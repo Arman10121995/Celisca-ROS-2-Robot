@@ -1,0 +1,17 @@
+# ROS 2 build folders
+build/
+install/
+log/
+
+# Python virtual environments (if any are inside the workspace)
+.venv/
+venv/
+.vscode/
+__pycache__/
+
+# OS generated files
+.DS_Store
+/.vscode/
+/build/
+/install/
+/log/

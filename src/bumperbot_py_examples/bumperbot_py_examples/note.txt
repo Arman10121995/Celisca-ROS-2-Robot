@@ -1,0 +1,14 @@
+Drive until sees a lidar point
+moves to lidar point
+
+register all obstacles seen as new point clusters 
+have a function to see 
+
+
+check lidar points next to robot, see if any the points around that obstacle are registered as no obstacle yet
+drive along the points > IF a point changes position to be further away
+drive until that point is behind the robot
+rotate and drive along the point until its back at the start
+markt point's position and exclude the points to drive along again
+
+
