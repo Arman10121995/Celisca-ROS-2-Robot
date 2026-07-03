@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, GroupAction, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, GroupAction, OpaqueFunction, TimerAction
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import UnlessCondition, IfCondition
@@ -81,39 +81,54 @@ def generate_launch_description():
     wheel_radius = LaunchConfiguration("wheel_radius")
     wheel_separation = LaunchConfiguration("wheel_separation")
 
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "joint_state_broadcaster",
-            "--controller-manager",
-            "/controller_manager",
-        ],
-        parameters=[{"use_sim_time": use_sim_time}]
+    joint_state_broadcaster_spawner = TimerAction(
+        period=2.0,
+        actions=[
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=[
+                    "joint_state_broadcaster",
+                    "--controller-manager",
+                    "/controller_manager",
+                ],
+                parameters=[{"use_sim_time": use_sim_time}]
+            )
+        ]
     )
 
-    wheel_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["bumperbot_controller", 
-                   "--controller-manager", 
-                   "/controller_manager"
-        ],
-        parameters=[{"use_sim_time": use_sim_time}],
-        condition=UnlessCondition(use_simple_controller),
+    wheel_controller_spawner = TimerAction(
+        period=4.0,
+        actions=[
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["bumperbot_controller", 
+                           "--controller-manager", 
+                           "/controller_manager"
+                ],
+                parameters=[{"use_sim_time": use_sim_time}],
+                condition=UnlessCondition(use_simple_controller),
+            )
+        ]
     )
 
     simple_controller = GroupAction(
         condition=IfCondition(use_simple_controller),
         actions=[
-            Node(
-                package="controller_manager",
-                executable="spawner",
-                arguments=["simple_velocity_controller", 
-                        "--controller-manager", 
-                        "/controller_manager"
-                ],
-                parameters=[{"use_sim_time": use_sim_time}]
+            TimerAction(
+                period=3.0,
+                actions=[
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=["simple_velocity_controller", 
+                                "--controller-manager", 
+                                "/controller_manager"
+                        ],
+                        parameters=[{"use_sim_time": use_sim_time}]
+                    ),
+                ]
             ),
             Node(
                 package="bumperbot_controller",

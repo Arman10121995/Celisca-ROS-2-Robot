@@ -64,8 +64,6 @@ Visualization Manager:
           Value: true
         laser_link:
           Value: true
-        map:
-          Value: true
         oakd_imu_frame:
           Value: true
         oakd_left_camera_frame:
@@ -82,8 +80,6 @@ Visualization Manager:
           Value: true
         oakd_right_camera_optical_frame:
           Value: true
-        odom:
-          Value: true
         wheel_left_link:
           Value: true
         wheel_right_link:
@@ -94,34 +90,32 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        map:
-          odom:
-            base_footprint:
-              base_link:
-                caster_front_link:
+        base_footprint:
+          base_link:
+            caster_front_link:
+              {}
+            caster_rear_link:
+              {}
+            imu_link:
+              {}
+            laser_link:
+              {}
+            oakd_link:
+              oakd_imu_frame:
+                {}
+              oakd_left_camera_frame:
+                oakd_left_camera_optical_frame:
                   {}
-                caster_rear_link:
+              oakd_rgb_camera_frame:
+                oakd_rgb_camera_optical_frame:
                   {}
-                imu_link:
+              oakd_right_camera_frame:
+                oakd_right_camera_optical_frame:
                   {}
-                laser_link:
-                  {}
-                oakd_link:
-                  oakd_imu_frame:
-                    {}
-                  oakd_left_camera_frame:
-                    oakd_left_camera_optical_frame:
-                      {}
-                  oakd_rgb_camera_frame:
-                    oakd_rgb_camera_optical_frame:
-                      {}
-                  oakd_right_camera_frame:
-                    oakd_right_camera_optical_frame:
-                      {}
-                wheel_left_link:
-                  {}
-                wheel_right_link:
-                  {}
+            wheel_left_link:
+              {}
+            wheel_right_link:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 0.699999988079071
@@ -183,8 +177,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        slam_toolbox: true
-        slam_toolbox_edges: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -302,7 +295,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /bumperbot_controller/odom
+        Value: /odom
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz_default_plugins/Odometry
@@ -360,7 +353,79 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
-        Link Tree Style: ""
+        Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_front_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_rear_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        oakd_imu_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        oakd_left_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        oakd_left_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        oakd_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        oakd_rgb_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        oakd_rgb_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        oakd_right_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        oakd_right_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        wheel_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -415,7 +480,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 4.609988689422607
+      Distance: 10.262624740600586
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -455,5 +520,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1387
-  X: 299
-  Y: 176
+  X: 268
+  Y: 199

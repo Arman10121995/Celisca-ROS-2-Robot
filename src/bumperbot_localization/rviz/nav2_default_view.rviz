@@ -690,7 +690,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /bumperbot_controller/odom
+        Value: /odom
       Value: true
     - Alpha: 0.699999988079071
       Class: rviz_default_plugins/Map

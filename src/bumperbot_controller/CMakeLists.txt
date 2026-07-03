@@ -45,15 +45,9 @@ install(
 )
 
 install(PROGRAMS
-  ${PROJECT_NAME}/simple_controller.py
-  ${PROJECT_NAME}/noisy_controller.py
-  ${PROJECT_NAME}/twist_relay.py
-  ${PROJECT_NAME}/keyboard_teleop.py
-  ${PROJECT_NAME}/automatic_teleop_1.py
-  ${PROJECT_NAME}/automatic_teleop_follow_wall.py
-  ${PROJECT_NAME}/lidar_point_monitor.py
-  ${PROJECT_NAME}/map_coverage_controller.py
-  ${PROJECT_NAME}/room_vacuum_controller.py
+  ${PROJECT_NAME}/cleaning_controller.py
+  ${PROJECT_NAME}/mapping_controller.py
+  ${PROJECT_NAME}/manual_teleop.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

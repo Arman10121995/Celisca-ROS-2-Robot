@@ -22,7 +22,7 @@ NoisyController::NoisyController(const std::string& name)
     RCLCPP_INFO_STREAM(get_logger(), "Using wheel separation " << wheel_separation_);
 
     joint_sub_ = create_subscription<sensor_msgs::msg::JointState>("/joint_states", 10, std::bind(&NoisyController::jointCallback, this, _1));
-    odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("/bumperbot_controller/odom_noisy", 10);
+    odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("/odom_noisy", 10);
 
     // Fill the Odometry message with invariant parameters
     odom_msg_.header.frame_id = "odom";
