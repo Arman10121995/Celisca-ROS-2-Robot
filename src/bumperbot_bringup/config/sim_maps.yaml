@@ -414,3 +414,42 @@ maps:
       y: "-6.0"
       yaw: "0.0"
 
+
+  aerial_course:
+    gazebo:
+      world_package: maps
+      world_name: aerial_course
+      world_path: maps/aerial_course/worlds/aerial_course.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/aerial_course/maps/map.yaml
+    spawn:
+      x: "-40.0"
+      y: "-40.0"
+      z: "0.5"
+      yaw: "0.0"
+    initial_pose:
+      x: "-40.0"
+      y: "-40.0"
+      yaw: "0.0"
+
+  aerial_indoor:
+    gazebo:
+      world_package: maps
+      world_name: aerial_indoor
+      world_path: maps/aerial_indoor/worlds/aerial_indoor.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/aerial_indoor/maps/map.yaml
+    spawn:
+      x: "-18.0"
+      y: "-18.0"
+      z: "0.5"
+      yaw: "0.0"
+    initial_pose:
+      x: "-18.0"
+      y: "-18.0"
+      yaw: "0.0"
+
