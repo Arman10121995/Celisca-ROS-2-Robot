@@ -1050,3 +1050,90 @@
   created: "2026-09-05"
   updated: "2026-09-05"
 
+
+- id: nav_dynamic
+  version: "1.0.0"
+  name: "Dynamic Obstacle Arena"
+  description: "16m x 16m grid arena with scripted moving-obstacle actors for dynamic-obstacle navigation testing (P4.5)"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_dynamic/worlds/nav_dynamic.world
+  occupancy_map: maps/maps/nav_dynamic/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: true
+    max_dynamic_count: 2
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -7.0
+        y: -7.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - dynamic
+    - obstacles
+    - 2D
+    - moving
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: nav_sensor_degraded
+  version: "1.0.0"
+  name: "Sensor-Degraded Arena"
+  description: "16m x 16m arena with tall blind-corner walls that deliberately occlude a 2D LIDAR for sensor-degradation testing (P4.5)"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
+  occupancy_map: maps/maps/nav_sensor_degraded/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -7.0
+        y: -7.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - sensor_degradation
+    - blind_corner
+    - 2D
+    - occluded
+  created: "2026-09-05"
+  updated: "2026-09-05"
+

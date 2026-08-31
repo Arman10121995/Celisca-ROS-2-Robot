@@ -103,6 +103,10 @@ P4.4:
         state: done
         owner: cline
         evidence: [added 2 3D aerial courses under src/maps/maps/ (aerial_course outdoor slalom with 8 gate pylons + gantry promoting the former placeholder, aerial_indoor multi-level with raised deck + mezzanine plates + pylons), each a Gazebo world from static box platforms with a companion Nav2 occupancy map rasterized from the same footprints (gen_aerial_arenas.py in src/maps/tools), registered integrated in environments.yaml (ros_package maps, 3D, aerial spawn zones, ground_truth) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_4_aerial_arenas.py 9 tests passing, cross-reference validation passes, full registry suite 164 run/4 pre-existing xacro failures unchanged]
+P4.5:
+        state: done
+        owner: cline
+        evidence: [added 2 dynamic/sensor-degradation variant arenas under src/maps/maps/ (nav_dynamic with two scripted actor moving obstacles, nav_sensor_degraded with tall blind-corner occluding walls), each a Gazebo world with a companion Nav2 occupancy map of the static geometry rasterized from the same footprints (gen_dynamic_arenas.py in src/maps/tools), registered integrated in environments.yaml with explicit dynamics metadata (nav_dynamic dynamic_obstacles true + max_dynamic_count 2 matching its actors, nav_sensor_degraded false) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_5_dynamic_variants.py 8 tests passing, cross-reference validation passes]
   P5: {title: algorithm_breadth, state: queued, owner: null}
   P6: {title: benchmarking, state: queued, owner: null}
   P7: {title: hardening, state: queued, owner: null}
@@ -116,5 +120,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P4.5
-  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete; P4.1 complete (14 environments qualified); P4.2 complete (5 nav arenas); P4.3 complete (3 terrain arenas for legged/humanoid); P4.4 complete (2 aerial courses - aerial_course outdoor slalom + aerial_indoor multi-level - occupancy provenance + world/map consistency, test_p4_4_aerial_arenas.py 9/9, cross-reference validation passes). Next: P4.5 - add dynamic-obstacle and sensor-degradation variants (extend arenas with moving actors / configurable sensor noise, update environment metadata with dynamics.dynamic_obstacles, add tests). Registry counts: 20 robots / 26 environments / 27 algorithms / 18 scenarios / 15 experiments.'
+  next_task: P4.6
+  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete; P4.1-P4.5 complete (14 qualified + 5 nav arenas + 3 terrain + 2 aerial + 2 dynamic/sensor variants, each with occupancy provenance + world/map consistency and a locking test file: test_p4_1 9/9, test_p4_2 8/8, test_p4_3 9/9, test_p4_4 9/9, test_p4_5 8/8, cross-reference validation passes). Next: P4.6 - add seeds, reset services, spawn zones, goals, and reference paths across the new arenas (ensure every environment declares spawn_zones and goals; add a reference-path section or seed metadata; update scenario/experiment data; add tests). Registry counts: 20 robots / 28 environments / 27 algorithms / 18 scenarios / 15 experiments.'

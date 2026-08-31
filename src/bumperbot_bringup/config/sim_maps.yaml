@@ -453,3 +453,42 @@ maps:
       y: "-18.0"
       yaw: "0.0"
 
+
+  nav_dynamic:
+    gazebo:
+      world_package: maps
+      world_name: nav_dynamic
+      world_path: maps/nav_dynamic/worlds/nav_dynamic.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_dynamic/maps/map.yaml
+    spawn:
+      x: "-7.0"
+      y: "-7.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-7.0"
+      y: "-7.0"
+      yaw: "0.0"
+
+  nav_sensor_degraded:
+    gazebo:
+      world_package: maps
+      world_name: nav_sensor_degraded
+      world_path: maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_sensor_degraded/maps/map.yaml
+    spawn:
+      x: "-7.0"
+      y: "-7.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-7.0"
+      y: "-7.0"
+      yaw: "0.0"
+
