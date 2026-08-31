@@ -32,6 +32,7 @@ baseline:
     - robot_lab_registry package built and tested
     - robot_lab_registry validation passes with 19 robots, 15 environments, 27 algorithms
     - test/test_registry.py: 10/10 tests passing (imports, schemas, catalog, validation, query, cross-references, capability checking, status counts, status distribution, robot-environment compatibility)
+    - CI workflow validates registry on every push/PR (robot-lab validate + test_registry.py)
 
 tasks:
   P0:
@@ -49,7 +50,7 @@ tasks:
       P1.3: {state: done, owner: root, evidence: [27 algorithms across 7 categories in algorithms.yaml]}
       P1.4: {state: done, owner: root, evidence: [test/test_registry.py extended with cross-reference, capability, status counts, status distribution, and robot-environment compatibility tests - all 10 tests passing]}
       P1.5: {state: done, owner: root, evidence: [ROADMAP.md, docs/architecture/overview.md]}
-      P1.6: {state: queued, owner: null, evidence: []}
+      P1.6: {state: done, owner: root, evidence: [.github/workflows/ci.yml updated with robot-lab validate and test_registry.py steps to validate both legacy profiles and canonical registry on every push/PR]}
   P2: {title: unified_composition, state: queued, owner: null}
   P3: {title: robot_integrations, state: queued, owner: null}
   P4: {title: environment_expansion, state: queued, owner: null}

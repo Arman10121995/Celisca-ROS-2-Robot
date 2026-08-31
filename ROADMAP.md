@@ -64,7 +64,7 @@ command, or artifact rather than merely saying that code was added.
   with honest maturity, dependencies, contracts, and applicability metadata. (27 algorithms)
 - [x] **P1.4** Add cross-reference, capability, status, and minimum-count tests. (10 tests passing)
 - [x] **P1.5** Add repository architecture, status, and continuation documents.
-- [ ] **P1.6** Make CI validate both legacy profiles and the canonical registry.
+- [x] **P1.6** Make CI validate both legacy profiles and the canonical registry. (CI workflow updated)
 
 ### P2 — unified composition
 
