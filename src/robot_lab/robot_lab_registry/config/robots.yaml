@@ -100,9 +100,9 @@
 - id: assem12ros_29
   version: "1.0.0"
   name: "Assem12 ROS 29"
-  description: "Mobile robot from Awesome-URDFs collection"
+  description: "Articulated 3-DOF linkage assembly from Awesome-URDFs (reclassified from mobile in P3.2: URDF has no wheels or continuous joints)"
   status: cataloged
-  robot_class: mobile
+  robot_class: manipulator
   maturity: prototype
   source:
     repository: "https://github.com/Arthur-Azevedo/Awesome-URDFs"
@@ -111,16 +111,16 @@
   supported_simulators:
     - gazebo
   locomotion:
-    type: differential_drive
-    dof: 2
+    type: articulated_linkage
+    dof: 3
   capabilities:
-    - mobility
+    - articulated
   assets:
     urdf: robots/_upstream/Awesome-URDFs/wychar_labs/assem12ros_29/urdf/assem12ros_29.urdf
   tags:
     - imported
   created: "2026-08-31"
-  updated: "2026-08-31"
+  updated: "2026-09-05"
 
 # ============================================================================
 # Legged Robots
@@ -886,3 +886,81 @@
     - multirotor
   created: "2026-08-31"
   updated: "2026-08-31"
+
+# ============================================================================
+# First-party differential-drive mobile robots (P3.2)
+# ============================================================================
+
+- id: labbot
+  version: "1.0.0"
+  name: "Labbot"
+  ros_package: robots
+  description: "Second first-party differential-drive mobile robot with LIDAR and IMU; primitive-geometry description with no mesh dependencies"
+  status: integrated
+  robot_class: mobile
+  maturity: simulated
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators:
+    - gazebo
+    - ignition
+  locomotion:
+    type: differential_drive
+    dof: 2
+    max_velocity: 0.8
+    max_acceleration: 1.5
+  sensors:
+    - type: lidar
+      name: base_laser
+      frame: laser_link
+      topic: /scan
+      message_type: sensor_msgs/LaserScan
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+    - type: odometry
+      name: odometry
+      frame: odom
+      topic: /odom
+      message_type: nav_msgs/Odometry
+  actuators:
+    - type: wheel
+      name: left_wheel
+      joint: labbot_left_wheel_joint
+    - type: wheel
+      name: right_wheel
+      joint: labbot_right_wheel_joint
+  command_interfaces:
+    - geometry_msgs/Twist
+  state_interfaces:
+    - nav_msgs/Odometry
+    - sensor_msgs/JointState
+  frames:
+    - base_link
+    - laser_link
+    - odom
+    - map
+  capabilities:
+    - navigation
+    - localization
+    - state_estimation
+    - sensor_fusion
+    - control
+    - costmap
+  dependencies:
+    - robots
+  assets:
+    urdf: robots/labbot/urdf/labbot.urdf.xacro
+    xacro: robots/labbot/urdf/labbot_ros2_control.xacro
+    meshes: []
+  smoke_experiments:
+    - labbot_smoke_test
+  tags:
+    - first-party
+    - differential
+  created: "2026-09-05"
+  updated: "2026-09-05"

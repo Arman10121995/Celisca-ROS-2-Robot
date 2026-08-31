@@ -26,7 +26,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
-| P3 — robot integrations | P3.1 done | Bumperbot qualified as reference differential-drive robot: smoke scenario/experiment, 28-test qualification suite, asset/launch contract validation, CI wiring |
+| P3 — robot integrations | P3.1, P3.2 done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
@@ -95,7 +95,27 @@ command, or artifact rather than merely saying that code was added.
   `robot-lab validate -c config --cross-references` passes, `robot-lab launch
   --dry-run` resolves the smoke composition with no warnings, robot_lab_bringup
   25/25 tests pass)
-- [ ] **P3.2** Integrate a second, independently maintained mobile base.
+- [x] **P3.2** Integrate a second mobile base (Labbot).
+  (Finding: the only other cataloged mobile robot, assem12ros_29, is NOT a
+  wheeled base — it is a 3-revolute-joint linkage misclassified as
+  differential_drive, and the vendored Awesome-URDFs/Unitree upstream
+  collection contains no wheeled mobile base, so an honest "second
+  independently maintained mobile base" was not achievable; recorded the
+  misclassification and delivered Labbot instead — a first-party
+  primitive-geometry (mesh-free) differential-drive robot with its own
+  description, ros2_control, gazebo sensor plugins, and controller config.
+  Added labbot_smoke_test scenario + experiment (full stack pinned),
+  test/test_labbot_qualification.py with 23 tests covering registry
+  contracts, smoke composition, and on-disk asset consistency including a
+  real xacro expansion check. Fixed robot_lab_registry packaging so
+  `ros2 run robot_lab_registry robot-lab` actually works: package.xml was
+  missing buildtool_depend/export build_type ament_cmake and the CLI was
+  never installed — added CMake scripts/robot-lab install; also removed an
+  invalid top-level build_type tag from robot_lab_bringup/package.xml.
+  Evidence: test_labbot_qualification.py 23/23, registry suites 10/10 +
+  28/28, robot_lab_bringup 25/25, `robot-lab validate --cross-references`
+  passes, `robot-lab launch --dry-run` resolves the labbot smoke composition
+  (robots + maps/small_office) with no warnings)
 - [ ] **P3.3** Turn one existing Unitree quadruped description into a simulated,
   commandable legged profile with sensors and odometry.
 - [ ] **P3.4** Turn one existing humanoid description into a simulated,

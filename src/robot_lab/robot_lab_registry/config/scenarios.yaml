@@ -451,3 +451,46 @@
     - reference
   created: "2026-09-05"
   updated: "2026-09-05"
+
+- id: labbot_smoke_test
+  version: "1.0.0"
+  name: "Labbot Smoke Test"
+  description: "Minimal smoke test to validate Labbot launch, topics, and contracts"
+  status: integrated
+  task_type: smoke_test
+  task_description: "Verify Labbot simulation launches, publishes odometry/sensor topics, and accepts velocity commands"
+  stopping_conditions:
+    - type: success
+      condition: "smoke_test_passed"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Gazebo spawns without errors"
+    - "Odometry published on /odom"
+    - "LIDAR published on /scan"
+    - "IMU published on /imu"
+    - "TF frames available"
+    - "Accepts Twist commands"
+    - "No launch errors or warnings"
+  failure_criteria:
+    - "Launch timeout"
+    - "Missing required topics"
+    - "TF frames not found"
+    - "Robot not spawned in Gazebo"
+  required_robot_classes:
+    - mobile
+  required_capabilities:
+    - navigation
+  timeout: 30.0
+  metrics:
+    - launch_success
+    - topics_published
+    - tf_frames_available
+    - command_acceptance
+  tags:
+    - smoke_test
+    - validation
+    - labbot
+    - first-party
+  created: "2026-09-05"
+  updated: "2026-09-05"

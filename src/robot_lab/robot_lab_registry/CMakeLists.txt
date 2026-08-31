@@ -25,6 +25,12 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+# Install the robot-lab CLI so `ros2 run robot_lab_registry robot-lab` works
+install(
+  PROGRAMS scripts/robot-lab
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # Install launch files if any
 # install(
 #   DIRECTORY launch

@@ -10,9 +10,7 @@
   </description>
   <maintainer email="robot-lab@example.com">Robot Lab Team</maintainer>
   <license>Apache-2.0</license>
-  
-  <build_type>ament_python</build_type>
-  
+
   <depend>rclpy</depend>
   <depend>std_msgs</depend>
   <depend>robot_lab_registry</depend>

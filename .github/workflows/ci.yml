@@ -43,6 +43,8 @@ jobs:
           python3 src/robot_lab/robot_lab_registry/test/test_registry.py
           # Run Bumperbot reference-robot qualification suite (P3.1)
           python3 src/robot_lab/robot_lab_registry/test/test_bumperbot_qualification.py
+          # Run Labbot second-robot qualification suite (P3.2)
+          python3 src/robot_lab/robot_lab_registry/test/test_labbot_qualification.py
 
       - name: Test core workspace
         shell: bash
