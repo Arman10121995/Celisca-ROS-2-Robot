@@ -1,0 +1,535 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <world name="terrain_stepping_stones">
+    <physics type="ode">
+      <max_step_size>0.01</max_step_size>
+    </physics>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.3 -1.0</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <pose>0 0 -0.05 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>22.0 18.0 0.1</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>100</mu><mu2>50</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>22.0 18.0 0.1</size></box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.52 0.42 1</ambient>
+            <diffuse>0.5 0.52 0.42 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_00">
+      <static>true</static>
+      <pose>0.000 -7.100 0.900 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>18.400 0.200 1.800</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>18.400 0.200 1.800</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_01">
+      <static>true</static>
+      <pose>0.000 7.100 0.900 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>18.400 0.200 1.800</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>18.400 0.200 1.800</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_02">
+      <static>true</static>
+      <pose>-9.100 0.000 0.900 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>0.200 14.400 1.800</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>0.200 14.400 1.800</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_03">
+      <static>true</static>
+      <pose>9.100 0.000 0.900 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>0.200 14.400 1.800</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>0.200 14.400 1.800</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_04">
+      <static>true</static>
+      <pose>-6.500 -5.000 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_05">
+      <static>true</static>
+      <pose>-4.500 -5.000 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_06">
+      <static>true</static>
+      <pose>-2.500 -3.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_07">
+      <static>true</static>
+      <pose>-0.500 -2.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_08">
+      <static>true</static>
+      <pose>1.500 -2.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_09">
+      <static>true</static>
+      <pose>3.500 -3.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_10">
+      <static>true</static>
+      <pose>5.500 -2.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_11">
+      <static>true</static>
+      <pose>7.500 -1.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_12">
+      <static>true</static>
+      <pose>7.000 0.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_13">
+      <static>true</static>
+      <pose>5.000 1.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_14">
+      <static>true</static>
+      <pose>3.000 1.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_15">
+      <static>true</static>
+      <pose>1.000 2.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_16">
+      <static>true</static>
+      <pose>-1.000 2.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="platform_17">
+      <static>true</static>
+      <pose>-3.000 1.500 0.150 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.400 1.400 0.300</size></box>
+          </geometry>
+          <material>
+            <ambient>0.42 0.44 0.40 1</ambient>
+            <diffuse>0.42 0.44 0.40 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

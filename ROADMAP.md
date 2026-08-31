@@ -27,7 +27,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
 | P3 — robot integrations | done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap); Berkeley Humanoid Lite qualified as simulated commandable humanoid profile (22 position-commandable joints, trunk IMU, estimated odometry, standing-pose command contract, bhl qualification suite); Quadrotor SITL qualified as simulated commandable aerial profile (MAVLink AttitudeTarget/PositionTarget bridge, mesh-free URDF for rendering/TF, mavros_offboard_controller with graceful degradation, quadrotor qualification suite); per-class smoke scenarios (mobile/legged/humanoid/aerial) plus documented safety/compute limits on all five integrated robots (P3.6, test_p3_6_safety_limits.py 12/12) |
-| P4 — environments | in progress | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3–P4.6 remaining |
+| P4 — environments | in progress | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4–P4.6 remaining |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
 | P7 — hardening | queued | CI matrices, provenance/licenses, documentation, and end-to-end qualification |
@@ -225,8 +225,25 @@ command, or artifact rather than merely saying that code was added.
     consistency (every obstacle center occupied, spawn free), sim_maps
     launch registration, and cross-reference validation.
 
-- [ ] **P4.3** Add rough terrain, stairs/ramps, and stepping-stone arenas for
+- [x] **P4.3** Add rough terrain, stairs/ramps, and stepping-stone arenas for
   legged/humanoid robots.
+  (Three 3D arenas added: `terrain_rough` (20m x 20m scattered low platforms,
+  promoting the former `outdoor_terrain` placeholder to a real on-disk world),
+  `terrain_stairs` (ascending 5-step staircase + descending ramp), and
+  `terrain_stepping_stones` (serpentine path of 0.3m-high stepping stones with
+  pits in between). Each ships a Gazebo `.world` built from static box
+  platforms plus a Nav2 occupancy PGM + map.yaml rasterized from the *exact
+  same* box footprints via the reusable `src/maps/tools/gen_terrain_arenas.py`
+  generator, so world geometry and localization map always agree. All three
+  registered as `integrated` in `config/environments.yaml` (ros_package maps,
+  3D, legged/humanoid spawn zones, ground_truth) and registered in
+  `src/bumperbot_bringup/config/sim_maps.yaml` with `has_2d_map: true` so they
+  launch in loc/nav modes. `test_p4_3_terrain_arenas.py` (9 tests) locks in
+  registration, integration, world XML well-formedness, occupancy-map
+  provenance, world↔map consistency (every platform center occupied, spawn
+  free), sim_maps launch registration, and cross-reference validation.
+  Evidence: test_p4_3_terrain_arenas.py 9/9, `robot-lab validate
+  --cross-references` passes.)
 - [ ] **P4.4** Add indoor and outdoor 3D/aerial courses with ground truth.
 - [ ] **P4.5** Add dynamic-obstacle and sensor-degradation variants.
 - [ ] **P4.6** Add seeds, reset services, spawn zones, goals, and reference paths.

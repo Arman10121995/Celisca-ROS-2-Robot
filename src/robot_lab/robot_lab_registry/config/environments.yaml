@@ -445,11 +445,13 @@
 - id: outdoor_terrain
   version: "1.0.0"
   name: "Outdoor Terrain"
-  description: "Outdoor terrain with uneven ground for legged robot testing"
-  status: cataloged
+  description: "Outdoor rough-terrain arena (terrain_rough) with scattered low-height raised platforms for legged/humanoid testing (P4.3)"
+  status: integrated
   dimension: 3D
   simulator: gazebo
-  world_file: ""
+  ros_package: maps
+  world_file: maps/maps/terrain_rough/worlds/terrain_rough.world
+  occupancy_map: maps/maps/terrain_rough/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -462,17 +464,17 @@
   spawn_zones:
     - id: ground_level
       pose:
-        x: 0.0
-        y: 0.0
+        x: -9.0
+        y: -9.0
         z: 0.0
       size:
         x: 5.0
         y: 5.0
         z: 1.0
   size:
-    x: 50.0
-    y: 50.0
-    z: 10.0
+    x: 20.0
+    y: 20.0
+    z: 3.0
   source:
     repository: "internal"
     license: "Apache-2.0"
@@ -482,7 +484,93 @@
     - 3D
     - legged
   created: "2026-08-31"
-  updated: "2026-08-31"
+  updated: "2026-09-05"
+
+- id: terrain_stairs
+  version: "1.0.0"
+  name: "Staircase Terrain"
+  description: "3D arena with an ascending staircase and a descending ramp for climb/recovery testing (P4.3)"
+  status: integrated
+  dimension: 3D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/terrain_stairs/worlds/terrain_stairs.world
+  occupancy_map: maps/maps/terrain_stairs/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - legged
+    - humanoid
+  spawn_zones:
+    - id: default
+      pose:
+        x: -7.0
+        y: -5.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - stairs
+    - 3D
+    - legged
+    - terrain
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: terrain_stepping_stones
+  version: "1.0.0"
+  name: "Stepping-Stone Terrain"
+  description: "3D arena with a serpentine path of raised stepping-stone platforms and pits for footfall testing (P4.3)"
+  status: integrated
+  dimension: 3D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
+  occupancy_map: maps/maps/terrain_stepping_stones/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - legged
+    - humanoid
+  spawn_zones:
+    - id: default
+      pose:
+        x: -8.0
+        y: -6.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 18.0
+    y: 14.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - stepping_stones
+    - 3D
+    - legged
+    - terrain
+  created: "2026-09-05"
+  updated: "2026-09-05"
 
 - id: aerial_course
   version: "1.0.0"

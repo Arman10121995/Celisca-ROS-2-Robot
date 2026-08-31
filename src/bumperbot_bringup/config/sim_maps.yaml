@@ -356,3 +356,61 @@ maps:
       y: "-8.0"
       yaw: "0.0"
 
+
+  outdoor_terrain:
+    gazebo:
+      world_package: maps
+      world_name: terrain_rough
+      world_path: maps/terrain_rough/worlds/terrain_rough.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/terrain_rough/maps/map.yaml
+    spawn:
+      x: "-9.0"
+      y: "-9.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-9.0"
+      y: "-9.0"
+      yaw: "0.0"
+
+  terrain_stairs:
+    gazebo:
+      world_package: maps
+      world_name: terrain_stairs
+      world_path: maps/terrain_stairs/worlds/terrain_stairs.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/terrain_stairs/maps/map.yaml
+    spawn:
+      x: "-7.0"
+      y: "-5.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-7.0"
+      y: "-5.0"
+      yaw: "0.0"
+
+  terrain_stepping_stones:
+    gazebo:
+      world_package: maps
+      world_name: terrain_stepping_stones
+      world_path: maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/terrain_stepping_stones/maps/map.yaml
+    spawn:
+      x: "-8.0"
+      y: "-6.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-8.0"
+      y: "-6.0"
+      yaw: "0.0"
+
