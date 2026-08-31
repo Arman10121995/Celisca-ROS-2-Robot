@@ -72,8 +72,8 @@ command, or artifact rather than merely saying that code was added.
   environment, simulator, and scenario. (RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector)
 - [x] **P2.2** Add independent selectors for perception, localization, state
   estimation, global planning, local planning, and control. (7 algorithm selectors + CompositionBuilder)
-- [ ] **P2.3** Resolve selectors into launch fragments and parameter overlays;
-  reject invalid combinations before processes start.
+- [x] **P2.3** Resolve selectors into launch fragments and parameter overlays;
+  reject invalid combinations before processes start. (LaunchFragment, ParameterOverlay, CompositionResolver with topic/conflict checking)
 - [ ] **P2.4** Wrap `bumperbot_bringup/simulated_robot.launch.py` as the first
   adapter and retain its public arguments until a documented deprecation.
 - [ ] **P2.5** Add namespaces and frame-prefix contracts so parallel and
