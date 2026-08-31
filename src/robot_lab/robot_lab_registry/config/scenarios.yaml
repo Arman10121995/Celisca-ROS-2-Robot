@@ -538,3 +538,45 @@
     - legged
   created: "2026-09-05"
   updated: "2026-09-05"
+
+- id: berkeley_humanoid_lite_smoke_test
+  version: "1.0.0"
+  name: "Berkeley Humanoid Lite Smoke Test"
+  description: "Minimal smoke test to validate BHL launch, topics, and contracts for the simulated commandable humanoid profile"
+  status: integrated
+  task_type: smoke_test
+  task_description: "Verify BHL simulation launches, publishes IMU/joint-state topics, and accepts standing-pose position commands"
+  stopping_conditions:
+    - type: success
+      condition: "smoke_test_passed"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Gazebo spawns without errors"
+    - "IMU published on /imu"
+    - "Joint states published on /joint_states"
+    - "TF frames available"
+    - "Accepts standing-pose position commands"
+    - "No launch errors or warnings"
+  failure_criteria:
+    - "Launch timeout"
+    - "Missing required topics"
+    - "TF frames not found"
+    - "Robot not spawned in Gazebo"
+  required_robot_classes:
+    - humanoid
+  required_capabilities:
+    - standing
+  timeout: 30.0
+  metrics:
+    - launch_success
+    - topics_published
+    - tf_frames_available
+    - command_acceptance
+  tags:
+    - smoke_test
+    - validation
+    - berkeley_humanoid_lite
+    - humanoid
+  created: "2026-09-05"
+  updated: "2026-09-05"

@@ -179,49 +179,134 @@
   updated: "2026-08-31"
 
 - id: berkeley_humanoid_lite
-  version: "1.0.0"
+  version: "2.0.0"
   name: "Berkeley Humanoid Lite"
-  description: "Humanoid robot for research and education"
-  status: cataloged
+  ros_package: berkeley_humanoid_lite
+  description: "Berkeley Humanoid Lite biped; vendored static URDF (22-DOF: 12 leg + 10 arm joints) qualified as a simulated, commandable humanoid profile with trunk IMU, estimated odometry, and 22 position-commandable joints via ros2_control (P3.4)"
+  status: integrated
   robot_class: humanoid
-  maturity: prototype
+  maturity: simulated
   source:
     repository: "https://github.com/berkeley-automation/Humanoid-Benchmark"
     license: "BSD-3-Clause"
     maintainer: "Berkeley Automation Lab"
   supported_simulators:
     - gazebo
+    - ignition
   locomotion:
     type: biped
-    dof: 20
+    dof: 22
     max_velocity: 2.0
     max_acceleration: 3.0
   sensors:
     - type: imu
-      name: torso_imu
-      frame: torso_link
+      name: imu
+      frame: imu
       topic: /imu
       message_type: sensor_msgs/Imu
-    - type: force_torque
-      name: left_foot_ft
-      frame: left_foot
-      topic: /left_foot_ft
-      message_type: geometry_msgs/WrenchStamped
-    - type: force_torque
-      name: right_foot_ft
-      frame: right_foot
-      topic: /right_foot_ft
-      message_type: geometry_msgs/WrenchStamped
+    - type: odometry
+      name: odometry
+      frame: odom
+      topic: /odom
+      message_type: nav_msgs/Odometry
+  actuators:
+    - type: joint
+      name: leg_left_hip_roll
+      joint: leg_left_hip_roll_joint
+    - type: joint
+      name: leg_left_hip_yaw
+      joint: leg_left_hip_yaw_joint
+    - type: joint
+      name: leg_left_hip_pitch
+      joint: leg_left_hip_pitch_joint
+    - type: joint
+      name: leg_left_knee_pitch
+      joint: leg_left_knee_pitch_joint
+    - type: joint
+      name: leg_left_ankle_pitch
+      joint: leg_left_ankle_pitch_joint
+    - type: joint
+      name: leg_left_ankle_roll
+      joint: leg_left_ankle_roll_joint
+    - type: joint
+      name: leg_right_hip_roll
+      joint: leg_right_hip_roll_joint
+    - type: joint
+      name: leg_right_hip_yaw
+      joint: leg_right_hip_yaw_joint
+    - type: joint
+      name: leg_right_hip_pitch
+      joint: leg_right_hip_pitch_joint
+    - type: joint
+      name: leg_right_knee_pitch
+      joint: leg_right_knee_pitch_joint
+    - type: joint
+      name: leg_right_ankle_pitch
+      joint: leg_right_ankle_pitch_joint
+    - type: joint
+      name: leg_right_ankle_roll
+      joint: leg_right_ankle_roll_joint
+    - type: joint
+      name: arm_left_shoulder_pitch
+      joint: arm_left_shoulder_pitch_joint
+    - type: joint
+      name: arm_left_shoulder_roll
+      joint: arm_left_shoulder_roll_joint
+    - type: joint
+      name: arm_left_shoulder_yaw
+      joint: arm_left_shoulder_yaw_joint
+    - type: joint
+      name: arm_left_elbow_roll
+      joint: arm_left_elbow_roll_joint
+    - type: joint
+      name: arm_left_elbow_pitch
+      joint: arm_left_elbow_pitch_joint
+    - type: joint
+      name: arm_right_shoulder_pitch
+      joint: arm_right_shoulder_pitch_joint
+    - type: joint
+      name: arm_right_shoulder_roll
+      joint: arm_right_shoulder_roll_joint
+    - type: joint
+      name: arm_right_shoulder_yaw
+      joint: arm_right_shoulder_yaw_joint
+    - type: joint
+      name: arm_right_elbow_roll
+      joint: arm_right_elbow_roll_joint
+    - type: joint
+      name: arm_right_elbow_pitch
+      joint: arm_right_elbow_pitch_joint
+  command_interfaces:
+    - std_msgs/Float64MultiArray
+  state_interfaces:
+    - sensor_msgs/JointState
+    - sensor_msgs/Imu
+    - nav_msgs/Odometry
+  frames:
+    - base
+    - imu
+    - odom
   capabilities:
     - bipedal_locomotion
     - balancing
+    - standing
+    - control
+    - state_estimation
+    - sensor_fusion
+  dependencies:
+    - robots
   assets:
-    urdf: robots/berkeley_humanoid_lite/urdf/berkeley_humanoid_lite.urdf
+    urdf: robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro
+    xacro: robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro
+  smoke_experiments:
+    - berkeley_humanoid_lite_smoke_test
   tags:
     - imported
     - humanoid
+    - biped
+    - qualification
   created: "2026-08-31"
-  updated: "2026-08-31"
+  updated: "2026-09-05"
 
 # ============================================================================
 # Unitree Quadruped Robots

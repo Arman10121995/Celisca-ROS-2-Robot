@@ -12,6 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: false
+          lfs: true
 
       - name: Install ROS 2 Humble
         uses: ros-tooling/setup-ros@v0.7
@@ -38,15 +39,11 @@ jobs:
           source /opt/ros/humble/setup.bash
           source install/setup.bash
           # Validate the registry catalogs
-          ros2 run robot_lab_registry robot-lab validate -c src/robot_lab/robot_lab_registry/config
-          # Run registry test suite
-          python3 src/robot_lab/robot_lab_registry/test/test_registry.py
-          # Run Bumperbot reference-robot qualification suite (P3.1)
-          python3 src/robot_lab/robot_lab_registry/test/test_bumperbot_qualification.py
-          # Run Labbot second-robot qualification suite (P3.2)
-          python3 src/robot_lab/robot_lab_registry/test/test_labbot_qualification.py
-          # Run Go2 legged-robot qualification suite (P3.3)
-          python3 src/robot_lab/robot_lab_registry/test/test_go2_qualification.py
+          ros2 run robot_lab_registry robot-lab validate \
+            -c src/robot_lab/robot_lab_registry/config --cross-references
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q \
+            src/robot_lab/robot_lab_registry/test \
+            src/robot_lab_bringup/test
 
       - name: Test core workspace
         shell: bash

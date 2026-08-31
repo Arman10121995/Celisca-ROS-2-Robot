@@ -24,6 +24,7 @@ setup(
         'console_scripts': [
             'robot-lab-select = robot_lab_bringup.selectors:main',
             'joint-effort-commander = robot_lab_bringup.joint_effort_commander:main',
+            'humanoid-standing-controller = robot_lab_bringup.humanoid_standing_controller:main',
         ],
     },
 )

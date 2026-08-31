@@ -451,3 +451,51 @@
     - qualification
   created: "2026-09-05"
   updated: "2026-09-05"
+
+- id: berkeley_humanoid_lite_smoke_test
+  version: "1.0.0"
+  name: "Berkeley Humanoid Lite Smoke Test"
+  description: "Validate BHL launches correctly and publishes all expected topics for the simulated commandable humanoid profile"
+  status: integrated
+  robot_id: berkeley_humanoid_lite
+  environment_id: empty
+  simulator: gazebo
+  scenario_id: berkeley_humanoid_lite_smoke_test
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: humanoid_standing_controller
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    humanoid_standing_controller:
+      command_rate_hz: 50.0
+      default_num_joints: 22
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/berkeley-automation/Humanoid-Benchmark"
+    license: "BSD-3-Clause"
+  tags:
+    - smoke_test
+    - validation
+    - berkeley_humanoid_lite
+    - humanoid
+    - qualification
+  created: "2026-09-05"
+  updated: "2026-09-05"

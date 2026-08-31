@@ -32,7 +32,7 @@ setup(
             'simple_lifecycle_node = bumperbot_py_examples.simple_lifecycle_node:main',
             'simple_qos_publisher = bumperbot_py_examples.simple_qos_publisher:main',
             'simple_qos_subscriber = bumperbot_py_examples.simple_qos_subscriber:main',
-            'simple_lidar_viewer = bumperbot_py_examples.simple_lidar_viewer:main',
+            'lidar_subscriber = bumperbot_py_examples.lidar_subscriber:main',
         ],
     },
 )

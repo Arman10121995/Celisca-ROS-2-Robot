@@ -14,7 +14,8 @@
   <depend>sensor_msgs</depend>
   <depend>cv_bridge</depend>
   <depend>message_filters</depend>
-  <depend>Pangolin</depend>
+  <!-- Pangolin is an optional external source dependency with no Jammy
+       rosdep key. CMake reports how to provide it when orbslam3 is built. -->
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -539,6 +539,7 @@
   supported_robot_classes:
     - mobile
     - legged
+    - humanoid
   parameters:
     costmap_topic: /global_costmap/costmap
     allow_unknown: true
@@ -675,6 +676,7 @@
   supported_robot_classes:
     - mobile
     - legged
+    - humanoid
   parameters:
     lookahead_distance: 0.5
     max_velocity: 1.0
@@ -812,6 +814,34 @@
   parameters:
     command_rate_hz: 100.0
     default_effort: 0.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+- id: humanoid_standing_controller
+  version: "1.0.0"
+  name: "Humanoid Standing Controller"
+  description: "Nominal standing-posture position command interface for humanoid robots; publishes Float64MultiArray position targets consumed by a position forward_command_controller (P3.4)"
+  status: integrated
+  category: control
+  family: joint_position
+  implementation:
+    package: robot_lab_bringup
+    plugin: HumanoidStandingController
+    language: python
+  input_contract:
+    required_topics:
+      - /joint_states
+  output_contract:
+    provided_topics:
+      - /bhl_standing_controller/commands
+  required_capabilities:
+    - standing
+  supported_robot_classes:
+    - humanoid
+  parameters:
+    command_rate_hz: 50.0
+    default_num_joints: 22
+    standing_pose: []
   source:
     repository: "internal"
     license: "Apache-2.0"

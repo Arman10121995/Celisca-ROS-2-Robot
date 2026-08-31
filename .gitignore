@@ -8,6 +8,12 @@ log/
 venv/
 .vscode/
 __pycache__/
+.pytest_cache/
+*.py[cod]
+.idea/
+CMakeFiles/
+KeyFrameTrajectory.txt
+saved_mode.txt
 
 # OS generated files
 .DS_Store

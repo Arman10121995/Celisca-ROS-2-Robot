@@ -3,17 +3,10 @@
 Map saving utility for saving occupancy maps to PGM/PNG format.
 Compatible with ROS 2 nav_msgs/OccupancyGrid format.
 """
-import sys
-import os
-# Add user site-packages to path to find numpy
-user_site_packages = os.path.expanduser('~/.local/lib/python3.10/site-packages')
-if os.path.exists(user_site_packages) and user_site_packages not in sys.path:
-    sys.path.insert(0, user_site_packages)
+from datetime import datetime
+from pathlib import Path
 
 import numpy as np
-from pathlib import Path
-from datetime import datetime
-import math
 
 
 class MapSaver:
@@ -101,11 +94,15 @@ class MapSaver:
             # Write PGM header
             f.write("P2\n")
             f.write(f"{width} {height}\n")
-            f.write("100\n")
+            f.write("255\n")
             
-            # Write pixel data
+            # ROS map_server conventions with negate: 0 use white for free,
+            # gray for unknown, and black for occupied cells.
             for row in map_data:
-                line = " ".join(str(int(pixel)) if pixel >= 0 else "-1" for pixel in row)
+                line = " ".join(
+                    "254" if pixel == 0 else "0" if pixel == 100 else "205"
+                    for pixel in row
+                )
                 f.write(line + "\n")
         
         return Path(filename)

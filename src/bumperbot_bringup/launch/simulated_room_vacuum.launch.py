@@ -93,7 +93,7 @@ def generate_launch_description():
 
     room_vacuum = Node(
         package="bumperbot_controller",
-        executable="room_vacuum_controller.py",
+        executable="mapping_controller.py",
         name="room_vacuum_controller",
         output="screen",
         parameters=[{

@@ -1,23 +1,14 @@
-import sys
-import os
-# Add user site-packages to path to find numpy
-user_site_packages = os.path.expanduser('~/.local/lib/python3.10/site-packages')
-if os.path.exists(user_site_packages) and user_site_packages not in sys.path:
-    sys.path.insert(0, user_site_packages)
-
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
-import pygame
-import math
-import numpy as np
 
-class SimpleSubscriber(Node):
+
+class LidarSubscriber(Node):
+    """Log the first received laser scan and then exit."""
 
     def __init__(self):
-        super().__init__("simple_subscriber")
+        super().__init__("lidar_subscriber")
         self.sub_ = self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
-        self.sub_
 
     def scan_callback(self, msg):
         self.get_logger().info("I heard: %s" % msg.ranges)
@@ -27,7 +18,7 @@ class SimpleSubscriber(Node):
 
 def main():
     rclpy.init()
-    node = SimpleSubscriber()
+    node = LidarSubscriber()
 
     try:
         rclpy.spin(node)
@@ -37,6 +28,7 @@ def main():
     # Clean up (crucial for finishing the process)
     node.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
