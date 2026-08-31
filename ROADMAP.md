@@ -76,8 +76,8 @@ command, or artifact rather than merely saying that code was added.
   reject invalid combinations before processes start. (LaunchFragment, ParameterOverlay, CompositionResolver with topic/conflict checking)
 - [x] **P2.4** Wrap `bumperbot_bringup/simulated_robot.launch.py` as the first
   adapter and retain its public arguments until a documented deprecation. (LegacyAdapter, robot_adapter.launch.py, 3 tests passing)
-- [ ] **P2.5** Add namespaces and frame-prefix contracts so parallel and
-  multi-robot experiments do not collide.
+- [x] **P2.5** Add namespaces and frame-prefix contracts so parallel and
+  multi-robot experiments do not collide. (NamespaceConfig, NamespaceManager, namespaces.py, LaunchFragment namespace support, CompositionBuilder namespace methods, CompositionResolver namespace resolution, adapter.py namespace parameters, test_namespaces.py with 7 tests passing)
 - [ ] **P2.6** Add `list`, `describe`, `validate`, `launch --dry-run`, and
   `doctor` commands.
 

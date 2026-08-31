@@ -147,15 +147,19 @@ class LegacyAdapter:
     
     def generate_legacy_launch_arguments(self, robot_id: str, environment_id: str,
                                          algo_ids: Dict[str, str],
-                                         scenario_id: Optional[str] = None) -> Dict[str, str]:
+                                         scenario_id: Optional[str] = None,
+                                         namespace: Optional[str] = None,
+                                         frame_prefix: Optional[str] = None) -> Dict[str, str]:
         """
-        Generate legacy launch arguments from robot_lab selections.
+        Generate legacy launch arguments from robot_lab selections (P2.5).
         
         Args:
             robot_id: Robot ID from registry
             environment_id: Environment ID from registry
             algo_ids: Dictionary of category -> algorithm ID
             scenario_id: Optional scenario ID
+            namespace: Optional namespace for multi-robot experiments
+            frame_prefix: Optional frame prefix for TF frames
         
         Returns:
             Dictionary of arguments for the legacy launch file
@@ -165,6 +169,12 @@ class LegacyAdapter:
         # Determine mode from algorithms if scenario not specified
         if not scenario_id or 'mode' not in config:
             config['mode'] = self.get_mode_from_algorithms(algo_ids)
+        
+        # Add namespace and frame_prefix if provided (P2.5)
+        if namespace:
+            config['namespace'] = namespace
+        if frame_prefix:
+            config['frame_prefix'] = frame_prefix.rstrip('/')
         
         return config
     
@@ -186,11 +196,13 @@ class LegacyAdapter:
 def create_bumperbot_adapter_launch(robot_id: str, environment_id: str,
                                      algo_ids: Dict[str, str],
                                      scenario_id: Optional[str] = None,
-                                     use_sim_time: bool = True):
+                                     use_sim_time: bool = True,
+                                     namespace: Optional[str] = None,
+                                     frame_prefix: Optional[str] = None):
     """
     Create a launch description that wraps bumperbot_bringup with robot_lab selections.
     
-    This is the P2.4 adapter implementation.
+    This is the P2.4/P2.5 adapter implementation with namespace support.
     
     Args:
         robot_id: Robot ID from registry
@@ -198,15 +210,17 @@ def create_bumperbot_adapter_launch(robot_id: str, environment_id: str,
         algo_ids: Dictionary of category -> algorithm ID
         scenario_id: Optional scenario ID
         use_sim_time: Whether to use simulation time
+        namespace: Optional namespace for multi-robot experiments (P2.5)
+        frame_prefix: Optional frame prefix for TF frames (P2.5)
     
     Returns:
         LaunchDescription that includes the legacy launch with mapped arguments
     """
     adapter = LegacyAdapter()
     
-    # Get legacy configuration
+    # Get legacy configuration with namespace support (P2.5)
     legacy_args = adapter.generate_legacy_launch_arguments(
-        robot_id, environment_id, algo_ids, scenario_id
+        robot_id, environment_id, algo_ids, scenario_id, namespace, frame_prefix
     )
     
     # Convert to launch arguments
@@ -282,6 +296,10 @@ def generate_adapter_launch_description():
             if algo_id:
                 algo_ids[cat] = algo_id
         
+        # Get namespace and frame_prefix (P2.5)
+        namespace = LaunchConfiguration('namespace').perform(context)
+        frame_prefix = LaunchConfiguration('frame_prefix').perform(context)
+        
         # Use the adapter to create the legacy launch
         adapter = LegacyAdapter()
         legacy_launch_path = adapter.get_legacy_launch_file(robot_id)
@@ -289,9 +307,9 @@ def generate_adapter_launch_description():
         if not legacy_launch_path:
             return [LogInfo(msg=f'No legacy launch file for robot {robot_id}')]
         
-        # Generate legacy arguments
+        # Generate legacy arguments with namespace support (P2.5)
         legacy_args = adapter.generate_legacy_launch_arguments(
-            robot_id, environment_id, algo_ids, scenario_id
+            robot_id, environment_id, algo_ids, scenario_id, namespace, frame_prefix
         )
         
         # Add use_sim_time from argument
@@ -353,6 +371,11 @@ def generate_adapter_launch_description():
                               description='Local planning algorithm ID'),
         DeclareLaunchArgument('control', default_value='',
                               description='Control algorithm ID'),
+        # Namespace and frame prefix support (P2.5)
+        DeclareLaunchArgument('namespace', default_value='',
+                              description='Namespace for multi-robot experiments'),
+        DeclareLaunchArgument('frame_prefix', default_value='',
+                              description='Frame prefix for TF frames'),
     ]
     
     return LaunchDescription([

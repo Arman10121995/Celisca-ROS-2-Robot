@@ -63,7 +63,7 @@ tasks:
       P2.2: {state: done, owner: root, evidence: [PerceptionSelector, LocalizationSelector, StateEstimationSelector, SensorFusionSelector, GlobalPlanningSelector, LocalPlanningSelector, ControlSelector]}
       P2.3: {state: done, owner: root, evidence: [launch_fragments.py: LaunchFragment, ParameterOverlay, LaunchFragmentRegistry, CompositionResolver with topic compatibility and conflict detection, 8 tests passing]}
       P2.4: {state: done, owner: root, evidence: [adapter.py with LegacyAdapter class, robot_adapter.launch.py wrapper, test/test_adapter.py with 3 tests passing]}
-      P2.5: {state: queued, owner: null, evidence: []}
+      P2.5: {state: done, owner: root, evidence: [namespaces.py with NamespaceConfig/NamespaceManager classes, LaunchFragment with namespace/frame_prefix fields and methods, CompositionBuilder with namespace/frame_prefix support, CompositionResolver with namespace-aware resolution, adapter.py with namespace parameters, test_namespaces.py with 7 tests passing]}
       P2.6: {state: queued, owner: null, evidence: []}
   P3: {title: robot_integrations, state: queued, owner: null}
   P4: {title: environment_expansion, state: queued, owner: null}

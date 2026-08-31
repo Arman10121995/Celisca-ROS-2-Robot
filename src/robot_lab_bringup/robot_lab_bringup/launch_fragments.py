@@ -27,6 +27,7 @@ from .selectors import (
     ControlSelector,
     CompositionBuilder
 )
+from .namespaces import NamespaceConfig, NamespaceManager, get_default_namespace_for_robot, get_default_frame_prefix
 
 
 @dataclass
@@ -61,6 +62,114 @@ class LaunchFragment:
     # Robot compatibility
     supported_robots: List[str] = field(default_factory=list)  # Empty means all
     unsupported_robots: List[str] = field(default_factory=list)  # Empty means all
+    
+    # Namespace and frame prefix support (P2.5)
+    # When set, this fragment will be launched in the specified namespace
+    namespace: Optional[str] = None
+    # Frame prefix for TF frames published by this fragment
+    frame_prefix: Optional[str] = None
+    # Whether to use robot's default namespace
+    use_robot_namespace: bool = True
+    # Whether to apply namespace to all topics
+    apply_namespace_to_topics: bool = True
+    # Whether to apply frame prefix to all frames
+    apply_frame_prefix: bool = True
+    
+    def get_namespaced_params(self, robot_namespace: str, 
+                              robot_frame_prefix: str = "") -> Dict[str, Any]:
+        """
+        Get parameters with namespace and frame prefix applied (P2.5).
+        
+        Args:
+            robot_namespace: The namespace for the robot
+            robot_frame_prefix: The frame prefix for the robot
+        
+        Returns:
+            Dictionary of parameters with namespaced values
+        """
+        from .namespaces import NamespaceConfig, apply_namespace_to_dict
+        
+        # Determine the effective namespace and frame prefix
+        if self.namespace:
+            effective_namespace = self.namespace
+        elif self.use_robot_namespace:
+            effective_namespace = robot_namespace
+        else:
+            effective_namespace = ""
+        
+        if self.frame_prefix:
+            effective_frame_prefix = self.frame_prefix
+        elif self.apply_frame_prefix and robot_frame_prefix:
+            effective_frame_prefix = robot_frame_prefix
+        else:
+            effective_frame_prefix = ""
+        
+        # Create a namespace config for this fragment
+        ns_config = NamespaceConfig(
+            name=effective_namespace,
+            frame_prefix=effective_frame_prefix
+        )
+        
+        # Apply namespace to all parameters
+        params = self.default_params.copy()
+        
+        # Apply namespace transformation to parameter values
+        namespaced_params = apply_namespace_to_dict(
+            params, 
+            effective_namespace,
+            None  # Don't use manager, we have our own config
+        )
+        
+        # Also apply to param_overlays
+        namespaced_overlays = {}
+        for overlay_name, overlay_params in self.param_overlays.items():
+            namespaced_overlays[overlay_name] = apply_namespace_to_dict(
+                overlay_params,
+                effective_namespace,
+                None
+            )
+        
+        # Add namespace-specific parameters to the result (not to the transformed params)
+        result = {
+            'default_params': namespaced_params,
+            'param_overlays': namespaced_overlays,
+            'namespace': effective_namespace,
+            'frame_prefix': effective_frame_prefix.rstrip('/') if effective_frame_prefix else ''
+        }
+        
+        return result
+    
+    def get_namespaced_topics(self, robot_namespace: str) -> List[str]:
+        """
+        Get provided topics with namespace applied (P2.5).
+        
+        Args:
+            robot_namespace: The namespace for the robot
+        
+        Returns:
+            List of namespaced topic names
+        """
+        if not self.apply_namespace_to_topics:
+            return self.provided_topics
+        
+        ns_config = NamespaceConfig(name=robot_namespace)
+        return [ns_config.get_topic(topic) for topic in self.provided_topics]
+    
+    def get_namespaced_required_topics(self, robot_namespace: str) -> List[str]:
+        """
+        Get required topics with namespace applied (P2.5).
+        
+        Args:
+            robot_namespace: The namespace for the robot
+        
+        Returns:
+            List of namespaced topic names
+        """
+        if not self.apply_namespace_to_topics:
+            return self.required_topics
+        
+        ns_config = NamespaceConfig(name=robot_namespace)
+        return [ns_config.get_topic(topic) for topic in self.required_topics]
 
 
 @dataclass
@@ -334,16 +443,29 @@ class CompositionResolver:
             - parameters: Combined parameters with overlays applied
             - warnings: List of warning messages
             - errors: List of error messages
+            - namespace: The namespace for this composition (P2.5)
+            - frame_prefix: The frame prefix for this composition (P2.5)
         """
         result = {
             'fragments': [],
             'parameters': {},
             'warnings': [],
-            'errors': []
+            'errors': [],
+            'namespace': '',
+            'frame_prefix': '',
+            'fragment_configs': {}  # Per-fragment namespace/params (P2.5)
         }
         
         # Get the composition
         comp = composition.build()
+        
+        # Get namespace and frame prefix from composition (P2.5)
+        namespace = getattr(comp, 'namespace', '')
+        frame_prefix = getattr(comp, 'frame_prefix', '')
+        enable_namespace = getattr(comp, 'enable_namespace', True)
+        
+        result['namespace'] = namespace
+        result['frame_prefix'] = frame_prefix
         
         # Validate robot
         robot_id = comp.robot_id
@@ -360,11 +482,33 @@ class CompositionResolver:
         
         result['fragments'].append(robot_fragment_id)
         
-        # Add robot-specific parameters
+        # Get robot fragment for namespace configuration
+        robot_fragment = self.fragment_registry.get_fragment(robot_fragment_id)
+        
+        # Add robot-specific parameters with namespace applied (P2.5)
         robot_overlay_name = f'{robot_id}_defaults'
         robot_overlay = self.fragment_registry._overlays.get(robot_overlay_name)
         if robot_overlay:
-            result['parameters'].update(robot_overlay.parameters)
+            # Apply namespace to overlay parameters
+            if enable_namespace and namespace:
+                from .namespaces import apply_namespace_to_dict, NamespaceConfig
+                ns_config = NamespaceConfig(name=namespace, frame_prefix=frame_prefix)
+                overlay_params = {}
+                for key, value in robot_overlay.parameters.items():
+                    if isinstance(value, str):
+                        # Apply namespace transformation
+                        if any(p in key.lower() for p in ['topic', 'frame', 'tf', 'cmd', 'scan', 'odom']):
+                            if 'frame' in key.lower() or 'tf' in key.lower():
+                                overlay_params[key] = ns_config.get_frame(value)
+                            else:
+                                overlay_params[key] = ns_config.get_topic(value)
+                        else:
+                            overlay_params[key] = value
+                    else:
+                        overlay_params[key] = value
+                result['parameters'].update(overlay_params)
+            else:
+                result['parameters'].update(robot_overlay.parameters)
         
         # Add environment-specific parameters
         env_id = comp.environment_id
@@ -381,6 +525,13 @@ class CompositionResolver:
         result['parameters']['simulator'] = simulator
         result['parameters']['use_sim_time'] = True
         
+        # Add namespace parameters (P2.5)
+        if enable_namespace:
+            if namespace:
+                result['parameters']['namespace'] = namespace
+            if frame_prefix:
+                result['parameters']['frame_prefix'] = frame_prefix.rstrip('/')
+        
         # Process algorithms
         for category, algo_id in comp.algorithm_ids.items():
             if algo_id:
@@ -388,20 +539,58 @@ class CompositionResolver:
                 if fragment_id:
                     result['fragments'].append(fragment_id)
                     
-                    # Get fragment and add its default params
+                    # Get fragment and add its default params with namespace (P2.5)
                     fragment = self.fragment_registry.get_fragment(fragment_id)
                     if fragment:
-                        result['parameters'].update(fragment.default_params)
+                        # Store per-fragment namespace config
+                        fragment_namespace = fragment.namespace or namespace
+                        fragment_frame_prefix = fragment.frame_prefix or frame_prefix
                         
-                        # Check for required topics
+                        result['fragment_configs'][fragment_id] = {
+                            'namespace': fragment_namespace,
+                            'frame_prefix': fragment_frame_prefix,
+                            'use_robot_namespace': fragment.use_robot_namespace
+                        }
+                        
+                        # Apply namespace to fragment params
+                        if enable_namespace and (namespace or fragment_namespace):
+                            from .namespaces import apply_namespace_to_dict, NamespaceConfig
+                            effective_ns = fragment_namespace or namespace
+                            effective_frame = fragment_frame_prefix or frame_prefix
+                            ns_config = NamespaceConfig(name=effective_ns, frame_prefix=effective_frame)
+                            
+                            namespaced_params = {}
+                            for key, value in fragment.default_params.items():
+                                if isinstance(value, str):
+                                    if any(p in key.lower() for p in ['topic', 'cmd', 'scan', 'odom', 'imu', 'laser']):
+                                        namespaced_params[key] = ns_config.get_topic(value)
+                                    elif any(p in key.lower() for p in ['frame', 'tf', 'base_link']):
+                                        namespaced_params[key] = ns_config.get_frame(value)
+                                    else:
+                                        namespaced_params[key] = value
+                                else:
+                                    namespaced_params[key] = value
+                            result['parameters'].update(namespaced_params)
+                        else:
+                            result['parameters'].update(fragment.default_params)
+                        
+                        # Check for required topics with namespace (P2.5)
                         for req_topic in fragment.required_topics:
-                            # Check if any fragment provides this topic
+                            # Check if any fragment provides this topic (with namespace)
                             provides = False
                             for frag_id in result['fragments']:
                                 frag = self.fragment_registry.get_fragment(frag_id)
-                                if frag and req_topic in frag.provided_topics:
-                                    provides = True
-                                    break
+                                if frag:
+                                    # Check both original and namespaced topic names
+                                    if req_topic in frag.provided_topics:
+                                        provides = True
+                                        break
+                                    # Also check if namespaced version is provided
+                                    ns_config = NamespaceConfig(name=namespace)
+                                    namespaced_req = ns_config.get_topic(req_topic)
+                                    if namespaced_req in frag.get_namespaced_topics(namespace):
+                                        provides = True
+                                        break
                             
                             if not provides:
                                 result['warnings'].append(

@@ -247,6 +247,16 @@ class CompositionBuilder:
         self.simulator: Optional[str] = None
         self.scenario_id: Optional[str] = None
         self.algorithm_ids: Dict[str, str] = {}
+        
+        # Namespace and frame prefix support (P2.5)
+        # Namespace for this robot (defaults to robot_id if not set)
+        self.namespace: Optional[str] = None
+        # Frame prefix for TF frames (defaults to namespace + '/' if not set)
+        self.frame_prefix: Optional[str] = None
+        # Whether to use automatic namespace generation
+        self.auto_namespace: bool = True
+        # Enable/disable namespace isolation
+        self.enable_namespace: bool = True
     
     def set_robot(self, robot_id: str) -> 'CompositionBuilder':
         """Set the robot."""
@@ -301,15 +311,81 @@ class CompositionBuilder:
         """Set the control algorithm."""
         return self.set_algorithm('control', algo_id)
     
+    def set_namespace(self, namespace: str) -> 'CompositionBuilder':
+        """Set the namespace for this composition (P2.5)."""
+        self.namespace = namespace
+        self.auto_namespace = False
+        return self
+    
+    def set_frame_prefix(self, frame_prefix: str) -> 'CompositionBuilder':
+        """Set the frame prefix for this composition (P2.5)."""
+        self.frame_prefix = frame_prefix
+        return self
+    
+    def set_enable_namespace(self, enable: bool) -> 'CompositionBuilder':
+        """Enable or disable namespace isolation (P2.5)."""
+        self.enable_namespace = enable
+        return self
+    
+    def get_effective_namespace(self) -> str:
+        """
+        Get the effective namespace, generating one if needed (P2.5).
+        
+        Returns:
+            The namespace to use, or empty string if disabled.
+        """
+        from .namespaces import get_default_namespace_for_robot
+        
+        if not self.enable_namespace:
+            return ""
+        
+        if self.namespace:
+            return self.namespace
+        
+        if self.auto_namespace and self.robot_id:
+            return get_default_namespace_for_robot(self.robot_id)
+        
+        return ""
+    
+    def get_effective_frame_prefix(self) -> str:
+        """
+        Get the effective frame prefix, generating one if needed (P2.5).
+        
+        Returns:
+            The frame prefix to use, or empty string if disabled.
+        """
+        from .namespaces import get_default_frame_prefix
+        
+        if not self.enable_namespace:
+            return ""
+        
+        if self.frame_prefix:
+            return self.frame_prefix
+        
+        namespace = self.get_effective_namespace()
+        if namespace:
+            return get_default_frame_prefix(self.robot_id or namespace)
+        
+        return ""
+    
     def build(self) -> Composition:
         """Build the composition object."""
-        return Composition(
+        # Build base composition from registry
+        composition = Composition(
             robot_id=self.robot_id or '',
             environment_id=self.environment_id or '',
             simulator=self.simulator or '',
             scenario_id=self.scenario_id,
             algorithm_ids=self.algorithm_ids
         )
+        
+        # Add namespace and frame_prefix as attributes (P2.5)
+        # These are stored separately since Composition class is from robot_lab_registry
+        composition.namespace = self.get_effective_namespace()
+        composition.frame_prefix = self.get_effective_frame_prefix()
+        composition.enable_namespace = self.enable_namespace
+        
+        return composition
     
     def validate(self) -> Tuple[bool, List[str]]:
         """
