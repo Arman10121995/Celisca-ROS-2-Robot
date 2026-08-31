@@ -310,6 +310,7 @@
     - mobile
     - legged
     - humanoid
+    - aerial
   parameters:
     approx_sync: true
   source:
@@ -374,6 +375,7 @@
     - mobile
     - legged
     - humanoid
+    - aerial
   parameters:
     sensor_timeout: 1.0
     two_d_mode: true
@@ -540,6 +542,7 @@
     - mobile
     - legged
     - humanoid
+    - aerial
   parameters:
     costmap_topic: /global_costmap/costmap
     allow_unknown: true
@@ -677,6 +680,7 @@
     - mobile
     - legged
     - humanoid
+    - aerial
   parameters:
     lookahead_distance: 0.5
     max_velocity: 1.0

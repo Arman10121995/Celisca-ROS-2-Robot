@@ -488,7 +488,7 @@
     record_plots: false
   namespace: ""
   namespaced: false
-    source:
+  source:
     repository: "https://github.com/berkeley-automation/Humanoid-Benchmark"
     license: "BSD-3-Clause"
   tags:
@@ -512,7 +512,7 @@
   algorithm_ids:
     perception: camera_calibration
     localization: rtabmap_localization
-    state_estimation: robot_localization_ekf
+    state_estimation: ekf_localization_node
     sensor_fusion: imu_complementary_filter
     global_planning: a_star_planner
     local_planning: pure_pursuit

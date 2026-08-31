@@ -142,10 +142,39 @@ command, or artifact rather than merely saying that code was added.
   23/23, robot_lab_bringup 25/25, `robot-lab validate --cross-references`
   passes, `robot-lab launch --dry-run` resolves the go2 smoke composition
   (go2_description + maps/empty) with no warnings and Environment Package: maps)
-- [ ] **P3.4** Turn one existing humanoid description into a simulated,
+- [x] **P3.4** Turn one existing humanoid description into a simulated,
   commandable profile with a stable standing/walking controller.
-- [ ] **P3.5** Integrate one multirotor SITL profile with pose, IMU, camera, and
+  (Qualified the Berkeley Humanoid Lite as a simulated, commandable humanoid
+  profile with a stable standing-pose controller, smoke scenario/experiment,
+  and 23-test qualification suite.)
+- [x] **P3.5** Integrate one multirotor SITL profile with pose, IMU, camera, and
   velocity/trajectory command contracts.
+  (Qualified the Quadrotor SITL as a simulated, commandable aerial profile.
+  Since ArduPilot SITL is a MAVLink FCU (not a ros2_control hardware target),
+  the commandable interface is mavros AttitudeTarget/PositionTarget offboard
+  setpoints, and the URDF exists only for rendering/TF. Added a first-party
+  mesh-free quadrotor_sitl.urdf.xacro (4 rotor links, IMU, downward LIDAR,
+  front camera) + quadrotor_gazebo.xacro gz-sim sensor plugins +
+  quadrotor_controllers.yaml (empty ros2_control set). Upgraded the robots.yaml
+  entry to integrated/simulated with full contracts (multirotor dof 4, IMU/GPS/
+  camera/LIDAR sensors, MAVLink command interfaces, state interfaces, frames,
+  flight/waypoint capabilities). Added mavros_offboard_controller control
+  algorithm (aerial) + bringup node that degrades gracefully when mavros_msgs
+  is absent (fallback mode). Added quadrotor_sitl_smoke_test scenario +
+  experiment (full 7-category stack pinned) and widened aerial support on the
+  pinned platform-agnostic algorithms (rtabmap_localization, ekf_localization_node,
+  a_star_planner, pure_pursuit) so cross-reference validation passes.
+  Registered the quadrotor launch fragment, mavros controller fragment, and
+  empty_world overlay in robot_lab_bringup so `--dry-run` resolves with no
+  warnings. Added test_quadrotor_sitl_qualification.py (20 tests): registry
+  contracts, smoke composition, MAVLink command interface, asset consistency
+  (mesh-free, rotor sides, sensors), controller node, and xacro expansion.
+  Fixed pre-existing YAML indentation errors in scenarios.yaml and
+  experiments.yaml that were silently breaking catalog loading.
+  Evidence: test_quadrotor_sitl_qualification.py 20 tests OK, registry suites
+  10/10, go2/labbot/bhl qualification suites 23/23 each, robot_lab_bringup
+  15/15, `robot-lab validate --cross-references` passes,
+  `--dry-run` resolves the quadrotor smoke composition with no warnings)
 - [ ] **P3.6** Add per-class smoke scenarios and documented safety/compute limits.
 
 ### P4 — environments

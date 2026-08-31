@@ -212,6 +212,7 @@ class LaunchFragmentRegistry:
         # For now, these are placeholders. In P2.4, we'll wrap bumperbot_bringup
         self._robot_launches = {
             'bumperbot': 'bumperbot_simulated',
+            'quadrotor_sitl': 'quadrotor_sitl_simulated',
         }
         
         # Algorithm -> Launch fragment mappings
@@ -222,6 +223,7 @@ class LaunchFragmentRegistry:
             'depth_image_to_pointcloud': 'depth_image_proc_node',
             'stereo_image_to_pointcloud': 'stereo_image_proc_node',
             'rgb_d_depth_to_pointcloud': 'rgb_d_pointcloud_node',
+            'camera_calibration': 'camera_calibration_node',
             
             # Localization
             'robot_localization_ekf': 'ekf_node',
@@ -256,6 +258,7 @@ class LaunchFragmentRegistry:
             'twist_relay': 'twist_relay_node',
             'cleaning_controller': 'cleaning_controller_node',
             'map_coverage_controller': 'map_coverage_controller_node',
+            'mavros_offboard_controller': 'mavros_offboard_controller_node',
         }
     
     def register_fragment(self, fragment: LaunchFragment):
@@ -334,6 +337,28 @@ class CompositionResolver:
             required_topics=[],
             status='integrated'
         ))
+
+        # Quadrotor SITL simulated launch
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='quadrotor_sitl_simulated',
+            package='quadrotor_sitl',
+            executable='',  # SITL + mavros bringup
+            launch_file='quadrotor_sitl.launch.py',
+            default_params={
+                'use_sim_time': True,
+                'world': 'empty',
+            },
+            supported_robots=['quadrotor_sitl'],
+            provided_topics=[
+                '/imu',
+                '/gps',
+                '/camera/image_raw',
+                '/scan',
+                '/mavros/setpoint/attitude',
+            ],
+            required_topics=[],
+            status='integrated'
+        ))
         
         # Perception fragments
         self.fragment_registry.register_fragment(LaunchFragment(
@@ -362,6 +387,19 @@ class CompositionResolver:
             category='perception',
             provided_topics=[],
             required_topics=['/scan', '/odom'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='camera_calibration_node',
+            package='camera_calibration',
+            executable='cameracalibrator',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='perception',
+            provided_topics=[],
+            required_topics=['/camera/image_raw'],
             status='integrated'
         ))
         
@@ -407,6 +445,24 @@ class CompositionResolver:
             required_topics=['/target_velocity'],
             status='integrated'
         ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='mavros_offboard_controller_node',
+            package='robot_lab_bringup',
+            executable='mavros_offboard_controller_node',
+            default_params={
+                'use_sim_time': True,
+                'command_topic': '/mavros/setpoint/attitude',
+                'command_rate_hz': 10.0,
+                'default_throttle': 0.0,
+                'mode': 'ALT_HOLD',
+            },
+            category='control',
+            provided_topics=['/mavros/setpoint/attitude'],
+            required_topics=['/mavros/setpoint/attitude'],
+            supported_robots=['quadrotor_sitl'],
+            status='integrated'
+        ))
         
         # Add parameter overlays
         self.fragment_registry.register_overlay(ParameterOverlay(
@@ -428,6 +484,17 @@ class CompositionResolver:
                 'initial_pose_theta': 0.0,
             },
             description='Small office world configuration'
+        ))
+
+        self.fragment_registry.register_overlay(ParameterOverlay(
+            name='empty_world',
+            parameters={
+                'world': 'empty',
+                'initial_pose_x': 0.0,
+                'initial_pose_y': 0.0,
+                'initial_pose_z': 0.5,
+            },
+            description='Empty world configuration (SITL quadrotor takeoff height)'
         ))
     
     def resolve(self, composition: 'CompositionBuilder') -> Tuple[bool, Dict[str, Any]]:

@@ -45,17 +45,11 @@ class MavrosOffboardController(Node):
             reliability=ReliabilityPolicy.RELIABLE,
             history=HistoryPolicy.KEEP_LAST,
         )
-        self._command_pub = self.create_publisher(
-            _msg := (AttitudeTarget if _HAS_MAVROS else
-                     __import__('std_msgs').msg.Empty),
-            self._command_topic, 10,
-        ) if _HAS_MAVROS else None
-        if not _HAS_MAVROS:
-            self.get_logger().warn(
-                'mavros_msgs not available; mavros_offboard_controller running '
-                'in fallback mode (no MAVLink setpoints emitted).'
+        self._command_pub = None
+        if _HAS_MAVROS:
+            self._command_pub = self.create_publisher(
+                AttitudeTarget, self._command_topic, 10,
             )
-        else:
             self._timer = self.create_timer(
                 1.0 / self._command_rate, self._publish_command
             )
@@ -63,6 +57,11 @@ class MavrosOffboardController(Node):
                 f"MavrosOffboardController: -> {self._command_topic} "
                 f"at {self._command_rate} Hz, mode={self._mode}, "
                 f"throttle={self._throttle}"
+            )
+        else:
+            self.get_logger().warn(
+                'mavros_msgs not available; mavros_offboard_controller running '
+                'in fallback mode (no MAVLink setpoints emitted).'
             )
 
     def _publish_command(self):
