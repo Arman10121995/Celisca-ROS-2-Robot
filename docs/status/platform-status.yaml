@@ -31,6 +31,7 @@ baseline:
     - simulated, room-vacuum, and real launch argument expansion
     - robot_lab_registry package built and tested
     - robot_lab_registry validation passes with 19 robots, 15 environments, 27 algorithms
+    - test/test_registry.py: 10/10 tests passing (imports, schemas, catalog, validation, query, cross-references, capability checking, status counts, status distribution, robot-environment compatibility)
 
 tasks:
   P0:
@@ -46,7 +47,7 @@ tasks:
       P1.1: {state: done, owner: root, evidence: [robot_lab_registry package, schemas.py, catalog.py, validation.py, query.py, cli.py, config/*, test/test_registry.py]}
       P1.2: {state: done, owner: root, evidence: [19 robots cataloged in robots.yaml, 15 environments cataloged in environments.yaml, 27 algorithms cataloged in algorithms.yaml, validation passes with no duplicate IDs]}
       P1.3: {state: done, owner: root, evidence: [27 algorithms across 7 categories in algorithms.yaml]}
-      P1.4: {state: queued, owner: null, evidence: []}
+      P1.4: {state: done, owner: root, evidence: [test/test_registry.py extended with cross-reference, capability, status counts, status distribution, and robot-environment compatibility tests - all 10 tests passing]}
       P1.5: {state: done, owner: root, evidence: [ROADMAP.md, docs/architecture/overview.md]}
       P1.6: {state: queued, owner: null, evidence: []}
   P2: {title: unified_composition, state: queued, owner: null}

@@ -62,7 +62,7 @@ command, or artifact rather than merely saying that code was added.
   normalized catalog without removing the legacy YAML files. (19 robots, 15 environments)
 - [x] **P1.3** Catalog at least five candidates per required algorithm category,
   with honest maturity, dependencies, contracts, and applicability metadata. (27 algorithms)
-- [ ] **P1.4** Add cross-reference, capability, status, and minimum-count tests.
+- [x] **P1.4** Add cross-reference, capability, status, and minimum-count tests. (10 tests passing)
 - [x] **P1.5** Add repository architecture, status, and continuation documents.
 - [ ] **P1.6** Make CI validate both legacy profiles and the canonical registry.
 

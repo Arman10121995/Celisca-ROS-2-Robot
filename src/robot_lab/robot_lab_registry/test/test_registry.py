@@ -217,6 +217,212 @@ def test_query():
     return True
 
 
+def test_cross_references():
+    """Test cross-reference validation (P1.4)."""
+    print("\nTesting cross-references...")
+    
+    from robot_lab_registry.catalog import Registry
+    from robot_lab_registry.validation import validate_cross_references
+    
+    config_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'config'
+    )
+    
+    registry = Registry(config_dir)
+    if not registry.load(config_dir):
+        print("  - Failed to load registry")
+        return False
+    
+    # Validate cross-references
+    result = validate_cross_references(registry)
+    
+    if result.valid:
+        print("  - Cross-reference validation: OK")
+    else:
+        print(f"  - Cross-reference validation: FAILED")
+        for error in result.errors:
+            print(f"    - {error}")
+        for warning in result.warnings:
+            print(f"    - WARNING: {warning}")
+        return False
+    
+    return True
+
+
+def test_capability_checking():
+    """Test capability checking between robots and algorithms (P1.4)."""
+    print("\nTesting capability checking...")
+    
+    from robot_lab_registry.catalog import Registry
+    from robot_lab_registry.validation import check_capabilities
+    
+    config_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'config'
+    )
+    
+    registry = Registry(config_dir)
+    if not registry.load(config_dir):
+        print("  - Failed to load registry")
+        return False
+    
+    # Get some robots and algorithms to test
+    robots = registry.robots.get_all()
+    algorithms = registry.algorithms.get_all()
+    
+    if not robots or not algorithms:
+        print("  - No robots or algorithms found")
+        return False
+    
+    # Test a few robot-algorithm pairs
+    test_pairs = [
+        ('bumperbot', 'costmap_2d_observation'),
+        ('bumperbot', 'amcl'),
+        ('a1', 'costmap_2d_observation'),
+    ]
+    
+    for robot_id, algo_id in test_pairs:
+        robot = robots.get(robot_id)
+        algorithm = algorithms.get(algo_id)
+        
+        if robot and algorithm:
+            result = check_capabilities(robot, algorithm)
+            if result.valid:
+                print(f"  - {robot_id} + {algo_id}: OK")
+            else:
+                print(f"  - {robot_id} + {algo_id}: Capability check issues - {result.errors}")
+        else:
+            print(f"  - {robot_id} or {algo_id}: Not found")
+    
+    return True
+
+
+def test_status_counts():
+    """Test minimum count requirements for each category (P1.4)."""
+    print("\nTesting status counts...")
+    
+    from robot_lab_registry.catalog import Registry
+    from robot_lab_registry.query import get_summary
+    
+    config_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'config'
+    )
+    
+    registry = Registry(config_dir)
+    if not registry.load(config_dir):
+        print("  - Failed to load registry")
+        return False
+    
+    summary = get_summary(config_dir)
+    
+    # Define minimum counts for each category
+    minimums = {
+        'total_robots': 5,
+        'total_environments': 5,
+        'total_algorithms': 5,
+    }
+    
+    # Check each category
+    all_passed = True
+    for category, minimum in minimums.items():
+        count = summary.get(category, 0)
+        if count >= minimum:
+            print(f"  - {category}: {count} >= {minimum} OK")
+        else:
+            print(f"  - {category}: {count} < {minimum} FAILED")
+            all_passed = False
+    
+    # Check algorithm categories have at least 5 total
+    algo_categories = summary.get('by_category', {})
+    total_algorithms = sum(algo_categories.values())
+    print(f"  - Total algorithms across all categories: {total_algorithms}")
+    
+    # Check for each algorithm category
+    required_categories = ['perception', 'localization', 'state_estimation', 
+                         'sensor_fusion', 'global_planning', 'local_planning', 'control']
+    for cat in required_categories:
+        count = algo_categories.get(cat, 0)
+        print(f"  - {cat}: {count} algorithms")
+    
+    return all_passed
+
+
+def test_status_distribution():
+    """Test status distribution across entities (P1.4)."""
+    print("\nTesting status distribution...")
+    
+    from robot_lab_registry.catalog import Registry
+    from robot_lab_registry.query import get_status_counts
+    
+    config_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'config'
+    )
+    
+    # Get status counts
+    counts = get_status_counts(config_dir)
+    
+    # Print counts for each entity type
+    for entity_type, status_dict in counts.items():
+        print(f"  - {entity_type}:")
+        for status, count in status_dict.items():
+            print(f"    - {status}: {count}")
+    
+    return True
+
+
+def test_robot_environment_compatibility():
+    """Test robot-environment compatibility checking (P1.4)."""
+    print("\nTesting robot-environment compatibility...")
+    
+    from robot_lab_registry.catalog import Registry
+    from robot_lab_registry.validation import check_robot_environment_compatibility
+    
+    config_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'config'
+    )
+    
+    registry = Registry(config_dir)
+    if not registry.load(config_dir):
+        print("  - Failed to load registry")
+        return False
+    
+    # Test a few robot-environment pairs
+    test_pairs = [
+        ('bumperbot', 'small_office'),
+        ('bumperbot', 'small_warehouse'),
+        ('a1', 'small_office'),
+        ('berkeley_humanoid_lite', 'outdoor_terrain'),  # 3D environment supports humanoid
+    ]
+    
+    all_valid = True
+    for robot_id, env_id in test_pairs:
+        robot = registry.robots.get(robot_id)
+        environment = registry.environments.get(env_id)
+        
+        if robot and environment:
+            result = check_robot_environment_compatibility(robot, environment)
+            if result.valid:
+                print(f"  - {robot_id} in {env_id}: OK")
+            else:
+                print(f"  - {robot_id} in {env_id}: FAILED")
+                if result.errors:
+                    for error in result.errors:
+                        print(f"    - ERROR: {error}")
+                if result.warnings:
+                    for warning in result.warnings:
+                        print(f"    - WARNING: {warning}")
+                all_valid = False
+        else:
+            print(f"  - {robot_id} or {env_id}: Not found")
+            all_valid = False
+    
+    return all_valid
+
+
 def main():
     """Run all tests."""
     print("=" * 60)
@@ -228,7 +434,13 @@ def main():
         test_schemas,
         test_catalog,
         test_validation,
-        test_query
+        test_query,
+        # P1.4 tests
+        test_cross_references,
+        test_capability_checking,
+        test_status_counts,
+        test_status_distribution,
+        test_robot_environment_compatibility,
     ]
     
     results = []
