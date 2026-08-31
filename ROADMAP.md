@@ -68,10 +68,10 @@ command, or artifact rather than merely saying that code was added.
 
 ### P2 — unified composition
 
-- [ ] **P2.1** Introduce `robot_lab_bringup` with selectors for robot,
-  environment, simulator, and scenario.
-- [ ] **P2.2** Add independent selectors for perception, localization, state
-  estimation, global planning, local planning, and control.
+- [x] **P2.1** Introduce `robot_lab_bringup` with selectors for robot,
+  environment, simulator, and scenario. (RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector)
+- [x] **P2.2** Add independent selectors for perception, localization, state
+  estimation, global planning, local planning, and control. (7 algorithm selectors + CompositionBuilder)
 - [ ] **P2.3** Resolve selectors into launch fragments and parameter overlays;
   reject invalid combinations before processes start.
 - [ ] **P2.4** Wrap `bumperbot_bringup/simulated_robot.launch.py` as the first

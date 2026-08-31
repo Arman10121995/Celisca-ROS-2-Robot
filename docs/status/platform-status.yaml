@@ -51,7 +51,17 @@ tasks:
       P1.4: {state: done, owner: root, evidence: [test/test_registry.py extended with cross-reference, capability, status counts, status distribution, and robot-environment compatibility tests - all 10 tests passing]}
       P1.5: {state: done, owner: root, evidence: [ROADMAP.md, docs/architecture/overview.md]}
       P1.6: {state: done, owner: root, evidence: [.github/workflows/ci.yml updated with robot-lab validate and test_registry.py steps to validate both legacy profiles and canonical registry on every push/PR]}
-  P2: {title: unified_composition, state: queued, owner: null}
+  P2:
+    title: unified_composition
+    state: active
+    owner: root
+    tasks:
+      P2.1: {state: done, owner: root, evidence: [robot_lab_bringup package, RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector]}
+      P2.2: {state: done, owner: root, evidence: [PerceptionSelector, LocalizationSelector, StateEstimationSelector, SensorFusionSelector, GlobalPlanningSelector, LocalPlanningSelector, ControlSelector]}
+      P2.3: {state: queued, owner: null, evidence: []}
+      P2.4: {state: queued, owner: null, evidence: []}
+      P2.5: {state: queued, owner: null, evidence: []}
+      P2.6: {state: queued, owner: null, evidence: []}
   P3: {title: robot_integrations, state: queued, owner: null}
   P4: {title: environment_expansion, state: queued, owner: null}
   P5: {title: algorithm_breadth, state: queued, owner: null}
@@ -67,5 +77,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P2.1
-  instructions: Read ROADMAP.md and docs/architecture/overview.md, P1 is now complete with normalized registry. Next: introduce robot_lab_bringup with selectors for robot, environment, simulator, and scenario.
+  next_task: P2.3
+  instructions: Read ROADMAP.md and docs/architecture/overview.md. P1 and P2.1/P2.2 are complete. Next: resolve selectors into launch fragments and parameter overlays (P2.3).
