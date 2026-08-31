@@ -548,3 +548,192 @@
     - qualification
   created: "2026-09-05"
   updated: "2026-09-05"
+
+- id: mobile_class_smoke
+  version: "1.0.0"
+  name: "Mobile Class Smoke"
+  description: "Reference mobile-class smoke composition (Bumperbot in small_office) exercising the generic mobile_class_smoke scenario"
+  status: integrated
+  robot_id: bumperbot
+  environment_id: small_office
+  simulator: gazebo
+  scenario_id: mobile_class_smoke
+  algorithm_ids:
+    perception: depth_image_to_pointcloud
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: teb_local_planner
+    control: simple_controller
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    simple_controller:
+      command_rate_hz: 20.0
+      max_velocity: 1.0
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - class_smoke
+    - smoke_test
+    - mobile
+    - validation
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: legged_class_smoke
+  version: "1.0.0"
+  name: "Legged Class Smoke"
+  description: "Reference legged-class smoke composition (Unitree Go2 in empty) exercising the generic legged_class_smoke scenario"
+  status: integrated
+  robot_id: go2
+  environment_id: empty
+  simulator: gazebo
+  scenario_id: legged_class_smoke
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: joint_effort_commander
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    joint_effort_commander:
+      command_rate_hz: 100.0
+      default_effort: 0.0
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_go2"
+    license: "MIT"
+  tags:
+    - class_smoke
+    - smoke_test
+    - legged
+    - validation
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: humanoid_class_smoke
+  version: "1.0.0"
+  name: "Humanoid Class Smoke"
+  description: "Reference humanoid-class smoke composition (BHL in empty) exercising the generic humanoid_class_smoke scenario"
+  status: integrated
+  robot_id: berkeley_humanoid_lite
+  environment_id: empty
+  simulator: gazebo
+  scenario_id: humanoid_class_smoke
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: humanoid_standing_controller
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    humanoid_standing_controller:
+      command_rate_hz: 50.0
+      default_num_joints: 22
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/berkeley-automation/Humanoid-Benchmark"
+    license: "BSD-3-Clause"
+  tags:
+    - class_smoke
+    - smoke_test
+    - humanoid
+    - validation
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: aerial_class_smoke
+  version: "1.0.0"
+  name: "Aerial Class Smoke"
+  description: "Reference aerial-class smoke composition (Quadrotor SITL in empty) exercising the generic aerial_class_smoke scenario"
+  status: integrated
+  robot_id: quadrotor_sitl
+  environment_id: empty
+  simulator: gazebo
+  scenario_id: aerial_class_smoke
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: mavros_offboard_controller
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    mavros_offboard_controller:
+      throttle: 0.0
+      mode: "ALT_HOLD"
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/ArduPilot/ardupilot"
+    license: "GPL-3.0"
+  tags:
+    - class_smoke
+    - smoke_test
+    - aerial
+    - validation
+  created: "2026-09-05"
+  updated: "2026-09-05"
+

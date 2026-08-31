@@ -90,12 +90,26 @@
       - robots/bumperbot/meshes/wheel_right_link.STL
   smoke_experiments:
     - bumperbot_smoke_test
+  safety_limits:
+    max_velocity: 1.0
+    max_acceleration: 2.0
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.15
+    collision_stop_time_s: 0.5
+    max_tilt_rad: 0.0
+    restricted_modes:
+      - manual_high_velocity
+  compute_limits:
+    cpu_cores: 2
+    memory_mb: 768
+    min_real_time_factor: 0.5
+    notes: "LIDAR (10 Hz) + IMU + odometry stack; single-controller nav on Humble/arm64"
   tags:
     - reference
     - differential
     - 2D
   created: "2026-01-01"
-  updated: "2026-08-31"
+  updated: "2026-09-05"
 
 - id: assem12ros_29
   version: "1.0.0"
@@ -300,6 +314,21 @@
     xacro: robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro
   smoke_experiments:
     - berkeley_humanoid_lite_smoke_test
+  safety_limits:
+    max_velocity: 2.0
+    max_acceleration: 3.0
+    command_rate_hz: 50.0
+    obstacle_clearance_m: 0.5
+    collision_stop_time_s: 0.3
+    max_tilt_rad: 0.35
+    restricted_modes:
+      - high_speed_bipedal_travel
+      - dynamic_manipulation
+  compute_limits:
+    cpu_cores: 4
+    memory_mb: 1536
+    min_real_time_factor: 0.5
+    notes: "22 position-controlled joints at up to 100 Hz via ros2_control; balancing controller is compute-sensitive"
   tags:
     - imported
     - humanoid
@@ -716,6 +745,21 @@
     xacro: robots/unitree/go2_description/xacro/go2_ros2_control.xacro
   smoke_experiments:
     - go2_smoke_test
+  safety_limits:
+    max_velocity: 3.0
+    max_acceleration: 5.0
+    command_rate_hz: 50.0
+    obstacle_clearance_m: 0.3
+    collision_stop_time_s: 0.3
+    max_tilt_rad: 0.5
+    restricted_modes:
+      - high_g_acceleration_bounds
+      - untrained_terrain
+  compute_limits:
+    cpu_cores: 4
+    memory_mb: 1536
+    min_real_time_factor: 0.5
+    notes: "12 effort-commandable leg joints at up to 100 Hz; gait controller is compute-sensitive"
   tags:
     - imported
     - quadruped
@@ -1070,6 +1114,21 @@
     meshes: []
   smoke_experiments:
     - quadrotor_sitl_smoke_test
+  safety_limits:
+    max_velocity: 10.0
+    max_acceleration: 15.0
+    command_rate_hz: 50.0
+    obstacle_clearance_m: 1.0
+    collision_stop_time_s: 0.2
+    max_tilt_rad: 0.785
+    restricted_modes:
+      - manual_without_geofence
+      - low_battery_autorotate
+  compute_limits:
+    cpu_cores: 2
+    memory_mb: 1024
+    min_real_time_factor: 0.5
+    notes: "ArduPilot SITL + gz-sim IMU/LIDAR/camera; MAVLink bridge adds latency ~10 ms; SITL is single-threaded per vehicle"
   tags:
     - integrated
     - multirotor
@@ -1152,6 +1211,20 @@
     meshes: []
   smoke_experiments:
     - labbot_smoke_test
+  safety_limits:
+    max_velocity: 0.8
+    max_acceleration: 1.5
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.15
+    collision_stop_time_s: 0.5
+    max_tilt_rad: 0.0
+    restricted_modes:
+      - manual_high_velocity
+  compute_limits:
+    cpu_cores: 2
+    memory_mb: 768
+    min_real_time_factor: 0.5
+    notes: "LIDAR + IMU + odometry stack; primitive geometry keeps load low"
   tags:
     - first-party
     - differential

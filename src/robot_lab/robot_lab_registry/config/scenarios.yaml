@@ -625,3 +625,179 @@
     - ardupilot
   created: "2026-09-05"
   updated: "2026-09-05"
+
+# ============================================================================
+# Per-class smoke scenarios (P3.6): generic scenarios reusable across every
+# robot of a given class, independent of the robot-specific smoke test.
+# ============================================================================
+
+- id: mobile_class_smoke
+  version: "1.0.0"
+  name: "Mobile Class Smoke Test"
+  description: "Generic smoke scenario for any mobile (differential/wheeled) robot: launch, sensor/odometry topic contracts, twist command acceptance, and TF"
+  status: integrated
+  task_type: smoke_test
+  task_description: "Verify a mobile robot launches, publishes LIDAR/IMU/odometry, and accepts geometry_msgs/Twist commands"
+  stopping_conditions:
+    - type: success
+      condition: "smoke_test_passed"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Gazebo spawns without errors"
+    - "LIDAR published on /scan"
+    - "IMU published on /imu"
+    - "Odometry published on /odom"
+    - "TF frames available"
+    - "Accepts Twist drive commands"
+    - "No launch errors or warnings"
+  failure_criteria:
+    - "Launch timeout"
+    - "Missing required topics"
+    - "TF frames not found"
+    - "Robot not spawned in Gazebo"
+  required_robot_classes:
+    - mobile
+  required_capabilities:
+    - navigation
+    - control
+  timeout: 30.0
+  metrics:
+    - launch_success
+    - topics_published
+    - tf_frames_available
+    - command_acceptance
+  tags:
+    - smoke_test
+    - validation
+    - class_smoke
+    - mobile
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: legged_class_smoke
+  version: "1.0.0"
+  name: "Legged Class Smoke Test"
+  description: "Generic smoke scenario for any legged robot: launch, IMU/joint-state topics, joint effort/position command acceptance, and TF"
+  status: integrated
+  task_type: smoke_test
+  task_description: "Verify a legged robot launches, publishes IMU and joint states, and accepts group joint effort commands"
+  stopping_conditions:
+    - type: success
+      condition: "smoke_test_passed"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Gazebo spawns without errors"
+    - "IMU published on /imu"
+    - "Joint states published on /joint_states"
+    - "TF frames available"
+    - "Accepts group joint effort commands"
+    - "No launch errors or warnings"
+  failure_criteria:
+    - "Launch timeout"
+    - "Missing required topics"
+    - "TF frames not found"
+    - "Robot not spawned in Gazebo"
+  required_robot_classes:
+    - legged
+  required_capabilities:
+    - locomotion
+  timeout: 30.0
+  metrics:
+    - launch_success
+    - topics_published
+    - tf_frames_available
+    - command_acceptance
+  tags:
+    - smoke_test
+    - validation
+    - class_smoke
+    - legged
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: humanoid_class_smoke
+  version: "1.0.0"
+  name: "Humanoid Class Smoke Test"
+  description: "Generic smoke scenario for any humanoid robot: launch, IMU/joint-state topics, standing-pose command acceptance, and TF"
+  status: integrated
+  task_type: smoke_test
+  task_description: "Verify a humanoid robot launches, publishes IMU and joint states, and accepts standing-pose position commands"
+  stopping_conditions:
+    - type: success
+      condition: "smoke_test_passed"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Gazebo spawns without errors"
+    - "IMU published on /imu"
+    - "Joint states published on /joint_states"
+    - "TF frames available"
+    - "Accepts standing-pose position commands"
+    - "No launch errors or warnings"
+  failure_criteria:
+    - "Launch timeout"
+    - "Missing required topics"
+    - "TF frames not found"
+    - "Robot not spawned in Gazebo"
+  required_robot_classes:
+    - humanoid
+  required_capabilities:
+    - standing
+  timeout: 30.0
+  metrics:
+    - launch_success
+    - topics_published
+    - tf_frames_available
+    - command_acceptance
+  tags:
+    - smoke_test
+    - validation
+    - class_smoke
+    - humanoid
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: aerial_class_smoke
+  version: "1.0.0"
+  name: "Aerial Class Smoke Test"
+  description: "Generic smoke scenario for any aerial robot: launch, IMU/GPS sensor topics, MAVLink AttitudeTarget command acceptance, and TF"
+  status: integrated
+  task_type: smoke_test
+  task_description: "Verify an aerial robot launches, publishes IMU and GPS, and accepts MAVLink AttitudeTarget commands"
+  stopping_conditions:
+    - type: success
+      condition: "smoke_test_passed"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Gazebo spawns without errors"
+    - "IMU published on /imu"
+    - "GPS published on /gps"
+    - "TF frames available"
+    - "Accepts AttitudeTarget commands"
+    - "No launch errors or warnings"
+  failure_criteria:
+    - "Launch timeout"
+    - "Missing required topics"
+    - "TF frames not found"
+    - "Robot not spawned in Gazebo"
+  required_robot_classes:
+    - aerial
+  required_capabilities:
+    - flight
+  timeout: 30.0
+  metrics:
+    - launch_success
+    - topics_published
+    - tf_frames_available
+    - command_acceptance
+  tags:
+    - smoke_test
+    - validation
+    - class_smoke
+    - aerial
+  created: "2026-09-05"
+  updated: "2026-09-05"
+

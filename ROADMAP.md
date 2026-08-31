@@ -26,7 +26,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
-| P3 — robot integrations | P3.1, P3.2, P3.3 done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap) |
+| P3 — robot integrations | done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap); Berkeley Humanoid Lite qualified as simulated commandable humanoid profile (22 position-commandable joints, trunk IMU, estimated odometry, standing-pose command contract, bhl qualification suite); Quadrotor SITL qualified as simulated commandable aerial profile (MAVLink AttitudeTarget/PositionTarget bridge, mesh-free URDF for rendering/TF, mavros_offboard_controller with graceful degradation, quadrotor qualification suite); per-class smoke scenarios (mobile/legged/humanoid/aerial) plus documented safety/compute limits on all five integrated robots (P3.6, test_p3_6_safety_limits.py 12/12) |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
@@ -175,7 +175,18 @@ command, or artifact rather than merely saying that code was added.
   10/10, go2/labbot/bhl qualification suites 23/23 each, robot_lab_bringup
   15/15, `robot-lab validate --cross-references` passes,
   `--dry-run` resolves the quadrotor smoke composition with no warnings)
-- [ ] **P3.6** Add per-class smoke scenarios and documented safety/compute limits.
+- [x] **P3.6** Add per-class smoke scenarios and documented safety/compute
+  limits. Added generic `<class>_class_smoke` scenarios (mobile, legged,
+  humanoid, aerial) independent of any single robot, plus corresponding
+  `<class>_class_smoke` experiments pinned to each class's reference robot
+  (bumperbot, go2, berkeley_humanoid_lite, quadrotor_sitl). Added documented
+  `safety_limits` (velocity/accel caps, command rate, obstacle clearance,
+  collision-stop time, max tilt, restricted modes) and `compute_limits`
+  (cpu_cores, memory_mb, min real-time factor, notes) blocks to all five
+  integrated robots. Evidence: test_p3_6_safety_limits.py 12/12 tests OK,
+  full registry pytest 138 passed / 1 skipped, registry suite 10/10,
+  `robot-lab validate --cross-references` passes, all YAML catalogs load
+  cleanly.
 
 ### P4 — environments
 
