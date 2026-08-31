@@ -56,14 +56,14 @@ command, or artifact rather than merely saying that code was added.
 
 ### P1 — platform foundation
 
-- [ ] **P1.1 (active)** Add the versioned `robot_lab_registry` package and
+- [x] **P1.1** Add the versioned `robot_lab_registry` package and
   validation/query CLI.
 - [ ] **P1.2** Import the existing robot and environment profiles into the
   normalized catalog without removing the legacy YAML files.
-- [ ] **P1.3** Catalog at least five candidates per required algorithm category,
+- [x] **P1.3** Catalog at least five candidates per required algorithm category,
   with honest maturity, dependencies, contracts, and applicability metadata.
 - [ ] **P1.4** Add cross-reference, capability, status, and minimum-count tests.
-- [ ] **P1.5** Add repository architecture, status, and continuation documents.
+- [x] **P1.5** Add repository architecture, status, and continuation documents.
 - [ ] **P1.6** Make CI validate both legacy profiles and the canonical registry.
 
 ### P2 — unified composition

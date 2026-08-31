@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robot_lab_registry</name>
+  <version>0.1.0</version>
+  <description>
+    Robot Lab Registry: canonical catalogs, schemas, and validation CLI for the 
+    unified multi-robot simulation and benchmarking platform.
+  </description>
+  
+  <maintainer email="vibe@mistral.ai">Mistral Vibe</maintainer>
+  <license>Apache-2.0</license>
+  
+  <url type="website">https://github.com/ros2/robot_lab</url>
+  <url type="repository">https://github.com/ros2/robot_lab.git</url>
+  <url type="bugtracker">https://github.com/ros2/robot_lab/issues</url>
+
+  <exec_depend>python3</exec_depend>
+  <exec_depend>pyyaml</exec_depend>
+  <exec_depend>jsonschema</exec_depend>
+  
+  <test_depend>pytest</test_depend>
+  
+  <export>
+  </export>
+</package>

@@ -1,0 +1,478 @@
+# Robot Lab Registry - Environment Catalog
+# Version 0.1.0
+# This file catalogs all simulation environments available in the platform
+
+# ============================================================================
+# 2D Indoor Environments
+# ============================================================================
+
+- id: small_office
+  version: "1.0.0"
+  name: "Simple Office"
+  description: "Small office environment with furniture and obstacles"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/simple_office/worlds/simple_office.world
+  occupancy_map: maps/maps/simple_office/maps/simple_office.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 15.0
+    y: 12.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - office
+    - indoor
+    - 2D
+    - navigation
+  created: "2026-01-01"
+  updated: "2026-08-31"
+
+- id: small_house
+  version: "1.0.0"
+  name: "Small House"
+  description: "Residential house environment with rooms and corridors"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/small_house/worlds/small_house.world
+  occupancy_map: maps/maps/small_house/maps/small_house.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 20.0
+    y: 15.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - residential
+    - indoor
+    - 2D
+    - navigation
+  created: "2026-01-01"
+  updated: "2026-08-31"
+
+- id: small_warehouse
+  version: "1.0.0"
+  name: "Small Warehouse"
+  description: "Warehouse environment with shelves and open spaces"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/small_warehouse/worlds/small_warehouse.world
+  occupancy_map: maps/maps/small_warehouse/maps/small_warehouse.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+    - id: near_shelves
+      pose:
+        x: 5.0
+        y: 5.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 25.0
+    y: 20.0
+    z: 5.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - warehouse
+    - industrial
+    - 2D
+    - navigation
+  created: "2026-01-01"
+  updated: "2026-08-31"
+
+- id: warehouse_demo
+  version: "1.0.0"
+  name: "Warehouse Demo"
+  description: "Demonstration warehouse with structured obstacles"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/warehouse_demo/worlds/warehouse_demo.world
+  occupancy_map: maps/maps/warehouse_demo/maps/warehouse_demo.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 30.0
+    y: 20.0
+    z: 5.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - warehouse
+    - demo
+    - 2D
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Multi-Floor Environments
+# ============================================================================
+
+- id: celisca_floor_1
+  version: "1.0.0"
+  name: "Celisca Floor 1"
+  description: "First floor of Celisca building"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/celisca_floor_1/worlds/celisca_floor_1.world
+  occupancy_map: maps/maps/celisca_floor_1/maps/celisca_floor_1.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: entrance
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - office
+    - floor
+    - multi_floor
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: celisca_floor_2
+  version: "1.0.0"
+  name: "Celisca Floor 2"
+  description: "Second floor of Celisca building"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/celisca_floor_2/worlds/celisca_floor_2.world
+  occupancy_map: maps/maps/celisca_floor_2/maps/celisca_floor_2.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: stairs_top
+      pose:
+        x: 5.0
+        y: 5.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - office
+    - floor
+    - multi_floor
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: celisca_floor_2_furniture
+  version: "1.0.0"
+  name: "Celisca Floor 2 with Furniture"
+  description: "Second floor with furniture and more detailed layout"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
+  occupancy_map: maps/maps/celisca_floor_2_furniture/maps/celisca_floor_2_furniture.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - office
+    - furniture
+    - detailed
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Actor Environments (with dynamic elements)
+# ============================================================================
+
+- id: celisca_f1_actor
+  version: "1.0.0"
+  name: "Celisca F1 with Actors"
+  description: "First floor with actor entities for simulation"
+  status: cataloged
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: true
+    max_dynamic_count: 10
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - actors
+    - dynamic
+    - simulation
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: celisca_f2_actor
+  version: "1.0.0"
+  name: "Celisca F2 with Actors"
+  description: "Second floor with actor entities"
+  status: cataloged
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: true
+    max_dynamic_count: 10
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - actors
+    - dynamic
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# 3D Environments (for aerial and legged robots)
+# ============================================================================
+
+- id: outdoor_terrain
+  version: "1.0.0"
+  name: "Outdoor Terrain"
+  description: "Outdoor terrain with uneven ground for legged robot testing"
+  status: cataloged
+  dimension: 3D
+  simulator: gazebo
+  world_file: ""
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - legged
+    - humanoid
+    - aerial
+  spawn_zones:
+    - id: ground_level
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 5.0
+        y: 5.0
+        z: 1.0
+  size:
+    x: 50.0
+    y: 50.0
+    z: 10.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - outdoor
+    - rough_terrain
+    - 3D
+    - legged
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: aerial_course
+  version: "1.0.0"
+  name: "Aerial Navigation Course"
+  description: "3D course designed for aerial robot navigation"
+  status: cataloged
+  dimension: 3D
+  simulator: gazebo
+  world_file: ""
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - aerial
+  spawn_zones:
+    - id: takeoff_zone
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.5
+      size:
+        x: 3.0
+        y: 3.0
+        z: 2.0
+  size:
+    x: 100.0
+    y: 100.0
+    z: 20.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - aerial
+    - 3D
+    - navigation
+  created: "2026-08-31"
+  updated: "2026-08-31"

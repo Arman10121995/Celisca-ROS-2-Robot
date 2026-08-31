@@ -1,0 +1,300 @@
+# Robot Lab Registry - Experiment Catalog
+# Version 0.1.0
+
+# ============================================================================
+# Bumperbot Reference Experiments
+# ============================================================================
+
+- id: bumperbot_simulation
+  version: "1.0.0"
+  name: "Bumperbot Simulation Test"
+  description: "Basic simulation test for Bumperbot in a simple environment"
+  status: integrated
+  robot_id: bumperbot
+  environment_id: small_office
+  simulator: gazebo
+  scenario_id: point_to_point_navigation
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: teb_local_planner
+    control: simple_controller
+  seed: 42
+  time_limit: 300.0
+  simulation_time_limit: 300.0
+  parameters:
+    amcl:
+      particle_count: 2000
+    teb_local_planner:
+      max_vel_x: 0.5
+      max_vel_theta: 1.0
+  metrics:
+    success: true
+    collisions: true
+    path_length: true
+    time_to_goal: true
+    clearance: true
+    energy_consumption: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - simulation
+    - baseline
+    - bumperbot
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: bumperbot_navigation
+  version: "1.0.0"
+  name: "Bumperbot Navigation Test"
+  description: "Navigation test with Bumperbot using Nav2 stack"
+  status: integrated
+  robot_id: bumperbot
+  environment_id: small_warehouse
+  simulator: gazebo
+  scenario_id: waypoint_navigation
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: a_star_planner
+    local_planning: dwb_local_planner
+    control: simple_controller
+  seed: 123
+  time_limit: 600.0
+  simulation_time_limit: 600.0
+  parameters:
+    amcl:
+      particle_count: 2000
+    dwb_local_planner:
+      max_vel_x: 0.5
+      max_vel_theta: 1.0
+  metrics:
+    success: true
+    collisions: true
+    path_length: true
+    time_to_complete: true
+    waypoint_error: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - navigation
+    - nav2
+    - bumperbot
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: bumperbot_odometry_localization
+  version: "1.0.0"
+  name: "Bumperbot Odometry Localization"
+  description: "Test odometry-based localization with Bumperbot"
+  status: integrated
+  robot_id: bumperbot
+  environment_id: small_office
+  simulator: gazebo
+  scenario_id: point_to_point_navigation
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: odometry_motion_model
+    state_estimation: kalman_filter_1d
+    sensor_fusion: imu_republisher
+    global_planning: dijkstra_planner
+    local_planning: pure_pursuit
+    control: pid_controller
+  seed: 456
+  time_limit: 300.0
+  simulation_time_limit: 300.0
+  parameters:
+    odometry_motion_model:
+      motion_model_type: "differential"
+      alpha1: 0.2
+      alpha2: 0.2
+      alpha3: 0.2
+      alpha4: 0.2
+    pure_pursuit:
+      lookahead_distance: 0.5
+  metrics:
+    success: true
+    pose_error: true
+    path_length: true
+    time_to_goal: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - localization
+    - odometry
+    - bumperbot
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: bumperbot_exploration
+  version: "1.0.0"
+  name: "Bumperbot Exploration"
+  description: "Test exploration and mapping with Bumperbot"
+  status: integrated
+  robot_id: bumperbot
+  environment_id: small_house
+  simulator: gazebo
+  scenario_id: exploration
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: teb_local_planner
+    control: cleaning_controller
+  seed: 789
+  time_limit: 900.0
+  simulation_time_limit: 900.0
+  parameters:
+    amcl:
+      particle_count: 2000
+    teb_local_planner:
+      max_vel_x: 0.3
+      max_vel_theta: 0.5
+    cleaning_controller:
+      cleaning_pattern: "lawnmower"
+      row_spacing: 0.5
+  metrics:
+    coverage_percentage: true
+    exploration_time: true
+    path_length: true
+    collisions: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: true
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - exploration
+    - mapping
+    - bumperbot
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Algorithm Comparison Experiments
+# ============================================================================
+
+- id: planner_comparison
+  version: "1.0.0"
+  name: "Global Planner Comparison"
+  description: "Compare different global planners on the same environment"
+  status: cataloged
+  robot_id: bumperbot
+  environment_id: small_warehouse
+  simulator: gazebo
+  scenario_id: point_to_point_navigation
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: dijkstra_planner  # Will be swapped for comparison
+    local_planning: teb_local_planner
+    control: simple_controller
+  seed: 100
+  time_limit: 300.0
+  simulation_time_limit: 300.0
+  parameters: {}
+  metrics:
+    success: true
+    path_length: true
+    time_to_goal: true
+    clearance: true
+    path_efficiency: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - comparison
+    - benchmark
+    - planner
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: localization_comparison
+  version: "1.0.0"
+  name: "Localization Algorithm Comparison"
+  description: "Compare different localization algorithms"
+  status: cataloged
+  robot_id: bumperbot
+  environment_id: small_office
+  simulator: gazebo
+  scenario_id: relocalization
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: odometry_motion_model  # Will be swapped for comparison
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: teb_local_planner
+    control: simple_controller
+  seed: 200
+  time_limit: 120.0
+  simulation_time_limit: 120.0
+  parameters: {}
+  metrics:
+    pose_error: true
+    convergence_time: true
+    success_rate: true
+    robustness: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - comparison
+    - benchmark
+    - localization
+  created: "2026-08-31"
+  updated: "2026-08-31"

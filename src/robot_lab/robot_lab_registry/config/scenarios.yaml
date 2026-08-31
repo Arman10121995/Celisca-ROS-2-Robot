@@ -1,0 +1,406 @@
+# Robot Lab Registry - Scenario Catalog
+# Version 0.1.0
+
+# ============================================================================
+# Navigation Scenarios
+# ============================================================================
+
+- id: point_to_point_navigation
+  version: "1.0.0"
+  name: "Point-to-Point Navigation"
+  description: "Navigate from start to goal position in a known environment"
+  status: integrated
+  task_type: navigation
+  task_description: "Robot must navigate from its current position to a specified goal position while avoiding static obstacles"
+  stopping_conditions:
+    - type: success
+      condition: "reached_goal"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Goal position reached within tolerance"
+    - "No collisions with obstacles"
+    - "Path efficiency > 80%"
+  failure_criteria:
+    - "Collision with obstacle"
+    - "Timeout without reaching goal"
+    - "Oscillating behavior"
+  required_robot_classes:
+    - mobile
+    - legged
+  required_capabilities:
+    - navigation
+    - localization
+    - perception
+  timeout: 300.0
+  metrics:
+    - success_rate
+    - path_length
+    - time_to_goal
+    - collisions
+    - clearance
+    - energy_consumption
+  tags:
+    - navigation
+    - 2D
+    - basic
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: waypoint_navigation
+  version: "1.0.0"
+  name: "Waypoint Navigation"
+  description: "Navigate through a sequence of waypoints"
+  status: integrated
+  task_type: navigation
+  task_description: "Robot must visit a sequence of waypoints in order, with optional optimization for shortest path"
+  stopping_conditions:
+    - type: success
+      condition: "all_waypoints_visited"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "All waypoints visited in order"
+    - "No collisions"
+    - "Total path length < 1.5 * optimal"
+  failure_criteria:
+    - "Collision with obstacle"
+    - "Timeout"
+    - "Waypoint not reached"
+  required_robot_classes:
+    - mobile
+    - legged
+  required_capabilities:
+    - navigation
+    - localization
+    - perception
+  timeout: 600.0
+  metrics:
+    - success_rate
+    - path_length
+    - time_to_complete
+    - waypoint_error
+    - energy_consumption
+  tags:
+    - navigation
+    - waypoint
+    - multi_goal
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: exploration
+  version: "1.0.0"
+  name: "Environment Exploration"
+  description: "Explore an unknown environment to build a complete map"
+  status: integrated
+  task_type: exploration
+  task_description: "Robot must explore an unknown environment, building a map and tracking explored areas until coverage is complete"
+  stopping_conditions:
+    - type: success
+      condition: "exploration_complete"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "95% of explorable area mapped"
+    - "No collisions"
+    - "Map quality score > 0.8"
+  failure_criteria:
+    - "Collision with obstacle"
+    - "Timeout"
+    - "Infinite loop behavior"
+  required_robot_classes:
+    - mobile
+    - legged
+  required_capabilities:
+    - exploration
+    - mapping
+    - localization
+    - perception
+  timeout: 900.0
+  metrics:
+    - coverage_percentage
+    - exploration_time
+    - map_quality
+    - path_length
+    - collisions
+  tags:
+    - exploration
+    - mapping
+    - coverage
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Localization Scenarios
+# ============================================================================
+
+- id: relocalization
+  version: "1.0.0"
+  name: "Relocalization After Pose Loss"
+  description: "Recover from pose loss using sensor data"
+  status: cataloged
+  task_type: relocalization
+  task_description: "Robot loses its pose estimate (kidnapped robot problem) and must relocalize using sensor data"
+  stopping_conditions:
+    - type: success
+      condition: "pose_recovered"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Pose error < 0.5m and < 10 degrees"
+    - "Pose recovered within 30 seconds"
+  failure_criteria:
+    - "Timeout without recovery"
+    - "Pose error > 1.0m or > 30 degrees"
+  required_robot_classes:
+    - mobile
+    - legged
+    - humanoid
+  required_capabilities:
+    - localization
+    - perception
+  timeout: 60.0
+  metrics:
+    - pose_error
+    - recovery_time
+    - success_rate
+  tags:
+    - localization
+    - recovery
+    - kidnapped_robot
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: global_localization
+  version: "1.0.0"
+  name: "Global Localization"
+  description: "Determine robot's pose in a known map from scratch"
+  status: integrated
+  task_type: relocalization
+  task_description: "Robot starts with unknown pose in a known environment and must determine its location using sensor data"
+  stopping_conditions:
+    - type: success
+      condition: "pose_converged"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Pose error < 0.3m and < 5 degrees"
+    - "Convergence within 60 seconds"
+  failure_criteria:
+    - "Timeout without convergence"
+    - "Pose error > 0.5m or > 15 degrees"
+  required_robot_classes:
+    - mobile
+    - legged
+  required_capabilities:
+    - localization
+    - perception
+  timeout: 120.0
+  metrics:
+    - pose_error
+    - convergence_time
+    - success_rate
+    - particle_diversity
+  tags:
+    - localization
+    - global
+    - initialization
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Coverage Scenarios
+# ============================================================================
+
+- id: area_coverage
+  version: "1.0.0"
+  name: "Area Coverage"
+  description: "Systematically cover a designated area"
+  status: integrated
+  task_type: coverage
+  task_description: "Robot must systematically cover a specified area, ensuring complete coverage with minimal overlap"
+  stopping_conditions:
+    - type: success
+      condition: "coverage_complete"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "100% area coverage"
+    - "No collisions"
+    - "Overlap < 20%"
+  failure_criteria:
+    - "Collision"
+    - "Timeout"
+    - "Incomplete coverage"
+  required_robot_classes:
+    - mobile
+  required_capabilities:
+    - coverage
+    - localization
+    - perception
+  timeout: 600.0
+  metrics:
+    - coverage_percentage
+    - coverage_time
+    - overlap_percentage
+    - path_length
+    - energy_consumption
+  tags:
+    - coverage
+    - systematic
+    - cleaning
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Traversal Scenarios
+# ============================================================================
+
+- id: rough_terrain_traversal
+  version: "1.0.0"
+  name: "Rough Terrain Traversal"
+  description: "Navigate across uneven or challenging terrain"
+  status: cataloged
+  task_type: traversal
+  task_description: "Robot must traverse rough terrain including obstacles, slopes, and uneven surfaces"
+  stopping_conditions:
+    - type: success
+      condition: "reached_goal"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+    - type: failure
+      condition: "tipped_over"
+  success_criteria:
+    - "Goal reached"
+    - "No collisions or tip-overs"
+    - "Stability maintained"
+  failure_criteria:
+    - "Collision"
+    - "Tip-over"
+    - "Timeout"
+    - "Stuck (no movement for > 30s)"
+  required_robot_classes:
+    - legged
+    - humanoid
+  required_capabilities:
+    - traversal
+    - localization
+    - perception
+  timeout: 600.0
+  metrics:
+    - success_rate
+    - traversal_time
+    - stability_score
+    - collisions
+    - tip_overs
+  tags:
+    - traversal
+    - rough_terrain
+    - 3D
+    - legged
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Aerial Scenarios
+# ============================================================================
+
+- id: waypoint_following_3d
+  version: "1.0.0"
+  name: "3D Waypoint Following"
+  description: "Follow a sequence of 3D waypoints in space"
+  status: cataloged
+  task_type: navigation
+  task_description: "Aerial robot must follow a sequence of 3D waypoints with specified positions and orientations"
+  stopping_conditions:
+    - type: success
+      condition: "all_waypoints_reached"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "All waypoints reached within tolerance"
+    - "No collisions"
+    - "Position error < 0.5m"
+    - "Orientation error < 10 degrees"
+  failure_criteria:
+    - "Collision"
+    - "Timeout"
+    - "Position error > 1.0m"
+    - "Orientation error > 20 degrees"
+  required_robot_classes:
+    - aerial
+  required_capabilities:
+    - flight
+    - localization
+    - perception
+  timeout: 600.0
+  metrics:
+    - waypoint_error
+    - flight_time
+    - energy_consumption
+    - collisions
+  tags:
+    - aerial
+    - 3D
+    - waypoint
+    - navigation
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: aerial_inspection
+  version: "1.0.0"
+  name: "Aerial Inspection"
+  description: "Inspect a structure or area from the air"
+  status: cataloged
+  task_type: inspection
+  task_description: "Aerial robot must inspect a designated structure, maintaining appropriate distance and view angles"
+  stopping_conditions:
+    - type: success
+      condition: "inspection_complete"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+    - type: failure
+      condition: "lost_sight"
+  success_criteria:
+    - "All inspection points visited"
+    - "No collisions"
+    - "Target in view > 90% of time"
+    - "Image quality > threshold"
+  failure_criteria:
+    - "Collision"
+    - "Timeout"
+    - "Target lost for > 10s"
+  required_robot_classes:
+    - aerial
+  required_capabilities:
+    - flight
+    - localization
+    - perception
+    - vision
+  timeout: 900.0
+  metrics:
+    - inspection_coverage
+    - flight_time
+    - image_quality
+    - collisions
+  tags:
+    - aerial
+    - inspection
+    - vision
+    - 3D
+  created: "2026-08-31"
+  updated: "2026-08-31"
