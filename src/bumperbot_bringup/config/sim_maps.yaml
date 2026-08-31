@@ -259,3 +259,100 @@ maps:
       x: "0.0"
       y: "0.0"
       yaw: "0.0"
+
+  # P4.2 deterministic navigation arenas
+  nav_empty:
+    gazebo:
+      world_package: maps
+      world_name: nav_empty
+      world_path: maps/nav_empty/worlds/nav_empty.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_empty/maps/map.yaml
+    spawn:
+      x: "-0.5"
+      y: "-0.5"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-0.5"
+      y: "-0.5"
+      yaw: "0.0"
+
+  nav_obstacle:
+    gazebo:
+      world_package: maps
+      world_name: nav_obstacle
+      world_path: maps/nav_obstacle/worlds/nav_obstacle.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_obstacle/maps/map.yaml
+    spawn:
+      x: "-7.0"
+      y: "-7.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-7.0"
+      y: "-7.0"
+      yaw: "0.0"
+
+  nav_maze:
+    gazebo:
+      world_package: maps
+      world_name: nav_maze
+      world_path: maps/nav_maze/worlds/nav_maze.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_maze/maps/map.yaml
+    spawn:
+      x: "-7.0"
+      y: "-7.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-7.0"
+      y: "-7.0"
+      yaw: "0.0"
+
+  nav_narrow_passage:
+    gazebo:
+      world_package: maps
+      world_name: nav_narrow_passage
+      world_path: maps/nav_narrow_passage/worlds/nav_narrow_passage.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_narrow_passage/maps/map.yaml
+    spawn:
+      x: "-6.0"
+      y: "-6.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-6.0"
+      y: "-6.0"
+      yaw: "0.0"
+
+  nav_warehouse:
+    gazebo:
+      world_package: maps
+      world_name: nav_warehouse
+      world_path: maps/nav_warehouse/worlds/nav_warehouse.world
+    map:
+      has_2d_map: true
+      package: maps
+      path: maps/nav_warehouse/maps/map.yaml
+    spawn:
+      x: "-8.0"
+      y: "-8.0"
+      z: "0.1"
+      yaw: "0.0"
+    initial_pose:
+      x: "-8.0"
+      y: "-8.0"
+      yaw: "0.0"
+

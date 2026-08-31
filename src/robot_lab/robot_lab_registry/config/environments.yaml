@@ -696,3 +696,225 @@
     - 2D
   created: "2026-08-31"
   updated: "2026-08-31"
+
+- id: nav_empty
+  version: "1.0.0"
+  name: "Nav Empty Arena"
+  description: "Deterministic large open navigation arena (12x12m) with boundary fence and slim reference posts for straight-line path planning"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_empty/worlds/nav_empty.world
+  occupancy_map: maps/maps/nav_empty/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -0.5
+        y: -0.5
+        z: 0.0
+      size:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+  size:
+    x: 12.0
+    y: 12.0
+    z: 2.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - navigation
+    - empty
+    - arena
+    - 2D
+    - deterministic
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: nav_obstacle
+  version: "1.0.0"
+  name: "Nav Obstacle Field"
+  description: "Deterministic 17x17m field of scattered box obstacles of varied size for multi-waypoint avoidance planning"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_obstacle/worlds/nav_obstacle.world
+  occupancy_map: maps/maps/nav_obstacle/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -7.0
+        y: -7.0
+        z: 0.0
+      size:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+  size:
+    x: 17.0
+    y: 17.0
+    z: 2.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - navigation
+    - obstacle
+    - arena
+    - 2D
+    - deterministic
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: nav_maze
+  version: "1.0.0"
+  name: "Nav Maze Arena"
+  description: "Deterministic 16x16m maze with outer wall and winding corridors, entrance at west and goal at east"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_maze/worlds/nav_maze.world
+  occupancy_map: maps/maps/nav_maze/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -7.0
+        y: -7.0
+        z: 0.0
+      size:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+  size:
+    x: 16.0
+    y: 16.0
+    z: 2.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - navigation
+    - maze
+    - arena
+    - 2D
+    - deterministic
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: nav_narrow_passage
+  version: "1.0.0"
+  name: "Nav Narrow Passage Arena"
+  description: "Deterministic 14x14m floor with successive offset-gap barriers forcing zigzag navigation through narrow passages"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_narrow_passage/worlds/nav_narrow_passage.world
+  occupancy_map: maps/maps/nav_narrow_passage/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -6.0
+        y: -6.0
+        z: 0.0
+      size:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+  size:
+    x: 14.0
+    y: 14.0
+    z: 2.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - navigation
+    - narrow
+    - passage
+    - arena
+    - 2D
+    - deterministic
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: nav_warehouse
+  version: "1.0.0"
+  name: "Nav Warehouse Arena"
+  description: "Deterministic 18x18m warehouse with parallel shelf rows and driving aisles plus pallet boxes"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  ros_package: maps
+  world_file: maps/maps/nav_warehouse/worlds/nav_warehouse.world
+  occupancy_map: maps/maps/nav_warehouse/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: -8.0
+        y: -8.0
+        z: 0.0
+      size:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+  size:
+    x: 18.0
+    y: 18.0
+    z: 2.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - navigation
+    - warehouse
+    - arena
+    - 2D
+    - deterministic
+  created: "2026-09-05"
+  updated: "2026-09-05"
+

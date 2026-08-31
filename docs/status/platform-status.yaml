@@ -44,6 +44,7 @@ baseline:
     - test/test_go2_qualification.py: '23/23 tests passing (P3.3 legged qualification - go2 registered integrated/simulated, 12-DOF quadruped, imu/camera/odometry contracts, 12 leg actuator joints, effort command interface, go2_smoke_test scenario/experiment pinning, macro-aware joint consistency, upstream mesh resolution, real xacro expansion)'
     - robot-lab launch --dry-run resolves the go2_smoke_test composition (go2_description + maps/empty) with no warnings and Environment Package: maps
     - test/test_p4_1_environment_qualification.py: '9/9 tests passing (P4.1 environment qualification - all 14 pre-existing Gazebo worlds registered and integrated, every integrated world_file resolves to an on-disk .world, occupancy-map provenance real (<id>/maps/map.pgm + companion map.yaml), actor worlds declare dynamic_obstacles, legacy small_office/small_house/small_warehouse/warehouse_demo remain integrated, cross-reference validation passes)'
+    - test/test_p4_2_nav_arenas.py: '8/8 tests passing (P4.2 deterministic nav arenas - nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse all registered integrated, world files well-formed XML, occupancy-map provenance, world/geometry-map consistency every obstacle center occupied + spawn free, sim_maps.yaml launch registration has_2d_map, cross-reference validation passes)'
 
 tasks:
   P0:
@@ -90,6 +91,10 @@ tasks:
         state: done
         owner: cline
         evidence: [all 14 pre-existing Gazebo worlds integrated in environments.yaml, added missing celisca_floor_1_furniture entry, corrected every occupancy_map to real <id>/maps/map.pgm with companion map.yaml, test/test_p4_1_environment_qualification.py 9 tests passing, full registry suite 147 passed/1 skipped]
+      P4.2:
+        state: done
+        owner: cline
+        evidence: [added 5 deterministic nav arenas under src/maps/maps/ (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse), each built from static box primitives with companion Nav2 occupancy map rasterized from the same geometry (gen_nav_arenas.py + validate_nav_arenas.py in src/maps/tools), registered integrated in environments.yaml (ros_package maps, 2D, spawn zones) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_2_nav_arenas.py 8 tests passing, full registry suite 155 passed/1 failed (quadrotor xacro unrelated)]
   P5: {title: algorithm_breadth, state: queued, owner: null}
   P6: {title: benchmarking, state: queued, owner: null}
   P7: {title: hardening, state: queued, owner: null}
@@ -103,5 +108,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P4.2
-  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete (see ROADMAP for per-task evidence); P4.1 complete - all 14 existing Gazebo worlds qualified as integrated in config/environments.yaml with occupancy-map provenance verified (test_p4_1_environment_qualification.py 9/9, full registry suite 147 passed/1 skipped). Next: P4.2 - add deterministic empty, obstacle, maze, narrow-passage, and warehouse navigation arenas as new worlds under maps/, following the P4.1 registration + qualification pattern (new .world + optional occupancy map, registry entry -> integrated, add tests). Registry counts: 20 robots / 16 environments / 27 algorithms / 18 scenarios / 15 experiments.'
+  next_task: P4.3
+  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete (see ROADMAP for per-task evidence); P4.1 complete (14 existing Gazebo worlds qualified with occupancy provenance, test_p4_1 9/9); P4.2 complete (5 deterministic nav arenas added - nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse - each with occupancy map rasterized from the same geometry via src/maps/tools/gen_nav_arenas.py, registered integrated + launchable in sim_maps.yaml, test_p4_2_nav_arenas.py 8/8, full registry suite 155 passed/1 failed where the failure is the pre-existing unrelated quadrotor xacro test). Next: P4.3 - add rough terrain, stairs/ramps, and stepping-stone arenas for legged/humanoid robots, following the same registration + qualification pattern (new .world + occupancy map, registry entry -> integrated, add tests). Registry counts: 20 robots / 21 environments / 27 algorithms / 18 scenarios / 15 experiments.'

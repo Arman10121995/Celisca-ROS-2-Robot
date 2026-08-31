@@ -158,3 +158,28 @@ ros2 launch bumperbot_bringup simulated_room_vacuum.launch.py mode:=nav map_name
 - `simple_box`
 - `small_house`
 - `small_warehouse`
+
+## P4.2 Deterministic Navigation Arenas
+
+Five deterministic navigation arenas (built entirely from static box
+primitives, with companion Nav2 occupancy maps rasterized from the exact same
+geometry) were added for path-planning validation:
+
+- `nav_empty` — 12x12m open floor with boundary fence and reference posts
+- `nav_obstacle` — 17x17m scattered box-obstacle field
+- `nav_maze` — 16x16m winding maze (west entrance, east goal)
+- `nav_narrow_passage` — 14x14m offset-gap barriers forcing zigzag navigation
+- `nav_warehouse` — 18x18m shelf aisles plus pallet boxes
+
+They are regenerated and validated from a single source of truth so the world
+geometry and the localization map always agree:
+
+```bash
+python3 src/maps/tools/gen_nav_arenas.py --out-dir src/maps/maps
+python3 src/maps/tools/validate_nav_arenas.py
+```
+
+Each arena is registered as `integrated` in
+`src/robot_lab/robot_lab_registry/config/environments.yaml` under the
+`nav_*` id and launchable in `src/bumperbot_bringup/config/sim_maps.yaml`.
+
