@@ -26,7 +26,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
-| P3 — robot integrations | queued | Working mobile, legged, humanoid, and aerial representatives |
+| P3 — robot integrations | P3.1 done | Bumperbot qualified as reference differential-drive robot: smoke scenario/experiment, 28-test qualification suite, asset/launch contract validation, CI wiring |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
@@ -83,7 +83,18 @@ command, or artifact rather than merely saying that code was added.
 
 ### P3 — robot integrations
 
-- [ ] **P3.1** Qualify Bumperbot as the reference differential-drive robot.
+- [x] **P3.1** Qualify Bumperbot as the reference differential-drive robot.
+  (bumperbot_smoke_test scenario + experiment in the registry;
+  test/test_bumperbot_qualification.py with 28 tests covering registry
+  metadata, sensor/command/state contracts, frames, capabilities, smoke
+  experiment pinning, and on-disk asset/launch existence; smoke_test added to
+  the scenario schema enum; stale mesh paths and missing bumperbot_bringup
+  dependency fixed in robots.yaml; ros_package added for bumperbot and
+  small_office; qualification suite wired into CI. Evidence: pytest 38/38
+  registry tests, unittest 28/28 qualification tests,
+  `robot-lab validate -c config --cross-references` passes, `robot-lab launch
+  --dry-run` resolves the smoke composition with no warnings, robot_lab_bringup
+  25/25 tests pass)
 - [ ] **P3.2** Integrate a second, independently maintained mobile base.
 - [ ] **P3.3** Turn one existing Unitree quadruped description into a simulated,
   commandable legged profile with sensors and odometry.

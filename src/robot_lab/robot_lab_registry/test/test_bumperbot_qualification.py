@@ -5,8 +5,22 @@ Tests for qualifying Bumperbot as the reference differential-drive robot.
 Validates launch configuration, sensor contracts, and smoke test scenarios.
 """
 
+import sys
 import unittest
 from pathlib import Path
+
+# Prefer the source package over any stale installed copy (e.g. a colcon
+# install injected through PYTHONPATH) when this file is executed directly.
+_SRC_PACKAGE_DIR = Path(__file__).resolve().parent.parent
+if _SRC_PACKAGE_DIR.name == "robot_lab_registry":
+    sys.path[:] = [
+        p for p in sys.path
+        if not (p.endswith("dist-packages") and "robot_lab_registry" in p)
+    ]
+    if str(_SRC_PACKAGE_DIR) not in sys.path:
+        sys.path.insert(0, str(_SRC_PACKAGE_DIR))
+    for _stale in [m for m in list(sys.modules) if m == "robot_lab_registry" or m.startswith("robot_lab_registry.")]:
+        del sys.modules[_stale]
 
 from robot_lab_registry.catalog import Registry
 from robot_lab_registry.validation import Composition, check_composition
@@ -262,6 +276,63 @@ class BumberbotLaunchValidationTests(unittest.TestCase):
         self.assertIsNotNone(robot)
         self.assertIsNotNone(environment)
         self.assertIsNotNone(scenario)
+
+
+class BumperbotAssetContractTests(unittest.TestCase):
+    """Validation layer 4 (assets): referenced files must exist in the repo."""
+
+    @classmethod
+    def setUpClass(cls):
+        config_dir = Path(__file__).parent.parent / "config"
+        cls.registry = Registry(config_dir)
+        cls.registry.load(config_dir)
+        # test/ -> robot_lab_registry -> robot_lab -> src -> workspace root
+        cls.workspace_root = Path(__file__).resolve().parents[4]
+        cls.src_root = cls.workspace_root / "src"
+        cls.robot = cls.registry.robots.get("bumperbot")
+
+    def _repo_asset(self, rel_path):
+        return self.src_root / rel_path
+
+    def test_bumperbot_urdf_exists(self):
+        """The referenced robot URDF xacro must exist on disk."""
+        path = self._repo_asset(self.robot["assets"]["urdf"])
+        self.assertTrue(path.is_file(), f"Missing URDF asset: {path}")
+
+    def test_bumperbot_ros2_control_xacro_exists(self):
+        """The referenced ros2_control xacro must exist on disk."""
+        path = self._repo_asset(self.robot["assets"]["xacro"])
+        self.assertTrue(path.is_file(), f"Missing ros2_control xacro: {path}")
+
+    def test_bumperbot_meshes_exist(self):
+        """Every referenced mesh file must exist on disk."""
+        for mesh in self.robot["assets"]["meshes"]:
+            path = self._repo_asset(mesh)
+            self.assertTrue(path.is_file(), f"Missing mesh asset: {path}")
+
+    def test_bumperbot_smoke_experiments_resolve(self):
+        """smoke_experiments must reference registered experiments."""
+        for exp_id in self.robot["smoke_experiments"]:
+            experiment = self.registry.experiments.get(exp_id)
+            self.assertIsNotNone(
+                experiment, f"smoke_experiments references unknown experiment: {exp_id}"
+            )
+            self.assertEqual(
+                experiment["scenario_id"], "bumperbot_smoke_test",
+                f"Experiment {exp_id} must use the bumperbot_smoke_test scenario",
+            )
+
+    def test_bumperbot_smoke_experiment_pins_full_stack(self):
+        """The smoke experiment must pin robot, environment, simulator, and scenario."""
+        experiment = self.registry.experiments.get("bumperbot_smoke_test")
+        self.assertEqual(experiment["robot_id"], "bumperbot")
+        self.assertEqual(experiment["simulator"], "gazebo")
+        self.assertIsNotNone(self.registry.environments.get(experiment["environment_id"]))
+
+    def test_bumperbot_launch_entry_point_exists(self):
+        """The legacy bringup launch used by the adapter must exist."""
+        launch = self.src_root / "bumperbot_bringup" / "launch" / "simulated_robot.launch.py"
+        self.assertTrue(launch.is_file(), f"Missing launch file: {launch}")
 
 
 if __name__ == "__main__":

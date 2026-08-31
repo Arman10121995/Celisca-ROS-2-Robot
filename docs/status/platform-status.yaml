@@ -17,8 +17,8 @@ baseline:
   registry_robots: 19
   registry_environments: 15
   registry_algorithms: 27
-  registry_scenarios: 9
-  registry_experiments: 6
+  registry_scenarios: 10
+  registry_experiments: 7
   tests:
     total: 147
     errors: 0
@@ -36,6 +36,8 @@ baseline:
     - test/test_selectors.py: 7/7 tests passing (robot, environment, simulator, scenario, perception, localization, control selectors)
     - test/test_launch_fragments.py: 8/8 tests passing (launch fragment creation, parameter overlays, registry, composition resolver)
     - test/test_adapter.py: 3/3 tests passing (LegacyAdapter, environment mappings, adapter launch generation)
+    - test/test_bumperbot_qualification.py: '28/28 tests passing (P3.1 reference-robot qualification - registry metadata, sensor/command/state contracts, frames, capabilities, smoke scenario/experiment pinning, on-disk asset and launch existence)'
+    - robot-lab launch --dry-run resolves the bumperbot_smoke_test composition (bumperbot + small_office + gazebo) with no warnings
 
 tasks:
   P0:
@@ -65,7 +67,12 @@ tasks:
       P2.4: {state: done, owner: root, evidence: [adapter.py with LegacyAdapter class, robot_adapter.launch.py wrapper, test/test_adapter.py with 3 tests passing]}
       P2.5: {state: done, owner: root, evidence: [namespaces.py with NamespaceConfig/NamespaceManager classes, LaunchFragment with namespace/frame_prefix fields and methods, CompositionBuilder with namespace/frame_prefix support, CompositionResolver with namespace-aware resolution, adapter.py with namespace parameters, test_namespaces.py with 7 tests passing]}
       P2.6: {state: done, owner: root, evidence: [cli.py: cmd_list, cmd_describe, cmd_search, cmd_validate, cmd_check_composition, cmd_summary, cmd_schema, cmd_launch with --dry-run flag, cmd_doctor with 5-tier diagnostics, parser registration and command handler dispatch, smoke tests passing: robot-lab doctor and robot-lab launch --dry-run working correctly, all robot_lab_registry tests passing]}
-  P3: {title: robot_integrations, state: queued, owner: null}
+  P3:
+    title: robot_integrations
+    state: active
+    owner: cline
+    tasks:
+      P3.1: {state: done, owner: cline+copilot, evidence: [bumperbot_smoke_test scenario in scenarios.yaml, bumperbot_smoke_test experiment in experiments.yaml, test/test_bumperbot_qualification.py 28 tests passing, smoke_test added to scenario schema task_type enum, robots.yaml corrected mesh paths plus bumperbot_bringup dependency and ros_package, environments.yaml ros_package for small_office, CI runs qualification suite, robot-lab launch --dry-run resolves smoke composition with no warnings]}
   P4: {title: environment_expansion, state: queued, owner: null}
   P5: {title: algorithm_breadth, state: queued, owner: null}
   P6: {title: benchmarking, state: queued, owner: null}
@@ -80,5 +87,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P3.1
-  instructions: Read ROADMAP.md and docs/architecture/overview.md. P0, P1, and P2 are complete. Next: qualify Bumperbot as reference differential-drive robot (P3.1) by creating smoke test scenario and validating launch/sensor/odometry contracts.
+  next_task: P3.2
+  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0, P1, P2 complete; P3.1 (Bumperbot reference qualification) complete. Next: integrate a second, independently maintained mobile base (P3.2) with the same qualification pattern (scenario, experiment, contracts, asset checks, tests). Note: ros_package metadata still missing for most robots/environments; add per entry as each is qualified. Registry counts are now 10 scenarios / 7 experiments / 28 qualification tests.'

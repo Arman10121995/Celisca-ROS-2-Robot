@@ -41,6 +41,8 @@ jobs:
           ros2 run robot_lab_registry robot-lab validate -c src/robot_lab/robot_lab_registry/config
           # Run registry test suite
           python3 src/robot_lab/robot_lab_registry/test/test_registry.py
+          # Run Bumperbot reference-robot qualification suite (P3.1)
+          python3 src/robot_lab/robot_lab_registry/test/test_bumperbot_qualification.py
 
       - name: Test core workspace
         shell: bash

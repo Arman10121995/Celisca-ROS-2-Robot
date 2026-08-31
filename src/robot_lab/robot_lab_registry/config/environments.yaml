@@ -9,6 +9,7 @@
 - id: small_office
   version: "1.0.0"
   name: "Simple Office"
+  ros_package: maps
   description: "Small office environment with furniture and obstacles"
   status: integrated
   dimension: 2D

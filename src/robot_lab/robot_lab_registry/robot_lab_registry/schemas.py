@@ -414,6 +414,7 @@ SCENARIO_SCHEMA = {
                         "inspection",
                         "search_and_rescue",
                         "formation",
+                        "smoke_test",
                         "custom"
                     ],
                     "description": "Type of task"
