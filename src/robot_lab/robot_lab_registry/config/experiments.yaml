@@ -298,3 +298,57 @@
     - localization
   created: "2026-08-31"
   updated: "2026-08-31"
+
+# ============================================================================
+# Smoke Test Experiments
+# ============================================================================
+
+- id: bumperbot_smoke_test
+  version: "1.0.0"
+  name: "Bumperbot Smoke Test"
+  description: "Validate Bumperbot launches correctly and publishes all expected topics"
+  status: integrated
+  robot_id: bumperbot
+  environment_id: small_office
+  simulator: gazebo
+  scenario_id: bumperbot_smoke_test
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: teb_local_planner
+    control: simple_controller
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    amcl:
+      particle_count: 500
+    teb_local_planner:
+      max_vel_x: 0.2
+      max_vel_theta: 0.5
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - smoke_test
+    - validation
+    - bumperbot
+    - reference
+    - qualification
+  created: "2026-09-05"
+  updated: "2026-09-05"
