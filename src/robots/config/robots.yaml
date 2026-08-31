@@ -1,0 +1,106 @@
+robots:
+  bumperbot:
+    package: robots
+    xacro: bumperbot/urdf/bumperbot.urdf.xacro
+    name: bumperbot
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    features: [ros2_control, lidar_2d, rgbd_camera]
+    supports_room_vacuum: true
+
+  berkeley_humanoid_lite:
+    package: robots
+    xacro: berkeley_humanoid_lite/urdf/berkeley_humanoid_lite.urdf
+    name: berkeley_humanoid_lite
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  berkeley_humanoid_lite_biped:
+    package: robots
+    xacro: berkeley_humanoid_lite/urdf/berkeley_humanoid_lite_biped.urdf
+    name: berkeley_humanoid_lite_biped
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_a1:
+    package: robots
+    xacro: unitree/a1_description/xacro/robot.xacro
+    name: unitree_a1
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_aliengo:
+    package: robots
+    xacro: unitree/aliengo_description/xacro/robot.xacro
+    name: unitree_aliengo
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_b1:
+    package: robots
+    xacro: unitree/b1_description/xacro/robot.xacro
+    name: unitree_b1
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_b2:
+    package: robots
+    xacro: unitree/b2_description/xacro/robot.xacro
+    name: unitree_b2
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_b2_mujoco:
+    package: robots
+    xacro: unitree/b2_description_mujoco/xml/b2_description.urdf
+    name: unitree_b2_mujoco
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_b2w:
+    package: robots
+    xacro: unitree/b2w_description/xacro/robot.xacro
+    name: unitree_b2w
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_g1:
+    package: robots
+    xacro: unitree/g1_description/g1.urdf
+    name: unitree_g1
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_g1_29dof:
+    package: robots
+    xacro: unitree/g1_description/g1_29dof.urdf
+    name: unitree_g1_29dof
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_go1:
+    package: robots
+    xacro: unitree/go1_description/xacro/robot.xacro
+    name: unitree_go1
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_go2:
+    package: robots
+    xacro: unitree/go2_description/xacro/robot.xacro
+    name: unitree_go2
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_go2w:
+    package: robots
+    xacro: unitree/go2w_description/urdf/go2w_description.urdf
+    name: unitree_go2w
+    supported_modes: [display]
+    supports_room_vacuum: false
+
+  unitree_h1_2:
+    package: robots
+    xacro: unitree/h1_2_description/h1_2.urdf
+    name: unitree_h1_2
+    supported_modes: [display]
+    supports_room_vacuum: false

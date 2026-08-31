@@ -1,0 +1,55 @@
+rtabmap:
+  ros__parameters:
+    frame_id: base_footprint
+    map_frame_id: map
+    odom_frame_id: odom
+    subscribe_depth: true
+    subscribe_rgbd: false
+    approx_sync: true
+    queue_size: 20
+    approx_sync_max_interval: 0.10
+    wait_for_transform: 0.2
+
+    # Use RGB-D loop closures with wheel odometry as the odom prior.
+    "Reg/Strategy": "1"
+    "RGBD/NeighborLinkRefining": "true"
+    "RGBD/ProximityBySpace": "true"
+    "RGBD/OptimizeFromGraphEnd": "false"
+    "RGBD/LinearUpdate": "0.10"
+    "RGBD/AngularUpdate": "0.10"
+    "RGBD/CreateOccupancyGrid": "true"
+
+    # OAK-D simulated RGB-D stream is 320x240 at 30 Hz; keep mapping light.
+    "Vis/MinInliers": "12"
+    "Vis/MaxDepth": "6.0"
+    "Kp/MaxFeatures": "600"
+    "Kp/DetectorStrategy": "6"
+
+    # 3D occupancy/grid map from depth. Range is lower than camera far clip
+    # to avoid low-value distant depth noise dominating the map.
+    "Grid/FromDepth": "true"
+    "Grid/3D": "true"
+    "Grid/CellSize": "0.05"
+    "Grid/RangeMin": "0.30"
+    "Grid/RangeMax": "6.0"
+    "Grid/DepthDecimation": "2"
+    "Grid/NormalsSegmentation": "false"
+    "Grid/MaxObstacleHeight": "2.0"
+    "Grid/MinGroundHeight": "-0.10"
+    "Grid/MaxGroundHeight": "0.20"
+
+rgbd_odometry:
+  ros__parameters:
+    frame_id: base_footprint
+    odom_frame_id: odom
+    publish_tf: false
+    subscribe_depth: true
+    subscribe_rgbd: false
+    approx_sync: true
+    queue_size: 20
+    approx_sync_max_interval: 0.10
+    wait_for_transform: 0.2
+    "Vis/MinInliers": "12"
+    "Vis/MaxDepth": "6.0"
+    "Kp/MaxFeatures": "600"
+    "Odom/ResetCountdown": "1"

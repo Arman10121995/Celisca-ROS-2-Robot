@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <world name="bigger_warehouse">
+    <physics type="ode">
+      <max_step_size>0.01</max_step_size>
+    </physics>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.3 -1.0</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Multiple shelves for bigger warehouse feel using gazebo_models -->
+    <model name="shelf_d">
+      <include>
+        <uri>model://aws_robomaker_warehouse_ShelfD_01</uri>
+      </include>
+      <pose>4 0 0 0 0 0</pose>
+    </model>
+    <model name="shelf_e">
+      <include>
+        <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      </include>
+      <pose>4 3 0 0 0 0</pose>
+    </model>
+    <model name="shelf_f">
+      <include>
+        <uri>model://aws_robomaker_warehouse_ShelfF_01</uri>
+      </include>
+      <pose>-4 0 0 0 0 3.14</pose>
+    </model>
+    <model name="clutter">
+      <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringD_01</uri>
+      </include>
+      <pose>0 2 0 0 0 0</pose>
+    </model>
+    <model name="pallet">
+      <include>
+        <uri>model://aws_robomaker_warehouse_PalletJackB_01</uri>
+      </include>
+      <pose>-2 -2 0 0 0 0</pose>
+    </model>
+  </world>
+</sdf>

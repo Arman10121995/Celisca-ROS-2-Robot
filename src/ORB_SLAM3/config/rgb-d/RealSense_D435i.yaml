@@ -1,0 +1,114 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Intel RealSense D456 RGB-D configuration for ORB-SLAM3
+# Use with aligned depth to color:
+#   /camera/camera/color/image_raw
+#   /camera/camera/aligned_depth_to_color/image_raw
+#--------------------------------------------------------------------------------------------
+
+Camera.type: "PinHole"
+
+#--------------------------------------------------------------------------------------------
+# Camera intrinsics
+# IMPORTANT:
+# These are safe approximate values for 640x480 RGB-D use.
+# For best accuracy, replace them with values from:
+#   ros2 topic echo /camera/camera/color/camera_info --once
+#--------------------------------------------------------------------------------------------
+
+Camera.fx: 386.0
+Camera.fy: 386.0
+Camera.cx: 320.0
+Camera.cy: 240.0
+
+# Distortion parameters
+# RealSense ROS usually publishes rectified/aligned images, so keep these zero.
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+
+# Camera resolution
+Camera.width: 640
+Camera.height: 480
+
+# Camera frames per second
+Camera.fps: 30.0
+
+# Color order of images
+# 0: BGR
+# 1: RGB
+# RealSense ROS color image is normally RGB8 if configured as RGB.
+Camera.RGB: 1
+
+# Image scale
+# Keep 1.0 first while debugging.
+# After it works, you can try 0.5 for speed.
+Camera.imageScale: 1.0
+
+#--------------------------------------------------------------------------------------------
+# RGB-D depth parameters
+#--------------------------------------------------------------------------------------------
+
+# Close/Far threshold. Baseline times.
+ThDepth: 40.0
+
+# Stereo baseline times fx.
+# D455/D456 baseline approx 95 mm = 0.095 m.
+# bf = fx * baseline = 386.0 * 0.095 = 36.67
+Camera.bf: 36.67
+
+# Depth map factor
+# RealSense aligned depth image is usually uint16 in millimeters.
+# ORB-SLAM3 expects depth_m = depth_raw / DepthMapFactor.
+DepthMapFactor: 1000.0
+
+#--------------------------------------------------------------------------------------------
+# IMU parameters
+# For RGB-D mode, ORB-SLAM3 normally ignores these.
+# Do not trust D435i Tbc for D456 inertial SLAM.
+# If you run RGB-D-Inertial, replace Tbc with the real D456 camera-to-IMU extrinsics.
+#--------------------------------------------------------------------------------------------
+
+Tbc: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: f
+   data: [1.0, 0.0, 0.0, 0.0,
+          0.0, 1.0, 0.0, 0.0,
+          0.0, 0.0, 1.0, 0.0,
+          0.0, 0.0, 0.0, 1.0]
+
+InsertKFsWhenLost: 0
+
+IMU.NoiseGyro: 1e-3
+IMU.NoiseAcc: 1e-2
+IMU.GyroWalk: 1e-6
+IMU.AccWalk: 1e-4
+IMU.Frequency: 200
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters
+#--------------------------------------------------------------------------------------------
+
+ORBextractor.nFeatures: 1250
+ORBextractor.scaleFactor: 1.2
+ORBextractor.nLevels: 8
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -3.5
+Viewer.ViewpointF: 500
