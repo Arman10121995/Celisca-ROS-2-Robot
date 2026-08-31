@@ -25,6 +25,7 @@ setup(
             'robot-lab-select = robot_lab_bringup.selectors:main',
             'joint-effort-commander = robot_lab_bringup.joint_effort_commander:main',
             'humanoid-standing-controller = robot_lab_bringup.humanoid_standing_controller:main',
+            'mavros-offboard-controller = robot_lab_bringup.mavros_offboard_controller:main',
         ],
     },
 )

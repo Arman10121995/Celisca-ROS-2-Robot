@@ -1,15 +1,15 @@
-#ifndef BUMPERBOT_INTERFACE_HPP
-#define BUMPERBOT_INTERFACE_HPP
+#ifndef BUMPERBOT_FIRMWARE__BUMPERBOT_INTERFACE_HPP_
+#define BUMPERBOT_FIRMWARE__BUMPERBOT_INTERFACE_HPP_
 
-#include <rclcpp/rclcpp.hpp>
 #include <hardware_interface/system_interface.hpp>
 #include <libserial/SerialPort.h>
+#include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/state.hpp>
 #include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
 
-#include <vector>
+#include <cstddef>
 #include <string>
-
+#include <vector>
 
 namespace bumperbot_firmware
 {
@@ -20,7 +20,7 @@ class BumperbotInterface : public hardware_interface::SystemInterface
 {
 public:
   BumperbotInterface();
-  virtual ~BumperbotInterface();
+  ~BumperbotInterface() override;
 
   // Implementing rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface
   CallbackReturn on_activate(const rclcpp_lifecycle::State &) override;
@@ -39,9 +39,10 @@ private:
   std::vector<double> velocity_commands_;
   std::vector<double> position_states_;
   std::vector<double> velocity_states_;
-  rclcpp::Time last_run_;
+  std::size_t left_wheel_index_{0};
+  std::size_t right_wheel_index_{0};
 };
 }  // namespace bumperbot_firmware
 
 
-#endif  // BUMPERBOT_INTERFACE_HPP
+#endif  // BUMPERBOT_FIRMWARE__BUMPERBOT_INTERFACE_HPP_

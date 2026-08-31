@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!--
+  P3.5: complete simulated, commandable Quadrotor SITL description.
+
+  ArduPilot SITL does not ship a ROS2 URDF, so this is a first-party
+  placeholder mechanical model. All dynamic state comes from the SITL FCU
+  via MAVROS/micro-ROS: /imu, /gps, /odom, and AttitudeTarget commands.
+  The mesh-free quadrotor body carries four rotor links, the IMU and
+  downward LIDAR, and the gazebo plugins that publish gz-sim sensor
+  topics backing the registry contracts.
+-->
+<robot name="quadrotor_sitl" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="is_ignition" default="true"/>
+  <xacro:arg name="namespace" default=""/>
+
+  <!-- Frame prefix for multi-robot use -->
+  <xacro:property name="prefix" value="$(arg namespace)"/>
+
+  <!-- Base (body) link -->
+  <link name="${prefix}base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.5"/>
+      <inertia ixx="0.03" ixy="0" ixz="0"
+               iyy="0.03" iyz="0"
+               izz="0.05"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.25"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.05" radius="0.25"/>
+      </geometry>
+    </collision>
+    </link>
+
+  <!-- Four rotor links -->
+  <xacro:macro name="rotor" params="side sign">
+    <link name="${prefix}${side}_rotor_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.02"/>
+        <inertia ixx="1e-5" ixy="0" ixz="0"
+                 iyy="1e-5" iyz="0"
+                 izz="1e-5"/>
+      </inertial>
+      <visual>
+        <origin xyz="${sign * 0.25} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.01" radius="0.06"/>
+        </geometry>
+        <material name="grey"/>
+      </visual>
+    </link>
+    <joint name="${prefix}${side}_rotor_joint" type="fixed">
+      <origin xyz="${sign * 0.25} 0 0" rpy="0 0 0"/>
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}${side}_rotor_link"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:rotor side="front_left"  sign="1"/>
+  <xacro:rotor side="front_right" sign="-1"/>
+  <xacro:rotor side="rear_left"   sign="1"/>
+  <xacro:rotor side="rear_right"  sign="-1"/>
+
+  <!-- IMU sensor -->
+  <link name="${prefix}imu_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.01"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0"
+               iyy="1e-6" iyz="0"
+               izz="1e-6"/>
+    </inertial>
+  </link>
+  <joint name="${prefix}imu_joint" type="fixed">
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}imu_link"/>
+  </joint>
+
+  <!-- Downward LIDAR -->
+  <link name="${prefix}laser_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.01"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0"
+               iyy="1e-6" iyz="0"
+               izz="1e-6"/>
+    </inertial>
+  </link>
+  <joint name="${prefix}laser_joint" type="fixed">
+    <origin xyz="0 0 -0.15" rpy="3.14 0 0"/>
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}laser_link"/>
+  </joint>
+
+  <!-- Front-facing RGB camera -->
+  <link name="${prefix}camera_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.01"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0"
+               iyy="1e-6" iyz="0"
+               izz="1e-6"/>
+    </inertial>
+  </link>
+  <joint name="${prefix}camera_joint" type="fixed">
+    <origin xyz="0.1 0 0.02" rpy="0 0 0"/>
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}camera_link"/>
+  </joint>
+
+  <!-- Gazebo / gz-sim sensor plugins backing the registry sensor contracts -->
+  <xacro:include filename="$(find robots)/quadrotor_sitl/urdf/quadrotor_gazebo.xacro"/>
+  <xacro:quadrotor_gazebo is_ignition="$(arg is_ignition)" prefix="${prefix}"/>
+
+  <!-- Material definitions -->
+  <material name="blue">
+    <color rgba="0 0 1 1"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 1"/>
+  </material>
+
+</robot>

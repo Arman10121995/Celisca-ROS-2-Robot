@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+  P3.5: ros2_control gazebo wiring for the Quadrotor SITL simulated profile.
+
+  ARDUPILOT SITL is a MAVLink-based FCU simulator, not a ros2_control
+  hardware target. The quadrotor's "commandable" interface is the
+  mavros/msgs::ActuatorId and AttitudeTarget bridges, not joint commands.
+  This xacro therefore declares NO ros2_control joints — instead it
+  attaches gz-sim sensor systems (IMU, LIDAR, camera) that publish the
+  registry sensor contracts (/imu, /scan, /camera/image_raw). The body
+  mechanical model exists only for rendering and TF.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="quadrotor_gazebo" params="is_ignition:=true prefix:=default">
+    <gazebo>
+      <plugin filename="ign_ros2_control-system"
+              name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <xacro:if value="$(arg is_ignition)">
+          <hardware>
+            <plugin>ign_ros2_control/IgnitionSystem</plugin>
+          </hardware>
+        </xacro:if>
+        <xacro:unless value="$(arg is_ignition)">
+          <hardware>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+          </hardware>
+        </xacro:unless>
+        <joint name="${prefix}imu_joint"/>
+        <joint name="${prefix}laser_joint"/>
+        <joint name="${prefix}camera_joint"/>
+      </plugin>
+
+      <!-- IMU sensor (gz-sim Imu system publishes /imu) -->
+      <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu">
+        <xacro:unless value="$(arg is_ignition)">
+          <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+        </xacro:unless>
+      </plugin>
+
+      <!-- Sensors (gz-sim sensors system publishes /imu, /scan, /camera) -->
+      <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+        <sensor type="imu" name="${prefix}imu_sensor">
+          <parent>${prefix}imu_link</parent>
+          <update_rate>100</update_rate>
+          <always_on>true</always_on>
+        </sensor>
+
+        <sensor type="gpu_lidar" name="${prefix}lidar_sensor">
+          <parent>${prefix}laser_link</parent>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <ray>
+            <horizontal>
+              <samples>16</samples>
+              <resolution>1</resolution>
+              <min_angle>-1.5708</min_angle>
+              <max_angle>1.5708</max_angle>
+            </horizontal>
+            <range>
+              <min>0.1</min>
+              <max>10.0</max>
+            </range>
+          </ray>
+          <plugin filename="ignition-gazebo-sensor-system"
+                  name="ignition::gazebo::systems::Sensor">
+            <topic>scan</topic>
+            <type>sensor_msgs/msg/LaserScan</type>
+          </plugin>
+        </sensor>
+
+        <camera name="${prefix}front_camera">
+          <parent>${prefix}camera_link</parent>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100</far>
+          </clip>
+          <plugin filename="ignition-gazebo-sensor-system"
+                  name="ignition::gazebo::systems::Camera">
+            <topic>camera/image_raw</topic>
+            <type>sensor_msgs/msg/Image</type>
+          </plugin>
+        </camera>
+      </plugin>
+
+      <xacro:unless value="$(arg is_ignition)">
+        <!-- Additional gz-sim plugins for non-ignition builds -->
+      </xacro:unless>
+
+      <xacro:if value="$(arg is_ignition)">
+        <!-- Ignition-specific physics settings -->
+        <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics">
+          <real_time_update_rate>1000</real_time_update_rate>
+          <max_step_size>0.001</max_step_size>
+        </plugin>
+      </xacro:if>
+    </plugin>
+  </gazebo>
+</robot>

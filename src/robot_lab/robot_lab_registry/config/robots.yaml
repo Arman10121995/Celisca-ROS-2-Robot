@@ -990,10 +990,11 @@
 - id: quadrotor_sitl
   version: "1.0.0"
   name: "Quadrotor SITL"
-  description: "Multirotor SITL model for aerial robotics"
-  status: cataloged
+  ros_package: quadrotor_sitl
+  description: "Multirotor ArduPilot SITL profile with first-party mesh-free mechanical model, gz-sim IMU/LIDAR/camera sensor plugins, and MAVLink (AttitudeTarget/PositionTarget) command bridge; qualifies as a simulated, commandable aerial profile (P3.5)"
+  status: integrated
   robot_class: aerial
-  maturity: prototype
+  maturity: simulated
   source:
     repository: "https://github.com/ArduPilot/ardupilot"
     license: "GPL-3.0"
@@ -1022,21 +1023,62 @@
       frame: camera_link
       topic: /camera/image_raw
       message_type: sensor_msgs/Image
+    - type: lidar
+      name: downward_lidar
+      frame: laser_link
+      topic: /scan
+      message_type: sensor_msgs/LaserScan
+  actuators:
+    - type: rotor
+      name: front_left_rotor
+      joint: front_left_rotor_joint
+    - type: rotor
+      name: front_right_rotor
+      joint: front_right_rotor_joint
+    - type: rotor
+      name: rear_left_rotor
+      joint: rear_left_rotor_joint
+    - type: rotor
+      name: rear_right_rotor
+      joint: rear_right_rotor_joint
   command_interfaces:
     - mavros_msgs/AttitudeTarget
     - mavros_msgs/PositionTarget
   state_interfaces:
     - nav_msgs/Odometry
     - sensor_msgs/Imu
+    - sensor_msgs/JointState
+  frames:
+    - base_link
+    - imu_link
+    - laser_link
+    - camera_link
   capabilities:
     - flight
     - hovering
     - waypoint_navigation
+    - navigation
+    - control
+    - state_estimation
+    - sensor_fusion
+    - perception
+  dependencies:
+    - robots
+  assets:
+    urdf: robots/quadrotor_sitl/urdf/quadrotor_sitl.urdf.xacro
+    xacro: robots/quadrotor_sitl/config/quadrotor_controllers.yaml
+    meshes: []
+  smoke_experiments:
+    - quadrotor_sitl_smoke_test
   tags:
-    - planned
+    - integrated
     - multirotor
+    - aerial
+    - ardupilot
+    - qualification
   created: "2026-08-31"
-  updated: "2026-08-31"
+  updated: "2026-09-05"
+
 
 # ============================================================================
 # First-party differential-drive mobile robots (P3.2)

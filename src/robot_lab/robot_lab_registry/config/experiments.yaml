@@ -488,7 +488,7 @@
     record_plots: false
   namespace: ""
   namespaced: false
-  source:
+    source:
     repository: "https://github.com/berkeley-automation/Humanoid-Benchmark"
     license: "BSD-3-Clause"
   tags:
@@ -496,6 +496,55 @@
     - validation
     - berkeley_humanoid_lite
     - humanoid
+    - qualification
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+- id: quadrotor_sitl_smoke_test
+  version: "1.0.0"
+  name: "Quadrotor SITL Smoke Test"
+  description: "Validate Quadrotor SITL launches correctly and publishes IMU/LIDAR/camera/GPS topics for the simulated commandable aerial profile"
+  status: integrated
+  robot_id: quadrotor_sitl
+  environment_id: empty
+  simulator: gazebo
+  scenario_id: quadrotor_sitl_smoke_test
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: robot_localization_ekf
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: mavros_offboard_controller
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    mavros_offboard_controller:
+      throttle: 0.0
+      mode: "ALT_HOLD"
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/ArduPilot/ardupilot"
+    license: "GPL-3.0"
+  tags:
+    - smoke_test
+    - validation
+    - quadrotor_sitl
+    - aerial
+    - ardupilot
     - qualification
   created: "2026-09-05"
   updated: "2026-09-05"

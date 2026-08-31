@@ -1,7 +1,14 @@
 #include "bumperbot_firmware/bumperbot_interface.hpp"
+#include "bumperbot_firmware/serial_protocol.hpp"
+
 #include <hardware_interface/types/hardware_interface_type_values.hpp>
 #include <pluginlib/class_list_macros.hpp>
 
+#include <algorithm>
+#include <cmath>
+#include <exception>
+#include <string>
+#include <unordered_set>
 
 namespace bumperbot_firmware
 {
@@ -29,26 +36,106 @@ BumperbotInterface::~BumperbotInterface()
 
 CallbackReturn BumperbotInterface::on_init(const hardware_interface::HardwareInfo &hardware_info)
 {
-  CallbackReturn result = hardware_interface::SystemInterface::on_init(hardware_info);
+  const CallbackReturn result = hardware_interface::SystemInterface::on_init(hardware_info);
   if (result != CallbackReturn::SUCCESS)
   {
     return result;
   }
 
-  try
+  const auto port_parameter = info_.hardware_parameters.find("port");
+  if (port_parameter == info_.hardware_parameters.end() || port_parameter->second.empty())
   {
-    port_ = info_.hardware_parameters.at("port");
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "A non-empty 'port' hardware parameter is required");
+    return CallbackReturn::FAILURE;
   }
-  catch (const std::out_of_range &e)
+  port_ = port_parameter->second;
+
+  constexpr std::size_t expected_joint_count = 2;
+  if (info_.joints.size() != expected_joint_count)
   {
-    RCLCPP_FATAL(rclcpp::get_logger("BumperbotInterface"), "No Serial Port provided! Aborting");
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "Expected exactly %zu wheel joints, received %zu", expected_joint_count,
+      info_.joints.size());
     return CallbackReturn::FAILURE;
   }
 
-  velocity_commands_.reserve(info_.joints.size());
-  position_states_.reserve(info_.joints.size());
-  velocity_states_.reserve(info_.joints.size());
-  last_run_ = rclcpp::Clock().now();
+  bool found_left_wheel = false;
+  bool found_right_wheel = false;
+  for (std::size_t index = 0; index < info_.joints.size(); ++index)
+  {
+    const auto & joint = info_.joints[index];
+    if (joint.name == "wheel_left_joint" && !found_left_wheel)
+    {
+      left_wheel_index_ = index;
+      found_left_wheel = true;
+    }
+    else if (joint.name == "wheel_right_joint" && !found_right_wheel)
+    {
+      right_wheel_index_ = index;
+      found_right_wheel = true;
+    }
+    else
+    {
+      RCLCPP_ERROR(
+        rclcpp::get_logger("BumperbotInterface"),
+        "Unexpected or duplicate joint '%s'; expected wheel_left_joint and wheel_right_joint",
+        joint.name.c_str());
+      return CallbackReturn::FAILURE;
+    }
+
+    if (
+      joint.command_interfaces.size() != 1 ||
+      joint.command_interfaces.front().name != hardware_interface::HW_IF_VELOCITY)
+    {
+      RCLCPP_ERROR(
+        rclcpp::get_logger("BumperbotInterface"),
+        "Joint '%s' must expose exactly one velocity command interface", joint.name.c_str());
+      return CallbackReturn::FAILURE;
+    }
+
+    if (joint.state_interfaces.size() != 2)
+    {
+      RCLCPP_ERROR(
+        rclcpp::get_logger("BumperbotInterface"),
+        "Joint '%s' must expose exactly position and velocity state interfaces",
+        joint.name.c_str());
+      return CallbackReturn::FAILURE;
+    }
+
+    std::unordered_set<std::string> state_interface_names;
+    for (const auto & state_interface : joint.state_interfaces)
+    {
+      state_interface_names.insert(state_interface.name);
+    }
+    if (
+      state_interface_names.size() != 2 ||
+      state_interface_names.count(hardware_interface::HW_IF_POSITION) != 1 ||
+      state_interface_names.count(hardware_interface::HW_IF_VELOCITY) != 1)
+    {
+      RCLCPP_ERROR(
+        rclcpp::get_logger("BumperbotInterface"),
+        "Joint '%s' must expose exactly position and velocity state interfaces",
+        joint.name.c_str());
+      return CallbackReturn::FAILURE;
+    }
+  }
+
+  if (!found_left_wheel || !found_right_wheel)
+  {
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "Both wheel_left_joint and wheel_right_joint are required");
+    return CallbackReturn::FAILURE;
+  }
+
+  // The exported interfaces store pointers into these vectors. Size them once here and
+  // subsequently mutate their elements without replacing the backing storage.
+  velocity_commands_.assign(info_.joints.size(), 0.0);
+  position_states_.assign(info_.joints.size(), 0.0);
+  velocity_states_.assign(info_.joints.size(), 0.0);
 
   return CallbackReturn::SUCCESS;
 }
@@ -57,9 +144,9 @@ CallbackReturn BumperbotInterface::on_init(const hardware_interface::HardwareInf
 std::vector<hardware_interface::StateInterface> BumperbotInterface::export_state_interfaces()
 {
   std::vector<hardware_interface::StateInterface> state_interfaces;
+  state_interfaces.reserve(info_.joints.size() * 2);
 
-  // Provide only a position Interafce
-  for (size_t i = 0; i < info_.joints.size(); i++)
+  for (std::size_t i = 0; i < info_.joints.size(); ++i)
   {
     state_interfaces.emplace_back(hardware_interface::StateInterface(
         info_.joints[i].name, hardware_interface::HW_IF_POSITION, &position_states_[i]));
@@ -74,9 +161,9 @@ std::vector<hardware_interface::StateInterface> BumperbotInterface::export_state
 std::vector<hardware_interface::CommandInterface> BumperbotInterface::export_command_interfaces()
 {
   std::vector<hardware_interface::CommandInterface> command_interfaces;
+  command_interfaces.reserve(info_.joints.size());
 
-  // Provide only a velocity Interafce
-  for (size_t i = 0; i < info_.joints.size(); i++)
+  for (std::size_t i = 0; i < info_.joints.size(); ++i)
   {
     command_interfaces.emplace_back(hardware_interface::CommandInterface(
         info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &velocity_commands_[i]));
@@ -91,9 +178,9 @@ CallbackReturn BumperbotInterface::on_activate(const rclcpp_lifecycle::State &)
   RCLCPP_INFO(rclcpp::get_logger("BumperbotInterface"), "Starting robot hardware ...");
 
   // Reset commands and states
-  velocity_commands_ = { 0.0, 0.0 };
-  position_states_ = { 0.0, 0.0 };
-  velocity_states_ = { 0.0, 0.0 };
+  std::fill(velocity_commands_.begin(), velocity_commands_.end(), 0.0);
+  std::fill(position_states_.begin(), position_states_.end(), 0.0);
+  std::fill(velocity_states_.begin(), velocity_states_.end(), 0.0);
 
   try
   {
@@ -135,78 +222,98 @@ CallbackReturn BumperbotInterface::on_deactivate(const rclcpp_lifecycle::State &
 }
 
 
-hardware_interface::return_type BumperbotInterface::read(const rclcpp::Time &,
-                                                          const rclcpp::Duration &)
+hardware_interface::return_type BumperbotInterface::read(
+  const rclcpp::Time &, const rclcpp::Duration & period)
 {
-  // Interpret the string
-  if(arduino_.IsDataAvailable())
+  const double period_seconds = period.seconds();
+  if (!std::isfinite(period_seconds) || period_seconds < 0.0)
   {
-    auto dt = (rclcpp::Clock().now() - last_run_).seconds();
-    std::string message;
-    arduino_.ReadLine(message);
-    std::stringstream ss(message);
-    std::string res;
-    int multiplier = 1;
-    while(std::getline(ss, res, ','))
-    {
-      multiplier = res.at(1) == 'p' ? 1 : -1;
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"), "Invalid read period: %.9f seconds",
+      period_seconds);
+    return hardware_interface::return_type::ERROR;
+  }
 
-      if(res.at(0) == 'r')
+  try
+  {
+    if (arduino_.IsDataAvailable())
+    {
+      std::string message;
+      arduino_.ReadLine(message);
+      const WheelVelocityFrame frame = parse_wheel_velocity_frame(message);
+      if (frame.right_velocity)
       {
-        velocity_states_.at(0) = multiplier * std::stod(res.substr(2, res.size()));
-        position_states_.at(0) += velocity_states_.at(0) * dt;
+        velocity_states_[right_wheel_index_] = *frame.right_velocity;
       }
-      else if(res.at(0) == 'l')
+      if (frame.left_velocity)
       {
-        velocity_states_.at(1) = multiplier * std::stod(res.substr(2, res.size()));
-        position_states_.at(1) += velocity_states_.at(1) * dt;
+        velocity_states_[left_wheel_index_] = *frame.left_velocity;
+      }
+      if (frame.malformed_tokens > 0)
+      {
+        RCLCPP_WARN(
+          rclcpp::get_logger("BumperbotInterface"),
+          "Ignored %zu malformed token(s) in an encoder frame", frame.malformed_tokens);
       }
     }
-    last_run_ = rclcpp::Clock().now();
   }
+  catch (const std::exception & exception)
+  {
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"), "Failed to read from serial port '%s': %s",
+      port_.c_str(), exception.what());
+    return hardware_interface::return_type::ERROR;
+  }
+  catch (...)
+  {
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "Failed to read from serial port '%s': unknown error", port_.c_str());
+    return hardware_interface::return_type::ERROR;
+  }
+
+  // ros2_control supplies the measured loop duration. Using it keeps integration deterministic
+  // under simulated time and avoids a second, unrelated wall-clock measurement.
+  for (std::size_t index = 0; index < position_states_.size(); ++index)
+  {
+    position_states_[index] += velocity_states_[index] * period_seconds;
+  }
+
   return hardware_interface::return_type::OK;
 }
 
 
-hardware_interface::return_type BumperbotInterface::write(const rclcpp::Time &,
-                                                          const rclcpp::Duration &)
+hardware_interface::return_type BumperbotInterface::write(
+  const rclcpp::Time &, const rclcpp::Duration &)
 {
-  // Implement communication protocol with the Arduino
-  std::stringstream message_stream;
-  char right_wheel_sign = velocity_commands_.at(0) >= 0 ? 'p' : 'n';
-  char left_wheel_sign = velocity_commands_.at(1) >= 0 ? 'p' : 'n';
-  std::string compensate_zeros_right = "";
-  std::string compensate_zeros_left = "";
-  if(std::abs(velocity_commands_.at(0)) < 10.0)
+  const auto message = format_wheel_command_frame(
+    velocity_commands_[right_wheel_index_], velocity_commands_[left_wheel_index_]);
+  if (!message)
   {
-    compensate_zeros_right = "0";
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "Wheel command is non-finite or outside the serial protocol range");
+    return hardware_interface::return_type::ERROR;
   }
-  else
-  {
-    compensate_zeros_right = "";
-  }
-  if(std::abs(velocity_commands_.at(1)) < 10.0)
-  {
-    compensate_zeros_left = "0";
-  }
-  else
-  {
-    compensate_zeros_left = "";
-  }
-  
-  message_stream << std::fixed << std::setprecision(2) << 
-    "r" << right_wheel_sign << compensate_zeros_right << std::abs(velocity_commands_.at(0)) << 
-    ",l" <<  left_wheel_sign << compensate_zeros_left << std::abs(velocity_commands_.at(1)) << ",";
 
   try
   {
-    arduino_.Write(message_stream.str());
+    arduino_.Write(*message);
+  }
+  catch (const std::exception & exception)
+  {
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "Failed to send wheel command '%s' to serial port '%s': %s", message->c_str(),
+      port_.c_str(), exception.what());
+    return hardware_interface::return_type::ERROR;
   }
   catch (...)
   {
-    RCLCPP_ERROR_STREAM(rclcpp::get_logger("BumperbotInterface"),
-                        "Something went wrong while sending the message "
-                            << message_stream.str() << " to the port " << port_);
+    RCLCPP_ERROR(
+      rclcpp::get_logger("BumperbotInterface"),
+      "Failed to send wheel command '%s' to serial port '%s': unknown error",
+      message->c_str(), port_.c_str());
     return hardware_interface::return_type::ERROR;
   }
 

@@ -970,3 +970,44 @@
   tags:
     - exploration
     - coverage
+
+# ============================================================================
+# P3.5: Aerial control algorithms
+# ============================================================================
+
+- id: mavros_offboard_controller
+  version: "1.0.0"
+  name: "MAVROS Offboard Controller"
+  description: "Publishes mavros_msgs/AttitudeTarget and PositionTarget for offboard control of multirotor SITL; relays setpoints to the ArduPilot FCU bridge for simulated waypoint and attitude control"
+  status: integrated
+  category: control
+  family: mavlink
+  implementation:
+    package: quadrotor_sitl
+    executable: mavros_offboard_controller.py
+    language: python
+  input_contract:
+    required_topics:
+      - /mavros/setpoint/attitude
+  output_contract:
+    provided_topics:
+      - /mavros/setpoint/attitude
+      - /mavros/setpoint/position
+  required_capabilities:
+    - control
+    - flight
+  supported_robot_classes:
+    - aerial
+  parameters:
+    throttle: 0.0
+    mode: "ALT_HOLD"
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - mavlink
+    - offboard
+    - aerial
+    - ardupilot
+  created: "2026-09-05"
+  updated: "2026-09-05"

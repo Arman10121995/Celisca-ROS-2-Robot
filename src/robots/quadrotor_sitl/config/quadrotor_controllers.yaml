@@ -1,0 +1,13 @@
+# P3.5: ros2_control configuration for Quadrotor SITL.
+#
+# ArduPilot SITL is a MAVLink FCU, not a ros2_control hardware target.
+# The commandable interface is mavros/msgs::ActuatorId and AttitudeTarget,
+# so ros2_control is configured with an empty controller set. The sensor
+# plugins and TF are declared in quadrotor_gazebo.xacro.
+
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: true
+  # Intentionally no controllers: the quadrotor is commanded over MAVLink,
+  # not via ros2_control joint commands or velocity controllers.

@@ -21,10 +21,15 @@ ament_python_install_package(${PROJECT_NAME})
 
 add_library(${PROJECT_NAME} SHARED 
   src/bumperbot_interface.cpp
+  src/serial_protocol.cpp
 )
-target_include_directories(${PROJECT_NAME} PRIVATE 
-  include
-  "${SERIAL_INCLUDE_DIRS}"
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  PRIVATE
+    "${SERIAL_INCLUDE_DIRS}"
 )
 target_link_libraries(${PROJECT_NAME}
  "${SERIAL_LDFLAGS}")
@@ -96,5 +101,16 @@ ament_export_dependencies(
   rclcpp
   rclcpp_lifecycle
 )
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+
+  ament_add_gtest(test_serial_protocol test/test_serial_protocol.cpp)
+  target_link_libraries(test_serial_protocol ${PROJECT_NAME})
+
+  ament_add_gtest(test_bumperbot_interface test/test_bumperbot_interface.cpp)
+  target_link_libraries(test_bumperbot_interface ${PROJECT_NAME})
+  ament_target_dependencies(test_bumperbot_interface hardware_interface rclcpp rclcpp_lifecycle)
+endif()
 
 ament_package()
