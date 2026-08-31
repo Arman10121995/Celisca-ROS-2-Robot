@@ -4,3 +4,7 @@
 /src/robots/unitree/b2w_description/meshes/base_link.dae filter=lfs diff=lfs merge=lfs -text
 /src/robots/unitree/b2w_description/meshes/trunk.dae filter=lfs diff=lfs merge=lfs -text
 /src/robots/unitree/go1_description/meshes/trunk.dae filter=lfs diff=lfs merge=lfs -text
+/src/robots/_upstream/Awesome-URDFs/unitree/robots/b2w_description/meshes/base_link.dae filter=lfs diff=lfs merge=lfs -text
+/src/robots/_upstream/Awesome-URDFs/unitree/robots/b2w_description/meshes/trunk.dae filter=lfs diff=lfs merge=lfs -text
+/src/robots/_upstream/Awesome-URDFs/unitree/robots/go1_description/meshes/trunk.dae filter=lfs diff=lfs merge=lfs -text
+/src/robots/_upstream/Berkeley-Humanoid-Lite-Assets/data/robots/berkeley_humanoid/berkeley_humanoid_lite/usd/configuration/berkeley_humanoid_lite_base.usd filter=lfs diff=lfs merge=lfs -text

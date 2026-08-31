@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="assem12ros_29">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="1.3878E-17 0.020679 -1.3878E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.15774" />
+      <inertia
+        ixx="7.3168E-05"
+        ixy="-1.6941E-21"
+        ixz="4.9128E-20"
+        iyy="0.00011533"
+        iyz="-6.5645E-21"
+        izz="7.3168E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.50196 0.50196 0.50196 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="l1">
+    <inertial>
+      <origin
+        xyz="5.433E-05 0.066186 8.6703E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.10232" />
+      <inertia
+        ixx="6.0533E-05"
+        ixy="1.1818E-08"
+        ixz="6.4494E-06"
+        iyy="6.5923E-05"
+        iyz="-6.4448E-08"
+        izz="2.6572E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ji"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="l1" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2"
+      upper="2"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="l2">
+    <inertial>
+      <origin
+        xyz="1.38777878078145E-17 -0.0206790113312739 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.157742086719256" />
+      <inertia
+        ixx="7.31681636191558E-05"
+        ixy="-8.470329472543E-22"
+        ixz="-3.77856103814223E-20"
+        iyy="0.000115328999084835"
+        iyz="5.82335151237331E-21"
+        izz="7.31681636191557E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.501960784313725 0.501960784313725 0.501960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j2"
+    type="fixed">
+    <origin
+      xyz="0.047829 0.11652 0.0087348"
+      rpy="0.18152 0.018467 -1.5674" />
+    <parent
+      link="l1" />
+    <child
+      link="l2" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="l3">
+    <inertial>
+      <origin
+        xyz="-0.000971901881603864 -0.0590580203272191 0.0026212835871158"
+        rpy="0 0 0" />
+      <mass
+        value="0.116597362446432" />
+      <inertia
+        ixx="3.57080380905168E-05"
+        ixy="-3.88567194650822E-07"
+        ixz="-3.02317549550716E-06"
+        iyy="6.34905346726241E-05"
+        iyz="1.01240798869642E-06"
+        izz="4.18068109784456E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j3"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="l2" />
+    <child
+      link="l3" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-2"
+      upper="2"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="l4">
+    <inertial>
+      <origin
+        xyz="0.000132319410339397 -0.100594626238919 0.000130508876165683"
+        rpy="0 0 0" />
+      <mass
+        value="0.179082488336875" />
+      <inertia
+        ixx="7.4928184422034E-05"
+        ixy="-8.69972978527386E-12"
+        ixz="4.79894567453247E-10"
+        iyy="0.000117947580752545"
+        iyz="-7.36633682184302E-12"
+        izz="7.49623847900487E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j4"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="l3" />
+    <child
+      link="l4" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="l5">
+    <inertial>
+      <origin
+        xyz="-0.0727380517901399 0.118564659552907 -0.0782875495042798"
+        rpy="0 0 0" />
+      <mass
+        value="0.143980559303271" />
+      <inertia
+        ixx="0.000598475203524328"
+        ixy="-1.53654554909525E-06"
+        ixz="5.16599658597293E-05"
+        iyy="0.00055697224445356"
+        iyz="1.58516320468509E-05"
+        izz="0.000102277362814367" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j5"
+    type="fixed">
+    <origin
+      xyz="0.1165 -0.04862 0.0022292"
+      rpy="-0.019089 0.18146 1.5674" />
+    <parent
+      link="l4" />
+    <child
+      link="l5" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="l6">
+    <inertial>
+      <origin
+        xyz="2.56191534912589E-05 -0.0340260283873075 -0.0124351509094178"
+        rpy="0 0 0" />
+      <mass
+        value="0.085455092221939" />
+      <inertia
+        ixx="8.86911437689624E-05"
+        ixy="5.39134371862045E-08"
+        ixz="5.6426741331197E-14"
+        iyy="1.66062359944508E-05"
+        iyz="-5.47389066263592E-12"
+        izz="9.55186524677266E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assem12ros_29/meshes/l6.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j6"
+    type="revolute">
+    <origin
+      xyz="-0.048853 0.1221 -0.16748"
+      rpy="1.3893 -0.017083 1.5739" />
+    <parent
+      link="l5" />
+    <child
+      link="l6" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2"
+      upper="2"
+      effort="0"
+      velocity="1" />
+  </joint>
+</robot>

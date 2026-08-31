@@ -427,3 +427,13 @@ ros2 launch bumperbot_bringup simulated_robot.launch.py --show-arguments
    - Modular design for easy extension
 
 This project provides a solid foundation for robotics research and development, with clear pathways for future enhancements and extensions.
+
+## Credits
+
+This workspace includes the following upstream robot description assets (bundled directly):
+
+| Repository | Original URL | License |
+|---|---|---|
+| Awesome-URDFs | https://github.com/code-name-57/Awesome-URDFs | MIT |
+| Berkeley-Humanoid-Lite | https://github.com/HybridRobotics/Berkeley-Humanoid-Lite | BSD-3-Clause |
+| Berkeley-Humanoid-Lite-Assets | https://github.com/HybridRobotics/Berkeley-Humanoid-Lite-Assets | BSD-3-Clause |

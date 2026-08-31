@@ -1,0 +1,62 @@
+schema_version: 1
+updated: "2026-08-31"
+goal: unified_multi_robot_algorithm_lab
+supported_baseline:
+  os: Ubuntu 22.04
+  ros: Humble
+  architecture: arm64
+  simulator: Gazebo Classic
+
+baseline:
+  core_packages: 16
+  optional_packages: 1
+  legacy_robot_profiles: 15
+  full_stack_robot_profiles: 1
+  legacy_environment_profiles: 14
+  legacy_modes: 5
+  tests:
+    total: 137
+    errors: 0
+    failures: 0
+    skipped: 0
+  evidence:
+    - colcon build --symlink-install --packages-skip orbslam3
+    - colcon test-result --verbose
+    - xacro expansion for all legacy robot profiles
+    - simulated, room-vacuum, and real launch argument expansion
+
+tasks:
+  P0:
+    title: repair_and_baseline
+    state: done
+    owner: root
+    remaining: []
+  P1:
+    title: platform_foundation
+    state: active
+    owner: root
+    tasks:
+      P1.1: {state: active, owner: root, evidence: []}
+      P1.2: {state: queued, owner: null, evidence: []}
+      P1.3: {state: queued, owner: null, evidence: []}
+      P1.4: {state: queued, owner: null, evidence: []}
+      P1.5: {state: active, owner: root, evidence: [ROADMAP.md, docs/architecture/overview.md]}
+      P1.6: {state: queued, owner: null, evidence: []}
+  P2: {title: unified_composition, state: queued, owner: null}
+  P3: {title: robot_integrations, state: queued, owner: null}
+  P4: {title: environment_expansion, state: queued, owner: null}
+  P5: {title: algorithm_breadth, state: queued, owner: null}
+  P6: {title: benchmarking, state: queued, owner: null}
+  P7: {title: hardening, state: queued, owner: null}
+
+known_blockers:
+  - id: hardware_hil
+    affects: [P7.5]
+    condition: physical Bumperbot and safe test fixture are required
+  - id: orbslam3_opencv_abi
+    affects: [P5.2]
+    condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
+
+handoff:
+  next_task: P1.1
+  instructions: Read ROADMAP.md and docs/architecture/overview.md, preserve the dirty baseline, then run registry validation before claiming P2 work.
