@@ -24,7 +24,7 @@ standard result record described in `docs/architecture/overview.md`.
 | Phase | State | Outcome |
 |---|---|---|
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
-| P1 — platform foundation | active | Normalized registry, validation CLI, persistent status, architecture contracts |
+| P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | queued | Independent selectors and compatibility-preserving launch/CLI |
 | P3 — robot integrations | queued | Working mobile, legged, humanoid, and aerial representatives |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |

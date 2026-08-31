@@ -42,7 +42,7 @@ tasks:
     remaining: []
   P1:
     title: platform_foundation
-    state: active
+    state: done
     owner: root
     tasks:
       P1.1: {state: done, owner: root, evidence: [robot_lab_registry package, schemas.py, catalog.py, validation.py, query.py, cli.py, config/*, test/test_registry.py]}
@@ -67,5 +67,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P1.2
-  instructions: Read ROADMAP.md and docs/architecture/overview.md, preserve the dirty baseline, then run registry validation before claiming P2 work.
+  next_task: P2.1
+  instructions: Read ROADMAP.md and docs/architecture/overview.md, P1 is now complete with normalized registry. Next: introduce robot_lab_bringup with selectors for robot, environment, simulator, and scenario.
