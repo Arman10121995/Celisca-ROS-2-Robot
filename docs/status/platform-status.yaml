@@ -20,7 +20,7 @@ baseline:
   registry_scenarios: 9
   registry_experiments: 6
   tests:
-    total: 137
+    total: 147
     errors: 0
     failures: 0
     skipped: 0
@@ -33,6 +33,9 @@ baseline:
     - robot_lab_registry validation passes with 19 robots, 15 environments, 27 algorithms
     - test/test_registry.py: 10/10 tests passing (imports, schemas, catalog, validation, query, cross-references, capability checking, status counts, status distribution, robot-environment compatibility)
     - CI workflow validates registry on every push/PR (robot-lab validate + test_registry.py)
+    - test/test_selectors.py: 7/7 tests passing (robot, environment, simulator, scenario, perception, localization, control selectors)
+    - test/test_launch_fragments.py: 8/8 tests passing (launch fragment creation, parameter overlays, registry, composition resolver)
+    - test/test_adapter.py: 3/3 tests passing (LegacyAdapter, environment mappings, adapter launch generation)
 
 tasks:
   P0:
@@ -53,13 +56,13 @@ tasks:
       P1.6: {state: done, owner: root, evidence: [.github/workflows/ci.yml updated with robot-lab validate and test_registry.py steps to validate both legacy profiles and canonical registry on every push/PR]}
   P2:
     title: unified_composition
-    state: active
+    state: in_progress
     owner: root
     tasks:
       P2.1: {state: done, owner: root, evidence: [robot_lab_bringup package, RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector]}
       P2.2: {state: done, owner: root, evidence: [PerceptionSelector, LocalizationSelector, StateEstimationSelector, SensorFusionSelector, GlobalPlanningSelector, LocalPlanningSelector, ControlSelector]}
       P2.3: {state: done, owner: root, evidence: [launch_fragments.py: LaunchFragment, ParameterOverlay, LaunchFragmentRegistry, CompositionResolver with topic compatibility and conflict detection, 8 tests passing]}
-      P2.4: {state: queued, owner: null, evidence: []}
+      P2.4: {state: done, owner: root, evidence: [adapter.py with LegacyAdapter class, robot_adapter.launch.py wrapper, test/test_adapter.py with 3 tests passing]}
       P2.5: {state: queued, owner: null, evidence: []}
       P2.6: {state: queued, owner: null, evidence: []}
   P3: {title: robot_integrations, state: queued, owner: null}
@@ -77,5 +80,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P2.4
-  instructions: Read ROADMAP.md and docs/architecture/overview.md. P1 and P2.1-P2.3 are complete. Next: wrap bumperbot_bringup/simulated_robot.launch.py as first adapter (P2.4).
+  next_task: P2.5
+  instructions: Read ROADMAP.md and docs/architecture/overview.md. P1 and P2.1-P2.4 are complete. Next: add namespaces and frame-prefix contracts for multi-robot experiments (P2.5).

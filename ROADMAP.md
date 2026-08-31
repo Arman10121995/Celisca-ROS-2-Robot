@@ -25,7 +25,7 @@ standard result record described in `docs/architecture/overview.md`.
 |---|---|---|
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
-| P2 — unified composition | queued | Independent selectors and compatibility-preserving launch/CLI |
+| P2 — unified composition | in_progress | Independent selectors and compatibility-preserving launch/CLI |
 | P3 — robot integrations | queued | Working mobile, legged, humanoid, and aerial representatives |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
@@ -74,8 +74,8 @@ command, or artifact rather than merely saying that code was added.
   estimation, global planning, local planning, and control. (7 algorithm selectors + CompositionBuilder)
 - [x] **P2.3** Resolve selectors into launch fragments and parameter overlays;
   reject invalid combinations before processes start. (LaunchFragment, ParameterOverlay, CompositionResolver with topic/conflict checking)
-- [ ] **P2.4** Wrap `bumperbot_bringup/simulated_robot.launch.py` as the first
-  adapter and retain its public arguments until a documented deprecation.
+- [x] **P2.4** Wrap `bumperbot_bringup/simulated_robot.launch.py` as the first
+  adapter and retain its public arguments until a documented deprecation. (LegacyAdapter, robot_adapter.launch.py, 3 tests passing)
 - [ ] **P2.5** Add namespaces and frame-prefix contracts so parallel and
   multi-robot experiments do not collide.
 - [ ] **P2.6** Add `list`, `describe`, `validate`, `launch --dry-run`, and
