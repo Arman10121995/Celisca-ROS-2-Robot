@@ -45,6 +45,8 @@ jobs:
           python3 src/robot_lab/robot_lab_registry/test/test_bumperbot_qualification.py
           # Run Labbot second-robot qualification suite (P3.2)
           python3 src/robot_lab/robot_lab_registry/test/test_labbot_qualification.py
+          # Run Go2 legged-robot qualification suite (P3.3)
+          python3 src/robot_lab/robot_lab_registry/test/test_go2_qualification.py
 
       - name: Test core workspace
         shell: bash

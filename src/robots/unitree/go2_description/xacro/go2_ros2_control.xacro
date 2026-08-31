@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+  P3.3: ros2_control + gz-sim wiring for the Unitree Go2 simulated profile.
+
+  Additive to the vendored upstream description (robot.xacro): this file is
+  meant to be included alongside robot.xacro by go2_sim.xacro. It declares
+  the 12 effort-commandable leg joints, the ros2_control/gz-sim system
+  plugins, and the IMU/RGB-camera sensor plugins that back the registry
+  sensor contracts (/imu, /camera/rgb/image_raw).
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- One leg's three joints with effort limits from const.xacro -->
+  <xacro:macro name="go2_leg_ros2_control" params="prefix hip_torque calf_torque">
+    <joint name="${prefix}_hip_joint">
+      <command_interface name="effort">
+        <param name="min">-${hip_torque}</param>
+        <param name="max">${hip_torque}</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="${prefix}_thigh_joint">
+      <command_interface name="effort">
+        <param name="min">-${hip_torque}</param>
+        <param name="max">${hip_torque}</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="${prefix}_calf_joint">
+      <command_interface name="effort">
+        <param name="min">-${calf_torque}</param>
+        <param name="max">${calf_torque}</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="go2_ros2_control" params="is_ignition:=true">
+
+    <ros2_control name="Go2System" type="system">
+
+      <!-- ROS 2 Humble (Ignition/Gz Fortress) -->
+      <xacro:if value="$(arg is_ignition)">
+        <hardware>
+          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+        </hardware>
+      </xacro:if>
+
+      <!-- ROS 2 Iron or above (Gz sim) -->
+      <xacro:unless value="$(arg is_ignition)">
+        <hardware>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+      </xacro:unless>
+
+      <xacro:go2_leg_ros2_control prefix="FL" hip_torque="23.7" calf_torque="35.55"/>
+      <xacro:go2_leg_ros2_control prefix="FR" hip_torque="23.7" calf_torque="35.55"/>
+      <xacro:go2_leg_ros2_control prefix="RL" hip_torque="23.7" calf_torque="35.55"/>
+      <xacro:go2_leg_ros2_control prefix="RR" hip_torque="23.7" calf_torque="35.55"/>
+
+    </ros2_control>
+
+    <!-- gz-sim system plugins and controller parameters -->
+    <gazebo>
+      <xacro:if value="$(arg is_ignition)">
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <parameters>$(find robots)/unitree/go2_description/config/go2_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu"/>
+        <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <parameters>$(find robots)/unitree/go2_description/config/go2_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+      </xacro:unless>
+    </gazebo>
+
+    <!-- IMU sensor backing the /imu registry contract -->
+    <gazebo reference="imu_link">
+      <sensor name="go2_imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>200</update_rate>
+        <topic>imu</topic>
+      </sensor>
+    </gazebo>
+
+    <!-- RGB camera on front_camera link backing the /camera/rgb/image_raw contract -->
+    <gazebo reference="front_camera">
+      <sensor name="front_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>15</update_rate>
+        <topic>camera/rgb/image_raw</topic>
+        <camera>
+          <horizontal_fov>1.57</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>300</far>
+          </clip>
+        </camera>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

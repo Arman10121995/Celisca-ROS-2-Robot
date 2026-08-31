@@ -788,6 +788,33 @@
     - noisy
     - testing
 
+- id: joint_effort_commander
+  version: "1.0.0"
+  name: "Joint Effort Commander"
+  description: "Joint-group effort command interface for legged and humanoid robots; publishes Float64MultiArray effort targets consumed by a forward_command_controller (P3.3)"
+  status: integrated
+  category: control
+  family: joint_effort
+  implementation:
+    package: robot_lab_bringup
+    plugin: JointEffortCommander
+    language: python
+  input_contract:
+    required_topics:
+      - /joint_states
+  output_contract:
+    provided_topics:
+      - /go2_group_effort_controller/commands
+  required_capabilities: []
+  supported_robot_classes:
+    - legged
+    - humanoid
+  parameters:
+    command_rate_hz: 100.0
+    default_effort: 0.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
 - id: pid_controller
   version: "1.0.0"
   name: "PID Controller"

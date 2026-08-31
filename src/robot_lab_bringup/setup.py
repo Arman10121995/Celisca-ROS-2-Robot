@@ -23,6 +23,7 @@ setup(
     entry_points={
         'console_scripts': [
             'robot-lab-select = robot_lab_bringup.selectors:main',
+            'joint-effort-commander = robot_lab_bringup.joint_effort_commander:main',
         ],
     },
 )

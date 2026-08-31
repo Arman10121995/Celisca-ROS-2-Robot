@@ -531,6 +531,7 @@
   status: cataloged
   dimension: 2D
   simulator: gazebo
+  ros_package: maps
   world_file: maps/maps/empty/worlds/empty.world
   occupancy_map: ""
   ground_truth_available: true

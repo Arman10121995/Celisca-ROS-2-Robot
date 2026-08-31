@@ -537,16 +537,18 @@
 - id: go2
   version: "1.0.0"
   name: "Unitree Go2"
-  description: "Quadruped robot from Unitree"
-  status: cataloged
+  ros_package: go2_description
+  description: "Unitree Go2 quadruped; vendored upstream description qualified as a simulated, commandable legged profile with IMU, RGB camera, estimated odometry, and 12 effort-commandable leg joints via ros2_control (P3.3)"
+  status: integrated
   robot_class: legged
-  maturity: prototype
+  maturity: simulated
   source:
     repository: "https://github.com/unitreerobotics/ros2_go2"
     license: "MIT"
     maintainer: "Unitree Robotics"
   supported_simulators:
     - gazebo
+    - ignition
   locomotion:
     type: quadruped
     dof: 12
@@ -556,22 +558,86 @@
       frame: imu_link
       topic: /imu
       message_type: sensor_msgs/Imu
+    - type: camera
+      name: front_camera
+      frame: front_camera
+      topic: /camera/rgb/image_raw
+      message_type: sensor_msgs/Image
+    - type: odometry
+      name: odometry
+      frame: odom
+      topic: /odom
+      message_type: nav_msgs/Odometry
+  actuators:
+    - type: joint
+      name: fl_hip
+      joint: FL_hip_joint
+    - type: joint
+      name: fl_thigh
+      joint: FL_thigh_joint
+    - type: joint
+      name: fl_calf
+      joint: FL_calf_joint
+    - type: joint
+      name: fr_hip
+      joint: FR_hip_joint
+    - type: joint
+      name: fr_thigh
+      joint: FR_thigh_joint
+    - type: joint
+      name: fr_calf
+      joint: FR_calf_joint
+    - type: joint
+      name: rl_hip
+      joint: RL_hip_joint
+    - type: joint
+      name: rl_thigh
+      joint: RL_thigh_joint
+    - type: joint
+      name: rl_calf
+      joint: RL_calf_joint
+    - type: joint
+      name: rr_hip
+      joint: RR_hip_joint
+    - type: joint
+      name: rr_thigh
+      joint: RR_thigh_joint
+    - type: joint
+      name: rr_calf
+      joint: RR_calf_joint
   command_interfaces:
+    - std_msgs/Float64MultiArray
     - unitree_legged_msgs/LowCmd
   state_interfaces:
-    - unitree_legged_msgs/LowState
+    - sensor_msgs/JointState
+    - sensor_msgs/Imu
+    - nav_msgs/Odometry
+  frames:
+    - base
+    - imu_link
+    - front_camera
+    - odom
   capabilities:
     - locomotion
     - walking
+    - control
+    - state_estimation
+    - sensor_fusion
+    - perception
+  dependencies:
+    - robots
   assets:
-    urdf: robots/unitree/go2_description/urdf/go2_description.urdf
-    xacro: robots/unitree/go2_description/xacro/robot.xacro
+    urdf: robots/unitree/go2_description/xacro/go2_sim.xacro
+    xacro: robots/unitree/go2_description/xacro/go2_ros2_control.xacro
+  smoke_experiments:
+    - go2_smoke_test
   tags:
     - imported
     - quadruped
     - unitree
+    - qualification
   created: "2026-08-31"
-  updated: "2026-08-31"
+  updated: "2026-09-05"
 
 - id: go2w
   version: "1.0.0"

@@ -402,3 +402,52 @@
     - qualification
   created: "2026-09-05"
   updated: "2026-09-05"
+
+- id: go2_smoke_test
+  version: "1.0.0"
+  name: "Go2 Smoke Test"
+  description: "Validate Go2 launches correctly and publishes all expected topics for the simulated commandable legged profile"
+  status: integrated
+  robot_id: go2
+  environment_id: empty
+  simulator: gazebo
+  scenario_id: go2_smoke_test
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: joint_effort_commander
+  seed: 42
+  time_limit: 30.0
+  simulation_time_limit: 30.0
+  parameters:
+    joint_effort_commander:
+      command_rate_hz: 100.0
+      default_effort: 0.0
+  metrics:
+    launch_success: true
+    topics_published: true
+    tf_available: true
+    command_accepted: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_trajectories: false
+    record_plots: false
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_go2"
+    license: "MIT"
+  tags:
+    - smoke_test
+    - validation
+    - go2
+    - unitree
+    - legged
+    - qualification
+  created: "2026-09-05"
+  updated: "2026-09-05"

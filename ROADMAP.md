@@ -26,7 +26,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
-| P3 — robot integrations | P3.1, P3.2 done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works |
+| P3 — robot integrations | P3.1, P3.2, P3.3 done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap) |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
@@ -116,8 +116,32 @@ command, or artifact rather than merely saying that code was added.
   28/28, robot_lab_bringup 25/25, `robot-lab validate --cross-references`
   passes, `robot-lab launch --dry-run` resolves the labbot smoke composition
   (robots + maps/small_office) with no warnings)
-- [ ] **P3.3** Turn one existing Unitree quadruped description into a simulated,
+- [x] **P3.3** Turn one existing Unitree quadruped description into a simulated,
   commandable legged profile with sensors and odometry.
+  (Chose Go2, already vendored under src/robots/unitree/go2_description with
+  full xacro + mesh assets. Added go2_ros2_control.xacro: 12 effort-commandable
+  leg joints via a per-leg macro with torque limits from const.xacro,
+  IgnitionSystem/GazeboSimSystem plugins, IMU + RGB camera gazebo sensors
+  backing registry contracts (/imu, /camera/rgb/image_raw), own
+  go2_controllers.yaml with joint_state_broadcaster +
+  go2_group_effort_controller (forward_command_controller, effort interface).
+  Added go2_sim.xacro wrapper combining upstream robot.xacro + ros2_control
+  wiring. Registry entry upgraded: integrated/simulated, odometry + camera +
+  IMU sensor contracts, 12 actuators, Float64MultiArray command interface,
+  state interfaces (JointState/Imu/Odometry), frames, capabilities,
+  ros_package go2_description. Added go2_smoke_test scenario + experiment
+  (full stack pinned). Added joint_effort_commander control algorithm
+  (legged/humanoid) — closes the gap where no control algorithm supported
+  legged robots, which blocked cross-reference validation. test/
+  test_go2_qualification.py with 23 tests covering registry contracts, smoke
+  composition, macro-aware joint consistency (registry vs control xacro vs
+  controllers yaml), upstream mesh resolution, and real xacro expansion.
+  Added ros_package: maps to the empty environment (resolves previous
+  "Environment Package: unknown" dry-run gap). CI runs the go2 suite.
+  Evidence: test_go2_qualification.py 23/23, registry suites 10/10 + 28/28 +
+  23/23, robot_lab_bringup 25/25, `robot-lab validate --cross-references`
+  passes, `robot-lab launch --dry-run` resolves the go2 smoke composition
+  (go2_description + maps/empty) with no warnings and Environment Package: maps)
 - [ ] **P3.4** Turn one existing humanoid description into a simulated,
   commandable profile with a stable standing/walking controller.
 - [ ] **P3.5** Integrate one multirotor SITL profile with pose, IMU, camera, and
