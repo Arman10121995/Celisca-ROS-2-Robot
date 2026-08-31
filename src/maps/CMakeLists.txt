@@ -13,4 +13,10 @@ install(
   DESTINATION share/${PROJECT_NAME}/maps
 )
 
+# Install P4.6 navigation/seed metadata under share/maps/config/...
+install(
+  DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
 ament_package()

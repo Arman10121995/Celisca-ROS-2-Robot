@@ -271,6 +271,42 @@ ENVIRONMENT_SCHEMA = {
                     },
                     "description": "Designated spawn zones"
                 },
+                "seed": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Deterministic random seed for environment stochasticity (P4.6)"
+                },
+                "goals": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "pose": {"type": "object"}
+                        },
+                        "required": ["id"]
+                    },
+                    "description": "Designated goal poses (P4.6)"
+                },
+                "reference_paths": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "waypoints": {
+                                "type": "array",
+                                "items": {"type": "object"}
+                            }
+                        },
+                        "required": ["id", "waypoints"]
+                    },
+                    "description": "Reference navigation waypoint paths (P4.6)"
+                },
+                "reset_service": {
+                    "type": "string",
+                    "description": "Name of the environment reset service (P4.6)"
+                },
                 "size": {
                     "type": "object",
                     "properties": {

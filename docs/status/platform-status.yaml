@@ -84,7 +84,7 @@ tasks:
       P3.3: {state: done, owner: cline, evidence: [Unitree Go2 qualified as first simulated commandable legged profile, go2_ros2_control.xacro with 12 effort-commandable leg joints (per-leg macro, torque limits from const.xacro), IgnitionSystem/GazeboSimSystem plugins, IMU + RGB camera gazebo sensors backing /imu and /camera/rgb/image_raw contracts, go2_controllers.yaml with joint_state_broadcaster + go2_group_effort_controller (forward_command_controller effort), go2_sim.xacro wrapper combining upstream robot.xacro + ros2_control wiring, registry entry upgraded to integrated/simulated with odometry+camera+imu sensor contracts, 12 actuators, Float64MultiArray command interface, JointState/Imu/Odometry state interfaces, ros_package go2_description, go2_smoke_test scenario + full-stack experiment, joint_effort_commander control algorithm added for legged/humanoid so cross-reference validation passes, test/test_go2_qualification.py 23 tests passing incl. macro-aware joint consistency, upstream mesh resolution, and real xacro expansion, empty environment ros_package added, CI runs go2 suite, robot-lab launch --dry-run resolves go2 smoke composition (go2_description + maps/empty) with no warnings]}
   P4:
     title: environment_expansion
-    state: in progress
+    state: done
     owner: cline
     tasks:
       P4.1:
@@ -107,6 +107,10 @@ P4.5:
         state: done
         owner: cline
         evidence: [added 2 dynamic/sensor-degradation variant arenas under src/maps/maps/ (nav_dynamic with two scripted actor moving obstacles, nav_sensor_degraded with tall blind-corner occluding walls), each a Gazebo world with a companion Nav2 occupancy map of the static geometry rasterized from the same footprints (gen_dynamic_arenas.py in src/maps/tools), registered integrated in environments.yaml with explicit dynamics metadata (nav_dynamic dynamic_obstacles true + max_dynamic_count 2 matching its actors, nav_sensor_degraded false) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_5_dynamic_variants.py 8 tests passing, cross-reference validation passes]
+P4.6:
+        state: done
+        owner: cline
+        evidence: [added normative navigation metadata (seed, reset_service, spawn_zones, goals, reference_paths) for all 12 deterministic arenas in src/maps/config/arena_navigation.yaml, extended the environment JSON schema with seed/goals/reference_paths/reset_service fields, mirrored the metadata into every arena entry in environments.yaml, validated all goals + reference waypoints land in free space of each arena's occupancy map, test/test_p4_6_navigation_metadata.py 7 tests passing, full registry suite 179 run/4 pre-existing xacro failures, cross-reference validation passes]
   P5: {title: algorithm_breadth, state: queued, owner: null}
   P6: {title: benchmarking, state: queued, owner: null}
   P7: {title: hardening, state: queued, owner: null}
@@ -120,5 +124,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P4.6
-  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete; P4.1-P4.5 complete (14 qualified + 5 nav arenas + 3 terrain + 2 aerial + 2 dynamic/sensor variants, each with occupancy provenance + world/map consistency and a locking test file: test_p4_1 9/9, test_p4_2 8/8, test_p4_3 9/9, test_p4_4 9/9, test_p4_5 8/8, cross-reference validation passes). Next: P4.6 - add seeds, reset services, spawn zones, goals, and reference paths across the new arenas (ensure every environment declares spawn_zones and goals; add a reference-path section or seed metadata; update scenario/experiment data; add tests). Registry counts: 20 robots / 28 environments / 27 algorithms / 18 scenarios / 15 experiments.'
+  next_task: P5.1
+  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete; P4 complete (14 qualified + 5 nav arenas + 3 terrain + 2 aerial + 2 dynamic/sensor variants + P4.6 seed/goal/reference-path metadata; test_p4_1 9/9, test_p4_2 8/8, test_p4_3 9/9, test_p4_4 9/9, test_p4_5 8/8, test_p4_6 7/7; cross-reference validation passes). Next: P5 - algorithm breadth, each category must reach 5 integrated implementations. Current integrated counts: perception 2 (need 3 more), localization 4 (need 1), state_estimation 2 (need 3), sensor_fusion 2 (need 3), global_planning 3 (need 2), local_planning 4 (need 1), control 9 (done). Add real integrated adapters + bringup fragments + tests for the gaps, mirroring the P3 qualification pattern. Registry counts: 20 robots / 28 environments / 30 algorithms / 18 scenarios / 15 experiments.'

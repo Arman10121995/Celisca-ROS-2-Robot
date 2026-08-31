@@ -27,7 +27,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
 | P3 — robot integrations | done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap); Berkeley Humanoid Lite qualified as simulated commandable humanoid profile (22 position-commandable joints, trunk IMU, estimated odometry, standing-pose command contract, bhl qualification suite); Quadrotor SITL qualified as simulated commandable aerial profile (MAVLink AttitudeTarget/PositionTarget bridge, mesh-free URDF for rendering/TF, mavros_offboard_controller with graceful degradation, quadrotor qualification suite); per-class smoke scenarios (mobile/legged/humanoid/aerial) plus documented safety/compute limits on all five integrated robots (P3.6, test_p3_6_safety_limits.py 12/12) |
-| P4 — environments | in progress | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4 done: 2 3D/aerial courses added (aerial_course via promoted placeholder, aerial_indoor) with occupancy provenance + world/map consistency; P4.5 done: 2 dynamic/sensor-degradation variants added (nav_dynamic with scripted moving actors, nav_sensor_degraded with blind-corner occluding walls) with dynamic metadata + world/map consistency; P4.6 remaining |
+| P4 — environments | done | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4 done: 2 3D/aerial courses added (aerial_course via promoted placeholder, aerial_indoor) with occupancy provenance + world/map consistency; P4.5 done: 2 dynamic/sensor-degradation variants added (nav_dynamic with scripted moving actors, nav_sensor_degraded with blind-corner occluding walls) with dynamic metadata + world/map consistency; P4.6 done: seeds, reset services, spawn zones, goals, and reference paths added to all 12 deterministic arenas (arena_navigation.yaml + schema fields + free-space-validated paths) |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
 | P7 — hardening | queued | CI matrices, provenance/licenses, documentation, and end-to-end qualification |
@@ -281,7 +281,24 @@ command, or artifact rather than merely saying that code was added.
   launch registration, and cross-reference validation. Evidence:
   test_p4_5_dynamic_variants.py 8/8, `robot-lab validate --cross-references`
   passes.)
-- [ ] **P4.6** Add seeds, reset services, spawn zones, goals, and reference paths.
+- [x] **P4.6** Add seeds, reset services, spawn zones, goals, and reference paths.
+  (Added normative navigation metadata to all 12 deterministic arenas
+  (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse,
+  outdoor_terrain, terrain_stairs, terrain_stepping_stones, aerial_course,
+  aerial_indoor, nav_dynamic, nav_sensor_degraded): each declares a deterministic
+  `seed`, a `reset_service` (`/gazebo/reset_world`), full `spawn_zones`,
+  `goals`, and `reference_paths`. This is captured in the central
+  `src/maps/config/arena_navigation.yaml` (installed into the maps package) and
+  mirrored into each environment entry in `config/environments.yaml`; the
+  environment JSON schema was extended with formal `seed`, `goals`,
+  `reference_paths`, and `reset_service` fields. Reference paths and goals were
+  antagonistically validated to land in *free space* of each arena's own
+  occupancy map (so Nav2 can actually navigate to every goal/waypoint).
+  `test_p4_6_navigation_metadata.py` (7 tests) locks in metadata coverage,
+  field presence, free-space goals/waypoints, registry↔metadata parity, spawn
+  zones, and cross-reference validation. Evidence: test_p4_6_navigation_metadata.py
+  7/7, full suite 179 run/4 pre-existing xacro failures, `robot-lab validate
+  --cross-references` passes.)
 
 ### P5 — algorithm breadth
 

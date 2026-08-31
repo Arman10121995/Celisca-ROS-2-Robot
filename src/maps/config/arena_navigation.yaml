@@ -1,0 +1,328 @@
+arenas:
+  nav_empty:
+    seed: 1
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: center
+      pose:
+        x: 0.0
+        y: 0.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_center
+      waypoints:
+      - x: -0.5
+        y: -0.5
+        yaw: 0.0
+      - x: 0.0
+        y: 0.0
+        yaw: 0.0
+  nav_obstacle:
+    seed: 2
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 7.0
+        y: 7.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_far_corner
+      waypoints:
+      - x: -7.0
+        y: -7.0
+        yaw: 0.0
+      - x: -3.0
+        y: -3.0
+        yaw: 0.0
+      - x: 2.0
+        y: -1.0
+        yaw: 0.0
+      - x: 4.0
+        y: 2.0
+        yaw: 0.0
+      - x: 7.0
+        y: 7.0
+        yaw: 0.0
+  nav_maze:
+    seed: 3
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: exit_east
+      pose:
+        x: 7.0
+        y: 7.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_exit
+      waypoints:
+      - x: -7.0
+        y: -7.0
+        yaw: 0.0
+      - x: -3.0
+        y: -7.0
+        yaw: 0.0
+      - x: -1.0
+        y: -3.0
+        yaw: 0.0
+      - x: 3.0
+        y: -3.0
+        yaw: 0.0
+      - x: 7.0
+        y: -2.0
+        yaw: 0.0
+      - x: 7.0
+        y: 7.0
+        yaw: 0.0
+  nav_narrow_passage:
+    seed: 4
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: exit
+      pose:
+        x: 6.0
+        y: 6.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_exit
+      waypoints:
+      - x: -6.0
+        y: -6.0
+        yaw: 0.0
+      - x: -3.0
+        y: -3.0
+        yaw: 0.0
+      - x: 0.0
+        y: 0.0
+        yaw: 0.0
+      - x: 3.0
+        y: 3.0
+        yaw: 0.0
+      - x: 6.0
+        y: 6.0
+        yaw: 0.0
+  nav_warehouse:
+    seed: 5
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 8.0
+        y: 8.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_far_corner
+      waypoints:
+      - x: -8.0
+        y: -8.0
+        yaw: 0.0
+      - x: -4.0
+        y: -4.0
+        yaw: 0.0
+      - x: 0.0
+        y: -1.6
+        yaw: 0.0
+      - x: 0.0
+        y: 4.8
+        yaw: 0.0
+      - x: 4.0
+        y: 6.0
+        yaw: 0.0
+      - x: 8.0
+        y: 8.0
+        yaw: 0.0
+  outdoor_terrain:
+    seed: 6
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 9.0
+        y: 9.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_far_corner
+      waypoints:
+      - x: -9.0
+        y: -9.0
+        yaw: 0.0
+      - x: -2.0
+        y: -2.0
+        yaw: 0.0
+      - x: 3.0
+        y: 3.0
+        yaw: 0.0
+      - x: 9.0
+        y: 9.0
+        yaw: 0.0
+  terrain_stairs:
+    seed: 7
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: east_ramp
+      pose:
+        x: 7.0
+        y: 5.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_east
+      waypoints:
+      - x: -7.0
+        y: -5.0
+        yaw: 0.0
+      - x: -1.0
+        y: -5.0
+        yaw: 0.0
+      - x: 2.0
+        y: -2.0
+        yaw: 0.0
+      - x: 7.0
+        y: 5.0
+        yaw: 0.0
+  terrain_stepping_stones:
+    seed: 8
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: east
+      pose:
+        x: 8.0
+        y: 6.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_east
+      waypoints:
+      - x: -8.0
+        y: -6.0
+        yaw: 0.0
+      - x: -7.0
+        y: -4.0
+        yaw: 0.0
+      - x: -4.0
+        y: -4.0
+        yaw: 0.0
+      - x: -2.0
+        y: -2.0
+        yaw: 0.0
+      - x: 0.0
+        y: 0.0
+        yaw: 0.0
+      - x: 3.0
+        y: 3.0
+        yaw: 0.0
+      - x: 6.0
+        y: 6.0
+        yaw: 0.0
+      - x: 8.0
+        y: 6.0
+        yaw: 0.0
+  aerial_course:
+    seed: 9
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 40.0
+        y: 40.0
+        yaw: 0.0
+    reference_paths:
+    - id: slalom
+      waypoints:
+      - x: -40.0
+        y: -40.0
+        yaw: 0.0
+      - x: -15.0
+        y: -5.0
+        yaw: 0.0
+      - x: 10.0
+        y: 5.0
+        yaw: 0.0
+      - x: 40.0
+        y: 40.0
+        yaw: 0.0
+  aerial_indoor:
+    seed: 10
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 18.0
+        y: 18.0
+        yaw: 0.0
+    reference_paths:
+    - id: multilevel
+      waypoints:
+      - x: -18.0
+        y: -18.0
+        yaw: 0.0
+      - x: -19.0
+        y: -6.0
+        yaw: 0.0
+      - x: -10.0
+        y: 15.0
+        yaw: 0.0
+      - x: 0.0
+        y: 12.0
+        yaw: 0.0
+      - x: 12.0
+        y: 15.0
+        yaw: 0.0
+      - x: 19.0
+        y: 6.0
+        yaw: 0.0
+      - x: 18.0
+        y: 18.0
+        yaw: 0.0
+  nav_dynamic:
+    seed: 11
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 7.0
+        y: 7.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_far_corner
+      waypoints:
+      - x: -7.0
+        y: -7.0
+        yaw: 0.0
+      - x: -3.0
+        y: -3.0
+        yaw: 0.0
+      - x: 1.0
+        y: -2.0
+        yaw: 0.0
+      - x: 3.0
+        y: 1.0
+        yaw: 0.0
+      - x: 7.0
+        y: 7.0
+        yaw: 0.0
+  nav_sensor_degraded:
+    seed: 12
+    reset_service: /gazebo/reset_world
+    goals:
+    - id: far_corner
+      pose:
+        x: 7.0
+        y: 7.0
+        yaw: 0.0
+    reference_paths:
+    - id: spawn_to_far_corner
+      waypoints:
+      - x: -7.0
+        y: -7.0
+        yaw: 0.0
+      - x: -3.0
+        y: -3.0
+        yaw: 0.0
+      - x: 1.0
+        y: -1.0
+        yaw: 0.0
+      - x: 4.0
+        y: 2.0
+        yaw: 0.0
+      - x: 7.0
+        y: 7.0
+        yaw: 0.0

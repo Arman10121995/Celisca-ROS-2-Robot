@@ -1,16 +1,8 @@
-# Robot Lab Registry - Environment Catalog
-# Version 0.1.0
-# This file catalogs all simulation environments available in the platform
-
-# ============================================================================
-# 2D Indoor Environments
-# ============================================================================
-
 - id: small_office
-  version: "1.0.0"
-  name: "Simple Office"
+  version: 1.0.0
+  name: Simple Office
   ros_package: maps
-  description: "Small office environment with furniture and obstacles"
+  description: Small office environment with furniture and obstacles
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -22,37 +14,36 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 15.0
     y: 12.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - office
-    - indoor
-    - 2D
-    - navigation
-  created: "2026-01-01"
-  updated: "2026-08-31"
-
+  - office
+  - indoor
+  - 2D
+  - navigation
+  created: '2026-01-01'
+  updated: '2026-08-31'
 - id: small_house
-  version: "1.0.0"
-  name: "Small House"
-  description: "Residential house environment with rooms and corridors"
+  version: 1.0.0
+  name: Small House
+  description: Residential house environment with rooms and corridors
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -64,37 +55,36 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 20.0
     y: 15.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - residential
-    - indoor
-    - 2D
-    - navigation
-  created: "2026-01-01"
-  updated: "2026-08-31"
-
+  - residential
+  - indoor
+  - 2D
+  - navigation
+  created: '2026-01-01'
+  updated: '2026-08-31'
 - id: small_warehouse
-  version: "1.0.0"
-  name: "Small Warehouse"
-  description: "Warehouse environment with shelves and open spaces"
+  version: 1.0.0
+  name: Small Warehouse
+  description: Warehouse environment with shelves and open spaces
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -106,46 +96,45 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
-    - id: near_shelves
-      pose:
-        x: 5.0
-        y: 5.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  - id: near_shelves
+    pose:
+      x: 5.0
+      y: 5.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 25.0
     y: 20.0
     z: 5.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - warehouse
-    - industrial
-    - 2D
-    - navigation
-  created: "2026-01-01"
-  updated: "2026-08-31"
-
+  - warehouse
+  - industrial
+  - 2D
+  - navigation
+  created: '2026-01-01'
+  updated: '2026-08-31'
 - id: warehouse_demo
-  version: "1.0.0"
-  name: "Warehouse Demo"
-  description: "Demonstration warehouse with structured obstacles"
+  version: 1.0.0
+  name: Warehouse Demo
+  description: Demonstration warehouse with structured obstacles
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -157,40 +146,35 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 30.0
     y: 20.0
     z: 5.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - warehouse
-    - demo
-    - 2D
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
-# ============================================================================
-# Multi-Floor Environments
-# ============================================================================
-
+  - warehouse
+  - demo
+  - 2D
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: celisca_floor_1
-  version: "1.0.0"
-  name: "Celisca Floor 1"
-  description: "First floor of Celisca building"
+  version: 1.0.0
+  name: Celisca Floor 1
+  description: First floor of Celisca building
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -202,36 +186,35 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: entrance
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: entrance
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - office
-    - floor
-    - multi_floor
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - office
+  - floor
+  - multi_floor
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: celisca_floor_2
-  version: "1.0.0"
-  name: "Celisca Floor 2"
-  description: "Second floor of Celisca building"
+  version: 1.0.0
+  name: Celisca Floor 2
+  description: Second floor of Celisca building
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -243,36 +226,35 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: stairs_top
-      pose:
-        x: 5.0
-        y: 5.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: stairs_top
+    pose:
+      x: 5.0
+      y: 5.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - office
-    - floor
-    - multi_floor
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - office
+  - floor
+  - multi_floor
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: celisca_floor_2_furniture
-  version: "1.0.0"
-  name: "Celisca Floor 2 with Furniture"
-  description: "Second floor with furniture and more detailed layout"
+  version: 1.0.0
+  name: Celisca Floor 2 with Furniture
+  description: Second floor with furniture and more detailed layout
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -284,35 +266,35 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - office
-    - furniture
-    - detailed
-  created: "2026-08-31"
-  updated: "2026-08-31"
+  - office
+  - furniture
+  - detailed
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: celisca_floor_1_furniture
-  version: "1.0.0"
-  name: "Celisca Floor 1 with Furniture"
-  description: "First floor of Celisca building with furniture and detailed layout"
+  version: 1.0.0
+  name: Celisca Floor 1 with Furniture
+  description: First floor of Celisca building with furniture and detailed layout
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -324,43 +306,36 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - office
-    - furniture
-    - detailed
-    - indoor
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
-
-
-# ============================================================================
-# Actor Environments (with dynamic elements)
-# ============================================================================
-
+  - office
+  - furniture
+  - detailed
+  - indoor
+  created: '2026-09-05'
+  updated: '2026-09-05'
 - id: celisca_f1_actor
-  version: "1.0.0"
-  name: "Celisca F1 with Actors"
-  description: "First floor with actor entities for simulation"
+  version: 1.0.0
+  name: Celisca F1 with Actors
+  description: First floor with actor entities for simulation
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -372,36 +347,35 @@
     dynamic_obstacles: true
     max_dynamic_count: 10
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - actors
-    - dynamic
-    - simulation
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - actors
+  - dynamic
+  - simulation
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: celisca_f2_actor
-  version: "1.0.0"
-  name: "Celisca F2 with Actors"
-  description: "Second floor with actor entities"
+  version: 1.0.0
+  name: Celisca F2 with Actors
+  description: Second floor with actor entities
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -413,39 +387,35 @@
     dynamic_obstacles: true
     max_dynamic_count: 10
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - actors
-    - dynamic
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
-# ============================================================================
-# 3D Environments (for aerial and legged robots)
-# ============================================================================
-
+  - actors
+  - dynamic
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: outdoor_terrain
-  version: "1.0.0"
-  name: "Outdoor Terrain"
-  description: "Outdoor rough-terrain arena (terrain_rough) with scattered low-height raised platforms for legged/humanoid testing (P4.3)"
+  version: 1.0.0
+  name: Outdoor Terrain
+  description: Outdoor rough-terrain arena (terrain_rough) with scattered low-height
+    raised platforms for legged/humanoid testing (P4.3)
   status: integrated
   dimension: 3D
   simulator: gazebo
@@ -458,38 +428,61 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - legged
-    - humanoid
-    - aerial
+  - legged
+  - humanoid
+  - aerial
   spawn_zones:
-    - id: ground_level
-      pose:
-        x: -9.0
-        y: -9.0
-        z: 0.0
-      size:
-        x: 5.0
-        y: 5.0
-        z: 1.0
+  - id: ground_level
+    pose:
+      x: -9.0
+      y: -9.0
+      z: 0.0
+    size:
+      x: 5.0
+      y: 5.0
+      z: 1.0
   size:
     x: 20.0
     y: 20.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - outdoor
-    - rough_terrain
-    - 3D
-    - legged
-  created: "2026-08-31"
-  updated: "2026-09-05"
-
+  - outdoor
+  - rough_terrain
+  - 3D
+  - legged
+  created: '2026-08-31'
+  updated: '2026-09-05'
+  seed: 6
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 9.0
+      y: 9.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_far_corner
+    waypoints:
+    - x: -9.0
+      y: -9.0
+      yaw: 0.0
+    - x: -2.0
+      y: -2.0
+      yaw: 0.0
+    - x: 3.0
+      y: 3.0
+      yaw: 0.0
+    - x: 9.0
+      y: 9.0
+      yaw: 0.0
 - id: terrain_stairs
-  version: "1.0.0"
-  name: "Staircase Terrain"
-  description: "3D arena with an ascending staircase and a descending ramp for climb/recovery testing (P4.3)"
+  version: 1.0.0
+  name: Staircase Terrain
+  description: 3D arena with an ascending staircase and a descending ramp for climb/recovery
+    testing (P4.3)
   status: integrated
   dimension: 3D
   simulator: gazebo
@@ -502,37 +495,60 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - legged
-    - humanoid
+  - legged
+  - humanoid
   spawn_zones:
-    - id: default
-      pose:
-        x: -7.0
-        y: -5.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -7.0
+      y: -5.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 16.0
     y: 16.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - stairs
-    - 3D
-    - legged
-    - terrain
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - stairs
+  - 3D
+  - legged
+  - terrain
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 7
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: east_ramp
+    pose:
+      x: 7.0
+      y: 5.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_east
+    waypoints:
+    - x: -7.0
+      y: -5.0
+      yaw: 0.0
+    - x: -1.0
+      y: -5.0
+      yaw: 0.0
+    - x: 2.0
+      y: -2.0
+      yaw: 0.0
+    - x: 7.0
+      y: 5.0
+      yaw: 0.0
 - id: terrain_stepping_stones
-  version: "1.0.0"
-  name: "Stepping-Stone Terrain"
-  description: "3D arena with a serpentine path of raised stepping-stone platforms and pits for footfall testing (P4.3)"
+  version: 1.0.0
+  name: Stepping-Stone Terrain
+  description: 3D arena with a serpentine path of raised stepping-stone platforms
+    and pits for footfall testing (P4.3)
   status: integrated
   dimension: 3D
   simulator: gazebo
@@ -545,37 +561,72 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - legged
-    - humanoid
+  - legged
+  - humanoid
   spawn_zones:
-    - id: default
-      pose:
-        x: -8.0
-        y: -6.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -8.0
+      y: -6.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 18.0
     y: 14.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - stepping_stones
-    - 3D
-    - legged
-    - terrain
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - stepping_stones
+  - 3D
+  - legged
+  - terrain
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 8
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: east
+    pose:
+      x: 8.0
+      y: 6.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_east
+    waypoints:
+    - x: -8.0
+      y: -6.0
+      yaw: 0.0
+    - x: -7.0
+      y: -4.0
+      yaw: 0.0
+    - x: -4.0
+      y: -4.0
+      yaw: 0.0
+    - x: -2.0
+      y: -2.0
+      yaw: 0.0
+    - x: 0.0
+      y: 0.0
+      yaw: 0.0
+    - x: 3.0
+      y: 3.0
+      yaw: 0.0
+    - x: 6.0
+      y: 6.0
+      yaw: 0.0
+    - x: 8.0
+      y: 6.0
+      yaw: 0.0
 - id: aerial_course
-  version: "1.0.0"
-  name: "Aerial Navigation Course"
-  description: "Outdoor 3D slalom course with gate pylons and a gantry for aerial robot navigation (P4.4)"
+  version: 1.0.0
+  name: Aerial Navigation Course
+  description: Outdoor 3D slalom course with gate pylons and a gantry for aerial robot
+    navigation (P4.4)
   status: integrated
   dimension: 3D
   simulator: gazebo
@@ -588,35 +639,58 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - aerial
+  - aerial
   spawn_zones:
-    - id: takeoff_zone
-      pose:
-        x: -40.0
-        y: -40.0
-        z: 0.5
-      size:
-        x: 3.0
-        y: 3.0
-        z: 2.0
+  - id: takeoff_zone
+    pose:
+      x: -40.0
+      y: -40.0
+      z: 0.5
+    size:
+      x: 3.0
+      y: 3.0
+      z: 2.0
   size:
     x: 100.0
     y: 100.0
     z: 20.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - aerial
-    - 3D
-    - navigation
-  created: "2026-08-31"
-  updated: "2026-09-05"
-
+  - aerial
+  - 3D
+  - navigation
+  created: '2026-08-31'
+  updated: '2026-09-05'
+  seed: 9
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 40.0
+      y: 40.0
+      yaw: 0.0
+  reference_paths:
+  - id: slalom
+    waypoints:
+    - x: -40.0
+      y: -40.0
+      yaw: 0.0
+    - x: -15.0
+      y: -5.0
+      yaw: 0.0
+    - x: 10.0
+      y: 5.0
+      yaw: 0.0
+    - x: 40.0
+      y: 40.0
+      yaw: 0.0
 - id: aerial_indoor
-  version: "1.0.0"
-  name: "Aerial Indoor Course"
-  description: "Indoor multi-level 3D course with a raised deck, mezzanine plates, and vertical pylons for aerial navigation (P4.4)"
+  version: 1.0.0
+  name: Aerial Indoor Course
+  description: Indoor multi-level 3D course with a raised deck, mezzanine plates,
+    and vertical pylons for aerial navigation (P4.4)
   status: integrated
   dimension: 3D
   simulator: gazebo
@@ -629,40 +703,67 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - aerial
+  - aerial
   spawn_zones:
-    - id: default
-      pose:
-        x: -18.0
-        y: -18.0
-        z: 0.5
-      size:
-        x: 3.0
-        y: 3.0
-        z: 2.0
+  - id: default
+    pose:
+      x: -18.0
+      y: -18.0
+      z: 0.5
+    size:
+      x: 3.0
+      y: 3.0
+      z: 2.0
   size:
     x: 40.0
     y: 40.0
     z: 10.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - aerial
-    - indoor
-    - 3D
-    - multi_level
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
-# ============================================================================
-# Additional 2D Environments
-# ============================================================================
-
+  - aerial
+  - indoor
+  - 3D
+  - multi_level
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 10
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 18.0
+      y: 18.0
+      yaw: 0.0
+  reference_paths:
+  - id: multilevel
+    waypoints:
+    - x: -18.0
+      y: -18.0
+      yaw: 0.0
+    - x: -19.0
+      y: -6.0
+      yaw: 0.0
+    - x: -10.0
+      y: 15.0
+      yaw: 0.0
+    - x: 0.0
+      y: 12.0
+      yaw: 0.0
+    - x: 12.0
+      y: 15.0
+      yaw: 0.0
+    - x: 19.0
+      y: 6.0
+      yaw: 0.0
+    - x: 18.0
+      y: 18.0
+      yaw: 0.0
 - id: bigger_warehouse
-  version: "1.0.0"
-  name: "Bigger Warehouse"
-  description: "Larger warehouse environment with more complex layout"
+  version: 1.0.0
+  name: Bigger Warehouse
+  description: Larger warehouse environment with more complex layout
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -674,81 +775,79 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 40.0
     y: 30.0
     z: 5.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - warehouse
-    - industrial
-    - 2D
-    - large
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - warehouse
+  - industrial
+  - 2D
+  - large
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: empty
-  version: "1.0.0"
-  name: "Empty World"
-  description: "Empty environment for testing basic functionality"
+  version: 1.0.0
+  name: Empty World
+  description: Empty environment for testing basic functionality
   status: integrated
   dimension: 2D
   simulator: gazebo
   ros_package: maps
   world_file: maps/maps/empty/worlds/empty.world
-  occupancy_map: ""
+  occupancy_map: ''
   ground_truth_available: true
   dynamics:
     static_obstacles: false
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 5.0
-        y: 5.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 5.0
+      y: 5.0
+      z: 1.0
   size:
     x: 100.0
     y: 100.0
     z: 10.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - empty
-    - testing
-    - 2D
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - empty
+  - testing
+  - 2D
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: residential_demo
-  version: "1.0.0"
-  name: "Residential Demo"
-  description: "Residential home demonstration environment"
+  version: 1.0.0
+  name: Residential Demo
+  description: Residential home demonstration environment
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -760,37 +859,36 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 25.0
     y: 20.0
     z: 3.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - residential
-    - home
-    - demo
-    - 2D
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - residential
+  - home
+  - demo
+  - 2D
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: simple_box
-  version: "1.0.0"
-  name: "Simple Box"
-  description: "Minimal box environment for basic testing"
+  version: 1.0.0
+  name: Simple Box
+  description: Minimal box environment for basic testing
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -802,37 +900,37 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: 0.0
-        y: 0.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 10.0
     y: 10.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - simple
-    - box
-    - testing
-    - 2D
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - simple
+  - box
+  - testing
+  - 2D
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: nav_empty
-  version: "1.0.0"
-  name: "Nav Empty Arena"
-  description: "Deterministic large open navigation arena (12x12m) with boundary fence and slim reference posts for straight-line path planning"
+  version: 1.0.0
+  name: Nav Empty Arena
+  description: Deterministic large open navigation arena (12x12m) with boundary fence
+    and slim reference posts for straight-line path planning
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -845,38 +943,55 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -0.5
-        y: -0.5
-        z: 0.0
-      size:
-        x: 1.0
-        y: 1.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -0.5
+      y: -0.5
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
   size:
     x: 12.0
     y: 12.0
     z: 2.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - navigation
-    - empty
-    - arena
-    - 2D
-    - deterministic
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - navigation
+  - empty
+  - arena
+  - 2D
+  - deterministic
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 1
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: center
+    pose:
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_center
+    waypoints:
+    - x: -0.5
+      y: -0.5
+      yaw: 0.0
+    - x: 0.0
+      y: 0.0
+      yaw: 0.0
 - id: nav_obstacle
-  version: "1.0.0"
-  name: "Nav Obstacle Field"
-  description: "Deterministic 17x17m field of scattered box obstacles of varied size for multi-waypoint avoidance planning"
+  version: 1.0.0
+  name: Nav Obstacle Field
+  description: Deterministic 17x17m field of scattered box obstacles of varied size
+    for multi-waypoint avoidance planning
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -889,38 +1004,64 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -7.0
-        y: -7.0
-        z: 0.0
-      size:
-        x: 1.0
-        y: 1.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -7.0
+      y: -7.0
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
   size:
     x: 17.0
     y: 17.0
     z: 2.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - navigation
-    - obstacle
-    - arena
-    - 2D
-    - deterministic
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - navigation
+  - obstacle
+  - arena
+  - 2D
+  - deterministic
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 2
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 7.0
+      y: 7.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_far_corner
+    waypoints:
+    - x: -7.0
+      y: -7.0
+      yaw: 0.0
+    - x: -3.0
+      y: -3.0
+      yaw: 0.0
+    - x: 2.0
+      y: -1.0
+      yaw: 0.0
+    - x: 4.0
+      y: 2.0
+      yaw: 0.0
+    - x: 7.0
+      y: 7.0
+      yaw: 0.0
 - id: nav_maze
-  version: "1.0.0"
-  name: "Nav Maze Arena"
-  description: "Deterministic 16x16m maze with outer wall and winding corridors, entrance at west and goal at east"
+  version: 1.0.0
+  name: Nav Maze Arena
+  description: Deterministic 16x16m maze with outer wall and winding corridors, entrance
+    at west and goal at east
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -933,38 +1074,67 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -7.0
-        y: -7.0
-        z: 0.0
-      size:
-        x: 1.0
-        y: 1.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -7.0
+      y: -7.0
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
   size:
     x: 16.0
     y: 16.0
     z: 2.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - navigation
-    - maze
-    - arena
-    - 2D
-    - deterministic
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - navigation
+  - maze
+  - arena
+  - 2D
+  - deterministic
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 3
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: exit_east
+    pose:
+      x: 7.0
+      y: 7.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_exit
+    waypoints:
+    - x: -7.0
+      y: -7.0
+      yaw: 0.0
+    - x: -3.0
+      y: -7.0
+      yaw: 0.0
+    - x: -1.0
+      y: -3.0
+      yaw: 0.0
+    - x: 3.0
+      y: -3.0
+      yaw: 0.0
+    - x: 7.0
+      y: -2.0
+      yaw: 0.0
+    - x: 7.0
+      y: 7.0
+      yaw: 0.0
 - id: nav_narrow_passage
-  version: "1.0.0"
-  name: "Nav Narrow Passage Arena"
-  description: "Deterministic 14x14m floor with successive offset-gap barriers forcing zigzag navigation through narrow passages"
+  version: 1.0.0
+  name: Nav Narrow Passage Arena
+  description: Deterministic 14x14m floor with successive offset-gap barriers forcing
+    zigzag navigation through narrow passages
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -977,39 +1147,65 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -6.0
-        y: -6.0
-        z: 0.0
-      size:
-        x: 1.0
-        y: 1.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -6.0
+      y: -6.0
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
   size:
     x: 14.0
     y: 14.0
     z: 2.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - navigation
-    - narrow
-    - passage
-    - arena
-    - 2D
-    - deterministic
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - navigation
+  - narrow
+  - passage
+  - arena
+  - 2D
+  - deterministic
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 4
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: exit
+    pose:
+      x: 6.0
+      y: 6.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_exit
+    waypoints:
+    - x: -6.0
+      y: -6.0
+      yaw: 0.0
+    - x: -3.0
+      y: -3.0
+      yaw: 0.0
+    - x: 0.0
+      y: 0.0
+      yaw: 0.0
+    - x: 3.0
+      y: 3.0
+      yaw: 0.0
+    - x: 6.0
+      y: 6.0
+      yaw: 0.0
 - id: nav_warehouse
-  version: "1.0.0"
-  name: "Nav Warehouse Arena"
-  description: "Deterministic 18x18m warehouse with parallel shelf rows and driving aisles plus pallet boxes"
+  version: 1.0.0
+  name: Nav Warehouse Arena
+  description: Deterministic 18x18m warehouse with parallel shelf rows and driving
+    aisles plus pallet boxes
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -1022,39 +1218,67 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -8.0
-        y: -8.0
-        z: 0.0
-      size:
-        x: 1.0
-        y: 1.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -8.0
+      y: -8.0
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
   size:
     x: 18.0
     y: 18.0
     z: 2.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - navigation
-    - warehouse
-    - arena
-    - 2D
-    - deterministic
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
-
+  - navigation
+  - warehouse
+  - arena
+  - 2D
+  - deterministic
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 5
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 8.0
+      y: 8.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_far_corner
+    waypoints:
+    - x: -8.0
+      y: -8.0
+      yaw: 0.0
+    - x: -4.0
+      y: -4.0
+      yaw: 0.0
+    - x: 0.0
+      y: -1.6
+      yaw: 0.0
+    - x: 0.0
+      y: 4.8
+      yaw: 0.0
+    - x: 4.0
+      y: 6.0
+      yaw: 0.0
+    - x: 8.0
+      y: 8.0
+      yaw: 0.0
 - id: nav_dynamic
-  version: "1.0.0"
-  name: "Dynamic Obstacle Arena"
-  description: "16m x 16m grid arena with scripted moving-obstacle actors for dynamic-obstacle navigation testing (P4.5)"
+  version: 1.0.0
+  name: Dynamic Obstacle Arena
+  description: 16m x 16m grid arena with scripted moving-obstacle actors for dynamic-obstacle
+    navigation testing (P4.5)
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -1067,37 +1291,63 @@
     dynamic_obstacles: true
     max_dynamic_count: 2
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -7.0
-        y: -7.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -7.0
+      y: -7.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 16.0
     y: 16.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - dynamic
-    - obstacles
-    - 2D
-    - moving
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - dynamic
+  - obstacles
+  - 2D
+  - moving
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 11
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 7.0
+      y: 7.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_far_corner
+    waypoints:
+    - x: -7.0
+      y: -7.0
+      yaw: 0.0
+    - x: -3.0
+      y: -3.0
+      yaw: 0.0
+    - x: 1.0
+      y: -2.0
+      yaw: 0.0
+    - x: 3.0
+      y: 1.0
+      yaw: 0.0
+    - x: 7.0
+      y: 7.0
+      yaw: 0.0
 - id: nav_sensor_degraded
-  version: "1.0.0"
-  name: "Sensor-Degraded Arena"
-  description: "16m x 16m arena with tall blind-corner walls that deliberately occlude a 2D LIDAR for sensor-degradation testing (P4.5)"
+  version: 1.0.0
+  name: Sensor-Degraded Arena
+  description: 16m x 16m arena with tall blind-corner walls that deliberately occlude
+    a 2D LIDAR for sensor-degradation testing (P4.5)
   status: integrated
   dimension: 2D
   simulator: gazebo
@@ -1110,30 +1360,55 @@
     dynamic_obstacles: false
     max_dynamic_count: 0
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   spawn_zones:
-    - id: default
-      pose:
-        x: -7.0
-        y: -7.0
-        z: 0.0
-      size:
-        x: 2.0
-        y: 2.0
-        z: 1.0
+  - id: default
+    pose:
+      x: -7.0
+      y: -7.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
   size:
     x: 16.0
     y: 16.0
     z: 3.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - sensor_degradation
-    - blind_corner
-    - 2D
-    - occluded
-  created: "2026-09-05"
-  updated: "2026-09-05"
-
+  - sensor_degradation
+  - blind_corner
+  - 2D
+  - occluded
+  created: '2026-09-05'
+  updated: '2026-09-05'
+  seed: 12
+  reset_service: /gazebo/reset_world
+  goals:
+  - id: far_corner
+    pose:
+      x: 7.0
+      y: 7.0
+      yaw: 0.0
+  reference_paths:
+  - id: spawn_to_far_corner
+    waypoints:
+    - x: -7.0
+      y: -7.0
+      yaw: 0.0
+    - x: -3.0
+      y: -3.0
+      yaw: 0.0
+    - x: 1.0
+      y: -1.0
+      yaw: 0.0
+    - x: 4.0
+      y: 2.0
+      yaw: 0.0
+    - x: 7.0
+      y: 7.0
+      yaw: 0.0
