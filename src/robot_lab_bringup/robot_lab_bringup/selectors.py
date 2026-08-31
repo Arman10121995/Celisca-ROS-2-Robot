@@ -338,6 +338,30 @@ class CompositionBuilder:
             'scenario_id': self.scenario_id,
             **self.algorithm_ids
         }
+    
+    def resolve_fragments(self) -> Tuple[bool, Dict[str, Any]]:
+        """
+        Resolve the composition into launch fragments (P2.3).
+        
+        Returns:
+            Tuple of (success, resolution_result)
+        """
+        from .launch_fragments import CompositionResolver
+        
+        resolver = CompositionResolver(self.registry.config_dir)
+        return resolver.resolve(self)
+    
+    def generate_launch(self) -> Dict[str, Any]:
+        """
+        Generate a launch description from the composition (P2.3).
+        
+        Returns:
+            Dictionary with launch configuration
+        """
+        from .launch_fragments import CompositionResolver
+        
+        resolver = CompositionResolver(self.registry.config_dir)
+        return resolver.generate_launch_description(self)
 
 
 # ============================================================================
