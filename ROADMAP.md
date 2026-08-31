@@ -27,7 +27,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
 | P3 — robot integrations | done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap); Berkeley Humanoid Lite qualified as simulated commandable humanoid profile (22 position-commandable joints, trunk IMU, estimated odometry, standing-pose command contract, bhl qualification suite); Quadrotor SITL qualified as simulated commandable aerial profile (MAVLink AttitudeTarget/PositionTarget bridge, mesh-free URDF for rendering/TF, mavros_offboard_controller with graceful degradation, quadrotor qualification suite); per-class smoke scenarios (mobile/legged/humanoid/aerial) plus documented safety/compute limits on all five integrated robots (P3.6, test_p3_6_safety_limits.py 12/12) |
-| P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
+| P4 — environments | in progress | P4.1 done: all 14 existing Gazebo worlds qualified (integrated) with occupancy-map provenance verified (test_p4_1_environment_qualification.py 9/9); P4.2–P4.6 remaining |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
 | P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
 | P7 — hardening | queued | CI matrices, provenance/licenses, documentation, and end-to-end qualification |
@@ -190,8 +190,19 @@ command, or artifact rather than merely saying that code was added.
 
 ### P4 — environments
 
-- [ ] **P4.1** Qualify all 14 existing Gazebo worlds and their occupancy-map
+- [x] **P4.1** Qualify all 14 existing Gazebo worlds and their occupancy-map
   provenance.
+  - All 14 pre-existing worlds in `maps/` are registered as `integrated` in
+    `config/environments.yaml` (14 of 16 entries; `outdoor_terrain` and
+    `aerial_course` remain `cataloged` placeholders for P4.3/P4.4).
+  - Added missing `celisca_floor_1_furniture` registry entry; each integrated
+    env's `world_file` resolves to an on-disk `.world` and every declared
+    `occupancy_map` resolves to a real `<id>/maps/map.pgm` with a companion
+    `map.yaml` (provenance corrected from `<id>.pgm` to the actual `map.pgm`).
+  - `test_p4_1_environment_qualification.py` (9 tests) locks in world
+    registration, integration status, dynamic-obstacle declarations for the
+    actor worlds, occupancy-map provenance, and legacy launch compatibility.
+    Full registry suite: 147 passed / 1 skipped.
 - [ ] **P4.2** Add deterministic empty, obstacle, maze, narrow-passage, and
   warehouse navigation arenas.
 - [ ] **P4.3** Add rough terrain, stairs/ramps, and stepping-stone arenas for

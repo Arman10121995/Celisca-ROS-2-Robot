@@ -15,7 +15,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/simple_office/worlds/simple_office.world
-  occupancy_map: maps/maps/simple_office/maps/simple_office.pgm
+  occupancy_map: maps/maps/simple_office/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -57,7 +57,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/small_house/worlds/small_house.world
-  occupancy_map: maps/maps/small_house/maps/small_house.pgm
+  occupancy_map: maps/maps/small_house/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -99,7 +99,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/small_warehouse/worlds/small_warehouse.world
-  occupancy_map: maps/maps/small_warehouse/maps/small_warehouse.pgm
+  occupancy_map: maps/maps/small_warehouse/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -150,7 +150,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/warehouse_demo/worlds/warehouse_demo.world
-  occupancy_map: maps/maps/warehouse_demo/maps/warehouse_demo.pgm
+  occupancy_map: maps/maps/warehouse_demo/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -195,7 +195,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/celisca_floor_1/worlds/celisca_floor_1.world
-  occupancy_map: maps/maps/celisca_floor_1/maps/celisca_floor_1.pgm
+  occupancy_map: maps/maps/celisca_floor_1/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -236,7 +236,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/celisca_floor_2/worlds/celisca_floor_2.world
-  occupancy_map: maps/maps/celisca_floor_2/maps/celisca_floor_2.pgm
+  occupancy_map: maps/maps/celisca_floor_2/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -277,7 +277,7 @@
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
-  occupancy_map: maps/maps/celisca_floor_2_furniture/maps/celisca_floor_2_furniture.pgm
+  occupancy_map: maps/maps/celisca_floor_2_furniture/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -309,6 +309,49 @@
     - detailed
   created: "2026-08-31"
   updated: "2026-08-31"
+- id: celisca_floor_1_furniture
+  version: "1.0.0"
+  name: "Celisca Floor 1 with Furniture"
+  description: "First floor of Celisca building with furniture and detailed layout"
+  status: integrated
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world
+  occupancy_map: maps/maps/celisca_floor_1_furniture/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - office
+    - furniture
+    - detailed
+    - indoor
+  created: "2026-09-05"
+  updated: "2026-09-05"
+
+
 
 # ============================================================================
 # Actor Environments (with dynamic elements)
@@ -318,10 +361,11 @@
   version: "1.0.0"
   name: "Celisca F1 with Actors"
   description: "First floor with actor entities for simulation"
-  status: cataloged
+  status: integrated
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world
+  occupancy_map: maps/maps/celisca_f1_actor/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -358,10 +402,11 @@
   version: "1.0.0"
   name: "Celisca F2 with Actors"
   description: "Second floor with actor entities"
-  status: cataloged
+  status: integrated
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world
+  occupancy_map: maps/maps/celisca_f2_actor/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -486,11 +531,11 @@
   version: "1.0.0"
   name: "Bigger Warehouse"
   description: "Larger warehouse environment with more complex layout"
-  status: cataloged
+  status: integrated
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/bigger_warehouse/worlds/bigger_warehouse.world
-  occupancy_map: maps/maps/bigger_warehouse/maps/bigger_warehouse.pgm
+  occupancy_map: maps/maps/bigger_warehouse/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -528,7 +573,7 @@
   version: "1.0.0"
   name: "Empty World"
   description: "Empty environment for testing basic functionality"
-  status: cataloged
+  status: integrated
   dimension: 2D
   simulator: gazebo
   ros_package: maps
@@ -572,11 +617,11 @@
   version: "1.0.0"
   name: "Residential Demo"
   description: "Residential home demonstration environment"
-  status: cataloged
+  status: integrated
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/residential_demo/worlds/residential_demo.world
-  occupancy_map: maps/maps/residential_demo/maps/residential_demo.pgm
+  occupancy_map: maps/maps/residential_demo/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -614,11 +659,11 @@
   version: "1.0.0"
   name: "Simple Box"
   description: "Minimal box environment for basic testing"
-  status: cataloged
+  status: integrated
   dimension: 2D
   simulator: gazebo
   world_file: maps/maps/simple_box/worlds/simple_box.world
-  occupancy_map: ""
+  occupancy_map: maps/maps/simple_box/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
