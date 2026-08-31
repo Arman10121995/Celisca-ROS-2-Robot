@@ -58,10 +58,10 @@ command, or artifact rather than merely saying that code was added.
 
 - [x] **P1.1** Add the versioned `robot_lab_registry` package and
   validation/query CLI.
-- [ ] **P1.2** Import the existing robot and environment profiles into the
-  normalized catalog without removing the legacy YAML files.
+- [x] **P1.2** Import the existing robot and environment profiles into the
+  normalized catalog without removing the legacy YAML files. (19 robots, 15 environments)
 - [x] **P1.3** Catalog at least five candidates per required algorithm category,
-  with honest maturity, dependencies, contracts, and applicability metadata.
+  with honest maturity, dependencies, contracts, and applicability metadata. (27 algorithms)
 - [ ] **P1.4** Add cross-reference, capability, status, and minimum-count tests.
 - [x] **P1.5** Add repository architecture, status, and continuation documents.
 - [ ] **P1.6** Make CI validate both legacy profiles and the canonical registry.

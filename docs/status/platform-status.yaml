@@ -12,10 +12,10 @@ baseline:
   optional_packages: 1
   legacy_robot_profiles: 15
   full_stack_robot_profiles: 1
-  legacy_environment_profiles: 14
+  legacy_environment_profiles: 15
   legacy_modes: 5
-  registry_robots: 5
-  registry_environments: 11
+  registry_robots: 19
+  registry_environments: 15
   registry_algorithms: 27
   registry_scenarios: 9
   registry_experiments: 6
@@ -30,6 +30,7 @@ baseline:
     - xacro expansion for all legacy robot profiles
     - simulated, room-vacuum, and real launch argument expansion
     - robot_lab_registry package built and tested
+    - robot_lab_registry validation passes with 19 robots, 15 environments, 27 algorithms
 
 tasks:
   P0:
@@ -43,8 +44,8 @@ tasks:
     owner: root
     tasks:
       P1.1: {state: done, owner: root, evidence: [robot_lab_registry package, schemas.py, catalog.py, validation.py, query.py, cli.py, config/*, test/test_registry.py]}
-      P1.2: {state: queued, owner: null, evidence: []}
-      P1.3: {state: queued, owner: null, evidence: []}
+      P1.2: {state: done, owner: root, evidence: [19 robots cataloged in robots.yaml, 15 environments cataloged in environments.yaml, 27 algorithms cataloged in algorithms.yaml, validation passes with no duplicate IDs]}
+      P1.3: {state: done, owner: root, evidence: [27 algorithms across 7 categories in algorithms.yaml]}
       P1.4: {state: queued, owner: null, evidence: []}
       P1.5: {state: done, owner: root, evidence: [ROADMAP.md, docs/architecture/overview.md]}
       P1.6: {state: queued, owner: null, evidence: []}

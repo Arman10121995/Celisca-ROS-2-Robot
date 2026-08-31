@@ -222,7 +222,616 @@
   updated: "2026-08-31"
 
 # ============================================================================
-# Aerial Robots (Placeholder - to be added)
+# Unitree Quadruped Robots
+# ============================================================================
+
+- id: a1
+  version: "1.0.0"
+  name: "Unitree A1"
+  description: "Small quadruped robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_a1"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  actuators:
+    - type: leg
+      name: FL_leg
+      joint: FL_hip_joint
+    - type: leg
+      name: FR_leg
+      joint: FR_hip_joint
+    - type: leg
+      name: RL_leg
+      joint: RL_hip_joint
+    - type: leg
+      name: RR_leg
+      joint: RR_hip_joint
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/a1_description/urdf/a1.urdf
+    xacro: robots/unitree/a1_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: aliengo
+  version: "1.0.0"
+  name: "Unitree Aliengo"
+  description: "Quadruped robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_aliengo"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  actuators:
+    - type: leg
+      name: FL_leg
+      joint: FL_hip_joint
+    - type: leg
+      name: FR_leg
+      joint: FR_hip_joint
+    - type: leg
+      name: RL_leg
+      joint: RL_hip_joint
+    - type: leg
+      name: RR_leg
+      joint: RR_hip_joint
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/aliengo_description/urdf/aliengo.urdf
+    xacro: robots/unitree/aliengo_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: b1
+  version: "1.0.0"
+  name: "Unitree B1"
+  description: "Quadruped robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_b1"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  actuators:
+    - type: leg
+      name: FL_leg
+      joint: FL_hip_joint
+    - type: leg
+      name: FR_leg
+      joint: FR_hip_joint
+    - type: leg
+      name: RL_leg
+      joint: RL_hip_joint
+    - type: leg
+      name: RR_leg
+      joint: RR_hip_joint
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/b1_description/xacro/b1.urdf
+    xacro: robots/unitree/b1_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: b2
+  version: "1.0.0"
+  name: "Unitree B2"
+  description: "Quadruped robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_b2"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/b2_description/urdf/b2_description.urdf
+    xacro: robots/unitree/b2_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: b2w
+  version: "1.0.0"
+  name: "Unitree B2W"
+  description: "Wheel--legged robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_b2w"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: wheel_legged
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/b2w_description/urdf/b2w_description.urdf
+    xacro: robots/unitree/b2w_description/xacro/robot.xacro
+  tags:
+    - imported
+    - wheel_legged
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: g1
+  version: "1.0.0"
+  name: "Unitree G1"
+  description: "Humanoid robot from Unitree"
+  status: cataloged
+  robot_class: humanoid
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_g1"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: biped
+    dof: 23
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  capabilities:
+    - bipedal_locomotion
+    - balancing
+  assets:
+    urdf: robots/unitree/g1_description/g1.urdf
+  tags:
+    - imported
+    - humanoid
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: go1
+  version: "1.0.0"
+  name: "Unitree Go1"
+  description: "Quadruped robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_go1"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/go1_description/urdf/go1.urdf
+    xacro: robots/unitree/go1_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: go2
+  version: "1.0.0"
+  name: "Unitree Go2"
+  description: "Quadruped robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_go2"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/go2_description/urdf/go2_description.urdf
+    xacro: robots/unitree/go2_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: go2w
+  version: "1.0.0"
+  name: "Unitree Go2W"
+  description: "Wheel--legged robot from Unitree"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_go2w"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: wheel_legged
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/unitree/go2w_description/urdf/go2w_description.urdf
+    xacro: robots/unitree/go2w_description/xacro/robot.xacro
+  tags:
+    - imported
+    - wheel_legged
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: h1
+  version: "1.0.0"
+  name: "Unitree H1"
+  description: "Humanoid robot from Unitree"
+  status: cataloged
+  robot_class: humanoid
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_h1"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: biped
+    dof: 42
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  capabilities:
+    - bipedal_locomotion
+    - balancing
+    - manipulation
+  assets:
+    urdf: robots/unitree/h1_description/h1.urdf
+  tags:
+    - imported
+    - humanoid
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: h1_2
+  version: "1.0.0"
+  name: "Unitree H1 v2"
+  description: "Humanoid robot v2 from Unitree"
+  status: cataloged
+  robot_class: humanoid
+  maturity: prototype
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_h1"
+    license: "MIT"
+    maintainer: "Unitree Robotics"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: biped
+    dof: 42
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  capabilities:
+    - bipedal_locomotion
+    - balancing
+    - manipulation
+  assets:
+    urdf: robots/unitree/h1_2_description/h1_2.urdf
+  tags:
+    - imported
+    - humanoid
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Aerial Robots
+# ============================================================================
+
+# ============================================================================
+# Additional Unitree Quadruped Robots (from Awesome-URDFs)
+# ============================================================================
+
+- id: laikago
+  version: "1.0.0"
+  name: "Unitree Laikago"
+  description: "Quadruped robot from Unitree (Awesome-URDFs)"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/Arthur-Azevedo/Awesome-URDFs"
+    license: "MIT"
+    maintainer: "Arthur Azevedo"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  actuators:
+    - type: leg
+      name: FL_leg
+      joint: FL_hip_joint
+    - type: leg
+      name: FR_leg
+      joint: FR_hip_joint
+    - type: leg
+      name: RL_leg
+      joint: RL_hip_joint
+    - type: leg
+      name: RR_leg
+      joint: RR_hip_joint
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/_upstream/Awesome-URDFs/unitree/robots/laikago_description/urdf/laikago.urdf
+    xacro: robots/_upstream/Awesome-URDFs/unitree/robots/laikago_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: z1
+  version: "1.0.0"
+  name: "Unitree Z1"
+  description: "Quadruped robot from Unitree (Awesome-URDFs)"
+  status: cataloged
+  robot_class: legged
+  maturity: prototype
+  source:
+    repository: "https://github.com/Arthur-Azevedo/Awesome-URDFs"
+    license: "MIT"
+    maintainer: "Arthur Azevedo"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: quadruped
+    dof: 12
+  sensors:
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  actuators:
+    - type: leg
+      name: FL_leg
+      joint: FL_hip_joint
+    - type: leg
+      name: FR_leg
+      joint: FR_hip_joint
+    - type: leg
+      name: RL_leg
+      joint: RL_hip_joint
+    - type: leg
+      name: RR_leg
+      joint: RR_hip_joint
+  command_interfaces:
+    - unitree_legged_msgs/LowCmd
+  state_interfaces:
+    - unitree_legged_msgs/LowState
+  capabilities:
+    - locomotion
+    - walking
+  assets:
+    urdf: robots/_upstream/Awesome-URDFs/unitree/robots/z1_description/urdf/z1.urdf
+    xacro: robots/_upstream/Awesome-URDFs/unitree/robots/z1_description/xacro/robot.xacro
+  tags:
+    - imported
+    - quadruped
+    - unitree
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Legacy Humanoid Import
+# ============================================================================
+
+- id: legacy_humanoid
+  version: "1.0.0"
+  name: "Legacy Humanoid"
+  description: "Legacy humanoid robot import"
+  status: cataloged
+  robot_class: humanoid
+  maturity: prototype
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators:
+    - gazebo
+  locomotion:
+    type: biped
+    dof: 20
+  sensors:
+    - type: imu
+      name: torso_imu
+      frame: torso_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+  capabilities:
+    - bipedal_locomotion
+    - balancing
+  assets:
+    urdf: robots/_upstream/legacy_humanoid_import/urdf/berkeley_humanoid_lite.urdf
+  tags:
+    - imported
+    - humanoid
+    - legacy
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+# ============================================================================
+# Aerial Robots
 # ============================================================================
 
 - id: quadrotor_sitl

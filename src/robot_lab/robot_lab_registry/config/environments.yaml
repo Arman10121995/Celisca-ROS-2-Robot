@@ -476,3 +476,176 @@
     - navigation
   created: "2026-08-31"
   updated: "2026-08-31"
+
+# ============================================================================
+# Additional 2D Environments
+# ============================================================================
+
+- id: bigger_warehouse
+  version: "1.0.0"
+  name: "Bigger Warehouse"
+  description: "Larger warehouse environment with more complex layout"
+  status: cataloged
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/bigger_warehouse/worlds/bigger_warehouse.world
+  occupancy_map: maps/maps/bigger_warehouse/maps/bigger_warehouse.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 40.0
+    y: 30.0
+    z: 5.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - warehouse
+    - industrial
+    - 2D
+    - large
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: empty
+  version: "1.0.0"
+  name: "Empty World"
+  description: "Empty environment for testing basic functionality"
+  status: cataloged
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/empty/worlds/empty.world
+  occupancy_map: ""
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: false
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+    - humanoid
+    - aerial
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 5.0
+        y: 5.0
+        z: 1.0
+  size:
+    x: 100.0
+    y: 100.0
+    z: 10.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - empty
+    - testing
+    - 2D
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: residential_demo
+  version: "1.0.0"
+  name: "Residential Demo"
+  description: "Residential home demonstration environment"
+  status: cataloged
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/residential_demo/worlds/residential_demo.world
+  occupancy_map: maps/maps/residential_demo/maps/residential_demo.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 25.0
+    y: 20.0
+    z: 3.5
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - residential
+    - home
+    - demo
+    - 2D
+  created: "2026-08-31"
+  updated: "2026-08-31"
+
+- id: simple_box
+  version: "1.0.0"
+  name: "Simple Box"
+  description: "Minimal box environment for basic testing"
+  status: cataloged
+  dimension: 2D
+  simulator: gazebo
+  world_file: maps/maps/simple_box/worlds/simple_box.world
+  occupancy_map: ""
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+    - mobile
+    - legged
+  spawn_zones:
+    - id: default
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      size:
+        x: 2.0
+        y: 2.0
+        z: 1.0
+  size:
+    x: 10.0
+    y: 10.0
+    z: 3.0
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - simple
+    - box
+    - testing
+    - 2D
+  created: "2026-08-31"
+  updated: "2026-08-31"
