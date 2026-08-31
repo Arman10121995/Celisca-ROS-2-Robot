@@ -4,7 +4,7 @@ This file is the hand-off ledger for the repository-wide program. It is the
 first file an agent should read before changing the platform. Update it in the
 same change that completes, blocks, adds, or materially re-scopes a task.
 
-Last updated: 2026-08-31
+Last updated: 2026-09-05
 
 ## Mission
 
@@ -25,7 +25,7 @@ standard result record described in `docs/architecture/overview.md`.
 |---|---|---|
 | P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
 | P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
-| P2 — unified composition | in_progress | Independent selectors and compatibility-preserving launch/CLI |
+| P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
 | P3 — robot integrations | queued | Working mobile, legged, humanoid, and aerial representatives |
 | P4 — environments | queued | Diverse deterministic 2D/3D benchmark environments |
 | P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
@@ -78,8 +78,8 @@ command, or artifact rather than merely saying that code was added.
   adapter and retain its public arguments until a documented deprecation. (LegacyAdapter, robot_adapter.launch.py, 3 tests passing)
 - [x] **P2.5** Add namespaces and frame-prefix contracts so parallel and
   multi-robot experiments do not collide. (NamespaceConfig, NamespaceManager, namespaces.py, LaunchFragment namespace support, CompositionBuilder namespace methods, CompositionResolver namespace resolution, adapter.py namespace parameters, test_namespaces.py with 7 tests passing)
-- [ ] **P2.6** Add `list`, `describe`, `validate`, `launch --dry-run`, and
-  `doctor` commands.
+- [x] **P2.6** Add `list`, `describe`, `validate`, `launch --dry-run`, and
+  `doctor` commands. (cli.py: cmd_list, cmd_describe, cmd_search, cmd_validate, cmd_check_composition, cmd_summary, cmd_schema, cmd_launch with --dry-run flag, cmd_doctor with 5-tier diagnostics; parser registration with argparse; command handler dict; smoke tests passing: robot-lab doctor and robot-lab launch --dry-run work correctly)
 
 ### P3 — robot integrations
 

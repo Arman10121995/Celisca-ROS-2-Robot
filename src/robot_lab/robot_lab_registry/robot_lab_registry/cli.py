@@ -89,30 +89,30 @@ def cmd_list(args) -> int:
     # Build kwargs
     kwargs = {}
     if entity_type == 'robots':
-        if args.robot_class:
+        if hasattr(args, 'robot_class') and args.robot_class:
             kwargs['robot_class'] = args.robot_class
     elif entity_type == 'environments':
-        if args.simulator:
+        if hasattr(args, 'simulator') and args.simulator:
             kwargs['simulator'] = args.simulator
-        if args.dimension:
+        if hasattr(args, 'dimension') and args.dimension:
             kwargs['dimension'] = args.dimension
     elif entity_type == 'algorithms':
-        if args.category:
+        if hasattr(args, 'category') and args.category:
             kwargs['category'] = args.category
-        if args.family:
+        if hasattr(args, 'family') and args.family:
             kwargs['family'] = args.family
-        if args.robot_class:
+        if hasattr(args, 'robot_class') and args.robot_class:
             kwargs['robot_class'] = args.robot_class
     elif entity_type == 'scenarios':
-        if args.task_type:
+        if hasattr(args, 'task_type') and args.task_type:
             kwargs['task_type'] = args.task_type
     elif entity_type == 'experiments':
-        if args.robot_id:
+        if hasattr(args, 'robot_id') and args.robot_id:
             kwargs['robot_id'] = args.robot_id
-        if args.environment_id:
+        if hasattr(args, 'environment_id') and args.environment_id:
             kwargs['environment_id'] = args.environment_id
     
-    if args.status:
+    if hasattr(args, 'status') and args.status:
         kwargs['status'] = args.status
     
     # Get config directory
@@ -354,6 +354,257 @@ def cmd_schema(args) -> int:
     return 0
 
 
+def cmd_launch(args) -> int:
+    """
+    Handle 'launch' command.
+    
+    Generates launch configuration for a composition, with --dry-run showing
+    the resolved configuration without executing it.
+    """
+    import os
+    from pathlib import Path
+    
+    # Load registry
+    registry = Registry(args.config_dir)
+    if not registry.load(args.config_dir):
+        print(f"Failed to load registry from {args.config_dir}")
+        return 1
+    
+    # Parse composition specification
+    composition_data = {}
+    if args.composition_file:
+        try:
+            with open(args.composition_file, 'r') as f:
+                composition_data = yaml.safe_load(f)
+        except Exception as e:
+            print(f"Failed to load composition file: {e}")
+            return 1
+    elif args.composition:
+        try:
+            composition_data = json.loads(args.composition)
+        except json.JSONDecodeError as e:
+            print(f"Invalid JSON composition: {e}")
+            return 1
+    else:
+        print("Please provide a composition file or inline JSON")
+        return 1
+    
+    # Convert to Composition object
+    from .validation import Composition, check_composition
+    try:
+        composition = Composition(
+            robot_id=composition_data.get('robot_id', ''),
+            environment_id=composition_data.get('environment_id', ''),
+            simulator=composition_data.get('simulator', ''),
+            scenario_id=composition_data.get('scenario_id'),
+            algorithm_ids=composition_data.get('algorithm_ids', {})
+        )
+    except Exception as e:
+        print(f"Invalid composition: {e}")
+        return 1
+    
+    # Validate composition
+    result = check_composition(registry, composition)
+    if not result.valid:
+        print("Composition is invalid:")
+        for error in result.errors:
+            print(f"  - {error}")
+        return 1
+    
+    # Generate launch configuration (dry-run)
+    print("Launch Configuration (dry-run)")
+    print("=" * 60)
+    print(f"\nComposition:")
+    print(f"  Robot: {composition.robot_id}")
+    print(f"  Environment: {composition.environment_id}")
+    print(f"  Simulator: {composition.simulator}")
+    if composition.scenario_id:
+        print(f"  Scenario: {composition.scenario_id}")
+    
+    print(f"\nAlgorithms:")
+    for category, algo_id in composition.algorithm_ids.items():
+        if algo_id:
+            algo = registry.algorithms.get(algo_id)
+            if algo:
+                print(f"  {category}: {algo_id} ({algo.get('name', 'Unknown')})")
+            else:
+                print(f"  {category}: {algo_id}")
+    
+    # Print resolved configuration
+    print(f"\nResolved Configuration:")
+    robot = registry.robots.get(composition.robot_id)
+    if robot:
+        print(f"  Robot Package: {robot.get('ros_package', 'unknown')}")
+        print(f"  Robot Name: {robot.get('name', 'unknown')}")
+    
+    environment = registry.environments.get(composition.environment_id)
+    if environment:
+        print(f"  Environment Package: {environment.get('ros_package', 'unknown')}")
+        print(f"  World File: {environment.get('world_file', 'unknown')}")
+    
+    print(f"\nDependencies:")
+    deps = set()
+    deps.add(robot.get('ros_package', 'unknown')) if robot else None
+    deps.add(environment.get('ros_package', 'unknown')) if environment else None
+    for algo_id in composition.algorithm_ids.values():
+        if algo_id:
+            algo = registry.algorithms.get(algo_id)
+            if algo and algo.get('ros_package'):
+                deps.add(algo.get('ros_package'))
+    
+    if deps:
+        for dep in sorted(deps):
+            if dep != 'unknown':
+                print(f"  - {dep}")
+    
+    print(f"\nWarnings:" if result.warnings else "\nNo warnings.")
+    for warning in result.warnings:
+        print(f"  - {warning}")
+    
+    if not args.dry_run:
+        print("\nNote: Pass --no-dry-run to actually launch (not yet implemented)")
+    
+    return 0
+
+
+def cmd_doctor(args) -> int:
+    """
+    Handle 'doctor' command.
+    
+    Performs diagnostic checks on the Robot Lab environment:
+    - ROS installation and version
+    - Required packages and dependencies
+    - Registry integrity
+    - Asset availability
+    - Simulation environment setup
+    """
+    import subprocess
+    import shutil
+    
+    print("Robot Lab Doctor - Workspace Diagnostics")
+    print("=" * 60)
+    
+    # Check 1: ROS installation
+    print("\n[1] ROS Installation")
+    print("-" * 40)
+    try:
+        result = subprocess.run(['ros2', '--version'], capture_output=True, text=True, timeout=5)
+        if result.returncode == 0:
+            print(f"✓ ROS 2 installed: {result.stdout.strip()}")
+        else:
+            print(f"✗ ROS 2 found but error: {result.stderr}")
+    except FileNotFoundError:
+        print("✗ ROS 2 not found in PATH")
+    except subprocess.TimeoutExpired:
+        print("✗ ROS 2 command timed out")
+    
+    # Check 2: Required tools
+    print("\n[2] Required Tools")
+    print("-" * 40)
+    tools = ['colcon', 'python3', 'gazebo']
+    for tool in tools:
+        if shutil.which(tool):
+            try:
+                result = subprocess.run([tool, '--version'], capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    print(f"✓ {tool}: {result.stdout.strip().split(chr(10))[0]}")
+                else:
+                    print(f"✓ {tool}: found")
+            except (subprocess.TimeoutExpired, Exception):
+                print(f"✓ {tool}: found")
+        else:
+            print(f"✗ {tool}: not found in PATH")
+    
+    # Check 3: Registry
+    print("\n[3] Registry Status")
+    print("-" * 40)
+    try:
+        registry = Registry(args.config_dir)
+        if registry.load(args.config_dir):
+            robots = len(registry.robots.get_all())
+            envs = len(registry.environments.get_all())
+            algos = len(registry.algorithms.get_all())
+            print(f"✓ Registry loaded successfully")
+            print(f"  - Robots: {robots}")
+            print(f"  - Environments: {envs}")
+            print(f"  - Algorithms: {algos}")
+            
+            # Validate registry
+            is_valid, errors = registry.validate()
+            if is_valid:
+                print(f"✓ Registry validation passed")
+            else:
+                print(f"✗ Registry validation failed: {len(errors)} errors")
+                for error in errors[:3]:  # Show first 3 errors
+                    print(f"    - {error}")
+                if len(errors) > 3:
+                    print(f"    ... and {len(errors) - 3} more errors")
+        else:
+            print(f"✗ Failed to load registry")
+    except Exception as e:
+        print(f"✗ Registry error: {e}")
+    
+    # Check 4: Core packages
+    print("\n[4] Core Packages")
+    print("-" * 40)
+    core_packages = [
+        'robot_lab_registry',
+        'robot_lab_bringup',
+        'bumperbot_bringup',
+        'bumperbot_description',
+        'gazebo_models'
+    ]
+    
+    for pkg in core_packages:
+        try:
+            result = subprocess.run(['ros2', 'pkg', 'prefix', pkg],
+                                   capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                print(f"✓ {pkg}")
+            else:
+                print(f"✗ {pkg}: not found")
+        except Exception:
+            print(f"✗ {pkg}: check failed")
+    
+    # Check 5: Environment validation
+    print("\n[5] Environment Setup")
+    print("-" * 40)
+    
+    # Check for valid build
+    if Path(args.config_dir or '.').parent.joinpath('build').exists():
+        print(f"✓ Build directory found")
+    else:
+        print(f"⚠ Build directory not found (run colcon build)")
+    
+    if Path(args.config_dir or '.').parent.joinpath('install').exists():
+        print(f"✓ Install directory found")
+    else:
+        print(f"⚠ Install directory not found (run colcon build)")
+    
+    # Check for simulation assets
+    try:
+        result = subprocess.run(['ros2', 'pkg', 'prefix', 'gazebo_models'],
+                               capture_output=True, text=True, timeout=5)
+        if result.returncode == 0:
+            models_dir = Path(result.stdout.strip()) / 'share' / 'gazebo_models'
+            if models_dir.exists():
+                model_count = len(list(models_dir.glob('*.sdf'))) + len(list(models_dir.glob('*/model.sdf')))
+                print(f"✓ Gazebo models found ({model_count} models)")
+            else:
+                print(f"⚠ Gazebo models directory not found")
+    except Exception:
+        print(f"⚠ Could not verify Gazebo models")
+    
+    print("\n[Summary]")
+    print("-" * 40)
+    print("Run 'robot-lab list robots' to see available robots")
+    print("Run 'robot-lab list environments' to see available environments")
+    print("Run 'robot-lab list algorithms' to see available algorithms")
+    print("Run 'robot-lab launch --dry-run <composition>' to test a launch configuration")
+    
+    return 0
+
+
 # ============================================================================
 # CLI Setup
 # ============================================================================
@@ -447,6 +698,24 @@ def create_parser() -> argparse.ArgumentParser:
     schema_parser.add_argument('--format', choices=['json', 'yaml'], default='yaml',
                                 help='Output format')
     
+    # Launch command
+    launch_parser = subparsers.add_parser('launch', help='Launch a composition')
+    launch_parser.add_argument('-c', '--config-dir', required=True,
+                               help='Directory containing catalog files')
+    launch_parser.add_argument('-f', '--composition-file', default=None,
+                              help='File containing composition (JSON/YAML)')
+    launch_parser.add_argument('--composition', default=None,
+                              help='Inline JSON composition')
+    launch_parser.add_argument('--dry-run', action='store_true', default=True,
+                              help='Show launch config without executing (default)')
+    launch_parser.add_argument('--no-dry-run', dest='dry_run', action='store_false',
+                              help='Actually execute the launch (not yet implemented)')
+    
+    # Doctor command
+    doctor_parser = subparsers.add_parser('doctor', help='Diagnose Robot Lab environment')
+    doctor_parser.add_argument('-c', '--config-dir', default=None,
+                               help='Directory containing catalog files')
+    
     return parser
 
 
@@ -478,7 +747,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         'validate': cmd_validate,
         'check-composition': cmd_check_composition,
         'summary': cmd_summary,
-        'schema': cmd_schema
+        'schema': cmd_schema,
+        'launch': cmd_launch,
+        'doctor': cmd_doctor
     }
     
     handler = command_handlers.get(args.command)

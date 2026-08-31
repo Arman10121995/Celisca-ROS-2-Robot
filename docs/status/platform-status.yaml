@@ -1,5 +1,5 @@
 schema_version: 1
-updated: "2026-08-31"
+updated: "2026-09-05"
 goal: unified_multi_robot_algorithm_lab
 supported_baseline:
   os: Ubuntu 22.04
@@ -56,7 +56,7 @@ tasks:
       P1.6: {state: done, owner: root, evidence: [.github/workflows/ci.yml updated with robot-lab validate and test_registry.py steps to validate both legacy profiles and canonical registry on every push/PR]}
   P2:
     title: unified_composition
-    state: in_progress
+    state: done
     owner: root
     tasks:
       P2.1: {state: done, owner: root, evidence: [robot_lab_bringup package, RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector]}
@@ -64,7 +64,7 @@ tasks:
       P2.3: {state: done, owner: root, evidence: [launch_fragments.py: LaunchFragment, ParameterOverlay, LaunchFragmentRegistry, CompositionResolver with topic compatibility and conflict detection, 8 tests passing]}
       P2.4: {state: done, owner: root, evidence: [adapter.py with LegacyAdapter class, robot_adapter.launch.py wrapper, test/test_adapter.py with 3 tests passing]}
       P2.5: {state: done, owner: root, evidence: [namespaces.py with NamespaceConfig/NamespaceManager classes, LaunchFragment with namespace/frame_prefix fields and methods, CompositionBuilder with namespace/frame_prefix support, CompositionResolver with namespace-aware resolution, adapter.py with namespace parameters, test_namespaces.py with 7 tests passing]}
-      P2.6: {state: queued, owner: null, evidence: []}
+      P2.6: {state: done, owner: root, evidence: [cli.py: cmd_list, cmd_describe, cmd_search, cmd_validate, cmd_check_composition, cmd_summary, cmd_schema, cmd_launch with --dry-run flag, cmd_doctor with 5-tier diagnostics, parser registration and command handler dispatch, smoke tests passing: robot-lab doctor and robot-lab launch --dry-run working correctly, all robot_lab_registry tests passing]}
   P3: {title: robot_integrations, state: queued, owner: null}
   P4: {title: environment_expansion, state: queued, owner: null}
   P5: {title: algorithm_breadth, state: queued, owner: null}
@@ -80,5 +80,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P2.5
-  instructions: Read ROADMAP.md and docs/architecture/overview.md. P1 and P2.1-P2.4 are complete. Next: add namespaces and frame-prefix contracts for multi-robot experiments (P2.5).
+  next_task: P3.1
+  instructions: Read ROADMAP.md and docs/architecture/overview.md. P0, P1, and P2 are complete. Next: qualify Bumperbot as reference differential-drive robot (P3.1) by creating smoke test scenario and validating launch/sensor/odometry contracts.
