@@ -250,6 +250,7 @@ class LaunchFragmentRegistry:
             'dwb_local_planner': 'dwb_local_planner_node',
             'pure_pursuit': 'pure_pursuit_node',
             'simple_controller': 'simple_controller_node',
+            'follow_the_gap': 'follow_the_gap_node',
             
             # Control
             'pd_motion_planner': 'pd_motion_planner_node',
@@ -259,6 +260,19 @@ class LaunchFragmentRegistry:
             'cleaning_controller': 'cleaning_controller_node',
             'map_coverage_controller': 'map_coverage_controller_node',
             'mavros_offboard_controller': 'mavros_offboard_controller_node',
+            # P5 breadth algorithms (bumperbot_algorithms package)
+            'obstacle_detector': 'obstacle_detector_node',
+            'scan_clusterer': 'scan_clusterer_node',
+            'pointcloud_segmenter': 'pointcloud_segmenter_node',
+            'dead_reckoning': 'dead_reckoning_node',
+            'ekf_3d_estimator': 'ekf_3d_estimator_node',
+            'motion_model_estimator': 'motion_model_estimator_node',
+            'pose_graph_estimator': 'pose_graph_estimator_node',
+            'wheel_imu_fusion': 'wheel_imu_fusion_node',
+            'gps_odom_fusion': 'gps_odom_fusion_node',
+            'complementary_imu': 'complementary_imu_node',
+            'rrt_planner': 'rrt_planner_node',
+            'voronoi_planner': 'voronoi_planner_node',
         }
     
     def register_fragment(self, fragment: LaunchFragment):
@@ -463,7 +477,177 @@ class CompositionResolver:
             supported_robots=['quadrotor_sitl'],
             status='integrated'
         ))
-        
+
+        # P5 breadth fragments (bumperbot_algorithms)
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='obstacle_detector_node',
+            package='bumperbot_algorithms',
+            executable='obstacle_detector',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='perception',
+            provided_topics=['/obstacles'],
+            required_topics=['/scan'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='scan_clusterer_node',
+            package='bumperbot_algorithms',
+            executable='scan_clusterer',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='perception',
+            provided_topics=['/clusters'],
+            required_topics=['/scan'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='pointcloud_segmenter_node',
+            package='bumperbot_algorithms',
+            executable='pointcloud_segmenter',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='perception',
+            provided_topics=['/segmented_points'],
+            required_topics=['/points'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='dead_reckoning_node',
+            package='bumperbot_algorithms',
+            executable='dead_reckoning',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='localization',
+            provided_topics=['/estimated_pose'],
+            required_topics=['/odom'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='ekf_3d_estimator_node',
+            package='bumperbot_algorithms',
+            executable='ekf_3d_estimator',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='state_estimation',
+            provided_topics=['/estimated_state'],
+            required_topics=['/odom'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='motion_model_estimator_node',
+            package='bumperbot_algorithms',
+            executable='motion_model_estimator',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='state_estimation',
+            provided_topics=['/estimated_state'],
+            required_topics=['/odom'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='pose_graph_estimator_node',
+            package='bumperbot_algorithms',
+            executable='pose_graph_estimator',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='state_estimation',
+            provided_topics=['/estimated_state'],
+            required_topics=['/odom'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='wheel_imu_fusion_node',
+            package='bumperbot_algorithms',
+            executable='wheel_imu_fusion',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='sensor_fusion',
+            provided_topics=['/fused_state'],
+            required_topics=['/odom','/imu'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='gps_odom_fusion_node',
+            package='bumperbot_algorithms',
+            executable='gps_odom_fusion',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='sensor_fusion',
+            provided_topics=['/fused_pose'],
+            required_topics=['/odom','/gps/fix'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='complementary_imu_node',
+            package='bumperbot_algorithms',
+            executable='complementary_imu',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='sensor_fusion',
+            provided_topics=['/attitude'],
+            required_topics=['/imu'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='rrt_planner_node',
+            package='bumperbot_algorithms',
+            executable='rrt_planner',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='global_planning',
+            provided_topics=['/plan'],
+            required_topics=['/costmap'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='voronoi_planner_node',
+            package='bumperbot_algorithms',
+            executable='voronoi_planner',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='global_planning',
+            provided_topics=['/plan'],
+            required_topics=['/costmap'],
+            status='integrated'
+        ))
+
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='follow_the_gap_node',
+            package='bumperbot_algorithms',
+            executable='follow_the_gap',
+            default_params={
+                'use_sim_time': True,
+            },
+            category='local_planning',
+            provided_topics=['/cmd_vel'],
+            required_topics=['/scan'],
+            status='integrated'
+        ))
+
         # Add parameter overlays
         self.fragment_registry.register_overlay(ParameterOverlay(
             name='bumperbot_defaults',

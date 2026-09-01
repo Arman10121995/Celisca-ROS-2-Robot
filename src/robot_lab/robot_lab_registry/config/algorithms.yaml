@@ -1,16 +1,7 @@
-# Robot Lab Registry - Algorithm Catalog
-# Version 0.1.0
-# All algorithms in a single file for simplicity
-
-# ============================================================================
-# PERCEPTION ALGORITHMS
-# ============================================================================
-
-# Perception - Laser-based
 - id: laser_scan_to_pointcloud
-  version: "1.0.0"
-  name: "Laser Scan to PointCloud"
-  description: "Converts 2D laser scan to 3D point cloud for perception"
+  version: 1.0.0
+  name: Laser Scan to PointCloud
+  description: Converts 2D laser scan to 3D point cloud for perception
   status: integrated
   category: perception
   family: pointcloud_conversion
@@ -20,36 +11,35 @@
     language: cpp
   input_contract:
     required_topics:
-      - /scan
+    - /scan
     required_parameters: []
   output_contract:
     provided_topics:
-      - /cloud
+    - /cloud
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     min_height: -0.1
     max_height: 0.1
     range_min: 0.1
     range_max: 100.0
   source:
-    repository: "https://github.com/ros-perception/pointcloud_to_laserscan"
-    license: "BSD-3-Clause"
+    repository: https://github.com/ros-perception/pointcloud_to_laserscan
+    license: BSD-3-Clause
   tags:
-    - conversion
-    - laser
-    - pointcloud
-  created: "2026-08-31"
-  updated: "2026-08-31"
-
+  - conversion
+  - laser
+  - pointcloud
+  created: '2026-08-31'
+  updated: '2026-08-31'
 - id: costmap_2d_observation
-  version: "1.0.0"
-  name: "2D Costmap Observation"
-  description: "Creates observation layers for 2D costmaps from sensor data"
+  version: 1.0.0
+  name: 2D Costmap Observation
+  description: Creates observation layers for 2D costmaps from sensor data
   status: integrated
   category: perception
   family: costmap
@@ -59,35 +49,34 @@
     language: cpp
   input_contract:
     required_topics:
-      - /scan
-      - /odom
+    - /scan
+    - /odom
     required_parameters:
-      - observation_sources
+    - observation_sources
   output_contract:
     provided_topics: []
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
-    observation_sources: "scan"
+    observation_sources: scan
     scan:
       topic: /scan
       sensor_frame: base_laser
       marking: true
       clearing: true
   source:
-    repository: "https://github.com/ros-planning/navigation2"
-    license: "Apache-2.0"
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
   tags:
-    - navigation
-    - costmap
-    - obstacle
-
+  - navigation
+  - costmap
+  - obstacle
 - id: depth_image_to_pointcloud
-  version: "1.0.0"
-  name: "Depth Image to PointCloud"
-  description: "Converts depth images to point clouds"
+  version: 1.0.0
+  name: Depth Image to PointCloud
+  description: Converts depth images to point clouds
   status: cataloged
   category: perception
   family: pointcloud_conversion
@@ -97,30 +86,29 @@
     language: cpp
   input_contract:
     required_topics:
-      - /camera/depth/image_raw
-      - /camera/depth/camera_info
+    - /camera/depth/image_raw
+    - /camera/depth/camera_info
   output_contract:
     provided_topics:
-      - /camera/depth/points
+    - /camera/depth/points
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters: {}
   source:
-    repository: "https://github.com/ros-perception/depth_image_proc"
-    license: "BSD-3-Clause"
+    repository: https://github.com/ros-perception/depth_image_proc
+    license: BSD-3-Clause
   tags:
-    - depth
-    - vision
-    - pointcloud
-
+  - depth
+  - vision
+  - pointcloud
 - id: camera_calibration
-  version: "1.0.0"
-  name: "Camera Calibration"
-  description: "Camera calibration for monocular and stereo cameras"
+  version: 1.0.0
+  name: Camera Calibration
+  description: Camera calibration for monocular and stereo cameras
   status: cataloged
   category: perception
   family: calibration
@@ -130,32 +118,31 @@
     language: python
   input_contract:
     required_topics:
-      - /camera/image_raw
+    - /camera/image_raw
     required_parameters:
-      - image_width
+    - image_width
   output_contract:
     provided_services:
-      - /calibrate_camera
+    - /calibrate_camera
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     image_width: 640
     image_height: 480
   source:
-    repository: "https://github.com/ros-perception/camera_calibration"
-    license: "BSD-3-Clause"
+    repository: https://github.com/ros-perception/camera_calibration
+    license: BSD-3-Clause
   tags:
-    - calibration
-    - vision
-
+  - calibration
+  - vision
 - id: feature_detection
-  version: "1.0.0"
-  name: "Feature Detection"
-  description: "ORB feature detection for visual odometry and SLAM"
+  version: 1.0.0
+  name: Feature Detection
+  description: ORB feature detection for visual odometry and SLAM
   status: cataloged
   category: perception
   family: feature_detection
@@ -165,32 +152,27 @@
     language: cpp
   input_contract:
     required_topics:
-      - /camera/image_raw
+    - /camera/image_raw
   output_contract:
     provided_topics:
-      - /orb_slam3/tracking
+    - /orb_slam3/tracking
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   source:
-    repository: "https://github.com/UZ-SLAMLab/ORB_SLAM3"
-    license: "GPL-3.0"
+    repository: https://github.com/UZ-SLAMLab/ORB_SLAM3
+    license: GPL-3.0
   tags:
-    - slam
-    - visual
-    - feature
-
-# ============================================================================
-# LOCALIZATION ALGORITHMS
-# ============================================================================
-
+  - slam
+  - visual
+  - feature
 - id: odometry_motion_model
-  version: "1.0.0"
-  name: "Odometry Motion Model"
-  description: "Odometry-based localization using motion model"
+  version: 1.0.0
+  name: Odometry Motion Model
+  description: Odometry-based localization using motion model
   status: integrated
   category: localization
   family: odometry
@@ -200,30 +182,29 @@
     language: cpp
   input_contract:
     required_topics:
-      - /odom
-      - /scan
+    - /odom
+    - /scan
   output_contract:
     provided_topics:
-      - /estimated_pose
+    - /estimated_pose
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
-    motion_model_type: "differential"
+    motion_model_type: differential
     alpha1: 0.2
     alpha2: 0.2
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - odometry
-    - motion_model
-
+  - odometry
+  - motion_model
 - id: robot_localization_ekf
-  version: "1.0.0"
-  name: "Robot Localization EKF"
-  description: "Extended Kalman Filter for robot localization"
+  version: 1.0.0
+  name: Robot Localization EKF
+  description: Extended Kalman Filter for robot localization
   status: integrated
   category: localization
   family: kalman_filter
@@ -233,29 +214,28 @@
     language: cpp
   input_contract:
     required_topics:
-      - /odom
-      - /imu
+    - /odom
+    - /imu
   output_contract:
     provided_topics:
-      - /odometry/filtered
+    - /odometry/filtered
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
     sensor_timeout: 1.0
     two_d_mode: true
   source:
-    repository: "https://github.com/cra-ros-pkg/robot_localization"
-    license: "BSD-3-Clause"
+    repository: https://github.com/cra-ros-pkg/robot_localization
+    license: BSD-3-Clause
   tags:
-    - ekf
-    - sensor_fusion
-
+  - ekf
+  - sensor_fusion
 - id: amcl
-  version: "1.0.0"
-  name: "AMCL"
-  description: "Adaptive Monte Carlo Localization for 2D pose estimation"
+  version: 1.0.0
+  name: AMCL
+  description: Adaptive Monte Carlo Localization for 2D pose estimation
   status: integrated
   category: localization
   family: particle_filter
@@ -265,31 +245,30 @@
     language: cpp
   input_contract:
     required_topics:
-      - /scan
-      - /odom
-      - /map
+    - /scan
+    - /odom
+    - /map
   output_contract:
     provided_topics:
-      - /particle_cloud
-      - /amcl_pose
+    - /particle_cloud
+    - /amcl_pose
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
     particle_count: 2000
-    global_frame_id: "map"
+    global_frame_id: map
   source:
-    repository: "https://github.com/ros-planning/navigation2"
-    license: "Apache-2.0"
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
   tags:
-    - probabilistic
-    - particle_filter
-
+  - probabilistic
+  - particle_filter
 - id: rtabmap_localization
-  version: "1.0.0"
-  name: "RTAB-Map Localization"
-  description: "RGB-D SLAM and localization using RTAB-Map"
+  version: 1.0.0
+  name: RTAB-Map Localization
+  description: RGB-D SLAM and localization using RTAB-Map
   status: integrated
   category: localization
   family: rgb_d_slam
@@ -299,31 +278,30 @@
     language: cpp
   input_contract:
     required_topics:
-      - /camera/rgb/image_raw
-      - /odom
+    - /camera/rgb/image_raw
+    - /odom
   output_contract:
     provided_topics:
-      - /rtabmap/mapData
-      - /rtabmap/pose
+    - /rtabmap/mapData
+    - /rtabmap/pose
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     approx_sync: true
   source:
-    repository: "https://github.com/introlab/rtab-map"
-    license: "BSD-3-Clause"
+    repository: https://github.com/introlab/rtab-map
+    license: BSD-3-Clause
   tags:
-    - slam
-    - rgb_d
-
+  - slam
+  - rgb_d
 - id: hector_slam
-  version: "1.0.0"
-  name: "Hector SLAM"
-  description: "LIDAR-based SLAM that works without odometry"
+  version: 1.0.0
+  name: Hector SLAM
+  description: LIDAR-based SLAM that works without odometry
   status: cataloged
   category: localization
   family: lidar_slam
@@ -333,29 +311,24 @@
     language: cpp
   input_contract:
     required_topics:
-      - /scan
+    - /scan
   output_contract:
     provided_topics:
-      - /slam_out_pose
+    - /slam_out_pose
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   source:
-    repository: "https://github.com/tu-darmstadt-ros-pkg/hector_slam"
-    license: "BSD-3-Clause"
+    repository: https://github.com/tu-darmstadt-ros-pkg/hector_slam
+    license: BSD-3-Clause
   tags:
-    - lidar
-    - odometry_free
-
-# ============================================================================
-# STATE ESTIMATION ALGORITHMS
-# ============================================================================
-
+  - lidar
+  - odometry_free
 - id: ekf_localization_node
-  version: "1.0.0"
-  name: "EKF Localization Node"
-  description: "Extended Kalman Filter node for state estimation"
+  version: 1.0.0
+  name: EKF Localization Node
+  description: Extended Kalman Filter node for state estimation
   status: integrated
   category: state_estimation
   family: kalman_filter
@@ -365,30 +338,29 @@
     language: cpp
   input_contract:
     required_topics:
-      - /odom
-      - /imu
+    - /odom
+    - /imu
   output_contract:
     provided_topics:
-      - /odometry/filtered
+    - /odometry/filtered
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     sensor_timeout: 1.0
     two_d_mode: true
   source:
-    repository: "https://github.com/cra-ros-pkg/robot_localization"
-    license: "BSD-3-Clause"
+    repository: https://github.com/cra-ros-pkg/robot_localization
+    license: BSD-3-Clause
   tags:
-    - ekf
-
+  - ekf
 - id: kalman_filter_1d
-  version: "1.0.0"
-  name: "1D Kalman Filter"
-  description: "Simple 1D Kalman Filter implementation"
+  version: 1.0.0
+  name: 1D Kalman Filter
+  description: Simple 1D Kalman Filter implementation
   status: integrated
   category: state_estimation
   family: kalman_filter
@@ -398,30 +370,25 @@
     language: cpp
   input_contract:
     required_topics:
-      - /odom
+    - /odom
   output_contract:
     provided_topics:
-      - /filtered_position
+    - /filtered_position
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
     process_noise: 0.1
     measurement_noise: 0.1
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - simple
-
-# ============================================================================
-# SENSOR FUSION ALGORITHMS
-# ============================================================================
-
+  - simple
 - id: imu_complementary_filter
-  version: "1.0.0"
-  name: "IMU Complementary Filter"
-  description: "Complementary filter for IMU sensor fusion"
+  version: 1.0.0
+  name: IMU Complementary Filter
+  description: Complementary filter for IMU sensor fusion
   status: integrated
   category: sensor_fusion
   family: complementary_filter
@@ -431,30 +398,29 @@
     language: cpp
   input_contract:
     required_topics:
-      - /imu
+    - /imu
   output_contract:
     provided_topics:
-      - /imu/filtered
+    - /imu/filtered
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     gain_acc: 0.01
     gain_mag: 0.01
   source:
-    repository: "https://github.com/ros-drivers/imu_filter_madgwick"
-    license: "BSD-3-Clause"
+    repository: https://github.com/ros-drivers/imu_filter_madgwick
+    license: BSD-3-Clause
   tags:
-    - imu
-    - orientation
-
+  - imu
+  - orientation
 - id: imu_republisher
-  version: "1.0.0"
-  name: "IMU Republisher"
-  description: "Republishes IMU data with different frame and calibration"
+  version: 1.0.0
+  name: IMU Republisher
+  description: Republishes IMU data with different frame and calibration
   status: integrated
   category: sensor_fusion
   family: data_processing
@@ -464,33 +430,28 @@
     language: python
   input_contract:
     required_topics:
-      - /imu
+    - /imu
   output_contract:
     provided_topics:
-      - /imu_repub
+    - /imu_repub
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     frame_id: base_link
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - imu
-    - republish
-
-# ============================================================================
-# GLOBAL PLANNING ALGORITHMS
-# ============================================================================
-
+  - imu
+  - republish
 - id: dijkstra_planner
-  version: "1.0.0"
-  name: "Dijkstra Planner"
-  description: "Dijkstra's algorithm for grid-based path planning"
+  version: 1.0.0
+  name: Dijkstra Planner
+  description: Dijkstra's algorithm for grid-based path planning
   status: integrated
   category: global_planning
   family: grid_search
@@ -500,29 +461,28 @@
     language: cpp
   input_contract:
     required_topics:
-      - /map
-      - /goal_pose
+    - /map
+    - /goal_pose
   output_contract:
     provided_topics:
-      - /plan
+    - /plan
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
     costmap_topic: /global_costmap/costmap
     allow_unknown: true
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - grid
-    - optimal
-
+  - grid
+  - optimal
 - id: a_star_planner
-  version: "1.0.0"
-  name: "A* Planner"
-  description: "A* algorithm for grid-based path planning with heuristic"
+  version: 1.0.0
+  name: A* Planner
+  description: A* algorithm for grid-based path planning with heuristic
   status: integrated
   category: global_planning
   family: grid_search
@@ -532,31 +492,30 @@
     language: cpp
   input_contract:
     required_topics:
-      - /map
-      - /goal_pose
+    - /map
+    - /goal_pose
   output_contract:
     provided_topics:
-      - /plan
+    - /plan
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     costmap_topic: /global_costmap/costmap
     allow_unknown: true
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - grid
-    - heuristic
-
+  - grid
+  - heuristic
 - id: navfn_planner
-  version: "1.0.0"
-  name: "NavFn Planner"
-  description: "Navigation Function planner using potential fields"
+  version: 1.0.0
+  name: NavFn Planner
+  description: Navigation Function planner using potential fields
   status: integrated
   category: global_planning
   family: potential_field
@@ -566,33 +525,28 @@
     language: cpp
   input_contract:
     required_topics:
-      - /map
-      - /goal_pose
+    - /map
+    - /goal_pose
   output_contract:
     provided_topics:
-      - /plan
+    - /plan
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
     costmap_topic: /global_costmap/costmap
     allow_unknown: true
   source:
-    repository: "https://github.com/ros-planning/navigation2"
-    license: "Apache-2.0"
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
   tags:
-    - potential_field
-    - smooth
-
-# ============================================================================
-# LOCAL PLANNING ALGORITHMS
-# ============================================================================
-
+  - potential_field
+  - smooth
 - id: teb_local_planner
-  version: "1.0.0"
-  name: "TEB Local Planner"
-  description: "Timed Elastic Band local planner for collision-free trajectory optimization"
+  version: 1.0.0
+  name: TEB Local Planner
+  description: Timed Elastic Band local planner for collision-free trajectory optimization
   status: integrated
   category: local_planning
   family: optimization_based
@@ -602,31 +556,30 @@
     language: cpp
   input_contract:
     required_topics:
-      - /plan
-      - /scan
-      - /odom
+    - /plan
+    - /scan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
     costmap_topic: /local_costmap/costmap
     odom_topic: /odom
     max_vel_x: 0.5
     max_vel_theta: 1.0
   source:
-    repository: "https://github.com/ros-planning/navigation2"
-    license: "Apache-2.0"
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
   tags:
-    - optimization
-    - elastic_band
-
+  - optimization
+  - elastic_band
 - id: dwb_local_planner
-  version: "1.0.0"
-  name: "DWB Local Planner"
-  description: "Dynamic Window Approach local planner"
+  version: 1.0.0
+  name: DWB Local Planner
+  description: Dynamic Window Approach local planner
   status: integrated
   category: local_planning
   family: sampling_based
@@ -636,31 +589,30 @@
     language: cpp
   input_contract:
     required_topics:
-      - /plan
-      - /scan
-      - /odom
+    - /plan
+    - /scan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
     costmap_topic: /local_costmap/costmap
     odom_topic: /odom
     max_vel_x: 0.5
     max_vel_theta: 1.0
   source:
-    repository: "https://github.com/ros-planning/navigation2"
-    license: "Apache-2.0"
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
   tags:
-    - sampling
-    - dynamic_window
-
+  - sampling
+  - dynamic_window
 - id: pure_pursuit
-  version: "1.0.0"
-  name: "Pure Pursuit"
-  description: "Pure pursuit algorithm for path following"
+  version: 1.0.0
+  name: Pure Pursuit
+  description: Pure pursuit algorithm for path following
   status: integrated
   category: local_planning
   family: path_following
@@ -670,31 +622,30 @@
     language: python
   input_contract:
     required_topics:
-      - /plan
-      - /odom
+    - /plan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters:
     lookahead_distance: 0.5
     max_velocity: 1.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - path_following
-    - geometric
-
+  - path_following
+  - geometric
 - id: pd_motion_planner
-  version: "1.0.0"
-  name: "PD Motion Planner"
-  description: "PD control for motion planning and trajectory tracking"
+  version: 1.0.0
+  name: PD Motion Planner
+  description: PD control for motion planning and trajectory tracking
   status: integrated
   category: local_planning
   family: control_based
@@ -704,32 +655,27 @@
     language: cpp
   input_contract:
     required_topics:
-      - /plan
-      - /odom
+    - /plan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
+  - mobile
+  - legged
   parameters:
     kp: 1.0
     kd: 0.1
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - pd_control
-
-# ============================================================================
-# CONTROL ALGORITHMS
-# ============================================================================
-
+  - pd_control
 - id: simple_controller
-  version: "1.0.0"
-  name: "Simple Controller"
-  description: "Simple PID controller for differential drive robots"
+  version: 1.0.0
+  name: Simple Controller
+  description: Simple PID controller for differential drive robots
   status: integrated
   category: control
   family: pid_control
@@ -739,14 +685,14 @@
     language: cpp
   input_contract:
     required_topics:
-      - /plan
-      - /odom
+    - /plan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
     kp_linear: 1.0
     ki_linear: 0.0
@@ -755,16 +701,15 @@
     max_linear_velocity: 0.5
     max_angular_velocity: 1.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - pid
-    - differential
-
+  - pid
+  - differential
 - id: noisy_controller
-  version: "1.0.0"
-  name: "Noisy Controller"
-  description: "PID controller with configurable noise for testing robustness"
+  version: 1.0.0
+  name: Noisy Controller
+  description: PID controller with configurable noise for testing robustness
   status: integrated
   category: control
   family: pid
@@ -774,30 +719,31 @@
     language: cpp
   input_contract:
     required_topics:
-      - /plan
-      - /odom
+    - /plan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
     kp_linear: 1.0
     noise_stddev_linear: 0.01
     max_linear_velocity: 0.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - pid
-    - noisy
-    - testing
-
+  - pid
+  - noisy
+  - testing
 - id: joint_effort_commander
-  version: "1.0.0"
-  name: "Joint Effort Commander"
-  description: "Joint-group effort command interface for legged and humanoid robots; publishes Float64MultiArray effort targets consumed by a forward_command_controller (P3.3)"
+  version: 1.0.0
+  name: Joint Effort Commander
+  description: Joint-group effort command interface for legged and humanoid robots;
+    publishes Float64MultiArray effort targets consumed by a forward_command_controller
+    (P3.3)
   status: integrated
   category: control
   family: joint_effort
@@ -807,24 +753,26 @@
     language: python
   input_contract:
     required_topics:
-      - /joint_states
+    - /joint_states
   output_contract:
     provided_topics:
-      - /go2_group_effort_controller/commands
+    - /go2_group_effort_controller/commands
   required_capabilities: []
   supported_robot_classes:
-    - legged
-    - humanoid
+  - legged
+  - humanoid
   parameters:
     command_rate_hz: 100.0
     default_effort: 0.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
 - id: humanoid_standing_controller
-  version: "1.0.0"
-  name: "Humanoid Standing Controller"
-  description: "Nominal standing-posture position command interface for humanoid robots; publishes Float64MultiArray position targets consumed by a position forward_command_controller (P3.4)"
+  version: 1.0.0
+  name: Humanoid Standing Controller
+  description: Nominal standing-posture position command interface for humanoid robots;
+    publishes Float64MultiArray position targets consumed by a position forward_command_controller
+    (P3.4)
   status: integrated
   category: control
   family: joint_position
@@ -834,25 +782,25 @@
     language: python
   input_contract:
     required_topics:
-      - /joint_states
+    - /joint_states
   output_contract:
     provided_topics:
-      - /bhl_standing_controller/commands
+    - /bhl_standing_controller/commands
   required_capabilities:
-    - standing
+  - standing
   supported_robot_classes:
-    - humanoid
+  - humanoid
   parameters:
     command_rate_hz: 50.0
     default_num_joints: 22
     standing_pose: []
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
 - id: pid_controller
-  version: "1.0.0"
-  name: "PID Controller"
-  description: "Standard PID controller for position and velocity control"
+  version: 1.0.0
+  name: PID Controller
+  description: Standard PID controller for position and velocity control
   status: integrated
   category: control
   family: pid
@@ -862,29 +810,28 @@
     language: cpp
   input_contract:
     required_topics:
-      - /plan
-      - /odom
+    - /plan
+    - /odom
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
     kp_linear: 1.0
     ki_linear: 0.0
     kd_linear: 0.1
     kp_angular: 1.0
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - pid
-
+  - pid
 - id: twist_relay
-  version: "1.0.0"
-  name: "Twist Relay"
-  description: "Simple relay for Twist commands"
+  version: 1.0.0
+  name: Twist Relay
+  description: Simple relay for Twist commands
   status: integrated
   category: control
   family: relay
@@ -894,28 +841,27 @@
     language: cpp
   input_contract:
     required_topics:
-      - /cmd_vel_input
+    - /cmd_vel_input
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
-    - legged
-    - humanoid
-    - aerial
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   parameters: {}
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - relay
-    - passthrough
-
+  - relay
+  - passthrough
 - id: cleaning_controller
-  version: "1.0.0"
-  name: "Cleaning Controller"
-  description: "Specialized controller for cleaning/coverage tasks"
+  version: 1.0.0
+  name: Cleaning Controller
+  description: Specialized controller for cleaning/coverage tasks
   status: integrated
   category: control
   family: task_specific
@@ -925,28 +871,27 @@
     language: python
   input_contract:
     required_topics:
-      - /odom
-      - /map
+    - /odom
+    - /map
   output_contract:
     provided_topics:
-      - /cmd_vel
+    - /cmd_vel
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
-    cleaning_pattern: "lawnmower"
+    cleaning_pattern: lawnmower
     row_spacing: 0.5
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - coverage
-    - cleaning
-
+  - coverage
+  - cleaning
 - id: map_coverage_controller
-  version: "1.0.0"
-  name: "Map Coverage Controller"
-  description: "Controller for systematic map coverage"
+  version: 1.0.0
+  name: Map Coverage Controller
+  description: Controller for systematic map coverage
   status: integrated
   category: control
   family: task_specific
@@ -956,33 +901,30 @@
     language: python
   input_contract:
     required_topics:
-      - /odom
-      - /map
+    - /odom
+    - /map
   output_contract:
     provided_topics:
-      - /cmd_vel
-      - /exploration_goal
+    - /cmd_vel
+    - /exploration_goal
   required_capabilities: []
   supported_robot_classes:
-    - mobile
+  - mobile
   parameters:
-    exploration_strategy: "frontier"
+    exploration_strategy: frontier
     max_velocity: 0.3
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - exploration
-    - coverage
-
-# ============================================================================
-# P3.5: Aerial control algorithms
-# ============================================================================
-
+  - exploration
+  - coverage
 - id: mavros_offboard_controller
-  version: "1.0.0"
-  name: "MAVROS Offboard Controller"
-  description: "Publishes mavros_msgs/AttitudeTarget and PositionTarget for offboard control of multirotor SITL; relays setpoints to the ArduPilot FCU bridge for simulated waypoint and attitude control"
+  version: 1.0.0
+  name: MAVROS Offboard Controller
+  description: Publishes mavros_msgs/AttitudeTarget and PositionTarget for offboard
+    control of multirotor SITL; relays setpoints to the ArduPilot FCU bridge for simulated
+    waypoint and attitude control
   status: integrated
   category: control
   family: mavlink
@@ -992,26 +934,457 @@
     language: python
   input_contract:
     required_topics:
-      - /mavros/setpoint/attitude
+    - /mavros/setpoint/attitude
   output_contract:
     provided_topics:
-      - /mavros/setpoint/attitude
-      - /mavros/setpoint/position
+    - /mavros/setpoint/attitude
+    - /mavros/setpoint/position
   required_capabilities:
-    - control
-    - flight
+  - control
+  - flight
   supported_robot_classes:
-    - aerial
+  - aerial
   parameters:
     throttle: 0.0
-    mode: "ALT_HOLD"
+    mode: ALT_HOLD
   source:
-    repository: "internal"
-    license: "Apache-2.0"
+    repository: internal
+    license: Apache-2.0
   tags:
-    - mavlink
-    - offboard
-    - aerial
-    - ardupilot
-  created: "2026-09-05"
-  updated: "2026-09-05"
+  - mavlink
+  - offboard
+  - aerial
+  - ardupilot
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: obstacle_detector
+  version: 1.0.0
+  name: Obstacle Detector
+  status: integrated
+  category: perception
+  family: clustering
+  implementation:
+    package: bumperbot_algorithms
+    executable: obstacle_detector
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /obstacles
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    cluster_distance: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - perception
+  - clustering
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: scan_clusterer
+  version: 1.0.0
+  name: Scan Clusterer
+  status: integrated
+  category: perception
+  family: clustering
+  implementation:
+    package: bumperbot_algorithms
+    executable: scan_clusterer
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /clusters
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    cluster_distance: 0.3
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - perception
+  - clustering
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: pointcloud_segmenter
+  version: 1.0.0
+  name: Pointcloud Segmenter
+  status: integrated
+  category: perception
+  family: segmentation
+  implementation:
+    package: bumperbot_algorithms
+    executable: pointcloud_segmenter
+    language: python
+  input_contract:
+    required_topics:
+    - /points
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /segmented_points
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    ground_threshold: 0.1
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - perception
+  - segmentation
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: dead_reckoning
+  version: 1.0.0
+  name: Dead Reckoning
+  status: integrated
+  category: localization
+  family: odometry
+  implementation:
+    package: bumperbot_algorithms
+    executable: dead_reckoning
+    language: python
+  input_contract:
+    required_topics:
+    - /odom
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /estimated_pose
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    initial_x: 0.0
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - localization
+  - odometry
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: ekf_3d_estimator
+  version: 1.0.0
+  name: EKF 3D Estimator
+  status: integrated
+  category: state_estimation
+  family: kalman_filter
+  implementation:
+    package: bumperbot_algorithms
+    executable: ekf_3d_estimator
+    language: python
+  input_contract:
+    required_topics:
+    - /odom
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /estimated_state
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    process_noise: 0.1
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - state_estimation
+  - kalman_filter
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: motion_model_estimator
+  version: 1.0.0
+  name: Motion Model Estimator
+  status: integrated
+  category: state_estimation
+  family: motion_model
+  implementation:
+    package: bumperbot_algorithms
+    executable: motion_model_estimator
+    language: python
+  input_contract:
+    required_topics:
+    - /odom
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /estimated_state
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    model_noise: 0.05
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - state_estimation
+  - motion_model
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: pose_graph_estimator
+  version: 1.0.0
+  name: Pose Graph Estimator
+  status: integrated
+  category: state_estimation
+  family: pose_graph
+  implementation:
+    package: bumperbot_algorithms
+    executable: pose_graph_estimator
+    language: python
+  input_contract:
+    required_topics:
+    - /odom
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /estimated_state
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    decay: 0.9
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - state_estimation
+  - pose_graph
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: wheel_imu_fusion
+  version: 1.0.0
+  name: Wheel IMU Fusion
+  status: integrated
+  category: sensor_fusion
+  family: complementary
+  implementation:
+    package: bumperbot_algorithms
+    executable: wheel_imu_fusion
+    language: python
+  input_contract:
+    required_topics:
+    - /odom
+    - /imu
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /fused_state
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    alpha: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - sensor_fusion
+  - complementary
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: gps_odom_fusion
+  version: 1.0.0
+  name: GPS Odom Fusion
+  status: integrated
+  category: sensor_fusion
+  family: weighted
+  implementation:
+    package: bumperbot_algorithms
+    executable: gps_odom_fusion
+    language: python
+  input_contract:
+    required_topics:
+    - /odom
+    - /gps/fix
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /fused_pose
+  required_capabilities: []
+  supported_robot_classes:
+  - aerial
+  - mobile
+  parameters:
+    gps_weight: 0.7
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - sensor_fusion
+  - weighted
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: complementary_imu
+  version: 1.0.0
+  name: Complementary IMU
+  status: integrated
+  category: sensor_fusion
+  family: complementary
+  implementation:
+    package: bumperbot_algorithms
+    executable: complementary_imu
+    language: python
+  input_contract:
+    required_topics:
+    - /imu
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /attitude
+  required_capabilities: []
+  supported_robot_classes:
+  - legged
+  - humanoid
+  - mobile
+  - aerial
+  parameters:
+    alpha: 0.98
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - sensor_fusion
+  - complementary
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: rrt_planner
+  version: 1.0.0
+  name: RRT Planner
+  status: integrated
+  category: global_planning
+  family: sampling
+  implementation:
+    package: bumperbot_algorithms
+    executable: rrt_planner
+    language: python
+  input_contract:
+    required_topics:
+    - /costmap
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /plan
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    step: 1.0
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - global_planning
+  - sampling
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: voronoi_planner
+  version: 1.0.0
+  name: Voronoi Planner
+  status: integrated
+  category: global_planning
+  family: roadmap
+  implementation:
+    package: bumperbot_algorithms
+    executable: voronoi_planner
+    language: python
+  input_contract:
+    required_topics:
+    - /costmap
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /plan
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    step: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - global_planning
+  - roadmap
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
+- id: follow_the_gap
+  version: 1.0.0
+  name: Follow The Gap
+  status: integrated
+  category: local_planning
+  family: reactive
+  implementation:
+    package: bumperbot_algorithms
+    executable: follow_the_gap
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    safety_radius: 0.3
+  source:
+    repository: internal
+    license: Apache-2.0
+  tags:
+  - local_planning
+  - reactive
+  - p5
+  created: '2026-09-05'
+  updated: '2026-09-05'
