@@ -228,8 +228,35 @@ class VacuumTab(LabTab):
             justify="left",
         ).grid(row=0, column=0, sticky="ew")
 
+        robot_frame = ttk.LabelFrame(self, text="Robot (vacuum-capable profiles)", padding=10)
+        robot_frame.grid(row=1, column=0, sticky="ew", pady=(10, 0))
+        robot_frame.columnconfigure(0, weight=1)
+        robot_frame.columnconfigure(1, weight=0)
+        capable = sorted(
+            robot_id
+            for robot_id, config in self.app.robot_profiles.items()
+            if bool(config.get("supports_room_vacuum", False))
+        )
+        self.vacuum_robot_var = tk.StringVar(
+            value=self.app.robot_var.get() if self.app.robot_var.get() in capable
+            else (capable[0] if capable else "")
+        )
+        robot_combo = ttk.Combobox(
+            robot_frame,
+            textvariable=self.vacuum_robot_var,
+            values=capable,
+            state="readonly",
+        )
+        robot_combo.grid(row=0, column=0, sticky="ew", padx=(0, 6))
+        robot_combo.bind("<<ComboboxSelected>>", self._on_robot_selected)
+        ttk.Button(
+            robot_frame,
+            text="Open Launch Tab (drive pad)",
+            command=lambda: self.app.show_tab("Launch"),
+        ).grid(row=0, column=1, sticky="ew")
+
         launch_frame = ttk.LabelFrame(self, text="Simulation", padding=10)
-        launch_frame.grid(row=1, column=0, sticky="ew", pady=(10, 0))
+        launch_frame.grid(row=2, column=0, sticky="ew", pady=(10, 0))
         launch_frame.columnconfigure(0, weight=1)
         launch_frame.columnconfigure(1, weight=1)
         ttk.Button(
@@ -242,7 +269,7 @@ class VacuumTab(LabTab):
         ).grid(row=0, column=1, sticky="ew", padx=(4, 0))
 
         cleaner_frame = ttk.LabelFrame(self, text="Cleaner Node", padding=10)
-        cleaner_frame.grid(row=2, column=0, sticky="ew", pady=(10, 0))
+        cleaner_frame.grid(row=3, column=0, sticky="ew", pady=(10, 0))
         cleaner_frame.columnconfigure(0, weight=1)
         cleaner_frame.columnconfigure(1, weight=1)
         ttk.Button(
@@ -253,7 +280,7 @@ class VacuumTab(LabTab):
         ).grid(row=0, column=1, sticky="ew", padx=(4, 0))
 
         manual_frame = ttk.LabelFrame(self, text="Manual Cleaning Drive", padding=10)
-        manual_frame.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
+        manual_frame.grid(row=4, column=0, sticky="nsew", pady=(10, 0))
         ttk.Label(
             manual_frame,
             text=(
@@ -266,7 +293,13 @@ class VacuumTab(LabTab):
             justify="left",
         ).grid(row=0, column=0, sticky="ew")
 
-        self.rowconfigure(3, weight=1)
+        self.rowconfigure(4, weight=1)
+
+    def _on_robot_selected(self, _event):
+        """Sync the Vacuum robot selection back into the Launch tab."""
+        self.app.robot_var.set(self.vacuum_robot_var.get())
+        self.app._update_from_selection()
+        self.app.set_status(f"Vacuum robot: {self.vacuum_robot_var.get()}")
 
     def _launch_vacuum_sim(self):
         command = [
@@ -274,7 +307,7 @@ class VacuumTab(LabTab):
             "launch",
             "robot_lab_bringup",
             "simulated_room_vacuum.launch.py",
-            f"robot_model:={self.app.robot_var.get()}",
+            f"robot_model:={self.vacuum_robot_var.get()}",
         ]
         self.app.start_launch_command(command)
 

@@ -192,8 +192,8 @@ class SimulationLauncherGui(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Robot Lab Control Center")
-        self.geometry("1040x720")
-        self.minsize(900, 620)
+        self.geometry("1280x820")
+        self.minsize(1000, 700)
 
         self.bringup_share = get_package_share_directory("robot_lab_bringup")
         self.robots_share = get_package_share_directory("robots")
@@ -237,12 +237,21 @@ class SimulationLauncherGui(tk.Tk):
         return next(iter(mapping), "")
 
     def _build_ui(self):
-        self.columnconfigure(0, weight=0)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
-        # Scrollable left controls panel
-        left_container = ttk.Frame(self)
+        # Top-level notebook: one full-size tab per control-center area
+        self.notebook = ttk.Notebook(self)
+        self.notebook.grid(row=0, column=0, sticky="nsew")
+
+        launch_tab = ttk.Frame(self.notebook)
+        self.notebook.add(launch_tab, text="Launch")
+        launch_tab.columnconfigure(0, weight=0)
+        launch_tab.columnconfigure(1, weight=1)
+        launch_tab.rowconfigure(0, weight=1)
+
+        # Scrollable left controls panel (inside the Launch tab)
+        left_container = ttk.Frame(launch_tab)
         left_container.grid(row=0, column=0, sticky="ns")
         left_container.columnconfigure(0, weight=1)
         left_container.rowconfigure(0, weight=1)
@@ -379,16 +388,10 @@ class SimulationLauncherGui(tk.Tk):
         self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 0))
 
         self.bg_processes = {}
-        notebook = ttk.Notebook(controls)
-        notebook.grid(row=13, column=0, sticky="nsew", pady=(10, 0))
-        controls.rowconfigure(13, weight=1)
-        from .lab_tabs import create_tabs
 
-        create_tabs(notebook, self)
-
-        ttk.Label(controls, text="Drive").grid(row=14, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="Drive").grid(row=13, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=15, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=14, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
@@ -412,7 +415,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=16, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=15, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
@@ -435,16 +438,9 @@ class SimulationLauncherGui(tk.Tk):
         ).grid(row=0, column=3, sticky="ew")
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=17, column=0, sticky="ew", pady=(0, 4))
+        self.save_map_button.grid(row=16, column=0, sticky="ew", pady=(0, 4))
 
-        ttk.Label(controls, textvariable=self.status_var, foreground="#555555").grid(
-            row=18,
-            column=0,
-            sticky="w",
-            pady=(10, 0),
-        )
-
-        output_frame = ttk.Frame(self, padding=(0, 12, 12, 12))
+        output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
         output_frame.columnconfigure(0, weight=1)
         output_frame.rowconfigure(1, weight=1)
@@ -452,6 +448,28 @@ class SimulationLauncherGui(tk.Tk):
         self.output = scrolledtext.ScrolledText(output_frame, wrap="word", height=24)
         self.output.grid(row=1, column=0, sticky="nsew", pady=(2, 0))
         self.output.configure(state="disabled")
+
+        # Shared console: every control-center tab streams its output here
+        console_frame = ttk.LabelFrame(self, text="Console", padding=(12, 2, 12, 6))
+        console_frame.grid(row=1, column=0, sticky="ew")
+        console_frame.columnconfigure(0, weight=1)
+        self.console = scrolledtext.ScrolledText(console_frame, wrap="word", height=10)
+        self.console.grid(row=0, column=0, sticky="ew", pady=(2, 0))
+        self.console.configure(state="disabled")
+
+        # Status bar spans the full window below the console
+        ttk.Label(
+            self,
+            textvariable=self.status_var,
+            foreground="#555555",
+            anchor="w",
+            padding=(12, 2),
+        ).grid(row=2, column=0, sticky="ew")
+
+        # Remaining control-center tabs (Registry, Vacuum, Benchmark, Tests, Health)
+        from .lab_tabs import create_tabs
+
+        create_tabs(self.notebook, self)
 
     def _on_selection_changed(self, _event):
         self._update_from_selection()
@@ -654,6 +672,8 @@ class SimulationLauncherGui(tk.Tk):
                 kind, payload = self.output_queue.get_nowait()
                 if kind == "line":
                     self._append_output(payload)
+                elif kind == "cline":
+                    self._console_append(payload)
                 elif kind == "done":
                     self._append_output(f"\n[launch exited with code {payload}]\n")
                     self._stop_drive()
@@ -669,6 +689,13 @@ class SimulationLauncherGui(tk.Tk):
         self.output.insert("end", text)
         self.output.see("end")
         self.output.configure(state="disabled")
+
+    def _console_append(self, text):
+        """Append text to the shared bottom console (all lab tabs)."""
+        self.console.configure(state="normal")
+        self.console.insert("end", text)
+        self.console.see("end")
+        self.console.configure(state="disabled")
 
     def _bind_drive_button(self, button, linear_scale, angular_scale):
         button.bind("<ButtonPress-1>", lambda _event: self._start_drive(linear_scale, angular_scale))
@@ -835,13 +862,13 @@ class SimulationLauncherGui(tk.Tk):
                 env=subprocess_env(),
             )
         except OSError as exc:
-            self.output_queue.put(("line", f"[{label} failed to start: {exc}]\n"))
+            self.output_queue.put(("cline", f"[{label} failed to start: {exc}]\n"))
             return
 
         for line in process.stdout:
-            self.output_queue.put(("line", line))
+            self.output_queue.put(("cline", line))
         return_code = process.wait()
-        self.output_queue.put(("line", f"[{label} exited with code {return_code}]\n"))
+        self.output_queue.put(("cline", f"[{label} exited with code {return_code}]\n"))
 
     def _stop_launch(self):
         if not self.process or self.process.poll() is not None:
@@ -862,9 +889,16 @@ class SimulationLauncherGui(tk.Tk):
                 pass
 
     # ---- Control-center APIs used by the lab tabs ----
+    def show_tab(self, title):
+        """Raise the control-center tab with the given title."""
+        for tab_id in self.notebook.tabs():
+            if self.notebook.tab(tab_id, "text") == title:
+                self.notebook.select(tab_id)
+                return
+
     def log(self, text):
         """Append text to the shared console (thread-safe via the queue)."""
-        self.output_queue.put(("line", text))
+        self.output_queue.put(("cline", text))
 
     def set_status(self, text):
         self.status_var.set(text)
@@ -924,9 +958,9 @@ class SimulationLauncherGui(tk.Tk):
 
     def _read_bg_output(self, process, key):
         for line in process.stdout:
-            self.output_queue.put(("line", line))
+            self.output_queue.put(("cline", line))
         return_code = process.wait()
-        self.output_queue.put(("line", f"[{key} exited with code {return_code}]\n"))
+        self.output_queue.put(("cline", f"[{key} exited with code {return_code}]\n"))
 
     def stop_bg_process(self, key):
         """Terminate a named background process if it is running."""
