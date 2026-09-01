@@ -1,7 +1,0 @@
-#!/usr/bin/env python3
-"""robot-lab CLI entry point installed for `ros2 run robot_lab_registry robot-lab`."""
-
-from robot_lab_registry.cli import main
-
-if __name__ == "__main__":
-    main()
