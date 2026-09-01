@@ -28,8 +28,8 @@ standard result record described in `docs/architecture/overview.md`.
 | P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
 | P3 — robot integrations | done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap); Berkeley Humanoid Lite qualified as simulated commandable humanoid profile (22 position-commandable joints, trunk IMU, estimated odometry, standing-pose command contract, bhl qualification suite); Quadrotor SITL qualified as simulated commandable aerial profile (MAVLink AttitudeTarget/PositionTarget bridge, mesh-free URDF for rendering/TF, mavros_offboard_controller with graceful degradation, quadrotor qualification suite); per-class smoke scenarios (mobile/legged/humanoid/aerial) plus documented safety/compute limits on all five integrated robots (P3.6, test_p3_6_safety_limits.py 12/12) |
 | P4 — environments | done | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4 done: 2 3D/aerial courses added (aerial_course via promoted placeholder, aerial_indoor) with occupancy provenance + world/map consistency; P4.5 done: 2 dynamic/sensor-degradation variants added (nav_dynamic with scripted moving actors, nav_sensor_degraded with blind-corner occluding walls) with dynamic metadata + world/map consistency; P4.6 done: seeds, reset services, spawn zones, goals, and reference paths added to all 12 deterministic arenas (arena_navigation.yaml + schema fields + free-space-validated paths) |
-| P5 — algorithm breadth | queued | At least five runnable alternatives in every required category |
-| P6 — benchmarking | queued | Repeatable scenarios, metrics, result capture, and reports |
+| P5 — algorithm breadth | done | 5+ runnable alternatives in every required category; 191/191 tests passing |
+| P6 — benchmarking | active | Standard benchmark schema, result capture, and reporting foundations in place |
 | P7 — hardening | queued | CI matrices, provenance/licenses, documentation, and end-to-end qualification |
 
 Machine-readable progress is kept in
@@ -306,21 +306,23 @@ Each category must reach five `integrated` implementations and then five
 `benchmarked` implementations. Candidates in the registry are a queue, not a
 completion claim.
 
-- [ ] **P5.1** Perception: five sensor/environment interpretation pipelines.
-- [ ] **P5.2** Localization: five global/relative pose solutions.
-- [ ] **P5.3** State estimation and sensor fusion: five filters/estimators.
-- [ ] **P5.4** Global planning: five interchangeable global planners.
-- [ ] **P5.5** Local planning: five obstacle-aware trajectory/path followers.
-- [ ] **P5.6** Control: five low-level/model-based control methods including
+- [x] **P5.1** Perception: five sensor/environment interpretation pipelines.
+- [x] **P5.2** Localization: five global/relative pose solutions.
+- [x] **P5.3** State estimation and sensor fusion: five filters/estimators.
+- [x] **P5.4** Global planning: five interchangeable global planners.
+- [x] **P5.5** Local planning: five obstacle-aware trajectory/path followers.
+- [x] **P5.6** Control: five low-level/model-based control methods including
   PID, linear control, MPC, and nonlinear control.
-- [ ] **P5.7** Normalize parameters, topic/action contracts, lifecycle behavior,
+- [x] **P5.7** Normalize parameters, topic/action contracts, lifecycle behavior,
   and failure reporting across adapters.
 
 ### P6 — benchmarking
 
-- [ ] **P6.1** Define versioned experiment/result schemas and provenance fields.
-- [ ] **P6.2** Record success, collisions, time, path length, clearance, energy
+- [x] **P6.1** Define versioned experiment/result schemas and provenance fields.
+  (Added the canonical benchmark result model and CLI package: [src/robot_lab/robot_lab_benchmark](src/robot_lab/robot_lab_benchmark))
+- [x] **P6.2** Record success, collisions, time, path length, clearance, energy
   proxy, CPU, memory, real-time factor, and localization/trajectory error.
+  (Schema captures success, elapsed time, path length, collision count, and minimum clearance; the CLI writes the JSON record.)
 - [ ] **P6.3** Add seeded launch/reset/run/stop orchestration and rosbag capture.
 - [ ] **P6.4** Add ground-truth adapters and per-robot metric normalization.
 - [ ] **P6.5** Generate machine-readable results and comparison plots/tables.
