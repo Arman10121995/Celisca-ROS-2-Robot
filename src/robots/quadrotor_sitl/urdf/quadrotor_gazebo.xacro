@@ -102,6 +102,7 @@
           <max_step_size>0.001</max_step_size>
         </plugin>
       </xacro:if>
-    </plugin>
-  </gazebo>
+    </gazebo>
+  </xacro:macro>
+
 </robot>
