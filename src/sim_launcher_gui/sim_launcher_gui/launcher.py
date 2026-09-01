@@ -367,9 +367,17 @@ class SimulationLauncherGui(tk.Tk):
         self.stop_button = ttk.Button(button_frame, text="Stop", command=self._stop_launch, state="disabled")
         self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 0))
 
-        ttk.Label(controls, text="Drive").grid(row=13, column=0, sticky="w", pady=(12, 0))
+        self.bg_processes = {}
+        notebook = ttk.Notebook(controls)
+        notebook.grid(row=13, column=0, sticky="nsew", pady=(10, 0))
+        controls.rowconfigure(13, weight=1)
+        from .lab_tabs import create_tabs
+
+        create_tabs(notebook, self)
+
+        ttk.Label(controls, text="Drive").grid(row=14, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=14, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=15, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
@@ -393,7 +401,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=15, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=16, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
@@ -416,10 +424,10 @@ class SimulationLauncherGui(tk.Tk):
         ).grid(row=0, column=3, sticky="ew")
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=16, column=0, sticky="ew", pady=(0, 4))
+        self.save_map_button.grid(row=17, column=0, sticky="ew", pady=(0, 4))
 
         ttk.Label(controls, textvariable=self.status_var, foreground="#555555").grid(
-            row=17,
+            row=18,
             column=0,
             sticky="w",
             pady=(10, 0),
@@ -828,8 +836,91 @@ class SimulationLauncherGui(tk.Tk):
             except OSError:
                 pass
 
+    # ---- Control-center APIs used by the lab tabs ----
+    def log(self, text):
+        """Append text to the shared console (thread-safe via the queue)."""
+        self.output_queue.put(("line", text))
+
+    def set_status(self, text):
+        self.status_var.set(text)
+
+    def start_launch_command(self, command):
+        """Start an arbitrary launch command in the main launch slot."""
+        if self.process and self.process.poll() is None:
+            messagebox.showinfo(
+                "Launch running",
+                "Stop the current launch before starting another one.",
+            )
+            return
+        self._append_output(f"$ {' '.join(str(part) for part in command)}\n")
+        try:
+            self.process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+                preexec_fn=os.setsid,
+                env=subprocess_env(),
+            )
+        except OSError as exc:
+            messagebox.showerror("Failed to start launch", str(exc))
+            return
+        self.start_button.configure(state="disabled")
+        self.stop_button.configure(state="normal")
+        self.status_var.set(f"Running: {command[3] if len(command) > 3 else command[0]}")
+        threading.Thread(target=self._read_process_output, daemon=True).start()
+
+    def stop_launch(self):
+        """Public stop hook used by the lab tabs."""
+        self._stop_launch()
+
+    def start_bg_process(self, command, key):
+        """Run a background process, streaming output to the shared console."""
+        existing = self.bg_processes.get(key)
+        if existing and existing.poll() is None:
+            self._append_output(f"[{key}] already running\n")
+            return
+        self._append_output(f"$ {' '.join(str(part) for part in command)}\n")
+        try:
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+                env=subprocess_env(),
+            )
+        except OSError as exc:
+            self._append_output(f"[{key} failed to start: {exc}]\n")
+            return
+        self.bg_processes[key] = process
+        threading.Thread(target=self._read_bg_output, args=(process, key), daemon=True).start()
+
+    def _read_bg_output(self, process, key):
+        for line in process.stdout:
+            self.output_queue.put(("line", line))
+        return_code = process.wait()
+        self.output_queue.put(("line", f"[{key} exited with code {return_code}]\n"))
+
+    def stop_bg_process(self, key):
+        """Terminate a named background process if it is running."""
+        process = self.bg_processes.get(key)
+        if process and process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+
+    def stop_all_bg(self):
+        """Terminate every tracked background process."""
+        for key in list(self.bg_processes):
+            self.stop_bg_process(key)
+
     def _on_close(self):
         self._stop_drive()
+        self.stop_all_bg()
         if self.process and self.process.poll() is None:
             try:
                 os.killpg(os.getpgid(self.process.pid), signal.SIGINT)
