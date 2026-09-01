@@ -72,3 +72,8 @@ class BenchmarkResult:
         }
         payload.update(self.extra)
         return payload
+
+
+__all__ = [
+    'BenchmarkResult',
+]

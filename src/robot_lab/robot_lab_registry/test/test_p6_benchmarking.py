@@ -4,7 +4,14 @@ import tempfile
 import unittest
 
 from robot_lab_benchmark import BenchmarkResult
+from robot_lab_benchmark.aggregator import aggregate_results, compare_results
 from robot_lab_benchmark.cli import main
+from robot_lab_benchmark.groundtruth import GroundTruthAdapter
+from robot_lab_benchmark.normalizer import MetricNormalizer
+from robot_lab_benchmark.orchestrator import BenchmarkRunner
+from robot_lab_benchmark.outputs import OutputGenerator
+from robot_lab_benchmark.reference import ReferenceBenchmark, ReferenceRegistry
+from robot_lab_benchmark.report import generate_report
 
 
 class BenchmarkingTests(unittest.TestCase):
@@ -69,6 +76,106 @@ class BenchmarkingTests(unittest.TestCase):
             self.assertEqual(payload['experiment_id'], 'bumperbot_smoke_test')
             self.assertTrue(payload['success'])
             self.assertEqual(payload['seed'], 7)
+
+    def test_runner_creates_seeded_run_manifest_and_bag_path(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            runner = BenchmarkRunner(output_dir=tmpdir)
+            summary = runner.run(
+                experiment_id='bumperbot_smoke_test',
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=13,
+                reset_service='/gazebo/reset_world',
+                bag_capture=True,
+            )
+
+            self.assertEqual(summary['seed'], 13)
+            self.assertEqual(summary['reset_service'], '/gazebo/reset_world')
+            self.assertTrue(summary['bag_path'].endswith('.bag'))
+            self.assertTrue(os.path.exists(summary['manifest_path']))
+            self.assertTrue(os.path.exists(summary['bag_path']))
+
+    def test_compare_results_ranks_successful_runs(self):
+        rows = [
+            BenchmarkResult(
+                experiment_id='bumperbot_smoke_test',
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=1,
+                success=True,
+                elapsed_seconds=15.0,
+                path_length_m=20.0,
+                collision_count=0,
+                min_clearance_m=0.8,
+            ),
+            BenchmarkResult(
+                experiment_id='bumperbot_smoke_test',
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=2,
+                success=True,
+                elapsed_seconds=10.0,
+                path_length_m=18.0,
+                collision_count=1,
+                min_clearance_m=0.6,
+            ),
+            BenchmarkResult(
+                experiment_id='bumperbot_smoke_test',
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=3,
+                success=False,
+                elapsed_seconds=25.0,
+                path_length_m=30.0,
+                collision_count=3,
+                min_clearance_m=0.1,
+            ),
+        ]
+
+        summary = aggregate_results(rows)
+        comparison = compare_results(rows)
+
+        self.assertEqual(summary['success_count'], 2)
+        self.assertEqual(summary['total_runs'], 3)
+        self.assertEqual(comparison['ranking'][0]['seed'], 2)
+        self.assertIn('best_run', comparison)
+
+    def test_generate_report_builds_comparison_summary(self):
+        rows = [
+            BenchmarkResult(
+                experiment_id='bumperbot_smoke_test',
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=7,
+                success=True,
+                elapsed_seconds=11.0,
+                path_length_m=19.0,
+                collision_count=0,
+                min_clearance_m=0.9,
+            ),
+            BenchmarkResult(
+                experiment_id='bumperbot_smoke_test',
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=9,
+                success=True,
+                elapsed_seconds=12.0,
+                path_length_m=22.0,
+                collision_count=1,
+                min_clearance_m=0.7,
+            ),
+        ]
+
+        report = generate_report(rows)
+        self.assertEqual(report['summary']['success_count'], 2)
+        self.assertEqual(report['ranking'][0]['seed'], 7)
+        self.assertIn('best_run', report)
 
 
 if __name__ == '__main__':
