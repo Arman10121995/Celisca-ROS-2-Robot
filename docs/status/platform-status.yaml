@@ -138,5 +138,5 @@ known_blockers:
     condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
 
 handoff:
-  next_task: P5.1
-  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P3 complete; P4 complete (14 qualified + 5 nav arenas + 3 terrain + 2 aerial + 2 dynamic/sensor variants + P4.6 seed/goal/reference-path metadata; test_p4_1 9/9, test_p4_2 8/8, test_p4_3 9/9, test_p4_4 9/9, test_p4_5 8/8, test_p4_6 7/7; cross-reference validation passes). Next: P5 - algorithm breadth, each category must reach 5 integrated implementations. Current integrated counts: perception 2 (need 3 more), localization 4 (need 1), state_estimation 2 (need 3), sensor_fusion 2 (need 3), global_planning 3 (need 2), local_planning 4 (need 1), control 9 (done). Add real integrated adapters + bringup fragments + tests for the gaps, mirroring the P3 qualification pattern. Registry counts: 20 robots / 28 environments / 30 algorithms / 18 scenarios / 15 experiments.'
+  next_task: P6.3
+  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P5 complete (P5: 5+ integrated per category - perception 5, localization 5, state_estimation 5, sensor_fusion 5, global_planning 5, local_planning 5, control 9; test_p5_algorithm_breadth.py 12/12 tests passing). P6.1-P6.2 complete (benchmark schemas, metrics). Next: P6.3 - Add seeded launch/reset/run/stop orchestration and rosbag capture. Registry counts: 20 robots / 28 environments / 30 algorithms / 18 scenarios / 15 experiments.'

@@ -23,7 +23,7 @@ if _SRC_PACKAGE_DIR.name == "robot_lab_registry":
     if str(_SRC_PACKAGE_DIR) not in sys.path:
         sys.path.insert(0, str(_SRC_PACKAGE_DIR))
     # Add src/ so the flat bumperbot_algorithms package is importable
-    _src_dir = str(_SRC_PACKAGE_DIR.parents[2])
+    _src_dir = str(_SRC_PACKAGE_DIR.parents[1])
     if _src_dir not in sys.path:
         sys.path.insert(0, _src_dir)
     for _stale in [m for m in list(sys.modules)
