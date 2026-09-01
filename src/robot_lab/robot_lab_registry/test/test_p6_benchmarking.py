@@ -1,15 +1,23 @@
 import json
 import os
+import sys
 import tempfile
 import unittest
+from pathlib import Path
+
+# Ensure robot_lab_benchmark (sibling package) is importable during tests
+_benchmark_pkg = Path(__file__).resolve().parents[3] / "robot_lab" / "robot_lab_benchmark"
+if str(_benchmark_pkg) not in sys.path:
+    sys.path.insert(0, str(_benchmark_pkg))
 
 from robot_lab_benchmark import BenchmarkResult
 from robot_lab_benchmark.aggregator import aggregate_results, compare_results
 from robot_lab_benchmark.cli import main
 from robot_lab_benchmark.groundtruth import GroundTruthAdapter
+from robot_lab_benchmark.launch_orchestrator import LaunchOrchestrator
 from robot_lab_benchmark.normalizer import MetricNormalizer
 from robot_lab_benchmark.orchestrator import BenchmarkRunner
-from robot_lab_benchmark.outputs import OutputGenerator
+from robot_lab_benchmark.outputs import OutputGenerator  # noqa: F401 used in tests
 from robot_lab_benchmark.reference import ReferenceBenchmark, ReferenceRegistry
 from robot_lab_benchmark.report import generate_report
 
@@ -176,6 +184,371 @@ class BenchmarkingTests(unittest.TestCase):
         self.assertEqual(report['summary']['success_count'], 2)
         self.assertEqual(report['ranking'][0]['seed'], 7)
         self.assertIn('best_run', report)
+
+
+class LaunchOrchestratorTests(unittest.TestCase):
+    """Tests for P6.3 seeded launch/reset/run/stop orchestration."""
+
+    def test_orchestrator_creates_output_dir(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            self.assertTrue(Path(tmpdir).is_dir())
+            self.assertEqual(orch.launch_package, 'robot_lab_bringup')
+            self.assertEqual(orch.launch_file, 'select_robot.launch.py')
+
+    def test_orchestrator_default_output_dir(self):
+        orch = LaunchOrchestrator(output_dir='/tmp/test_orch_default')
+        self.assertTrue(orch.output_dir.is_dir())
+        orch.output_dir.rmdir()  # clean up
+
+    def test_reset_returns_false_without_sim(self):
+        """Reset should gracefully fail when no simulator is running."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            # No simulator running — should return False, not raise
+            result = orch.reset('/gazebo/reset_world')
+            self.assertFalse(result)
+
+    def test_run_without_bag_capture(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            result = orch.run(seed=42, duration_sec=0.1, bag_capture=False)
+            self.assertTrue(result['success'])
+            self.assertGreater(result['elapsed_seconds'], 0.0)
+            self.assertFalse(result['bag_capture'])
+            self.assertIsNone(result['bag_path'])
+
+    def test_run_with_bag_capture(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            result = orch.run(seed=42, duration_sec=0.1, bag_capture=True)
+            self.assertTrue(result['success'])
+            self.assertTrue(result['bag_capture'])
+            self.assertIsNotNone(result['bag_path'])
+            self.assertTrue(os.path.exists(result['bag_path']))
+
+    def test_run_with_custom_topics(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            result = orch.run(
+                seed=42, duration_sec=0.1, bag_capture=True,
+                topics=['/cmd_vel', '/scan'],
+            )
+            self.assertTrue(result['success'])
+            self.assertIn('bag_path', result)
+
+    def test_execute_full_run_produces_manifest(self):
+        """Full lifecycle run should produce a manifest file."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            summary = orch.execute_full_run(
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=99,
+                duration_sec=0.1,
+                bag_capture=True,
+            )
+            self.assertEqual(summary['robot_id'], 'bumperbot')
+            self.assertEqual(summary['seed'], 99)
+            self.assertIn('launch_ok', summary)
+            self.assertIn('reset_ok', summary)
+            self.assertIn('stop_ok', summary)
+            self.assertTrue(os.path.exists(summary['manifest_path']))
+
+    def test_execute_full_run_writes_manifest_contents(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            summary = orch.execute_full_run(
+                robot_id='bumperbot',
+                environment_id='small_office',
+                scenario_id='bumperbot_smoke_test',
+                seed=5,
+                duration_sec=0.1,
+                bag_capture=False,
+            )
+            with open(summary['manifest_path'], 'r', encoding='utf-8') as f:
+                manifest = json.load(f)
+            self.assertEqual(manifest['schema_version'], '1.0')
+            self.assertEqual(manifest['robot_id'], 'bumperbot')
+            self.assertEqual(manifest['seed'], 5)
+
+    def test_stop_without_launch_is_safe(self):
+        """Calling stop() without a prior launch should not raise."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            orch = LaunchOrchestrator(output_dir=tmpdir)
+            result = orch.stop()
+            self.assertTrue(result)
+
+
+class GroundTruthAdapterTests(unittest.TestCase):
+    """Tests for P6.4 ground-truth metric extraction."""
+
+    def test_empty_adapter_returns_zero_metrics(self):
+        gt = GroundTruthAdapter()
+        metrics = gt.extract_metrics()
+        self.assertEqual(metrics['path_length_m'], 0.0)
+        self.assertEqual(metrics['collision_count'], 0)
+        self.assertEqual(metrics['min_clearance_m'], 0.0)
+
+    def test_path_length_from_poses(self):
+        gt = GroundTruthAdapter()
+        gt.add_odometry({'pose': {'pose': {'position': {'x': 0.0, 'y': 0.0}}}})
+        gt.add_odometry({'pose': {'pose': {'position': {'x': 3.0, 'y': 4.0}}}})
+        self.assertAlmostEqual(gt.compute_path_length(), 5.0, places=5)
+
+    def test_collision_count_from_scans(self):
+        gt = GroundTruthAdapter()
+        # add_scan stores only the min of each scan
+        gt.add_scan({'ranges': [0.1, 0.5, 1.0, 0.2, 5.0]})  # min = 0.1
+        gt.add_scan({'ranges': [0.2, 0.4, 1.0]})             # min = 0.2
+        gt.add_scan({'ranges': [0.5, 1.0, 2.0]})             # min = 0.5 (above threshold)
+        # Two scans below default 0.3 threshold
+        self.assertEqual(gt.compute_collision_count(), 2)
+
+    def test_min_clearance(self):
+        gt = GroundTruthAdapter()
+        gt.add_scan({'ranges': [1.0, 0.5, 0.2, 3.0]})
+        self.assertAlmostEqual(gt.compute_min_clearance(), 0.2, places=5)
+
+    def test_extract_metrics_integration(self):
+        gt = GroundTruthAdapter()
+        gt.add_odometry({'pose': {'pose': {'position': {'x': 0.0, 'y': 0.0}}}})
+        gt.add_odometry({'pose': {'pose': {'position': {'x': 1.0, 'y': 0.0}}}})
+        gt.add_scan({'ranges': [0.1, 1.0, 2.0]})
+        metrics = gt.extract_metrics()
+        self.assertAlmostEqual(metrics['path_length_m'], 1.0, places=5)
+        self.assertGreaterEqual(metrics['collision_count'], 1)
+        self.assertAlmostEqual(metrics['min_clearance_m'], 0.1, places=5)
+
+
+class MetricNormalizerTests(unittest.TestCase):
+    """Tests for P6.4 per-robot metric normalization."""
+
+    def test_normalize_path_efficiency(self):
+        n = MetricNormalizer(path_length_reference=25.0, elapsed_seconds_reference=60.0)
+        # Same ratio as reference → 1.0
+        score = n.normalize_path_efficiency(25.0, 60.0)
+        self.assertAlmostEqual(score, 1.0, places=5)
+
+    def test_normalize_path_efficiency_higher_for_faster(self):
+        n = MetricNormalizer(path_length_reference=25.0, elapsed_seconds_reference=60.0)
+        # Faster than reference → higher raw efficiency → higher normalized score
+        fast = n.normalize_path_efficiency(25.0, 30.0)
+        slow = n.normalize_path_efficiency(25.0, 120.0)
+        self.assertGreater(fast, slow)
+
+    def test_normalize_collision_penalty(self):
+        n = MetricNormalizer(collision_penalty=1.0)
+        self.assertAlmostEqual(n.normalize_collision_penalty(0), 0.0, places=5)
+        self.assertAlmostEqual(n.normalize_collision_penalty(1), 1.0, places=5)
+        self.assertAlmostEqual(n.normalize_collision_penalty(3), 2.0, places=5)  # capped
+
+    def test_normalize_clearance(self):
+        n = MetricNormalizer(clearance_target=0.5)
+        # At target → 0.0
+        self.assertAlmostEqual(n.normalize_clearance(0.5), 0.0, places=5)
+        # Below target → positive penalty
+        self.assertGreater(n.normalize_clearance(0.1), 0.0)
+
+    def test_composite_score_for_successful_run(self):
+        n = MetricNormalizer()
+        score = n.compute_composite_score(
+            path_length_m=20.0, elapsed_seconds=50.0,
+            collision_count=0, min_clearance_m=0.6,
+        )
+        self.assertGreaterEqual(score, 0.0)
+        self.assertLessEqual(score, 2.0)
+
+    def test_composite_score_penalizes_collisions(self):
+        n = MetricNormalizer()
+        clean = n.compute_composite_score(20.0, 50.0, 0, 0.6)
+        dirty = n.compute_composite_score(20.0, 50.0, 5, 0.6)
+        self.assertLess(clean, dirty)
+
+    def test_normalize_batch_marks_failed_runs(self):
+        n = MetricNormalizer()
+        results = [
+            BenchmarkResult('e', 'r', 'env', 's', 1, True, 10.0, 20.0, 0, 0.8),
+            BenchmarkResult('e', 'r', 'env', 's', 2, False, 0.0, 0.0, 0, 0.0),
+        ]
+        normalized = n.normalize_batch(results)
+        self.assertEqual(len(normalized), 2)
+        # Failed run gets worst scores
+        self.assertEqual(normalized[1]['normalized']['composite'], 2.0)
+        # Successful run gets a finite score
+        self.assertLess(normalized[0]['normalized']['composite'], 2.0)
+
+
+class OutputGeneratorTests(unittest.TestCase):
+    """Tests for P6.5 machine-readable result output."""
+
+    def _sample_results(self):
+        return [
+            BenchmarkResult('e', 'r', 'env', 's', 1, True, 10.0, 20.0, 0, 0.8),
+            BenchmarkResult('e', 'r', 'env', 's', 2, True, 12.0, 22.0, 1, 0.6),
+            BenchmarkResult('e', 'r', 'env', 's', 3, False, 0.0, 0.0, 0, 0.0),
+        ]
+
+    def test_write_json_report(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'report.json')
+            ok = OutputGenerator.write_json_report(
+                self._sample_results(), path,
+                summary={'success_count': 2},
+            )
+            self.assertTrue(ok)
+            with open(path, 'r') as f:
+                data = json.load(f)
+            self.assertEqual(data['schema_version'], '1.0')
+            self.assertEqual(len(data['results']), 3)
+
+    def test_write_csv_report(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'report.csv')
+            ok = OutputGenerator.write_csv_report(self._sample_results(), path)
+            self.assertTrue(ok)
+            with open(path, 'r') as f:
+                lines = f.readlines()
+            self.assertEqual(len(lines), 4)  # header + 3 rows
+
+    def test_write_markdown_table(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'report.md')
+            ok = OutputGenerator.write_markdown_table(
+                self._sample_results(), path, title='Test Results',
+            )
+            self.assertTrue(ok)
+            with open(path, 'r') as f:
+                content = f.read()
+            self.assertIn('# Test Results', content)
+            self.assertIn('| seed |', content)
+
+    def test_write_comparison_html(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'report.html')
+            ok = OutputGenerator.write_comparison_html(
+                self._sample_results(), path, title='Test Comparison',
+            )
+            self.assertTrue(ok)
+            with open(path, 'r') as f:
+                content = f.read()
+            self.assertIn('<title>Test Comparison</title>', content)
+            self.assertIn('<table>', content)
+
+    def test_write_plot_requires_matplotlib(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'plot.png')
+            # Should return False without matplotlib, not raise
+            result = OutputGenerator.write_plot(self._sample_results(), path)
+            # We just check it doesn't crash; result depends on matplotlib availability
+            self.assertIsInstance(result, bool)
+
+    def test_empty_results_handled_gracefully(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'empty.json')
+            ok = OutputGenerator.write_json_report([], path)
+            self.assertTrue(ok)  # JSON handles empty
+            csv_path = os.path.join(tmpdir, 'empty.csv')
+            ok = OutputGenerator.write_csv_report([], csv_path)
+            self.assertFalse(ok)  # CSV returns False for empty
+
+
+class RegressionThresholdTests(unittest.TestCase):
+    """Tests for P6.6 reference results and regression thresholds."""
+
+    def test_reference_benchmark_passes_for_good_result(self):
+        ref = ReferenceBenchmark(
+            experiment_id='bumperbot_smoke_test',
+            robot_id='bumperbot',
+            environment_id='small_office',
+            scenario_id='bumperbot_smoke_test',
+            baseline_elapsed_seconds=12.0,
+            baseline_path_length_m=18.0,
+            baseline_collision_count=0,
+            baseline_min_clearance_m=0.75,
+        )
+        good = BenchmarkResult(
+            'bumperbot_smoke_test', 'bumperbot', 'small_office',
+            'bumperbot_smoke_test', 1, True, 12.5, 18.5, 0, 0.7,
+        )
+        check = ref.check_regression(good)
+        self.assertTrue(check['passed'])
+
+    def test_reference_benchmark_flags_regression(self):
+        ref = ReferenceBenchmark(
+            experiment_id='bumperbot_smoke_test',
+            robot_id='bumperbot',
+            environment_id='small_office',
+            scenario_id='bumperbot_smoke_test',
+            baseline_elapsed_seconds=12.0,
+            baseline_path_length_m=18.0,
+            baseline_collision_count=0,
+            baseline_min_clearance_m=0.75,
+            threshold_elapsed_seconds=1.2,
+            threshold_collision_count=1,
+        )
+        # Way too many collisions → regression
+        bad = BenchmarkResult(
+            'bumperbot_smoke_test', 'bumperbot', 'small_office',
+            'bumperbot_smoke_test', 2, True, 13.0, 19.0, 5, 0.3,
+        )
+        check = ref.check_regression(bad)
+        self.assertFalse(check['passed'])
+        self.assertGreater(len(check['regressions']), 0)
+
+    def test_reference_registry_loads_and_checks(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ref_data = {
+                'schema_version': '1.0',
+                'references': {
+                    'e_r_env_s': {
+                        'experiment_id': 'e',
+                        'robot_id': 'r',
+                        'environment_id': 'env',
+                        'scenario_id': 's',
+                        'baseline_elapsed_seconds': 10.0,
+                        'baseline_path_length_m': 20.0,
+                        'baseline_collision_count': 0,
+                        'baseline_min_clearance_m': 0.8,
+                    },
+                },
+            }
+            ref_path = Path(tmpdir) / 'refs.json'
+            ref_path.write_text(json.dumps(ref_data), encoding='utf-8')
+
+            reg = ReferenceRegistry(registry_path=ref_path)
+            self.assertTrue(reg.load())
+            ref = reg.get_reference('e', 'r', 'env', 's')
+            self.assertIsNotNone(ref)
+
+    def test_reference_registry_save_roundtrip(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ref_path = Path(tmpdir) / 'refs.json'
+            reg = ReferenceRegistry(registry_path=ref_path)
+            reg.add_reference('e', 'r', 'env', 's', 10.0, 20.0, 0, 0.8)
+            self.assertTrue(reg.save())
+
+            reg2 = ReferenceRegistry(registry_path=ref_path)
+            self.assertTrue(reg2.load())
+            ref = reg2.get_reference('e', 'r', 'env', 's')
+            self.assertIsNotNone(ref)
+            self.assertAlmostEqual(ref.baseline_elapsed_seconds, 10.0, places=5)
+
+    def test_check_all_regressions(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ref_path = Path(tmpdir) / 'refs.json'
+            reg = ReferenceRegistry(registry_path=ref_path)
+            reg.add_reference('e', 'r', 'env', 's', 10.0, 20.0, 0, 0.8)
+            reg.save()
+            reg.load()
+
+            results = [
+                BenchmarkResult('e', 'r', 'env', 's', 1, True, 10.0, 20.0, 0, 0.8),
+                BenchmarkResult('e', 'r', 'env', 's', 2, True, 50.0, 30.0, 0, 0.8),
+            ]
+            report = reg.check_all_regressions(results)
+            self.assertEqual(report['total_checks'], 2)
 
 
 if __name__ == '__main__':

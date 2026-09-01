@@ -257,8 +257,9 @@ class BhlAssetContractTests(unittest.TestCase):
         xacro_bin = shutil.which("xacro")
         if xacro_bin is None:
             self.skipTest("xacro executable not available")
+        urdf_path = str(self._repo_asset(self.robot["assets"]["urdf"]))
         result = subprocess.run(
-            [xacro_bin, str(self._repo_asset(self.robot["assets"]["urdf"]))],
+            ["bash", "-c", f"source /opt/ros/humble/setup.bash && {xacro_bin} {urdf_path}"],
             capture_output=True, text=True, timeout=90,
         )
         self.assertEqual(

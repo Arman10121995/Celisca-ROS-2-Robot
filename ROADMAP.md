@@ -323,10 +323,18 @@ completion claim.
 - [x] **P6.2** Record success, collisions, time, path length, clearance, energy
   proxy, CPU, memory, real-time factor, and localization/trajectory error.
   (Schema captures success, elapsed time, path length, collision count, and minimum clearance; the CLI writes the JSON record.)
-- [ ] **P6.3** Add seeded launch/reset/run/stop orchestration and rosbag capture.
-- [ ] **P6.4** Add ground-truth adapters and per-robot metric normalization.
-- [ ] **P6.5** Generate machine-readable results and comparison plots/tables.
-- [ ] **P6.6** Check in small reference results and regression thresholds.
+- [x] **P6.3** Add seeded launch/reset/run/stop orchestration and rosbag capture.
+  (LaunchOrchestrator manages the full lifecycle: launch → reset → run → stop,
+  with optional rosbag capture and seeded manifest output.)
+- [x] **P6.4** Add ground-truth adapters and per-robot metric normalization.
+  (GroundTruthAdapter extracts path length, collisions, clearance from sensor data;
+  MetricNormalizer computes normalized efficiency/collision/clearance and a composite score.)
+- [x] **P6.5** Generate machine-readable results and comparison plots/tables.
+  (OutputGenerator writes JSON, CSV, Markdown, HTML, and matplotlib plots;
+  generate_report builds a comparison summary with ranking and best-run.)
+- [x] **P6.6** Check in small reference results and regression thresholds.
+  (Reference data file with seeded bumperbot smoke-test baselines and per-metric
+  thresholds; regression checking flags runs that exceed baseline × threshold.)
 
 ### P7 — hardening
 
