@@ -112,6 +112,70 @@ def test_room_vacuum_launch_uses_an_installed_executable():
     assert "${PROJECT_NAME}/mapping_controller.py" in controller_cmake
 
 
+SIMULATORS = {"gazebo", "isaac", "pybullet", "mujoco"}
+
+
+@pytest.mark.parametrize("mode_name,mode_config", MODES.items())
+def test_every_mode_declares_supported_simulators(mode_name, mode_config):
+    simulators = mode_config.get("simulators")
+    assert simulators, f"{mode_name}: missing simulators list in sim_modes.yaml"
+    assert len(simulators) == len(set(simulators)), f"{mode_name}: duplicate simulators"
+    for sim in simulators:
+        assert sim in SIMULATORS, f"{mode_name}: unknown simulator '{sim}'"
+
+
+def test_launch_dispatch_covers_all_simulators():
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8"
+    )
+    # The dispatch registry must cover exactly the four simulators.
+    for sim in ("gazebo", "isaac", "pybullet", "mujoco"):
+        assert sim in launch_text, f"{sim}: missing from simulator dispatch"
+
+    for adapter_pkg, launch_file in (
+        ("robot_lab_description", "gazebo.launch.py"),
+        ("robot_lab_isaac", "isaac_simulator.launch.py"),
+        ("robot_lab_pybullet", "pybullet_simulator.launch.py"),
+        ("robot_lab_mujoco", "mujoco_simulator.launch.py"),
+    ):
+        assert launch_file in launch_text, f"{launch_file}: not referenced by dispatch"
+        adapter = SRC_DIR / adapter_pkg
+        if adapter_pkg == "robot_lab_description":
+            adapter = SRC_DIR / "robot_lab_description"
+        assert (adapter / "launch" / launch_file).is_file(), (
+            f"{adapter_pkg}: missing launch {launch_file}"
+        )
+
+
+def test_each_simulator_launch_accepts_spawn_interface():
+    """Every simulator adapter must expose the spawn argument interface the
+    bringup dispatcher forwards (robot/pose/world args)."""
+    required_args = {
+        "world_name",
+        "world_package",
+        "world_path",
+        "model",
+        "robot_package",
+        "robot_name",
+        "spawn_x",
+        "spawn_y",
+        "spawn_z",
+        "spawn_yaw",
+        "use_sim_time",
+    }
+    for adapter_pkg, launch_file in (
+        ("robot_lab_isaac", "isaac_simulator.launch.py"),
+        ("robot_lab_pybullet", "pybullet_simulator.launch.py"),
+        ("robot_lab_mujoco", "mujoco_simulator.launch.py"),
+    ):
+        text = (SRC_DIR / adapter_pkg / "launch" / launch_file).read_text(
+            encoding="utf-8"
+        )
+        for arg in required_args:
+            # Each arg must be both referenced and declared.
+            assert f'"{arg}"' in text, f"{adapter_pkg}: missing arg '{arg}'"
+
+
 def test_runtime_topic_contracts_are_consistent():
     ekf = _load(SRC_DIR / "robot_lab_localization" / "config" / "ekf.yaml")
     assert ekf["ekf_filter_node"]["ros__parameters"]["imu0"] == "imu_ekf"

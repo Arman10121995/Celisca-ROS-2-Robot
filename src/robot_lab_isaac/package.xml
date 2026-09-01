@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>robot_lab_isaac</name>
+  <version>0.1.0</version>
+  <description>Isaac Sim simulator adapter for Robot Lab simulations.</description>
+  <maintainer email="robot@example.com">Robot Lab</maintainer>
+  <license>MIT</license>
+
+  <depend>rclpy</depend>
+  <depend>launch_ros</depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_flake8</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

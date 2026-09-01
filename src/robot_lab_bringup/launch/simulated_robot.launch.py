@@ -18,6 +18,16 @@ MODE_ALIASES = {
     "nave": "nav",
 }
 
+# Maps simulator name → (package_share_key, launch_file_relative_path)
+_SIMULATOR_DISPATCH = {
+    "gazebo": ("robot_lab_description", "gazebo.launch.py"),
+    "isaac": ("robot_lab_isaac", "isaac_simulator.launch.py"),
+    "pybullet": ("robot_lab_pybullet", "pybullet_simulator.launch.py"),
+    "mujoco": ("robot_lab_mujoco", "mujoco_simulator.launch.py"),
+}
+
+_VALID_SIMULATORS = frozenset(_SIMULATOR_DISPATCH)
+
 
 def _package_file(package_name, relative_path):
     if not relative_path:
@@ -372,15 +382,34 @@ def _build_simulation_actions(context):
         _section_enabled(mode_config.get("gazebo"), True),
     )
     if gazebo_enabled:
+        simulator = _launch_value(context, "simulator")
+        if simulator not in _VALID_SIMULATORS:
+            raise RuntimeError(
+                f"Unknown simulator '{simulator}'. "
+                f"Choose from: {sorted(_VALID_SIMULATORS)}"
+            )
+
+        # Determine the mode-config allowed simulators (if listed).
+        allowed = mode_config.get("simulators")
+        if allowed and simulator not in allowed:
+            raise RuntimeError(
+                f"Simulator '{simulator}' is not supported in mode '{mode_name}'. "
+                f"Allowed: {allowed}"
+            )
+
+        sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
+        sim_share = get_package_share_directory(sim_pkg)
+
         actions.append(
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(_launch_file(description_share, "gazebo.launch.py")),
+                PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
                 launch_arguments={
                     "world_name": world_name,
                     "world_package": world_package,
                     "world_path": world_path,
                     "model": model_path,
                     "robot_package": robot_package,
+                    "robot_xacro": robot_xacro,
                     "robot_name": robot_name,
                     "spawn_x": spawn_x,
                     "spawn_y": spawn_y,
@@ -557,10 +586,16 @@ def generate_launch_description():
             description="Use simulation clock.",
         ),
         DeclareLaunchArgument(
+            "simulator",
+            default_value="gazebo",
+            choices=["gazebo", "isaac", "pybullet", "mujoco"],
+            description="Which physics simulator backend to use.",
+        ),
+        DeclareLaunchArgument(
             "start_gazebo",
             default_value="auto",
             choices=["auto", "true", "false"],
-            description="Override whether Gazebo starts. 'auto' uses sim_modes.yaml.",
+            description="Override whether the physics simulator starts. 'auto' uses sim_modes.yaml.",
         ),
         DeclareLaunchArgument(
             "start_rviz",
