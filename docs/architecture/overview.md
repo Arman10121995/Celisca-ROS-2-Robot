@@ -10,7 +10,7 @@ robot + simulator + environment + scenario
       + global planning + local planning + control
                          |
                          v
-                launch adapters and contracts
+              launch adapters and contracts
                          |
                          v
              metrics, artifacts, and result record
@@ -30,21 +30,18 @@ src/
     robot_lab_bringup/      # composition and legacy launch adapters (P2)
     robot_lab_benchmark/    # runner, metrics, result schema (P6)
   robots/                   # descriptions and robot-specific assets
+    _upstream/              # vendored third-party robot assets
   maps/                     # worlds, occupancy maps, reference geometry
   gazebo_models/            # reusable environment models
+  bumperbot_algorithms/     # 13 algorithm implementations (P5)
   bumperbot_*/              # reference robot and legacy-compatible adapters
   ORB_SLAM3/                # optional external-library adapter
 ```
 
-The initial reorganization is additive. Moving working packages merely to make
-the directory tree look tidy would break paths while providing no runtime
-isolation. Package ownership is separated first; source moves can occur only
-after launch and CI consumers use the canonical interfaces.
-
 ## Package boundaries
 
 | Layer | Owns | Must not own |
-|---|---|---|
+|-------|------|--------------|
 | Registry | Metadata, schemas, compatibility rules, experiment presets | ROS nodes or simulator processes |
 | Assets | URDF/SDF/Xacro, meshes, worlds, occupancy maps | Algorithm policy or benchmark conclusions |
 | Algorithm adapter | One common contract around one implementation | Robot/world-specific orchestration |
@@ -59,11 +56,31 @@ Required metadata includes class, maturity, supported simulators, locomotion,
 sensors, command/state interfaces, frames, capabilities, source/provenance, and
 the smoke experiments that justify its status.
 
+**Integrated robots:**
+
+| Robot | Class | DOF | Simulators | Source |
+|-------|-------|-----|------------|--------|
+| Bumperbot | Differential drive | — | Gazebo | First-party |
+| Labbot | Differential drive | — | Gazebo | First-party |
+| Go2 | Quadruped | 12 leg joints | Gazebo | Unitree (vendored) |
+| Berkeley Humanoid Lite | Humanoid | 22 position joints | Gazebo | HybridRobotics (vendored) |
+| Quadrotor SITL | Aerial | 4 rotors | Gazebo | First-party |
+
 ### Environment
 
 Required metadata includes simulator/world reference, dimensionality, tags,
 map/ground-truth availability, dynamics, supported robot classes, spawn zones,
 source/provenance, and qualification status.
+
+**Environment categories:**
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| Indoor worlds | 14 | small_office, small_house, warehouse_demo |
+| Navigation arenas | 5 | nav_empty, nav_obstacle, nav_maze |
+| Dynamic variants | 2 | nav_dynamic, nav_sensor_degraded |
+| Terrain | 3 | terrain_rough, terrain_stairs, terrain_stepping_stones |
+| Aerial courses | 2 | aerial_course, aerial_indoor |
 
 ### Algorithm
 
@@ -71,6 +88,18 @@ Required metadata includes category, family, implementation package/plugin,
 status, input/output contract, required capabilities, supported robot classes,
 upstream source, and smoke/benchmark evidence. Algorithm entries are adapters;
 an upstream project name alone is not an integration.
+
+**Algorithm coverage (30 algorithms, 7 categories):**
+
+| Category | Count | New (P5) | Legacy |
+|----------|-------|----------|--------|
+| Perception | 5 | obstacle_detector, scan_clusterer, pointcloud_segmenter | 2 |
+| Localization | 5 | dead_reckoning | 4 |
+| State Estimation | 5 | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator | 2 |
+| Sensor Fusion | 5 | wheel_imu_fusion, gps_odom_fusion, complementary_imu | 2 |
+| Global Planning | 5 | rrt_planner, voronoi_planner | 3 |
+| Local Planning | 5 | follow_the_gap | 4 |
+| Control | 9 | mavros_offboard_controller, joint_effort_commander | 7 |
 
 ### Scenario
 
@@ -86,10 +115,10 @@ benchmarking.
 
 ## Runtime contracts
 
-All adapters will support a namespace. The reference single-robot contract is:
+All adapters support a namespace. The reference single-robot contract is:
 
 | Contract | Interface |
-|---|---|
+|----------|-----------|
 | Body command | `geometry_msgs/Twist` or class-specific trajectory beneath the robot namespace |
 | Estimated state | `nav_msgs/Odometry` plus TF |
 | Global pose | `map -> odom` TF where applicable |
@@ -119,18 +148,71 @@ global planning or benchmark schemas.
 Only levels 1–4 belong in the registry package. Runtime validation lives with
 bringup and benchmark packages.
 
-## Standard result outline
+## Benchmark architecture (P6)
 
-P6 will version the exact schema. Every result must at minimum include:
+### Standard result schema
 
-- repository revision and dirty-state marker;
-- ROS, simulator, host architecture, and dependency versions;
-- full resolved experiment and parameter hashes;
-- seed, start/goal, timing, and termination reason;
-- success, collisions, path length, elapsed simulation time, real-time factor,
-  minimum clearance, and resource usage;
-- pose/trajectory error when ground truth is available;
-- artifact paths for logs, bags, maps, trajectories, and plots.
+Every benchmark produces a versioned JSON record:
 
-This provenance is required so a visually successful demo is not mistaken for
-a reproducible comparison.
+```json
+{
+  "schema_version": "1.0",
+  "experiment_id": "bumperbot_smoke_test",
+  "robot_id": "bumperbot",
+  "environment_id": "small_office",
+  "scenario_id": "bumperbot_smoke_test",
+  "seed": 42,
+  "success": true,
+  "elapsed_seconds": 12.5,
+  "path_length_m": 18.4,
+  "collision_count": 0,
+  "min_clearance_m": 0.75,
+  "revision": "a22c378",
+  "timestamp_utc": "2026-09-01T12:00:00Z"
+}
+```
+
+### Benchmark components
+
+| Component | Package | Purpose |
+|-----------|---------|---------|
+| `BenchmarkResult` | `robot_lab_benchmark` | Versioned result schema |
+| `LaunchOrchestrator` | `robot_lab_benchmark` | launch/reset/run/stop lifecycle |
+| `GroundTruthAdapter` | `robot_lab_benchmark` | Extract metrics from sensor data |
+| `MetricNormalizer` | `robot_lab_benchmark` | Normalize for fair comparison |
+| `OutputGenerator` | `robot_lab_benchmark` | JSON/CSV/MD/HTML/plots |
+| `ReferenceBenchmark` | `robot_lab_benchmark` | Baseline + regression checking |
+| `ReferenceRegistry` | `robot_lab_benchmark` | Multi-baseline management |
+| `BenchmarkRunner` | `robot_lab_benchmark` | Seeded run manifest |
+| CLI | `robot_lab_benchmark/cli.py` | Emit canonical records |
+
+### Orchestration lifecycle
+
+```
+launch  →  reset  →  run (rosbag capture)  →  stop  →  manifest.json
+```
+
+## CI/CD architecture
+
+| Workflow | Trigger | Duration | What it runs |
+|----------|---------|----------|--------------|
+| `ci.yml` | Push/PR | < 60s | `scripts/test_fast.sh` (compile + P5/P6 logic + registry) |
+| `scheduled-full.yml` | Daily 06:00 UTC | ~5min | Full colcon test + all 257 unit tests |
+
+## Testing architecture
+
+**257 tests across 4 test files:**
+
+| Test file | Count | Coverage |
+|-----------|-------|----------|
+| `test_p5_algorithm_breadth.py` | 12 | Category coverage, node assets, algorithm logic, cross-references |
+| `test_p6_benchmarking.py` | 65 | Schema, orchestration, ground-truth, normalization, outputs, regression, licenses, bootstrap, doctor, tutorials, support matrix |
+| `test_bumperbot_qualification.py` | 28 | Bumperbot metadata, contracts, smoke test |
+| `test_*.py` (other) | 152 | Registry, selectors, launch fragments, adapter, environments, robots |
+
+## Provenance and licensing
+
+- **License:** MIT (see `LICENSE`)
+- **Third-party assets:** Unitree (BSD 3-Clause), Berkeley Humanoid Lite (CC BY-SA 4.0)
+- **License tracking:** `LICENSES/third-party-notices.md` documents all external assets
+- **Tests verify:** Every upstream asset has a license file and is documented
