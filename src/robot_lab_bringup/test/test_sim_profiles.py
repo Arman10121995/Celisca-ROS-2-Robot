@@ -35,8 +35,8 @@ def test_expected_profiles_are_present():
         "residential_demo", "simple_box",
     ):
         assert legacy in MAPS, f"{legacy}: legacy map missing from sim_maps.yaml"
-    assert len(ROBOTS) >= 16
-    for core in ("bumperbot", "labbot", "unitree_go2", "berkeley_humanoid_lite"):
+    assert len(ROBOTS) >= 17
+    for core in ("bumperbot", "labbot", "quadrotor_sitl", "unitree_go2", "berkeley_humanoid_lite"):
         assert core in ROBOTS, f"{core}: core robot profile missing"
 
 

@@ -112,3 +112,12 @@ robots:
     name: unitree_h1_2
     supported_modes: [display]
     supports_room_vacuum: false
+
+  quadrotor_sitl:
+    package: robot_lab_robots
+    xacro: quadrotor_sitl/urdf/quadrotor_sitl.urdf.xacro
+    name: quadrotor_sitl
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    features: [ros2_control, lidar_2d, rgbd_camera]
+    supports_room_vacuum: false
+    robot_class: aerial
