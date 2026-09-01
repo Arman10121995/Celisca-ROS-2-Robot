@@ -46,14 +46,12 @@ except Exception:  # pragma: no cover - optional dependency
             return self._node_name
 
 
-class ObstacleDetector(Node):
+class ObstacleDetector:
     """Detect obstacle clusters from an occupancy grid or scan ranges."""
 
-    def __init__(self, node_name='obstacle_detector'):
-        super().__init__(node_name)
-        self.declare_parameter('cluster_distance', 0.5)
-        self.cluster_distance = self.get_parameter('cluster_distance').value
-        self.get_logger().info(f'ObstacleDetector ready (cluster distance {self.cluster_distance}m)')
+    def __init__(self, node_name='obstacle_detector', cluster_distance=0.5):
+        self.node_name = node_name
+        self.cluster_distance = cluster_distance
 
     def detect(self, points):
         """Group 2D points [(x, y), ...] into clusters by proximity."""
@@ -76,14 +74,12 @@ class ObstacleDetector(Node):
         return clusters
 
 
-class ScanClusterer(Node):
+class ScanClusterer:
     """Cluster LaserScan angle/range readings into object clusters."""
 
-    def __init__(self, node_name='scan_clusterer'):
-        super().__init__(node_name)
-        self.declare_parameter('cluster_distance', 0.3)
-        self.cluster_distance = self.get_parameter('cluster_distance').value
-        self.get_logger().info('ScanClusterer ready')
+    def __init__(self, node_name='scan_clusterer', cluster_distance=0.3):
+        self.node_name = node_name
+        self.cluster_distance = cluster_distance
 
     def cluster_ranges(self, angle_min, angle_increment, ranges, max_range):
         """Return list of clusters, each a list of (x, y) cartesian points."""
@@ -112,14 +108,12 @@ class ScanClusterer(Node):
         return clusters
 
 
-class PointcloudSegmenter(Node):
+class PointcloudSegmenter:
     """Split a set of 3D points into ground / non-ground by height threshold."""
 
-    def __init__(self, node_name='pointcloud_segmenter'):
-        super().__init__(node_name)
-        self.declare_parameter('ground_threshold', 0.1)
-        self.ground_threshold = self.get_parameter('ground_threshold').value
-        self.get_logger().info('PointcloudSegmenter ready')
+    def __init__(self, node_name='pointcloud_segmenter', ground_threshold=0.1):
+        self.node_name = node_name
+        self.ground_threshold = ground_threshold
 
     def segment(self, points_xyz):
         ground, objects = [], []

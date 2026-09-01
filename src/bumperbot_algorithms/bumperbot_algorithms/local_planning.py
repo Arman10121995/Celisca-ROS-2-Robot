@@ -40,7 +40,9 @@ except Exception:  # pragma: no cover - optional dependency
             return _L()
         def get_name(self):
             return self._node_name
-    class FollowTheGap:
+
+
+class FollowTheGap:
     """Select heading toward the widest gap in a laser scan."""
 
     def __init__(self, safety_radius=0.3, max_range=10.0):

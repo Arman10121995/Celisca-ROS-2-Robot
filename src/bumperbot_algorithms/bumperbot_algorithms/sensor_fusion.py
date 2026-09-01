@@ -40,7 +40,9 @@ except Exception:  # pragma: no cover - optional dependency
             return _L()
         def get_name(self):
             return self._node_name
-    class WheelImuFusion:
+
+
+class WheelImuFusion:
     """Complementary fusion of wheel odometry and IMU yaw rate."""
 
     def __init__(self, alpha=0.5):

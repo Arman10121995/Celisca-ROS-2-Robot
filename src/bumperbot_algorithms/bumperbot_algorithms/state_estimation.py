@@ -44,7 +44,9 @@ except Exception:  # pragma: no cover - optional dependency
             return _L()
         def get_name(self):
             return self._node_name
-    class EKF3DEstimator:
+
+
+class EKF3DEstimator:
     """Simple EKF over 3D position/velocity with constant-velocity model."""
 
     def __init__(self, process_noise=0.1, measurement_noise=0.2):
