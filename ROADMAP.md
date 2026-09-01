@@ -338,10 +338,22 @@ completion claim.
 
 ### P7 — hardening
 
-- [ ] **P7.1** Add fast PR tests and scheduled full simulation matrices.
-- [ ] **P7.2** Pin external sources and document asset/code licenses.
-- [ ] **P7.3** Add install/bootstrap/doctor flows for supported hosts.
-- [ ] **P7.4** Add tutorials that reproduce one comparison in each category.
+- [x] **P7.1** Add fast PR tests and scheduled full simulation matrices.
+  (scripts/test_fast.sh runs module compilation + P5/P6 logic tests + registry
+  validation in < 60s; scheduled-full.yml runs the full suite daily at 06:00 UTC;
+  CI workflow uses the fast script for PR checks.)
+- [x] **P7.2** Pin external sources and document asset/code licenses.
+  (Top-level MIT LICENSE; LICENSES/third-party-notices.md documents all external
+  assets and their licenses; tests verify every upstream asset has a license
+  file and is documented in notices.)
+- [x] **P7.3** Add install/bootstrap/doctor flows for supported hosts.
+  (scripts/bootstrap.sh installs deps and builds; scripts/doctor.sh diagnoses
+  workspace health; scripts/test_fast.sh runs quick validation; CI + scheduled
+  workflows for automated testing.)
+- [x] **P7.4** Add tutorials that reproduce one comparison in each category.
+  (docs/tutorials/ with index + 5 category tutorials: perception, planning,
+  localization, state estimation, sensor fusion. Each has a Run section with
+  copy-paste Python code.)
 - [ ] **P7.5** Validate real Bumperbot hardware and explicitly separate HIL-only
   claims from simulation claims.
 - [ ] **P7.6** Publish a support matrix with measured evidence and known limits.

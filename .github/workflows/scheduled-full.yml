@@ -1,0 +1,52 @@
+name: Scheduled Full Simulation Matrix
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  full-test-suite:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out workspace
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          lfs: true
+
+      - name: Install ROS 2 Humble
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: humble
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          rosdep update
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Build workspace
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build --symlink-install --packages-skip orbslam3
+
+      - name: Run full test suite
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install/setup.bash
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 colcon test \
+            --packages-skip orbslam3 --python-testing pytest
+          colcon test-result --verbose
+
+      - name: Run Python unit tests
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install/setup.bash
+          PYTHONPATH=src/robot_lab/robot_lab_registry:src/bumperbot_algorithms:src/robot_lab/robot_lab_benchmark \
+            PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m unittest discover \
+            -s src/robot_lab/robot_lab_registry/test -v 2>&1 | tail -30

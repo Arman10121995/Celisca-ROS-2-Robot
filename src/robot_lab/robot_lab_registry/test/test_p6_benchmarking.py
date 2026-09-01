@@ -551,5 +551,146 @@ class RegressionThresholdTests(unittest.TestCase):
             self.assertEqual(report['total_checks'], 2)
 
 
+class LicenseAndProvenanceTests(unittest.TestCase):
+    """Tests for P7.2 external source pinning and license documentation."""
+
+    def test_top_level_license_exists(self):
+        license_path = Path(__file__).resolve().parents[4] / "LICENSE"
+        self.assertTrue(license_path.is_file(), "Top-level LICENSE file missing")
+
+    def test_license_contains_permission_notice(self):
+        license_path = Path(__file__).resolve().parents[4] / "LICENSE"
+        content = license_path.read_text(encoding='utf-8')
+        self.assertIn("MIT License", content)
+        self.assertIn("Third-party", content)
+
+    def test_third_party_notices_exists(self):
+        notices = Path(__file__).resolve().parents[4] / "LICENSES" / "third-party-notices.md"
+        self.assertTrue(notices.is_file(), "LICENSES/third-party-notices.md missing")
+
+    def test_third_party_notices_lists_unitree(self):
+        notices = Path(__file__).resolve().parents[4] / "LICENSES" / "third-party-notices.md"
+        content = notices.read_text(encoding='utf-8')
+        self.assertIn("Unitree", content)
+        self.assertIn("BSD 3-Clause", content)
+
+    def test_external_assets_have_license_file(self):
+        upstream = Path(__file__).resolve().parents[4] / "src" / "robots" / "_upstream"
+        if upstream.is_dir():
+            for asset_dir in upstream.iterdir():
+                if asset_dir.is_dir():
+                    # Accept both LICENSE (US) and LICENCE (UK) spellings
+                    us_license = asset_dir / "LICENSE"
+                    uk_license = asset_dir / "LICENCE"
+                    has_license = us_license.is_file() or uk_license.is_file()
+                    self.assertTrue(
+                        has_license,
+                        f"External asset {asset_dir.name} missing license file",
+                    )
+
+    def test_no_stray_external_assets_without_attribution(self):
+        upstream = Path(__file__).resolve().parents[4] / "src" / "robots" / "_upstream"
+        if not upstream.is_dir():
+            return
+        notices = Path(__file__).resolve().parents[4] / "LICENSES" / "third-party-notices.md"
+        content = notices.read_text(encoding='utf-8')
+        for asset_dir in upstream.iterdir():
+            if asset_dir.is_dir():
+                self.assertIn(
+                    asset_dir.name, content,
+                    f"External asset {asset_dir.name} not documented in notices",
+                )
+
+
+class InstallBootstrapDoctorTests(unittest.TestCase):
+    """Tests for P7.3 install/bootstrap/doctor flows."""
+
+    def test_bootstrap_script_exists(self):
+        path = Path(__file__).resolve().parents[4] / "scripts" / "bootstrap.sh"
+        self.assertTrue(path.is_file(), "scripts/bootstrap.sh missing")
+        self.assertTrue(os.access(path, os.X_OK), "scripts/bootstrap.sh not executable")
+
+    def test_doctor_script_exists(self):
+        path = Path(__file__).resolve().parents[4] / "scripts" / "doctor.sh"
+        self.assertTrue(path.is_file(), "scripts/doctor.sh missing")
+        self.assertTrue(os.access(path, os.X_OK), "scripts/doctor.sh not executable")
+
+    def test_fast_test_script_exists(self):
+        path = Path(__file__).resolve().parents[4] / "scripts" / "test_fast.sh"
+        self.assertTrue(path.is_file(), "scripts/test_fast.sh missing")
+        self.assertTrue(os.access(path, os.X_OK), "scripts/test_fast.sh not executable")
+
+    def test_bootstrap_checks_prerequisites(self):
+        content = (Path(__file__).resolve().parents[4] / "scripts" / "bootstrap.sh").read_text()
+        self.assertIn("python3", content)
+        self.assertIn("colcon", content)
+        self.assertIn("rosdep", content)
+
+    def test_doctor_reports_workspace_health(self):
+        content = (Path(__file__).resolve().parents[4] / "scripts" / "doctor.sh").read_text()
+        self.assertIn("ROS_DISTRO", content)
+        self.assertIn("PASS", content)
+        self.assertIn("FAIL", content)
+
+    def test_ci_workflow_exists(self):
+        ci = Path(__file__).resolve().parents[4] / ".github" / "workflows" / "ci.yml"
+        self.assertTrue(ci.is_file(), "CI workflow missing")
+
+    def test_scheduled_workflow_exists(self):
+        scheduled = Path(__file__).resolve().parents[4] / ".github" / "workflows" / "scheduled-full.yml"
+        self.assertTrue(scheduled.is_file(), "Scheduled workflow missing")
+
+    def test_workspace_has_required_dirs(self):
+        root = Path(__file__).resolve().parents[4]
+        for d in ["src", "docs"]:
+            self.assertTrue((root / d).is_dir(), f"{d}/ directory missing")
+
+    def test_documentation_exists(self):
+        root = Path(__file__).resolve().parents[4]
+        self.assertTrue((root / "docs" / "architecture" / "overview.md").is_file())
+        self.assertTrue((root / "ROADMAP.md").is_file())
+
+
+class TutorialDocumentationTests(unittest.TestCase):
+    """Tests for P7.4 tutorial documentation."""
+
+    def test_tutorials_index_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "index.md"
+        self.assertTrue(path.is_file(), "Tutorial index missing")
+
+    def test_perception_tutorial_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "perception.md"
+        self.assertTrue(path.is_file(), "Perception tutorial missing")
+
+    def test_planning_tutorial_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "planning.md"
+        self.assertTrue(path.is_file(), "Planning tutorial missing")
+
+    def test_localization_tutorial_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "localization.md"
+        self.assertTrue(path.is_file(), "Localization tutorial missing")
+
+    def test_state_estimation_tutorial_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "state_estimation.md"
+        self.assertTrue(path.is_file(), "State estimation tutorial missing")
+
+    def test_sensor_fusion_tutorial_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "sensor_fusion.md"
+        self.assertTrue(path.is_file(), "Sensor fusion tutorial missing")
+
+    def test_tutorials_index_lists_all_categories(self):
+        content = (Path(__file__).resolve().parents[4] / "docs" / "tutorials" / "index.md").read_text()
+        for cat in ["Perception", "Planning", "Localization", "State Estimation", "Sensor Fusion"]:
+            self.assertIn(cat, content, f"Index missing category: {cat}")
+
+    def test_each_tutorial_has_run_section(self):
+        tutorials_dir = Path(__file__).resolve().parents[4] / "docs" / "tutorials"
+        for tutorial in tutorials_dir.glob("*.md"):
+            if tutorial.name == "index.md":
+                continue
+            content = tutorial.read_text()
+            self.assertIn("## Run", content, f"{tutorial.name} missing Run section")
+
+
 if __name__ == '__main__':
     unittest.main()

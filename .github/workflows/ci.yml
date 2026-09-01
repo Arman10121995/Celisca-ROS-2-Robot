@@ -33,24 +33,9 @@ jobs:
           colcon build --symlink-install --packages-skip orbslam3 \
             --event-handlers console_direct+
 
-      - name: Validate robot_lab_registry
+      - name: Fast PR tests (P7.1)
         shell: bash
         run: |
           source /opt/ros/humble/setup.bash
           source install/setup.bash
-          # Validate the registry catalogs
-          ros2 run robot_lab_registry robot-lab validate \
-            -c src/robot_lab/robot_lab_registry/config --cross-references
-          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q \
-            src/robot_lab/robot_lab_registry/test \
-            src/robot_lab_bringup/test
-
-      - name: Test core workspace
-        shell: bash
-        run: |
-          source /opt/ros/humble/setup.bash
-          source install/setup.bash
-          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 colcon test \
-            --packages-skip orbslam3 --python-testing pytest \
-            --event-handlers console_direct+
-          colcon test-result --verbose
+          bash scripts/test_fast.sh

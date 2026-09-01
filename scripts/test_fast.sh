@@ -23,7 +23,8 @@ python3 -m unittest discover \
 
 echo ""
 echo "=== Benchmark tests (schema + logic only) ==="
-python3 -m unittest \
+TEST_DIR="src/robot_lab/robot_lab_registry/test"
+PYTHONPATH="$TEST_DIR:$PYTHONPATH" python3 -m unittest \
     test_p6_benchmarking.BenchmarkingTests \
     test_p6_benchmarking.GroundTruthAdapterTests \
     test_p6_benchmarking.MetricNormalizerTests \
