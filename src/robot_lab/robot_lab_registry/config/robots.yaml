@@ -9,7 +9,7 @@
 - id: bumperbot
   version: "1.0.0"
   name: "Bumperbot"
-  ros_package: bumperbot_bringup
+  ros_package: robot_lab_bringup
   description: "Reference differential-drive mobile robot with LIDAR and IMU"
   status: integrated
   robot_class: mobile
@@ -73,14 +73,14 @@
     - exploration
     - coverage
   dependencies:
-    - bumperbot_bringup
-    - bumperbot_description
-    - bumperbot_firmware
-    - bumperbot_localization
-    - bumperbot_mapping
-    - bumperbot_planning
-    - bumperbot_controller
-    - bumperbot_navigation
+    - robot_lab_bringup
+    - robot_lab_description
+    - robot_lab_firmware
+    - robot_lab_localization
+    - robot_lab_mapping
+    - robot_lab_planning
+    - robot_lab_controller
+    - robot_lab_navigation
   assets:
     urdf: robots/bumperbot/urdf/bumperbot.urdf.xacro
     xacro: robots/bumperbot/urdf/bumperbot_ros2_control.xacro

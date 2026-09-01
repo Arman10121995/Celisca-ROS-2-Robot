@@ -6,12 +6,12 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-export PYTHONPATH="src/robot_lab/robot_lab_registry:src/bumperbot_algorithms:src/robot_lab/robot_lab_benchmark"
+export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark"
 export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
 
 echo "=== Module compilation check ==="
 for f in perception localization state_estimation sensor_fusion global_planning local_planning; do
-    python3 -m py_compile src/bumperbot_algorithms/bumperbot_algorithms/$f.py
+    python3 -m py_compile src/robot_lab_algorithms/robot_lab_algorithms/$f.py
 done
 echo "All modules compile."
 

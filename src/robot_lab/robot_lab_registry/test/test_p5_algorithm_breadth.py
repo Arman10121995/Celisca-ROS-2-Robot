@@ -4,7 +4,7 @@ P5 - Algorithm breadth: five integrated implementations per required category.
 Validates that every required algorithm category now has at least five
 `integrated` implementations (P5.1-P5.6), that the P5.7 normalization contract
 is satisfied (each carries implementation package + input/output contracts),
-that the 13 new bumperbot_algorithms nodes are on disk and their pure-Python
+that the 13 new robot_lab_algorithms nodes are on disk and their pure-Python
 logic is correct, and that cross-reference validation passes.
 """
 
@@ -22,8 +22,8 @@ if _SRC_PACKAGE_DIR.name == "robot_lab_registry":
     ]
     if str(_SRC_PACKAGE_DIR) not in sys.path:
         sys.path.insert(0, str(_SRC_PACKAGE_DIR))
-    # Add src/bumperbot_algorithms so the nested Python package is importable
-    _pkg_root = str(_SRC_PACKAGE_DIR.parents[2] / "src" / "bumperbot_algorithms")
+    # Add src/robot_lab_algorithms so the nested Python package is importable
+    _pkg_root = str(_SRC_PACKAGE_DIR.parents[2] / "src" / "robot_lab_algorithms")
     if _pkg_root not in sys.path:
         sys.path.insert(0, _pkg_root)
     for _stale in [m for m in list(sys.modules)
@@ -38,7 +38,7 @@ REQUIRED_CATEGORIES = [
     "global_planning", "local_planning", "control",
 ]
 
-# The 13 new P5 algorithms backed by the bumperbot_algorithms package.
+# The 13 new P5 algorithms backed by the robot_lab_algorithms package.
 NEW_ALGORITHMS = [
     "obstacle_detector", "scan_clusterer", "pointcloud_segmenter",
     "dead_reckoning", "ekf_3d_estimator", "motion_model_estimator",
@@ -84,8 +84,8 @@ class CategoryCoverageTests(unittest.TestCase):
             self.assertIn(aid, algos, f"algorithm '{aid}' missing")
             self.assertEqual(algos[aid]["status"], "integrated")
             self.assertEqual(
-                algos[aid]["implementation"]["package"], "bumperbot_algorithms",
-                f"algorithm '{aid}' should use bumperbot_algorithms",
+                algos[aid]["implementation"]["package"], "robot_lab_algorithms",
+                f"algorithm '{aid}' should use robot_lab_algorithms",
             )
 
 
@@ -93,7 +93,7 @@ class NodeAssetTests(unittest.TestCase):
     """The new algorithm node modules exist on disk."""
 
     def setUp(self):
-        self.pkg = Path(__file__).resolve().parents[4] / "src/bumperbot_algorithms/bumperbot_algorithms"
+        self.pkg = Path(__file__).resolve().parents[4] / "src/robot_lab_algorithms/robot_lab_algorithms"
 
     def test_node_modules_exist(self):
         modules = ["perception", "localization", "state_estimation",
@@ -106,7 +106,7 @@ class AlgorithmLogicTests(unittest.TestCase):
     """Pure-Python algorithm logic behaves correctly."""
 
     def test_follow_the_gap_steers_toward_gap(self):
-        from bumperbot_algorithms.local_planning import FollowTheGap
+        from robot_lab_algorithms.local_planning import FollowTheGap
         ftg = FollowTheGap()
         # scan with a clear gap on the left, obstacle on the right
         ranges = [10.0] * 60 + [0.2] * 30 + [10.0] * 30
@@ -115,7 +115,7 @@ class AlgorithmLogicTests(unittest.TestCase):
         self.assertLess(angular, 0.0)  # steers toward the left gap (negative theta region)
 
     def test_rrt_planner_finds_path(self):
-        from bumperbot_algorithms.global_planning import RRTPlanner
+        from robot_lab_algorithms.global_planning import RRTPlanner
         def is_free(x, y):
             return abs(x) > 0.6 or abs(y) > 0.6  # central square obstacle
         planner = RRTPlanner(step=0.8, max_iter=2000, goal_tol=0.5)
@@ -126,7 +126,7 @@ class AlgorithmLogicTests(unittest.TestCase):
         self.assertAlmostEqual(path[-1][0], 5.0, delta=0.6)
 
     def test_dead_reckoning_integrates(self):
-        from bumperbot_algorithms.localization import DeadReckoning
+        from robot_lab_algorithms.localization import DeadReckoning
         dr = DeadReckoning()
         # move forward 1 m/s for 2 s and 0.5 rad/s for 2 s
         state = dr.integrate(1.0, 0.5, 2.0)
@@ -134,7 +134,7 @@ class AlgorithmLogicTests(unittest.TestCase):
         self.assertGreater(state[0], 0.5)  # moved in x
 
     def test_ekf_update_converges(self):
-        from bumperbot_algorithms.state_estimation import EKF3DEstimator
+        from robot_lab_algorithms.state_estimation import EKF3DEstimator
         ekf = EKF3DEstimator()
         ekf.predict(0.1)
         z = [1.0, 0.0, 0.0, 0.5, 0.0, 0.0]
@@ -145,7 +145,7 @@ class AlgorithmLogicTests(unittest.TestCase):
         self.assertAlmostEqual(s[0], 1.0, delta=0.5)
 
     def test_complementary_fusion_blends(self):
-        from bumperbot_algorithms.sensor_fusion import WheelImuFusion
+        from robot_lab_algorithms.sensor_fusion import WheelImuFusion
         f = WheelImuFusion(alpha=0.5)
         for _ in range(10):
             f.fuse(1.0, 0.5, 0.1)
@@ -153,14 +153,14 @@ class AlgorithmLogicTests(unittest.TestCase):
         self.assertGreater(yaw, 0.0)
 
     def test_obstacle_detector_clusters(self):
-        from bumperbot_algorithms.perception import ObstacleDetector
+        from robot_lab_algorithms.perception import ObstacleDetector
         od = ObstacleDetector()
         points = [(0.0, 0.0), (0.1, 0.1), (5.0, 5.0)]
         clusters = od.detect(points)
         self.assertEqual(len(clusters), 2)
 
     def test_follow_the_gap_handles_full_obstacle(self):
-        from bumperbot_algorithms.local_planning import FollowTheGap
+        from robot_lab_algorithms.local_planning import FollowTheGap
         ftg = FollowTheGap()
         linear, angular = ftg.steer(-1.5708, 0.01745, [0.2] * 120)
         self.assertEqual(angular, 0.0)

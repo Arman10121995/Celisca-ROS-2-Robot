@@ -233,7 +233,7 @@ class QuadrotorSITLAssetContractTests(unittest.TestCase):
 
     def test_quadrotor_mavros_controller_node(self):
         """The bringup mavros_offboard_controller.py must exist."""
-        node = self.src_root / "robot_lab_bringup" / "robot_lab_bringup" / \
+        node = self.src_root / "robot_lab_adapter" / "robot_lab_adapter" / \
                "mavros_offboard_controller.py"
         self.assertTrue(node.is_file(), f"Missing controller node: {node}")
         src = node.read_text()

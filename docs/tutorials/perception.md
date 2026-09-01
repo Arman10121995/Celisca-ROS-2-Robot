@@ -5,7 +5,7 @@ Compare obstacle detection vs. scan clustering on the same input data.
 ## Run
 
 ```python
-from bumperbot_algorithms.perception import ObstacleDetector, ScanClusterer
+from robot_lab_algorithms.perception import ObstacleDetector, ScanClusterer
 
 # Detect obstacle clusters from 2D points
 detector = ObstacleDetector()

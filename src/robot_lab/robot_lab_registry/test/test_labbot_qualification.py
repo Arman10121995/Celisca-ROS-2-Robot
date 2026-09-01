@@ -207,9 +207,9 @@ class LabbotAssetContractTests(unittest.TestCase):
         path = self.robot_dir / "urdf" / "labbot_gazebo.xacro"
         self.assertTrue(path.is_file(), f"Missing gazebo xacro: {path}")
 
-    def test_labbot_controllers_config_exists(self):
+    def test_robot_lab_controllers_config_exists(self):
         """The diff-drive controller configuration must exist on disk."""
-        path = self.robot_dir / "config" / "labbot_controllers.yaml"
+        path = self.robot_dir / "config" / "robot_lab_controllers.yaml"
         self.assertTrue(path.is_file(), f"Missing controllers config: {path}")
 
     def test_labbot_urdf_only_references_robots_package(self):
@@ -236,15 +236,15 @@ class LabbotAssetContractTests(unittest.TestCase):
             )
 
         controllers = (
-            self.robot_dir / "config" / "labbot_controllers.yaml"
+            self.robot_dir / "config" / "robot_lab_controllers.yaml"
         ).read_text()
         for joint in registry_joints:
             self.assertIn(joint, controllers, f"controllers yaml missing joint: {joint}")
 
-    def test_labbot_gazebo_plugin_uses_labbot_controllers(self):
+    def test_labbot_gazebo_plugin_uses_robot_lab_controllers(self):
         """The gazebo xacro must load Labbot's own controller parameters."""
         gazebo = (self.robot_dir / "urdf" / "labbot_gazebo.xacro").read_text()
-        self.assertIn("labbot/config/labbot_controllers.yaml", gazebo)
+        self.assertIn("labbot/config/robot_lab_controllers.yaml", gazebo)
 
     def test_labbot_gazebo_sensors_declared(self):
         """The gazebo xacro must declare the IMU and LIDAR sensors."""

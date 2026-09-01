@@ -1,53 +1,25 @@
 cmake_minimum_required(VERSION 3.8)
 project(robot_lab_bringup)
 
-# Default to C++17
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# Find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ament_python REQUIRED)
 
-# Install Python package
 install(
-  DIRECTORY robot_lab_bringup
-  DESTINATION lib/python3.10/site-packages
-)
-
-# Install resource file
-install(
-  FILES resource/${PROJECT_NAME}
-  DESTINATION share/ament_index/resource_index/packages
-)
-
-# Install launch files
-install(
-  DIRECTORY launch
+  DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME}
 )
 
-# Install config files
 install(
-  DIRECTORY config
-  DESTINATION share/${PROJECT_NAME}
+  PROGRAMS scripts/sim_launcher_gui scripts/export_3d_map.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install package.xml
-install(
-  FILES package.xml
-  DESTINATION share/${PROJECT_NAME}
-)
-
-ament_export_include_directories(
-  include
-)
-
-ament_export_dependencies(
-  rclpy
-  std_msgs
-  robot_lab_registry
-)
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+  ament_add_pytest_test(sim_profiles test/test_sim_profiles.py TIMEOUT 180)
+endif()
 
 ament_package()

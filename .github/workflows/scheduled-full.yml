@@ -47,6 +47,6 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           source install/setup.bash
-          PYTHONPATH=src/robot_lab/robot_lab_registry:src/bumperbot_algorithms:src/robot_lab/robot_lab_benchmark \
+          PYTHONPATH=src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark \
             PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m unittest discover \
             -s src/robot_lab/robot_lab_registry/test -v 2>&1 | tail -30

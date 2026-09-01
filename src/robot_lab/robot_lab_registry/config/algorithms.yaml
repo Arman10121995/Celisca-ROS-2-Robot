@@ -177,7 +177,7 @@
   category: localization
   family: odometry
   implementation:
-    package: bumperbot_localization
+    package: robot_lab_localization
     plugin: OdometryMotionModel
     language: cpp
   input_contract:
@@ -365,7 +365,7 @@
   category: state_estimation
   family: kalman_filter
   implementation:
-    package: bumperbot_localization
+    package: robot_lab_localization
     plugin: KalmanFilter1D
     language: cpp
   input_contract:
@@ -425,7 +425,7 @@
   category: sensor_fusion
   family: data_processing
   implementation:
-    package: bumperbot_localization
+    package: robot_lab_localization
     executable: imu_republisher
     language: python
   input_contract:
@@ -456,7 +456,7 @@
   category: global_planning
   family: grid_search
   implementation:
-    package: bumperbot_planning
+    package: robot_lab_planning
     plugin: DijkstraPlanner
     language: cpp
   input_contract:
@@ -487,7 +487,7 @@
   category: global_planning
   family: grid_search
   implementation:
-    package: bumperbot_planning
+    package: robot_lab_planning
     plugin: AStarPlanner
     language: cpp
   input_contract:
@@ -617,7 +617,7 @@
   category: local_planning
   family: path_following
   implementation:
-    package: bumperbot_motion
+    package: robot_lab_motion
     executable: pure_pursuit
     language: python
   input_contract:
@@ -650,7 +650,7 @@
   category: local_planning
   family: control_based
   implementation:
-    package: bumperbot_motion
+    package: robot_lab_motion
     executable: pd_motion_planner
     language: cpp
   input_contract:
@@ -680,7 +680,7 @@
   category: control
   family: pid_control
   implementation:
-    package: bumperbot_controller
+    package: robot_lab_controller
     plugin: SimpleController
     language: cpp
   input_contract:
@@ -714,7 +714,7 @@
   category: control
   family: pid
   implementation:
-    package: bumperbot_controller
+    package: robot_lab_controller
     plugin: NoisyController
     language: cpp
   input_contract:
@@ -748,7 +748,7 @@
   category: control
   family: joint_effort
   implementation:
-    package: robot_lab_bringup
+    package: robot_lab_adapter
     plugin: JointEffortCommander
     language: python
   input_contract:
@@ -777,7 +777,7 @@
   category: control
   family: joint_position
   implementation:
-    package: robot_lab_bringup
+    package: robot_lab_adapter
     plugin: HumanoidStandingController
     language: python
   input_contract:
@@ -805,7 +805,7 @@
   category: control
   family: pid
   implementation:
-    package: bumperbot_controller
+    package: robot_lab_controller
     plugin: PIDController
     language: cpp
   input_contract:
@@ -836,7 +836,7 @@
   category: control
   family: relay
   implementation:
-    package: bumperbot_controller
+    package: robot_lab_controller
     plugin: TwistRelay
     language: cpp
   input_contract:
@@ -866,7 +866,7 @@
   category: control
   family: task_specific
   implementation:
-    package: bumperbot_controller
+    package: robot_lab_controller
     executable: cleaning_controller.py
     language: python
   input_contract:
@@ -896,7 +896,7 @@
   category: control
   family: task_specific
   implementation:
-    package: bumperbot_controller
+    package: robot_lab_controller
     executable: map_coverage_controller.py
     language: python
   input_contract:
@@ -964,7 +964,7 @@
   category: perception
   family: clustering
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: obstacle_detector
     language: python
   input_contract:
@@ -998,7 +998,7 @@
   category: perception
   family: clustering
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: scan_clusterer
     language: python
   input_contract:
@@ -1030,7 +1030,7 @@
   category: perception
   family: segmentation
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: pointcloud_segmenter
     language: python
   input_contract:
@@ -1064,7 +1064,7 @@
   category: localization
   family: odometry
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: dead_reckoning
     language: python
   input_contract:
@@ -1096,7 +1096,7 @@
   category: state_estimation
   family: kalman_filter
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: ekf_3d_estimator
     language: python
   input_contract:
@@ -1130,7 +1130,7 @@
   category: state_estimation
   family: motion_model
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: motion_model_estimator
     language: python
   input_contract:
@@ -1163,7 +1163,7 @@
   category: state_estimation
   family: pose_graph
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: pose_graph_estimator
     language: python
   input_contract:
@@ -1197,7 +1197,7 @@
   category: sensor_fusion
   family: complementary
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: wheel_imu_fusion
     language: python
   input_contract:
@@ -1230,7 +1230,7 @@
   category: sensor_fusion
   family: weighted
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: gps_odom_fusion
     language: python
   input_contract:
@@ -1263,7 +1263,7 @@
   category: sensor_fusion
   family: complementary
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: complementary_imu
     language: python
   input_contract:
@@ -1297,7 +1297,7 @@
   category: global_planning
   family: sampling
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: rrt_planner
     language: python
   input_contract:
@@ -1331,7 +1331,7 @@
   category: global_planning
   family: roadmap
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: voronoi_planner
     language: python
   input_contract:
@@ -1363,7 +1363,7 @@
   category: local_planning
   family: reactive
   implementation:
-    package: bumperbot_algorithms
+    package: robot_lab_algorithms
     executable: follow_the_gap
     language: python
   input_contract:

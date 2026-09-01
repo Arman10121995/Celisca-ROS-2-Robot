@@ -5,7 +5,7 @@ Dead reckoning: integrate velocity commands into a pose estimate.
 ## Run
 
 ```python
-from bumperbot_algorithms.localization import DeadReckoning
+from robot_lab_algorithms.localization import DeadReckoning
 
 dr = DeadReckoning()
 

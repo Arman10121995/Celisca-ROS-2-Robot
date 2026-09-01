@@ -50,7 +50,7 @@ done
 # Check key packages
 echo ""
 echo "Key Packages:"
-for pkg in robot_lab_registry robot_lab_bringup bumperbot_algorithms robot_lab_benchmark; do
+for pkg in robot_lab_registry robot_lab_adapter robot_lab_algorithms robot_lab_benchmark; do
     if [ -d "src/robot_lab/$pkg" ] || [ -d "src/$pkg" ]; then
         report pass "$pkg source present"
     else
@@ -98,7 +98,7 @@ fi
 # Check launch files
 echo ""
 echo "Launch Files:"
-for launch in src/robot_lab_bringup/launch/select_robot.launch.py; do
+for launch in src/robot_lab_adapter/launch/select_robot.launch.py; do
     if [ -f "$launch" ]; then
         report pass "$(basename $launch) present"
     else

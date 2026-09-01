@@ -1,0 +1,125 @@
+modes:
+  display:
+    requires_2d_map: false
+    gazebo:
+      enabled: false
+    controller:
+      enabled: false
+    joystick:
+      enabled: false
+    global_localization:
+      enabled: false
+    local_localization:
+      enabled: false
+    slam:
+      enabled: false
+    navigation:
+      enabled: false
+    rviz:
+      enabled: true
+      package: robot_lab_description
+      path: rviz/display.rviz
+
+  loc:
+    requires_2d_map: true
+    gazebo:
+      enabled: true
+    controller:
+      enabled: true
+      use_simple_controller: "False"
+      use_python: "False"
+    joystick:
+      enabled: true
+    global_localization:
+      enabled: true
+    local_localization:
+      enabled: true
+    slam:
+      enabled: false
+    navigation:
+      enabled: false
+    rviz:
+      enabled: true
+      package: robot_lab_localization
+      path: rviz/global_localization.rviz
+
+  slam:
+    requires_2d_map: false
+    gazebo:
+      enabled: true
+    controller:
+      enabled: true
+      use_simple_controller: "False"
+      use_python: "False"
+    joystick:
+      enabled: true
+    global_localization:
+      enabled: false
+    local_localization:
+      enabled: true
+    slam:
+      enabled: true
+    navigation:
+      enabled: false
+    rviz:
+      enabled: true
+      package: robot_lab_mapping
+      path: rviz/slam.rviz
+
+  3d_slam:
+    requires_2d_map: false
+    required_features: [rgbd_camera]
+    gazebo:
+      enabled: true
+    controller:
+      enabled: true
+      use_simple_controller: "False"
+      use_python: "False"
+    joystick:
+      enabled: true
+    global_localization:
+      enabled: false
+    local_localization:
+      enabled: true
+    slam:
+      enabled: false
+    rtabmap:
+      enabled: true
+      rgb_topic: /oakd/rgb/image_raw
+      depth_topic: /oakd/depth/image_raw
+      camera_info_topic: /oakd/rgb/camera_info
+      points_topic: /oakd/points
+      odom_topic: /odometry/filtered
+      frame_id: base_footprint
+      map_frame_id: map
+      start_visual_odometry: "false"
+      start_rtabmap_viz: "false"
+    navigation:
+      enabled: false
+    rviz:
+      enabled: true
+      package: robot_lab_mapping
+      path: rviz/rtabmap.rviz
+
+  nav:
+    requires_2d_map: true
+    gazebo:
+      enabled: true
+    controller:
+      enabled: true
+      use_simple_controller: "False"
+      use_python: "False"
+    joystick:
+      enabled: true
+    global_localization:
+      enabled: true
+    local_localization:
+      enabled: true
+    slam:
+      enabled: false
+    navigation:
+      enabled: true
+    rviz:
+      enabled: true
+      package: robot_lab_localization
+      path: rviz/nav2_default_view.rviz

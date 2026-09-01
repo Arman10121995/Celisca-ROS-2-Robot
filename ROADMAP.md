@@ -68,13 +68,13 @@ command, or artifact rather than merely saying that code was added.
 
 ### P2 — unified composition
 
-- [x] **P2.1** Introduce `robot_lab_bringup` with selectors for robot,
+- [x] **P2.1** Introduce `robot_lab_adapter` with selectors for robot,
   environment, simulator, and scenario. (RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector)
 - [x] **P2.2** Add independent selectors for perception, localization, state
   estimation, global planning, local planning, and control. (7 algorithm selectors + CompositionBuilder)
 - [x] **P2.3** Resolve selectors into launch fragments and parameter overlays;
   reject invalid combinations before processes start. (LaunchFragment, ParameterOverlay, CompositionResolver with topic/conflict checking)
-- [x] **P2.4** Wrap `bumperbot_bringup/simulated_robot.launch.py` as the first
+- [x] **P2.4** Wrap `robot_lab_bringup/simulated_robot.launch.py` as the first
   adapter and retain its public arguments until a documented deprecation. (LegacyAdapter, robot_adapter.launch.py, 3 tests passing)
 - [x] **P2.5** Add namespaces and frame-prefix contracts so parallel and
   multi-robot experiments do not collide. (NamespaceConfig, NamespaceManager, namespaces.py, LaunchFragment namespace support, CompositionBuilder namespace methods, CompositionResolver namespace resolution, adapter.py namespace parameters, test_namespaces.py with 7 tests passing)
@@ -88,12 +88,12 @@ command, or artifact rather than merely saying that code was added.
   test/test_bumperbot_qualification.py with 28 tests covering registry
   metadata, sensor/command/state contracts, frames, capabilities, smoke
   experiment pinning, and on-disk asset/launch existence; smoke_test added to
-  the scenario schema enum; stale mesh paths and missing bumperbot_bringup
+  the scenario schema enum; stale mesh paths and missing robot_lab_bringup
   dependency fixed in robots.yaml; ros_package added for bumperbot and
   small_office; qualification suite wired into CI. Evidence: pytest 38/38
   registry tests, unittest 28/28 qualification tests,
   `robot-lab validate -c config --cross-references` passes, `robot-lab launch
-  --dry-run` resolves the smoke composition with no warnings, robot_lab_bringup
+  --dry-run` resolves the smoke composition with no warnings, robot_lab_adapter
   25/25 tests pass)
 - [x] **P3.2** Integrate a second mobile base (Labbot).
   (Finding: the only other cataloged mobile robot, assem12ros_29, is NOT a
@@ -111,9 +111,9 @@ command, or artifact rather than merely saying that code was added.
   `ros2 run robot_lab_registry robot-lab` actually works: package.xml was
   missing buildtool_depend/export build_type ament_cmake and the CLI was
   never installed — added CMake scripts/robot-lab install; also removed an
-  invalid top-level build_type tag from robot_lab_bringup/package.xml.
+  invalid top-level build_type tag from robot_lab_adapter/package.xml.
   Evidence: test_labbot_qualification.py 23/23, registry suites 10/10 +
-  28/28, robot_lab_bringup 25/25, `robot-lab validate --cross-references`
+  28/28, robot_lab_adapter 25/25, `robot-lab validate --cross-references`
   passes, `robot-lab launch --dry-run` resolves the labbot smoke composition
   (robots + maps/small_office) with no warnings)
 - [x] **P3.3** Turn one existing Unitree quadruped description into a simulated,
@@ -139,7 +139,7 @@ command, or artifact rather than merely saying that code was added.
   Added ros_package: maps to the empty environment (resolves previous
   "Environment Package: unknown" dry-run gap). CI runs the go2 suite.
   Evidence: test_go2_qualification.py 23/23, registry suites 10/10 + 28/28 +
-  23/23, robot_lab_bringup 25/25, `robot-lab validate --cross-references`
+  23/23, robot_lab_adapter 25/25, `robot-lab validate --cross-references`
   passes, `robot-lab launch --dry-run` resolves the go2 smoke composition
   (go2_description + maps/empty) with no warnings and Environment Package: maps)
 - [x] **P3.4** Turn one existing humanoid description into a simulated,
@@ -165,14 +165,14 @@ command, or artifact rather than merely saying that code was added.
   pinned platform-agnostic algorithms (rtabmap_localization, ekf_localization_node,
   a_star_planner, pure_pursuit) so cross-reference validation passes.
   Registered the quadrotor launch fragment, mavros controller fragment, and
-  empty_world overlay in robot_lab_bringup so `--dry-run` resolves with no
+  empty_world overlay in robot_lab_adapter so `--dry-run` resolves with no
   warnings. Added test_quadrotor_sitl_qualification.py (20 tests): registry
   contracts, smoke composition, MAVLink command interface, asset consistency
   (mesh-free, rotor sides, sensors), controller node, and xacro expansion.
   Fixed pre-existing YAML indentation errors in scenarios.yaml and
   experiments.yaml that were silently breaking catalog loading.
   Evidence: test_quadrotor_sitl_qualification.py 20 tests OK, registry suites
-  10/10, go2/labbot/bhl qualification suites 23/23 each, robot_lab_bringup
+  10/10, go2/labbot/bhl qualification suites 23/23 each, robot_lab_adapter
   15/15, `robot-lab validate --cross-references` passes,
   `--dry-run` resolves the quadrotor smoke composition with no warnings)
 - [x] **P3.6** Add per-class smoke scenarios and documented safety/compute
@@ -218,7 +218,7 @@ command, or artifact rather than merely saying that code was added.
     guaranteeing world geometry and localization map always agree.
   - All five registered as `integrated` in `config/environments.yaml`
     (ros_package maps, 2D, spawn zones at free regions) and registered in
-    `src/bumperbot_bringup/config/sim_maps.yaml` with `has_2d_map: true` so
+    `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true` so
     they are launchable in loc/nav modes.
   - `test_p4_2_nav_arenas.py` (8 tests) locks in registration, integration,
     world-file XML well-formedness, occupancy-map provenance, world↔map
@@ -237,7 +237,7 @@ command, or artifact rather than merely saying that code was added.
   generator, so world geometry and localization map always agree. All three
   registered as `integrated` in `config/environments.yaml` (ros_package maps,
   3D, legged/humanoid spawn zones, ground_truth) and registered in
-  `src/bumperbot_bringup/config/sim_maps.yaml` with `has_2d_map: true` so they
+  `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true` so they
   launch in loc/nav modes. `test_p4_3_terrain_arenas.py` (9 tests) locks in
   registration, integration, world XML well-formedness, occupancy-map
   provenance, world↔map consistency (every platform center occupied, spawn
@@ -255,7 +255,7 @@ command, or artifact rather than merely saying that code was added.
   `src/maps/tools/gen_aerial_arenas.py` generator. Both registered as
   `integrated` in `config/environments.yaml` (ros_package maps, 3D, aerial
   spawn zones, ground_truth_available) and in
-  `src/bumperbot_bringup/config/sim_maps.yaml` with `has_2d_map: true`.
+  `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true`.
   `test_p4_4_aerial_arenas.py` (9 tests) locks in registration, integration,
   world XML well-formedness, occupancy-map provenance, world↔map consistency
   (obstacle centers occupied, spawn free), sim_maps launch registration, and
@@ -273,7 +273,7 @@ command, or artifact rather than merely saying that code was added.
   `config/environments.yaml` with explicit `dynamics` metadata — `nav_dynamic`
   has `dynamic_obstacles: true` + `max_dynamic_count: 2` matching its two
   actors, `nav_sensor_degraded` has `dynamic_obstacles: false` — and in
-  `src/bumperbot_bringup/config/sim_maps.yaml` with `has_2d_map: true`.
+  `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true`.
   Generated by the reusable `src/maps/tools/gen_dynamic_arenas.py`.
   `test_p4_5_dynamic_variants.py` (8 tests) locks in registration/integration,
   dynamic-metadata↔world coherence (actors present iff dynamic declared), world

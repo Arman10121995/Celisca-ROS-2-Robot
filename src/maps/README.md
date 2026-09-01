@@ -4,13 +4,13 @@ This package stores simulation worlds, Nav2 map files, and map-specific assets.
 The launch system reads map defaults from:
 
 ```text
-src/bumperbot_bringup/config/sim_maps.yaml
+src/robot_lab_bringup/config/sim_maps.yaml
 ```
 
 The GUI launcher reads the same map profiles:
 
 ```bash
-ros2 run bumperbot_bringup sim_launcher_gui
+ros2 run robot_lab_bringup sim_launcher_gui
 ```
 
 ## Directory Layout
@@ -76,7 +76,7 @@ occupied_thresh: 0.65
 free_thresh: 0.196
 ```
 
-4. Register the map profile in `src/bumperbot_bringup/config/sim_maps.yaml`:
+4. Register the map profile in `src/robot_lab_bringup/config/sim_maps.yaml`:
 
 ```yaml
 maps:
@@ -106,7 +106,7 @@ same Gazebo world frame, set it to the same `x`, `y`, and `yaw` as `spawn`.
 5. Rebuild:
 
 ```bash
-colcon build --packages-select maps bumperbot_bringup
+colcon build --packages-select maps robot_lab_bringup
 source install/setup.bash
 ```
 
@@ -115,38 +115,38 @@ source install/setup.bash
 Display robot only:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=display robot_model:=bumperbot
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display robot_model:=bumperbot
 ```
 
 Localization on a saved map:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=loc map_name:=my_map
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc map_name:=my_map
 ```
 
 SLAM on a Gazebo world:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=slam map_name:=my_map
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam map_name:=my_map
 ```
 
 3D RGB-D SLAM on a Gazebo world:
 
 ```bash
 sudo apt-get install ros-humble-rtabmap-ros
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=3d_slam map_name:=my_map
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=3d_slam map_name:=my_map
 ```
 
 Navigation on a saved map:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=nav map_name:=my_map
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=my_map
 ```
 
 Room vacuum simulation is separate:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_room_vacuum.launch.py mode:=nav map_name:=my_map
+ros2 launch robot_lab_bringup simulated_room_vacuum.launch.py mode:=nav map_name:=my_map
 ```
 
 ## Current Map Profiles
@@ -181,5 +181,5 @@ python3 src/maps/tools/validate_nav_arenas.py
 
 Each arena is registered as `integrated` in
 `src/robot_lab/robot_lab_registry/config/environments.yaml` under the
-`nav_*` id and launchable in `src/bumperbot_bringup/config/sim_maps.yaml`.
+`nav_*` id and launchable in `src/robot_lab_bringup/config/sim_maps.yaml`.
 

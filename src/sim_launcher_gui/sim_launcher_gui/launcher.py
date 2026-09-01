@@ -195,7 +195,7 @@ class SimulationLauncherGui(tk.Tk):
         self.geometry("1040x720")
         self.minsize(900, 620)
 
-        self.bringup_share = get_package_share_directory("bumperbot_bringup")
+        self.bringup_share = get_package_share_directory("robot_lab_bringup")
         self.robots_share = get_package_share_directory("robots")
         self.maps_share = get_package_share_directory("maps")
 
@@ -583,7 +583,7 @@ class SimulationLauncherGui(tk.Tk):
         return [
             "ros2",
             "launch",
-            "bumperbot_bringup",
+            "robot_lab_bringup",
             launch_file,
             f"mode:={self.mode_var.get()}",
             f"map_name:={self.map_var.get()}",

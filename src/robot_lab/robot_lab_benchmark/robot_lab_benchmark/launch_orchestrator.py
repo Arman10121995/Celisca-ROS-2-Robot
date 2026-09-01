@@ -15,7 +15,7 @@ class LaunchOrchestrator:
 
     def __init__(
         self,
-        launch_package: str = 'robot_lab_bringup',
+        launch_package: str = 'robot_lab_adapter',
         launch_file: str = 'select_robot.launch.py',
         output_dir: Optional[str] = None,
         ros2_cmd: str = 'ros2',

@@ -4,7 +4,7 @@ This package stores robot descriptions and robot launch profiles. The simulator
 selects robots through:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py robot_model:=bumperbot
+ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot
 ```
 
 Robot profiles are defined in:
@@ -16,7 +16,7 @@ src/robots/config/robots.yaml
 The GUI launcher reads the same profiles:
 
 ```bash
-ros2 run bumperbot_bringup sim_launcher_gui
+ros2 run robot_lab_bringup sim_launcher_gui
 ```
 
 ## Directory Layout
@@ -87,14 +87,14 @@ robots:
 5. Rebuild:
 
 ```bash
-colcon build --packages-select robots bumperbot_bringup
+colcon build --packages-select robots robot_lab_bringup
 source install/setup.bash
 ```
 
 6. Run it:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=display robot_model:=my_robot
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display robot_model:=my_robot
 ```
 
 ## Run Robots In The Modes
@@ -106,32 +106,32 @@ The GUI disables modes that are not listed in a robot profile's
 Display any valid robot description:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=display robot_model:=unitree_go2
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display robot_model:=unitree_go2
 ```
 
 Localization with a robot that has the full simulation stack:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=loc map_name:=small_house robot_model:=bumperbot
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc map_name:=small_house robot_model:=bumperbot
 ```
 
 SLAM with a robot that has the full simulation stack:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=slam map_name:=small_house robot_model:=bumperbot
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam map_name:=small_house robot_model:=bumperbot
 ```
 
 3D RGB-D SLAM with a robot that has an RGB-D camera:
 
 ```bash
 sudo apt-get install ros-humble-rtabmap-ros
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=3d_slam map_name:=small_house robot_model:=bumperbot
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=3d_slam map_name:=small_house robot_model:=bumperbot
 ```
 
 Navigation with a robot that has the full simulation stack:
 
 ```bash
-ros2 launch bumperbot_bringup simulated_robot.launch.py mode:=nav map_name:=small_house robot_model:=bumperbot
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=small_house robot_model:=bumperbot
 ```
 
 ## Runtime Requirements

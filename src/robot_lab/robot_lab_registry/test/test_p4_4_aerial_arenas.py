@@ -156,7 +156,7 @@ class AerialConsistencyTests(unittest.TestCase):
 class LaunchRegistrationTests(unittest.TestCase):
     def setUp(self):
         self.path = Path(__file__).resolve().parents[4] / \
-            "src/bumperbot_bringup/config/sim_maps.yaml"
+            "src/robot_lab_bringup/config/sim_maps.yaml"
         import yaml
         self.maps = yaml.safe_load(self.path.read_text()).get("maps", {})
 

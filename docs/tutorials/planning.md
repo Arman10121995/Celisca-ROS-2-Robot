@@ -5,7 +5,7 @@ Compare RRT vs. Voronoi global planning on the same occupancy grid.
 ## Run
 
 ```python
-from bumperbot_algorithms.global_planning import RRTPlanner, VoronoiPlanner
+from robot_lab_algorithms.global_planning import RRTPlanner, VoronoiPlanner
 
 # Define environment: central obstacle
 def is_free(x, y):

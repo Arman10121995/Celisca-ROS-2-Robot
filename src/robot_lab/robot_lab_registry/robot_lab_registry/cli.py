@@ -549,9 +549,9 @@ def cmd_doctor(args) -> int:
     print("-" * 40)
     core_packages = [
         'robot_lab_registry',
+        'robot_lab_adapter',
         'robot_lab_bringup',
-        'bumperbot_bringup',
-        'bumperbot_description',
+        'robot_lab_description',
         'gazebo_models'
     ]
     

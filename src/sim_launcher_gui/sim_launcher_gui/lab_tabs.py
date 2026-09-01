@@ -219,7 +219,7 @@ class VacuumTab(LabTab):
             info,
             text=(
                 "Room vacuum coverage for robots that support cleaning missions "
-                "(bumperbot and full-stack profiles with supports_room_vacuum).\n"
+                "(bumperbot and other full-stack robot profiles with supports_room_vacuum).\n"
                 "The room-vacuum launch brings up Gazebo + the vacuum room world; "
                 "the cleaner node drives systematic coverage."
             ),
@@ -271,7 +271,7 @@ class VacuumTab(LabTab):
         command = [
             "ros2",
             "launch",
-            "bumperbot_bringup",
+            "robot_lab_bringup",
             "simulated_room_vacuum.launch.py",
             f"robot_model:={self.app.robot_var.get()}",
         ]
@@ -551,7 +551,7 @@ class TestsTab(LabTab):
         command = (
             f"cd {WORKSPACE_ROOT} && "
             "PYTHONPATH=src/robot_lab/robot_lab_registry:"
-            "src/robot_lab/robot_lab_benchmark:src/bumperbot_algorithms "
+            "src/robot_lab/robot_lab_benchmark:src/robot_lab_algorithms "
             "python3 -m unittest discover -s src/robot_lab/robot_lab_registry/test "
             "-p 'test_p*.py' -v"
         )
@@ -577,7 +577,7 @@ class TestsTab(LabTab):
             f"cd {WORKSPACE_ROOT} && for f in perception localization "
             "state_estimation sensor_fusion global_planning local_planning; do "
             "python3 -m py_compile "
-            "src/bumperbot_algorithms/bumperbot_algorithms/$f.py && "
+            "src/robot_lab_algorithms/robot_lab_algorithms/$f.py && "
             "echo \"$f OK\"; done"
         )
         self.app.start_bg_process(["bash", "-c", command], "tests")

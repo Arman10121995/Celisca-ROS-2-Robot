@@ -222,7 +222,7 @@ class LaunchRegistrationTests(unittest.TestCase):
         cls.registry.load(config_dir)
         cls.src_root = Path(__file__).resolve().parents[4] / "src"
         cls.sim_maps = (
-            cls.src_root / "bumperbot_bringup" / "config" / "sim_maps.yaml"
+            cls.src_root / "robot_lab_bringup" / "config" / "sim_maps.yaml"
         )
 
     def test_all_arenas_in_sim_maps(self):

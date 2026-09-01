@@ -5,7 +5,7 @@ EKF 3D state estimator: predict and update cycle.
 ## Run
 
 ```python
-from bumperbot_algorithms.state_estimation import EKF3DEstimator
+from robot_lab_algorithms.state_estimation import EKF3DEstimator
 
 ekf = EKF3DEstimator()
 

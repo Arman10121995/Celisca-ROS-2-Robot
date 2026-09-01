@@ -27,14 +27,14 @@ presets while the new composition layer is built.
 src/
   robot_lab/
     robot_lab_registry/     # schemas, catalogs, compatibility, query CLI
-    robot_lab_bringup/      # composition and legacy launch adapters (P2)
+    robot_lab_adapter/      # composition and legacy launch adapters (P2)
     robot_lab_benchmark/    # runner, metrics, result schema (P6)
   robots/                   # descriptions and robot-specific assets
     _upstream/              # vendored third-party robot assets
   maps/                     # worlds, occupancy maps, reference geometry
   gazebo_models/            # reusable environment models
-  bumperbot_algorithms/     # 13 algorithm implementations (P5)
-  bumperbot_*/              # reference robot and legacy-compatible adapters
+  robot_lab_algorithms/     # 13 algorithm implementations (P5)
+  robot_lab_*/              # reference robot and legacy-compatible adapters
   ORB_SLAM3/                # optional external-library adapter
 ```
 

@@ -193,7 +193,7 @@ class LaunchOrchestratorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             orch = LaunchOrchestrator(output_dir=tmpdir)
             self.assertTrue(Path(tmpdir).is_dir())
-            self.assertEqual(orch.launch_package, 'robot_lab_bringup')
+            self.assertEqual(orch.launch_package, 'robot_lab_adapter')
             self.assertEqual(orch.launch_file, 'select_robot.launch.py')
 
     def test_orchestrator_default_output_dir(self):

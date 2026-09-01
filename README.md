@@ -62,14 +62,14 @@ Each selector is independent. Compatibility is decided from explicit capabilitie
 src/
   robot_lab/
     robot_lab_registry/     # schemas, catalogs, validation, query CLI
-    robot_lab_bringup/      # composition and legacy launch adapters
+    robot_lab_adapter/      # composition and legacy launch adapters
     robot_lab_benchmark/    # runner, metrics, result schema, orchestration
   robots/                   # URDF/SDF descriptions and robot-specific assets
     _upstream/              # vendored third-party robot assets
   maps/                     # Gazebo worlds, occupancy maps, reference geometry
   gazebo_models/            # reusable environment models
-  bumperbot_algorithms/     # 13 new algorithm implementations (P5)
-  bumperbot_*/              # reference differential-drive robot packages
+  robot_lab_algorithms/     # 13 new algorithm implementations (P5)
+  robot_lab_*/              # reference differential-drive robot packages
   ORB_SLAM3/                # optional external SLAM adapter
 ```
 
@@ -214,7 +214,7 @@ bash scripts/doctor.sh
 ## Project Structure
 
 ```
-bumperbot_ws/
+robot_lab_ws/
 ├── .github/workflows/        # CI (fast PR) + scheduled (full) workflows
 ├── docs/
 │   ├── architecture/
@@ -232,8 +232,8 @@ bumperbot_ws/
 │   ├── robots/               # Robot descriptions + upstream assets
 │   ├── maps/                 # Worlds, occupancy maps
 │   ├── gazebo_models/        # Reusable environment models
-│   ├── bumperbot_algorithms/ # 13 algorithm implementations
-│   └── bumperbot_*/          # Reference robot packages
+│   ├── robot_lab_algorithms/ # 13 algorithm implementations
+│   └── robot_lab_*/          # Reference robot packages
 ├── LICENSE                   # MIT License
 ├── LICENSES/                 # Third-party license notices
 ├── ROADMAP.md                # Program state and task ledger

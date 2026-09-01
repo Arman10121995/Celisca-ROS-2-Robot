@@ -165,7 +165,7 @@ class BumberbotQualificationTests(unittest.TestCase):
         self.assertIsNotNone(env)
         self.assertEqual(env["simulator"], "gazebo")
 
-    def test_bumperbot_algorithms_exist(self):
+    def test_robot_lab_algorithms_exist(self):
         """Verify all algorithms used in smoke test exist."""
         experiment = self.registry.experiments.get("bumperbot_smoke_test")
         algorithms = experiment["algorithm_ids"]
@@ -240,8 +240,8 @@ class BumberbotLaunchValidationTests(unittest.TestCase):
         dependencies = robot["dependencies"]
 
         # Must have bringup and description packages
-        self.assertIn("bumperbot_bringup", dependencies)
-        self.assertIn("bumperbot_description", dependencies)
+        self.assertIn("robot_lab_bringup", dependencies)
+        self.assertIn("robot_lab_description", dependencies)
 
     def test_bumperbot_has_asset_urdf(self):
         """Verify Bumperbot URDF asset is specified."""
@@ -331,7 +331,7 @@ class BumperbotAssetContractTests(unittest.TestCase):
 
     def test_bumperbot_launch_entry_point_exists(self):
         """The legacy bringup launch used by the adapter must exist."""
-        launch = self.src_root / "bumperbot_bringup" / "launch" / "simulated_robot.launch.py"
+        launch = self.src_root / "robot_lab_bringup" / "launch" / "simulated_robot.launch.py"
         self.assertTrue(launch.is_file(), f"Missing launch file: {launch}")
 
 

@@ -5,7 +5,7 @@ Complementary IMU filter: blend gyro integration with accelerometer tilt.
 ## Run
 
 ```python
-from bumperbot_algorithms.sensor_fusion import ComplementaryImu
+from robot_lab_algorithms.sensor_fusion import ComplementaryImu
 
 imu = ComplementaryImu(alpha=0.98)
 
