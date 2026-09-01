@@ -228,17 +228,38 @@ robot_lab_ws/
 │   ├── doctor.sh             # Health diagnostics
 │   └── test_fast.sh          # Fast PR test suite
 ├── src/
-│   ├── robot_lab/            # Core platform packages
+│   ├── robot_lab/            # Core platform (registry, adapter, benchmark)
 │   ├── robots/               # Robot descriptions + upstream assets
 │   ├── maps/                 # Worlds, occupancy maps
 │   ├── gazebo_models/        # Reusable environment models
-│   ├── robot_lab_algorithms/ # 13 algorithm implementations
-│   └── robot_lab_*/          # Reference robot packages
+│   ├── sim_launcher_gui/     # Unified control-center GUI (Tkinter)
+│   ├── vacuum_cleaning/      # Robot-agnostic cleaning mission node
+│   ├── robot_lab_algorithms/   # Perception, localization, EKF, fusion, planners
+│   ├── robot_lab_bringup/      # Simulation/real launch entry points
+│   ├── robot_lab_adapter/      # Legacy launch adapters + fragments
+│   ├── robot_lab_controller/   # Teleop, mapping, cleaning controllers
+│   ├── robot_lab_description/  # Xacro/URDF, meshes (reference robots)
+│   ├── robot_lab_localization/ # AMCL / localization launch helpers
+│   ├── robot_lab_mapping/      # SLAM (slam_toolbox, RTAB-Map) helpers
+│   ├── robot_lab_navigation/   # Nav2 bringup and config
+│   ├── robot_lab_motion/       # Motion primitives
+│   ├── robot_lab_planning/     # Path planning helpers
+│   ├── robot_lab_msgs/         # Shared message definitions
+│   ├── robot_lab_utils/        # Shared utilities
+│   ├── robot_lab_firmware/     # Hardware interface definitions
+│   ├── robot_lab_cpp_examples/ # C++ ROS2 examples (tf, publishers)
+│   └── robot_lab_py_examples/  # Python ROS2 examples
 ├── LICENSE                   # MIT License
 ├── LICENSES/                 # Third-party license notices
 ├── ROADMAP.md                # Program state and task ledger
 └── README.md                 # This file
 ```
+
+Every robot profile (bumperbot, labbot, go2, h1, quadrotor, ...) plugs into the
+same `robot_lab_*` packages through the registry catalogs — no robot has its own
+parallel package set. Robot-specific assets (URDF, meshes, controllers config,
+joint names) live under `src/robots/` and are referenced by robot id.
+
 
 ---
 
