@@ -40,15 +40,22 @@ except Exception:  # pragma: no cover - optional dependency
             return self._node_name
 
 
-class DeadReckoning:
+class DeadReckoning(Node):
     """Integrate body twist into an odometry pose (dead reckoning)."""
 
     def __init__(self, node_name='dead_reckoning'):
-        self.node_name = node_name
+        super().__init__(node_name)
         self.x = 0.0
         self.y = 0.0
         self.theta = 0.0
         self.last_time = None
+        self.declare_parameter('initial_x', 0.0)
+        self.declare_parameter('initial_y', 0.0)
+        self.declare_parameter('initial_theta', 0.0)
+        self.x = float(self.get_parameter('initial_x').value)
+        self.y = float(self.get_parameter('initial_y').value)
+        self.theta = float(self.get_parameter('initial_theta').value)
+        self.get_logger().info('DeadReckoning ready')
 
     def integrate(self, vx, wz, dt):
         """Advance the pose by (linear x, angular z) over dt seconds (2D)."""
@@ -63,7 +70,6 @@ class DeadReckoning:
             self.y += -radius * (math.cos(self.theta + wz * dt) - math.cos(self.theta))
         self.theta += wz * dt
         return (self.x, self.y, self.theta)
-
 
 
 def dead_reckoning_main(args=None):

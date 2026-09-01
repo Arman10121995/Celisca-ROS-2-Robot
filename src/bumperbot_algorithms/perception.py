@@ -20,8 +20,24 @@ try:
     import rclpy
     from rclpy.node import Node
     from rclpy.qos import qos_profile_sensor_data
-except Exception:  # pragma: no cover - optional dependency
-    rclpy = None
+    from sensor_msgs.msg import LaserScan, PointCloud2, PointField
+    from geometry_msgs.msg import Point32
+    from visualization_msgs.msg import Marker, MarkerArray
+    from std_msgs.msg import Header
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError as e:
+    HAS_NUMPY = False
+    try:
+        import rclpy
+        from rclpy.node import Node
+        from rclpy.qos import qos_profile_sensor_data
+        from sensor_msgs.msg import LaserScan, PointCloud2, PointField
+        from geometry_msgs.msg import Point32
+        from visualization_msgs.msg import Marker, MarkerArray
+        from std_msgs.msg import Header
+    except Exception:  # pragma: no cover - optional dependency
+        rclpy = None
 
     class Node:
         """Fallback base when rclpy is unavailable (dry/local testing)."""

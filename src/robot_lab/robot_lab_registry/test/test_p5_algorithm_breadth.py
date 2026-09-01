@@ -22,6 +22,10 @@ if _SRC_PACKAGE_DIR.name == "robot_lab_registry":
     ]
     if str(_SRC_PACKAGE_DIR) not in sys.path:
         sys.path.insert(0, str(_SRC_PACKAGE_DIR))
+    # Add src/ so the flat bumperbot_algorithms package is importable
+    _src_dir = str(_SRC_PACKAGE_DIR.parents[2])
+    if _src_dir not in sys.path:
+        sys.path.insert(0, _src_dir)
     for _stale in [m for m in list(sys.modules)
                    if m == "robot_lab_registry" or m.startswith("robot_lab_registry.")]:
         del sys.modules[_stale]
@@ -89,7 +93,7 @@ class NodeAssetTests(unittest.TestCase):
     """The new algorithm node modules exist on disk."""
 
     def setUp(self):
-        self.pkg = Path(__file__).resolve().parents[4] / "src/bumperbot_algorithms/bumperbot_algorithms"
+        self.pkg = Path(__file__).resolve().parents[4] / "src/bumperbot_algorithms"
 
     def test_node_modules_exist(self):
         modules = ["perception", "localization", "state_estimation",
