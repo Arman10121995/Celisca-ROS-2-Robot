@@ -195,6 +195,27 @@ ros2 run robot_lab_registry robot-lab launch --dry-run bumperbot_smoke_test
 
 ---
 
+## Control Center GUI
+
+```bash
+ros2 run sim_launcher_gui sim_launcher_gui
+```
+
+A single Tkinter window that drives the whole platform, robot-agnostic and registry-driven:
+
+| Tab | What you can do |
+|-----|-----------------|
+| **Launch** | Pick any robot × mode (display / loc / slam / 3d_slam / nav) × map, launch the unified `robot_lab_bringup` stack, drive with the teleop pad, save maps, export 3D maps. A live info panel shows each robot's feature class, available modes, and cleaning-mission support. |
+| **Registry** | Browse and search all robots, environments, algorithms, scenarios, and experiments with full YAML detail views. |
+| **Vacuum** | One-click room-vacuum simulation + cleaner-node start/stop for any robot whose profile declares `supports_room_vacuum: true`. |
+| **Benchmark** | Seeded benchmark runs (robot × environment × scenario × seed) via the P6 `LaunchOrchestrator`, plus regression checks against checked-in reference results. |
+| **Tests** | Fast suite, full 257-test suite, registry validation, and algorithm compile checks — output streamed into the GUI console. |
+| **Health** | Doctor diagnostics, platform status (phase ledger + test counts), live ROS node/topic inspection. |
+
+Adding a robot to `src/robots/config/robots.yaml` (or a map to `sim_maps.yaml`) makes it appear — correctly gated by capabilities — everywhere in the GUI with no code changes.
+
+---
+
 ## Testing
 
 ```bash

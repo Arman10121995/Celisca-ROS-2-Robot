@@ -199,6 +199,36 @@ launch  →  reset  →  run (rosbag capture)  →  stop  →  manifest.json
 | `ci.yml` | Push/PR | < 60s | `scripts/test_fast.sh` (compile + P5/P6 logic + registry) |
 | `scheduled-full.yml` | Daily 06:00 UTC | ~5min | Full colcon test + all 257 unit tests |
 
+## Control Center GUI (`sim_launcher_gui`)
+
+Tkinter-based single-window control center (`ros2 run sim_launcher_gui sim_launcher_gui`), fully decoupled from any robot: every dropdown, launch, and benchmark reads from the shared registries, never from hardcoded per-robot packages.
+
+```
+sim_launcher_gui/
+└── sim_launcher_gui/
+    ├── launcher.py    # Tk app shell + Launch tab (robot/mode/map, drive pad, map save)
+    └── lab_tabs.py    # LabTab base + Registry, Vacuum, Benchmark, Tests, Health tabs
+```
+
+**Tabs:**
+
+| Tab | Function | Data source |
+|-----|----------|-------------|
+| Launch | Robot/Mode/Map selection, launch, drive pad, save map, 3D map export | `robots.yaml`, `sim_modes.yaml`, `sim_maps.yaml` (from `robot_lab_bringup`/`robots`/`maps` share dirs) |
+| Registry | Browse + search all 5 registries with YAML detail view | `robot_lab_registry/config/*.yaml` |
+| Vacuum | Room-vacuum mission launch + `vacuum_cleaner` node control | Launch profiles with `supports_room_vacuum: true` |
+| Benchmark | Seeded runs via `LaunchOrchestrator`, regression check vs reference | `robot_lab_benchmark` + `reference_data/results.json` |
+| Tests | Fast/full suite, registry validation, algorithm compile check | `scripts/test_fast.sh`, `robot_lab_registry/test` |
+| Health | Doctor diagnostics, platform status, live ROS graph | `scripts/doctor.sh`, `platform-status.yaml`, `ros2 node/topic list` |
+
+**Uniform-structure principles encoded in the GUI:**
+
+1. **One launch entry point** — all launches go through `robot_lab_bringup` (`simulated_robot.launch.py` / `simulated_room_vacuum.launch.py`); the robot id (`robot_model:=`) selects the description from `src/robots/`, never a per-robot package.
+2. **Profile-driven capability gating** — mode buttons, vacuum radio, and map combobox enable/disable purely from `supported_modes` / `features` / `supports_room_vacuum` fields; adding a robot to `robots.yaml` automatically appears correctly in the GUI.
+3. **Robot info panel** — the Launch tab shows the selected robot's feature class, available modes, and cleaning-mission support, derived live from its profile.
+4. **Registry-driven benchmarking** — Benchmark tab comboboxes are populated from the same YAML configs the CLI validates, so GUI and CI always agree.
+5. **Managed background processes** — all spawned processes (launches, rosbags, test runs, cleaner node) are tracked and cleaned up on exit.
+
 ## Testing architecture
 
 **257 tests across 4 test files:**

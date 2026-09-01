@@ -218,8 +218,9 @@ class VacuumTab(LabTab):
         ttk.Label(
             info,
             text=(
-                "Room vacuum coverage for robots that support cleaning missions "
-                "(bumperbot and other full-stack robot profiles with supports_room_vacuum).\n"
+                "Room vacuum coverage for any robot whose launch profile declares "
+                "supports_room_vacuum: true (robot-agnostic: driven by "
+                "src/robots/config/robots.yaml, no per-robot package needed).\n"
                 "The room-vacuum launch brings up Gazebo + the vacuum room world; "
                 "the cleaner node drives systematic coverage."
             ),

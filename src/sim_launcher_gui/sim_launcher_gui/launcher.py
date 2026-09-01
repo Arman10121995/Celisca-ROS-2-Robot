@@ -178,20 +178,20 @@ def subprocess_env():
         try:
             log_dir.mkdir(parents=True, exist_ok=True)
         except OSError:
-            log_dir = Path("/tmp/bumperbot_ros_logs")
+            log_dir = Path("/tmp/robot_lab_ros_logs")
             log_dir.mkdir(parents=True, exist_ok=True)
         env["ROS_LOG_DIR"] = str(log_dir)
-    if not env.get("BUMPERBOT_RTABMAP_DIR"):
+    if not env.get("ROBOT_LAB_RTABMAP_DIR") and not env.get("BUMPERBOT_RTABMAP_DIR"):
         rtabmap_dir = Path.cwd() / "log" / "rtabmap"
         rtabmap_dir.mkdir(parents=True, exist_ok=True)
-        env["BUMPERBOT_RTABMAP_DIR"] = str(rtabmap_dir)
+        env["ROBOT_LAB_RTABMAP_DIR"] = str(rtabmap_dir)
     return env
 
 
 class SimulationLauncherGui(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Bumperbot Simulation Launcher")
+        self.title("Robot Lab Control Center")
         self.geometry("1040x720")
         self.minsize(900, 620)
 
@@ -289,15 +289,26 @@ class SimulationLauncherGui(tk.Tk):
         controls.columnconfigure(0, weight=1)
 
         ttk.Label(controls, text="Robot").grid(row=0, column=0, sticky="w")
+        robot_frame = ttk.Frame(controls)
+        robot_frame.grid(row=1, column=0, sticky="ew", pady=(2, 12))
+        robot_frame.columnconfigure(0, weight=1)
         robot_combo = ttk.Combobox(
-            controls,
+            robot_frame,
             textvariable=self.robot_var,
             values=sorted(self.robot_profiles.keys()),
             state="readonly",
             width=34,
         )
-        robot_combo.grid(row=1, column=0, sticky="ew", pady=(2, 12))
+        robot_combo.grid(row=0, column=0, sticky="ew")
         robot_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
+        self.robot_info_var = tk.StringVar(value="")
+        ttk.Label(
+            robot_frame,
+            textvariable=self.robot_info_var,
+            foreground="#555555",
+            wraplength=330,
+            justify="left",
+        ).grid(row=1, column=0, sticky="ew", pady=(4, 0))
 
         ttk.Label(controls, text="Mode").grid(row=2, column=0, sticky="w")
         mode_frame = ttk.Frame(controls)
@@ -521,6 +532,17 @@ class SimulationLauncherGui(tk.Tk):
 
         self.command_var.set(" ".join(self._command()))
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
+        self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
+
+    def _robot_info_text(self, supported_modes, supports_vacuum):
+        config = self._robot_config()
+        features = config.get("features", [])
+        lines = [
+            f"Class profile: {', '.join(features) if features else 'display only'}",
+            f"Modes: {', '.join(MODE_LABELS.get(m, m) for m in supported_modes) or 'none'}",
+            f"Cleaning missions: {'yes' if supports_vacuum else 'no'}",
+        ]
+        return "\n".join(lines)
 
     def _resolve_rviz_path(self):
         rviz_config = self._mode_config().get("rviz", {})
@@ -548,7 +570,10 @@ class SimulationLauncherGui(tk.Tk):
         return package_path(robot_config.get("package", "robots"), robot_config.get("xacro", ""))
 
     def _rtabmap_database_path(self):
-        base_dir = os.environ.get("BUMPERBOT_RTABMAP_DIR", str(Path.cwd() / "log" / "rtabmap"))
+        base_dir = os.environ.get(
+            "ROBOT_LAB_RTABMAP_DIR",
+            os.environ.get("BUMPERBOT_RTABMAP_DIR", str(Path.cwd() / "log" / "rtabmap")),
+        )
         safe_map = "".join(char if char.isalnum() or char in ("-", "_") else "_" for char in self.map_var.get())
         safe_robot = "".join(char if char.isalnum() or char in ("-", "_") else "_" for char in self.robot_var.get())
         return str(Path(base_dir) / f"{safe_map}_{safe_robot}.db")
