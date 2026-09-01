@@ -13,7 +13,7 @@ install(
 )
 
 install(
-  PROGRAMS scripts/sim_launcher_gui scripts/export_3d_map.py
+  PROGRAMS scripts/export_3d_map.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1,12 +1,12 @@
 maps:
   celisca_floor_1:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: celisca_floor_1
       world_path: maps/celisca_floor_1/worlds/celisca_floor_1.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/celisca_floor_1/maps/map.yaml
     spawn:
       x: "0.0"
@@ -20,12 +20,12 @@ maps:
 
   celisca_floor_2:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: celisca_floor_2
       world_path: maps/celisca_floor_2/worlds/celisca_floor_2.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/celisca_floor_2/maps/map.yaml
     spawn:
       x: "0.0"
@@ -39,12 +39,12 @@ maps:
 
   celisca_f1_actor:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: celisca_f1_actor
       world_path: maps/celisca_f1_actor/worlds/celisca_f1_actor.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/celisca_f1_actor/maps/map.yaml
     spawn:
       x: "0.0"
@@ -58,12 +58,12 @@ maps:
 
   celisca_f2_actor:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: celisca_f2_actor
       world_path: maps/celisca_f2_actor/worlds/celisca_f2_actor.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/celisca_f2_actor/maps/map.yaml
     spawn:
       x: "0.0"
@@ -77,12 +77,12 @@ maps:
 
   celisca_floor_1_furniture:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: celisca_floor_1_furniture
       world_path: maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/celisca_floor_1_furniture/maps/map.yaml
     spawn:
       x: "0.0"
@@ -96,12 +96,12 @@ maps:
 
   celisca_floor_2_furniture:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: celisca_floor_2_furniture
       world_path: maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/celisca_floor_2_furniture/maps/map.yaml
     spawn:
       x: "0.0"
@@ -115,7 +115,7 @@ maps:
 
   simple_box:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: simple_box
       world_path: maps/simple_box/worlds/simple_box.world
     map:
@@ -132,12 +132,12 @@ maps:
 
   small_house:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: small_house
       world_path: maps/small_house/worlds/small_house.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/small_house/maps/map.yaml
     spawn:
       x: "0.0"
@@ -151,12 +151,12 @@ maps:
 
   small_warehouse:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: small_warehouse
       world_path: maps/small_warehouse/worlds/small_warehouse.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/small_warehouse/maps/map.yaml
     spawn:
       x: "0.0"
@@ -170,7 +170,7 @@ maps:
 
   empty:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: empty
       world_path: maps/empty/worlds/empty.world
     map:
@@ -188,7 +188,7 @@ maps:
   # Demo map using models from the gazebo_models library (residential collection)
   residential_demo:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: residential_demo
       world_path: maps/residential_demo/worlds/residential_demo.world
     map:
@@ -205,12 +205,12 @@ maps:
 
   bigger_warehouse:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: bigger_warehouse
       world_path: maps/bigger_warehouse/worlds/bigger_warehouse.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/bigger_warehouse/maps/map.yaml
     spawn:
       x: "0.0"
@@ -224,12 +224,12 @@ maps:
 
   simple_office:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: simple_office
       world_path: maps/simple_office/worlds/simple_office.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/simple_office/maps/map.yaml
     spawn:
       x: "0.0"
@@ -243,12 +243,12 @@ maps:
 
   warehouse_demo:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: warehouse_demo
       world_path: maps/warehouse_demo/worlds/warehouse_demo.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/warehouse_demo/maps/map.yaml
     spawn:
       x: "0.0"
@@ -263,12 +263,12 @@ maps:
   # P4.2 deterministic navigation arenas
   nav_empty:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_empty
       world_path: maps/nav_empty/worlds/nav_empty.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_empty/maps/map.yaml
     spawn:
       x: "-0.5"
@@ -282,12 +282,12 @@ maps:
 
   nav_obstacle:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_obstacle
       world_path: maps/nav_obstacle/worlds/nav_obstacle.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_obstacle/maps/map.yaml
     spawn:
       x: "-7.0"
@@ -301,12 +301,12 @@ maps:
 
   nav_maze:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_maze
       world_path: maps/nav_maze/worlds/nav_maze.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_maze/maps/map.yaml
     spawn:
       x: "-7.0"
@@ -320,12 +320,12 @@ maps:
 
   nav_narrow_passage:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_narrow_passage
       world_path: maps/nav_narrow_passage/worlds/nav_narrow_passage.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_narrow_passage/maps/map.yaml
     spawn:
       x: "-6.0"
@@ -339,12 +339,12 @@ maps:
 
   nav_warehouse:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_warehouse
       world_path: maps/nav_warehouse/worlds/nav_warehouse.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_warehouse/maps/map.yaml
     spawn:
       x: "-8.0"
@@ -359,12 +359,12 @@ maps:
 
   outdoor_terrain:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: terrain_rough
       world_path: maps/terrain_rough/worlds/terrain_rough.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/terrain_rough/maps/map.yaml
     spawn:
       x: "-9.0"
@@ -378,12 +378,12 @@ maps:
 
   terrain_stairs:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: terrain_stairs
       world_path: maps/terrain_stairs/worlds/terrain_stairs.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/terrain_stairs/maps/map.yaml
     spawn:
       x: "-7.0"
@@ -397,12 +397,12 @@ maps:
 
   terrain_stepping_stones:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: terrain_stepping_stones
       world_path: maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/terrain_stepping_stones/maps/map.yaml
     spawn:
       x: "-8.0"
@@ -417,12 +417,12 @@ maps:
 
   aerial_course:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: aerial_course
       world_path: maps/aerial_course/worlds/aerial_course.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/aerial_course/maps/map.yaml
     spawn:
       x: "-40.0"
@@ -436,12 +436,12 @@ maps:
 
   aerial_indoor:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: aerial_indoor
       world_path: maps/aerial_indoor/worlds/aerial_indoor.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/aerial_indoor/maps/map.yaml
     spawn:
       x: "-18.0"
@@ -456,12 +456,12 @@ maps:
 
   nav_dynamic:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_dynamic
       world_path: maps/nav_dynamic/worlds/nav_dynamic.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_dynamic/maps/map.yaml
     spawn:
       x: "-7.0"
@@ -475,12 +475,12 @@ maps:
 
   nav_sensor_degraded:
     gazebo:
-      world_package: maps
+      world_package: robot_lab_maps
       world_name: nav_sensor_degraded
       world_path: maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
     map:
       has_2d_map: true
-      package: maps
+      package: robot_lab_maps
       path: maps/nav_sensor_degraded/maps/map.yaml
     spawn:
       x: "-7.0"

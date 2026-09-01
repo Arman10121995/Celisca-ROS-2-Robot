@@ -7,10 +7,10 @@ retains its original license. See the referenced license files for full terms.
 
 | Asset | Source | License | Location |
 |-------|--------|---------|----------|
-| Unitree robot descriptions (Go2, B2, H1, G1, etc.) | [Awesome-URDFs](https://github.com/Awesome-URDFs) / Unitree Robotics | BSD 3-Clause | `src/robots/_upstream/Awesome-URDFs/` |
-| Berkeley Humanoid Lite | [Berkeley-Humanoid-Lite-Assets](https://github.com/) | CC BY-SA 4.0 | `src/robots/_upstream/Berkeley-Humanoid-Lite-Assets/` |
-| Berkeley Humanoid Lite (dev) | [Berkeley-Humanoid-Lite](https://github.com/) | See asset license | `src/robots/_upstream/Berkeley-Humanoid-Lite/` |
-| Legacy humanoid import | Internal conversion | See URDF metadata | `src/robots/_upstream/legacy_humanoid_import/` |
+| Unitree robot descriptions (Go2, B2, H1, G1, etc.) | [Awesome-URDFs](https://github.com/Awesome-URDFs) / Unitree Robotics | BSD 3-Clause | `src/robot_lab_robots/_upstream/Awesome-URDFs/` |
+| Berkeley Humanoid Lite | [Berkeley-Humanoid-Lite-Assets](https://github.com/) | CC BY-SA 4.0 | `src/robot_lab_robots/_upstream/Berkeley-Humanoid-Lite-Assets/` |
+| Berkeley Humanoid Lite (dev) | [Berkeley-Humanoid-Lite](https://github.com/) | See asset license | `src/robot_lab_robots/_upstream/Berkeley-Humanoid-Lite/` |
+| Legacy humanoid import | Internal conversion | See URDF metadata | `src/robot_lab_robots/_upstream/legacy_humanoid_import/` |
 
 ## Software Dependencies
 
@@ -26,4 +26,4 @@ retains its original license. See the referenced license files for full terms.
 
 ## Original Licenses
 
-- `src/robots/_upstream/Awesome-URDFs/LICENSE` — BSD 3-Clause (Unitree Robotics)
+- `src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE` — BSD 3-Clause (Unitree Robotics)

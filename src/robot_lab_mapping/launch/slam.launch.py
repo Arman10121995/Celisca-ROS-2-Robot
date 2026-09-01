@@ -1,33 +1,29 @@
+"""2D SLAM (slam_toolbox) launch, parameterized per robot.
+
+Loads the base slam_toolbox.yaml and, if present, a per-robot overlay from
+config/robots/<robot_model>.yaml so frames/topics match any robot profile.
+"""
 import os
-from launch import LaunchDescription
+
 from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 
-def generate_launch_description():
+def _setup(context, *args, **kwargs):
+    mapping_share = get_package_share_directory("robot_lab_mapping")
+    use_sim_time = LaunchConfiguration("use_sim_time").perform(context).lower() == "true"
+    slam_config = LaunchConfiguration("slam_config").perform(context)
+    robot_model = LaunchConfiguration("robot_model").perform(context)
 
-    use_sim_time = LaunchConfiguration("use_sim_time")
-    slam_config = LaunchConfiguration("slam_config")
+    parameters = [slam_config]
+    overlay = os.path.join(mapping_share, "config", "robots", f"{robot_model}.yaml")
+    if os.path.exists(overlay):
+        parameters.append(overlay)
+    parameters.append({"use_sim_time": use_sim_time})
 
-    lifecycle_nodes = ["map_saver_server"]
-
-    use_sim_time_arg = DeclareLaunchArgument(
-        "use_sim_time",
-        default_value="true"
-    )
-
-    slam_config_arg = DeclareLaunchArgument(
-        "slam_config",
-        default_value=os.path.join(
-            get_package_share_directory("robot_lab_mapping"),
-            "config",
-            "slam_toolbox.yaml"
-        ),
-        description="Full path to slam yaml file to load"
-    )
-    
     nav2_map_saver = Node(
         package="nav2_map_server",
         executable="map_saver_server",
@@ -46,10 +42,7 @@ def generate_launch_description():
         executable="sync_slam_toolbox_node",
         name="slam_toolbox",
         output="screen",
-        parameters=[
-            slam_config,
-            {"use_sim_time": use_sim_time},
-        ],
+        parameters=parameters,
     )
 
     nav2_lifecycle_manager = Node(
@@ -58,16 +51,28 @@ def generate_launch_description():
         name="lifecycle_manager_slam",
         output="screen",
         parameters=[
-            {"node_names": lifecycle_nodes},
+            {"node_names": ["map_saver_server"]},
             {"use_sim_time": use_sim_time},
-            {"autostart": True}
+            {"autostart": True},
         ],
     )
 
+    return [nav2_map_saver, slam_toolbox, nav2_lifecycle_manager]
+
+
+def generate_launch_description():
+    mapping_share = get_package_share_directory("robot_lab_mapping")
     return LaunchDescription([
-        use_sim_time_arg,
-        slam_config_arg,
-        nav2_map_saver,
-        slam_toolbox,
-        nav2_lifecycle_manager,
+        DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument(
+            "slam_config",
+            default_value=os.path.join(mapping_share, "config", "slam_toolbox.yaml"),
+            description="Full path to slam yaml file to load",
+        ),
+        DeclareLaunchArgument(
+            "robot_model",
+            default_value="bumperbot",
+            description="Robot id; loads config/robots/<robot_model>.yaml overlay if present",
+        ),
+        OpaqueFunction(function=_setup),
     ])

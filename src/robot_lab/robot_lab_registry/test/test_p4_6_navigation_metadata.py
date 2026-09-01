@@ -105,7 +105,7 @@ def _is_free(grid, cols, rows, origin, x, y):
 
 class MetadataCoverageTests(unittest.TestCase):
     def setUp(self):
-        self.path = _src() / "maps/config/arena_navigation.yaml"
+        self.path = _src() / "robot_lab_maps/config/arena_navigation.yaml"
         self.data = yaml.safe_load(self.path.read_text())
         self.arenas = self.data["arenas"]
 
@@ -149,7 +149,7 @@ class MetadataCoverageTests(unittest.TestCase):
 
 class RegistryMetadataTests(unittest.TestCase):
     def test_registry_entries_carry_p4_6_fields(self):
-        meta = yaml.safe_load((_src() / "maps/config/arena_navigation.yaml").read_text())
+        meta = yaml.safe_load((_src() / "robot_lab_maps/config/arena_navigation.yaml").read_text())
         arena_meta = meta["arenas"]
         envs = _envs()
         for a in ARENAS:

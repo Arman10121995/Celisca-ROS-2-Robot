@@ -126,7 +126,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "sim_robots_config",
-            default_value=os.path.join(get_package_share_directory("robots"), "config", "robots.yaml"),
+            default_value=os.path.join(get_package_share_directory("robot_lab_robots"), "config", "robots.yaml"),
             description="YAML file defining robot model profiles.",
         ),
         DeclareLaunchArgument(

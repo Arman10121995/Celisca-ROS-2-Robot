@@ -92,7 +92,7 @@ class AerialRegistrationTests(unittest.TestCase):
         envs = {e["id"]: e for e in _registry().environments.get_all().values()}
         for a in AERIAL:
             self.assertEqual(envs[a]["status"], "integrated")
-            self.assertEqual(envs[a].get("ros_package"), "maps")
+            self.assertEqual(envs[a].get("ros_package"), "robot_lab_maps")
             self.assertEqual(envs[a]["dimension"], "3D")
             self.assertTrue(envs[a]["world_file"])
             self.assertTrue(envs[a]["occupancy_map"])
@@ -164,12 +164,12 @@ class LaunchRegistrationTests(unittest.TestCase):
         for a in AERIAL:
             self.assertIn(a, self.maps)
             self.assertTrue(self.maps[a]["map"]["has_2d_map"])
-            self.assertEqual(self.maps[a]["gazebo"]["world_package"], "maps")
+            self.assertEqual(self.maps[a]["gazebo"]["world_package"], "robot_lab_maps")
 
     def test_world_paths_resolve(self):
         for a in AERIAL:
             wp = self.maps[a]["gazebo"]["world_path"]
-            self.assertTrue((_src() / "maps" / wp).is_file(),
+            self.assertTrue((_src() / "robot_lab_maps" / wp).is_file(),
                             f"world missing: {wp}")
 
 

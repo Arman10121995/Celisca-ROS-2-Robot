@@ -82,12 +82,12 @@
     - robot_lab_controller
     - robot_lab_navigation
   assets:
-    urdf: robots/bumperbot/urdf/bumperbot.urdf.xacro
-    xacro: robots/bumperbot/urdf/bumperbot_ros2_control.xacro
+    urdf: robot_lab_robots/bumperbot/urdf/bumperbot.urdf.xacro
+    xacro: robot_lab_robots/bumperbot/urdf/bumperbot_ros2_control.xacro
     meshes:
-      - robots/bumperbot/meshes/base_link.STL
-      - robots/bumperbot/meshes/wheel_left_link.STL
-      - robots/bumperbot/meshes/wheel_right_link.STL
+      - robot_lab_robots/bumperbot/meshes/base_link.STL
+      - robot_lab_robots/bumperbot/meshes/wheel_left_link.STL
+      - robot_lab_robots/bumperbot/meshes/wheel_right_link.STL
   smoke_experiments:
     - bumperbot_smoke_test
   safety_limits:
@@ -130,7 +130,7 @@
   capabilities:
     - articulated
   assets:
-    urdf: robots/_upstream/Awesome-URDFs/wychar_labs/assem12ros_29/urdf/assem12ros_29.urdf
+    urdf: robot_lab_robots/_upstream/Awesome-URDFs/wychar_labs/assem12ros_29/urdf/assem12ros_29.urdf
   tags:
     - imported
   created: "2026-08-31"
@@ -185,7 +185,7 @@
     - locomotion
     - walking
   assets:
-    xacro: robots/_upstream/Awesome-URDFs/unitree/robots/aliengoZ1_description/xacro/robot.xacro
+    xacro: robot_lab_robots/_upstream/Awesome-URDFs/unitree/robots/aliengoZ1_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -308,10 +308,10 @@
     - state_estimation
     - sensor_fusion
   dependencies:
-    - robots
+    - robot_lab_robots
   assets:
-    urdf: robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro
-    xacro: robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro
+    urdf: robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro
+    xacro: robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro
   smoke_experiments:
     - berkeley_humanoid_lite_smoke_test
   safety_limits:
@@ -384,8 +384,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/a1_description/urdf/a1.urdf
-    xacro: robots/unitree/a1_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/a1_description/urdf/a1.urdf
+    xacro: robot_lab_robots/unitree/a1_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -436,8 +436,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/aliengo_description/urdf/aliengo.urdf
-    xacro: robots/unitree/aliengo_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/aliengo_description/urdf/aliengo.urdf
+    xacro: robot_lab_robots/unitree/aliengo_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -488,8 +488,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/b1_description/xacro/b1.urdf
-    xacro: robots/unitree/b1_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/b1_description/xacro/b1.urdf
+    xacro: robot_lab_robots/unitree/b1_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -527,8 +527,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/b2_description/urdf/b2_description.urdf
-    xacro: robots/unitree/b2_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/b2_description/urdf/b2_description.urdf
+    xacro: robot_lab_robots/unitree/b2_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -566,8 +566,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/b2w_description/urdf/b2w_description.urdf
-    xacro: robots/unitree/b2w_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/b2w_description/urdf/b2w_description.urdf
+    xacro: robot_lab_robots/unitree/b2w_description/xacro/robot.xacro
   tags:
     - imported
     - wheel_legged
@@ -601,7 +601,7 @@
     - bipedal_locomotion
     - balancing
   assets:
-    urdf: robots/unitree/g1_description/g1.urdf
+    urdf: robot_lab_robots/unitree/g1_description/g1.urdf
   tags:
     - imported
     - humanoid
@@ -639,8 +639,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/go1_description/urdf/go1.urdf
-    xacro: robots/unitree/go1_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/go1_description/urdf/go1.urdf
+    xacro: robot_lab_robots/unitree/go1_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -739,10 +739,10 @@
     - sensor_fusion
     - perception
   dependencies:
-    - robots
+    - robot_lab_robots
   assets:
-    urdf: robots/unitree/go2_description/xacro/go2_sim.xacro
-    xacro: robots/unitree/go2_description/xacro/go2_ros2_control.xacro
+    urdf: robot_lab_robots/unitree/go2_description/xacro/go2_sim.xacro
+    xacro: robot_lab_robots/unitree/go2_description/xacro/go2_ros2_control.xacro
   smoke_experiments:
     - go2_smoke_test
   safety_limits:
@@ -798,8 +798,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/unitree/go2w_description/urdf/go2w_description.urdf
-    xacro: robots/unitree/go2w_description/xacro/robot.xacro
+    urdf: robot_lab_robots/unitree/go2w_description/urdf/go2w_description.urdf
+    xacro: robot_lab_robots/unitree/go2w_description/xacro/robot.xacro
   tags:
     - imported
     - wheel_legged
@@ -834,7 +834,7 @@
     - balancing
     - manipulation
   assets:
-    urdf: robots/unitree/h1_description/h1.urdf
+    urdf: robot_lab_robots/unitree/h1_description/h1.urdf
   tags:
     - imported
     - humanoid
@@ -869,7 +869,7 @@
     - balancing
     - manipulation
   assets:
-    urdf: robots/unitree/h1_2_description/h1_2.urdf
+    urdf: robot_lab_robots/unitree/h1_2_description/h1_2.urdf
   tags:
     - imported
     - humanoid
@@ -928,8 +928,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/_upstream/Awesome-URDFs/unitree/robots/laikago_description/urdf/laikago.urdf
-    xacro: robots/_upstream/Awesome-URDFs/unitree/robots/laikago_description/xacro/robot.xacro
+    urdf: robot_lab_robots/_upstream/Awesome-URDFs/unitree/robots/laikago_description/urdf/laikago.urdf
+    xacro: robot_lab_robots/_upstream/Awesome-URDFs/unitree/robots/laikago_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -980,8 +980,8 @@
     - locomotion
     - walking
   assets:
-    urdf: robots/_upstream/Awesome-URDFs/unitree/robots/z1_description/urdf/z1.urdf
-    xacro: robots/_upstream/Awesome-URDFs/unitree/robots/z1_description/xacro/robot.xacro
+    urdf: robot_lab_robots/_upstream/Awesome-URDFs/unitree/robots/z1_description/urdf/z1.urdf
+    xacro: robot_lab_robots/_upstream/Awesome-URDFs/unitree/robots/z1_description/xacro/robot.xacro
   tags:
     - imported
     - quadruped
@@ -1019,7 +1019,7 @@
     - bipedal_locomotion
     - balancing
   assets:
-    urdf: robots/_upstream/legacy_humanoid_import/urdf/berkeley_humanoid_lite.urdf
+    urdf: robot_lab_robots/_upstream/legacy_humanoid_import/urdf/berkeley_humanoid_lite.urdf
   tags:
     - imported
     - humanoid
@@ -1107,10 +1107,10 @@
     - sensor_fusion
     - perception
   dependencies:
-    - robots
+    - robot_lab_robots
   assets:
-    urdf: robots/quadrotor_sitl/urdf/quadrotor_sitl.urdf.xacro
-    xacro: robots/quadrotor_sitl/config/quadrotor_controllers.yaml
+    urdf: robot_lab_robots/quadrotor_sitl/urdf/quadrotor_sitl.urdf.xacro
+    xacro: robot_lab_robots/quadrotor_sitl/config/quadrotor_controllers.yaml
     meshes: []
   smoke_experiments:
     - quadrotor_sitl_smoke_test
@@ -1146,7 +1146,7 @@
 - id: labbot
   version: "1.0.0"
   name: "Labbot"
-  ros_package: robots
+  ros_package: robot_lab_robots
   description: "Second first-party differential-drive mobile robot with LIDAR and IMU; primitive-geometry description with no mesh dependencies"
   status: integrated
   robot_class: mobile
@@ -1204,10 +1204,10 @@
     - control
     - costmap
   dependencies:
-    - robots
+    - robot_lab_robots
   assets:
-    urdf: robots/labbot/urdf/labbot.urdf.xacro
-    xacro: robots/labbot/urdf/labbot_ros2_control.xacro
+    urdf: robot_lab_robots/labbot/urdf/labbot.urdf.xacro
+    xacro: robot_lab_robots/labbot/urdf/labbot_ros2_control.xacro
     meshes: []
   smoke_experiments:
     - labbot_smoke_test

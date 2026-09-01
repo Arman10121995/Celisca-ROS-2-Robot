@@ -32,7 +32,7 @@ src/
   robots/                   # descriptions and robot-specific assets
     _upstream/              # vendored third-party robot assets
   maps/                     # worlds, occupancy maps, reference geometry
-  gazebo_models/            # reusable environment models
+  robot_lab_models/            # reusable environment models
   robot_lab_algorithms/     # 13 algorithm implementations (P5)
   robot_lab_*/              # reference robot and legacy-compatible adapters
   ORB_SLAM3/                # optional external-library adapter
@@ -199,13 +199,13 @@ launch  →  reset  →  run (rosbag capture)  →  stop  →  manifest.json
 | `ci.yml` | Push/PR | < 60s | `scripts/test_fast.sh` (compile + P5/P6 logic + registry) |
 | `scheduled-full.yml` | Daily 06:00 UTC | ~5min | Full colcon test + all 257 unit tests |
 
-## Control Center GUI (`sim_launcher_gui`)
+## Control Center GUI (`robot_lab_gui`)
 
-Tkinter-based single-window control center (`ros2 run sim_launcher_gui sim_launcher_gui`), fully decoupled from any robot: every dropdown, launch, and benchmark reads from the shared registries, never from hardcoded per-robot packages.
+Tkinter-based single-window control center (`ros2 run robot_lab_gui robot_lab_gui`), fully decoupled from any robot: every dropdown, launch, and benchmark reads from the shared registries, never from hardcoded per-robot packages.
 
 ```
-sim_launcher_gui/
-└── sim_launcher_gui/
+robot_lab_gui/
+└── robot_lab_gui/
     ├── launcher.py    # Tk app shell + Launch tab (robot/mode/map, drive pad, map save)
     └── lab_tabs.py    # LabTab base + Registry, Vacuum, Benchmark, Tests, Health tabs
 ```
@@ -223,7 +223,7 @@ sim_launcher_gui/
 
 **Uniform-structure principles encoded in the GUI:**
 
-1. **One launch entry point** — all launches go through `robot_lab_bringup` (`simulated_robot.launch.py` / `simulated_room_vacuum.launch.py`); the robot id (`robot_model:=`) selects the description from `src/robots/`, never a per-robot package.
+1. **One launch entry point** — all launches go through `robot_lab_bringup` (`simulated_robot.launch.py` / `simulated_room_vacuum.launch.py`); the robot id (`robot_model:=`) selects the description from `src/robot_lab_robots/`, never a per-robot package.
 2. **Profile-driven capability gating** — mode buttons, vacuum radio, and map combobox enable/disable purely from `supported_modes` / `features` / `supports_room_vacuum` fields; adding a robot to `robots.yaml` automatically appears correctly in the GUI.
 3. **Robot info panel** — the Launch tab shows the selected robot's feature class, available modes, and cleaning-mission support, derived live from its profile.
 4. **Registry-driven benchmarking** — Benchmark tab comboboxes are populated from the same YAML configs the CLI validates, so GUI and CI always agree.

@@ -13,7 +13,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 def generate_launch_description():
     robot_lab_description_dir = get_package_share_directory("robot_lab_description")
     try:
-        robots_dir = get_package_share_directory("robots")
+        robots_dir = get_package_share_directory("robot_lab_robots")
         default_model = os.path.join(robots_dir, "bumperbot", "urdf", "bumperbot.urdf.xacro")
     except Exception:
         default_model = ""

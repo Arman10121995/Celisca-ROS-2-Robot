@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  P3.4: complete simulated, commandable Berkeley Humanoid Lite (BHL)
+  description.
+
+  Combines the vendored static upstream URDF (berkeley_humanoid_lite.urdf,
+  Onshape-to-URDF export) with the ros2_control / gz-sim wiring
+  (bhl_ros2_control.xacro). This is the xacro that a bringup launch would
+  process and spawn; the registry assets.urdf entry points here.
+
+  BHL is a 22-DOF humanoid: 12 leg joints (hip roll/yaw/pitch, knee pitch,
+  ankle pitch/roll per leg) + 10 arm joints (shoulder pitch/roll/yaw, elbow
+  roll/pitch per arm), with an IMU frame on the trunk.
+-->
+<robot name="berkeley_humanoid_lite" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="is_ignition" default="true"/>
+
+  <xacro:include filename="$(find robot_lab_robots)/berkeley_humanoid_lite/urdf/berkeley_humanoid_lite.urdf"/>
+  <xacro:include filename="$(find robot_lab_robots)/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro"/>
+
+  <xacro:bhl_ros2_control is_ignition="$(arg is_ignition)"/>
+
+</robot>

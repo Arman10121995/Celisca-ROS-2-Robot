@@ -32,7 +32,7 @@ class LegacyAdapter:
             'robot_id': {
                 'bumperbot': {
                     'robot_model': 'bumperbot',
-                    'robot_package': 'robots',
+                    'robot_package': 'robot_lab_robots',
                     'robot_xacro': 'bumperbot/urdf/bumperbot.urdf.xacro',
                     'robot_name': 'bumperbot',
                 }

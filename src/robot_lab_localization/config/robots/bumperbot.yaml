@@ -1,0 +1,8 @@
+# Per-robot localization overlay for 'bumperbot' (merged over ekf.yaml / amcl.yaml)
+ekf_filter_node:
+  ros__parameters:
+    base_link_frame: base_footprint
+amcl:
+  ros__parameters:
+    base_frame_id: base_footprint
+    scan_topic: scan

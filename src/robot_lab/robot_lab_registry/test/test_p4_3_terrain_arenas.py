@@ -101,7 +101,7 @@ class TerrainRegistrationTests(unittest.TestCase):
         reg = {e["id"]: e for e in self.registry.environments.get_all().values()}
         for a in TERRAIN:
             self.assertEqual(reg[a]["status"], "integrated")
-            self.assertEqual(reg[a].get("ros_package"), "maps")
+            self.assertEqual(reg[a].get("ros_package"), "robot_lab_maps")
             self.assertEqual(reg[a]["dimension"], "3D")
             self.assertTrue(reg[a]["world_file"])
             self.assertTrue(reg[a]["occupancy_map"])
@@ -192,13 +192,13 @@ class LaunchRegistrationTests(unittest.TestCase):
         for a in TERRAIN:
             self.assertIn(a, self.maps)
             self.assertTrue(self.maps[a]["map"]["has_2d_map"])
-            self.assertEqual(self.maps[a]["gazebo"]["world_package"], "maps")
+            self.assertEqual(self.maps[a]["gazebo"]["world_package"], "robot_lab_maps")
 
     def test_world_paths_resolve(self):
         src = Path(__file__).resolve().parents[4] / "src"
         for a in TERRAIN:
             wp = self.maps[a]["gazebo"]["world_path"]
-            self.assertTrue((src / "maps" / wp).is_file(),
+            self.assertTrue((src / "robot_lab_maps" / wp).is_file(),
                             f"world missing: {wp}")
 
 

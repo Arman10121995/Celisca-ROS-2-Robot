@@ -1,13 +1,13 @@
 - id: small_office
   version: 1.0.0
   name: Simple Office
-  ros_package: maps
+  ros_package: robot_lab_maps
   description: Small office environment with furniture and obstacles
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/simple_office/worlds/simple_office.world
-  occupancy_map: maps/maps/simple_office/maps/map.pgm
+  world_file: robot_lab_maps/maps/simple_office/worlds/simple_office.world
+  occupancy_map: robot_lab_maps/maps/simple_office/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -47,8 +47,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/small_house/worlds/small_house.world
-  occupancy_map: maps/maps/small_house/maps/map.pgm
+  world_file: robot_lab_maps/maps/small_house/worlds/small_house.world
+  occupancy_map: robot_lab_maps/maps/small_house/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -88,8 +88,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/small_warehouse/worlds/small_warehouse.world
-  occupancy_map: maps/maps/small_warehouse/maps/map.pgm
+  world_file: robot_lab_maps/maps/small_warehouse/worlds/small_warehouse.world
+  occupancy_map: robot_lab_maps/maps/small_warehouse/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -138,8 +138,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/warehouse_demo/worlds/warehouse_demo.world
-  occupancy_map: maps/maps/warehouse_demo/maps/map.pgm
+  world_file: robot_lab_maps/maps/warehouse_demo/worlds/warehouse_demo.world
+  occupancy_map: robot_lab_maps/maps/warehouse_demo/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -178,8 +178,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/celisca_floor_1/worlds/celisca_floor_1.world
-  occupancy_map: maps/maps/celisca_floor_1/maps/map.pgm
+  world_file: robot_lab_maps/maps/celisca_floor_1/worlds/celisca_floor_1.world
+  occupancy_map: robot_lab_maps/maps/celisca_floor_1/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -218,8 +218,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/celisca_floor_2/worlds/celisca_floor_2.world
-  occupancy_map: maps/maps/celisca_floor_2/maps/map.pgm
+  world_file: robot_lab_maps/maps/celisca_floor_2/worlds/celisca_floor_2.world
+  occupancy_map: robot_lab_maps/maps/celisca_floor_2/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -258,8 +258,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
-  occupancy_map: maps/maps/celisca_floor_2_furniture/maps/map.pgm
+  world_file: robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
+  occupancy_map: robot_lab_maps/maps/celisca_floor_2_furniture/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -298,8 +298,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world
-  occupancy_map: maps/maps/celisca_floor_1_furniture/maps/map.pgm
+  world_file: robot_lab_maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world
+  occupancy_map: robot_lab_maps/maps/celisca_floor_1_furniture/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -339,8 +339,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world
-  occupancy_map: maps/maps/celisca_f1_actor/maps/map.pgm
+  world_file: robot_lab_maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world
+  occupancy_map: robot_lab_maps/maps/celisca_f1_actor/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -379,8 +379,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world
-  occupancy_map: maps/maps/celisca_f2_actor/maps/map.pgm
+  world_file: robot_lab_maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world
+  occupancy_map: robot_lab_maps/maps/celisca_f2_actor/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -419,9 +419,9 @@
   status: integrated
   dimension: 3D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/terrain_rough/worlds/terrain_rough.world
-  occupancy_map: maps/maps/terrain_rough/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world
+  occupancy_map: robot_lab_maps/maps/terrain_rough/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -486,9 +486,9 @@
   status: integrated
   dimension: 3D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/terrain_stairs/worlds/terrain_stairs.world
-  occupancy_map: maps/maps/terrain_stairs/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/terrain_stairs/worlds/terrain_stairs.world
+  occupancy_map: robot_lab_maps/maps/terrain_stairs/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -552,9 +552,9 @@
   status: integrated
   dimension: 3D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
-  occupancy_map: maps/maps/terrain_stepping_stones/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
+  occupancy_map: robot_lab_maps/maps/terrain_stepping_stones/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -630,9 +630,9 @@
   status: integrated
   dimension: 3D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/aerial_course/worlds/aerial_course.world
-  occupancy_map: maps/maps/aerial_course/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/aerial_course/worlds/aerial_course.world
+  occupancy_map: robot_lab_maps/maps/aerial_course/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -694,9 +694,9 @@
   status: integrated
   dimension: 3D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/aerial_indoor/worlds/aerial_indoor.world
-  occupancy_map: maps/maps/aerial_indoor/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/aerial_indoor/worlds/aerial_indoor.world
+  occupancy_map: robot_lab_maps/maps/aerial_indoor/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -767,8 +767,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/bigger_warehouse/worlds/bigger_warehouse.world
-  occupancy_map: maps/maps/bigger_warehouse/maps/map.pgm
+  world_file: robot_lab_maps/maps/bigger_warehouse/worlds/bigger_warehouse.world
+  occupancy_map: robot_lab_maps/maps/bigger_warehouse/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -808,8 +808,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/empty/worlds/empty.world
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/empty/worlds/empty.world
   occupancy_map: ''
   ground_truth_available: true
   dynamics:
@@ -851,8 +851,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/residential_demo/worlds/residential_demo.world
-  occupancy_map: maps/maps/residential_demo/maps/map.pgm
+  world_file: robot_lab_maps/maps/residential_demo/worlds/residential_demo.world
+  occupancy_map: robot_lab_maps/maps/residential_demo/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -892,8 +892,8 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  world_file: maps/maps/simple_box/worlds/simple_box.world
-  occupancy_map: maps/maps/simple_box/maps/map.pgm
+  world_file: robot_lab_maps/maps/simple_box/worlds/simple_box.world
+  occupancy_map: robot_lab_maps/maps/simple_box/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -934,9 +934,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_empty/worlds/nav_empty.world
-  occupancy_map: maps/maps/nav_empty/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+  occupancy_map: robot_lab_maps/maps/nav_empty/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -995,9 +995,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_obstacle/worlds/nav_obstacle.world
-  occupancy_map: maps/maps/nav_obstacle/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
+  occupancy_map: robot_lab_maps/maps/nav_obstacle/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -1065,9 +1065,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_maze/worlds/nav_maze.world
-  occupancy_map: maps/maps/nav_maze/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_maze/worlds/nav_maze.world
+  occupancy_map: robot_lab_maps/maps/nav_maze/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -1138,9 +1138,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_narrow_passage/worlds/nav_narrow_passage.world
-  occupancy_map: maps/maps/nav_narrow_passage/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_narrow_passage/worlds/nav_narrow_passage.world
+  occupancy_map: robot_lab_maps/maps/nav_narrow_passage/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -1209,9 +1209,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_warehouse/worlds/nav_warehouse.world
-  occupancy_map: maps/maps/nav_warehouse/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_warehouse/worlds/nav_warehouse.world
+  occupancy_map: robot_lab_maps/maps/nav_warehouse/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -1282,9 +1282,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_dynamic/worlds/nav_dynamic.world
-  occupancy_map: maps/maps/nav_dynamic/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_dynamic/worlds/nav_dynamic.world
+  occupancy_map: robot_lab_maps/maps/nav_dynamic/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true
@@ -1351,9 +1351,9 @@
   status: integrated
   dimension: 2D
   simulator: gazebo
-  ros_package: maps
-  world_file: maps/maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
-  occupancy_map: maps/maps/nav_sensor_degraded/maps/map.pgm
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
+  occupancy_map: robot_lab_maps/maps/nav_sensor_degraded/maps/map.pgm
   ground_truth_available: true
   dynamics:
     static_obstacles: true

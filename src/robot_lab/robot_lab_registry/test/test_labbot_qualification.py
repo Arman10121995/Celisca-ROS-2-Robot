@@ -91,7 +91,7 @@ class LabbotQualificationTests(unittest.TestCase):
     def test_labbot_dependencies_exist(self):
         """Verify Labbot's declared dependency packages exist in src/."""
         robot = self.registry.robots.get("labbot")
-        self.assertIn("robots", robot["dependencies"])
+        self.assertIn("robot_lab_robots", robot["dependencies"])
         src_root = Path(__file__).resolve().parents[4] / "src"
         for dep in robot["dependencies"]:
             self.assertTrue(
@@ -187,7 +187,7 @@ class LabbotAssetContractTests(unittest.TestCase):
         cls.workspace_root = Path(__file__).resolve().parents[4]
         cls.src_root = cls.workspace_root / "src"
         cls.robot = cls.registry.robots.get("labbot")
-        cls.robot_dir = cls.src_root / "robots" / "labbot"
+        cls.robot_dir = cls.src_root / "robot_lab_robots" / "labbot"
 
     def _repo_asset(self, rel_path):
         return self.src_root / rel_path
@@ -218,7 +218,7 @@ class LabbotAssetContractTests(unittest.TestCase):
         for token in urdf.split("package://")[1:]:
             package = token.split("/")[0]
             self.assertEqual(
-                package, "robots",
+                package, "robot_lab_robots",
                 f"URDF references unknown package: {package}",
             )
 

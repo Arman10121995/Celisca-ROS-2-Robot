@@ -1,0 +1,8 @@
+# Per-robot localization overlay for 'berkeley_humanoid_lite' (merged over ekf.yaml / amcl.yaml)
+ekf_filter_node:
+  ros__parameters:
+    base_link_frame: base
+amcl:
+  ros__parameters:
+    base_frame_id: base
+    scan_topic: scan

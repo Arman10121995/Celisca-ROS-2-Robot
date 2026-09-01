@@ -575,7 +575,7 @@ class LicenseAndProvenanceTests(unittest.TestCase):
         self.assertIn("BSD 3-Clause", content)
 
     def test_external_assets_have_license_file(self):
-        upstream = Path(__file__).resolve().parents[4] / "src" / "robots" / "_upstream"
+        upstream = Path(__file__).resolve().parents[4] / "src" / "robot_lab_robots" / "_upstream"
         if upstream.is_dir():
             for asset_dir in upstream.iterdir():
                 if asset_dir.is_dir():
@@ -589,7 +589,7 @@ class LicenseAndProvenanceTests(unittest.TestCase):
                     )
 
     def test_no_stray_external_assets_without_attribution(self):
-        upstream = Path(__file__).resolve().parents[4] / "src" / "robots" / "_upstream"
+        upstream = Path(__file__).resolve().parents[4] / "src" / "robot_lab_robots" / "_upstream"
         if not upstream.is_dir():
             return
         notices = Path(__file__).resolve().parents[4] / "LICENSES" / "third-party-notices.md"

@@ -1,0 +1,5 @@
+# Per-robot SLAM overlay for 'bumperbot' (merged over slam_toolbox.yaml by slam.launch.py)
+slam_toolbox:
+  ros__parameters:
+    base_frame: base_footprint
+    scan_topic: /scan

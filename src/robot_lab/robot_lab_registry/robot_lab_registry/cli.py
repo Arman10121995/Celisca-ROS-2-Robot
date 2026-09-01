@@ -552,7 +552,7 @@ def cmd_doctor(args) -> int:
         'robot_lab_adapter',
         'robot_lab_bringup',
         'robot_lab_description',
-        'gazebo_models'
+        'robot_lab_models'
     ]
     
     for pkg in core_packages:
@@ -583,10 +583,10 @@ def cmd_doctor(args) -> int:
     
     # Check for simulation assets
     try:
-        result = subprocess.run(['ros2', 'pkg', 'prefix', 'gazebo_models'],
+        result = subprocess.run(['ros2', 'pkg', 'prefix', 'robot_lab_models'],
                                capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
-            models_dir = Path(result.stdout.strip()) / 'share' / 'gazebo_models'
+            models_dir = Path(result.stdout.strip()) / 'share' / 'robot_lab_models'
             if models_dir.exists():
                 model_count = len(list(models_dir.glob('*.sdf'))) + len(list(models_dir.glob('*/model.sdf')))
                 print(f"✓ Gazebo models found ({model_count} models)")

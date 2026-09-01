@@ -8,7 +8,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     pkg_labbot = get_package_share_directory('robot_lab_bringup')
-    pkg_robots = get_package_share_directory('robots')
+    pkg_robots = get_package_share_directory("robot_lab_robots")
     urdf = os.path.join(pkg_robots, 'labbot', 'urdf', 'labbot.urdf.xacro')
     return LaunchDescription([
         DeclareLaunchArgument('map_name', default_value='small_office'),

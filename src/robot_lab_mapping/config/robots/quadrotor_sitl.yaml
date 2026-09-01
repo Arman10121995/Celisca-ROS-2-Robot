@@ -1,0 +1,4 @@
+# Aerial profile: 2D SLAM is not part of the quadrotor stack (uses RGB-D RTAB-Map).
+# This empty overlay exists so robot_model:=quadrotor_sitl does not error.
+slam_toolbox:
+  ros__parameters: {}

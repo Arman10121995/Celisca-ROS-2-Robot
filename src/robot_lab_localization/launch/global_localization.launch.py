@@ -11,6 +11,7 @@ def generate_launch_description():
     map_yaml = LaunchConfiguration("map_yaml")
     use_sim_time = LaunchConfiguration("use_sim_time")
     amcl_config = LaunchConfiguration("amcl_config")
+    robot_model = LaunchConfiguration("robot_model")
     initial_pose_x = LaunchConfiguration("initial_pose_x")
     initial_pose_y = LaunchConfiguration("initial_pose_y")
     initial_pose_yaw = LaunchConfiguration("initial_pose_yaw")
@@ -66,7 +67,7 @@ def generate_launch_description():
         else:
             # Consolidated maps package: data lives under share/maps/maps/<name>/maps/map.yaml
             try:
-                pkg_share = get_package_share_directory("maps")
+                pkg_share = get_package_share_directory("robot_lab_maps")
                 resolved_map_yaml = os.path.join(pkg_share, "maps", name, "maps", "map.yaml")
             except Exception:
                 # Legacy fallback (robot_lab_mapping or old layout)
@@ -74,7 +75,7 @@ def generate_launch_description():
                     pkg_share = get_package_share_directory("robot_lab_mapping")
                     resolved_map_yaml = os.path.join(pkg_share, "maps", name, "map.yaml")
                 except Exception:
-                    pkg_share = get_package_share_directory("maps")
+                    pkg_share = get_package_share_directory("robot_lab_maps")
                     resolved_map_yaml = os.path.join(pkg_share, "maps", name, "maps", "map.yaml")
         if not os.path.exists(resolved_map_yaml):
             raise RuntimeError(f"Map YAML does not exist: {resolved_map_yaml}")
@@ -94,13 +95,8 @@ def generate_launch_description():
     
     nav2_map_server = OpaqueFunction(function=create_map_server)
 
-    nav2_amcl = Node(
-        package="nav2_amcl",
-        executable="amcl",
-        name="amcl",
-        output="screen",
-        emulate_tty=True,
-        parameters=[
+    def create_amcl(context):
+        amcl_parameters = [
             amcl_config,
             {"use_sim_time": use_sim_time},
             {
@@ -109,8 +105,27 @@ def generate_launch_description():
                 "initial_pose.z": 0.0,
                 "initial_pose.yaw": initial_pose_yaw,
             },
-        ],
-    )
+        ]
+        # Per-robot overlay (frames/topics) merged over the base amcl config.
+        robot_model_val = robot_model.perform(context)
+        overlay = os.path.join(
+            get_package_share_directory("robot_lab_localization"),
+            "config", "robots", f"{robot_model_val}.yaml",
+        )
+        if os.path.exists(overlay):
+            amcl_parameters.insert(1, overlay)
+        return [
+            Node(
+                package="nav2_amcl",
+                executable="amcl",
+                name="amcl",
+                output="screen",
+                emulate_tty=True,
+                parameters=amcl_parameters,
+            )
+        ]
+
+    nav2_amcl = OpaqueFunction(function=create_amcl)
 
     nav2_lifecycle_manager = Node(
         package="nav2_lifecycle_manager",
@@ -129,6 +144,11 @@ def generate_launch_description():
         use_sim_time_arg,
         map_yaml_arg,
         amcl_config_arg,
+        DeclareLaunchArgument(
+            "robot_model",
+            default_value="bumperbot",
+            description="Robot id; loads config/robots/<robot_model>.yaml overlay if present",
+        ),
         initial_pose_x_arg,
         initial_pose_y_arg,
         initial_pose_yaw_arg,

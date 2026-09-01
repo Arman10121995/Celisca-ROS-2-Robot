@@ -38,7 +38,7 @@ except Exception:
 def get_generated_map_path():
     """Get the absolute path to the generated_map directory.
     
-    Returns the absolute path to WORKSPACE/src/maps/generated_map directory
+    Returns the absolute path to WORKSPACE/src/robot_lab_maps/generated_map directory
     by navigating up from the current module's location.
     Handles both source and install directory paths.
     """
@@ -49,12 +49,12 @@ def get_generated_map_path():
     if '/install/' in module_dir:
         # We're in the install directory. Navigate to the source workspace.
         # From: WORKSPACE/install/robot_lab_controller/local/lib/python3.10/dist-packages/robot_lab_controller/
-        # To:   WORKSPACE/src/maps/generated_map/
+        # To:   WORKSPACE/src/robot_lab_maps/generated_map/
         # Find the workspace root by going up until we find 'install' directory
         parts = module_dir.split('/install/')
         if len(parts) >= 2:
             workspace_root = parts[0]
-            # Navigate to WORKSPACE/src/maps/generated_map
+            # Navigate to WORKSPACE/src/robot_lab_maps/generated_map
             generated_map_path = os.path.abspath(os.path.join(workspace_root, 'src', 'maps', 'generated_map'))
         else:
             # Fallback: use relative path from install location
@@ -62,7 +62,7 @@ def get_generated_map_path():
     else:
         # We're in the source directory.
         # From: WORKSPACE/src/robot_lab_controller/robot_lab_controller/
-        # To:   WORKSPACE/src/maps/generated_map/
+        # To:   WORKSPACE/src/robot_lab_maps/generated_map/
         generated_map_path = os.path.abspath(os.path.join(module_dir, '..', '..', 'maps', 'generated_map'))
     
     return generated_map_path

@@ -1,0 +1,4 @@
+# Aerial profile: Nav2 2D navigation is not part of the quadrotor stack.
+# Empty overlay so robot_model:=quadrotor_sitl does not error.
+controller_server:
+  ros__parameters: {}

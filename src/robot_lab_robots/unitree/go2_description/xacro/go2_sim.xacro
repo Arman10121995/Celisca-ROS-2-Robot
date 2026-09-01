@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  P3.3: complete simulated, commandable Go2 description.
+
+  Combines the vendored upstream Unitree description (robot.xacro) with the
+  ros2_control/gz-sim wiring (go2_ros2_control.xacro). This is the xacro that
+  a bringup launch would process and spawn; the registry assets.urdf entry
+  points here.
+-->
+<robot name="go2" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="is_ignition" default="true"/>
+
+  <xacro:include filename="$(find robot_lab_robots)/unitree/go2_description/xacro/robot.xacro"/>
+  <xacro:include filename="$(find robot_lab_robots)/unitree/go2_description/xacro/go2_ros2_control.xacro"/>
+
+  <xacro:go2_ros2_control is_ignition="$(arg is_ignition)"/>
+
+</robot>

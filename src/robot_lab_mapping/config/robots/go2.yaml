@@ -1,0 +1,5 @@
+# Per-robot SLAM overlay for 'go2' (merged over slam_toolbox.yaml by slam.launch.py)
+slam_toolbox:
+  ros__parameters:
+    base_frame: base
+    scan_topic: /scan

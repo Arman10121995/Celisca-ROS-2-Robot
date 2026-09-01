@@ -102,7 +102,7 @@ class ArenaRegistrationTests(unittest.TestCase):
                 f"arena '{arena}' should be integrated after P4.2",
             )
             self.assertIn(
-                registered[arena].get("ros_package"), ("maps",),
+                registered[arena].get("ros_package"), ("robot_lab_maps",),
                 f"arena '{arena}' needs ros_package maps",
             )
             self.assertEqual(registered[arena]["dimension"], "2D")
@@ -236,15 +236,15 @@ class LaunchRegistrationTests(unittest.TestCase):
                 profile["map"].get("has_2d_map", False),
                 f"'{arena}' should declare has_2d_map: true",
             )
-            self.assertEqual(profile["gazebo"]["world_package"], "maps")
+            self.assertEqual(profile["gazebo"]["world_package"], "robot_lab_maps")
             world_rel = profile["gazebo"]["world_path"]
             self.assertTrue(
-                (self.src_root / "maps" / world_rel).is_file(),
+                (self.src_root / "robot_lab_maps" / world_rel).is_file(),
                 f"'{arena}' world_path not found: {world_rel}",
             )
             map_rel = profile["map"]["path"]
             self.assertTrue(
-                (self.src_root / "maps" / map_rel).is_file(),
+                (self.src_root / "robot_lab_maps" / map_rel).is_file(),
                 f"'{arena}' map path not found: {map_rel}",
             )
 

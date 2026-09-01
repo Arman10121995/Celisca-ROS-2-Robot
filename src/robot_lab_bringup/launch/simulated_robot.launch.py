@@ -259,7 +259,7 @@ def _resolve_world_path(gazebo_config):
         return ""
     if Path(str(world_path)).is_absolute():
         return str(world_path)
-    return _package_file(gazebo_config.get("world_package", "maps"), world_path)
+    return _package_file(gazebo_config.get("world_package", "robot_lab_maps"), world_path)
 
 
 def _resolve_map_yaml(map_name, map_config):
@@ -269,7 +269,7 @@ def _resolve_map_yaml(map_name, map_config):
         map_path = f"maps/{map_name}/maps/map.yaml"
     if Path(str(map_path)).is_absolute():
         return str(map_path)
-    return _package_file(map_file_config.get("package", "maps"), map_path)
+    return _package_file(map_file_config.get("package", "robot_lab_maps"), map_path)
 
 
 def _map_has_2d_map(map_name, map_config, map_yaml):
@@ -319,7 +319,7 @@ def _build_simulation_actions(context):
         _launch_value(context, "robot_xacro"),
     )
     _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config)
-    robot_package = _config_value(context, "robot_package", robot_config.get("package", "robots"))
+    robot_package = _config_value(context, "robot_package", robot_config.get("package", "robot_lab_robots"))
     robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
     robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
     model_path = _package_file(robot_package, robot_xacro)
@@ -328,7 +328,7 @@ def _build_simulation_actions(context):
     spawn_config = map_config.get("spawn", {})
     initial_pose_config = map_config.get("initial_pose", {})
 
-    world_package = _config_value(context, "world_package", gazebo_config.get("world_package", "maps"))
+    world_package = _config_value(context, "world_package", gazebo_config.get("world_package", "robot_lab_maps"))
     world_name = _config_value(context, "world_name", gazebo_config.get("world_name", map_name))
     configured_world_path = _resolve_world_path({**gazebo_config, "world_package": world_package})
     world_path = _config_value(context, "world_path", configured_world_path)
@@ -420,6 +420,7 @@ def _build_simulation_actions(context):
                     "map_name": map_name,
                     "map_yaml": map_yaml,
                     "use_sim_time": use_sim_time,
+                    "robot_model": robot_model,
                     "initial_pose_x": initial_pose_x,
                     "initial_pose_y": initial_pose_y,
                     "initial_pose_yaw": initial_pose_yaw,
@@ -431,7 +432,10 @@ def _build_simulation_actions(context):
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(localization_share, "local_localization.launch.py")),
-                launch_arguments={"use_sim_time": use_sim_time}.items(),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "robot_model": robot_model,
+                }.items(),
             )
         )
 
@@ -439,7 +443,10 @@ def _build_simulation_actions(context):
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(mapping_share, "slam.launch.py")),
-                launch_arguments={"use_sim_time": use_sim_time}.items(),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "robot_model": robot_model,
+                }.items(),
             )
         )
 
@@ -483,7 +490,10 @@ def _build_simulation_actions(context):
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(navigation_share, "navigation.launch.py")),
-                launch_arguments={"use_sim_time": use_sim_time}.items(),
+                launch_arguments={
+                    "use_sim_time": use_sim_time,
+                    "robot_model": robot_model,
+                }.items(),
             )
         )
 
@@ -533,7 +543,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "sim_robots_config",
-            default_value=os.path.join(get_package_share_directory("robots"), "config", "robots.yaml"),
+            default_value=os.path.join(get_package_share_directory("robot_lab_robots"), "config", "robots.yaml"),
             description="YAML file defining robot model profiles.",
         ),
         DeclareLaunchArgument(

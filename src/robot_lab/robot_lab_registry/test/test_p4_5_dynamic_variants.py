@@ -104,7 +104,7 @@ class VariantRegistrationTests(unittest.TestCase):
         for a in VARIANTS:
             self.assertIn(a, envs)
             self.assertEqual(envs[a]["status"], "integrated")
-            self.assertEqual(envs[a].get("ros_package"), "maps")
+            self.assertEqual(envs[a].get("ros_package"), "robot_lab_maps")
             self.assertTrue(envs[a]["world_file"])
             self.assertTrue(envs[a]["occupancy_map"])
 
@@ -190,9 +190,9 @@ class LaunchRegistrationTests(unittest.TestCase):
         for a in VARIANTS:
             self.assertIn(a, self.maps)
             self.assertTrue(self.maps[a]["map"]["has_2d_map"])
-            self.assertEqual(self.maps[a]["gazebo"]["world_package"], "maps")
+            self.assertEqual(self.maps[a]["gazebo"]["world_package"], "robot_lab_maps")
             wp = self.maps[a]["gazebo"]["world_path"]
-            self.assertTrue((_src() / "maps" / wp).is_file(), f"world missing {wp}")
+            self.assertTrue((_src() / "robot_lab_maps" / wp).is_file(), f"world missing {wp}")
 
 
 class CrossReferenceTests(unittest.TestCase):

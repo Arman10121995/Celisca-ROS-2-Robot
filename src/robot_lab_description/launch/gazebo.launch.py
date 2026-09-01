@@ -248,7 +248,7 @@ def generate_launch_description():
 
         # Build GZ_SIM_RESOURCE_PATH (only executed for actual simulation)
         try:
-            gazebo_models_share = get_package_share_directory("gazebo_models")
+            gazebo_models_share = get_package_share_directory("robot_lab_models")
             model_path = str(Path(gazebo_models_share).parent.resolve())
             model_path += pathsep + os.path.join(gazebo_models_share, "models")
         except Exception:
@@ -266,15 +266,15 @@ def generate_launch_description():
                 model_path += pathsep + os.path.dirname(rshare)
         except Exception:
             pass
-        # Consolidated robots sub packages (add parent dir so package://robots/... resolves)
+        # Consolidated robots sub packages (add parent dir so package://robot_lab_robots/... resolves)
         try:
-            robots_share = get_package_share_directory("robots")
+            robots_share = get_package_share_directory("robot_lab_robots")
             model_path += pathsep + os.path.dirname(robots_share)
         except Exception:
             pass
         # Consolidated maps package (for world meshes like celisca buildings)
         try:
-            maps_share = get_package_share_directory("maps")
+            maps_share = get_package_share_directory("robot_lab_maps")
             model_path += pathsep + os.path.dirname(maps_share)
             model_path += pathsep + os.path.join(maps_share, "maps")
         except Exception:

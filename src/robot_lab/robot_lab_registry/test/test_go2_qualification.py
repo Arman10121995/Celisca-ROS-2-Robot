@@ -95,7 +95,7 @@ class Go2QualificationTests(unittest.TestCase):
     def test_go2_dependencies_exist(self):
         """Verify Go2's declared dependency packages exist in src/."""
         robot = self.registry.robots.get("go2")
-        self.assertIn("robots", robot["dependencies"])
+        self.assertIn("robot_lab_robots", robot["dependencies"])
         src_root = Path(__file__).resolve().parents[4] / "src"
         for dep in robot["dependencies"]:
             self.assertTrue(
@@ -181,7 +181,7 @@ class Go2AssetContractTests(unittest.TestCase):
         cls.workspace_root = Path(__file__).resolve().parents[4]
         cls.src_root = cls.workspace_root / "src"
         cls.robot = cls.registry.robots.get("go2")
-        cls.robot_dir = cls.src_root / "robots" / "unitree" / "go2_description"
+        cls.robot_dir = cls.src_root / "robot_lab_robots" / "unitree" / "go2_description"
 
     def _repo_asset(self, rel_path):
         return self.src_root / rel_path
@@ -255,7 +255,7 @@ class Go2AssetContractTests(unittest.TestCase):
             text = (self.robot_dir / xacro_path).read_text()
             refs.update(
                 re.findall(
-                    r"package://robots/unitree/go2_description/meshes/([\w./\-]+)",
+                    r"package://robot_lab_robots/unitree/go2_description/meshes/([\w./\-]+)",
                     text,
                 )
             )

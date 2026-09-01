@@ -94,7 +94,7 @@ class BhlQualificationTests(unittest.TestCase):
 
     def test_bhl_dependencies_exist(self):
         robot = self.registry.robots.get("berkeley_humanoid_lite")
-        self.assertIn("robots", robot["dependencies"])
+        self.assertIn("robot_lab_robots", robot["dependencies"])
         src_root = Path(__file__).resolve().parents[4] / "src"
         for dep in robot["dependencies"]:
             self.assertTrue((src_root / dep).is_dir(), f"Missing dep in src/: {dep}")
@@ -103,11 +103,11 @@ class BhlQualificationTests(unittest.TestCase):
         robot = self.registry.robots.get("berkeley_humanoid_lite")
         self.assertEqual(
             robot["assets"]["urdf"],
-            "robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro",
+            "robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro",
         )
         self.assertEqual(
             robot["assets"]["xacro"],
-            "robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro",
+            "robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro",
         )
 
     def test_bhl_smoke_composition(self):
@@ -190,7 +190,7 @@ class BhlAssetContractTests(unittest.TestCase):
         cls.workspace_root = Path(__file__).resolve().parents[4]
         cls.src_root = cls.workspace_root / "src"
         cls.robot = cls.registry.robots.get("berkeley_humanoid_lite")
-        cls.robot_dir = cls.src_root / "robots" / "berkeley_humanoid_lite"
+        cls.robot_dir = cls.src_root / "robot_lab_robots" / "berkeley_humanoid_lite"
 
     def _repo_asset(self, rel_path):
         return self.src_root / rel_path
@@ -244,12 +244,12 @@ class BhlAssetContractTests(unittest.TestCase):
         import re
         urdf = (self.robot_dir / "urdf" / "berkeley_humanoid_lite.urdf").read_text()
         refs = re.findall(
-            r"package://robots/berkeley_humanoid_lite/([\w.\-/]+)", urdf
+            r"package://robot_lab_robots/berkeley_humanoid_lite/([\w.\-/]+)", urdf
         )
         self.assertGreater(len(refs), 0, "No mesh refs found in BHL URDF")
         for rel in refs:
             self.assertTrue(
-                (self.src_root / "robots" / "berkeley_humanoid_lite" / rel).exists(),
+                (self.src_root / "robot_lab_robots" / "berkeley_humanoid_lite" / rel).exists(),
                 f"BHL URDF references missing file: {rel}",
             )
 
