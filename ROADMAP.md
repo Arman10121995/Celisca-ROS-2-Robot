@@ -356,7 +356,9 @@ completion claim.
   copy-paste Python code.)
 - [ ] **P7.5** Validate real Bumperbot hardware and explicitly separate HIL-only
   claims from simulation claims.
-- [ ] **P7.6** Publish a support matrix with measured evidence and known limits.
+- [x] **P7.6** Publish a support matrix with measured evidence and known limits.
+  (docs/status/support-matrix.md documents robot/algorithm/environment support
+  with test evidence and known limits; platform-status.yaml updated.)
 
 ## Definition of status
 

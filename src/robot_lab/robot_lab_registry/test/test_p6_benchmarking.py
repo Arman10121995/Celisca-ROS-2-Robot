@@ -692,5 +692,40 @@ class TutorialDocumentationTests(unittest.TestCase):
             self.assertIn("## Run", content, f"{tutorial.name} missing Run section")
 
 
+class SupportMatrixTests(unittest.TestCase):
+    """Tests for P7.6 support matrix and platform status."""
+
+    def test_platform_status_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "status" / "platform-status.yaml"
+        self.assertTrue(path.is_file(), "platform-status.yaml missing")
+
+    def test_support_matrix_exists(self):
+        path = Path(__file__).resolve().parents[4] / "docs" / "status" / "support-matrix.md"
+        self.assertTrue(path.is_file(), "support-matrix.md missing")
+
+    def test_platform_status_has_current_test_count(self):
+        import yaml
+        path = Path(__file__).resolve().parents[4] / "docs" / "status" / "platform-status.yaml"
+        with open(path, 'r') as f:
+            data = yaml.safe_load(f)
+        self.assertEqual(data['baseline']['tests']['total'], 257)
+        self.assertEqual(data['baseline']['tests']['failures'], 0)
+
+    def test_support_matrix_lists_all_robots(self):
+        content = (Path(__file__).resolve().parents[4] / "docs" / "status" / "support-matrix.md").read_text()
+        for robot in ["Bumperbot", "Labbot", "Go2", "Berkeley Humanoid", "Quadrotor"]:
+            self.assertIn(robot, content, f"Support matrix missing robot: {robot}")
+
+    def test_support_matrix_lists_all_categories(self):
+        content = (Path(__file__).resolve().parents[4] / "docs" / "status" / "support-matrix.md").read_text()
+        for cat in ["Perception", "Localization", "State Estimation", "Sensor Fusion", "Global Planning", "Local Planning", "Control"]:
+            self.assertIn(cat, content, f"Support matrix missing category: {cat}")
+
+    def test_support_matrix_lists_known_limits(self):
+        content = (Path(__file__).resolve().parents[4] / "docs" / "status" / "support-matrix.md").read_text()
+        self.assertIn("Known Limits", content)
+        self.assertIn("Hardware HIL", content)
+
+
 if __name__ == '__main__':
     unittest.main()

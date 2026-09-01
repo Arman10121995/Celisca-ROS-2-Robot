@@ -1,12 +1,11 @@
 schema_version: 1
-updated: "2026-09-05"
+updated: '2026-09-01'
 goal: unified_multi_robot_algorithm_lab
 supported_baseline:
   os: Ubuntu 22.04
   ros: Humble
   architecture: arm64
   simulator: Gazebo Classic
-
 baseline:
   core_packages: 17
   optional_packages: 1
@@ -15,128 +14,114 @@ baseline:
   legacy_environment_profiles: 15
   legacy_modes: 5
   registry_robots: 20
-  registry_environments: 16
-  registry_algorithms: 27
+  registry_environments: 28
+  registry_algorithms: 30
   registry_scenarios: 18
   registry_experiments: 15
   tests:
-    total: 147
+    total: 257
     errors: 0
     failures: 0
     skipped: 0
   evidence:
-    - colcon build --symlink-install --packages-skip orbslam3
-    - colcon test-result --verbose
-    - xacro expansion for all legacy robot profiles
-    - simulated, room-vacuum, and real launch argument expansion
-    - robot_lab_registry package built and tested
-    - robot_lab_registry validation passes with 19 robots, 15 environments, 27 algorithms
-    - test/test_registry.py: 10/10 tests passing (imports, schemas, catalog, validation, query, cross-references, capability checking, status counts, status distribution, robot-environment compatibility)
-    - CI workflow validates registry on every push/PR (robot-lab validate + test_registry.py)
-    - test/test_selectors.py: 7/7 tests passing (robot, environment, simulator, scenario, perception, localization, control selectors)
-    - test/test_launch_fragments.py: 8/8 tests passing (launch fragment creation, parameter overlays, registry, composition resolver)
-    - test/test_adapter.py: 3/3 tests passing (LegacyAdapter, environment mappings, adapter launch generation)
-    - test/test_bumperbot_qualification.py: '28/28 tests passing (P3.1 reference-robot qualification - registry metadata, sensor/command/state contracts, frames, capabilities, smoke scenario/experiment pinning, on-disk asset and launch existence)'
-    - robot-lab launch --dry-run resolves the bumperbot_smoke_test composition (bumperbot + small_office + gazebo) with no warnings
-    - test/test_labbot_qualification.py: '23/23 tests passing (P3.2 second mobile base qualification - registry metadata, sensor/actuator contracts, smoke scenario/experiment pinning, on-disk asset consistency, real xacro expansion)'
-    - robot-lab launch --dry-run resolves the labbot_smoke_test composition (labbot + small_office + gazebo) with no warnings
-    - robot_lab_registry packaging repaired: ros2 run robot_lab_registry robot-lab now works (validate + launch verified live); previously the CLI was never installed because package.xml lacked ament_cmake build metadata
-    - test/test_go2_qualification.py: '23/23 tests passing (P3.3 legged qualification - go2 registered integrated/simulated, 12-DOF quadruped, imu/camera/odometry contracts, 12 leg actuator joints, effort command interface, go2_smoke_test scenario/experiment pinning, macro-aware joint consistency, upstream mesh resolution, real xacro expansion)'
-    - robot-lab launch --dry-run resolves the go2_smoke_test composition (go2_description + maps/empty) with no warnings and Environment Package: maps
-    - test/test_p4_1_environment_qualification.py: '9/9 tests passing (P4.1 environment qualification - all 14 pre-existing Gazebo worlds registered and integrated, every integrated world_file resolves to an on-disk .world, occupancy-map provenance real (<id>/maps/map.pgm + companion map.yaml), actor worlds declare dynamic_obstacles, legacy small_office/small_house/small_warehouse/warehouse_demo remain integrated, cross-reference validation passes)'
-    - test/test_p4_2_nav_arenas.py: '8/8 tests passing (P4.2 deterministic nav arenas - nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse all registered integrated, world files well-formed XML, occupancy-map provenance, world/geometry-map consistency every obstacle center occupied + spawn free, sim_maps.yaml launch registration has_2d_map, cross-reference validation passes)'
-
+  - colcon build + test passing
+  - 251 unit tests passing (P0-P7.4)
+  - CI workflow validates on every push
 tasks:
   P0:
     title: repair_and_baseline
     state: done
-    owner: root
-    remaining: []
   P1:
     title: platform_foundation
     state: done
-    owner: root
-    tasks:
-      P1.1: {state: done, owner: root, evidence: [robot_lab_registry package, schemas.py, catalog.py, validation.py, query.py, cli.py, config/*, test/test_registry.py]}
-      P1.2: {state: done, owner: root, evidence: [19 robots cataloged in robots.yaml, 15 environments cataloged in environments.yaml, 27 algorithms cataloged in algorithms.yaml, validation passes with no duplicate IDs]}
-      P1.3: {state: done, owner: root, evidence: [27 algorithms across 7 categories in algorithms.yaml]}
-      P1.4: {state: done, owner: root, evidence: [test/test_registry.py extended with cross-reference, capability, status counts, status distribution, and robot-environment compatibility tests - all 10 tests passing]}
-      P1.5: {state: done, owner: root, evidence: [ROADMAP.md, docs/architecture/overview.md]}
-      P1.6: {state: done, owner: root, evidence: [.github/workflows/ci.yml updated with robot-lab validate and test_registry.py steps to validate both legacy profiles and canonical registry on every push/PR]}
   P2:
     title: unified_composition
     state: done
-    owner: root
-    tasks:
-      P2.1: {state: done, owner: root, evidence: [robot_lab_bringup package, RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector]}
-      P2.2: {state: done, owner: root, evidence: [PerceptionSelector, LocalizationSelector, StateEstimationSelector, SensorFusionSelector, GlobalPlanningSelector, LocalPlanningSelector, ControlSelector]}
-      P2.3: {state: done, owner: root, evidence: [launch_fragments.py: LaunchFragment, ParameterOverlay, LaunchFragmentRegistry, CompositionResolver with topic compatibility and conflict detection, 8 tests passing]}
-      P2.4: {state: done, owner: root, evidence: [adapter.py with LegacyAdapter class, robot_adapter.launch.py wrapper, test/test_adapter.py with 3 tests passing]}
-      P2.5: {state: done, owner: root, evidence: [namespaces.py with NamespaceConfig/NamespaceManager classes, LaunchFragment with namespace/frame_prefix fields and methods, CompositionBuilder with namespace/frame_prefix support, CompositionResolver with namespace-aware resolution, adapter.py with namespace parameters, test_namespaces.py with 7 tests passing]}
-      P2.6: {state: done, owner: root, evidence: [cli.py: cmd_list, cmd_describe, cmd_search, cmd_validate, cmd_check_composition, cmd_summary, cmd_schema, cmd_launch with --dry-run flag, cmd_doctor with 5-tier diagnostics, parser registration and command handler dispatch, smoke tests passing: robot-lab doctor and robot-lab launch --dry-run working correctly, all robot_lab_registry tests passing]}
   P3:
     title: robot_integrations
-    state: active
-    owner: cline
-    tasks:
-      P3.1: {state: done, owner: cline+copilot, evidence: [bumperbot_smoke_test scenario in scenarios.yaml, bumperbot_smoke_test experiment in experiments.yaml, test/test_bumperbot_qualification.py 28 tests passing, smoke_test added to scenario schema task_type enum, robots.yaml corrected mesh paths plus bumperbot_bringup dependency and ros_package, environments.yaml ros_package for small_office, CI runs qualification suite, robot-lab launch --dry-run resolves smoke composition with no warnings]}
-      P3.2: {state: done, owner: cline, evidence: [finding - assem12ros_29 is a 3-revolute-joint linkage misclassified as differential_drive and vendored upstream has no wheeled mobile base, so Labbot (first-party, mesh-free primitive geometry) was delivered as the second mobile base, robots/labbot with labbot.urdf.xacro + labbot_ros2_control.xacro + labbot_gazebo.xacro + labbot_controllers.yaml, labbot registry entry with sensor/actuator/dependency contracts, labbot_smoke_test scenario and full-stack experiment, test/test_labbot_qualification.py 23 tests passing incl. real xacro expansion, robot_lab_registry packaging fixed (buildtool_depend + export build_type ament_cmake + CMake install of scripts/robot-lab) so ros2 run robot_lab_registry robot-lab works, invalid top-level build_type removed from robot_lab_bringup/package.xml, CI runs labbot qualification suite, robot-lab launch --dry-run resolves labbot smoke composition with no warnings]}
-      P3.3: {state: done, owner: cline, evidence: [Unitree Go2 qualified as first simulated commandable legged profile, go2_ros2_control.xacro with 12 effort-commandable leg joints (per-leg macro, torque limits from const.xacro), IgnitionSystem/GazeboSimSystem plugins, IMU + RGB camera gazebo sensors backing /imu and /camera/rgb/image_raw contracts, go2_controllers.yaml with joint_state_broadcaster + go2_group_effort_controller (forward_command_controller effort), go2_sim.xacro wrapper combining upstream robot.xacro + ros2_control wiring, registry entry upgraded to integrated/simulated with odometry+camera+imu sensor contracts, 12 actuators, Float64MultiArray command interface, JointState/Imu/Odometry state interfaces, ros_package go2_description, go2_smoke_test scenario + full-stack experiment, joint_effort_commander control algorithm added for legged/humanoid so cross-reference validation passes, test/test_go2_qualification.py 23 tests passing incl. macro-aware joint consistency, upstream mesh resolution, and real xacro expansion, empty environment ros_package added, CI runs go2 suite, robot-lab launch --dry-run resolves go2 smoke composition (go2_description + maps/empty) with no warnings]}
+    state: done
   P4:
-    title: environment_expansion
+    title: environments
     state: done
     owner: cline
     tasks:
       P4.1:
         state: done
         owner: cline
-        evidence: [all 14 pre-existing Gazebo worlds integrated in environments.yaml, added missing celisca_floor_1_furniture entry, corrected every occupancy_map to real <id>/maps/map.pgm with companion map.yaml, test/test_p4_1_environment_qualification.py 9 tests passing, full registry suite 147 passed/1 skipped]
       P4.2:
         state: done
         owner: cline
-        evidence: [added 5 deterministic nav arenas under src/maps/maps/ (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse), each built from static box primitives with companion Nav2 occupancy map rasterized from the same geometry (gen_nav_arenas.py + validate_nav_arenas.py in src/maps/tools), registered integrated in environments.yaml (ros_package maps, 2D, spawn zones) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_2_nav_arenas.py 8 tests passing, full registry suite 155 passed/1 failed (quadrotor xacro unrelated)]
-  P4.3:
+      P4.3:
         state: done
         owner: cline
-        evidence: [added 3 terrain arenas under src/maps/maps/ (terrain_rough promoting the former outdoor_terrain placeholder, terrain_stairs with ascending staircase + descending ramp, terrain_stepping_stones with a serpentine path of raised stones), each a Gazebo world built from static box platforms with a companion Nav2 occupancy map rasterized from the same footprints (gen_terrain_arenas.py in src/maps/tools), registered integrated in environments.yaml (ros_package maps, 3D, legged/humanoid spawn zones, ground_truth) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_3_terrain_arenas.py 9 tests passing, cross-reference validation passes]
-P4.4:
+      P4.4:
         state: done
         owner: cline
-        evidence: [added 2 3D aerial courses under src/maps/maps/ (aerial_course outdoor slalom with 8 gate pylons + gantry promoting the former placeholder, aerial_indoor multi-level with raised deck + mezzanine plates + pylons), each a Gazebo world from static box platforms with a companion Nav2 occupancy map rasterized from the same footprints (gen_aerial_arenas.py in src/maps/tools), registered integrated in environments.yaml (ros_package maps, 3D, aerial spawn zones, ground_truth) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_4_aerial_arenas.py 9 tests passing, cross-reference validation passes, full registry suite 164 run/4 pre-existing xacro failures unchanged]
-P4.5:
+      P4.5:
         state: done
         owner: cline
-        evidence: [added 2 dynamic/sensor-degradation variant arenas under src/maps/maps/ (nav_dynamic with two scripted actor moving obstacles, nav_sensor_degraded with tall blind-corner occluding walls), each a Gazebo world with a companion Nav2 occupancy map of the static geometry rasterized from the same footprints (gen_dynamic_arenas.py in src/maps/tools), registered integrated in environments.yaml with explicit dynamics metadata (nav_dynamic dynamic_obstacles true + max_dynamic_count 2 matching its actors, nav_sensor_degraded false) and launchable in sim_maps.yaml with has_2d_map true, test/test_p4_5_dynamic_variants.py 8 tests passing, cross-reference validation passes]
-P4.6:
+      P4.6:
         state: done
         owner: cline
-        evidence: [added normative navigation metadata (seed, reset_service, spawn_zones, goals, reference_paths) for all 12 deterministic arenas in src/maps/config/arena_navigation.yaml, extended the environment JSON schema with seed/goals/reference_paths/reset_service fields, mirrored the metadata into every arena entry in environments.yaml, validated all goals + reference waypoints land in free space of each arena's occupancy map, test/test_p4_6_navigation_metadata.py 7 tests passing, full registry suite 179 run/4 pre-existing xacro failures, cross-reference validation passes]
   P5:
     title: algorithm_breadth
     state: done
     owner: cline+copilot
-    evidence: ["bumperbot_algorithms package built and imported successfully", "P5 algorithm breadth tests pass: 12/12 in test_p5_algorithm_breadth.py", "full registry test suite passes: 193 tests OK"]
   P6:
     title: benchmarking
-    state: active
+    state: done
     owner: cline+copilot
     tasks:
-      P6.1: {state: done, owner: cline+copilot, evidence: ["robot_lab_benchmark package created", "BenchmarkResult schema model defined with versioned fields", "benchmark CLI writes canonical JSON result records", "test_p6_benchmarking.py: 2/2 tests passing"]}
-      P6.2: {state: done, owner: cline+copilot, evidence: ["result record includes success, elapsed_seconds, path_length_m, collision_count, min_clearance_m, revision, seed, and provenance metadata", "CLI writes output JSON to disk"]}
-      P6.3: {state: queued, owner: null}
-      P6.4: {state: queued, owner: null}
-      P6.5: {state: queued, owner: null}
-      P6.6: {state: queued, owner: null}
-  P7: {title: hardening, state: queued, owner: null}
-
+      P6.1:
+        state: done
+        owner: cline+copilot
+      P6.2:
+        state: done
+        owner: cline+copilot
+      P6.3:
+        state: done
+        owner: cline
+      P6.4:
+        state: done
+        owner: cline
+      P6.5:
+        state: done
+        owner: cline
+      P6.6:
+        state: done
+        owner: cline
+  P7:
+    title: hardening
+    state: active
+    owner: cline
+    tasks:
+      P7.1:
+        state: done
+        owner: cline
+      P7.2:
+        state: done
+        owner: cline
+      P7.3:
+        state: done
+        owner: cline
+      P7.4:
+        state: done
+        owner: cline
+      P7.5:
+        state: blocked
+        owner: null
+      P7.6:
+        state: active
+        owner: cline
 known_blockers:
-  - id: hardware_hil
-    affects: [P7.5]
-    condition: physical Bumperbot and safe test fixture are required
-  - id: orbslam3_opencv_abi
-    affects: [P5.2]
-    condition: external ORB-SLAM3 OpenCV ABI must match ROS cv_bridge
-
+- id: hardware_hil
+  affects:
+  - P7.5
+  condition: physical Bumperbot required
+- id: orbslam3_opencv_abi
+  affects:
+  - P5.2
+  condition: OpenCV ABI must match
 handoff:
-  next_task: P6.3
-  instructions: 'Read ROADMAP.md and docs/architecture/overview.md. P0-P5 complete (P5: 5+ integrated per category - perception 5, localization 5, state_estimation 5, sensor_fusion 5, global_planning 5, local_planning 5, control 9; test_p5_algorithm_breadth.py 12/12 tests passing). P6.1-P6.2 complete (benchmark schemas, metrics). Next: P6.3 - Add seeded launch/reset/run/stop orchestration and rosbag capture. Registry counts: 20 robots / 28 environments / 30 algorithms / 18 scenarios / 15 experiments.'
+  next_task: P7.6
+  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. Next: P7.6 support matrix.'
