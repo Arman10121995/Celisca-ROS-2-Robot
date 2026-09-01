@@ -89,7 +89,7 @@ modes:
       depth_topic: /oakd/depth/image_raw
       camera_info_topic: /oakd/rgb/camera_info
       points_topic: /oakd/points
-        odom_topic: /odometry/filtered
+      odom_topic: /odometry/filtered
       frame_id: base_footprint
       map_frame_id: map
       start_visual_odometry: "false"
