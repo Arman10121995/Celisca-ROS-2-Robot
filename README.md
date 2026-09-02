@@ -157,9 +157,9 @@ One launch dispatcher (`simulated_robot.launch.py`) selects the physics backend 
 | Simulator | Package | Status | Notes |
 |-----------|---------|--------|-------|
 | Gazebo Classic | `robot_lab_description` | ✅ Integrated | Primary simulator; spawns URDF with standard ros2_control + sensor plugins |
-| Isaac Sim | `robot_lab_isaac` | 🚧 Adapter | Mirror spawn interface; physics backend still a stub |
-| PyBullet | `robot_lab_pybullet` | 🚧 Adapter | Mirror spawn interface; physics backend still a stub |
-| MuJoCo | `robot_lab_mujoco` | 🚧 Adapter | Mirror spawn interface; physics backend still a stub |
+| Isaac Sim | `robot_lab_isaac` | 🚧 Adapter | Mirror spawn interface; no aarch64 pip wheel (standalone aarch64 build optional) |
+| PyBullet | `robot_lab_pybullet` | ✅ Qualified | 3.2.7 source-built vs NumPy 2.x; headless DIRECT physics smoke-tested |
+| MuJoCo | `robot_lab_mujoco` | ✅ Qualified | 3.3.4 + dm-control via aarch64 wheel; headless physics smoke-tested |
 
 ```bash
 # Select the physics backend (default: gazebo)
@@ -270,14 +270,16 @@ bash scripts/test_fast.sh
 PYTHONPATH=src/robot_lab/robot_lab_registry python3 -m unittest discover \
     -s src/robot_lab/robot_lab_registry/test
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
-    src/robot_lab_bringup/test/test_sim_profiles.py -q
+    src/robot_lab_bringup/test/test_sim_profiles.py \
+    src/robot_lab_bringup/test/test_simulator_backends.py -q
 
 # Health check
 bash scripts/doctor.sh
 ```
 
 **257/257 registry tests passing, 0 errors, 0 failures.** Bringup profile tests
-(200 collected, including 7 simulator-dispatch tests) also pass.
+(206 collected, including 7 simulator-dispatch tests and 6 simulator-backend
+smoke tests for PyBullet, MuJoCo, and Isaac offline-mode) also pass.
 
 ---
 
@@ -294,7 +296,7 @@ bash scripts/doctor.sh
 | P6 | Benchmarking | Done |
 | P7 | Hardening | Active (P7.5 blocked) |
 
-**Next:** P7.8 (Multi-simulator physics backends)
+**In Progress:** P7.8 (Multi-simulator physics backends — PyBullet & MuJoCo qualified; Isaac Sim pending)
 **Blocked:** P7.5 (Hardware HIL)
 
 ---

@@ -2,7 +2,7 @@
 
 Measured evidence and known limits for all supported configurations.
 
-Last updated: 2026-09-01
+Last updated: 2026-09-02
 
 ## Platform Support
 
@@ -12,9 +12,9 @@ Last updated: 2026-09-01
 | ROS 2 Humble | ✅ Supported | Primary target distribution |
 | arm64 | ✅ Supported | Platform tested |
 | Gazebo Classic | ✅ Supported | Primary simulator, fully qualified |
-| Isaac Sim | 🚧 Adapter | Spawn interface mirrors Gazebo; physics backend pending (P7.8) |
-| PyBullet | 🚧 Adapter | Spawn interface mirrors Gazebo; physics backend pending (P7.8) |
-| MuJoCo | 🚧 Adapter | Spawn interface mirrors Gazebo; physics backend pending (P7.8) |
+| Isaac Sim | 🚧 Adapter | No aarch64 pip wheel; standalone aarch64 build requires separate install (see Known Limits) |
+| PyBullet | ✅ Qualified | 3.2.7 rebuilt from source against NumPy 2.x; headless DIRECT physics verified |
+| MuJoCo | ✅ Qualified | 3.3.4 + dm-control 1.0.31 via aarch64 wheel; headless physics verified |
 | ORB-SLAM3 | ⚠️ Optional | OpenCV ABI warning if versions mismatch |
 
 ## Robot Support
@@ -68,7 +68,7 @@ Last updated: 2026-09-01
 | Passing | 257 |
 | Failing | 0 |
 | Errors | 0 |
-| Bringup profile tests | 200 (incl. 7 simulator dispatch) |
+| Bringup profile tests | 206 (incl. 7 simulator dispatch + 6 backend smoke) |
 | CI status | ✅ Passing |
 
 ## Known Limits
@@ -77,7 +77,7 @@ Last updated: 2026-09-01
 |-------|-------------|
 | Hardware HIL | Physical Bumperbot validation pending (P7.5 blocked) |
 | ORB-SLAM3 | OpenCV ABI must match ROS cv_bridge |
-| Simulator backends | Isaac/PyBullet/MuJoCo adapters dispatch and accept the Gazebo spawn interface, but physics backends are stubs (P7.8) |
+| Simulator backends | PyBullet (source-built vs NumPy 2.x) and MuJoCo (aarch64 wheel) physics verified headless; Isaac Sim not installed — no aarch64 pip wheel, standalone aarch64 build (~10-20 GB, separate env from ROS venv) pending |
 | Real-time | Real-time performance not benchmarked on hardware |
 | Multi-robot | No multi-robot scenarios tested |
 

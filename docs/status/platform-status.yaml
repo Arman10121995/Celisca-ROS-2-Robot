@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-09-01'
+updated: '2026-09-02'
 goal: unified_multi_robot_algorithm_lab
 supported_baseline:
   os: Ubuntu 22.04
@@ -7,9 +7,9 @@ supported_baseline:
   architecture: arm64
   simulators:
   - Gazebo Classic (qualified)
-  - Isaac Sim (adapter, P7.8 pending)
-  - PyBullet (adapter, P7.8 pending)
-  - MuJoCo (adapter, P7.8 pending)
+  - Isaac Sim (adapter, no aarch64 pip wheel)
+  - PyBullet (qualified, source-built vs NumPy 2.x)
+  - MuJoCo (qualified, aarch64 wheel)
 baseline:
   core_packages: 17
   optional_packages: 1
@@ -30,7 +30,7 @@ baseline:
   evidence:
   - colcon build + test passing
   - 257 unit tests passing (P0-P7.4)
-  - 200 bringup profile tests passing incl. 7 simulator dispatch
+  - 206 bringup profile tests passing incl. 7 simulator dispatch + 6 backend smoke (PyBullet/MuJoCo headless physics, Isaac offline mode)
   - CI workflow validates on every push
 tasks:
   P0:
@@ -124,6 +124,7 @@ tasks:
       P7.8:
         state: active
         owner: null
+        note: PyBullet + MuJoCo physics verified headless on Jetson arm64; Isaac Sim pending (no aarch64 pip wheel, standalone build optional)
 known_blockers:
 - id: hardware_hil
   affects:
@@ -133,6 +134,10 @@ known_blockers:
   affects:
   - P5.2
   condition: OpenCV ABI must match
+- id: isaac_sim_aarch64
+  affects:
+  - P7.8
+  condition: Isaac Sim has no aarch64 pip wheel; standalone aarch64 build (10-20 GB, separate env) would be needed
 handoff:
   next_task: P7.8
-  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. P7.6 support matrix published. P7.7 multi-simulator dispatch infrastructure done. Next: P7.8 physics backends for Isaac/PyBullet/MuJoCo.'
+  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. P7.6 support matrix published. P7.7 multi-simulator dispatch infrastructure done. P7.8 PyBullet (source-built vs NumPy 2.x) and MuJoCo (aarch64 wheel) physics verified headless on Jetson AGX Orin; test_simulator_backends.py added (6 smoke tests). Isaac Sim remains adapter-only: no aarch64 pip wheel, standalone aarch64 build is the only path and requires a separate ~10-20 GB install.'

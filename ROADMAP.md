@@ -30,7 +30,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P4 — environments | done | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4 done: 2 3D/aerial courses added (aerial_course via promoted placeholder, aerial_indoor) with occupancy provenance + world/map consistency; P4.5 done: 2 dynamic/sensor-degradation variants added (nav_dynamic with scripted moving actors, nav_sensor_degraded with blind-corner occluding walls) with dynamic metadata + world/map consistency; P4.6 done: seeds, reset services, spawn zones, goals, and reference paths added to all 12 deterministic arenas (arena_navigation.yaml + schema fields + free-space-validated paths) |
 | P5 — algorithm breadth | done | 5+ runnable alternatives in every required category; 191/191 tests passing |
 | P6 — benchmarking | done | Standard benchmark schema, result capture, and reporting foundations in place |
-| P7 — hardening | active | CI matrices, provenance/licenses, documentation, end-to-end qualification, and multi-simulator dispatch (P7.7 done; P7.8 physics backends next) |
+| P7 — hardening | active | CI matrices, provenance/licenses, documentation, end-to-end qualification, and multi-simulator dispatch (P7.7 done; P7.8 in progress — PyBullet & MuJoCo qualified, Isaac Sim pending) |
 
 Machine-readable progress is kept in
 `docs/status/platform-status.yaml`. The canonical capability inventory is in
@@ -365,9 +365,15 @@ completion claim.
   new robot_lab_isaac/robot_lab_pybullet/robot_lab_mujoco adapter packages
   mirroring the Gazebo spawn interface; sim_modes.yaml `simulators:` lists per
   mode; GUI Launch-tab simulator dropdown gated by mode; dispatch covers all
-  four backends in tests. Robot-lab bringup profile suite passes 200 collected
-  tests including 7 new simulator-dispatch tests; full clean colcon build of 26
-  packages succeeds.)
+  four backends in tests. Robot-lab bringup profile suite passes 206 collected
+  tests including 7 new simulator-dispatch tests and 6 simulator-backend smoke
+  tests; full clean colcon build of 26 packages succeeds.)
+- [~] **P7.8** Qualify physics backends for Isaac Sim, PyBullet, and MuJoCo.
+  (PyBullet 3.2.7 rebuilt from source against NumPy 2.2.6 on Jetson arm64 —
+  headless DIRECT gravity test passes; MuJoCo 3.3.4 + dm-control installed via
+  aarch64 wheels — headless gravity/contact test passes; test_simulator_backends.py
+  added to bringup suite. Isaac Sim remains adapter-only: no aarch64 pip wheel;
+  standalone aarch64 build (~10-20 GB, separate environment) is the remaining path.)
 
 ## Definition of status
 
@@ -409,9 +415,10 @@ ros2 run robot_lab_registry robot-lab validate
 
 - The supported baseline is ROS 2 Humble on Ubuntu 22.04/arm64.
 - Four simulator backends are dispatched (Gazebo, Isaac Sim, PyBullet, MuJoCo);
-  Gazebo is the qualified physics backend. Isaac/PyBullet/MuJoCo adapters exist
-  and forward the spawn interface, but their physics backends are stubs pending
-  P7.8.
+  Gazebo is the qualified primary backend. PyBullet (source-built vs NumPy 2.x)
+  and MuJoCo (aarch64 wheel) physics backends are verified headless and fixture-
+  smoke-tested; Isaac Sim remains an adapter stub (no aarch64 pip wheel —
+  standalone aarch64 build is the only path, ~10-20 GB external install).
 - Only Bumperbot currently has a complete simulation/navigation stack. Imported
   Unitree and Berkeley assets are description-only and must not be advertised as
   commandable robots.

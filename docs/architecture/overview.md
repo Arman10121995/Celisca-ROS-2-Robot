@@ -60,8 +60,8 @@ sensors, command/state interfaces, frames, capabilities, source/provenance, and
 the smoke experiments that justify its status.
 
 **Integrated robots:** (launch dispatch can target any of the four simulator
-backends; Gazebo is the qualified primary backend for all, the others are
-adapter stubs until physics backends land as P7.8)
+backends; Gazebo is the qualified primary backend, PyBullet and MuJoCo are
+qualified secondary backends, Isaac Sim remains an adapter stub)
 
 | Robot | Class | DOF | Simulators | Source |
 |-------|-------|-----|------------|--------|

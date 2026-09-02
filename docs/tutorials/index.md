@@ -23,7 +23,8 @@ bash scripts/doctor.sh
 
 Tutorials run on the default **Gazebo Classic** backend. The same commands
 accept `simulator:=isaac`, `simulator:=pybullet`, or `simulator:=mujoco`
-(adapter backends; physics engines pending P7.8):
+(PyBullet and MuJoCo physics verified headless; isaac runs the adapter stub in
+offline mode until the standalone aarch64 build is installed):
 
 ```bash
 ros2 launch robot_lab_bringup simulated_robot.launch.py \
