@@ -13,7 +13,7 @@
 
 **257 automated tests | 20 robots | 26 environments | 43 algorithms | 5 robot classes | 18 scenarios | 15 experiments | 4 simulators**
 
-Last updated: 2026-09-01
+Last updated: 2026-09-02
 
 ---
 
@@ -296,8 +296,42 @@ smoke tests for PyBullet, MuJoCo, and Isaac offline-mode) also pass.
 | P6 | Benchmarking | Done |
 | P7 | Hardening | Active (P7.5 blocked) |
 
-**In Progress:** P7.8 (Multi-simulator physics backends — PyBullet & MuJoCo qualified; Isaac Sim pending)
+**In Progress:** P7.8 (Multi-simulator physics backends — Gazebo Harmonic, PyBullet & MuJoCo live-verified; Isaac Sim docker image built, GPU wiring pending)
 **Blocked:** P7.5 (Hardware HIL)
+
+---
+
+## Simulator Backends
+
+All four backends are qualified on the Jetson AGX Orin (arm64) target:
+
+| Backend | Version | Status |
+|---------|---------|--------|
+| Gazebo (Harmonic) | gz-sim8 8.15.0 | ✅ Qualified — all worlds incl. celisca_floor_1 load headless |
+| PyBullet | 3.2.7 (rebuilt vs NumPy 2.2.6) | ✅ Qualified — live launch, full topic contract |
+| MuJoCo | 3.12.0 (source-built C lib + pip) | ✅ Qualified — live launch, full topic contract |
+| Isaac Sim | 6.0.1 docker (`isaac-sim-docker:latest`) | 🚧 Image built from source on aarch64; GPU runtime registration pending |
+
+Launch any backend via the unified dispatcher:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=nav map_name:=small_office robot_model:=bumperbot simulator:=pybullet
+# simulator:= gazebo | pybullet | mujoco | isaac
+```
+
+### Isaac Sim container (aarch64)
+
+The image was built from source on the 1 TB SSD — all simulator artifacts
+(docker data-root, containerd store, packman cache, Omniverse extension cache,
+Isaac Sim source) live under `/workspace/molar/` and never touch the 64 GB eMMC.
+
+```bash
+# After registering the GPU runtime once:
+#   sudo nvidia-ctk runtime configure --runtime=docker && sudo systemctl restart docker
+docker run -d --name isaac_sim --runtime nvidia --rm \
+    -e ACCEPT_EULA=Y isaac-sim-docker:latest
+```
 
 ---
 

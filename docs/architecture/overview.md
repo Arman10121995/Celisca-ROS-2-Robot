@@ -61,15 +61,16 @@ the smoke experiments that justify its status.
 
 **Integrated robots:** (launch dispatch can target any of the four simulator
 backends; Gazebo is the qualified primary backend, PyBullet and MuJoCo are
-qualified secondary backends, Isaac Sim remains an adapter stub)
+qualified secondary backends with live-verified launch + topic contracts, and
+Isaac Sim runs from a source-built docker image — GPU wiring pending)
 
 | Robot | Class | DOF | Simulators | Source |
 |-------|-------|-----|------------|--------|
-| Bumperbot | Differential drive | — | Gazebo (qualified) | First-party |
-| Labbot | Differential drive | — | Gazebo (qualified) | First-party |
-| Go2 | Quadruped | 12 leg joints | Gazebo (qualified) | Unitree (vendored) |
-| Berkeley Humanoid Lite | Humanoid | 22 position joints | Gazebo (qualified) | HybridRobotics (vendored) |
-| Quadrotor SITL | Aerial | 4 rotors | Gazebo (qualified) | First-party |
+| Bumperbot | Differential drive | — | Gazebo · PyBullet · MuJoCo · Isaac | First-party |
+| Labbot | Differential drive | — | Gazebo · PyBullet · MuJoCo · Isaac | First-party |
+| Go2 | Quadruped | 12 leg joints | Gazebo · PyBullet · MuJoCo · Isaac | Unitree (vendored) |
+| Berkeley Humanoid Lite | Humanoid | 22 position joints | Gazebo · PyBullet · MuJoCo · Isaac | HybridRobotics (vendored) |
+| Quadrotor SITL | Aerial | 4 rotors | Gazebo · PyBullet · MuJoCo · Isaac | First-party |
 
 ### Environment
 
@@ -93,11 +94,25 @@ A simulator is a first-class launch selector. `simulated_robot.launch.py`
 dispatches on the `simulator:=` argument against a fixed registry:
 
 ```text
-gazebo  → robot_lab_description/gazebo.launch.py          (qualified)
-isaac   → robot_lab_isaac/isaac_simulator.launch.py       (adapter stub)
-pybullet→ robot_lab_pybullet/pybullet_simulator.launch.py (adapter stub)
-mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (adapter stub)
+gazebo  → robot_lab_description/gazebo.launch.py          (qualified primary; Gazebo Harmonic `gz sim`)
+isaac   → robot_lab_isaac/isaac_simulator.launch.py       (adapter + docker image built; GPU wiring pending)
+pybullet→ robot_lab_pybullet/pybullet_simulator.launch.py (qualified; full ROS2 bridge, live-verified)
+mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (qualified; full ROS2 bridge, live-verified)
 ```
+
+**Backend qualification status (Jetson AGX Orin, arm64, measured 2026-09-02):**
+
+| Backend | Version | Qualification |
+|---------|---------|---------------|
+| Gazebo (Harmonic) | gz-sim8 8.15.0 | Worlds incl. `celisca_floor_1` (165 MB furniture STL) load headless with zero errors |
+| PyBullet | 3.2.7 (source-rebuilt vs NumPy 2.2.6) | Live launch verified: spawner publishes `/clock` `/odom` `/scan` `/imu/out` `/joint_states` |
+| MuJoCo | 3.12.0 (C lib source-built + pip bindings) | Live launch verified: same topic contract; passive-viewer shutdown segfault fixed for ARM |
+| Isaac Sim | 6.0.1 docker image (`isaac-sim-docker:latest`, 26.1 GB) | Source-built via `tools/docker/` on aarch64; container GPU runtime registration is the remaining step |
+
+Large simulator artifacts live on the 1 TB SSD (`/workspace/molar/`), never on
+the 64 GB eMMC: docker `data-root` + containerd store, packman cache, Omniverse
+extension cache (symlinked from `~/.local/share/ov`), and the Isaac Sim source
+tree (`/workspace/molar/installs/IsaacSim-6.0.1`).
 
 Every adapter package mirrors the Gazebo spawn interface so the bringup layer
 forwards `world_*`, `model`/`robot_*`, `spawn_*`, and `use_sim_time` unchanged.

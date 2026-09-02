@@ -7,7 +7,7 @@ supported_baseline:
   architecture: arm64
   simulators:
   - Gazebo Classic (qualified)
-  - Isaac Sim (adapter; docker aarch64 build in progress, source on SSD)
+  - Isaac Sim (docker image isaac-sim-docker:latest built from source on SSD; GPU wiring pending)
   - PyBullet (qualified, source-built vs NumPy 2.x)
   - MuJoCo (qualified, aarch64 wheel)
 baseline:
@@ -124,7 +124,7 @@ tasks:
       P7.8:
         state: active
         owner: null
-        note: 'PyBullet 3.2.7 (numpy 2.2.6 rebuild) + MuJoCo 3.12.0 launches verified live on Jetson arm64 with full ROS2 topic contract (/clock /odom /scan /imu /joint_states); Gazebo Harmonic verified headless incl. celisca_floor_1 furniture mesh; Isaac Sim docker build in progress from source on SSD'
+        note: 'PyBullet 3.2.7 (numpy 2.2.6 rebuild) + MuJoCo 3.12.0 launches verified live on Jetson arm64 with full ROS2 topic contract (/clock /odom /scan /imu /joint_states); Gazebo Harmonic verified headless incl. celisca_floor_1 furniture mesh; Isaac Sim 6.0.1 docker image isaac-sim-docker:latest (26.1 GB) built from source on the SSD — remaining: nvidia runtime registration + container boot test + robot_lab_isaac smoke'
 known_blockers:
 - id: hardware_hil
   affects:
@@ -137,7 +137,7 @@ known_blockers:
 - id: isaac_sim_aarch64
   affects:
   - P7.8
-  condition: Isaac Sim built via docker (source on SSD); docker data-root must point to /workspace (SSD) — run sudo bash /workspace/molar/isaac_docker_setup.sh once; eMMC only has ~7.5G free
+  condition: docker image isaac-sim-docker:latest built (26.1 GB, on SSD); remaining steps — register nvidia runtime (sudo nvidia-ctk runtime configure --runtime=docker), container boot test, robot_lab_isaac smoke. Docker data-root AND containerd store must stay on /workspace (SSD) — eMMC only has ~7.4G free; recovery script scripts/fix_containerd_disk.sh
 handoff:
   next_task: P7.8
-  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. P7.6 support matrix published. P7.7 multi-simulator dispatch infrastructure done. P7.8: PyBullet 3.2.7 + MuJoCo 3.12.0 launches verified live on Jetson AGX Orin (full ROS2 topic contract); Gazebo Harmonic verified headless with furniture-mesh world. Isaac Sim docker aarch64 build from /workspace/molar/installs/IsaacSim-6.0.1 pending — run sudo bash /workspace/molar/isaac_docker_setup.sh (relocates docker data-root to SSD, adds user to docker group, installs xorg-dev + nvidia-container-toolkit), then tools/docker/prep_docker_build.sh + build_docker.sh --aarch64.'
+  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. P7.6 support matrix published. P7.7 multi-simulator dispatch infrastructure done. P7.8: PyBullet 3.2.7 + MuJoCo 3.12.0 launches verified live on Jetson AGX Orin (full ROS2 topic contract); Gazebo Harmonic verified headless with furniture-mesh world. Isaac Sim 6.0.1 docker image isaac-sim-docker:latest BUILT from source (26.1 GB, on SSD) — remaining: sudo nvidia-ctk runtime configure --runtime=docker + systemctl restart docker, container boot test (docker run -d --runtime nvidia -e ACCEPT_EULA=Y isaac-sim-docker:latest), then robot_lab_isaac smoke against the container. Keep docker data-root + containerd store on /workspace (SSD); scripts/isaac_docker_setup.sh, scripts/fix_containerd_disk.sh and scripts/isaac_postbuild.sh document the pipeline.'

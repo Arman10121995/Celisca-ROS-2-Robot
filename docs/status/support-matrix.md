@@ -12,7 +12,7 @@ Last updated: 2026-09-02
 | ROS 2 Humble | ✅ Supported | Primary target distribution |
 | arm64 | ✅ Supported | Platform tested |
 | Gazebo (Harmonic) | ✅ Supported | `gz sim` headless verified: nav_maze + celisca_floor_1 worlds load with zero errors; furniture STL (165 MB, LFS-restored) resolves via GZ_SIM_RESOURCE_PATH set in gazebo.launch.py |
-| Isaac Sim | 🚧 Building | Source at /workspace/molar/installs/IsaacSim-6.0.1 (SSD); Docker-based aarch64 build in progress (see Known Limits) |
+| Isaac Sim | 🚧 Image Built | `isaac-sim-docker:latest` (26.1 GB) source-built on aarch64 via `tools/docker/` pipeline; stored on 1 TB SSD. Remaining: nvidia runtime registration + container boot test + `robot_lab_isaac` smoke |
 | PyBullet | ✅ Qualified | 3.2.7 rebuilt from source against NumPy 2.2.6 (venv + user site); launch verified live on Jetson: spawner runs clean, publishes /clock /odom /scan /imu/out /joint_states |
 | MuJoCo | ✅ Qualified | 3.12.0 (C lib source-built on SSD + pip bindings); launch verified live on Jetson: spawner runs clean, publishes /clock /odom /scan /imu/out /joint_states; viewer segfault fix (no .close() at shutdown on ARM) |
 | ORB-SLAM3 | ⚠️ Optional | OpenCV ABI warning if versions mismatch |
@@ -77,7 +77,7 @@ Last updated: 2026-09-02
 |-------|-------------|
 | Hardware HIL | Physical Bumperbot validation pending (P7.5 blocked) |
 | ORB-SLAM3 | OpenCV ABI must match ROS cv_bridge |
-| Simulator backends | PyBullet and MuJoCo both implement complete ROS2 spawner (+GUI, +laser scan via mj_ray). ASCII STL meshes in robot URDF exceed MuJoCo ushort mesh limit -> fallback basic-primitive MJCF used (spawner falls back gracefully). Isaac Sim: source extracted to /workspace/molar/installs/IsaacSim-6.0.1 (1TB SSD); docker-based aarch64 build (tools/docker/build_docker.sh --aarch64) requires docker data-root on SSD + nvidia-container-toolkit — setup script: /workspace/molar/isaac_docker_setup.sh. Internal eMMC is 87% full — never install large artifacts to / |
+| Simulator backends | PyBullet and MuJoCo both implement complete ROS2 spawner (+GUI, +laser scan via mj_ray). ASCII STL meshes in robot URDF exceed MuJoCo ushort mesh limit -> fallback basic-primitive MJCF used (spawner falls back gracefully). Isaac Sim docker image built (26.1 GB on SSD); GPU wiring + container smoke pending. All large artifacts (docker data-root, containerd store, packman cache, Omniverse ext cache, Isaac Sim source) live on the 1 TB SSD — internal eMMC is ~87% full and must never receive build artifacts (recovery: scripts/fix_containerd_disk.sh) |
 | Real-time | Real-time performance not benchmarked on hardware |
 | Multi-robot | No multi-robot scenarios tested |
 
