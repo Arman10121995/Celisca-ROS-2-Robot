@@ -60,6 +60,7 @@ def _build_mujoco_actions(context):
             name="mujoco_spawner",
             output="screen",
             parameters=[{
+                "model": LaunchConfiguration("model"),
                 "world_xml": mujoco_xml,
                 "robot_name": robot_name,
                 "robot_package": robot_package,
@@ -73,19 +74,8 @@ def _build_mujoco_actions(context):
         )
     )
 
-    # Sensor bridge
-    actions.append(
-        Node(
-            package="robot_lab_mujoco",
-            executable="sensor_bridge",
-            name="mujoco_sensor_bridge",
-            output="screen",
-            parameters=[{
-                "robot_name": robot_name,
-                "use_sim_time": use_sim_time,
-            }],
-        )
-    )
+    # NOTE: The MuJoCo spawner already publishes joint_states, odom,
+    # TF, scan, imu, and clock directly.  No separate sensor_bridge needed.
 
     return actions
 

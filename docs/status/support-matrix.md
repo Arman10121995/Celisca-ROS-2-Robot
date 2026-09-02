@@ -13,8 +13,8 @@ Last updated: 2026-09-02
 | arm64 | ✅ Supported | Platform tested |
 | Gazebo Classic | ✅ Supported | Primary simulator, fully qualified |
 | Isaac Sim | 🚧 Adapter | No aarch64 pip wheel; standalone aarch64 build requires separate install (see Known Limits) |
-| PyBullet | ✅ Qualified | 3.2.7 rebuilt from source against NumPy 2.x; headless DIRECT physics verified |
-| MuJoCo | ✅ Qualified | 3.3.4 + dm-control 1.0.31 via aarch64 wheel; headless physics verified |
+| PyBullet | ✅ Qualified | 3.2.7 rebuilt from source against NumPy 2.x; spawner implements full ROS2 bridge (joint_states, odom, TF, scan, imu, clock) with GUI + DIRECT fallback |
+| MuJoCo | ✅ Qualified | 3.3.4 + dm-control 1.0.31 via aarch64 wheel; complete spawner implements GUI viewer (launch_passive), physics loop, ROS2 topics, and mj_ray laser scan |
 | ORB-SLAM3 | ⚠️ Optional | OpenCV ABI warning if versions mismatch |
 
 ## Robot Support
@@ -77,7 +77,7 @@ Last updated: 2026-09-02
 |-------|-------------|
 | Hardware HIL | Physical Bumperbot validation pending (P7.5 blocked) |
 | ORB-SLAM3 | OpenCV ABI must match ROS cv_bridge |
-| Simulator backends | PyBullet (source-built vs NumPy 2.x) and MuJoCo (aarch64 wheel) physics verified headless; Isaac Sim not installed — no aarch64 pip wheel, standalone aarch64 build (~10-20 GB, separate env from ROS venv) pending |
+| Simulator backends | PyBullet and MuJoCo both implement complete ROS2 spawner (+GUI, +laser scan via mj_ray). ASCII STL meshes in robot URDF exceed MuJoCo ushort mesh limit -> fallback basic-primitive MJCF used (spawner falls back gracefully). Isaac Sim not installed — standalone install (~10-20 GB) pending |
 | Real-time | Real-time performance not benchmarked on hardware |
 | Multi-robot | No multi-robot scenarios tested |
 

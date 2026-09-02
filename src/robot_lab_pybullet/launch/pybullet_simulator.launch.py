@@ -48,6 +48,7 @@ def _build_pybullet_actions(context):
             name="pybullet_spawner",
             output="screen",
             parameters=[{
+                "model": LaunchConfiguration("model"),
                 "robot_name": robot_name,
                 "robot_package": robot_package,
                 "robot_xacro": robot_xacro,
@@ -60,19 +61,8 @@ def _build_pybullet_actions(context):
         )
     )
 
-    # Sensor bridge: PyBullet sensor data → ROS 2 topics
-    actions.append(
-        Node(
-            package="robot_lab_pybullet",
-            executable="sensor_bridge",
-            name="pybullet_sensor_bridge",
-            output="screen",
-            parameters=[{
-                "robot_name": robot_name,
-                "use_sim_time": use_sim_time,
-            }],
-        )
-    )
+    # NOTE: The PyBullet spawner already publishes joint_states, odom,
+    # TF, scan, imu, and clock directly.  No separate sensor_bridge needed.
 
     return actions
 

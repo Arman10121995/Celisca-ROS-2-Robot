@@ -19,4 +19,10 @@ install(
   DESTINATION share/${PROJECT_NAME}/config
 )
 
+# Install MJCF (MuJoCo) world files under share/maps/mjcf/...
+install(
+  DIRECTORY mjcf/
+  DESTINATION share/${PROJECT_NAME}/mjcf
+)
+
 ament_package()

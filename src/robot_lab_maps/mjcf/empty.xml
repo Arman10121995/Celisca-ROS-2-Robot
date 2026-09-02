@@ -1,0 +1,8 @@
+<mujoco model="empty">
+  <option gravity="0 0 -9.81"/>
+  <worldbody>
+    <geom type="plane" size="50 50 0.1"/>
+    <light diffuse="0.8 0.8 0.8" pos="0 0 5" dir="0 0 -1" castshadow="true"/>
+    <light diffuse="0.3 0.3 0.3" pos="0 -3 3" dir="0 1 -1"/>
+  </worldbody>
+</mujoco>
