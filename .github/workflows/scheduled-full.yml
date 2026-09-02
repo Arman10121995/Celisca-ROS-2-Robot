@@ -20,6 +20,11 @@ jobs:
         with:
           required-ros-distributions: humble
 
+      - name: Install Python dependencies
+        shell: bash
+        run: |
+          pip3 install pytest pybullet mujoco numpy
+
       - name: Install dependencies
         shell: bash
         run: |

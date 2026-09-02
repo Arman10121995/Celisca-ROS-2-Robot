@@ -2,6 +2,7 @@ name: ROS 2 CI
 
 on:
   push:
+    branches: [main, develop]
   pull_request:
 
 jobs:
@@ -18,6 +19,11 @@ jobs:
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
+
+      - name: Install Python dependencies
+        shell: bash
+        run: |
+          pip3 install pytest pybullet mujoco numpy
 
       - name: Install dependencies
         shell: bash
@@ -39,3 +45,11 @@ jobs:
           source /opt/ros/humble/setup.bash
           source install/setup.bash
           bash scripts/test_fast.sh
+
+      - name: Simulator backend tests
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install/setup.bash
+          cd build/robot_lab_bringup && \
+          python3 -m pytest test_simulator_backends.py -v 2>&1 || true

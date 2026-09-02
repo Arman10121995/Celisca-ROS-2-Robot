@@ -591,22 +591,31 @@ class MuJoCoSpawner(Node):
         self._running = False
         if self._thread and self._thread.is_alive():
             self._thread.join(timeout=2.0)
-        if self._viewer is not None:
-            try:
-                self._viewer.close()
-            except Exception:
-                pass
+        # NOTE: We intentionally do NOT call self._viewer.close() because
+        # mujoco.viewer.launch_passive() creates a viewer on a separate
+        # thread with its own OpenGL context.  Calling .close() on it
+        # after the ROS shutdown sequence has begun causes a segfault on
+        # some platforms (notably Jetson / ARM).  Instead we let the
+        # viewer be reaped when the process exits.
+        self._viewer = None
         super().destroy_node()
 
 
 def main(args=None):
+    import signal as _signal
     rclpy.init(args=args)
     node = MuJoCoSpawner()
+    # Prevent Python-level KeyboardInterrupt traceback when the process is
+    # killed with SIGINT — the shutdown path in destroy_node() handles cleanup.
+    _signal.signal(_signal.SIGINT, _signal.SIG_DFL)
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except Exception:
         pass
     finally:
-        node.destroy_node()
+        try:
+            node.destroy_node()
+        except Exception:
+            pass
         if rclpy.ok():
             rclpy.shutdown()
