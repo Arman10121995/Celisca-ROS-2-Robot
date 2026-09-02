@@ -11,7 +11,7 @@
 [![Tests: 257 Passing](https://img.shields.io/badge/Tests-257%20Passing-brightgreen)](https://github.com/features/actions)
 [![CI: Passing](https://img.shields.io/badge/CI-Passing-brightgreen)](.github/workflows/)
 
-**257 automated tests | 20 robots | 28 environments | 30 algorithms | 7 robot classes | 18 scenarios | 15 experiments**
+**257 automated tests | 20 robots | 26 environments | 43 algorithms | 5 robot classes | 18 scenarios | 15 experiments | 4 simulators**
 
 Last updated: 2026-09-01
 
@@ -58,6 +58,7 @@ All leading to: launch adapters and contracts → metrics, artifacts, and result
 - **Automated validation**: 257 tests verify everything
 - **Benchmark-first**: Every algorithm has standard result schema and regression testing
 - **Unified composition**: One bringup handles all robots via robot_model parameter
+- **Multi-simulator**: One launch dispatch routes to Gazebo, Isaac Sim, PyBullet, or MuJoCo
 
 ---
 
@@ -99,9 +100,12 @@ robot_lab_ws/
 │   │   ├── robot_lab_benchmark/        # Benchmarking
 │   │   ├── robot_lab_algorithms/       # Algorithm implementations
 │   │   └── ...
-│   ├── robot_lab_robots/               # 20 robot descriptions
-│   ├── robot_lab_maps/                 # 28 environment maps
-│   ├── robot_lab_gui/                  # Control Center GUI
+│   ├── robot_lab_isaac/               # Isaac Sim simulator adapter
+│   ├── robot_lab_pybullet/            # PyBullet simulator adapter
+│   ├── robot_lab_mujoco/              # MuJoCo simulator adapter
+│   ├── robot_lab_robots/              # 20 robot descriptions
+│   ├── robot_lab_maps/                # 26 environment maps
+│   ├── robot_lab_gui/                 # Control Center GUI
 │   └── ORB_SLAM3/                      # Optional SLAM
 ├── LICENSE
 ├── LICENSES/third-party-notices.md
@@ -113,7 +117,7 @@ robot_lab_ws/
 
 ## Features
 
-### Robot Support (20 robots across 4 classes)
+### Robot Support (20 robots across 5 classes)
 
 | Robot | Class | DOF | Status | Features |
 |-------|-------|-----|--------|----------|
@@ -124,19 +128,19 @@ robot_lab_ws/
 | Quadrotor SITL | Aerial | 4 | Integrated | MAVLink control |
 | 15 Unitree robots | Quadruped/Humanoid | 12-42 | Cataloged | Vendored descriptions |
 
-### Algorithm Coverage (30 algorithms, 7 categories)
+### Algorithm Coverage (43 algorithms, 7 categories)
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| Perception | 5+ | obstacle_detector, scan_clusterer, pointcloud_segmenter |
-| Localization | 5+ | amcl, rtabmap, hector_slam, dead_reckoning |
-| State Estimation | 5+ | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator |
-| Sensor Fusion | 5+ | wheel_imu_fusion, gps_odom_fusion, complementary_imu |
-| Global Planning | 5+ | rrt_planner, voronoi_planner, a_star_planner |
-| Local Planning | 5+ | follow_the_gap, pure_pursuit, pd_motion_planner |
-| Control | 9+ | joint_effort_commander, humanoid_standing_controller, mavros_offboard_controller |
+| Perception | 8 | obstacle_detector, scan_clusterer, pointcloud_segmenter |
+| Localization | 6 | amcl, rtabmap, hector_slam, dead_reckoning |
+| State Estimation | 5 | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator |
+| Sensor Fusion | 5 | wheel_imu_fusion, gps_odom_fusion, complementary_imu |
+| Global Planning | 5 | rrt_planner, voronoi_planner, a_star_planner |
+| Local Planning | 5 | follow_the_gap, pure_pursuit, pd_motion_planner |
+| Control | 9 | joint_effort_commander, humanoid_standing_controller, mavros_offboard_controller |
 
-### Environment Support (28 environments)
+### Environment Support (26 environments)
 
 | Category | Count | Examples |
 |----------|-------|----------|
@@ -145,6 +149,28 @@ robot_lab_ws/
 | Dynamic variants | 2 | nav_dynamic, nav_sensor_degraded |
 | Terrain | 3 | terrain_rough, terrain_stairs, terrain_stepping_stones |
 | Aerial courses | 2 | aerial_course, aerial_indoor |
+
+### Simulator Support (4 backends)
+
+One launch dispatcher (`simulated_robot.launch.py`) selects the physics backend with the `simulator:=` argument. Every mode declares which simulators it supports in `sim_modes.yaml`, and each backend exposes the same spawn interface (world/model/pose arguments).
+
+| Simulator | Package | Status | Notes |
+|-----------|---------|--------|-------|
+| Gazebo Classic | `robot_lab_description` | ✅ Integrated | Primary simulator; spawns URDF with standard ros2_control + sensor plugins |
+| Isaac Sim | `robot_lab_isaac` | 🚧 Adapter | Mirror spawn interface; physics backend still a stub |
+| PyBullet | `robot_lab_pybullet` | 🚧 Adapter | Mirror spawn interface; physics backend still a stub |
+| MuJoCo | `robot_lab_mujoco` | 🚧 Adapter | Mirror spawn interface; physics backend still a stub |
+
+```bash
+# Select the physics backend (default: gazebo)
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=nav map_name:=small_office robot_model:=bumperbot simulator:=gazebo
+
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=nav map_name:=small_office robot_model:=bumperbot simulator:=isaac
+```
+
+The GUI Launch tab exposes the same dropdown, gated per mode by the `simulators:` list in `sim_modes.yaml`. Unknown or unsupported simulator values are rejected before any process starts.
 
 ---
 
@@ -193,7 +219,7 @@ ros2 run robot_lab_benchmark benchmark --bag-capture true
 ros2 run robot_lab_gui robot_lab_gui
 ```
 
-- **Launch tab**: Robot/Mode/Map selection, drive pad, save maps
+- **Launch tab**: Robot/Mode/Map/Simulator selection, drive pad, save maps
 - **Registry tab**: Browse all 5 registries
 - **Vacuum tab**: Room vacuum mission control
 - **Benchmark tab**: Seeded runs and regression checks
@@ -210,6 +236,10 @@ ros2 run robot_lab_gui robot_lab_gui
 # Navigation with Bumperbot
 ros2 launch robot_lab_bringup simulated_robot.launch.py \
     mode:=nav map_name:=small_office robot_model:=bumperbot
+
+# Navigation with a different physics backend
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=nav map_name:=small_office robot_model:=bumperbot simulator:=pybullet
 
 # Display only
 ros2 launch robot_lab_bringup simulated_robot.launch.py \
@@ -236,15 +266,18 @@ ros2 run robot_lab_vacuum_cleaning vacuum_cleaner
 # Fast PR tests (< 60s)
 bash scripts/test_fast.sh
 
-# Full test suite (257 tests)
+# Full test suite (257 registry tests + bringup profile tests)
 PYTHONPATH=src/robot_lab/robot_lab_registry python3 -m unittest discover \
     -s src/robot_lab/robot_lab_registry/test
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
+    src/robot_lab_bringup/test/test_sim_profiles.py -q
 
 # Health check
 bash scripts/doctor.sh
 ```
 
-**257/257 tests passing, 0 errors, 0 failures**
+**257/257 registry tests passing, 0 errors, 0 failures.** Bringup profile tests
+(200 collected, including 7 simulator-dispatch tests) also pass.
 
 ---
 
@@ -261,7 +294,7 @@ bash scripts/doctor.sh
 | P6 | Benchmarking | Done |
 | P7 | Hardening | Active (P7.5 blocked) |
 
-**Next:** P7.6 (Support Matrix)
+**Next:** P7.8 (Multi-simulator physics backends)
 **Blocked:** P7.5 (Hardware HIL)
 
 ---

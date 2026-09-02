@@ -100,6 +100,11 @@ maps:
       yaw: "0.0"
 ```
 
+The `simulator:=` launch argument selects the physics backend
+(`gazebo|isaac|pybullet|mujoco`, default `gazebo`); world files are
+Gazebo-format and are forwarded through the same spawn interface by the ISAAC,
+PyBullet, and MuJoCo adapters.
+
 `initial_pose` is the AMCL pose in the map frame. For maps generated from the
 same Gazebo world frame, set it to the same `x`, `y`, and `yaw` as `spawn`.
 

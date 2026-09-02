@@ -7,6 +7,10 @@ selects robots through:
 ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot
 ```
 
+The physics backend is selected with `simulator:=gazebo|isaac|pybullet|mujoco`
+(default `gazebo`; the ISAAC/PyBullet/MuJoCo adapters mirror the Gazebo spawn
+interface — see P7.7 in the ROADMAP):
+
 Robot profiles are defined in:
 
 ```text

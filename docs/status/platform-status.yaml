@@ -5,7 +5,11 @@ supported_baseline:
   os: Ubuntu 22.04
   ros: Humble
   architecture: arm64
-  simulator: Gazebo Classic
+  simulators:
+  - Gazebo Classic (qualified)
+  - Isaac Sim (adapter, P7.8 pending)
+  - PyBullet (adapter, P7.8 pending)
+  - MuJoCo (adapter, P7.8 pending)
 baseline:
   core_packages: 17
   optional_packages: 1
@@ -14,8 +18,8 @@ baseline:
   legacy_environment_profiles: 15
   legacy_modes: 5
   registry_robots: 20
-  registry_environments: 28
-  registry_algorithms: 30
+  registry_environments: 26
+  registry_algorithms: 43
   registry_scenarios: 18
   registry_experiments: 15
   tests:
@@ -25,7 +29,8 @@ baseline:
     skipped: 0
   evidence:
   - colcon build + test passing
-  - 251 unit tests passing (P0-P7.4)
+  - 257 unit tests passing (P0-P7.4)
+  - 200 bringup profile tests passing incl. 7 simulator dispatch
   - CI workflow validates on every push
 tasks:
   P0:
@@ -111,8 +116,14 @@ tasks:
         state: blocked
         owner: null
       P7.6:
-        state: active
+        state: done
         owner: cline
+      P7.7:
+        state: done
+        owner: cline
+      P7.8:
+        state: active
+        owner: null
 known_blockers:
 - id: hardware_hil
   affects:
@@ -123,5 +134,5 @@ known_blockers:
   - P5.2
   condition: OpenCV ABI must match
 handoff:
-  next_task: P7.6
-  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. Next: P7.6 support matrix.'
+  next_task: P7.8
+  instructions: 'P0-P7.4 complete. P7.5 blocked on hardware. P7.6 support matrix published. P7.7 multi-simulator dispatch infrastructure done. Next: P7.8 physics backends for Isaac/PyBullet/MuJoCo.'

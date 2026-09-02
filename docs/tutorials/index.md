@@ -19,6 +19,17 @@ bash scripts/test_fast.sh
 bash scripts/doctor.sh
 ```
 
+## Simulator Backends
+
+Tutorials run on the default **Gazebo Classic** backend. The same commands
+accept `simulator:=isaac`, `simulator:=pybullet`, or `simulator:=mujoco`
+(adapter backends; physics engines pending P7.8):
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=nav map_name:=small_office robot_model:=bumperbot simulator:=gazebo
+```
+
 ## Tutorials by Category
 
 | Category | Tutorial | What you'll compare |

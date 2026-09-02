@@ -33,7 +33,10 @@ src/
     _upstream/              # vendored third-party robot assets
   maps/                     # worlds, occupancy maps, reference geometry
   robot_lab_models/            # reusable environment models
-  robot_lab_algorithms/     # 13 algorithm implementations (P5)
+  robot_lab_algorithms/     # 43 algorithm implementations (P5)
+  robot_lab_isaac/          # Isaac Sim simulator adapter
+  robot_lab_pybullet/       # PyBullet simulator adapter
+  robot_lab_mujoco/         # MuJoCo simulator adapter
   robot_lab_*/              # reference robot and legacy-compatible adapters
   ORB_SLAM3/                # optional external-library adapter
 ```
@@ -56,15 +59,17 @@ Required metadata includes class, maturity, supported simulators, locomotion,
 sensors, command/state interfaces, frames, capabilities, source/provenance, and
 the smoke experiments that justify its status.
 
-**Integrated robots:**
+**Integrated robots:** (launch dispatch can target any of the four simulator
+backends; Gazebo is the qualified primary backend for all, the others are
+adapter stubs until physics backends land as P7.8)
 
 | Robot | Class | DOF | Simulators | Source |
 |-------|-------|-----|------------|--------|
-| Bumperbot | Differential drive | — | Gazebo | First-party |
-| Labbot | Differential drive | — | Gazebo | First-party |
-| Go2 | Quadruped | 12 leg joints | Gazebo | Unitree (vendored) |
-| Berkeley Humanoid Lite | Humanoid | 22 position joints | Gazebo | HybridRobotics (vendored) |
-| Quadrotor SITL | Aerial | 4 rotors | Gazebo | First-party |
+| Bumperbot | Differential drive | — | Gazebo (qualified) | First-party |
+| Labbot | Differential drive | — | Gazebo (qualified) | First-party |
+| Go2 | Quadruped | 12 leg joints | Gazebo (qualified) | Unitree (vendored) |
+| Berkeley Humanoid Lite | Humanoid | 22 position joints | Gazebo (qualified) | HybridRobotics (vendored) |
+| Quadrotor SITL | Aerial | 4 rotors | Gazebo (qualified) | First-party |
 
 ### Environment
 
@@ -82,6 +87,28 @@ source/provenance, and qualification status.
 | Terrain | 3 | terrain_rough, terrain_stairs, terrain_stepping_stones |
 | Aerial courses | 2 | aerial_course, aerial_indoor |
 
+### Simulator
+
+A simulator is a first-class launch selector. `simulated_robot.launch.py`
+dispatches on the `simulator:=` argument against a fixed registry:
+
+```text
+gazebo  → robot_lab_description/gazebo.launch.py          (qualified)
+isaac   → robot_lab_isaac/isaac_simulator.launch.py       (adapter stub)
+pybullet→ robot_lab_pybullet/pybullet_simulator.launch.py (adapter stub)
+mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (adapter stub)
+```
+
+Every adapter package mirrors the Gazebo spawn interface so the bringup layer
+forwards `world_*`, `model`/`robot_*`, `spawn_*`, and `use_sim_time` unchanged.
+`sim_modes.yaml` declares the `simulators:` list per mode; the GUI Launch tab
+gates its simulator dropdown from the same list, and the dispatcher rejects
+unknown or unsupported values before any process starts.
+
+Required metadata for a fully integrated simulator includes world reference
+paths, spawn-zone semantics, ground-truth extraction, supported robot classes,
+and qualification status.
+
 ### Algorithm
 
 Required metadata includes category, family, implementation package/plugin,
@@ -89,12 +116,12 @@ status, input/output contract, required capabilities, supported robot classes,
 upstream source, and smoke/benchmark evidence. Algorithm entries are adapters;
 an upstream project name alone is not an integration.
 
-**Algorithm coverage (30 algorithms, 7 categories):**
+**Algorithm coverage (43 algorithms, 7 categories):**
 
 | Category | Count | New (P5) | Legacy |
 |----------|-------|----------|--------|
-| Perception | 5 | obstacle_detector, scan_clusterer, pointcloud_segmenter | 2 |
-| Localization | 5 | dead_reckoning | 4 |
+| Perception | 8 | obstacle_detector, scan_clusterer, pointcloud_segmenter | 5 |
+| Localization | 6 | dead_reckoning | 5 |
 | State Estimation | 5 | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator | 2 |
 | Sensor Fusion | 5 | wheel_imu_fusion, gps_odom_fusion, complementary_imu | 2 |
 | Global Planning | 5 | rrt_planner, voronoi_planner | 3 |
@@ -197,7 +224,7 @@ launch  →  reset  →  run (rosbag capture)  →  stop  →  manifest.json
 | Workflow | Trigger | Duration | What it runs |
 |----------|---------|----------|--------------|
 | `ci.yml` | Push/PR | < 60s | `scripts/test_fast.sh` (compile + P5/P6 logic + registry) |
-| `scheduled-full.yml` | Daily 06:00 UTC | ~5min | Full colcon test + all 257 unit tests |
+| `scheduled-full.yml` | Daily 06:00 UTC | ~5min | Full colcon test + all 257 unit tests + 200 bringup profile tests |
 
 ## Control Center GUI (`robot_lab_gui`)
 
@@ -214,7 +241,7 @@ robot_lab_gui/
 
 | Tab | Function | Data source |
 |-----|----------|-------------|
-| Launch | Robot/Mode/Map selection, launch, drive pad, save map, 3D map export | `robots.yaml`, `sim_modes.yaml`, `sim_maps.yaml` (from `robot_lab_bringup`/`robots`/`maps` share dirs) |
+| Launch | Robot/Mode/Map/Simulator selection, launch, drive pad, save map, 3D map export | `robots.yaml`, `sim_modes.yaml`, `sim_maps.yaml` (from `robot_lab_bringup`/`robots`/`maps` share dirs) |
 | Registry | Browse + search all 5 registries with YAML detail view | `robot_lab_registry/config/*.yaml` |
 | Vacuum | Room-vacuum mission launch + `vacuum_cleaner` node control | Launch profiles with `supports_room_vacuum: true` |
 | Benchmark | Seeded runs via `LaunchOrchestrator`, regression check vs reference | `robot_lab_benchmark` + `reference_data/results.json` |
@@ -224,14 +251,14 @@ robot_lab_gui/
 **Uniform-structure principles encoded in the GUI:**
 
 1. **One launch entry point** — all launches go through `robot_lab_bringup` (`simulated_robot.launch.py` / `simulated_room_vacuum.launch.py`); the robot id (`robot_model:=`) selects the description from `src/robot_lab_robots/`, never a per-robot package.
-2. **Profile-driven capability gating** — mode buttons, vacuum radio, and map combobox enable/disable purely from `supported_modes` / `features` / `supports_room_vacuum` fields; adding a robot to `robots.yaml` automatically appears correctly in the GUI.
+2. **Profile-driven capability gating** — mode buttons, simulator dropdown, vacuum radio, and map combobox enable/disable purely from `supported_modes` / `simulators` / `features` / `supports_room_vacuum` fields; adding a robot to `robots.yaml` automatically appears correctly in the GUI.
 3. **Robot info panel** — the Launch tab shows the selected robot's feature class, available modes, and cleaning-mission support, derived live from its profile.
 4. **Registry-driven benchmarking** — Benchmark tab comboboxes are populated from the same YAML configs the CLI validates, so GUI and CI always agree.
 5. **Managed background processes** — all spawned processes (launches, rosbags, test runs, cleaner node) are tracked and cleaned up on exit.
 
 ## Testing architecture
 
-**257 tests across 4 test files:**
+**257 registry unit tests + 200 bringup profile tests:**
 
 | Test file | Count | Coverage |
 |-----------|-------|----------|
@@ -239,6 +266,7 @@ robot_lab_gui/
 | `test_p6_benchmarking.py` | 65 | Schema, orchestration, ground-truth, normalization, outputs, regression, licenses, bootstrap, doctor, tutorials, support matrix |
 | `test_bumperbot_qualification.py` | 28 | Bumperbot metadata, contracts, smoke test |
 | `test_*.py` (other) | 152 | Registry, selectors, launch fragments, adapter, environments, robots |
+| `robot_lab_bringup/test_sim_profiles.py` | 200 | Map/robot/mode profiles, simulator dispatch, spawn interfaces, topic contracts (7 simulator tests) |
 
 ## Provenance and licensing
 

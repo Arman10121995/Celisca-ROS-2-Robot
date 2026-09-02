@@ -11,7 +11,10 @@ Last updated: 2026-09-01
 | Ubuntu 22.04 | ✅ Supported | CI runs on ubuntu-22.04 |
 | ROS 2 Humble | ✅ Supported | Primary target distribution |
 | arm64 | ✅ Supported | Platform tested |
-| Gazebo Classic | ✅ Supported | Primary simulator |
+| Gazebo Classic | ✅ Supported | Primary simulator, fully qualified |
+| Isaac Sim | 🚧 Adapter | Spawn interface mirrors Gazebo; physics backend pending (P7.8) |
+| PyBullet | 🚧 Adapter | Spawn interface mirrors Gazebo; physics backend pending (P7.8) |
+| MuJoCo | 🚧 Adapter | Spawn interface mirrors Gazebo; physics backend pending (P7.8) |
 | ORB-SLAM3 | ⚠️ Optional | OpenCV ABI warning if versions mismatch |
 
 ## Robot Support
@@ -28,13 +31,13 @@ Last updated: 2026-09-01
 
 | Category | Count | Status | Algorithms |
 |----------|-------|--------|------------|
-| Perception | 5 | ✅ | obstacle_detector, scan_clusterer, pointcloud_segmenter, + 2 legacy |
-| Localization | 5 | ✅ | dead_reckoning, + 4 legacy |
-| State Estimation | 5 | ✅ | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator, + 2 legacy |
-| Sensor Fusion | 5 | ✅ | wheel_imu_fusion, gps_odom_fusion, complementary_imu, + 2 legacy |
-| Global Planning | 5 | ✅ | rrt_planner, voronoi_planner, + 3 legacy |
-| Local Planning | 5 | ✅ | follow_the_gap, + 4 legacy |
-| Control | 9 | ✅ | mavros_offboard_controller, joint_effort_commander, + 7 legacy |
+| Perception | 8 | ✅ | obstacle_detector, scan_clusterer, pointcloud_segmenter + 5 legacy |
+| Localization | 6 | ✅ | dead_reckoning + 5 legacy |
+| State Estimation | 5 | ✅ | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator + 2 legacy |
+| Sensor Fusion | 5 | ✅ | wheel_imu_fusion, gps_odom_fusion, complementary_imu + 2 legacy |
+| Global Planning | 5 | ✅ | rrt_planner, voronoi_planner + 3 legacy |
+| Local Planning | 5 | ✅ | follow_the_gap + 4 legacy |
+| Control | 9 | ✅ | mavros_offboard_controller, joint_effort_commander + 7 legacy |
 
 ## Environment Support
 
@@ -61,10 +64,11 @@ Last updated: 2026-09-01
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 251 |
-| Passing | 251 |
+| Registry unit tests | 257 |
+| Passing | 257 |
 | Failing | 0 |
 | Errors | 0 |
+| Bringup profile tests | 200 (incl. 7 simulator dispatch) |
 | CI status | ✅ Passing |
 
 ## Known Limits
@@ -73,7 +77,7 @@ Last updated: 2026-09-01
 |-------|-------------|
 | Hardware HIL | Physical Bumperbot validation pending (P7.5 blocked) |
 | ORB-SLAM3 | OpenCV ABI must match ROS cv_bridge |
-| Simulator | Gazebo Classic only; no simulator abstraction yet |
+| Simulator backends | Isaac/PyBullet/MuJoCo adapters dispatch and accept the Gazebo spawn interface, but physics backends are stubs (P7.8) |
 | Real-time | Real-time performance not benchmarked on hardware |
 | Multi-robot | No multi-robot scenarios tested |
 
