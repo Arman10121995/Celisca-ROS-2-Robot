@@ -85,7 +85,10 @@ class PyBulletSpawner(Node):
         self.declare_parameter("spawn_y", 0.0)
         self.declare_parameter("spawn_z", 0.0)
         self.declare_parameter("spawn_yaw", 0.0)
-        self.declare_parameter("use_sim_time", True)
+        # use_sim_time is auto-declared by rclpy when passed via launch
+        # overrides — only declare it if not already present.
+        if not self.has_parameter("use_sim_time"):
+            self.declare_parameter("use_sim_time", True)
         self.declare_parameter("world_name", "empty")
         self.declare_parameter("world_path", "")
         self.declare_parameter("wheel_radius", 0.033)

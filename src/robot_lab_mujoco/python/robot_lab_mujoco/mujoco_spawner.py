@@ -18,8 +18,11 @@ try:
     import mujoco
     import mujoco.viewer
 except ImportError:
-    mujoco = None
-    mujoco.viewer = None
+    # Graceful degradation: keep a module-like shim so that
+    # ``mujoco.viewer is not None`` checks below remain valid without
+    # crashing at import time (AttributeError: 'NoneType' has no 'viewer').
+    import types
+    mujoco = types.SimpleNamespace(viewer=None)
 
 import rclpy
 from rclpy.node import Node
@@ -151,7 +154,10 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("spawn_y", 0.0)
         self.declare_parameter("spawn_z", 0.0)
         self.declare_parameter("spawn_yaw", 0.0)
-        self.declare_parameter("use_sim_time", True)
+        # use_sim_time is auto-declared by rclpy when passed via launch
+        # overrides — only declare it if not already present.
+        if not self.has_parameter("use_sim_time"):
+            self.declare_parameter("use_sim_time", True)
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
         self.declare_parameter("publish_rate", 50.0)
