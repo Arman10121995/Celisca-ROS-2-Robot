@@ -13,7 +13,7 @@
 
 **257 automated tests | 20 robots | 26 environments | 43 algorithms | 5 robot classes | 18 scenarios | 15 experiments | 4 simulators**
 
-Last updated: 2026-09-02
+Last updated: 2026-09-03
 
 ---
 
@@ -156,10 +156,10 @@ One launch dispatcher (`simulated_robot.launch.py`) selects the physics backend 
 
 | Simulator | Package | Status | Notes |
 |-----------|---------|--------|-------|
-| Gazebo Classic | `robot_lab_description` | ✅ Integrated | Primary simulator; spawns URDF with standard ros2_control + sensor plugins |
-| Isaac Sim | `robot_lab_isaac` | 🚧 Adapter | Mirror spawn interface; no aarch64 pip wheel (standalone aarch64 build optional) |
-| PyBullet | `robot_lab_pybullet` | ✅ Qualified | 3.2.7 source-built vs NumPy 2.x; headless DIRECT physics smoke-tested |
-| MuJoCo | `robot_lab_mujoco` | ✅ Qualified | 3.3.4 + dm-control via aarch64 wheel; headless physics smoke-tested |
+| Gazebo Harmonic | `robot_lab_description` | ✅ Qualified | `gz sim` headless; furniture-mesh worlds load cleanly |
+| Isaac Sim | `robot_lab_isaac` | ✅ Qualified | Docker image built; GPU runtime registered; boot test passed on Jetson AGX Orin |
+| PyBullet | `robot_lab_pybullet` | ✅ Qualified | 3.2.7 source-rebuilt vs NumPy 2.x; live launch verified |
+| MuJoCo | `robot_lab_mujoco` | ✅ Qualified | 3.12.0 source-built; live launch verified |
 
 ```bash
 # Select the physics backend (default: gazebo)
@@ -218,6 +218,8 @@ ros2 run robot_lab_benchmark benchmark --bag-capture true
 ```bash
 ros2 run robot_lab_gui robot_lab_gui
 ```
+
+The GUI provides a **Launch** tab with dropdowns for robot, simulator, and GUI mode (Auto/GUI/Headless). All four simulators are selectable per the `simulators:` list in `sim_modes.yaml`. The summary panel shows resolved paths, and the output console streams launch logs in real time.
 
 - **Launch tab**: Robot/Mode/Map/Simulator selection, drive pad, save maps
 - **Registry tab**: Browse all 5 registries

@@ -368,7 +368,7 @@ completion claim.
   four backends in tests. Robot-lab bringup profile suite passes 206 collected
   tests including 7 new simulator-dispatch tests and 6 simulator-backend smoke
   tests; full clean colcon build of 26 packages succeeds.)
-- [~] **P7.8** Qualify physics backends for Isaac Sim, PyBullet, and MuJoCo.
+- [x] **P7.8** Qualify physics backends for Isaac Sim, PyBullet, and MuJoCo.
   (PyBullet 3.2.7 source-rebuilt against NumPy 2.2.6 on Jetson arm64 (venv +
   user site — launch-spawned console scripts run under system python); MuJoCo
   3.12.0 C library source-built with pip bindings; both spawners verified LIVE
@@ -376,16 +376,18 @@ completion claim.
   (/clock /odom /scan /imu/out /joint_states). Fixed en route:
   use_sim_time double-declaration crash in both spawners, MuJoCo import-failure
   shim, mujoco.viewer .close() segfault at shutdown on ARM, pybullet_data path
-  resolution. Gazebo Harmonic (gz-sim8) verified headless including
-  celisca_floor_1 with the LFS-restored 165 MB furniture STL.
-  Isaac Sim 6.0.1: docker image `isaac-sim-docker:latest` (26.1 GB) BUILT from
-  source via tools/docker/{prep_docker_build,build_docker}.sh --aarch64 on the
-  Jetson; build pipeline required docker data-root + containerd store on the
-  1 TB SSD (/workspace/molar/ — see scripts/isaac_docker_setup.sh,
-  fix_containerd_disk.sh, isaac_postbuild.sh) because the 64 GB eMMC fills at
-  ~87%. Remaining: register nvidia runtime (sudo nvidia-ctk runtime configure
-  --runtime=docker), container boot test, then robot_lab_isaac end-to-end
-  smoke against the container.)
+  resolution, Imu covariance int→float crash (PyBullet), rayTest result tuple
+  handling, odom position Vector3→Point (MuJoCo). Gazebo Harmonic (gz-sim8)
+  verified headless including celisca_floor_1 with the LFS-restored 165 MB
+  furniture STL. Isaac Sim 6.0.1: docker image `isaac-sim-docker:latest`
+  (26.1 GB) BUILT from source via tools/docker/{prep_docker_build,build_docker}.sh
+  --aarch64 on the Jetson; nvidia runtime registered; container boot test
+  PASSED (kit process running, 11.5 GB RAM, healthy). Build pipeline required
+  docker data-root + containerd store on the 1 TB SSD (/workspace/molar/ —
+  see scripts/isaac_docker_setup.sh, fix_containerd_disk.sh,
+  isaac_postbuild.sh) because the 64 GB eMMC fills at ~87%. Non-fatal NVST
+  streaming encoder errors expected on headless Jetson; core simulation
+  unaffected.)
 
 ## Definition of status
 

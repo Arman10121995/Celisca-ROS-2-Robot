@@ -107,7 +107,7 @@ mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (qualified; full ROS
 | Gazebo (Harmonic) | gz-sim8 8.15.0 | Worlds incl. `celisca_floor_1` (165 MB furniture STL) load headless with zero errors |
 | PyBullet | 3.2.7 (source-rebuilt vs NumPy 2.2.6) | Live launch verified: spawner publishes `/clock` `/odom` `/scan` `/imu/out` `/joint_states` |
 | MuJoCo | 3.12.0 (C lib source-built + pip bindings) | Live launch verified: same topic contract; passive-viewer shutdown segfault fixed for ARM |
-| Isaac Sim | 6.0.1 docker image (`isaac-sim-docker:latest`, 26.1 GB) | Source-built via `tools/docker/` on aarch64; container GPU runtime registration is the remaining step |
+| Isaac Sim | 6.0.1 docker image (`isaac-sim-docker:latest`, 26.1 GB) | Source-built via `tools/docker/` on aarch64; GPU runtime registered; boot test passed on Jetson AGX Orin |
 
 Large simulator artifacts live on the 1 TB SSD (`/workspace/molar/`), never on
 the 64 GB eMMC: docker `data-root` + containerd store, packman cache, Omniverse
