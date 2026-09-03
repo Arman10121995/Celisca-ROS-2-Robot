@@ -76,6 +76,7 @@ class PyBulletSpawner(Node):
 
     def __init__(self):
         super().__init__("pybullet_spawner")
+        self.get_logger().info("PyBulletSpawner __init__ started")
         # Parameters
         self.declare_parameter("robot_name", "bumperbot")
         self.declare_parameter("robot_package", "robot_lab_robots")
@@ -95,6 +96,7 @@ class PyBulletSpawner(Node):
         self.declare_parameter("wheel_separation", 0.17)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
         self.declare_parameter("right_wheel_joint", "wheel_right_joint")
+        self.get_logger().info("Parameters declared")
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
         self.declare_parameter("publish_rate", 50.0)
@@ -240,13 +242,28 @@ class PyBulletSpawner(Node):
         tmp = tempfile.NamedTemporaryFile(suffix=".urdf", delete=False, mode="w")
         tmp.write(urdf)
         tmp.close()
+        self.get_logger().info(f"URDF written to {tmp.name}")
 
-        # Connect
-        gui = bool(self.get_parameter("gui").value and os.environ.get("DISPLAY"))
-        p.connect(p.GUI if gui else p.DIRECT)
+        # Determine GUI mode: handle both boolean and string values from launch
+        gui_param = self.get_parameter("gui").value
+        # Convert string "true"/"false" to boolean if needed
+        if isinstance(gui_param, str):
+            gui_param = gui_param.lower() in ("true", "1", "yes")
+        display = os.environ.get("DISPLAY")
+        gui = bool(gui_param and display)
+        self.get_logger().info(f"PyBullet gui param={self.get_parameter('gui').value} (resolved={gui_param}), DISPLAY={display} -> mode={'GUI' if gui else 'DIRECT'}")
+        self.get_logger().info("Connecting to PyBullet...")
+        try:
+            client_id = p.connect(p.GUI if gui else p.DIRECT)
+            self.get_logger().info(f"PyBullet connected with client_id={client_id}")
+        except Exception as e:
+            self.get_logger().warn(f"PyBullet GUI connection failed: {e}. Falling back to DIRECT mode.")
+            client_id = p.connect(p.DIRECT)
+            self.get_logger().info(f"PyBullet connected in DIRECT mode with client_id={client_id}")
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.81)
         p.setTimeStep(self._dt)
+        self.get_logger().info("PyBullet physics engine configured")
         p.setRealTimeSimulation(0)
 
         # Ground

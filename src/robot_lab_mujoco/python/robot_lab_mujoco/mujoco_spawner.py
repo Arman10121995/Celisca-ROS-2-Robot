@@ -310,10 +310,14 @@ class MuJoCoSpawner(Node):
         )
 
         # --- open viewer ---
-        gui = bool(
-            self.get_parameter("gui").value
-            and os.environ.get("DISPLAY")
-        )
+        # Determine GUI mode: handle both boolean and string values from launch
+        gui_param = self.get_parameter("gui").value
+        # Convert string "true"/"false" to boolean if needed
+        if isinstance(gui_param, str):
+            gui_param = gui_param.lower() in ("true", "1", "yes")
+        display = os.environ.get("DISPLAY")
+        gui = bool(gui_param and display)
+        self.get_logger().info(f"MuJoCo gui param={self.get_parameter('gui').value} (resolved={gui_param}), DISPLAY={display} -> mode={'GUI' if gui else 'DIRECT'}")
         if gui and mujoco.viewer is not None:
             try:
                 self._viewer = mujoco.viewer.launch_passive(
@@ -326,7 +330,7 @@ class MuJoCoSpawner(Node):
                 )
                 self._viewer = None
         else:
-            self.get_logger().info("MuJoCo running headless (no DISPLAY).")
+            self.get_logger().info("MuJoCo running headless (gui=%s, viewer=%s)." % (gui, mujoco.viewer is not None))
             self._viewer = None
 
         # --- start physics thread ---
