@@ -30,6 +30,7 @@ def _build_mujoco_actions(context):
     spawn_y = LaunchConfiguration("spawn_y")
     spawn_z = LaunchConfiguration("spawn_z")
     spawn_yaw = LaunchConfiguration("spawn_yaw")
+    gui = LaunchConfiguration("gui")
 
     actions = []
 
@@ -70,6 +71,7 @@ def _build_mujoco_actions(context):
                 "spawn_z": spawn_z,
                 "spawn_yaw": spawn_yaw,
                 "use_sim_time": use_sim_time,
+                "gui": gui,
             }],
         )
     )
@@ -94,5 +96,6 @@ def generate_launch_description():
         DeclareLaunchArgument("spawn_z", default_value="0.0"),
         DeclareLaunchArgument("spawn_yaw", default_value="0.0"),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument("gui", default_value="true"),
         OpaqueFunction(function=_build_mujoco_actions),
     ])

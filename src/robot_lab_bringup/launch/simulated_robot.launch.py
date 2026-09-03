@@ -421,7 +421,13 @@ def _build_simulation_actions(context):
         )
 
     controller_config = mode_config.get("controller", {})
-    if _section_enabled(controller_config):
+    # ros2_control (controller_manager + robot_lab_controller + joint_state_broadcaster)
+    # is only provided by the Gazebo backend (gz_ros2_control).  PyBullet and
+    # MuJoCo spawners aré self-contained: they subscribe /cmd_vel and publish
+    # /odom + /joint_states + /clock directly, so no controller_layer is needed —
+    # launching ones would hang forever waiting for /controller_manager.
+    _sim_for_controller = _launch_value(context, "simulator")
+    if _section_enabled(controller_config) and _sim_for_controller == "gazebo":
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(controller_share, "controller.launch.py")),
@@ -622,6 +628,12 @@ def generate_launch_description():
             "world_path",
             default_value="auto",
             description="Full Gazebo world path override. 'auto' uses sim_maps.yaml.",
+        ),
+        DeclareLaunchArgument(
+            "gui",
+            default_value="auto",
+            choices=["auto", "true", "false"],
+            description="Force GUI or headless for PyBullet/MuJoCo. 'auto' enables GUI when DISPLAY is set.",
         ),
         DeclareLaunchArgument(
             "map_yaml",

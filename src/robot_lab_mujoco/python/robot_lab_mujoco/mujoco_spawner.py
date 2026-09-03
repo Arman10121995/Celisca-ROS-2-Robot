@@ -27,7 +27,7 @@ except ImportError:
 import rclpy
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
-from geometry_msgs.msg import Quaternion, TransformStamped, Twist, Vector3
+from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu, JointState, LaserScan
 from tf2_ros import TransformBroadcaster
@@ -519,10 +519,10 @@ class MuJoCoSpawner(Node):
         m.header.stamp = self._stamp()
         m.header.frame_id = "odom"
         m.child_frame_id = "base_footprint"
-        m.pose.pose.position = Vector3(*self._bpos)
-        m.pose.pose.orientation = Quaternion(*self._born)
-        m.twist.twist.linear = Vector3(*self._blin)
-        m.twist.twist.angular = Vector3(*self._bang)
+        m.pose.pose.position = Point(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
+        m.pose.pose.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
+        m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
+        m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._pub_odom.publish(m)
 
     def _pub_tf(self):
@@ -530,17 +530,17 @@ class MuJoCoSpawner(Node):
         t.header.stamp = self._stamp()
         t.header.frame_id = "odom"
         t.child_frame_id = "base_footprint"
-        t.transform.translation = Vector3(*self._bpos)
-        t.transform.rotation = Quaternion(*self._born)
+        t.transform.translation = Vector3(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
+        t.transform.rotation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         self._tf_br.sendTransform(t)
 
     def _pub_imu(self):
         m = Imu()
         m.header.stamp = self._stamp()
         m.header.frame_id = "imu_link"
-        m.orientation = Quaternion(*self._born)
+        m.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         m.orientation_covariance = [0.001,0,0, 0,0.001,0, 0,0,0.001]
-        m.angular_velocity = Vector3(*self._bang)
+        m.angular_velocity = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         m.angular_velocity_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
         m.linear_acceleration = Vector3(x=0.0, y=0.0, z=9.81)
         m.linear_acceleration_covariance = [0.1,0,0, 0,0.1,0, 0,0,0.1]

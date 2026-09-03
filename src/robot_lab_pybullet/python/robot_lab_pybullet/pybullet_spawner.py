@@ -22,7 +22,7 @@ except ImportError:
 import rclpy
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
-from geometry_msgs.msg import Quaternion, TransformStamped, Twist, Vector3
+from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu, JointState, LaserScan
 from tf2_ros import TransformBroadcaster
@@ -126,16 +126,72 @@ class PyBulletSpawner(Node):
 
         # Publishers
         self._pub_js = self.create_publisher(JointState, "/joint_states", 10)
-        self._pub_odom = self.create_publisher(Odometry, "/odom", 10)
-        self._pub_scan = self.create_publisher(LaserScan, "/scan", 10)
-        self._pub_imu = self.create_publisher(Imu, "/imu/out", 10)
-        self._pub_clock = self.create_publisher(Time, "/clock", 10)
+        self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
+        self._scan_pub = self.create_publisher(LaserScan, "/scan", 10)
+        self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
+        self._clock_pub = self.create_publisher(Time, "/clock", 10)
         self._tf_br = TransformBroadcaster(self)
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
         self._timer = self.create_timer(0.5, self._try_spawn)
         self._thread = None
 
+    def _load_sdf_meshes(self, world_path: str) -> None:
+        """Load static mesh geometries from an SDF .world file into PyBullet.
+
+
+        Parses ``<uri>package://<pkg>/<path></uri>`` mesh references (and optional
+        sibling ``<scale>n n n</scale>``), resolves them via ament package share
+        directories,and creates a fixed-base multi-body per mesh."""
+        import re as _re
+        import xml.etree.ElementTree as ET
+        try:
+            tree = ET.parse(world_path)
+        except Exception as e:
+            self.get_logger().warn(f"SDF world parse error: {e}")
+            return
+        for mesh_el in tree.getroot().iter():
+            if mesh_el.tag.rsplit("}", 1)[-1] != "mesh":
+                continue
+            uri_el = scale_el = None
+            for child in mesh_el:
+                tag = child.tag.rsplit("}", 1)[-1]
+                if tag == "uri":
+                    uri_el = child
+                elif tag == "scale":
+                    scale_el = child
+            if uri_el is None:
+                continue
+            uri = (uri_el.text or "").strip()
+            if not uri.startswith("package://"):
+                continue
+            rest = uri[len("package://"):]
+            pkg, _, rel = rest.partition("/")
+            try:
+                from ament_index_python.packages import get_package_share_directory
+                abs_path = os.path.join(get_package_share_directory(pkg), rel)
+            except Exception:
+                self.get_logger().warn(f"SDF mesh package not found: {pkg}")
+                continue
+            if not os.path.isfile(abs_path):
+                continue
+            scale = [1.0, 1.0, 1.0]
+            if scale_el is not None and scale_el.text:
+                try:
+                    scale = [float(v) for v in scale_el.text.split()]
+                except (ValueError, TypeError):
+                    pass
+            try:
+                cid = p.createCollisionShape(p.GEOM_MESH, fileName=abs_path,
+                                              meshScale=scale)
+                vid = p.createVisualShape(p.GEOM_MESH, fileName=abs_path,
+                                          meshScale=scale,
+                                          rgbaColor=[0.6, 0.6, 0.6, 1.0])
+                p.createMultiBody(baseCollisionShapeIndex=cid,
+                                  baseVisualShapeIndex=vid, baseMass=0)
+                self.get_logger().info(f"Loaded SDF mesh: {abs_path} (scale {scale})")
+            except Exception as e:
+                self.get_logger().warn(f"SDF mesh load error {abs_path}: {e}")
     def _on_cmd(self, msg):
         with self._twist_lock:
             self._twist = msg
@@ -207,6 +263,8 @@ class PyBulletSpawner(Node):
                                               rgbaColor=[0.6, 0.6, 0.6, 1.0])
                     p.createMultiBody(baseCollisionShapeIndex=cid,
                                       baseVisualShapeIndex=vid, baseMass=0)
+                elif ext in (".world", ".sdf"):
+                    self._load_sdf_meshes(str(wp))
                 else:
                     p.loadURDF(str(wp), useFixedBase=True)
             except Exception as e:
@@ -334,35 +392,35 @@ class PyBulletSpawner(Node):
         m.header.stamp = self._stamp()
         m.header.frame_id = "odom"
         m.child_frame_id = "base_footprint"
-        m.pose.pose.position = Vector3(*self._bpos)
-        m.pose.pose.orientation = Quaternion(*self._born)
-        m.twist.twist.linear = Vector3(*self._blin)
-        m.twist.twist.angular = Vector3(*self._bang)
-        self._pub_odom.publish(m)
+        m.pose.pose.position = Point(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
+        m.pose.pose.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
+        m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
+        m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
+        self._odom_pub.publish(m)
 
     def _pub_tf(self):
         t = TransformStamped()
         t.header.stamp = self._stamp()
         t.header.frame_id = "odom"
         t.child_frame_id = "base_footprint"
-        t.transform.translation = Vector3(*self._bpos)
-        t.transform.rotation = Quaternion(*self._born)
+        t.transform.translation = Vector3(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
+        t.transform.rotation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         self._tf_br.sendTransform(t)
 
     def _pub_imu(self):
         m = Imu()
         m.header.stamp = self._stamp()
         m.header.frame_id = "imu_link"
-        m.orientation = Quaternion(*self._born)
-        m.orientation_covariance = [0.001,0,0, 0,0.001,0, 0,0,0.001]
-        m.angular_velocity = Vector3(*self._bang)
-        m.angular_velocity_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
+        m.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
+        m.orientation_covariance = [0.001,0.0,0.0, 0.0,0.001,0.0, 0.0,0.0,0.001]
+        m.angular_velocity = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
+        m.angular_velocity_covariance = [0.01,0.0,0.0, 0.0,0.01,0.0, 0.0,0.0,0.01]
         m.linear_acceleration = Vector3(x=0.0, y=0.0, z=9.81)
-        m.linear_acceleration_covariance = [0.1,0,0, 0,0.1,0, 0,0,0.1]
-        self._pub_imu.publish(m)
+        m.linear_acceleration_covariance = [0.1,0.0,0.0, 0.0,0.1,0.0, 0.0,0.0,0.1]
+        self._imu_pub.publish(m)
 
     def _pub_clock(self):
-        self._pub_clock.publish(self._stamp())
+        self._clock_pub.publish(self._stamp())
 
     def _pub_scan(self):
         ln = self.get_parameter("laser_link_name").value
@@ -387,10 +445,13 @@ class PyBulletSpawner(Node):
             a = byaw - math.pi + i * ai
             rt = [lp[0]+math.cos(a)*ax, lp[1]+math.sin(a)*ax, lp[2]]
             res = p.rayTest(lp, rt)
-            hf = res[0][3]
-            if hf < 1.0:
-                d = hf * ax
-                ranges.append(max(am, d))
+            if res and res[0][0] >= 0:
+                hf = res[0][3]
+                if isinstance(hf, (int, float)) and hf < 1.0:
+                    d = hf * ax
+                    ranges.append(max(am, float(d)))
+                else:
+                    ranges.append(float("inf"))
             else:
                 ranges.append(float("inf"))
         msg = LaserScan()
@@ -403,7 +464,7 @@ class PyBulletSpawner(Node):
         msg.range_min = am
         msg.range_max = ax
         msg.ranges = ranges
-        self._pub_scan.publish(msg)
+        self._scan_pub.publish(msg)
 
     def destroy_node(self):
         self._running = False
