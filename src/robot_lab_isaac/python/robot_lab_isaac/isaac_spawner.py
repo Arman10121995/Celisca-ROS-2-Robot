@@ -7,6 +7,7 @@ message and exits, allowing the rest of the launch graph to continue.
 """
 import os
 import rclpy
+from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 
 
@@ -25,7 +26,10 @@ class IsaacSpawner(Node):
         self.declare_parameter("spawn_yaw", 0.0)
         self.declare_parameter("gui", True)
 
-        self._spawn_timer = self.create_timer(0.5, self._try_spawn)
+        self._spawn_timer = self.create_timer(
+            0.5, self._try_spawn,
+            clock=Clock(clock_type=ClockType.SYSTEM_TIME),
+        )
         self._spawned = False
 
     def _try_spawn(self):

@@ -11,6 +11,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import xml.etree.ElementTree as ET
 
 import numpy as np
 
@@ -25,6 +26,7 @@ except ImportError:
     mujoco = types.SimpleNamespace(viewer=None)
 
 import rclpy
+from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
@@ -178,6 +180,7 @@ class MuJoCoSpawner(Node):
         self._body_id = -1
         self._free_joint_qpos_adr = -1
         self._joint_name2id = {}   # mujoco joint name -> qpos index
+        self._joint_name2dofadr = {}  # mujoco joint name -> dof (qvel) index
         self._joint_names = []
         self._lw_name = ""
         self._rw_name = ""
@@ -197,18 +200,25 @@ class MuJoCoSpawner(Node):
         self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
 
         # --- publishers ---
-        self._pub_js = self.create_publisher(JointState, "/joint_states", 10)
-        self._pub_odom = self.create_publisher(Odometry, "/odom", 10)
-        self._pub_scan = self.create_publisher(LaserScan, "/scan", 10)
-        self._pub_imu = self.create_publisher(Imu, "/imu/out", 10)
-        self._pub_clock = self.create_publisher(Time, "/clock", 10)
+        self._js_pub = self.create_publisher(JointState, "/joint_states", 10)
+        self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
+        self._scan_pub = self.create_publisher(LaserScan, "/scan", 10)
+        self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
+        self._clock_pub = self.create_publisher(Time, "/clock", 10)
         self._tf_br = TransformBroadcaster(self)
 
         # --- subscriptions ---
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
 
         # --- timer to attempt spawn ---
-        self._timer = self.create_timer(0.5, self._try_spawn)
+        # NOTE: use an explicit wall-clock timer. With use_sim_time=true the
+        # node default clock is frozen until a /clock publisher exists — and
+        # this node IS the /clock publisher, so a default-clock spawn timer
+        # would never fire (sim-time deadlock).
+        self._timer = self.create_timer(
+            0.5, self._try_spawn,
+            clock=Clock(clock_type=ClockType.SYSTEM_TIME),
+        )
         self._thread = None
 
     def _on_cmd(self, msg):
@@ -226,7 +236,10 @@ class MuJoCoSpawner(Node):
             self._spawn()
         except Exception as exc:
             self.get_logger().error("Spawn failed: %s" % exc)
-            self._timer = self.create_timer(2.0, self._try_spawn)
+            self._timer = self.create_timer(
+                2.0, self._try_spawn,
+                clock=Clock(clock_type=ClockType.SYSTEM_TIME),
+            )
 
     def _spawn(self):
         from ament_index_python.packages import get_package_share_directory
@@ -344,6 +357,14 @@ class MuJoCoSpawner(Node):
         with open(world_path, "r") as fh:
             world_text = fh.read()
 
+        # MjModel.from_xml_string() resolves relative asset paths against the
+        # process CWD, not the source XML's directory.  World MJCFs use paths
+        # relative to their own location (e.g. '../maps/.../mesh.stl'), so
+        # rewrite them to absolute paths before the text is parsed.
+        world_text = MuJoCoSpawner._absolutize_asset_paths(
+            world_text, os.path.dirname(os.path.abspath(world_path))
+        )
+
         wb_match = re.search(
             r"(<worldbody>)(.*?)(</worldbody>)", robot_mjcf, re.DOTALL
         )
@@ -373,11 +394,52 @@ class MuJoCoSpawner(Node):
 
         return world_text
 
+    @staticmethod
+    def _absolutize_asset_paths(xml_text, base_dir):
+        """Rewrite relative asset file paths to absolute ones.
+
+        MuJoCo resolves relative asset paths against the process working
+        directory when loading from a string (``MjModel.from_xml_string``),
+        not against the XML file's own directory.  World MJCFs in the maps
+        package reference meshes relative to their own location, so they
+        must be made absolute before parsing.
+        """
+        try:
+            root = ET.fromstring(xml_text)
+        except ET.ParseError:
+            return xml_text
+
+        asset_tags = ("mesh", "hfield", "skin", "texture")
+        changed = False
+        for elem in root.iter():
+            # Strip any namespace prefix for the tag comparison.
+            tag = elem.tag.split("}")[-1]
+            if tag in asset_tags:
+                f = elem.get("file")
+                if not f or f.startswith("package://") or os.path.isabs(f):
+                    continue
+                elem.set(
+                    "file", os.path.normpath(os.path.join(base_dir, f))
+                )
+                changed = True
+            elif tag == "include":
+                f = elem.get("file")
+                if f and not os.path.isabs(f):
+                    elem.set(
+                        "file", os.path.normpath(os.path.join(base_dir, f))
+                    )
+                    changed = True
+
+        if not changed:
+            return xml_text
+        return ET.tostring(root, encoding="unicode")
+
     def _find_body_and_joints(self):
         m = self._model
         self._free_joint_qpos_adr = -1
         self._body_id = -1
         self._joint_name2id = {}
+        self._joint_name2dofadr = {}
         self._joint_names = []
 
         for i in range(m.njnt):
@@ -404,6 +466,9 @@ class MuJoCoSpawner(Node):
                 jname = "joint_%d" % i
             jadr = m.jnt_qposadr[i]
             self._joint_name2id[jname] = jadr
+            # qvel is indexed by DOF address, not qpos address — they differ
+            # once a free joint (7 qpos / 6 dof) precedes the hinge joints.
+            self._joint_name2dofadr[jname] = m.jnt_dofadr[i]
             self._joint_names.append(jname)
             if jname == lw:
                 self._lw_qpos_adr = jadr
@@ -459,9 +524,10 @@ class MuJoCoSpawner(Node):
             self._jvel = []
             for jn in self._joint_names:
                 adr = self._joint_name2id.get(jn, -1)
+                dadr = self._joint_name2dofadr.get(jn, -1)
                 if adr >= 0:
                     self._jpos.append(float(self._data.qpos[adr]))
-                    self._jvel.append(float(self._data.qvel[adr]))
+                    self._jvel.append(float(self._data.qvel[dadr]))
                 else:
                     self._jpos.append(0.0)
                     self._jvel.append(0.0)
@@ -516,7 +582,7 @@ class MuJoCoSpawner(Node):
         m.position = list(self._jpos)
         m.velocity = list(self._jvel)
         m.effort = [0.0] * len(self._joint_names)
-        self._pub_js.publish(m)
+        self._js_pub.publish(m)
 
     def _pub_odom(self):
         m = Odometry()
@@ -527,7 +593,7 @@ class MuJoCoSpawner(Node):
         m.pose.pose.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
-        self._pub_odom.publish(m)
+        self._odom_pub.publish(m)
 
     def _pub_tf(self):
         t = TransformStamped()
@@ -543,15 +609,15 @@ class MuJoCoSpawner(Node):
         m.header.stamp = self._stamp()
         m.header.frame_id = "imu_link"
         m.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
-        m.orientation_covariance = [0.001,0,0, 0,0.001,0, 0,0,0.001]
+        m.orientation_covariance = [0.001, 0.0, 0.0, 0.0, 0.001, 0.0, 0.0, 0.0, 0.001]
         m.angular_velocity = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
-        m.angular_velocity_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
+        m.angular_velocity_covariance = [0.01, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.01]
         m.linear_acceleration = Vector3(x=0.0, y=0.0, z=9.81)
-        m.linear_acceleration_covariance = [0.1,0,0, 0,0.1,0, 0,0,0.1]
-        self._pub_imu.publish(m)
+        m.linear_acceleration_covariance = [0.1, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.1]
+        self._imu_pub.publish(m)
 
     def _pub_clock(self):
-        self._pub_clock.publish(self._stamp())
+        self._clock_pub.publish(self._stamp())
 
     def _pub_scan(self):
         n = int(self.get_parameter("scan_samples").value)
@@ -595,7 +661,7 @@ class MuJoCoSpawner(Node):
         msg.range_min = am
         msg.range_max = ax
         msg.ranges = ranges
-        self._pub_scan.publish(msg)
+        self._scan_pub.publish(msg)
 
     def destroy_node(self):
         self._running = False

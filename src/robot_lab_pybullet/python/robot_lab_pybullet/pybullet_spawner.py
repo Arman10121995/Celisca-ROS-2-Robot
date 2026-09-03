@@ -20,6 +20,7 @@ except ImportError:
     pybullet_data = None
 
 import rclpy
+from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
@@ -135,7 +136,12 @@ class PyBulletSpawner(Node):
         self._tf_br = TransformBroadcaster(self)
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
-        self._timer = self.create_timer(0.5, self._try_spawn)
+        # Wall-clock timer — see note in mujoco_spawner / above comment about
+        # the use_sim_time deadlock (this node publishes /clock itself).
+        self._timer = self.create_timer(
+            0.5, self._try_spawn,
+            clock=Clock(clock_type=ClockType.SYSTEM_TIME),
+        )
         self._thread = None
 
     def _load_sdf_meshes(self, world_path: str) -> None:
@@ -209,7 +215,10 @@ class PyBulletSpawner(Node):
             self._spawn()
         except Exception as e:
             self.get_logger().error(f"Spawn failed: {e}")
-            self._timer = self.create_timer(2.0, self._try_spawn)
+            self._timer = self.create_timer(
+                2.0, self._try_spawn,
+                clock=Clock(clock_type=ClockType.SYSTEM_TIME),
+            )
 
     def _spawn(self):
         from ament_index_python.packages import get_package_share_directory
