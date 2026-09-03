@@ -229,6 +229,7 @@ class SimulationLauncherGui(tk.Tk):
         self.launch_kind_var = tk.StringVar(value="simulation")
         self.drive_linear_var = tk.DoubleVar(value=0.25)
         self.drive_angular_var = tk.DoubleVar(value=0.8)
+        self.gui_var = tk.StringVar(value="auto")
         self.command_var = tk.StringVar()
         self.summary_var = tk.StringVar()
         self.status_var = tk.StringVar(value="Idle")
@@ -384,7 +385,18 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.vacuum_radio.grid(row=1, column=0, sticky="w", pady=2)
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=10, column=0, sticky="w")
+        ttk.Label(controls, text="GUI").grid(row=9, column=0, sticky="w", pady=(12, 0))
+        gui_frame = ttk.Frame(controls)
+        gui_frame.grid(row=10, column=0, sticky="ew", pady=(2, 12))
+        for column, text in enumerate(["Auto", "GUI", "Headless"]):
+            ttk.Radiobutton(
+                gui_frame,
+                text=text,
+                variable=self.gui_var,
+                value=["auto", "true", "false"][column],
+            ).grid(row=0, column=column, sticky="w", padx=(0, 12))
+
+        ttk.Label(controls, text="Resolved Configuration").grid(row=11, column=0, sticky="w")
         summary = ttk.Label(
             controls,
             textvariable=self.summary_var,
@@ -392,14 +404,14 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=330,
             foreground="#333333",
         )
-        summary.grid(row=11, column=0, sticky="ew", pady=(2, 12))
+        summary.grid(row=12, column=0, sticky="ew", pady=(2, 12))
 
-        ttk.Label(controls, text="Command").grid(row=12, column=0, sticky="w")
+        ttk.Label(controls, text="Command").grid(row=13, column=0, sticky="w")
         command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=13, column=0, sticky="ew", pady=(2, 12))
+        command.grid(row=14, column=0, sticky="ew", pady=(2, 12))
 
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=14, column=0, sticky="ew")
+        button_frame.grid(row=15, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=1)
         button_frame.columnconfigure(1, weight=1)
         self.start_button = ttk.Button(button_frame, text="Start", command=self._start_launch)
@@ -409,9 +421,9 @@ class SimulationLauncherGui(tk.Tk):
 
         self.bg_processes = {}
 
-        ttk.Label(controls, text="Drive").grid(row=15, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="Drive").grid(row=16, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=16, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=17, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
@@ -435,7 +447,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=17, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=18, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
@@ -458,7 +470,7 @@ class SimulationLauncherGui(tk.Tk):
         ).grid(row=0, column=3, sticky="ew")
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=18, column=0, sticky="ew", pady=(0, 4))
+        self.save_map_button.grid(row=19, column=0, sticky="ew", pady=(0, 4))
 
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
@@ -635,10 +647,12 @@ class SimulationLauncherGui(tk.Tk):
         unsupported = [MODE_LABELS.get(mode, mode) for mode in MODE_ORDER if mode not in supported_modes]
         robot_note = "full simulation stack" if len(supported_modes) > 1 else "description/display only"
         simulator = self.simulator_var.get()
+        gui_label = {"auto": "Auto (GUI if DISPLAY)", "true": "GUI", "false": "Headless"}
         lines = [
             f"Robot: {self.robot_var.get()} ({robot_note})",
             f"Robot file: {self._resolve_robot_path()}",
             f"Simulator: {SIMULATOR_LABELS.get(simulator, simulator)}",
+            f"GUI: {gui_label.get(self.gui_var.get(), self.gui_var.get())}",
             f"RViz: {self._resolve_rviz_path()}",
             f"Gazebo world: {self._resolve_world_path()}",
             f"2D map: {self._map_yaml_path() if self._map_has_2d_map() else 'not available'}",
@@ -669,6 +683,7 @@ class SimulationLauncherGui(tk.Tk):
             f"map_name:={self.map_var.get()}",
             f"robot_model:={self.robot_var.get()}",
             f"simulator:={self.simulator_var.get()}",
+            f"gui:={self.gui_var.get()}",
         ]
 
     def _start_launch(self):
