@@ -646,6 +646,11 @@ def generate_launch_description():
             description="Simulator GUI mode. 'auto' enables GUI if DISPLAY is set, 'true' forces GUI, 'false' forces headless.",
         ),
         DeclareLaunchArgument(
+            "algorithm",
+            default_value="auto",
+            description="Algorithm to use for the selected mode. 'auto' uses the default algorithm from sim_modes.yaml.",
+        ),
+        DeclareLaunchArgument(
             "start_gazebo",
             default_value="auto",
             choices=["auto", "true", "false"],

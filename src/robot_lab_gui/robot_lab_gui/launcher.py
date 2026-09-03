@@ -42,6 +42,26 @@ SIMULATOR_LABELS = {
     "mujoco": "MuJoCo",
 }
 
+# Algorithm categories from registry
+ALGORITHM_CATEGORIES = [
+    "perception",
+    "localization",
+    "state_estimation",
+    "sensor_fusion",
+    "global_planning",
+    "local_planning",
+    "control",
+]
+
+# Maps mode → default algorithm category
+MODE_TO_ALGORITHM_CATEGORY = {
+    "display": "perception",
+    "loc": "localization",
+    "slam": "localization",
+    "3d_slam": "state_estimation",
+    "nav": "global_planning",
+}
+
 
 def _strip_yaml_comment(line):
     quote = None
@@ -215,6 +235,16 @@ class SimulationLauncherGui(tk.Tk):
         self.map_profiles = load_yaml(self.maps_config_path).get("maps", {})
         self.robot_profiles = load_yaml(self.robots_config_path).get("robots", {})
 
+        # Load algorithms from registry
+        self.algorithms_config_path = os.path.join(
+            get_package_share_directory("robot_lab_registry"),
+            "config",
+            "algorithms.yaml",
+        )
+        self.algorithms = self._load_algorithms()
+        self.algorithm_category_var = tk.StringVar(value="localization")
+        self.algorithm_id_var = tk.StringVar()
+
         self.process = None
         self.ros_node = None
         self.cmd_vel_pub = None
@@ -245,6 +275,29 @@ class SimulationLauncherGui(tk.Tk):
         if preferred in mapping:
             return preferred
         return next(iter(mapping), "")
+
+    def _load_algorithms(self):
+        """Load algorithms from the registry YAML."""
+        raw = load_yaml(self.algorithms_config_path)
+        if isinstance(raw, list):
+            return raw
+        if isinstance(raw, dict):
+            return raw.get("algorithms", [])
+        return []
+
+    def _algorithms_for_category(self, category):
+        """Return algorithm IDs matching the given category."""
+        return [
+            a["id"] for a in self.algorithms
+            if a.get("category") == category
+        ]
+
+    def _algorithm_name(self, algorithm_id):
+        """Return the human-readable name for an algorithm ID."""
+        for a in self.algorithms:
+            if a.get("id") == algorithm_id:
+                return a.get("name", algorithm_id)
+        return algorithm_id
 
     def _build_ui(self):
         self.columnconfigure(0, weight=1)
@@ -396,7 +449,30 @@ class SimulationLauncherGui(tk.Tk):
                 value=["auto", "true", "false"][column],
             ).grid(row=0, column=column, sticky="w", padx=(0, 12))
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=11, column=0, sticky="w")
+        # --- Algorithm selection ---
+        ttk.Label(controls, text="Algorithm Category").grid(row=11, column=0, sticky="w", pady=(12, 0))
+        self.algorithm_category_combo = ttk.Combobox(
+            controls,
+            textvariable=self.algorithm_category_var,
+            values=ALGORITHM_CATEGORIES,
+            state="readonly",
+            width=34,
+        )
+        self.algorithm_category_combo.grid(row=12, column=0, sticky="ew", pady=(2, 12))
+        self.algorithm_category_combo.bind(
+            "<<ComboboxSelected>>", self._on_algorithm_category_changed
+        )
+
+        ttk.Label(controls, text="Algorithm").grid(row=13, column=0, sticky="w")
+        self.algorithm_combo = ttk.Combobox(
+            controls,
+            textvariable=self.algorithm_id_var,
+            state="readonly",
+            width=34,
+        )
+        self.algorithm_combo.grid(row=14, column=0, sticky="ew", pady=(2, 12))
+
+        ttk.Label(controls, text="Resolved Configuration").grid(row=15, column=0, sticky="w")
         summary = ttk.Label(
             controls,
             textvariable=self.summary_var,
@@ -404,14 +480,14 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=330,
             foreground="#333333",
         )
-        summary.grid(row=12, column=0, sticky="ew", pady=(2, 12))
+        summary.grid(row=16, column=0, sticky="ew", pady=(2, 12))
 
-        ttk.Label(controls, text="Command").grid(row=13, column=0, sticky="w")
+        ttk.Label(controls, text="Command").grid(row=17, column=0, sticky="w")
         command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=14, column=0, sticky="ew", pady=(2, 12))
+        command.grid(row=18, column=0, sticky="ew", pady=(2, 12))
 
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=15, column=0, sticky="ew")
+        button_frame.grid(row=19, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=1)
         button_frame.columnconfigure(1, weight=1)
         self.start_button = ttk.Button(button_frame, text="Start", command=self._start_launch)
@@ -421,9 +497,9 @@ class SimulationLauncherGui(tk.Tk):
 
         self.bg_processes = {}
 
-        ttk.Label(controls, text="Drive").grid(row=16, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="Drive").grid(row=20, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=17, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=21, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
@@ -447,7 +523,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=18, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=22, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
@@ -470,7 +546,7 @@ class SimulationLauncherGui(tk.Tk):
         ).grid(row=0, column=3, sticky="ew")
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=19, column=0, sticky="ew", pady=(0, 4))
+        self.save_map_button.grid(row=23, column=0, sticky="ew", pady=(0, 4))
 
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
@@ -568,6 +644,24 @@ class SimulationLauncherGui(tk.Tk):
         """Refresh summary/command after a simulator change."""
         self._update_from_selection()
 
+    def _on_algorithm_category_changed(self, _event=None):
+        """When category changes, update the default category and refresh."""
+        self._refresh_algorithm_dropdown()
+        self._update_from_selection()
+
+    def _refresh_algorithm_dropdown(self):
+        """Populate the algorithm dropdown based on the selected category."""
+        category = self.algorithm_category_var.get()
+        algorithms = self._algorithms_for_category(category)
+        self.algorithm_combo.configure(values=algorithms)
+        if algorithms:
+            # Keep current selection if valid, otherwise pick first
+            current = self.algorithm_id_var.get()
+            if current not in algorithms:
+                self.algorithm_id_var.set(algorithms[0])
+        else:
+            self.algorithm_id_var.set("")
+
     def _update_from_selection(self):
         supported_modes = self._supported_modes()
         if self.mode_var.get() not in supported_modes:
@@ -594,6 +688,9 @@ class SimulationLauncherGui(tk.Tk):
             self.launch_kind_var.set("simulation")
         self.vacuum_radio.state(["!disabled"] if supports_vacuum else ["disabled"])
         self.save_map_button.state(["!disabled"] if self.mode_var.get() in ("slam", "3d_slam") else ["disabled"])
+
+        # Update algorithm dropdown based on category
+        self._refresh_algorithm_dropdown()
 
         self.command_var.set(" ".join(self._command()))
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
@@ -648,9 +745,13 @@ class SimulationLauncherGui(tk.Tk):
         robot_note = "full simulation stack" if len(supported_modes) > 1 else "description/display only"
         simulator = self.simulator_var.get()
         gui_label = {"auto": "Auto (GUI if DISPLAY)", "true": "GUI", "false": "Headless"}
+        algorithm_id = self.algorithm_id_var.get()
+        algorithm_name = self._algorithm_name(algorithm_id) if algorithm_id else "auto"
         lines = [
             f"Robot: {self.robot_var.get()} ({robot_note})",
             f"Robot file: {self._resolve_robot_path()}",
+            f"Mode: {MODE_LABELS.get(self.mode_var.get(), self.mode_var.get())}",
+            f"Algorithm: {algorithm_name}",
             f"Simulator: {SIMULATOR_LABELS.get(simulator, simulator)}",
             f"GUI: {gui_label.get(self.gui_var.get(), self.gui_var.get())}",
             f"RViz: {self._resolve_rviz_path()}",
@@ -674,7 +775,7 @@ class SimulationLauncherGui(tk.Tk):
             if self.launch_kind_var.get() == "vacuum"
             else "simulated_robot.launch.py"
         )
-        return [
+        command = [
             "ros2",
             "launch",
             "robot_lab_bringup",
@@ -685,6 +786,10 @@ class SimulationLauncherGui(tk.Tk):
             f"simulator:={self.simulator_var.get()}",
             f"gui:={self.gui_var.get()}",
         ]
+        # Add algorithm selection if not in display mode
+        if self.mode_var.get() != "display" and self.algorithm_id_var.get():
+            command.append(f"algorithm:={self.algorithm_id_var.get()}")
+        return command
 
     def _start_launch(self):
         if self.process and self.process.poll() is None:
