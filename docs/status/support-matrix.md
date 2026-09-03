@@ -12,7 +12,7 @@ Last updated: 2026-09-02
 | ROS 2 Humble | ✅ Supported | Primary target distribution |
 | arm64 | ✅ Supported | Platform tested |
 | Gazebo (Harmonic) | ✅ Supported | `gz sim` headless verified: nav_maze + celisca_floor_1 worlds load with zero errors; furniture STL (165 MB, LFS-restored) resolves via GZ_SIM_RESOURCE_PATH set in gazebo.launch.py |
-| Isaac Sim | 🚧 Image Built | `isaac-sim-docker:latest` (26.1 GB) source-built on aarch64 via `tools/docker/` pipeline; stored on 1 TB SSD. Remaining: nvidia runtime registration + container boot test + `robot_lab_isaac` smoke |
+| Isaac Sim | ✅ Qualified | `isaac-sim-docker:latest` (26.1 GB) source-built on aarch64 via `tools/docker/` pipeline; nvidia runtime registered, container boot test passed (kit process running, healthy). Non-fatal NVST streaming errors expected on headless Jetson |
 | PyBullet | ✅ Qualified | 3.2.7 rebuilt from source against NumPy 2.2.6 (venv + user site); launch verified live on Jetson: spawner runs clean, publishes /clock /odom /scan /imu/out /joint_states |
 | MuJoCo | ✅ Qualified | 3.12.0 (C lib source-built on SSD + pip bindings); launch verified live on Jetson: spawner runs clean, publishes /clock /odom /scan /imu/out /joint_states; viewer segfault fix (no .close() at shutdown on ARM) |
 | ORB-SLAM3 | ⚠️ Optional | OpenCV ABI warning if versions mismatch |
@@ -77,7 +77,7 @@ Last updated: 2026-09-02
 |-------|-------------|
 | Hardware HIL | Physical Bumperbot validation pending (P7.5 blocked) |
 | ORB-SLAM3 | OpenCV ABI must match ROS cv_bridge |
-| Simulator backends | PyBullet and MuJoCo both implement complete ROS2 spawner (+GUI, +laser scan via mj_ray). ASCII STL meshes in robot URDF exceed MuJoCo ushort mesh limit -> fallback basic-primitive MJCF used (spawner falls back gracefully). Isaac Sim docker image built (26.1 GB on SSD); GPU wiring + container smoke pending. All large artifacts (docker data-root, containerd store, packman cache, Omniverse ext cache, Isaac Sim source) live on the 1 TB SSD — internal eMMC is ~87% full and must never receive build artifacts (recovery: scripts/fix_containerd_disk.sh) |
+| Simulator backends | All four simulators qualified on Jetson AGX Orin: Gazebo Harmonic (headless, furniture-mesh world), PyBullet 3.2.7 (live launch, full ROS2 topic contract), MuJoCo 3.12.0 (live launch, full ROS2 topic contract), Isaac Sim 6.0.1 (docker image built, nvidia runtime registered, container boot test passed). PyBullet/MuJoCo implement complete ROS2 spawner (+GUI, +laser scan). All large artifacts (docker data-root, containerd store, packman cache, Omniverse ext cache, Isaac Sim source) live on the 1 TB SSD — internal eMMC must never receive build artifacts (recovery: scripts/fix_containerd_disk.sh) |
 | Real-time | Real-time performance not benchmarked on hardware |
 | Multi-robot | No multi-robot scenarios tested |
 
