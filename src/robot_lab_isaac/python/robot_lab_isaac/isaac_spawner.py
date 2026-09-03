@@ -23,6 +23,7 @@ class IsaacSpawner(Node):
         self.declare_parameter("spawn_y", 0.0)
         self.declare_parameter("spawn_z", 0.0)
         self.declare_parameter("spawn_yaw", 0.0)
+        self.declare_parameter("gui", True)
 
         self._spawn_timer = self.create_timer(0.5, self._try_spawn)
         self._spawned = False

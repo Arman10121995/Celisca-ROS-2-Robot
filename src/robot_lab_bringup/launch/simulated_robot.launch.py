@@ -362,18 +362,54 @@ def _build_simulation_actions(context):
     actions = []
 
     if mode_name == "display":
-        rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
-        actions.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(_launch_file(description_share, "display.launch.py")),
-                launch_arguments={
-                    "model": model_path,
-                    "rviz_config": rviz_config,
-                    "start_rviz": str(_auto_bool(context, "start_rviz", True)),
-                    "use_sim_time": use_sim_time,
-                }.items(),
+        # Display mode: show robot in RViz + selected simulator GUI (if applicable).
+        # For Gazebo, use the dedicated display.launch.py (no physics).
+        # For other simulators, include their launch file with gui enabled so
+        # the user sees the robot in the simulator's native viewer too.
+        simulator = _launch_value(context, "simulator")
+        if simulator == "gazebo":
+            rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
+            actions.append(
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(_launch_file(description_share, "display.launch.py")),
+                    launch_arguments={
+                        "model": model_path,
+                        "rviz_config": rviz_config,
+                        "start_rviz": str(_auto_bool(context, "start_rviz", True)),
+                        "use_sim_time": use_sim_time,
+                    }.items(),
+                )
             )
-        )
+        else:
+            # For PyBullet/MuJoCo/Isaac: include the simulator launch with gui=true
+            if simulator not in _VALID_SIMULATORS:
+                raise RuntimeError(
+                    f"Unknown simulator '{simulator}'. "
+                    f"Choose from: {sorted(_VALID_SIMULATORS)}"
+                )
+            sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
+            sim_share = get_package_share_directory(sim_pkg)
+            display_args = {
+                "world_name": world_name,
+                "world_package": world_package,
+                "world_path": world_path,
+                "model": model_path,
+                "robot_package": robot_package,
+                "robot_xacro": robot_xacro,
+                "robot_name": robot_name,
+                "spawn_x": spawn_x,
+                "spawn_y": spawn_y,
+                "spawn_z": spawn_z,
+                "spawn_yaw": spawn_yaw,
+                "use_sim_time": use_sim_time,
+                "gui": "true",
+            }
+            actions.append(
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
+                    launch_arguments=display_args.items(),
+                )
+            )
         return actions
 
     gazebo_enabled = _auto_bool(
@@ -400,6 +436,11 @@ def _build_simulation_actions(context):
         sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
         sim_share = get_package_share_directory(sim_pkg)
 
+        # Forward the gui argument: auto→true if DISPLAY set, else false
+        gui_value = _launch_value(context, "gui")
+        if gui_value == "auto":
+            gui_value = "true" if os.environ.get("DISPLAY") else "false"
+
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
@@ -416,6 +457,7 @@ def _build_simulation_actions(context):
                     "spawn_z": spawn_z,
                     "spawn_yaw": spawn_yaw,
                     "use_sim_time": use_sim_time,
+                    "gui": gui_value,
                 }.items(),
             )
         )
@@ -596,6 +638,12 @@ def generate_launch_description():
             default_value="gazebo",
             choices=["gazebo", "isaac", "pybullet", "mujoco"],
             description="Which physics simulator backend to use.",
+        ),
+        DeclareLaunchArgument(
+            "gui",
+            default_value="auto",
+            choices=["auto", "true", "false"],
+            description="Simulator GUI mode. 'auto' enables GUI if DISPLAY is set, 'true' forces GUI, 'false' forces headless.",
         ),
         DeclareLaunchArgument(
             "start_gazebo",

@@ -94,6 +94,7 @@ def _build_isaac_actions(context):
                 "spawn_z": spawn_z,
                 "spawn_yaw": spawn_yaw,
                 "use_sim_time": use_sim_time,
+                "gui": LaunchConfiguration("gui"),
             }],
         )
     )
@@ -131,5 +132,6 @@ def generate_launch_description():
         DeclareLaunchArgument("spawn_z", default_value="0.0"),
         DeclareLaunchArgument("spawn_yaw", default_value="0.0"),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument("gui", default_value="true"),
         OpaqueFunction(function=_build_isaac_actions),
     ])
