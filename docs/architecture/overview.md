@@ -62,7 +62,11 @@ the smoke experiments that justify its status.
 **Integrated robots:** (launch dispatch can target any of the four simulator
 backends; Gazebo is the qualified primary backend, PyBullet and MuJoCo are
 qualified secondary backends with live-verified launch + topic contracts, and
-Isaac Sim runs from a source-built docker image — GPU wiring pending)
+Isaac Sim runs natively from a pip-installed aarch64 wheel (6.0.1) under a
+dedicated Python 3.12 virtualenv on the 1 TB SSD; the ROS node drives it
+through a runtime child process. NVIDIA officially supports aarch64 only on
+DGX Spark — on Jetson, Kit may abort at startup and the spawner degrades
+gracefully to offline mode)
 
 | Robot | Class | DOF | Simulators | Source |
 |-------|-------|-----|------------|--------|
@@ -95,7 +99,7 @@ dispatches on the `simulator:=` argument against a fixed registry:
 
 ```text
 gazebo  → robot_lab_description/gazebo.launch.py          (qualified primary; Gazebo Harmonic `gz sim`)
-isaac   → robot_lab_isaac/isaac_simulator.launch.py       (adapter + docker image built; GPU wiring pending)
+isaac   → robot_lab_isaac/isaac_simulator.launch.py       (native pip 6.0.1 aarch64; runtime subprocess; offline fallback)
 pybullet→ robot_lab_pybullet/pybullet_simulator.launch.py (qualified; full ROS2 bridge, live-verified)
 mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (qualified; full ROS2 bridge, live-verified)
 ```
@@ -105,14 +109,14 @@ mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (qualified; full ROS
 | Backend | Version | Qualification |
 |---------|---------|---------------|
 | Gazebo (Harmonic) | gz-sim8 8.15.0 | Worlds incl. `celisca_floor_1` (165 MB furniture STL) load headless with zero errors |
-| PyBullet | 3.2.7 (source-rebuilt vs NumPy 2.2.6) | Live launch verified: spawner publishes `/clock` `/odom` `/scan` `/imu/out` `/joint_states` |
-| MuJoCo | 3.12.0 (C lib source-built + pip bindings) | Live launch verified: same topic contract; passive-viewer shutdown segfault fixed for ARM |
-| Isaac Sim | 6.0.1 docker image (`isaac-sim-docker:latest`, 26.1 GB) | Source-built via `tools/docker/` on aarch64; GPU runtime registered; boot test passed on Jetson AGX Orin |
+| PyBullet | 3.2.7 (source-rebuilt vs NumPy 2.2.6) | Live launch verified: spawner publishes `/clock` `/odom` `/scan` `/imu/out` `/joint_states`; use_sim_time spawn deadlock fixed |
+| MuJoCo | 3.12.0 (C lib source-built + pip bindings) | Live launch verified: same topic contract; passive-viewer shutdown segfault fixed for ARM; MJCF asset-path and IMU covariance fixes |
+| Isaac Sim | 6.0.1.0 (pip aarch64 wheel, Python 3.12 venv) | Native install on the 1 TB SSD; `isaac_runtime.py` subprocess builds the stage (USD or SDF→STL→USD) and streams state to the ROS node; NVIDIA supports aarch64 only on DGX Spark — Jetson Kit may abort at startup (TSC), graceful offline fallback |
 
-Large simulator artifacts live on the 1 TB SSD (`/workspace/molar/`), never on
-the 64 GB eMMC: docker `data-root` + containerd store, packman cache, Omniverse
-extension cache (symlinked from `~/.local/share/ov`), and the Isaac Sim source
-tree (`/workspace/molar/installs/IsaacSim-6.0.1`).
+Large simulator artifacts live on the 1 TB SSD, never on the 64 GB eMMC: the
+Isaac Sim Python 3.12 virtualenv (`/workspace/isaac_env`), the uv-managed
+interpreter (`/workspace/uv`), pip cache (`/workspace/.pip_cache`), plus the
+docker `data-root` and packman/Omniverse caches under `/workspace/molar/`.
 
 Every adapter package mirrors the Gazebo spawn interface so the bringup layer
 forwards `world_*`, `model`/`robot_*`, `spawn_*`, and `use_sim_time` unchanged.

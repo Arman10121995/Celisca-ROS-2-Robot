@@ -41,6 +41,32 @@ def _resolve_world_stage(context, pkg, world_name):
     return os.path.join(description_share, "worlds", "empty.usd")
 
 
+def _resolve_world_sdf(context, pkg, world_name):
+    """Locate the SDF ``.world`` file for the requested map."""
+    world_name_str = world_name.perform(context)
+    try:
+        maps_share = get_package_share_directory("robot_lab_maps")
+        candidate = os.path.join(
+            maps_share, "maps", world_name_str, "worlds",
+            world_name_str + ".world",
+        )
+        if os.path.exists(candidate):
+            return candidate
+    except Exception:
+        pass
+    try:
+        pkg_share = get_package_share_directory(pkg)
+        candidate = os.path.join(
+            pkg_share, "maps", world_name_str, "worlds",
+            world_name_str + ".world",
+        )
+        if os.path.exists(candidate):
+            return candidate
+    except Exception:
+        pass
+    return ""
+
+
 def _build_isaac_actions(context):
     """Construct Isaac Sim nodes and include the base description launch."""
     use_sim_time = LaunchConfiguration("use_sim_time")
@@ -56,8 +82,10 @@ def _build_isaac_actions(context):
 
     actions = []
 
-    # Resolve the USD stage for the world
-    stage_path = _resolve_world_stage(context, world_package.perform(context), world_name)
+    # Resolve the SDF .world file first (preferred for mesh-based maps).
+    sdf_path = _resolve_world_sdf(context, world_package.perform(context), world_name)
+    # Only fall back to a USD stage if no SDF world is available.
+    stage_path = "" if sdf_path else _resolve_world_stage(context, world_package.perform(context), world_name)
 
     # Robot description + state publisher (mirrors gazebo.launch.py).
     robot_description = ParameterValue(
@@ -86,6 +114,7 @@ def _build_isaac_actions(context):
             output="screen",
             parameters=[{
                 "world_stage": stage_path,
+                "world_path": sdf_path,
                 "robot_name": robot_name,
                 "robot_package": robot_package,
                 "robot_xacro": robot_xacro,

@@ -157,9 +157,9 @@ One launch dispatcher (`simulated_robot.launch.py`) selects the physics backend 
 | Simulator | Package | Status | Notes |
 |-----------|---------|--------|-------|
 | Gazebo Harmonic | `robot_lab_description` | ✅ Qualified | `gz sim` headless; furniture-mesh worlds load cleanly |
-| Isaac Sim | `robot_lab_isaac` | ✅ Qualified | Docker image built; GPU runtime registered; boot test passed on Jetson AGX Orin |
-| PyBullet | `robot_lab_pybullet` | ✅ Qualified | 3.2.7 source-rebuilt vs NumPy 2.x; live launch verified |
-| MuJoCo | `robot_lab_mujoco` | ✅ Qualified | 3.12.0 source-built; live launch verified |
+| Isaac Sim | `robot_lab_isaac` | 🚧 Installed (pip 6.0.1.0 aarch64) | Runtime child process on the 1 TB SSD; NVIDIA officially supports aarch64 only on DGX Spark — on Jetson, Kit may abort at startup (TSC), in which case the spawner degrades gracefully to offline mode |
+| PyBullet | `robot_lab_pybullet` | ✅ Qualified | 3.2.7 source-rebuilt vs NumPy 2.x; live launch verified (incl. `use_sim_time`) |
+| MuJoCo | `robot_lab_mujoco` | ✅ Qualified | 3.12.0 source-built; live launch verified (incl. `use_sim_time` and `celisca_floor_1`) |
 
 ```bash
 # Select the physics backend (default: gazebo)
@@ -298,7 +298,7 @@ smoke tests for PyBullet, MuJoCo, and Isaac offline-mode) also pass.
 | P6 | Benchmarking | Done |
 | P7 | Hardening | Active (P7.5 blocked) |
 
-**In Progress:** P7.8 (Multi-simulator physics backends — Gazebo Harmonic, PyBullet & MuJoCo live-verified; Isaac Sim docker image built, GPU wiring pending)
+**In Progress:** P7.8 (Multi-simulator physics backends — Gazebo Harmonic, PyBullet & MuJoCo live-verified; Isaac Sim 6.0.1 installed natively via pip on the 1 TB SSD with runtime subprocess wired; Jetson TSC caveat documented)
 **Blocked:** P7.5 (Hardware HIL)
 
 ---
@@ -310,9 +310,9 @@ All four backends are qualified on the Jetson AGX Orin (arm64) target:
 | Backend | Version | Status |
 |---------|---------|--------|
 | Gazebo (Harmonic) | gz-sim8 8.15.0 | ✅ Qualified — all worlds incl. celisca_floor_1 load headless |
-| PyBullet | 3.2.7 (rebuilt vs NumPy 2.2.6) | ✅ Qualified — live launch, full topic contract |
-| MuJoCo | 3.12.0 (source-built C lib + pip) | ✅ Qualified — live launch, full topic contract |
-| Isaac Sim | 6.0.1 docker (`isaac-sim-docker:latest`) | 🚧 Image built from source on aarch64; GPU runtime registration pending |
+| PyBullet | 3.2.7 (rebuilt vs NumPy 2.2.6) | ✅ Qualified — live launch, full topic contract, use_sim_time fixed |
+| MuJoCo | 3.12.0 (source-built C lib + pip) | ✅ Qualified — live launch, full topic contract, MJCF mesh paths fixed |
+| Isaac Sim | 6.0.1.0 (pip, aarch64 wheel) | 🚧 Native install on the 1 TB SSD (`/workspace/isaac_env`, Python 3.12); runtime subprocess wired; NVIDIA supports aarch64 only on DGX Spark — Jetson may abort at Kit startup (TSC), graceful offline fallback |
 
 Launch any backend via the unified dispatcher:
 
@@ -322,18 +322,43 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 # simulator:= gazebo | pybullet | mujoco | isaac
 ```
 
-### Isaac Sim container (aarch64)
+### Isaac Sim native install (aarch64, 1 TB SSD)
 
-The image was built from source on the 1 TB SSD — all simulator artifacts
-(docker data-root, containerd store, packman cache, Omniverse extension cache,
-Isaac Sim source) live under `/workspace/molar/` and never touch the 64 GB eMMC.
+Isaac Sim ≥ 5.0 ships aarch64 pip wheels but requires **Python 3.12**, while
+ROS 2 Humble's `rclpy` is Python-3.10-only.  The two therefore run as separate
+processes:
+
+- `robot_lab_isaac/isaac_spawner.py` — the ROS 2 node (Python 3.10).  Owns
+  the topic contract (`/clock`, `/joint_states`, `/odom`, `/imu/out`, `/tf`),
+  forwards `/cmd_vel`, and manages the child process.
+- `robot_lab_isaac/isaac_runtime.py` — the Isaac Sim runtime child, executed
+  under a dedicated Python 3.12 virtualenv on the 1 TB SSD.  Instantiates
+  `SimulationApp`, builds the stage (pre-built USD `world_stage`, or the map
+  SDF's static STL meshes converted to USD at runtime), imports the robot
+  URDF, steps physics, and streams state to the parent over stdin/stdout
+  (line-delimited JSON).
+
+The virtualenv and all caches live on the SSD and never touch the eMMC:
 
 ```bash
-# After registering the GPU runtime once:
-#   sudo nvidia-ctk runtime configure --runtime=docker && sudo systemctl restart docker
-docker run -d --name isaac_sim --runtime nvidia --rm \
-    -e ACCEPT_EULA=Y isaac-sim-docker:latest
+# one-time setup (uv bootstraps Python 3.12 on the SSD)
+export UV_PYTHON_INSTALL_DIR=/workspace/uv/python
+uv venv /workspace/isaac_env --python 3.12 --seed
+/workspace/isaac_env/bin/python -m pip install \
+    'isaacsim[all,extscache]==6.0.1.0' \
+    --extra-index-url https://pypi.nvidia.com --resume-retries 10
 ```
+
+The spawner parameter `isaac_python` (default `/workspace/isaac_env/bin/python`)
+points at the runtime interpreter.  If it is missing — or if Kit aborts on this
+platform — the spawner logs a clear message and the rest of the launch graph
+continues in offline mode.
+
+> **Platform caveat (2026-09):** per NVIDIA, *"Isaac Sim aarch64 builds are
+> currently only supported on NVIDIA DGX Spark systems"*.  On Jetson AGX Orin
+> the wheel installs but Kit may abort during startup with
+> `Cannot calculate frequency: TSC ran backwards` (no known fix upstream);
+> Isaac ROS remains the supported path for Jetson deployment.
 
 ---
 

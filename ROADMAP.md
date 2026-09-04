@@ -30,7 +30,7 @@ standard result record described in `docs/architecture/overview.md`.
 | P4 — environments | done | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4 done: 2 3D/aerial courses added (aerial_course via promoted placeholder, aerial_indoor) with occupancy provenance + world/map consistency; P4.5 done: 2 dynamic/sensor-degradation variants added (nav_dynamic with scripted moving actors, nav_sensor_degraded with blind-corner occluding walls) with dynamic metadata + world/map consistency; P4.6 done: seeds, reset services, spawn zones, goals, and reference paths added to all 12 deterministic arenas (arena_navigation.yaml + schema fields + free-space-validated paths) |
 | P5 — algorithm breadth | done | 5+ runnable alternatives in every required category; 191/191 tests passing |
 | P6 — benchmarking | done | Standard benchmark schema, result capture, and reporting foundations in place |
-| P7 — hardening | active | CI matrices, provenance/licenses, documentation, end-to-end qualification, and multi-simulator dispatch (P7.7 done; P7.8 in progress — Gazebo Harmonic + PyBullet + MuJoCo live-verified, Isaac Sim docker image built from source, GPU wiring pending) |
+| P7 — hardening | active | CI matrices, provenance/licenses, documentation, end-to-end qualification, and multi-simulator dispatch (P7.7 done; P7.8 done — Gazebo Harmonic + PyBullet + MuJoCo live-verified; P7.8b done — Isaac Sim 6.0.1 native pip install on the 1 TB SSD with runtime subprocess; Jetson TSC caveat documented) |
 
 Machine-readable progress is kept in
 `docs/status/platform-status.yaml`. The canonical capability inventory is in
@@ -389,6 +389,27 @@ completion claim.
   streaming encoder errors expected on headless Jetson; core simulation
   unaffected.)
 
+- [x] **P7.8b** Native Isaac Sim pip install + runtime subprocess (2026-09-03).
+  Isaac Sim 6.0.1.0 now ships official aarch64 manylinux_2_35 wheels (cp312)
+  on PyPI; installed `isaacsim[all,extscache]==6.0.1.0` under a uv-bootstrapped
+  Python 3.12 virtualenv on the 1 TB SSD (/workspace/isaac_env + /workspace/uv;
+  caches in /workspace/.pip_cache — nothing on the eMMC). Because Humble's
+  rclpy is py3.10-only, `robot_lab_isaac` was restructured into a two-process
+  design: the ROS node (isaac_spawner.py) owns the topic contract and spawns
+  isaac_runtime.py (py3.12) which instantiates SimulationApp, builds the stage
+  from the USD `world_stage` or the map SDF's STL meshes converted to USD at
+  runtime, imports the robot URDF, steps physics, and streams state over
+  stdin/stdout (line-delimited JSON). Launch resolves the map SDF
+  (`_resolve_world_sdf`). En route fixed: the use_sim_time spawn-timer
+  deadlock (wall-clock timers in all three non-Gazebo spawners), MuJoCo MJCF
+  asset-path absolutization for from_xml_string, MuJoCo publisher/method name
+  collisions (_pub_clock/_pub_odom/...), MuJoCo qvel dof-address indexing,
+  MuJoCo IMU covariance int→float. Caveat: NVIDIA states Isaac Sim aarch64 is
+  officially supported only on DGX Spark; on Jetson AGX Orin Kit may abort at
+  startup ("Cannot calculate frequency: TSC ran backwards", no upstream fix)
+  — the spawner logs this and falls back to offline mode. `/scan` for Isaac
+  (RTX lidar) still pending.
+
 ## Definition of status
 
 - `cataloged`: metadata and an upstream/source decision exist; it may not be
@@ -430,9 +451,15 @@ ros2 run robot_lab_registry robot-lab validate
 - The supported baseline is ROS 2 Humble on Ubuntu 22.04/arm64.
 - Four simulator backends are dispatched (Gazebo, Isaac Sim, PyBullet, MuJoCo);
   Gazebo is the qualified primary backend. PyBullet (source-built vs NumPy 2.x)
-  and MuJoCo (aarch64 wheel) physics backends are verified headless and fixture-
-  smoke-tested; Isaac Sim remains an adapter stub (no aarch64 pip wheel —
-  standalone aarch64 build is the only path, ~10-20 GB external install).
+  and MuJoCo (aarch64 wheel) physics backends are live-verified including the
+  celisca_floor_1 map; the use_sim_time spawn-timer deadlock that froze all
+  three non-Gazebo spawners was fixed (wall-clock spawn timers + MJCF asset
+  path absolutization for MuJoCo). Isaac Sim 6.0.1 is installed natively via
+  its aarch64 pip wheel under a Python 3.12 virtualenv on the 1 TB SSD and is
+  driven by `robot_lab_isaac` through the `isaac_runtime.py` subprocess; note
+  NVIDIA officially supports Isaac Sim aarch64 only on DGX Spark — on Jetson,
+  Kit may abort at startup ("TSC ran backwards") and the spawner falls back to
+  offline mode. `/scan` is not yet simulated for Isaac (RTX lidar pending).
 - Only Bumperbot currently has a complete simulation/navigation stack. Imported
   Unitree and Berkeley assets are description-only and must not be advertised as
   commandable robots.
