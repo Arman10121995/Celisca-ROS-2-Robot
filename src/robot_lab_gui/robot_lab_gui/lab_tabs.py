@@ -1,8 +1,9 @@
 """Additional control-center tabs for the Robot Lab GUI.
 
 Provides Registry (catalog browsing), Vacuum (cleaning control),
-Benchmark (seeded runs + regression), Tests (suite runners) and
-Health (doctor / platform status / ROS graph) tabs.
+Benchmark (seeded runs + regression), Tests (suite runners),
+Health (doctor / platform status / ROS graph), and Live Monitor
+(real-time telemetry) tabs.
 """
 
 import json
@@ -13,6 +14,22 @@ import tkinter as tk
 from tkinter import messagebox, scrolledtext, ttk
 
 from .launcher import load_yaml, subprocess_env
+
+try:
+    from .live_monitor import LiveMonitorTab
+    HAS_LIVE_MONITOR = True
+except ImportError:
+    HAS_LIVE_MONITOR = False
+
+try:
+    from .themes.modern import (
+        BG_DARK, BG_CARD, FG_PRIMARY, FG_MUTED, ACCENT,
+        ACCENT_GREEN, ACCENT_RED, ACCENT_YELLOW, STATUS_OK,
+        STATUS_ERROR, STATUS_IDLE, STATUS_WARN,
+    )
+    THEME_AVAILABLE = True
+except ImportError:
+    THEME_AVAILABLE = False
 
 
 def find_workspace_root():
@@ -709,10 +726,13 @@ class HealthTab(LabTab):
 
 def create_tabs(notebook, app):
     """Instantiate all control-center tabs and return them."""
-    return [
+    tabs = [
         RegistryTab(notebook, app),
         VacuumTab(notebook, app),
         BenchmarkTab(notebook, app),
         TestsTab(notebook, app),
         HealthTab(notebook, app),
     ]
+    if HAS_LIVE_MONITOR:
+        tabs.append(LiveMonitorTab(notebook, app))
+    return tabs

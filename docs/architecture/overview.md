@@ -111,7 +111,7 @@ mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (qualified; full ROS
 | Gazebo (Harmonic) | gz-sim8 8.15.0 | Worlds incl. `celisca_floor_1` (165 MB furniture STL) load headless with zero errors |
 | PyBullet | 3.2.7 (source-rebuilt vs NumPy 2.2.6) | Live launch verified: spawner publishes `/clock` `/odom` `/scan` `/imu/out` `/joint_states`; use_sim_time spawn deadlock fixed |
 | MuJoCo | 3.12.0 (C lib source-built + pip bindings) | Live launch verified: same topic contract; passive-viewer shutdown segfault fixed for ARM; MJCF asset-path and IMU covariance fixes |
-| Isaac Sim | 6.0.1.0 (pip aarch64 wheel, Python 3.12 venv) | Native install on the 1 TB SSD; `isaac_runtime.py` subprocess builds the stage (USD or SDF→STL→USD) and streams state to the ROS node; NVIDIA supports aarch64 only on DGX Spark — Jetson Kit may abort at startup (TSC), graceful offline fallback |
+| Isaac Sim | 6.0.1.0 (pip aarch64 wheel, Python 3.12 venv) | Native install on the 1 TB SSD; `isaac_runtime.py` subprocess builds the stage (USD or SDF→STL→USD), imports URDF via `isaacsim.asset.importer.urdf`, runs physics, and streams state to the ROS node over a JSON event FIFO; full topic contract (`/clock`, `/odom`, `/scan`, `/imu/out`, `/joint_states`, `/tf`) live-verified on Jetson AGX Orin |
 
 Large simulator artifacts live on the 1 TB SSD, never on the 64 GB eMMC: the
 Isaac Sim Python 3.12 virtualenv (`/workspace/isaac_env`), the uv-managed

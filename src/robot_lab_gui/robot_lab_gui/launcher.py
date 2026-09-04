@@ -8,7 +8,7 @@ import signal
 import subprocess
 import threading
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, ttk
+from tkinter import filedialog, messagebox, scrolledtext, ttk, simpledialog
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -23,6 +23,34 @@ try:
     import yaml
 except ImportError:
     yaml = None
+
+# ── Modern theme ─────────────────────────────────────────────────────────
+try:
+    from .themes.modern import (
+        apply as apply_theme, tooltip as add_tooltip,
+        STATUS_OK, STATUS_ERROR,
+    )
+    THEME_AVAILABLE = True
+except ImportError:
+    THEME_AVAILABLE = False
+    STATUS_OK = STATUS_ERROR = "#555555"
+    def apply_theme(_root): return {}
+    def add_tooltip(_w, _t): pass
+
+# ── Launch profiles ──────────────────────────────────────────────────────
+try:
+    from .launch_profiles import (
+        list_profiles, save_profile, load_profile, delete_profile,
+        ensure_defaults,
+    )
+    PROFILES_AVAILABLE = True
+except ImportError:
+    PROFILES_AVAILABLE = False
+    def list_profiles(): return []
+    def save_profile(_n, _c): pass
+    def load_profile(_n): return None
+    def delete_profile(_n): return False
+    def ensure_defaults(): pass
 
 
 MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
@@ -219,9 +247,27 @@ def subprocess_env():
 class SimulationLauncherGui(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Robot Lab Control Center")
-        self.geometry("1280x820")
-        self.minsize(1000, 700)
+                # Apply modern dark theme
+        if THEME_AVAILABLE:
+            self.fonts = apply_theme(self)
+        else:
+            self.fonts = {}
+
+        self.title("🤖 Robot Lab Control Center")
+        self.geometry("1280x860")
+        self.minsize(1024, 768)
+
+        # Keyboard shortcuts
+        self.bind_all("<Control-Return>", lambda _e: self._start_launch())
+        self.bind_all("<Control-r>", lambda _e: self._refresh_maps())
+        self.bind_all("<Escape>", lambda _e: self._stop_launch())
+
+        # Load saved launch profiles
+        if PROFILES_AVAILABLE:
+            ensure_defaults()
+
+        self._profiles_menu = None
+        self._profile_names = []
 
         self.bringup_share = get_package_share_directory("robot_lab_bringup")
         self.robots_share = get_package_share_directory("robot_lab_robots")
@@ -364,20 +410,20 @@ class SimulationLauncherGui(tk.Tk):
         robot_frame = ttk.Frame(controls)
         robot_frame.grid(row=1, column=0, sticky="ew", pady=(2, 12))
         robot_frame.columnconfigure(0, weight=1)
-        robot_combo = ttk.Combobox(
+        self.robot_combo = ttk.Combobox(
             robot_frame,
             textvariable=self.robot_var,
             values=sorted(self.robot_profiles.keys()),
             state="readonly",
             width=34,
         )
-        robot_combo.grid(row=0, column=0, sticky="ew")
-        robot_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
+        self.robot_combo.grid(row=0, column=0, sticky="ew")
+        self.robot_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
         self.robot_info_var = tk.StringVar(value="")
         ttk.Label(
             robot_frame,
             textvariable=self.robot_info_var,
-            foreground="#555555",
+            foreground="#a6adc8" if THEME_AVAILABLE else "#555555",
             wraplength=330,
             justify="left",
         ).grid(row=1, column=0, sticky="ew", pady=(4, 0))
@@ -438,9 +484,9 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.vacuum_radio.grid(row=1, column=0, sticky="w", pady=2)
 
-        ttk.Label(controls, text="GUI").grid(row=9, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="GUI").grid(row=10, column=0, sticky="w", pady=(12, 0))
         gui_frame = ttk.Frame(controls)
-        gui_frame.grid(row=10, column=0, sticky="ew", pady=(2, 12))
+        gui_frame.grid(row=11, column=0, sticky="ew", pady=(2, 12))
         for column, text in enumerate(["Auto", "GUI", "Headless"]):
             ttk.Radiobutton(
                 gui_frame,
@@ -450,7 +496,7 @@ class SimulationLauncherGui(tk.Tk):
             ).grid(row=0, column=column, sticky="w", padx=(0, 12))
 
         # --- Algorithm selection ---
-        ttk.Label(controls, text="Algorithm Category").grid(row=11, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="Algorithm Category").grid(row=12, column=0, sticky="w", pady=(12, 0))
         self.algorithm_category_combo = ttk.Combobox(
             controls,
             textvariable=self.algorithm_category_var,
@@ -458,48 +504,67 @@ class SimulationLauncherGui(tk.Tk):
             state="readonly",
             width=34,
         )
-        self.algorithm_category_combo.grid(row=12, column=0, sticky="ew", pady=(2, 12))
+        self.algorithm_category_combo.grid(row=13, column=0, sticky="ew", pady=(2, 12))
         self.algorithm_category_combo.bind(
             "<<ComboboxSelected>>", self._on_algorithm_category_changed
         )
 
-        ttk.Label(controls, text="Algorithm").grid(row=13, column=0, sticky="w")
+        ttk.Label(controls, text="Algorithm").grid(row=14, column=0, sticky="w")
         self.algorithm_combo = ttk.Combobox(
             controls,
             textvariable=self.algorithm_id_var,
             state="readonly",
             width=34,
         )
-        self.algorithm_combo.grid(row=14, column=0, sticky="ew", pady=(2, 12))
+        self.algorithm_combo.grid(row=15, column=0, sticky="ew", pady=(2, 12))
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=15, column=0, sticky="w")
+        ttk.Label(controls, text="Resolved Configuration").grid(row=16, column=0, sticky="w")
         summary = ttk.Label(
             controls,
             textvariable=self.summary_var,
             justify="left",
             wraplength=330,
-            foreground="#333333",
+            foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
         )
-        summary.grid(row=16, column=0, sticky="ew", pady=(2, 12))
+        summary.grid(row=17, column=0, sticky="ew", pady=(2, 12))
 
-        ttk.Label(controls, text="Command").grid(row=17, column=0, sticky="w")
+        ttk.Label(controls, text="Command").grid(row=18, column=0, sticky="w")
         command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=18, column=0, sticky="ew", pady=(2, 12))
+        command.grid(row=19, column=0, sticky="ew", pady=(2, 12))
 
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=19, column=0, sticky="ew")
+        button_frame.grid(row=20, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=1)
         button_frame.columnconfigure(1, weight=1)
-        self.start_button = ttk.Button(button_frame, text="Start", command=self._start_launch)
+        button_frame.columnconfigure(2, weight=1)
+        button_frame.columnconfigure(3, weight=1)
+        button_frame.columnconfigure(4, weight=1)
+
+        self.start_button = ttk.Button(button_frame, text="▶ Start Simulation",
+                                        command=self._start_launch,
+                                        style="Accent.TButton")
         self.start_button.grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        self.stop_button = ttk.Button(button_frame, text="Stop", command=self._stop_launch, state="disabled")
-        self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 0))
+        self.stop_button = ttk.Button(button_frame, text="■ Stop", command=self._stop_launch,
+                                       state="disabled", style="Danger.TButton")
+        self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 4))
+
+        # Launch profile buttons
+        if PROFILES_AVAILABLE:
+            ttk.Button(button_frame, text="💾 Save Profile",
+                       command=self._save_profile,
+                       style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=4)
+            ttk.Button(button_frame, text="📂 Load",
+                       command=self._show_load_profile,
+                       style="Small.TButton").grid(row=0, column=3, sticky="ew", padx=4)
+            ttk.Button(button_frame, text="🗑 Profiles",
+                       command=self._delete_profile,
+                       style="Small.TButton").grid(row=0, column=4, sticky="ew", padx=(4, 0))
 
         self.bg_processes = {}
 
-        ttk.Label(controls, text="Drive").grid(row=20, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="Drive").grid(row=21, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=21, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=22, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
@@ -523,7 +588,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=22, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=23, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
@@ -566,17 +631,48 @@ class SimulationLauncherGui(tk.Tk):
         self.console.configure(state="disabled")
 
         # Status bar spans the full window below the console
-        ttk.Label(
-            self,
-            textvariable=self.status_var,
-            foreground="#555555",
-            anchor="w",
-            padding=(12, 2),
-        ).grid(row=2, column=0, sticky="ew")
+        if THEME_AVAILABLE:
+            status_frame = ttk.Frame(self, style="Statusbar.TFrame")
+        else:
+            status_frame = ttk.Frame(self, relief="sunken")
+        status_frame.grid(row=2, column=0, sticky="ew", pady=(4, 0))
+
+        status_style = "Statusbar.TLabel" if THEME_AVAILABLE else None
+        self._ros_status_dot = tk.Label(status_frame, text="●",
+                                        fg="#ff6b6b", font=("Segoe UI", 10))
+        self._ros_status_dot.grid(row=0, column=0, padx=(8, 4))
+
+        ttk.Label(status_frame, text="ROS 2:",
+                  style=status_style).grid(
+            row=0, column=1, padx=(0, 0))
+        self.ros_status_var = tk.StringVar(value="checking...")
+        ttk.Label(status_frame, textvariable=self.ros_status_var,
+                  style=status_style).grid(
+            row=0, column=2, padx=(4, 16))
+
+        ttk.Label(status_frame, text="Processes:",
+                  style=status_style).grid(
+            row=0, column=3, padx=(0, 0))
+        self.proc_count_var = tk.StringVar(value="0")
+        ttk.Label(status_frame, textvariable=self.proc_count_var,
+                  style=status_style).grid(
+            row=0, column=4, padx=(4, 16))
+
+        ttk.Label(status_frame, textvariable=self.status_var,
+                  style=status_style).grid(
+            row=0, column=5, sticky="w", padx=(0, 0))
+
+        ttk.Label(status_frame, text="Ctrl+Enter launch | Ctrl+R refresh | Esc stop",
+                  style=status_style).grid(
+            row=0, column=6, sticky="e", padx=(16, 8))
+
+        status_frame.columnconfigure(5, weight=1)
+
+        # Check ROS status
+        self._check_ros_status()
 
         # Remaining control-center tabs (Registry, Vacuum, Benchmark, Tests, Health)
         from .lab_tabs import create_tabs
-
         create_tabs(self.notebook, self)
 
     def _on_selection_changed(self, _event):
@@ -791,11 +887,67 @@ class SimulationLauncherGui(tk.Tk):
             command.append(f"algorithm:={self.algorithm_id_var.get()}")
         return command
 
-    def _start_launch(self):
-        if self.process and self.process.poll() is None:
-            messagebox.showinfo("Launch running", "Stop the current launch before starting another one.")
+    def _save_profile(self):
+        """Save current configuration as a named profile."""
+        name = tk.simpledialog.askstring("Save Profile", "Profile name:")
+        if not name:
             return
+        config = {
+            "mode": self.mode_var.get(),
+            "simulator": self.simulator_var.get(),
+            "robot": self.robot_var.get(),
+            "map_name": self.map_var.get(),
+            "gui": self.gui_var.get(),
+            "algorithm": self.algorithm_id_var.get(),
+        }
+        save_profile(name, config)
+        self.status_var.set(f"Profile '{name}' saved")
+        self.after(3000, lambda: self.status_var.set("Idle"))
 
+    def _show_load_profile(self):
+        """Show dialog to load a saved profile."""
+        profiles = list_profiles()
+        if not profiles:
+            messagebox.showinfo("Load Profile", "No profiles saved yet.")
+            return
+        name = tk.simpledialog.askstring(
+            "Load Profile", "Select profile to load:",
+            initialvalue=profiles[0] if profiles else "")
+        if not name or name not in profiles:
+            return
+        cfg = load_profile(name)
+        if cfg is None:
+            return
+        self.mode_var.set(cfg.get("mode", self.mode_var.get()))
+        self.simulator_var.set(cfg.get("simulator", self.simulator_var.get()))
+        self.robot_var.set(cfg.get("robot", self.robot_var.get()))
+        self.map_var.set(cfg.get("map_name", self.map_var.get()))
+        self.gui_var.set(cfg.get("gui", self.gui_var.get()))
+        self.algorithm_id_var.set(cfg.get("algorithm", self.algorithm_id_var.get()))
+        self._update_from_selection()
+        self.status_var.set(f"Profile '{name}' loaded")
+        self.after(3000, lambda: self.status_var.set("Idle"))
+
+    def _delete_profile(self):
+        """Delete a saved profile."""
+        profiles = list_profiles()
+        if not profiles:
+            messagebox.showinfo("Delete Profile", "No profiles to delete.")
+            return
+        name = tk.simpledialog.askstring(
+            "Delete Profile", "Enter profile name to delete:",
+            initialvalue=profiles[0] if profiles else "")
+        if not name or name not in profiles:
+            messagebox.showwarning("Delete Profile", f"Profile '{name}' not found.")
+            return
+        if not messagebox.askyesno("Confirm Delete",
+                                    f"Delete profile '{name}'?"):
+            return
+        delete_profile(name)
+        self.status_var.set(f"Profile '{name}' deleted")
+        self.after(3000, lambda: self.status_var.set("Idle"))
+
+    def _start_launch(self):
         command = self._command()
         self._append_output(f"$ {' '.join(command)}\n")
         try:
@@ -842,11 +994,52 @@ class SimulationLauncherGui(tk.Tk):
             pass
         self.after(100, self._poll_output)
 
+    def _refresh_maps(self):
+        """Reload maps, robots and algorithms from the config files."""
+        self.map_profiles = load_yaml(self.maps_config_path).get("maps", {})
+        self.robot_profiles = load_yaml(self.robots_config_path).get("robots", {})
+        self.algorithms = self._load_algorithms()
+        # Update the dropdown values so new entries appear immediately
+        self.robot_combo.configure(values=sorted(self.robot_profiles.keys()))
+        self.map_combo.configure(values=sorted(self.map_profiles.keys()))
+        self._refresh_algorithm_dropdown()
+        self._update_from_selection()
+        self.status_var.set("Refreshed catalogs")
+        self.after(3000, lambda: self.status_var.set("Idle"))
+
+    def _check_ros_status(self):
+        """Check if ROS 2 is available and show status in the status bar."""
+        # Prefer the environment used for launching subprocesses, which
+        # contains the sourced ROS 2 overlay even when the GUI itself
+        # was started from a shell without ROS sourced.
+        ros2_path = shutil.which("ros2")
+        if not ros2_path:
+            try:
+                ros2_path = shutil.which(
+                    "ros2", path=subprocess_env().get("PATH", ""))
+            except Exception:
+                ros2_path = None
+        if ros2_path:
+            self.ros_status_var.set("✓ Available")
+            if THEME_AVAILABLE:
+                self._ros_status_dot.configure(fg=STATUS_OK)
+        else:
+            self.ros_status_var.set("✗ Not found")
+            if THEME_AVAILABLE:
+                self._ros_status_dot.configure(fg=STATUS_ERROR)
+
+    def _update_proc_count(self):
+        """Update the background process count in the status bar."""
+        count = sum(1 for p in self.bg_processes.values()
+                    if p.poll() is None)
+        self.proc_count_var.set(str(count))
+
     def _append_output(self, text):
         self.output.configure(state="normal")
         self.output.insert("end", text)
         self.output.see("end")
         self.output.configure(state="disabled")
+        self._update_proc_count()
 
     def _console_append(self, text):
         """Append text to the shared bottom console (all lab tabs)."""
@@ -1138,6 +1331,10 @@ class SimulationLauncherGui(tk.Tk):
     def _on_close(self):
         self._stop_drive()
         self.stop_all_bg()
+        # Stop the live monitor's ROS thread before shutting rclpy down
+        monitor = getattr(self, "live_monitor_tab", None)
+        if monitor is not None:
+            monitor.shutdown()
         if self.process and self.process.poll() is None:
             try:
                 os.killpg(os.getpgid(self.process.pid), signal.SIGINT)

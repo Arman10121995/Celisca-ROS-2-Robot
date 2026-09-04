@@ -219,14 +219,15 @@ ros2 run robot_lab_benchmark benchmark --bag-capture true
 ros2 run robot_lab_gui robot_lab_gui
 ```
 
-The GUI provides a **Launch** tab with dropdowns for robot, simulator, and GUI mode (Auto/GUI/Headless). All four simulators are selectable per the `simulators:` list in `sim_modes.yaml`. The summary panel shows resolved paths, and the output console streams launch logs in real time.
+The GUI provides a **Launch** tab with dropdowns for robot, simulator, and GUI mode (Auto/GUI/Headless). All four simulators are selectable per the `simulators:` list in `sim_modes.yaml`. The summary panel shows resolved paths, and the output console streams launch logs in real time. Keyboard shortcuts: `Ctrl+Enter` to launch, `Ctrl+R` to refresh catalogs, `Esc` to stop. The status bar shows real-time ROS 2 availability, active process count, and current action.
 
-- **Launch tab**: Robot/Mode/Map/Simulator selection, drive pad, save maps
+- **Launch tab**: Robot/Mode/Map/Simulator selection, drive pad, save maps, launch profiles
 - **Registry tab**: Browse all 5 registries
 - **Vacuum tab**: Room vacuum mission control
 - **Benchmark tab**: Seeded runs and regression checks
 - **Tests tab**: Run test suites
 - **Health tab**: Doctor diagnostics and live ROS graph
+- **Live Monitor tab**: Real-time telemetry (`/odom`, `/scan`, `/imu/out`, `/clock`) with configurable refresh rate
 
 ---
 
