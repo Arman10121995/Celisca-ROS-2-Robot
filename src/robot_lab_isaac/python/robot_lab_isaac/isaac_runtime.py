@@ -83,6 +83,7 @@ class _StdinReader(threading.Thread):
 
 _EVT_FIFO = os.environ.get("ISAAC_EVENT_FIFO", "")
 _EVT_FILE = None
+_EVT_OPENED = threading.Event()
 
 
 def _open_evt():
@@ -90,20 +91,25 @@ def _open_evt():
     if _EVT_FIFO:
         try:
             _EVT_FILE = open(_EVT_FIFO, "w", buffering=1)
+            _EVT_OPENED.set()
             return
         except Exception:
             pass
     _EVT_FILE = None
+    _EVT_OPENED.set()
 
 
 def _emit(obj):
     line = json.dumps(obj)
+    # Ensure the FIFO open has been attempted (non-blocking check)
+    if not _EVT_OPENED.is_set() and _EVT_FIFO:
+        threading.Thread(target=_open_evt, daemon=True).start()
+        _EVT_OPENED.set()  # Mark as attempted to avoid re-spawning
     try:
         if _EVT_FILE is not None:
             _EVT_FILE.write(line + "\n")
             _EVT_FILE.flush()
             return
-        # Fallback: Kit may hijack/close stdout, so best-effort only.
     except Exception:
         pass
     # Also write to stderr as fallback (Kit may not hijack stderr)
@@ -373,7 +379,6 @@ def _run_stage(app, reader, cfg, state):
 
 
 if __name__ == "__main__":
-    _open_evt()
     try:
         cfg = json.loads(sys.stdin.readline())
         run(cfg)

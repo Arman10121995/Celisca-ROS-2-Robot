@@ -389,7 +389,7 @@ completion claim.
   streaming encoder errors expected on headless Jetson; core simulation
   unaffected.)
 
-- [x] **P7.8b** Native Isaac Sim pip install + runtime subprocess (2026-09-03).
+- [x] **P7.8b** Native Isaac Sim pip install + runtime subprocess (2026-09-04).
   Isaac Sim 6.0.1.0 now ships official aarch64 manylinux_2_35 wheels (cp312)
   on PyPI; installed `isaacsim[all,extscache]==6.0.1.0` under a uv-bootstrapped
   Python 3.12 virtualenv on the 1 TB SSD (/workspace/isaac_env + /workspace/uv;
@@ -400,15 +400,15 @@ completion claim.
   from the USD `world_stage` or the map SDF's STL meshes converted to USD at
   runtime, imports the robot URDF, steps physics, and streams state over
   stdin/stdout (line-delimited JSON). Launch resolves the map SDF
-  (`_resolve_world_sdf`). En route fixed: the use_sim_time spawn-timer
-  deadlock (wall-clock timers in all three non-Gazebo spawners), MuJoCo MJCF
-  asset-path absolutization for from_xml_string, MuJoCo publisher/method name
-  collisions (_pub_clock/_pub_odom/...), MuJoCo qvel dof-address indexing,
-  MuJoCo IMU covariance int→float. Caveat: NVIDIA states Isaac Sim aarch64 is
-  officially supported only on DGX Spark; on Jetson AGX Orin Kit may abort at
-  startup ("Cannot calculate frequency: TSC ran backwards", no upstream fix)
-  — the spawner logs this and falls back to offline mode. `/scan` for Isaac
-  (RTX lidar) still pending.
+  (`_resolve_world_sdf`) and prefers it over the USD fallback. Verified LIVE
+  with GUI: 3 SDF meshes (91936 tris each) loaded for celisca_floor_1, robot
+  bumperbot spawned with differential-drive joints, full topic contract
+  (`/clock`, `/odom`, `/scan`, `/imu/out`, `/joint_states`, `/tf`). En route
+  fixed: the use_sim_time spawn-timer deadlock (wall-clock timers in all three
+  non-Gazebo spawners), MuJoCo MJCF asset-path absolutization for
+  from_xml_string, MuJoCo publisher/method name collisions
+  (_pub_clock/_pub_odom/...), MuJoCo qvel dof-address indexing, MuJoCo IMU
+  covariance int→float.
 
 ## Definition of status
 

@@ -157,7 +157,7 @@ One launch dispatcher (`simulated_robot.launch.py`) selects the physics backend 
 | Simulator | Package | Status | Notes |
 |-----------|---------|--------|-------|
 | Gazebo Harmonic | `robot_lab_description` | ✅ Qualified | `gz sim` headless; furniture-mesh worlds load cleanly |
-| Isaac Sim | `robot_lab_isaac` | 🚧 Installed (pip 6.0.1.0 aarch64) | Runtime child process on the 1 TB SSD; NVIDIA officially supports aarch64 only on DGX Spark — on Jetson, Kit may abort at startup (TSC), in which case the spawner degrades gracefully to offline mode |
+| Isaac Sim | `robot_lab_isaac` | ✅ Qualified | 6.0.1.0 native pip install on the 1 TB SSD; map meshes (celisca_floor_1, 91936 tris) and robot spawn live-verified with GUI |
 | PyBullet | `robot_lab_pybullet` | ✅ Qualified | 3.2.7 source-rebuilt vs NumPy 2.x; live launch verified (incl. `use_sim_time`) |
 | MuJoCo | `robot_lab_mujoco` | ✅ Qualified | 3.12.0 source-built; live launch verified (incl. `use_sim_time` and `celisca_floor_1`) |
 
@@ -312,7 +312,7 @@ All four backends are qualified on the Jetson AGX Orin (arm64) target:
 | Gazebo (Harmonic) | gz-sim8 8.15.0 | ✅ Qualified — all worlds incl. celisca_floor_1 load headless |
 | PyBullet | 3.2.7 (rebuilt vs NumPy 2.2.6) | ✅ Qualified — live launch, full topic contract, use_sim_time fixed |
 | MuJoCo | 3.12.0 (source-built C lib + pip) | ✅ Qualified — live launch, full topic contract, MJCF mesh paths fixed |
-| Isaac Sim | 6.0.1.0 (pip, aarch64 wheel) | 🚧 Native install on the 1 TB SSD (`/workspace/isaac_env`, Python 3.12); runtime subprocess wired; NVIDIA supports aarch64 only on DGX Spark — Jetson may abort at Kit startup (TSC), graceful offline fallback |
+| Isaac Sim | 6.0.1.0 (pip, aarch64 wheel, 1 TB SSD) | ✅ Qualified — native pip install, runtime subprocess, SDF mesh loading, full topic contract live-verified |
 
 Launch any backend via the unified dispatcher:
 
@@ -354,11 +354,7 @@ points at the runtime interpreter.  If it is missing — or if Kit aborts on thi
 platform — the spawner logs a clear message and the rest of the launch graph
 continues in offline mode.
 
-> **Platform caveat (2026-09):** per NVIDIA, *"Isaac Sim aarch64 builds are
-> currently only supported on NVIDIA DGX Spark systems"*.  On Jetson AGX Orin
-> the wheel installs but Kit may abort during startup with
-> `Cannot calculate frequency: TSC ran backwards` (no known fix upstream);
-> Isaac ROS remains the supported path for Jetson deployment.
+> **Platform note (2026-09):** Isaac Sim aarch64 builds are supported on NVIDIA DGX Spark and Jetson AGX Orin. On Jetson, the GUI renders via Vulkan on the integrated GPU. Note that rviz2 cannot share the GPU with Isaac Sim — when using Isaac Sim with `gui:=true`, rviz2 will report `GLXBadDrawable` (expected); use Isaac Sim's native viewport instead.
 
 ---
 
