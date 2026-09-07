@@ -1,295 +1,309 @@
-# Robot Lab platform architecture
+# Robot Lab architecture: current implementation and target
 
-## Design rule
+Documentation baseline: source commit `dff388f`, audited 2026-09-07. This page
+separates code that exists from architecture still to implement. It is not a
+claim that every described combination runs successfully.
 
-An experiment is a validated composition, not a monolithic mode:
+Start with [the support matrix](../status/support-matrix.md) and
+[the audit](../status/audit-2026-09-07.md). Implementation order, task ownership,
+and acceptance criteria belong in [ROADMAP.md](../../ROADMAP.md); an agent
+resuming work must also read [AGENT_HANDOFF.md](../AGENT_HANDOFF.md).
 
-```text
-robot + simulator + environment + scenario
-      + perception + localization + state estimation
-      + global planning + local planning + control
-                         |
-                         v
-              launch adapters and contracts
-                         |
-                         v
-             metrics, artifacts, and result record
-```
+## Goal and present gap
 
-Each selector is independent in the canonical model. Compatibility is decided
-from explicit capabilities and contracts before launch. The existing Bumperbot
-`display`, `loc`, `slam`, `3d_slam`, and `nav` modes remain supported as legacy
-presets while the new composition layer is built.
+The goal is a unified learning and evaluation platform for mobile, legged,
+humanoid, and aerial robots in 2D and 3D environments. Users should independently
+select perception, localization, state estimation, sensor fusion, global
+planning, local planning, and control algorithms, then compare measured
+performance under the same scenario conditions. Five genuinely distinct,
+runnable choices per category is a target, not a claim established by catalog
+counts.
 
-## Source-tree target
+The current repository has a substantial Bumperbot-oriented ROS stack, robot and
+map assets, four simulator launch adapters, a desktop GUI, algorithm examples,
+and benchmark/reporting foundations. Its main execution path still uses legacy
+mode profiles. Independent composition is incomplete, runtime contracts are
+inconsistent, and benchmark results contain placeholders. One reproducible,
+measured end-to-end experiment is the next integration milestone.
+
+## Actual source-tree and package map
+
+There are 26 discoverable ROS packages at the audited baseline, including optional
+ORB-SLAM3. Nested vendor descriptions are assets of the enclosing
+`robot_lab_robots` package, not individually supported robot stacks.
 
 ```text
 src/
   robot_lab/
-    robot_lab_registry/     # schemas, catalogs, compatibility, query CLI
-    robot_lab_adapter/      # composition and legacy launch adapters (P2)
-    robot_lab_benchmark/    # runner, metrics, result schema (P6)
-  robots/                   # descriptions and robot-specific assets
-    _upstream/              # vendored third-party robot assets
-  maps/                     # worlds, occupancy maps, reference geometry
-  robot_lab_models/            # reusable environment models
-  robot_lab_algorithms/     # 43 algorithm implementations (P5)
-  robot_lab_isaac/          # Isaac Sim simulator adapter
-  robot_lab_pybullet/       # PyBullet simulator adapter
-  robot_lab_mujoco/         # MuJoCo simulator adapter
-  robot_lab_*/              # reference robot and legacy-compatible adapters
-  ORB_SLAM3/                # optional external-library adapter
+    robot_lab_registry/     # catalogs, schemas, validation, query CLI
+    robot_lab_benchmark/    # result records, runner/reporting foundations
+  robot_lab_adapter/        # incomplete selectors/composition/legacy adapters
+  robot_lab_bringup/        # current profile-driven launch orchestration
+  robot_lab_description/    # Gazebo/display launch and description support
+  robot_lab_robots/         # consolidated first-party and vendored robot assets
+  robot_lab_maps/           # worlds, occupancy maps, arena tools and metadata
+  robot_lab_models/         # shared world models
+  robot_lab_pybullet/       # PyBullet bridge and spawner
+  robot_lab_mujoco/         # MuJoCo bridge and spawner
+  robot_lab_isaac/          # ROS bridge plus external Isaac runtime process
+  robot_lab_algorithms/     # numerical examples and partial ROS adapters
+  robot_lab_gui/            # Tkinter launch/control center
+  robot_lab_*/              # ROS stack, hardware utilities and examples below
+  ORB_SLAM3/                # optional external-library wrapper
 ```
 
-## Package boundaries
+| Layer/packages | Current responsibility | Boundary to maintain |
+|---|---|---|
+| `robot_lab_registry` | YAML catalogs, schemas, references, CLI, partial compatibility | Describe and validate; do not start ROS or simulator processes |
+| `robot_lab_adapter`, `robot_lab_bringup` | Selectors, launch fragments, profile resolution, simulator dispatch | Own composition, readiness, namespaces and parameters; not algorithm mathematics |
+| `robot_lab_description`, `robot_lab_robots` | Descriptions, Gazebo/display startup, sensor/control assets | Own physical model and declared interfaces; not benchmark verdicts |
+| `robot_lab_maps`, `robot_lab_models` | SDF worlds, occupancy data, static/dynamic assets, generators | Own geometry, transforms, landmarks and provenance |
+| `robot_lab_pybullet`, `robot_lab_mujoco`, `robot_lab_isaac` | Additional engine loading, stepping and ROS bridges | Own engine-specific import, physics, sensors, ground truth and reset |
+| `robot_lab_mapping` | SLAM Toolbox and RTAB-Map launch/configuration | Adapt mapping to explicit sensor/frame contracts |
+| `robot_lab_localization` | AMCL, EKF, odometry/IMU processing and examples | Publish estimates with explicit TF ownership |
+| `robot_lab_navigation` | Nav2 configuration, lifecycle and behavior-tree launch | Compose navigation plugins without hiding selected algorithms |
+| `robot_lab_planning`, `robot_lab_motion` | Standalone planners and path followers | Separate global paths, local obstacle handling and actuation |
+| `robot_lab_controller`, `robot_lab_utils` | Wheel control, joystick/multiplexer, mapping/cleaning, safety | Translate commands, enforce limits and stop safely |
+| `robot_lab_algorithms` | Additional numerical algorithms and entry points | One functioning contract per implementation; no empty-node integrations |
+| `robot_lab_benchmark` | Records, execution helpers, reporting and regression utilities | Measure real runs; never manufacture success or ground truth |
+| `robot_lab_gui` | Profiles, catalog browser, drive/map tools, monitoring | Use the same resolver/runner as CLI; no private support rules |
+| `robot_lab_vacuum_cleaning` | Additional basic vacuum controller | Reconcile duplication with cleaning logic in `robot_lab_controller` |
+| `robot_lab_firmware`, `robot_lab_msgs` | Serial/Arduino interface and shared messages | Separate hardware operation from simulation-only workflows |
+| `robot_lab_cpp_examples`, `robot_lab_py_examples`, `orbslam3` | Teaching examples and optional external integration | Keep optional dependencies out of the reference build's critical path |
 
-| Layer | Owns | Must not own |
-|-------|------|--------------|
-| Registry | Metadata, schemas, compatibility rules, experiment presets | ROS nodes or simulator processes |
-| Assets | URDF/SDF/Xacro, meshes, worlds, occupancy maps | Algorithm policy or benchmark conclusions |
-| Algorithm adapter | One common contract around one implementation | Robot/world-specific orchestration |
-| Bringup | Composition, namespaces, lifecycle order, parameter overlays | Algorithm implementation details |
-| Benchmark | Scenario lifecycle, ground truth, metrics, artifacts | Hidden tuning unique to a compared algorithm |
+## Current execution paths
 
-## Canonical entities
-
-### Robot
-
-Required metadata includes class, maturity, supported simulators, locomotion,
-sensors, command/state interfaces, frames, capabilities, source/provenance, and
-the smoke experiments that justify its status.
-
-**Integrated robots:** (launch dispatch can target any of the four simulator
-backends; Gazebo is the qualified primary backend, PyBullet and MuJoCo are
-qualified secondary backends with live-verified launch + topic contracts, and
-Isaac Sim runs natively from a pip-installed aarch64 wheel (6.0.1) under a
-dedicated Python 3.12 virtualenv on the 1 TB SSD; the ROS node drives it
-through a runtime child process. NVIDIA officially supports aarch64 only on
-DGX Spark — on Jetson, Kit may abort at startup and the spawner degrades
-gracefully to offline mode)
-
-| Robot | Class | DOF | Simulators | Source |
-|-------|-------|-----|------------|--------|
-| Bumperbot | Differential drive | — | Gazebo · PyBullet · MuJoCo · Isaac | First-party |
-| Labbot | Differential drive | — | Gazebo · PyBullet · MuJoCo · Isaac | First-party |
-| Go2 | Quadruped | 12 leg joints | Gazebo · PyBullet · MuJoCo · Isaac | Unitree (vendored) |
-| Berkeley Humanoid Lite | Humanoid | 22 position joints | Gazebo · PyBullet · MuJoCo · Isaac | HybridRobotics (vendored) |
-| Quadrotor SITL | Aerial | 4 rotors | Gazebo · PyBullet · MuJoCo · Isaac | First-party |
-
-### Environment
-
-Required metadata includes simulator/world reference, dimensionality, tags,
-map/ground-truth availability, dynamics, supported robot classes, spawn zones,
-source/provenance, and qualification status.
-
-**Environment categories:**
-
-| Category | Count | Examples |
-|----------|-------|----------|
-| Indoor worlds | 14 | small_office, small_house, warehouse_demo |
-| Navigation arenas | 5 | nav_empty, nav_obstacle, nav_maze |
-| Dynamic variants | 2 | nav_dynamic, nav_sensor_degraded |
-| Terrain | 3 | terrain_rough, terrain_stairs, terrain_stepping_stones |
-| Aerial courses | 2 | aerial_course, aerial_indoor |
-
-### Simulator
-
-A simulator is a first-class launch selector. `simulated_robot.launch.py`
-dispatches on the `simulator:=` argument against a fixed registry:
+### Main profile-driven route
 
 ```text
-gazebo  → robot_lab_description/gazebo.launch.py          (qualified primary; Gazebo Harmonic `gz sim`)
-isaac   → robot_lab_isaac/isaac_simulator.launch.py       (native pip 6.0.1 aarch64; runtime subprocess; offline fallback)
-pybullet→ robot_lab_pybullet/pybullet_simulator.launch.py (qualified; full ROS2 bridge, live-verified)
-mujoco  → robot_lab_mujoco/mujoco_simulator.launch.py     (qualified; full ROS2 bridge, live-verified)
+GUI or ros2 launch robot_lab_bringup simulated_robot.launch.py
+  → load robot profile + map profile + mode profile
+  → check a subset of profile requirements
+  → choose Gazebo / PyBullet / MuJoCo / Isaac launch adapter
+  → launch the mode's localization, mapping and/or navigation nodes
+  → sensors → pose estimate → planner → path follower → command → robot
 ```
 
-**Backend qualification status (Jetson AGX Orin, arm64, measured 2026-09-02):**
+The implementation is
+[simulated_robot.launch.py](../../src/robot_lab_bringup/launch/simulated_robot.launch.py).
+Its configuration sources are:
 
-| Backend | Version | Qualification |
-|---------|---------|---------------|
-| Gazebo (Harmonic) | gz-sim8 8.15.0 | Worlds incl. `celisca_floor_1` (165 MB furniture STL) load headless with zero errors |
-| PyBullet | 3.2.7 (source-rebuilt vs NumPy 2.2.6) | Live launch verified: spawner publishes `/clock` `/odom` `/scan` `/imu/out` `/joint_states`; use_sim_time spawn deadlock fixed |
-| MuJoCo | 3.12.0 (C lib source-built + pip bindings) | Live launch verified: same topic contract; passive-viewer shutdown segfault fixed for ARM; MJCF asset-path and IMU covariance fixes |
-| Isaac Sim | 6.0.1.0 (pip aarch64 wheel, Python 3.12 venv) | Native install on the 1 TB SSD; `isaac_runtime.py` subprocess builds the stage (USD or SDF→STL→USD), imports URDF via `isaacsim.asset.importer.urdf`, runs physics, and streams state to the ROS node over a JSON event FIFO; full topic contract (`/clock`, `/odom`, `/scan`, `/imu/out`, `/joint_states`, `/tf`) live-verified on Jetson AGX Orin |
+- [Robot launch profiles](../../src/robot_lab_robots/config/robots.yaml).
+- [Environment launch profiles](../../src/robot_lab_bringup/config/sim_maps.yaml).
+- [Mode profiles](../../src/robot_lab_bringup/config/sim_modes.yaml).
+- Package-specific controller, localization, mapping and Nav2 configuration.
 
-Large simulator artifacts live on the 1 TB SSD, never on the 64 GB eMMC: the
-Isaac Sim Python 3.12 virtualenv (`/workspace/isaac_env`), the uv-managed
-interpreter (`/workspace/uv`), pip cache (`/workspace/.pip_cache`), plus the
-docker `data-root` and packman/Omniverse caches under `/workspace/molar/`.
+| Mode | Current launch intent | Qualification caveat |
+|---|---|---|
+| `display` | Gazebo selection uses RViz; other selections include their simulator viewer | Non-Gazebo display forwards `gui=true`; not universally physics-free or headless-safe |
+| `loc` | Known-map AMCL plus local EKF and drive controls | Needs compatible map, sensor topics, clock and TF |
+| `slam` | SLAM Toolbox plus local state estimation | Needs working scan/odometry; not qualified on every backend |
+| `3d_slam` | RTAB-Map with RGB, depth, camera info and optional points | Non-Gazebo bridges lack required RGB-D despite mode allowlists |
+| `nav` | Known-map localization plus Nav2 | Strongest route is Bumperbot/Gazebo; no fresh mission recertification in this audit |
 
-Every adapter package mirrors the Gazebo spawn interface so the bringup layer
-forwards `world_*`, `model`/`robot_*`, `spawn_*`, and `use_sim_time` unchanged.
-`sim_modes.yaml` declares the `simulators:` list per mode; the GUI Launch tab
-gates its simulator dropdown from the same list, and the dispatcher rejects
-unknown or unsupported values before any process starts.
+Configured Nav2 defaults are SmacPlanner2D and Regulated Pure Pursuit; do not infer
+the active implementation from the registry inventory. Gazebo uses the
+`ros2_control` layer; other bridges implement their own command subscriptions and
+state publication. The legacy EKF expects `/robot_lab_controller/odom`, while
+those bridges publish `/odom`. The joystick multiplexer targets
+`robot_lab_controller/cmd_vel_unstamped`, while the bridges subscribe to
+`/cmd_vel`. These need deliberate adapters and tests.
 
-Required metadata for a fully integrated simulator includes world reference
-paths, spawn-zone semantics, ground-truth extraction, supported robot classes,
-and qualification status.
+### Registry/composition route: not working orchestration
 
-### Algorithm
+Separate [registry catalogs](../../src/robot_lab/robot_lab_registry/config)
+describe robots, environments, algorithms, scenarios and experiments. At the
+baseline they contain 20 robots, 26 environments, 43 algorithms, 18 scenarios and
+15 experiments. These are metadata counts, not successful-run counts.
 
-Required metadata includes category, family, implementation package/plugin,
-status, input/output contract, required capabilities, supported robot classes,
-upstream source, and smoke/benchmark evidence. Algorithm entries are adapters;
-an upstream project name alone is not an integration.
+Current gaps that a new agent must not mistake for completed integration:
 
-**Algorithm coverage (43 algorithms, 7 categories):**
+- Registry and launch-profile IDs differ, for example `go2` versus `unitree_go2`;
+  there are 20 catalog robots but 17 main launch profiles.
+- `robot-lab launch` prints configuration; execution is explicitly unimplemented.
+- `select_robot.launch.py` describes the robot rather than spawning it.
+- `select_components.launch.py` fails construction by concatenating strings with
+  `LaunchConfiguration` objects.
+- The main launch file declares `algorithm` but does not apply its value. GUI
+  selection therefore does not prove a different algorithm ran.
+- Capability validation is disabled; category/simulator mismatches can pass
+  registry composition validation. Main-launch simulator-name validation does
+  not repair this separate validation path.
 
-| Category | Count | New (P5) | Legacy |
-|----------|-------|----------|--------|
-| Perception | 8 | obstacle_detector, scan_clusterer, pointcloud_segmenter | 5 |
-| Localization | 6 | dead_reckoning | 5 |
-| State Estimation | 5 | ekf_3d_estimator, motion_model_estimator, pose_graph_estimator | 2 |
-| Sensor Fusion | 5 | wheel_imu_fusion, gps_odom_fusion, complementary_imu | 2 |
-| Global Planning | 5 | rrt_planner, voronoi_planner | 3 |
-| Local Planning | 5 | follow_the_gap | 4 |
-| Control | 9 | mavros_offboard_controller, joint_effort_commander | 7 |
+## Target architecture to implement
 
-### Scenario
+This section is a future design contract, not existing guarantees. Implement it
+in the dependency order recorded in the roadmap.
 
-A scenario defines the task and stopping conditions independently of a map: for
-example fixed-start waypoint navigation, relocalization after pose loss,
-coverage, rough-terrain traversal, or aerial inspection.
-
-### Experiment
-
-An experiment pins one item in every required dimension plus parameters, seed,
-time limit, metrics, and artifact policy. It is the unit of smoke testing and
-benchmarking.
-
-## Runtime contracts
-
-All adapters support a namespace. The reference single-robot contract is:
-
-| Contract | Interface |
-|----------|-----------|
-| Body command | `geometry_msgs/Twist` or class-specific trajectory beneath the robot namespace |
-| Estimated state | `nav_msgs/Odometry` plus TF |
-| Global pose | `map -> odom` TF where applicable |
-| Local body pose | `odom -> base_link`/`base_footprint` TF |
-| 2D obstacles | `sensor_msgs/LaserScan` and/or costmap |
-| 3D perception | image/depth/camera-info or `sensor_msgs/PointCloud2` |
-| Planned route | `nav_msgs/Path` |
-| Navigation goal | Nav2 action contract for compatible ground robots |
-| Ground truth | simulator adapter output, never substituted for estimated state |
-
-Robot-class-specific contracts (joint trajectories, gait commands, aerial
-setpoints) must be converted at the control boundary rather than leaking into
-global planning or benchmark schemas.
-
-## Validation layers
-
-1. **Schema:** required fields, types, IDs, allowed statuses/categories.
-2. **References:** every experiment selector resolves to a catalog entry.
-3. **Capabilities:** robot sensors/interfaces and environment dimensionality
-   satisfy every selected algorithm and scenario.
-4. **Assets:** referenced package files and plugins exist.
-5. **Static launch:** launch descriptions expand and dependencies resolve.
-6. **Smoke:** processes become healthy, topics/actions appear, and a minimal
-   task completes or fails in a classified way.
-7. **Benchmark:** fixed seed and conditions produce a standard result record.
-
-Only levels 1–4 belong in the registry package. Runtime validation lives with
-bringup and benchmark packages.
-
-## Benchmark architecture (P6)
-
-### Standard result schema
-
-Every benchmark produces a versioned JSON record:
-
-```json
-{
-  "schema_version": "1.0",
-  "experiment_id": "bumperbot_smoke_test",
-  "robot_id": "bumperbot",
-  "environment_id": "small_office",
-  "scenario_id": "bumperbot_smoke_test",
-  "seed": 42,
-  "success": true,
-  "elapsed_seconds": 12.5,
-  "path_length_m": 18.4,
-  "collision_count": 0,
-  "min_clearance_m": 0.75,
-  "revision": "a22c378",
-  "timestamp_utc": "2026-09-01T12:00:00Z"
-}
+```text
+GUI / CLI / CI
+       ↓
+one experiment resolver and compatibility validator
+       ↓
+immutable manifest: robot + backend + environment + scenario
+  + algorithms by category + parameters + seed + artifact policy
+       ↓
+bringup lifecycle and readiness gates
+       ↓
+simulator/robot adapters ↔ typed ROS algorithm adapters
+       ↓
+scenario outcome + isolated ground truth + recorded measurements
+       ↓
+validated result → reports and regression comparisons
 ```
 
-### Benchmark components
+### Canonical entities and single source of truth
 
-| Component | Package | Purpose |
-|-----------|---------|---------|
-| `BenchmarkResult` | `robot_lab_benchmark` | Versioned result schema |
-| `LaunchOrchestrator` | `robot_lab_benchmark` | launch/reset/run/stop lifecycle |
-| `GroundTruthAdapter` | `robot_lab_benchmark` | Extract metrics from sensor data |
-| `MetricNormalizer` | `robot_lab_benchmark` | Normalize for fair comparison |
-| `OutputGenerator` | `robot_lab_benchmark` | JSON/CSV/MD/HTML/plots |
-| `ReferenceBenchmark` | `robot_lab_benchmark` | Baseline + regression checking |
-| `ReferenceRegistry` | `robot_lab_benchmark` | Multi-baseline management |
-| `BenchmarkRunner` | `robot_lab_benchmark` | Seeded run manifest |
-| CLI | `robot_lab_benchmark/cli.py` | Emit canonical records |
+| Entity | Required definition and evidence |
+|---|---|
+| Robot | Stable ID/aliases, class, description, inertias/collisions, joints/limits, sensors, frames, command/state contracts, backend capabilities, provenance, per-combination evidence |
+| Simulator | Engine/version, imports/features, physics step, clock/reset/seed semantics, sensors, commands, ground truth/contacts, readiness and shutdown |
+| Environment | ID, world per supported backend, scale/origin, dimensionality, occupancy/geometry correspondence, spawn zones, goals, dynamics, reference paths and provenance |
+| Algorithm | Category, distinct method, real executable/plugin, typed I/O, parameters, required sensors/frames, classes, resource limits and evidence |
+| Scenario | Task, initialization, goal/stopping conditions, timeouts, collision/fall/flight criteria, perturbations and requested metrics |
+| Experiment | Pinned selections/overlays, seed, limits, versions, recording policy and complete resolved manifest |
+| Qualification | Exact composition, revision, toolchain/machine, command, test level, outcome, artifacts and known limits |
 
-### Orchestration lifecycle
+Use one canonical resolver for CLI, GUI and CI. During migration, support explicit
+aliases and translate legacy modes into resolved presets; never silently drop a
+selection or maintain separate compatibility rules. A Gazebo world must not
+implicitly become qualified for another engine.
 
+### Typed runtime contracts
+
+Document exact topic names, message types, frames, QoS, units, rates, timeouts and
+publishers before implementing adapters. These are target requirements; proposed
+names are not all present in current code.
+
+| Boundary | Required contract |
+|---|---|
+| Clock | One `rosgraph_msgs/msg/Clock` publisher per isolated simulation clock domain; consistent consumers; tested stepping/reset |
+| Command | Namespaced velocity, joint trajectory/effort or aerial setpoint appropriate to the class; one arbitrated actuation route, limits, stale-command timeout |
+| Measurements | Namespaced wheel odometry, IMU, scan, image/depth/camera-info or cloud; explicit frame, calibration, timestamp, covariance and noise/dropout policy |
+| Estimated state | Namespaced `nav_msgs/msg/Odometry` and/or pose; one owner of each estimated TF edge |
+| Frames | Explicit world/map/odom/body/sensor chain; isolate frame IDs, not merely node/topic namespaces |
+| Path/local command | `nav_msgs/msg/Path` with common costmap/obstacle and command interfaces; feasibility and failure outputs |
+| Goal/task | Common action/status; Nav2 actions for compatible mobile tasks and explicit adapters for other classes |
+| Ground truth | Dedicated `ground_truth/*` state/contact streams, excluded from estimators unless explicitly testing a truth-fed baseline |
+| Readiness | Expected type, rate, timestamp progress, finite values, TF connectivity, active lifecycle and process health—not topic existence alone |
+
+All three non-Gazebo spawners currently publish `builtin_interfaces/msg/Time` on
+`/clock`, use absolute topics, publish `odom → base_footprint` TF, and derive
+odometry from simulator state. They do not satisfy this target. Separate raw
+measurements, estimates and simulator truth before comparing filters.
+
+Specify compatible QoS for every pair, including sensors, static metadata and
+TF. Put numerical tolerances for timestamp skew, rates and transform age in each
+qualification case. Clock reset must reset dependent filters, buffers and task
+state; it cannot silently continue a run.
+
+### Lifecycle, isolation and failure handling
+
+```text
+resolve → validate → start → ready → reset/seed → ready → record/run
+                                                    ↓
+                                      success / failure / timeout / abort
+                                                    ↓
+                                       stop → collect → verify artifacts
 ```
-launch  →  reset  →  run (rosbag capture)  →  stop  →  manifest.json
-```
 
-## CI/CD architecture
+- Validate before starting processes. Unknown simulator, wrong category, missing
+  sensors and unsupported command interfaces are hard errors, not warnings.
+- Readiness proves actual physics, advancing time, sensors, TF, controllers and
+  required actions. An offline fallback is diagnostic, not a successful run.
+- Apply and record seeds in every random component; seeding only a Python generator
+  is insufficient. Verify initial pose and world state after reset.
+- Run until explicit success/failure/timeout/cancellation. Wall-clock and simulated
+  time limits serve different purposes and both matter.
+- Isolate process groups, ROS domain/backend transport, topics, TF frames and
+  artifact paths. Stop only owned processes; do not broadly kill ROS/simulators
+  while another agent or user may be working.
+- Clean up on all exits. Test sequential runs and simultaneous isolated robots
+  before claiming repeatable reset or multi-robot support.
 
-| Workflow | Trigger | Duration | What it runs |
-|----------|---------|----------|--------------|
-| `ci.yml` | Push/PR | < 60s | `scripts/test_fast.sh` (compile + P5/P6 logic + registry) |
-| `scheduled-full.yml` | Daily 06:00 UTC | ~5min | Full colcon test + all 257 unit tests + 200 bringup profile tests |
+### Benchmark records and fair comparisons
 
-## Control Center GUI (`robot_lab_gui`)
+Schema, normalization, reporting and regression helpers exist. Fixed placeholder
+metrics and success after a wait are not benchmark evidence.
 
-Tkinter-based single-window control center (`ros2 run robot_lab_gui robot_lab_gui`), fully decoupled from any robot: every dropdown, launch, and benchmark reads from the shared registries, never from hardcoded per-robot packages.
+Future records must include the resolved manifest/hash, revision/dirty state,
+dependency/backend versions, hardware, simulation settings, seeds actually
+applied, timestamps, outcome/reason, metrics with units/source, and links/checksums
+for logs/recordings. Missing metrics are unavailable with a reason, never invented
+zeros. Label synthetic fixtures so reports cannot confuse them with measured runs.
 
-```
-robot_lab_gui/
-└── robot_lab_gui/
-    ├── launcher.py    # Tk app shell + Launch tab (robot/mode/map, drive pad, map save)
-    └── lab_tabs.py    # LabTab base + Registry, Vacuum, Benchmark, Tests, Health tabs
-```
+Measure success, trajectory error, simulated/wall duration, path length,
+footprint-aware clearance, contacts, falls/flight violations, resource use and
+real-time factor as appropriate. Hold initial conditions, sensor model and compute
+limits consistent; record tuning budgets, repeat over seeds, and compare raw
+metrics/distributions before aggregate scores.
 
-**Tabs:**
+## Extension procedure for agents
 
-| Tab | Function | Data source |
-|-----|----------|-------------|
-| Launch | Robot/Mode/Map/Simulator selection, launch, drive pad, save map, 3D map export | `robots.yaml`, `sim_modes.yaml`, `sim_maps.yaml` (from `robot_lab_bringup`/`robots`/`maps` share dirs) |
-| Registry | Browse + search all 5 registries with YAML detail view | `robot_lab_registry/config/*.yaml` |
-| Vacuum | Room-vacuum mission launch + `vacuum_cleaner` node control | Launch profiles with `supports_room_vacuum: true` |
-| Benchmark | Seeded runs via `LaunchOrchestrator`, regression check vs reference | `robot_lab_benchmark` + `reference_data/results.json` |
-| Tests | Fast/full suite, registry validation, algorithm compile check | `scripts/test_fast.sh`, `robot_lab_registry/test` |
-| Health | Doctor diagnostics, platform status, live ROS graph | `scripts/doctor.sh`, `platform-status.yaml`, `ros2 node/topic list` |
+Preserve existing assets. Do not add catalog entries first and declare a category
+complete. Attach reproducible evidence to each tested combination.
 
-**Uniform-structure principles encoded in the GUI:**
+### Add a robot
 
-1. **One launch entry point** — all launches go through `robot_lab_bringup` (`simulated_robot.launch.py` / `simulated_room_vacuum.launch.py`); the robot id (`robot_model:=`) selects the description from `src/robot_lab_robots/`, never a per-robot package.
-2. **Profile-driven capability gating** — mode buttons, simulator dropdown, vacuum radio, and map combobox enable/disable purely from `supported_modes` / `simulators` / `features` / `supports_room_vacuum` fields; adding a robot to `robots.yaml` automatically appears correctly in the GUI.
-3. **Robot info panel** — the Launch tab shows the selected robot's feature class, available modes, and cleaning-mission support, derived live from its profile.
-4. **Registry-driven benchmarking** — Benchmark tab comboboxes are populated from the same YAML configs the CLI validates, so GUI and CI always agree.
-5. **Managed background processes** — all spawned processes (launches, rosbags, test runs, cleaner node) are tracked and cleaned up on exit.
+1. Add licensed description, collisions/inertias and class-specific limits under
+   `robot_lab_robots`; check Xacro/URDF and mesh resolution after installation.
+2. Define sensors, frames, I/O and explicit backend support. Register canonical
+   IDs/aliases without another independent profile interpretation.
+3. Implement the backend/control adapter and safe reset/spawn. Wheel control does
+   not establish legged locomotion or flight support.
+4. Add static/install tests, then real headless sensor/command smoke checks.
+5. Complete a class-appropriate task: mobile goal, legged traversal, humanoid
+   balance/walking or takeoff–waypoints–landing. Record limits and failures.
+6. Promote only the tested configuration; qualify other backends/maps separately.
 
-## Testing architecture
+### Add an environment
 
-**257 registry unit tests + 200 bringup profile tests:**
+1. Add provenance and backend-specific assets; check units, transforms, collisions,
+   dimensions and installed resource resolution.
+2. Supply occupancy maps where appropriate, with generation/provenance and geometry
+   agreement tests; 3D geometry alone is not a valid 2D navigation map.
+3. Define free-space spawn/goals, reference paths, reset and deterministic dynamics.
+   Distinguish occlusion from noise/dropout models.
+4. Test loading and a compatible scenario per advertised backend. Do not inherit
+   qualification from a related world.
 
-| Test file | Count | Coverage |
-|-----------|-------|----------|
-| `test_p5_algorithm_breadth.py` | 12 | Category coverage, node assets, algorithm logic, cross-references |
-| `test_p6_benchmarking.py` | 65 | Schema, orchestration, ground-truth, normalization, outputs, regression, licenses, bootstrap, doctor, tutorials, support matrix |
-| `test_bumperbot_qualification.py` | 28 | Bumperbot metadata, contracts, smoke test |
-| `test_*.py` (other) | 152 | Registry, selectors, launch fragments, adapter, environments, robots |
-| `robot_lab_bringup/test_sim_profiles.py` | 200 | Map/robot/mode profiles, simulator dispatch, spawn interfaces, topic contracts (7 simulator tests) |
+### Add an algorithm
 
-## Provenance and licensing
+1. Choose a distinct method and state assumptions, I/O and failure behavior. Keep
+   utilities/relays separate from comparative algorithm breadth.
+2. Add analytic/reference tests, including degenerate/adversarial cases; label
+   educational approximations honestly.
+3. Implement a real installed ROS node/plugin: consume inputs, execute the method,
+   publish outputs, expose parameters and obey clock/namespace contracts.
+4. Register compatibility and connect the common resolver. Test that switching the
+   ID changes the executable/plugin and effective parameters.
+5. Add input-to-output and mission checks, then repeated measured comparisons with
+   a reference under the same conditions.
 
-- **License:** MIT (see `LICENSE`)
-- **Third-party assets:** Unitree (BSD 3-Clause), Berkeley Humanoid Lite (CC BY-SA 4.0)
-- **License tracking:** `LICENSES/third-party-notices.md` documents all external assets
-- **Tests verify:** Every upstream asset has a license file and is documented
+### Add or qualify a simulator backend
+
+1. Implement installation/runtime discovery without host-specific paths. Missing
+   optional engines must produce an explicit unavailable result.
+2. Test model/world import and real physics independently from the ROS bridge.
+3. Implement typed clock, sensors, commands, TF policy, truth, contacts, seeds/reset,
+   readiness and shutdown.
+4. Verify message traffic and command response, then complete the same mobile
+   reference scenario as the primary backend.
+5. Qualify RGB-D, terrain, flight and extra classes separately. Engine boot or a
+   generic falling-body test is not navigation qualification.
+
+## Validation and documentation policy
+
+Progress from schema/references to assets/install, launch construction, numerical
+correctness, ROS contracts, scenario smoke and repeated measured benchmarks.
+Each level proves only its own scope.
+
+The recorded audit found 485 passing selected source tests and one failure, plus
+five passing selected backend tests. It did not certify full missions, GUI,
+all optional engines or hardware. CI has branch-coverage and ignored-failure gaps.
+Use the linked audit for exact limits, not a blanket passing-platform badge.
+
+When completing a roadmap task, update evidence, support matrix and machine status
+together. Keep historical counts dated. Verify licenses per asset/dependency;
+the repository license does not override third-party licenses. Record unresolved
+blockers and the exact next check in the handoff so another agent can resume.

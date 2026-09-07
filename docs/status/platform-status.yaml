@@ -1,143 +1,823 @@
-schema_version: 1
-updated: '2026-09-03'
-goal: unified_multi_robot_algorithm_lab
+# Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
+# Counts are audited observations, not targets or proof of runtime qualification.
+schema_version: 2
+updated: "2026-09-07"
+goal: "unified_multi_robot_algorithm_lab"
+overall_state: "partial"
+assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
+audit_revision: "dff388f"
+documentation_only_revision: true
 supported_baseline:
-  os: Ubuntu 22.04
-  ros: Humble
-  architecture: arm64
+  os: "Ubuntu 22.04"
+  ros: "Humble"
+  architecture: "arm64 is the documented development target; CI host qualification is tracked separately"
+  qualification: "No fresh clean build, GUI task, full robot mission or hardware qualification in the 2026-09-07 audit."
   simulators:
-  - Gazebo Harmonic (qualified; headless, furniture-mesh worlds)
-  - Isaac Sim (qualified; docker image built, nvidia runtime registered, boot test passed)
-  - PyBullet (qualified, source-built vs NumPy 2.x, live launch verified)
-  - MuJoCo (qualified, source-built, live launch verified)
+    gazebo: "Primary configured path; historical startup reports, not freshly mission-qualified."
+    pybullet: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair."
+    mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair."
+    isaac: "Runtime subprocess code exists; full startup/mission unverified in this audit; no scan/RGB-D publishers; clock contract needs repair."
 baseline:
-  core_packages: 17
+  recorded_on: "2026-09-07"
+  revision: "dff388f"
+  discovered_packages: 26
+  core_packages: 25
   optional_packages: 1
-  legacy_robot_profiles: 15
-  full_stack_robot_profiles: 1
-  legacy_environment_profiles: 15
+  optional_package_ids:
+    - "orbslam3"
+  legacy_robot_profiles: 17
+  legacy_environment_profiles: 26
   legacy_modes: 5
   registry_robots: 20
   registry_environments: 26
   registry_algorithms: 43
   registry_scenarios: 18
   registry_experiments: 15
+  catalog_label_counts:
+    robots:
+      integrated: 5
+      cataloged: 15
+    environments:
+      integrated: 26
+    algorithms:
+      integrated: 39
+      cataloged: 4
+    scenarios:
+      integrated: 14
+      cataloged: 4
+    experiments:
+      integrated: 13
+      cataloged: 2
+  catalog_label_warning: "Counts describe current source YAML labels, not verified capabilities. Runtime catalogs unchanged by this documentation revision; reconcile in R3.1."
   tests:
-    total: 257
+    scope: "Selected source tests plus selected backend tests from pre-documentation audit; not the full suite."
+    total: 491
+    passed: 490
+    failures: 1
     errors: 0
-    failures: 0
     skipped: 0
-  evidence:
-  - colcon build + test passing
-  - 257 unit tests passing (P0-P7.4)
-  - 206 bringup profile tests passing incl. 7 simulator dispatch + 6 backend smoke (PyBullet/MuJoCo headless physics, Isaac offline mode)
-  - CI workflow validates on every push
-tasks:
+    deselected: 10
+    full_suite: false
+    evidence: "docs/status/audit-2026-09-07.md"
+  verification_runs:
+    -
+      id: "audit-source"
+      revision: "dff388f"
+      total: 486
+      passed: 485
+      failures: 1
+      errors: 0
+      skipped: 0
+      deselected: 9
+      duration_seconds: 70.92
+      scope: "Registry + adapter + bringup profiles + map saver, excluding LaunchOrchestratorTests"
+      command_ref: "docs/status/audit-2026-09-07.md#source-tests"
+      failure: "AlgorithmLogicTests.test_dead_reckoning_integrates: rclpy.init() not called"
+    -
+      id: "audit-backends"
+      revision: "dff388f"
+      total: 5
+      passed: 5
+      failures: 0
+      errors: 0
+      skipped: 0
+      deselected: 1
+      duration_seconds: 0.83
+      scope: "Headless PyBullet/MuJoCo box physics + adapter import checks; excludes Isaac graceful_degradation startup"
+      command_ref: "docs/status/audit-2026-09-07.md#selected-backend-tests"
+  other_checks:
+    registry_cross_references: "pass; insufficient evidence of compatibility"
+    invalid_simulator_probe: "incorrectly accepted"
+    wrong_category_probe: "incorrectly accepted"
+    missing_capability_probe: "incorrectly accepted"
+    select_components_launch_generation: "TypeError"
+    benchmark_ros2_run: "No executable found; executable installed under bin"
+  historical_colcon_results:
+    total: 81
+    failures: 31
+    skipped: 1
+    qualification: "Stored results only, not a fresh run and not combined with audit totals."
+  not_verified:
+    - "fresh clean build"
+    - "full simulator missions"
+    - "GUI end-to-end operation"
+    - "Isaac startup"
+    - "physical hardware"
+    - "all robot/backend combinations"
+    - "five live comparisons per algorithm category"
+legacy_phases:
   P0:
-    title: repair_and_baseline
-    state: done
+    state: "partial"
+    replaced_by:
+      - "R1"
+      - "R2"
+      - "R9"
   P1:
-    title: platform_foundation
-    state: done
+    state: "partial"
+    replaced_by:
+      - "R3"
   P2:
-    title: unified_composition
-    state: done
+    state: "partial"
+    replaced_by:
+      - "R3"
   P3:
-    title: robot_integrations
-    state: done
+    state: "partial"
+    replaced_by:
+      - "R5"
+  P3.4:
+    state: "partial"
+    owner: null
+    replaced_by:
+      - "R5.3"
+    note: "Do not assume the earlier agent is still active; inspect ownership and worktree before resuming."
   P4:
-    title: environments
-    state: done
-    owner: cline
-    tasks:
-      P4.1:
-        state: done
-        owner: cline
-      P4.2:
-        state: done
-        owner: cline
-      P4.3:
-        state: done
-        owner: cline
-      P4.4:
-        state: done
-        owner: cline
-      P4.5:
-        state: done
-        owner: cline
-      P4.6:
-        state: done
-        owner: cline
+    state: "partial"
+    replaced_by:
+      - "R6"
+    note: "Assets and static geometry checks exist; runtime environment qualification remains."
   P5:
-    title: algorithm_breadth
-    state: done
-    owner: cline+copilot
+    state: "partial"
+    replaced_by:
+      - "R7"
   P6:
-    title: benchmarking
-    state: done
-    owner: cline+copilot
-    tasks:
-      P6.1:
-        state: done
-        owner: cline+copilot
-      P6.2:
-        state: done
-        owner: cline+copilot
-      P6.3:
-        state: done
-        owner: cline
-      P6.4:
-        state: done
-        owner: cline
-      P6.5:
-        state: done
-        owner: cline
-      P6.6:
-        state: done
-        owner: cline
+    state: "partial"
+    replaced_by:
+      - "R4"
   P7:
-    title: hardening
-    state: active
-    owner: cline
+    state: "partial"
+    replaced_by:
+      - "R1"
+      - "R8"
+      - "R9"
+  P7.5:
+    state: "blocked"
+    replaced_by:
+      - "R9.4"
+  P7.8b:
+    state: "partial"
+    replaced_by:
+      - "R8.2"
+task_state_options:
+  - "queued"
+  - "active"
+  - "partial"
+  - "blocked"
+  - "done"
+maturity_policy:
+  cataloged: "Metadata/source candidate; no runnable claim."
+  available: "Installed implementation resolves, but integration mission evidence incomplete."
+  integrated: "Typed runtime adapter plus automated useful input-output/task proof for an explicit robot/backend/scenario."
+  benchmarked: "Integrated plus reproducible measured records and provenance."
+  disallowed_evidence:
+    - "catalog count alone"
+    - "file presence alone"
+    - "empty node spins"
+    - "offline fallback"
+    - "hardcoded metrics"
+    - "wall-clock sleep labeled task success"
+tasks:
+  R0:
+    title: "Documentation recovery"
+    state: "done"
+    owner: "documentation-coordinator"
     tasks:
-      P7.1:
-        state: done
-        owner: cline
-      P7.2:
-        state: done
-        owner: cline
-      P7.3:
-        state: done
-        owner: cline
-      P7.4:
-        state: done
-        owner: cline
-      P7.5:
-        state: blocked
+      R0.1:
+        title: "Reconcile audited baseline"
+        state: "done"
+        owner: "documentation-coordinator"
+        depends_on: []
+        scope_paths:
+          - "docs/status/audit-2026-09-07.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence:
+          - "docs/status/audit-2026-09-07.md"
+        next_action: "Preserve revision, commands, exclusions, results and negative probes. Separate inventory, historical reports, static tests and live evidence."
+      R0.2:
+        title: "Publish truthful documentation and agent work plan"
+        state: "done"
+        owner: "documentation-coordinator"
+        depends_on:
+          - "R0.1"
+        scope_paths:
+          - "README.md"
+          - "ROADMAP.md"
+          - "docs/"
+          - "src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py"
+        acceptance_ref: "ROADMAP.md"
+        evidence:
+          - "docs/AGENT_HANDOFF.md"
+          - "docs/status/audit-2026-09-07.md"
+          - "src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py: test_platform_status_test_numbers_are_self_consistent (66/66 pass at this revision)"
+        next_action: "Completed: truthful README/ROADMAP published, continuation protocol added, stale fixed-count assertion replaced with ledger self-consistency checks."
+  R1:
+    title: "Trustworthy development baseline"
+    state: "queued"
+    owner: null
+    tasks:
+      R1.1:
+        title: "Repair installed entry points and portable paths"
+        state: "queued"
         owner: null
-      P7.6:
-        state: done
-        owner: cline
-      P7.7:
-        state: done
-        owner: cline
-      P7.8:
-        state: done
-        owner: cline
-        note: 'All four simulators qualified on Jetson AGX Orin: Gazebo Harmonic (headless, furniture-mesh world), PyBullet 3.2.7 (live launch, full ROS2 topic contract), MuJoCo 3.12.0 (live launch, full ROS2 topic contract), Isaac Sim 6.0.1 (docker image built, nvidia runtime registered, container boot test passed). robot_lab_isaac spawner + sensor_bridge stubs degrade gracefully when isaacsim Python API not installed.'
+        depends_on:
+          - "R0.2"
+        scope_paths:
+          - "src/*/setup.py"
+          - "src/*/setup.cfg"
+          - "src/*/CMakeLists.txt"
+          - "src/robot_lab_navigation/config/bt_navigator.yaml"
+          - "src/robot_lab_controller/robot_lab_controller/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Fix benchmark executable ROS placement and audit every advertised executable/plugin/launch against the installed index. Resolve assets via package shares; use configurable output directories outside source/install; preserve existing assets."
+      R1.2:
+        title: "Separate and repair test tiers"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R0.2"
+        scope_paths:
+          - "src/robot_lab/robot_lab_registry/test/"
+          - "src/robot_lab_adapter/test/"
+          - "src/robot_lab_bringup/test/"
+          - "scripts/test_fast.sh"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Separate numerical, ROS-node, launch-contract, physics, mission and hardware tests. Fix the DeadReckoning initialization failure. Mock subprocesses in unit orchestration tests; replace count-only qualification progressively."
+      R1.3:
+        title: "Make CI bootstrap and doctor trustworthy"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R1.1"
+          - "R1.2"
+        scope_paths:
+          - ".github/workflows/"
+          - "scripts/bootstrap.sh"
+          - "scripts/doctor.sh"
+          - "scripts/test_fast.sh"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Include master/current development branches; remove ignored required-test failures and invalid test paths. Make dependency/build failures nonzero. Separate project bootstrap from privileged host changes; pin required dependency inputs."
+  R2:
+    title: "Simulator and ROS contracts"
+    state: "queued"
+    owner: null
+    tasks:
+      R2.1:
+        title: "Fix simulation clocks"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R1.2"
+        scope_paths:
+          - "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py"
+          - "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py"
+          - "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py"
+          - "src/robot_lab_bringup/test/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Publish rosgraph_msgs/msg/Clock wrapping Time in all three adapters. Keep startup/readiness on wall time and measurements on simulation time; declare dependencies."
+      R2.2:
+        title: "Unify commands odometry sensors and TF"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R2.1"
+          - "R1.1"
+        scope_paths:
+          - "src/robot_lab_controller/"
+          - "src/robot_lab_localization/"
+          - "src/robot_lab_bringup/"
+          - "src/robot_lab_pybullet/"
+          - "src/robot_lab_mujoco/"
+          - "src/robot_lab_isaac/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Reconcile /odom versus /robot_lab_controller/odom, mux output versus backend /cmd_vel, sensor topics/QoS and TF ownership. Separate perfect ground truth from measurements and estimates. Add command watchdogs and bounded arbitration."
+      R2.3:
+        title: "Gate readiness capabilities and failures"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R2.2"
+        scope_paths:
+          - "src/robot_lab_bringup/config/sim_modes.yaml"
+          - "src/robot_lab_bringup/launch/"
+          - "src/robot_lab_gui/"
+          - "src/robot_lab_pybullet/"
+          - "src/robot_lab_mujoco/"
+          - "src/robot_lab_isaac/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Expose ready/health/reset contracts. Gate modes by actual backend sensor/actuator support. Offline fallback is a diagnostic mode, never successful physics. Replace blind sleeps with bounded readiness checks."
+  R3:
+    title: "Strict composition and execution"
+    state: "queued"
+    owner: null
+    tasks:
+      R3.1:
+        title: "Reconcile registry profiles and aliases"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R1.1"
+        scope_paths:
+          - "src/robot_lab/robot_lab_registry/config/"
+          - "src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py"
+          - "src/robot_lab_robots/config/robots.yaml"
+          - "src/robot_lab_bringup/config/"
+          - "src/robot_lab_adapter/robot_lab_adapter/launch_fragments.py"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Establish canonical IDs and migration aliases (go2/unitree_go2, outdoor_terrain/display name). Audit all 43 algorithm implementations including PID/coverage/aerial references and reversed contracts. Downgrade unsupported maturity without deleting assets."
+      R3.2:
+        title: "Enforce typed composition compatibility"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R3.1"
+          - "R2.3"
+        scope_paths:
+          - "src/robot_lab/robot_lab_registry/robot_lab_registry/validation.py"
+          - "src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py"
+          - "src/robot_lab_adapter/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Validate explicit simulator, algorithm category, sensors, dimensions, kinematics, command interfaces, dependencies, topics and TF ownership. Restore capability checks and use one validator in CLI and GUI."
+      R3.3:
+        title: "Execute resolved experiments through CLI"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R3.2"
+        scope_paths:
+          - "src/robot_lab/robot_lab_registry/robot_lab_registry/cli.py"
+          - "src/robot_lab_adapter/"
+          - "src/robot_lab_bringup/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Fix LaunchConfiguration concatenation. Replace describe-only robot selection and dry-run-only launch with one resolver/executor. Support seven independent selectors, robot/backend/world/scenario, spawn/reset, parameters and seed; preserve safe dry-run and legacy aliases."
+      R3.4:
+        title: "Connect GUI to the common resolver"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R3.3"
+        scope_paths:
+          - "src/robot_lab_gui/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Replace ignored algorithm argument with full composition controls; filter by validator, show maturity/readiness and unsupported reasons. Save/load resolved manifests and migrate old profiles; monitor actual running choices."
+      R3.5:
+        title: "Isolate namespaces frames and simulator instances"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R3.3"
+          - "R2.2"
+        scope_paths:
+          - "src/robot_lab_adapter/robot_lab_adapter/namespaces.py"
+          - "src/robot_lab_bringup/"
+          - "src/robot_lab_gui/"
+          - "src/robot_lab_*/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Separate robot from experiment namespaces; remove accidental absolute-topic coupling. One clock belongs to each simulator instance; independent simulators require isolated ROS discovery/partitions."
+  R4:
+    title: "Measured reference experiment"
+    state: "queued"
+    owner: null
+    tasks:
+      R4.1:
+        title: "Implement scenario lifecycle and truthful outcomes"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R3.3"
+          - "R2.3"
+        scope_paths:
+          - "src/robot_lab/robot_lab_benchmark/"
+          - "src/robot_lab/robot_lab_registry/config/scenarios.yaml"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement validate→launch→ready→reset/seed→initialize pose→send task→observe→stop→record. Task completion determines success, not sleep duration; launch/reset failures abort. Use unique result IDs and real rosbag2 recording."
+      R4.2:
+        title: "Measure metrics and preserve provenance"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R4.1"
+        scope_paths:
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Remove hardcoded distance/collision/clearance. Measure contacts, footprint-aware clearance, trajectory distance and timestamp/frame-aligned truth/estimation error; collect CPU/memory/RTF and defined effort proxy. Record manifest/hash, revision/dirty state, dependencies, asset hashes, seeds, budgets, tolerances and artifact paths."
+      R4.3:
+        title: "Publish first reproducible planner comparison"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R4.2"
+        scope_paths:
+          - "src/robot_lab/robot_lab_benchmark/"
+          - "src/robot_lab/robot_lab_registry/config/experiments.yaml"
+          - "docs/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Use Bumperbot + deterministic arena + Gazebo. Compare two wired planners with all other settings fixed. Predeclare at least five seeds, timeout, tolerance and resource budget; keep tuning and evaluation seeds separate."
+  R5:
+    title: "Robot-class qualification"
+    state: "queued"
+    owner: null
+    tasks:
+      R5.1:
+        title: "Qualify Bumperbot and Labbot mobile tasks"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R4.3"
+        scope_paths:
+          - "src/robot_lab_robots/bumperbot/"
+          - "src/robot_lab_robots/labbot/"
+          - "src/robot_lab_controller/"
+          - "src/robot_lab_localization/"
+          - "src/robot_lab_navigation/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Verify robot-specific inertias, wheel geometry, footprint, sensors/control and overlays using golden harness. Preserve Bumperbot mapping/RGB-D/coverage; do not claim Labbot RGB-D without implementation."
+      R5.2:
+        title: "Qualify Go2 locomotion"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+        scope_paths:
+          - "src/robot_lab_robots/unitree/go2_description/"
+          - "src/robot_lab_adapter/"
+          - "src/robot_lab_robots/config/robots.yaml"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control."
+      R5.3:
+        title: "Qualify Berkeley Humanoid Lite balance and walking"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+        scope_paths:
+          - "src/robot_lab_robots/berkeley_humanoid_lite/"
+          - "src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py"
+          - "src/robot_lab_robots/config/robots.yaml"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Resume historical P3.4 after ownership check. Verify joints/inertias/limits; wire simulation wrapper; implement closed-loop balance before stepping/walking. A fixed pose is not proof of balance."
+      R5.4:
+        title: "Integrate real multirotor SITL flight"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+        scope_paths:
+          - "src/robot_lab_robots/quadrotor_sitl/"
+          - "src/robot_lab_adapter/robot_lab_adapter/mavros_offboard_controller.py"
+          - "src/robot_lab_bringup/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion."
+  R6:
+    title: "Environment qualification"
+    state: "queued"
+    owner: null
+    tasks:
+      R6.1:
+        title: "Qualify geometry map alignment and resets"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R2.3"
+          - "R3.1"
+        scope_paths:
+          - "src/robot_lab_maps/tools/"
+          - "src/robot_lab_maps/config/arena_navigation.yaml"
+          - "src/robot_lab/robot_lab_registry/config/environments.yaml"
+          - "src/robot_lab_bringup/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Preserve worlds/provenance; validate units, mesh/collision geometry, map origin/resolution, spawn/goal clearance and generation seeds. Bind reset to actual backend API rather than universal /gazebo/reset_world metadata."
+      R6.2:
+        title: "Add real dynamic and sensor-disturbance cases"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R6.1"
+          - "R4.2"
+        scope_paths:
+          - "src/robot_lab_maps/"
+          - "src/robot_lab/robot_lab_registry/config/scenarios.yaml"
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab/robot_lab_benchmark/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Verify actor collision/sensor effects; add deterministic noise, bias, drift, delay, dropout, occlusion and outlier injection with separate seeds. Geometry occlusion is not generic sensor degradation."
+      R6.3:
+        title: "Qualify 3D terrain and aerial representations"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R6.1"
+          - "R5.2"
+          - "R5.3"
+          - "R5.4"
+        scope_paths:
+          - "src/robot_lab_maps/"
+          - "src/robot_lab/robot_lab_registry/config/"
+          - "src/robot_lab/robot_lab_benchmark/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Provide height/elevation/voxel/mesh queries where needed, legged traversable surfaces and aerial free volumes/geofences. Do not infer 3D feasibility solely from a 2D occupancy projection."
+  R7:
+    title: "Algorithm breadth"
+    state: "queued"
+    owner: null
+    tasks:
+      R7.1:
+        title: "Normalize numerical and ROS algorithm adapters"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R4.3"
+          - "R3.2"
+        scope_paths:
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab_adapter/"
+          - "src/robot_lab/robot_lab_registry/config/algorithms.yaml"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Separate numerical classes from ROS wrappers; enforce input/output types, rates, timestamps, frames, covariance, lifecycle, seeds/reset, parameter bounds and failure codes. Wire useful kernels or mark educational; validate mathematical names against implementations."
+      R7.2:
+        title: "Five perception pipelines"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab/robot_lab_registry/config/"
+          - "docs/tutorials/perception.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement the five candidates or documented equivalents in the breadth specification below; give each a method subrecord, equations/source, ROS adapter, labels/input stratum and benchmark experiment."
+      R7.3:
+        title: "Five localization methods"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_localization/"
+          - "src/robot_lab_mapping/"
+          - "src/robot_lab_algorithms/"
+          - "docs/tutorials/localization.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement the five candidates or justified replacements; group sensor/map assumptions and initialization/relocalization protocol; retain ORB-SLAM3 optional unless ABI/dependency tests pass."
+      R7.4:
+        title: "Five state-estimation methods"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab_localization/"
+          - "docs/tutorials/state_estimation.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement five mathematically distinct estimators on declared state/dynamics/measurement models. Preserve toy examples with honest names or replace with full equations and numerical tests."
+      R7.5:
+        title: "Five sensor-fusion methods"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab_localization/"
+          - "docs/tutorials/sensor_fusion.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement five fusion methods in matched attitude-only and pose-fusion strata; handle measurement timing, covariance, frame conversion and biased/dropped sensors."
+      R7.6:
+        title: "Five global planners"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_planning/"
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab_navigation/"
+          - "docs/tutorials/planning.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement distinct graph/grid and sampling-based planners using common collision checking, footprint, goal and compute budget. Verify edges, not only sampled endpoints."
+      R7.7:
+        title: "Five local planners"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_motion/"
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab_navigation/"
+          - "docs/tutorials/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement five path-following/reactive/trajectory methods with common constraints and explicit distinctions. Validate upstream ROS version availability before selecting TEB/MPPI or a replacement."
+      R7.8:
+        title: "Five low-level or model-based controllers"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.1"
+        scope_paths:
+          - "src/robot_lab_controller/"
+          - "src/robot_lab_algorithms/"
+          - "src/robot_lab_adapter/"
+          - "docs/tutorials/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Implement PID, LQR, constrained linear MPC, nonlinear MPC and feedback-linearization/backstepping control (or justified nonlinear replacement) on a common supported plant. Record equations, actuator model, limits and solver deadlines."
+  R8:
+    title: "Backend qualification and scaling"
+    state: "queued"
+    owner: null
+    tasks:
+      R8.1:
+        title: "Qualify PyBullet and MuJoCo combinations"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+          - "R6.1"
+        scope_paths:
+          - "src/robot_lab_pybullet/"
+          - "src/robot_lab_mujoco/"
+          - "src/robot_lab_bringup/test/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Verify import fidelity, frames, stepping, contacts, limits, sensors/noise and reset. Do not silently substitute a generic box model. Start with mobile; add class/backend rows only after that class mission passes."
+      R8.2:
+        title: "Qualify Isaac on a named host configuration"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+          - "R6.1"
+        scope_paths:
+          - "src/robot_lab_isaac/"
+          - "scripts/"
+          - "docs/status/support-matrix.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Validate Python/ROS subprocess boundary, runtime discovery, import, control, sensors and failures on a chosen compatible host. Implement needed LiDAR/RGB-D or gate modes; parameterize host paths. Historical Jetson startup reports are not qualification."
+      R8.3:
+        title: "Resource-bounded concurrent experiments"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R3.5"
+          - "R4.3"
+          - "R8.1"
+        scope_paths:
+          - "src/robot_lab/robot_lab_benchmark/"
+          - "src/robot_lab_gui/"
+          - "src/robot_lab_adapter/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Add CPU/memory/GPU/RTF budgets, bounded queues, cancellation and independent artifacts. Distinguish multiple robots in one world from independent simulations."
+  R9:
+    title: "Reproducibility, learning and release"
+    state: "queued"
+    owner: null
+    tasks:
+      R9.1:
+        title: "Provenance licenses and clean-host reproduction"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R4.3"
+          - "R1.3"
+        scope_paths:
+          - "LICENSES/third-party-notices.md"
+          - "scripts/"
+          - "docs/"
+          - "src/robot_lab/robot_lab_registry/config/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Pin external revisions/dependencies; verify actual upstream licenses and replace placeholder source URLs. Document storage/download/runtime requirements; top-level MIT does not relicense third-party assets."
+      R9.2:
+        title: "Seven real comparison tutorials"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R7.2"
+          - "R7.3"
+          - "R7.4"
+          - "R7.5"
+          - "R7.6"
+          - "R7.7"
+          - "R7.8"
+          - "R3.4"
+        scope_paths:
+          - "docs/tutorials/"
+          - "README.md"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Upgrade current numerical demos to saved experiments; add separate global/local planning and control guides plus robot/backend examples, failure interpretation and parameter-study protocol."
+      R9.3:
+        title: "Evidence-generated support matrix and release gate"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+          - "R5.2"
+          - "R5.3"
+          - "R5.4"
+          - "R6.2"
+          - "R6.3"
+          - "R8.1"
+          - "R8.2"
+          - "R8.3"
+          - "R9.1"
+          - "R9.2"
+        scope_paths:
+          - "docs/status/"
+          - "README.md"
+          - "ROADMAP.md"
+          - ".github/workflows/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Generate inventories/support rows from metadata plus runtime evidence, with revision/date/host/backend/robot/scenario/seeds. Reconcile all scope promises before release; do not silently waive an unfinished backend requirement."
+      R9.4:
+        title: "Optional physical Bumperbot HIL"
+        state: "blocked"
+        owner: null
+        depends_on:
+          - "R5.1"
+          - "R9.1"
+        scope_paths:
+          - "src/robot_lab_firmware/"
+          - "src/robot_lab_utils/"
+          - "docs/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Wait for physical equipment, safe test setup and explicit authorization. Review serial timeouts, units, direction, limits, disconnect and e-stop before powered motion."
+        blocked_by:
+          - "hardware_hil"
 known_blockers:
-- id: hardware_hil
-  affects:
-  - P7.5
-  condition: physical Bumperbot required
-- id: orbslam3_opencv_abi
-  affects:
-  - P5.2
-  condition: OpenCV ABI must match
-- id: isaac_sim_aarch64
-  affects:
-  - P7.8
-  condition: QUALIFIED — docker image isaac-sim-docker:latest built (26.1 GB, on SSD), nvidia runtime registered, container boot test passed (kit process running, 11.5GB RAM, healthy). Non-fatal NVST streaming encoder errors expected on headless Jetson. Docker data-root + containerd store on /workspace (SSD). P7.8 marked done.
+  -
+    id: "hardware_hil"
+    affects:
+      - "R9.4"
+    condition: "Physical Bumperbot, safe test setup and explicit hardware-operation authorization required."
+    unblock: "Arrange supervised hardware access and approve bounded HIL checks."
+    blocks_simulation_release: false
+  -
+    id: "orbslam3_opencv_abi"
+    affects:
+      - "R7.3"
+    condition: "Historical ABI warning; optional ORB-SLAM3 not freshly built or qualified."
+    unblock: "Verify matching OpenCV/cv_bridge and external dependencies if choosing this optional implementation."
+    blocks_simulation_release: false
+risks:
+  -
+    id: "isaac_host_runtime"
+    affects:
+      - "R8.2"
+    description: "Historical Jetson startup instability and machine-specific runtime paths; host/API compatibility requires verification. Do not claim an active blocker without checking."
+  -
+    id: "catalog_test_coupling"
+    affects:
+      - "R3.1"
+      - "R7.1"
+    description: "Tests currently require integrated labels; update to evidence gates when correcting runtime metadata."
+  -
+    id: "shared_ros_graph"
+    affects:
+      - "R1.2"
+      - "R2.2"
+      - "R3.5"
+    description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: P7.5 (blocked on hardware) or P8 (next milestone)
-  instructions: 'P0-P7.8 complete. P7.5 blocked on physical Bumperbot hardware. P7.6 support matrix published. P7.7 multi-simulator dispatch infrastructure done. P7.8 ALL FOUR SIMULATORS QUALIFIED on Jetson AGX Orin — Gazebo Harmonic (headless, furniture-mesh world), PyBullet 3.2.7 (live launch, full ROS2 topic contract), MuJoCo 3.12.0 (live launch, full ROS2 topic contract), Isaac Sim 6.0.1 (docker image built, nvidia runtime registered, container boot test passed). robot_lab_isaac spawner + sensor_bridge stubs degrade gracefully when isaacsim Python API not installed. scripts/isaac_docker_setup.sh, scripts/fix_containerd_disk.sh and scripts/isaac_postbuild.sh document the pipeline.'
+  next_task: "R1.1"
+  parallel_ready_after_R0:
+    - "R1.1"
+    - "R1.2"
+  next_action: "R0 complete (docs published, protocol and audit evidence in place). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R1.1 or R1.2 and reproduce the installed executable/path defects and the DeadReckoning failure. This documentation update does not authorize hardware motion."
+  protocol: "docs/AGENT_HANDOFF.md"
+  plan: "ROADMAP.md"
+  audit: "docs/status/audit-2026-09-07.md"
+  no_runtime_repairs_completed_by_this_revision: true
+  session_notes: []

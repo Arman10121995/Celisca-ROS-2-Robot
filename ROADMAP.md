@@ -1,471 +1,484 @@
-# Robot Lab continuous roadmap
+# Robot Lab: implementation roadmap and continuation plan
 
-This file is the hand-off ledger for the repository-wide program. It is the
-first file an agent should read before changing the platform. Update it in the
-same change that completes, blocks, adds, or materially re-scopes a task.
+Updated: 2026-09-07. Runtime audit baseline: `dff388f`.
 
-Last updated: 2026-09-05
+This is an implementation specification, not a list of promised features.
+[Machine-readable status](docs/status/platform-status.yaml) owns task state,
+ownership, dependencies and the next task. This file owns scope and acceptance
+criteria. Update both together. Start each session with
+[AGENT_HANDOFF](docs/AGENT_HANDOFF.md).
 
-## Mission
+## Goal and completion boundary
 
-Build a reproducible ROS 2 laboratory in which the robot, simulator,
-environment, scenario, perception pipeline, localization method, state
-estimator, global planner, local planner, and low-level controller can be
-changed independently and compared with common metrics.
+Build a reproducible ROS 2 platform for learning and comparing algorithms across
+mobile, legged, humanoid and aerial robots, in 2D and 3D environments. Preserve
+existing assets and the Bumperbot workflow. Robot, simulator, environment,
+scenario, perception, localization, state estimation, sensor fusion, global
+planning, local planning and control must be selectable independently **where
+their physical and data contracts are compatible**.
 
-The target is not satisfied by catalog entries alone. Every claimed
-"integrated" option must have launch/configuration files, declared
-dependencies, a compatible robot/environment combination, and an automated
-smoke test. Every claimed "benchmarked" option must additionally produce the
-standard result record described in `docs/architecture/overview.md`.
+The goal is complete only when all of the following are evidenced:
 
-## Current program state
+- At least two mobile bases and one quadruped, humanoid and multirotor complete
+  their own class-appropriate simulated tasks. Manipulator support is an extension;
+  retain existing manipulator assets without claiming commandable support.
+- Existing worlds remain available. Navigation, terrain, stairs, stepping stones,
+  aerial, moving-obstacle and degraded-sensor tasks have verified geometry,
+  runtime resets and recorded seeds. A 2D projection is not a 3D map.
+- Each of seven algorithm categories has at least five distinct, runnable,
+  mathematically defensible implementations and reproducible comparisons.
+  Include PID, linear/model-based control, MPC and nonlinear control.
+- One resolved experiment manifest drives CLI and GUI execution, recording the
+  actual plugins, parameters, assets, simulator, scenario and seeds.
+- Results measure success, contact events, simulated time, path/trajectory
+  quality, clearance, estimation error, compute use, real-time factor and a
+  defined effort/energy proxy where applicable. Missing metrics remain unavailable.
+- Truth is separate from measurements; failed trials are retained; a clean
+  checkout can reproduce the comparison.
+- Every advertised backend/robot/mode combination has its own qualification
+  evidence. Four adapters do not imply universal cross-product support.
 
-| Phase | State | Outcome |
+There is no universal "best" algorithm. Compare within declared input/model
+strata and publish accuracy, robustness, cost and failure tradeoffs. Republishers,
+command relays and parameter variants do not count as distinct algorithms.
+Physical HIL is a separate hardware-dependent milestone, not a prerequisite for
+a simulation-only release. Reduced-scope releases must explicitly list exclusions.
+
+## Achieved foundation and historical reconciliation
+
+The [audit](docs/status/audit-2026-09-07.md) records 26 ROS packages, 20 robot
+entries, 26 environments, 43 algorithms, 18 scenarios and 15 experiments.
+Selected tests passed 490 cases and failed one; this is not mission qualification.
+Useful work includes descriptions/worlds, arena generators, the Bumperbot-oriented
+mode launcher, Nav2/AMCL/EKF/SLAM configurations, catalogs/query tools, GUI,
+numerical examples, backend code and result/reporting helpers.
+
+Catalog maturity labels have **not** been changed in this documentation revision.
+They overstate runtime support; R3.1 reconciles metadata and its tests together.
+
+| Legacy phase | Audited state | Retained work / remaining obligation | Recovery |
+|---|---|---|---|
+| P0 baseline | Partial; reverify | Hardware parsing/profile tests exist; installs, paths, topics and CI need repair | R1, R2, R9 |
+| P1 foundation | Partial | Catalog/schema/query code exists; compatibility checks insufficient | R3.1, R3.2 |
+| P2 composition | Partial | Selector/fragment classes exist; actual launch and applied choices incomplete | R3.3–R3.5 |
+| P3 robots | Partial | Richer assets exist; Go2/BHL display profiles and unproven flight/locomotion | R5 |
+| P3.4 humanoid | Partial, no current owner asserted | Standing-related code is not balance/walking qualification; check live ownership | R5.3 |
+| P4 environments | Assets/static checks implemented | Geometry/generators retained; runtime reset, actors and 3D traversal unqualified | R6 |
+| P5 algorithms | Partial | Counts/kernels exist; empty/broken ROS entry points and simplified methods | R7 |
+| P6 benchmarking | Partial | Reporting helpers exist; placeholder metrics and false-success paths | R4 |
+| P7 hardening | Partial | Scripts/CI/backend code exist; blanket qualification claims withdrawn | R1, R8, R9 |
+| P7.5 hardware | Blocked | Equipment, safe setup and explicit operation authorization required | R9.4 |
+| P7.7/P7.8/P7.8b | Dispatch/runtime code exists | Historical startup reports are not current mission evidence | R2, R8 |
+
+Old IDs remain valid for locating commits/tests. Historical narrative is available
+with `git show dff388f:ROADMAP.md`; do not copy its green counts or host-specific
+installation reports into current support claims.
+
+## Order, ownership and state rules
+
+The default sequence is R0 → R1 → R2 → R3 → R4 → R5/R6 → R7 → R8 → R9.
+Dependencies below allow safe parallel work: R1.1/R1.2, independent robot-class
+lanes after R5.1, environment work, and R7 categories after R7.1. Prefer the
+smallest complete experiment over adding more catalogs or GUI controls.
+
+- Task states: `queued`, `active`, `partial`, `blocked`, `done`.
+- `partial` means useful work exists but acceptance has not passed.
+- A blocked task needs the exact prerequisite, attempted checks and unblock action.
+- Claim ownership in YAML before changing shared files; one coordinator owns ledgers.
+- Source maturity is separate: cataloged → available → integrated → benchmarked.
+  Integration requires installed code plus a real input-to-output runtime test on
+  a named robot/backend/task; benchmarking additionally requires measured artifacts.
+- Read dependency acceptance before relying on a `done` label. If evidence fails,
+  reopen the task and record it; do not silently weaken its tests.
+- No runtime implementation has been completed by the R0 documentation revision.
+
+## Ordered task specifications
+
+Each task includes scope, files, dependencies and a completion test. The YAML
+ledger is authoritative for current state/owner. Paths containing `*` are scope
+hints, not instructions to mechanically rewrite every package.
+
+## R0 — Documentation recovery
+
+### R0.1 — Reconcile audited baseline
+
+Dependencies: none.
+
+- Files: `docs/status/audit-2026-09-07.md`.
+- Implement: Preserve revision, commands, exclusions, results and negative probes. Separate inventory, historical reports, static tests and live evidence.
+- Acceptance: Counts match the catalogs; findings link to source; no fabricated logs, clean-build or mission qualification claim.
+
+### R0.2 — Publish truthful documentation and agent work plan
+
+Dependencies: `R0.1`.
+
+- Files: `README.md`, `ROADMAP.md`, `docs/`, `src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py`.
+- Implement: Rewrite current state and target architecture; add durable task ownership/dependencies and continuation protocol. Replace documentation assertions demanding stale green numbers with scoped evidence checks.
+- Acceptance: Links and YAML parse; task dependencies resolve without cycles; docs tests pass; no runtime repair is marked complete.
+
+## R1 — Trustworthy development baseline
+
+### R1.1 — Repair installed entry points and portable paths
+
+Dependencies: `R0.2`.
+
+- Files: `src/*/setup.py`, `src/*/setup.cfg`, `src/*/CMakeLists.txt`, `src/robot_lab_navigation/config/bt_navigator.yaml`, `src/robot_lab_controller/robot_lab_controller/`.
+- Implement: Fix benchmark executable ROS placement and audit every advertised executable/plugin/launch against the installed index. Resolve assets via package shares; use configurable output directories outside source/install; preserve existing assets.
+- Acceptance: Clean isolated build of 25 non-ORB packages; installed --help and launch-generation checks pass without source import hacks or developer home paths; optional dependencies reported separately.
+
+### R1.2 — Separate and repair test tiers
+
+Dependencies: `R0.2`.
+
+- Files: `src/robot_lab/robot_lab_registry/test/`, `src/robot_lab_adapter/test/`, `src/robot_lab_bringup/test/`, `scripts/test_fast.sh`.
+- Implement: Separate numerical, ROS-node, launch-contract, physics, mission and hardware tests. Fix the DeadReckoning initialization failure. Mock subprocesses in unit orchestration tests; replace count-only qualification progressively.
+- Acceptance: Unit suite runs without accessing a shared ROS graph; optional engines produce explicit skips; numerical assertions remain strong; ROS nodes initialize and tear down correctly.
+
+### R1.3 — Make CI bootstrap and doctor trustworthy
+
+Dependencies: `R1.1`, `R1.2`.
+
+- Files: `.github/workflows/`, `scripts/bootstrap.sh`, `scripts/doctor.sh`, `scripts/test_fast.sh`.
+- Implement: Include master/current development branches; remove ignored required-test failures and invalid test paths. Make dependency/build failures nonzero. Separate project bootstrap from privileged host changes; pin required dependency inputs.
+- Acceptance: Intentional build/test/dependency failure makes the required job fail; clean required lane passes; optional lanes report reasons. Do not call a job a simulation matrix until it executes missions.
+
+## R2 — Simulator and ROS contracts
+
+### R2.1 — Fix simulation clocks
+
+Dependencies: `R1.2`.
+
+- Files: `src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py`, `src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py`, `src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py`, `src/robot_lab_bringup/test/`.
+- Implement: Publish rosgraph_msgs/msg/Clock wrapping Time in all three adapters. Keep startup/readiness on wall time and measurements on simulation time; declare dependencies.
+- Acceptance: A real use_sim_time subscriber advances, pauses and resets; types match; startup works at time zero; reset does not create negative-duration measurements. Engine import tests are insufficient.
+
+### R2.2 — Unify commands odometry sensors and TF
+
+Dependencies: `R2.1`, `R1.1`.
+
+- Files: `src/robot_lab_controller/`, `src/robot_lab_localization/`, `src/robot_lab_bringup/`, `src/robot_lab_pybullet/`, `src/robot_lab_mujoco/`, `src/robot_lab_isaac/`.
+- Implement: Reconcile /odom versus /robot_lab_controller/odom, mux output versus backend /cmd_vel, sensor topics/QoS and TF ownership. Separate perfect ground truth from measurements and estimates. Add command watchdogs and bounded arbitration.
+- Acceptance: Commands reach only selected simulated robot with correct signs; stale commands stop; EKF receives data; one publisher owns each TF edge; covariance/timestamps and sensor frames are correct.
+
+### R2.3 — Gate readiness capabilities and failures
+
+Dependencies: `R2.2`.
+
+- Files: `src/robot_lab_bringup/config/sim_modes.yaml`, `src/robot_lab_bringup/launch/`, `src/robot_lab_gui/`, `src/robot_lab_pybullet/`, `src/robot_lab_mujoco/`, `src/robot_lab_isaac/`.
+- Implement: Expose ready/health/reset contracts. Gate modes by actual backend sensor/actuator support. Offline fallback is a diagnostic mode, never successful physics. Replace blind sleeps with bounded readiness checks.
+- Acceptance: Missing engine/camera/LiDAR, reset failure and process death yield structured errors and scoped cleanup. Unsupported modes fail before launch; headless is honored even for non-Gazebo display.
+
+## R3 — Strict composition and execution
+
+### R3.1 — Reconcile registry profiles and aliases
+
+Dependencies: `R1.1`.
+
+- Files: `src/robot_lab/robot_lab_registry/config/`, `src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py`, `src/robot_lab_robots/config/robots.yaml`, `src/robot_lab_bringup/config/`, `src/robot_lab_adapter/robot_lab_adapter/launch_fragments.py`.
+- Implement: Establish canonical IDs and migration aliases (go2/unitree_go2, outdoor_terrain/display name). Audit all 43 algorithm implementations including PID/coverage/aerial references and reversed contracts. Downgrade unsupported maturity without deleting assets.
+- Acceptance: One inventory agrees across GUI/CLI/docs; available package/plugin references resolve; integrated labels name scoped runtime evidence. Replace tests that require false labels with evidence checks.
+
+### R3.2 — Enforce typed composition compatibility
+
+Dependencies: `R3.1`, `R2.3`.
+
+- Files: `src/robot_lab/robot_lab_registry/robot_lab_registry/validation.py`, `src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py`, `src/robot_lab_adapter/`.
+- Implement: Validate explicit simulator, algorithm category, sensors, dimensions, kinematics, command interfaces, dependencies, topics and TF ownership. Restore capability checks and use one validator in CLI and GUI.
+- Acceptance: Unknown simulator, AMCL in global_planning and missing required LiDAR are rejected; valid combinations pass with actionable diagnostics; 2D planners cannot gain flight capability by a metadata label.
+
+### R3.3 — Execute resolved experiments through CLI
+
+Dependencies: `R3.2`.
+
+- Files: `src/robot_lab/robot_lab_registry/robot_lab_registry/cli.py`, `src/robot_lab_adapter/`, `src/robot_lab_bringup/`.
+- Implement: Fix LaunchConfiguration concatenation. Replace describe-only robot selection and dry-run-only launch with one resolver/executor. Support seven independent selectors, robot/backend/world/scenario, spawn/reset, parameters and seed; preserve safe dry-run and legacy aliases.
+- Acceptance: Dry-run emits concrete resolved manifest without processes; live execution uses it; switching between two implemented planners changes the active plugin and behavior; no duplicate hardcoded stack starts.
+
+### R3.4 — Connect GUI to the common resolver
+
+Dependencies: `R3.3`.
+
+- Files: `src/robot_lab_gui/`.
+- Implement: Replace ignored algorithm argument with full composition controls; filter by validator, show maturity/readiness and unsupported reasons. Save/load resolved manifests and migrate old profiles; monitor actual running choices.
+- Acceptance: CLI and GUI resolve identical saved profiles; selection changes active component; stop/close only clean owned processes and never delete user artifacts; headless GUI-adjacent logic tests pass.
+
+### R3.5 — Isolate namespaces frames and simulator instances
+
+Dependencies: `R3.3`, `R2.2`.
+
+- Files: `src/robot_lab_adapter/robot_lab_adapter/namespaces.py`, `src/robot_lab_bringup/`, `src/robot_lab_gui/`, `src/robot_lab_*/`.
+- Implement: Separate robot from experiment namespaces; remove accidental absolute-topic coupling. One clock belongs to each simulator instance; independent simulators require isolated ROS discovery/partitions.
+- Acceptance: Two simulated robots have independent commands/sensors/TF; independent experiments cannot share reset services/clocks/result directories; stopping/resetting one cannot affect the other.
+
+## R4 — Measured reference experiment
+
+### R4.1 — Implement scenario lifecycle and truthful outcomes
+
+Dependencies: `R3.3`, `R2.3`.
+
+- Files: `src/robot_lab/robot_lab_benchmark/`, `src/robot_lab/robot_lab_registry/config/scenarios.yaml`.
+- Implement: Implement validate→launch→ready→reset/seed→initialize pose→send task→observe→stop→record. Task completion determines success, not sleep duration; launch/reset failures abort. Use unique result IDs and real rosbag2 recording.
+- Acceptance: Success, collision, timeout, no path, lost state, process death and cancellation have distinct terminal records; unit tests mock processes; integration tests prove cleanup and prevent artifact overwrite.
+
+### R4.2 — Measure metrics and preserve provenance
+
+Dependencies: `R4.1`.
+
+- Files: `src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/`.
+- Implement: Remove hardcoded distance/collision/clearance. Measure contacts, footprint-aware clearance, trajectory distance and timestamp/frame-aligned truth/estimation error; collect CPU/memory/RTF and defined effort proxy. Record manifest/hash, revision/dirty state, dependencies, asset hashes, seeds, budgets, tolerances and artifact paths.
+- Acceptance: Known trajectories/contact fixtures yield correct values; one contact is not counted per scan; missing/NaN/stale data invalidate metrics instead of becoming zero; schema rejects invalid values and distinguishes measured versus derived metrics.
+
+### R4.3 — Publish first reproducible planner comparison
+
+Dependencies: `R4.2`.
+
+- Files: `src/robot_lab/robot_lab_benchmark/`, `src/robot_lab/robot_lab_registry/config/experiments.yaml`, `docs/`.
+- Implement: Use Bumperbot + deterministic arena + Gazebo. Compare two wired planners with all other settings fixed. Predeclare at least five seeds, timeout, tolerance and resource budget; keep tuning and evaluation seeds separate.
+- Acceptance: Manifest reruns reproduce scenario; raw traces support metrics; all failures retained; report distributions/failure rate rather than only best run; thresholds are measured and justified; bag artifacts contain real data.
+
+## R5 — Robot-class qualification
+
+### R5.1 — Qualify Bumperbot and Labbot mobile tasks
+
+Dependencies: `R4.3`.
+
+- Files: `src/robot_lab_robots/bumperbot/`, `src/robot_lab_robots/labbot/`, `src/robot_lab_controller/`, `src/robot_lab_localization/`, `src/robot_lab_navigation/`.
+- Implement: Verify robot-specific inertias, wheel geometry, footprint, sensors/control and overlays using golden harness. Preserve Bumperbot mapping/RGB-D/coverage; do not claim Labbot RGB-D without implementation.
+- Acceptance: Both bases spawn at known pose, drive/turn/stop and complete clear/obstacle navigation with limits/watchdogs. Truth and odometry are separate; robot-specific results recorded on one named backend.
+
+### R5.2 — Qualify Go2 locomotion
+
+Dependencies: `R5.1`.
+
+- Files: `src/robot_lab_robots/unitree/go2_description/`, `src/robot_lab_adapter/`, `src/robot_lab_robots/config/robots.yaml`.
+- Implement: Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control.
+- Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
+
+### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
+
+Dependencies: `R5.1`.
+
+- Files: `src/robot_lab_robots/berkeley_humanoid_lite/`, `src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py`, `src/robot_lab_robots/config/robots.yaml`.
+- Implement: Resume historical P3.4 after ownership check. Verify joints/inertias/limits; wire simulation wrapper; implement closed-loop balance before stepping/walking. A fixed pose is not proof of balance.
+- Acceptance: Declared stance-duration and bounded perturbation recovery pass; flat-ground stepping/walking and stop measured; falls/limits enforced. Stair qualification waits for flat-ground success.
+
+### R5.4 — Integrate real multirotor SITL flight
+
+Dependencies: `R5.1`.
+
+- Files: `src/robot_lab_robots/quadrotor_sitl/`, `src/robot_lab_adapter/robot_lab_adapter/mavros_offboard_controller.py`, `src/robot_lab_bringup/`.
+- Implement: Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion.
+- Acceptance: Simulated takeoff, hover, 3D waypoints, landing and command-loss failsafe pass; actual altitude/FCU state measured; no 2D follower or differential-drive controller substitutes for flight; no real FCU connection.
+
+## R6 — Environment qualification
+
+### R6.1 — Qualify geometry map alignment and resets
+
+Dependencies: `R2.3`, `R3.1`.
+
+- Files: `src/robot_lab_maps/tools/`, `src/robot_lab_maps/config/arena_navigation.yaml`, `src/robot_lab/robot_lab_registry/config/environments.yaml`, `src/robot_lab_bringup/`.
+- Implement: Preserve worlds/provenance; validate units, mesh/collision geometry, map origin/resolution, spawn/goal clearance and generation seeds. Bind reset to actual backend API rather than universal /gazebo/reset_world metadata.
+- Acceptance: Runtime coordinates match maps; resets restore poses/velocities/actors and sensor/estimator histories; converted worlds preserve required geometry or reject unsupported content; artifacts/versioned seeds recorded.
+
+### R6.2 — Add real dynamic and sensor-disturbance cases
+
+Dependencies: `R6.1`, `R4.2`.
+
+- Files: `src/robot_lab_maps/`, `src/robot_lab/robot_lab_registry/config/scenarios.yaml`, `src/robot_lab_algorithms/`, `src/robot_lab/robot_lab_benchmark/`.
+- Implement: Verify actor collision/sensor effects; add deterministic noise, bias, drift, delay, dropout, occlusion and outlier injection with separate seeds. Geometry occlusion is not generic sensor degradation.
+- Acceptance: Fault traces repeat; truth is not contaminated; baseline/degraded cases share task and budgets; recovery time/failure criteria measured; moving obstacles are observed and interact as specified.
+
+### R6.3 — Qualify 3D terrain and aerial representations
+
+Dependencies: `R6.1`, `R5.2`, `R5.3`, `R5.4`.
+
+- Files: `src/robot_lab_maps/`, `src/robot_lab/robot_lab_registry/config/`, `src/robot_lab/robot_lab_benchmark/`.
+- Implement: Provide height/elevation/voxel/mesh queries where needed, legged traversable surfaces and aerial free volumes/geofences. Do not infer 3D feasibility solely from a 2D occupancy projection.
+- Acceptance: Class-appropriate terrain/flight missions pass; overhang, foothold and altitude collisions detected in validation; maps/trajectories and results carry dimensionality and frame metadata.
+
+## R7 — Algorithm breadth
+
+### R7.1 — Normalize numerical and ROS algorithm adapters
+
+Dependencies: `R4.3`, `R3.2`.
+
+- Files: `src/robot_lab_algorithms/`, `src/robot_lab_adapter/`, `src/robot_lab/robot_lab_registry/config/algorithms.yaml`.
+- Implement: Separate numerical classes from ROS wrappers; enforce input/output types, rates, timestamps, frames, covariance, lifecycle, seeds/reset, parameter bounds and failure codes. Wire useful kernels or mark educational; validate mathematical names against implementations.
+- Acceptance: One adapter per category does useful input→output work with installed entrypoints, analytic/oracle tests and ROS tests; missing data cannot report success; replay deterministic; common safety layers disclosed separately.
+
+### R7.2 — Five perception pipelines
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_algorithms/`, `src/robot_lab/robot_lab_registry/config/`, `docs/tutorials/perception.md`.
+- Implement: Implement the five candidates or documented equivalents in the breadth specification below; give each a method subrecord, equations/source, ROS adapter, labels/input stratum and benchmark experiment.
+- Acceptance: Five substantive pipelines integrated and benchmarked within fair input strata; conversion utilities do not count; precision/recall, IoU where applicable, occlusion robustness and latency measured.
+
+### R7.3 — Five localization methods
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_localization/`, `src/robot_lab_mapping/`, `src/robot_lab_algorithms/`, `docs/tutorials/localization.md`.
+- Implement: Implement the five candidates or justified replacements; group sensor/map assumptions and initialization/relocalization protocol; retain ORB-SLAM3 optional unless ABI/dependency tests pass.
+- Acceptance: Five actual pose-output methods with ATE/RPE, convergence and failure measurements; no localization estimate comes from undisclosed perfect simulator truth.
+
+### R7.4 — Five state-estimation methods
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_algorithms/`, `src/robot_lab_localization/`, `docs/tutorials/state_estimation.md`.
+- Implement: Implement five mathematically distinct estimators on declared state/dynamics/measurement models. Preserve toy examples with honest names or replace with full equations and numerical tests.
+- Acceptance: Five integrated estimators with analytic/nonlinear/noisy fixtures, RMSE/divergence/CPU and NEES/NIS where defined; duplicate EKF labels and pose averaging called graph optimization do not count.
+
+### R7.5 — Five sensor-fusion methods
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_algorithms/`, `src/robot_lab_localization/`, `docs/tutorials/sensor_fusion.md`.
+- Implement: Implement five fusion methods in matched attitude-only and pose-fusion strata; handle measurement timing, covariance, frame conversion and biased/dropped sensors.
+- Acceptance: Five integrated and benchmarked methods; compare like input sets; attitude/pose error, consistency, delay/dropout robustness and cost measured; republishers do not count.
+
+### R7.6 — Five global planners
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_planning/`, `src/robot_lab_algorithms/`, `src/robot_lab_navigation/`, `docs/tutorials/planning.md`.
+- Implement: Implement distinct graph/grid and sampling-based planners using common collision checking, footprint, goal and compute budget. Verify edges, not only sampled endpoints.
+- Acceptance: Five integrated/benchmarked planners; valid paths, no-path handling, path cost, solve time and success distributions tested. Same algorithm via two packages does not inflate distinct count.
+
+### R7.7 — Five local planners
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_motion/`, `src/robot_lab_algorithms/`, `src/robot_lab_navigation/`, `docs/tutorials/`.
+- Implement: Implement five path-following/reactive/trajectory methods with common constraints and explicit distinctions. Validate upstream ROS version availability before selecting TEB/MPPI or a replacement.
+- Acceptance: Five integrated/benchmarked methods receive same global paths and sensors; collision, tracking, progress, smoothness, latency and obstacle-recovery metrics recorded; safety-layer effects disclosed.
+
+### R7.8 — Five low-level or model-based controllers
+
+Dependencies: `R7.1`.
+
+- Files: `src/robot_lab_controller/`, `src/robot_lab_algorithms/`, `src/robot_lab_adapter/`, `docs/tutorials/`.
+- Implement: Implement PID, LQR, constrained linear MPC, nonlinear MPC and feedback-linearization/backstepping control (or justified nonlinear replacement) on a common supported plant. Record equations, actuator model, limits and solver deadlines.
+- Acceptance: Five integrated/benchmarked controllers with tracking, disturbance, stability-envelope, saturation recovery, effort and deadline tests; PID anti-windup and watchdogs work; robot-class plant differences explicit.
+
+## R8 — Backend qualification and scaling
+
+### R8.1 — Qualify PyBullet and MuJoCo combinations
+
+Dependencies: `R5.1`, `R6.1`.
+
+- Files: `src/robot_lab_pybullet/`, `src/robot_lab_mujoco/`, `src/robot_lab_bringup/test/`.
+- Implement: Verify import fidelity, frames, stepping, contacts, limits, sensors/noise and reset. Do not silently substitute a generic box model. Start with mobile; add class/backend rows only after that class mission passes.
+- Acceptance: R2 contracts and R4 mobile experiment pass on each backend with artifacts; differences measured, not assumed identical physics; missing sensor modes gated; non-mobile support separately evidenced.
+
+### R8.2 — Qualify Isaac on a named host configuration
+
+Dependencies: `R5.1`, `R6.1`.
+
+- Files: `src/robot_lab_isaac/`, `scripts/`, `docs/status/support-matrix.md`.
+- Implement: Validate Python/ROS subprocess boundary, runtime discovery, import, control, sensors and failures on a chosen compatible host. Implement needed LiDAR/RGB-D or gate modes; parameterize host paths. Historical Jetson startup reports are not qualification.
+- Acceptance: Live startup/reset/command/sensor/mission evidence recorded; child failure aborts cleanly; offline is never success. If engine cannot run, record exact blocker and continue other lanes.
+
+### R8.3 — Resource-bounded concurrent experiments
+
+Dependencies: `R3.5`, `R4.3`, `R8.1`.
+
+- Files: `src/robot_lab/robot_lab_benchmark/`, `src/robot_lab_gui/`, `src/robot_lab_adapter/`.
+- Implement: Add CPU/memory/GPU/RTF budgets, bounded queues, cancellation and independent artifacts. Distinguish multiple robots in one world from independent simulations.
+- Acceptance: Two runs maintain isolated clocks/seeds/results; overload reported; stop/reset scoped; scheduling does not silently change compared algorithms' budgets.
+
+## R9 — Reproducibility, learning and release
+
+### R9.1 — Provenance licenses and clean-host reproduction
+
+Dependencies: `R4.3`, `R1.3`.
+
+- Files: `LICENSES/third-party-notices.md`, `scripts/`, `docs/`, `src/robot_lab/robot_lab_registry/config/`.
+- Implement: Pin external revisions/dependencies; verify actual upstream licenses and replace placeholder source URLs. Document storage/download/runtime requirements; top-level MIT does not relicense third-party assets.
+- Acceptance: Fresh documented host/container builds and reruns golden comparison without developer directories; provenance and redistribution decisions recorded; optional dependencies explicit.
+
+### R9.2 — Seven real comparison tutorials
+
+Dependencies: `R7.2`, `R7.3`, `R7.4`, `R7.5`, `R7.6`, `R7.7`, `R7.8`, `R3.4`.
+
+- Files: `docs/tutorials/`, `README.md`.
+- Implement: Upgrade current numerical demos to saved experiments; add separate global/local planning and control guides plus robot/backend examples, failure interpretation and parameter-study protocol.
+- Acceptance: Every command exercised; each category links real results for five methods; tables/plots generated from artifacts; GUI and CLI tutorials share manifests and explain applicability.
+
+### R9.3 — Evidence-generated support matrix and release gate
+
+Dependencies: `R5.1`, `R5.2`, `R5.3`, `R5.4`, `R6.2`, `R6.3`, `R8.1`, `R8.2`, `R8.3`, `R9.1`, `R9.2`.
+
+- Files: `docs/status/`, `README.md`, `ROADMAP.md`, `.github/workflows/`.
+- Implement: Generate inventories/support rows from metadata plus runtime evidence, with revision/date/host/backend/robot/scenario/seeds. Reconcile all scope promises before release; do not silently waive an unfinished backend requirement.
+- Acceptance: Required robot/world/seven-category tasks pass; every release claim maps to artifacts; failures/skips and limitations published. Any reduced-scope release needs an explicit recorded decision; never call remaining work complete.
+
+### R9.4 — Optional physical Bumperbot HIL
+
+Dependencies: `R5.1`, `R9.1`.
+
+- Files: `src/robot_lab_firmware/`, `src/robot_lab_utils/`, `docs/`.
+- Implement: Wait for physical equipment, safe test setup and explicit authorization. Review serial timeouts, units, direction, limits, disconnect and e-stop before powered motion.
+- Acceptance: Supervised HIL checklist/logs and recovery procedure; hardware claims kept separate. No real motor/FCU action is authorized by simulation work; simulation release does not depend on this task.
+
+## R7 breadth specification: candidates, not current support
+
+Select and pin actual implementations during each task after checking licenses,
+maintenance, ROS-release compatibility and mathematical validity. Preserve useful
+existing methods. A replacement needs a recorded rationale; do not silently
+upgrade ROS or claim a candidate is installable because upstream documentation
+mentions it. "Five" is an implementation/evidence target, not a count of labels.
+
+| Task | Five target methods/pipelines | Fair comparison boundary |
 |---|---|---|
-| P0 — repair and baseline | done | Portable core build; coherent topics and launches; profile tests; CI; 137 ROS test results passing |
-| P1 — platform foundation | done | Normalized registry (19 robots, 15 environments, 27 algorithms), validation CLI, 10-pass test suite, persistent status, architecture contracts |
-| P2 — unified composition | done | Selectors, composition resolution, launch fragments, namespace contracts, CLI with list/describe/validate/launch/doctor, 10-test suites, adapter backward compatibility |
-| P3 — robot integrations | done | Bumperbot qualified as reference differential-drive robot (smoke scenario/experiment, 28-test qualification suite, CI wiring); Labbot added as second first-party mesh-free differential-drive robot (smoke scenario/experiment, 23-test qualification suite, xacro expansion validated); robot-lab CLI packaging fixed so `ros2 run robot_lab_registry robot-lab` works; Unitree Go2 quadruped qualified as simulated commandable legged profile (sim wrapper xacro over vendored upstream description, 12 effort-commandable leg joints via ros2_control, IMU/RGB/odometry contracts, go2_smoke_test scenario/experiment, 23-test qualification suite, new joint_effort_commander control algorithm closing the legged-control gap); Berkeley Humanoid Lite qualified as simulated commandable humanoid profile (22 position-commandable joints, trunk IMU, estimated odometry, standing-pose command contract, bhl qualification suite); Quadrotor SITL qualified as simulated commandable aerial profile (MAVLink AttitudeTarget/PositionTarget bridge, mesh-free URDF for rendering/TF, mavros_offboard_controller with graceful degradation, quadrotor qualification suite); per-class smoke scenarios (mobile/legged/humanoid/aerial) plus documented safety/compute limits on all five integrated robots (P3.6, test_p3_6_safety_limits.py 12/12) |
-| P4 — environments | done | P4.1 done: 14 existing Gazebo worlds qualified with occupancy-map provenance; P4.2 done: 5 deterministic nav arenas added (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse) with occupancy provenance + world/map consistency; P4.3 done: 3 terrain arenas added (terrain_rough via promoted outdoor_terrain, terrain_stairs, terrain_stepping_stones) for legged/humanoid with occupancy provenance + world/map consistency; P4.4 done: 2 3D/aerial courses added (aerial_course via promoted placeholder, aerial_indoor) with occupancy provenance + world/map consistency; P4.5 done: 2 dynamic/sensor-degradation variants added (nav_dynamic with scripted moving actors, nav_sensor_degraded with blind-corner occluding walls) with dynamic metadata + world/map consistency; P4.6 done: seeds, reset services, spawn zones, goals, and reference paths added to all 12 deterministic arenas (arena_navigation.yaml + schema fields + free-space-validated paths) |
-| P5 — algorithm breadth | done | 5+ runnable alternatives in every required category; 191/191 tests passing |
-| P6 — benchmarking | done | Standard benchmark schema, result capture, and reporting foundations in place |
-| P7 — hardening | active | CI matrices, provenance/licenses, documentation, end-to-end qualification, and multi-simulator dispatch (P7.7 done; P7.8 done — Gazebo Harmonic + PyBullet + MuJoCo live-verified; P7.8b done — Isaac Sim 6.0.1 native pip install on the 1 TB SSD with runtime subprocess; Jetson TSC caveat documented) |
+| R7.2 Perception | Scan obstacle clustering; Euclidean point-cloud clustering; DBSCAN clustering; RANSAC ground removal plus obstacle segmentation; voxel occupancy obstacle pipeline | Use labeled input strata and consistent obstacle definitions. Compare compatible cloud pipelines on the same observations; conversions alone do not count. Add RGB-D vision as a separate stratum. |
+| R7.3 Localization | Wheel dead reckoning; AMCL; ICP scan matching; NDT registration; RGB-D SLAM/localization using the RTAB-Map path | Separate odometry, LiDAR-map and visual-input strata. Report ATE/RPE, initialization and relocalization success. |
+| R7.4 State Estimation | Linear KF; EKF; UKF; particle filter; error-state/invariant EKF | Define state/dynamics/measurement models. Use nonlinear and noisy fixtures; report consistency where mathematically applicable. |
+| R7.5 Sensor Fusion | Complementary attitude filter; Mahony; Madgwick; wheel/IMU EKF; wheel/IMU/GNSS UKF | Attitude methods share IMU inputs; pose-fusion methods share odometry/IMU/GNSS inputs. Do not rank unlike state outputs as equivalent. |
+| R7.6 Global Planning | Dijkstra; A*; PRM; RRT; RRT* | Common collision checker, footprint and compute budget. NavFn/Smac may supply implementations/baselines; avoid duplicate family counts. |
+| R7.7 Local Planning | DWB/DWA; Regulated Pure Pursuit; TEB or documented compatible time-parameterized replacement; MPPI; Follow-the-Gap with explicit goal/path policy | Same global path, sensors and limits; disclose reactive versus trajectory-optimizing behavior and common safety layer. |
+| R7.8 Control | PID with anti-windup; LQR; constrained linear MPC; nonlinear MPC; feedback-linearization or backstepping control | Common plant, reference, state inputs, disturbances and actuator limits. Define robot-class applicability; wheel and flight actuators are not interchangeable. |
 
-Machine-readable progress is kept in
-`docs/status/platform-status.yaml`. The canonical capability inventory is in
-the `robot_lab_registry` package; catalog status and task status are different:
-the former describes runnable software, while the latter describes work.
+Each R7.2–R7.8 task remains partial until all five methods have numerical tests,
+installed adapters, compatible experiments and measured comparison records.
+Create a subrecord before implementing each method:
 
-## Work queue
-
-Task states are `done`, `active`, `queued`, or `blocked`. Only one task should
-be marked `active` per contributor at a time. Evidence must name a test,
-command, or artifact rather than merely saying that code was added.
-
-### P0 — repaired baseline
-
-- [x] **P0.1** Repair executable installation, imports, and launch references.
-- [x] **P0.2** Normalize velocity and odometry topic contracts.
-- [x] **P0.3** Remove host-specific build/runtime paths and unsafe GUI mutation.
-- [x] **P0.4** Correct ros2_control hardware interface indexing and serial parsing.
-- [x] **P0.5** Validate all 15 robot descriptions and the 14-map/5-mode matrix.
-- [x] **P0.6** Restore submodule metadata and exclude upstream source trees from colcon.
-- [x] **P0.7** Replace the stale README with the verified repository map.
-- [x] **P0.8** Add CI and reach 137 tests with zero errors/failures/skips.
-
-### P1 — platform foundation
-
-- [x] **P1.1** Add the versioned `robot_lab_registry` package and
-  validation/query CLI.
-- [x] **P1.2** Import the existing robot and environment profiles into the
-  normalized catalog without removing the legacy YAML files. (19 robots, 15 environments)
-- [x] **P1.3** Catalog at least five candidates per required algorithm category,
-  with honest maturity, dependencies, contracts, and applicability metadata. (27 algorithms)
-- [x] **P1.4** Add cross-reference, capability, status, and minimum-count tests. (10 tests passing)
-- [x] **P1.5** Add repository architecture, status, and continuation documents.
-- [x] **P1.6** Make CI validate both legacy profiles and the canonical registry. (CI workflow updated)
-
-### P2 — unified composition
-
-- [x] **P2.1** Introduce `robot_lab_adapter` with selectors for robot,
-  environment, simulator, and scenario. (RobotSelector, EnvironmentSelector, SimulatorSelector, ScenarioSelector)
-- [x] **P2.2** Add independent selectors for perception, localization, state
-  estimation, global planning, local planning, and control. (7 algorithm selectors + CompositionBuilder)
-- [x] **P2.3** Resolve selectors into launch fragments and parameter overlays;
-  reject invalid combinations before processes start. (LaunchFragment, ParameterOverlay, CompositionResolver with topic/conflict checking)
-- [x] **P2.4** Wrap `robot_lab_bringup/simulated_robot.launch.py` as the first
-  adapter and retain its public arguments until a documented deprecation. (LegacyAdapter, robot_adapter.launch.py, 3 tests passing)
-- [x] **P2.5** Add namespaces and frame-prefix contracts so parallel and
-  multi-robot experiments do not collide. (NamespaceConfig, NamespaceManager, namespaces.py, LaunchFragment namespace support, CompositionBuilder namespace methods, CompositionResolver namespace resolution, adapter.py namespace parameters, test_namespaces.py with 7 tests passing)
-- [x] **P2.6** Add `list`, `describe`, `validate`, `launch --dry-run`, and
-  `doctor` commands. (cli.py: cmd_list, cmd_describe, cmd_search, cmd_validate, cmd_check_composition, cmd_summary, cmd_schema, cmd_launch with --dry-run flag, cmd_doctor with 5-tier diagnostics; parser registration with argparse; command handler dict; smoke tests passing: robot-lab doctor and robot-lab launch --dry-run work correctly)
-
-### P3 — robot integrations
-
-- [x] **P3.1** Qualify Bumperbot as the reference differential-drive robot.
-  (bumperbot_smoke_test scenario + experiment in the registry;
-  test/test_bumperbot_qualification.py with 28 tests covering registry
-  metadata, sensor/command/state contracts, frames, capabilities, smoke
-  experiment pinning, and on-disk asset/launch existence; smoke_test added to
-  the scenario schema enum; stale mesh paths and missing robot_lab_bringup
-  dependency fixed in robots.yaml; ros_package added for bumperbot and
-  small_office; qualification suite wired into CI. Evidence: pytest 38/38
-  registry tests, unittest 28/28 qualification tests,
-  `robot-lab validate -c config --cross-references` passes, `robot-lab launch
-  --dry-run` resolves the smoke composition with no warnings, robot_lab_adapter
-  25/25 tests pass)
-- [x] **P3.2** Integrate a second mobile base (Labbot).
-  (Finding: the only other cataloged mobile robot, assem12ros_29, is NOT a
-  wheeled base — it is a 3-revolute-joint linkage misclassified as
-  differential_drive, and the vendored Awesome-URDFs/Unitree upstream
-  collection contains no wheeled mobile base, so an honest "second
-  independently maintained mobile base" was not achievable; recorded the
-  misclassification and delivered Labbot instead — a first-party
-  primitive-geometry (mesh-free) differential-drive robot with its own
-  description, ros2_control, gazebo sensor plugins, and controller config.
-  Added labbot_smoke_test scenario + experiment (full stack pinned),
-  test/test_labbot_qualification.py with 23 tests covering registry
-  contracts, smoke composition, and on-disk asset consistency including a
-  real xacro expansion check. Fixed robot_lab_registry packaging so
-  `ros2 run robot_lab_registry robot-lab` actually works: package.xml was
-  missing buildtool_depend/export build_type ament_cmake and the CLI was
-  never installed — added CMake scripts/robot-lab install; also removed an
-  invalid top-level build_type tag from robot_lab_adapter/package.xml.
-  Evidence: test_labbot_qualification.py 23/23, registry suites 10/10 +
-  28/28, robot_lab_adapter 25/25, `robot-lab validate --cross-references`
-  passes, `robot-lab launch --dry-run` resolves the labbot smoke composition
-  (robots + maps/small_office) with no warnings)
-- [x] **P3.3** Turn one existing Unitree quadruped description into a simulated,
-  commandable legged profile with sensors and odometry.
-  (Chose Go2, already vendored under src/robot_lab_robots/unitree/go2_description with
-  full xacro + mesh assets. Added go2_ros2_control.xacro: 12 effort-commandable
-  leg joints via a per-leg macro with torque limits from const.xacro,
-  IgnitionSystem/GazeboSimSystem plugins, IMU + RGB camera gazebo sensors
-  backing registry contracts (/imu, /camera/rgb/image_raw), own
-  go2_controllers.yaml with joint_state_broadcaster +
-  go2_group_effort_controller (forward_command_controller, effort interface).
-  Added go2_sim.xacro wrapper combining upstream robot.xacro + ros2_control
-  wiring. Registry entry upgraded: integrated/simulated, odometry + camera +
-  IMU sensor contracts, 12 actuators, Float64MultiArray command interface,
-  state interfaces (JointState/Imu/Odometry), frames, capabilities,
-  ros_package go2_description. Added go2_smoke_test scenario + experiment
-  (full stack pinned). Added joint_effort_commander control algorithm
-  (legged/humanoid) — closes the gap where no control algorithm supported
-  legged robots, which blocked cross-reference validation. test/
-  test_go2_qualification.py with 23 tests covering registry contracts, smoke
-  composition, macro-aware joint consistency (registry vs control xacro vs
-  controllers yaml), upstream mesh resolution, and real xacro expansion.
-  Added ros_package: robot_lab_maps to the empty environment (resolves previous
-  "Environment Package: unknown" dry-run gap). CI runs the go2 suite.
-  Evidence: test_go2_qualification.py 23/23, registry suites 10/10 + 28/28 +
-  23/23, robot_lab_adapter 25/25, `robot-lab validate --cross-references`
-  passes, `robot-lab launch --dry-run` resolves the go2 smoke composition
-  (go2_description + maps/empty) with no warnings and Environment Package: maps)
-- [x] **P3.4** Turn one existing humanoid description into a simulated,
-  commandable profile with a stable standing/walking controller.
-  (Qualified the Berkeley Humanoid Lite as a simulated, commandable humanoid
-  profile with a stable standing-pose controller, smoke scenario/experiment,
-  and 23-test qualification suite.)
-- [x] **P3.5** Integrate one multirotor SITL profile with pose, IMU, camera, and
-  velocity/trajectory command contracts.
-  (Qualified the Quadrotor SITL as a simulated, commandable aerial profile.
-  Since ArduPilot SITL is a MAVLink FCU (not a ros2_control hardware target),
-  the commandable interface is mavros AttitudeTarget/PositionTarget offboard
-  setpoints, and the URDF exists only for rendering/TF. Added a first-party
-  mesh-free quadrotor_sitl.urdf.xacro (4 rotor links, IMU, downward LIDAR,
-  front camera) + quadrotor_gazebo.xacro gz-sim sensor plugins +
-  quadrotor_controllers.yaml (empty ros2_control set). Upgraded the robots.yaml
-  entry to integrated/simulated with full contracts (multirotor dof 4, IMU/GPS/
-  camera/LIDAR sensors, MAVLink command interfaces, state interfaces, frames,
-  flight/waypoint capabilities). Added mavros_offboard_controller control
-  algorithm (aerial) + bringup node that degrades gracefully when mavros_msgs
-  is absent (fallback mode). Added quadrotor_sitl_smoke_test scenario +
-  experiment (full 7-category stack pinned) and widened aerial support on the
-  pinned platform-agnostic algorithms (rtabmap_localization, ekf_localization_node,
-  a_star_planner, pure_pursuit) so cross-reference validation passes.
-  Registered the quadrotor launch fragment, mavros controller fragment, and
-  empty_world overlay in robot_lab_adapter so `--dry-run` resolves with no
-  warnings. Added test_quadrotor_sitl_qualification.py (20 tests): registry
-  contracts, smoke composition, MAVLink command interface, asset consistency
-  (mesh-free, rotor sides, sensors), controller node, and xacro expansion.
-  Fixed pre-existing YAML indentation errors in scenarios.yaml and
-  experiments.yaml that were silently breaking catalog loading.
-  Evidence: test_quadrotor_sitl_qualification.py 20 tests OK, registry suites
-  10/10, go2/labbot/bhl qualification suites 23/23 each, robot_lab_adapter
-  15/15, `robot-lab validate --cross-references` passes,
-  `--dry-run` resolves the quadrotor smoke composition with no warnings)
-- [x] **P3.6** Add per-class smoke scenarios and documented safety/compute
-  limits. Added generic `<class>_class_smoke` scenarios (mobile, legged,
-  humanoid, aerial) independent of any single robot, plus corresponding
-  `<class>_class_smoke` experiments pinned to each class's reference robot
-  (bumperbot, go2, berkeley_humanoid_lite, quadrotor_sitl). Added documented
-  `safety_limits` (velocity/accel caps, command rate, obstacle clearance,
-  collision-stop time, max tilt, restricted modes) and `compute_limits`
-  (cpu_cores, memory_mb, min real-time factor, notes) blocks to all five
-  integrated robots. Evidence: test_p3_6_safety_limits.py 12/12 tests OK,
-  full registry pytest 138 passed / 1 skipped, registry suite 10/10,
-  `robot-lab validate --cross-references` passes, all YAML catalogs load
-  cleanly.
-
-### P4 — environments
-
-- [x] **P4.1** Qualify all 14 existing Gazebo worlds and their occupancy-map
-  provenance.
-  - All 14 pre-existing worlds in `maps/` are registered as `integrated` in
-    `config/environments.yaml` (14 of 16 entries; `outdoor_terrain` and
-    `aerial_course` remain `cataloged` placeholders for P4.3/P4.4).
-  - Added missing `celisca_floor_1_furniture` registry entry; each integrated
-    env's `world_file` resolves to an on-disk `.world` and every declared
-    `occupancy_map` resolves to a real `<id>/maps/map.pgm` with a companion
-    `map.yaml` (provenance corrected from `<id>.pgm` to the actual `map.pgm`).
-  - `test_p4_1_environment_qualification.py` (9 tests) locks in world
-    registration, integration status, dynamic-obstacle declarations for the
-    actor worlds, occupancy-map provenance, and legacy launch compatibility.
-    Full registry suite: 147 passed / 1 skipped.
-- [x] **P4.2** Add deterministic empty, obstacle, maze, narrow-passage, and
-  warehouse navigation arenas.
-  - Added five deterministic navigation arenas under `src/robot_lab_maps/maps/`, each
-    built exclusively from static box primitives (no external mesh
-    dependencies) so every wall/obstacle is reproducible and deterministic:
-    `nav_empty` (12x12m open floor), `nav_obstacle` (17x17m scattered box
-    field), `nav_maze` (16x16m winding maze), `nav_narrow_passage` (14x14m
-    offset-gap barriers), and `nav_warehouse` (18x18m shelf aisles).
-  - Each arena ships `worlds/<arena>.world` plus a companion Nav2 occupancy
-    map `maps/map.pgm` + `map.yaml` whose occupied pixels are rasterized from
-    the *exact same* box rectangles that build the world (source: reusable
-    `src/robot_lab_maps/tools/gen_nav_arenas.py` generator + `validate_nav_arenas.py`),
-    guaranteeing world geometry and localization map always agree.
-  - All five registered as `integrated` in `config/environments.yaml`
-    (ros_package maps, 2D, spawn zones at free regions) and registered in
-    `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true` so
-    they are launchable in loc/nav modes.
-  - `test_p4_2_nav_arenas.py` (8 tests) locks in registration, integration,
-    world-file XML well-formedness, occupancy-map provenance, world↔map
-    consistency (every obstacle center occupied, spawn free), sim_maps
-    launch registration, and cross-reference validation.
-
-- [x] **P4.3** Add rough terrain, stairs/ramps, and stepping-stone arenas for
-  legged/humanoid robots.
-  (Three 3D arenas added: `terrain_rough` (20m x 20m scattered low platforms,
-  promoting the former `outdoor_terrain` placeholder to a real on-disk world),
-  `terrain_stairs` (ascending 5-step staircase + descending ramp), and
-  `terrain_stepping_stones` (serpentine path of 0.3m-high stepping stones with
-  pits in between). Each ships a Gazebo `.world` built from static box
-  platforms plus a Nav2 occupancy PGM + map.yaml rasterized from the *exact
-  same* box footprints via the reusable `src/robot_lab_maps/tools/gen_terrain_arenas.py`
-  generator, so world geometry and localization map always agree. All three
-  registered as `integrated` in `config/environments.yaml` (ros_package maps,
-  3D, legged/humanoid spawn zones, ground_truth) and registered in
-  `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true` so they
-  launch in loc/nav modes. `test_p4_3_terrain_arenas.py` (9 tests) locks in
-  registration, integration, world XML well-formedness, occupancy-map
-  provenance, world↔map consistency (every platform center occupied, spawn
-  free), sim_maps launch registration, and cross-reference validation.
-  Evidence: test_p4_3_terrain_arenas.py 9/9, `robot-lab validate
-  --cross-references` passes.)
-- [x] **P4.4** Add indoor and outdoor 3D/aerial courses with ground truth.
-  (Two 3D aerial courses added: `aerial_course` (outdoor 100m x 100m slalom
-  course with 8 gate pylons + a central 6m gantry, promoting the former
-  `aerial_course` placeholder to a real world) and `aerial_indoor` (indoor
-  40m x 40m multi-level course with a raised upper deck, mezzanine plates,
-  doorway pylons, and ground-floor slalom pylons). Each ships a Gazebo `.world`
-  built from static box platforms plus a Nav2 occupancy PGM + map.yaml
-  rasterized from the exact same footprints via the reusable
-  `src/robot_lab_maps/tools/gen_aerial_arenas.py` generator. Both registered as
-  `integrated` in `config/environments.yaml` (ros_package maps, 3D, aerial
-  spawn zones, ground_truth_available) and in
-  `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true`.
-  `test_p4_4_aerial_arenas.py` (9 tests) locks in registration, integration,
-  world XML well-formedness, occupancy-map provenance, world↔map consistency
-  (obstacle centers occupied, spawn free), sim_maps launch registration, and
-  cross-reference validation. Evidence: test_p4_4_aerial_arenas.py 9/9,
-  `robot-lab validate --cross-references` passes.)
-- [x] **P4.5** Add dynamic-obstacle and sensor-degradation variants.
-  (Two variant arenas added: `nav_dynamic` (16m x 16m grid floor with a central
-  cross wall plus two scripted `actor` moving obstacles that periodically sweep
-  the floor, exercising dynamic-obstacle avoidance) and `nav_sensor_degraded`
-  (16m x 16m with tall blind-corner walls and central pylons that deliberately
-  occlude a 2D LIDAR, exercising sensor-degradation/recovery). Each ships a
-  Gazebo `.world` plus a Nav2 occupancy map of the *static* geometry rasterized
-  from the same footprints (moving actors are excluded from the map and instead
-  declared in dynamics metadata). Both registered as `integrated` in
-  `config/environments.yaml` with explicit `dynamics` metadata — `nav_dynamic`
-  has `dynamic_obstacles: true` + `max_dynamic_count: 2` matching its two
-  actors, `nav_sensor_degraded` has `dynamic_obstacles: false` — and in
-  `src/robot_lab_bringup/config/sim_maps.yaml` with `has_2d_map: true`.
-  Generated by the reusable `src/robot_lab_maps/tools/gen_dynamic_arenas.py`.
-  `test_p4_5_dynamic_variants.py` (8 tests) locks in registration/integration,
-  dynamic-metadata↔world coherence (actors present iff dynamic declared), world
-  XML well-formedness, occupancy provenance, world↔map consistency, sim_maps
-  launch registration, and cross-reference validation. Evidence:
-  test_p4_5_dynamic_variants.py 8/8, `robot-lab validate --cross-references`
-  passes.)
-- [x] **P4.6** Add seeds, reset services, spawn zones, goals, and reference paths.
-  (Added normative navigation metadata to all 12 deterministic arenas
-  (nav_empty, nav_obstacle, nav_maze, nav_narrow_passage, nav_warehouse,
-  outdoor_terrain, terrain_stairs, terrain_stepping_stones, aerial_course,
-  aerial_indoor, nav_dynamic, nav_sensor_degraded): each declares a deterministic
-  `seed`, a `reset_service` (`/gazebo/reset_world`), full `spawn_zones`,
-  `goals`, and `reference_paths`. This is captured in the central
-  `src/robot_lab_maps/config/arena_navigation.yaml` (installed into the maps package) and
-  mirrored into each environment entry in `config/environments.yaml`; the
-  environment JSON schema was extended with formal `seed`, `goals`,
-  `reference_paths`, and `reset_service` fields. Reference paths and goals were
-  antagonistically validated to land in *free space* of each arena's own
-  occupancy map (so Nav2 can actually navigate to every goal/waypoint).
-  `test_p4_6_navigation_metadata.py` (7 tests) locks in metadata coverage,
-  field presence, free-space goals/waypoints, registry↔metadata parity, spawn
-  zones, and cross-reference validation. Evidence: test_p4_6_navigation_metadata.py
-  7/7, full suite 179 run/4 pre-existing xacro failures, `robot-lab validate
-  --cross-references` passes.)
-
-### P5 — algorithm breadth
-
-Each category must reach five `integrated` implementations and then five
-`benchmarked` implementations. Candidates in the registry are a queue, not a
-completion claim.
-
-- [x] **P5.1** Perception: five sensor/environment interpretation pipelines.
-- [x] **P5.2** Localization: five global/relative pose solutions.
-- [x] **P5.3** State estimation and sensor fusion: five filters/estimators.
-- [x] **P5.4** Global planning: five interchangeable global planners.
-- [x] **P5.5** Local planning: five obstacle-aware trajectory/path followers.
-- [x] **P5.6** Control: five low-level/model-based control methods including
-  PID, linear control, MPC, and nonlinear control.
-- [x] **P5.7** Normalize parameters, topic/action contracts, lifecycle behavior,
-  and failure reporting across adapters.
-
-### P6 — benchmarking
-
-- [x] **P6.1** Define versioned experiment/result schemas and provenance fields.
-  (Added the canonical benchmark result model and CLI package: [src/robot_lab/robot_lab_benchmark](src/robot_lab/robot_lab_benchmark))
-- [x] **P6.2** Record success, collisions, time, path length, clearance, energy
-  proxy, CPU, memory, real-time factor, and localization/trajectory error.
-  (Schema captures success, elapsed time, path length, collision count, and minimum clearance; the CLI writes the JSON record.)
-- [x] **P6.3** Add seeded launch/reset/run/stop orchestration and rosbag capture.
-  (LaunchOrchestrator manages the full lifecycle: launch → reset → run → stop,
-  with optional rosbag capture and seeded manifest output.)
-- [x] **P6.4** Add ground-truth adapters and per-robot metric normalization.
-  (GroundTruthAdapter extracts path length, collisions, clearance from sensor data;
-  MetricNormalizer computes normalized efficiency/collision/clearance and a composite score.)
-- [x] **P6.5** Generate machine-readable results and comparison plots/tables.
-  (OutputGenerator writes JSON, CSV, Markdown, HTML, and matplotlib plots;
-  generate_report builds a comparison summary with ranking and best-run.)
-- [x] **P6.6** Check in small reference results and regression thresholds.
-  (Reference data file with seeded bumperbot smoke-test baselines and per-metric
-  thresholds; regression checking flags runs that exceed baseline × threshold.)
-
-### P7 — hardening
-
-- [x] **P7.1** Add fast PR tests and scheduled full simulation matrices.
-  (scripts/test_fast.sh runs module compilation + P5/P6 logic tests + registry
-  validation in < 60s; scheduled-full.yml runs the full suite daily at 06:00 UTC;
-  CI workflow uses the fast script for PR checks.)
-- [x] **P7.2** Pin external sources and document asset/code licenses.
-  (Top-level MIT LICENSE; LICENSES/third-party-notices.md documents all external
-  assets and their licenses; tests verify every upstream asset has a license
-  file and is documented in notices.)
-- [x] **P7.3** Add install/bootstrap/doctor flows for supported hosts.
-  (scripts/bootstrap.sh installs deps and builds; scripts/doctor.sh diagnoses
-  workspace health; scripts/test_fast.sh runs quick validation; CI + scheduled
-  workflows for automated testing.)
-- [x] **P7.4** Add tutorials that reproduce one comparison in each category.
-  (docs/tutorials/ with index + 5 category tutorials: perception, planning,
-  localization, state estimation, sensor fusion. Each has a Run section with
-  copy-paste Python code.)
-- [ ] **P7.5** Validate real Bumperbot hardware and explicitly separate HIL-only
-  claims from simulation claims.
-- [x] **P7.6** Publish a support matrix with measured evidence and known limits.
-  (docs/status/support-matrix.md documents robot/algorithm/environment support
-  with test evidence and known limits; platform-status.yaml updated.)
-- [x] **P7.7** Add multi-simulator dispatch infrastructure (Gazebo, Isaac Sim,
-  PyBullet, MuJoCo).
-  (simulated_robot.launch.py `simulator:=` arg with a fixed dispatch registry;
-  new robot_lab_isaac/robot_lab_pybullet/robot_lab_mujoco adapter packages
-  mirroring the Gazebo spawn interface; sim_modes.yaml `simulators:` lists per
-  mode; GUI Launch-tab simulator dropdown gated by mode; dispatch covers all
-  four backends in tests. Robot-lab bringup profile suite passes 206 collected
-  tests including 7 new simulator-dispatch tests and 6 simulator-backend smoke
-  tests; full clean colcon build of 26 packages succeeds.)
-- [x] **P7.8** Qualify physics backends for Isaac Sim, PyBullet, and MuJoCo.
-  (PyBullet 3.2.7 source-rebuilt against NumPy 2.2.6 on Jetson arm64 (venv +
-  user site — launch-spawned console scripts run under system python); MuJoCo
-  3.12.0 C library source-built with pip bindings; both spawners verified LIVE
-  via ros2 launch — 0 process deaths and full ROS2 topic contract
-  (/clock /odom /scan /imu/out /joint_states). Fixed en route:
-  use_sim_time double-declaration crash in both spawners, MuJoCo import-failure
-  shim, mujoco.viewer .close() segfault at shutdown on ARM, pybullet_data path
-  resolution, Imu covariance int→float crash (PyBullet), rayTest result tuple
-  handling, odom position Vector3→Point (MuJoCo). Gazebo Harmonic (gz-sim8)
-  verified headless including celisca_floor_1 with the LFS-restored 165 MB
-  furniture STL. Isaac Sim 6.0.1: docker image `isaac-sim-docker:latest`
-  (26.1 GB) BUILT from source via tools/docker/{prep_docker_build,build_docker}.sh
-  --aarch64 on the Jetson; nvidia runtime registered; container boot test
-  PASSED (kit process running, 11.5 GB RAM, healthy). Build pipeline required
-  docker data-root + containerd store on the 1 TB SSD (/workspace/molar/ —
-  see scripts/isaac_docker_setup.sh, fix_containerd_disk.sh,
-  isaac_postbuild.sh) because the 64 GB eMMC fills at ~87%. Non-fatal NVST
-  streaming encoder errors expected on headless Jetson; core simulation
-  unaffected.)
-
-- [x] **P7.8b** Native Isaac Sim pip install + runtime subprocess (2026-09-04).
-  Isaac Sim 6.0.1.0 now ships official aarch64 manylinux_2_35 wheels (cp312)
-  on PyPI; installed `isaacsim[all,extscache]==6.0.1.0` under a uv-bootstrapped
-  Python 3.12 virtualenv on the 1 TB SSD (/workspace/isaac_env + /workspace/uv;
-  caches in /workspace/.pip_cache — nothing on the eMMC). Because Humble's
-  rclpy is py3.10-only, `robot_lab_isaac` was restructured into a two-process
-  design: the ROS node (isaac_spawner.py) owns the topic contract and spawns
-  isaac_runtime.py (py3.12) which instantiates SimulationApp, builds the stage
-  from the USD `world_stage` or the map SDF's STL meshes converted to USD at
-  runtime, imports the robot URDF, steps physics, and streams state over
-  stdin/stdout (line-delimited JSON). Launch resolves the map SDF
-  (`_resolve_world_sdf`) and prefers it over the USD fallback. Verified LIVE
-  with GUI: 3 SDF meshes (91936 tris each) loaded for celisca_floor_1, robot
-  bumperbot spawned with differential-drive joints, full topic contract
-  (`/clock`, `/odom`, `/scan`, `/imu/out`, `/joint_states`, `/tf`). En route
-  fixed: the use_sim_time spawn-timer deadlock (wall-clock timers in all three
-  non-Gazebo spawners), MuJoCo MJCF asset-path absolutization for
-  from_xml_string, MuJoCo publisher/method name collisions
-  (_pub_clock/_pub_odom/...), MuJoCo qvel dof-address indexing, MuJoCo IMU
-  covariance int→float.
-
-## Definition of status
-
-- `cataloged`: metadata and an upstream/source decision exist; it may not be
-  installed or runnable.
-- `available`: implementation can be installed/built on the supported ROS
-  distribution, but this repository has not completed its adapter smoke test.
-- `integrated`: adapter/configuration is in this repository and its declared
-  smoke test passes for at least one registered experiment.
-- `benchmarked`: integrated, plus a reproducible standard result record exists.
-- `blocked`: the exact blocker, attempted resolution, and unblock condition are
-  recorded. Missing time is not a blocker.
-
-## Continuation protocol
-
-1. Read this file, `docs/status/platform-status.yaml`, and
-   `docs/architecture/overview.md`.
-2. Inspect `git status --short`; preserve unrelated and nested-repository work.
-3. Re-run the evidence attached to the last completed task before depending on
-   it.
-4. Claim the next unblocked task by setting its machine-readable state to
-   `active` and adding the contributor/agent identifier.
-5. Implement the smallest end-to-end slice: configuration, adapter, dependency,
-   test, documentation, and provenance together.
-6. Update both ledgers with evidence and remaining gaps before stopping.
-
-Baseline verification commands:
-
-```bash
-source /opt/ros/humble/setup.bash
-colcon build --symlink-install --packages-skip orbslam3
-source install/setup.bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 colcon test --packages-skip orbslam3 --python-testing pytest
-colcon test-result --verbose
-ros2 run robot_lab_registry robot-lab validate
+```yaml
+methods:
+  canonical_algorithm_id:
+    state: queued
+    owner: null
+    implementation_ref: null
+    applicable_robots: []
+    input_stratum: null
+    numerical_tests: []
+    integration_experiment: null
+    benchmark_artifacts: []
+    remaining: []
 ```
 
-## Known constraints
+Upstream discovery: [Nav2 plugin catalog](https://docs.nav2.org/rolling/configuration_and_development/navigation_plugins/)
+and [robot_localization filter documentation](https://docs.ros.org/en/kinetic/api/robot_localization/html/state_estimation_nodes.html).
+These describe families, not the installed Humble API. Verify the selected release
+and local interfaces before coding; research the primary paper/documentation for
+each new method. Prefer maintained upstream implementations where suitable and
+label educational approximations honestly.
 
-- The supported baseline is ROS 2 Humble on Ubuntu 22.04/arm64.
-- Four simulator backends are dispatched (Gazebo, Isaac Sim, PyBullet, MuJoCo);
-  Gazebo is the qualified primary backend. PyBullet (source-built vs NumPy 2.x)
-  and MuJoCo (aarch64 wheel) physics backends are live-verified including the
-  celisca_floor_1 map; the use_sim_time spawn-timer deadlock that froze all
-  three non-Gazebo spawners was fixed (wall-clock spawn timers + MJCF asset
-  path absolutization for MuJoCo). Isaac Sim 6.0.1 is installed natively via
-  its aarch64 pip wheel under a Python 3.12 virtualenv on the 1 TB SSD and is
-  driven by `robot_lab_isaac` through the `isaac_runtime.py` subprocess; note
-  NVIDIA officially supports Isaac Sim aarch64 only on DGX Spark — on Jetson,
-  Kit may abort at startup ("TSC ran backwards") and the spawner falls back to
-  offline mode. `/scan` is not yet simulated for Isaac (RTX lidar pending).
-- Only Bumperbot currently has a complete simulation/navigation stack. Imported
-  Unitree and Berkeley assets are description-only and must not be advertised as
-  commandable robots.
-- ORB-SLAM3 is optional and currently carries an OpenCV ABI warning when its
-  external build does not match ROS `cv_bridge`.
-- Physical serial hardware, motor direction, and the controller protocol still
-  require hardware-in-the-loop validation.
-- Upstream robot/model assets have separate licenses. Provenance and
-  redistribution review are required before release.
+## Common implementation and evidence contract
+
+Every task requires scoped code/config/assets, dependencies and provenance,
+positive/negative tests, runtime evidence where claimed, updated documentation,
+honest registry maturity, and an exact handoff. Tests asserting file existence,
+imports or counts remain static checks; none substitutes for mission evidence.
+
+For each runtime artifact retain: task/experiment ID, code revision and dirty
+state, resolved manifest, robot/world hashes, backend/version, host, seed set,
+budgets/tolerances, command, exit code, raw trace/bag locations, failure/skip
+reasons and result schema version. Avoid committing large bags or licensed assets
+without review; retain a checksum and documented retrieval location.
+
+Next task: consult `handoff.next_task` in the YAML ledger. See
+[AGENT_HANDOFF](docs/AGENT_HANDOFF.md) for commands, safety, ownership, session
+resumption and the work-pause template. Agents must leave enough evidence to
+continue without the previous chat.

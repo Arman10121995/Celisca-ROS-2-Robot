@@ -703,13 +703,32 @@ class SupportMatrixTests(unittest.TestCase):
         path = Path(__file__).resolve().parents[4] / "docs" / "status" / "support-matrix.md"
         self.assertTrue(path.is_file(), "support-matrix.md missing")
 
-    def test_platform_status_has_current_test_count(self):
+    def test_platform_status_test_numbers_are_self_consistent(self):
+        """R0.2: the ledger records scoped evidence, not a fixed green count.
+
+        The audit (docs/status/audit-2026-09-07.md) replaced blanket claims
+        with recorded scope. The test asserts the recorded numbers are
+        internally consistent and explicitly scoped, whatever their values.
+        """
         import yaml
         path = Path(__file__).resolve().parents[4] / "docs" / "status" / "platform-status.yaml"
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
-        self.assertEqual(data['baseline']['tests']['total'], 257)
-        self.assertEqual(data['baseline']['tests']['failures'], 0)
+        tests = data['baseline']['tests']
+        for key in ('total', 'passed', 'failures', 'errors', 'skipped'):
+            self.assertIn(key, tests, f"tests.{key} missing from ledger")
+            self.assertIsInstance(tests[key], int)
+            self.assertGreaterEqual(tests[key], 0)
+        self.assertIsInstance(tests.get('full_suite'), bool)
+        self.assertIsInstance(tests.get('scope'), str)
+        self.assertGreater(len(tests['scope']), 0)
+        accounted = (tests['passed'] + tests['failures']
+                     + tests['errors'] + tests['skipped'])
+        self.assertEqual(accounted, tests['total'],
+                         "ledger test counts do not add up")
+        self.assertIsInstance(data.get('audit_revision'), str)
+        self.assertTrue(data['audit_revision'],
+                        "ledger must name the audited revision")
 
     def test_support_matrix_lists_all_robots(self):
         content = (Path(__file__).resolve().parents[4] / "docs" / "status" / "support-matrix.md").read_text()
