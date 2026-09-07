@@ -211,13 +211,13 @@ tasks:
         next_action: "Completed: truthful README/ROADMAP published, continuation protocol added, stale fixed-count assertion replaced with ledger self-consistency checks."
   R1:
     title: "Trustworthy development baseline"
-    state: "queued"
+    state: "partial"
     owner: null
     tasks:
       R1.1:
         title: "Repair installed entry points and portable paths"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R0.2"
         scope_paths:
@@ -227,8 +227,14 @@ tasks:
           - "src/robot_lab_navigation/config/bt_navigator.yaml"
           - "src/robot_lab_controller/robot_lab_controller/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Fix benchmark executable ROS placement and audit every advertised executable/plugin/launch against the installed index. Resolve assets via package shares; use configurable output directories outside source/install; preserve existing assets."
+        evidence:
+          - "scripts/audit_entry_points.py (repeatable audit; 50 packages; only expected [NOT-BUILT] notes for optional ORB_SLAM3)"
+          - "src/robot_lab/robot_lab_benchmark/setup.cfg (console script now installs to lib/robot_lab_benchmark; 'ros2 run robot_lab_benchmark robot-lab-benchmark --help' verified)"
+          - "src/robot_lab_firmware/CMakeLists.txt (removed RUNTIME DESTINATION bin; serial nodes resolve via 'ros2 pkg executables')"
+          - "src/robot_lab_localization/CMakeLists.txt (odometry_motion_model no longer duplicated into bin/)"
+          - "src/robot_lab_navigation/config/bt_navigator.yaml + launch/navigation.launch.py (absolute /home path replaced by package-share resolution; installed config verified clean)"
+          - "motion/planning plugin targets verified as pluginlib .so libraries in lib/ (not executables); no absolute host paths remain in any src config/launch"
+        next_action: "Completed: every advertised executable/plugin/launch in built packages resolves against the installed index; assets resolve via package shares; benchmark output remains configurable outside source/install."
       R1.2:
         title: "Separate and repair test tiers"
         state: "queued"
@@ -811,7 +817,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R1.1"
+  next_task: "R1.2"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"

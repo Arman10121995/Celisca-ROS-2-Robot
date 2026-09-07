@@ -23,6 +23,14 @@ def _setup(context, *args, **kwargs):
     def server(exec_name, name, config_file):
         parameters = [os.path.join(pkg, "config", config_file)] + overlay_params
         parameters.append({"use_sim_time": use_sim_time})
+        if exec_name == "bt_navigator":
+            # Resolve the default behavior tree from the installed package
+            # share (portable) instead of an absolute source path.
+            bt_xml = os.path.join(
+                pkg, "behavior_tree",
+                "simple_navigation_w_replanning_and_recovery.xml")
+            if os.path.isfile(bt_xml):
+                parameters.append({"default_nav_to_pose_bt_xml": bt_xml})
         return Node(
             package="nav2_controller" if exec_name == "controller_server"
             else "nav2_planner" if exec_name == "planner_server"

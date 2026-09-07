@@ -83,7 +83,6 @@ install(TARGETS
   simple_serial_transmitter
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
   DESTINATION lib/${PROJECT_NAME}
 )
 
