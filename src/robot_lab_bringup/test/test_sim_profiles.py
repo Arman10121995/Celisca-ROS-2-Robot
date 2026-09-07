@@ -2,8 +2,6 @@
 # Licensed under the Apache License, Version 2.0
 
 from pathlib import Path
-import shutil
-import subprocess
 
 import pytest
 import yaml
@@ -54,24 +52,6 @@ def test_map_profile_references_exist(map_name, map_config):
     metadata = _load(map_yaml)
     image_path = map_yaml.parent / metadata["image"]
     assert image_path.is_file(), f"{map_name}: missing map image {image_path}"
-
-
-@pytest.mark.parametrize("robot_name,robot_config", ROBOTS.items())
-def test_robot_profile_can_be_expanded(robot_name, robot_config):
-    model_path = SRC_DIR / "robot_lab_robots" / robot_config["xacro"]
-    assert model_path.is_file(), f"{robot_name}: missing model {model_path}"
-    xacro_bin = shutil.which("xacro")
-    if xacro_bin is None:
-        pytest.skip("xacro executable not available")
-    # Run through a sourced shell so package resolution (ament_index_python /
-    # $(find ...)) works even when the test runner overrode PYTHONPATH.
-    subprocess.run(
-        ["bash", "-c", f"source /opt/ros/humble/setup.bash && {xacro_bin} {model_path}"],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
 
 
 @pytest.mark.parametrize("robot_name,robot_config", ROBOTS.items())

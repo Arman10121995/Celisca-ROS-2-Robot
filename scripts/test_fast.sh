@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Fast PR test suite (P7.1) — runs in < 60s, no simulation required.
-# Excludes: xacro expansion tests (need built workspace + Gazebo),
-#           launch orchestration tests (subprocess timeouts).
+# Fast PR test suite (R1.2) — unit/numerical/config tier, < 60 s.
+# No ROS graph required, no subprocesses, no real physics.
+# The authoritative tier manifest lives in scripts/test_tiers.sh.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -16,21 +16,8 @@ done
 echo "All modules compile."
 
 echo ""
-echo "=== Fast unit tests ==="
-python3 -m unittest discover \
-    -s src/robot_lab/robot_lab_registry/test \
-    -p 'test_p5*' -v
-
-echo ""
-echo "=== Benchmark tests (schema + logic only) ==="
-TEST_DIR="src/robot_lab/robot_lab_registry/test"
-PYTHONPATH="$TEST_DIR:$PYTHONPATH" python3 -m unittest \
-    test_p6_benchmarking.BenchmarkingTests \
-    test_p6_benchmarking.GroundTruthAdapterTests \
-    test_p6_benchmarking.MetricNormalizerTests \
-    test_p6_benchmarking.OutputGeneratorTests \
-    test_p6_benchmarking.RegressionThresholdTests \
-    -v
+echo "=== Fast unit tests (fast tier) ==="
+bash scripts/test_tiers.sh fast
 
 echo ""
 echo "=== Registry validation ==="

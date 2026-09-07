@@ -40,22 +40,17 @@ except Exception:  # pragma: no cover - optional dependency
             return self._node_name
 
 
-class DeadReckoning(Node):
-    """Integrate body twist into an odometry pose (dead reckoning)."""
+class DeadReckoning:
+    """Integrate body twist into an odometry pose (dead reckoning).
 
-    def __init__(self, node_name='dead_reckoning'):
-        super().__init__(node_name)
-        self.x = 0.0
-        self.y = 0.0
-        self.theta = 0.0
-        self.last_time = None
-        self.declare_parameter('initial_x', 0.0)
-        self.declare_parameter('initial_y', 0.0)
-        self.declare_parameter('initial_theta', 0.0)
-        self.x = float(self.get_parameter('initial_x').value)
-        self.y = float(self.get_parameter('initial_y').value)
-        self.theta = float(self.get_parameter('initial_theta').value)
-        self.get_logger().info('DeadReckoning ready')
+    Pure 2D math with no ROS dependency so numerical tests run without a
+    ROS context (R1.2: numerical tests must not require rclpy.init()).
+    """
+
+    def __init__(self, initial_x=0.0, initial_y=0.0, initial_theta=0.0):
+        self.x = float(initial_x)
+        self.y = float(initial_y)
+        self.theta = float(initial_theta)
 
     def integrate(self, vx, wz, dt):
         """Advance the pose by (linear x, angular z) over dt seconds (2D)."""
@@ -72,12 +67,43 @@ class DeadReckoning(Node):
         return (self.x, self.y, self.theta)
 
 
+class DeadReckoningNode(Node):
+    """ROS wrapper around :class:`DeadReckoning` for the console entry point."""
+
+    def __init__(self, node_name='dead_reckoning'):
+        super().__init__(node_name)
+        self.declare_parameter('initial_x', 0.0)
+        self.declare_parameter('initial_y', 0.0)
+        self.declare_parameter('initial_theta', 0.0)
+        self.dr = DeadReckoning(
+            initial_x=self.get_parameter('initial_x').value,
+            initial_y=self.get_parameter('initial_y').value,
+            initial_theta=self.get_parameter('initial_theta').value,
+        )
+        self.get_logger().info('DeadReckoning ready')
+
+    @property
+    def x(self):
+        return self.dr.x
+
+    @property
+    def y(self):
+        return self.dr.y
+
+    @property
+    def theta(self):
+        return self.dr.theta
+
+    def integrate(self, vx, wz, dt):
+        return self.dr.integrate(vx, wz, dt)
+
+
 def dead_reckoning_main(args=None):
     if rclpy is None:
         print('dead_reckoning: rclpy unavailable (dry mode)')
         return 1
     rclpy.init(args=args)
-    node = DeadReckoning()
+    node = DeadReckoningNode()
     try:
         while rclpy.ok():
             rclpy.spin_once(node, timeout_sec=0.1)

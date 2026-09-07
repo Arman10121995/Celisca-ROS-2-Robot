@@ -34,7 +34,11 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu, JointState
 from tf2_ros import TransformBroadcaster
 
-_DEFAULT_ISAAC_PY = "/workspace/isaac_env/bin/python"
+# Portable default: the Isaac python path may be supplied per host via the
+# ISAAC_PYTHON environment variable (or the ``isaac_python`` parameter by
+# launch files)). Empty default => offline mode (R1.1/R1.2: no
+# host-specific absolute paths in source.).
+_DEFAULT_ISAAC_PY = os.environ.get("ISAAC_PYTHON", "")
 
 
 def _xacro_to_urdf(xacro_path):
@@ -165,7 +169,7 @@ class IsaacSpawner(Node):
         if rp and rp not in pkg_map:
             pkg_map[rp] = get_package_share_directory(rp)
         urdf = _strip_gazebo_tags(_rewrite_package_uris(urdf_text, pkg_map))
-        fd, urdf_file = tempfile.mkstemp(suffix=".urdf", dir="/workspace/.tmp")
+        fd, urdf_file = tempfile.mkstemp(suffix=".urdf", dir=tempfile.gettempdir())
         with os.fdopen(fd, "w") as fh:
             fh.write(urdf)
         self.get_logger().info("URDF written to %s" % urdf_file)
@@ -204,7 +208,7 @@ class IsaacSpawner(Node):
         # Dedicated event FIFO: Kit hijacks/closes the child's stdout, so
         # structured state flows through a named pipe instead.
         self._fifo_path = tempfile.mkstemp(
-            prefix="isaac_evt_", dir="/workspace/.tmp")[1]
+            prefix="isaac_evt_", dir=tempfile.gettempdir())[1]
         os.unlink(self._fifo_path)
         os.mkfifo(self._fifo_path)
         env["ISAAC_EVENT_FIFO"] = self._fifo_path

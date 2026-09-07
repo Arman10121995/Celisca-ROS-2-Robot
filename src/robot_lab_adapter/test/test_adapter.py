@@ -6,6 +6,8 @@ Test suite for legacy adapter (P2.4).
 import sys
 import os
 
+import pytest
+
 # Add the package to path
 _base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(_base_path, 'robot_lab_adapter'))
@@ -100,7 +102,20 @@ def test_environment_mappings():
 
 
 def test_adapter_launch_generation():
-    """Test adapter launch generation."""
+    """Test adapter launch generation.
+
+    Builds a real LaunchDescription, so it requires the ROS 2 ``launch``
+    package; in the plain-Python fast tier it skips with an explicit reason
+    (R1.2: launch-contract tests only run where ROS is available).
+    """
+    # ROS 2 ``launch`` may resolve as an empty namespace package on the
+    # plain-Python fast tier, so importorskip is not enough: check the actual
+    # attribute we need before running (R1.2: launch-contract tests only
+    # run where ROS launch is importable).
+    try:
+        from launch import LaunchDescription  # noqa: F401
+    except ImportError:
+        pytest.skip("ROS 2 'launch' package not importable (fast tier has no ROS env)")
     print("\nTesting adapter launch generation...")
     
     from robot_lab_adapter.adapter import create_bumperbot_adapter_launch

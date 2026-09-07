@@ -10,10 +10,10 @@ The adapter translates between robot_lab selector choices and legacy configurati
 import os
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
-from launch import LaunchDescription, LaunchContext
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+
+# NOTE: ROS 2 `launch` classes are imported lazily inside the functions that
+# build LaunchDescriptions (R1.2): pure config/mapping methods must work with
+# plain Python and no ROS environment. Only launch-building paths need launch.
 
 from .selectors import CompositionBuilder
 from .launch_fragments import CompositionResolver

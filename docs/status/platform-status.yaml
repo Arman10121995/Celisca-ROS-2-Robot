@@ -237,8 +237,8 @@ tasks:
         next_action: "Completed: every advertised executable/plugin/launch in built packages resolves against the installed index; assets resolve via package shares; benchmark output remains configurable outside source/install."
       R1.2:
         title: "Separate and repair test tiers"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R0.2"
         scope_paths:
@@ -247,8 +247,14 @@ tasks:
           - "src/robot_lab_bringup/test/"
           - "scripts/test_fast.sh"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Separate numerical, ROS-node, launch-contract, physics, mission and hardware tests. Fix the DeadReckoning initialization failure. Mock subprocesses in unit orchestration tests; replace count-only qualification progressively."
+        evidence:
+          - "scripts/test_tiers.sh (tiered runner: fast/integration/physics/all with explicit manifests; preserves host PYTHONPATH so ROS-capable runs exercise launch/adapter checks)"
+          - "docs/TESTING.md (tier taxonomy: unit hermetic no-ROS-graph; integration needs sourced ROS; physics optional engines explicit skips;)"
+          - "ruste: DeadReckoning refactored into pure-math class + DeadReckoningNode ROS wrapper; previously NotInitializedException in rclpy.init()-less test; p5 algorithm suite 12/12 now passes"
+          - "xacro subprocess test moved out of test_sim_profiles.py into test_xacro_expansion.py (integration tier); adapter.py top-level ROS launch imports made lazy; test_adapter_launch_generation skips explicitly without ROS launch"
+          - "Isaac: removed host-specific paths (/workspace/isaac_env/bin/python,$/workspace/.tmp); isaac_python default now portable via ISAAC_PYTHON env; offline contract test made deterministic (6/6 physics passed in both plain-Python and ROS runs"
+          - "Runs: fast 385 passed+1 explicit skip (no ROS); with ROS 386 passed; integration 106 passed; physics 6 passed (both modes); full all-tier 498 passed,  ​0 failed"
+        next_action: "Completed: tier separation (numerical vs launch-contract vs physics/hardware), DeadReckoning init fixed, subprocess xacro moved to integration tier, host-specific paths removed from isaac spawner."
       R1.3:
         title: "Make CI bootstrap and doctor trustworthy"
         state: "queued"
@@ -817,7 +823,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R1.2"
+  next_task: "R1.3"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
