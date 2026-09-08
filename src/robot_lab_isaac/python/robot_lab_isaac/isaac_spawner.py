@@ -29,10 +29,13 @@ import rclpy
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
+from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import Imu, JointState
+from std_msgs.msg import Bool
+from std_srvs.srv import Trigger
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
@@ -99,6 +102,17 @@ class IsaacSpawner(Node):
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
         self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
         # TF published by the EKF, not the spawner.
+
+        # Readiness / health / reset contracts (R2.3).
+        self._ready_pub = self.create_publisher(Bool, "/robot_lab/ready", 10)
+        self._health_pub = self.create_publisher(
+            DiagnosticArray, "/robot_lab/health", 10)
+        self._reset_srv = self.create_service(
+            Trigger, "/robot_lab/reset", self._on_reset)
+        self._ready = False
+        self._health_timer = self.create_timer(
+            1.0, self._publish_health,
+            clock=Clock(clock_type=ClockType.SYSTEM_TIME))
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
 
@@ -256,6 +270,9 @@ class IsaacSpawner(Node):
                         with self._lock:
                             self._dofs = msg.get("dofs", [])
                             self._spawned = True
+                        # Signal readiness (R2.3).
+                        self._ready = True
+                        self._ready_pub.publish(Bool(data=True))
                         self.get_logger().info(
                             "Isaac runtime ready (dofs=%s)" % self._dofs)
                     elif ev == "state":
@@ -289,6 +306,51 @@ class IsaacSpawner(Node):
             except OSError:
                 pass
             self._fifo_path = None
+
+    # ------------------------------------------------------------------
+    def _on_reset(self, request, response):
+        """Reset the simulation (R2.3)."""
+        try:
+            if self._proc is not None and self._proc.stdin is not None:
+                # Send reset command to Isaac runtime.
+                self._proc.stdin.write('{"reset": true}\n')
+                self._proc.stdin.flush()
+                self.get_logger().info("Reset command sent to Isaac runtime")
+                response.success = True
+                response.message = "Reset command sent to Isaac runtime"
+            else:
+                response.success = False
+                response.message = "Isaac runtime not running (offline mode)"
+        except Exception as e:
+            response.success = False
+            response.message = f"Reset failed: {e}"
+            self.get_logger().error(f"Reset failed: {e}")
+        return response
+
+    def _publish_health(self):
+        """Publish health status (R2.3)."""
+        msg = DiagnosticArray()
+        status = DiagnosticStatus()
+        status.name = "isaac_spawner"
+        status.hardware_id = "isaac"
+
+        if self._ready and self._proc is not None:
+            status.level = DiagnosticStatus.OK
+            status.message = "running"
+        elif self._proc is None:
+            status.level = DiagnosticStatus.WARN
+            status.message = "offline mode"
+        else:
+            status.level = DiagnosticStatus.ERROR
+            status.message = "not ready"
+
+        status.values.append(KeyValue(key="ready", value=str(self._ready)))
+        status.values.append(
+            KeyValue(key="spawned", value=str(self._spawned)))
+        status.values.append(
+            KeyValue(key="offline", value=str(self._proc is None)))
+        msg.status.append(status)
+        self._health_pub.publish(msg)
 
     # ------------------------------------------------------------------
     def _publish(self):

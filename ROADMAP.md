@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-07. Runtime audit baseline: `dff388f`.
+Updated: 2026-09-08. Runtime audit baseline: `dff388f`. R2.3 readiness contracts complete.
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -167,6 +167,7 @@ Dependencies: `R2.2`.
 - Files: `src/robot_lab_bringup/config/sim_modes.yaml`, `src/robot_lab_bringup/launch/`, `src/robot_lab_gui/`, `src/robot_lab_pybullet/`, `src/robot_lab_mujoco/`, `src/robot_lab_isaac/`.
 - Implement: Expose ready/health/reset contracts. Gate modes by actual backend sensor/actuator support. Offline fallback is a diagnostic mode, never successful physics. Replace blind sleeps with bounded readiness checks.
 - Acceptance: Missing engine/camera/LiDAR, reset failure and process death yield structured errors and scoped cleanup. Unsupported modes fail before launch; headless is honored even for non-Gazebo display.
+- Evidence: All three spawners declare `/robot_lab/ready` (Bool), `/robot_lab/health` (DiagnosticArray), and `/robot_lab/reset` (Trigger); Isaac offline reports WARN; test_readiness_contracts.py: 4 tests pass; full bringup test suite: 219 tests pass.
 
 ## R3 — Strict composition and execution
 

@@ -23,10 +23,13 @@ import rclpy
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
+from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import Imu, JointState, LaserScan
+from std_msgs.msg import Bool
+from std_srvs.srv import Trigger
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
@@ -140,6 +143,28 @@ class PyBulletSpawner(Node):
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
         self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
         # TF published by the EKF, not the spawner.
+
+        # Readiness / health / reset contracts (R2.3).
+        try:
+            self._ready_pub = self.create_publisher(Bool, "/robot_lab/ready", 10)
+            self.get_logger().info("Created /robot_lab/ready publisher")
+        except Exception as e:
+            self.get_logger().error("Failed to create /robot_lab/ready: %s" % e)
+        try:
+            self._health_pub = self.create_publisher(
+                DiagnosticArray, "/robot_lab/health", 10)
+            self.get_logger().info("Created /robot_lab/health publisher")
+        except Exception as e:
+            self.get_logger().error("Failed to create /robot_lab/health: %s" % e)
+        try:
+            self._reset_srv = self.create_service(
+                Trigger, "/robot_lab/reset", self._on_reset)
+            self.get_logger().info("Created /robot_lab/reset service")
+        except Exception as e:
+            self.get_logger().error("Failed to create /robot_lab/reset: %s" % e)
+        self._ready = False
+        # Health timer created after init to avoid blocking
+        self._health_timer = None
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
         # Wall-clock timer — see note in mujoco_spawner / above comment about
@@ -345,6 +370,10 @@ class PyBulletSpawner(Node):
         self._thread.start()
         self.get_logger().info("PyBullet spawner running")
 
+        # Signal readiness (R2.3).
+        self._ready = True
+        self._ready_pub.publish(Bool(data=True))
+
     def _loop(self):
         pub_dt = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
         scan_dt = 1.0 / max(self.get_parameter("scan_rate").value, 0.1)
@@ -444,6 +473,60 @@ class PyBulletSpawner(Node):
         m.linear_acceleration = Vector3(x=0.0, y=0.0, z=9.81)
         m.linear_acceleration_covariance = [0.1,0.0,0.0, 0.0,0.1,0.0, 0.0,0.0,0.1]
         self._imu_pub.publish(m)
+
+    def _on_reset(self, request, response):
+        """Reset the simulation (R2.3)."""
+        try:
+            if self._robot_id >= 0 and p is not None:
+                # Reset robot position to spawn point.
+                sx = self.get_parameter("spawn_x").value
+                sy = self.get_parameter("spawn_y").value
+                sz = self.get_parameter("spawn_z").value
+                syaw = self.get_parameter("spawn_yaw").value
+                orn = _rpy_quaternion(0, 0, syaw)
+                p.resetBasePositionAndOrientation(
+                    self._robot_id, [sx, sy, sz], [orn.x, orn.y, orn.z, orn.w])
+                # Reset velocity.
+                p.resetBaseVelocity(self._robot_id, [0, 0, 0], [0, 0, 0])
+                # Reset simulation time.
+                self._sim_t = 0.0
+                self._sim_step = 0
+                self.get_logger().info("Simulation reset")
+                response.success = True
+                response.message = "Simulation reset successfully"
+            else:
+                response.success = False
+                response.message = "No robot loaded"
+        except Exception as e:
+            response.success = False
+            response.message = f"Reset failed: {e}"
+            self.get_logger().error(f"Reset failed: {e}")
+        return response
+
+    def _publish_health(self):
+        """Publish health status (R2.3)."""
+        msg = DiagnosticArray()
+        status = DiagnosticStatus()
+        status.name = "pybullet_spawner"
+        status.hardware_id = "pybullet"
+
+        if self._ready and self._robot_id >= 0:
+            status.level = DiagnosticStatus.OK
+            status.message = "running"
+        elif self._robot_id < 0:
+            status.level = DiagnosticStatus.WARN
+            status.message = "no robot loaded"
+        else:
+            status.level = DiagnosticStatus.ERROR
+            status.message = "not ready"
+
+        status.values.append(KeyValue(key="ready", value=str(self._ready)))
+        status.values.append(
+            KeyValue(key="robot_id", value=str(self._robot_id)))
+        status.values.append(
+            KeyValue(key="sim_t", value=f"{self._sim_t:.3f}"))
+        msg.status.append(status)
+        self._health_pub.publish(msg)
 
     def _pub_clock(self):
         clock_msg = RosClock()

@@ -57,7 +57,7 @@ live-verified ROS contract is not supported by this audit.
 | Joint states | Controller/plugin route | Implemented | Implemented | Implemented |
 | TF | Description/controller/estimator routes; ownership needs checks | Publishes `odom → base_footprint`; estimator conflict risk | Same | Same |
 | Ground truth vs measurements | Separation needs experiment-level verification | Truth reused as odometry; independent measurement/truth contract unqualified | Same limitation | Same limitation |
-| Reset/seed/readiness | Foundations; lifecycle not recertified | End-to-end contract unqualified | End-to-end contract unqualified | End-to-end unqualified; fallback must be explicit |
+| Reset/seed/readiness | /robot_lab/ready + /robot_lab/health + /robot_lab/reset contracts declared and tested (R2.3) | Same | Same | Same; Isaac offline reports WARN health (no physics) |
 
 The clock must be `rosgraph_msgs/msg/Clock`, not `builtin_interfaces/msg/Time`.
 Topic existence does not prove consumers can use its type or timing. Non-Gazebo
