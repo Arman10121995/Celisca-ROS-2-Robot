@@ -45,12 +45,15 @@ class Go2QualificationTests(unittest.TestCase):
         cls.registry.load(config_dir)
 
     def test_go2_registered(self):
-        """Verify Go2 is registered in the catalog as integrated."""
+        """Verify Go2 is registered in the catalog with evidence."""
         robot = self.registry.robots.get("go2")
         self.assertIsNotNone(robot)
         self.assertEqual(robot["name"], "Unitree Go2")
         self.assertEqual(robot["robot_class"], "legged")
-        self.assertEqual(robot["status"], "integrated")
+        self.assertTrue(
+            robot.get("evidence"),
+            "Go2 must have evidence (smoke test, asset checks)",
+        )
 
     def test_go2_is_quadruped(self):
         """Verify Go2 is a 12-DOF quadruped."""

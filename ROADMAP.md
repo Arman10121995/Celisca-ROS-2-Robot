@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-08. Runtime audit baseline: `dff388f`. R2.3 readiness contracts complete.
+Updated: 2026-09-08. Runtime audit baseline: `dff388f`. R2.3 readiness contracts complete. R3.1 evidence-gated registry labels complete.
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,

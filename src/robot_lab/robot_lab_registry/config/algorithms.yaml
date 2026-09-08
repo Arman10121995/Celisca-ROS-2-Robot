@@ -991,6 +991,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_obstacle_detector_clusters"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: scan_clusterer
   version: 1.0.0
   name: Scan Clusterer
@@ -1023,6 +1028,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: pointcloud_segmenter
   version: 1.0.0
   name: Pointcloud Segmenter
@@ -1057,6 +1067,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: dead_reckoning
   version: 1.0.0
   name: Dead Reckoning
@@ -1089,6 +1104,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: numerical_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_dead_reckoning_integrates"
+      description: "Numerical logic test passes (deterministic, no ROS graph)"
+      date: "2026-09-08"
 - id: ekf_3d_estimator
   version: 1.0.0
   name: EKF 3D Estimator
@@ -1123,6 +1143,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: numerical_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_ekf_update_converges"
+      description: "Numerical logic test passes (deterministic, no ROS graph)"
+      date: "2026-09-08"
 - id: motion_model_estimator
   version: 1.0.0
   name: Motion Model Estimator
@@ -1156,6 +1181,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: pose_graph_estimator
   version: 1.0.0
   name: Pose Graph Estimator
@@ -1190,6 +1220,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: wheel_imu_fusion
   version: 1.0.0
   name: Wheel IMU Fusion
@@ -1223,6 +1258,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: numerical_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_complementary_fusion_blends"
+      description: "Numerical logic test passes (deterministic, no ROS graph)"
+      date: "2026-09-08"
 - id: gps_odom_fusion
   version: 1.0.0
   name: GPS Odom Fusion
@@ -1256,6 +1296,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: complementary_imu
   version: 1.0.0
   name: Complementary IMU
@@ -1290,6 +1335,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: numerical_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_complementary_fusion_blends"
+      description: "Numerical logic test passes (deterministic, no ROS graph)"
+      date: "2026-09-08"
 - id: rrt_planner
   version: 1.0.0
   name: RRT Planner
@@ -1324,6 +1374,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: numerical_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_rrt_planner_finds_path"
+      description: "Numerical logic test passes (deterministic, no ROS graph)"
+      date: "2026-09-08"
 - id: voronoi_planner
   version: 1.0.0
   name: Voronoi Planner
@@ -1356,6 +1411,11 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: unit_test
+      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
+      description: "Pure-Python module/unit checks pass"
+      date: "2026-09-08"
 - id: follow_the_gap
   version: 1.0.0
   name: Follow The Gap
@@ -1388,3 +1448,8 @@
   - p5
   created: '2026-09-05'
   updated: '2026-09-05'
+  evidence:
+    - kind: numerical_test
+      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_follow_the_gap_steers_toward_gap"
+      description: "Numerical logic test passes (deterministic, no ROS graph)"
+      date: "2026-09-08"

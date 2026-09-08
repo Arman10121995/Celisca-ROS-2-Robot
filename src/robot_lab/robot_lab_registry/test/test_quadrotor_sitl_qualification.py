@@ -45,12 +45,15 @@ class QuadrotorSITLQualificationTests(unittest.TestCase):
         cls.registry.load(config_dir)
 
     def test_quadrotor_registered(self):
-        """Verify the Quadrotor SITL entry is registered as integrated."""
+        """Verify the Quadrotor SITL entry is registered in the catalog with evidence."""
         robot = self.registry.robots.get("quadrotor_sitl")
         self.assertIsNotNone(robot)
         self.assertEqual(robot["name"], "Quadrotor SITL")
         self.assertEqual(robot["robot_class"], "aerial")
-        self.assertEqual(robot["status"], "integrated")
+        self.assertTrue(
+            robot.get("evidence"),
+            "Quadrotor SITL must have evidence (smoke test, asset checks)",
+        )
 
     def test_quadrotor_is_multirotor(self):
         """Verify the locomotion contract: multirotor, 4 rotors."""

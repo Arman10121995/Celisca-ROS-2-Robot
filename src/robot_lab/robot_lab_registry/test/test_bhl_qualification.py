@@ -45,12 +45,15 @@ class BhlQualificationTests(unittest.TestCase):
         cls.registry.load(config_dir)
 
     def test_bhl_registered(self):
-        """Verify BHL is registered and integrated."""
+        """Verify BHL is registered with evidence."""
         robot = self.registry.robots.get("berkeley_humanoid_lite")
         self.assertIsNotNone(robot)
         self.assertEqual(robot["name"], "Berkeley Humanoid Lite")
         self.assertEqual(robot["robot_class"], "humanoid")
-        self.assertEqual(robot["status"], "integrated")
+        self.assertTrue(
+            robot.get("evidence"),
+            "BHL must have evidence (smoke test, asset checks)",
+        )
         self.assertEqual(robot["maturity"], "simulated")
 
     def test_bhl_is_biped(self):

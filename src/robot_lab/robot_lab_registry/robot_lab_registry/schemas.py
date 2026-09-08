@@ -62,6 +62,34 @@ COMMON_FIELDS = {
             "enum": STATUS_OPTIONS,
             "description": "Maturity status of this entity"
         },
+        "evidence": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "kind": {
+                        "type": "string",
+                        "enum": ["smoke_test", "numerical_test", "runtime_test", "integration_test", "benchmark", "unit_test"],
+                        "description": "Type of evidence"
+                    },
+                    "reference": {
+                        "type": "string",
+                        "description": "Reference to the evidence (test ID, experiment ID, file path)"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Human-readable description of what was verified"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Date the evidence was recorded"
+                    }
+                },
+                "required": ["kind", "reference"]
+            },
+            "description": "Scoped runtime evidence supporting the status label. Each entry documents a specific verification."
+        },
         "source": {
             "type": "object",
             "properties": {

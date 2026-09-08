@@ -82,7 +82,10 @@ class CategoryCoverageTests(unittest.TestCase):
         algos = self.registry.algorithms.get_all()
         for aid in NEW_ALGORITHMS:
             self.assertIn(aid, algos, f"algorithm '{aid}' missing")
-            self.assertEqual(algos[aid]["status"], "integrated")
+            self.assertTrue(
+                algos[aid].get("evidence"),
+                f"algorithm '{aid}' must have evidence (numerical/unit test references)",
+            )
             self.assertEqual(
                 algos[aid]["implementation"]["package"], "robot_lab_algorithms",
                 f"algorithm '{aid}' should use robot_lab_algorithms",

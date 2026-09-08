@@ -90,6 +90,15 @@
       - robot_lab_robots/bumperbot/meshes/wheel_right_link.STL
   smoke_experiments:
     - bumperbot_smoke_test
+  evidence:
+    - kind: smoke_test
+      reference: "bumperbot_smoke_test"
+      description: "Launch + topic check; Nav2/AMCL/EKF stack verified on Humble/arm64"
+      date: "2026-09-05"
+    - kind: integration_test
+      reference: "test_labbot_qualification.py::test_labbot_smoke_experiments_resolve"
+      description: "Cross-reference validation passes"
+      date: "2026-09-05"
   safety_limits:
     max_velocity: 1.0
     max_acceleration: 2.0
@@ -314,6 +323,15 @@
     xacro: robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_ros2_control.xacro
   smoke_experiments:
     - berkeley_humanoid_lite_smoke_test
+  evidence:
+    - kind: smoke_test
+      reference: "berkeley_humanoid_lite_smoke_test"
+      description: "Launch + topic check in display mode; walking not established"
+      date: "2026-09-05"
+    - kind: integration_test
+      reference: "test_bhl_qualification.py"
+      description: "Asset/contract checks pass"
+      date: "2026-09-05"
   safety_limits:
     max_velocity: 2.0
     max_acceleration: 3.0
@@ -745,6 +763,15 @@
     xacro: robot_lab_robots/unitree/go2_description/xacro/go2_ros2_control.xacro
   smoke_experiments:
     - go2_smoke_test
+  evidence:
+    - kind: smoke_test
+      reference: "go2_smoke_test"
+      description: "Launch + topic check in display mode; walking not established"
+      date: "2026-09-05"
+    - kind: integration_test
+      reference: "test_go2_qualification.py"
+      description: "Asset/contract checks pass"
+      date: "2026-09-05"
   safety_limits:
     max_velocity: 3.0
     max_acceleration: 5.0
@@ -1114,6 +1141,15 @@
     meshes: []
   smoke_experiments:
     - quadrotor_sitl_smoke_test
+  evidence:
+    - kind: smoke_test
+      reference: "quadrotor_sitl_smoke_test"
+      description: "Launch + topic check in display mode; flight not established"
+      date: "2026-09-05"
+    - kind: integration_test
+      reference: "test_quadrotor_sitl_qualification.py"
+      description: "Asset/contract checks pass"
+      date: "2026-09-05"
   safety_limits:
     max_velocity: 10.0
     max_acceleration: 15.0
@@ -1211,6 +1247,15 @@
     meshes: []
   smoke_experiments:
     - labbot_smoke_test
+  evidence:
+    - kind: smoke_test
+      reference: "labbot_smoke_test"
+      description: "Launch + topic check; diff-drive controller verified on Humble/arm64"
+      date: "2026-09-05"
+    - kind: integration_test
+      reference: "test_labbot_qualification.py::test_labbot_smoke_experiments_resolve"
+      description: "Cross-reference validation passes"
+      date: "2026-09-05"
   safety_limits:
     max_velocity: 0.8
     max_acceleration: 1.5
