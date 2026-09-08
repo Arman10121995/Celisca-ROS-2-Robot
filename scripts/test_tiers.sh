@@ -45,6 +45,7 @@ FAST_TESTS=(
 
 INTEGRATION_TESTS=(
   "$BRG_TEST/test_xacro_expansion.py"
+  "$BRG_TEST/test_simulation_clocks.py"
   "$REG_TEST"/test_go2_qualification.py
   "$REG_TEST"/test_labbot_qualification.py
   "$REG_TEST"/test_bhl_qualification.py

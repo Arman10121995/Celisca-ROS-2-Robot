@@ -31,6 +31,7 @@ from rclpy.node import Node
 from builtin_interfaces.msg import Time
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
+from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import Imu, JointState, LaserScan
 from tf2_ros import TransformBroadcaster
 
@@ -204,7 +205,7 @@ class MuJoCoSpawner(Node):
         self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
         self._scan_pub = self.create_publisher(LaserScan, "/scan", 10)
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
-        self._clock_pub = self.create_publisher(Time, "/clock", 10)
+        self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
         self._tf_br = TransformBroadcaster(self)
 
         # --- subscriptions ---
@@ -617,7 +618,9 @@ class MuJoCoSpawner(Node):
         self._imu_pub.publish(m)
 
     def _pub_clock(self):
-        self._clock_pub.publish(self._stamp())
+        clock_msg = RosClock()
+        clock_msg.clock = self._stamp()
+        self._clock_pub.publish(clock_msg)
 
     def _pub_scan(self):
         n = int(self.get_parameter("scan_samples").value)

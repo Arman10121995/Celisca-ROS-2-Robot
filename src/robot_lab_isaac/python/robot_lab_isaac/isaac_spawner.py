@@ -31,6 +31,7 @@ from rclpy.node import Node
 from builtin_interfaces.msg import Time
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
+from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import Imu, JointState
 from tf2_ros import TransformBroadcaster
 
@@ -93,7 +94,7 @@ class IsaacSpawner(Node):
         self._js_pub = self.create_publisher(JointState, "/joint_states", 10)
         self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
-        self._clock_pub = self.create_publisher(Time, "/clock", 10)
+        self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
         self._tf_br = TransformBroadcaster(self)
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
@@ -302,7 +303,9 @@ class IsaacSpawner(Node):
         jpos = state.get("jpos", [])
         jvel = state.get("jvel", [])
 
-        self._clock_pub.publish(stamp)
+        clock_msg = RosClock()
+        clock_msg.clock = stamp
+        self._clock_pub.publish(clock_msg)
 
         js = JointState()
         js.header.stamp = stamp

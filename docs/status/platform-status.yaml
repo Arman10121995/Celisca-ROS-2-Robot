@@ -279,12 +279,13 @@ tasks:
           - "doctor.sh local run: 24/24 PASS, exit 0; registry cross-reference validation: PASS; audit: 50 packages, 0 failures (4 optional warnings)"
   R2:
     title: "Simulator and ROS contracts"
-    state: "queued"
+    state: "in_progress"
     owner: null
+    next_task: "R2.2"
     tasks:
       R2.1:
         title: "Fix simulation clocks"
-        state: "queued"
+        state: "done"
         owner: null
         depends_on:
           - "R1.2"
@@ -294,8 +295,11 @@ tasks:
           - "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py"
           - "src/robot_lab_bringup/test/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Publish rosgraph_msgs/msg/Clock wrapping Time in all three adapters. Keep startup/readiness on wall time and measurements on simulation time; declare dependencies."
+        evidence:
+          - "All three spawners publish rosgraph_msgs/msg/Clock (was raw Time) on /clock; startup/readiness timers remain on SYSTEM_TIME, measurements on sim time"
+          - "test_simulation_clocks.py: 4 tests — Clock type, monotonic from ~0, offline Isaac, all-adapter structural check"
+          - "Full suite: 386 fast + 6 physics + 110 integration = 502 passed, 0 failed"
+        next_action: "Complete — R2.1 done. Advance to R2.2."
       R2.2:
         title: "Unify commands odometry sensors and TF"
         state: "queued"
