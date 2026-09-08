@@ -576,6 +576,8 @@ def _build_simulation_actions(context):
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "robot_model": robot_model,
+                    "global_planner_plugin": _launch_value(context, "global_planner_plugin"),
+                    "local_planner_plugin": _launch_value(context, "local_planner_plugin"),
                 }.items(),
             )
         )
@@ -608,6 +610,16 @@ def generate_launch_description():
             "mode",
             default_value="nav",
             description="Bringup mode from sim_modes.yaml. 'nave' is accepted as an alias for nav.",
+        ),
+        DeclareLaunchArgument(
+            "global_planner_plugin",
+            default_value="nav2_smac_planner/SmacPlanner2D",
+            description="Global planner plugin forwarded to the navigation stack.",
+        ),
+        DeclareLaunchArgument(
+            "local_planner_plugin",
+            default_value="nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController",
+            description="Local planner plugin forwarded to the navigation stack.",
         ),
         DeclareLaunchArgument(
             "map_name",

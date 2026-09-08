@@ -281,7 +281,7 @@ tasks:
     title: "Simulator and ROS contracts"
     state: "done"
     owner: "cline-agent"
-    next_task: "R3.3"
+    next_task: "R3.4"
     tasks:
       R2.1:
         title: "Fix simulation clocks"
@@ -392,8 +392,8 @@ tasks:
         next_action: "Complete — R3.2 done (typed composition compatibility enforced; capability checks restored; single validator shared by CLI and adapter/GUI). Advance to R3.3 (execute resolved experiments through CLI: fix LaunchConfiguration concatenation, replace describe-only selection with one resolver/executor, seven independent selectors, safe dry-run, legacy aliases go2/unitree_go2 and outdoor_terrain migration)."
       R3.3:
         title: "Execute resolved experiments through CLI"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R3.2"
         scope_paths:
@@ -401,8 +401,18 @@ tasks:
           - "src/robot_lab_adapter/"
           - "src/robot_lab_bringup/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Fix LaunchConfiguration concatenation. Replace describe-only robot selection and dry-run-only launch with one resolver/executor. Support seven independent selectors, robot/backend/world/scenario, spawn/reset, parameters and seed; preserve safe dry-run and legacy aliases."
+        evidence:
+          - "src/robot_lab_adapter/robot_lab_adapter/resolver.py (new): one resolver/executor shared by CLI (R3.4 GUI). ExperimentRequest carries the seven independent algorithm selectors plus robot/backend/world/scenario, spawn pose, reset policy, parameters and seed; apply_aliases maps legacy unitree_go2->go2 and terrain_rough->outdoor_terrain; resolve_experiment builds a concrete manifest (manifest_version, resolved_from, aliases_applied, robot_id/environment_id/simulator/scenario_id, algorithm_ids, plugins, reset policy/service, parameters/seed/namespace, launch package/file/arguments, ros2_command) validated by the single typed validator (R3.2 check_composition); every launch argument is a plain string"
+          - "resolver world mapping: derives map_name/world_package/world_name/world_path/map_yaml from the registry environment world_file (robot_lab_maps/maps/<key>/worlds/<key>.world) and spawn arguments from the environment spawn zone or explicit override; GLOBAL_PLANNER_PLUGINS/LOCAL_PLANNER_PLUGINS map canonical planner IDs to concrete nav2 plugin strings (a_star/dijkstra/navfn -> SmacPlanner2D or NavfnPlanner, dwb_local_planner -> dwb_core::DWBLocalPlanner)"
+          - "src/robot_lab/robot_lab_registry/robot_lab_registry/cli.py: launch command rewritten to the resolver/executor: --experiment base with selector overrides, --robot/--backend/--world/--scenario, the seven --<slot> selectors, --spawn 'x,y,z,yaw', --no-reset, --param KEY=VALUE (repeatable), --seed, --namespace, --out manifest.yaml, safe --dry-run default and --execute live run using the same manifest; dry-run starts no process"
+          - "src/robot_lab_navigation/launch/navigation.launch.py: new global_planner_plugin/local_planner_plugin launch args forwarded through planner_server/controller_server parameter overrides (_planner_parameter_overrides: GridBased.plugin, FollowPath.plugin, DWB critics); defaults reproduce the existing smac/RPP config so unparametrized launches are unchanged"
+          - "src/robot_lab_bringup/launch/simulated_robot.launch.py: declares and forwards both planner args to the navigation include; exactly one navigation stack start (verified single 'navigation.launch.py' include)"
+          - "src/robot_lab_adapter/launch/select_components.launch.py: fixed LaunchConfiguration concatenation bug (string + LaunchConfiguration raised TypeError) by using a LogInfo substitution list"
+          - "Live validation: `ros2 launch robot_lab_bringup simulated_robot.launch.py ... global_planner_plugin:=nav2_navfn_planner/NavfnPlanner` booted gazebo + full nav2 stack headless with the Navfn plugin arg accepted and no fatal errors"
+          - "test_r3_3_resolver_executor.py (fast tier, 20 tests): concrete manifest, no-process dry-run, exact command derivation, selector defaults, spawn override, reset policy, both legacy aliases, planner-switch plugins differing between a_star/navfn and dwb, experiment-base override via selector, R3.2 typed-validator gating, CLI dry-run/execute/out/invalid paths"
+          - "test_r3_3_launch_contracts.py (integration tier, 3 tests): navigation launch plugin overrides, select_components.launch.py constructs (regression for the concatenation TypeError), single navigation include"
+          - "Suites: registry 285 passed; fast tier 423 passed + 1 skip; integration tier 113 passed; test_fast.sh PR check PASS; CLI end-to-end dry-run verified for both planners"
+        next_action: "Complete — R3.3 done (resolver/executor, seven independent selectors, spawn/reset/params/seed, safe dry-run + --execute, legacy aliases, planner switching, LaunchConfiguration fix, single stack start). Advance to R3.4 (connect GUI to the common resolver: full composition controls replacing the ignored algorithm argument, filter by validator, show maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
       R3.4:
         title: "Connect GUI to the common resolver"
         state: "queued"
@@ -857,11 +867,11 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R3.3"
+  next_task: "R3.4"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R3.2 complete (typed composition compatibility enforced: explicit/known simulator, algorithm-category slots, sensor requirements with LiDAR hard-gate, dimension contracts that metadata labels cannot bypass, restored capability checks; single validator shared by CLI and adapter/GUI; 285 registry + 25 adapter tests pass). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R3.3 (execute resolved experiments through CLI: fix LaunchConfiguration concatenation, replace describe-only robot selection and dry-run-only launch with one resolver/executor, seven independent selectors, safe dry-run, legacy aliases go2/unitree_go2 and outdoor_terrain)."
+  next_action: "R3.3 complete (one resolver/executor emits and executes concrete manifests; seven independent selectors; robot/backend/world/scenario/spawn/reset/params/seed; legacy aliases unitree_go2 and terrain_rough; planner switching changes the active nav2 plugin; LaunchConfiguration concatenation fixed; dry-run starts no process; 285 registry + 423 fast + 113 integration tests pass). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R3.4 (connect GUI to the common resolver: replace ignored algorithm argument with full composition controls, filter by validator showing maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"

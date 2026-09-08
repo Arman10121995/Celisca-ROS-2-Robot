@@ -356,114 +356,128 @@ def cmd_schema(args) -> int:
 
 def cmd_launch(args) -> int:
     """
-    Handle 'launch' command.
-    
-    Generates launch configuration for a composition, with --dry-run showing
-    the resolved configuration without executing it.
+    Handle 'launch' command (R3.3 resolver/executor).
+
+    Independent selectors (robot, backend, world, scenario, the seven
+    algorithm slots, spawn pose, reset policy, parameters, seed) are
+    validated by the single typed validator and resolved into a concrete
+    manifest. Dry-run is the safe default: it prints the manifest and the
+    exact ros2 launch command without starting any process. --execute runs
+    live using that same manifest.
     """
-    import os
-    from pathlib import Path
-    
+    try:
+        from robot_lab_adapter.resolver import (
+            ExperimentRequest,
+            execute_manifest,
+            manifest_to_yaml,
+            resolve_experiment,
+        )
+    except ImportError as e:
+        print(f"robot_lab_adapter resolver unavailable: {e}")
+        return 1
+
     # Load registry
     registry = Registry(args.config_dir)
     if not registry.load(args.config_dir):
         print(f"Failed to load registry from {args.config_dir}")
         return 1
-    
-    # Parse composition specification
-    composition_data = {}
-    if args.composition_file:
+
+    # Optional base composition: file / inline JSON. Selector flags override it.
+    base = {}
+    if args.composition_file or args.composition:
         try:
-            with open(args.composition_file, 'r') as f:
-                composition_data = yaml.safe_load(f)
+            if args.composition_file:
+                with open(args.composition_file, 'r') as f:
+                    base = yaml.safe_load(f) or {}
+            else:
+                base = json.loads(args.composition)
         except Exception as e:
-            print(f"Failed to load composition file: {e}")
+            print(f"Failed to load composition: {e}")
             return 1
-    elif args.composition:
+
+    def flag(value, base_key):
+        """Selector flag wins over the base composition value."""
+        return value if value is not None else base.get(base_key)
+
+    algorithm_flags = {
+        'perception': args.perception,
+        'localization': args.localization,
+        'state_estimation': args.state_estimation,
+        'sensor_fusion': args.sensor_fusion,
+        'global_planning': args.global_planning,
+        'local_planning': args.local_planning,
+        'control': args.control,
+    }
+    algorithm_ids = dict(base.get('algorithm_ids') or {})
+    for slot, value in algorithm_flags.items():
+        if value:
+            algorithm_ids[slot] = value
+
+    spawn = None
+    if args.spawn:
+        parts = [p.strip() for p in args.spawn.split(',')]
+        if len(parts) != 4:
+            print("--spawn expects 'x,y,z,yaw'")
+            return 1
         try:
-            composition_data = json.loads(args.composition)
-        except json.JSONDecodeError as e:
-            print(f"Invalid JSON composition: {e}")
+            spawn = dict(zip(('x', 'y', 'z', 'yaw'), (float(p) for p in parts)))
+        except ValueError as e:
+            print(f"Invalid --spawn values: {e}")
             return 1
-    else:
-        print("Please provide a composition file or inline JSON")
-        return 1
-    
-    # Convert to Composition object
-    from .validation import Composition, check_composition
-    try:
-        composition = Composition(
-            robot_id=composition_data.get('robot_id', ''),
-            environment_id=composition_data.get('environment_id', ''),
-            simulator=composition_data.get('simulator', ''),
-            scenario_id=composition_data.get('scenario_id'),
-            algorithm_ids=composition_data.get('algorithm_ids', {})
-        )
-    except Exception as e:
-        print(f"Invalid composition: {e}")
-        return 1
-    
-    # Validate composition
-    result = check_composition(registry, composition)
-    if not result.valid:
-        print("Composition is invalid:")
-        for error in result.errors:
+
+    parameters = {}
+    for item in args.param or []:
+        if '=' not in item:
+            print(f"--param expects KEY=VALUE, got '{item}'")
+            return 1
+        key, value = item.split('=', 1)
+        try:
+            parameters[key] = yaml.safe_load(value)
+        except yaml.YAMLError:
+            parameters[key] = value
+
+    request = ExperimentRequest(
+        robot_id=flag(args.robot, 'robot_id'),
+        simulator=flag(args.backend, 'simulator'),
+        environment_id=flag(args.world, 'environment_id'),
+        scenario_id=flag(args.scenario, 'scenario_id'),
+        experiment_id=args.experiment,
+        algorithm_ids={k: v for k, v in algorithm_ids.items() if v},
+        spawn=spawn,
+        reset=not args.no_reset,
+        parameters=parameters,
+        seed=args.seed,
+        namespace=args.namespace or '',
+    )
+
+    ok, resolved = resolve_experiment(registry, request)
+    if not ok:
+        print("Failed to resolve composition:")
+        for error in resolved.get('errors', []):
             print(f"  - {error}")
         return 1
-    
-    # Generate launch configuration (dry-run)
-    print("Launch Configuration (dry-run)")
-    print("=" * 60)
-    print(f"\nComposition:")
-    print(f"  Robot: {composition.robot_id}")
-    print(f"  Environment: {composition.environment_id}")
-    print(f"  Simulator: {composition.simulator}")
-    if composition.scenario_id:
-        print(f"  Scenario: {composition.scenario_id}")
-    
-    print(f"\nAlgorithms:")
-    for category, algo_id in composition.algorithm_ids.items():
-        if algo_id:
-            algo = registry.algorithms.get(algo_id)
-            if algo:
-                print(f"  {category}: {algo_id} ({algo.get('name', 'Unknown')})")
-            else:
-                print(f"  {category}: {algo_id}")
-    
-    # Print resolved configuration
-    print(f"\nResolved Configuration:")
-    robot = registry.robots.get(composition.robot_id)
-    if robot:
-        print(f"  Robot Package: {robot.get('ros_package', 'unknown')}")
-        print(f"  Robot Name: {robot.get('name', 'unknown')}")
-    
-    environment = registry.environments.get(composition.environment_id)
-    if environment:
-        print(f"  Environment Package: {environment.get('ros_package', 'unknown')}")
-        print(f"  World File: {environment.get('world_file', 'unknown')}")
-    
-    print(f"\nDependencies:")
-    deps = set()
-    deps.add(robot.get('ros_package', 'unknown')) if robot else None
-    deps.add(environment.get('ros_package', 'unknown')) if environment else None
-    for algo_id in composition.algorithm_ids.values():
-        if algo_id:
-            algo = registry.algorithms.get(algo_id)
-            if algo and algo.get('ros_package'):
-                deps.add(algo.get('ros_package'))
-    
-    if deps:
-        for dep in sorted(deps):
-            if dep != 'unknown':
-                print(f"  - {dep}")
-    
-    print(f"\nWarnings:" if result.warnings else "\nNo warnings.")
-    for warning in result.warnings:
-        print(f"  - {warning}")
-    
-    if not args.dry_run:
-        print("\nNote: Pass --no-dry-run to actually launch (not yet implemented)")
-    
+
+    print(manifest_to_yaml(resolved))
+
+    if args.out:
+        with open(args.out, 'w') as f:
+            f.write(manifest_to_yaml(resolved))
+        print(f"Saved resolved manifest to {args.out}")
+
+    if args.execute:
+        command, process = execute_manifest(resolved, execute=True)
+        print(f"Executing: {' '.join(command)}")
+        try:
+            return process.wait()
+        except KeyboardInterrupt:
+            process.terminate()
+            print("Launch interrupted; terminated ros2 launch.")
+            return 130
+
+    command, process = execute_manifest(resolved, execute=False)
+    assert process is None  # dry-run must never spawn a process
+    print("Dry-run complete; no processes started. Live execution command:")
+    print(f"  {' '.join(command)}")
     return 0
 
 
@@ -699,17 +713,51 @@ def create_parser() -> argparse.ArgumentParser:
                                 help='Output format')
     
     # Launch command
-    launch_parser = subparsers.add_parser('launch', help='Launch a composition')
+    launch_parser = subparsers.add_parser('launch', help='Resolve and run a composition (safe dry-run by default)')
     launch_parser.add_argument('-c', '--config-dir', required=True,
                                help='Directory containing catalog files')
     launch_parser.add_argument('-f', '--composition-file', default=None,
-                              help='File containing composition (JSON/YAML)')
+                              help='File containing base composition (JSON/YAML)')
     launch_parser.add_argument('--composition', default=None,
-                              help='Inline JSON composition')
-    launch_parser.add_argument('--dry-run', action='store_true', default=True,
-                              help='Show launch config without executing (default)')
-    launch_parser.add_argument('--no-dry-run', dest='dry_run', action='store_false',
-                              help='Actually execute the launch (not yet implemented)')
+                              help='Inline JSON base composition')
+    launch_parser.add_argument('--experiment', default=None,
+                              help='Registered experiment id to use as the base; selector flags override it')
+    launch_parser.add_argument('--robot', default=None,
+                              help='Robot id (legacy aliases accepted, e.g. unitree_go2)')
+    launch_parser.add_argument('--backend', default=None,
+                              help='Simulator backend (gazebo, pybullet, mujoco, isaac, ignition, real)')
+    launch_parser.add_argument('--world', default=None,
+                              help='Environment id (legacy aliases accepted, e.g. terrain_rough)')
+    launch_parser.add_argument('--scenario', default=None,
+                              help='Scenario id')
+    launch_parser.add_argument('--perception', default=None,
+                              help='Perception algorithm selector')
+    launch_parser.add_argument('--localization', default=None,
+                              help='Localization algorithm selector')
+    launch_parser.add_argument('--state-estimation', default=None,
+                              help='State estimation algorithm selector')
+    launch_parser.add_argument('--sensor-fusion', default=None,
+                              help='Sensor fusion algorithm selector')
+    launch_parser.add_argument('--global-planning', default=None,
+                              help='Global planning algorithm selector')
+    launch_parser.add_argument('--local-planning', default=None,
+                              help='Local planning algorithm selector')
+    launch_parser.add_argument('--control', default=None,
+                              help='Control algorithm selector')
+    launch_parser.add_argument('--spawn', default=None,
+                              help="Spawn pose 'x,y,z,yaw' (default: environment spawn zone)")
+    launch_parser.add_argument('--no-reset', action='store_true', default=False,
+                              help='Disable the reset service for this run')
+    launch_parser.add_argument('--param', action='append', default=[], metavar='KEY=VALUE',
+                              help='Parameter override (repeatable)')
+    launch_parser.add_argument('--seed', type=int, default=None,
+                              help='Deterministic seed recorded in the manifest')
+    launch_parser.add_argument('--namespace', default='',
+                              help='ROS namespace for this run')
+    launch_parser.add_argument('--out', default=None,
+                              help='Save the resolved manifest to this file')
+    launch_parser.add_argument('--execute', action='store_true', default=False,
+                              help='Live execution using the resolved manifest (default: safe dry-run)')
     
     # Doctor command
     doctor_parser = subparsers.add_parser('doctor', help='Diagnose Robot Lab environment')

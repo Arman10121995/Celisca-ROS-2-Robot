@@ -41,12 +41,14 @@ FAST_TESTS=(
   "$ADP_TEST/test_launch_fragments.py"
   "$ADP_TEST/test_selectors.py"
   "$ADP_TEST/test_namespaces.py"
+  "$ADP_TEST/test_r3_3_resolver_executor.py"
   "$BRG_TEST/test_sim_profiles.py"
 )
 
 INTEGRATION_TESTS=(
   "$BRG_TEST/test_xacro_expansion.py"
   "$BRG_TEST/test_simulation_clocks.py"
+  "$ADP_TEST/test_r3_3_launch_contracts.py"
   "$REG_TEST"/test_go2_qualification.py
   "$REG_TEST"/test_labbot_qualification.py
   "$REG_TEST"/test_bhl_qualification.py

@@ -27,16 +27,18 @@ def generate_launch_description():
         DeclareLaunchArgument('control', default_value='', description='Control algorithm ID'),
     ]
     
-    # Log the selections
+    # Log the selections. LogInfo accepts a list of substitutions; string
+    # concatenation with LaunchConfiguration objects raises TypeError.
     log_action = LogInfo(
-        msg="Selected components: "
-            + "perception=" + LaunchConfiguration('perception') + ", "
-            + "localization=" + LaunchConfiguration('localization') + ", "
-            + "state_estimation=" + LaunchConfiguration('state_estimation') + ", "
-            + "sensor_fusion=" + LaunchConfiguration('sensor_fusion') + ", "
-            + "global_planning=" + LaunchConfiguration('global_planning') + ", "
-            + "local_planning=" + LaunchConfiguration('local_planning') + ", "
-            + "control=" + LaunchConfiguration('control')
+        msg=[
+            "Selected components: perception=", LaunchConfiguration('perception'),
+            ", localization=", LaunchConfiguration('localization'),
+            ", state_estimation=", LaunchConfiguration('state_estimation'),
+            ", sensor_fusion=", LaunchConfiguration('sensor_fusion'),
+            ", global_planning=", LaunchConfiguration('global_planning'),
+            ", local_planning=", LaunchConfiguration('local_planning'),
+            ", control=", LaunchConfiguration('control'),
+        ]
     )
     
     # Validate composition
