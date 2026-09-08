@@ -1,0 +1,8 @@
+# Robot Lab Python dependency pins (R1.3).
+# These are the project-tier packages installed into .venv by scripts/bootstrap.sh.
+# Host-tier packages (ROS 2 Humble, colcon, rosdep, apt system deps) are NOT
+# installed here; bootstrap.sh only verifies them and delegates to the
+# documented system install commands.
+numpy==2.2.6
+pyyaml==6.0.3
+pytest==6.2.5

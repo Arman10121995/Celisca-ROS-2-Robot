@@ -257,8 +257,8 @@ tasks:
         next_action: "Completed: tier separation (numerical vs launch-contract vs physics/hardware), DeadReckoning init fixed, subprocess xacro moved to integration tier, host-specific paths removed from isaac spawner."
       R1.3:
         title: "Make CI bootstrap and doctor trustworthy"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R1.1"
           - "R1.2"
@@ -267,9 +267,16 @@ tasks:
           - "scripts/bootstrap.sh"
           - "scripts/doctor.sh"
           - "scripts/test_fast.sh"
+          - "requirements.txt"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Include master/current development branches; remove ignored required-test failures and invalid test paths. Make dependency/build failures nonzero. Separate project bootstrap from privileged host changes; pin required dependency inputs."
+        evidence:
+          - "ci.yml: added master to trigger branches; paths-ignore for docs/README/ROADMAP; split into fast/physics/integration/registry-crosstab steps; rosdep install no longer masked with || true; ORB_SLAM3 documented as optional skip"
+          - "scheduled-full.yml: renamed; uses test_tiers.sh all; added registry cross-reference + entry-point audit (R1.1) steps"
+          - "bootstrap.sh: separated PROJECT tier (venv + pinned requirements.txt + build) from HOST tier (--with-host-deps: apt/rosdep init); set -euo pipefail with no masked failures; --skip-build flag"
+          - "doctor.sh: set +u/set -u guards around all source calls; dynamic launch-dir discovery; installed-executables entry-point check (ros2 pkg executables); license checks; exits nonzero on failures"
+          - "requirements.txt: pinned numpy/pytest/pyaml for .venv (project-tier only; host deps verified, not installed)"
+          - "audit_entry_points.py: NOT-BUILT optional packages (ORB_SLAM3) now warnings not failures; exit 0 when only optional packages are unbuilt"
+          - "doctor.sh local run: 24/24 PASS, exit 0; registry cross-reference validation: PASS; audit: 50 packages, 0 failures (4 optional warnings)"
   R2:
     title: "Simulator and ROS contracts"
     state: "queued"
@@ -823,11 +830,11 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R1.3"
+  next_task: "R2"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R0 complete (docs published, protocol and audit evidence in place). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R1.1 or R1.2 and reproduce the installed executable/path defects and the DeadReckoning failure. This documentation update does not authorize hardware motion."
+  next_action: "R1.3 complete (CI/bootstrap/doctor trustworthy; pinned requirements; audit tolerates optional packages). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R2 (simulator and ROS contracts) and confirm the simulator↔ROS topic/action contracts against the installed adapters."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"

@@ -1,4 +1,4 @@
-name: Scheduled Full Simulation Matrix
+name: Scheduled Full Test Suite
 
 on:
   schedule:
@@ -38,20 +38,27 @@ jobs:
           source /opt/ros/humble/setup.bash
           colcon build --symlink-install --packages-skip orbslam3
 
-      - name: Run full test suite
+      - name: Run the three test tiers (fast + physics + integration)
         shell: bash
         run: |
           source /opt/ros/humble/setup.bash
           source install/setup.bash
-          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 colcon test \
-            --packages-skip orbslam3 --python-testing pytest
-          colcon test-result --verbose
+          bash scripts/test_tiers.sh all
 
-      - name: Run Python unit tests
+      - name: Registry cross-reference validation
         shell: bash
         run: |
-          source /opt/ros/humble/setup.bash
-          source install/setup.bash
-          PYTHONPATH=src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark \
-            PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m unittest discover \
-            -s src/robot_lab/robot_lab_registry/test -v 2>&1 | tail -30
+          PYTHONPATH=src/robot_lab/robot_lab_registry python3 -c "
+          from robot_lab_registry.catalog import Registry
+          from robot_lab_registry.validation import validate_cross_references
+          reg = Registry('src/robot_lab/robot_lab_registry/config')
+          reg.load('src/robot_lab/robot_lab_registry/config')
+          result = validate_cross_references(reg)
+          assert result.valid, f'Cross-reference errors: {result.errors}'
+          print('Registry cross-reference validation: PASS')
+          "
+
+      - name: Entry-point / portable-path audit (R1.1)
+        shell: bash
+        run: |
+          python3 scripts/audit_entry_points.py

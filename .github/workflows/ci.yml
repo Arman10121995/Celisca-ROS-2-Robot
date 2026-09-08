@@ -2,8 +2,12 @@ name: ROS 2 CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master, main, develop]
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'ROADMAP.md'
 
 jobs:
   build-and-test:
@@ -30,26 +34,46 @@ jobs:
         run: |
           source /opt/ros/humble/setup.bash
           rosdep update
+          # Fail the job when declared deps cannot resolve (no more || true).
           rosdep install --from-paths src --ignore-src -r -y
 
       - name: Build core workspace
         shell: bash
         run: |
           source /opt/ros/humble/setup.bash
+          # ORB_SLAM3 is optional (its kit/install are host-specific and
+          # it is not part of the audited baseline). Keep it skipped here.
           colcon build --symlink-install --packages-skip orbslam3 \
             --event-handlers console_direct+
 
-      - name: Fast PR tests (P7.1)
+      - name: Fast tier (unit/numerical/config; no ROS graph needed)
         shell: bash
         run: |
-          source /opt/ros/humble/setup.bash
-          source install/setup.bash
-          bash scripts/test_fast.sh
+          bash scripts/test_tiers.sh fast
 
-      - name: Simulator backend tests
+      - name: Physics tier (optional engines; explicit per-engine skips)
         shell: bash
         run: |
           source /opt/ros/humble/setup.bash
           source install/setup.bash
-          cd build/robot_lab_bringup && \
-          python3 -m pytest test_simulator_backends.py -v 2>&1 || true
+          bash scripts/test_tiers.sh physics
+
+      - name: Integration tier (launch-contract, xacro, qualification)
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install/setup.bash
+          bash scripts/test_tiers.sh integration
+
+      - name: Registry cross-reference validation
+        shell: bash
+        run: |
+          PYTHONPATH=src/robot_lab/robot_lab_registry python3 -c "
+          from robot_lab_registry.catalog import Registry
+          from robot_lab_registry.validation import validate_cross_references
+          reg = Registry('src/robot_lab/robot_lab_registry/config')
+          reg.load('src/robot_lab/robot_lab_registry/config')
+          result = validate_cross_references(reg)
+          assert result.valid, f'Cross-reference errors: {result.errors}'
+          print('Registry cross-reference validation: PASS')
+          "

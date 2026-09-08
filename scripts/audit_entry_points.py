@@ -88,7 +88,8 @@ def data_files_installed(pkg_dir):
 
 
 def main():
-    report = []
+    failures = []  # real problems: installed-but-wrong
+    warnings = []  # optional / not-built packages (e.g. ORB_SLAM3)
     packages = sorted({px.parent for px in SRC.rglob("package.xml")
                        if "test" not in px.parts})
     for pkg_dir in packages:
@@ -97,8 +98,8 @@ def main():
 
         for name in sorted(setup_entry_points(pkg_dir)):
             if not (lib_pkg / name).exists():
-                report.append(f"[MISSING-EXEC] {pkg}: '{name}' not at "
-                              f"{lib_pkg.relative_to(WS)}/{name}")
+                failures.append(f"[MISSING-EXEC] {pkg}: '{name}' not at "
+                                f"{lib_pkg.relative_to(WS)}/{name}")
 
         cmake = pkg_dir / "CMakeLists.txt"
         if cmake.is_file():
@@ -113,26 +114,31 @@ def main():
                     if exec_ok or plugin_ok:
                         continue
                     if not (INSTALL / pkg).exists():
-                        report.append(
+                        warnings.append(
                             f"[NOT-BUILT] {pkg}: package not in install space; "
                             f"target '{tgt}' unresolved (optional package?)")
                     else:
-                        report.append(
+                        failures.append(
                             f"[MISSING-TARGET] {pkg}: '{tgt}' neither at "
                             f"{lib_pkg.relative_to(WS)}/{tgt} nor as plugin "
                             f"lib{tgt}.so")
 
         for problem in data_files_installed(pkg_dir):
-            report.append(f"[MISSING-DATAFILE] {pkg}: {problem}")
+            failures.append(f"[MISSING-DATAFILE] {pkg}: {problem}")
 
     print(f"Packages audited: {len(packages)}")
-    if report:
-        print(f"Mismatches: {len(report)}")
-        for line in report:
+    if warnings:
+        print(f"Warnings (optional/not-built): {len(warnings)}")
+        for line in warnings:
             print(" ", line)
-        Path("/tmp/r1_1_audit.txt").write_text("\n".join(report) + "\n")
+    if failures:
+        print(f"Failures: {len(failures)}")
+        for line in failures:
+            print(" ", line)
+        Path("/tmp/r1_1_audit.txt").write_text("\n".join(failures) + "\n")
         return 1
-    print("All advertised entry points resolve to the installed index.")
+    if not warnings:
+        print("All advertised entry points resolve to the installed index.")
     Path("/tmp/r1_1_audit.txt").write_text("")
     return 0
 

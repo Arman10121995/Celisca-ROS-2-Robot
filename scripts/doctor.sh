@@ -24,7 +24,10 @@ echo ""
 # Check ROS 2
 echo "ROS 2 Environment:"
 if [ -f /opt/ros/humble/setup.bash ]; then
+    set +u
+    # shellcheck disable=SC1091
     source /opt/ros/humble/setup.bash
+    set -u
     report pass "ROS 2 Humble installed"
 else
     report fail "ROS 2 Humble not found"
@@ -75,7 +78,10 @@ echo ""
 echo "Build Status:"
 if [ -f install/setup.bash ]; then
     report pass "Workspace built (install/setup.bash exists)"
+    set +u
+    # shellcheck disable=SC1091
     source install/setup.bash 2>/dev/null
+    set -u
 else
     report warn "Workspace not built (run 'colcon build')"
 fi
@@ -98,13 +104,45 @@ fi
 # Check launch files
 echo ""
 echo "Launch Files:"
-for launch in src/robot_lab_adapter/launch/select_robot.launch.py; do
-    if [ -f "$launch" ]; then
-        report pass "$(basename $launch) present"
-    else
-        report fail "$(basename $launch) missing"
-    fi
+# The adapter launch files live under src/robot_lab_adapter/launch/ for the
+# top-level layout, or src/robot_lab_adapter/launch/ in the monorepo layout.
+LAUNCH_DIR=""
+for cand in src/robot_lab_adapter/launch src/adapter/launch; do
+    if [ -d "$cand" ]; then LAUNCH_DIR="$cand"; break; fi
 done
+if [ -n "$LAUNCH_DIR" ]; then
+    launches=("$LAUNCH_DIR"/*.launch.py)
+    if [ -e "${launches[0]}" ]; then
+        for launch in "${launches[@]}"; do
+            report pass "$(basename "$launch") present"
+        done
+    else
+        report warn "No .launch.py files under $LAUNCH_DIR"
+    fi
+else
+    report fail "adapter launch directory not found"
+fi
+
+# Check installed entry points (R1.1/R1.3): ros2 pkg executables for the core
+# packages. Requires a built + sourced workspace; warn otherwise.
+echo ""
+echo "Installed Executables (entry points):"
+if [ -f install/setup.bash ] && command -v ros2 >/dev/null 2>&1; then
+    set +u
+    # shellcheck disable=SC1091
+    source install/setup.bash
+    set -u
+    for pkg in robot_lab_registry robot_lab_gui robot_lab_benchmark robot_lab_algorithms; do
+        if ros2 pkg executables "$pkg" >/dev/null 2>&1; then
+            n=$(ros2 pkg executables "$pkg" | wc -l)
+            report pass "$pkg: $n executable(s)"
+        else
+            report fail "$pkg: no installed executables"
+        fi
+    done
+else
+    report warn "Workspace not built (or ros2 not on PATH); skipping entry-point check"
+fi
 
 # Check licenses
 echo ""
