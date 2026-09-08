@@ -281,7 +281,7 @@ tasks:
     title: "Simulator and ROS contracts"
     state: "done"
     owner: "cline-agent"
-    next_task: "R3.2"
+    next_task: "R3.3"
     tasks:
       R2.1:
         title: "Fix simulation clocks"
@@ -372,8 +372,8 @@ tasks:
         next_action: "Complete — R3.1 done (evidence-gated labels; false status requirements removed from tests; assets preserved). Advance to R3.2 (typed composition compatibility). Canonical-ID/alias migration (go2/unitree_go2, outdoor_terrain) intentionally deferred to R3.2/R3.3 resolver work where aliases are consumed."
       R3.2:
         title: "Enforce typed composition compatibility"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R3.1"
           - "R2.3"
@@ -382,8 +382,14 @@ tasks:
           - "src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py"
           - "src/robot_lab_adapter/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Validate explicit simulator, algorithm category, sensors, dimensions, kinematics, command interfaces, dependencies, topics and TF ownership. Restore capability checks and use one validator in CLI and GUI."
+        evidence:
+          - "schemas.py: added SIMULATOR_OPTIONS constant (gazebo, ignition, pybullet, mujoco, isaac, real) and enum validation on the environment and experiment simulator fields; added optional typed 'supported_dimensions' field to ALGORITHM_SCHEMA (2D/2.5D/3D)"
+          - "validation.py: new check_simulator_compatibility (rejects missing/unknown simulator and composition-vs-environment simulator mismatch), check_algorithm_category (rejects AMCL in global_planning-style slot mismatches with corrective diagnostics), check_sensor_requirements (resolves input_contract.required_topics against robot sensors, other selected algorithms' outputs and environment/task topics; missing required LiDAR is a hard error, other sensor-type gaps are actionable remapping warnings), check_dimension_compatibility (an algorithm declaring supported_dimensions must match the environment dimension; an 'aerial' supported_robot_classes label alone cannot grant flight capability)"
+          - "validation.py: restored the robot-vs-algorithm capability check in check_capabilities (data-verified safe: only humanoid_standing_controller ['standing'] and mavros_offboard_controller ['control','flight'] declare capabilities, both satisfiable by BHL and quadrotor_sitl)"
+          - "check_composition wires all new checks; one validator is shared by the CLI (robot-lab validate --cross-references, robot-lab check-composition) and the adapter/GUI composition flow (selectors.py resolves through check_composition); the GUI has no duplicate validation logic (verified by grep)"
+          - "test_r3_2_composition_compatibility.py: 18 tests covering every acceptance criterion (unknown/missing/mismatched simulator, AMCL category mismatch, missing required LiDAR on go2, algorithm-output topic resolution, 2D planner with 'aerial' label rejected in aerial_course, dimension-declared match accepted, restored capability gate, valid-composition pass, actionable-diagnostics content, all registered experiments still validate)"
+          - "Registry suite: 285 passed (267 baseline + 18 new), 0 failed; adapter suite: 25 passed; 'robot-lab validate -c config --cross-references' PASS on real data (all 15 experiments satisfy the typed checks; 16 actionable warnings recorded for topic-name variants such as /camera/image_raw vs /camera/rgb/image_raw)"
+        next_action: "Complete — R3.2 done (typed composition compatibility enforced; capability checks restored; single validator shared by CLI and adapter/GUI). Advance to R3.3 (execute resolved experiments through CLI: fix LaunchConfiguration concatenation, replace describe-only selection with one resolver/executor, seven independent selectors, safe dry-run, legacy aliases go2/unitree_go2 and outdoor_terrain migration)."
       R3.3:
         title: "Execute resolved experiments through CLI"
         state: "queued"
@@ -851,11 +857,11 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R3.2"
+  next_task: "R3.3"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R3.1 complete (registry labels reconciled to evidence gates; 5 integrated robots + 13 P5 algorithms carry structured evidence; qualification tests no longer demand false status labels; 267 registry + 385 fast-tier tests pass). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R3.2 (typed composition compatibility: validate simulator/algorithm-category/sensor/dimension/kinematics/command-interface contracts in one validator shared by CLI and GUI)."
+  next_action: "R3.2 complete (typed composition compatibility enforced: explicit/known simulator, algorithm-category slots, sensor requirements with LiDAR hard-gate, dimension contracts that metadata labels cannot bypass, restored capability checks; single validator shared by CLI and adapter/GUI; 285 registry + 25 adapter tests pass). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R3.3 (execute resolved experiments through CLI: fix LaunchConfiguration concatenation, replace describe-only robot selection and dry-run-only launch with one resolver/executor, seven independent selectors, safe dry-run, legacy aliases go2/unitree_go2 and outdoor_terrain)."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"

@@ -25,6 +25,7 @@ VERSION_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+$"
 STATUS_OPTIONS = ["cataloged", "available", "integrated", "benchmarked", "blocked"]
 ROBOT_CLASS_OPTIONS = ["mobile", "legged", "humanoid", "aerial", "manipulator", "hybrid"]
 ENVIRONMENT_DIMENSION_OPTIONS = ["2D", "3D", "2.5D"]
+SIMULATOR_OPTIONS = ["gazebo", "ignition", "pybullet", "mujoco", "isaac", "real"]
 ALGORITHM_CATEGORY_OPTIONS = [
     "perception",
     "localization", 
@@ -258,6 +259,7 @@ ENVIRONMENT_SCHEMA = {
                 },
                 "simulator": {
                     "type": "string",
+                    "enum": SIMULATOR_OPTIONS,
                     "description": "Target simulator (e.g., gazebo, ignition, pybullet, real)"
                 },
                 "world_file": {
@@ -436,6 +438,16 @@ ALGORITHM_SCHEMA = {
                     "items": {"type": "string", "enum": ROBOT_CLASS_OPTIONS},
                     "description": "Robot classes this algorithm supports"
                 },
+                "supported_dimensions": {
+                    "type": "array",
+                    "items": {"type": "string", "enum": ENVIRONMENT_DIMENSION_OPTIONS},
+                    "description": (
+                        "Environment dimensionalities this algorithm operates in "
+                        "(e.g., a 2D planner must declare 3D support before it can be "
+                        "composed into a 3D/aerial environment; an 'aerial' entry in "
+                        "supported_robot_classes alone does not grant flight capability)"
+                    )
+                },
                 "parameters": {
                     "type": "object",
                     "additionalProperties": True,
@@ -560,6 +572,7 @@ EXPERIMENT_SCHEMA = {
                 },
                 "simulator": {
                     "type": "string",
+                    "enum": SIMULATOR_OPTIONS,
                     "description": "Simulator to use"
                 },
                 "scenario_id": {

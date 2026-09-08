@@ -8,7 +8,44 @@ from typing import Dict, List, Any, Optional, Set, Tuple
 from dataclasses import dataclass, field
 
 from .catalog import Registry, Catalog
-from .schemas import ALGORITHM_CATEGORY_OPTIONS
+from .schemas import (
+    ALGORITHM_CATEGORY_OPTIONS,
+    SIMULATOR_OPTIONS,
+    ENVIRONMENT_DIMENSION_OPTIONS,
+)
+
+# Topics published by the mission/task layer, the environment itself, or ROS
+# infrastructure rather than a physical robot sensor. These are always
+# considered available when a robot is composed into an environment.
+ENVIRONMENT_PROVIDED_TOPICS = {'/map', '/goal_pose', '/clock', '/tf', '/tf_static'}
+
+# Map a required topic substring to the physical sensor type that must exist
+# on the robot for the topic to be satisfiable.
+TOPIC_SENSOR_TYPE_PATTERNS = (
+    ('/scan', 'lidar'),
+    ('/points', 'pointcloud'),
+    ('/cloud', 'pointcloud'),
+    ('/camera', 'camera'),
+    ('/image', 'camera'),
+    ('/imu', 'imu'),
+    ('/gps', 'gps'),
+    ('/fix', 'gps'),
+    ('/odom', 'odometry'),
+)
+
+# Sensor types that can stand in for another required type (e.g. a point
+# cloud may be produced by a lidar or a depth camera).
+SENSOR_TYPE_ALTERNATIVES = {
+    'pointcloud': {'lidar', 'camera'},
+}
+
+
+def _infer_sensor_type(topic: str) -> Optional[str]:
+    """Infer the physical sensor type a topic is produced by (None if not a sensor topic)."""
+    for pattern, sensor_type in TOPIC_SENSOR_TYPE_PATTERNS:
+        if pattern in topic:
+            return sensor_type
+    return None
 
 
 @dataclass
@@ -55,19 +92,18 @@ def check_capabilities(
         ValidationResult with compatibility status
     """
     result = ValidationResult(valid=True)
-    
-    # Capability checking is currently disabled - needs refinement
-    # robot_capabilities = set(robot.get('capabilities', []))
-    # required_capabilities = set(algorithm.get('required_capabilities', []))
-    # 
-    # # Check required capabilities
-    # missing = required_capabilities - robot_capabilities
-    # if missing:
-    #     result.valid = False
-    #     result.errors.append(
-    #         f"Robot '{robot['id']}' missing capabilities for algorithm '{algorithm['id']}': {missing}"
-    #     )
-    
+
+    # Check required capabilities (restored in R3.2: typed capability gating).
+    robot_capabilities = set(robot.get('capabilities', []))
+    required_capabilities = set(algorithm.get('required_capabilities', []))
+    missing = required_capabilities - robot_capabilities
+    if missing:
+        result.valid = False
+        result.errors.append(
+            f"Robot '{robot['id']}' missing capabilities {sorted(missing)} required by "
+            f"algorithm '{algorithm['id']}' (robot has: {sorted(robot_capabilities)})"
+        )
+
     # Check robot class compatibility
     algorithm_robot_classes = set(algorithm.get('supported_robot_classes', []))
     robot_class = robot.get('robot_class')
@@ -131,6 +167,193 @@ def check_robot_environment_compatibility(
                 f"'{robot_class}' robot '{robot['id']}'"
             )
     
+    return result
+
+
+def check_simulator_compatibility(
+    simulator: str,
+    robot: Dict[str, Any],
+    environment: Dict[str, Any],
+) -> ValidationResult:
+    """
+    Check that a composition declares an explicit, known simulator that is
+    consistent with the environment it runs in (R3.2).
+
+    Args:
+        simulator: Simulator requested by the composition
+        robot: Robot entity (used for actionable diagnostics)
+        environment: Environment entity the composition runs in
+
+    Returns:
+        ValidationResult with compatibility status
+    """
+    result = ValidationResult(valid=True)
+
+    simulator = (simulator or '').strip()
+    if not simulator:
+        result.valid = False
+        result.errors.append(
+            f"Composition of robot '{robot['id']}' in environment "
+            f"'{environment['id']}' must declare an explicit simulator "
+            f"(supported: {SIMULATOR_OPTIONS})"
+        )
+        return result
+
+    if simulator not in SIMULATOR_OPTIONS:
+        result.valid = False
+        result.errors.append(
+            f"Unknown simulator '{simulator}'; supported simulators: {SIMULATOR_OPTIONS}"
+        )
+
+    env_simulator = (environment.get('simulator') or '').strip()
+    if env_simulator and env_simulator != simulator:
+        result.valid = False
+        result.errors.append(
+            f"Environment '{environment['id']}' is authored for simulator "
+            f"'{env_simulator}' but the composition requests '{simulator}'"
+        )
+
+    return result
+
+
+def check_algorithm_category(
+    category: str,
+    algorithm: Dict[str, Any],
+) -> ValidationResult:
+    """
+    Check that an algorithm is assigned to the composition slot matching its
+    declared category (R3.2). E.g. AMCL (localization) in the global_planning
+    slot is a typed composition error.
+
+    Args:
+        category: Composition slot the algorithm is assigned to
+        algorithm: Algorithm entity
+
+    Returns:
+        ValidationResult with compatibility status
+    """
+    result = ValidationResult(valid=True)
+
+    algo_category = algorithm.get('category')
+    if algo_category != category:
+        result.valid = False
+        result.errors.append(
+            f"Algorithm '{algorithm['id']}' has category '{algo_category}' but is assigned "
+            f"to the '{category}' slot; move it to the '{algo_category}' slot or select an "
+            f"algorithm whose category is '{category}'"
+        )
+
+    return result
+
+
+def check_sensor_requirements(
+    robot: Dict[str, Any],
+    algorithms: List[Dict[str, Any]],
+    environment: Dict[str, Any],
+) -> ValidationResult:
+    """
+    Check that every algorithm input topic is satisfiable by the composed
+    robot/environment/algorithm stack (R3.2).
+
+    A required topic is satisfied when it is published by a robot sensor, by
+    another selected algorithm, or by the environment/task layer. When a
+    required topic implies a physical sensor type (e.g. '/scan' implies a
+    LiDAR) the robot must carry a sensor of that type:
+
+    - a missing LiDAR is a hard error (scan-based algorithms cannot run),
+    - other sensor-type gaps are warnings (frequently just topic naming
+      variants that need remapping, e.g. '/camera/image_raw' vs
+      '/camera/rgb/image_raw').
+
+    Args:
+        robot: Robot entity
+        algorithms: Algorithm entities selected by the composition
+        environment: Environment entity
+
+    Returns:
+        ValidationResult with compatibility status
+    """
+    result = ValidationResult(valid=True)
+
+    sensor_topics = {
+        sensor.get('topic') for sensor in robot.get('sensors', []) if sensor.get('topic')
+    }
+    sensor_types = {
+        sensor.get('type') for sensor in robot.get('sensors', []) if sensor.get('type')
+    }
+    provided_topics = set(sensor_topics) | ENVIRONMENT_PROVIDED_TOPICS
+    for algorithm in algorithms:
+        provided_topics.update(
+            (algorithm.get('output_contract') or {}).get('provided_topics', []) or []
+        )
+
+    for algorithm in algorithms:
+        required_topics = (algorithm.get('input_contract') or {}).get('required_topics', []) or []
+        for topic in required_topics:
+            if topic in provided_topics:
+                continue
+
+            sensor_type = _infer_sensor_type(topic)
+            if sensor_type is None:
+                result.warnings.append(
+                    f"Algorithm '{algorithm['id']}' requires topic '{topic}' which is not "
+                    f"provided by robot '{robot['id']}' sensors, other selected algorithms, "
+                    f"or the environment; ensure it is published at runtime"
+                )
+                continue
+
+            acceptable_types = SENSOR_TYPE_ALTERNATIVES.get(sensor_type, {sensor_type})
+            if acceptable_types & sensor_types:
+                continue
+
+            message = (
+                f"Robot '{robot['id']}' has no {sensor_type} sensor required by algorithm "
+                f"'{algorithm['id']}' (topic '{topic}'; robot sensors: {sorted(sensor_types)})"
+            )
+            if sensor_type == 'lidar':
+                # Scan-based algorithms cannot run without a LiDAR: hard failure.
+                result.valid = False
+                result.errors.append(message)
+            else:
+                result.warnings.append(
+                    message + " (topic name may differ; verify remapping)"
+                )
+
+    return result
+
+
+def check_dimension_compatibility(
+    algorithm: Dict[str, Any],
+    environment: Dict[str, Any],
+) -> ValidationResult:
+    """
+    Check that an algorithm operates in the environment's dimensionality (R3.2).
+
+    An algorithm that declares 'supported_dimensions' must list the
+    environment's dimension. A 2D planner cannot gain flight capability by
+    adding 'aerial' to 'supported_robot_classes': the metadata label alone
+    is not sufficient without a declared dimension match.
+
+    Args:
+        algorithm: Algorithm entity
+        environment: Environment entity
+
+    Returns:
+        ValidationResult with compatibility status
+    """
+    result = ValidationResult(valid=True)
+
+    supported_dimensions = algorithm.get('supported_dimensions')
+    env_dimension = environment.get('dimension')
+    if supported_dimensions and env_dimension and env_dimension not in supported_dimensions:
+        result.valid = False
+        result.errors.append(
+            f"Algorithm '{algorithm['id']}' supports dimensions "
+            f"{sorted(supported_dimensions)} but environment '{environment['id']}' is "
+            f"'{env_dimension}'; an entry in supported_robot_classes does not grant "
+            f"capability in unmatched dimensions"
+        )
+
     return result
 
 
@@ -260,13 +483,21 @@ def check_composition(
             result.valid = False
             result.errors.append(f"Scenario '{composition.scenario_id}' not found in registry")
     
-    # Check all algorithms
+    # Check all algorithms (existence + typed category slot match, R3.2)
+    algorithms = []
     for category, algo_id in composition.algorithm_ids.items():
-        if algo_id and not registry.algorithms.get(algo_id):
+        if not algo_id:
+            continue
+        algorithm = registry.algorithms.get(algo_id)
+        if not algorithm:
             result.valid = False
             result.errors.append(f"Algorithm '{algo_id}' (category: {category}) not found in registry")
-    
-    # 2. Check robot-environment compatibility
+            continue
+        algorithms.append(algorithm)
+        result.merge(check_algorithm_category(category, algorithm))
+
+    # 2. Check simulator typing and robot-environment compatibility
+    result.merge(check_simulator_compatibility(composition.simulator, robot, environment))
     env_result = check_robot_environment_compatibility(robot, environment)
     result.merge(env_result)
     
@@ -276,20 +507,16 @@ def check_composition(
         result.merge(scenario_result)
     
     # 4. Check robot-algorithm capability compatibility
-    algo_ids = [aid for aid in composition.get_all_algorithm_ids() if aid]
-    for algo_id in algo_ids:
-        algorithm = registry.algorithms.get(algo_id)
-        if algorithm:
-            algo_result = check_capabilities(robot, algorithm)
-            result.merge(algo_result)
-    
+    for algorithm in algorithms:
+        algo_result = check_capabilities(robot, algorithm)
+        result.merge(algo_result)
+
+    # 4b. Sensor and dimension contracts (R3.2)
+    result.merge(check_sensor_requirements(robot, algorithms, environment))
+    for algorithm in algorithms:
+        result.merge(check_dimension_compatibility(algorithm, environment))
+
     # 5. Check algorithm-algorithm compatibility
-    algorithms = []
-    for algo_id in algo_ids:
-        algorithm = registry.algorithms.get(algo_id)
-        if algorithm:
-            algorithms.append(algorithm)
-    
     # Check pairwise compatibility
     for i in range(len(algorithms)):
         for j in range(i + 1, len(algorithms)):

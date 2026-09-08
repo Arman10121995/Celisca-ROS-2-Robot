@@ -36,6 +36,7 @@ FAST_TESTS=(
   "$REG_TEST/test_p3_6_safety_limits.py"
   "$REG_TEST"/test_p4_*.py
   "$REG_TEST/test_bumperbot_qualification.py"
+  "$REG_TEST/test_r3_2_composition_compatibility.py"
   "$ADP_TEST/test_adapter.py"
   "$ADP_TEST/test_launch_fragments.py"
   "$ADP_TEST/test_selectors.py"
