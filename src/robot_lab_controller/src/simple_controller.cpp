@@ -23,7 +23,7 @@ SimpleController::SimpleController(const std::string& name)
     wheel_cmd_pub_ = create_publisher<std_msgs::msg::Float64MultiArray>("/simple_velocity_controller/commands", 10);
     vel_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>("/robot_lab_controller/cmd_vel", 10, std::bind(&SimpleController::velCallback, this, _1));
     joint_sub_ = create_subscription<sensor_msgs::msg::JointState>("/joint_states", 10, std::bind(&SimpleController::jointCallback, this, _1));
-    odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("/odom", 10);
+    odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("/robot_lab_controller/odom", 10);
 
     speed_conversion_ << wheel_radius_/2, wheel_radius_/2, wheel_radius_/wheel_separation_, -wheel_radius_/wheel_separation_;
     RCLCPP_INFO_STREAM(get_logger(), "The conversion matrix is \n" << speed_conversion_);
@@ -36,16 +36,20 @@ SimpleController::SimpleController(const std::string& name)
     odom_msg_.pose.pose.orientation.z = 0.0;
     odom_msg_.pose.pose.orientation.w = 1.0;
 
-    transform_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
-    transform_stamped_.header.frame_id = "odom";
-    transform_stamped_.child_frame_id = "base_footprint";
-
+    // TF is published by the EKF (odom→base_footprint), not the controller.
+    // Command watchdog: stop the robot if no cmd_vel arrives within 500ms.
+    last_cmd_time_ = get_clock()->now();
+    watchdog_timeout_s_ = 0.5;
     prev_time_ = get_clock()->now();
+    watchdog_timer_ = create_wall_timer(
+        std::chrono::milliseconds(100),
+        std::bind(&SimpleController::watchdogCallback, this));
 }
 
 
 void SimpleController::velCallback(const geometry_msgs::msg::TwistStamped &msg)
 {
+    last_cmd_time_ = get_clock()->now();
     // Implements the differential kinematic model
     // Given v and w, calculate the velocities of the wheels
     Eigen::Vector2d robot_speed(msg.twist.linear.x, msg.twist.angular.z);
@@ -102,16 +106,18 @@ void SimpleController::jointCallback(const sensor_msgs::msg::JointState &state)
     odom_msg_.twist.twist.linear.x = linear;
     odom_msg_.twist.twist.angular.z = angular;
     odom_pub_->publish(odom_msg_);
+}
 
-    // TF
-    transform_stamped_.transform.translation.x = x_;
-    transform_stamped_.transform.translation.y = y_;
-    transform_stamped_.transform.rotation.x = q.getX();
-    transform_stamped_.transform.rotation.y = q.getY();
-    transform_stamped_.transform.rotation.z = q.getZ();
-    transform_stamped_.transform.rotation.w = q.getW();
-    transform_stamped_.header.stamp = get_clock()->now();
-    transform_broadcaster_->sendTransform(transform_stamped_);
+
+void SimpleController::watchdogCallback()
+{
+    double since_last = (get_clock()->now() - last_cmd_time_).seconds();
+    if (since_last > watchdog_timeout_s_) {
+        std_msgs::msg::Float64MultiArray wheel_speed_msg;
+        wheel_speed_msg.data.push_back(0.0);
+        wheel_speed_msg.data.push_back(0.0);
+        wheel_cmd_pub_->publish(wheel_speed_msg);
+    }
 }
 
 

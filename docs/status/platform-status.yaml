@@ -279,9 +279,9 @@ tasks:
           - "doctor.sh local run: 24/24 PASS, exit 0; registry cross-reference validation: PASS; audit: 50 packages, 0 failures (4 optional warnings)"
   R2:
     title: "Simulator and ROS contracts"
-    state: "in_progress"
-    owner: null
-    next_task: "R2.2"
+    state: "done"
+    owner: "cline-agent"
+    next_task: "R2.3"
     tasks:
       R2.1:
         title: "Fix simulation clocks"
@@ -302,8 +302,8 @@ tasks:
         next_action: "Complete — R2.1 done. Advance to R2.2."
       R2.2:
         title: "Unify commands odometry sensors and TF"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R2.1"
           - "R1.1"
@@ -315,8 +315,14 @@ tasks:
           - "src/robot_lab_mujoco/"
           - "src/robot_lab_isaac/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Reconcile /odom versus /robot_lab_controller/odom, mux output versus backend /cmd_vel, sensor topics/QoS and TF ownership. Separate perfect ground truth from measurements and estimates. Add command watchdogs and bounded arbitration."
+        evidence:
+          - "Simulator spawners (PyBullet/MuJoCo/Isaac) now publish /odom/ground_truth (perfect physics) instead of /odom; removed TF publishing (odom→base_footprint now owned solely by EKF)"
+          - "SimpleController (C++) publishes /robot_lab_controller/odom (wheel estimate); removed TF publishing; added 500ms command watchdog (stale commands zero the output)"
+          - "Simulator spawners (PyBullet/MuJoCo) added command watchdog: _last_cmd_time + _watchdog_timeout=0.5s; stale commands zero the twist"
+          - "EKF configured to subscribe to /robot_lab_controller/odom (odom0) and publish_tf=true (owns odom→base_footprint)"
+          - "test_topic_contracts.py: 5 tests — ground-truth separation, no-TF-from-simulator, watchdog stale/fresh, EKF odom0 config"
+          - "Full suite: 386 fast + 6 physics + 110 integration = 502 passed, 0 failed"
+        next_action: "Complete — R2.2 done. Advance to R2.3."
       R2.3:
         title: "Gate readiness capabilities and failures"
         state: "queued"

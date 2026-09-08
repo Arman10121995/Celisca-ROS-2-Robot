@@ -505,6 +505,11 @@ def _build_simulation_actions(context):
             )
         )
 
+    # EKF odom0: Gazebo uses the SimpleController wheel estimate; self-contained
+    # spawners (PyBullet/MuJoCo/Isaac) publish perfect odometry on /odom/ground_truth.
+    _sim = _launch_value(context, "simulator")
+    _odom0_topic = "/robot_lab_controller/odom" if _sim == "gazebo" else "/odom/ground_truth"
+
     if _section_enabled(mode_config.get("local_localization")):
         actions.append(
             IncludeLaunchDescription(
@@ -512,6 +517,7 @@ def _build_simulation_actions(context):
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "robot_model": robot_model,
+                    "odom0": _odom0_topic,
                 }.items(),
             )
         )

@@ -27,7 +27,8 @@ from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import Imu, JointState, LaserScan
-from tf2_ros import TransformBroadcaster
+
+# TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
 
 def _xacro_to_urdf(xacro_path):
@@ -117,6 +118,8 @@ class PyBulletSpawner(Node):
         self._rw = -1
         self._twist = Twist()
         self._twist_lock = threading.Lock()
+        self._last_cmd_time = time.monotonic()
+        self._watchdog_timeout = 0.5  # stop if no cmd_vel for 500ms
         self._sim_t = 0.0
         self._sim_step = 0
         self._bpos = [0.0, 0.0, 0.0]
@@ -130,11 +133,13 @@ class PyBulletSpawner(Node):
 
         # Publishers
         self._pub_js = self.create_publisher(JointState, "/joint_states", 10)
-        self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
+        # Ground-truth odometry on /odom/ground_truth (perfect, from physics).
+        # The estimated /odom is owned by the controller/EKF stack.
+        self._odom_pub = self.create_publisher(Odometry, "/odom/ground_truth", 10)
         self._scan_pub = self.create_publisher(LaserScan, "/scan", 10)
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
         self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
-        self._tf_br = TransformBroadcaster(self)
+        # TF published by the EKF, not the spawner.
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
         # Wall-clock timer — see note in mujoco_spawner / above comment about
@@ -204,6 +209,7 @@ class PyBulletSpawner(Node):
     def _on_cmd(self, msg):
         with self._twist_lock:
             self._twist = msg
+            self._last_cmd_time = time.monotonic()
 
     def _try_spawn(self):
         if self._robot_id >= 0:
@@ -352,9 +358,12 @@ class PyBulletSpawner(Node):
             now = time.monotonic()
             elapsed = now - t0
 
-            # cmd_vel
+            # cmd_vel — apply watchdog: stop if no recent command
             with self._twist_lock:
                 t = self._twist
+                stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
+            if stale:
+                t = Twist()
             vl = (t.linear.x - t.angular.z * ws / 2.0) / wr
             vr = (t.linear.x + t.angular.z * ws / 2.0) / wr
             clamp = 50.0
@@ -391,7 +400,6 @@ class PyBulletSpawner(Node):
                 self._pub_odom()
                 self._pub_imu()
                 self._pub_clock()
-                self._pub_tf()
             if elapsed - last_scan >= scan_dt:
                 last_scan = elapsed
                 self._pub_scan()
@@ -424,15 +432,6 @@ class PyBulletSpawner(Node):
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._odom_pub.publish(m)
-
-    def _pub_tf(self):
-        t = TransformStamped()
-        t.header.stamp = self._stamp()
-        t.header.frame_id = "odom"
-        t.child_frame_id = "base_footprint"
-        t.transform.translation = Vector3(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
-        t.transform.rotation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
-        self._tf_br.sendTransform(t)
 
     def _pub_imu(self):
         m = Imu()

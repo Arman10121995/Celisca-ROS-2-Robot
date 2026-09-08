@@ -18,12 +18,19 @@ def _setup(context, *args, **kwargs):
     use_sim_time = LaunchConfiguration("use_sim_time").perform(context).lower() == "true"
     use_python_imu_republisher = LaunchConfiguration("use_python_imu_republisher").perform(context)
     robot_model = LaunchConfiguration("robot_model").perform(context)
+    # odom0 selects the wheel/ground-truth odometry source.  Gazebo uses the
+    # SimpleController output on /robot_lab_controller/odom; self-contained
+    # spawners (PyBullet/MuJoCo) publish perfect odometry on /odom/ground_truth.
+    odom0_topic = LaunchConfiguration("odom0").perform(context)
 
     parameters = [os.path.join(localization_share, "config", "ekf.yaml")]
     overlay = os.path.join(localization_share, "config", "robots", f"{robot_model}.yaml")
     if os.path.exists(overlay):
         parameters.append(overlay)
-    parameters.append({"use_sim_time": use_sim_time})
+    parameters.append({
+        "use_sim_time": use_sim_time,
+        "odom0": odom0_topic,
+    })
 
     robot_localization = Node(
         package="robot_localization",
@@ -58,6 +65,11 @@ def generate_launch_description():
             "robot_model",
             default_value="bumperbot",
             description="Robot id; loads config/robots/<robot_model>.yaml overlay if present",
+        ),
+        DeclareLaunchArgument(
+            "odom0",
+            default_value="/robot_lab_controller/odom",
+            description="Odometry source for EKF odom0 (wheel estimate or ground truth)",
         ),
         OpaqueFunction(function=_setup),
     ])

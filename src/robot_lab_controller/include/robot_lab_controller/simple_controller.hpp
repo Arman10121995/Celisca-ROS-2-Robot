@@ -7,8 +7,6 @@
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <nav_msgs/msg/odometry.hpp>
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <tf2_ros/transform_broadcaster.h>
 
 
 class SimpleController : public rclcpp::Node
@@ -38,9 +36,12 @@ private:
     double y_;
     double theta_;
 
-    // TF
-    std::unique_ptr<tf2_ros::TransformBroadcaster> transform_broadcaster_;
-    geometry_msgs::msg::TransformStamped transform_stamped_;
+    void watchdogCallback();
+
+    // Command watchdog: stop the robot if no command arrives within this window.
+    rclcpp::Time last_cmd_time_;
+    double watchdog_timeout_s_;
+    rclcpp::TimerBase::SharedPtr watchdog_timer_;
 };
 
 #endif // SIMPLE_CONTROLLER_HPP

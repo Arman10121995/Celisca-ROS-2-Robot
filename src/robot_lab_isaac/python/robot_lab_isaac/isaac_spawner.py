@@ -33,7 +33,8 @@ from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import Imu, JointState
-from tf2_ros import TransformBroadcaster
+
+# TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
 # Portable default: the Isaac python path may be supplied per host via the
 # ISAAC_PYTHON environment variable (or the ``isaac_python`` parameter by
@@ -92,10 +93,12 @@ class IsaacSpawner(Node):
             self.declare_parameter("use_sim_time", True)
 
         self._js_pub = self.create_publisher(JointState, "/joint_states", 10)
-        self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
+        # Ground-truth odometry on /odom/ground_truth (perfect, from physics).
+        # The fused estimate lives on /odom (published by the EKF).
+        self._odom_pub = self.create_publisher(Odometry, "/odom/ground_truth", 10)
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
         self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
-        self._tf_br = TransformBroadcaster(self)
+        # TF published by the EKF, not the spawner.
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
 
@@ -339,15 +342,6 @@ class IsaacSpawner(Node):
         im.linear_acceleration_covariance = [0.1, 0.0, 0.0, 0.0, 0.1, 0.0,
                                              0.0, 0.0, 0.1]
         self._imu_pub.publish(im)
-
-        tf = TransformStamped()
-        tf.header.stamp = stamp
-        tf.header.frame_id = "odom"
-        tf.child_frame_id = "base_footprint"
-        tf.transform.translation = Vector3(x=pos[0], y=pos[1], z=pos[2])
-        tf.transform.rotation = Quaternion(
-            x=orn[0], y=orn[1], z=orn[2], w=orn[3])
-        self._tf_br.sendTransform(tf)
 
     def shutdown(self):
         proc = self._proc
