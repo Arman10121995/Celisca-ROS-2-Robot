@@ -1,3 +1,16 @@
+"""Robot Lab benchmark package (R4.x).
+
+This package provides the scenario lifecycle, truthful outcome classification,
+and (in later R4.x modules) metric extraction, normalization, aggregation,
+reference baselines, and report generation for reproducible planner/algorithm
+comparisons.
+
+R4.1 modules:
+- task_lifecycle.py: scenario lifecycle orchestration (validate -> launch ->
+  ready -> reset/seed -> initialize -> task -> observe -> stop -> record)
+- truthful_outcomes.py: terminal outcome taxonomy and classification
+"""
+
 from __future__ import annotations
 
 import datetime as _dt
@@ -74,6 +87,46 @@ class BenchmarkResult:
         return payload
 
 
+from .task_lifecycle import (
+    LifecyclePhase,
+    ScenarioLifecycle,
+    make_lifecycle,
+)
+from .truthful_outcomes import (
+    OutcomeKind,
+    TERMINAL_OUTCOMES,
+    ABORT_OUTCOMES,
+    classify_outcome,
+    outcome_to_dict,
+    write_outcome_record,
+    outcome_is_terminal,
+    outcome_is_abort,
+    outcome_success,
+    build_result_id,
+    all_outcome_kinds,
+    terminal_outcome_kinds,
+    abort_outcome_kinds,
+)
+
 __all__ = [
-    'BenchmarkResult',
+    # Core result record
+    "BenchmarkResult",
+    # Lifecycle
+    "LifecyclePhase",
+    "ScenarioLifecycle",
+    "make_lifecycle",
+    # Outcomes
+    "OutcomeKind",
+    "TERMINAL_OUTCOMES",
+    "ABORT_OUTCOMES",
+    "classify_outcome",
+    "outcome_to_dict",
+    "write_outcome_record",
+    "outcome_is_terminal",
+    "outcome_is_abort",
+    "outcome_success",
+    "build_result_id",
+    "all_outcome_kinds",
+    "terminal_outcome_kinds",
+    "abort_outcome_kinds",
 ]

@@ -1,7 +1,7 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-08"
+updated: "2026-09-09"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -85,6 +85,18 @@ baseline:
       duration_seconds: 0.83
       scope: "Headless PyBullet/MuJoCo box physics + adapter import checks; excludes Isaac graceful_degradation startup"
       command_ref: "docs/status/audit-2026-09-07.md#selected-backend-tests"
+    -
+      id: "r4-1-lifecycle-truthful-outcomes"
+      revision: "679a4ad"
+      total: 48
+      passed: 48
+      failures: 0
+      errors: 0
+      skipped: 0
+      deselected: 0
+      duration_seconds: 1.27
+      scope: "ScenarioLifecycle phase machine + OutcomeKind taxonomy (9 outcomes, priority-ordered classify_outcome, deterministic result IDs, manifest recording, timestamped rosbag2 paths, launch-failure abort)"
+      command_ref: "src/robot_lab/robot_lab_benchmark/test/test_r4_1_lifecycle_truthful_outcomes.py"
   other_checks:
     registry_cross_references: "pass; insufficient evidence of compatibility"
     invalid_simulator_probe: "incorrectly accepted"
@@ -347,7 +359,7 @@ tasks:
     title: "Strict composition and execution"
     state: "done"
     owner: "cline-agent"
-    next_task: "R4.1"
+    next_task: "R4.2"
     tasks:
       R3.1:
         title: "Reconcile registry profiles and aliases"
@@ -456,7 +468,7 @@ tasks:
     tasks:
       R4.1:
         title: "Implement scenario lifecycle and truthful outcomes"
-        state: "queued"
+        state: "done"
         owner: null
         depends_on:
           - "R3.3"
@@ -465,8 +477,11 @@ tasks:
           - "src/robot_lab/robot_lab_benchmark/"
           - "src/robot_lab/robot_lab_registry/config/scenarios.yaml"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement validate→launch→ready→reset/seed→initialize pose→send task→observe→stop→record. Task completion determines success, not sleep duration; launch/reset failures abort. Use unique result IDs and real rosbag2 recording."
+        evidence:
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/task_lifecycle.py"
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/truthful_outcomes.py"
+          - "src/robot_lab/robot_lab_benchmark/test/test_r4_1_lifecycle_truthful_outcomes.py"
+        next_action: "Complete — R4.1 done (ScenarioLifecycle phase machine validate→launch→ready→reset_and_seed→initialize_pose→send_task→observe→stop→record with unique deterministic result IDs and timestamped rosbag2 path allocation; OutcomeKind taxonomy of 9 distinct terminal outcomes with priority-ordered classify_outcome; launch/reset failure aborts before task via run() short-circuit; manifest.json written on record(); 48 unit tests pass). Advance to R4.2 (real metric extraction: distance, contacts, clearance, CPU/RTF, ground-truth vs estimation error)."
       R4.2:
         title: "Measure metrics and preserve provenance"
         state: "queued"
@@ -877,7 +892,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R3.4"
+  next_task: "R4.2"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"

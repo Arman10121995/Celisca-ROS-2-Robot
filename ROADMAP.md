@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-08. Runtime audit baseline: `dff388f`. R2.3 readiness contracts complete. R3.1 evidence-gated registry labels complete.
+Updated: 2026-09-09. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle and truthful outcomes complete.
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -215,11 +215,12 @@ Dependencies: `R3.3`, `R2.2`.
 
 ### R4.1 — Implement scenario lifecycle and truthful outcomes
 
-Dependencies: `R3.3`, `R2.3`.
+Dependencies: `R3.3`, `R2.3`. State: **complete** (2026-09-09).
 
 - Files: `src/robot_lab/robot_lab_benchmark/`, `src/robot_lab/robot_lab_registry/config/scenarios.yaml`.
 - Implement: Implement validate→launch→ready→reset/seed→initialize pose→send task→observe→stop→record. Task completion determines success, not sleep duration; launch/reset failures abort. Use unique result IDs and real rosbag2 recording.
 - Acceptance: Success, collision, timeout, no path, lost state, process death and cancellation have distinct terminal records; unit tests mock processes; integration tests prove cleanup and prevent artifact overwrite.
+- Evidence: `task_lifecycle.py` (ScenarioLifecycle phase machine with deterministic unique result IDs, timestamped rosbag2 path allocation, manifest.json recording), `truthful_outcomes.py` (9 OutcomeKind values, priority-ordered classify_outcome, terminal/abort taxonomy), `test_r4_1_lifecycle_truthful_outcomes.py` (48 tests pass).
 
 ### R4.2 — Measure metrics and preserve provenance
 
