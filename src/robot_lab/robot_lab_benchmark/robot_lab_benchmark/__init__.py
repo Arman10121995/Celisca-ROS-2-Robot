@@ -34,6 +34,25 @@ from robot_lab_benchmark.metrics import (
     effort_proxy,
 )
 
+from robot_lab_benchmark.qualification import (
+    LinkInfo,
+    WheelInfo,
+    RobotDescription,
+    RobotGolden,
+    CheckResult,
+    QualificationReport,
+    TaskStageResult,
+    TaskTrialSpec,
+    TaskTrialObservation,
+    GOLDEN,
+    QUALIFICATION_SCHEMA_VERSION,
+    parse_robot_description,
+    golden_for,
+    run_static_checks,
+    qualify_robot,
+    write_qualification_report,
+)
+
 from robot_lab_benchmark.comparison import (
     ComparisonArm,
     ComparisonSpec,
@@ -197,4 +216,21 @@ __all__ = [
     "metric_distribution",
     "write_comparison_report",
     "make_bumperbot_comparison",
+    # Qualification (R5.1)
+    "LinkInfo",
+    "WheelInfo",
+    "RobotDescription",
+    "RobotGolden",
+    "CheckResult",
+    "QualificationReport",
+    "TaskStageResult",
+    "TaskTrialSpec",
+    "TaskTrialObservation",
+    "GOLDEN",
+    "QUALIFICATION_SCHEMA_VERSION",
+    "parse_robot_description",
+    "golden_for",
+    "run_static_checks",
+    "qualify_robot",
+    "write_qualification_report",
 ]

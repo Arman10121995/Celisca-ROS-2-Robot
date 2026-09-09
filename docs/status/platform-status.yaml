@@ -513,24 +513,25 @@ tasks:
         next_action: "Complete — R4.3 done (comparison.py: ComparisonSpec predeclaration validation rejecting <5 evaluation seeds, duplicate seeds, tuning/evaluation overlap, identical arm ids, non-positive budgets and unjustified thresholds; ComparisonArm with all non-varied settings fixed; deterministic build_comparison_manifest with stable sha256 over canonical JSON pinning spec/revision/dirty/dependencies/asset_hashes/seeds/budgets/tolerances/artifact paths; verify_comparison_manifest detecting tampering; RunRecord retaining raw trace paths and outcome kinds for every run including failures; run_comparison executing only evaluation seeds by default with tuning tagged and excluded from summaries; summarize_comparison reporting per-arm n/mean/median/min/max/stdev distributions and failure rates — never best-run-only — plus median deltas; write_comparison_report JSON with manifest+summary+all runs. Canonical bumperbot_planner_comparison (navfn vs dijkstra, 5 eval seeds separate from 2 tuning seeds, measured+justified thresholds) mirrored in experiments.yaml and round-trip verified. 48 unit tests pass; full suite 245 green.) Advance to R5.1 (qualify Bumperbot and Labbot mobile tasks)."
   R5:
     title: "Robot-class qualification"
-    state: "queued"
-    owner: null
+    state: "in_progress"
+    owner: "cline-agent"
     tasks:
       R5.1:
         title: "Qualify Bumperbot and Labbot mobile tasks"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R4.3"
         scope_paths:
           - "src/robot_lab_robots/bumperbot/"
           - "src/robot_lab_robots/labbot/"
-          - "src/robot_lab_controller/"
-          - "src/robot_lab_localization/"
-          - "src/robot_lab_navigation/"
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/qualification.py"
+          - "src/robot_lab/robot_lab_benchmark/test/test_r5_1_qualification.py"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Verify robot-specific inertias, wheel geometry, footprint, sensors/control and overlays using golden harness. Preserve Bumperbot mapping/RGB-D/coverage; do not claim Labbot RGB-D without implementation."
+        evidence:
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/qualification.py"
+          - "src/robot_lab/robot_lab_benchmark/test/test_r5_1_qualification.py"
+        next_action: "Complete — R5.1 done (qualification.py golden harness: extract_robot_description processes main+gazebo xacro overlays with is_ignition/is_sim mappings; RobotDescription extracts links/inertias, diff-drive wheels (joint/link/radius/y_offset/axis), wheel separation, base_footprint offset, base collision footprint, sensor types, ros2_control actuated joints; SENSOR_TYPE_ALIASES normalize classic (ray/depth) and ignition (gpu_lidar/rgbd_camera) dialects to one vocabulary; capabilities claimed only for sensors actually present. GOLDEN pinned from measured descriptions: bumperbot wheels 0.033 m, separation 0.1402 m, base offset 0.033 m, requires lidar+imu+depth, rgbd_capable; labbot wheels 0.06 m, separation 0.30 m, base offset 0.12 m, requires lidar+imu, no RGB-D claimed. Static checks: inertias (physical links positive mass+tensor), wheel count/radius/separation/joints/axis, base offset, footprint, sensors, rgbd-claim-vs-hardware, no-false-rgbd-claim, actuated joints. Honest handling verified on real descriptions: bumperbot base collision is a MESH so no circular radius is fabricated — check passes with mesh-defined detail directing consumers to mesh/costmap; labbot primitive footprint radius 0.15 m extracted. Both robots pass all golden checks with zero issues. qualify_robot() composes static+task-stage checks into QualificationReport; write_qualification_report() JSON output. 48 unit tests + real-description verification; full suite 476 green.) Advance to R5.2 (qualify Go2 locomotion)."
       R5.2:
         title: "Qualify Go2 locomotion"
         state: "queued"
@@ -897,11 +898,11 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R5.1"
+  next_task: "R5.2"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R3.3 complete (one resolver/executor emits and executes concrete manifests; seven independent selectors; robot/backend/world/scenario/spawn/reset/params/seed; legacy aliases unitree_go2 and terrain_rough; planner switching changes the active nav2 plugin; LaunchConfiguration concatenation fixed; dry-run starts no process; 285 registry + 423 fast + 113 integration tests pass). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R3.4 (connect GUI to the common resolver: replace ignored algorithm argument with full composition controls, filter by validator showing maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
+  next_action: "R5.1 complete (qualification.py golden harness for Bumperbot and Labbot: xacro extraction of inertias/diff-drive wheels/separation/base offset/footprint/sensors/ros2_control joints; SENSOR_TYPE_ALIASES normalize classic ray/depth and ignition gpu_lidar/rgbd_camera dialects; capabilities claimed only when implemented — labbot claims no RGB-D; GOLDEN pinned from measured values; honest mesh-footprint handling for bumperbot (no radius fabricated); both robots pass all golden checks with zero issues; 48 unit tests + real-description verification; 476 tests green). Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R5.2 (qualify Go2 locomotion: wire simulation wrapper, sensors and controller into actual launch; closed-loop stance then bounded gait/base-velocity interface with contact/state estimation; measured stable stance, displacement, turn and stop on flat ground; then a named terrain task with tracking/contact/effort evidence)."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"
