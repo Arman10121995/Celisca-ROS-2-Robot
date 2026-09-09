@@ -113,7 +113,7 @@ class TestEffortLimits:
         for name, d in urdf.items():
             assert d["effort"] == 20.0
 
-        def test_urdf_all_velocity_15(self):
+    def test_urdf_all_velocity_15(self):
         urdf = parse_bhl_joints()
         for name, d in urdf.items():
             assert d["velocity"] == 15.0
@@ -214,7 +214,7 @@ class TestAnkleStrategy:
         left_hip = targets["leg_left_hip_roll_joint"] - nominal["leg_left_hip_roll_joint"]
         right_hip = targets["leg_right_hip_roll_joint"] - nominal["leg_right_hip_roll_joint"]
         assert left_hip == pytest.approx(0.08 * 0.2, abs=1e-9)
-                assert right_hip == pytest.approx(-0.08 * 0.2, abs=1e-9)
+        assert right_hip == pytest.approx(-0.08 * 0.2, abs=1e-9)
 
 
 # ----------------------------------------------------------------------
@@ -242,8 +242,6 @@ class TestArmReaction:
 
     def test_knee_softens_with_tilt(self, nominal):
         flat = balance_targets(nominal, BodyState(roll_rad=0.0, pitch_rad=0.0))
-            def test_knee_softens_with_tilt(self, nominal):
-        flat = balance_targets(nominal, BodyState(roll_rad=0.0, pitch_rad=0.0))
         tilted = balance_targets(nominal, BodyState(roll_rad=0.3, pitch_rad=0.3))
         assert tilted["leg_left_knee_pitch_joint"] < flat["leg_left_knee_pitch_joint"]
 
@@ -269,7 +267,7 @@ class TestClamping:
     def test_balance_targets_clamped(self, nominal):
         body = BodyState(roll_rad=0.6, pitch_rad=0.6)
         targets = balance_targets(nominal, body)
-                for name in BHL_JOINT_NAMES:
+        for name in BHL_JOINT_NAMES:
             lo, hi = POSITION_LIMITS[name]
             assert lo <= targets[name] <= hi
 
@@ -296,7 +294,7 @@ class TestNoDriveOnMissingData:
         for name, tau in efforts.items():
             assert abs(tau) <= EFFORT_LIMIT
 
-        def test_pd_gains_per_limb_type(self):
+    def test_pd_gains_per_limb_type(self):
         assert STANCE_PD_LEGS[0] > STANCE_PD_ARMS[0]
 
 
@@ -383,7 +381,7 @@ class TestSafetyMonitor:
         meas = {j: 19.6 for j in BHL_JOINT_NAMES}
         for _ in range(49):
             s.observe_efforts(cmd, meas)
-                meas2 = {j: 19.6 for j in BHL_JOINT_NAMES if j != "leg_left_knee_pitch_joint"}
+        meas2 = {j: 19.6 for j in BHL_JOINT_NAMES if j != "leg_left_knee_pitch_joint"}
         s.observe_efforts(cmd, meas2)
         assert s.state != SafetyState.SAFE_STOP
 
