@@ -8,7 +8,7 @@ import signal
 import subprocess
 import threading
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, ttk, simpledialog
+from tkinter import filedialog, messagebox, scrolledtext, ttk
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -41,16 +41,34 @@ except ImportError:
 try:
     from .launch_profiles import (
         list_profiles, save_profile, load_profile, delete_profile,
-        ensure_defaults,
+        ensure_defaults, save_manifest, is_manifest,
     )
     PROFILES_AVAILABLE = True
 except ImportError:
     PROFILES_AVAILABLE = False
     def list_profiles(): return []
     def save_profile(_n, _c): pass
+    def save_manifest(_n, _m): return ""
     def load_profile(_n): return None
     def delete_profile(_n): return False
     def ensure_defaults(): pass
+    def is_manifest(_c): return False
+
+# ── Headless composition logic (R3.4) ─────────────────────────────────────
+try:
+    from .gui_composition import (
+        ALGORITHM_SLOT_LABELS,
+        GuiCompositionSelection,
+        command_for_selection,
+        get_registry,
+        migrate_legacy_selection,
+        resolve_selection,
+        validation_lines,
+    )
+    COMPOSITION_AVAILABLE = True
+except ImportError as _import_error:
+    COMPOSITION_AVAILABLE = False
+    _COMPOSITION_IMPORT_ERROR = _import_error
 
 
 MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
@@ -212,7 +230,6 @@ def load_yaml(path):
         return _load_simple_yaml(yaml_file.read(), path)
 
 
-
 def package_path(package_name, relative_path):
     if not relative_path:
         return ""
@@ -290,6 +307,15 @@ class SimulationLauncherGui(tk.Tk):
         self.algorithms = self._load_algorithms()
         self.algorithm_category_var = tk.StringVar(value="localization")
         self.algorithm_id_var = tk.StringVar()
+        self.slot_vars = {slot: tk.StringVar() for slot in ALGORITHM_CATEGORIES}
+        self.slot_combos = {}
+        self.validation_var = tk.StringVar(value="Valid")
+        self.composition_registry = None
+        if COMPOSITION_AVAILABLE:
+            try:
+                self.composition_registry = get_registry()
+            except Exception as _reg_error:  # pragma: no cover — installed GUI path
+                self._compo_error = str(_reg_error)
 
         self.process = None
         self.ros_node = None
@@ -495,28 +521,35 @@ class SimulationLauncherGui(tk.Tk):
                 value=["auto", "true", "false"][column],
             ).grid(row=0, column=column, sticky="w", padx=(0, 12))
 
-        # --- Algorithm selection ---
-        ttk.Label(controls, text="Algorithm Category").grid(row=12, column=0, sticky="w", pady=(12, 0))
-        self.algorithm_category_combo = ttk.Combobox(
-            controls,
-            textvariable=self.algorithm_category_var,
-            values=ALGORITHM_CATEGORIES,
-            state="readonly",
-            width=34,
-        )
-        self.algorithm_category_combo.grid(row=13, column=0, sticky="ew", pady=(2, 12))
-        self.algorithm_category_combo.bind(
-            "<<ComboboxSelected>>", self._on_algorithm_category_changed
-        )
+        # --- Full composition controls (R3.4): all seven algorithm slots ---
+        composition_frame = ttk.LabelFrame(
+            controls, text="Composition — algorithm slots", padding=(8, 6))
+        composition_frame.grid(row=12, column=0, sticky="ew", pady=(12, 6))
+        composition_frame.columnconfigure(1, weight=1)
+        for row, slot in enumerate(ALGORITHM_CATEGORIES):
+            ttk.Label(
+                composition_frame,
+                text=ALGORITHM_SLOT_LABELS.get(slot, slot.title()),
+            ).grid(row=row, column=0, sticky="w", padx=(0, 6))
+            combo = ttk.Combobox(
+                composition_frame,
+                textvariable=self.slot_vars[slot],
+                state="readonly",
+                width=26,
+            )
+            combo.grid(row=row, column=1, sticky="ew")
+            combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
+            self.slot_combos[slot] = combo
 
-        ttk.Label(controls, text="Algorithm").grid(row=14, column=0, sticky="w")
-        self.algorithm_combo = ttk.Combobox(
+        ttk.Label(controls, text="Validation", foreground="#a6adc8" if THEME_AVAILABLE else "#333333"
+                  ).grid(row=13, column=0, sticky="w", pady=(4, 2))
+        ttk.Label(
             controls,
-            textvariable=self.algorithm_id_var,
-            state="readonly",
-            width=34,
-        )
-        self.algorithm_combo.grid(row=15, column=0, sticky="ew", pady=(2, 12))
+            textvariable=self.validation_var,
+            justify="left",
+            wraplength=330,
+            foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
+        ).grid(row=14, column=0, sticky="ew", pady=(2, 8))
 
         ttk.Label(controls, text="Resolved Configuration").grid(row=16, column=0, sticky="w")
         summary = ttk.Label(
@@ -745,18 +778,71 @@ class SimulationLauncherGui(tk.Tk):
         self._refresh_algorithm_dropdown()
         self._update_from_selection()
 
+    def _refresh_slot_combos(self):
+        """Populate the seven algorithm slot dropdowns from the registry."""
+        for slot in ALGORITHM_CATEGORIES:
+            algorithms = self._algorithms_for_category(slot)
+            combo = self.slot_combos.get(slot)
+            if combo is None:
+                continue
+            combo.configure(values=algorithms)
+            current = self.slot_vars[slot].get()
+            if current and current not in algorithms:
+                self.slot_vars[slot].set("")
+
+    def _composition_selection(self):
+        """Build the shared resolver selection from the current GUI controls."""
+        if not COMPOSITION_AVAILABLE:
+            raise RuntimeError("gui_composition unavailable")
+        algorithm_ids = {
+            slot: self.slot_vars[slot].get() for slot in ALGORITHM_CATEGORIES
+        }
+        return GuiCompositionSelection(
+            robot_id=self.robot_var.get() or None,
+            simulator=self.simulator_var.get() or None,
+            environment_id=self.map_var.get() or None,
+            algorithm_ids=algorithm_ids,
+            reset=True,
+        )
+
+    def _update_validation_and_command(self):
+        """Run the shared validator and refresh command + validation text."""
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+            self.command_var.set(" ".join(self._legacy_command()))
+            self.validation_var.set(
+                "Composition resolver unavailable; legacy launch used.")
+            return
+        try:
+            selection = self._composition_selection()
+            errors, warnings = validation_lines(
+                self.composition_registry, selection)
+        except Exception as exc:  # pragma: no cover — defensive
+            self.command_var.set(" ".join(self._legacy_command()))
+            self.validation_var.set(f"Resolver error: {exc}")
+            return
+
+        if errors:
+            self.validation_var.set(
+                "Invalid: " + " | ".join(errors))
+            self.command_var.set("")
+            return
+
+        notes = []
+        if warnings:
+            notes.append("Warnings: " + "; ".join(warnings[:3]))
+        self.validation_var.set("Valid" + (f" — {'; '.join(notes)}"
+                                           if notes else ""))
+        self.command_var.set(" ".join(command_for_selection(
+            self.composition_registry, selection)))
+
     def _refresh_algorithm_dropdown(self):
-        """Populate the algorithm dropdown based on the selected category."""
-        category = self.algorithm_category_var.get()
-        algorithms = self._algorithms_for_category(category)
-        self.algorithm_combo.configure(values=algorithms)
-        if algorithms:
-            # Keep current selection if valid, otherwise pick first
-            current = self.algorithm_id_var.get()
-            if current not in algorithms:
-                self.algorithm_id_var.set(algorithms[0])
-        else:
-            self.algorithm_id_var.set("")
+        """Backwards-compatible alias: sync the seven slot dropdowns.
+
+        The single category/algorithm dropdown from earlier revisions was
+        replaced by full composition controls (R3.4); this keeps old call
+        sites working by refreshing all slots.
+        """
+        self._refresh_slot_combos()
 
     def _update_from_selection(self):
         supported_modes = self._supported_modes()
@@ -785,10 +871,10 @@ class SimulationLauncherGui(tk.Tk):
         self.vacuum_radio.state(["!disabled"] if supports_vacuum else ["disabled"])
         self.save_map_button.state(["!disabled"] if self.mode_var.get() in ("slam", "3d_slam") else ["disabled"])
 
-        # Update algorithm dropdown based on category
-        self._refresh_algorithm_dropdown()
+        # Update the seven algorithm slot dropdowns and the shared validator
+        self._refresh_slot_combos()
 
-        self.command_var.set(" ".join(self._command()))
+        self._update_validation_and_command()
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
 
@@ -866,6 +952,27 @@ class SimulationLauncherGui(tk.Tk):
         return "\n".join(lines)
 
     def _command(self):
+        """Concrete command for the current selection via the shared resolver.
+
+        Single stack start: the resolver emits the exact ros2 launch command
+        from the same manifest the CLI uses; the ignored GUI 'algorithm:='
+        argument is gone — planner/slot selections now change active nav2
+        plugins through the manifest arguments.
+        """
+        if COMPOSITION_AVAILABLE and self.composition_registry is not None:
+            try:
+                selection = self._composition_selection()
+                errors, _warnings = validation_lines(
+                    self.composition_registry, selection)
+                if not errors:
+                    return command_for_selection(
+                        self.composition_registry, selection)
+            except Exception as exc:  # pragma: no cover — defensive
+                self.status_var.set(f"Resolver fallback: {exc}")
+        return self._legacy_command()
+
+    def _legacy_command(self):
+        """Pre-resolver fallback build (used only when resolver is unavailable)."""
         launch_file = (
             "simulated_room_vacuum.launch.py"
             if self.launch_kind_var.get() == "vacuum"
@@ -888,10 +995,23 @@ class SimulationLauncherGui(tk.Tk):
         return command
 
     def _save_profile(self):
-        """Save current configuration as a named profile."""
+        """Save current configuration as a named profile (resolved manifest)."""
         name = tk.simpledialog.askstring("Save Profile", "Profile name:")
         if not name:
             return
+        if COMPOSITION_AVAILABLE and self.composition_registry is not None:
+            try:
+                selection = self._composition_selection()
+                ok, manifest = resolve_selection(
+                    self.composition_registry, selection)
+                if ok:
+                    save_manifest(name, manifest)
+                    self.status_var.set(f"Profile '{name}' saved (manifest)")
+                    self.after(3000, lambda: self.status_var.set("Idle"))
+                    return
+            except Exception as exc:  # pragma: no cover — defensive
+                self.status_var.set(f"Save failed: {exc}")
+                return
         config = {
             "mode": self.mode_var.get(),
             "simulator": self.simulator_var.get(),
@@ -904,8 +1024,19 @@ class SimulationLauncherGui(tk.Tk):
         self.status_var.set(f"Profile '{name}' saved")
         self.after(3000, lambda: self.status_var.set("Idle"))
 
+    def _apply_manifest_to_controls(self, manifest):
+        """Apply a resolved manifest back onto the composition controls."""
+        self.robot_var.set(manifest.get("robot_id") or self.robot_var.get())
+        self.simulator_var.set(manifest.get("simulator") or self.simulator_var.get())
+        env = manifest.get("environment_id")
+        if env:
+            self.map_var.set(env)
+        for slot in ALGORITHM_CATEGORIES:
+            self.slot_vars[slot].set(
+                (manifest.get("algorithm_ids") or {}).get(slot, ""))
+
     def _show_load_profile(self):
-        """Show dialog to load a saved profile."""
+        """Show dialog to load a saved profile (manifest or migrated legacy)."""
         profiles = list_profiles()
         if not profiles:
             messagebox.showinfo("Load Profile", "No profiles saved yet.")
@@ -918,12 +1049,33 @@ class SimulationLauncherGui(tk.Tk):
         cfg = load_profile(name)
         if cfg is None:
             return
-        self.mode_var.set(cfg.get("mode", self.mode_var.get()))
-        self.simulator_var.set(cfg.get("simulator", self.simulator_var.get()))
-        self.robot_var.set(cfg.get("robot", self.robot_var.get()))
-        self.map_var.set(cfg.get("map_name", self.map_var.get()))
-        self.gui_var.set(cfg.get("gui", self.gui_var.get()))
-        self.algorithm_id_var.set(cfg.get("algorithm", self.algorithm_id_var.get()))
+
+        if is_manifest(cfg):
+            self._apply_manifest_to_controls(cfg)
+        else:
+            # Legacy JSON config dict: migrate through the shared selector
+            # logic (best-effort map_name -> registry environment).
+            selection = GuiCompositionSelection(
+                robot_id=cfg.get("robot"),
+                simulator=cfg.get("simulator"),
+                environment_id=(cfg.get("map_name") or None),
+                algorithm_ids={},
+            )
+            if COMPOSITION_AVAILABLE and self.composition_registry is not None:
+                migrated = migrate_legacy_selection(
+                    cfg, self.composition_registry, MODE_TO_ALGORITHM_CATEGORY)
+                selection = migrated
+                if migrated.environment_id:
+                    self.map_var.set(migrated.environment_id)
+                for slot, value in migrated.algorithm_ids.items():
+                    if slot in self.slot_vars:
+                        self.slot_vars[slot].set(value)
+            self.robot_var.set(selection.robot_id or self.robot_var.get())
+            self.simulator_var.set(selection.simulator or self.simulator_var.get())
+            fallback_algorithm = selection.algorithm_ids.get(
+                MODE_TO_ALGORITHM_CATEGORY.get(cfg.get("mode", ""), ""), "")
+            self.algorithm_id_var.set(cfg.get("algorithm", "") or fallback_algorithm)
+
         self._update_from_selection()
         self.status_var.set(f"Profile '{name}' loaded")
         self.after(3000, lambda: self.status_var.set("Idle"))
