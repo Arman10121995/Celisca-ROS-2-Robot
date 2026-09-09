@@ -359,7 +359,7 @@ tasks:
     title: "Strict composition and execution"
     state: "done"
     owner: "cline-agent"
-    next_task: "R4.3"
+    next_task: "R5.1"
     tasks:
       R3.1:
         title: "Reconcile registry profiles and aliases"
@@ -497,8 +497,8 @@ tasks:
         next_action: "Complete — R4.2 done (metrics.py: MeasuredMetrics/DerivedMetrics/RunMetrics schema distinguishing measured vs derived; trajectory_distance over pose sequences; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values. Truthful None-on-missing semantics everywhere: missing/NaN/stale data invalidate metrics instead of becoming zero. 83 unit tests pass; full suite 197 green with R4.1+P6.) Advance to R4.3 (first reproducible planner comparison with manifests, predeclared seeds/budgets, and bag artifacts)."
       R4.3:
         title: "Publish first reproducible planner comparison"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R4.2"
         scope_paths:
@@ -506,8 +506,11 @@ tasks:
           - "src/robot_lab/robot_lab_registry/config/experiments.yaml"
           - "docs/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Use Bumperbot + deterministic arena + Gazebo. Compare two wired planners with all other settings fixed. Predeclare at least five seeds, timeout, tolerance and resource budget; keep tuning and evaluation seeds separate."
+        evidence:
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/comparison.py"
+          - "src/robot_lab/robot_lab_benchmark/test/test_r4_3_planner_comparison.py"
+          - "src/robot_lab/robot_lab_registry/config/experiments.yaml"
+        next_action: "Complete — R4.3 done (comparison.py: ComparisonSpec predeclaration validation rejecting <5 evaluation seeds, duplicate seeds, tuning/evaluation overlap, identical arm ids, non-positive budgets and unjustified thresholds; ComparisonArm with all non-varied settings fixed; deterministic build_comparison_manifest with stable sha256 over canonical JSON pinning spec/revision/dirty/dependencies/asset_hashes/seeds/budgets/tolerances/artifact paths; verify_comparison_manifest detecting tampering; RunRecord retaining raw trace paths and outcome kinds for every run including failures; run_comparison executing only evaluation seeds by default with tuning tagged and excluded from summaries; summarize_comparison reporting per-arm n/mean/median/min/max/stdev distributions and failure rates — never best-run-only — plus median deltas; write_comparison_report JSON with manifest+summary+all runs. Canonical bumperbot_planner_comparison (navfn vs dijkstra, 5 eval seeds separate from 2 tuning seeds, measured+justified thresholds) mirrored in experiments.yaml and round-trip verified. 48 unit tests pass; full suite 245 green.) Advance to R5.1 (qualify Bumperbot and Labbot mobile tasks)."
   R5:
     title: "Robot-class qualification"
     state: "queued"
@@ -894,7 +897,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R4.3"
+  next_task: "R5.1"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"

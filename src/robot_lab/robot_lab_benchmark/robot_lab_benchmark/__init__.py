@@ -34,6 +34,24 @@ from robot_lab_benchmark.metrics import (
     effort_proxy,
 )
 
+from robot_lab_benchmark.comparison import (
+    ComparisonArm,
+    ComparisonSpec,
+    ComparisonResult,
+    ComparisonValidationError,
+    ResourceBudget,
+    RunRecord,
+    ThresholdSpec,
+    MIN_EVALUATION_SEEDS,
+    build_comparison_manifest,
+    verify_comparison_manifest,
+    run_comparison,
+    summarize_comparison,
+    metric_distribution,
+    write_comparison_report,
+    make_bumperbot_comparison,
+)
+
 import datetime as _dt
 from typing import Any, Dict, Optional
 
@@ -163,4 +181,20 @@ __all__ = [
     "timestamp_aligned_error",
     "compute_rtf",
     "effort_proxy",
+    # Comparison (R4.3)
+    "ComparisonArm",
+    "ComparisonSpec",
+    "ComparisonResult",
+    "ComparisonValidationError",
+    "ResourceBudget",
+    "RunRecord",
+    "ThresholdSpec",
+    "MIN_EVALUATION_SEEDS",
+    "build_comparison_manifest",
+    "verify_comparison_manifest",
+    "run_comparison",
+    "summarize_comparison",
+    "metric_distribution",
+    "write_comparison_report",
+    "make_bumperbot_comparison",
 ]
