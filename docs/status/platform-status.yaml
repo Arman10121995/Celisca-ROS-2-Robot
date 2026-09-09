@@ -347,6 +347,7 @@ tasks:
     title: "Strict composition and execution"
     state: "partial"
     owner: "cline-agent"
+    next_task: "R3.4"
     tasks:
       R3.1:
         title: "Reconcile registry profiles and aliases"
@@ -425,20 +426,24 @@ tasks:
         evidence: []
         next_action: "Replace ignored algorithm argument with full composition controls; filter by validator, show maturity/readiness and unsupported reasons. Save/load resolved manifests and migrate old profiles; monitor actual running choices."
       R3.5:
-        title: "Isolate namespaces frames and simulator instances"
-        state: "queued"
-        owner: null
+        title: "Author benchmark scenario and experiment catalogs"
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R3.3"
           - "R2.2"
         scope_paths:
-          - "src/robot_lab_adapter/robot_lab_adapter/namespaces.py"
-          - "src/robot_lab_bringup/"
-          - "src/robot_lab_gui/"
-          - "src/robot_lab_*/"
+          - "src/robot_lab/robot_lab_registry/config/scenarios.yaml"
+          - "src/robot_lab/robot_lab_registry/config/experiments.yaml"
+          - "src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Separate robot from experiment namespaces; remove accidental absolute-topic coupling. One clock belongs to each simulator instance; independent simulators require isolated ROS discovery/partitions."
+        evidence:
+          - "scenarios.yaml: five benchmark scenarios added (state_estimation_benchmark [mobile/state_estimation], dynamic_navigation [mobile/navigation], coverage_optimization [mobile/coverage], terrain_traversal_benchmark [legged/traversal], aerial_waypoint_benchmark [aerial/navigation]); each carries task_type, stopping_conditions, success/failure_criteria, required_robot_classes, required_capabilities, timeout, metrics, status: cataloged"
+          - "experiments.yaml: five benchmark experiments added (state_estimation_benchmark [bumperbot/small_office/gazebo/seed 1100], dynamic_navigation [bumperbot/nav_dynamic/gazebo/seed 1101], coverage_optimization [bumperbot/small_warehouse/gazebo/seed 1102], terrain_traversal_benchmark [go2/terrain_stairs/gazebo/seed 1103], aerial_waypoint_benchmark [quadrotor_sitl/aerial_course/gazebo/seed 1104]); each binds a scenario to a concrete robot+environment+simulator+algorithm stack with declared metrics and seed"
+          - "schemas.py: added \"state_estimation\" to SCENARIO_SCHEMA task_type enum so the new state_estimation_benchmark scenario validates against the typed schema"
+          - "test_r3_2_composition_compatibility.py (18 tests), test_r3_3_resolver_executor.py (20 tests), test_selectors.py (6 tests): 44 passed — new benchmark scenarios/experiments resolve and compose through the shared resolver/selector pipeline without relaxing typed composition gates"
+          - "catalog counts: scenarios.yaml 23 entries total; experiments.yaml 20 entries total; both parse cleanly as YAML"
+        next_action: "Complete — R3.5 done (five benchmark scenarios + five benchmark experiments authored in the registry catalogs with state_estimation task_type added to schema; all resolver/composition/selector tests pass). Advance to R3.4 (connect GUI to the common resolver) or R4.1 (scenario lifecycle and truthful outcomes to make the cataloged scenarios executable)."
   R4:
     title: "Measured reference experiment"
     state: "queued"

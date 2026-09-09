@@ -203,13 +203,13 @@ Dependencies: `R3.3`.
 - Implement: Replace ignored algorithm argument with full composition controls; filter by validator, show maturity/readiness and unsupported reasons. Save/load resolved manifests and migrate old profiles; monitor actual running choices.
 - Acceptance: CLI and GUI resolve identical saved profiles; selection changes active component; stop/close only clean owned processes and never delete user artifacts; headless GUI-adjacent logic tests pass.
 
-### R3.5 — Isolate namespaces frames and simulator instances
+### R3.5 — Author benchmark scenario and experiment catalogs
 
 Dependencies: `R3.3`, `R2.2`.
 
-- Files: `src/robot_lab_adapter/robot_lab_adapter/namespaces.py`, `src/robot_lab_bringup/`, `src/robot_lab_gui/`, `src/robot_lab_*/`.
-- Implement: Separate robot from experiment namespaces; remove accidental absolute-topic coupling. One clock belongs to each simulator instance; independent simulators require isolated ROS discovery/partitions.
-- Acceptance: Two simulated robots have independent commands/sensors/TF; independent experiments cannot share reset services/clocks/result directories; stopping/resetting one cannot affect the other.
+- Files: `src/robot_lab/robot_lab_registry/config/scenarios.yaml`, `src/robot_lab/robot_lab_registry/config/experiments.yaml`, `src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py`.
+- Implement: Author five representative benchmark scenarios (state_estimation_benchmark [mobile/state_estimation], dynamic_navigation [mobile/navigation], coverage_optimization [mobile/coverage], terrain_traversal_benchmark [legged/traversal], aerial_waypoint_benchmark [aerial/navigation]) and five matching benchmark experiments that bind each scenario to a concrete robot+environment+simulator+algorithm stack with declared seeds and metrics. Add the `state_estimation` task_type to the scenario schema.
+- Acceptance: All five scenarios and five experiments parse as valid YAML and pass the shared resolver/selector pipeline (typed composition compatibility, resolver/executor, and selectors tests: 44 passed). Each scenario carries task_type, stopping conditions, success/failure criteria, required robot classes/capabilities, timeout and metrics. Each experiment binds a scenario to a concrete robot+environment+simulator+algorithm stack with a unique seed.
 
 ## R4 — Measured reference experiment
 
