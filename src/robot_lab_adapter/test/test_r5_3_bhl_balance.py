@@ -214,5 +214,180 @@ class TestAnkleStrategy:
         left_hip = targets["leg_left_hip_roll_joint"] - nominal["leg_left_hip_roll_joint"]
         right_hip = targets["leg_right_hip_roll_joint"] - nominal["leg_right_hip_roll_joint"]
         assert left_hip == pytest.approx(0.08 * 0.2, abs=1e-9)
-        assert right_hip == pytest.approx(-0.08 * 0.2, abs=1e-9)
+                assert right_hip == pytest.approx(-0.08 * 0.2, abs=1e-9)
+
+
+# ----------------------------------------------------------------------
+# R4: Arm reaction
+# ----------------------------------------------------------------------
+class TestArmReaction:
+    def test_arms_opposite_shoulder_pitch(self, nominal):
+        body = BodyState(roll_rad=0.2, pitch_rad=0.0)
+        targets = balance_targets(nominal, body)
+        left_delta = targets["arm_left_shoulder_pitch_joint"] - nominal["arm_left_shoulder_pitch_joint"]
+        right_delta = targets["arm_right_shoulder_pitch_joint"] - nominal["arm_right_shoulder_pitch_joint"]
+        assert left_delta == pytest.approx(ARM_BALANCE_K * 0.2, abs=1e-9)
+        assert right_delta == pytest.approx(-ARM_BALANCE_K * 0.2, abs=1e-9)
+        assert (left_delta > 0) != (right_delta > 0)
+
+    def test_arms_only_react_to_roll(self, nominal):
+        body = BodyState(roll_rad=0.0, pitch_rad=0.1)
+        targets = balance_targets(nominal, body)
+        assert targets["arm_left_shoulder_pitch_joint"] == pytest.approx(
+            nominal["arm_left_shoulder_pitch_joint"]
+        )
+        assert targets["arm_right_shoulder_pitch_joint"] == pytest.approx(
+            nominal["arm_right_shoulder_pitch_joint"]
+        )
+
+    def test_knee_softens_with_tilt(self, nominal):
+        flat = balance_targets(nominal, BodyState(roll_rad=0.0, pitch_rad=0.0))
+            def test_knee_softens_with_tilt(self, nominal):
+        flat = balance_targets(nominal, BodyState(roll_rad=0.0, pitch_rad=0.0))
+        tilted = balance_targets(nominal, BodyState(roll_rad=0.3, pitch_rad=0.3))
+        assert tilted["leg_left_knee_pitch_joint"] < flat["leg_left_knee_pitch_joint"]
+
+
+# ----------------------------------------------------------------------
+# R5: Clamping and no-drive safety
+# ----------------------------------------------------------------------
+class TestClamping:
+    def test_clamp_position_respects_limits(self):
+        for name in BHL_JOINT_NAMES:
+            lo, hi = POSITION_LIMITS[name]
+            assert clamp_position(name, lo - 100.0) == pytest.approx(lo)
+            assert clamp_position(name, hi + 100.0) == pytest.approx(hi)
+            mid = (lo + hi) / 2
+            assert clamp_position(name, mid) == pytest.approx(mid)
+
+    def test_clamp_effort_respects_limit(self):
+        v = "leg_left_ankle_pitch_joint"
+        assert clamp_effort(v, 50.0) == pytest.approx(20.0)
+        assert clamp_effort(v, -50.0) == pytest.approx(-20.0)
+        assert clamp_effort(v, 5.0) == pytest.approx(5.0)
+
+    def test_balance_targets_clamped(self, nominal):
+        body = BodyState(roll_rad=0.6, pitch_rad=0.6)
+        targets = balance_targets(nominal, body)
+                for name in BHL_JOINT_NAMES:
+            lo, hi = POSITION_LIMITS[name]
+            assert lo <= targets[name] <= hi
+
+
+class TestNoDriveOnMissingData:
+    def test_missing_position_gives_zero_effort(self):
+        targets = nominal_standing_pose()
+        positions = {k: v for k, v in targets.items() if k != "leg_left_ankle_pitch_joint"}
+        efforts = pd_effort_command(targets, positions)
+        assert efforts["leg_left_ankle_pitch_joint"] == 0.0
+
+    def test_missing_velocity_uses_zero(self, nominal):
+        positions = _full_positions()
+        efforts_no_vel = pd_effort_command(nominal, positions)
+        efforts_with_zero_vel = pd_effort_command(
+            nominal, positions, {j: 0.0 for j in BHL_JOINT_NAMES}
+        )
+        for name in BHL_JOINT_NAMES:
+            assert efforts_no_vel[name] == pytest.approx(efforts_with_zero_vel[name])
+
+    def test_all_efforts_within_limit(self, nominal):
+        positions = _full_positions()
+        efforts = pd_effort_command(nominal, positions)
+        for name, tau in efforts.items():
+            assert abs(tau) <= EFFORT_LIMIT
+
+        def test_pd_gains_per_limb_type(self):
+        assert STANCE_PD_LEGS[0] > STANCE_PD_ARMS[0]
+
+
+# ----------------------------------------------------------------------
+# R6: Safety monitor
+# ----------------------------------------------------------------------
+class TestSafetyMonitor:
+    def test_nominal_starts_clean(self):
+        s = SafetyState()
+        assert s.state == SafetyState.NOMINAL
+        assert s.reason is None
+
+    def test_warn_on_tilt(self):
+        s = SafetyState()
+        issues = s.observe_body(BodyState(roll_rad=0.4, pitch_rad=0.0))
+        assert s.state == SafetyState.WARN
+        assert any("warn" in i for i in issues)
+
+    def test_fall_enters_safe_stop(self):
+        s = SafetyState()
+        issues = s.observe_body(BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert s.state == SafetyState.SAFE_STOP
+        assert any("safe_stop" in i for i in issues)
+
+    def test_safe_stop_latched(self):
+        s = SafetyState()
+        s.observe_body(BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert s.state == SafetyState.SAFE_STOP
+        s.observe_body(BodyState(roll_rad=0.0, pitch_rad=0.0))
+        assert s.state == SafetyState.SAFE_STOP
+
+    def test_safe_stop_requires_reset(self):
+        s = SafetyState()
+        s.observe_body(BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert s.state == SafetyState.SAFE_STOP
+        s.reset()
+        assert s.state == SafetyState.NOMINAL
+
+    def test_warn_recovers_when_level(self):
+        s = SafetyState()
+        s.observe_body(BodyState(roll_rad=0.4, pitch_rad=0.0))
+        assert s.state == SafetyState.WARN
+        s.observe_body(BodyState(roll_rad=0.0, pitch_rad=0.0))
+        assert s.state == SafetyState.NOMINAL
+
+    def test_safe_stop_positions_are_nominal(self):
+        s = SafetyState()
+        result = s.safe_stop_positions()
+        assert set(result.keys()) == set(BHL_JOINT_NAMES)
+        for name in BHL_JOINT_NAMES:
+            assert result[name] == pytest.approx(nominal_standing_pose()[name])
+
+    def test_balance_permitted_in_nominal(self):
+        assert SafetyState().balance_permitted() is True
+
+    def test_balance_not_permitted_in_safe_stop(self):
+        s = SafetyState()
+        s._enter_safe_stop("test")
+        assert s.balance_permitted() is False
+
+    def test_effort_saturation_triggers_safe_stop(self):
+        s = SafetyState()
+        cmd = {j: 19.6 for j in BHL_JOINT_NAMES}
+        meas = {j: 19.6 for j in BHL_JOINT_NAMES}
+        issues = []
+        for _ in range(51):
+            issues = s.observe_efforts(cmd, meas)
+        assert s.state == SafetyState.SAFE_STOP
+        assert any("safe_stop" in i for i in issues)
+
+    def test_no_sat_until_threshold_cycles(self):
+        s = SafetyState()
+        cmd = {j: 19.6 for j in BHL_JOINT_NAMES}
+        meas = {j: 19.6 for j in BHL_JOINT_NAMES}
+        for _ in range(49):
+            s.observe_efforts(cmd, meas)
+        assert s.state != SafetyState.SAFE_STOP
+        s.observe_efforts(cmd, meas)
+        assert s.state == SafetyState.SAFE_STOP
+
+    def test_missing_effort_resets_saturation(self):
+        s = SafetyState()
+        cmd = {j: 19.6 for j in BHL_JOINT_NAMES}
+        meas = {j: 19.6 for j in BHL_JOINT_NAMES}
+        for _ in range(49):
+            s.observe_efforts(cmd, meas)
+        meas2 = {j: 19.6 for j in BHL_JOINT_NAMES if j != "leg_left_knee_pitch_joint"}
+        s.observe_efforts(cmd, meas2)
+        assert s.state != SafetyState.SAFE_STOP
+
+
+
+
 
