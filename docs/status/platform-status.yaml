@@ -549,17 +549,19 @@ tasks:
         next_action: "Complete — R5.2 done (go2_locomotion.py, pure-logic locomotion core: constants honest to the Go2 description — 12 joints, effort limits from const.xacro hip/thigh 23.7 N·m and calf 35.55 N·m, PD gains from go2_robot_control.yaml, nominal stance inside position limits, tilt warn 0.35 rad / fall 0.70 rad, trot 0.70 s cycle with 0.5 duty, base-velocity limits vx 0.5/vy 0.3 m/s and wz 0.7 rad/s with accel limits 1.0/0.5/2.0; closed-loop joint-space PD stance where a joint with no position measurement is NOT driven (zero effort, never assumed at target); bounded base-velocity interface with clamp + first-order rate limiting; trot is diagonal-pair stepping, explicitly not claimed as MPC; effort-residual contact estimation with None for missing data; latched SAFE_STOP safety monitor on excessive tilt (0.70 rad) or sustained effort saturation (>=98% limit for 50 cycles) requiring explicit reset; BodyState.from_quaternion roll/pitch from IMU ZYX quaternion; ControlCycle issues flow all warnings. Honest findings: raw effort publishing is not gait control; contact is local effort-residual estimation, never assumed. 61 unit tests + full adapter suite 108 green.) Advance to R5.3 (qualify Berkeley Humanoid Lite balance and walking)."
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: codex
         depends_on:
           - "R5.1"
         scope_paths:
           - "src/robot_lab_robots/berkeley_humanoid_lite/"
           - "src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py"
+          - "src/robot_lab_adapter/robot_lab_adapter/bhl_balance.py"
+          - "src/robot_lab_adapter/test/test_r5_3_bhl_balance.py"
           - "src/robot_lab_robots/config/robots.yaml"
         acceptance_ref: "ROADMAP.md"
         evidence: []
-        next_action: "Resume historical P3.4 after ownership check. Verify joints/inertias/limits; wire simulation wrapper; implement closed-loop balance before stepping/walking. A fixed pose is not proof of balance."
+        next_action: "R5.3 active - codex. Deliver BHL joint/inertia/limit static validation, closed-loop balance core (ankle strategy + arm reaction, IMU feedback), safety monitor, 60+ unit tests, and a standing-pose-is-not-balance check."
       R5.4:
         title: "Integrate real multirotor SITL flight"
         state: "queued"
