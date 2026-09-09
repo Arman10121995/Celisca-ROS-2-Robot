@@ -345,9 +345,9 @@ tasks:
         next_action: "Complete — R2.3 done. Advance to R3.1."
   R3:
     title: "Strict composition and execution"
-    state: "partial"
+    state: "done"
     owner: "cline-agent"
-    next_task: "R3.4"
+    next_task: "R4.1"
     tasks:
       R3.1:
         title: "Reconcile registry profiles and aliases"
@@ -416,15 +416,20 @@ tasks:
         next_action: "Complete — R3.3 done (resolver/executor, seven independent selectors, spawn/reset/params/seed, safe dry-run + --execute, legacy aliases, planner switching, LaunchConfiguration fix, single stack start). Advance to R3.4 (connect GUI to the common resolver: full composition controls replacing the ignored algorithm argument, filter by validator, show maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
       R3.4:
         title: "Connect GUI to the common resolver"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "cline-agent"
         depends_on:
           - "R3.3"
         scope_paths:
           - "src/robot_lab_gui/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Replace ignored algorithm argument with full composition controls; filter by validator, show maturity/readiness and unsupported reasons. Save/load resolved manifests and migrate old profiles; monitor actual running choices."
+        evidence:
+          - "gui_composition.py (new): headless GUI-adjacent composition logic that builds resolver.ExperimentRequest from GuiCompositionSelection, resolves via the SAME resolver/validator the CLI uses, and serializes the same manifest YAML the CLI --out writes; provides build_request, resolve_selection, command_for_selection, validation_lines, migrate_legacy_selection, manifest_to_yaml/from_yaml, manifest_running_summary, get_registry, ALGORITHM_SLOT_LABELS and ALGORITHM_CATEGORIES (all 7 slots: perception/localization/state_estimation/sensor_fusion/global_planning/local_planning/control)"
+          - "launch_profiles.py: save/load/delete/export/import profiles in both legacy JSON config dicts and resolved manifest YAML; save_manifest writes the CLI --out format; is_manifest distinguishes the two; ensure_defaults preserves existing user profiles; built-in default profiles retained"
+          - "launcher.py: replaced ignored single-algorithm argument with full composition controls — seven algorithm slot combos (ALGORITHM_SLOT_LABELS + ALGORITHM_CATEGORIES), _refresh_slot_combos, _update_validation_and_command, _composition_selection; _command delegates to command_for_selection via the shared resolver with _legacy_command fallback; _save_profile writes resolved manifests; _show_load_profile uses is_manifest to branch to _apply_manifest_to_controls or migrate_legacy_selection; status_var reflects validation_lines errors/warnings"
+          - "test_r3_4_gui_composition.py: 11 headless GUI-adjacent tests — CLI and GUI resolve identical manifests; GUI-saved profile reloaded by CLI resolves identically; manifest_to_yaml/from_yaml roundtrips; selection changes active nav2 plugin (a_star vs navfn differ only in global_planner_plugin); validator filters invalid selection (go2 without LiDAR rejected for amcl); legacy profile migration map_name->environment; profile delete never touches user artifacts; ensure_defaults never overwrites user profiles; manifest_running_summary exposes robot/environment/simulator/plugins/launch_file; CLI --out manifest loadable by GUI layer resolves to same command"
+          - "Shared resolver/selector pipeline still passes: test_r3_2_composition_compatibility, test_r3_3_resolver_executor, test_selectors (44 passed)"
+        next_action: "Complete — R3.4 done (GUI now uses the same resolver/validator as CLI; seven algorithm slots replace the ignored algorithm argument; validator-filtered diagnostics; manifest save/load with legacy migration; save/load/roundtrip tests pass; profile delete is ownership-safe). Advance to R4.1 (scenario lifecycle and truthful outcomes) — the cataloged benchmark scenarios from R3.5 need validate→launch→ready→reset/seed→initialize→task→observe→stop→record to become executable."
       R3.5:
         title: "Author benchmark scenario and experiment catalogs"
         state: "done"

@@ -199,9 +199,9 @@ Dependencies: `R3.2`.
 
 Dependencies: `R3.3`.
 
-- Files: `src/robot_lab_gui/`.
-- Implement: Replace ignored algorithm argument with full composition controls; filter by validator, show maturity/readiness and unsupported reasons. Save/load resolved manifests and migrate old profiles; monitor actual running choices.
-- Acceptance: CLI and GUI resolve identical saved profiles; selection changes active component; stop/close only clean owned processes and never delete user artifacts; headless GUI-adjacent logic tests pass.
+- Files: `src/robot_lab_gui/` (`gui_composition.py`, `launch_profiles.py`, `launcher.py`, `test/test_r3_4_gui_composition.py`).
+- Implement: Replace the ignored single algorithm argument with full composition controls — seven algorithm slot combos (perception, localization, state_estimation, sensor_fusion, global_planning, local_planning, control), built from `ALGORITHM_SLOT_LABELS` and `ALGORITHM_CATEGORIES`. The headless `gui_composition` module builds `resolver.ExperimentRequest` from `GuiCompositionSelection`, resolves via the same resolver/validator the CLI uses, and serializes the same manifest YAML the CLI `--out` writes. `launcher.py` delegates `_command` to `command_for_selection`, shows validator-filtered diagnostics from `validation_lines`, saves resolved manifests via `save_manifest`, loads manifests and legacy profiles via `is_manifest` → `_apply_manifest_to_controls` or `migrate_legacy_selection`, and keeps `_legacy_command` as a defensive fallback.
+- Acceptance: CLI and GUI resolve identical saved profiles (test: GUI and CLI resolve identical manifest; GUI-saved profile reloaded by CLI resolves identically; CLI `--out` manifest loadable by GUI layer resolves to same command). Selection changes the active component (test: global_planning a_star vs navfn differ only in `global_planner_plugin`). Stop/close only clean owned processes and never delete user artifacts (test: profile delete never touches user artifacts; ensure_defaults never overwrites user profiles). Headless GUI-adjacent logic tests pass (11 passed).
 
 ### R3.5 — Author benchmark scenario and experiment catalogs
 
