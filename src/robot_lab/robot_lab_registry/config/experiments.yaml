@@ -737,3 +737,236 @@
   created: "2026-09-05"
   updated: "2026-09-05"
 
+
+# ============================================================================
+# R3.5 Benchmark Experiments (representative benchmark catalog entries)
+# ============================================================================
+
+- id: state_estimation_benchmark
+  version: "1.0.0"
+  name: "State Estimation Benchmark"
+  description: "Benchmark state estimation accuracy and consistency on a mobile robot with ground truth"
+  status: cataloged
+  robot_id: bumperbot
+  environment_id: small_office
+  simulator: gazebo
+  scenario_id: state_estimation_benchmark
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: teb_local_planner
+    control: simple_controller
+  seed: 1100
+  time_limit: 120.0
+  simulation_time_limit: 120.0
+  parameters: {}
+  metrics:
+    pose_error: true
+    estimation_error: true
+    computation_time: true
+    success_rate: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - benchmark
+    - state_estimation
+    - comparison
+    - bumperbot
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+- id: dynamic_navigation
+  version: "1.0.0"
+  name: "Dynamic Obstacle Navigation Benchmark"
+  description: "Benchmark navigation performance with moving obstacles in a 2D environment"
+  status: cataloged
+  robot_id: bumperbot
+  environment_id: nav_dynamic
+  simulator: gazebo
+  scenario_id: dynamic_navigation
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: a_star_planner
+    local_planning: dwb_local_planner
+    control: simple_controller
+  seed: 1101
+  time_limit: 300.0
+  simulation_time_limit: 300.0
+  parameters: {}
+  metrics:
+    success_rate: true
+    collisions: true
+    clearance: true
+    path_length: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - benchmark
+    - navigation
+    - dynamic
+    - bumperbot
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+- id: coverage_optimization
+  version: "1.0.0"
+  name: "Coverage Path Optimization Benchmark"
+  description: "Benchmark coverage path efficiency and overlap for a known environment"
+  status: cataloged
+  robot_id: bumperbot
+  environment_id: small_warehouse
+  simulator: gazebo
+  scenario_id: coverage_optimization
+  algorithm_ids:
+    perception: costmap_2d_observation
+    localization: amcl
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_republisher
+    global_planning: navfn_planner
+    local_planning: pure_pursuit
+    control: map_coverage_controller
+  seed: 1102
+  time_limit: 600.0
+  simulation_time_limit: 600.0
+  parameters: {}
+  metrics:
+    coverage_percentage: true
+    path_efficiency: true
+    overlap_percentage: true
+    time_to_complete: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+  tags:
+    - benchmark
+    - coverage
+    - optimization
+    - bumperbot
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+
+- id: terrain_traversal_benchmark
+  version: "1.0.0"
+  name: "Terrain Traversal Benchmark"
+  description: "Benchmark legged robot traversal stability and progress over 3D terrain"
+  status: cataloged
+  robot_id: go2
+  environment_id: terrain_stairs
+  simulator: gazebo
+  scenario_id: terrain_traversal_benchmark
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: joint_effort_commander
+  seed: 1103
+  time_limit: 300.0
+  simulation_time_limit: 300.0
+  parameters: {}
+  metrics:
+    success_rate: true
+    traversal_time: true
+    stability_score: true
+    energy_consumption: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/unitreerobotics/ros2_go2"
+    license: "MIT"
+  tags:
+    - benchmark
+    - traversal
+    - legged
+    - 3d
+    - go2
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+- id: aerial_waypoint_benchmark
+  version: "1.0.0"
+  name: "Aerial Waypoint Tracking Benchmark"
+  description: "Benchmark aerial robot 3D waypoint tracking accuracy and smoothness"
+  status: cataloged
+  robot_id: quadrotor_sitl
+  environment_id: aerial_course
+  simulator: gazebo
+  scenario_id: aerial_waypoint_benchmark
+  algorithm_ids:
+    perception: camera_calibration
+    localization: rtabmap_localization
+    state_estimation: ekf_localization_node
+    sensor_fusion: imu_complementary_filter
+    global_planning: a_star_planner
+    local_planning: pure_pursuit
+    control: mavros_offboard_controller
+  seed: 1104
+  time_limit: 300.0
+  simulation_time_limit: 300.0
+  parameters: {}
+  metrics:
+    tracking_error: true
+    flight_time: true
+    smoothness: true
+    success_rate: true
+  artifacts:
+    record_bag: false
+    record_logs: true
+    record_maps: false
+    record_trajectories: true
+    record_plots: true
+  namespace: ""
+  namespaced: false
+  source:
+    repository: "https://github.com/ArduPilot/ardupilot"
+    license: "GPL-3.0"
+  tags:
+    - benchmark
+    - aerial
+    - waypoint
+    - 3d
+    - quadrotor_sitl
+  created: "2026-09-09"
+  updated: "2026-09-09"
+

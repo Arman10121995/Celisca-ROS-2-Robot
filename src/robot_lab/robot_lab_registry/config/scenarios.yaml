@@ -801,3 +801,212 @@
   created: "2026-09-05"
   updated: "2026-09-05"
 
+# ============================================================================
+# R3.5 Benchmark Scenarios (representative benchmark experiments)
+# ============================================================================
+
+- id: state_estimation_benchmark
+  version: "1.0.0"
+  name: "State Estimation Benchmark"
+  description: "Compare state estimation algorithms on pose tracking accuracy against ground truth"
+  status: cataloged
+  task_type: state_estimation
+  task_description: "Robot estimates its pose from noisy sensor data while ground truth is recorded for comparison; estimators are evaluated on accuracy, consistency and compute"
+  stopping_conditions:
+    - type: success
+      condition: "estimation_complete"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Pose error within acceptable bounds"
+    - "Estimation converges within timeout"
+  failure_criteria:
+    - "Timeout without convergence"
+    - "Divergent estimate"
+  required_robot_classes:
+    - mobile
+  required_capabilities:
+    - localization
+    - state_estimation
+    - perception
+  timeout: 120.0
+  metrics:
+    - pose_error
+    - estimation_error
+    - computation_time
+    - success_rate
+  tags:
+    - state_estimation
+    - benchmark
+    - comparison
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+- id: dynamic_navigation
+  version: "1.0.0"
+  name: "Dynamic Obstacle Navigation"
+  description: "Navigate through an environment with moving obstacles"
+  status: cataloged
+  task_type: navigation
+  task_description: "Robot must navigate from start to goal while avoiding both static and dynamic obstacles"
+  stopping_conditions:
+    - type: success
+      condition: "reached_goal"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "Goal position reached within tolerance"
+    - "No collisions with static or dynamic obstacles"
+  failure_criteria:
+    - "Collision with obstacle"
+    - "Timeout without reaching goal"
+  required_robot_classes:
+    - mobile
+  required_capabilities:
+    - navigation
+    - localization
+    - perception
+  timeout: 300.0
+  metrics:
+    - success_rate
+    - collisions
+    - clearance
+    - path_length
+  tags:
+    - navigation
+    - dynamic
+    - benchmark
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+
+
+
+- id: coverage_optimization
+  version: "1.0.0"
+  name: "Coverage Path Optimization"
+  description: "Optimize coverage path for a known environment"
+  status: cataloged
+  task_type: coverage
+  task_description: "Robot must cover a known environment with minimal overlap and an efficient path"
+  stopping_conditions:
+    - type: success
+      condition: "coverage_complete"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "100% area coverage achieved"
+    - "Overlap below threshold"
+    - "Path efficiency above threshold"
+  failure_criteria:
+    - "Collision with obstacle"
+    - "Timeout without complete coverage"
+    - "Excessive overlap"
+  required_robot_classes:
+    - mobile
+  required_capabilities:
+    - coverage
+    - localization
+    - perception
+  timeout: 600.0
+  metrics:
+    - coverage_percentage
+    - path_efficiency
+    - overlap_percentage
+    - time_to_complete
+  tags:
+    - coverage
+    - optimization
+    - benchmark
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+- id: terrain_traversal_benchmark
+  version: "1.0.0"
+  name: "Terrain Traversal Benchmark"
+  description: "Benchmark legged robot traversal over challenging terrain"
+  status: cataloged
+  task_type: traversal
+  task_description: "Legged robot must traverse stairs or stepping stones while maintaining stability and forward progress"
+  stopping_conditions:
+    - type: success
+      condition: "reached_goal"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+    - type: failure
+      condition: "tipped_over"
+  success_criteria:
+    - "Goal reached successfully"
+    - "No collisions or tip-overs"
+    - "Stable gait maintained throughout"
+  failure_criteria:
+    - "Collision with obstacle"
+    - "Tip-over"
+    - "Timeout or stuck"
+  required_robot_classes:
+    - legged
+  required_capabilities:
+    - locomotion
+    - traversal
+    - state_estimation
+  timeout: 300.0
+  metrics:
+    - success_rate
+    - traversal_time
+    - stability_score
+    - energy_consumption
+  tags:
+    - traversal
+    - legged
+    - benchmark
+    - 3d
+  created: "2026-09-09"
+  updated: "2026-09-09"
+
+- id: aerial_waypoint_benchmark
+  version: "1.0.0"
+  name: "Aerial Waypoint Tracking Benchmark"
+  description: "Benchmark aerial robot 3D waypoint tracking performance"
+  status: cataloged
+  task_type: navigation
+  task_description: "Aerial robot must accurately track a sequence of 3D waypoints with stable flight"
+  stopping_conditions:
+    - type: success
+      condition: "all_waypoints_reached"
+    - type: failure
+      condition: "collision"
+    - type: failure
+      condition: "timeout"
+  success_criteria:
+    - "All waypoints reached within tolerance"
+    - "Smooth trajectory between waypoints"
+    - "No collisions"
+  failure_criteria:
+    - "Waypoint not reached within tolerance"
+    - "Collision with obstacle"
+    - "Timeout"
+  required_robot_classes:
+    - aerial
+  required_capabilities:
+    - flight
+    - waypoint_navigation
+    - localization
+  timeout: 300.0
+  metrics:
+    - tracking_error
+    - flight_time
+    - smoothness
+    - success_rate
+  tags:
+    - aerial
+    - waypoint
+    - benchmark
+    - 3d
+  created: "2026-09-09"
+  updated: "2026-09-09"

@@ -484,6 +484,7 @@ SCENARIO_SCHEMA = {
                         "navigation",
                         "exploration",
                         "relocalization",
+                        "state_estimation",
                         "coverage",
                         "traversal",
                         "manipulation",
