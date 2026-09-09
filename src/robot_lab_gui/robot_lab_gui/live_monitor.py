@@ -74,7 +74,7 @@ class LiveMonitorTab(ttk.Frame):
         self.btn_connect = ttk.Button(bar, text="Connect", command=self._toggle_connect)
         self.btn_connect.grid(row=0, column=1, padx=(0, 4))
 
-        self.status_dot = tk.Label(bar, text="●", fg=STATUS_IDLE, bg=BG_DARK,
+        self.status_dot = tk.Label(bar, text="*", fg=STATUS_IDLE, bg=BG_DARK,
                                     font=("Segoe UI", 12))
         self.status_dot.grid(row=0, column=2, padx=(0, 4))
 
@@ -134,7 +134,7 @@ class LiveMonitorTab(ttk.Frame):
             row, col = i // 3, (i % 3) * 2
             tk.Label(parent, text=field + ":", bg=BG_CARD, fg=FG_MUTED,
                      font=("Segoe UI", 9)).grid(row=row, column=col, sticky="e", padx=(0, 2))
-            var = tk.StringVar(value="—")
+            var = tk.StringVar(value="-")
             tk.Label(parent, textvariable=var, bg=BG_CARD, fg=FG_PRIMARY,
                      font=("Consolas", 9)).grid(row=row, column=col + 1, sticky="w", padx=(0, 10))
             self.odom_labels[field] = var
@@ -146,7 +146,7 @@ class LiveMonitorTab(ttk.Frame):
             row, col = i // 3, (i % 3) * 2
             tk.Label(parent, text=field + ":", bg=BG_CARD, fg=FG_MUTED,
                      font=("Segoe UI", 9)).grid(row=row, column=col, sticky="e", padx=(0, 2))
-            var = tk.StringVar(value="—")
+            var = tk.StringVar(value="-")
             tk.Label(parent, textvariable=var, bg=BG_CARD, fg=FG_PRIMARY,
                      font=("Consolas", 9)).grid(row=row, column=col + 1, sticky="w", padx=(0, 10))
             self.imu_labels[field] = var
@@ -306,9 +306,9 @@ class LiveMonitorTab(ttk.Frame):
         self.scan_text.configure(state="disabled")
 
     def _build_clock(self, parent):
-        self.clock_var = tk.StringVar(value="Sim time: —")
+        self.clock_var = tk.StringVar(value="Sim time: -")
         tk.Label(parent, textvariable=self.clock_var, bg=BG_CARD, fg=FG_PRIMARY,
                  font=("Consolas", 10, "bold")).grid(row=0, column=0, sticky="w")
-        self.fps_var = tk.StringVar(value="FPS: —")
+        self.fps_var = tk.StringVar(value="FPS: -")
         tk.Label(parent, textvariable=self.fps_var, bg=BG_CARD, fg=FG_MUTED,
                  font=("Consolas", 9)).grid(row=1, column=0, sticky="w", pady=(4, 0))

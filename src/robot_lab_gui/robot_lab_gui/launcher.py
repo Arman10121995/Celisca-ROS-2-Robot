@@ -270,7 +270,7 @@ class SimulationLauncherGui(tk.Tk):
         else:
             self.fonts = {}
 
-        self.title("🤖 Robot Lab Control Center")
+        self.title("Robot Lab Control Center")
         self.geometry("1280x860")
         self.minsize(1024, 768)
 
@@ -523,7 +523,7 @@ class SimulationLauncherGui(tk.Tk):
 
         # --- Full composition controls (R3.4): all seven algorithm slots ---
         composition_frame = ttk.LabelFrame(
-            controls, text="Composition — algorithm slots", padding=(8, 6))
+            controls, text="Composition - algorithm slots", padding=(8, 6))
         composition_frame.grid(row=12, column=0, sticky="ew", pady=(12, 6))
         composition_frame.columnconfigure(1, weight=1)
         for row, slot in enumerate(ALGORITHM_CATEGORIES):
@@ -573,23 +573,23 @@ class SimulationLauncherGui(tk.Tk):
         button_frame.columnconfigure(3, weight=1)
         button_frame.columnconfigure(4, weight=1)
 
-        self.start_button = ttk.Button(button_frame, text="▶ Start Simulation",
+        self.start_button = ttk.Button(button_frame, text="Start Simulation",
                                         command=self._start_launch,
                                         style="Accent.TButton")
         self.start_button.grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        self.stop_button = ttk.Button(button_frame, text="■ Stop", command=self._stop_launch,
+        self.stop_button = ttk.Button(button_frame, text="Stop", command=self._stop_launch,
                                        state="disabled", style="Danger.TButton")
         self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 4))
 
         # Launch profile buttons
         if PROFILES_AVAILABLE:
-            ttk.Button(button_frame, text="💾 Save Profile",
+            ttk.Button(button_frame, text="Save Profile",
                        command=self._save_profile,
                        style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=4)
-            ttk.Button(button_frame, text="📂 Load",
+            ttk.Button(button_frame, text="Load",
                        command=self._show_load_profile,
                        style="Small.TButton").grid(row=0, column=3, sticky="ew", padx=4)
-            ttk.Button(button_frame, text="🗑 Profiles",
+            ttk.Button(button_frame, text="Delete/Profiles",
                        command=self._delete_profile,
                        style="Small.TButton").grid(row=0, column=4, sticky="ew", padx=(4, 0))
 
@@ -671,7 +671,7 @@ class SimulationLauncherGui(tk.Tk):
         status_frame.grid(row=2, column=0, sticky="ew", pady=(4, 0))
 
         status_style = "Statusbar.TLabel" if THEME_AVAILABLE else None
-        self._ros_status_dot = tk.Label(status_frame, text="●",
+        self._ros_status_dot = tk.Label(status_frame, text="*",
                                         fg="#ff6b6b", font=("Segoe UI", 10))
         self._ros_status_dot.grid(row=0, column=0, padx=(8, 4))
 
@@ -830,7 +830,7 @@ class SimulationLauncherGui(tk.Tk):
         notes = []
         if warnings:
             notes.append("Warnings: " + "; ".join(warnings[:3]))
-        self.validation_var.set("Valid" + (f" — {'; '.join(notes)}"
+        self.validation_var.set("Valid" + (f" - {'; '.join(notes)}"
                                            if notes else ""))
         self.command_var.set(" ".join(command_for_selection(
             self.composition_registry, selection)))
@@ -1172,11 +1172,11 @@ class SimulationLauncherGui(tk.Tk):
             except Exception:
                 ros2_path = None
         if ros2_path:
-            self.ros_status_var.set("✓ Available")
+            self.ros_status_var.set("OK Available")
             if THEME_AVAILABLE:
                 self._ros_status_dot.configure(fg=STATUS_OK)
         else:
-            self.ros_status_var.set("✗ Not found")
+            self.ros_status_var.set("X Not found")
             if THEME_AVAILABLE:
                 self._ros_status_dot.configure(fg=STATUS_ERROR)
 

@@ -515,7 +515,7 @@ class BenchmarkTab(LabTab):
         if not self.last_manifest:
             messagebox.showinfo(
                 "Regression check",
-                "Run a benchmark first — the check compares the latest run "
+                "Run a benchmark first - the check compares the latest run "
                 "against the reference results.",
             )
             return
