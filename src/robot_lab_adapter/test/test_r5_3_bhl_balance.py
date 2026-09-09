@@ -383,9 +383,92 @@ class TestSafetyMonitor:
         meas = {j: 19.6 for j in BHL_JOINT_NAMES}
         for _ in range(49):
             s.observe_efforts(cmd, meas)
-        meas2 = {j: 19.6 for j in BHL_JOINT_NAMES if j != "leg_left_knee_pitch_joint"}
+                meas2 = {j: 19.6 for j in BHL_JOINT_NAMES if j != "leg_left_knee_pitch_joint"}
         s.observe_efforts(cmd, meas2)
         assert s.state != SafetyState.SAFE_STOP
+
+
+# ----------------------------------------------------------------------
+# R7: Controller integration
+# ----------------------------------------------------------------------
+class TestController:
+    def test_update_returns_cycle(self, controller):
+        positions = _full_positions()
+        cycle = controller.update(STANCE_DT, positions)
+        assert isinstance(cycle, BhlControlCycle)
+        assert cycle.safety_state == SafetyState.NOMINAL
+        assert set(cycle.position_targets.keys()) == set(BHL_JOINT_NAMES)
+        assert set(cycle.efforts.keys()) == set(BHL_JOINT_NAMES)
+
+    def test_update_with_body_uses_balance(self, controller):
+        positions = _full_positions()
+        body = BodyState(roll_rad=0.2, pitch_rad=0.0)
+        cycle = controller.update(STANCE_DT, positions, body=body)
+        assert cycle.safety_state == SafetyState.WARN
+
+    def test_safe_stop_zeroes_efforts(self, controller):
+        positions = _full_positions()
+        controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert controller.safety.state == SafetyState.SAFE_STOP
+        cycle = controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert cycle.safety_state == SafetyState.SAFE_STOP
+        assert all(abs(v) < 1e-9 for v in cycle.efforts.values())
+
+    def test_safe_stop_uses_nominal_targets(self, controller):
+        positions = _full_positions()
+        controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.8, pitch_rad=0.0))
+        cycle = controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert cycle.safety_state == SafetyState.SAFE_STOP
+        for name in BHL_JOINT_NAMES:
+            assert cycle.position_targets[name] == pytest.approx(nominal_standing_pose()[name])
+
+    def test_reset_recovers_from_safe_stop(self, controller):
+        positions = _full_positions()
+        controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.8, pitch_rad=0.0))
+        assert controller.safety.state == SafetyState.SAFE_STOP
+        controller.reset()
+        body = BodyState(roll_rad=0.2, pitch_rad=0.0)
+        cycle = controller.update(STANCE_DT, positions, body=body)
+        assert cycle.safety_state != SafetyState.SAFE_STOP
+
+    def test_standing_pose_is_not_balance(self, controller):
+        """Critical honesty test: level body -> nominal targets;
+        tilted body -> different targets."""
+        positions = _full_positions()
+        level = controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.0, pitch_rad=0.0))
+        tilted = controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.15, pitch_rad=0.05))
+        diffs = [
+            abs(tilted.position_targets[n] - level.position_targets[n])
+            for n in BHL_JOINT_NAMES
+        ]
+        assert any(d > 1e-6 for d in diffs)
+
+    def test_contacts_none_for_biped(self, controller):
+        positions = _full_positions()
+        cycle = controller.update(STANCE_DT, positions, body=BodyState(roll_rad=0.0, pitch_rad=0.0))
+        for leg in BHL_LEGS:
+            assert cycle.contacts[leg] is None
+
+    def test_stance_constants_declared(self):
+        assert STANCE_DURATION_SECONDS == 1.0
+        assert BASE_VEL_LIMITS_PLACEHOLDER is None
+
+    def test_imu_quaternion_body_state(self):
+        body = BodyState.from_quaternion(0.383, 0.0, 0.0, 0.924)
+        assert body.roll_rad == pytest.approx(0.785, abs=0.02)
+        assert body.pitch_rad == pytest.approx(0.0, abs=1e-6)
+
+    def test_warn_threshold_constant(self):
+        assert TILT_WARN_RAD == 0.35
+
+    def test_fall_threshold_constant(self):
+        assert TILT_FALL_RAD == 0.70
+
+    def test_zero_quaternion_fallback(self):
+        body = BodyState.from_quaternion(0.0, 0.0, 0.0, 0.0)
+        assert body.roll_rad == 0.0
+        assert body.pitch_rad == 0.0
+
 
 
 
