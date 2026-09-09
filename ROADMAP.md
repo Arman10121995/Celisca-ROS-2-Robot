@@ -229,6 +229,8 @@ Dependencies: `R4.1`.
 - Files: `src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/`.
 - Implement: Remove hardcoded distance/collision/clearance. Measure contacts, footprint-aware clearance, trajectory distance and timestamp/frame-aligned truth/estimation error; collect CPU/memory/RTF and defined effort proxy. Record manifest/hash, revision/dirty state, dependencies, asset hashes, seeds, budgets, tolerances and artifact paths.
 - Acceptance: Known trajectories/contact fixtures yield correct values; one contact is not counted per scan; missing/NaN/stale data invalidate metrics instead of becoming zero; schema rejects invalid values and distinguishes measured versus derived metrics.
+- Status: Done.
+- Evidence: `metrics.py` (MeasuredMetrics/DerivedMetrics/RunMetrics schema; trajectory_distance; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values; truthful None-on-missing semantics), `test_r4_2_metrics.py` (83 tests pass; full suite 197 green with R4.1+P6).
 
 ### R4.3 — Publish first reproducible planner comparison
 

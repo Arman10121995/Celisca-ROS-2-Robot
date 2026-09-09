@@ -9,9 +9,30 @@ R4.1 modules:
 - task_lifecycle.py: scenario lifecycle orchestration (validate -> launch ->
   ready -> reset/seed -> initialize -> task -> observe -> stop -> record)
 - truthful_outcomes.py: terminal outcome taxonomy and classification
+
+R4.2 modules:
+- metrics.py: measured/derived metric extraction with truthful None-on-missing
+  semantics (trajectory distance, contact events, footprint clearance,
+  timestamp-aligned ground-truth error, RTF, effort proxy) and schema
+  validation
 """
 
 from __future__ import annotations
+
+from robot_lab_benchmark.metrics import (
+    MeasuredMetrics,
+    DerivedMetrics,
+    RunMetrics,
+    compute_derived_metrics,
+    compose_run_metrics,
+    validate_metric_value,
+    trajectory_distance,
+    contact_events,
+    footprint_clearance,
+    timestamp_aligned_error,
+    compute_rtf,
+    effort_proxy,
+)
 
 import datetime as _dt
 from typing import Any, Dict, Optional
@@ -129,4 +150,17 @@ __all__ = [
     "all_outcome_kinds",
     "terminal_outcome_kinds",
     "abort_outcome_kinds",
+    # Metrics (R4.2)
+    "MeasuredMetrics",
+    "DerivedMetrics",
+    "RunMetrics",
+    "compute_derived_metrics",
+    "compose_run_metrics",
+    "validate_metric_value",
+    "trajectory_distance",
+    "contact_events",
+    "footprint_clearance",
+    "timestamp_aligned_error",
+    "compute_rtf",
+    "effort_proxy",
 ]

@@ -359,7 +359,7 @@ tasks:
     title: "Strict composition and execution"
     state: "done"
     owner: "cline-agent"
-    next_task: "R4.2"
+    next_task: "R4.3"
     tasks:
       R3.1:
         title: "Reconcile registry profiles and aliases"
@@ -484,15 +484,17 @@ tasks:
         next_action: "Complete — R4.1 done (ScenarioLifecycle phase machine validate→launch→ready→reset_and_seed→initialize_pose→send_task→observe→stop→record with unique deterministic result IDs and timestamped rosbag2 path allocation; OutcomeKind taxonomy of 9 distinct terminal outcomes with priority-ordered classify_outcome; launch/reset failure aborts before task via run() short-circuit; manifest.json written on record(); 48 unit tests pass). Advance to R4.2 (real metric extraction: distance, contacts, clearance, CPU/RTF, ground-truth vs estimation error)."
       R4.2:
         title: "Measure metrics and preserve provenance"
-        state: "queued"
+        state: "done"
         owner: null
         depends_on:
           - "R4.1"
         scope_paths:
           - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Remove hardcoded distance/collision/clearance. Measure contacts, footprint-aware clearance, trajectory distance and timestamp/frame-aligned truth/estimation error; collect CPU/memory/RTF and defined effort proxy. Record manifest/hash, revision/dirty state, dependencies, asset hashes, seeds, budgets, tolerances and artifact paths."
+        evidence:
+          - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/metrics.py"
+          - "src/robot_lab/robot_lab_benchmark/test/test_r4_2_metrics.py"
+        next_action: "Complete — R4.2 done (metrics.py: MeasuredMetrics/DerivedMetrics/RunMetrics schema distinguishing measured vs derived; trajectory_distance over pose sequences; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values. Truthful None-on-missing semantics everywhere: missing/NaN/stale data invalidate metrics instead of becoming zero. 83 unit tests pass; full suite 197 green with R4.1+P6.) Advance to R4.3 (first reproducible planner comparison with manifests, predeclared seeds/budgets, and bag artifacts)."
       R4.3:
         title: "Publish first reproducible planner comparison"
         state: "queued"
@@ -892,7 +894,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R4.2"
+  next_task: "R4.3"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
