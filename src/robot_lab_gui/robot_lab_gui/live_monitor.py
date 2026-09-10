@@ -81,7 +81,7 @@ class LiveMonitorTab(ttk.Frame):
             pass
 
         self.status_dot = tk.Label(bar, text="*", fg=STATUS_IDLE, bg=BG_DARK,
-                                    font=self.fonts["mono"])
+                                    font=self.app.fonts.get("mono", ("Courier", 10)))
         self.status_dot.grid(row=0, column=2, padx=(0, 4))
 
         self.status_label = ttk.Label(bar, text="Disconnected", style="Status.Idle.TLabel")
@@ -126,7 +126,7 @@ class LiveMonitorTab(ttk.Frame):
         frame.grid(row=row, column=0, sticky="nsew", pady=4)
         frame.columnconfigure(0, weight=1)
         hdr = tk.Label(frame, text=title, bg=BG_CARD, fg=FG_PRIMARY,
-                        font=self.fonts["subheading"], padx=10, pady=6)
+                        font=self.app.fonts.get("subheading", ("Segoe UI", 11, "bold")), padx=10, pady=6)
         hdr.grid(row=0, column=0, sticky="w")
         inner = tk.Frame(frame, bg=BG_CARD, padx=10, pady=10)
         inner.grid(row=1, column=0, sticky="nsew")
@@ -139,10 +139,10 @@ class LiveMonitorTab(ttk.Frame):
         for i, field in enumerate(fields):
             row, col = i // 3, (i % 3) * 2
             tk.Label(parent, text=field + ":", bg=BG_CARD, fg=FG_MUTED,
-                     font=self.fonts["small"]).grid(row=row, column=col, sticky="e", padx=(0, 2))
+                     font=self.app.fonts.get("small", ("Segoe UI", 9))).grid(row=row, column=col, sticky="e", padx=(0, 2))
             var = tk.StringVar(value="-")
             tk.Label(parent, textvariable=var, bg=BG_CARD, fg=FG_PRIMARY,
-                     font=self.fonts["mono_small"]).grid(row=row, column=col + 1, sticky="w", padx=(0, 10))
+                     font=self.app.fonts.get("mono_small", ("Courier", 9))).grid(row=row, column=col + 1, sticky="w", padx=(0, 10))
             self.odom_labels[field] = var
 
     def _build_imu(self, parent):
@@ -151,10 +151,10 @@ class LiveMonitorTab(ttk.Frame):
         for i, field in enumerate(fields):
             row, col = i // 3, (i % 3) * 2
             tk.Label(parent, text=field + ":", bg=BG_CARD, fg=FG_MUTED,
-                     font=self.fonts["small"]).grid(row=row, column=col, sticky="e", padx=(0, 2))
+                     font=self.app.fonts.get("small", ("Segoe UI", 9))).grid(row=row, column=col, sticky="e", padx=(0, 2))
             var = tk.StringVar(value="-")
             tk.Label(parent, textvariable=var, bg=BG_CARD, fg=FG_PRIMARY,
-                     font=self.fonts["mono_small"]).grid(row=row, column=col + 1, sticky="w", padx=(0, 10))
+                     font=self.app.fonts.get("mono_small", ("Courier", 9))).grid(row=row, column=col + 1, sticky="w", padx=(0, 10))
             self.imu_labels[field] = var
 
 
@@ -310,7 +310,7 @@ class LiveMonitorTab(ttk.Frame):
 
     def _build_scan(self, parent):
         self.scan_text = tk.Text(parent, height=8, bg=BG_CARD, fg=FG_PRIMARY,
-                                  font=self.fonts["mono_tiny"], relief="flat",
+                                  font=self.app.fonts.get("mono_tiny", ("Courier", 8)), relief="flat",
                                   highlightthickness=0, wrap="word")
         self.scan_text.grid(row=0, column=0, sticky="nsew")
         self.scan_text.insert("1.0", "Waiting for /scan messages...")
@@ -319,7 +319,7 @@ class LiveMonitorTab(ttk.Frame):
     def _build_clock(self, parent):
         self.sample_var = tk.StringVar(value="odom 0 | scan 0 | imu 0")
         tk.Label(parent, textvariable=self.sample_var, bg=BG_CARD, fg=FG_MUTED,
-                 font=self.fonts["mono_small"]).grid(row=0, column=0, sticky="w")
+                 font=self.app.fonts.get("mono_small", ("Courier", 9))).grid(row=0, column=0, sticky="w")
         self.clock_var = tk.StringVar(value="Sim time: -")
         tk.Label(parent, textvariable=self.clock_var, bg=BG_CARD, fg=FG_PRIMARY,
                  font=("Consolas", 10, "bold")).grid(row=1, column=0, sticky="w")
