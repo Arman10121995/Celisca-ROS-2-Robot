@@ -8,7 +8,7 @@ import signal
 import subprocess
 import threading
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
+from tkinter import filedialog, messagebox, scrolledtext, ttk
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -235,13 +235,7 @@ def package_path(package_name, relative_path):
         return ""
     if os.path.isabs(str(relative_path)):
         return str(relative_path)
-    try:
-        return os.path.join(get_package_share_directory(package_name), *str(relative_path).split("/"))
-    except Exception:
-        # Installed package name may differ from the config key (e.g. "maps"
-        # -> robot_lab_maps). Never let a missing optional asset crash the GUI;
-        # callers treat a non-existent path as "asset unavailable".
-        return ""
+    return os.path.join(get_package_share_directory(package_name), *str(relative_path).split("/"))
 
 
 def bool_value(value):
@@ -315,10 +309,6 @@ class SimulationLauncherGui(tk.Tk):
         self.algorithm_id_var = tk.StringVar()
         self.slot_vars = {slot: tk.StringVar() for slot in ALGORITHM_CATEGORIES}
         self.slot_combos = {}
-        self.slot_labels = {}
-        self._compat_cache = {}
-        self._cleared_selections = []  # Track selections cleared due to incompatibility
-        self.compatibility_var = tk.StringVar(value="")
         self.validation_var = tk.StringVar(value="Valid")
         self.composition_registry = None
         if COMPOSITION_AVAILABLE:
@@ -333,7 +323,6 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_repeat_job = None
         self.current_drive = (0.0, 0.0)
         self.output_queue = queue.Queue()
-        self._output_autoscroll = True  # follow-tail for Launch Output
 
         self.robot_var = tk.StringVar(value=self._first_key(self.robot_profiles, "bumperbot"))
         self.map_var = tk.StringVar(value=self._first_key(self.map_profiles, "celisca_floor_1"))
@@ -410,12 +399,8 @@ class SimulationLauncherGui(tk.Tk):
             borderwidth=0,
             highlightthickness=0,
             yscrollcommand=scrollbar.set,
-            width=372,
+            width=360,
         )
-        try:
-            canvas.configure(bg='#1e1e2e')
-        except Exception:
-            pass
         canvas.grid(row=0, column=0, sticky="nsew")
         scrollbar.configure(command=canvas.yview)
 
@@ -441,11 +426,9 @@ class SimulationLauncherGui(tk.Tk):
         def _on_button5(event):
             canvas.yview_scroll(1, "units")
 
-        for _seq, _fn in (("<MouseWheel>", _on_mousewheel),
-                           ("<Button-4>", _on_button4),
-                           ("<Button-5>", _on_button5)):
-            canvas.bind(_seq, _fn)
-            controls.bind(_seq, _fn)
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        canvas.bind_all("<Button-4>", _on_button4)
+        canvas.bind_all("<Button-5>", _on_button5)
 
         controls.columnconfigure(0, weight=1)
 
@@ -462,7 +445,6 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.robot_combo.grid(row=0, column=0, sticky="ew")
         self.robot_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
-        add_tooltip(self.robot_combo, "Robot platform; filters modes, maps and simulators.")
         self.robot_info_var = tk.StringVar(value="")
         ttk.Label(
             robot_frame,
@@ -496,7 +478,6 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.map_combo.grid(row=5, column=0, sticky="ew", pady=(2, 12))
         self.map_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
-        add_tooltip(self.map_combo, "World/map; 3D-capable entries marked [3D].")
 
         ttk.Label(controls, text="Simulator").grid(row=6, column=0, sticky="w")
         self.simulator_combo = ttk.Combobox(
@@ -508,7 +489,6 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.simulator_combo.grid(row=7, column=0, sticky="ew", pady=(2, 12))
         self.simulator_combo.bind("<<ComboboxSelected>>", self._simulator_selected)
-        add_tooltip(self.simulator_combo, "Physics backend for this launch.")
 
         ttk.Label(controls, text="Launch").grid(row=8, column=0, sticky="w")
         launch_frame = ttk.Frame(controls)
@@ -547,12 +527,10 @@ class SimulationLauncherGui(tk.Tk):
         composition_frame.grid(row=12, column=0, sticky="ew", pady=(12, 6))
         composition_frame.columnconfigure(1, weight=1)
         for row, slot in enumerate(ALGORITHM_CATEGORIES):
-            label = ttk.Label(
+            ttk.Label(
                 composition_frame,
                 text=ALGORITHM_SLOT_LABELS.get(slot, slot.title()),
-            )
-            label.grid(row=row, column=0, sticky="w", padx=(0, 6))
-            self.slot_labels[slot] = label
+            ).grid(row=row, column=0, sticky="w", padx=(0, 6))
             combo = ttk.Combobox(
                 composition_frame,
                 textvariable=self.slot_vars[slot],
@@ -563,189 +541,119 @@ class SimulationLauncherGui(tk.Tk):
             combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
             self.slot_combos[slot] = combo
 
-        # Compatibility status label (shows filtering results)
-        self.compatibility_label = ttk.Label(
-            controls,
-            textvariable=self.compatibility_var,
-            justify="left",
-            wraplength=340,
-        )
-        self.compatibility_label.grid(row=13, column=0, sticky="ew", pady=(4, 2))
-        add_tooltip(self.compatibility_label, "Shows algorithm compatibility status for current robot/map/mode selection")
-
-        # Composition control buttons
-        comp_button_frame = ttk.Frame(controls)
-        comp_button_frame.grid(row=14, column=0, sticky="w", pady=(2, 4))
-        self.reset_composition_button = ttk.Button(
-            comp_button_frame,
-            text="Reset Composition",
-            command=self._reset_composition,
-        )
-        self.reset_composition_button.pack(side="left", padx=(0, 4))
-        self.show_incompatible_button = ttk.Button(
-            comp_button_frame,
-            text="Show Incompatible",
-            command=self._show_incompatible_dialog,
-        )
-        self.show_incompatible_button.pack(side="left", padx=(0, 4))
-        self.quick_select_button = ttk.Button(
-            comp_button_frame,
-            text="Quick Select",
-            command=self._quick_select_compatible,
-        )
-        self.quick_select_button.pack(side="left", padx=(0, 4))
-        self.show_cleared_button = ttk.Button(
-            comp_button_frame,
-            text="Show Cleared",
-            command=self._show_cleared_selections,
-        )
-        self.show_cleared_button.pack(side="left")
-
-        # Visual separator
-        ttk.Separator(controls, orient="horizontal").grid(row=15, column=0, sticky="ew", pady=(6, 4))
-
-        ttk.Label(controls, text="Validation").grid(row=16, column=0, sticky="w", pady=(4, 2))
-        self.validation_label = ttk.Label(
+        ttk.Label(controls, text="Validation", foreground="#a6adc8" if THEME_AVAILABLE else "#333333"
+                  ).grid(row=13, column=0, sticky="w", pady=(4, 2))
+        ttk.Label(
             controls,
             textvariable=self.validation_var,
             justify="left",
-            wraplength=340,
-            style="Status.Idle.TLabel" if THEME_AVAILABLE else None,
-        )
-        self.validation_label.grid(row=17, column=0, sticky="ew", pady=(2, 8))
+            wraplength=330,
+            foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
+        ).grid(row=14, column=0, sticky="ew", pady=(2, 8))
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=19, column=0, sticky="w")
+        ttk.Label(controls, text="Resolved Configuration").grid(row=16, column=0, sticky="w")
         summary = ttk.Label(
             controls,
             textvariable=self.summary_var,
             justify="left",
-            wraplength=340,
-            style="Muted.TLabel" if THEME_AVAILABLE else None,
+            wraplength=330,
+            foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
         )
-        summary.grid(row=20, column=0, sticky="ew", pady=(2, 12))
+        summary.grid(row=17, column=0, sticky="ew", pady=(2, 12))
 
-        cmd_header = ttk.Frame(controls)
-        cmd_header.grid(row=21, column=0, sticky="ew")
-        cmd_header.columnconfigure(0, weight=1)
-        ttk.Label(cmd_header, text="Command").grid(row=0, column=0, sticky="w")
-        ttk.Button(cmd_header, text="Copy", command=self._copy_command,
-                   style="Small.TButton").grid(row=0, column=1, sticky="e")
+        ttk.Label(controls, text="Command").grid(row=18, column=0, sticky="w")
         command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=22, column=0, sticky="ew", pady=(2, 12))
-        add_tooltip(command, "Exact ros2 launch command. Copy it to run headless.")
+        command.grid(row=19, column=0, sticky="ew", pady=(2, 12))
 
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=23, column=0, sticky="ew")
-        button_frame.columnconfigure(0, weight=3)
-        button_frame.columnconfigure(1, weight=2)
+        button_frame.grid(row=20, column=0, sticky="ew")
+        button_frame.columnconfigure(0, weight=1)
+        button_frame.columnconfigure(1, weight=1)
         button_frame.columnconfigure(2, weight=1)
+        button_frame.columnconfigure(3, weight=1)
+        button_frame.columnconfigure(4, weight=1)
 
         self.start_button = ttk.Button(button_frame, text="Start Simulation",
-                                         command=self._start_launch,
-                                         style="Accent.TButton")
+                                        command=self._start_launch,
+                                        style="Accent.TButton")
         self.start_button.grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        add_tooltip(self.start_button, "Launch the resolved command (Ctrl+Enter).")
         self.stop_button = ttk.Button(button_frame, text="Stop", command=self._stop_launch,
-                                        state="disabled", style="Danger.TButton")
-        self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 0))
-        add_tooltip(self.stop_button, "Stop the running launch (Esc).")
+                                       state="disabled", style="Danger.TButton")
+        self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 4))
 
-        # Launch profiles live in one menu button (saves a 5-column squeeze).
+        # Launch profile buttons
         if PROFILES_AVAILABLE:
-            self.profiles_button = ttk.Button(button_frame, text="Profiles...",
-                                                command=self._show_profiles_menu,
-                                                style="Small.TButton")
-            self.profiles_button.grid(row=0, column=2, sticky="ew", padx=(4, 0))
-        else:
-            self.profiles_button = None
+            ttk.Button(button_frame, text="Save Profile",
+                       command=self._save_profile,
+                       style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=4)
+            ttk.Button(button_frame, text="Load",
+                       command=self._show_load_profile,
+                       style="Small.TButton").grid(row=0, column=3, sticky="ew", padx=4)
+            ttk.Button(button_frame, text="Delete/Profiles",
+                       command=self._delete_profile,
+                       style="Small.TButton").grid(row=0, column=4, sticky="ew", padx=(4, 0))
+
         self.bg_processes = {}
 
-        drive_box = ttk.LabelFrame(controls, text="Drive (teleop)", padding=(8, 6))
-        drive_box.grid(row=21, column=0, sticky="ew", pady=(12, 4))
-        drive_box.columnconfigure(0, weight=1)
-        drive_frame = ttk.Frame(drive_box)
-        drive_frame.grid(row=0, column=0, sticky="ew")
+        ttk.Label(controls, text="Drive").grid(row=21, column=0, sticky="w", pady=(12, 0))
+        drive_frame = ttk.Frame(controls)
+        drive_frame.grid(row=22, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
         forward_button = ttk.Button(drive_frame, text="Forward")
         forward_button.grid(row=0, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(forward_button, 1.0, 0.0)
-        add_tooltip(forward_button, "Hold to drive forward (publishes cmd_vel).")
 
         left_button = ttk.Button(drive_frame, text="Left")
         left_button.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(left_button, 0.0, 1.0)
-        add_tooltip(left_button, "Hold to rotate left.")
 
         stop_drive_button = ttk.Button(drive_frame, text="Stop", command=self._stop_drive)
         stop_drive_button.grid(row=1, column=1, sticky="ew", padx=2, pady=2)
-        add_tooltip(stop_drive_button, "Stop teleop motion immediately.")
 
         right_button = ttk.Button(drive_frame, text="Right")
         right_button.grid(row=1, column=2, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(right_button, 0.0, -1.0)
-        add_tooltip(right_button, "Hold to rotate right.")
 
         reverse_button = ttk.Button(drive_frame, text="Reverse")
         reverse_button.grid(row=2, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(reverse_button, -1.0, 0.0)
-        add_tooltip(reverse_button, "Hold to drive backward.")
 
-        speed_frame = ttk.Frame(drive_box)
-        speed_frame.grid(row=1, column=0, sticky="ew", pady=(6, 0))
+        speed_frame = ttk.Frame(controls)
+        speed_frame.grid(row=23, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
-        linear_spin = ttk.Spinbox(
+        ttk.Spinbox(
             speed_frame,
             from_=0.05,
             to=1.0,
             increment=0.05,
             textvariable=self.drive_linear_var,
             width=6,
-        )
-        linear_spin.grid(row=0, column=1, sticky="ew", padx=(0, 8))
-        add_tooltip(linear_spin, "Max forward speed in m/s for teleop.")
+        ).grid(row=0, column=1, sticky="ew", padx=(0, 8))
         ttk.Label(speed_frame, text="Angular").grid(row=0, column=2, sticky="w", padx=(0, 4))
-        angular_spin = ttk.Spinbox(
+        ttk.Spinbox(
             speed_frame,
             from_=0.1,
             to=2.0,
             increment=0.1,
             textvariable=self.drive_angular_var,
             width=6,
-        )
-        angular_spin.grid(row=0, column=3, sticky="ew")
-        add_tooltip(angular_spin, "Max turn speed in rad/s for teleop.")
+        ).grid(row=0, column=3, sticky="ew")
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=24, column=0, sticky="ew", pady=(0, 4))
-        add_tooltip(self.save_map_button, "Save map (enabled in SLAM / 3D SLAM).")
+        self.save_map_button.grid(row=23, column=0, sticky="ew", pady=(0, 4))
 
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
         output_frame.columnconfigure(0, weight=1)
         output_frame.rowconfigure(1, weight=1)
-        output_header = ttk.Frame(output_frame)
-        output_header.grid(row=0, column=0, sticky="ew")
-        output_header.columnconfigure(0, weight=1)
-        ttk.Label(output_header, text="Launch Output").grid(row=0, column=0, sticky="w")
-        self.autoscroll_var = tk.BooleanVar(value=True)
-        self.autoscroll_check = ttk.Checkbutton(
-            output_header, text="Autoscroll", variable=self.autoscroll_var,
-            command=self._on_autoscroll_toggled)
-        self.autoscroll_check.grid(row=0, column=1, sticky="e")
-        add_tooltip(self.autoscroll_check, "Follow new output; uncheck to freeze.")
-        ttk.Button(output_header, text="Clear", command=self._clear_output,
-                   style="Small.TButton").grid(row=0, column=2, sticky="e", padx=(6, 0))
+        ttk.Label(output_frame, text="Launch Output").grid(row=0, column=0, sticky="w")
         self.output = scrolledtext.ScrolledText(output_frame, wrap="word", height=24)
         self.output.grid(row=1, column=0, sticky="nsew", pady=(2, 0))
         self.output.configure(state="disabled")
-        try:
-            self.output.vbar.configure(command=self._on_output_scroll)
-        except Exception:
-            pass
 
         # Shared console: every control-center tab streams its output here
         console_frame = ttk.LabelFrame(self, text="Console", padding=(12, 2, 12, 6))
@@ -764,7 +672,7 @@ class SimulationLauncherGui(tk.Tk):
 
         status_style = "Statusbar.TLabel" if THEME_AVAILABLE else None
         self._ros_status_dot = tk.Label(status_frame, text="*",
-                                        fg="#ff6b6b", font=fonts["mono_small"])
+                                        fg="#ff6b6b", font=("Segoe UI", 10))
         self._ros_status_dot.grid(row=0, column=0, padx=(8, 4))
 
         ttk.Label(status_frame, text="ROS 2:",
@@ -821,19 +729,11 @@ class SimulationLauncherGui(tk.Tk):
         return package_path(map_file_config.get("package", "maps"), relative_path)
 
     def _map_has_2d_map(self):
-        try:
-            map_file_config = self._map_config().get("map", {})
-            configured = map_file_config.get("has_2d_map")
-            map_path = self._map_yaml_path()
-            if not map_path:
-                # Asset package not installed: only trust an explicit True
-                # from config; otherwise report unavailable without crashing.
-                return bool_value(configured) if configured is not None else False
-            if configured is not None:
-                return bool_value(configured) and os.path.exists(map_path)
-            return os.path.exists(map_path)
-        except Exception:
-            return False
+        map_file_config = self._map_config().get("map", {})
+        configured = map_file_config.get("has_2d_map")
+        if configured is not None:
+            return bool_value(configured) and os.path.exists(self._map_yaml_path())
+        return os.path.exists(self._map_yaml_path())
 
     def _mode_requires_2d_map(self, mode):
         return bool_value(self.mode_profiles.get(mode, {}).get("requires_2d_map", False))
@@ -879,9 +779,9 @@ class SimulationLauncherGui(tk.Tk):
         self._update_from_selection()
 
     def _refresh_slot_combos(self):
-        """Populate the seven algorithm slot dropdowns with compatible algorithms."""
+        """Populate the seven algorithm slot dropdowns from the registry."""
         for slot in ALGORITHM_CATEGORIES:
-            algorithms = self._slot_compatible_algorithms(slot)
+            algorithms = self._algorithms_for_category(slot)
             combo = self.slot_combos.get(slot)
             if combo is None:
                 continue
@@ -889,264 +789,6 @@ class SimulationLauncherGui(tk.Tk):
             current = self.slot_vars[slot].get()
             if current and current not in algorithms:
                 self.slot_vars[slot].set("")
-                base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-                self._cleared_selections.append(
-                    f"{base}: '{current}' (incompatible with current robot/map)")
-
-            # Update slot visual state based on mode relevance
-            is_active = self._slot_is_active(slot)
-            is_primary = (self._primary_slot_for_mode() == slot)
-            label = self.slot_labels.get(slot)
-            tooltip = self._slot_tooltip_text(slot)
-
-            if is_active:
-                combo.configure(state="readonly")
-                add_tooltip(combo, tooltip)
-                if label:
-                    count = len(algorithms)
-                    base_text = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-                    label_text = f"{base_text} ({count})"
-                    if is_primary:
-                        label.configure(text=f"★ {label_text}", state="normal",
-                                       style="Accent.TLabel" if THEME_AVAILABLE else None)
-                    else:
-                        label.configure(text=label_text, state="normal")
-                    add_tooltip(label, tooltip)
-            else:
-                combo.configure(state="disabled")
-                add_tooltip(combo, tooltip)
-                if label:
-                    count = len(algorithms)
-                    base_text = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-                    label.configure(text=f"{base_text} ({count})", state="disabled")
-                    add_tooltip(label, tooltip)
-
-    def _slot_is_active(self, slot):
-        """Check if a slot is relevant for the current mode."""
-        mode = self.mode_var.get()
-        mode_slots = {
-            "display": {"perception"},
-            "loc": {"localization"},
-            "slam": {"localization", "sensor_fusion"},
-            "3d_slam": {"state_estimation", "sensor_fusion"},
-            "nav": {"global_planning", "local_planning", "control", "localization"},
-        }
-        return slot in mode_slots.get(mode, set())
-
-    def _primary_slot_for_mode(self, mode=None):
-        """Return the primary (most important) slot for the given/current mode.""
-        if mode is None:
-            mode = self.mode_var.get()
-        return MODE_TO_ALGORITHM_CATEGORY.get(mode)
-
-    def _slot_tooltip_text(self, slot):
-        """Return tooltip text explaining slot relevance.""
-        is_active = self._slot_is_active(slot)
-        is_primary = (self._primary_slot_for_mode() == slot)
-        count = len(self._slot_compatible_algorithms(slot))
-        base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-        if is_primary:
-            return f"{base} - PRIMARY slot for current mode ({count} compatible algorithms)"
-        if is_active:
-            return f"{base} - active for current mode ({count} compatible algorithms)"
-        return f"{base} - not used in current mode"
-
-    def _slot_compatible_algorithms(self, slot):
-        """Return list of algorithm IDs compatible with current robot/environment."""
-        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
-            return self._algorithms_for_category(slot)
-
-        robot_id = self.robot_var.get()
-        environment_id = self.map_var.get()
-
-        # Check cache
-        cache_key = (robot_id, environment_id, self.simulator_var.get(), slot)
-        if cache_key in self._compat_cache:
-            return self._compat_cache[cache_key]
-
-        compatible = []
-        for algorithm in self.algorithms:
-            if algorithm.get("category") != slot:
-                continue
-
-            test_selection = GuiCompositionSelection(
-                robot_id=robot_id,
-                simulator=self.simulator_var.get(),
-                environment_id=environment_id,
-                algorithm_ids={slot: algorithm["id"]},
-                reset=True,
-            )
-
-            try:
-                errors, _ = validation_lines(self.composition_registry, test_selection)
-                if not errors:
-                    compatible.append(algorithm["id"])
-            except Exception:
-                compatible.append(algorithm["id"])
-
-        # Store in cache
-        self._compat_cache[cache_key] = compatible
-        return compatible
-
-    def _clear_compat_cache(self):
-        """Clear the compatibility cache."""
-        self._compat_cache = {}
-
-    def _get_compatibility_summary(self):
-        """Return a summary of slot compatibility for the current selection.""
-        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
-            return ""
-        summary_parts = []
-        total_compatible = 0
-        total_slots_active = 0
-        for slot in ALGORITHM_CATEGORIES:
-            if not self._slot_is_active(slot):
-            total_slots_active += 1
-                continue
-            count = len(self._slot_compatible_algorithms(slot))
-            total_compatible += count
-            if count == 0:
-                base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-                summary_parts.append(f"{base}: none")
-        if summary_parts:
-            return "⚠ No compatible: " + ", ".join(summary_parts)
-        if total_slots_active > 0:
-            return f"✓ All {total_slots_active} active slots have compatible algorithms ({total_compatible} total)"
-        return "No active slots for current mode"
-
-    def _reset_composition(self):
-        """Reset all algorithm slot selections to empty."""
-        for slot in ALGORITHM_CATEGORIES:
-            self.slot_vars[slot].set("")
-    def _show_cleared_selections(self):
-        """Show a dialog listing selections that were automatically cleared."""
-        if not self._cleared_selections:
-            messagebox.showinfo(
-                "Cleared Selections",
-                "No selections have been automatically cleared.",
-            )
-            return
-
-        dialog = tk.Toplevel(self.root)
-        dialog.title("Cleared Selections")
-        dialog.geometry("500x300")
-        dialog.transient(self.root)
-
-        text = scrolledtext.ScrolledText(dialog, wrap="word", padx=10, pady=10)
-        text.pack(fill="both", expand=True)
-
-        lines = [
-            "The following selections were automatically cleared",
-            "because they are incompatible with the current robot/map:",
-            "",
-        ]
-        lines.extend(self._cleared_selections)
-        lines.append("")
-        lines.append("Change the robot or map to restore compatibility.")
-
-        text.insert("1.0", "\n".join(lines))
-        text.configure(state="disabled")
-
-        btn_frame = ttk.Frame(dialog)
-        btn_frame.pack(pady=8)
-        ttk.Button(btn_frame, text="Close", command=dialog.destroy).pack(side="left", padx=4)
-        ttk.Button(btn_frame, text="Clear History", command=lambda: self._clear_cleared_history(dialog)).pack(side="left", padx=4)
-
-    def _clear_cleared_history(self, dialog=None):
-        """Clear the history of automatically cleared selections."""
-        self._cleared_selections = []
-        if dialog:
-            dialog.destroy()
-
-    def _get_incompatibility_reasons(self, slot, algorithm_id):
-        self._update_from_selection()
-
-    def _get_incompatibility_reasons(self, slot, algorithm_id):
-        """Return a list of reasons why an algorithm is incompatible."""
-        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
-            return []
-        test_selection = GuiCompositionSelection(
-            robot_id=self.robot_var.get(),
-            simulator=self.simulator_var.get(),
-            environment_id=self.map_var.get(),
-            algorithm_ids={slot: algorithm_id},
-            reset=True,
-        )
-        try:
-            errors, warnings = validation_lines(self.composition_registry, test_selection)
-            return errors + warnings
-        except Exception as exc:
-            return [str(exc)]
-
-    def _quick_select_compatible(self):
-        """Auto-select the first compatible algorithm for each active slot."""
-        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
-            return
-        selected_count = 0
-        for slot in ALGORITHM_CATEGORIES:
-            if not self._slot_is_active(slot):
-                continue
-            if self.slot_vars[slot].get():
-                continue  # Already selected
-            compatible = self._slot_compatible_algorithms(slot)
-            if compatible:
-                self.slot_vars[slot].set(compatible[0])
-                selected_count += 1
-        if selected_count > 0:
-            self._update_from_selection()
-
-    def _show_incompatible_dialog(self):
-        """Show a dialog listing incompatible algorithms and reasons."""
-        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
-            messagebox.showinfo(
-                "Compatibility",
-                "Composition module unavailable. All algorithms shown.",
-            )
-            return
-
-        dialog = tk.Toplevel(self.root)
-        dialog.title("Algorithm Compatibility")
-        dialog.geometry("600x400")
-        dialog.transient(self.root)
-
-        text = scrolledtext.ScrolledText(dialog, wrap="word", padx=10, pady=10)
-        text.pack(fill="both", expand=True)
-
-        robot_id = self.robot_var.get()
-        environment_id = self.map_var.get()
-        simulator = self.simulator_var.get()
-
-        lines = [
-            f"Current selection: Robot={robot_id}, Map={environment_id}, Simulator={simulator}",
-            f"Mode: {MODE_LABELS.get(self.mode_var.get(), self.mode_var.get())}",
-            "",
-        ]
-
-        for slot in ALGORITHM_CATEGORIES:
-            base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-            compatible = self._slot_compatible_algorithms(slot)
-            incompatible = []
-            for algorithm in self.algorithms:
-                if algorithm.get("category") == slot and algorithm["id"] not in compatible:
-                    incompatible.append(algorithm["id"])
-
-            if incompatible:
-                lines.append(f"--- {base} ({len(incompatible)} incompatible) ---")
-                for algo_id in incompatible:
-                    reasons = self._get_incompatibility_reasons(slot, algo_id)
-                    algo_name = self._algorithm_name(algo_id)
-                    lines.append(f"  {algo_name}:")
-                    for reason in reasons[:3]:  # Limit to first 3 reasons
-                        lines.append(f"    - {reason}")
-                lines.append("")
-
-        if not any("---" in line for line in lines):
-            lines.append("All algorithms are compatible with the current selection!")
-
-        text.insert("1.0", "\n".join(lines))
-        text.configure(state="disabled")
-
-        ttk.Button(dialog, text="Close", command=dialog.destroy).pack(pady=8)
 
     def _composition_selection(self):
         """Build the shared resolver selection from the current GUI controls."""
@@ -1169,7 +811,6 @@ class SimulationLauncherGui(tk.Tk):
             self.command_var.set(" ".join(self._legacy_command()))
             self.validation_var.set(
                 "Composition resolver unavailable; legacy launch used.")
-            self._set_validation_style("idle")
             return
         try:
             selection = self._composition_selection()
@@ -1178,14 +819,12 @@ class SimulationLauncherGui(tk.Tk):
         except Exception as exc:  # pragma: no cover — defensive
             self.command_var.set(" ".join(self._legacy_command()))
             self.validation_var.set(f"Resolver error: {exc}")
-            self._set_validation_style("error")
             return
 
         if errors:
             self.validation_var.set(
                 "Invalid: " + " | ".join(errors))
             self.command_var.set("")
-            self._set_validation_style("error")
             return
 
         notes = []
@@ -1193,37 +832,8 @@ class SimulationLauncherGui(tk.Tk):
             notes.append("Warnings: " + "; ".join(warnings[:3]))
         self.validation_var.set("Valid" + (f" - {'; '.join(notes)}"
                                            if notes else ""))
-        self._set_validation_style("warn" if warnings else "ok")
         self.command_var.set(" ".join(command_for_selection(
             self.composition_registry, selection)))
-
-    def _copy_command(self):
-        """Copy the resolved ros2 command to the clipboard."""
-        text = self.command_var.get().strip()
-        if not text:
-            self.status_var.set("Nothing to copy - selection is invalid")
-            self.after(3000, lambda: self.status_var.set("Idle"))
-            return
-        try:
-            self.clipboard_clear()
-            self.clipboard_append(text)
-            self.status_var.set("Command copied to clipboard")
-        except Exception as exc:
-            self.status_var.set("Copy failed: " + str(exc))
-        self.after(3000, lambda: self.status_var.set("Idle"))
-
-    def _set_validation_style(self, kind):
-        """Recolor the validation line: ok / warn / error / idle."""
-        if not THEME_AVAILABLE:
-            return
-        try:
-            self.validation_label.configure(style={
-                "ok": "Status.OK.TLabel",
-                "warn": "Status.Warn.TLabel",
-                "error": "Status.Error.TLabel",
-            }.get(kind, "Status.Idle.TLabel"))
-        except Exception:
-            pass
 
     def _refresh_algorithm_dropdown(self):
         """Backwards-compatible alias: sync the seven slot dropdowns.
@@ -1235,9 +845,6 @@ class SimulationLauncherGui(tk.Tk):
         self._refresh_slot_combos()
 
     def _update_from_selection(self):
-        # Clear compatibility cache when selection changes
-        self._clear_compat_cache()
-        self._cleared_selections = []
         supported_modes = self._supported_modes()
         if self.mode_var.get() not in supported_modes:
             self.mode_var.set(self._fallback_mode(supported_modes))
@@ -1270,15 +877,6 @@ class SimulationLauncherGui(tk.Tk):
         self._update_validation_and_command()
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
-        self.compatibility_var.set(self._get_compatibility_summary())
-        # Update label color based on compatibility status
-        compat_text = self.compatibility_var.get()
-        if compat_text.startswith("✓"):
-            self.compatibility_label.configure(foreground="#4caf50")  # Green
-        elif compat_text.startswith("⚠"):
-            self.compatibility_label.configure(foreground="#ff8800")  # Orange
-        else:
-            self.compatibility_label.configure(foreground="#888888")  # Gray
 
     def _robot_info_text(self, supported_modes, supports_vacuum):
         config = self._robot_config()
@@ -1358,7 +956,7 @@ class SimulationLauncherGui(tk.Tk):
 
         Single stack start: the resolver emits the exact ros2 launch command
         from the same manifest the CLI uses; the ignored GUI 'algorithm:='
-        argument is gone - planner/slot selections now change active nav2
+        argument is gone — planner/slot selections now change active nav2
         plugins through the manifest arguments.
         """
         if COMPOSITION_AVAILABLE and self.composition_registry is not None:
@@ -1398,7 +996,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _save_profile(self):
         """Save current configuration as a named profile (resolved manifest)."""
-        name = simpledialog.askstring("Save Profile", "Profile name:", parent=self)
+        name = tk.simpledialog.askstring("Save Profile", "Profile name:")
         if not name:
             return
         if COMPOSITION_AVAILABLE and self.composition_registry is not None:
@@ -1437,53 +1035,21 @@ class SimulationLauncherGui(tk.Tk):
             self.slot_vars[slot].set(
                 (manifest.get("algorithm_ids") or {}).get(slot, ""))
 
-    def _show_profiles_menu(self):
-        """One popup menu for Save / Load / Delete (compact button row)."""
-        profiles = list_profiles() if PROFILES_AVAILABLE else []
-        menu = tk.Menu(self, tearoff=0)
-        menu.add_command(label="Save current as...", command=self._save_profile)
-        menu.add_separator()
-        if profiles:
-            load_menu = tk.Menu(menu, tearoff=0)
-            for name in profiles:
-                load_menu.add_command(
-                    label=name, command=lambda n=name: self._load_profile_by_name(n))
-            menu.add_cascade(label="Load", menu=load_menu)
-            del_menu = tk.Menu(menu, tearoff=0)
-            for name in profiles:
-                del_menu.add_command(
-                    label=name, command=lambda n=name: self._delete_profile_by_name(n))
-            menu.add_cascade(label="Delete", menu=del_menu)
-        else:
-            menu.add_command(label="(no saved profiles)", state="disabled")
-        try:
-            x = self.profiles_button.winfo_rootx()
-            y = self.profiles_button.winfo_rooty() + self.profiles_button.winfo_height()
-            menu.tk_popup(x, y)
-        finally:
-            try:
-                menu.grab_release()
-            except Exception:
-                pass
-
-    def _load_profile_by_name(self, name):
-        """Load *name* without a type-in dialog (menu entry point)."""
+    def _show_load_profile(self):
+        """Show dialog to load a saved profile (manifest or migrated legacy)."""
+        profiles = list_profiles()
+        if not profiles:
+            messagebox.showinfo("Load Profile", "No profiles saved yet.")
+            return
+        name = tk.simpledialog.askstring(
+            "Load Profile", "Select profile to load:",
+            initialvalue=profiles[0] if profiles else "")
+        if not name or name not in profiles:
+            return
         cfg = load_profile(name)
         if cfg is None:
-            messagebox.showwarning("Load Profile", "Profile '" + name + "' not found.")
             return
-        self._apply_profile_config(name, cfg)
 
-    def _delete_profile_by_name(self, name):
-        """Delete *name* after confirmation (menu entry point)."""
-        if not messagebox.askyesno("Confirm Delete", "Delete profile '" + name + "'?"):
-            return
-        delete_profile(name)
-        self.status_var.set("Profile '" + name + "' deleted")
-        self.after(3000, lambda: self.status_var.set("Idle"))
-
-    def _apply_profile_config(self, name, cfg):
-        """Apply a loaded profile dict (manifest or legacy) to the controls."""
         if is_manifest(cfg):
             self._apply_manifest_to_controls(cfg)
         else:
@@ -1509,84 +1075,29 @@ class SimulationLauncherGui(tk.Tk):
             fallback_algorithm = selection.algorithm_ids.get(
                 MODE_TO_ALGORITHM_CATEGORY.get(cfg.get("mode", ""), ""), "")
             self.algorithm_id_var.set(cfg.get("algorithm", "") or fallback_algorithm)
+
         self._update_from_selection()
-        self.status_var.set("Profile '" + name + "' loaded")
+        self.status_var.set(f"Profile '{name}' loaded")
         self.after(3000, lambda: self.status_var.set("Idle"))
 
-    def _show_load_profile(self):
-        """Show dialog to load a saved profile (manifest or migrated legacy)."""
-        profiles = list_profiles()
-        if not profiles:
-            messagebox.showinfo("Load Profile", "No profiles saved yet.")
-            return
-        dialog = tk.Toplevel(self)
-        dialog.title("Load Profile")
-        dialog.transient(self)
-        dialog.resizable(False, False)
-        ttk.Label(dialog, text="Select profile to load:").pack(padx=12, pady=(12, 4))
-        listbox = tk.Listbox(dialog, height=min(10, len(profiles)), exportselection=False)
-        for name in profiles:
-            listbox.insert("end", name)
-        listbox.selection_set(0)
-        listbox.pack(padx=12, pady=4, fill="both", expand=True)
-
-        def _confirm(_e=None):
-            sel = listbox.curselection()
-            if not sel:
-                return
-            dialog.destroy()
-            self._load_profile_by_name(profiles[sel[0]])
-
-        buttons = ttk.Frame(dialog)
-        buttons.pack(padx=12, pady=(4, 12), fill="x")
-        ttk.Button(buttons, text="Load", command=_confirm, style="Accent.TButton").pack(side="right")
-        ttk.Button(buttons, text="Cancel", command=dialog.destroy).pack(side="right", padx=(0, 6))
-        listbox.bind("<Double-Button-1>", _confirm)
-        dialog.bind("<Return>", _confirm)
-        dialog.bind("<Escape>", lambda _e: dialog.destroy())
-        dialog.grab_set()
-        try:
-            self.wait_window(dialog)
-        except Exception:
-            pass
-
     def _delete_profile(self):
-        """Delete a saved profile via a list dialog with confirmation."""
+        """Delete a saved profile."""
         profiles = list_profiles()
         if not profiles:
             messagebox.showinfo("Delete Profile", "No profiles to delete.")
             return
-        dialog = tk.Toplevel(self)
-        dialog.title("Delete Profile")
-        dialog.transient(self)
-        dialog.resizable(False, False)
-        ttk.Label(dialog, text="Select profile to delete:").pack(padx=12, pady=(12, 4))
-        listbox = tk.Listbox(dialog, height=min(10, len(profiles)), exportselection=False)
-        for name in profiles:
-            listbox.insert("end", name)
-        listbox.selection_set(0)
-        listbox.pack(padx=12, pady=4, fill="both", expand=True)
-
-        def _confirm(_e=None):
-            sel = listbox.curselection()
-            if not sel:
-                return
-            name = profiles[sel[0]]
-            dialog.destroy()
-            self._delete_profile_by_name(name)
-
-        buttons = ttk.Frame(dialog)
-        buttons.pack(padx=12, pady=(4, 12), fill="x")
-        ttk.Button(buttons, text="Delete", command=_confirm, style="Danger.TButton").pack(side="right")
-        ttk.Button(buttons, text="Cancel", command=dialog.destroy).pack(side="right", padx=(0, 6))
-        listbox.bind("<Double-Button-1>", _confirm)
-        dialog.bind("<Return>", _confirm)
-        dialog.bind("<Escape>", lambda _e: dialog.destroy())
-        dialog.grab_set()
-        try:
-            self.wait_window(dialog)
-        except Exception:
-            pass
+        name = tk.simpledialog.askstring(
+            "Delete Profile", "Enter profile name to delete:",
+            initialvalue=profiles[0] if profiles else "")
+        if not name or name not in profiles:
+            messagebox.showwarning("Delete Profile", f"Profile '{name}' not found.")
+            return
+        if not messagebox.askyesno("Confirm Delete",
+                                    f"Delete profile '{name}'?"):
+            return
+        delete_profile(name)
+        self.status_var.set(f"Profile '{name}' deleted")
+        self.after(3000, lambda: self.status_var.set("Idle"))
 
     def _start_launch(self):
         command = self._command()
@@ -1675,53 +1186,19 @@ class SimulationLauncherGui(tk.Tk):
                     if p.poll() is None)
         self.proc_count_var.set(str(count))
 
-    def _on_autoscroll_toggled(self):
-        """Enable/disable follow-tail; when re-enabled jump to the end."""
-        try:
-            enabled = bool(self.autoscroll_var.get())
-        except Exception:
-            enabled = True
-        self._output_autoscroll = enabled
-        if enabled:
-            try:
-                self.output.see("end")
-            except Exception:
-                pass
-
-    def _on_output_scroll(self, *args):
-        """Track manual scrollbar use: dragging up freezes, bottom resumes."""
-        try:
-            self.output.yview(*args)
-            first, last = self.output.yview()
-            at_bottom = last >= 0.999
-            self._output_autoscroll = at_bottom
-            try:
-                self.autoscroll_var.set(at_bottom)
-            except Exception:
-                pass
-        except Exception:
-            pass
-
-    def _clear_output(self):
-        """Clear the Launch Output pane (log file on disk is untouched)."""
-        try:
-            self.output.configure(state="normal")
-            self.output.delete("1.0", "end")
-            self.output.configure(state="disabled")
-        except Exception:
-            pass
-
     def _append_output(self, text):
         self.output.configure(state="normal")
         self.output.insert("end", text)
-        try:
-            follow = bool(self.autoscroll_var.get())
-        except Exception:
-            follow = getattr(self, "_output_autoscroll", True)
-        if follow:
-            self.output.see("end")
+        self.output.see("end")
         self.output.configure(state="disabled")
         self._update_proc_count()
+
+    def _console_append(self, text):
+        """Append text to the shared bottom console (all lab tabs)."""
+        self.console.configure(state="normal")
+        self.console.insert("end", text)
+        self.console.see("end")
+        self.console.configure(state="disabled")
 
     def _bind_drive_button(self, button, linear_scale, angular_scale):
         button.bind("<ButtonPress-1>", lambda _event: self._start_drive(linear_scale, angular_scale))
