@@ -100,9 +100,15 @@ def apply(root):
     style.configure("TLabel", background=BG_DARK, foreground=FG_PRIMARY, font=fonts["body"])
     style.configure("Heading.TLabel", background=BG_DARK, foreground=FG_PRIMARY, font=fonts["heading"])
     style.configure("Subheading.TLabel", background=BG_CARD, foreground=FG_PRIMARY, font=fonts["subheading"])
+    style.configure("Title.TLabel", background=BG_DARK, foreground=ACCENT,
+                    font=fonts["heading"])
     style.configure("Muted.TLabel", background=BG_DARK, foreground=FG_MUTED, font=fonts["small"])
     style.configure("Card.TLabel", background=BG_CARD, foreground=FG_PRIMARY, font=fonts["body"])
     style.configure("CardTitle.TLabel", background=BG_CARD, foreground=FG_PRIMARY, font=fonts["subheading"])
+    style.configure("Mono.TLabel", background=BG_DARK, foreground=FG_PRIMARY,
+                    font=fonts["mono"])
+    style.configure("MonoCard.TLabel", background=BG_CARD, foreground=FG_PRIMARY,
+                    font=fonts["mono"])
 
     # Buttons
     style.configure("TButton", background=BG_HOVER, foreground=FG_PRIMARY,

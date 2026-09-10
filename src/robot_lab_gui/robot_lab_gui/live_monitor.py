@@ -81,7 +81,7 @@ class LiveMonitorTab(ttk.Frame):
             pass
 
         self.status_dot = tk.Label(bar, text="*", fg=STATUS_IDLE, bg=BG_DARK,
-                                    font=("Segoe UI", 12))
+                                    font=(self.fonts["mono"], 11))
         self.status_dot.grid(row=0, column=2, padx=(0, 4))
 
         self.status_label = ttk.Label(bar, text="Disconnected", style="Status.Idle.TLabel")
@@ -126,7 +126,7 @@ class LiveMonitorTab(ttk.Frame):
         frame.grid(row=row, column=0, sticky="nsew", pady=4)
         frame.columnconfigure(0, weight=1)
         hdr = tk.Label(frame, text=title, bg=BG_CARD, fg=FG_PRIMARY,
-                        font=("Segoe UI", 11, "bold"), padx=10, pady=6)
+                        font=self.fonts["subheading"], padx=10, pady=6)
         hdr.grid(row=0, column=0, sticky="w")
         inner = tk.Frame(frame, bg=BG_CARD, padx=10, pady=10)
         inner.grid(row=1, column=0, sticky="nsew")
