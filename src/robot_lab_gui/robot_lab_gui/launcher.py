@@ -315,6 +315,10 @@ class SimulationLauncherGui(tk.Tk):
         self.algorithm_id_var = tk.StringVar()
         self.slot_vars = {slot: tk.StringVar() for slot in ALGORITHM_CATEGORIES}
         self.slot_combos = {}
+        self.slot_labels = {}
+        self._compat_cache = {}
+        self._cleared_selections = []  # Track selections cleared due to incompatibility
+        self.compatibility_var = tk.StringVar(value="")
         self.validation_var = tk.StringVar(value="Valid")
         self.composition_registry = None
         if COMPOSITION_AVAILABLE:
@@ -543,10 +547,12 @@ class SimulationLauncherGui(tk.Tk):
         composition_frame.grid(row=12, column=0, sticky="ew", pady=(12, 6))
         composition_frame.columnconfigure(1, weight=1)
         for row, slot in enumerate(ALGORITHM_CATEGORIES):
-            ttk.Label(
+            label = ttk.Label(
                 composition_frame,
                 text=ALGORITHM_SLOT_LABELS.get(slot, slot.title()),
-            ).grid(row=row, column=0, sticky="w", padx=(0, 6))
+            )
+            label.grid(row=row, column=0, sticky="w", padx=(0, 6))
+            self.slot_labels[slot] = label
             combo = ttk.Combobox(
                 composition_frame,
                 textvariable=self.slot_vars[slot],
@@ -557,7 +563,48 @@ class SimulationLauncherGui(tk.Tk):
             combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
             self.slot_combos[slot] = combo
 
-        ttk.Label(controls, text="Validation").grid(row=13, column=0, sticky="w", pady=(4, 2))
+        # Compatibility status label (shows filtering results)
+        self.compatibility_label = ttk.Label(
+            controls,
+            textvariable=self.compatibility_var,
+            justify="left",
+            wraplength=340,
+        )
+        self.compatibility_label.grid(row=13, column=0, sticky="ew", pady=(4, 2))
+        add_tooltip(self.compatibility_label, "Shows algorithm compatibility status for current robot/map/mode selection")
+
+        # Composition control buttons
+        comp_button_frame = ttk.Frame(controls)
+        comp_button_frame.grid(row=14, column=0, sticky="w", pady=(2, 4))
+        self.reset_composition_button = ttk.Button(
+            comp_button_frame,
+            text="Reset Composition",
+            command=self._reset_composition,
+        )
+        self.reset_composition_button.pack(side="left", padx=(0, 4))
+        self.show_incompatible_button = ttk.Button(
+            comp_button_frame,
+            text="Show Incompatible",
+            command=self._show_incompatible_dialog,
+        )
+        self.show_incompatible_button.pack(side="left", padx=(0, 4))
+        self.quick_select_button = ttk.Button(
+            comp_button_frame,
+            text="Quick Select",
+            command=self._quick_select_compatible,
+        )
+        self.quick_select_button.pack(side="left", padx=(0, 4))
+        self.show_cleared_button = ttk.Button(
+            comp_button_frame,
+            text="Show Cleared",
+            command=self._show_cleared_selections,
+        )
+        self.show_cleared_button.pack(side="left")
+
+        # Visual separator
+        ttk.Separator(controls, orient="horizontal").grid(row=15, column=0, sticky="ew", pady=(6, 4))
+
+        ttk.Label(controls, text="Validation").grid(row=16, column=0, sticky="w", pady=(4, 2))
         self.validation_label = ttk.Label(
             controls,
             textvariable=self.validation_var,
@@ -565,9 +612,9 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=340,
             style="Status.Idle.TLabel" if THEME_AVAILABLE else None,
         )
-        self.validation_label.grid(row=14, column=0, sticky="ew", pady=(2, 8))
+        self.validation_label.grid(row=17, column=0, sticky="ew", pady=(2, 8))
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=16, column=0, sticky="w")
+        ttk.Label(controls, text="Resolved Configuration").grid(row=19, column=0, sticky="w")
         summary = ttk.Label(
             controls,
             textvariable=self.summary_var,
@@ -575,20 +622,20 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=340,
             style="Muted.TLabel" if THEME_AVAILABLE else None,
         )
-        summary.grid(row=17, column=0, sticky="ew", pady=(2, 12))
+        summary.grid(row=20, column=0, sticky="ew", pady=(2, 12))
 
         cmd_header = ttk.Frame(controls)
-        cmd_header.grid(row=18, column=0, sticky="ew")
+        cmd_header.grid(row=21, column=0, sticky="ew")
         cmd_header.columnconfigure(0, weight=1)
         ttk.Label(cmd_header, text="Command").grid(row=0, column=0, sticky="w")
         ttk.Button(cmd_header, text="Copy", command=self._copy_command,
                    style="Small.TButton").grid(row=0, column=1, sticky="e")
         command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=19, column=0, sticky="ew", pady=(2, 12))
+        command.grid(row=22, column=0, sticky="ew", pady=(2, 12))
         add_tooltip(command, "Exact ros2 launch command. Copy it to run headless.")
 
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=20, column=0, sticky="ew")
+        button_frame.grid(row=23, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=3)
         button_frame.columnconfigure(1, weight=2)
         button_frame.columnconfigure(2, weight=1)
@@ -832,9 +879,9 @@ class SimulationLauncherGui(tk.Tk):
         self._update_from_selection()
 
     def _refresh_slot_combos(self):
-        """Populate the seven algorithm slot dropdowns from the registry."""
+        """Populate the seven algorithm slot dropdowns with compatible algorithms."""
         for slot in ALGORITHM_CATEGORIES:
-            algorithms = self._algorithms_for_category(slot)
+            algorithms = self._slot_compatible_algorithms(slot)
             combo = self.slot_combos.get(slot)
             if combo is None:
                 continue
@@ -842,6 +889,264 @@ class SimulationLauncherGui(tk.Tk):
             current = self.slot_vars[slot].get()
             if current and current not in algorithms:
                 self.slot_vars[slot].set("")
+                base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
+                self._cleared_selections.append(
+                    f"{base}: '{current}' (incompatible with current robot/map)")
+
+            # Update slot visual state based on mode relevance
+            is_active = self._slot_is_active(slot)
+            is_primary = (self._primary_slot_for_mode() == slot)
+            label = self.slot_labels.get(slot)
+            tooltip = self._slot_tooltip_text(slot)
+
+            if is_active:
+                combo.configure(state="readonly")
+                add_tooltip(combo, tooltip)
+                if label:
+                    count = len(algorithms)
+                    base_text = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
+                    label_text = f"{base_text} ({count})"
+                    if is_primary:
+                        label.configure(text=f"★ {label_text}", state="normal",
+                                       style="Accent.TLabel" if THEME_AVAILABLE else None)
+                    else:
+                        label.configure(text=label_text, state="normal")
+                    add_tooltip(label, tooltip)
+            else:
+                combo.configure(state="disabled")
+                add_tooltip(combo, tooltip)
+                if label:
+                    count = len(algorithms)
+                    base_text = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
+                    label.configure(text=f"{base_text} ({count})", state="disabled")
+                    add_tooltip(label, tooltip)
+
+    def _slot_is_active(self, slot):
+        """Check if a slot is relevant for the current mode."""
+        mode = self.mode_var.get()
+        mode_slots = {
+            "display": {"perception"},
+            "loc": {"localization"},
+            "slam": {"localization", "sensor_fusion"},
+            "3d_slam": {"state_estimation", "sensor_fusion"},
+            "nav": {"global_planning", "local_planning", "control", "localization"},
+        }
+        return slot in mode_slots.get(mode, set())
+
+    def _primary_slot_for_mode(self, mode=None):
+        """Return the primary (most important) slot for the given/current mode.""
+        if mode is None:
+            mode = self.mode_var.get()
+        return MODE_TO_ALGORITHM_CATEGORY.get(mode)
+
+    def _slot_tooltip_text(self, slot):
+        """Return tooltip text explaining slot relevance.""
+        is_active = self._slot_is_active(slot)
+        is_primary = (self._primary_slot_for_mode() == slot)
+        count = len(self._slot_compatible_algorithms(slot))
+        base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
+        if is_primary:
+            return f"{base} - PRIMARY slot for current mode ({count} compatible algorithms)"
+        if is_active:
+            return f"{base} - active for current mode ({count} compatible algorithms)"
+        return f"{base} - not used in current mode"
+
+    def _slot_compatible_algorithms(self, slot):
+        """Return list of algorithm IDs compatible with current robot/environment."""
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+            return self._algorithms_for_category(slot)
+
+        robot_id = self.robot_var.get()
+        environment_id = self.map_var.get()
+
+        # Check cache
+        cache_key = (robot_id, environment_id, self.simulator_var.get(), slot)
+        if cache_key in self._compat_cache:
+            return self._compat_cache[cache_key]
+
+        compatible = []
+        for algorithm in self.algorithms:
+            if algorithm.get("category") != slot:
+                continue
+
+            test_selection = GuiCompositionSelection(
+                robot_id=robot_id,
+                simulator=self.simulator_var.get(),
+                environment_id=environment_id,
+                algorithm_ids={slot: algorithm["id"]},
+                reset=True,
+            )
+
+            try:
+                errors, _ = validation_lines(self.composition_registry, test_selection)
+                if not errors:
+                    compatible.append(algorithm["id"])
+            except Exception:
+                compatible.append(algorithm["id"])
+
+        # Store in cache
+        self._compat_cache[cache_key] = compatible
+        return compatible
+
+    def _clear_compat_cache(self):
+        """Clear the compatibility cache."""
+        self._compat_cache = {}
+
+    def _get_compatibility_summary(self):
+        """Return a summary of slot compatibility for the current selection.""
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+            return ""
+        summary_parts = []
+        total_compatible = 0
+        total_slots_active = 0
+        for slot in ALGORITHM_CATEGORIES:
+            if not self._slot_is_active(slot):
+            total_slots_active += 1
+                continue
+            count = len(self._slot_compatible_algorithms(slot))
+            total_compatible += count
+            if count == 0:
+                base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
+                summary_parts.append(f"{base}: none")
+        if summary_parts:
+            return "⚠ No compatible: " + ", ".join(summary_parts)
+        if total_slots_active > 0:
+            return f"✓ All {total_slots_active} active slots have compatible algorithms ({total_compatible} total)"
+        return "No active slots for current mode"
+
+    def _reset_composition(self):
+        """Reset all algorithm slot selections to empty."""
+        for slot in ALGORITHM_CATEGORIES:
+            self.slot_vars[slot].set("")
+    def _show_cleared_selections(self):
+        """Show a dialog listing selections that were automatically cleared."""
+        if not self._cleared_selections:
+            messagebox.showinfo(
+                "Cleared Selections",
+                "No selections have been automatically cleared.",
+            )
+            return
+
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Cleared Selections")
+        dialog.geometry("500x300")
+        dialog.transient(self.root)
+
+        text = scrolledtext.ScrolledText(dialog, wrap="word", padx=10, pady=10)
+        text.pack(fill="both", expand=True)
+
+        lines = [
+            "The following selections were automatically cleared",
+            "because they are incompatible with the current robot/map:",
+            "",
+        ]
+        lines.extend(self._cleared_selections)
+        lines.append("")
+        lines.append("Change the robot or map to restore compatibility.")
+
+        text.insert("1.0", "\n".join(lines))
+        text.configure(state="disabled")
+
+        btn_frame = ttk.Frame(dialog)
+        btn_frame.pack(pady=8)
+        ttk.Button(btn_frame, text="Close", command=dialog.destroy).pack(side="left", padx=4)
+        ttk.Button(btn_frame, text="Clear History", command=lambda: self._clear_cleared_history(dialog)).pack(side="left", padx=4)
+
+    def _clear_cleared_history(self, dialog=None):
+        """Clear the history of automatically cleared selections."""
+        self._cleared_selections = []
+        if dialog:
+            dialog.destroy()
+
+    def _get_incompatibility_reasons(self, slot, algorithm_id):
+        self._update_from_selection()
+
+    def _get_incompatibility_reasons(self, slot, algorithm_id):
+        """Return a list of reasons why an algorithm is incompatible."""
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+            return []
+        test_selection = GuiCompositionSelection(
+            robot_id=self.robot_var.get(),
+            simulator=self.simulator_var.get(),
+            environment_id=self.map_var.get(),
+            algorithm_ids={slot: algorithm_id},
+            reset=True,
+        )
+        try:
+            errors, warnings = validation_lines(self.composition_registry, test_selection)
+            return errors + warnings
+        except Exception as exc:
+            return [str(exc)]
+
+    def _quick_select_compatible(self):
+        """Auto-select the first compatible algorithm for each active slot."""
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+            return
+        selected_count = 0
+        for slot in ALGORITHM_CATEGORIES:
+            if not self._slot_is_active(slot):
+                continue
+            if self.slot_vars[slot].get():
+                continue  # Already selected
+            compatible = self._slot_compatible_algorithms(slot)
+            if compatible:
+                self.slot_vars[slot].set(compatible[0])
+                selected_count += 1
+        if selected_count > 0:
+            self._update_from_selection()
+
+    def _show_incompatible_dialog(self):
+        """Show a dialog listing incompatible algorithms and reasons."""
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+            messagebox.showinfo(
+                "Compatibility",
+                "Composition module unavailable. All algorithms shown.",
+            )
+            return
+
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Algorithm Compatibility")
+        dialog.geometry("600x400")
+        dialog.transient(self.root)
+
+        text = scrolledtext.ScrolledText(dialog, wrap="word", padx=10, pady=10)
+        text.pack(fill="both", expand=True)
+
+        robot_id = self.robot_var.get()
+        environment_id = self.map_var.get()
+        simulator = self.simulator_var.get()
+
+        lines = [
+            f"Current selection: Robot={robot_id}, Map={environment_id}, Simulator={simulator}",
+            f"Mode: {MODE_LABELS.get(self.mode_var.get(), self.mode_var.get())}",
+            "",
+        ]
+
+        for slot in ALGORITHM_CATEGORIES:
+            base = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
+            compatible = self._slot_compatible_algorithms(slot)
+            incompatible = []
+            for algorithm in self.algorithms:
+                if algorithm.get("category") == slot and algorithm["id"] not in compatible:
+                    incompatible.append(algorithm["id"])
+
+            if incompatible:
+                lines.append(f"--- {base} ({len(incompatible)} incompatible) ---")
+                for algo_id in incompatible:
+                    reasons = self._get_incompatibility_reasons(slot, algo_id)
+                    algo_name = self._algorithm_name(algo_id)
+                    lines.append(f"  {algo_name}:")
+                    for reason in reasons[:3]:  # Limit to first 3 reasons
+                        lines.append(f"    - {reason}")
+                lines.append("")
+
+        if not any("---" in line for line in lines):
+            lines.append("All algorithms are compatible with the current selection!")
+
+        text.insert("1.0", "\n".join(lines))
+        text.configure(state="disabled")
+
+        ttk.Button(dialog, text="Close", command=dialog.destroy).pack(pady=8)
 
     def _composition_selection(self):
         """Build the shared resolver selection from the current GUI controls."""
@@ -930,6 +1235,9 @@ class SimulationLauncherGui(tk.Tk):
         self._refresh_slot_combos()
 
     def _update_from_selection(self):
+        # Clear compatibility cache when selection changes
+        self._clear_compat_cache()
+        self._cleared_selections = []
         supported_modes = self._supported_modes()
         if self.mode_var.get() not in supported_modes:
             self.mode_var.set(self._fallback_mode(supported_modes))
@@ -962,6 +1270,15 @@ class SimulationLauncherGui(tk.Tk):
         self._update_validation_and_command()
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
+        self.compatibility_var.set(self._get_compatibility_summary())
+        # Update label color based on compatibility status
+        compat_text = self.compatibility_var.get()
+        if compat_text.startswith("✓"):
+            self.compatibility_label.configure(foreground="#4caf50")  # Green
+        elif compat_text.startswith("⚠"):
+            self.compatibility_label.configure(foreground="#ff8800")  # Orange
+        else:
+            self.compatibility_label.configure(foreground="#888888")  # Gray
 
     def _robot_info_text(self, supported_modes, supports_vacuum):
         config = self._robot_config()
@@ -1041,7 +1358,7 @@ class SimulationLauncherGui(tk.Tk):
 
         Single stack start: the resolver emits the exact ros2 launch command
         from the same manifest the CLI uses; the ignored GUI 'algorithm:='
-        argument is gone — planner/slot selections now change active nav2
+        argument is gone - planner/slot selections now change active nav2
         plugins through the manifest arguments.
         """
         if COMPOSITION_AVAILABLE and self.composition_registry is not None:
