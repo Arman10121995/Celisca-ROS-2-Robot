@@ -717,7 +717,7 @@ class SimulationLauncherGui(tk.Tk):
 
         status_style = "Statusbar.TLabel" if THEME_AVAILABLE else None
         self._ros_status_dot = tk.Label(status_frame, text="*",
-                                        fg="#ff6b6b", font=("Segoe UI", 10))
+                                        fg="#ff6b6b", font=fonts["mono_small"])
         self._ros_status_dot.grid(row=0, column=0, padx=(8, 4))
 
         ttk.Label(status_frame, text="ROS 2:",

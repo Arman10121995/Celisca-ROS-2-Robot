@@ -73,7 +73,9 @@ def _fonts():
         "small": (body, 9),
         "small_bold": (body, 9, "bold"),
         "mono": (mono, 10),
+        "mono_bold": (mono, 10, "bold"),
         "mono_small": (mono, 9),
+        "mono_tiny": (mono, 8),
         "title": (body, 16, "bold"),
     }
 
