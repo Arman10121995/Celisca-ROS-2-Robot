@@ -71,8 +71,14 @@ class LiveMonitorTab(ttk.Frame):
         ttk.Label(bar, text="Live Monitor", style="Heading.TLabel").grid(
             row=0, column=0, sticky="w", padx=(0, 16))
 
-        self.btn_connect = ttk.Button(bar, text="Connect", command=self._toggle_connect)
+        self.btn_connect = ttk.Button(bar, text="Connect", command=self._toggle_connect,
+                                        style="Accent.TButton")
         self.btn_connect.grid(row=0, column=1, padx=(0, 4))
+        try:
+            from .themes.modern import tooltip as _tip
+            _tip(self.btn_connect, "Subscribe to /odom, /scan, /imu/out, /clock.")
+        except Exception:
+            pass
 
         self.status_dot = tk.Label(bar, text="*", fg=STATUS_IDLE, bg=BG_DARK,
                                     font=("Segoe UI", 12))
@@ -162,8 +168,11 @@ class LiveMonitorTab(ttk.Frame):
         if not ROS_AVAILABLE:
             self.app.log("[live_monitor] rclpy not available.\n")
             return
+        if self._running:
+            return
         self._running = True
-        self.btn_connect.configure(text="Disconnect")
+        self.btn_connect.configure(text="Disconnect", state="normal")
+        self.status_label.configure(text="Connecting...", style="Status.Warn.TLabel")
         self.status_dot.configure(fg=STATUS_OK)
         self.status_label.configure(text="Connected", style="Status.OK.TLabel")
         self._ros_thread = threading.Thread(target=self._ros_spin, daemon=True)
@@ -289,6 +298,8 @@ class LiveMonitorTab(ttk.Frame):
                     sc["n"], sc["valid"], sc["min"], sc["max"],
                     sc["angle_min"], sc["angle_max"]))
             self.scan_text.configure(state="disabled")
+        self.sample_var.set("odom %d | scan %d | imu %d" % (
+            len(self._odom_buf), len(self._scan_buf), len(self._imu_buf)))
         if self._clock_buf:
             t = self._clock_buf[-1]
             self.clock_var.set("Sim time: %.2f s" % t)
@@ -306,9 +317,12 @@ class LiveMonitorTab(ttk.Frame):
         self.scan_text.configure(state="disabled")
 
     def _build_clock(self, parent):
+        self.sample_var = tk.StringVar(value="odom 0 | scan 0 | imu 0")
+        tk.Label(parent, textvariable=self.sample_var, bg=BG_CARD, fg=FG_MUTED,
+                 font=("Consolas", 9)).grid(row=0, column=0, sticky="w")
         self.clock_var = tk.StringVar(value="Sim time: -")
         tk.Label(parent, textvariable=self.clock_var, bg=BG_CARD, fg=FG_PRIMARY,
-                 font=("Consolas", 10, "bold")).grid(row=0, column=0, sticky="w")
+                 font=("Consolas", 10, "bold")).grid(row=1, column=0, sticky="w")
         self.fps_var = tk.StringVar(value="FPS: -")
         tk.Label(parent, textvariable=self.fps_var, bg=BG_CARD, fg=FG_MUTED,
-                 font=("Consolas", 9)).grid(row=1, column=0, sticky="w", pady=(4, 0))
+                 font=("Consolas", 9)).grid(row=2, column=0, sticky="w", pady=(4, 0))

@@ -241,7 +241,7 @@ class VacuumTab(LabTab):
                 "The room-vacuum launch brings up Gazebo + the vacuum room world; "
                 "the cleaner node drives systematic coverage."
             ),
-            wraplength=680,
+            wraplength=640,
             justify="left",
         ).grid(row=0, column=0, sticky="ew")
 
@@ -594,7 +594,7 @@ class TestsTab(LabTab):
             ),
             wraplength=680,
             justify="left",
-            foreground="#555555",
+            foreground="#a6adc8" if THEME_AVAILABLE else "#555555",
         )
         info.grid(row=1, column=0, sticky="ew", pady=(10, 0))
 
