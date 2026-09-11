@@ -456,8 +456,15 @@ Dependencies: `R5.1`, `R6.1`.
   Verification: MuJoCo builds a model for 425/425 robot x map combinations
   (the 26th map resolves through its world name); PyBullet produces geometry
   for 26/26 maps (small_house 86 bodies, small_warehouse 25, nav_maze 16,
-  previously 0); both load 17/17 robot descriptions. This is import fidelity,
-  not the mission qualification this task requires.
+  previously 0); both load 17/17 robot descriptions, and all 17 still expand
+  as xacro for the Gazebo route. A live display-mode matrix over
+  gazebo/pybullet/mujoco x 7 robot choices (including none) x 6 map choices
+  (including none) launched 123/123 combinations with no launch error. Live
+  spot checks: Unitree Go2 in MuJoCo/nav_maze loads 14 bodies with all 12 leg
+  joints and staged meshes (previously the fallback box); Unitree H1-2 in
+  PyBullet/small_house loads 57 joints in an 86-shape world (previously the
+  robot failed to load and the world was empty). This is import fidelity, not
+  the mission qualification this task requires.
 
 ### R8.2 — Qualify Isaac on a named host configuration
 
