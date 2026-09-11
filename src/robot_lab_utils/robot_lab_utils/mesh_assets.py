@@ -17,6 +17,7 @@ depend on the other.
 import hashlib
 import os
 import re
+import shutil
 import struct
 import tempfile
 import xml.etree.ElementTree as ET

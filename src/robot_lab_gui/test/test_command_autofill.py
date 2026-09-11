@@ -183,3 +183,72 @@ def test_legacy_fallback_still_autofills_selected_options(app):
     assert command[3] == "simulated_room_vacuum.launch.py"
     assert "gui:=false" in command
     assert app.start_button.instate(["!disabled"])
+
+def test_algorithm_arguments_follow_the_mode_without_leaking(app):
+    """Switching modes rebuilds the slots; stale steps must not survive.
+
+    Each mode runs its own set of categories. When a previous mode's steps
+    were left behind they emitted a second, contradictory
+    `<category>:=none` next to the real selection, so the launch received two
+    values for the same category.
+    """
+    select(app, app.robot_combo, "bumperbot")
+    select(app, app.map_combo, "celisca_floor_1")
+
+    expected = {
+        "display": {"perception"},
+        "loc": {"localization", "state_estimation", "sensor_fusion"},
+        "slam": {"localization", "state_estimation", "sensor_fusion",
+                 "perception"},
+        "nav": {"global_planning", "local_planning", "control",
+                "localization", "state_estimation", "sensor_fusion"},
+    }
+    # Includes a return to an earlier mode, which is when leakage showed up.
+    for mode in ("display", "loc", "slam", "nav", "display", "nav"):
+        app.mode_buttons[mode].invoke()
+        app.update()
+        arguments = app._algorithm_arguments()
+        categories = [argument.split(":=", 1)[0] for argument in arguments]
+        assert len(categories) == len(set(categories)), (
+            f"{mode} emitted duplicate categories: {arguments}")
+        assert set(categories) == expected[mode], (
+            f"{mode} emitted {sorted(categories)}")
+
+
+def test_slot_selection_reaches_the_launch_command(app):
+    """A changed slot must appear in the command that Run would execute."""
+    select(app, app.robot_combo, "bumperbot")
+    select(app, app.map_combo, "celisca_floor_1")
+    app.mode_buttons["nav"].invoke()
+    app.update()
+    select(app, app.slot_combos["local_planner"], "mppi_controller")
+    command = displayed_command(app)
+    assert "local_planning:=mppi_controller" in command
+
+
+def test_display_mode_runs_without_a_robot_or_without_a_map(app):
+    """Display mode can show a world alone, or a robot alone."""
+    app.mode_buttons["display"].invoke()
+    app.update()
+
+    select(app, app.map_combo, launcher.NONE_LABEL)
+    command = displayed_command(app)
+    assert "map_name:=none" in command
+    assert f"robot_model:={app.robot_var.get()}" in command
+
+    select(app, app.map_combo, "celisca_floor_1")
+    select(app, app.robot_combo, launcher.NONE_LABEL)
+    command = displayed_command(app)
+    assert "robot_model:=none" in command
+    assert "map_name:=celisca_floor_1" in command
+
+
+def test_modes_needing_a_robot_are_disabled_without_one(app):
+    """An unavailable mode is greyed out, not silently re-selected."""
+    app.mode_buttons["display"].invoke()
+    select(app, app.robot_combo, launcher.NONE_LABEL)
+    app.update()
+    for mode in ("loc", "slam", "nav", "3d_slam"):
+        assert app.mode_buttons[mode].instate(["disabled"]), (
+            f"{mode} should be unavailable with no robot selected")
+    assert app.mode_var.get() == "display"
