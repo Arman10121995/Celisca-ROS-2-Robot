@@ -45,17 +45,37 @@ GUI or ros2 launch
   → sensor data → estimated pose → plan → command → simulated robot
 ```
 
-| Mode | Intended behavior |
-|---|---|
-| `display` | Robot model display in RViz |
-| `loc` | Known-map localization with AMCL and local state estimation |
-| `slam` | 2D mapping with SLAM Toolbox |
-| `3d_slam` | RGB-D mapping with RTAB-Map; requires actual camera streams |
-| `nav` | Known-map localization plus Nav2 navigation |
+A mode declares the ordered pipeline it runs, and each step that has an
+`algorithm_category` is a selector. Mode categories and algorithm categories
+are one taxonomy (`config/sim_modes.yaml` is the authority):
 
-The default navigation configuration uses AMCL, `robot_localization` EKF, **SmacPlanner2D** and **Regulated Pure Pursuit**. These defaults are not automatically replaced by choosing an algorithm in the GUI or registry. The Gazebo-oriented route also includes command multiplexing for navigation and teleoperation.
+| Mode | Category | Selectable within the mode |
+|---|---|---|
+| `display` | Perception & Visualization | perception |
+| `loc` | Localization | localization, state estimation, sensor fusion |
+| `slam` | 2D Mapping & Localization | localization (SLAM backend), state estimation, sensor fusion, perception |
+| `3d_slam` | 3D Mapping & Localization | localization, state estimation, perception |
+| `nav` | Navigation | global planning, local planning, control, localization, state estimation, sensor fusion |
 
-The target experiment model adds independent perception, localization, state-estimation, sensor-fusion, global-planning, local-planning and control selectors. Today the registry can describe that model, but the composition CLI only previews it and the main launch's `algorithm` argument is not applied. The GUI, registry and launch profiles are not yet a single authoritative execution path.
+Each of the seven registry categories is a launch argument:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav   robot_model:=bumperbot map_name:=small_office simulator:=pybullet   global_planning:=navfn_planner local_planning:=mppi_controller   localization:=amcl state_estimation:=ekf_localization_node
+```
+
+Each argument takes an algorithm ID, `auto` (the mode's declared default) or
+`none` (run the mode without that stage). Selections are resolved **before any
+process starts**, against
+[`config/algorithm_dispatch.yaml`](src/robot_lab_bringup/config/algorithm_dispatch.yaml),
+which records for every cataloged algorithm whether it starts its own node,
+switches a Nav2 plugin, is provided by a stack the mode already runs, or cannot
+run and why. A selection that the mode does not run, or that names an algorithm
+this workspace cannot start, fails with that reason instead of being silently
+replaced by a default. The CLI resolver emits the same arguments, so a dry-run
+command and a GUI launch are the same command.
+
+Display mode also accepts `robot_model:=none` (show a world on its own) and
+`map_name:=none` (show a robot with no world) in every backend.
 
 ## Package map
 
@@ -105,9 +125,15 @@ Benchmark code includes schemas, output/report generation, orchestration helpers
 
 Gazebo is the reference integration route. PyBullet and MuJoCo have physics engines and ROS bridge code; Isaac uses a separate runtime subprocess and can fall back to offline behavior. A simulator process starting or an offline stub running is not qualification.
 
-The three non-Gazebo spawners publish the wrong message type on `/clock`; command/odometry wiring needs reconciliation. Their camera coverage is insufficient for `3d_slam`, and Isaac lacks scan publication. See the support matrix before selecting a backend.
+Asset coverage across backends is no longer the limit: all 17 robot
+descriptions import into PyBullet and MuJoCo, and all 26 maps exist for both
+(MuJoCo worlds are generated from the same Gazebo `.world` sources by
+`robot_lab_maps/tools/gen_mjcf_worlds.py`; the PyBullet backend parses the SDF
+directly). What remains unqualified is the runtime contract, not the geometry.
 
-The Tkinter GUI has launch profiles, process logs, registry browsing, drive/map tools, vacuum/benchmark/test/health tabs and telemetry monitoring. These are interface features, not proof that each underlying workflow works. In particular, its algorithm dropdown does not currently switch the running algorithm stack.
+The three non-Gazebo spawners publish the wrong message type on `/clock`; command/odometry wiring needs reconciliation. Their camera coverage is insufficient for `3d_slam`, and Isaac lacks scan publication. Isaac Sim is detected and launched automatically where it is installed, but on the Jetson baseline Kit aborts during extension startup because Isaac's own bundled torch links against a CUDA symbol the device does not provide — see the support matrix before selecting a backend.
+
+The Tkinter GUI has launch profiles, process logs, registry browsing, drive/map tools, vacuum/benchmark/test/health tabs and telemetry monitoring. These are interface features, not proof that each underlying workflow works. Its algorithm slots are built from the active mode's pipeline steps, list only algorithms the bringup layer can actually start, and are applied to the launch; modes and backends that the current selection cannot run are disabled with the reason attached rather than silently re-selected.
 
 ## Browse the repository safely
 
