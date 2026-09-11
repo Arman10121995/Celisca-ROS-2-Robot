@@ -159,9 +159,10 @@ class IsaacSpawner(Node):
         if self._spawned:
             return
         self._timer.cancel()
+        # The parameter default already carries the detected interpreter;
+        # an explicitly empty value means "do not start Isaac", so it is
+        # honoured rather than being re-detected behind the caller's back.
         isaac_py = self.get_parameter("isaac_python").value
-        if not isaac_py:
-            isaac_py = _default_isaac_python()
         if not isaac_py or not os.path.isfile(str(isaac_py)):
             self.get_logger().warn(
                 "Isaac Sim python (%r) not found - running in offline "

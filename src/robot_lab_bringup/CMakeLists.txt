@@ -21,6 +21,7 @@ if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(sim_profiles test/test_sim_profiles.py TIMEOUT 180)
   ament_add_pytest_test(simulator_backends test/test_simulator_backends.py TIMEOUT 180)
+  ament_add_pytest_test(algorithm_dispatch test/test_algorithm_dispatch.py TIMEOUT 120)
 endif()
 
 ament_package()
