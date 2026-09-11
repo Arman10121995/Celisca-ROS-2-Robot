@@ -7,6 +7,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, SetEnvironmentVariable, TimerAction
+from launch.conditions import IfCondition
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
@@ -26,7 +27,15 @@ def generate_launch_description():
     # Re-adding model_arg declaration without a default value
     model_arg = DeclareLaunchArgument(
         name="model",
-        description="Absolute path to robot urdf file"
+        default_value="",
+        description="Absolute path to robot urdf file. Empty with "
+                    "spawn_robot:=false shows the world on its own."
+    )
+
+    spawn_robot_arg = DeclareLaunchArgument(
+        name="spawn_robot", default_value="true",
+        description="Spawn a robot into the world. 'false' runs the world "
+                    "alone (map-only display)."
     )
 
     world_package_arg = DeclareLaunchArgument(
@@ -103,9 +112,12 @@ def generate_launch_description():
         value_type=str
     )
 
+    spawn_robot = LaunchConfiguration("spawn_robot")
+
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
+        condition=IfCondition(spawn_robot),
         parameters=[{"robot_description": robot_description,
                      "use_sim_time": use_sim_time}]
     )
@@ -339,6 +351,10 @@ def generate_launch_description():
         gz_world_name = get_sdf_world_name(world_file_path, wname)
         rname = LaunchConfiguration("robot_name").perform(context)
 
+        if LaunchConfiguration("spawn_robot").perform(context).lower() \
+                not in ("true", "1", "yes", "on"):
+            return []
+
         return [Node(
             package="ros_gz_sim",
             executable="create",
@@ -365,6 +381,7 @@ def generate_launch_description():
         executable="gz_pointcloud_to_optical.py",
         name="oakd_pointcloud_converter",
         output="screen",
+        condition=IfCondition(spawn_robot),
         parameters=[{
             "input_topic": "/oakd/points_gz",
             "output_topic": "/oakd/points",
@@ -376,6 +393,7 @@ def generate_launch_description():
     return LaunchDescription([
         use_sim_time_arg,
         model_arg, # Re-added model_arg
+        spawn_robot_arg,
         world_name_arg,
         world_package_arg,
         world_path_arg,

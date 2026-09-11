@@ -162,54 +162,149 @@ def _spin(node, spin_count=0):
             pass
 
 
+# ---------------------------------------------------------------------------
+# ROS 2 node wrappers
+#
+# The classes above are pure, deterministic algorithm cores (unit-testable
+# without a ROS graph).  The wrappers below are what the console entry points
+# actually run: real rclpy nodes that subscribe to the live sensor contract,
+# apply the core, and publish the result, so selecting one of these in the
+# GUI/CLI starts a node that genuinely participates in the pipeline.
+# ---------------------------------------------------------------------------
+
+def _marker_array_from_clusters(clusters, frame_id, stamp, ns):
+    """One LINE_STRIP/POINTS marker per cluster for RViz."""
+    array = MarkerArray()
+    for index, cluster in enumerate(clusters):
+        marker = Marker()
+        marker.header.frame_id = frame_id
+        marker.header.stamp = stamp
+        marker.ns = ns
+        marker.id = index
+        marker.type = Marker.POINTS
+        marker.action = Marker.ADD
+        marker.scale.x = 0.05
+        marker.scale.y = 0.05
+        marker.color.a = 1.0
+        marker.color.r = 1.0
+        marker.color.g = float(index % 3) / 2.0
+        marker.pose.orientation.w = 1.0
+        for point in cluster:
+            p = Point32()
+            p.x, p.y, p.z = float(point[0]), float(point[1]), 0.0
+            marker.points.append(p)
+        array.markers.append(marker)
+    return array
+
+
+class ObstacleDetectorNode(Node):
+    """/scan -> proximity-clustered obstacles on /perception/obstacles."""
+
+    def __init__(self, node_name='obstacle_detector'):
+        super().__init__(node_name)
+        self.declare_parameter('scan_topic', '/scan')
+        self.declare_parameter('cluster_distance', 0.5)
+        self.declare_parameter('markers_topic', '/perception/obstacles')
+        self.detector = ObstacleDetector(
+            cluster_distance=float(self.get_parameter('cluster_distance').value))
+        self._pub = self.create_publisher(
+            MarkerArray, self.get_parameter('markers_topic').value, 10)
+        self.create_subscription(
+            LaserScan, self.get_parameter('scan_topic').value,
+            self._on_scan, qos_profile_sensor_data)
+        self.clusters = []
+        self.get_logger().info('obstacle_detector ready')
+
+    def _on_scan(self, msg):
+        points = []
+        for index, distance in enumerate(msg.ranges):
+            if not math.isfinite(distance) or distance <= msg.range_min \
+                    or distance >= msg.range_max:
+                continue
+            angle = msg.angle_min + index * msg.angle_increment
+            points.append((distance * math.cos(angle),
+                           distance * math.sin(angle)))
+        self.clusters = self.detector.detect(points)
+        self._pub.publish(_marker_array_from_clusters(
+            self.clusters, msg.header.frame_id, msg.header.stamp, 'obstacles'))
+
+
+class ScanClustererNode(Node):
+    """/scan -> contiguous scan clusters on /perception/clusters."""
+
+    def __init__(self, node_name='scan_clusterer'):
+        super().__init__(node_name)
+        self.declare_parameter('scan_topic', '/scan')
+        self.declare_parameter('cluster_distance', 0.3)
+        self.declare_parameter('markers_topic', '/perception/clusters')
+        self.clusterer = ScanClusterer(
+            cluster_distance=float(self.get_parameter('cluster_distance').value))
+        self._pub = self.create_publisher(
+            MarkerArray, self.get_parameter('markers_topic').value, 10)
+        self.create_subscription(
+            LaserScan, self.get_parameter('scan_topic').value,
+            self._on_scan, qos_profile_sensor_data)
+        self.clusters = []
+        self.get_logger().info('scan_clusterer ready')
+
+    def _on_scan(self, msg):
+        self.clusters = self.clusterer.cluster_ranges(
+            msg.angle_min, msg.angle_increment, list(msg.ranges), msg.range_max)
+        self._pub.publish(_marker_array_from_clusters(
+            self.clusters, msg.header.frame_id, msg.header.stamp, 'clusters'))
+
+
+class PointcloudSegmenterNode(Node):
+    """PointCloud2 -> ground / non-ground clouds by height threshold."""
+
+    def __init__(self, node_name='pointcloud_segmenter'):
+        super().__init__(node_name)
+        self.declare_parameter('points_topic', '/oakd/points')
+        self.declare_parameter('ground_threshold', 0.1)
+        self.declare_parameter('ground_topic', '/perception/ground')
+        self.declare_parameter('obstacles_topic', '/perception/obstacle_cloud')
+        self.segmenter = PointcloudSegmenter(
+            ground_threshold=float(self.get_parameter('ground_threshold').value))
+        self._ground_pub = self.create_publisher(
+            PointCloud2, self.get_parameter('ground_topic').value, 10)
+        self._object_pub = self.create_publisher(
+            PointCloud2, self.get_parameter('obstacles_topic').value, 10)
+        self.create_subscription(
+            PointCloud2, self.get_parameter('points_topic').value,
+            self._on_points, qos_profile_sensor_data)
+        self.ground = []
+        self.objects = []
+        self.get_logger().info('pointcloud_segmenter ready')
+
+    def _on_points(self, msg):
+        try:
+            from sensor_msgs_py import point_cloud2
+        except ImportError:  # pragma: no cover - Humble ships this package
+            self.get_logger().warn('sensor_msgs_py unavailable; idling')
+            return
+        points = [(float(p[0]), float(p[1]), float(p[2]))
+                  for p in point_cloud2.read_points(
+                      msg, field_names=('x', 'y', 'z'), skip_nans=True)]
+        self.ground, self.objects = self.segmenter.segment(points)
+        self._ground_pub.publish(
+            point_cloud2.create_cloud_xyz32(msg.header, self.ground))
+        self._object_pub.publish(
+            point_cloud2.create_cloud_xyz32(msg.header, self.objects))
+
+
+from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
+
+
 def obstacle_detector_main(args=None):
-    if rclpy is None:
-        print('obstacle_detector: rclpy unavailable (dry mode)')
-        return 1
-    rclpy.init(args=args)
-    node = ObstacleDetector()
-    node.get_logger().info('obstacle_detector: up')
-    import time
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(ObstacleDetectorNode, 'obstacle_detector', args=args)
 
 
 def scan_clusterer_main(args=None):
-    if rclpy is None:
-        return 1
-    rclpy.init(args=args)
-    node = ScanClusterer()
-    import time
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(ScanClustererNode, 'scan_clusterer', args=args)
 
 
 def pointcloud_segmenter_main(args=None):
-    if rclpy is None:
-        return 1
-    rclpy.init(args=args)
-    node = PointcloudSegmenter()
-    import time
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(PointcloudSegmenterNode, 'pointcloud_segmenter', args=args)
 
 
 if __name__ == '__main__':

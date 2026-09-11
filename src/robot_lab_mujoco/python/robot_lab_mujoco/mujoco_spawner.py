@@ -120,300 +120,24 @@ _FALLBACK_MJCF = """<mujoco model="fallback_robot">
 """
 
 
-def _mesh_staging_dir(robot_name, urdf_text):
-    """Per-robot, content-addressed cache dir for converted meshes."""
-    tag = hashlib.sha1(urdf_text.encode("utf-8")).hexdigest()[:12]
-    safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(robot_name or "robot"))
-    path = os.path.join(
-        tempfile.gettempdir(), "robot_lab_mujoco_meshes", safe_name, tag
-    )
-    os.makedirs(path, exist_ok=True)
-    return path
-
-
-def _resolve_mesh_source(uri, pkg_map, base_dir=""):
-    """Resolve a URDF mesh filename to an absolute host path ('' if unknown).
-
-    Handles package://, file://, absolute paths and — as a last resort —
-    URIs relative to *base_dir* (the directory of the source xacro/URDF;
-    retargeting a temp-file URDF would otherwise break them).
-    """
-    uri = (uri or "").strip()
-    if uri.startswith("package://"):
-        rest = uri[len("package://"):]
-        pkg, _, rel = rest.partition("/")
-        base = pkg_map.get(pkg, "")
-        return os.path.join(base, rel) if base else ""
-    if uri.startswith("file://"):
-        return uri[len("file://"):]
-    if os.path.isabs(uri):
-        return uri
-    if base_dir:
-        # Relative URIs are relative to the package layout: the URDF often
-        # sits in an 'urdf'/'xacro'/'xml' subdirectory next to 'meshes', so
-        # walk up the ancestor chain and try the URI against each one.
-        base = os.path.abspath(base_dir)
-        for _ in range(8):
-            candidate = os.path.join(base, uri)
-            if os.path.isfile(candidate):
-                return candidate
-            parent = os.path.dirname(base)
-            if parent == base:
-                break
-            base = parent
-    return ""
-
-
-def _parse_collada_mesh(dae_path):
-    """Minimal Collada reader -> (vertices Nx3, faces Mx3) in Z-up order.
-
-    Supports the triangle/polygon primitives a robot URDF references for
-    display.  Raises ValueError when the file contains no usable geometry
-    (the caller then falls back to a placeholder box).
-    """
-    tree = ET.parse(dae_path)
-    root = tree.getroot()
-    match = re.match(r"\{(.+)\}COLLADA", root.tag)
-    ns = match.group(1) if match else ""
-
-    def _q(tag):
-        return "{%s}%s" % (ns, tag) if ns else tag
-
-    up_axis = "Y_UP"
-    for asset in root.findall(_q("asset")):
-        axis = asset.find(_q("up_axis"))
-        if axis is not None and axis.text:
-            up_axis = axis.text.strip()
-
-    vertices = []
-    faces = []
-    for geometry in root.iter(_q("geometry")):
-        mesh = geometry.find(_q("mesh"))
-        if mesh is None:
-            continue
-        sources = {}
-        for source in mesh.findall(_q("source")):
-            arr = source.find(_q("float_array"))
-            if arr is None or not arr.text or not source.get("id"):
-                continue
-            try:
-                sources["#" + source.get("id")] = [
-                    float(v) for v in arr.text.split()
-                ]
-            except ValueError:
-                continue
-        vertex_position = {}
-        for vtx in mesh.findall(_q("vertices")):
-            for inp in vtx.findall(_q("input")):
-                if inp.get("semantic") == "POSITION":
-                    vertex_position["#" + (vtx.get("id") or "")] = \
-                        inp.get("source", "")
-
-        for prim_tag in ("triangles", "polylist"):
-            for prim in mesh.findall(_q(prim_tag)):
-                inputs = prim.findall(_q("input"))
-                if not inputs:
-                    continue
-                stride = max(int(inp.get("offset", 0)) for inp in inputs) + 1
-                vertex_offset = None
-                positions = None
-                for inp in inputs:
-                    if inp.get("semantic") == "VERTEX":
-                        vertex_offset = int(inp.get("offset", 0))
-                        src = inp.get("source", "")
-                        positions = sources.get(vertex_position.get(src, src))
-                if vertex_offset is None or not positions:
-                    continue
-                p_elem = prim.find(_q("p"))
-                if p_elem is None or not p_elem.text:
-                    continue
-                try:
-                    idx = [int(v) for v in p_elem.text.split()]
-                except ValueError:
-                    continue
-                counts = None
-                vc = prim.find(_q("vcount"))
-                if vc is not None and vc.text:
-                    try:
-                        counts = [int(v) for v in vc.text.split()]
-                    except ValueError:
-                        counts = None
-                if not counts:
-                    counts = [3] * (len(idx) // max(stride, 1))
-                cursor = 0
-                for count in counts:
-                    if count < 3 or cursor + count * stride > len(idx):
-                        cursor += max(count, 0) * stride
-                        continue
-                    group = idx[cursor:cursor + count * stride]
-                    cursor += count * stride
-                    corner_ids = group[vertex_offset::stride]
-                    base = len(vertices)
-                    for vi in corner_ids:
-                        if 0 <= vi * 3 + 2 < len(positions):
-                            vertices.append(positions[vi * 3:vi * 3 + 3])
-                        else:
-                            vertices.append([0.0, 0.0, 0.0])
-                    for k in range(1, len(corner_ids) - 1):
-                        faces.append((base, base + k, base + k + 1))
-
-    if not faces:
-        raise ValueError("no triangle geometry found")
-    verts = np.array(vertices, dtype=np.float64)
-    if up_axis == "Y_UP":
-        verts = verts[:, [0, 2, 1]] * np.array([1.0, -1.0, 1.0])
-    elif up_axis == "X_UP":
-        verts = verts[:, [1, 0, 2]] * np.array([-1.0, 1.0, 1.0])
-    tris = np.array(faces, dtype=np.int64)
-    return verts, tris
-
-
-def _write_binary_stl(stl_path, vertices, faces):
-    """Write a binary STL; facet normals are recomputed from the winding."""
-    tris = vertices[faces]
-    v1 = tris[:, 1] - tris[:, 0]
-    v2 = tris[:, 2] - tris[:, 0]
-    normals = np.cross(v1, v2)
-    norm = np.linalg.norm(normals, axis=1)
-    norm[norm == 0.0] = 1.0
-    normals = normals / norm[:, None]
-    with open(stl_path, "wb") as fh:
-        fh.write(b"\0" * 80)
-        fh.write(struct.pack("<I", len(faces)))
-        for normal, tri in zip(normals, tris):
-            fh.write(struct.pack("<3f", float(normal[0]), float(normal[1]),
-                                 float(normal[2])))
-            for vertex in tri:
-                fh.write(struct.pack("<3f", float(vertex[0]), float(vertex[1]),
-                                     float(vertex[2])))
-            fh.write(struct.pack("<H", 0))
-
-
-def _write_placeholder_stl(stl_path, size=0.025):
-    """Small cube standing in for meshes MuJoCo cannot use."""
-    s = size
-    corners = np.array([
-        [-s, -s, -s], [s, -s, -s], [s, s, -s], [-s, s, -s],
-        [-s, -s, s], [s, -s, s], [s, s, s], [-s, s, s],
-    ], dtype=np.float64)
-    quads = [
-        (0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4),
-        (2, 3, 7, 6), (1, 2, 6, 5), (3, 0, 4, 7),
-    ]
-    faces = []
-    for a, b, c, d in quads:
-        faces.append((a, b, c))
-        faces.append((a, c, d))
-    _write_binary_stl(stl_path, corners, np.array(faces, dtype=np.int64))
-
-
-_MUJOCO_MAX_STL_FACES = 180000  # MuJoCo decoder cap is 200000; keep headroom
-
-
-def _binary_stl_face_count(path):
-    """Face count of a binary STL from its header/size ('' unsafe)."""
-    try:
-        size = os.path.getsize(path)
-    except OSError:
-        return 0
-    if size < 84:
-        return 0
-    return (size - 84) // 50
-
-
-def _read_binary_stl(path):
-    """Binary STL reader -> (vertices Nx3, faces Mx3)."""
-    with open(path, "rb") as fh:
-        fh.read(80)
-        (count,) = struct.unpack("<I", fh.read(4))
-        raw = fh.read(count * 50)
-    data = np.frombuffer(raw, dtype=np.uint8)
-    if len(data) < count * 50:
-        raise ValueError("truncated binary STL")
-    data = data.reshape(count, 50)
-    floats = data[:, 12:48].copy().view("<f4").reshape(count, 3, 3)
-    verts = floats.reshape(-1, 3).astype(np.float64)
-    faces = np.arange(len(verts), dtype=np.int64).reshape(-1, 3)
-    return verts, faces
-
-
-def _cap_faces(vertices, faces, max_faces=_MUJOCO_MAX_STL_FACES):
-    """Naive decimation keeping the model under MuJoCo's decoder cap."""
-    if len(faces) <= max_faces:
-        return vertices, faces
-    step = int(np.ceil(len(faces) / max_faces))
-    return vertices, faces[::step]
-
-
-def _is_ascii_stl(path):
-    """True when *path* is an ASCII STL (MuJoCo only decodes binary STL)."""
-    try:
-        with open(path, "rb") as fh:
-            head = fh.read(512)
-    except OSError:
-        return False
-    return head.lstrip().startswith(b"solid") and b"facet" in head
-
-
-def _stage_stl(source, staged, notes, uri):
-    """Stage one STL mesh (binary copy, ASCII/beyond-cap conversion)."""
-    if (os.path.exists(staged) and not _is_ascii_stl(staged)
-            and 0 < _binary_stl_face_count(staged) <= _MUJOCO_MAX_STL_FACES):
-        return staged
-    if _is_ascii_stl(source):
-        try:
-            verts, faces = _parse_ascii_stl(source)
-            verts, faces = _cap_faces(verts, faces)
-            _write_binary_stl(staged, verts, faces)
-            return staged
-        except Exception as exc:
-            notes.append("mesh '%s' not convertible (%s); placeholder used"
-                         % (os.path.basename(uri), exc))
-            return ""
-    if _binary_stl_face_count(source) > _MUJOCO_MAX_STL_FACES:
-        try:
-            verts, faces = _read_binary_stl(source)
-            verts, faces = _cap_faces(verts, faces)
-            _write_binary_stl(staged, verts, faces)
-            notes.append("mesh '%s' decimated to %d faces (MuJoCo limit)"
-                         % (os.path.basename(uri), len(faces)))
-            return staged
-        except Exception as exc:
-            notes.append("mesh '%s' not convertible (%s); placeholder used"
-                         % (os.path.basename(uri), exc))
-            return ""
-    try:
-        shutil.copyfile(source, staged)
-        return staged
-    except OSError:
-        return ""
-
-
-def _parse_ascii_stl(path):
-    """Minimal ASCII STL reader -> (vertices Nx3, faces Mx3)."""
-    vertices = []
-    faces = []
-    current = []
-    with open(path, "r", errors="replace") as fh:
-        for line in fh:
-            parts = line.split()
-            if len(parts) >= 4 and parts[0] == "vertex":
-                try:
-                    current.append([float(parts[1]), float(parts[2]),
-                                    float(parts[3])])
-                except ValueError:
-                    current = []
-                    continue
-                if len(current) == 3:
-                    base = len(vertices)
-                    vertices.extend(current)
-                    faces.append((base, base + 1, base + 2))
-                    current = []
-            elif parts and parts[0] in ("endsolid", "solid"):
-                current = []
-    if not faces:
-        raise ValueError("no facets found in ASCII STL")
-    return np.array(vertices, dtype=np.float64), np.array(faces, dtype=np.int64)
+# Mesh staging/conversion lives in robot_lab_utils so the PyBullet backend
+# uses the identical pipeline (see robot_lab_utils/mesh_assets.py).  The
+# historical private names are kept as aliases: they are what this module and
+# its tests already reference.
+from robot_lab_utils.mesh_assets import (  # noqa: E402
+    _MUJOCO_MAX_STL_FACES,
+    _binary_stl_face_count,
+    _cap_faces,
+    _is_ascii_stl,
+    _mesh_staging_dir,
+    _parse_ascii_stl,
+    _parse_collada_mesh,
+    _read_binary_stl,
+    _resolve_mesh_source,
+    _stage_stl,
+    _write_binary_stl,
+    _write_placeholder_stl,
+)
 
 
 def _stage_meshes(urdf_text, pkg_map, cache_dir, base_dir=""):
@@ -596,6 +320,110 @@ def _inject_mujoco_compiler(urdf_text, mesh_dir):
     return ET.tostring(root, encoding="unicode")
 
 
+def _add_floating_base(mjcf_text, robot_name="robot"):
+    """Give an imported robot a floating base so it can move.
+
+    MuJoCo's URDF importer welds the root link to the world (URDF has no
+    notion of a floating base), which leaves every wheeled/legged robot
+    pinned in place and makes /cmd_vel do nothing.  Wrapping the robot's
+    worldbody content in a single body that carries a ``<freejoint/>`` gives
+    the base the 6 DOF the physics loop and the odometry publisher expect.
+
+    A model that already has a free joint is returned unchanged.
+    """
+    try:
+        root = ET.fromstring(mjcf_text)
+    except ET.ParseError:
+        return mjcf_text
+
+    worldbody = root.find("worldbody")
+    if worldbody is None or not len(worldbody):
+        return mjcf_text
+
+    for element in root.iter():
+        if element.tag == "freejoint":
+            return mjcf_text
+        if element.tag == "joint" and element.get("type") == "free":
+            return mjcf_text
+
+    # Lights and cameras stay in the world; everything else rides the base.
+    movable = [child for child in list(worldbody)
+               if child.tag not in ("light", "camera")]
+    if not movable:
+        return mjcf_text
+
+    base = ET.Element("body", {"name": "%s_base" % robot_name})
+    ET.SubElement(base, "freejoint", {"name": "%s_freejoint" % robot_name})
+    for child in movable:
+        worldbody.remove(child)
+        base.append(child)
+    worldbody.append(base)
+    return ET.tostring(root, encoding="unicode")
+
+
+def _stage_world_meshes(mjcf_text, logger=None):
+    """Convert a world MJCF's mesh assets into formats MuJoCo can load.
+
+    Generated world MJCF (robot_lab_maps/mjcf/*.xml) points straight at the
+    files the Gazebo world uses, which for the vendored Gazebo model library
+    are Collada (.DAE).  MuJoCo reads only STL/OBJ/MSH, so each mesh is
+    converted once into the same content-addressed cache the robot meshes
+    use, and the MJCF is rewritten to reference the staged file.
+
+    Meshes that cannot be converted become a small placeholder box, so one
+    bad asset never costs the whole world.
+    """
+
+    def _log(level, message):
+        if logger is not None:
+            getattr(logger, level)(message)
+
+    try:
+        root = ET.fromstring(mjcf_text)
+    except ET.ParseError:
+        return mjcf_text
+
+    assets = [mesh for mesh in root.iter("mesh") if mesh.get("file")]
+    if not assets:
+        return mjcf_text
+
+    cache_dir = _mesh_staging_dir("world", mjcf_text)
+    converted = placeholders = 0
+    for mesh in assets:
+        source = mesh.get("file") or ""
+        extension = os.path.splitext(source)[1].lower()
+        if extension in (".obj", ".msh"):
+            continue
+        stem = re.sub(r"[^A-Za-z0-9_.-]+", "_",
+                      os.path.splitext(os.path.basename(source))[0] or "mesh")
+        staged = os.path.join(cache_dir, stem + ".stl")
+        notes = []
+        if extension == ".stl" and os.path.isfile(source):
+            result = _stage_stl(source, staged, notes, source)
+            if result:
+                mesh.set("file", result)
+                continue
+        if os.path.isfile(source):
+            try:
+                vertices, faces = _parse_collada_mesh(source)
+                _write_binary_stl(staged, vertices, faces)
+                mesh.set("file", staged)
+                converted += 1
+                continue
+            except Exception as exc:
+                notes.append("%s: %s" % (os.path.basename(source), exc))
+        _write_placeholder_stl(staged)
+        mesh.set("file", staged)
+        placeholders += 1
+        for note in notes[:1]:
+            _log("warning", "MuJoCo world mesh: " + note)
+
+    if converted or placeholders:
+        _log("info", "MuJoCo world meshes staged: %d converted, %d placeholder(s)."
+                     % (converted, placeholders))
+    return ET.tostring(root, encoding="unicode")
+
+
 def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
                           base_dir=""):
     """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
@@ -636,7 +464,7 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         tmp.write(urdf_text)
         tmp.close()
         spec = mujoco.MjSpec.from_file(tmp.name)
-        mjcf = spec.to_xml()
+        mjcf = _add_floating_base(spec.to_xml(), robot_name or "robot")
         if placeholders:
             _log("warning",
                  "MuJoCo URDF import OK with %d placeholder geom(s); "
@@ -842,7 +670,8 @@ class MuJoCoSpawner(Node):
 
         # --- combine world + robot into single XML ---
         if world_xml and not use_fallback:
-            world_mjcf = self._merge_mjcf(world_xml, robot_mjcf)
+            world_mjcf = self._merge_mjcf(
+                world_xml, robot_mjcf, logger=self.get_logger())
         else:
             world_mjcf = robot_mjcf
 
@@ -909,48 +738,90 @@ class MuJoCoSpawner(Node):
         self._ready = True
         self._ready_pub.publish(Bool(data=True))
 
+    # MJCF top-level sections that belong to the robot and must survive the
+    # merge into a world.  Dropping <asset> was why every mesh-based robot
+    # failed to load with "mesh '<name>' not found in geom N": the geoms
+    # referenced meshes whose definitions had been thrown away.
+    _MERGED_SECTIONS = (
+        "asset", "default", "contact", "equality", "tendon",
+        "actuator", "sensor", "keyframe",
+    )
+
     @staticmethod
-    def _merge_mjcf(world_path, robot_mjcf):
-        """Insert robot MJCF bodies/actuators into the world XML."""
+    def _merge_mjcf(world_path, robot_mjcf, logger=None):
+        """Combine a world MJCF with a robot MJCF into one loadable model.
+
+        Both documents keep their own assets, defaults and actuators; the
+        robot's worldbody content is appended to the world's worldbody.  Asset
+        file paths of both sides are made absolute first, because
+        ``MjModel.from_xml_string`` resolves relative paths against the
+        process working directory rather than the source XML's directory.
+        """
         with open(world_path, "r") as fh:
             world_text = fh.read()
 
-        # MjModel.from_xml_string() resolves relative asset paths against the
-        # process CWD, not the source XML's directory.  World MJCFs use paths
-        # relative to their own location (e.g. '../maps/.../mesh.stl'), so
-        # rewrite them to absolute paths before the text is parsed.
         world_text = MuJoCoSpawner._absolutize_asset_paths(
             world_text, os.path.dirname(os.path.abspath(world_path))
         )
+        world_text = _stage_world_meshes(world_text, logger=logger)
 
-        wb_match = re.search(
-            r"(<worldbody>)(.*?)(</worldbody>)", robot_mjcf, re.DOTALL
-        )
-        act_match = re.search(
-            r"(<actuator>)(.*?)(</actuator>)", robot_mjcf, re.DOTALL
-        )
-        robot_wb = wb_match.group(2) if wb_match else ""
-        robot_act = act_match.group(2) if act_match else ""
+        try:
+            world_root = ET.fromstring(world_text)
+            robot_root = ET.fromstring(robot_mjcf)
+        except ET.ParseError:
+            # Unparseable input: fall back to the robot model alone rather
+            # than emitting a half-merged document.
+            return robot_mjcf
 
-        if "</worldbody>" in world_text:
-            world_text = world_text.replace(
-                "</worldbody>", robot_wb + "\n  </worldbody>"
-            )
-        else:
-            world_text = "<mujoco><worldbody>" + world_text + \
-                         robot_wb + "</worldbody>"
-            if robot_act:
-                world_text += "<actuator>" + robot_act + "</actuator>"
-            world_text += "</mujoco>"
+        # The robot compiler's meshdir is what makes its <asset> file paths
+        # resolvable; bake it into the paths, then drop it so the merged
+        # document does not inherit a directory the world does not share.
+        robot_compiler = robot_root.find("compiler")
+        meshdir = ""
+        if robot_compiler is not None:
+            meshdir = (robot_compiler.get("meshdir")
+                       or robot_compiler.get("assetdir") or "")
+        if meshdir:
+            for asset in robot_root.iter():
+                if asset.tag not in ("mesh", "hfield", "skin", "texture"):
+                    continue
+                path = asset.get("file")
+                if path and not os.path.isabs(path):
+                    asset.set("file", os.path.normpath(
+                        os.path.join(meshdir, path)))
 
-        if robot_act:
-            if "</mujoco>" in world_text:
-                world_text = world_text.replace(
-                    "</mujoco>",
-                    "<actuator>" + robot_act + "</actuator>\n</mujoco>",
-                )
+        # Carry over compiler settings that change how the robot is
+        # interpreted (angles, inertia bounds) without the directory hints.
+        if robot_compiler is not None:
+            world_compiler = world_root.find("compiler")
+            if world_compiler is None:
+                world_compiler = ET.SubElement(world_root, "compiler")
+            for key, value in robot_compiler.attrib.items():
+                if key in ("meshdir", "assetdir", "texturedir"):
+                    continue
+                world_compiler.set(key, value)
 
-        return world_text
+        def section(root, tag):
+            element = root.find(tag)
+            if element is None:
+                element = ET.SubElement(root, tag)
+            return element
+
+        for tag in MuJoCoSpawner._MERGED_SECTIONS:
+            robot_section = robot_root.find(tag)
+            if robot_section is None or not len(robot_section):
+                continue
+            target = section(world_root, tag)
+            for child in list(robot_section):
+                target.append(child)
+
+        robot_worldbody = robot_root.find("worldbody")
+        if robot_worldbody is not None:
+            target = section(world_root, "worldbody")
+            for child in list(robot_worldbody):
+                target.append(child)
+
+        return ET.tostring(world_root, encoding="unicode")
 
     @staticmethod
     def _absolutize_asset_paths(xml_text, base_dir):

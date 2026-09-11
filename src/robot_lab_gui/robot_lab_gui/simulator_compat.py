@@ -214,8 +214,21 @@ def simulator_status(simulator: str,
 
     if simulator == "isaac":
         isaac_python = env.get("ISAAC_PYTHON", "")
-        if isaac_python and os.path.isfile(isaac_python):
-            return True, ""
+        if isaac_python:
+            if os.path.isfile(isaac_python):
+                return True, ""
+            return False, ("ISAAC_PYTHON points at %s, which does not exist"
+                           % isaac_python)
+        # No explicit override: detect a local installation, the same way
+        # the Isaac backend itself does, so an installed Isaac Sim is
+        # selectable without the user exporting anything.
+        try:
+            from robot_lab_utils.isaac_env import isaac_status
+        except ImportError:
+            pass
+        else:
+            available, detail = isaac_status(env)
+            return available, "" if available else detail
         try:
             if find_spec("isaacsim") is not None:
                 return True, ""

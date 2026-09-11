@@ -10,12 +10,31 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def _resolve_mujoco_xml(context, world_name):
-    """Locate the MuJoCo MJCF/XML for the requested map."""
-    world_name_str = world_name.perform(context)
+    """Locate the MuJoCo MJCF/XML for the requested map.
+
+    MJCF worlds are generated from the Gazebo ``.world`` files by
+    ``robot_lab_maps/tools/gen_mjcf_worlds.py`` and named after the world.
+    The ``world_path`` basename is tried as well so a map whose sim_maps key
+    differs from its world name (``outdoor_terrain`` -> ``terrain_rough``)
+    still finds its world.  Falling back to the empty stage is reported, not
+    silent, because an unnoticed fallback looks exactly like a map that
+    failed to load.
+    """
     maps_share = get_package_share_directory("robot_lab_maps")
-    candidate = os.path.join(maps_share, "mjcf", world_name_str + ".xml")
-    if os.path.exists(candidate):
-        return candidate
+    candidates = [world_name.perform(context)]
+    world_path = LaunchConfiguration("world_path").perform(context)
+    if world_path:
+        candidates.append(
+            os.path.splitext(os.path.basename(world_path))[0])
+    for name in candidates:
+        if not name or name == "none":
+            continue
+        candidate = os.path.join(maps_share, "mjcf", name + ".xml")
+        if os.path.exists(candidate):
+            return candidate
+    print("[robot_lab_mujoco] no MJCF world for %s; using the empty stage. "
+          "Run robot_lab_maps/tools/gen_mjcf_worlds.py to generate it."
+          % (candidates[0] or "<unnamed>"))
     return os.path.join(maps_share, "mjcf", "empty.xml")
 
 

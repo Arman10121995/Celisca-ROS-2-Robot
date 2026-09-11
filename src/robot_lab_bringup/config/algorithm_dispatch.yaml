@@ -1,0 +1,124 @@
+# How a selected algorithm is APPLIED when a simulation is launched.
+#
+# The GUI / CLI select one algorithm per category (the categories are the
+# canonical registry taxonomy and match the `algorithm_category` of each
+# mode step in sim_modes.yaml).  simulated_robot.launch.py reads this file
+# and turns every selection into something concrete, so a selection is
+# never silently ignored:
+#
+#   node:   {package, executable, [name], [parameters]}
+#           -> started as its own ROS 2 node alongside the mode's stack.
+#   plugin: <plugin class string>
+#           -> switches the active nav2 plugin of the navigation stack
+#              (planner_server / controller_server).
+#   stack:  <launch id>
+#           -> already provided by a stack the mode starts; recorded so the
+#              launch can report *where* the selection takes effect
+#              instead of pretending it started something.
+#   unavailable: <reason>
+#           -> cataloged only; the launch refuses the selection with this
+#              reason rather than starting a broken graph.
+#
+# `requires_mode` (optional, list) restricts an entry to specific modes.
+algorithms:
+  perception:
+    laser_scan_to_pointcloud:
+      node: {package: pointcloud_to_laserscan, executable: pointcloud_to_laserscan_node}
+    costmap_2d_observation:
+      stack: navigation_costmap
+    obstacle_detector:
+      node: {package: robot_lab_algorithms, executable: obstacle_detector}
+    scan_clusterer:
+      node: {package: robot_lab_algorithms, executable: scan_clusterer}
+    pointcloud_segmenter:
+      node: {package: robot_lab_algorithms, executable: pointcloud_segmenter}
+    depth_image_to_pointcloud:
+      unavailable: "cataloged only - depth_image_proc adapter not integrated"
+    camera_calibration:
+      unavailable: "cataloged only - offline calibration tool, not a runtime pipeline"
+    feature_detection:
+      unavailable: "cataloged only - ORB-SLAM3 build carries an OpenCV ABI mismatch"
+
+  localization:
+    amcl:
+      stack: global_localization
+    slam_toolbox:
+      stack: slam
+    rtabmap_localization:
+      stack: rtabmap
+    robot_localization_ekf:
+      stack: local_localization
+    odometry_motion_model:
+      node: {package: robot_lab_localization, executable: odometry_motion_model}
+    dead_reckoning:
+      node: {package: robot_lab_algorithms, executable: dead_reckoning}
+    hector_slam:
+      unavailable: "cataloged only - hector_slam is not built in this workspace"
+
+  state_estimation:
+    ekf_localization_node:
+      stack: local_localization
+    kalman_filter_1d:
+      node: {package: robot_lab_localization, executable: kalman_filter}
+    ekf_3d_estimator:
+      node: {package: robot_lab_algorithms, executable: ekf_3d_estimator}
+    motion_model_estimator:
+      node: {package: robot_lab_algorithms, executable: motion_model_estimator}
+    pose_graph_estimator:
+      node: {package: robot_lab_algorithms, executable: pose_graph_estimator}
+
+  sensor_fusion:
+    imu_republisher:
+      stack: local_localization
+    imu_complementary_filter:
+      node: {package: imu_filter_madgwick, executable: imu_filter_madgwick_node}
+    wheel_imu_fusion:
+      node: {package: robot_lab_algorithms, executable: wheel_imu_fusion}
+    gps_odom_fusion:
+      node: {package: robot_lab_algorithms, executable: gps_odom_fusion}
+    complementary_imu:
+      node: {package: robot_lab_algorithms, executable: complementary_imu}
+
+  global_planning:
+    a_star_planner:
+      plugin: nav2_smac_planner/SmacPlanner2D
+    navfn_planner:
+      plugin: nav2_navfn_planner/NavfnPlanner
+    dijkstra_planner:
+      plugin: nav2_navfn_planner/NavfnPlanner
+    rrt_planner:
+      node: {package: robot_lab_algorithms, executable: rrt_planner}
+    voronoi_planner:
+      node: {package: robot_lab_algorithms, executable: voronoi_planner}
+
+  local_planning:
+    dwb_local_planner:
+      plugin: dwb_core::DWBLocalPlanner
+    teb_local_planner:
+      unavailable: "cataloged only - nav2_teb_planner is not built in this workspace"
+    pure_pursuit:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+    pd_motion_planner:
+      node: {package: robot_lab_motion, executable: pd_motion_planner.py}
+    follow_the_gap:
+      node: {package: robot_lab_algorithms, executable: follow_the_gap}
+
+  control:
+    simple_controller:
+      stack: controller
+    noisy_controller:
+      node: {package: robot_lab_controller, executable: noisy_controller}
+    twist_relay:
+      node: {package: robot_lab_controller, executable: twist_relay}
+    pid_controller:
+      node: {package: robot_lab_motion, executable: pure_pursuit.py}
+    joint_effort_commander:
+      node: {package: robot_lab_adapter, executable: joint-effort-commander}
+    humanoid_standing_controller:
+      node: {package: robot_lab_adapter, executable: humanoid-standing-controller}
+    mavros_offboard_controller:
+      node: {package: robot_lab_adapter, executable: mavros-offboard-controller}
+    cleaning_controller:
+      node: {package: robot_lab_controller, executable: cleaning_controller.py}
+    map_coverage_controller:
+      node: {package: robot_lab_controller, executable: mapping_controller.py}

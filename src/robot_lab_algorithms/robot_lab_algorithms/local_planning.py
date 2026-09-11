@@ -92,21 +92,62 @@ class FollowTheGap:
         return (linear, angular)
 
 
+# ---------------------------------------------------------------------------
+# ROS 2 node wrapper (what the console entry point runs)
+# ---------------------------------------------------------------------------
+
+from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
+
+
+class FollowTheGapNode(Node):
+    """/scan -> reactive gap-following velocity command.
+
+    Publishes to ``cmd_vel_topic`` (``/cmd_vel_gap`` by default) so the
+    planner can be observed without fighting the active controller; point it
+    at ``/cmd_vel`` to drive the robot with it.
+    """
+
+    def __init__(self, node_name='follow_the_gap'):
+        super().__init__(node_name)
+        from sensor_msgs.msg import LaserScan
+        from geometry_msgs.msg import Twist, PoseStamped
+        from rclpy.qos import qos_profile_sensor_data
+        self._twist_type = Twist
+        self.declare_parameter('scan_topic', '/scan')
+        self.declare_parameter('cmd_vel_topic', '/cmd_vel_gap')
+        self.declare_parameter('goal_topic', '/goal_pose')
+        self.declare_parameter('safety_radius', 0.3)
+        self.declare_parameter('max_range', 10.0)
+        self.planner = FollowTheGap(
+            safety_radius=float(self.get_parameter('safety_radius').value),
+            max_range=float(self.get_parameter('max_range').value))
+        self._pub = self.create_publisher(
+            Twist, self.get_parameter('cmd_vel_topic').value, 10)
+        self.create_subscription(
+            LaserScan, self.get_parameter('scan_topic').value,
+            self._on_scan, qos_profile_sensor_data)
+        self.create_subscription(
+            PoseStamped, self.get_parameter('goal_topic').value,
+            self._on_goal, 10)
+        self._goal_bearing = 0.0
+        self.get_logger().info('follow_the_gap ready')
+
+    def _on_goal(self, msg):
+        self._goal_bearing = math.atan2(msg.pose.position.y,
+                                        msg.pose.position.x)
+
+    def _on_scan(self, msg):
+        ranges = [r if math.isfinite(r) else msg.range_max for r in msg.ranges]
+        linear, angular = self.planner.steer(
+            msg.angle_min, msg.angle_increment, ranges, self._goal_bearing)
+        command = self._twist_type()
+        command.linear.x = float(linear)
+        command.angular.z = float(angular)
+        self._pub.publish(command)
+
+
 def follow_the_gap_main(args=None):
-    if rclpy is None:
-        print('follow_the_gap: rclpy unavailable (dry mode)')
-        return 1
-    rclpy.init(args=args)
-    node = Node('follow_the_gap')
-    node.get_logger().info('follow_the_gap: up')
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(FollowTheGapNode, 'follow_the_gap', args=args)
 
 
 if __name__ == '__main__':

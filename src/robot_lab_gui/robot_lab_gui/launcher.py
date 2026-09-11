@@ -121,7 +121,33 @@ except ImportError:  # pragma: no cover — defensive
         return True
 
 
+# Sentinel entry for the robot / map selectors.  Display mode can run with
+# only a robot (no world) or only a world (no robot), so both selectors carry
+# an explicit "nothing selected" choice that resolves to `none` on the command
+# line rather than to an empty string.
+NONE_LABEL = "— None —"
+NONE_VALUE = "none"
+
+
+def is_none_selection(value):
+    """True when a selector holds the explicit 'nothing selected' entry."""
+    return str(value).strip() in ("", NONE_LABEL, NONE_VALUE)
+
+
+def selection_value(value):
+    """Selector value as the launch layer expects it ('none' for the sentinel)."""
+    return NONE_VALUE if is_none_selection(value) else str(value).strip()
+
+
 MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
+MODE_TOOLTIPS = {
+    "display": "Visualize a robot and/or a map in the selected simulator "
+               "(no physics stack, controllers or localization).",
+    "loc": "Localization: localize against a known map.",
+    "slam": "SLAM: build a 2D map while localizing.",
+    "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",
+    "nav": "Navigation: plan and follow paths (2D map required).",
+}
 MODE_LABELS = {
     "display": "Display",
     "loc": "Localization",
@@ -391,9 +417,11 @@ class SimulationLauncherGui(tk.Tk):
         self.output_queue = queue.Queue()
         self._output_autoscroll = True  # follow-tail for Launch Output
 
-        self.robot_var = tk.StringVar(value=self._first_key(self.robot_profiles, "bumperbot"))
-        self.map_var = tk.StringVar(value=self._first_key(self.map_profiles, "celisca_floor_1"))
-        self.mode_var = tk.StringVar(value="nav")
+        self.robot_var = tk.StringVar(
+            value=self._first_key(self.robot_profiles, "bumperbot"))
+        self.map_var = tk.StringVar(
+            value=self._first_key(self.map_profiles, "celisca_floor_1"))
+        self.mode_var = tk.StringVar(value="display")
         self.simulator_var = tk.StringVar(value="gazebo")
         self.launch_kind_var = tk.StringVar(value="simulation")
         self.drive_linear_var = tk.DoubleVar(value=0.25)
@@ -513,13 +541,16 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_combo = ttk.Combobox(
             robot_frame,
             textvariable=self.robot_var,
-            values=sorted(self.robot_profiles.keys()),
+            values=[NONE_LABEL] + sorted(self.robot_profiles.keys()),
             state="readonly",
             width=34,
         )
         self.robot_combo.grid(row=0, column=0, sticky="ew")
         self.robot_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
-        add_tooltip(self.robot_combo, "Select the robot platform to simulate.")
+        add_tooltip(
+            self.robot_combo,
+            "Robot to simulate. '%s' shows the map with no robot "
+            "(display mode only)." % NONE_LABEL)
         self.robot_info_var = tk.StringVar(value="")
         ttk.Label(
             robot_frame,
@@ -532,13 +563,6 @@ class SimulationLauncherGui(tk.Tk):
         ttk.Label(controls, text="Mode").grid(row=2, column=0, sticky="w")
         mode_frame = ttk.Frame(controls)
         mode_frame.grid(row=3, column=0, sticky="ew", pady=(2, 12))
-        mode_tooltips = {
-            "display": "Visualize the robot in a 3D world (no sensors required).",
-            "loc": "Localization: localize against a known map.",
-            "slam": "SLAM: build a 2D map while localizing.",
-            "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",
-            "nav": "Navigation: plan and follow paths (2D map required).",
-        }
         for index, mode in enumerate(MODE_ORDER):
             button = ttk.Radiobutton(
                 mode_frame,
@@ -549,19 +573,22 @@ class SimulationLauncherGui(tk.Tk):
             )
             button.grid(row=index, column=0, sticky="w", pady=2)
             self.mode_buttons[mode] = button
-            add_tooltip(button, mode_tooltips.get(mode, ""))
+            add_tooltip(button, MODE_TOOLTIPS.get(mode, ""))
 
         ttk.Label(controls, text="Map").grid(row=4, column=0, sticky="w")
         self.map_combo = ttk.Combobox(
             controls,
             textvariable=self.map_var,
-            values=sorted(self.map_profiles.keys()),
+            values=[NONE_LABEL] + sorted(self.map_profiles.keys()),
             state="readonly",
             width=34,
         )
         self.map_combo.grid(row=5, column=0, sticky="ew", pady=(2, 12))
         self.map_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
-        add_tooltip(self.map_combo, "Select the environment/map to load.")
+        add_tooltip(
+            self.map_combo,
+            "Environment to load. '%s' shows the robot with no world "
+            "(display mode only)." % NONE_LABEL)
 
         ttk.Label(controls, text="Simulator").grid(row=6, column=0, sticky="w")
         self.simulator_combo = ttk.Combobox(
@@ -860,6 +887,8 @@ class SimulationLauncherGui(tk.Tk):
 
     def _map_yaml_path(self, map_id=None):
         map_id = map_id or self.map_var.get()
+        if is_none_selection(map_id):
+            return ""
         map_config = self.map_profiles.get(map_id, {})
         map_file_config = map_config.get("map", {})
         relative_path = map_file_config.get("path", "")
@@ -869,6 +898,8 @@ class SimulationLauncherGui(tk.Tk):
 
     def _map_has_2d_map(self, map_id=None):
         map_id = map_id or self.map_var.get()
+        if is_none_selection(map_id):
+            return False
         map_file_config = self.map_profiles.get(map_id, {}).get("map", {})
         configured = map_file_config.get("has_2d_map")
         if configured is not None:
@@ -888,20 +919,100 @@ class SimulationLauncherGui(tk.Tk):
                 if not simulator
                 or _simulator_supports_mode(simulator, mode, self.mode_profiles)]
 
+    def _robot_free(self):
+        return is_none_selection(self.robot_var.get())
+
+    def _map_free(self):
+        return is_none_selection(self.map_var.get())
+
+    def _mode_reasons(self):
+        """mode -> '' when selectable, else why it is not.
+
+        The reason is what the GUI shows on a disabled control, so every
+        greyed-out option can say what would make it selectable.
+        """
+        simulator = self.simulator_var.get()
+        robot_config = self._robot_config()
+        robot_supported = robot_config.get("supported_modes", ["display"])
+        robot_features = robot_config.get("features", [])
+        robot_free = self._robot_free()
+        map_free = self._map_free()
+
+        reasons = {}
+        for mode in MODE_ORDER:
+            if mode not in self.mode_profiles:
+                reasons[mode] = "not defined in sim_modes.yaml"
+                continue
+            # Robot-free / map-free runs only make sense for visualization.
+            if (robot_free or map_free) and mode != "display":
+                missing = "robot" if robot_free else "map"
+                reasons[mode] = ("needs a %s; only Display runs without one"
+                                 % missing)
+                continue
+            if not robot_free and mode not in robot_supported:
+                reasons[mode] = ("robot '%s' does not declare this mode"
+                                 % self.robot_var.get())
+                continue
+            if not map_free and self._mode_requires_2d_map(mode) \
+                    and not self._map_has_2d_map():
+                reasons[mode] = ("map '%s' has no 2D occupancy map; build one "
+                                 "with SLAM first" % self.map_var.get())
+                continue
+            missing_features = [
+                feature for feature in self._mode_required_features(mode)
+                if not robot_free and feature not in robot_features
+            ]
+            if missing_features:
+                reasons[mode] = ("robot lacks %s" % ", ".join(missing_features))
+                continue
+            if simulator:
+                supported, why = self._simulator_mode_support(simulator, mode)
+                if not supported:
+                    reasons[mode] = why
+                    continue
+            reasons[mode] = ""
+        return reasons
+
+    def _simulator_mode_support(self, simulator, mode):
+        """(ok, reason) for one simulator/mode pair, installation included."""
+        try:
+            from .simulator_compat import (
+                simulator_status, simulator_supports_mode)
+        except ImportError:
+            return _simulator_supports_mode(simulator, mode,
+                                            self.mode_profiles), ""
+        ok, why = simulator_supports_mode(simulator, mode, self.mode_profiles)
+        if not ok:
+            return False, "%s: %s" % (SIMULATOR_LABELS.get(simulator,
+                                                           simulator), why)
+        installed, why = simulator_status(simulator)
+        if not installed:
+            return False, "%s: %s" % (SIMULATOR_LABELS.get(simulator,
+                                                           simulator), why)
+        return True, ""
+
     def _robot_map_modes(self):
         """Modes the robot+map support, independent of the simulator choice."""
         robot_config = self._robot_config()
         robot_supported = robot_config.get("supported_modes", ["display"])
         robot_features = robot_config.get("features", [])
-        map_has_2d_map = self._map_has_2d_map()
+        robot_free = self._robot_free()
+        map_free = self._map_free()
+        map_has_2d_map = False if map_free else self._map_has_2d_map()
         supported = []
         for mode in MODE_ORDER:
-            if mode not in robot_supported or mode not in self.mode_profiles:
+            if mode not in self.mode_profiles:
                 continue
-            if self._mode_requires_2d_map(mode) and not map_has_2d_map:
+            if (robot_free or map_free) and mode != "display":
                 continue
-            required_features = self._mode_required_features(mode)
-            if any(feature not in robot_features for feature in required_features):
+            if not robot_free and mode not in robot_supported:
+                continue
+            if not map_free and self._mode_requires_2d_map(mode) \
+                    and not map_has_2d_map:
+                continue
+            if not robot_free and any(
+                    feature not in robot_features
+                    for feature in self._mode_required_features(mode)):
                 continue
             supported.append(mode)
         return supported
@@ -941,16 +1052,35 @@ class SimulationLauncherGui(tk.Tk):
             break
         return modes, fixes
 
-    def _mode_simulators(self):
-        """Simulators selectable for the active mode (features + installed)."""
-        allowed = _allowed_simulators(self.mode_var.get(), self.mode_profiles)
-        return [sim for sim in SIMULATOR_ORDER
-                if allowed.get(sim, (False, ""))[0]]
-
     def _allowed_maps(self):
-        """Map profiles compatible with the active mode's requirements."""
-        return [map_id for map_id in sorted(self.map_profiles)
+        """Map profiles selectable for the active mode.
+
+        Display mode accepts every registered environment in every backend
+        (including the map-free sentinel); the map-dependent modes accept
+        only environments with a real 2D occupancy map on disk.
+        """
+        maps = [map_id for map_id in sorted(self.map_profiles)
                 if self._map_ok_for_mode(map_id)]
+        if self.mode_var.get() == "display" and not self._robot_free():
+            return [NONE_LABEL] + maps
+        return maps
+
+    def _allowed_robots(self):
+        """Robot profiles selectable for the active mode.
+
+        The robot-free sentinel is offered only in display mode, and only
+        when a map is selected - there has to be something left to show.
+        """
+        robots = sorted(self.robot_profiles)
+        if self.mode_var.get() == "display" and not self._map_free():
+            return [NONE_LABEL] + robots
+        return robots
+
+    def _selectable_simulators(self):
+        """Backends that can run the active mode and are installed here."""
+        mode = self.mode_var.get()
+        return [sim for sim in SIMULATOR_ORDER
+                if self._simulator_mode_support(sim, mode)[0]]
 
     def _map_ok_for_mode(self, map_id):
         if self._mode_requires_2d_map(self.mode_var.get()):
@@ -991,7 +1121,11 @@ class SimulationLauncherGui(tk.Tk):
         return supported_modes[0] if supported_modes else "display"
 
     def _mode_simulators(self):
-        """Simulators the active mode supports, from sim_modes.yaml."""
+        """Simulators the active mode declares in sim_modes.yaml.
+
+        This is the mode's own declaration only; host availability is
+        applied separately by :meth:`_selectable_simulators`.
+        """
         return self._mode_config().get("simulators", SIMULATOR_ORDER)
 
     def _simulator_selected(self, _event=None):
@@ -1347,7 +1481,15 @@ class SimulationLauncherGui(tk.Tk):
         """Run the shared validator and refresh command + validation text."""
         if not COMPOSITION_AVAILABLE or self.composition_registry is None:
             self.validation_var.set(
-                "Composition resolver unavailable; legacy launch used.")
+                "Composition resolver unavailable; direct launch used.")
+            self._set_command(self._legacy_command())
+            return
+        if self._robot_free() or self._map_free():
+            # The registry models an experiment as robot + environment, so a
+            # deliberately robot-free or map-free display run is built
+            # directly instead of being reported as an invalid composition.
+            what = "map only" if self._robot_free() else "robot only"
+            self.validation_var.set("Valid - display %s" % what)
             self._set_command(self._legacy_command())
             return
         try:
@@ -1362,6 +1504,15 @@ class SimulationLauncherGui(tk.Tk):
             command = list(manifest["ros2_command"])
             if self.launch_kind_var.get() == "vacuum":
                 command[3] = "simulated_room_vacuum.launch.py"
+            # The manifest carries the algorithm choices, but only the two
+            # nav2 planner slots become launch arguments there.  Appending
+            # every selected category keeps the launch faithful to the panel
+            # for perception, localization, estimation, fusion and control.
+            for argument in self._algorithm_arguments():
+                category = argument.split(":=", 1)[0]
+                command = [part for part in command
+                           if not part.startswith(category + ":=")]
+                command.append(argument)
         except Exception as exc:  # pragma: no cover — defensive
             self.validation_var.set(f"Resolver error: {exc}")
             self._set_command([])
@@ -1398,41 +1549,52 @@ class SimulationLauncherGui(tk.Tk):
             self.status_var.set("Command copied")
 
     def _update_from_selection(self):
-        # 1. Maps: only environments valid for the mode's requirements stay
-        # selectable (loc/nav need a real 2D occupancy map on disk).
+        # 1. Maps: every map stays selectable in display mode (a map can be
+        # visualized in any backend, with or without a robot); the
+        # map-dependent modes keep only environments that have a real 2D
+        # occupancy map on disk.
         allowed_maps = self._allowed_maps()
         if self.map_var.get() not in allowed_maps and allowed_maps:
             self.map_var.set(allowed_maps[0])
 
-        # 2. Fix-point cascade: robot+map gate modes, modes gate simulators,
-        # simulators gate modes. Corrected BEFORE any command is built, so
-        # the launch always runs exactly what the panel shows.
+        # 2. Correct only what cannot be represented at all, then gate the
+        # rest: an option the current selection cannot run is disabled with
+        # the reason attached, instead of being silently switched.
         supported_modes, fixes = self._resolve_compatibility()
         if fixes and fixes != self._last_fixes:
             self._last_fixes = fixes
             self.status_var.set("Auto-corrected: " + "; ".join(fixes))
             self.after(6000, lambda: self.status_var.set("Idle"))
 
+        mode_reasons = self._mode_reasons()
         for mode, button in self.mode_buttons.items():
-            if mode in supported_modes:
-                button.state(["!disabled"])
-            else:
+            reason = mode_reasons.get(mode, "")
+            if reason:
                 button.state(["disabled"])
+                add_tooltip(button, "Unavailable - %s" % reason)
+            else:
+                button.state(["!disabled"])
+                add_tooltip(button, MODE_TOOLTIPS.get(mode, ""))
 
-        map_enabled = self.mode_var.get() != "display"
+        # Display mode is exactly where the map selector matters most: a map
+        # can be shown on its own in any simulator.  It is only locked when
+        # no environment is valid for the mode at all.
         self.map_combo.configure(
             values=allowed_maps,
-            state="readonly" if map_enabled else "disabled",
+            state="readonly" if allowed_maps else "disabled",
         )
+        self.robot_combo.configure(values=self._allowed_robots())
 
-        # The simulator stays selectable in every mode (display mode shows
-        # the robot in the chosen simulator's native viewer); only genuinely
-        # unavailable or single-choice setups disable the combo.
-        allowed_sims = self._mode_simulators()
+        # Simulators: every backend stays listed, and the panel underneath
+        # says which are selectable and why the others are not, so the choice
+        # is visible rather than silently narrowed.
+        allowed_sims = self._selectable_simulators()
         self.simulator_combo.configure(
-            values=allowed_sims,
+            values=allowed_sims or SIMULATOR_ORDER,
             state="readonly" if len(allowed_sims) > 1 else "disabled",
         )
+        if allowed_sims and self.simulator_var.get() not in allowed_sims:
+            self.simulator_var.set(allowed_sims[0])
         self._update_simulator_panel()
 
         supports_vacuum = bool_value(self._robot_config().get("supports_room_vacuum", False))
@@ -1540,8 +1702,30 @@ class SimulationLauncherGui(tk.Tk):
         """Return the executable arguments shown in the command preview."""
         return list(self._prepared_command)
 
+    def _algorithm_arguments(self):
+        """`<category>:=<algorithm>` for every selectable slot of the mode.
+
+        Every category the mode runs is passed explicitly - including the
+        ones left empty, which become `none` - so the launch runs exactly the
+        composition shown in the panel instead of falling back to the mode's
+        defaults for anything the user changed.
+        """
+        arguments = []
+        for step_id, category in self._mode_step_categories.items():
+            if category is None:
+                continue
+            variable = self.slot_vars.get(step_id)
+            value = variable.get().strip() if variable else ""
+            arguments.append("%s:=%s" % (category, value or "none"))
+        return arguments
+
     def _legacy_command(self):
-        """Pre-resolver fallback build (used only when resolver is unavailable)."""
+        """Direct launch command built from the panel selections.
+
+        Used when the registry resolver is unavailable, and for the
+        robot-free / map-free display runs the registry cannot express (it
+        requires both a robot and an environment entity).
+        """
         launch_file = (
             "simulated_room_vacuum.launch.py"
             if self.launch_kind_var.get() == "vacuum"
@@ -1553,15 +1737,12 @@ class SimulationLauncherGui(tk.Tk):
             "robot_lab_bringup",
             launch_file,
             f"mode:={self.mode_var.get()}",
-            f"map_name:={self.map_var.get()}",
-            f"robot_model:={self.robot_var.get()}",
+            f"map_name:={selection_value(self.map_var.get())}",
+            f"robot_model:={selection_value(self.robot_var.get())}",
             f"simulator:={self.simulator_var.get()}",
             f"gui:={self.gui_var.get()}",
         ]
-        # Add algorithm selection if not in display mode
-        primary_algo = self._primary_algorithm_id()
-        if self.mode_var.get() != "display" and primary_algo:
-            command.append(f"algorithm:={primary_algo}")
+        command.extend(self._algorithm_arguments())
         return command
 
     def _save_profile(self):

@@ -43,7 +43,21 @@ from std_srvs.srv import Trigger
 # ISAAC_PYTHON environment variable (or the ``isaac_python`` parameter by
 # launch files)). Empty default => offline mode (R1.1/R1.2: no
 # host-specific absolute paths in source.).
-_DEFAULT_ISAAC_PY = os.environ.get("ISAAC_PYTHON", "")
+def _default_isaac_python():
+    """Interpreter to run the Isaac runtime child with.
+
+    ISAAC_PYTHON still wins; when it is unset a local Isaac Sim installation
+    is detected, so a host that has Isaac installed can select it in the GUI
+    without exporting anything first.
+    """
+    try:
+        from robot_lab_utils.isaac_env import find_isaac_python
+    except ImportError:  # pragma: no cover - robot_lab_utils always present
+        return os.environ.get("ISAAC_PYTHON", "")
+    return find_isaac_python()
+
+
+_DEFAULT_ISAAC_PY = _default_isaac_python()
 
 
 def _xacro_to_urdf(xacro_path):
@@ -146,11 +160,13 @@ class IsaacSpawner(Node):
             return
         self._timer.cancel()
         isaac_py = self.get_parameter("isaac_python").value
+        if not isaac_py:
+            isaac_py = _default_isaac_python()
         if not isaac_py or not os.path.isfile(str(isaac_py)):
             self.get_logger().warn(
-                "Isaac Sim python (%r) not found — running in offline "
-                "mode.  Install isaacsim (see README) or set the "
-                "isaac_python parameter." % isaac_py
+                "Isaac Sim python (%r) not found - running in offline "
+                "mode.  Install isaacsim (see README) or set ISAAC_PYTHON / "
+                "the isaac_python parameter." % isaac_py
             )
             self._spawned = True
             return

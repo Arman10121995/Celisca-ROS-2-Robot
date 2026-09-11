@@ -17,6 +17,16 @@ def _setup(context, *args, **kwargs):
     use_sim_time = LaunchConfiguration("use_sim_time").perform(context).lower() == "true"
     slam_config = LaunchConfiguration("slam_config").perform(context)
     robot_model = LaunchConfiguration("robot_model").perform(context)
+    slam_backend = LaunchConfiguration("slam_backend").perform(context).strip()
+
+    # The only 2D SLAM backend built in this workspace is slam_toolbox; a
+    # selection naming anything else is refused rather than silently mapped
+    # onto slam_toolbox (which would misreport which algorithm ran).
+    if slam_backend and slam_backend.lower() not in ("auto", "slam_toolbox"):
+        raise RuntimeError(
+            "slam_backend '%s' is not built in this workspace; the available "
+            "2D SLAM backend is 'slam_toolbox'." % slam_backend
+        )
 
     parameters = [slam_config]
     overlay = os.path.join(mapping_share, "config", "robots", f"{robot_model}.yaml")
@@ -73,6 +83,12 @@ def generate_launch_description():
             "robot_model",
             default_value="bumperbot",
             description="Robot id; loads config/robots/<robot_model>.yaml overlay if present",
+        ),
+        DeclareLaunchArgument(
+            "slam_backend",
+            default_value="auto",
+            description="2D SLAM implementation selected for the localization "
+                        "category ('auto' or 'slam_toolbox').",
         ),
         OpaqueFunction(function=_setup),
     ])

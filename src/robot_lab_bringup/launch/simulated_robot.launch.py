@@ -28,6 +28,36 @@ _SIMULATOR_DISPATCH = {
 
 _VALID_SIMULATORS = frozenset(_SIMULATOR_DISPATCH)
 
+# Canonical algorithm categories (identical to the registry taxonomy and to
+# the `algorithm_category` of every selectable step in sim_modes.yaml).  Each
+# is a launch argument: `<category>:=<algorithm id>`, or `auto` to take the
+# mode's declared default, or `none` to run the mode without that stage.
+# Stack defaults, used when neither an explicit *_plugin argument nor a
+# planner selection pins the nav2 plugin class.
+_DEFAULT_GLOBAL_PLANNER_PLUGIN = "nav2_smac_planner/SmacPlanner2D"
+_DEFAULT_LOCAL_PLANNER_PLUGIN = (
+    "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+)
+
+ALGORITHM_CATEGORIES = (
+    "perception",
+    "localization",
+    "state_estimation",
+    "sensor_fusion",
+    "global_planning",
+    "local_planning",
+    "control",
+)
+
+# Sentinel selections for the robot / map slots.  Display mode is allowed to
+# run with only a robot (no world) or only a world (no robot), so the GUI can
+# visualize either one on its own in any simulator backend.
+_NONE_VALUES = ("none", "None", "— None —", "")
+
+
+def _is_none(value):
+    return str(value).strip() in _NONE_VALUES or str(value).strip().lower() == "none"
+
 
 def _package_file(package_name, relative_path):
     if not relative_path:
@@ -305,6 +335,135 @@ def _resolve_rviz_config(mode_config, rviz_override):
     return _package_file(package_name, relative_path)
 
 
+def _load_algorithm_dispatch(bringup_share):
+    """Load config/algorithm_dispatch.yaml (category -> id -> how to apply)."""
+    path = os.path.join(bringup_share, "config", "algorithm_dispatch.yaml")
+    if not os.path.isfile(path):
+        return {}
+    return (_load_yaml(path) or {}).get("algorithms", {}) or {}
+
+
+def _mode_step_defaults(mode_config):
+    """category -> default algorithm id declared by the mode's steps."""
+    defaults = {}
+    for step in mode_config.get("steps") or []:
+        if not isinstance(step, dict):
+            continue
+        category = step.get("algorithm_category")
+        default = step.get("default_algorithm")
+        if category in ALGORITHM_CATEGORIES and default:
+            defaults.setdefault(category, str(default))
+    return defaults
+
+
+def _mode_step_categories(mode_config):
+    """Categories the mode actually runs, in declaration order."""
+    categories = []
+    for step in mode_config.get("steps") or []:
+        if not isinstance(step, dict):
+            continue
+        category = step.get("algorithm_category")
+        if category in ALGORITHM_CATEGORIES and category not in categories:
+            categories.append(category)
+    return categories
+
+
+def _resolve_algorithm_selection(context, mode_config, dispatch):
+    """Resolve every algorithm launch argument into a concrete decision.
+
+    Returns ``(selection, plugins, nodes, notes)``:
+
+    * ``selection`` - category -> algorithm id actually in force ('' when the
+      stage is switched off or the mode does not run that category);
+    * ``plugins``   - category -> nav2 plugin class for stack plugin switches;
+    * ``nodes``     - list of ``(category, algorithm id, node spec)`` to start;
+    * ``notes``     - human-readable lines describing where each selection
+      takes effect, logged so a launch never silently drops a choice.
+
+    Raises RuntimeError when a selection cannot be honoured, rather than
+    starting a simulation that quietly ignores it.
+    """
+    mode_categories = _mode_step_categories(mode_config)
+    defaults = _mode_step_defaults(mode_config)
+    selection, plugins, nodes, notes = {}, {}, [], []
+
+    # Backwards compatibility: the deprecated single `algorithm:=` argument
+    # fills the mode's first selectable category when that category was left
+    # on 'auto'.
+    legacy = str(_launch_value(context, "algorithm") or "auto").strip()
+    legacy_category = mode_categories[0] if mode_categories else None
+
+    for category in ALGORITHM_CATEGORIES:
+        requested = str(_launch_value(context, category) or "auto").strip()
+        if _is_auto(requested) and category == legacy_category \
+                and not _is_auto(legacy) and not _is_none(legacy):
+            requested = legacy
+            notes.append("legacy algorithm:=%s applied to %s"
+                         % (legacy, category))
+        if _is_auto(requested):
+            requested = defaults.get(category, "none")
+        if _is_none(requested):
+            selection[category] = ""
+            continue
+        if category not in mode_categories:
+            raise RuntimeError(
+                "Algorithm '%s' was selected for category '%s', but the "
+                "current mode does not run that category. Mode categories: %s"
+                % (requested, category, mode_categories or "(none)")
+            )
+        entry = (dispatch.get(category) or {}).get(requested)
+        if entry is None:
+            known = sorted((dispatch.get(category) or {}).keys())
+            raise RuntimeError(
+                "Unknown %s algorithm '%s'. Known: %s"
+                % (category, requested, known)
+            )
+        if entry.get("unavailable"):
+            raise RuntimeError(
+                "%s algorithm '%s' cannot be launched: %s"
+                % (category, requested, entry["unavailable"])
+            )
+        selection[category] = requested
+        if entry.get("plugin"):
+            plugins[category] = str(entry["plugin"])
+            notes.append("%s=%s -> plugin %s"
+                         % (category, requested, entry["plugin"]))
+        elif entry.get("node"):
+            nodes.append((category, requested, entry["node"]))
+            notes.append("%s=%s -> node %s/%s"
+                         % (category, requested,
+                            entry["node"].get("package"),
+                            entry["node"].get("executable")))
+        elif entry.get("stack"):
+            notes.append("%s=%s -> %s stack"
+                         % (category, requested, entry["stack"]))
+    return selection, plugins, nodes, notes
+
+
+def _algorithm_nodes(nodes, use_sim_time):
+    """Node actions for every selection that runs as its own process."""
+    actions = []
+    for category, algorithm_id, spec in nodes:
+        package = spec.get("package")
+        executable = spec.get("executable")
+        if not package or not executable:
+            continue
+        parameters = [{"use_sim_time": _as_bool(use_sim_time, True)}]
+        extra = spec.get("parameters")
+        if isinstance(extra, dict) and extra:
+            parameters.append(dict(extra))
+        actions.append(
+            Node(
+                package=package,
+                executable=executable,
+                name=spec.get("name") or ("%s_%s" % (category, algorithm_id)),
+                output="screen",
+                parameters=parameters,
+            )
+        )
+    return actions
+
+
 def _build_simulation_actions(context):
     description_share = get_package_share_directory("robot_lab_description")
     controller_share = get_package_share_directory("robot_lab_controller")
@@ -316,35 +475,80 @@ def _build_simulation_actions(context):
     mode_configs = _load_yaml(_launch_value(context, "sim_modes_config"))
     robot_configs = _load_yaml(_launch_value(context, "sim_robots_config"))
 
+    bringup_share = get_package_share_directory("robot_lab_bringup")
+
     requested_mode = _launch_value(context, "mode")
     mode_name, mode_config = _resolve_mode_config(mode_configs, requested_mode)
+
+    # A map-free run is only meaningful in display mode: the robot is shown
+    # in an empty world of the selected simulator.  Every other mode needs a
+    # world (and loc/nav additionally need its occupancy map).
     map_name = _launch_value(context, "map_name")
-    map_config = _resolve_map_config(map_configs, map_name)
+    map_free = _is_none(map_name)
+    if map_free and mode_name != "display":
+        raise RuntimeError(
+            "map_name:=none is only supported in mode:=display; mode '%s' "
+            "needs a world. Select a map or switch to display mode."
+            % mode_name
+        )
+    map_config = {} if map_free else _resolve_map_config(map_configs, map_name)
 
     use_sim_time = _launch_value(context, "use_sim_time")
+
+    # A robot-free run shows the world on its own (display mode only), so a
+    # map can be inspected in any simulator without spawning a robot.
     robot_model = _launch_value(context, "robot_model")
-    robot_config = _resolve_robot_config(
-        robot_configs,
-        robot_model,
-        _launch_value(context, "robot_xacro"),
-    )
-    _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config)
-    robot_package = _config_value(context, "robot_package", robot_config.get("package", "robot_lab_robots"))
-    robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
-    robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
-    model_path = _package_file(robot_package, robot_xacro)
+    robot_free = _is_none(robot_model)
+    if robot_free and mode_name != "display":
+        raise RuntimeError(
+            "robot_model:=none is only supported in mode:=display; mode '%s' "
+            "needs a robot. Select a robot or switch to display mode."
+            % mode_name
+        )
+    if robot_free and map_free:
+        raise RuntimeError(
+            "robot_model:=none together with map_name:=none leaves nothing "
+            "to display. Select at least a robot or a map."
+        )
+
+    if robot_free:
+        robot_config = {}
+        robot_package = ""
+        robot_xacro = ""
+        robot_name = "none"
+        model_path = ""
+    else:
+        robot_config = _resolve_robot_config(
+            robot_configs,
+            robot_model,
+            _launch_value(context, "robot_xacro"),
+        )
+        _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config)
+        robot_package = _config_value(context, "robot_package", robot_config.get("package", "robot_lab_robots"))
+        robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
+        robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
+        model_path = _package_file(robot_package, robot_xacro)
 
     gazebo_config = map_config.get("gazebo", {})
     spawn_config = map_config.get("spawn", {})
     initial_pose_config = map_config.get("initial_pose", {})
 
     world_package = _config_value(context, "world_package", gazebo_config.get("world_package", "robot_lab_maps"))
-    world_name = _config_value(context, "world_name", gazebo_config.get("world_name", map_name))
-    configured_world_path = _resolve_world_path({**gazebo_config, "world_package": world_package})
+    # A map-free display run still needs a ground plane to stand on, so it
+    # falls back to the always-present 'empty' world of the maps package.
+    default_world_name = "empty" if map_free else gazebo_config.get("world_name", map_name)
+    world_name = _config_value(context, "world_name", default_world_name)
+    if map_free:
+        configured_world_path = _package_file(
+            "robot_lab_maps", "maps/empty/worlds/empty.world")
+    else:
+        configured_world_path = _resolve_world_path(
+            {**gazebo_config, "world_package": world_package})
     world_path = _config_value(context, "world_path", configured_world_path)
-    configured_map_yaml = _resolve_map_yaml(map_name, map_config)
+    configured_map_yaml = "" if map_free else _resolve_map_yaml(map_name, map_config)
     map_yaml = _config_value(context, "map_yaml", configured_map_yaml)
-    if _as_bool(mode_config.get("requires_2d_map"), False) and not _map_has_2d_map(map_name, map_config, map_yaml):
+    if not map_free and _as_bool(mode_config.get("requires_2d_map"), False) \
+            and not _map_has_2d_map(map_name, map_config, map_yaml):
         raise RuntimeError(
             f"Mode '{mode_name}' requires a valid 2D map, but map '{map_name}' does not have one. "
             "Use mode:=slam to create one first, then save it into the maps package and set has_2d_map: true."
@@ -362,55 +566,126 @@ def _build_simulation_actions(context):
     actions = []
 
     if mode_name == "display":
-        # Display mode: show robot in RViz + selected simulator GUI (if applicable).
-        # For Gazebo, use the dedicated display.launch.py (no physics).
-        # For other simulators, include their launch file with gui enabled so
-        # the user sees the robot in the simulator's native viewer too.
+        # Display mode visualizes what was selected in the chosen simulator's
+        # own viewer, with RViz alongside it.  All three combinations are
+        # supported in every backend:
+        #   robot + map  - robot spawned in the world
+        #   robot only   - robot in the simulator's empty world (map_name:=none)
+        #   map only     - the world on its own (robot_model:=none)
+        # No physics stack, controllers or localization run here.
         simulator = _launch_value(context, "simulator")
-        if simulator == "gazebo":
-            rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
-            actions.append(
-                IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(_launch_file(description_share, "display.launch.py")),
-                    launch_arguments={
-                        "model": model_path,
-                        "rviz_config": rviz_config,
-                        "start_rviz": str(_auto_bool(context, "start_rviz", True)),
-                        "use_sim_time": use_sim_time,
-                    }.items(),
-                )
+        if simulator not in _VALID_SIMULATORS:
+            raise RuntimeError(
+                f"Unknown simulator '{simulator}'. "
+                f"Choose from: {sorted(_VALID_SIMULATORS)}"
             )
-        else:
-            # For PyBullet/MuJoCo/Isaac: include the simulator launch with gui=true
-            if simulator not in _VALID_SIMULATORS:
-                raise RuntimeError(
-                    f"Unknown simulator '{simulator}'. "
-                    f"Choose from: {sorted(_VALID_SIMULATORS)}"
+        gui_value = _launch_value(context, "gui")
+        if _is_auto(gui_value):
+            gui_value = "true" if os.environ.get("DISPLAY") else "false"
+        rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
+        start_rviz = _auto_bool(context, "start_rviz", True)
+
+        if simulator == "gazebo":
+            # Gazebo display: robot_state_publisher + RViz via display.launch.py,
+            # plus gz-sim itself when a world was selected so the map is visible.
+            if not robot_free:
+                actions.append(
+                    IncludeLaunchDescription(
+                        PythonLaunchDescriptionSource(
+                            _launch_file(description_share, "display.launch.py")),
+                        launch_arguments={
+                            "model": model_path,
+                            "rviz_config": rviz_config,
+                            "start_rviz": str(start_rviz),
+                            "use_sim_time": use_sim_time,
+                        }.items(),
+                    )
                 )
-            sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
-            sim_share = get_package_share_directory(sim_pkg)
-            display_args = {
-                "world_name": world_name,
-                "world_package": world_package,
-                "world_path": world_path,
-                "model": model_path,
-                "robot_package": robot_package,
-                "robot_xacro": robot_xacro,
-                "robot_name": robot_name,
-                "spawn_x": spawn_x,
-                "spawn_y": spawn_y,
-                "spawn_z": spawn_z,
-                "spawn_yaw": spawn_yaw,
-                "use_sim_time": use_sim_time,
-                "gui": "true",
-            }
+            elif start_rviz and rviz_config:
+                actions.append(
+                    Node(
+                        package="rviz2",
+                        executable="rviz2",
+                        arguments=["-d", rviz_config],
+                        output="screen",
+                        parameters=[{"use_sim_time": _as_bool(use_sim_time, True)}],
+                    )
+                )
+            if not map_free or robot_free:
+                gazebo_args = {
+                    "world_name": world_name,
+                    "world_package": world_package,
+                    "world_path": world_path,
+                    "use_sim_time": use_sim_time,
+                    "gui": gui_value,
+                }
+                if not robot_free:
+                    gazebo_args.update({
+                        "model": model_path,
+                        "robot_package": robot_package,
+                        "robot_xacro": robot_xacro,
+                        "robot_name": robot_name,
+                        "spawn_x": spawn_x,
+                        "spawn_y": spawn_y,
+                        "spawn_z": spawn_z,
+                        "spawn_yaw": spawn_yaw,
+                    })
+                else:
+                    gazebo_args["spawn_robot"] = "false"
+                actions.append(
+                    IncludeLaunchDescription(
+                        PythonLaunchDescriptionSource(
+                            _launch_file(description_share, "gazebo.launch.py")),
+                        launch_arguments=gazebo_args.items(),
+                    )
+                )
+            return actions
+
+        # PyBullet / MuJoCo / Isaac: their own viewer renders both the world
+        # and the robot, so the simulator launch is included directly.
+        sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
+        sim_share = get_package_share_directory(sim_pkg)
+        display_args = {
+            "world_name": world_name,
+            "world_package": world_package,
+            "world_path": world_path,
+            "model": model_path,
+            "robot_package": robot_package,
+            "robot_xacro": robot_xacro,
+            "robot_name": robot_name,
+            "spawn_x": spawn_x,
+            "spawn_y": spawn_y,
+            "spawn_z": spawn_z,
+            "spawn_yaw": spawn_yaw,
+            "use_sim_time": use_sim_time,
+            "gui": gui_value,
+        }
+        actions.append(
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
+                launch_arguments=display_args.items(),
+            )
+        )
+        if start_rviz and rviz_config and not robot_free:
             actions.append(
-                IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
-                    launch_arguments=display_args.items(),
+                Node(
+                    package="rviz2",
+                    executable="rviz2",
+                    arguments=["-d", rviz_config],
+                    output="screen",
+                    parameters=[{"use_sim_time": _as_bool(use_sim_time, True)}],
                 )
             )
         return actions
+
+    # Resolve every algorithm selection BEFORE anything is started, so an
+    # unrunnable choice fails loudly here instead of producing a simulation
+    # that silently ignores it.
+    dispatch = _load_algorithm_dispatch(bringup_share)
+    algorithm_selection, algorithm_plugins, algorithm_nodes, algorithm_notes = \
+        _resolve_algorithm_selection(context, mode_config, dispatch)
+    for note in algorithm_notes:
+        print("[robot_lab] algorithm %s" % note)
 
     gazebo_enabled = _auto_bool(
         context,
@@ -525,17 +800,17 @@ def _build_simulation_actions(context):
         )
 
     if _section_enabled(mode_config.get("slam")):
-        slam_backend = str(_launch_value(context, "algorithm") or "auto").lower()
-        slam_args: Dict[str, str] = {
+        slam_args = {
             "use_sim_time": use_sim_time,
             "robot_model": robot_model,
         }
-        if slam_backend not in ("", "auto"):
+        slam_backend = algorithm_selection.get("localization", "")
+        if slam_backend:
             slam_args["slam_backend"] = slam_backend
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(mapping_share, "slam.launch.py")),
-                launch_arguments=slam_args,
+                launch_arguments=slam_args.items(),
             )
         )
 
@@ -576,31 +851,33 @@ def _build_simulation_actions(context):
         )
 
     if _section_enabled(mode_config.get("navigation")):
-        global_backend = str(_launch_value(context, "global_planner") or "auto").lower()
-        local_backend = str(_launch_value(context, "local_planner") or "auto").lower()
-        controller_backend = str(_launch_value(context, "controller") or "auto").lower()
-        localizer_backend = str(_launch_value(context, "localizer") or "auto").lower()
-        nav_args: Dict[str, str] = {
+        # The resolved planner selections decide the active nav2 plugins.
+        # An explicit *_plugin argument still wins, so a caller can pin a
+        # plugin class the registry does not model yet.
+        global_plugin = _launch_value(context, "global_planner_plugin")
+        local_plugin = _launch_value(context, "local_planner_plugin")
+        if _is_auto(global_plugin):
+            global_plugin = algorithm_plugins.get(
+                "global_planning", _DEFAULT_GLOBAL_PLANNER_PLUGIN)
+        if _is_auto(local_plugin):
+            local_plugin = algorithm_plugins.get(
+                "local_planning", _DEFAULT_LOCAL_PLANNER_PLUGIN)
+        nav_args = {
             "use_sim_time": use_sim_time,
             "robot_model": robot_model,
-            "global_planner_plugin": _launch_value(context, "global_planner_plugin"),
-            "local_planner_plugin": _launch_value(context, "local_planner_plugin"),
-            "navigation_backend": controller_backend,
+            "global_planner_plugin": global_plugin,
+            "local_planner_plugin": local_plugin,
         }
-        # Concrete global/local planner selections override the stack-default
-        # plugin strings unless the caller already pinned them explicitly.
-        if global_backend not in ("", "auto"):
-            nav_args["global_planner"] = global_backend
-        if local_backend not in ("", "auto"):
-            nav_args["local_planner"] = local_backend
-        if localizer_backend not in ("", "auto"):
-            nav_args["localizer"] = localizer_backend
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(navigation_share, "navigation.launch.py")),
-                launch_arguments=nav_args,
+                launch_arguments=nav_args.items(),
             )
         )
+
+    # Selections that run as their own process (planners, estimators,
+    # perception pipelines and controllers that are not stack plugins).
+    actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time))
 
     rviz_enabled = _auto_bool(
         context,
@@ -633,18 +910,21 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "global_planner_plugin",
-            default_value="nav2_smac_planner/SmacPlanner2D",
-            description="Global planner plugin forwarded to the navigation stack.",
+            default_value="auto",
+            description="Global planner plugin forwarded to the navigation "
+                        "stack. 'auto' uses the global_planning selection.",
         ),
         DeclareLaunchArgument(
             "local_planner_plugin",
-            default_value="nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController",
-            description="Local planner plugin forwarded to the navigation stack.",
+            default_value="auto",
+            description="Local planner plugin forwarded to the navigation "
+                        "stack. 'auto' uses the local_planning selection.",
         ),
         DeclareLaunchArgument(
             "map_name",
             default_value="celisca_floor_1",
-            description="Map profile name from sim_maps.yaml.",
+            description="Map profile name from sim_maps.yaml, or 'none' to "
+                        "display a robot without a world (display mode only).",
         ),
         DeclareLaunchArgument(
             "sim_modes_config",
@@ -664,7 +944,9 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "robot_model",
             default_value="bumperbot",
-            description="Robot profile name from robots/config/robots.yaml.",
+            description="Robot profile name from robots/config/robots.yaml, "
+                        "or 'none' to display a world without a robot "
+                        "(display mode only).",
         ),
         DeclareLaunchArgument(
             "use_sim_time",
@@ -686,8 +968,20 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "algorithm",
             default_value="auto",
-            description="Algorithm to use for the selected mode. 'auto' uses the default algorithm from sim_modes.yaml.",
+            description="Deprecated single-algorithm selector. Prefer the "
+                        "per-category arguments below; when set it fills the "
+                        "first selectable category of the mode.",
         ),
+    ] + [
+        DeclareLaunchArgument(
+            category,
+            default_value="auto",
+            description="Algorithm for the '%s' category. 'auto' uses the "
+                        "mode's default_algorithm from sim_modes.yaml, "
+                        "'none' switches the stage off." % category,
+        )
+        for category in ALGORITHM_CATEGORIES
+    ] + [
         DeclareLaunchArgument(
             "start_gazebo",
             default_value="auto",
@@ -719,12 +1013,6 @@ def generate_launch_description():
             "world_path",
             default_value="auto",
             description="Full Gazebo world path override. 'auto' uses sim_maps.yaml.",
-        ),
-        DeclareLaunchArgument(
-            "gui",
-            default_value="auto",
-            choices=["auto", "true", "false"],
-            description="Force GUI or headless for PyBullet/MuJoCo. 'auto' enables GUI when DISPLAY is set.",
         ),
         DeclareLaunchArgument(
             "map_yaml",

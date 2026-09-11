@@ -9,6 +9,8 @@ degrades gracefully when odometry topics are absent.
 import math
 import sys
 
+from ._runtime import run as _run
+
 
 try:
     import rclpy
@@ -99,19 +101,7 @@ class DeadReckoningNode(Node):
 
 
 def dead_reckoning_main(args=None):
-    if rclpy is None:
-        print('dead_reckoning: rclpy unavailable (dry mode)')
-        return 1
-    rclpy.init(args=args)
-    node = DeadReckoningNode()
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(DeadReckoningNode, 'dead_reckoning', args=args)
 
 
 if __name__ == '__main__':

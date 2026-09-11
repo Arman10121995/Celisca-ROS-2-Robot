@@ -148,37 +148,161 @@ class VoronoiPlanner:
         return path
 
 
+# ---------------------------------------------------------------------------
+# ROS 2 node wrappers (what the console entry points run)
+# ---------------------------------------------------------------------------
+
+from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
+
+
+class _GridPlannerNode(Node):
+    """Shared plumbing for grid planners: /map + /goal_pose -> nav_msgs/Path.
+
+    These planners run alongside the Nav2 stack rather than as Nav2 plugins:
+    they consume the same occupancy map and goal, and publish their own plan
+    so it can be compared against the plugin planner's output.
+    """
+
+    def __init__(self, node_name, default_output):
+        super().__init__(node_name)
+        from nav_msgs.msg import OccupancyGrid, Path
+        from geometry_msgs.msg import PoseStamped
+        self._path_type = Path
+        self._pose_type = PoseStamped
+        self.declare_parameter('map_topic', '/map')
+        self.declare_parameter('goal_topic', '/goal_pose')
+        self.declare_parameter('odom_topic', '/odom/ground_truth')
+        self.declare_parameter('path_topic', default_output)
+        self.declare_parameter('occupied_threshold', 50)
+        self._pub = self.create_publisher(
+            Path, self.get_parameter('path_topic').value, 10)
+        self.create_subscription(
+            OccupancyGrid, self.get_parameter('map_topic').value,
+            self._on_map, 10)
+        self.create_subscription(
+            PoseStamped, self.get_parameter('goal_topic').value,
+            self._on_goal, 10)
+        from nav_msgs.msg import Odometry
+        self.create_subscription(
+            Odometry, self.get_parameter('odom_topic').value,
+            self._on_odom, 10)
+        self._map = None
+        self._start = (0.0, 0.0)
+        self.path = []
+        self.get_logger().info('%s ready (waiting for /map and a goal)' % node_name)
+
+    def _on_map(self, msg):
+        self._map = msg
+
+    def _on_odom(self, msg):
+        self._start = (msg.pose.pose.position.x, msg.pose.pose.position.y)
+
+    def _world_is_free(self, x, y):
+        grid = self._map
+        if grid is None:
+            return True
+        column = int((x - grid.info.origin.position.x) / grid.info.resolution)
+        row = int((y - grid.info.origin.position.y) / grid.info.resolution)
+        if column < 0 or row < 0 or column >= grid.info.width \
+                or row >= grid.info.height:
+            return False
+        value = grid.data[row * grid.info.width + column]
+        threshold = int(self.get_parameter('occupied_threshold').value)
+        return value >= 0 and value < threshold
+
+    def _bounds(self):
+        grid = self._map
+        if grid is None:
+            return (-10.0, -10.0, 10.0, 10.0)
+        return (
+            grid.info.origin.position.x,
+            grid.info.origin.position.y,
+            grid.info.origin.position.x + grid.info.width * grid.info.resolution,
+            grid.info.origin.position.y + grid.info.height * grid.info.resolution,
+        )
+
+    def _publish_path(self, waypoints, frame_id):
+        path = self._path_type()
+        path.header.frame_id = frame_id or 'map'
+        path.header.stamp = self.get_clock().now().to_msg()
+        for x, y in waypoints:
+            pose = self._pose_type()
+            pose.header = path.header
+            pose.pose.position.x = float(x)
+            pose.pose.position.y = float(y)
+            pose.pose.orientation.w = 1.0
+            path.poses.append(pose)
+        self.path = list(waypoints)
+        self._pub.publish(path)
+
+    def _on_goal(self, msg):  # pragma: no cover - overridden
+        raise NotImplementedError
+
+
+class RRTPlannerNode(_GridPlannerNode):
+    """Sampling-based RRT global planner publishing /plan/rrt."""
+
+    def __init__(self, node_name='rrt_planner'):
+        super().__init__(node_name, '/plan/rrt')
+        self.declare_parameter('step', 1.0)
+        self.declare_parameter('max_iterations', 2000)
+        self.declare_parameter('goal_tolerance', 0.6)
+        self.declare_parameter('seed', 0)
+        self.planner = RRTPlanner(
+            step=float(self.get_parameter('step').value),
+            max_iter=int(self.get_parameter('max_iterations').value),
+            goal_tol=float(self.get_parameter('goal_tolerance').value))
+
+    def _on_goal(self, msg):
+        goal = (msg.pose.position.x, msg.pose.position.y)
+        waypoints = self.planner.plan(
+            self._start, goal, self._world_is_free, self._bounds(),
+            seed=int(self.get_parameter('seed').value))
+        if not waypoints:
+            self.get_logger().warn('RRT found no path to (%.2f, %.2f)' % goal)
+            return
+        self._publish_path(waypoints, msg.header.frame_id)
+
+
+class VoronoiPlannerNode(_GridPlannerNode):
+    """Clearance-maximizing global planner publishing /plan/voronoi."""
+
+    def __init__(self, node_name='voronoi_planner'):
+        super().__init__(node_name, '/plan/voronoi')
+        self.declare_parameter('step', 0.5)
+        self.declare_parameter('max_steps', 2000)
+        self.planner = VoronoiPlanner()
+
+    def _clearance_at(self, x, y):
+        """Distance-to-obstacle proxy: how far a free ring stays free."""
+        if not self._world_is_free(x, y):
+            return 0.0
+        clearance = 0.0
+        for radius in (0.2, 0.4, 0.6, 0.8):
+            blocked = any(
+                not self._world_is_free(x + radius * math.cos(a),
+                                        y + radius * math.sin(a))
+                for a in (0.0, math.pi / 2, math.pi, 3 * math.pi / 2))
+            if blocked:
+                break
+            clearance = radius
+        return clearance + 0.1
+
+    def _on_goal(self, msg):
+        goal = (msg.pose.position.x, msg.pose.position.y)
+        waypoints = self.planner.plan(
+            self._start, goal, self._clearance_at,
+            step=float(self.get_parameter('step').value),
+            max_steps=int(self.get_parameter('max_steps').value))
+        self._publish_path(waypoints, msg.header.frame_id)
+
+
 def rrt_planner_main(args=None):
-    if rclpy is None:
-        print('rrt_planner: rclpy unavailable (dry mode)')
-        return 1
-    rclpy.init(args=args)
-    node = Node('rrt_planner')
-    node.get_logger().info('rrt_planner: up')
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(RRTPlannerNode, 'rrt_planner', args=args)
 
 
 def voronoi_planner_main(args=None):
-    if rclpy is None:
-        return 1
-    rclpy.init(args=args)
-    node = Node('voronoi_planner')
-    node.get_logger().info('voronoi_planner: up')
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(VoronoiPlannerNode, 'voronoi_planner', args=args)
 
 
 if __name__ == '__main__':

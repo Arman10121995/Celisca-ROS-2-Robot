@@ -114,53 +114,128 @@ class PoseGraphEstimator:
         return tuple(self.estimate)
 
 
+# ---------------------------------------------------------------------------
+# ROS 2 node wrappers (what the console entry points run)
+# ---------------------------------------------------------------------------
+
+from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
+
+
+class _OdometryEstimatorNode(Node):
+    """Shared plumbing: consume /odom, publish a filtered Odometry estimate."""
+
+    def __init__(self, node_name, default_output):
+        super().__init__(node_name)
+        from nav_msgs.msg import Odometry
+        self._odometry_type = Odometry
+        self.declare_parameter('odom_topic', '/odom/ground_truth')
+        self.declare_parameter('output_topic', default_output)
+        self._pub = self.create_publisher(
+            Odometry, self.get_parameter('output_topic').value, 10)
+        self.create_subscription(
+            Odometry, self.get_parameter('odom_topic').value,
+            self._on_odom, 10)
+        self._last_stamp = None
+        self.get_logger().info('%s ready' % node_name)
+
+    def _dt(self, msg):
+        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        dt = 0.0 if self._last_stamp is None else max(0.0, stamp - self._last_stamp)
+        self._last_stamp = stamp
+        return dt
+
+    def _publish(self, msg, x, y, z=0.0):
+        out = self._odometry_type()
+        out.header = msg.header
+        out.child_frame_id = msg.child_frame_id
+        out.pose.pose.position.x = float(x)
+        out.pose.pose.position.y = float(y)
+        out.pose.pose.position.z = float(z)
+        out.pose.pose.orientation = msg.pose.pose.orientation
+        out.twist = msg.twist
+        self._pub.publish(out)
+
+    def _on_odom(self, msg):  # pragma: no cover - overridden
+        raise NotImplementedError
+
+
+class EKF3DEstimatorNode(_OdometryEstimatorNode):
+    """Constant-velocity EKF over 3D position/velocity."""
+
+    def __init__(self, node_name='ekf_3d_estimator'):
+        super().__init__(node_name, '/odometry/ekf_3d')
+        self.declare_parameter('process_noise', 0.1)
+        self.declare_parameter('measurement_noise', 0.2)
+        self.estimator = EKF3DEstimator(
+            process_noise=float(self.get_parameter('process_noise').value),
+            measurement_noise=float(self.get_parameter('measurement_noise').value))
+
+    def _on_odom(self, msg):
+        dt = self._dt(msg)
+        if dt > 0.0:
+            self.estimator.predict(dt)
+        position = msg.pose.pose.position
+        linear = msg.twist.twist.linear
+        self.estimator.update([position.x, position.y, position.z,
+                               linear.x, linear.y, linear.z])
+        state = self.estimator.state()
+        self._publish(msg, state[0], state[1], state[2])
+
+
+class MotionModelEstimatorNode(_OdometryEstimatorNode):
+    """Constant-velocity motion model corrected by odometry measurements."""
+
+    def __init__(self, node_name='motion_model_estimator'):
+        super().__init__(node_name, '/odometry/motion_model')
+        self.declare_parameter('model_noise', 0.05)
+        self.declare_parameter('correction_gain', 0.5)
+        self.estimator = MotionModelEstimator(
+            model_noise=float(self.get_parameter('model_noise').value))
+
+    def _on_odom(self, msg):
+        dt = self._dt(msg)
+        self.estimator.vx = msg.twist.twist.linear.x
+        self.estimator.vy = msg.twist.twist.linear.y
+        if dt > 0.0:
+            self.estimator.predict(dt)
+        self.estimator.correct(
+            msg.pose.pose.position.x, msg.pose.pose.position.y,
+            gain=float(self.get_parameter('correction_gain').value))
+        state = self.estimator.state()
+        self._publish(msg, state[0], state[1])
+
+
+class PoseGraphEstimatorNode(_OdometryEstimatorNode):
+    """Incremental pose-graph estimator fed with relative odometry motion."""
+
+    def __init__(self, node_name='pose_graph_estimator'):
+        super().__init__(node_name, '/odometry/pose_graph')
+        self.declare_parameter('decay', 0.9)
+        self.estimator = PoseGraphEstimator(
+            decay=float(self.get_parameter('decay').value))
+        self._previous = None
+
+    def _on_odom(self, msg):
+        position = msg.pose.pose.position
+        current = (position.x, position.y)
+        if self._previous is not None:
+            self.estimator.add_relative(current[0] - self._previous[0],
+                                        current[1] - self._previous[1], 0.0)
+        self._previous = current
+        state = self.estimator.state()
+        self._publish(msg, state[0], state[1])
+
+
 def ekf_3d_estimator_main(args=None):
-    if rclpy is None:
-        print('ekf_3d_estimator: rclpy unavailable (dry mode)')
-        return 1
-    rclpy.init(args=args)
-    node = Node('ekf_3d_estimator')
-    node.get_logger().info('ekf_3d_estimator: up')
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(EKF3DEstimatorNode, 'ekf_3d_estimator', args=args)
 
 
 def motion_model_estimator_main(args=None):
-    if rclpy is None:
-        return 1
-    rclpy.init(args=args)
-    node = Node('motion_model_estimator')
-    node.get_logger().info('motion_model_estimator: up')
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(MotionModelEstimatorNode, 'motion_model_estimator', args=args)
 
 
 def pose_graph_estimator_main(args=None):
-    if rclpy is None:
-        return 1
-    rclpy.init(args=args)
-    node = Node('pose_graph_estimator')
-    node.get_logger().info('pose_graph_estimator: up')
-    try:
-        while rclpy.ok():
-            rclpy.spin_once(node, timeout_sec=0.1)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0
+    return _run(PoseGraphEstimatorNode, 'pose_graph_estimator', args=args)
 
 
 if __name__ == '__main__':

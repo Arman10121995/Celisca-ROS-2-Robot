@@ -298,6 +298,44 @@
   tags:
   - slam
   - rgb_d
+- id: slam_toolbox
+  version: 1.0.0
+  name: SLAM Toolbox
+  description: Pose-graph 2D SLAM building an occupancy map online from laser scans
+  status: integrated
+  category: localization
+  family: pose_graph_slam
+  implementation:
+    package: slam_toolbox
+    executable: async_slam_toolbox_node
+    language: cpp
+  input_contract:
+    required_topics:
+    - /scan
+    - /odom
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /map
+    - /pose
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    mode: mapping
+    resolution: 0.05
+  source:
+    repository: https://github.com/SteveMacenski/slam_toolbox
+    license: LGPL-2.1
+  tags:
+  - slam
+  - mapping
+  - pose_graph
+  created: '2026-09-11'
+  updated: '2026-09-11'
 - id: hector_slam
   version: 1.0.0
   name: Hector SLAM

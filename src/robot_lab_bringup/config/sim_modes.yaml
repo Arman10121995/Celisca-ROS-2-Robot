@@ -12,7 +12,7 @@ modes:
     - id: visualizer
       label: "Visualizer"
       algorithm_category: perception
-      default_algorithm: rviz_display
+      default_algorithm: none
     requires_2d_map: false
     gazebo:
       enabled: false
@@ -88,7 +88,7 @@ modes:
     - id: slam_backend
       label: "2D SLAM algorithm"
       algorithm_category: localization
-      default_algorithm: slam_toolbox_impl
+      default_algorithm: slam_toolbox
     - id: state_estimator
       label: "State estimation"
       algorithm_category: state_estimation
@@ -199,7 +199,7 @@ modes:
     - id: controller
       label: "Motion controller"
       algorithm_category: control
-      default_algorithm: pure_pursuit
+      default_algorithm: simple_controller
     - id: localizer
       label: "Localization algorithm"
       algorithm_category: localization
