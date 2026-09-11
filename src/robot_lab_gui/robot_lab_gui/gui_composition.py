@@ -49,6 +49,8 @@ class GuiCompositionSelection:
     parameters: Dict[str, Any] = field(default_factory=dict)
     seed: Optional[int] = None
     namespace: str = ''
+    mode: Optional[str] = None
+    gui: Optional[str] = None
 
 
 def environment_id_for_map_name(
@@ -89,6 +91,8 @@ def build_request(selection: GuiCompositionSelection) -> ExperimentRequest:
         parameters=selection.parameters,
         seed=selection.seed,
         namespace=selection.namespace,
+        mode=selection.mode,
+        gui=selection.gui,
     )
 
 

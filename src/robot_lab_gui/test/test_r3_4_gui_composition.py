@@ -34,6 +34,15 @@ if _SRC_REGISTRY_DIR.name == "robot_lab_registry":
     if str(_SRC_REGISTRY_DIR) not in sys.path:
         sys.path.insert(0, str(_SRC_REGISTRY_DIR))
 
+_SRC_ADAPTER_PKG = _SRC_GUI_DIR.parent / "robot_lab_adapter"
+if (_SRC_ADAPTER_PKG / "robot_lab_adapter").is_dir():
+    sys.path[:] = [
+        p for p in sys.path
+        if not (p.endswith("dist-packages") and "robot_lab_adapter" in p)
+    ]
+    if str(_SRC_ADAPTER_PKG) not in sys.path:
+        sys.path.insert(0, str(_SRC_ADAPTER_PKG))
+
 from robot_lab_registry.catalog import Registry  # noqa: E402
 from robot_lab_adapter.resolver import (  # noqa: E402
     ExperimentRequest,

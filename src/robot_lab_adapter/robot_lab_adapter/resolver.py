@@ -78,6 +78,12 @@ class ExperimentRequest:
     parameters: Dict[str, Any] = field(default_factory=dict)
     seed: Optional[int] = None
     namespace: str = ''
+    # Bringup mode (sim_modes.yaml key) and simulator GUI choice; both are
+    # applied to the concrete launch command (simulated_robot.launch.py
+    # otherwise defaults to mode=nav / gui=auto and would silently ignore
+    # the user's selection).
+    mode: Optional[str] = None
+    gui: Optional[str] = None
 
 
 def apply_aliases(request: ExperimentRequest) -> Tuple[ExperimentRequest, List[str]]:
@@ -250,6 +256,18 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
     launch_args.update(_spawn_arguments(environment, resolved.spawn))
     planner_args, plugins = _planner_arguments(algorithm_ids)
     launch_args.update(planner_args)
+    # Apply the selected bringup mode and simulator GUI choice to the
+    # concrete command: the launch file defaults to mode=nav / gui=auto, so
+    # omitting them would silently ignore the user's selection (R3.4).
+    if resolved.mode:
+        launch_args['mode'] = str(resolved.mode)
+    if resolved.gui:
+        gui_value = str(resolved.gui).lower()
+        if gui_value not in ('auto', 'true', 'false'):
+            outcome['errors'].append(
+                f"Invalid gui value '{gui_value}' (expected auto/true/false)")
+            return False, outcome
+        launch_args['gui'] = gui_value
 
     manifest = {
         'manifest_version': MANIFEST_VERSION,
@@ -265,6 +283,8 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
             'parameters': request.parameters,
             'seed': request.seed,
             'namespace': request.namespace,
+            'mode': request.mode,
+            'gui': request.gui,
         },
         'aliases_applied': aliases_applied,
         'robot_id': robot_id,

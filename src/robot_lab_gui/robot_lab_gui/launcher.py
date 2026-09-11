@@ -70,6 +70,39 @@ except ImportError as _import_error:
     COMPOSITION_AVAILABLE = False
     _COMPOSITION_IMPORT_ERROR = _import_error
 
+# ── Simulator availability + compatibility gating (headless, testable) ────
+try:
+    from .simulator_compat import (
+        SIMULATOR_FEATURE_GAPS,
+        allowed_simulators as _allowed_simulators,
+        available_simulators as _available_simulators,
+        correction_for as _correction_for,
+        simulator_supports_mode as _simulator_supports_mode,
+    )
+    SIMULATOR_COMPAT_AVAILABLE = True
+except ImportError:  # pragma: no cover — defensive
+    SIMULATOR_COMPAT_AVAILABLE = False
+    SIMULATOR_FEATURE_GAPS = {}
+
+    def _available_simulators(env=None):
+        return {s: (True, "") for s in SIMULATOR_ORDER}
+
+    def _allowed_simulators(mode, mode_profiles=None, env=None):
+        return {s: (True, "") for s in SIMULATOR_ORDER}
+
+    def _correction_for(current, allowed, fallback_order=None):
+        if not allowed:
+            return None, "no compatible option available"
+        if current in allowed:
+            return current, ""
+        for candidate in (fallback_order or []):
+            if candidate in allowed:
+                return candidate, "corrected"
+        return allowed[0], "corrected"
+
+    def _simulator_supports_mode(simulator, mode, mode_profiles=None):
+        return True
+
 
 MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
 MODE_LABELS = {
@@ -304,6 +337,10 @@ class SimulationLauncherGui(tk.Tk):
         self.map_profiles = load_yaml(self.maps_config_path).get("maps", {})
         self.robot_profiles = load_yaml(self.robots_config_path).get("robots", {})
 
+        # Which simulators are actually usable on this host (installed
+        # binaries / configured runtimes) — gates the Simulator combo.
+        self.simulator_status = _available_simulators()
+
         # Load algorithms from registry
         self.algorithms_config_path = os.path.join(
             get_package_share_directory("robot_lab_registry"),
@@ -332,6 +369,8 @@ class SimulationLauncherGui(tk.Tk):
         self.cmd_vel_pub = None
         self.drive_repeat_job = None
         self.current_drive = (0.0, 0.0)
+        self._launch_running = False
+        self._last_fixes = []
         self.output_queue = queue.Queue()
         self._output_autoscroll = True  # follow-tail for Launch Output
 
@@ -554,10 +593,25 @@ class SimulationLauncherGui(tk.Tk):
             rb.grid(row=0, column=column, sticky="w", padx=(0, 12))
             add_tooltip(rb, gui_tooltip)
 
+        # --- Simulator availability (host-detected; R3.4+ gating) ---------
+        sim_panel = ttk.LabelFrame(
+            controls, text="Simulator availability", padding=(8, 4))
+        sim_panel.grid(row=12, column=0, sticky="ew", pady=(0, 10))
+        self.simulator_status_labels = {}
+        for index, sim_id in enumerate(SIMULATOR_ORDER):
+            row_label = ttk.Label(
+                sim_panel,
+                text="… %s" % SIMULATOR_LABELS.get(sim_id, sim_id),
+                justify="left",
+                wraplength=330,
+            )
+            row_label.grid(row=index, column=0, sticky="w")
+            self.simulator_status_labels[sim_id] = row_label
+
         # --- Full composition controls (R3.4): all seven algorithm slots ---
         composition_frame = ttk.LabelFrame(
             controls, text="Composition - algorithm slots", padding=(8, 6))
-        composition_frame.grid(row=12, column=0, sticky="ew", pady=(12, 6))
+        composition_frame.grid(row=13, column=0, sticky="ew", pady=(12, 6))
         composition_frame.columnconfigure(1, weight=1)
         for row, slot in enumerate(ALGORITHM_CATEGORIES):
             label = ttk.Label(
@@ -584,17 +638,17 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=330,
             foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
         )
-        self.compatibility_label.grid(row=12, column=0, sticky="ew", pady=(0, 2))
+        self.compatibility_label.grid(row=14, column=0, sticky="ew", pady=(0, 2))
         add_tooltip(self.compatibility_label,
                    "Shows whether the current robot/mode supports all slots.")
 
         # Separator between composition and validation
         ttk.Separator(controls, orient="horizontal").grid(
-            row=13, column=0, sticky="ew", pady=(2, 4))
+            row=15, column=0, sticky="ew", pady=(2, 4))
 
         # Action buttons for composition management
         action_frame = ttk.Frame(controls)
-        action_frame.grid(row=14, column=0, sticky="ew", pady=(2, 4))
+        action_frame.grid(row=16, column=0, sticky="ew", pady=(2, 4))
         action_frame.columnconfigure(0, weight=1)
         action_frame.columnconfigure(1, weight=1)
         action_frame.columnconfigure(2, weight=1)
@@ -614,16 +668,16 @@ class SimulationLauncherGui(tk.Tk):
                    style="Small.TButton").grid(row=0, column=3, sticky="ew", padx=(3, 0))
 
         ttk.Label(controls, text="Validation", foreground="#a6adc8" if THEME_AVAILABLE else "#333333"
-                  ).grid(row=15, column=0, sticky="w", pady=(4, 2))
+                  ).grid(row=17, column=0, sticky="w", pady=(4, 2))
         ttk.Label(
             controls,
             textvariable=self.validation_var,
             justify="left",
             wraplength=330,
             foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
-        ).grid(row=14, column=0, sticky="ew", pady=(2, 8))
+        ).grid(row=18, column=0, sticky="ew", pady=(2, 8))
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=16, column=0, sticky="w")
+        ttk.Label(controls, text="Resolved Configuration").grid(row=19, column=0, sticky="w")
         summary = ttk.Label(
             controls,
             textvariable=self.summary_var,
@@ -631,14 +685,14 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=330,
             foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
         )
-        summary.grid(row=17, column=0, sticky="ew", pady=(2, 12))
+        summary.grid(row=20, column=0, sticky="ew", pady=(2, 12))
 
-        ttk.Label(controls, text="Command").grid(row=18, column=0, sticky="w")
+        ttk.Label(controls, text="Command").grid(row=21, column=0, sticky="w")
         command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=19, column=0, sticky="ew", pady=(2, 12))
+        command.grid(row=22, column=0, sticky="ew", pady=(2, 12))
 
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=20, column=0, sticky="ew")
+        button_frame.grid(row=23, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=1)
         button_frame.columnconfigure(1, weight=1)
         button_frame.columnconfigure(2, weight=1)
@@ -667,9 +721,9 @@ class SimulationLauncherGui(tk.Tk):
 
         self.bg_processes = {}
 
-        ttk.Label(controls, text="Drive").grid(row=21, column=0, sticky="w", pady=(12, 0))
+        ttk.Label(controls, text="Drive").grid(row=24, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=22, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=25, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
@@ -693,7 +747,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=23, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=26, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
@@ -716,7 +770,7 @@ class SimulationLauncherGui(tk.Tk):
         ).grid(row=0, column=3, sticky="ew")
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=23, column=0, sticky="ew", pady=(0, 4))
+        self.save_map_button.grid(row=27, column=0, sticky="ew", pady=(0, 4))
 
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
@@ -792,20 +846,22 @@ class SimulationLauncherGui(tk.Tk):
     def _map_config(self):
         return self.map_profiles.get(self.map_var.get(), {})
 
-    def _map_yaml_path(self):
-        map_config = self._map_config()
+    def _map_yaml_path(self, map_id=None):
+        map_id = map_id or self.map_var.get()
+        map_config = self.map_profiles.get(map_id, {})
         map_file_config = map_config.get("map", {})
         relative_path = map_file_config.get("path", "")
         if not relative_path:
-            relative_path = f"maps/{self.map_var.get()}/maps/map.yaml"
+            relative_path = f"maps/{map_id}/maps/map.yaml"
         return package_path(map_file_config.get("package", "maps"), relative_path)
 
-    def _map_has_2d_map(self):
-        map_file_config = self._map_config().get("map", {})
+    def _map_has_2d_map(self, map_id=None):
+        map_id = map_id or self.map_var.get()
+        map_file_config = self.map_profiles.get(map_id, {}).get("map", {})
         configured = map_file_config.get("has_2d_map")
         if configured is not None:
-            return bool_value(configured) and os.path.exists(self._map_yaml_path())
-        return os.path.exists(self._map_yaml_path())
+            return bool_value(configured) and os.path.exists(self._map_yaml_path(map_id))
+        return os.path.exists(self._map_yaml_path(map_id))
 
     def _mode_requires_2d_map(self, mode):
         return bool_value(self.mode_profiles.get(mode, {}).get("requires_2d_map", False))
@@ -814,6 +870,14 @@ class SimulationLauncherGui(tk.Tk):
         return self.mode_profiles.get(mode, {}).get("required_features", [])
 
     def _supported_modes(self):
+        """Modes selectable for the current robot+map+simulator combination."""
+        simulator = self.simulator_var.get()
+        return [mode for mode in self._robot_map_modes()
+                if not simulator
+                or _simulator_supports_mode(simulator, mode, self.mode_profiles)]
+
+    def _robot_map_modes(self):
+        """Modes the robot+map support, independent of the simulator choice."""
         robot_config = self._robot_config()
         robot_supported = robot_config.get("supported_modes", ["display"])
         robot_features = robot_config.get("features", [])
@@ -829,6 +893,83 @@ class SimulationLauncherGui(tk.Tk):
                 continue
             supported.append(mode)
         return supported
+
+    def _resolve_compatibility(self):
+        """Fix-point cascade correcting mode <-> simulator compatibility.
+
+        Returns (supported_modes, fixes) after correcting self.mode_var and
+        self.simulator_var in place, so every downstream decision (command,
+        validation, algorithm slots) sees a compatible selection.
+        """
+        fixes = []
+        simulator = self.simulator_var.get() or "gazebo"
+        modes = self._robot_map_modes()
+        for _ in range(3):
+            modes = [mode for mode in self._robot_map_modes()
+                     if _simulator_supports_mode(simulator, mode,
+                                                 self.mode_profiles)]
+            if self.mode_var.get() not in modes:
+                new_mode, note = _correction_for(
+                    self.mode_var.get(), modes,
+                    ["slam", "display", "loc", "nav", "3d_slam"])
+                if new_mode:
+                    fixes.append("mode %s" % note)
+                    self.mode_var.set(new_mode)
+            sims = [sim for sim in SIMULATOR_ORDER
+                    if _allowed_simulators(self.mode_var.get(),
+                                           self.mode_profiles)
+                       .get(sim, (False, ""))[0]]
+            if simulator not in sims:
+                new_sim, note = _correction_for(simulator, sims, SIMULATOR_ORDER)
+                if new_sim and new_sim != simulator:
+                    fixes.append("simulator %s" % note)
+                    simulator = new_sim
+                    self.simulator_var.set(new_sim)
+                    continue
+            break
+        return modes, fixes
+
+    def _mode_simulators(self):
+        """Simulators selectable for the active mode (features + installed)."""
+        allowed = _allowed_simulators(self.mode_var.get(), self.mode_profiles)
+        return [sim for sim in SIMULATOR_ORDER
+                if allowed.get(sim, (False, ""))[0]]
+
+    def _allowed_maps(self):
+        """Map profiles compatible with the active mode's requirements."""
+        return [map_id for map_id in sorted(self.map_profiles)
+                if self._map_ok_for_mode(map_id)]
+
+    def _map_ok_for_mode(self, map_id):
+        if self._mode_requires_2d_map(self.mode_var.get()):
+            return self._map_has_2d_map(map_id)
+        return True
+
+    def _update_simulator_panel(self):
+        """Refresh the per-simulator availability rows in the left panel."""
+        rows = getattr(self, "simulator_status_labels", None)
+        if not rows:
+            return
+        statuses = _available_simulators()
+        mode = self.mode_var.get()
+        for sim_id, row_label in rows.items():
+            name = SIMULATOR_LABELS.get(sim_id, sim_id)
+            installed, reason = statuses.get(sim_id, (False, "unknown"))
+            ok_mode, why_mode = _simulator_supports_mode(
+                sim_id, mode, self.mode_profiles)
+            if installed and ok_mode:
+                text = "● %s — available" % name
+                color = "#a6e3a1" if THEME_AVAILABLE else "#2e7d32"
+            elif installed:
+                text = "● %s — cannot run %s: %s" % (name, mode, why_mode)
+                color = "#fab387" if THEME_AVAILABLE else "#e65100"
+            else:
+                text = "○ %s — not available: %s" % (name, reason)
+                color = "#6c7086" if THEME_AVAILABLE else "#777777"
+            try:
+                row_label.configure(text=text, foreground=color)
+            except tk.TclError:  # pragma: no cover — widget destroyed
+                pass
 
     def _fallback_mode(self, supported_modes):
         if "slam" in supported_modes:
@@ -1098,6 +1239,8 @@ class SimulationLauncherGui(tk.Tk):
             environment_id=self.map_var.get() or None,
             algorithm_ids=algorithm_ids,
             reset=True,
+            mode=self.mode_var.get() or None,
+            gui=self.gui_var.get() or None,
         )
 
     def _update_validation_and_command(self):
@@ -1114,12 +1257,16 @@ class SimulationLauncherGui(tk.Tk):
         except Exception as exc:  # pragma: no cover — defensive
             self.command_var.set(" ".join(self._legacy_command()))
             self.validation_var.set(f"Resolver error: {exc}")
+            if not self._launch_running:
+                self.start_button.state(["disabled"])
             return
 
         if errors:
             self.validation_var.set(
                 "Invalid: " + " | ".join(errors))
             self.command_var.set("")
+            if not self._launch_running:
+                self.start_button.state(["disabled"])
             return
 
         notes = []
@@ -1129,6 +1276,8 @@ class SimulationLauncherGui(tk.Tk):
                                            if notes else ""))
         self.command_var.set(" ".join(command_for_selection(
             self.composition_registry, selection)))
+        if not self._launch_running:
+            self.start_button.state(["!disabled"])
 
     def _refresh_algorithm_dropdown(self):
         """Backwards-compatible alias: sync the seven slot dropdowns.
@@ -1140,9 +1289,20 @@ class SimulationLauncherGui(tk.Tk):
         self._refresh_slot_combos()
 
     def _update_from_selection(self):
-        supported_modes = self._supported_modes()
-        if self.mode_var.get() not in supported_modes:
-            self.mode_var.set(self._fallback_mode(supported_modes))
+        # 1. Maps: only environments valid for the mode's requirements stay
+        # selectable (loc/nav need a real 2D occupancy map on disk).
+        allowed_maps = self._allowed_maps()
+        if self.map_var.get() not in allowed_maps and allowed_maps:
+            self.map_var.set(allowed_maps[0])
+
+        # 2. Fix-point cascade: robot+map gate modes, modes gate simulators,
+        # simulators gate modes. Corrected BEFORE any command is built, so
+        # the launch always runs exactly what the panel shows.
+        supported_modes, fixes = self._resolve_compatibility()
+        if fixes and fixes != self._last_fixes:
+            self._last_fixes = fixes
+            self.status_var.set("Auto-corrected: " + "; ".join(fixes))
+            self.after(6000, lambda: self.status_var.set("Idle"))
 
         for mode, button in self.mode_buttons.items():
             if mode in supported_modes:
@@ -1151,14 +1311,20 @@ class SimulationLauncherGui(tk.Tk):
                 button.state(["disabled"])
 
         map_enabled = self.mode_var.get() != "display"
-        self.map_combo.configure(state="readonly" if map_enabled else "disabled")
-
-        allowed_sims = self._mode_simulators()
-        if self.simulator_var.get() not in allowed_sims:
-            self.simulator_var.set(allowed_sims[0] if allowed_sims else "gazebo")
-        self.simulator_combo.configure(
-            state="readonly" if map_enabled else "disabled"
+        self.map_combo.configure(
+            values=allowed_maps,
+            state="readonly" if map_enabled else "disabled",
         )
+
+        # The simulator stays selectable in every mode (display mode shows
+        # the robot in the chosen simulator's native viewer); only genuinely
+        # unavailable or single-choice setups disable the combo.
+        allowed_sims = self._mode_simulators()
+        self.simulator_combo.configure(
+            values=allowed_sims,
+            state="readonly" if len(allowed_sims) > 1 else "disabled",
+        )
+        self._update_simulator_panel()
 
         supports_vacuum = bool_value(self._robot_config().get("supports_room_vacuum", False))
         if not supports_vacuum and self.launch_kind_var.get() == "vacuum":
@@ -1343,6 +1509,14 @@ class SimulationLauncherGui(tk.Tk):
         for slot in ALGORITHM_CATEGORIES:
             self.slot_vars[slot].set(
                 (manifest.get("algorithm_ids") or {}).get(slot, ""))
+        # Restore the applied mode and simulator-GUI choice (R3.4+).
+        resolved_from = manifest.get("resolved_from") or {}
+        mode = resolved_from.get("mode") or manifest.get("mode")
+        if mode and mode in self.mode_profiles:
+            self.mode_var.set(mode)
+        gui_value = resolved_from.get("gui") or manifest.get("gui")
+        if gui_value in ("auto", "true", "false"):
+            self.gui_var.set(gui_value)
 
     def _show_load_profile(self):
         """Show dialog to load a saved profile (manifest or migrated legacy)."""
@@ -1409,6 +1583,26 @@ class SimulationLauncherGui(tk.Tk):
         self.after(3000, lambda: self.status_var.set("Idle"))
 
     def _start_launch(self):
+        # Apply-before-run: never start from an incompatible selection. The
+        # shared validator is the same one the CLI uses; the legacy command
+        # fallback is reserved for environments without the resolver.
+        if COMPOSITION_AVAILABLE and self.composition_registry is not None:
+            try:
+                selection = self._composition_selection()
+                errors, _warnings = validation_lines(
+                    self.composition_registry, selection)
+                if errors:
+                    messagebox.showerror(
+                        "Launch blocked",
+                        "The selected configuration is not compatible:\n\n- "
+                        + "\n- ".join(errors)
+                        + "\n\nFix the highlighted options, then start again.")
+                    self.status_var.set("Launch blocked: invalid configuration")
+                    self.after(5000, lambda: self.status_var.set("Idle"))
+                    return
+            except Exception as exc:  # pragma: no cover — defensive
+                messagebox.showerror("Launch blocked", f"Resolver error: {exc}")
+                return
         command = self._command()
         self._append_output(f"$ {' '.join(command)}\n")
         try:
@@ -1427,6 +1621,7 @@ class SimulationLauncherGui(tk.Tk):
 
         self.start_button.configure(state="disabled")
         self.stop_button.configure(state="normal")
+        self._launch_running = True
         self.status_var.set(f"Running: {command[3]}")
         threading.Thread(target=self._read_process_output, daemon=True).start()
 
@@ -1435,6 +1630,7 @@ class SimulationLauncherGui(tk.Tk):
         for line in self.process.stdout:
             self.output_queue.put(("line", line))
         return_code = self.process.wait()
+        self._launch_running = False
         self.output_queue.put(("done", return_code))
 
     def _poll_output(self):
@@ -1448,6 +1644,7 @@ class SimulationLauncherGui(tk.Tk):
                 elif kind == "done":
                     self._append_output(f"\n[launch exited with code {payload}]\n")
                     self._stop_drive()
+                    self._launch_running = False
                     self.start_button.configure(state="normal")
                     self.stop_button.configure(state="disabled")
                     self.status_var.set("Idle")
@@ -1739,6 +1936,7 @@ class SimulationLauncherGui(tk.Tk):
             return
         self.start_button.configure(state="disabled")
         self.stop_button.configure(state="normal")
+        self._launch_running = True
         self.status_var.set(f"Running: {command[3] if len(command) > 3 else command[0]}")
         threading.Thread(target=self._read_process_output, daemon=True).start()
 

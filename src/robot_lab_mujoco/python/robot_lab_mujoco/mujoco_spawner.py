@@ -4,9 +4,12 @@ Loads a world + robot model, opens the MuJoCo passive viewer, runs the
 physics step loop, and publishes the ROS 2 topics required by the
 stack (joint_states, TF, odom, scan, imu, clock).
 """
+import hashlib
 import math
 import os
 import re
+import shutil
+import struct
 import subprocess
 import tempfile
 import threading
@@ -117,27 +120,453 @@ _FALLBACK_MJCF = """<mujoco model="fallback_robot">
 """
 
 
-def _build_mjcf_from_urdf(urdf_text, pkg_map):
-    """Try MuJoCo MjSpec URDF import; fall back to the simple template."""
-    if mujoco is not None and hasattr(mujoco.MjSpec, "from_file"):
-        tmp = None
-        try:
-            tmp = tempfile.NamedTemporaryFile(
-                suffix=".urdf", delete=False, mode="w"
-            )
-            tmp.write(urdf_text)
-            tmp.close()
-            spec = mujoco.MjSpec.from_file(tmp.name)
-            return spec.to_xml()
-        except Exception:
-            pass
-        finally:
-            if tmp is not None:
+def _mesh_staging_dir(robot_name, urdf_text):
+    """Per-robot, content-addressed cache dir for converted meshes."""
+    tag = hashlib.sha1(urdf_text.encode("utf-8")).hexdigest()[:12]
+    safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(robot_name or "robot"))
+    path = os.path.join(
+        tempfile.gettempdir(), "robot_lab_mujoco_meshes", safe_name, tag
+    )
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def _resolve_mesh_source(uri, pkg_map):
+    """Resolve a URDF mesh filename to an absolute host path ('' if unknown)."""
+    uri = (uri or "").strip()
+    if uri.startswith("package://"):
+        rest = uri[len("package://"):]
+        pkg, _, rel = rest.partition("/")
+        base = pkg_map.get(pkg, "")
+        return os.path.join(base, rel) if base else ""
+    if uri.startswith("file://"):
+        return uri[len("file://"):]
+    if os.path.isabs(uri):
+        return uri
+    return ""
+
+
+def _parse_collada_mesh(dae_path):
+    """Minimal Collada reader -> (vertices Nx3, faces Mx3) in Z-up order.
+
+    Supports the triangle/polygon primitives a robot URDF references for
+    display.  Raises ValueError when the file contains no usable geometry
+    (the caller then falls back to a placeholder box).
+    """
+    tree = ET.parse(dae_path)
+    root = tree.getroot()
+    match = re.match(r"\{(.+)\}COLLADA", root.tag)
+    ns = match.group(1) if match else ""
+
+    def _q(tag):
+        return "{%s}%s" % (ns, tag) if ns else tag
+
+    up_axis = "Y_UP"
+    for asset in root.findall(_q("asset")):
+        axis = asset.find(_q("up_axis"))
+        if axis is not None and axis.text:
+            up_axis = axis.text.strip()
+
+    vertices = []
+    faces = []
+    for geometry in root.iter(_q("geometry")):
+        mesh = geometry.find(_q("mesh"))
+        if mesh is None:
+            continue
+        sources = {}
+        for source in mesh.findall(_q("source")):
+            arr = source.find(_q("float_array"))
+            if arr is None or not arr.text or not source.get("id"):
+                continue
+            try:
+                sources["#" + source.get("id")] = [
+                    float(v) for v in arr.text.split()
+                ]
+            except ValueError:
+                continue
+        vertex_position = {}
+        for vtx in mesh.findall(_q("vertices")):
+            for inp in vtx.findall(_q("input")):
+                if inp.get("semantic") == "POSITION":
+                    vertex_position["#" + (vtx.get("id") or "")] = \
+                        inp.get("source", "")
+
+        for prim_tag in ("triangles", "polylist"):
+            for prim in mesh.findall(_q(prim_tag)):
+                inputs = prim.findall(_q("input"))
+                if not inputs:
+                    continue
+                stride = max(int(inp.get("offset", 0)) for inp in inputs) + 1
+                vertex_offset = None
+                positions = None
+                for inp in inputs:
+                    if inp.get("semantic") == "VERTEX":
+                        vertex_offset = int(inp.get("offset", 0))
+                        src = inp.get("source", "")
+                        positions = sources.get(vertex_position.get(src, src))
+                if vertex_offset is None or not positions:
+                    continue
+                p_elem = prim.find(_q("p"))
+                if p_elem is None or not p_elem.text:
+                    continue
                 try:
-                    os.unlink(tmp.name)
-                except Exception:
+                    idx = [int(v) for v in p_elem.text.split()]
+                except ValueError:
+                    continue
+                counts = None
+                vc = prim.find(_q("vcount"))
+                if vc is not None and vc.text:
+                    try:
+                        counts = [int(v) for v in vc.text.split()]
+                    except ValueError:
+                        counts = None
+                if not counts:
+                    counts = [3] * (len(idx) // max(stride, 1))
+                cursor = 0
+                for count in counts:
+                    if count < 3 or cursor + count * stride > len(idx):
+                        cursor += max(count, 0) * stride
+                        continue
+                    group = idx[cursor:cursor + count * stride]
+                    cursor += count * stride
+                    corner_ids = group[vertex_offset::stride]
+                    base = len(vertices)
+                    for vi in corner_ids:
+                        if 0 <= vi * 3 + 2 < len(positions):
+                            vertices.append(positions[vi * 3:vi * 3 + 3])
+                        else:
+                            vertices.append([0.0, 0.0, 0.0])
+                    for k in range(1, len(corner_ids) - 1):
+                        faces.append((base, base + k, base + k + 1))
+
+    if not faces:
+        raise ValueError("no triangle geometry found")
+    verts = np.array(vertices, dtype=np.float64)
+    if up_axis == "Y_UP":
+        verts = verts[:, [0, 2, 1]] * np.array([1.0, -1.0, 1.0])
+    elif up_axis == "X_UP":
+        verts = verts[:, [1, 0, 2]] * np.array([-1.0, 1.0, 1.0])
+    tris = np.array(faces, dtype=np.int64)
+    return verts, tris
+
+
+def _write_binary_stl(stl_path, vertices, faces):
+    """Write a binary STL; facet normals are recomputed from the winding."""
+    tris = vertices[faces]
+    v1 = tris[:, 1] - tris[:, 0]
+    v2 = tris[:, 2] - tris[:, 0]
+    normals = np.cross(v1, v2)
+    norm = np.linalg.norm(normals, axis=1)
+    norm[norm == 0.0] = 1.0
+    normals = normals / norm[:, None]
+    with open(stl_path, "wb") as fh:
+        fh.write(b"\0" * 80)
+        fh.write(struct.pack("<I", len(faces)))
+        for normal, tri in zip(normals, tris):
+            fh.write(struct.pack("<3f", float(normal[0]), float(normal[1]),
+                                 float(normal[2])))
+            for vertex in tri:
+                fh.write(struct.pack("<3f", float(vertex[0]), float(vertex[1]),
+                                     float(vertex[2])))
+            fh.write(struct.pack("<H", 0))
+
+
+def _write_placeholder_stl(stl_path, size=0.025):
+    """Small cube standing in for meshes MuJoCo cannot use."""
+    s = size
+    corners = np.array([
+        [-s, -s, -s], [s, -s, -s], [s, s, -s], [-s, s, -s],
+        [-s, -s, s], [s, -s, s], [s, s, s], [-s, s, s],
+    ], dtype=np.float64)
+    quads = [
+        (0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4),
+        (2, 3, 7, 6), (1, 2, 6, 5), (3, 0, 4, 7),
+    ]
+    faces = []
+    for a, b, c, d in quads:
+        faces.append((a, b, c))
+        faces.append((a, c, d))
+    _write_binary_stl(stl_path, corners, np.array(faces, dtype=np.int64))
+
+
+_MUJOCO_MAX_STL_FACES = 180000  # MuJoCo decoder cap is 200000; keep headroom
+
+
+def _binary_stl_face_count(path):
+    """Face count of a binary STL from its header/size ('' unsafe)."""
+    try:
+        size = os.path.getsize(path)
+    except OSError:
+        return 0
+    if size < 84:
+        return 0
+    return (size - 84) // 50
+
+
+def _read_binary_stl(path):
+    """Binary STL reader -> (vertices Nx3, faces Mx3)."""
+    with open(path, "rb") as fh:
+        fh.read(80)
+        (count,) = struct.unpack("<I", fh.read(4))
+        raw = fh.read(count * 50)
+    data = np.frombuffer(raw, dtype=np.uint8)
+    if len(data) < count * 50:
+        raise ValueError("truncated binary STL")
+    data = data.reshape(count, 50)
+    floats = data[:, 12:48].copy().view("<f4").reshape(count, 3, 3)
+    verts = floats.reshape(-1, 3).astype(np.float64)
+    faces = np.arange(len(verts), dtype=np.int64).reshape(-1, 3)
+    return verts, faces
+
+
+def _cap_faces(vertices, faces, max_faces=_MUJOCO_MAX_STL_FACES):
+    """Naive decimation keeping the model under MuJoCo's decoder cap."""
+    if len(faces) <= max_faces:
+        return vertices, faces
+    step = int(np.ceil(len(faces) / max_faces))
+    return vertices, faces[::step]
+
+
+def _is_ascii_stl(path):
+    """True when *path* is an ASCII STL (MuJoCo only decodes binary STL)."""
+    try:
+        with open(path, "rb") as fh:
+            head = fh.read(512)
+    except OSError:
+        return False
+    return head.lstrip().startswith(b"solid") and b"facet" in head
+
+
+def _stage_stl(source, staged, notes, uri):
+    """Stage one STL mesh (binary copy, ASCII/beyond-cap conversion)."""
+    if (os.path.exists(staged) and not _is_ascii_stl(staged)
+            and 0 < _binary_stl_face_count(staged) <= _MUJOCO_MAX_STL_FACES):
+        return staged
+    if _is_ascii_stl(source):
+        try:
+            verts, faces = _parse_ascii_stl(source)
+            verts, faces = _cap_faces(verts, faces)
+            _write_binary_stl(staged, verts, faces)
+            return staged
+        except Exception as exc:
+            notes.append("mesh '%s' not convertible (%s); placeholder used"
+                         % (os.path.basename(uri), exc))
+            return ""
+    if _binary_stl_face_count(source) > _MUJOCO_MAX_STL_FACES:
+        try:
+            verts, faces = _read_binary_stl(source)
+            verts, faces = _cap_faces(verts, faces)
+            _write_binary_stl(staged, verts, faces)
+            notes.append("mesh '%s' decimated to %d faces (MuJoCo limit)"
+                         % (os.path.basename(uri), len(faces)))
+            return staged
+        except Exception as exc:
+            notes.append("mesh '%s' not convertible (%s); placeholder used"
+                         % (os.path.basename(uri), exc))
+            return ""
+    try:
+        shutil.copyfile(source, staged)
+        return staged
+    except OSError:
+        return ""
+
+
+def _parse_ascii_stl(path):
+    """Minimal ASCII STL reader -> (vertices Nx3, faces Mx3)."""
+    vertices = []
+    faces = []
+    current = []
+    with open(path, "r", errors="replace") as fh:
+        for line in fh:
+            parts = line.split()
+            if len(parts) >= 4 and parts[0] == "vertex":
+                try:
+                    current.append([float(parts[1]), float(parts[2]),
+                                    float(parts[3])])
+                except ValueError:
+                    current = []
+                    continue
+                if len(current) == 3:
+                    base = len(vertices)
+                    vertices.extend(current)
+                    faces.append((base, base + 1, base + 2))
+                    current = []
+            elif parts and parts[0] in ("endsolid", "solid"):
+                current = []
+    if not faces:
+        raise ValueError("no facets found in ASCII STL")
+    return np.array(vertices, dtype=np.float64), np.array(faces, dtype=np.int64)
+
+
+def _stage_meshes(urdf_text, pkg_map, cache_dir):
+    """Stage every URDF mesh into *cache_dir* and rewrite the URDF.
+
+    - package:// URIs are resolved to real files (MuJoCo cannot read them);
+    - Collada (.dae) meshes are converted to binary STL (MuJoCo only reads
+      STL/OBJ/MSH) using the built-in minimal Collada parser;
+    - meshes that are missing or unconvertible get a small placeholder box
+      so the robot still loads and stays visible.
+
+    Returns (staged_urdf_text, notes, placeholder_count).
+    """
+    notes = []
+    placeholders = 0
+    try:
+        root = ET.fromstring(urdf_text)
+    except ET.ParseError as exc:
+        return urdf_text, ["URDF XML parse error: %s" % exc], 0
+
+    for mesh_elem in root.iter("mesh"):
+        uri = mesh_elem.get("filename") or ""
+        source = _resolve_mesh_source(uri, pkg_map)
+        stem = re.sub(r"[^A-Za-z0-9_.-]+", "_",
+                      os.path.splitext(os.path.basename(uri))[0] or "mesh")
+        ext = os.path.splitext(uri)[1].lower()
+        staged = ""
+        if source and os.path.isfile(source):
+            if ext == ".stl":
+                staged = os.path.join(cache_dir, stem + ".stl")
+                if not os.path.exists(staged):
+                    staged = _stage_stl(source, staged, notes, uri)
+            elif ext in (".obj", ".msh"):
+                staged = os.path.join(cache_dir, os.path.basename(source))
+                if not os.path.exists(staged):
+                    try:
+                        shutil.copyfile(source, staged)
+                    except OSError:
+                        staged = ""
+            elif ext == ".dae":
+                staged = os.path.join(cache_dir, stem + ".stl")
+                if not os.path.exists(staged):
+                    try:
+                        verts, tris = _parse_collada_mesh(source)
+                        verts, tris = _cap_faces(verts, tris)
+                        _write_binary_stl(staged, verts, tris)
+                    except Exception as exc:
+                        notes.append(
+                            "mesh '%s' not convertible (%s); placeholder used"
+                            % (os.path.basename(uri), exc))
+                        staged = ""
+            else:
+                notes.append("unsupported mesh format '%s' in '%s'"
+                             % (ext, os.path.basename(uri)))
+        if staged and os.path.isfile(staged):
+            mesh_elem.set("filename", os.path.basename(staged))
+        else:
+            placeholder = os.path.join(cache_dir, "placeholder_box.stl")
+            if not os.path.exists(placeholder):
+                try:
+                    _write_placeholder_stl(placeholder)
+                except OSError:
                     pass
-    return _FALLBACK_MJCF
+            if os.path.exists(placeholder):
+                mesh_elem.set("filename", "placeholder_box.stl")
+                placeholders += 1
+                notes.append("mesh '%s' unavailable -> placeholder box"
+                             % os.path.basename(uri))
+
+    return ET.tostring(root, encoding="unicode"), notes, placeholders
+
+
+def _inject_mujoco_compiler(urdf_text, mesh_dir):
+    """Add or patch the MuJoCo URDF-compiler block (meshdir + inertia repair).
+
+    Unitree URDFs already ship a ``<mujoco><compiler .../></mujoco>``
+    extension block — in that case the existing block is patched in place
+    (adding meshdir/strippath and inertia bounds) instead of duplicated.
+    """
+    try:
+        root = ET.fromstring(urdf_text)
+    except ET.ParseError:
+        return urdf_text
+
+    compiler_attrs = {
+        "meshdir": mesh_dir.replace("\\", "/"),
+        "strippath": "false",
+        "discardvisual": "false",
+        "balanceinertia": "true",
+        "boundmass": "1e-4",
+        "boundinertia": "1e-8",
+    }
+
+    existing = root.find("mujoco")
+    if existing is not None:
+        compiler = existing.find("compiler")
+        if compiler is None:
+            compiler = ET.SubElement(existing, "compiler")
+        # meshdir/strippath/discardvisual must match the staged cache;
+        # everything else (angle, balanceinertia...) is only filled in when
+        # the URDF does not already carry a value.
+        forced = ("meshdir", "strippath", "discardvisual")
+        for key, value in compiler_attrs.items():
+            if key in forced or not compiler.get(key):
+                compiler.set(key, value)
+        return ET.tostring(root, encoding="unicode")
+
+    block = ET.Element("mujoco")
+    compiler = ET.SubElement(block, "compiler")
+    for key, value in compiler_attrs.items():
+        compiler.set(key, value)
+    # <mujoco> must follow <robot>'s opening tag as its first child.
+    root.insert(0, block)
+    return ET.tostring(root, encoding="unicode")
+
+
+def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name=""):
+    """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
+
+    Mesh staging (package:// resolution, DAE->STL conversion) happens first
+    so the importer sees a self-contained model.  Failures are reported
+    with the real MuJoCo error; the generic diff-drive template is a loud
+    last resort, never a silent substitution (which previously made most
+    robots appear as a box in the viewer).
+    """
+
+    def _log(level, message):
+        if logger is not None:
+            getattr(logger, level)(message)
+
+    if mujoco is None or not hasattr(mujoco, "MjSpec"):
+        _log("error", "mujoco (>=3.2 with MjSpec) not importable; "
+                      "using fallback MJCF template.")
+        return _FALLBACK_MJCF
+
+    tmp = None
+    try:
+        cache_dir = _mesh_staging_dir(robot_name, urdf_text)
+        urdf_text, notes, placeholders = _stage_meshes(
+            urdf_text, pkg_map, cache_dir)
+        for note in notes:
+            _log("warning", "MuJoCo mesh staging: " + note)
+        urdf_text = _inject_mujoco_compiler(urdf_text, cache_dir)
+
+        tmp = tempfile.NamedTemporaryFile(
+            suffix=".urdf", delete=False, mode="w"
+        )
+        tmp.write(urdf_text)
+        tmp.close()
+        spec = mujoco.MjSpec.from_file(tmp.name)
+        mjcf = spec.to_xml()
+        if placeholders:
+            _log("warning",
+                 "MuJoCo URDF import OK with %d placeholder geom(s); "
+                 "some meshes could not be converted." % placeholders)
+        else:
+            _log("info", "MuJoCo URDF import OK (all meshes staged).")
+        return mjcf
+    except Exception as exc:
+        _log("error",
+             "MuJoCo URDF import failed (%s); using fallback diff-drive "
+             "template.%s" % (
+                 exc,
+                 " Staged URDF kept at %s." % tmp.name if tmp else ""))
+        return _FALLBACK_MJCF
+    finally:
+        if tmp is not None:
+            try:
+                os.unlink(tmp.name)
+            except Exception:
+                pass
 
 
 # ---------------------------------------------------------------------------
@@ -183,6 +612,7 @@ class MuJoCoSpawner(Node):
         self._data = None
         self._viewer = None
         self._body_id = -1
+        self._model_source = "none"
         self._free_joint_qpos_adr = -1
         self._joint_name2id = {}   # mujoco joint name -> qpos index
         self._joint_name2dofadr = {}  # mujoco joint name -> dof (qvel) index
@@ -285,6 +715,7 @@ class MuJoCoSpawner(Node):
                 )
 
         use_fallback = False
+        self._model_source = "fallback"
         if model and os.path.isfile(str(model)):
             urdf = _xacro_to_urdf(str(model))
             pkg_map = {}
@@ -294,14 +725,25 @@ class MuJoCoSpawner(Node):
                 except Exception:
                     pass
             rp = self.get_parameter("robot_package").value
+            # package:// mesh URIs may reference packages not named by
+            # $(find ...) xacro args — resolve those shares too.
+            for pkg_name in re.findall(r"package://([^/]+)/", urdf):
+                if pkg_name not in pkg_map:
+                    try:
+                        pkg_map[pkg_name] = get_package_share_directory(pkg_name)
+                    except Exception:
+                        pass
             if rp and rp not in pkg_map:
                 try:
                     pkg_map[rp] = get_package_share_directory(rp)
                 except Exception:
                     pass
-            urdf = _rewrite_package_uris(urdf, pkg_map)
             urdf = _strip_gazebo_tags(urdf)
-            robot_mjcf = _build_mjcf_from_urdf(urdf, pkg_map)
+            robot_mjcf = _build_mjcf_from_urdf(
+                urdf, pkg_map, logger=self.get_logger(),
+                robot_name=self.get_parameter("robot_name").value)
+            if robot_mjcf != _FALLBACK_MJCF:
+                self._model_source = "urdf"
         else:
             self.get_logger().warn("URDF not found; using fallback MJCF.")
             robot_mjcf = _FALLBACK_MJCF
@@ -691,6 +1133,9 @@ class MuJoCoSpawner(Node):
             KeyValue(key="body_id", value=str(self._body_id)))
         status.values.append(
             KeyValue(key="sim_t", value=f"{self._sim_t:.3f}"))
+        status.values.append(
+            KeyValue(key="model_source",
+                     value=str(getattr(self, "_model_source", "unknown"))))
         msg.status.append(status)
         self._health_pub.publish(msg)
 
