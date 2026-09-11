@@ -14,9 +14,9 @@ supported_baseline:
   qualification: "No fresh clean build, GUI task, full robot mission or hardware qualification in the 2026-09-07 audit."
   simulators:
     gazebo: "Primary configured path; historical startup reports, not freshly mission-qualified."
-    pybullet: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair."
-    mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair."
-    isaac: "Runtime subprocess code exists; full startup/mission unverified in this audit; no scan/RGB-D publishers; clock contract needs repair."
+    pybullet: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robot descriptions load and 26/26 worlds produce static geometry."
+    mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
+    isaac: "Runtime subprocess code exists; full startup/mission unverified in this audit; no scan/RGB-D publishers; clock contract needs repair. 2026-09-11: local installation auto-detected and the runtime child starts, but Kit aborts in extension startup (see known_blockers/isaac_jetson_cuda_torch)."
 baseline:
   recorded_on: "2026-09-07"
   revision: "dff388f"
@@ -883,6 +883,13 @@ known_blockers:
     condition: "Historical ABI warning; optional ORB-SLAM3 not freshly built or qualified."
     unblock: "Verify matching OpenCV/cv_bridge and external dependencies if choosing this optional implementation."
     blocks_simulation_release: false
+  -
+    id: "isaac_jetson_cuda_torch"
+    affects:
+      - "R8.2"
+    condition: "Isaac Sim Kit aborts during extension startup on this Jetson AGX Orin: isaacsim.core.deprecation_manager.api imports the bundled omni.isaac.ml_archive torch, whose nvidia/cusparse/lib/libcusparse.so.12 needs __nvJitLinkCreate_12_8 from libnvJitLink.so.12, a symbol the device CUDA does not export. Reproduced 2026-09-11 twice: through the launch graph and by instantiating SimulationApp directly under IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh. Runtime discovery itself is fixed - the installation is auto-detected and the child process starts."
+    unblock: "Install a Jetson-matched torch/CUDA into Isaac's own Python, or exclude the deprecated ml_archive extension from the Kit experience; then re-run the direct SimulationApp boot before re-testing the launch graph."
+    blocks_simulation_release: false
 risks:
   -
     id: "isaac_host_runtime"
@@ -913,5 +920,9 @@ handoff:
   audit: "docs/status/audit-2026-09-07.md"
   no_runtime_repairs_completed_by_this_revision: false
   session_notes:
+    - "2026-09-11 selection fidelity: every algorithm category is now a launch argument and is applied. Before, only global_planning/local_planning reached the launch and mode:=nav crashed on four undeclared launch configurations while mode:=slam crashed on a dict passed where launch expects pairs. Added the seven-category contract in simulated_robot.launch.py driven by the new robot_lab_bringup/config/algorithm_dispatch.yaml (45 entries: node / nav2 plugin / stack-provided / unavailable-with-reason); resolver.py emits the same arguments so CLI and GUI agree. Unrunnable or out-of-mode selections now fail with the reason instead of being dropped. Evidence: test_algorithm_dispatch.py 11 passed; all five modes launch; registry 286 passed; GUI 37 passed."
+    - "2026-09-11 algorithm entry points: 12 of 13 robot_lab_algorithms console scripts spun plain non-Node classes and died on start, leaving five categories with no runnable standalone implementation. Each now has a real rclpy node wrapper around the unchanged numerical core, plus a shared _runtime.py so SIGINT/SIGTERM stops a node without a traceback. mppi_controller (nav2_mppi_controller::MPPIController) added so local planning keeps five runnable implementations after teb_local_planner was recorded as not built here."
+    - "2026-09-11 backend import fidelity: MuJoCo imported 2/17 robots (the MJCF merge discarded <asset>/<default>/meshdir, so mesh robots silently became the fallback box) and had worlds for 3/26 maps; PyBullet imported 15/17 robots and loaded only mesh geometry, so all twelve box-built arenas were empty. Now: MuJoCo 17/17 robots with a floating base and 425/425 robot x map models build; PyBullet 17/17 robots and 26/26 maps produce geometry. MJCF worlds are generated from the same Gazebo sources by robot_lab_maps/tools/gen_mjcf_worlds.py; Collada meshes are converted by the shared robot_lab_utils/mesh_assets.py used by both backends."
+    - "2026-09-11 display mode: robot_model:=none and map_name:=none are valid in display mode, so a world can be shown with no robot and a robot with no world; the Gazebo display path now starts gz-sim with the selected world instead of ignoring the map; registered environments declare every backend they run in, which previously made three of the four backends unusable for every map."
     - "R2.3 completed: all three spawners (PyBullet/MuJoCo/Isaac) now declare /robot_lab/ready, /robot_lab/health, and /robot_lab/reset contracts. Debug print removed from pybullet_spawner.py. Packages rebuilt with --symlink-install. Full bringup test suite: 219 tests pass."
     - "R3.1 completed: structured evidence field added to registry schemas; 5 integrated robots and 13 P5 algorithms now carry evidence entries referencing their smoke experiments and pure-Python logic tests; qualification tests (BHL/go2/quadrotor/safety-limits/algorithm-breadth) gate on evidence instead of bare status labels. Registry suite 267 passed; fast-tier 385 passed + 1 skip; cross-reference validation PASS."

@@ -176,11 +176,16 @@ class R34GuiCompositionTests(unittest.TestCase):
         self.assertIn("global_planner_plugin:=nav2_navfn_planner/NavfnPlanner",
                       cmd_n)
         self.assertNotEqual(cmd_a, cmd_n)
-        # All other arguments stay the same.
+        # The selection is also passed through by category, so the launch
+        # applies the chosen planner rather than the mode default.
+        self.assertIn("global_planning:=a_star_planner", cmd_a)
+        self.assertIn("global_planning:=navfn_planner", cmd_n)
+        # Everything outside the global_planning slot stays the same.
         arg_a = {p.split(":=", 1)[0]: p for p in cmd_a[4:]}
         arg_n = {p.split(":=", 1)[0]: p for p in cmd_n[4:]}
-        arg_a.pop("global_planner_plugin")
-        arg_n.pop("global_planner_plugin")
+        for changed in ("global_planner_plugin", "global_planning"):
+            arg_a.pop(changed)
+            arg_n.pop(changed)
         self.assertEqual(arg_a, arg_n)
 
     # ------------------------------------------------------------------

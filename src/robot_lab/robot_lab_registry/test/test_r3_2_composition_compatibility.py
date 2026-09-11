@@ -87,19 +87,36 @@ class R32TypedCompositionTests(unittest.TestCase):
         )
 
     def test_simulator_environment_mismatch_rejected(self):
-        """A composition simulator that contradicts the environment is rejected."""
+        """A simulator outside the environment's supported set is rejected.
+
+        Registered environments declare every backend they were ported to
+        (world geometry for the non-authoring backends is generated from the
+        same source world), so the check fires on a simulator that is not in
+        that set rather than on anything but the authoring backend.
+        """
         result = check_composition(
             self.registry,
-            make_composition(simulator="pybullet"),
+            make_composition(simulator="real"),
         )
         self.assertFalse(result.valid)
         self.assertTrue(
-            any(
-                "authored for simulator 'gazebo'" in err and "'pybullet'" in err
-                for err in result.errors
-            ),
+            any("supports simulator(s)" in err and "'real'" in err
+                for err in result.errors),
             f"expected a simulator-mismatch diagnostic, got: {result.errors}",
         )
+
+    def test_ported_simulator_accepted(self):
+        """Every backend an environment declares support for is accepted."""
+        for simulator in ("gazebo", "pybullet", "mujoco", "isaac"):
+            with self.subTest(simulator=simulator):
+                result = check_composition(
+                    self.registry,
+                    make_composition(simulator=simulator),
+                )
+                self.assertTrue(
+                    result.valid,
+                    f"{simulator} rejected: {result.errors}",
+                )
 
     def test_matching_simulator_accepted(self):
         """The environment's own simulator passes the simulator check."""

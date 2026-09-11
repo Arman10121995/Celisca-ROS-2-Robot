@@ -23,6 +23,22 @@ LOCAL_PLANNER_EXTRA_PARAMS = {
             "GoalAlign", "PathAlign", "PathDist", "GoalDist",
         ],
     },
+    # MPPI scores sampled rollouts with weighted critics instead of the
+    # DWB critic set, and needs its own horizon/batch configuration.
+    "nav2_mppi_controller::MPPIController": {
+        "FollowPath.time_steps": 56,
+        "FollowPath.model_dt": 0.05,
+        "FollowPath.batch_size": 2000,
+        "FollowPath.iteration_count": 1,
+        "FollowPath.temperature": 0.3,
+        "FollowPath.gamma": 0.015,
+        "FollowPath.motion_model": "DiffDrive",
+        "FollowPath.critics": [
+            "ConstraintCritic", "CostCritic", "GoalCritic",
+            "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic",
+            "PathAngleCritic", "PreferForwardCritic",
+        ],
+    },
 }
 
 _PLANNER_SERVERS = {"planner_server"}

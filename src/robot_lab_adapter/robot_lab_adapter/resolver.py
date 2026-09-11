@@ -256,6 +256,15 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
     launch_args.update(_spawn_arguments(environment, resolved.spawn))
     planner_args, plugins = _planner_arguments(algorithm_ids)
     launch_args.update(planner_args)
+    # Every selected category is passed to the launch file, not just the two
+    # that map onto nav2 plugins: simulated_robot.launch.py declares one
+    # argument per category and starts/parametrizes the selection, so a
+    # dry-run command reproduces the full composition rather than a
+    # command that silently falls back to the mode defaults.
+    for slot in ALGORITHM_SLOTS:
+        selected = algorithm_ids.get(slot)
+        if selected:
+            launch_args[slot] = selected
     # Apply the selected bringup mode and simulator GUI choice to the
     # concrete command: the launch file defaults to mode=nav / gui=auto, so
     # omitting them would silently ignore the user's selection (R3.4).

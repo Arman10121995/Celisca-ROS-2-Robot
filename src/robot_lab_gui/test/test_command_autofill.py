@@ -102,15 +102,18 @@ def test_command_tracks_robot_map_mode_backend_and_planner(app):
     app.mode_buttons["loc"].invoke()
     assert "mode:=loc" in displayed_command(app)
     app.mode_buttons["nav"].invoke()
+    # Environments are ported to every backend (world geometry is generated
+    # for all four from the same source world), so switching the backend
+    # keeps a runnable command and simply re-targets it.
     select(app, app.simulator_combo, "mujoco")
-    # Labbot is not cataloged for MuJoCo; never leave a runnable Gazebo
-    # command on screen when that unsupported backend is selected.
-    assert displayed_command(app) == []
-    assert "mujoco" in app.validation_var.get()
+    assert "simulator:=mujoco" in displayed_command(app)
     select(app, app.simulator_combo, "gazebo")
     assert "simulator:=gazebo" in displayed_command(app)
     select(app, app.slot_combos["global_planner"], "navfn_planner")
-    assert "global_planner_plugin:=nav2_navfn_planner/NavfnPlanner" in displayed_command(app)
+    command = displayed_command(app)
+    assert "global_planner_plugin:=nav2_navfn_planner/NavfnPlanner" in command
+    # The selection is also forwarded by category so the launch applies it.
+    assert "global_planning:=navfn_planner" in command
 
 
 def test_room_vacuum_choice_changes_launch_file(app):
@@ -131,11 +134,15 @@ def test_copy_and_run_use_preview_with_shell_quoting(app):
             patch.object(launcher.threading, "Thread"), \
             patch.object(launcher, "subprocess_env", return_value={}):
         app._update_validation_and_command()
-        assert displayed_command(app) == command
+        shown = displayed_command(app)
+        # The resolver command is carried through verbatim; the launcher
+        # additionally appends the per-category algorithm selections.
+        assert shown[:len(command)] == command
+        assert "world_path:=/tmp/a map's world;test.world" in shown
         app.copy_command_button.invoke()
-        assert shlex.split(app.clipboard_get()) == command
+        assert shlex.split(app.clipboard_get()) == shown
         app.start_button.invoke()
-        assert popen.call_args.args[0] == command
+        assert popen.call_args.args[0] == shown
         assert not popen.call_args.kwargs.get("shell", False)
         assert f"$ {app.command_var.get()}" in app.output.get("1.0", "end")
         # Ctrl+Enter cannot start another process while one is running.

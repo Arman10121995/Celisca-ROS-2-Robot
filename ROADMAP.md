@@ -1,6 +1,8 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-09. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle and truthful outcomes complete.
+Updated: 2026-09-11. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
+and truthful outcomes complete. 2026-09-11: selection fidelity work landed
+against R3.3/R3.4, R7.1, R6.1 and R8.1; R8.2 blocked with a named defect.
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -204,6 +206,36 @@ Dependencies: `R3.3`.
 - Acceptance: CLI and GUI resolve identical saved profiles (test: GUI and CLI resolve identical manifest; GUI-saved profile reloaded by CLI resolves identically; CLI `--out` manifest loadable by GUI layer resolves to same command). Selection changes the active component (test: global_planning a_star vs navfn differ only in `global_planner_plugin`). Stop/close only clean owned processes and never delete user artifacts (test: profile delete never touches user artifacts; ensure_defaults never overwrites user profiles). Headless GUI-adjacent logic tests pass (11 passed).
 - Command autofill follow-up (2026-09-11): `_update_validation_and_command` resolves once and stores the argument list used by the visible preview, Copy Command and Run Command. GUI/headless and room-vacuum choices update the command; map profile keys are translated to registry environment IDs. Invalid selections clear the command and disable Run/Copy. Verification: 37 GUI tests passed under Xvfb, package rebuild and installed-window smoke check passed; see [evidence](docs/status/gui-command-autofill-2026-09-11.md).
 
+- Applied-selection follow-up (2026-09-11): the resolver recorded all seven
+  algorithm slots in the manifest but only `global_planning` and
+  `local_planning` ever became launch arguments, so five categories were
+  selectable and then discarded. `simulated_robot.launch.py` now declares one
+  `<category>:=<algorithm|auto|none>` argument per registry category and
+  resolves each one *before* any process starts, against the new data-driven
+  `src/robot_lab_bringup/config/algorithm_dispatch.yaml` (45 entries), which
+  records for every cataloged algorithm whether it starts a node, switches a
+  nav2 plugin, is supplied by a stack the mode already runs, or cannot run and
+  why. `resolver.py` emits the same arguments, so a CLI dry-run and the GUI
+  produce the same command. Selections that the mode does not run, or that name
+  a cataloged-only algorithm, now fail with the reason instead of being dropped.
+  Two launch defects were fixed en route: `mode:=nav` aborted every run with
+  "launch configuration 'global_planner' does not exist" (four arguments were
+  read but never declared), and `mode:=slam` aborted with "too many values to
+  unpack" (a dict passed where launch expects pairs). Verification:
+  `src/robot_lab_bringup/test/test_algorithm_dispatch.py` 11 passed; display,
+  loc, slam, 3d_slam and nav all launch; registry 286 passed, GUI 37 passed.
+
+- Selectability follow-up (2026-09-11): the GUI now gates options on real
+  compatibility instead of silently re-selecting. Modes are disabled with the
+  reason attached (robot lacks a declared mode or a sensor feature, map has no
+  2D occupancy map, backend cannot run the mode or is not installed); algorithm
+  slots list only algorithms the bringup layer can actually start, and a slot
+  with no compatible option is disabled with that explanation rather than
+  offering choices that would fail; every slot also offers an explicit "none"
+  that reaches the launch as `<category>:=none`. The robot and map selectors
+  gained a "None" entry for display mode, so a world can be shown with no robot
+  and a robot with no world.
+
 ### R3.5 — Author benchmark scenario and experiment catalogs
 
 Dependencies: `R3.3`, `R2.2`.
@@ -313,6 +345,24 @@ Dependencies: `R4.3`, `R3.2`.
 - Implement: Separate numerical classes from ROS wrappers; enforce input/output types, rates, timestamps, frames, covariance, lifecycle, seeds/reset, parameter bounds and failure codes. Wire useful kernels or mark educational; validate mathematical names against implementations.
 - Acceptance: One adapter per category does useful input→output work with installed entrypoints, analytic/oracle tests and ROS tests; missing data cannot report success; replay deterministic; common safety layers disclosed separately.
 
+- ROS entry-point follow-up (2026-09-11): 12 of the 13 `robot_lab_algorithms`
+  console scripts could not run. Their `*_main` functions called
+  `rclpy.spin_once()` on plain algorithm classes that are not `rclpy` nodes, so
+  each died immediately (`AttributeError: 'PointcloudSegmenter' object has no
+  attribute 'subscriptions'`), leaving five of the seven categories with no
+  runnable standalone implementation. Each now has a real node wrapper around
+  the unchanged numerical core: perception (`/scan` -> clustered
+  `MarkerArray`, `PointCloud2` -> ground/obstacle clouds), state estimation and
+  sensor fusion (`/odom` + `/imu` -> filtered `Odometry`/`Imu`), global planning
+  (`/map` + `/goal_pose` -> `nav_msgs/Path`), local planning (`/scan` ->
+  `Twist`). A shared `_runtime.py` gives every entry point one clean stop path,
+  so SIGINT/SIGTERM ends a node without a traceback in the GUI console.
+  `mppi_controller` (`nav2_mppi_controller::MPPIController`, already installed)
+  was added to close local planning back to five runnable implementations after
+  `teb_local_planner` was recorded as not built in this workspace.
+  Verification: all 13 entry points start and stop cleanly;
+  `test_algorithm_dispatch.py` asserts >= 5 runnable implementations per category.
+
 ### R7.2 — Five perception pipelines
 
 Dependencies: `R7.1`.
@@ -379,6 +429,36 @@ Dependencies: `R5.1`, `R6.1`.
 - Implement: Verify import fidelity, frames, stepping, contacts, limits, sensors/noise and reset. Do not silently substitute a generic box model. Start with mobile; add class/backend rows only after that class mission passes.
 - Acceptance: R2 contracts and R4 mobile experiment pass on each backend with artifacts; differences measured, not assumed identical physics; missing sensor modes gated; non-mobile support separately evidenced.
 
+- Import-fidelity follow-up (2026-09-11): the "generic box substitution" this
+  task warns about was happening for almost every robot and every world.
+  MuJoCo imported 2 of 17 robot descriptions: `_merge_mjcf` copied only
+  `<worldbody>` and `<actuator>` out of the converted robot and discarded
+  `<asset>`, `<default>` and the compiler `meshdir`, so every mesh-based robot
+  failed with "mesh 'base_link' not found in geom 1" and fell back to the
+  diff-drive template; imported robots were also welded to the world with no
+  free joint, so none could be driven. The merge now composes all top-level
+  sections with asset paths made absolute, and `_add_floating_base` gives an
+  imported robot the 6-DOF base the physics loop and odometry expect. PyBullet
+  failed 2 of 17 (`unitree_g1_29dof`, `unitree_h1_2`), whose descriptions use
+  relative mesh paths that break once the prepared URDF is written to a temp
+  directory; those paths are now anchored to the source description.
+  On the environment side, 3 of 26 maps had a MuJoCo world and the rest fell
+  back silently to `mjcf/empty.xml`, while PyBullet loaded only `<mesh>`
+  geometry and so rendered all twelve box-built arenas as bare planes.
+  `src/robot_lab_maps/tools/gen_mjcf_worlds.py` now derives MJCF from the same
+  Gazebo `.world` sources (primitives with the full model->link->geometry pose
+  chain, meshes, `model://` includes resolved against the vendored model
+  library, actors skipped and reported) for all 26 maps, and the PyBullet
+  backend loads SDF primitives and includes rather than meshes alone. Collada,
+  the only mesh format the vendored model library ships, is converted to STL by
+  the shared `src/robot_lab_utils/robot_lab_utils/mesh_assets.py`, which both
+  backends use instead of each carrying a copy.
+  Verification: MuJoCo builds a model for 425/425 robot x map combinations
+  (the 26th map resolves through its world name); PyBullet produces geometry
+  for 26/26 maps (small_house 86 bodies, small_warehouse 25, nav_maze 16,
+  previously 0); both load 17/17 robot descriptions. This is import fidelity,
+  not the mission qualification this task requires.
+
 ### R8.2 — Qualify Isaac on a named host configuration
 
 Dependencies: `R5.1`, `R6.1`.
@@ -386,6 +466,26 @@ Dependencies: `R5.1`, `R6.1`.
 - Files: `src/robot_lab_isaac/`, `scripts/`, `docs/status/support-matrix.md`.
 - Implement: Validate Python/ROS subprocess boundary, runtime discovery, import, control, sensors and failures on a chosen compatible host. Implement needed LiDAR/RGB-D or gate modes; parameterize host paths. Historical Jetson startup reports are not qualification.
 - Acceptance: Live startup/reset/command/sensor/mission evidence recorded; child failure aborts cleanly; offline is never success. If engine cannot run, record exact blocker and continue other lanes.
+
+- Runtime-discovery follow-up (2026-09-11), task still BLOCKED:
+  - Fixed: the backend no longer requires `ISAAC_PYTHON` to be exported by
+    hand. `src/robot_lab_utils/robot_lab_utils/isaac_env.py` detects a local
+    installation (explicit `ISAAC_PYTHON` still wins), so the GUI reports Isaac
+    as available and the runtime child starts under Isaac's own Python 3.12.
+    Previously every launch degraded to offline mode and Isaac could not be
+    selected at all.
+  - Blocker: Kit aborts during extension startup on this Jetson AGX Orin.
+    `isaacsim.core.deprecation_manager.api` imports the bundled
+    `omni.isaac.ml_archive` torch, whose
+    `nvidia/cusparse/lib/libcusparse.so.12` requires `__nvJitLinkCreate_12_8`
+    from `libnvJitLink.so.12`, a symbol the device CUDA does not export.
+    Startup stops there. Reproduced twice: through the launch graph, and by
+    instantiating `SimulationApp` directly under
+    `IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh`.
+  - Unblock condition: install a Jetson-matched torch/CUDA into Isaac's own
+    Python, or exclude the deprecated ml_archive extension from the Kit
+    experience; then re-run the direct `SimulationApp` boot before re-testing
+    the launch graph. Offline mode remains not-success, per this task.
 
 ### R8.3 — Resource-bounded concurrent experiments
 

@@ -1,6 +1,7 @@
 # Robot Lab support matrix
 
-Last updated: 2026-09-07. Baseline reviewed: `dff388f`.
+Last updated: 2026-09-11. Baseline reviewed: `dff388f`; simulator
+coverage and the algorithm-selection contract re-measured 2026-09-11.
 
 This matrix reports implementation and evidence, not registry maturity labels.
 No new full missions, GUI sessions or hardware operations were performed by the
@@ -33,9 +34,9 @@ checks. One machine's cached installation does not prove universal support.
 | Backend/component | Implementation/evidence | Current limit |
 |---|---|---|
 | Gazebo Harmonic | Primary launch/control path, robot/world assets, historical headless world-load notes | Strongest reference route; no fresh end-to-end navigation or all-world recertification |
-| PyBullet | Spawner, wheel command bridge, state/scan output; selected tests include basic real physics | Partial runtime implementation, not complete ROS/navigation qualification |
-| MuJoCo | Model import, wheel-actuation bridge, state/scan output; selected tests include basic real physics | Partial runtime implementation, not complete ROS/navigation qualification |
-| Isaac Sim | ROS spawner plus separate runtime, stage/robot import and state streaming; historical installation/boot notes | Experimental; no fresh native startup/mission test, no scan/RGB-D publisher, offline fallback is not physics evidence |
+| PyBullet | Spawner, wheel command bridge, state/scan output; selected tests include basic real physics. 2026-09-11: loads all 17 robot descriptions and materialises static geometry for all 26 worlds (boxes/spheres/cylinders/planes/meshes, `model://` includes resolved, Collada staged to STL) | Partial runtime implementation, not complete ROS/navigation qualification |
+| MuJoCo | Model import, wheel-actuation bridge, state/scan output; selected tests include basic real physics. 2026-09-11: all 17 robots import with their assets and a floating base; MJCF worlds generated for all 26 maps | Partial runtime implementation, not complete ROS/navigation qualification |
+| Isaac Sim | ROS spawner plus separate runtime, stage/robot import and state streaming; historical installation/boot notes. 2026-09-11: the local installation is auto-detected and the runtime child starts under Isaac's own Python | Kit aborts during extension startup on this Jetson: Isaac's bundled `omni.isaac.ml_archive` torch links `libcusparse.so.12` against `__nvJitLinkCreate_12_8`, which the device CUDA does not provide. Selectable and launchable, not yet qualified |
 | ORB-SLAM3 | Optional external-library wrapper | Requires compatible dependencies including OpenCV/cv_bridge ABI; not required for reference simulation |
 
 Historical versions, Docker image sizes and host paths are installation history,
@@ -53,6 +54,8 @@ live-verified ROS contract is not supported by this audit.
 | Odometry | Controller odometry and local EKF configuration | Simulator base state on `/odom` | Simulator body state on `/odom` | Runtime state on `/odom` |
 | IMU | Description/plugin/configuration assets | Implemented from simulator state | Implemented from simulator state | Implemented from runtime state |
 | 2D scan | LiDAR assets for compatible robots | Raycast output implemented | Raycast output implemented | No publisher in current spawner |
+| World geometry | SDF worlds loaded natively | SDF parsed directly: primitives + meshes, `model://` resolved (26/26 maps produce geometry) | MJCF generated from the same SDF by `robot_lab_maps/tools/gen_mjcf_worlds.py` (26/26 maps) | SDF world path forwarded to the runtime; unverified while Kit startup is blocked |
+| Robot import | Native URDF/xacro | 17/17 robot descriptions load | 17/17 import with assets, defaults and a floating base | Blocked with Kit startup |
 | RGB/depth/camera info | Bumperbot sensor assets and RTAB-Map configuration | Not implemented in current bridge | Not implemented in current bridge | Not implemented in current bridge |
 | Joint states | Controller/plugin route | Implemented | Implemented | Implemented |
 | TF | Description/controller/estimator routes; ownership needs checks | Publishes `odom → base_footprint`; estimator conflict risk | Same | Same |

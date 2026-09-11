@@ -205,12 +205,21 @@ def check_simulator_compatibility(
             f"Unknown simulator '{simulator}'; supported simulators: {SIMULATOR_OPTIONS}"
         )
 
+    # An environment declares the backend it was authored for plus every
+    # other backend it has been ported to (`simulators`).  World geometry is
+    # generated for all four backends from the same Gazebo source, so an
+    # environment is usually runnable everywhere; an environment that lists
+    # a narrower set is still enforced.
     env_simulator = (environment.get('simulator') or '').strip()
-    if env_simulator and env_simulator != simulator:
+    supported = [str(s).strip() for s in (environment.get('simulators') or [])
+                 if str(s).strip()]
+    if env_simulator and env_simulator not in supported:
+        supported.append(env_simulator)
+    if supported and simulator not in supported:
         result.valid = False
         result.errors.append(
-            f"Environment '{environment['id']}' is authored for simulator "
-            f"'{env_simulator}' but the composition requests '{simulator}'"
+            f"Environment '{environment['id']}' supports simulator(s) "
+            f"{sorted(supported)} but the composition requests '{simulator}'"
         )
 
     return result

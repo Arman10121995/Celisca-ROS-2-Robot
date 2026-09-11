@@ -391,6 +391,7 @@ class SimulationLauncherGui(tk.Tk):
             "algorithms.yaml",
         )
         self.algorithms = self._load_algorithms()
+        self.algorithm_dispatch = self._load_algorithm_dispatch()
         self.slot_vars = {}
         self.slot_combos = {}
         self.slot_labels = {}
@@ -453,11 +454,43 @@ class SimulationLauncherGui(tk.Tk):
             return raw.get("algorithms", [])
         return []
 
+    def _load_algorithm_dispatch(self):
+        """Load how each algorithm is applied at launch (bringup config).
+
+        The GUI must not offer an algorithm the launch layer would refuse:
+        entries marked `unavailable` are cataloged only (not built in this
+        workspace), so they are filtered out with their reason attached.
+        """
+        try:
+            path = package_path(
+                "robot_lab_bringup", "config/algorithm_dispatch.yaml")
+        except Exception:
+            return {}
+        if not path or not os.path.exists(path):
+            return {}
+        raw = load_yaml(path)
+        if not isinstance(raw, dict):
+            return {}
+        return raw.get("algorithms", {}) or {}
+
+    def _algorithm_unavailable_reason(self, category, algorithm_id):
+        """Why *algorithm_id* cannot be launched, or '' when it can."""
+        entry = (self.algorithm_dispatch.get(category) or {}).get(algorithm_id)
+        if entry is None:
+            return ("not wired into the launch layer "
+                    "(missing from algorithm_dispatch.yaml)")
+        return entry.get("unavailable", "") or ""
+
     def _algorithms_for_category(self, category):
-        """Return algorithm IDs matching the given category."""
+        """Runnable algorithm IDs for *category*.
+
+        Filtered by what the bringup layer can actually start, so a slot
+        never lists an option that would fail the launch.
+        """
         return [
             a["id"] for a in self.algorithms
             if a.get("category") == category
+            and not self._algorithm_unavailable_reason(category, a["id"])
         ]
 
     def _algorithm_name(self, algorithm_id):
@@ -974,22 +1007,17 @@ class SimulationLauncherGui(tk.Tk):
         return reasons
 
     def _simulator_mode_support(self, simulator, mode):
-        """(ok, reason) for one simulator/mode pair, installation included."""
-        try:
-            from .simulator_compat import (
-                simulator_status, simulator_supports_mode)
-        except ImportError:
-            return _simulator_supports_mode(simulator, mode,
-                                            self.mode_profiles), ""
-        ok, why = simulator_supports_mode(simulator, mode, self.mode_profiles)
-        if not ok:
-            return False, "%s: %s" % (SIMULATOR_LABELS.get(simulator,
-                                                           simulator), why)
-        installed, why = simulator_status(simulator)
-        if not installed:
-            return False, "%s: %s" % (SIMULATOR_LABELS.get(simulator,
-                                                           simulator), why)
-        return True, ""
+        """(ok, reason) for one simulator/mode pair, installation included.
+
+        Goes through the module-level compatibility helpers so the headless
+        layer stays the single source of truth for what a backend can run.
+        """
+        allowed = _allowed_simulators(mode, self.mode_profiles)
+        ok, why = allowed.get(simulator, (False, "unknown simulator"))
+        if ok:
+            return True, ""
+        return False, "%s: %s" % (
+            SIMULATOR_LABELS.get(simulator, simulator), why)
 
     def _robot_map_modes(self):
         """Modes the robot+map support, independent of the simulator choice."""

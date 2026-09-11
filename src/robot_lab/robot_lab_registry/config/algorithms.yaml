@@ -647,6 +647,43 @@
   tags:
   - sampling
   - dynamic_window
+- id: mppi_controller
+  version: 1.0.0
+  name: MPPI Controller
+  description: Model Predictive Path Integral controller sampling trajectory rollouts
+    against weighted critics
+  status: integrated
+  category: local_planning
+  family: model_predictive_control
+  implementation:
+    package: nav2_mppi_controller
+    plugin: nav2_mppi_controller::MPPIController
+    language: cpp
+  input_contract:
+    required_topics:
+    - /plan
+    - /odom
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    time_steps: 56
+    model_dt: 0.05
+    batch_size: 2000
+  source:
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
+  tags:
+  - mpc
+  - sampling
+  - local_planning
+  created: '2026-09-11'
+  updated: '2026-09-11'
 - id: pure_pursuit
   version: 1.0.0
   name: Pure Pursuit

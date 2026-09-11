@@ -260,7 +260,18 @@ ENVIRONMENT_SCHEMA = {
                 "simulator": {
                     "type": "string",
                     "enum": SIMULATOR_OPTIONS,
-                    "description": "Target simulator (e.g., gazebo, ignition, pybullet, real)"
+                    "description": "Simulator the world was authored for"
+                },
+                "simulators": {
+                    "type": "array",
+                    "items": {"type": "string", "enum": SIMULATOR_OPTIONS},
+                    "description": (
+                        "Every simulator this environment can run in. World "
+                        "geometry for the non-authoring backends is derived "
+                        "from the same source world (MJCF via "
+                        "robot_lab_maps/tools/gen_mjcf_worlds.py, SDF parsed "
+                        "directly by the PyBullet backend)."
+                    )
                 },
                 "world_file": {
                     "type": "string",
