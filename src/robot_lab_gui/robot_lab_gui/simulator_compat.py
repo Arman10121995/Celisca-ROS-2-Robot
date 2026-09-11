@@ -266,7 +266,8 @@ def simulator_supports_mode(simulator: str,
                if feature in SIMULATOR_FEATURE_GAPS.get(simulator, ())]
     if missing:
         assets = ", ".join(
-            FEATURE_ASSET_NOTES.get(feature, feature) for feature in missing)
+            "%s (%s)" % (FEATURE_ASSET_NOTES.get(feature, feature), feature)
+            for feature in missing)
         return False, ("%s not provided by the %s bridge (required by "
                        "mode '%s')" % (
                            assets,

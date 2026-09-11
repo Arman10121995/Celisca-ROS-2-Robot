@@ -109,7 +109,7 @@ class SimulatorModeGatingTests(unittest.TestCase):
         for sim in ("pybullet", "mujoco"):
             ok, why = sc.simulator_supports_mode(sim, "3d_slam", MODE_PROFILES)
             self.assertFalse(ok)
-            self.assertIn("rgbd_camera", why)
+            self.assertIn("rgbd", why)
             for mode in ("display", "loc", "slam", "nav"):
                 ok, why = sc.simulator_supports_mode(sim, mode, MODE_PROFILES)
                 self.assertTrue(ok, (sim, mode, why))

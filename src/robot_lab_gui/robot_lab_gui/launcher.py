@@ -1601,9 +1601,6 @@ class SimulationLauncherGui(tk.Tk):
         env = manifest.get("environment_id")
         if env:
             self.map_var.set(env)
-        for slot in ALGORITHM_CATEGORIES:
-            self.slot_vars[slot].set(
-                (manifest.get("algorithm_ids") or {}).get(slot, ""))
         # Stash manifest algorithm_ids — they are keyed by
         # algorithm_category and will be re-applied to the rebuilt per-mode
         # slot widgets (see _show_load_profile / _pending_manifest_algos).
@@ -1768,7 +1765,7 @@ class SimulationLauncherGui(tk.Tk):
         # Update the dropdown values so new entries appear immediately
         self.robot_combo.configure(values=sorted(self.robot_profiles.keys()))
         self.map_combo.configure(values=sorted(self.map_profiles.keys()))
-        self._refresh_algorithm_dropdown()
+        self._refresh_slot_combos()
         self._update_from_selection()
         self.status_var.set("Refreshed catalogs")
         self.after(3000, lambda: self.status_var.set("Idle"))

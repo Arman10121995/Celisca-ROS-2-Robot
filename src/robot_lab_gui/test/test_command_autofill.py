@@ -109,7 +109,7 @@ def test_command_tracks_robot_map_mode_backend_and_planner(app):
     assert "mujoco" in app.validation_var.get()
     select(app, app.simulator_combo, "gazebo")
     assert "simulator:=gazebo" in displayed_command(app)
-    select(app, app.slot_combos["global_planning"], "navfn_planner")
+    select(app, app.slot_combos["global_planner"], "navfn_planner")
     assert "global_planner_plugin:=nav2_navfn_planner/NavfnPlanner" in displayed_command(app)
 
 
