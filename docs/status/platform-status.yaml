@@ -1,7 +1,7 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-09"
+updated: "2026-09-11"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -429,7 +429,7 @@ tasks:
       R3.4:
         title: "Connect GUI to the common resolver"
         state: "done"
-        owner: "cline-agent"
+        owner: "codex"
         depends_on:
           - "R3.3"
         scope_paths:
@@ -441,7 +441,8 @@ tasks:
           - "launcher.py: replaced ignored single-algorithm argument with full composition controls — seven algorithm slot combos (ALGORITHM_SLOT_LABELS + ALGORITHM_CATEGORIES), _refresh_slot_combos, _update_validation_and_command, _composition_selection; _command delegates to command_for_selection via the shared resolver with _legacy_command fallback; _save_profile writes resolved manifests; _show_load_profile uses is_manifest to branch to _apply_manifest_to_controls or migrate_legacy_selection; status_var reflects validation_lines errors/warnings"
           - "test_r3_4_gui_composition.py: 11 headless GUI-adjacent tests — CLI and GUI resolve identical manifests; GUI-saved profile reloaded by CLI resolves identically; manifest_to_yaml/from_yaml roundtrips; selection changes active nav2 plugin (a_star vs navfn differ only in global_planner_plugin); validator filters invalid selection (go2 without LiDAR rejected for amcl); legacy profile migration map_name->environment; profile delete never touches user artifacts; ensure_defaults never overwrites user profiles; manifest_running_summary exposes robot/environment/simulator/plugins/launch_file; CLI --out manifest loadable by GUI layer resolves to same command"
           - "Shared resolver/selector pipeline still passes: test_r3_2_composition_compatibility, test_r3_3_resolver_executor, test_selectors (44 passed)"
-        next_action: "Complete — R3.4 done (GUI now uses the same resolver/validator as CLI; seven algorithm slots replace the ignored algorithm argument; validator-filtered diagnostics; manifest save/load with legacy migration; save/load/roundtrip tests pass; profile delete is ownership-safe). Advance to R4.1 (scenario lifecycle and truthful outcomes) — the cataloged benchmark scenarios from R3.5 need validate→launch→ready→reset/seed→initialize→task→observe→stop→record to become executable."
+          - "docs/status/gui-command-autofill-2026-09-11.md: working-tree follow-up on 726707a; 37 GUI tests passed under Xvfb, including 10 real-Tk autofill/clipboard/run regression cases; GUI package rebuilt and installed-window smoke check passed. Preview, Copy and Run share resolved arguments; GUI/headless and vacuum choices refresh the command; map aliases normalize for validation. No simulator mission executed."
+        next_action: "Command autofill follow-up complete. Continue the platform's scenario-lifecycle and measured-mission work without treating GUI dispatch checks as simulator qualification."
       R3.5:
         title: "Author benchmark scenario and experiment catalogs"
         state: "done"

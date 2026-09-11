@@ -131,8 +131,13 @@ def _mesh_staging_dir(robot_name, urdf_text):
     return path
 
 
-def _resolve_mesh_source(uri, pkg_map):
-    """Resolve a URDF mesh filename to an absolute host path ('' if unknown)."""
+def _resolve_mesh_source(uri, pkg_map, base_dir=""):
+    """Resolve a URDF mesh filename to an absolute host path ('' if unknown).
+
+    Handles package://, file://, absolute paths and — as a last resort —
+    URIs relative to *base_dir* (the directory of the source xacro/URDF;
+    retargeting a temp-file URDF would otherwise break them).
+    """
     uri = (uri or "").strip()
     if uri.startswith("package://"):
         rest = uri[len("package://"):]
@@ -143,6 +148,10 @@ def _resolve_mesh_source(uri, pkg_map):
         return uri[len("file://"):]
     if os.path.isabs(uri):
         return uri
+    if base_dir:
+        candidate = os.path.join(base_dir, uri)
+        if os.path.isfile(candidate):
+            return candidate
     return ""
 
 
@@ -398,7 +407,7 @@ def _parse_ascii_stl(path):
     return np.array(vertices, dtype=np.float64), np.array(faces, dtype=np.int64)
 
 
-def _stage_meshes(urdf_text, pkg_map, cache_dir):
+def _stage_meshes(urdf_text, pkg_map, cache_dir, base_dir=""):
     """Stage every URDF mesh into *cache_dir* and rewrite the URDF.
 
     - package:// URIs are resolved to real files (MuJoCo cannot read them);
@@ -418,7 +427,7 @@ def _stage_meshes(urdf_text, pkg_map, cache_dir):
 
     for mesh_elem in root.iter("mesh"):
         uri = mesh_elem.get("filename") or ""
-        source = _resolve_mesh_source(uri, pkg_map)
+        source = _resolve_mesh_source(uri, pkg_map, base_dir=base_dir)
         stem = re.sub(r"[^A-Za-z0-9_.-]+", "_",
                       os.path.splitext(os.path.basename(uri))[0] or "mesh")
         ext = os.path.splitext(uri)[1].lower()
@@ -468,6 +477,72 @@ def _stage_meshes(urdf_text, pkg_map, cache_dir):
     return ET.tostring(root, encoding="unicode"), notes, placeholders
 
 
+def _repair_urdf_inertias(urdf_text):
+    """Clamp non-physical masses/inertias so MuJoCo can import the model.
+
+    Unitree's B-series URDFs ship <inertia ixx=... izz="..."/> full-matrix
+    blocks with tiny/zero/negative eigenvalues (sensor links) that MuJoCo
+    rejects even with balanceinertia enabled, which only repairs diagonal
+    inertias.  Elements whose inertia matrix is not positive-definite are
+    replaced by an isotropic matrix of the same magnitude, and non-positive
+    masses are raised to a small bound.
+    """
+    def _float(value):
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
+    def _inertia_ok(ixx, ixy, ixz, iyy, iyz, izz):
+        matrix = np.array([
+            [ixx, ixy, ixz],
+            [ixy, iyy, iyz],
+            [ixz, iyz, izz],
+        ], dtype=np.float64)
+        eigenvalues = np.linalg.eigvalsh(matrix)
+        return bool(np.all(np.isfinite(eigenvalues))
+                    and np.min(eigenvalues) > 1e-13)
+
+    try:
+        root = ET.fromstring(urdf_text)
+    except ET.ParseError:
+        return urdf_text
+
+    repaired = 0
+    for inertial in root.iter("inertial"):
+        mass_elem = inertial.find("mass")
+        if mass_elem is not None:
+            mass_value = _float(mass_elem.get("value"))
+            if mass_value is None or mass_value <= 0.0:
+                mass_elem.set("value", "1e-4")
+                repaired += 1
+        inertia = inertial.find("inertia")
+        if inertia is None:
+            continue
+        ixx = _float(inertia.get("ixx"))
+        ixy = _float(inertia.get("ixy"))
+        ixz = _float(inertia.get("ixz"))
+        iyy = _float(inertia.get("iyy"))
+        iyz = _float(inertia.get("iyz"))
+        izz = _float(inertia.get("izz"))
+        if None in (ixx, ixy, ixz, iyy, iyz, izz):
+            continue
+        if _inertia_ok(ixx, ixy, ixz, iyy, iyz, izz):
+            continue
+        scale = max((ixx + iyy + izz) / 3.0, 1e-4)
+        inertia.set("ixx", "%.6g" % scale)
+        inertia.set("ixy", "0")
+        inertia.set("ixz", "0")
+        inertia.set("iyy", "%.6g" % scale)
+        inertia.set("iyz", "0")
+        inertia.set("izz", "%.6g" % scale)
+        repaired += 1
+
+    if not repaired:
+        return urdf_text
+    return ET.tostring(root, encoding="unicode")
+
+
 def _inject_mujoco_compiler(urdf_text, mesh_dir):
     """Add or patch the MuJoCo URDF-compiler block (meshdir + inertia repair).
 
@@ -512,7 +587,8 @@ def _inject_mujoco_compiler(urdf_text, mesh_dir):
     return ET.tostring(root, encoding="unicode")
 
 
-def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name=""):
+def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
+                          base_dir=""):
     """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
 
     Mesh staging (package:// resolution, DAE->STL conversion) happens first
@@ -535,9 +611,14 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name=""):
     try:
         cache_dir = _mesh_staging_dir(robot_name, urdf_text)
         urdf_text, notes, placeholders = _stage_meshes(
-            urdf_text, pkg_map, cache_dir)
+            urdf_text, pkg_map, cache_dir, base_dir=base_dir)
         for note in notes:
             _log("warning", "MuJoCo mesh staging: " + note)
+        repaired = urdf_text
+        urdf_text = _repair_urdf_inertias(urdf_text)
+        if urdf_text != repaired:
+            _log("warning", "MuJoCo inertia repair: clamped non-physical "
+                            "mass/inertia entries.")
         urdf_text = _inject_mujoco_compiler(urdf_text, cache_dir)
 
         tmp = tempfile.NamedTemporaryFile(
@@ -741,7 +822,8 @@ class MuJoCoSpawner(Node):
             urdf = _strip_gazebo_tags(urdf)
             robot_mjcf = _build_mjcf_from_urdf(
                 urdf, pkg_map, logger=self.get_logger(),
-                robot_name=self.get_parameter("robot_name").value)
+                robot_name=self.get_parameter("robot_name").value,
+                base_dir=os.path.dirname(os.path.abspath(str(model))))
             if robot_mjcf != _FALLBACK_MJCF:
                 self._model_source = "urdf"
         else:

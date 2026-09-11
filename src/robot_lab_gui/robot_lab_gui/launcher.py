@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import queue
+import shlex
 import shutil
 import signal
 import subprocess
@@ -59,7 +60,7 @@ try:
     from .gui_composition import (
         ALGORITHM_SLOT_LABELS,
         GuiCompositionSelection,
-        command_for_selection,
+        environment_id_for_map_name,
         get_registry,
         migrate_legacy_selection,
         resolve_selection,
@@ -383,6 +384,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_angular_var = tk.DoubleVar(value=0.8)
         self.gui_var = tk.StringVar(value="auto")
         self.command_var = tk.StringVar()
+        self._prepared_command = []
         self.summary_var = tk.StringVar()
         self.status_var = tk.StringVar(value="Idle")
 
@@ -589,6 +591,7 @@ class SimulationLauncherGui(tk.Tk):
                 text=text,
                 variable=self.gui_var,
                 value=["auto", "true", "false"][column],
+                command=self._update_from_selection,
             )
             rb.grid(row=0, column=column, sticky="w", padx=(0, 12))
             add_tooltip(rb, gui_tooltip)
@@ -687,37 +690,23 @@ class SimulationLauncherGui(tk.Tk):
         )
         summary.grid(row=20, column=0, sticky="ew", pady=(2, 12))
 
-        ttk.Label(controls, text="Command").grid(row=21, column=0, sticky="w")
-        command = ttk.Entry(controls, textvariable=self.command_var, state="readonly", width=44)
-        command.grid(row=22, column=0, sticky="ew", pady=(2, 12))
-
         button_frame = ttk.Frame(controls)
-        button_frame.grid(row=23, column=0, sticky="ew")
+        button_frame.grid(row=21, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=1)
         button_frame.columnconfigure(1, weight=1)
         button_frame.columnconfigure(2, weight=1)
-        button_frame.columnconfigure(3, weight=1)
-        button_frame.columnconfigure(4, weight=1)
-
-        self.start_button = ttk.Button(button_frame, text="Start Simulation",
-                                        command=self._start_launch,
-                                        style="Accent.TButton")
-        self.start_button.grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        self.stop_button = ttk.Button(button_frame, text="Stop", command=self._stop_launch,
-                                       state="disabled", style="Danger.TButton")
-        self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 4))
 
         # Launch profile buttons
         if PROFILES_AVAILABLE:
             ttk.Button(button_frame, text="Save Profile",
                        command=self._save_profile,
-                       style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=4)
+                       style="Small.TButton").grid(row=0, column=0, sticky="ew", padx=4)
             ttk.Button(button_frame, text="Load",
                        command=self._show_load_profile,
-                       style="Small.TButton").grid(row=0, column=3, sticky="ew", padx=4)
+                       style="Small.TButton").grid(row=0, column=1, sticky="ew", padx=4)
             ttk.Button(button_frame, text="Delete/Profiles",
                        command=self._delete_profile,
-                       style="Small.TButton").grid(row=0, column=4, sticky="ew", padx=(4, 0))
+                       style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=(4, 0))
 
         self.bg_processes = {}
 
@@ -775,10 +764,31 @@ class SimulationLauncherGui(tk.Tk):
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
         output_frame.columnconfigure(0, weight=1)
-        output_frame.rowconfigure(1, weight=1)
-        ttk.Label(output_frame, text="Launch Output").grid(row=0, column=0, sticky="w")
+        output_frame.rowconfigure(3, weight=1)
+        command_header = ttk.Frame(output_frame)
+        command_header.grid(row=0, column=0, sticky="ew", pady=(0, 4))
+        command_header.columnconfigure(0, weight=1)
+        ttk.Label(command_header, text="Command (auto-filled)").grid(
+            row=0, column=0, sticky="w")
+        self.copy_command_button = ttk.Button(
+            command_header, text="Copy Command", command=self._copy_command)
+        self.copy_command_button.grid(row=0, column=1, padx=(8, 4))
+        self.start_button = ttk.Button(
+            command_header, text="Run Command", command=self._start_launch,
+            style="Accent.TButton")
+        self.start_button.grid(row=0, column=2, padx=4)
+        self.stop_button = ttk.Button(
+            command_header, text="Stop", command=self._stop_launch,
+            state="disabled", style="Danger.TButton")
+        self.stop_button.grid(row=0, column=3, padx=(4, 0))
+        self.command_preview = scrolledtext.ScrolledText(
+            output_frame, wrap="word", height=5, width=1, state="disabled")
+        self.command_preview.grid(row=1, column=0, sticky="ew", pady=(0, 12))
+        add_tooltip(self.command_preview,
+                    "Updates from the selected options. Run here or copy into a ROS 2 terminal.")
+        ttk.Label(output_frame, text="Launch Output").grid(row=2, column=0, sticky="w")
         self.output = scrolledtext.ScrolledText(output_frame, wrap="word", height=24)
-        self.output.grid(row=1, column=0, sticky="nsew", pady=(2, 0))
+        self.output.grid(row=3, column=0, sticky="nsew", pady=(2, 0))
         self.output.configure(state="disabled")
 
         # Shared console: every control-center tab streams its output here
@@ -1045,7 +1055,7 @@ class SimulationLauncherGui(tk.Tk):
             test_selection = GuiCompositionSelection(
                 robot_id=self.robot_var.get() or None,
                 simulator=self.simulator_var.get() or None,
-                environment_id=self.map_var.get() or None,
+                environment_id=self._environment_id(),
                 algorithm_ids={slot: algo_id},
                 reset=True,
             )
@@ -1099,7 +1109,7 @@ class SimulationLauncherGui(tk.Tk):
                 test_selection = GuiCompositionSelection(
                     robot_id=robot_id or None,
                     simulator=self.simulator_var.get() or None,
-                    environment_id=self.map_var.get() or None,
+                    environment_id=self._environment_id(),
                     algorithm_ids={slot: algo_id},
                     reset=True,
                 )
@@ -1145,7 +1155,7 @@ class SimulationLauncherGui(tk.Tk):
                 test_selection = GuiCompositionSelection(
                     robot_id=robot_id or None,
                     simulator=self.simulator_var.get() or None,
-                    environment_id=self.map_var.get() or None,
+                    environment_id=self._environment_id(),
                     algorithm_ids={slot: algo_id},
                     reset=True,
                 )
@@ -1226,6 +1236,14 @@ class SimulationLauncherGui(tk.Tk):
         ttk.Button(dialog, text="Close",
                    command=dialog.destroy).pack(pady=(0, 12))
 
+    def _environment_id(self):
+        """Translate a map profile key to its registry environment ID."""
+        map_name = self.map_var.get()
+        if COMPOSITION_AVAILABLE and self.composition_registry is not None:
+            return environment_id_for_map_name(
+                map_name, self.composition_registry) or map_name or None
+        return map_name or None
+
     def _composition_selection(self):
         """Build the shared resolver selection from the current GUI controls."""
         if not COMPOSITION_AVAILABLE:
@@ -1236,7 +1254,7 @@ class SimulationLauncherGui(tk.Tk):
         return GuiCompositionSelection(
             robot_id=self.robot_var.get() or None,
             simulator=self.simulator_var.get() or None,
-            environment_id=self.map_var.get() or None,
+            environment_id=self._environment_id(),
             algorithm_ids=algorithm_ids,
             reset=True,
             mode=self.mode_var.get() or None,
@@ -1246,38 +1264,56 @@ class SimulationLauncherGui(tk.Tk):
     def _update_validation_and_command(self):
         """Run the shared validator and refresh command + validation text."""
         if not COMPOSITION_AVAILABLE or self.composition_registry is None:
-            self.command_var.set(" ".join(self._legacy_command()))
             self.validation_var.set(
                 "Composition resolver unavailable; legacy launch used.")
+            self._set_command(self._legacy_command())
             return
         try:
             selection = self._composition_selection()
-            errors, warnings = validation_lines(
+            ok, manifest = resolve_selection(
                 self.composition_registry, selection)
+            if not ok:
+                self.validation_var.set(
+                    "Invalid: " + " | ".join(manifest.get("errors", [])))
+                self._set_command([])
+                return
+            command = list(manifest["ros2_command"])
+            if self.launch_kind_var.get() == "vacuum":
+                command[3] = "simulated_room_vacuum.launch.py"
         except Exception as exc:  # pragma: no cover — defensive
-            self.command_var.set(" ".join(self._legacy_command()))
             self.validation_var.set(f"Resolver error: {exc}")
-            if not self._launch_running:
-                self.start_button.state(["disabled"])
-            return
-
-        if errors:
-            self.validation_var.set(
-                "Invalid: " + " | ".join(errors))
-            self.command_var.set("")
-            if not self._launch_running:
-                self.start_button.state(["disabled"])
+            self._set_command([])
             return
 
         notes = []
+        aliases = manifest.get("aliases_applied", [])
+        if aliases:
+            notes.append("Migrated: " + "; ".join(aliases))
+        warnings = manifest.get("warnings", [])
         if warnings:
             notes.append("Warnings: " + "; ".join(warnings[:3]))
         self.validation_var.set("Valid" + (f" - {'; '.join(notes)}"
                                            if notes else ""))
-        self.command_var.set(" ".join(command_for_selection(
-            self.composition_registry, selection)))
-        if not self._launch_running:
-            self.start_button.state(["!disabled"])
+        self._set_command(command)
+
+    def _set_command(self, command):
+        """Keep the preview, clipboard text and executable arguments in sync."""
+        self._prepared_command = list(command)
+        self.command_var.set(shlex.join(command))
+        self.command_preview.configure(state="normal")
+        self.command_preview.delete("1.0", "end")
+        self.command_preview.insert("1.0", self.command_var.get())
+        self.command_preview.configure(state="disabled")
+        self.copy_command_button.state(["!disabled"] if command else ["disabled"])
+        self.start_button.state(
+            ["!disabled"] if command and not self._launch_running else ["disabled"])
+
+    def _copy_command(self):
+        self._update_validation_and_command()
+        if self.command_var.get():
+            self.clipboard_clear()
+            self.clipboard_append(self.command_var.get())
+            self.status_var.set("Command copied")
 
     def _refresh_algorithm_dropdown(self):
         """Backwards-compatible alias: sync the seven slot dropdowns.
@@ -1427,24 +1463,8 @@ class SimulationLauncherGui(tk.Tk):
         return "\n".join(lines)
 
     def _command(self):
-        """Concrete command for the current selection via the shared resolver.
-
-        Single stack start: the resolver emits the exact ros2 launch command
-        from the same manifest the CLI uses; the ignored GUI 'algorithm:='
-        argument is gone — planner/slot selections now change active nav2
-        plugins through the manifest arguments.
-        """
-        if COMPOSITION_AVAILABLE and self.composition_registry is not None:
-            try:
-                selection = self._composition_selection()
-                errors, _warnings = validation_lines(
-                    self.composition_registry, selection)
-                if not errors:
-                    return command_for_selection(
-                        self.composition_registry, selection)
-            except Exception as exc:  # pragma: no cover — defensive
-                self.status_var.set(f"Resolver fallback: {exc}")
-        return self._legacy_command()
+        """Return the executable arguments shown in the command preview."""
+        return list(self._prepared_command)
 
     def _legacy_command(self):
         """Pre-resolver fallback build (used only when resolver is unavailable)."""
@@ -1583,28 +1603,15 @@ class SimulationLauncherGui(tk.Tk):
         self.after(3000, lambda: self.status_var.set("Idle"))
 
     def _start_launch(self):
-        # Apply-before-run: never start from an incompatible selection. The
-        # shared validator is the same one the CLI uses; the legacy command
-        # fallback is reserved for environments without the resolver.
-        if COMPOSITION_AVAILABLE and self.composition_registry is not None:
-            try:
-                selection = self._composition_selection()
-                errors, _warnings = validation_lines(
-                    self.composition_registry, selection)
-                if errors:
-                    messagebox.showerror(
-                        "Launch blocked",
-                        "The selected configuration is not compatible:\n\n- "
-                        + "\n- ".join(errors)
-                        + "\n\nFix the highlighted options, then start again.")
-                    self.status_var.set("Launch blocked: invalid configuration")
-                    self.after(5000, lambda: self.status_var.set("Idle"))
-                    return
-            except Exception as exc:  # pragma: no cover — defensive
-                messagebox.showerror("Launch blocked", f"Resolver error: {exc}")
-                return
+        if self._launch_running or (self.process is not None and self.process.poll() is None):
+            return
+        self._update_validation_and_command()
         command = self._command()
-        self._append_output(f"$ {' '.join(command)}\n")
+        if not command:
+            messagebox.showerror("Launch blocked", self.validation_var.get())
+            self.status_var.set("Launch blocked: invalid configuration")
+            return
+        self._append_output(f"$ {self.command_var.get()}\n")
         try:
             self.process = subprocess.Popen(
                 command,
@@ -1645,7 +1652,7 @@ class SimulationLauncherGui(tk.Tk):
                     self._append_output(f"\n[launch exited with code {payload}]\n")
                     self._stop_drive()
                     self._launch_running = False
-                    self.start_button.configure(state="normal")
+                    self._update_validation_and_command()
                     self.stop_button.configure(state="disabled")
                     self.status_var.set("Idle")
         except queue.Empty:
