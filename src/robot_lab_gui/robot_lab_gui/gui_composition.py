@@ -24,16 +24,14 @@ from robot_lab_adapter.resolver import (
     resolve_experiment,
 )
 
-# Category label shown next to each algorithm slot in the GUI.
-ALGORITHM_SLOT_LABELS = {
-    "perception": "Perception",
-    "localization": "Localization",
-    "state_estimation": "State Estimation",
-    "sensor_fusion": "Sensor Fusion",
-    "global_planning": "Global Planning",
-    "local_planning": "Local Planning",
-    "control": "Control",
-}
+# Category taxonomy (single source: headless simulator_compat module).
+from .simulator_compat import (
+    ALGORITHM_CATEGORIES,
+    ALGORITHM_SLOT_LABELS,
+    MODE_ORDER,
+    mode_algorithm_categories,
+    mode_category,
+)
 
 
 @dataclass

@@ -49,6 +49,88 @@ DEFAULT_MODE_FEATURES: Dict[str, Tuple[str, ...]] = {
     "3d_slam": ("rgbd_camera",),
 }
 
+MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
+
+# Canonical algorithm category taxonomy (mirrors registry algorithms.yaml).
+ALGORITHM_CATEGORIES: List[str] = [
+    "perception",
+    "localization",
+    "state_estimation",
+    "sensor_fusion",
+    "global_planning",
+    "local_planning",
+    "control",
+]
+
+ALGORITHM_SLOT_LABELS: Dict[str, str] = {
+    "perception": "Perception",
+    "localization": "Localization",
+    "state_estimation": "State Estimation",
+    "sensor_fusion": "Sensor Fusion",
+    "global_planning": "Global Planning",
+    "local_planning": "Local Planning",
+    "control": "Control",
+}
+
+# Human-readable mode category + the algorithm categories that are
+# selectable *within* that mode.  sim_modes.yaml carries the authoritative
+# values (category / algorithm_categories); these defaults keep the headless
+# layer and tests aligned when a mode file predates the schema.
+MODE_CATEGORIES: Dict[str, str] = {
+    "display": "Perception & Visualization",
+    "loc": "Localization",
+    "slam": "2D Mapping & Localization",
+    "3d_slam": "3D Mapping & Localization",
+    "nav": "Navigation",
+}
+
+MODE_ALGORITHM_SLOTS: Dict[str, Tuple[str, ...]] = {
+    "display": ("perception",),
+    "loc": ("localization", "state_estimation", "sensor_fusion"),
+    "slam": ("localization", "state_estimation", "sensor_fusion", "perception"),
+    "3d_slam": ("localization", "state_estimation", "perception"),
+    "nav": ("global_planning", "local_planning", "control",
+            "localization", "state_estimation", "sensor_fusion"),
+}
+
+# Sensor feature -> the concrete asset/topic the simulator must provide.
+FEATURE_ASSET_NOTES: Dict[str, str] = {
+    "lidar_2d": "/scan (2D LiDAR) publisher",
+    "rgbd_camera": "RGB-D camera bridge",
+}
+
+
+def mode_category(mode: str,
+                  mode_profiles: Optional[Dict[str, Any]] = None) -> str:
+    """Human-readable category label for *mode* (config-driven)."""
+    mode_cfg = (mode_profiles or {}).get(mode) or {}
+    return mode_cfg.get("category") or MODE_CATEGORIES.get(mode, mode.title())
+
+
+def mode_algorithm_categories(mode: str,
+                              mode_profiles: Optional[Dict[str, Any]] = None
+                              ) -> List[str]:
+    """Algorithm categories selectable within *mode* (config-driven).
+
+    Reads the mode's ``algorithm_categories`` from sim_modes.yaml when
+    present, falling back to the canonical MODE_ALGORITHM_SLOTS table so a
+    mode file that predates the schema stays correct.
+    """
+    mode_cfg = (mode_profiles or {}).get(mode) or {}
+    configured = mode_cfg.get("algorithm_categories")
+    if configured:
+        return [
+            category for category in configured
+            if category in ALGORITHM_CATEGORIES
+        ]
+    return list(MODE_ALGORITHM_SLOTS.get(mode, ()))
+
+
+def mode_requires_2d_map(mode: str,
+                         mode_profiles: Optional[Dict[str, Any]] = None) -> bool:
+    """Whether *mode* needs a pre-built 2D occupancy map on disk."""
+    return bool((mode_profiles or {}).get(mode, {}).get("requires_2d_map", False))
+
 
 def simulator_status(simulator: str,
                      env: Optional[Dict[str, str]] = None) -> Tuple[bool, str]:
@@ -127,9 +209,13 @@ def simulator_supports_mode(simulator: str,
     missing = [feature for feature in mode_feature_requirements(mode, mode_profiles)
                if feature in SIMULATOR_FEATURE_GAPS.get(simulator, ())]
     if missing:
-        return False, ("no %s support in the %s bridge"
-                       % (", ".join(missing),
-                          SIMULATOR_LABELS.get(simulator, simulator)))
+        assets = ", ".join(
+            FEATURE_ASSET_NOTES.get(feature, feature) for feature in missing)
+        return False, ("%s not provided by the %s bridge (required by "
+                       "mode '%s')" % (
+                           assets,
+                           SIMULATOR_LABELS.get(simulator, simulator),
+                           mode))
     return True, ""
 
 
