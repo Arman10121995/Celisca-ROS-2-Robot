@@ -24,23 +24,31 @@ def _build_pybullet_actions(context):
 
     actions = []
 
-    # Robot description + state publisher (mirrors gazebo.launch.py: process
-    # the xacro model and publish robot_description + TF).
-    robot_description = ParameterValue(
-        Command(["xacro ", LaunchConfiguration("model")]),
-        value_type=str,
-    )
-    actions.append(
-        Node(
-            package="robot_state_publisher",
-            executable="robot_state_publisher",
-            output="screen",
-            parameters=[{
-                "robot_description": robot_description,
-                "use_sim_time": use_sim_time,
-            }],
+    # A robot-free display run (robot_model:=none) passes an empty model:
+    # there is no description to publish and nothing to spawn, so only the
+    # world is shown.  Building the xacro command anyway would fail the
+    # whole launch.
+    model_path = LaunchConfiguration("model").perform(context).strip()
+    spawn_robot = bool(model_path) and model_path.lower() != "none"
+
+    if spawn_robot:
+        # Robot description + state publisher (mirrors gazebo.launch.py: process
+        # the xacro model and publish robot_description + TF).
+        robot_description = ParameterValue(
+            Command(["xacro ", LaunchConfiguration("model")]),
+            value_type=str,
         )
-    )
+        actions.append(
+            Node(
+                package="robot_state_publisher",
+                executable="robot_state_publisher",
+                output="screen",
+                parameters=[{
+                    "robot_description": robot_description,
+                    "use_sim_time": use_sim_time,
+                }],
+            )
+        )
 
     # PyBullet physics engine + robot spawn
     actions.append(
@@ -76,9 +84,9 @@ def generate_launch_description():
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),
-        DeclareLaunchArgument("model"),
+        DeclareLaunchArgument("model", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),
-        DeclareLaunchArgument("robot_xacro"),
+        DeclareLaunchArgument("robot_xacro", default_value=""),
         DeclareLaunchArgument("robot_name", default_value="bumperbot"),
         DeclareLaunchArgument("spawn_x", default_value="0.0"),
         DeclareLaunchArgument("spawn_y", default_value="0.0"),

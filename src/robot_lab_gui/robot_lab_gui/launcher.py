@@ -1027,6 +1027,16 @@ class SimulationLauncherGui(tk.Tk):
         fixes = []
         simulator = self.simulator_var.get() or "gazebo"
         modes = self._robot_map_modes()
+        if self._robot_free() or self._map_free():
+            # A deliberately robot-free / map-free selection is display-only
+            # by construction; nothing to correct beyond pinning the mode.
+            if self.mode_var.get() != "display":
+                fixes.append("mode '%s' not available without a %s -> "
+                             "'display'" % (self.mode_var.get(),
+                                            "robot" if self._robot_free()
+                                            else "map"))
+                self.mode_var.set("display")
+            return ["display"], fixes
         for _ in range(3):
             modes = [mode for mode in self._robot_map_modes()
                      if _simulator_supports_mode(simulator, mode,
@@ -1207,24 +1217,36 @@ class SimulationLauncherGui(tk.Tk):
             if category_name is None:
                 continue  # Fixed pipeline step
             algorithms = self._slot_compatible_algorithms(category_name)
-            label = self.slot_labels.get(step_id)
             var = self.slot_vars.get(step_id)
             if combo is None:
                 continue
-            combo.configure(values=algorithms)
+            # Every stage can also be switched off explicitly, which the
+            # launch layer receives as `<category>:=none`.
+            combo.configure(values=[NONE_LABEL] + algorithms)
             if var is not None:
                 current = var.get()
-                if current and current not in algorithms:
+                if current and not is_none_selection(current) \
+                        and current not in algorithms:
                     self._cleared_selections.append(
                         (category_name, self._algorithm_name(current)))
-                    var.set("")
-            combo.configure(state="readonly")
-            tip = f"{len(algorithms)} compatible algorithm(s)."
-            if len(algorithms) == 1:
-                tip = self._algorithm_description(algorithms[0])
-            if label is not None:
-                label_text = label.cget("text")
-                label.configure(text=label_text)
+                    var.set(NONE_LABEL)
+            if algorithms:
+                combo.configure(state="readonly")
+                tip = ("%d algorithm(s) compatible with this robot/simulator."
+                       % len(algorithms))
+                if len(algorithms) == 1:
+                    tip = self._algorithm_description(algorithms[0])
+            else:
+                # Nothing in this category fits the current selection; the
+                # slot is locked with the reason rather than offering
+                # choices that would fail at launch.
+                combo.configure(state="disabled")
+                tip = ("No %s algorithm is compatible with %s in %s."
+                       % (ALGORITHM_SLOT_LABELS.get(category_name,
+                                                    category_name).lower(),
+                          self.robot_var.get() or "this robot",
+                          SIMULATOR_LABELS.get(self.simulator_var.get(),
+                                               self.simulator_var.get())))
             add_tooltip(combo, tip)
 
     def _slot_compatible_algorithms(self, slot):
@@ -1240,7 +1262,11 @@ class SimulationLauncherGui(tk.Tk):
         if cached is not None:
             return cached
         compatible = []
-        if not COMPOSITION_AVAILABLE or self.composition_registry is None:
+        if not COMPOSITION_AVAILABLE or self.composition_registry is None \
+                or self._robot_free() or self._map_free():
+            # Without a registry (or without both a robot and an
+            # environment to validate against) the full category is offered
+            # rather than an empty list that would look like a broken slot.
             compatible = self._algorithms_for_category(slot)
             self._compat_cache[cache_key] = compatible
             return compatible
@@ -1465,7 +1491,7 @@ class SimulationLauncherGui(tk.Tk):
             if category_name is None:
                 continue
             var = self.slot_vars.get(step_id)
-            if var and var.get():
+            if var and var.get() and not is_none_selection(var.get()):
                 algorithm_ids[category_name] = var.get()
         return GuiCompositionSelection(
             robot_id=self.robot_var.get() or None,
@@ -1716,7 +1742,7 @@ class SimulationLauncherGui(tk.Tk):
                 continue
             variable = self.slot_vars.get(step_id)
             value = variable.get().strip() if variable else ""
-            arguments.append("%s:=%s" % (category, value or "none"))
+            arguments.append("%s:=%s" % (category, selection_value(value)))
         return arguments
 
     def _legacy_command(self):
