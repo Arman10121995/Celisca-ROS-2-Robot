@@ -365,14 +365,13 @@ class SimulationLauncherGui(tk.Tk):
             "algorithms.yaml",
         )
         self.algorithms = self._load_algorithms()
-        self.algorithm_category_var = tk.StringVar(value="localization")
-        self.algorithm_id_var = tk.StringVar()
-        self.slot_vars = {slot: tk.StringVar() for slot in ALGORITHM_CATEGORIES}
+        self.slot_vars = {}
         self.slot_combos = {}
         self.slot_labels = {}
-        self._mode_step_categories = {}  # step_id -> algorithm_category (or None)
+        self._mode_step_categories = {}
+        self._pending_manifest_algos = {}
         self._compat_cache = {}
-        self._cleared_selections = []  # Track selections cleared due to incompatibility
+        self._cleared_selections = []
         self.compatibility_var = tk.StringVar(value="")
         self.validation_var = tk.StringVar(value="Valid")
         self.composition_registry = None
@@ -1000,8 +999,7 @@ class SimulationLauncherGui(tk.Tk):
         self._update_from_selection()
 
     def _on_algorithm_category_changed(self, _event=None):
-        """When category changes, update the default category and refresh."""
-        self._refresh_algorithm_dropdown()
+        """When an algorithm slot changes, re-resolve and refresh."""
         self._update_from_selection()
 
     def _refresh_mode_steps(self):
@@ -1139,6 +1137,23 @@ class SimulationLauncherGui(tk.Tk):
         """
         return slot in self.slot_combos
 
+    def _primary_algorithm_id(self):
+        """Return the first non-empty algorithm ID from the dynamic slots."""
+        for step_id, category_name in self._mode_step_categories.items():
+            if category_name is None:
+                continue
+            var = self.slot_vars.get(step_id)
+            if var and var.get():
+                return var.get()
+        return ""
+
+    def _primary_algorithm_name(self):
+        """Return the display name for the first selected algorithm, or 'auto'."""
+        algo_id = self._primary_algorithm_id()
+        if not algo_id:
+            return "auto"
+        return self._algorithm_name(algo_id)
+
     def _algorithm_description(self, algorithm_id):
         """Return the description for an algorithm ID (or its name)."""
         for a in self.algorithms:
@@ -1155,14 +1170,17 @@ class SimulationLauncherGui(tk.Tk):
             return "No robot selected."
         total = 0
         compatible = 0
-        for slot in ALGORITHM_CATEGORIES:
-            for algo_id in self._algorithms_for_category(slot):
+        for slot in self._mode_step_categories:
+            category_name = self._mode_step_categories[slot]
+            if category_name is None:
+                continue
+            for algo_id in self._algorithms_for_category(category_name):
                 total += 1
                 test_selection = GuiCompositionSelection(
                     robot_id=robot_id or None,
                     simulator=self.simulator_var.get() or None,
                     environment_id=self._environment_id(),
-                    algorithm_ids={slot: algo_id},
+                    algorithm_ids={category_name: algo_id},
                     reset=True,
                 )
                 try:
@@ -1201,14 +1219,17 @@ class SimulationLauncherGui(tk.Tk):
                 "No robot selected.")
             return
         lines = []
-        for slot in ALGORITHM_CATEGORIES:
+        for step_id in self._mode_step_categories:
+            category_name = self._mode_step_categories[step_id]
+            if category_name is None:
+                continue
             bad = []
-            for algo_id in self._algorithms_for_category(slot):
+            for algo_id in self._algorithms_for_category(category_name):
                 test_selection = GuiCompositionSelection(
                     robot_id=robot_id or None,
                     simulator=self.simulator_var.get() or None,
                     environment_id=self._environment_id(),
-                    algorithm_ids={slot: algo_id},
+                    algorithm_ids={category_name: algo_id},
                     reset=True,
                 )
                 try:
@@ -1219,8 +1240,9 @@ class SimulationLauncherGui(tk.Tk):
                 except Exception:
                     pass
             if bad:
-                label = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-                lines.append(f"{label}: {', '.join(bad)}")
+                label = self.slot_labels.get(step_id)
+                label_text = label.cget("text") if label else category_name
+                lines.append(f"{label_text}: {', '.join(bad)}")
         if not lines:
             messagebox.showinfo(
                 "Incompatible Algorithms",
@@ -1250,10 +1272,12 @@ class SimulationLauncherGui(tk.Tk):
             self.status_var.set("Composition resolver unavailable.")
             self.after(3000, lambda: self.status_var.set("Idle"))
             return
-        for slot in ALGORITHM_CATEGORIES:
-            compatible = self._slot_compatible_algorithms(slot)
+        for step_id, category_name in self._mode_step_categories.items():
+            if category_name is None:
+                continue
+            compatible = self._slot_compatible_algorithms(category_name)
             if compatible:
-                self.slot_vars[slot].set(compatible[0])
+                self.slot_vars[step_id].set(compatible[0])
         self._compat_cache.clear()
         self._update_from_selection()
         self.status_var.set("Quick select applied.")
@@ -1373,15 +1397,6 @@ class SimulationLauncherGui(tk.Tk):
             self.clipboard_append(self.command_var.get())
             self.status_var.set("Command copied")
 
-    def _refresh_algorithm_dropdown(self):
-        """Backwards-compatible alias: sync the seven slot dropdowns.
-
-        The single category/algorithm dropdown from earlier revisions was
-        replaced by full composition controls (R3.4); this keeps old call
-        sites working by refreshing all slots.
-        """
-        self._refresh_slot_combos()
-
     def _update_from_selection(self):
         # 1. Maps: only environments valid for the mode's requirements stay
         # selectable (loc/nav need a real 2D occupancy map on disk).
@@ -1498,8 +1513,7 @@ class SimulationLauncherGui(tk.Tk):
         robot_note = "full simulation stack" if len(supported_modes) > 1 else "description/display only"
         simulator = self.simulator_var.get()
         gui_label = {"auto": "Auto (GUI if DISPLAY)", "true": "GUI", "false": "Headless"}
-        algorithm_id = self.algorithm_id_var.get()
-        algorithm_name = self._algorithm_name(algorithm_id) if algorithm_id else "auto"
+        algorithm_name = self._primary_algorithm_name()
         lines = [
             f"Robot: {self.robot_var.get()} ({robot_note})",
             f"Robot file: {self._resolve_robot_path()}",
@@ -1545,8 +1559,9 @@ class SimulationLauncherGui(tk.Tk):
             f"gui:={self.gui_var.get()}",
         ]
         # Add algorithm selection if not in display mode
-        if self.mode_var.get() != "display" and self.algorithm_id_var.get():
-            command.append(f"algorithm:={self.algorithm_id_var.get()}")
+        primary_algo = self._primary_algorithm_id()
+        if self.mode_var.get() != "display" and primary_algo:
+            command.append(f"algorithm:={primary_algo}")
         return command
 
     def _save_profile(self):
@@ -1573,7 +1588,7 @@ class SimulationLauncherGui(tk.Tk):
             "robot": self.robot_var.get(),
             "map_name": self.map_var.get(),
             "gui": self.gui_var.get(),
-            "algorithm": self.algorithm_id_var.get(),
+            "algorithm": self._primary_algorithm_id(),
         }
         save_profile(name, config)
         self.status_var.set(f"Profile '{name}' saved")
@@ -1589,6 +1604,10 @@ class SimulationLauncherGui(tk.Tk):
         for slot in ALGORITHM_CATEGORIES:
             self.slot_vars[slot].set(
                 (manifest.get("algorithm_ids") or {}).get(slot, ""))
+        # Stash manifest algorithm_ids — they are keyed by
+        # algorithm_category and will be re-applied to the rebuilt per-mode
+        # slot widgets (see _show_load_profile / _pending_manifest_algos).
+        self._pending_manifest_algos = manifest.get("algorithm_ids") or {}
         # Restore the applied mode and simulator-GUI choice (R3.4+).
         resolved_from = manifest.get("resolved_from") or {}
         mode = resolved_from.get("mode") or manifest.get("mode")
@@ -1635,11 +1654,33 @@ class SimulationLauncherGui(tk.Tk):
                         self.slot_vars[slot].set(value)
             self.robot_var.set(selection.robot_id or self.robot_var.get())
             self.simulator_var.set(selection.simulator or self.simulator_var.get())
-            fallback_algorithm = selection.algorithm_ids.get(
-                MODE_TO_ALGORITHM_CATEGORY.get(cfg.get("mode", ""), ""), "")
-            self.algorithm_id_var.set(cfg.get("algorithm", "") or fallback_algorithm)
 
         self._update_from_selection()
+
+        # Apply stashed manifest algorithm_ids (or migrated legacy value)
+        # to the rebuilt per-mode slot widgets AFTER _update_from_selection
+        # has rebuilt them, so values survive the slot rebuild.
+        if self._pending_manifest_algos:
+            pending = self._pending_manifest_algos
+            self._pending_manifest_algos = {}
+        elif COMPOSITION_AVAILABLE and self.composition_registry is not None:
+            pending = migrated.algorithm_ids or {}
+        else:
+            legacy_algo = cfg.get("algorithm", "") or ""
+            pending = {}
+            if legacy_algo:
+                cat = MODE_TO_ALGORITHM_CATEGORY.get(cfg.get("mode", ""), "")
+                if cat:
+                    pending = {cat: legacy_algo}
+        for step_id, category_name in self._mode_step_categories.items():
+            if category_name is None:
+                continue
+            var = self.slot_vars.get(step_id)
+            if var is not None:
+                var.set(pending.get(category_name, ""))
+        self._compat_cache.clear()
+        self._refresh_slot_combos()
+        self._update_validation_and_command()
         self.status_var.set(f"Profile '{name}' loaded")
         self.after(3000, lambda: self.status_var.set("Idle"))
 
