@@ -112,11 +112,24 @@ def mode_algorithm_categories(mode: str,
                               ) -> List[str]:
     """Algorithm categories selectable within *mode* (config-driven).
 
-    Reads the mode's ``algorithm_categories`` from sim_modes.yaml when
-    present, falling back to the canonical MODE_ALGORITHM_SLOTS table so a
-    mode file that predates the schema stays correct.
+    Reads the ordered ``steps`` list from sim_modes.yaml when present (each
+    step may carry its own ``algorithm_category``), accepts the legacy flat
+    ``algorithm_categories`` list for older files, and falls back to the
+    canonical MODE_ALGORITHM_SLOTS table so a mode file that predates the
+    schema stays correct.
     """
     mode_cfg = (mode_profiles or {}).get(mode) or {}
+    step_categories: List[str] = []
+    steps = mode_cfg.get("steps") or []
+    if isinstance(steps, list):
+        for step in steps:
+            if not isinstance(step, dict):
+                continue
+            category = step.get("algorithm_category")
+            if category in ALGORITHM_CATEGORIES and category not in step_categories:
+                step_categories.append(category)
+        if step_categories:
+            return step_categories
     configured = mode_cfg.get("algorithm_categories")
     if configured:
         return [
@@ -124,6 +137,49 @@ def mode_algorithm_categories(mode: str,
             if category in ALGORITHM_CATEGORIES
         ]
     return list(MODE_ALGORITHM_SLOTS.get(mode, ()))
+
+
+def mode_steps(mode: str,
+               mode_profiles: Optional[Dict[str, Any]] = None
+               ) -> List[Dict[str, Any]]:
+    """Ordered pipeline steps declared for *mode* in sim_modes.yaml.
+
+    Each step is ``{"id": ..., "label": ..., "algorithm_category": ...,
+    "default_algorithm": ...}`` (only ``id`` is mandatory). Steps without an
+    ``algorithm_category`` are fixed pipeline switches (e.g. viewer /
+    simulator); steps with one render an algorithm selector. Returns [] when
+    the mode declares no steps.
+    """
+    mode_cfg = (mode_profiles or {}).get(mode) or {}
+    steps = mode_cfg.get("steps") or []
+    if not isinstance(steps, list):
+        return []
+    normalized: List[Dict[str, Any]] = []
+    for step in steps:
+        if not isinstance(step, dict) or not step.get("id"):
+            continue
+        normalized.append({
+            "id": str(step.get("id")),
+            "label": str(step.get("label") or step.get("id")),
+            "algorithm_category": (
+                step.get("algorithm_category")
+                if step.get("algorithm_category") in ALGORITHM_CATEGORIES
+                else None
+            ),
+            "default_algorithm": step.get("default_algorithm"),
+        })
+    return normalized
+
+
+def mode_default_algorithms(mode: str,
+                            mode_profiles: Optional[Dict[str, Any]] = None
+                            ) -> Dict[str, str]:
+    """category -> default algorithm ID for *mode*'s selectable steps."""
+    return {
+        step["algorithm_category"]: str(step["default_algorithm"])
+        for step in mode_steps(mode, mode_profiles)
+        if step["algorithm_category"] and step["default_algorithm"]
+    }
 
 
 def mode_requires_2d_map(mode: str,
@@ -217,6 +273,25 @@ def simulator_supports_mode(simulator: str,
                            SIMULATOR_LABELS.get(simulator, simulator),
                            mode))
     return True, ""
+
+
+def logical_simulators_for_mode(mode: str,
+                               mode_profiles: Optional[Dict[str, Any]] = None
+                               ) -> List[str]:
+    """Simulators that can run *mode*, ignoring host installation state.
+
+    Used to keep options like ``display`` selectable in every simulator (the
+    launch layer provides empty-world / show-model fallbacks) while the
+    availability layer separately greys out backends that are not installed
+    on this host. ``mode_profiles`` is the parsed sim_modes.yaml ``modes``
+    mapping; when omitted the compatibility defaults apply.
+    """
+    mode_cfg = (mode_profiles or {}).get(mode) or {}
+    declared = mode_cfg.get("simulators")
+    ordered = [sim for sim in SIMULATOR_ORDER
+               if not declared or sim in declared]
+    return [sim for sim in ordered
+            if simulator_supports_mode(sim, mode, mode_profiles)[0]]
 
 
 def allowed_simulators(mode: str,

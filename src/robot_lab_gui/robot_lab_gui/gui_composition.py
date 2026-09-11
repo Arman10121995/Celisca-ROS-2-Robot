@@ -31,6 +31,8 @@ from .simulator_compat import (
     MODE_ORDER,
     mode_algorithm_categories,
     mode_category,
+    mode_default_algorithms,
+    mode_steps,
 )
 
 
@@ -135,9 +137,21 @@ def validation_lines(registry: Any,
     return list(resolved.get('errors', [])), list(resolved.get('warnings', []))
 
 
-def default_slot_for_mode(mode: str, category_map: Dict[str, str]) -> Optional[str]:
-    """Return the primary algorithm category a legacy mode implies."""
-    return category_map.get(mode)
+def default_slot_for_mode(mode: str,
+                          category_map: Dict[str, str],
+                          mode_profiles: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Legacy explicit override (kept for compatibility). When empty, the
+    sim_modes.yaml steps (via mode_profiles) decide the default slot,
+    falling back to the canonical per-mode first category.
+    """
+    if category_map.get(mode):
+        return category_map[mode]
+    steps = mode_steps(mode, mode_profiles)
+    for step in steps:
+        if step["algorithm_category"]:
+            return step["algorithm_category"]
+    categories = mode_algorithm_categories(mode, mode_profiles)
+    return categories[0] if categories else None
 
 def manifest_running_summary(manifest: Dict[str, Any]) -> Dict[str, Any]:
     """

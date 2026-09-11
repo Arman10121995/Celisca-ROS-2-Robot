@@ -78,12 +78,28 @@ try:
         allowed_simulators as _allowed_simulators,
         available_simulators as _available_simulators,
         correction_for as _correction_for,
+        mode_algorithm_categories as _mode_algorithm_categories,
+        mode_category as _mode_category,
+        mode_default_algorithms as _mode_default_algorithms,
+        mode_steps as _mode_steps,
         simulator_supports_mode as _simulator_supports_mode,
     )
     SIMULATOR_COMPAT_AVAILABLE = True
 except ImportError:  # pragma: no cover — defensive
     SIMULATOR_COMPAT_AVAILABLE = False
     SIMULATOR_FEATURE_GAPS = {}
+
+    def _mode_steps(_mode, _profiles=None):
+        return []
+
+    def _mode_algorithm_categories(_mode, _profiles=None):
+        return []
+
+    def _mode_default_algorithms(_mode, _profiles=None):
+        return {}
+
+    def _mode_category(mode, _profiles=None):
+        return str(mode).title()
 
     def _available_simulators(env=None):
         return {s: (True, "") for s in SIMULATOR_ORDER}
@@ -138,7 +154,7 @@ MODE_TO_ALGORITHM_CATEGORY = {
     "display": "perception",
     "loc": "localization",
     "slam": "localization",
-    "3d_slam": "state_estimation",
+    "3d_slam": "localization",
     "nav": "global_planning",
 }
 
@@ -354,6 +370,7 @@ class SimulationLauncherGui(tk.Tk):
         self.slot_vars = {slot: tk.StringVar() for slot in ALGORITHM_CATEGORIES}
         self.slot_combos = {}
         self.slot_labels = {}
+        self._mode_step_categories = {}  # step_id -> algorithm_category (or None)
         self._compat_cache = {}
         self._cleared_selections = []  # Track selections cleared due to incompatibility
         self.compatibility_var = tk.StringVar(value="")
@@ -611,27 +628,13 @@ class SimulationLauncherGui(tk.Tk):
             row_label.grid(row=index, column=0, sticky="w")
             self.simulator_status_labels[sim_id] = row_label
 
-        # --- Full composition controls (R3.4): all seven algorithm slots ---
-        composition_frame = ttk.LabelFrame(
+        # --- Full composition controls (R3.4): dynamic algorithm slots ---
+        # The slots are rebuilt when the mode changes (see _refresh_mode_steps).
+        self.composition_frame = ttk.LabelFrame(
             controls, text="Composition - algorithm slots", padding=(8, 6))
-        composition_frame.grid(row=13, column=0, sticky="ew", pady=(12, 6))
-        composition_frame.columnconfigure(1, weight=1)
-        for row, slot in enumerate(ALGORITHM_CATEGORIES):
-            label = ttk.Label(
-                composition_frame,
-                text=ALGORITHM_SLOT_LABELS.get(slot, slot.title()),
-            )
-            label.grid(row=row, column=0, sticky="w", padx=(0, 6))
-            self.slot_labels[slot] = label
-            combo = ttk.Combobox(
-                composition_frame,
-                textvariable=self.slot_vars[slot],
-                state="readonly",
-                width=26,
-            )
-            combo.grid(row=row, column=1, sticky="ew")
-            combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
-            self.slot_combos[slot] = combo
+        self.composition_frame.grid(row=13, column=0, sticky="ew", pady=(12, 6))
+        self.composition_frame.columnconfigure(1, weight=1)
+        self._current_mode_steps = None  # Track when mode changes
 
         # Compatibility status label (color-coded)
         self.compatibility_label = ttk.Label(
@@ -1001,36 +1004,94 @@ class SimulationLauncherGui(tk.Tk):
         self._refresh_algorithm_dropdown()
         self._update_from_selection()
 
+    def _refresh_mode_steps(self):
+        """Rebuild the composition slots when the mode changes.
+
+        Uses the mode's ``steps`` from sim_modes.yaml. Steps with an
+        ``algorithm_category`` get a selectable dropdown; steps without are
+        fixed pipeline labels. Only rebuilds when the mode actually changes.
+        """
+        mode = self.mode_var.get()
+        steps = _mode_steps(mode, self.mode_profiles)
+        steps_key = tuple(step["id"] for step in steps)
+        if steps_key == self._current_mode_steps:
+            return  # No change, skip rebuild
+        self._current_mode_steps = steps_key
+
+        # Clear existing widgets
+        for widget in self.composition_frame.winfo_children():
+            widget.destroy()
+        self.slot_combos.clear()
+        self.slot_labels.clear()
+        self.slot_vars.clear()
+
+        # Update the frame title to show the mode category
+        category = _mode_category(mode, self.mode_profiles)
+        self.composition_frame.configure(text=f"Composition — {category}")
+
+        # Build new slots from mode steps
+        defaults = _mode_default_algorithms(mode, self.mode_profiles)
+        for row, step in enumerate(steps):
+            step_id = step["id"]
+            label_text = step["label"]
+            category_name = step.get("algorithm_category")
+            label = ttk.Label(
+                self.composition_frame,
+                text=label_text,
+            )
+            label.grid(row=row, column=0, sticky="w", padx=(0, 6))
+            self.slot_labels[step_id] = label
+
+            if category_name:
+                # Selectable algorithm slot
+                var = tk.StringVar()
+                default_algo = defaults.get(category_name, "")
+                if default_algo:
+                    var.set(default_algo)
+                combo = ttk.Combobox(
+                    self.composition_frame,
+                    textvariable=var,
+                    state="readonly",
+                    width=26,
+                )
+                combo.grid(row=row, column=1, sticky="ew")
+                combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
+                self.slot_combos[step_id] = combo
+                self.slot_vars[step_id] = var
+                self._mode_step_categories[step_id] = category_name
+            else:
+                # Fixed pipeline step (no selection)
+                self._mode_step_categories[step_id] = None
+
     def _refresh_slot_combos(self):
-        """Populate the seven algorithm slot dropdowns from the registry.
+        """Populate the dynamic algorithm slot dropdowns from the registry.
 
         Filters each slot's dropdown to algorithms compatible with the
-        current robot, disables slots not active for the current mode, and
-        attaches tooltips describing each algorithm.
+        current robot/map/simulator, applies defaults from sim_modes.yaml,
+        and attaches tooltips describing each algorithm.
         """
-        for slot in ALGORITHM_CATEGORIES:
-            algorithms = self._slot_compatible_algorithms(slot)
-            combo = self.slot_combos.get(slot)
-            label = self.slot_labels.get(slot)
+        for step_id, combo in self.slot_combos.items():
+            category_name = self._mode_step_categories.get(step_id)
+            if category_name is None:
+                continue  # Fixed pipeline step
+            algorithms = self._slot_compatible_algorithms(category_name)
+            label = self.slot_labels.get(step_id)
+            var = self.slot_vars.get(step_id)
             if combo is None:
                 continue
             combo.configure(values=algorithms)
-            current = self.slot_vars[slot].get()
-            if current and current not in algorithms:
-                self._cleared_selections.append(
-                    (slot, self._algorithm_name(current)))
-                self.slot_vars[slot].set("")
-            if self._slot_is_active(slot):
-                combo.configure(state="readonly")
-            else:
-                combo.configure(state="disabled")
+            if var is not None:
+                current = var.get()
+                if current and current not in algorithms:
+                    self._cleared_selections.append(
+                        (category_name, self._algorithm_name(current)))
+                    var.set("")
+            combo.configure(state="readonly")
             tip = f"{len(algorithms)} compatible algorithm(s)."
             if len(algorithms) == 1:
                 tip = self._algorithm_description(algorithms[0])
             if label is not None:
-                label_text = ALGORITHM_SLOT_LABELS.get(slot, slot.title())
-                if not self._slot_is_active(slot):
-                    label_text += " (auto)"
+                label_text = label.cget("text")
                 label.configure(text=label_text)
             add_tooltip(combo, tip)
 
@@ -1072,20 +1133,11 @@ class SimulationLauncherGui(tk.Tk):
     def _slot_is_active(self, slot):
         """Whether *slot* should be editable in the current mode.
 
-        Only the primary algorithm slot for the active mode is editable;
-        the rest are auto-populated from the resolver defaults.
+        With dynamic mode steps, every step that has an algorithm_category
+        is selectable. This method is kept for backward compatibility but
+        the dynamic slot building in _refresh_mode_steps handles activity.
         """
-        primary = self._primary_slot_for_mode(self.mode_var.get())
-        return primary is None or slot == primary
-
-    @staticmethod
-    def _primary_slot_for_mode(mode):
-        """Return the algorithm slot that *mode* primarily exercises.
-
-        Returns None when the mode has no primary slot (display), so all
-        slots stay read-only.
-        """
-        return MODE_TO_ALGORITHM_CATEGORY.get(mode)
+        return slot in self.slot_combos
 
     def _algorithm_description(self, algorithm_id):
         """Return the description for an algorithm ID (or its name)."""
@@ -1127,8 +1179,8 @@ class SimulationLauncherGui(tk.Tk):
 
     def _reset_composition(self):
         """Clear all algorithm slot selections back to empty."""
-        for slot in ALGORITHM_CATEGORIES:
-            self.slot_vars[slot].set("")
+        for var in self.slot_vars.values():
+            var.set("")
         self._cleared_selections.clear()
         self._compat_cache.clear()
         self._update_from_selection()
@@ -1248,9 +1300,15 @@ class SimulationLauncherGui(tk.Tk):
         """Build the shared resolver selection from the current GUI controls."""
         if not COMPOSITION_AVAILABLE:
             raise RuntimeError("gui_composition unavailable")
-        algorithm_ids = {
-            slot: self.slot_vars[slot].get() for slot in ALGORITHM_CATEGORIES
-        }
+        # Build algorithm_ids from the dynamic mode steps, keyed by
+        # algorithm_category so the resolver can apply them.
+        algorithm_ids = {}
+        for step_id, category_name in self._mode_step_categories.items():
+            if category_name is None:
+                continue
+            var = self.slot_vars.get(step_id)
+            if var and var.get():
+                algorithm_ids[category_name] = var.get()
         return GuiCompositionSelection(
             robot_id=self.robot_var.get() or None,
             simulator=self.simulator_var.get() or None,
@@ -1371,7 +1429,9 @@ class SimulationLauncherGui(tk.Tk):
         # Clear cached compatibility results (robot/mode/map changed)
         self._compat_cache.clear()
 
-        # Update the seven algorithm slot dropdowns and the shared validator
+        # Rebuild the composition slots when the mode changed, then populate
+        # each selectable slot with compatible algorithms from the registry.
+        self._refresh_mode_steps()
         self._refresh_slot_combos()
 
         # Update compatibility status label + color

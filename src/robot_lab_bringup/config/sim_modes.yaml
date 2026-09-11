@@ -39,7 +39,21 @@ modes:
     - mujoco
   loc:
     category: "Localization"
-    algorithm_categories: [localization, state_estimation, sensor_fusion]
+    steps:
+    - id: simulator
+      label: "Simulator backend"
+    - id: localizer
+      label: "Localization algorithm"
+      algorithm_category: localization
+      default_algorithm: amcl
+    - id: state_estimator
+      label: "State estimation"
+      algorithm_category: state_estimation
+      default_algorithm: ekf_localization_node
+    - id: sensor_fusion
+      label: "Sensor fusion"
+      algorithm_category: sensor_fusion
+      default_algorithm: wheel_imu_fusion
     requires_2d_map: true
     gazebo:
       enabled: true
@@ -68,7 +82,25 @@ modes:
     - mujoco
   slam:
     category: "2D Mapping & Localization"
-    algorithm_categories: [localization, state_estimation, sensor_fusion, perception]
+    steps:
+    - id: simulator
+      label: "Simulator backend"
+    - id: slam_backend
+      label: "2D SLAM algorithm"
+      algorithm_category: localization
+      default_algorithm: slam_toolbox_impl
+    - id: state_estimator
+      label: "State estimation"
+      algorithm_category: state_estimation
+      default_algorithm: ekf_localization_node
+    - id: sensor_fusion
+      label: "Sensor fusion"
+      algorithm_category: sensor_fusion
+      default_algorithm: wheel_imu_fusion
+    - id: map_visualizer
+      label: "Map visualizer"
+      algorithm_category: perception
+      default_algorithm: costmap_2d_observation
     requires_2d_map: false
     gazebo:
       enabled: true
@@ -97,7 +129,21 @@ modes:
     - mujoco
   3d_slam:
     category: "3D Mapping & Localization"
-    algorithm_categories: [localization, state_estimation, perception]
+    steps:
+    - id: simulator
+      label: "Simulator backend"
+    - id: slam_3d_backend
+      label: "3D SLAM algorithm"
+      algorithm_category: localization
+      default_algorithm: rtabmap_localization
+    - id: state_estimator
+      label: "State estimation"
+      algorithm_category: state_estimation
+      default_algorithm: ekf_3d_estimator
+    - id: map_visualizer
+      label: "3D visualizer"
+      algorithm_category: perception
+      default_algorithm: pointcloud_segmenter
     requires_2d_map: false
     required_features:
     - rgbd_camera
@@ -139,7 +185,33 @@ modes:
     - mujoco
   nav:
     category: "Navigation"
-    algorithm_categories: [global_planning, local_planning, control, localization, state_estimation, sensor_fusion]
+    steps:
+    - id: simulator
+      label: "Simulator backend"
+    - id: global_planner
+      label: "Global planner"
+      algorithm_category: global_planning
+      default_algorithm: a_star_planner
+    - id: local_planner
+      label: "Local planner"
+      algorithm_category: local_planning
+      default_algorithm: dwb_local_planner
+    - id: controller
+      label: "Motion controller"
+      algorithm_category: control
+      default_algorithm: pure_pursuit
+    - id: localizer
+      label: "Localization algorithm"
+      algorithm_category: localization
+      default_algorithm: amcl
+    - id: state_estimator
+      label: "State estimation"
+      algorithm_category: state_estimation
+      default_algorithm: ekf_localization_node
+    - id: sensor_fusion
+      label: "Sensor fusion"
+      algorithm_category: sensor_fusion
+      default_algorithm: wheel_imu_fusion
     requires_2d_map: true
     gazebo:
       enabled: true

@@ -464,10 +464,12 @@ def _build_simulation_actions(context):
 
     controller_config = mode_config.get("controller", {})
     # ros2_control (controller_manager + robot_lab_controller + joint_state_broadcaster)
-    # is only provided by the Gazebo backend (gz_ros2_control).  PyBullet and
-    # MuJoCo spawners aré self-contained: they subscribe /cmd_vel and publish
-    # /odom + /joint_states + /clock directly, so no controller_layer is needed —
-    # launching ones would hang forever waiting for /controller_manager.
+    # is only provided by the Gazebo backend (gz_ros2_control).  Alternate
+    # backends (Isaac/PyBullet/MuJoCo) are self-contained: their spawners
+    # subscribe /cmd_vel and publish /odom + /joint_states + /clock directly,
+    # so launching a controller layer would hang forever waiting for
+    # /controller_manager.  In display mode the Gazebo controller layer is
+    # likewise skipped — there is nothing to drive yet.
     _sim_for_controller = _launch_value(context, "simulator")
     if _section_enabled(controller_config) and _sim_for_controller == "gazebo":
         actions.append(
@@ -523,13 +525,17 @@ def _build_simulation_actions(context):
         )
 
     if _section_enabled(mode_config.get("slam")):
+        slam_backend = str(_launch_value(context, "algorithm") or "auto").lower()
+        slam_args: Dict[str, str] = {
+            "use_sim_time": use_sim_time,
+            "robot_model": robot_model,
+        }
+        if slam_backend not in ("", "auto"):
+            slam_args["slam_backend"] = slam_backend
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(mapping_share, "slam.launch.py")),
-                launch_arguments={
-                    "use_sim_time": use_sim_time,
-                    "robot_model": robot_model,
-                }.items(),
+                launch_arguments=slam_args,
             )
         )
 
@@ -570,15 +576,29 @@ def _build_simulation_actions(context):
         )
 
     if _section_enabled(mode_config.get("navigation")):
+        global_backend = str(_launch_value(context, "global_planner") or "auto").lower()
+        local_backend = str(_launch_value(context, "local_planner") or "auto").lower()
+        controller_backend = str(_launch_value(context, "controller") or "auto").lower()
+        localizer_backend = str(_launch_value(context, "localizer") or "auto").lower()
+        nav_args: Dict[str, str] = {
+            "use_sim_time": use_sim_time,
+            "robot_model": robot_model,
+            "global_planner_plugin": _launch_value(context, "global_planner_plugin"),
+            "local_planner_plugin": _launch_value(context, "local_planner_plugin"),
+            "navigation_backend": controller_backend,
+        }
+        # Concrete global/local planner selections override the stack-default
+        # plugin strings unless the caller already pinned them explicitly.
+        if global_backend not in ("", "auto"):
+            nav_args["global_planner"] = global_backend
+        if local_backend not in ("", "auto"):
+            nav_args["local_planner"] = local_backend
+        if localizer_backend not in ("", "auto"):
+            nav_args["localizer"] = localizer_backend
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(navigation_share, "navigation.launch.py")),
-                launch_arguments={
-                    "use_sim_time": use_sim_time,
-                    "robot_model": robot_model,
-                    "global_planner_plugin": _launch_value(context, "global_planner_plugin"),
-                    "local_planner_plugin": _launch_value(context, "local_planner_plugin"),
-                }.items(),
+                launch_arguments=nav_args,
             )
         )
 
