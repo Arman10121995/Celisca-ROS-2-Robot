@@ -1188,12 +1188,16 @@ class SimulationLauncherGui(tk.Tk):
             return  # No change, skip rebuild
         self._current_mode_steps = steps_key
 
-        # Clear existing widgets
+        # Clear existing widgets and the step->category map together: a
+        # stale entry left from the previous mode has no matching variable,
+        # so it would emit a second, contradictory `<category>:=none`
+        # argument alongside the real selection.
         for widget in self.composition_frame.winfo_children():
             widget.destroy()
         self.slot_combos.clear()
         self.slot_labels.clear()
         self.slot_vars.clear()
+        self._mode_step_categories.clear()
 
         # Update the frame title to show the mode category
         category = _mode_category(mode, self.mode_profiles)
@@ -1701,6 +1705,8 @@ class SimulationLauncherGui(tk.Tk):
         return package_path(package_name, relative_path)
 
     def _resolve_world_path(self):
+        if self._map_free():
+            return "none"
         if self.mode_var.get() == "display":
             return "disabled"
         gazebo_config = self._map_config().get("gazebo", {})
@@ -1712,6 +1718,8 @@ class SimulationLauncherGui(tk.Tk):
         return package_path(package_name, relative_path)
 
     def _resolve_robot_path(self):
+        if self._robot_free():
+            return "none"
         robot_config = self._robot_config()
         return package_path(robot_config.get("package", "robots"), robot_config.get("xacro", ""))
 
@@ -1729,19 +1737,34 @@ class SimulationLauncherGui(tk.Tk):
         robot_note = "full simulation stack" if len(supported_modes) > 1 else "description/display only"
         simulator = self.simulator_var.get()
         gui_label = {"auto": "Auto (GUI if DISPLAY)", "true": "GUI", "false": "Headless"}
-        algorithm_name = self._primary_algorithm_name()
+        robot_free, map_free = self._robot_free(), self._map_free()
         lines = [
-            f"Robot: {self.robot_var.get()} ({robot_note})",
-            f"Robot file: {self._resolve_robot_path()}",
+            "Robot: %s" % ("none (world only)" if robot_free
+                           else "%s (%s)" % (self.robot_var.get(), robot_note)),
+            f"Robot file: {'-' if robot_free else self._resolve_robot_path()}",
             f"Mode: {MODE_LABELS.get(self.mode_var.get(), self.mode_var.get())}",
-            f"Algorithm: {algorithm_name}",
+        ]
+        # Every category the mode runs is listed, because every one of them is
+        # passed to the launch: the panel and the command cannot disagree.
+        for step_id, category in self._mode_step_categories.items():
+            if category is None:
+                continue
+            variable = self.slot_vars.get(step_id)
+            value = variable.get() if variable else ""
+            label = ALGORITHM_SLOT_LABELS.get(category, category.title())
+            if is_none_selection(value):
+                lines.append(f"  {label}: off")
+            else:
+                lines.append(f"  {label}: {self._algorithm_name(value)}")
+        lines.extend([
             f"Simulator: {SIMULATOR_LABELS.get(simulator, simulator)}",
             f"GUI: {gui_label.get(self.gui_var.get(), self.gui_var.get())}",
             f"RViz: {self._resolve_rviz_path()}",
-            f"Gazebo world: {self._resolve_world_path()}",
+            "World: %s" % ("none (robot only)" if map_free
+                           else self._resolve_world_path()),
             f"2D map: {self._map_yaml_path() if self._map_has_2d_map() else 'not available'}",
             f"Vacuum: {'available' if supports_vacuum else 'not available'}",
-        ]
+        ])
         if self.mode_var.get() == "3d_slam":
             rtabmap_config = self._mode_config().get("rtabmap", {})
             lines.extend([
@@ -1764,14 +1787,22 @@ class SimulationLauncherGui(tk.Tk):
         composition shown in the panel instead of falling back to the mode's
         defaults for anything the user changed.
         """
-        arguments = []
+        arguments = {}
         for step_id, category in self._mode_step_categories.items():
             if category is None:
                 continue
             variable = self.slot_vars.get(step_id)
-            value = variable.get().strip() if variable else ""
-            arguments.append("%s:=%s" % (category, selection_value(value)))
-        return arguments
+            if variable is None:
+                continue
+            value = variable.get().strip()
+            # A mode may run one category in more than one step (SLAM uses
+            # localization for its backend); the last real selection wins,
+            # and an empty slot never overwrites a chosen one.
+            if category in arguments and is_none_selection(value):
+                continue
+            arguments[category] = selection_value(value)
+        return ["%s:=%s" % (category, value)
+                for category, value in arguments.items()]
 
     def _legacy_command(self):
         """Direct launch command built from the panel selections.

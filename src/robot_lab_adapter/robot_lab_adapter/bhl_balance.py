@@ -509,16 +509,42 @@ class BhlBalanceController:
 # ----------------------------------------------------------------------
 # URDF static validation (used by the qualification tests)
 # ----------------------------------------------------------------------
+_BHL_URDF_RELATIVE = os.path.join(
+    "berkeley_humanoid_lite", "urdf", "berkeley_humanoid_lite.urdf")
+
+
 def _urdf_path() -> str:
-    """Resolve the BHL URDF path relative to the repository source tree."""
-    here = os.path.dirname(os.path.abspath(__file__))
-    root = here
-    for _ in range(5):
-        root = os.path.dirname(root)
-    return os.path.join(
-        root, "robot_lab_robots", "berkeley_humanoid_lite",
-        "urdf", "berkeley_humanoid_lite.urdf",
-    )
+    """Resolve the BHL URDF, whether running from source or an install.
+
+    A fixed number of parent hops from this file only works for one layout
+    and silently produced a path outside the workspace; the package share
+    directory is authoritative when the workspace is sourced, and otherwise
+    the source tree is searched upward for robot_lab_robots.
+    """
+    try:
+        from ament_index_python.packages import get_package_share_directory
+        candidate = os.path.join(
+            get_package_share_directory("robot_lab_robots"),
+            _BHL_URDF_RELATIVE)
+        if os.path.isfile(candidate):
+            return candidate
+    except Exception:
+        pass
+
+    directory = os.path.dirname(os.path.abspath(__file__))
+    while True:
+        candidate = os.path.join(
+            directory, "robot_lab_robots", _BHL_URDF_RELATIVE)
+        if os.path.isfile(candidate):
+            return candidate
+        parent = os.path.dirname(directory)
+        if parent == directory:
+            # Return the conventional source-tree location so the failure
+            # names a path a reader can act on.
+            return os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                "..", "..", "robot_lab_robots", _BHL_URDF_RELATIVE)
+        directory = parent
 
 
 def parse_bhl_joints() -> Dict[str, Dict[str, Optional[float]]]:

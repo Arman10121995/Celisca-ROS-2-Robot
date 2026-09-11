@@ -57,6 +57,13 @@ LOCAL_PLANNER_PLUGINS = {
     # DWB local planner (the stack default is the regulated pure pursuit
     # controller, which needs no override).
     'dwb_local_planner': 'dwb_core::DWBLocalPlanner',
+    # Model-predictive path integral controller.
+    'mppi_controller': 'nav2_mppi_controller::MPPIController',
+    # The stack default, stated explicitly so a manifest records which
+    # controller ran rather than leaving it implied.
+    'pure_pursuit': (
+        'nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController'
+    ),
 }
 
 BRINGUP_PACKAGE = 'robot_lab_bringup'
