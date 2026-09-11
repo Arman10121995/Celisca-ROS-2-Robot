@@ -31,7 +31,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/base_link.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/base_link.dae" />
       </geometry>
       <material
         name="">
@@ -71,7 +71,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/logo_left.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/logo_left.obj" />
       </geometry>
       <material
         name="">
@@ -116,7 +116,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/logo_right.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/logo_right.obj" />
       </geometry>
       <material
         name="">
@@ -161,7 +161,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/unitree_ladar.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/unitree_ladar.obj" />
       </geometry>
       <material
         name="">
@@ -213,7 +213,7 @@
         rpy="0 0.7805 1.5708" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/f_dc_link.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/f_dc_link.obj" />
       </geometry>
       <material
         name="">
@@ -257,7 +257,7 @@
         rpy="0 -0.7805 1.5708" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/r_dc_link.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/r_dc_link.obj" />
       </geometry>
       <material
         name="">
@@ -301,7 +301,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/fake_imu_link.STL" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/fake_imu_link.STL" />
       </geometry>
       <material
         name="">
@@ -345,7 +345,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/fake_head_Link.STL" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/fake_head_Link.STL" />
       </geometry>
       <material
         name="">
@@ -397,7 +397,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/fake_tail_link.STL" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/fake_tail_link.STL" />
       </geometry>
       <material
         name="">
@@ -449,7 +449,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_hip.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_hip.dae" />
       </geometry>
       <material
         name="">
@@ -518,7 +518,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_thigh.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_thigh.dae" />
       </geometry>
       <material
         name="">
@@ -587,7 +587,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_thigh_protect.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/FL_thigh_protect.obj" />
       </geometry>
       <material
         name="">
@@ -629,7 +629,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_calf.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_calf.dae" />
       </geometry>
       <material
         name="">
@@ -714,7 +714,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_foot.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FL_foot.dae" />
       </geometry>
       <material
         name="">
@@ -764,7 +764,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_hip.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_hip.dae" />
       </geometry>
       <material
         name="">
@@ -833,7 +833,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_thigh.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_thigh.dae" />
       </geometry>
       <material
         name="">
@@ -900,7 +900,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_thigh_protect.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/FR_thigh_protect.obj" />
       </geometry>
       <material
         name="">
@@ -942,7 +942,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_calf.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_calf.dae" />
       </geometry>
       <material
         name="">
@@ -1027,7 +1027,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/FR_foot.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/FR_foot.obj" />
       </geometry>
       <material
         name="">
@@ -1077,7 +1077,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_hip.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_hip.dae" />
       </geometry>
       <material
         name="">
@@ -1146,7 +1146,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_thigh.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_thigh.dae" />
       </geometry>
       <material
         name="">
@@ -1213,7 +1213,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_thigh_protect.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/RL_thigh_protect.obj" />
       </geometry>
       <material
         name="">
@@ -1262,7 +1262,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_calf.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_calf.dae" />
       </geometry>
       <material
         name="">
@@ -1347,7 +1347,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RL_foot.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/RL_foot.obj" />
       </geometry>
       <material
         name="">
@@ -1397,7 +1397,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_hip.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_hip.dae" />
       </geometry>
       <material
         name="">
@@ -1466,7 +1466,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_thigh.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_thigh.dae" />
       </geometry>
       <material
         name="">
@@ -1533,7 +1533,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_thigh_protect.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/RR_thigh_protect.obj" />
       </geometry>
       <material
         name="">
@@ -1575,7 +1575,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_calf.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_calf.dae" />
       </geometry>
       <material
         name="">
@@ -1660,7 +1660,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/RR_foot.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/RR_foot.obj" />
       </geometry>
       <material
         name="">
@@ -1710,7 +1710,7 @@
         rpy="0 1.5708 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/f_oc_link.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/f_oc_link.obj" />
       </geometry>
       <material
         name="">
@@ -1754,7 +1754,7 @@
         rpy="0 1.5708 0" />
       <geometry>
         <mesh
-          filename="package://robot_lab_robots/unitree/b2_description/meshes/r_oc_link.obj" />
+          filename="package://robot_lab_robots/unitree/b2_description_mujoco/meshes/r_oc_link.obj" />
       </geometry>
       <material
         name="">

@@ -19,7 +19,7 @@
     <visual>
       <origin xyz="-0.00461671 0.000372278 0.637874" rpy="0 -0 0"/>
       <geometry>
-        <mesh filename="./assets/merged/base_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/base_visual.stl"/>
       </geometry>
       <material name="base_parts_material">
         <color rgba="0.375679 0.397177 0.375591 1.0"/>
@@ -37,7 +37,7 @@
     <visual>
       <origin xyz="6.93889e-18 9.72026e-19 0.0025" rpy="6.12323e-17 -2.26485e-14 2.65724e-15"/>
       <geometry>
-        <mesh filename="./assets/merged/imu_2_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/imu_2_visual.stl"/>
       </geometry>
       <material name="imu_2_parts_material">
         <color rgba="0.141176 0.694118 0.65098 1.0"/>
@@ -79,7 +79,7 @@
     <visual>
       <origin xyz="-0.00410941 -0.000112596 -0.0464623" rpy="-9.35706e-15 -0.785398 1.19419e-14"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_left_hip_roll_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_left_hip_roll_visual.stl"/>
       </geometry>
       <material name="leg_left_hip_roll_parts_material">
         <color rgba="0.514202 0.546917 0.498371 1.0"/>
@@ -97,7 +97,7 @@
     <visual>
       <origin xyz="-0.00411632 -8.63203e-05 0.0463382" rpy="-3.14159 -0.785398 -1.5708"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_left_hip_yaw_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_left_hip_yaw_visual.stl"/>
       </geometry>
       <material name="leg_left_hip_yaw_parts_material">
         <color rgba="0.514113 0.546836 0.49828 1.0"/>
@@ -121,7 +121,7 @@
     <visual>
       <origin xyz="0.0030405 0.120388 0.0210924" rpy="1.5708 -7.461e-15 -3.10862e-15"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_left_hip_pitch_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_left_hip_pitch_visual.stl"/>
       </geometry>
       <material name="leg_left_hip_pitch_parts_material">
         <color rgba="0.562885 0.5918 0.548895 1.0"/>
@@ -145,7 +145,7 @@
     <visual>
       <origin xyz="-4.14041e-05 -0.112249 0.0257397" rpy="1.5708 -7.28874e-15 3.14159"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_left_knee_pitch_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_left_knee_pitch_visual.stl"/>
       </geometry>
       <material name="leg_left_knee_pitch_parts_material">
         <color rgba="0.664553 0.686049 0.654152 1.0"/>
@@ -163,7 +163,7 @@
     <visual>
       <origin xyz="0.0131065 0.0273743 0.0274153" rpy="1.5708 5.92291e-15 -2.07873e-13"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_left_ankle_pitch_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_left_ankle_pitch_visual.stl"/>
       </geometry>
       <material name="leg_left_ankle_pitch_parts_material">
         <color rgba="0.866867 0.866867 0.866867 1.0"/>
@@ -187,7 +187,7 @@
     <visual>
       <origin xyz="2.29341e-05 0.0226611 0.0197836" rpy="1.5708 -1.5708 0"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_left_ankle_roll_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_left_ankle_roll_visual.stl"/>
       </geometry>
       <material name="leg_left_ankle_roll_parts_material">
         <color rgba="0.694564 0.714459 0.684938 1.0"/>
@@ -259,7 +259,7 @@
     <visual>
       <origin xyz="0.00410941 -0.00018505 -0.0464478" rpy="-9.76523e-15 -0.785398 -3.14159"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_right_hip_roll_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_right_hip_roll_visual.stl"/>
       </geometry>
       <material name="leg_right_hip_roll_parts_material">
         <color rgba="0.514202 0.546917 0.498371 1.0"/>
@@ -277,7 +277,7 @@
     <visual>
       <origin xyz="0.00411632 -1.3851e-05 0.0463238" rpy="-3.14159 -0.785398 -1.5708"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_right_hip_yaw_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_right_hip_yaw_visual.stl"/>
       </geometry>
       <material name="leg_right_hip_yaw_parts_material">
         <color rgba="0.514113 0.546836 0.49828 1.0"/>
@@ -301,7 +301,7 @@
     <visual>
       <origin xyz="0.00319928 0.120388 -0.0210924" rpy="1.5708 -6.71544e-15 -2.48065e-15"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_right_hip_pitch_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_right_hip_pitch_visual.stl"/>
       </geometry>
       <material name="leg_right_hip_pitch_parts_material">
         <color rgba="0.562885 0.5918 0.548895 1.0"/>
@@ -325,7 +325,7 @@
     <visual>
       <origin xyz="-5.09429e-05 0.112249 -0.0257397" rpy="1.5708 -6.95618e-15 -2.56528e-15"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_right_knee_pitch_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_right_knee_pitch_visual.stl"/>
       </geometry>
       <material name="leg_right_knee_pitch_parts_material">
         <color rgba="0.664553 0.686049 0.654152 1.0"/>
@@ -343,7 +343,7 @@
     <visual>
       <origin xyz="0.0131065 0.0273743 -0.0274153" rpy="1.5708 -6.79537e-15 1.09692e-13"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_right_ankle_pitch_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_right_ankle_pitch_visual.stl"/>
       </geometry>
       <material name="leg_right_ankle_pitch_parts_material">
         <color rgba="0.866867 0.866867 0.866867 1.0"/>
@@ -367,7 +367,7 @@
     <visual>
       <origin xyz="2.29341e-05 0.0226611 0.0197836" rpy="1.5708 -1.5708 0"/>
       <geometry>
-        <mesh filename="./assets/merged/leg_right_ankle_roll_visual.stl"/>
+        <mesh filename="package://robot_lab_robots/berkeley_humanoid_lite/meshes/leg_right_ankle_roll_visual.stl"/>
       </geometry>
       <material name="leg_right_ankle_roll_parts_material">
         <color rgba="0.694564 0.714459 0.684938 1.0"/>

@@ -149,9 +149,18 @@ def _resolve_mesh_source(uri, pkg_map, base_dir=""):
     if os.path.isabs(uri):
         return uri
     if base_dir:
-        candidate = os.path.join(base_dir, uri)
-        if os.path.isfile(candidate):
-            return candidate
+        # Relative URIs are relative to the package layout: the URDF often
+        # sits in an 'urdf'/'xacro'/'xml' subdirectory next to 'meshes', so
+        # walk up the ancestor chain and try the URI against each one.
+        base = os.path.abspath(base_dir)
+        for _ in range(8):
+            candidate = os.path.join(base, uri)
+            if os.path.isfile(candidate):
+                return candidate
+            parent = os.path.dirname(base)
+            if parent == base:
+                break
+            base = parent
     return ""
 
 
