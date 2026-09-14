@@ -103,6 +103,64 @@ class MujocoRobotImportTests(unittest.TestCase):
             self.assertEqual(0, data.warning[bad].number,
                              "QACC blew up at t=%.3f" % data.time)
 
+    def test_imported_wheels_are_actuated_and_drive_forward(self):
+        """The URDF importer creates no actuators, so /cmd_vel moved nothing."""
+        mujoco = self.mujoco
+        mjcf = self.spawner._add_wheel_velocity_actuators(
+            _robot_mjcf(self.spawner, "bumperbot"),
+            ("wheel_left_joint", "wheel_right_joint"))
+        model = mujoco.MjModel.from_xml_string(
+            self.spawner.MuJoCoSpawner._merge_mjcf(self.world, mjcf))
+        self.assertEqual(2, model.nu)
+        self.assertEqual(2, mjcf.count('armature="0.005"'),
+                         "unstable velocity servo on a bare 53 g wheel")
+        data = mujoco.MjData(model)
+        free = [joint for joint in range(model.njnt)
+                if model.jnt_type[joint] == mujoco.mjtJoint.mjJNT_FREE][0]
+        base = model.jnt_bodyid[free]
+        mujoco.mj_forward(model, data)
+        start = data.xpos[base].copy()
+        data.ctrl[:] = 0.3 / 0.033
+        for _ in range(int(2.0 / model.opt.timestep)):
+            mujoco.mj_step(model, data)
+        moved = data.xpos[base] - start
+        self.assertGreater(moved[0], 0.3, "robot did not drive forward")
+        self.assertLess(abs(moved[1]), 0.1)
+
+    def test_turn_command_turns_at_the_commanded_rate(self):
+        mujoco = self.mujoco
+        mjcf = self.spawner._add_wheel_velocity_actuators(
+            _robot_mjcf(self.spawner, "bumperbot"),
+            ("wheel_left_joint", "wheel_right_joint"))
+        model = mujoco.MjModel.from_xml_string(
+            self.spawner.MuJoCoSpawner._merge_mjcf(self.world, mjcf))
+        data = mujoco.MjData(model)
+        free = [joint for joint in range(model.njnt)
+                if model.jnt_type[joint] == mujoco.mjtJoint.mjJNT_FREE][0]
+        quat = model.jnt_qposadr[free] + 3
+        for _ in range(int(0.5 / model.opt.timestep)):
+            mujoco.mj_step(model, data)
+        # 0.15 m/s and 0.6 rad/s over the 0.17 m contact track, r = 0.033 m.
+        data.ctrl[0], data.ctrl[1] = 3.0, 6.09
+        start = None
+        for step in range(int(3.0 / model.opt.timestep)):
+            mujoco.mj_step(model, data)
+            if step == int(1.0 / model.opt.timestep):
+                w, _, _, z = data.qpos[quat:quat + 4]
+                start = 2.0 * __import__("math").atan2(z, w)
+        w, _, _, z = data.qpos[quat:quat + 4]
+        rate = (2.0 * __import__("math").atan2(z, w) - start) / 2.0
+        self.assertAlmostEqual(0.6, rate, delta=0.06)
+
+    def test_physics_time_keeps_pace_with_the_tick(self):
+        self.assertEqual(2, self.spawner._physics_substeps(1.0 / 240.0, 0.002))
+        self.assertEqual(1, self.spawner._physics_substeps(0.001, 0.002))
+
+    def test_existing_actuators_are_not_duplicated(self):
+        mjcf = self.spawner._add_wheel_velocity_actuators(
+            self.spawner._FALLBACK_MJCF, ("wheel_left_joint", "wheel_right_joint"))
+        self.assertEqual(2, mjcf.count("<velocity"))
+
     def test_rest_pose_exclusion_leaves_non_overlapping_robots_alone(self):
         mjcf = _robot_mjcf(self.spawner, "bumperbot")
         self.assertNotIn("<exclude", mjcf)

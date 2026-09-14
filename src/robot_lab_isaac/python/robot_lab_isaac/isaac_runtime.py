@@ -67,6 +67,128 @@ def _ros_quat_from_isaac(quaternion):
     return [x, y, z, w]
 
 
+# Scan origin for a robot without a laser link, relative to its root body:
+# the same 0.12 m above the base the PyBullet and MuJoCo bridges use.
+_DEFAULT_SCAN_OFFSET = [[0.0, 0.0, 0.12], [1.0, 0.0, 0.0, 0.0]]
+
+
+def _multiply_wxyz(a, b):
+    aw, ax, ay, az = (float(v) for v in a)
+    bw, bx, by, bz = (float(v) for v in b)
+    return (aw * bw - ax * bx - ay * by - az * bz,
+            aw * bx + ax * bw + ay * bz - az * by,
+            aw * by - ax * bz + ay * bw + az * bx,
+            aw * bz + ax * by - ay * bx + az * bw)
+
+
+def _mounted_origin_and_yaw(base_position, base_quaternion, offset):
+    """World origin and heading of a sensor rigidly mounted on the base.
+
+    *base_quaternion* and the offset's quaternion are scalar-first; *offset*
+    is ``[[x, y, z], [w, x, y, z]]`` in the base frame.  This interpreter has
+    no robot_lab_utils, so the two-line frame composition lives here.
+    """
+    offset_position, offset_quaternion = offset
+    w, x, y, z = (float(v) for v in base_quaternion)
+    vx, vy, vz = (float(v) for v in offset_position)
+    tx = 2.0 * (y * vz - z * vy)
+    ty = 2.0 * (z * vx - x * vz)
+    tz = 2.0 * (x * vy - y * vx)
+    rotated = (vx + w * tx + (y * tz - z * ty),
+               vy + w * ty + (z * tx - x * tz),
+               vz + w * tz + (x * ty - y * tx))
+    origin = [float(b) + r for b, r in zip(base_position, rotated)]
+    qw, qx, qy, qz = _multiply_wxyz(base_quaternion, offset_quaternion)
+    yaw = math.atan2(2.0 * (qw * qz + qx * qy), 1.0 - 2.0 * (qy * qy + qz * qz))
+    return origin, yaw
+
+
+def _scan_ranges(cast, origin, yaw, samples, range_min, range_max,
+                 ignored_bodies):
+    """One planar 360-degree scan; angles run from -pi in the sensor frame.
+
+    *cast(origin, direction, distance, report)* is PhysX ``raycast_all``.
+    The rays start inside the sensor link's own collider, so hits on the
+    robot's bodies are ignored.  No return is ``inf``, as in the PyBullet and
+    MuJoCo bridges.
+    """
+    samples = max(int(samples), 1)
+    increment = 2.0 * math.pi / samples
+    ranges = []
+    for index in range(samples):
+        angle = yaw - math.pi + index * increment
+        nearest = [float("inf")]
+
+        def report(hit, nearest=nearest):
+            if (hit.rigid_body not in ignored_bodies
+                    and hit.distance < nearest[0]):
+                nearest[0] = float(hit.distance)
+            return True
+
+        cast(tuple(origin), (math.cos(angle), math.sin(angle), 0.0),
+             float(range_max), report)
+        distance = nearest[0]
+        ranges.append(max(float(range_min), distance)
+                      if distance < float(range_max) else float("inf"))
+    return ranges
+
+
+def _articulation_root_body(robot):
+    """Name of the articulation's root rigid body, or '' when unknown.
+
+    ``get_world_pose`` reports this body, which the importer may choose
+    differently from the URDF root link (Bumperbot: ``base_link``, not
+    ``base_footprint``).
+    """
+    for owner in (getattr(robot, "_articulation_view", None), robot):
+        try:
+            return str(list(owner.body_names)[0])
+        except Exception:
+            continue
+    return ""
+
+
+def _prepare_scan(cfg, dt, robot, stage):
+    """Settings for the planar scan, or None when scanning is off.
+
+    The spawner sends the laser link's offset from each link that carries it;
+    the one used is for the link Isaac reports as the articulation's root
+    body, which the importer may pick differently from the URDF root.
+    """
+    scan_cfg = cfg.get("scan") or {}
+    rate = float(scan_cfg.get("rate", 0.0) or 0.0)
+    if rate <= 0.0:
+        return None
+    import carb
+    from omni.physx import get_physx_scene_query_interface
+    from pxr import UsdPhysics
+
+    root_body = _articulation_root_body(robot)
+    offsets = scan_cfg.get("offsets") or {}
+    base = root_body if root_body in offsets else scan_cfg.get("urdf_root", "")
+    offset = offsets.get(base) or _DEFAULT_SCAN_OFFSET
+    ignored = {str(prim.GetPath()) for prim in stage.Traverse()
+               if prim.HasAPI(UsdPhysics.RigidBodyAPI)
+               and not str(prim.GetPath()).startswith("/World/map/")}
+    query = get_physx_scene_query_interface()
+
+    def cast(origin, direction, distance, report):
+        query.raycast_all(carb.Float3(*origin), carb.Float3(*direction),
+                          float(distance), report)
+
+    every = max(1, int(round(1.0 / (dt * rate))))
+    _emit({"event": "log",
+           "msg": "Scan: %d rays every %d steps from offset %s of '%s' "
+                  "(root body '%s'); %d robot bodies ignored"
+                  % (int(scan_cfg.get("samples", 360)), every, offset[0],
+                     base or "default", root_body or "?", len(ignored))})
+    return {"cast": cast, "offset": offset, "every": every,
+            "samples": int(scan_cfg.get("samples", 360)),
+            "range_min": float(scan_cfg.get("range_min", 0.12)),
+            "range_max": float(scan_cfg.get("range_max", 12.0)),
+            "ignored": ignored}
+
+
 def _author_wheel_velocity_drives(stage, joint_names,
                                   damping=_WHEEL_DRIVE_DAMPING):
     """Author zero-stiffness velocity drives on the named revolute joints.
@@ -130,6 +252,7 @@ class _StdinReader(threading.Thread):
         super().__init__()
         self.cmd = [0.0, 0.0]
         self.stop = False
+        self.reset_requested = False
 
     def run(self):
         try:
@@ -143,6 +266,10 @@ class _StdinReader(threading.Thread):
                     continue
                 if "cmd_vel" in msg:
                     self.cmd = list(msg["cmd_vel"])[:2]
+                elif msg.get("reset"):
+                    # Sent by the spawner's /robot_lab/reset service, which
+                    # used to report success while this reader ignored it.
+                    self.reset_requested = True
                 elif msg.get("cmd") == "shutdown":
                     self.stop = True
                     return
@@ -409,7 +536,8 @@ def _run_stage(app, reader, cfg, state):
             imp_cfg = URDFImporterConfig(urdf_path=cfg["urdf_file"])
             imp_cfg.merge_fixed_joints = False
             imp_cfg.fix_base = False
-            imp_cfg.collision_from_visuals = True
+            imp_cfg.collision_from_visuals = bool(
+                cfg.get("collision_from_visuals", True))
             imp_cfg.joint_drive_type = "force"
             usd_path = URDFImporter(imp_cfg).import_urdf()
             prim = stage_utils.add_reference_to_stage(usd_path, "/World")
@@ -485,13 +613,30 @@ def _run_stage(app, reader, cfg, state):
     rw = cfg.get("right_wheel_joint", "")
     lw_idx = dof_names.index(lw) if lw in dof_names else -1
     rw_idx = dof_names.index(rw) if rw in dof_names else -1
-    _emit({"event": "ready", "dofs": dof_names})
+    _emit({"event": "ready", "dofs": dof_names,
+           "root_body": _articulation_root_body(robot)})
+
+    try:
+        scan = _prepare_scan(cfg, dt, robot, stage_obj)
+    except Exception as exc:
+        scan = None
+        _emit({"event": "log", "msg": "Scan unavailable: %s" % exc})
 
     wheel_radius = float(cfg.get("wheel_radius", 0.033))
     wheel_separation = float(cfg.get("wheel_separation", 0.17))
     action_error_reported = False
     sim_step = 0
     while state["running"] and not reader.stop and app.is_running():
+        if reader.reset_requested:
+            reader.reset_requested = False
+            try:
+                world.reset()
+            except Exception as exc:
+                _emit({"event": "log", "msg": "Reset failed: %s" % exc})
+            else:
+                # The step counter keeps running so /clock never goes back.
+                _emit({"event": "log",
+                       "msg": "Reset applied: world returned to its initial state"})
         linear, angular = reader.cmd
         vl, vr = _wheel_velocities(linear, angular, wheel_radius,
                                    wheel_separation)
@@ -521,16 +666,18 @@ def _run_stage(app, reader, cfg, state):
         sim_step += 1
         t = sim_step * dt
 
+        q = None
         try:
             pose = robot.get_world_pose()
             pos = [float(v) for v in pose[0]]
-            q = pose[1]
+            q = [float(v) for v in pose[1]]
             orn = _ros_quat_from_isaac(q)  # events carry ROS (x, y, z, w)
             lin = [float(v) for v in robot.get_linear_velocity()]
             ang = [float(v) for v in robot.get_angular_velocity()]
             jpos = [float(v) for v in robot.get_joint_positions()]
             jvel = [float(v) for v in robot.get_joint_velocities()]
         except Exception:
+            q = None
             pos = [0.0, 0.0, 0.0]
             orn = [0.0, 0.0, 0.0, 1.0]
             lin = [0.0, 0.0, 0.0]
@@ -540,6 +687,19 @@ def _run_stage(app, reader, cfg, state):
 
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel})
+
+        if scan is not None and q is not None and sim_step % scan["every"] == 0:
+            origin, yaw = _mounted_origin_and_yaw(pos, q, scan["offset"])
+            try:
+                ranges = _scan_ranges(scan["cast"], origin, yaw,
+                                      scan["samples"], scan["range_min"],
+                                      scan["range_max"], scan["ignored"])
+            except Exception as exc:
+                _emit({"event": "log",
+                       "msg": "Scan disabled after raycast failure: %s" % exc})
+                scan = None
+            else:
+                _emit({"event": "scan", "t": t, "ranges": ranges})
 
     state["running"] = False
 

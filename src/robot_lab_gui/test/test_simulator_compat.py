@@ -114,13 +114,13 @@ class SimulatorModeGatingTests(unittest.TestCase):
                 ok, why = sc.simulator_supports_mode(sim, mode, MODE_PROFILES)
                 self.assertTrue(ok, (sim, mode, why))
 
-    def test_isaac_lacks_scan_and_rgbd(self):
-        self.assertFalse(
-            sc.simulator_supports_mode("isaac", "nav", MODE_PROFILES)[0])
-        self.assertFalse(
-            sc.simulator_supports_mode("isaac", "3d_slam", MODE_PROFILES)[0])
-        self.assertTrue(
-            sc.simulator_supports_mode("isaac", "display", MODE_PROFILES)[0])
+    def test_isaac_has_scan_but_no_rgbd(self):
+        for mode in ("display", "loc", "slam", "nav"):
+            ok, why = sc.simulator_supports_mode("isaac", mode, MODE_PROFILES)
+            self.assertTrue(ok, (mode, why))
+        ok, why = sc.simulator_supports_mode("isaac", "3d_slam", MODE_PROFILES)
+        self.assertFalse(ok)
+        self.assertIn("rgbd", why)
 
     def test_allowed_simulators_for_3d_slam(self):
         allowed = sc.allowed_simulators("3d_slam", MODE_PROFILES, env={})

@@ -5,7 +5,7 @@ Python-3.10-only while ``isaacsim`` >= 5.0 requires Python 3.12.  Instead
 it spawns :mod:`robot_lab_isaac.isaac_runtime` under the dedicated Isaac
 Sim virtual environment (parameter ``isaac_python``) and exchanges
 clock/state/commands over a JSON event FIFO plus stdin commands.  The
-node publishes the ROS 2 topic contract (joint_states, TF, odom, imu,
+node publishes the ROS 2 topic contract (joint_states, odom, imu, scan,
 clock) and forwards /cmd_vel to the runtime child.
 
 If the Isaac Sim python environment is missing or the child fails, the
@@ -19,6 +19,7 @@ offline mode.
     backwards").  In that case the node falls back to offline mode.
 """
 import json
+import math
 import os
 import re
 import signal
@@ -35,9 +36,12 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
-from sensor_msgs.msg import Imu, JointState
+from sensor_msgs.msg import Imu, JointState, LaserScan
 from std_msgs.msg import Bool
 from std_srvs.srv import Trigger
+
+from robot_lab_utils.sim_frames import (
+    body_odometry, mounted_sensor_offsets, relative_frame, urdf_link_frames)
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
@@ -176,6 +180,15 @@ class IsaacSpawner(Node):
         # MuJoCo spawners, so /cmd_vel means the same thing in every backend.
         self.declare_parameter("wheel_radius", 0.033)
         self.declare_parameter("wheel_separation", 0.17)
+        # URDF import: build colliders from the visual meshes (True) or use
+        # the description's own <collision> geometry (False).
+        self.declare_parameter("collision_from_visuals", True)
+        # Planar scan, same parameters as the PyBullet and MuJoCo spawners.
+        self.declare_parameter("laser_link_name", "laser_link")
+        self.declare_parameter("scan_rate", 5.0)
+        self.declare_parameter("scan_samples", 360)
+        self.declare_parameter("scan_range_min", 0.12)
+        self.declare_parameter("scan_range_max", 12.0)
 
         if not self.has_parameter("use_sim_time"):
             self.declare_parameter("use_sim_time", True)
@@ -185,6 +198,7 @@ class IsaacSpawner(Node):
         # The fused estimate lives on /odom (published by the EKF).
         self._odom_pub = self.create_publisher(Odometry, "/odom/ground_truth", 10)
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
+        self._scan_pub = self.create_publisher(LaserScan, "/scan", 10)
         self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
         # TF published by the EKF, not the spawner.
 
@@ -213,6 +227,8 @@ class IsaacSpawner(Node):
         self._state = None
         self._spawned = False
         self._twist = Twist()
+        self._urdf_text = ""
+        self._root_offset = None  # Isaac's root body in the URDF root frame
 
     # ------------------------------------------------------------------
     def _on_cmd(self, msg):
@@ -275,6 +291,7 @@ class IsaacSpawner(Node):
         if rp and rp not in pkg_map:
             pkg_map[rp] = get_package_share_directory(rp)
         urdf = _strip_gazebo_tags(_rewrite_package_uris(urdf_text, pkg_map))
+        self._urdf_text = urdf
         fd, urdf_file = tempfile.mkstemp(suffix=".urdf", dir=tempfile.gettempdir())
         with os.fdopen(fd, "w") as fh:
             fh.write(urdf)
@@ -299,6 +316,9 @@ class IsaacSpawner(Node):
             "wheel_radius": float(self.get_parameter("wheel_radius").value),
             "wheel_separation": float(
                 self.get_parameter("wheel_separation").value),
+            "collision_from_visuals": bool(
+                self.get_parameter("collision_from_visuals").value),
+            "scan": self._scan_config(urdf),
         }
         # The world is parsed here, on the ROS side, and handed over as plain
         # records: the runtime's interpreter has no ROS package index, and its
@@ -348,6 +368,32 @@ class IsaacSpawner(Node):
         threading.Thread(target=self._drain_stdout, daemon=True).start()
         # Read structured events from the FIFO.
         threading.Thread(target=self._read_runtime, daemon=True).start()
+
+    def _scan_config(self, urdf_text):
+        """Scan settings for the runtime, including the laser link offsets.
+
+        The runtime has no URDF parser, so the laser link's pose relative to
+        each link that carries it is computed here.
+        """
+        link = self.get_parameter("laser_link_name").value
+        offsets = mounted_sensor_offsets(urdf_text, link)
+        try:
+            _frames, urdf_root = urdf_link_frames(urdf_text)
+        except Exception:
+            urdf_root = None
+        if not offsets:
+            self.get_logger().warn(
+                "Robot has no '%s' link; /scan originates 0.12 m above the "
+                "base, as in the PyBullet and MuJoCo bridges." % link)
+        return {
+            "rate": float(self.get_parameter("scan_rate").value),
+            "samples": int(self.get_parameter("scan_samples").value),
+            "range_min": float(self.get_parameter("scan_range_min").value),
+            "range_max": float(self.get_parameter("scan_range_max").value),
+            "urdf_root": urdf_root or "",
+            "offsets": {base: [list(position), list(quaternion)]
+                        for base, (position, quaternion) in offsets.items()},
+        }
 
     def _world_shapes(self, world_path):
         """Static world shapes for the runtime, or None to use its fallback.
@@ -415,8 +461,11 @@ class IsaacSpawner(Node):
                         continue
                     ev = msg.get("event")
                     if ev == "ready":
+                        root_offset = self._root_body_offset(
+                            msg.get("root_body", ""))
                         with self._lock:
                             self._dofs = msg.get("dofs", [])
+                            self._root_offset = root_offset
                             self._spawned = True
                         # Signal readiness (R2.3).
                         self._ready = True
@@ -426,6 +475,8 @@ class IsaacSpawner(Node):
                     elif ev == "state":
                         with self._lock:
                             self._state = msg
+                    elif ev == "scan":
+                        self._publish_scan(msg)
                     elif ev == "log":
                         self.get_logger().info(
                             "Isaac runtime: %s" % msg.get("msg"))
@@ -475,6 +526,46 @@ class IsaacSpawner(Node):
             self.get_logger().error(f"Reset failed: {e}")
         return response
 
+    def _root_body_offset(self, root_body):
+        """Pose of Isaac's articulation root body in the URDF root's frame.
+
+        The other backends report the URDF root link; Isaac reports the root
+        rigid body, which for Bumperbot is base_link, 0.033 m above
+        base_footprint.  None when they are the same link or unknown.
+        """
+        try:
+            frames, urdf_root = urdf_link_frames(self._urdf_text)
+        except Exception:
+            return None
+        if not root_body or not urdf_root or root_body == urdf_root:
+            return None
+        offset = relative_frame(frames, root_body, urdf_root)
+        if offset is not None:
+            self.get_logger().info(
+                "Isaac reports root body '%s'; odometry is re-expressed at "
+                "URDF root '%s' (offset %s)"
+                % (root_body, urdf_root,
+                   [round(v, 4) for v in offset[0]]))
+        return offset
+
+    def _publish_scan(self, event):
+        ranges = [float(v) for v in (event.get("ranges") or [])]
+        if not ranges:
+            return
+        t = float(event.get("t", 0.0))
+        msg = LaserScan()
+        msg.header.stamp = Time(sec=int(t), nanosec=int((t - int(t)) * 1e9))
+        msg.header.frame_id = self.get_parameter("laser_link_name").value
+        msg.angle_increment = 2.0 * math.pi / len(ranges)
+        msg.angle_min = -math.pi
+        msg.angle_max = -math.pi + (len(ranges) - 1) * msg.angle_increment
+        msg.scan_time = 1.0 / max(
+            float(self.get_parameter("scan_rate").value), 0.1)
+        msg.range_min = float(self.get_parameter("scan_range_min").value)
+        msg.range_max = float(self.get_parameter("scan_range_max").value)
+        msg.ranges = ranges
+        self._scan_pub.publish(msg)
+
     def _publish_health(self):
         """Publish health status (R2.3)."""
         msg = DiagnosticArray()
@@ -505,6 +596,7 @@ class IsaacSpawner(Node):
         with self._lock:
             state = self._state
             dofs = list(self._dofs)
+            root_offset = self._root_offset
         if state is None:
             return
         t = float(state.get("t", 0.0))
@@ -515,6 +607,10 @@ class IsaacSpawner(Node):
         ang = state.get("ang", [0.0, 0.0, 0.0])
         jpos = state.get("jpos", [])
         jvel = state.get("jvel", [])
+        # Isaac reports its root body with world-frame velocities; odometry
+        # is the URDF root's pose with the twist and IMU rates in the robot's
+        # own frame, which is how robot_localization fuses vx / vy / vyaw.
+        pos, orn, lin, ang = body_odometry(pos, orn, lin, ang, root_offset)
 
         clock_msg = RosClock()
         clock_msg.clock = stamp

@@ -7,8 +7,8 @@ selectable BEFORE a launch command is built:
   (Gazebo binaries, PyBullet/MuJoCo wheels, the Isaac Sim runtime);
 - which modes a given simulator can physically run, based on the
   per-simulator sensor gaps documented in docs/status/support-matrix.md
-  (the Isaac spawner publishes no 2D scan and no RGB-D; the PyBullet and
-  MuJoCo bridges have no RGB-D camera implementation);
+  (the PyBullet, MuJoCo and Isaac bridges publish a 2D scan but no RGB-D
+  camera);
 - automatic correction of an invalid robot/mode/simulator/environment
   selection cascade, returning the fixes so the GUI can show what changed.
 
@@ -30,11 +30,11 @@ SIMULATOR_LABELS = {
 }
 
 # Sensor/feature gaps per simulator backend (support-matrix.md):
-# - Isaac Sim: no /scan publisher and no RGB-D bridge in the current spawner;
-# - PyBullet/MuJoCo: bridges implement odometry/scan but no RGB-D camera.
+# - PyBullet/MuJoCo/Isaac Sim: bridges publish odometry and /scan (checked
+#   live against the map geometry) but no RGB-D camera.
 SIMULATOR_FEATURE_GAPS: Dict[str, Tuple[str, ...]] = {
     "gazebo": (),
-    "isaac": ("lidar_2d", "rgbd_camera"),
+    "isaac": ("rgbd_camera",),
     "pybullet": ("rgbd_camera",),
     "mujoco": ("rgbd_camera",),
 }

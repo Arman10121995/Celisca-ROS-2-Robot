@@ -30,15 +30,24 @@ except ImportError:
 
 import rclpy
 from rclpy.clock import Clock, ClockType
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
-from sensor_msgs.msg import Imu, JointState, LaserScan
+from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
 from std_msgs.msg import Bool
 from std_srvs.srv import Trigger
+
+from robot_lab_utils import camera_model
+from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
+from robot_lab_utils.sim_frames import (
+    compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
+    yaw_of)
+
+_CAMERA_NAME = "robot_lab_rgbd"
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
@@ -566,6 +575,134 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
 # ROS 2 Node
 # ---------------------------------------------------------------------------
 
+def _add_wheel_velocity_actuators(mjcf_text, joint_names, force_limit=5.0,
+                                  armature=0.005):
+    """Give the named wheel joints velocity actuators when they have none.
+
+    MuJoCo's URDF importer creates no actuators, so every imported wheeled
+    robot ignored /cmd_vel: the control loop drives a velocity actuator per
+    wheel joint and found none.  The force limit mirrors the PyBullet
+    bridge's 5 N*m velocity control.
+
+    The driven joints also get rotor inertia (``armature``) when they have
+    none.  A bare 53 g wheel has ~3e-5 kg*m^2 about its axle, and a velocity
+    servo with gain kv is only stable while kv * timestep / inertia stays
+    well below 2; at MuJoCo's 2 ms step it was ~130, the wheels spun up to
+    300 rad/s from a zero command and the robot tumbled.  0.005 kg*m^2 is a
+    small geared motor's reflected rotor inertia.  Joints that are absent or
+    already actuated are left alone.
+    """
+    try:
+        root = ET.fromstring(mjcf_text)
+    except ET.ParseError:
+        return mjcf_text
+    hinges = {joint.get("name") for joint in root.iter("joint")
+              if joint.get("name") and joint.get("type", "hinge") == "hinge"}
+    for joint in root.iter("joint"):
+        if joint.get("name") in joint_names and joint.get("name") in hinges \
+                and not joint.get("armature"):
+            joint.set("armature", "%g" % armature)
+    actuator = root.find("actuator")
+    actuated = set()
+    if actuator is not None:
+        actuated = {child.get("joint") for child in actuator
+                    if child.get("joint")}
+    missing = [name for name in joint_names
+               if name in hinges and name not in actuated]
+    if not missing:
+        return mjcf_text
+    if actuator is None:
+        actuator = ET.SubElement(root, "actuator")
+    for name in missing:
+        ET.SubElement(actuator, "velocity", {
+            "name": name + "_velocity", "joint": name, "kv": "1",
+            "ctrllimited": "true", "ctrlrange": "-50 50",
+            "forcelimited": "true",
+            "forcerange": "%g %g" % (-force_limit, force_limit),
+        })
+    return ET.tostring(root, encoding="unicode")
+
+
+def _add_camera_to_base(mjcf_text, name, offset, fovy_degrees):
+    """Attach a fixed camera to the floating base at a camera link's pose.
+
+    *offset* is the camera link (x forward, z up) in the base frame, from
+    ``sim_frames.offset_from_root``; MJCF cameras look along -z with +y up.
+    The URDF importer fuses fixed links into the base, so the camera goes on
+    the base body.  Unchanged when there is no floating base or the camera
+    already exists.
+    """
+    try:
+        root = ET.fromstring(mjcf_text)
+    except ET.ParseError:
+        return mjcf_text
+    if any(camera.get("name") == name for camera in root.iter("camera")):
+        return mjcf_text
+    base = None
+    for body in root.iter("body"):
+        if body.find("freejoint") is not None or any(
+                joint.get("type") == "free" for joint in body.findall("joint")):
+            base = body
+            break
+    if base is None:
+        return mjcf_text
+    position, quaternion = compose(
+        offset, ((0.0, 0.0, 0.0), camera_model.LINK_TO_OPENGL_CAMERA))
+    ET.SubElement(base, "camera", {
+        "name": name, "mode": "fixed",
+        "pos": "%.6g %.6g %.6g" % tuple(position),
+        "quat": "%.6g %.6g %.6g %.6g" % tuple(quaternion),
+        "fovy": "%.6g" % fovy_degrees,
+    })
+    return ET.tostring(root, encoding="unicode")
+
+
+def _body_frame_velocity(model, data, body_id):
+    """(angular, linear) velocity of a body's frame origin, in that frame.
+
+    This is what the odometry twist and the IMU rates mean.  ``cvel`` is
+    world-aligned and taken about the subtree centre of mass, and
+    ``mjOBJ_BODY`` reports in the body's inertial frame, which is rotated
+    whenever the description's <inertial> is (Bumperbot's is, by
+    rpy="0 0.25 0.3"); ``mjOBJ_XBODY`` is the body frame itself.
+    """
+    velocity = np.zeros(6)
+    mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_XBODY, body_id,
+                             velocity, 1)
+    return ([float(v) for v in velocity[:3]],
+            [float(v) for v in velocity[3:6]])
+
+
+def _physics_substeps(period, timestep):
+    """Model timesteps per physics tick, so physics time keeps pace."""
+    return max(1, int(round(float(period) / max(float(timestep), 1e-9))))
+
+
+def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
+                        geomid):
+    """Distance along a ray to the first geom not belonging to the robot.
+
+    The scan starts inside the sensor link's own geometry, and a fixed link
+    may survive as a separate body rather than being fused into the base, so
+    ``mj_ray``'s single ``bodyexclude`` is not enough: hits on any body under
+    *robot_root* are stepped past.  Returns -1 when nothing is hit.
+    """
+    start = np.array(origin, dtype=np.float64)
+    travelled = 0.0
+    for _ in range(16):
+        dist = mujoco.mj_ray(model, data, start, direction, None, 1, -1, geomid)
+        if dist < 0.0 or geomid[0] < 0:
+            return -1.0
+        if model.body_rootid[model.geom_bodyid[geomid[0]]] != robot_root:
+            return travelled + dist
+        step = dist + 1e-4
+        travelled += step
+        if travelled >= max_range:
+            return -1.0
+        start = start + direction * step
+    return -1.0
+
+
 class MuJoCoSpawner(Node):
     """Spawn a robot into a MuJoCo world, open the GUI viewer, and
     publish joint_states, TF, odom, scan, imu, and clock."""
@@ -599,6 +736,19 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
+        # RGB-D camera, rendered from the description's camera link with the
+        # Gazebo sensor's intrinsics; 0 Hz disables it.  Rendering needs an
+        # OpenGL context (GLFW with a display here).
+        self.declare_parameter("camera_rate", 5.0)
+        self.declare_parameter("camera_link_name", camera_model.OAKD["link"])
+        self.declare_parameter("camera_optical_frame",
+                               camera_model.OAKD["optical_frame"])
+        self.declare_parameter("camera_width", camera_model.OAKD["width"])
+        self.declare_parameter("camera_height", camera_model.OAKD["height"])
+        self.declare_parameter("camera_horizontal_fov",
+                               camera_model.OAKD["horizontal_fov"])
+        self.declare_parameter("camera_near", camera_model.OAKD["near"])
+        self.declare_parameter("camera_far", camera_model.OAKD["far"])
 
         # --- state ---
         self._model = None
@@ -624,10 +774,13 @@ class MuJoCoSpawner(Node):
         self._born = [0.0, 0.0, 0.0, 1.0]
         self._blin = [0.0, 0.0, 0.0]
         self._bang = [0.0, 0.0, 0.0]
+        self._laser_offset = None  # laser link pose in the free body's frame
+        self._camera = None
         self._jpos = []
         self._jvel = []
         self._running = True
         self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
+        self._substeps = 1  # model timesteps per physics tick
 
         # --- publishers ---
         self._js_pub = self.create_publisher(JointState, "/joint_states", 10)
@@ -732,12 +885,30 @@ class MuJoCoSpawner(Node):
                 except Exception:
                     pass
             urdf = _strip_gazebo_tags(urdf)
+            # The free-joint body carries the URDF root link's frame, so the
+            # scan origin is the laser link's pose in that frame.
+            self._laser_offset = offset_from_root(
+                urdf, self.get_parameter("laser_link_name").value)
             robot_mjcf = _build_mjcf_from_urdf(
                 urdf, pkg_map, logger=self.get_logger(),
                 robot_name=self.get_parameter("robot_name").value,
                 base_dir=os.path.dirname(os.path.abspath(str(model))))
             if robot_mjcf != _FALLBACK_MJCF:
                 self._model_source = "urdf"
+                robot_mjcf = _add_wheel_velocity_actuators(
+                    robot_mjcf,
+                    (self.get_parameter("left_wheel_joint").value,
+                     self.get_parameter("right_wheel_joint").value))
+                camera_offset = offset_from_root(
+                    urdf, self.get_parameter("camera_link_name").value)
+                if camera_offset is not None \
+                        and self.get_parameter("camera_rate").value > 0:
+                    robot_mjcf = _add_camera_to_base(
+                        robot_mjcf, _CAMERA_NAME, camera_offset,
+                        math.degrees(camera_model.vertical_fov(
+                            self.get_parameter("camera_horizontal_fov").value,
+                            self.get_parameter("camera_width").value,
+                            self.get_parameter("camera_height").value)))
         else:
             self.get_logger().warn("URDF not found; using fallback MJCF.")
             robot_mjcf = _FALLBACK_MJCF
@@ -753,6 +924,8 @@ class MuJoCoSpawner(Node):
         # --- build model ---
         self._model = mujoco.MjModel.from_xml_string(world_mjcf)
         self._data = mujoco.MjData(self._model)
+        self._substeps = _physics_substeps(self._dt, self._model.opt.timestep)
+        self._camera = self._camera_setup()
 
         # --- find the root body that contains the free joint ---
         self._find_body_and_joints()
@@ -989,8 +1162,10 @@ class MuJoCoSpawner(Node):
     def _loop(self):
         pub_dt = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
         scan_dt = 1.0 / max(self.get_parameter("scan_rate").value, 0.1)
+        camera_dt = 1.0 / max(self._camera["rate"], 0.1) if self._camera else 0.0
         last_pub = 0.0
         last_scan = 0.0
+        last_camera = 0.0
         t0 = time.monotonic()
         wr = self.get_parameter("wheel_radius").value
         ws = self.get_parameter("wheel_separation").value
@@ -1016,17 +1191,24 @@ class MuJoCoSpawner(Node):
             if self._rw_qpos_adr >= 0 and self._model.nu > 0:
                 self._set_velocity_actuator(self._rw_name, vr)
 
-            mujoco.mj_step(self._model, self._data)
+            # A tick of physics_rate advances as many model timesteps as fit
+            # in it, and the published clock is physics time.  Counting ticks
+            # at 1/physics_rate while each mj_step advanced the model's own
+            # 2 ms made /clock run about twice as fast as the physics.
+            for _ in range(self._substeps):
+                mujoco.mj_step(self._model, self._data)
             self._sim_step += 1
-            self._sim_t = self._sim_step * self._dt
+            self._sim_t = float(self._data.time)
 
             bid = self._body_id
             self._bpos = list(self._data.xpos[bid])
-            self._born = list(self._data.xquat[bid])
+            # xquat is scalar-first; the publishers use ROS (x, y, z, w).
+            # Copying it straight through published a level robot as rolled
+            # 180 degrees.
+            self._born = xyzw_from_wxyz(self._data.xquat[bid])
 
-            cvel = list(self._data.cvel[bid])
-            self._bang = cvel[:3]
-            self._blin = cvel[3:6]
+            self._bang, self._blin = _body_frame_velocity(
+                self._model, self._data, bid)
 
             self._jpos = []
             self._jvel = []
@@ -1040,16 +1222,27 @@ class MuJoCoSpawner(Node):
                     self._jpos.append(0.0)
                     self._jvel.append(0.0)
 
-            if elapsed - last_pub >= pub_dt:
-                last_pub = elapsed
-                self._pub_joint_states()
-                self._pub_odom()
-                self._pub_imu()
-                self._pub_clock()
+            try:
+                if elapsed - last_pub >= pub_dt:
+                    last_pub = elapsed
+                    self._pub_joint_states()
+                    self._pub_odom()
+                    self._pub_imu()
+                    self._pub_clock()
 
-            if elapsed - last_scan >= scan_dt:
-                last_scan = elapsed
-                self._pub_scan()
+                if elapsed - last_scan >= scan_dt:
+                    last_scan = elapsed
+                    self._pub_scan()
+
+                if self._camera is not None and elapsed - last_camera >= camera_dt:
+                    last_camera = elapsed
+                    self._pub_camera()
+            except Exception:
+                # Launch's SIGINT shuts the ROS context down before
+                # destroy_node() stops this thread; publishing then raises.
+                if not rclpy.ok():
+                    break
+                raise
 
             if self._viewer is not None and self._viewer.is_running():
                 self._viewer.sync()
@@ -1187,14 +1380,18 @@ class MuJoCoSpawner(Node):
         ax = self.get_parameter("scan_range_max").value
         ai = 2.0 * math.pi / n
 
-        lp = np.array([
-            self._bpos[0], self._bpos[1], self._bpos[2] + 0.12
-        ], dtype=np.float64)
-
-        qx, qy, qz, qw = self._born
-        siny = 2.0 * (qw * qz + qx * qy)
-        cosy = 1.0 - 2.0 * (qy ** 2 + qz ** 2)
-        byaw = math.atan2(siny, cosy)
+        base_q = wxyz_from_xyzw(self._born)
+        if self._laser_offset is not None:
+            origin, laser_q = mounted_pose(
+                self._bpos, base_q, self._laser_offset)
+        else:
+            # No laser link in the description: same fallback as PyBullet.
+            origin = (self._bpos[0], self._bpos[1], self._bpos[2] + 0.12)
+            laser_q = base_q
+        lp = np.array(origin, dtype=np.float64)
+        # Angles are in the laser frame; Bumperbot's laser is mounted facing
+        # backwards, so the base heading is not the scan heading.
+        byaw = yaw_of(laser_q)
 
         geomid = np.zeros(1, dtype=np.int32)
         ranges = []
@@ -1203,9 +1400,8 @@ class MuJoCoSpawner(Node):
             vec = np.array([
                 math.cos(angle), math.sin(angle), 0.0
             ], dtype=np.float64)
-            dist = mujoco.mj_ray(
-                self._model, self._data, lp, vec, None, 1, -1, geomid
-            )
+            dist = _ray_skipping_robot(
+                self._model, self._data, lp, vec, self._body_id, ax, geomid)
             if 0.0 < dist < ax:
                 ranges.append(max(am, float(dist)))
             else:
@@ -1215,7 +1411,8 @@ class MuJoCoSpawner(Node):
         msg.header.stamp = self._stamp()
         msg.header.frame_id = self.get_parameter("laser_link_name").value
         msg.angle_min = -math.pi
-        msg.angle_max = math.pi
+        # n samples span n - 1 increments; angle_max = pi claimed n + 1.
+        msg.angle_max = -math.pi + (n - 1) * ai
         msg.angle_increment = ai
         msg.scan_time = 1.0 / max(
             self.get_parameter("scan_rate").value, 0.1
@@ -1224,6 +1421,73 @@ class MuJoCoSpawner(Node):
         msg.range_max = ax
         msg.ranges = ranges
         self._scan_pub.publish(msg)
+
+    def _camera_setup(self):
+        """Camera settings and publishers, or None when there is no camera."""
+        link = self.get_parameter("camera_link_name").value
+        camera_id = mujoco.mj_name2id(
+            self._model, mujoco.mjtObj.mjOBJ_CAMERA, _CAMERA_NAME)
+        if camera_id < 0:
+            if self.get_parameter("camera_rate").value > 0:
+                self.get_logger().info(
+                    "Robot has no '%s' link; no RGB-D camera is published."
+                    % link)
+            return None
+        camera = {
+            "rate": float(self.get_parameter("camera_rate").value),
+            "frame": self.get_parameter("camera_optical_frame").value,
+            "width": int(self.get_parameter("camera_width").value),
+            "height": int(self.get_parameter("camera_height").value),
+            "horizontal_fov": float(
+                self.get_parameter("camera_horizontal_fov").value),
+            "near": float(self.get_parameter("camera_near").value),
+            "far": float(self.get_parameter("camera_far").value),
+            "renderer": None,
+        }
+        # Clip planes are global in MuJoCo, as fractions of the model extent.
+        extent = max(float(self._model.stat.extent), 1e-6)
+        self._model.vis.map.znear = camera["near"] / extent
+        self._model.vis.map.zfar = camera["far"] / extent
+        self._rgb_pub = self.create_publisher(
+            Image, camera_model.OAKD["rgb_topic"], 5)
+        self._depth_pub = self.create_publisher(
+            Image, camera_model.OAKD["depth_topic"], 5)
+        self._camera_info_pub = self.create_publisher(
+            CameraInfo, camera_model.OAKD["info_topic"], 5)
+        self.get_logger().info(
+            "RGB-D camera on '%s': %dx%d at %.1f Hz"
+            % (link, camera["width"], camera["height"], camera["rate"]))
+        return camera
+
+    def _pub_camera(self):
+        camera = self._camera
+        if camera["renderer"] is None:
+            # Created on the physics thread, which owns the GL context.
+            try:
+                camera["renderer"] = mujoco.Renderer(
+                    self._model, camera["height"], camera["width"])
+            except Exception as exc:
+                self.get_logger().warn(
+                    "RGB-D camera disabled: MuJoCo could not create an "
+                    "OpenGL context (%s). On this host GLFW needs a display."
+                    % exc)
+                self._camera = None
+                return
+        renderer = camera["renderer"]
+        renderer.update_scene(self._data, camera=_CAMERA_NAME)
+        rgb = renderer.render()
+        renderer.enable_depth_rendering()
+        renderer.update_scene(self._data, camera=_CAMERA_NAME)
+        depth = renderer.render().astype(np.float32)
+        renderer.disable_depth_rendering()
+        depth[depth >= camera["far"] * (1.0 - 1e-6)] = np.inf
+        stamp = self._stamp()
+        self._rgb_pub.publish(image_msg(stamp, camera["frame"], rgb, "rgb8"))
+        self._depth_pub.publish(
+            image_msg(stamp, camera["frame"], depth, "32FC1"))
+        self._camera_info_pub.publish(camera_info_msg(
+            stamp, camera["frame"], camera["width"], camera["height"],
+            camera["horizontal_fov"]))
 
     def destroy_node(self):
         self._running = False
@@ -1240,15 +1504,14 @@ class MuJoCoSpawner(Node):
 
 
 def main(args=None):
-    import signal as _signal
     rclpy.init(args=args)
     node = MuJoCoSpawner()
-    # Prevent Python-level KeyboardInterrupt traceback when the process is
-    # killed with SIGINT — the shutdown path in destroy_node() handles cleanup.
-    _signal.signal(_signal.SIGINT, _signal.SIG_DFL)
     try:
         rclpy.spin(node)
-    except Exception:
+    except (KeyboardInterrupt, ExternalShutdownException):
+        # A stop from launch or the GUI, not a failure.  SIGINT used to be
+        # reset to its default action here, which killed the process before
+        # cleanup and made every stop report "process has died".
         pass
     finally:
         try:

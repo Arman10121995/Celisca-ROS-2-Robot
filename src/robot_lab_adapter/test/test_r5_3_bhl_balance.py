@@ -42,7 +42,9 @@ from robot_lab_adapter.bhl_balance import (  # noqa: E402
     BHL_LEGS,
     EFFORT_LIMIT,
     KNEE_BALANCE_K,
+    EFFORT_SATURATION_CYCLES,
     POSITION_LIMITS,
+    STANCE_DT,
     STANCE_DURATION_SECONDS,
     STANCE_PD_ARMS,
     STANCE_PD_LEGS,
@@ -376,13 +378,32 @@ class TestSafetyMonitor:
         assert s.state == SafetyState.SAFE_STOP
 
     def test_missing_effort_resets_saturation(self):
+        """A missing measurement restarts that joint's saturation count.
+
+        Counters are per joint: the other joints still reach the threshold on
+        the same cycle, so this checks the gap on one joint, not the latch.
+        """
+        s = SafetyState()
+        gap_joint = "leg_left_knee_pitch_joint"
+        only_gap = [gap_joint]
+        cmd = {j: 19.6 for j in only_gap}
+        meas = {j: 19.6 for j in only_gap}
+        for _ in range(EFFORT_SATURATION_CYCLES - 1):
+            s.observe_efforts(cmd, meas)
+        s.observe_efforts(cmd, {})  # measurement missing for one cycle
+        for _ in range(EFFORT_SATURATION_CYCLES - 1):
+            s.observe_efforts(cmd, meas)
+        assert s.state != SafetyState.SAFE_STOP
+        s.observe_efforts(cmd, meas)
+        assert s.state == SafetyState.SAFE_STOP
+
+    def test_missing_effort_on_all_joints_prevents_latch(self):
         s = SafetyState()
         cmd = {j: 19.6 for j in BHL_JOINT_NAMES}
         meas = {j: 19.6 for j in BHL_JOINT_NAMES}
-        for _ in range(49):
+        for _ in range(EFFORT_SATURATION_CYCLES - 1):
             s.observe_efforts(cmd, meas)
-        meas2 = {j: 19.6 for j in BHL_JOINT_NAMES if j != "leg_left_knee_pitch_joint"}
-        s.observe_efforts(cmd, meas2)
+        s.observe_efforts(cmd, {})
         assert s.state != SafetyState.SAFE_STOP
 
 
@@ -399,9 +420,20 @@ class TestController:
         assert set(cycle.efforts.keys()) == set(BHL_JOINT_NAMES)
 
     def test_update_with_body_uses_balance(self, controller):
+        """A tilt below the warn threshold still changes the targets."""
         positions = _full_positions()
         body = BodyState(roll_rad=0.2, pitch_rad=0.0)
+        assert body.max_tilt_rad < TILT_WARN_RAD
         cycle = controller.update(STANCE_DT, positions, body=body)
+        assert cycle.safety_state == SafetyState.NOMINAL
+        assert cycle.position_targets == balance_targets(nominal_standing_pose(), body)
+        assert cycle.position_targets != nominal_standing_pose()
+
+    def test_update_warns_between_warn_and_fall_thresholds(self, controller):
+        positions = _full_positions()
+        tilt = (TILT_WARN_RAD + TILT_FALL_RAD) / 2.0
+        cycle = controller.update(
+            STANCE_DT, positions, body=BodyState(roll_rad=tilt, pitch_rad=0.0))
         assert cycle.safety_state == SafetyState.WARN
 
     def test_safe_stop_zeroes_efforts(self, controller):

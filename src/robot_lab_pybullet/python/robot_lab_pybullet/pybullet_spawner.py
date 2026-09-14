@@ -27,9 +27,110 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
-from sensor_msgs.msg import Imu, JointState, LaserScan
+from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
 from std_msgs.msg import Bool
 from std_srvs.srv import Trigger
+
+import numpy as np
+
+from robot_lab_utils import camera_model
+from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
+from robot_lab_utils.sim_frames import rotate, world_to_body, wxyz_from_xyzw
+from robot_lab_utils.urdf_contact import gazebo_link_friction
+
+# Upper bound for friction taken from <gazebo><mu1>: descriptions use values
+# like 1e15 to mean "no slip" in Gazebo's solver.
+_MAX_LATERAL_FRICTION = 1.0
+
+
+def _apply_link_friction(robot_id, link_indices, friction):
+    """Apply per-link lateral friction; returns the links that were set.
+
+    *link_indices* maps link names to PyBullet link indices; the base link
+    (index -1) must be included by the caller if it is named in *friction*.
+    """
+    applied = []
+    for link, mu in sorted(friction.items()):
+        if link not in link_indices:
+            continue
+        p.changeDynamics(robot_id, link_indices[link],
+                         lateralFriction=min(float(mu), _MAX_LATERAL_FRICTION))
+        applied.append(link)
+    return applied
+
+
+def _render_rgbd(position, orientation_xyzw, camera):
+    """Render RGB and metric depth from a camera link frame.
+
+    The link looks along its +x axis with +z up, as the OAK-D link does.
+    Returns ``(rgb, depth)``: uint8 HxWx3 and float32 HxW metres along the
+    optical axis, ``inf`` where nothing is within the far clip.  The tiny
+    software renderer needs no display or GPU.
+    """
+    q = wxyz_from_xyzw(orientation_xyzw)
+    eye = [float(v) for v in position]
+    forward = rotate((1.0, 0.0, 0.0), q)
+    up = rotate((0.0, 0.0, 1.0), q)
+    width, height = int(camera["width"]), int(camera["height"])
+    view = p.computeViewMatrix(
+        eye, [e + f for e, f in zip(eye, forward)], list(up))
+    projection = p.computeProjectionMatrixFOV(
+        fov=math.degrees(camera_model.vertical_fov(
+            camera["horizontal_fov"], width, height)),
+        aspect=float(width) / height,
+        nearVal=camera["near"], farVal=camera["far"])
+    _, _, rgba, z_buffer, _ = p.getCameraImage(
+        width, height, view, projection, renderer=p.ER_TINY_RENDERER,
+        flags=p.ER_NO_SEGMENTATION_MASK)
+    rgb = np.asarray(rgba, dtype=np.uint8).reshape(height, width, 4)[:, :, :3]
+    z_buffer = np.asarray(z_buffer, dtype=np.float64).reshape(height, width)
+    depth = camera_model.linear_depth(
+        z_buffer, camera["near"], camera["far"]).astype(np.float32)
+    depth[z_buffer >= 1.0] = np.inf
+    return rgb, depth
+
+
+def _planar_scan(ray_batch, origin, yaw, samples, range_min, range_max,
+                 robot_id, max_passes=4):
+    """Ranges of a 360-degree planar scan; angles run from -pi about *yaw*.
+
+    *ray_batch* is ``pybullet.rayTestBatch``, whose hits are
+    ``(body, link, hit_fraction, hit_position, hit_normal)``.  The scan used
+    to read ``hit_position`` as the fraction, so every ray came back ``inf``.
+    Rays that hit the robot itself are cast again from just past that hit.
+    """
+    samples = max(int(samples), 1)
+    increment = 2.0 * math.pi / samples
+    directions = [(math.cos(yaw - math.pi + i * increment),
+                   math.sin(yaw - math.pi + i * increment))
+                  for i in range(samples)]
+    ranges = [float("inf")] * samples
+    starts = [0.0] * samples
+    pending = list(range(samples))
+    for _ in range(max_passes):
+        if not pending:
+            break
+        froms = [[origin[0] + directions[i][0] * starts[i],
+                  origin[1] + directions[i][1] * starts[i], origin[2]]
+                 for i in pending]
+        tos = [[origin[0] + directions[i][0] * range_max,
+                origin[1] + directions[i][1] * range_max, origin[2]]
+               for i in pending]
+        retry = []
+        for i, hit in zip(pending, ray_batch(froms, tos)):
+            body, fraction = hit[0], float(hit[2])
+            if body < 0:
+                continue
+            distance = starts[i] + fraction * (range_max - starts[i])
+            if body == robot_id:
+                starts[i] = distance + 1e-3
+                if starts[i] < range_max:
+                    retry.append(i)
+                continue
+            if distance < range_max:
+                ranges[i] = max(float(range_min), distance)
+        pending = retry
+    return ranges
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
@@ -147,10 +248,23 @@ class PyBulletSpawner(Node):
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
+        # RGB-D camera, rendered from the description's camera link with the
+        # Gazebo sensor's intrinsics; 0 Hz disables it.
+        self.declare_parameter("camera_rate", 5.0)
+        self.declare_parameter("camera_link_name", camera_model.OAKD["link"])
+        self.declare_parameter("camera_optical_frame",
+                               camera_model.OAKD["optical_frame"])
+        self.declare_parameter("camera_width", camera_model.OAKD["width"])
+        self.declare_parameter("camera_height", camera_model.OAKD["height"])
+        self.declare_parameter("camera_horizontal_fov",
+                               camera_model.OAKD["horizontal_fov"])
+        self.declare_parameter("camera_near", camera_model.OAKD["near"])
+        self.declare_parameter("camera_far", camera_model.OAKD["far"])
 
         # State
         self._robot_id = -1
         self._link_idx = {}
+        self._camera = None
         self._joint_idx = {}
         self._joint_names = []
         self._lw = -1
@@ -375,6 +489,8 @@ class PyBulletSpawner(Node):
         urdf = _rewrite_package_uris(urdf, pkg_map)
         urdf = _absolutize_mesh_paths(
             urdf, os.path.dirname(os.path.abspath(str(model))))
+        # Per-link friction lives in the <gazebo> blocks that are removed next.
+        link_friction = gazebo_link_friction(urdf)
         urdf = _strip_gazebo_tags(urdf)
 
         tmp = tempfile.NamedTemporaryFile(suffix=".urdf", delete=False, mode="w")
@@ -448,6 +564,17 @@ class PyBulletSpawner(Node):
             self._joint_idx[jn] = i
             if info[2] != p.JOINT_FIXED:
                 self._joint_names.append(jn)
+        friction_links = dict(self._link_idx)
+        friction_links[p.getBodyInfo(self._robot_id)[0].decode()] = -1
+        applied = _apply_link_friction(
+            self._robot_id, friction_links, link_friction)
+        if applied:
+            self.get_logger().info(
+                "Friction from the description's <gazebo> blocks: %s"
+                % ", ".join("%s=%g" % (link, min(link_friction[link],
+                                                 _MAX_LATERAL_FRICTION))
+                            for link in applied))
+        self._camera = self._camera_setup()
         lw = self.get_parameter("left_wheel_joint").value
         rw = self.get_parameter("right_wheel_joint").value
         self._lw = self._joint_idx.get(lw, -1)
@@ -474,8 +601,10 @@ class PyBulletSpawner(Node):
     def _loop(self):
         pub_dt = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
         scan_dt = 1.0 / max(self.get_parameter("scan_rate").value, 0.1)
+        camera_dt = 1.0 / max(self._camera["rate"], 0.1) if self._camera else 0.0
         last_pub = 0.0
         last_scan = 0.0
+        last_camera = 0.0
         t0 = time.monotonic()
         wr = self.get_parameter("wheel_radius").value
         ws = self.get_parameter("wheel_separation").value
@@ -512,23 +641,37 @@ class PyBulletSpawner(Node):
             lv, av = p.getBaseVelocity(self._robot_id)
             self._bpos = list(pos)
             self._born = list(orn)
-            self._blin = list(lv)
-            self._bang = list(av)
+            # PyBullet reports world-frame velocities; the odometry twist and
+            # the IMU rates are expressed in the robot's own frame, which is
+            # how robot_localization fuses vx / vy / vyaw.
+            base_q = wxyz_from_xyzw(orn)
+            self._blin = list(world_to_body(lv, base_q))
+            self._bang = list(world_to_body(av, base_q))
             self._jpos, self._jvel = [], []
             for jn in self._joint_names:
                 s = p.getJointState(self._robot_id, self._joint_idx[jn])
                 self._jpos.append(s[0])
                 self._jvel.append(s[1])
 
-            if elapsed - last_pub >= pub_dt:
-                last_pub = elapsed
-                self._pub_joint_states()
-                self._pub_odom()
-                self._pub_imu()
-                self._pub_clock()
-            if elapsed - last_scan >= scan_dt:
-                last_scan = elapsed
-                self._pub_scan()
+            try:
+                if elapsed - last_pub >= pub_dt:
+                    last_pub = elapsed
+                    self._pub_joint_states()
+                    self._pub_odom()
+                    self._pub_imu()
+                    self._pub_clock()
+                if elapsed - last_scan >= scan_dt:
+                    last_scan = elapsed
+                    self._pub_scan()
+                if self._camera is not None and elapsed - last_camera >= camera_dt:
+                    last_camera = elapsed
+                    self._pub_camera()
+            except Exception:
+                # Launch's SIGINT shuts the ROS context down before
+                # destroy_node() stops this thread; publishing then raises.
+                if not rclpy.ok():
+                    break
+                raise
 
             dt = time.monotonic() - now
             if dt < self._dt:
@@ -634,9 +777,12 @@ class PyBulletSpawner(Node):
         ln = self.get_parameter("laser_link_name").value
         li = self._link_idx.get(ln, -1)
         if li >= 0:
-            st = p.getLinkState(self._robot_id, li)
-            lp = list(st[0])
-            lo = list(st[1])
+            # Indices 4/5 are the URDF link frame; 0/1 are the link's centre
+            # of mass, which for Bumperbot's laser is 1.2 cm off the sensor.
+            st = p.getLinkState(self._robot_id, li,
+                                computeForwardKinematics=True)
+            lp = list(st[4])
+            lo = list(st[5])
         else:
             lp = [self._bpos[0], self._bpos[1], self._bpos[2] + 0.12]
             lo = self._born
@@ -646,33 +792,66 @@ class PyBulletSpawner(Node):
         n = int(self.get_parameter("scan_samples").value)
         am = self.get_parameter("scan_range_min").value
         ax = self.get_parameter("scan_range_max").value
-        rng = ax - am
         ai = 2.0 * math.pi / n
-        ranges = []
-        for i in range(n):
-            a = byaw - math.pi + i * ai
-            rt = [lp[0]+math.cos(a)*ax, lp[1]+math.sin(a)*ax, lp[2]]
-            res = p.rayTest(lp, rt)
-            if res and res[0][0] >= 0:
-                hf = res[0][3]
-                if isinstance(hf, (int, float)) and hf < 1.0:
-                    d = hf * ax
-                    ranges.append(max(am, float(d)))
-                else:
-                    ranges.append(float("inf"))
-            else:
-                ranges.append(float("inf"))
+        ranges = _planar_scan(p.rayTestBatch, lp, byaw, n, am, ax,
+                              self._robot_id)
         msg = LaserScan()
         msg.header.stamp = self._stamp()
         msg.header.frame_id = ln
         msg.angle_min = -math.pi
-        msg.angle_max = math.pi
+        # n samples span n - 1 increments; angle_max = pi claimed n + 1.
+        msg.angle_max = -math.pi + (n - 1) * ai
         msg.angle_increment = ai
         msg.scan_time = 1.0 / max(self.get_parameter("scan_rate").value, 0.1)
         msg.range_min = am
         msg.range_max = ax
         msg.ranges = ranges
         self._scan_pub.publish(msg)
+
+    def _camera_setup(self):
+        """Camera settings and publishers, or None when not applicable."""
+        rate = float(self.get_parameter("camera_rate").value)
+        link = self.get_parameter("camera_link_name").value
+        if rate <= 0.0:
+            return None
+        if link not in self._link_idx:
+            self.get_logger().info(
+                "Robot has no '%s' link; no RGB-D camera is published." % link)
+            return None
+        camera = {
+            "link": self._link_idx[link],
+            "rate": rate,
+            "frame": self.get_parameter("camera_optical_frame").value,
+            "width": int(self.get_parameter("camera_width").value),
+            "height": int(self.get_parameter("camera_height").value),
+            "horizontal_fov": float(
+                self.get_parameter("camera_horizontal_fov").value),
+            "near": float(self.get_parameter("camera_near").value),
+            "far": float(self.get_parameter("camera_far").value),
+        }
+        self._rgb_pub = self.create_publisher(
+            Image, camera_model.OAKD["rgb_topic"], 5)
+        self._depth_pub = self.create_publisher(
+            Image, camera_model.OAKD["depth_topic"], 5)
+        self._camera_info_pub = self.create_publisher(
+            CameraInfo, camera_model.OAKD["info_topic"], 5)
+        self.get_logger().info(
+            "RGB-D camera on '%s': %dx%d at %.1f Hz (software renderer)"
+            % (link, camera["width"], camera["height"], rate))
+        return camera
+
+    def _pub_camera(self):
+        camera = self._camera
+        state = p.getLinkState(self._robot_id, camera["link"],
+                               computeForwardKinematics=True)
+        rgb, depth = _render_rgbd(state[4], state[5], camera)
+        stamp = self._stamp()
+        self._rgb_pub.publish(image_msg(stamp, camera["frame"], rgb, "rgb8"))
+        self._depth_pub.publish(
+            image_msg(stamp, camera["frame"], depth, "32FC1"))
+        self._camera_info_pub.publish(camera_info_msg(
+            stamp, camera["frame"], camera["width"], camera["height"],
+            camera["horizontal_fov"]))
 
     def destroy_node(self):
         self._running = False
