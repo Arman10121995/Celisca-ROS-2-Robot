@@ -80,6 +80,16 @@ def _absolutize_mesh_paths(urdf_text, base_dir):
     return re.sub(r'(<mesh\b[^>]*?\bfilename=")([^"]*)(")', _repl, urdf_text)
 
 
+def _xyzw(orientation_wxyz):
+    """Scalar-first (w, x, y, z) as the (x, y, z, w) PyBullet expects.
+
+    The shared SDF reader is scalar-first; handing its quaternions to PyBullet
+    unconverted would rotate every non-axis-aligned obstacle.
+    """
+    w, x, y, z = (float(v) for v in list(orientation_wxyz)[:4])
+    return [x, y, z, w]
+
+
 def _strip_gazebo_tags(urdf_text):
     """Remove XML tags that PyBullet cannot parse."""
     for tag in ("ros2_control", "transmission", "gazebo"):
@@ -204,163 +214,44 @@ class PyBulletSpawner(Node):
     # ------------------------------------------------------------------
     # SDF world loading
     # ------------------------------------------------------------------
-    _MODEL_DIRS = ("robot_lab_models",)
-
-    def _resolve_sdf_uri(self, uri, base_dir):
-        """Resolve a model://, package:// or relative SDF URI to a real path."""
-        from ament_index_python.packages import get_package_share_directory
-        uri = (uri or "").strip()
-        if not uri:
-            return ""
-        if uri.startswith("model://"):
-            rest = uri[len("model://"):]
-            for package in self._MODEL_DIRS:
-                try:
-                    share = get_package_share_directory(package)
-                except Exception:
-                    continue
-                candidate = os.path.join(share, "models", rest)
-                if os.path.exists(candidate):
-                    return candidate
-            return ""
-        if uri.startswith("package://"):
-            package, _, rest = uri[len("package://"):].partition("/")
-            try:
-                candidate = os.path.join(
-                    get_package_share_directory(package), rest)
-            except Exception:
-                return ""
-            return candidate if os.path.exists(candidate) else ""
-        if uri.startswith("file://"):
-            uri = uri[len("file://"):]
-        if os.path.isabs(uri):
-            return uri if os.path.exists(uri) else ""
-        candidate = os.path.normpath(os.path.join(base_dir, uri))
-        return candidate if os.path.exists(candidate) else ""
-
-    @staticmethod
-    def _sdf_pose(element):
-        """(x, y, z, roll, pitch, yaw) from an SDF <pose>; zeros when absent."""
-        import xml.etree.ElementTree as ET
-        if element is None:
-            return [0.0] * 6
-        for child in element:
-            if child.tag.rsplit("}", 1)[-1] == "pose":
-                values = [float(v) for v in (child.text or "").split()]
-                return (values + [0.0] * 6)[:6]
-        return [0.0] * 6
-
-    @staticmethod
-    def _sdf_child(element, name):
-        if element is None:
-            return None
-        for child in element:
-            if child.tag.rsplit("}", 1)[-1] == name:
-                return child
-        return None
-
-    @staticmethod
-    def _sdf_children(element, name):
-        if element is None:
-            return []
-        return [c for c in element if c.tag.rsplit("}", 1)[-1] == name]
-
-    @staticmethod
-    def _sdf_text(element, name, default=""):
-        child = PyBulletSpawner._sdf_child(element, name)
-        if child is None or child.text is None:
-            return default
-        return child.text
-
-    @staticmethod
-    def _compose_pose(parent, child):
-        """Compose two (position, quaternion) frames (PyBullet xyzw order)."""
-        position, orientation = p.multiplyTransforms(
-            parent[0], parent[1], child[0], child[1])
-        return (list(position), list(orientation))
-
-    @staticmethod
-    def _frame_from_pose(pose):
-        return ([pose[0], pose[1], pose[2]],
-                list(p.getQuaternionFromEuler([pose[3], pose[4], pose[5]])))
-
     def _load_sdf_world(self, world_path: str) -> None:
         """Materialise an SDF world's static geometry in PyBullet.
 
-        Previously only ``<mesh>`` geometry was loaded, so every arena built
-        from box primitives (all twelve deterministic nav/terrain/aerial
-        arenas) rendered as an empty plane.  Boxes, spheres, cylinders,
-        planes and meshes are now created, with the full model -> link ->
-        geometry pose chain applied, and ``model://`` includes are resolved
-        against the vendored model library.
+        Parsing is the shared ``robot_lab_utils.sdf_world`` reader that the
+        Isaac backend also uses (primitives, the full model -> link ->
+        geometry pose chain, ``model://`` includes), so both backends build
+        the same world from the same source instead of each keeping a copy.
         """
-        import xml.etree.ElementTree as ET
+        from ament_index_python.packages import get_package_share_directory
         try:
-            root = ET.parse(world_path).getroot()
+            from robot_lab_utils.sdf_world import (
+                extract_static_shapes, uri_resolver)
+        except ImportError as exc:
+            self.get_logger().warn(
+                f"World geometry helpers unavailable ({exc}); world not loaded")
+            return
+        model_dirs = []
+        try:
+            model_dirs.append(os.path.join(
+                get_package_share_directory("robot_lab_models"), "models"))
+        except Exception:
+            pass
+        try:
+            shapes, skipped = extract_static_shapes(
+                world_path,
+                uri_resolver(model_dirs, get_package_share_directory))
         except Exception as exc:
             self.get_logger().warn(f"SDF world parse error: {exc}")
             return
-        world = self._sdf_child(root, "world") or root
-        base_dir = os.path.dirname(os.path.abspath(world_path))
-        identity = ([0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0])
-
-        counts = {"created": 0, "skipped": 0}
-        for model in self._sdf_children(world, "model"):
-            self._load_sdf_model(model, identity, base_dir, counts)
-        for include in self._sdf_children(world, "include"):
-            wrapper = ET.Element("model")
-            wrapper.append(include)
-            self._load_sdf_model(wrapper, identity, base_dir, counts)
+        created = 0
+        for shape in shapes:
+            if self._create_shape(shape):
+                created += 1
+            else:
+                skipped.append("%s shape not created" % shape.get("type"))
         self.get_logger().info(
             "SDF world '%s': %d static shape(s) created, %d skipped"
-            % (os.path.basename(world_path), counts["created"],
-               counts["skipped"]))
-
-    def _load_sdf_model(self, model, frame, base_dir, counts, depth=0):
-        import xml.etree.ElementTree as ET
-        if depth > 8:  # pragma: no cover - defensive against cyclic includes
-            return
-        frame = self._compose_pose(
-            frame, self._frame_from_pose(self._sdf_pose(model)))
-
-        include = self._sdf_child(model, "include")
-        if include is not None:
-            uri = self._sdf_text(include, "uri")
-            directory = self._resolve_sdf_uri(uri, base_dir)
-            include_frame = self._compose_pose(
-                frame, self._frame_from_pose(self._sdf_pose(include)))
-            sdf_path = os.path.join(directory, "model.sdf") if directory else ""
-            if sdf_path and os.path.isfile(sdf_path):
-                try:
-                    nested_root = ET.parse(sdf_path).getroot()
-                except Exception:
-                    counts["skipped"] += 1
-                else:
-                    for nested in self._sdf_children(nested_root, "model"):
-                        self._load_sdf_model(
-                            nested, include_frame, os.path.dirname(sdf_path),
-                            counts, depth + 1)
-            else:
-                counts["skipped"] += 1
-
-        for link in self._sdf_children(model, "link"):
-            link_frame = self._compose_pose(
-                frame, self._frame_from_pose(self._sdf_pose(link)))
-            sources = (self._sdf_children(link, "collision")
-                       or self._sdf_children(link, "visual"))
-            for source in sources:
-                geometry = self._sdf_child(source, "geometry")
-                if geometry is None:
-                    continue
-                pose = self._compose_pose(
-                    link_frame, self._frame_from_pose(self._sdf_pose(source)))
-                if self._create_sdf_shape(geometry, pose, base_dir):
-                    counts["created"] += 1
-                else:
-                    counts["skipped"] += 1
-
-        for nested in self._sdf_children(model, "model"):
-            self._load_sdf_model(nested, frame, base_dir, counts, depth + 1)
+            % (os.path.basename(world_path), created, len(skipped)))
 
     def _stage_mesh(self, path):
         """Return a loadable mesh path, converting Collada when needed."""
@@ -382,64 +273,40 @@ class PyBulletSpawner(Node):
                 "could not convert mesh %s" % os.path.basename(path))
         return staged
 
-    def _create_sdf_shape(self, geometry, pose, base_dir):
-        """Create one static PyBullet body for an SDF <geometry>."""
-        position, orientation = pose
+    def _create_shape(self, shape):
+        """Create one static PyBullet body from a shared shape record."""
+        kind = shape.get("type")
+        size = [float(v) for v in (shape.get("size") or [])]
         colour = [0.55, 0.57, 0.6, 1.0]
-        collision = visual = -1
-
-        box = self._sdf_child(geometry, "box")
-        sphere = self._sdf_child(geometry, "sphere")
-        cylinder = self._sdf_child(geometry, "cylinder")
-        plane = self._sdf_child(geometry, "plane")
-        mesh = self._sdf_child(geometry, "mesh")
         try:
-            if box is not None:
-                size = [float(v) for v in
-                        (self._sdf_text(box, "size", "1 1 1")).split()]
-                half = [max(v, 1e-6) / 2.0 for v in (size + [1.0, 1.0, 1.0])[:3]]
+            if kind in ("box", "plane"):
+                if kind == "box":
+                    half = [max(v, 1e-6) / 2.0 for v in (size + [1.0] * 3)[:3]]
+                else:  # a thin box keeps the plane's own pose and extent
+                    full = (size + [100.0, 100.0])[:2]
+                    half = [max(full[0], 1e-6) / 2.0,
+                            max(full[1], 1e-6) / 2.0, 0.005]
                 collision = p.createCollisionShape(p.GEOM_BOX, halfExtents=half)
                 visual = p.createVisualShape(p.GEOM_BOX, halfExtents=half,
                                              rgbaColor=colour)
-            elif sphere is not None:
-                radius = float(self._sdf_text(sphere, "radius", "0.5"))
+            elif kind == "sphere":
+                radius = (size + [0.5])[0]
                 collision = p.createCollisionShape(p.GEOM_SPHERE, radius=radius)
                 visual = p.createVisualShape(p.GEOM_SPHERE, radius=radius,
                                              rgbaColor=colour)
-            elif cylinder is not None:
-                radius = float(self._sdf_text(cylinder, "radius", "0.5"))
-                length = float(self._sdf_text(cylinder, "length", "1.0"))
+            elif kind == "cylinder":
+                radius, length = (size + [0.5, 1.0])[:2]
                 collision = p.createCollisionShape(
                     p.GEOM_CYLINDER, radius=radius, height=length)
                 visual = p.createVisualShape(
                     p.GEOM_CYLINDER, radius=radius, length=length,
                     rgbaColor=colour)
-            elif plane is not None:
-                # The ground plane is already loaded; an SDF plane at a
-                # non-zero pose is modelled as a thin box so its offset and
-                # orientation are preserved.
-                size = [float(v) for v in
-                        (self._sdf_text(plane, "size", "100 100")).split()]
-                half = [max(size[0], 1e-6) / 2.0,
-                        max(size[1] if len(size) > 1 else size[0], 1e-6) / 2.0,
-                        0.005]
-                collision = p.createCollisionShape(p.GEOM_BOX, halfExtents=half)
-                visual = p.createVisualShape(p.GEOM_BOX, halfExtents=half,
-                                             rgbaColor=colour)
-            elif mesh is not None:
-                uri = self._sdf_text(mesh, "uri")
-                path = self._resolve_sdf_uri(uri, base_dir)
-                if not path or not os.path.isfile(path):
-                    return False
-                # PyBullet cannot build a shape from Collada, which is the
-                # only format the vendored Gazebo model library ships, so
-                # meshes go through the shared staging/conversion cache.
-                path = self._stage_mesh(path)
+            elif kind == "mesh":
+                path = self._stage_mesh(shape.get("mesh", ""))
                 if not path:
                     return False
                 scale = [float(v) for v in
-                         (self._sdf_text(mesh, "scale", "1 1 1")).split()]
-                scale = (scale + [1.0, 1.0, 1.0])[:3]
+                         (shape.get("scale") or [1.0, 1.0, 1.0])[:3]]
                 collision = p.createCollisionShape(
                     p.GEOM_MESH, fileName=path, meshScale=scale)
                 visual = p.createVisualShape(
@@ -450,13 +317,12 @@ class PyBulletSpawner(Node):
         except Exception as exc:
             self.get_logger().warn(f"SDF shape load error: {exc}")
             return False
-
         p.createMultiBody(
             baseMass=0,
             baseCollisionShapeIndex=collision,
             baseVisualShapeIndex=visual,
-            basePosition=position,
-            baseOrientation=orientation,
+            basePosition=[float(v) for v in shape.get("position", [0, 0, 0])],
+            baseOrientation=_xyzw(shape.get("orientation", [1, 0, 0, 0])),
         )
         return True
 

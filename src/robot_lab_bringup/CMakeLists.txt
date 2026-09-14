@@ -22,6 +22,8 @@ if(BUILD_TESTING)
   ament_add_pytest_test(sim_profiles test/test_sim_profiles.py TIMEOUT 180)
   ament_add_pytest_test(simulator_backends test/test_simulator_backends.py TIMEOUT 180)
   ament_add_pytest_test(algorithm_dispatch test/test_algorithm_dispatch.py TIMEOUT 120)
+  ament_add_pytest_test(backend_assets test/test_backend_assets.py TIMEOUT 300)
+  ament_add_pytest_test(isaac_runtime_shutdown test/test_isaac_runtime_shutdown.py TIMEOUT 120)
 endif()
 
 ament_package()

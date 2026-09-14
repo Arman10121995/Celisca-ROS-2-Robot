@@ -21,3 +21,6 @@ saved_mode.txt
 /build/
 /install/
 /log/
+
+# MuJoCo writes this warning log into the working directory at run time.
+MUJOCO_LOG.TXT

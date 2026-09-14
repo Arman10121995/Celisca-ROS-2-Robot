@@ -361,6 +361,86 @@ def _add_floating_base(mjcf_text, robot_name="robot"):
     return ET.tostring(root, encoding="unicode")
 
 
+def _emit_log(logger, level, message):
+    """Log *message* at *level* through an rclpy (or stdlib-style) logger.
+
+    rclpy caches the severity used at each logging call site and raises
+    "Logger severity cannot be changed between calls" when the same site logs
+    at a different level.  Routing every level through one
+    ``getattr(logger, level)(message)`` line therefore made any warning
+    followed by an info message abort the spawn: the Berkeley Humanoid Lite
+    logs an inertia-repair warning and then "import OK", and failed on every
+    attempt.  Each severity has its own call site here.
+    """
+    if logger is None:
+        return
+    if level == "error":
+        logger.error(message)
+    elif level in ("warning", "warn"):
+        logger.warning(message)
+    elif level == "debug":
+        logger.debug(message)
+    else:
+        logger.info(message)
+
+
+def _exclude_rest_pose_self_contacts(mjcf_text, logger=None):
+    """Exclude robot body pairs that already interpenetrate at the rest pose.
+
+    MuJoCo only auto-excludes parent<->child contacts. Some vendored
+    descriptions ship collision meshes that overlap between bodies further
+    apart in the tree: the Unitree H1-2 hand starts with its 1.9 g thumb
+    links 3-5 mm inside the wrist link (a grandparent), so the very first
+    contact force on a near-massless finger drives the solver to
+    "Nan, Inf or huge value in QACC" on the first step.
+
+    An overlap that exists at the model's own reference configuration is a
+    description defect, not a collision the robot can resolve, so exactly
+    those pairs get a <contact><exclude/>.  Legitimate self-collision (legs,
+    arms meeting during motion) stays enabled, and masses, inertias and
+    joint dynamics are left untouched.
+    """
+
+
+    if not hasattr(mujoco, "MjModel"):
+        return mjcf_text
+    try:
+        root = ET.fromstring(mjcf_text)
+        model = mujoco.MjModel.from_xml_string(mjcf_text)
+    except Exception:
+        return mjcf_text
+
+    data = mujoco.MjData(model)
+    mujoco.mj_forward(model, data)
+    pairs = set()
+    for index in range(data.ncon):
+        contact = data.contact[index]
+        if contact.dist >= -1e-4:  # touching, not interpenetrating
+            continue
+        body1 = model.geom_bodyid[contact.geom1]
+        body2 = model.geom_bodyid[contact.geom2]
+        if body1 == 0 or body2 == 0 or body1 == body2:
+            continue
+        name1 = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body1)
+        name2 = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body2)
+        if name1 and name2:
+            pairs.add(tuple(sorted((name1, name2))))
+    if not pairs:
+        return mjcf_text
+
+    contact_section = root.find("contact")
+    if contact_section is None:  # an empty element is falsy; compare to None
+        contact_section = ET.SubElement(root, "contact")
+    for name1, name2 in sorted(pairs):
+        ET.SubElement(contact_section, "exclude",
+                      {"body1": name1, "body2": name2})
+    _emit_log(logger, "warning",
+         "MuJoCo: excluded %d self-contact pair(s) that interpenetrate at the "
+         "rest pose: %s" % (len(pairs), ", ".join("%s/%s" % pair
+                                                  for pair in sorted(pairs))))
+    return ET.tostring(root, encoding="unicode")
+
+
 def _stage_world_meshes(mjcf_text, logger=None):
     """Convert a world MJCF's mesh assets into formats MuJoCo can load.
 
@@ -374,9 +454,6 @@ def _stage_world_meshes(mjcf_text, logger=None):
     bad asset never costs the whole world.
     """
 
-    def _log(level, message):
-        if logger is not None:
-            getattr(logger, level)(message)
 
     try:
         root = ET.fromstring(mjcf_text)
@@ -416,10 +493,10 @@ def _stage_world_meshes(mjcf_text, logger=None):
         mesh.set("file", staged)
         placeholders += 1
         for note in notes[:1]:
-            _log("warning", "MuJoCo world mesh: " + note)
+            _emit_log(logger, "warning", "MuJoCo world mesh: " + note)
 
     if converted or placeholders:
-        _log("info", "MuJoCo world meshes staged: %d converted, %d placeholder(s)."
+        _emit_log(logger, "info", "MuJoCo world meshes staged: %d converted, %d placeholder(s)."
                      % (converted, placeholders))
     return ET.tostring(root, encoding="unicode")
 
@@ -435,12 +512,9 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
     robots appear as a box in the viewer).
     """
 
-    def _log(level, message):
-        if logger is not None:
-            getattr(logger, level)(message)
 
     if mujoco is None or not hasattr(mujoco, "MjSpec"):
-        _log("error", "mujoco (>=3.2 with MjSpec) not importable; "
+        _emit_log(logger, "error", "mujoco (>=3.2 with MjSpec) not importable; "
                       "using fallback MJCF template.")
         return _FALLBACK_MJCF
 
@@ -450,11 +524,11 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         urdf_text, notes, placeholders = _stage_meshes(
             urdf_text, pkg_map, cache_dir, base_dir=base_dir)
         for note in notes:
-            _log("warning", "MuJoCo mesh staging: " + note)
+            _emit_log(logger, "warning", "MuJoCo mesh staging: " + note)
         repaired = urdf_text
         urdf_text = _repair_urdf_inertias(urdf_text)
         if urdf_text != repaired:
-            _log("warning", "MuJoCo inertia repair: clamped non-physical "
+            _emit_log(logger, "warning", "MuJoCo inertia repair: clamped non-physical "
                             "mass/inertia entries.")
         urdf_text = _inject_mujoco_compiler(urdf_text, cache_dir)
 
@@ -465,15 +539,16 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         tmp.close()
         spec = mujoco.MjSpec.from_file(tmp.name)
         mjcf = _add_floating_base(spec.to_xml(), robot_name or "robot")
+        mjcf = _exclude_rest_pose_self_contacts(mjcf, logger=logger)
         if placeholders:
-            _log("warning",
+            _emit_log(logger, "warning",
                  "MuJoCo URDF import OK with %d placeholder geom(s); "
                  "some meshes could not be converted." % placeholders)
         else:
-            _log("info", "MuJoCo URDF import OK (all meshes staged).")
+            _emit_log(logger, "info", "MuJoCo URDF import OK (all meshes staged).")
         return mjcf
     except Exception as exc:
-        _log("error",
+        _emit_log(logger, "error",
              "MuJoCo URDF import failed (%s); using fallback diff-drive "
              "template.%s" % (
                  exc,

@@ -33,10 +33,10 @@ checks. One machine's cached installation does not prove universal support.
 
 | Backend/component | Implementation/evidence | Current limit |
 |---|---|---|
-| Gazebo Harmonic | Primary launch/control path, robot/world assets, historical headless world-load notes | Strongest reference route; no fresh end-to-end navigation or all-world recertification |
+| Gazebo (Ignition Fortress 6.18) | Primary launch/control path, robot/world assets, historical headless world-load notes. The launch executes `ign gazebo` 6 through Humble's binary `ros_gz_sim` 0.244 (verified 2026-09-14 from the running process name and the `ign-gazebo-6` plugin path); Gazebo Harmonic (gz-sim 8.15) is also installed but is not what this launch path runs | Strongest reference route; no fresh end-to-end navigation or all-world recertification |
 | PyBullet | Spawner, wheel command bridge, state/scan output; selected tests include basic real physics. 2026-09-11: loads all 17 robot descriptions and materialises static geometry for all 26 worlds (boxes/spheres/cylinders/planes/meshes, `model://` includes resolved, Collada staged to STL) | Partial runtime implementation, not complete ROS/navigation qualification |
 | MuJoCo | Model import, wheel-actuation bridge, state/scan output; selected tests include basic real physics. 2026-09-11: all 17 robots import with their assets and a floating base; MJCF worlds generated for all 26 maps | Partial runtime implementation, not complete ROS/navigation qualification |
-| Isaac Sim | ROS spawner plus separate runtime, stage/robot import and state streaming; historical installation/boot notes. 2026-09-11: the local installation is auto-detected and the runtime child starts under Isaac's own Python | Kit aborts during extension startup on this Jetson: Isaac's bundled `omni.isaac.ml_archive` torch links `libcusparse.so.12` against `__nvJitLinkCreate_12_8`, which the device CUDA does not provide. Selectable and launchable, not yet qualified |
+| Isaac Sim | ROS spawner plus a separate runtime under Isaac's Python 3.12. 2026-09-14 on this Jetson AGX Orin: installation auto-detected; boots with Isaac's bundled `libnvJitLink` preloaded; through `ros2 launch` the runtime reaches ready (245 s cold, 30 s warm), publishes /joint_states, /odom/ground_truth and /clock at 50 Hz, builds SDF worlds as USD collision prims, and stops cleanly on SIGINT in 2 s with no Kit process left | Drives in the commanded direction with wheel velocities tracking the command, but body speed is ~15 % below it (cause not isolated); runs at a real-time factor of 0.18 headless on this Jetson; no scan or RGB-D publisher; no mission qualification |
 | ORB-SLAM3 | Optional external-library wrapper | Requires compatible dependencies including OpenCV/cv_bridge ABI; not required for reference simulation |
 
 Historical versions, Docker image sizes and host paths are installation history,
@@ -54,8 +54,17 @@ live-verified ROS contract is not supported by this audit.
 | Odometry | Controller odometry and local EKF configuration | Simulator base state on `/odom` | Simulator body state on `/odom` | Runtime state on `/odom` |
 | IMU | Description/plugin/configuration assets | Implemented from simulator state | Implemented from simulator state | Implemented from runtime state |
 | 2D scan | LiDAR assets for compatible robots | Raycast output implemented | Raycast output implemented | No publisher in current spawner |
-| World geometry | SDF worlds loaded natively | SDF parsed directly: primitives + meshes, `model://` resolved (26/26 maps produce geometry) | MJCF generated from the same SDF by `robot_lab_maps/tools/gen_mjcf_worlds.py` (26/26 maps) | SDF world path forwarded to the runtime; unverified while Kit startup is blocked |
-| Robot import | Native URDF/xacro | 17/17 robot descriptions load | 17/17 import with assets, defaults and a floating base | Blocked with Kit startup |
+| World geometry | SDF worlds loaded natively | Parsed with the shared `sdf_world.py` reader (same as Isaac): primitives + meshes, `model://` resolved, Collada staged to STL (26/26 maps produce geometry; pre/post-refactor loaders equivalent within 1e-4 m) | MJCF generated from the same SDF by `robot_lab_maps/tools/gen_mjcf_worlds.py` (26/26 maps) | Spawner parses the SDF with `sdf_world.py`; the runtime creates USD collision prims: 26/26 maps build (box bounds within 1e-6 m), nav_maze verified live |
+| Robot import | Native URDF/xacro; 17/17 robots spawn live (`OK creation of entity`) | 17/17 robot descriptions load; 17/17 spawn live through `ros2 launch` with world geometry | 17/17 import with assets, defaults and a floating base; 17/17 spawn live through `ros2 launch` | Bumperbot imports and reaches ready live; other robots not yet run through Isaac |
+
+Import is not stable simulation, so stepping was measured separately: all 17
+robots survive a 2 s passive drop in MuJoCo with no `QACC` blow-up
+(2026-09-14). The earlier `Nan, Inf or huge value in QACC` warnings came from
+collision meshes that interpenetrate at the rest pose (Unitree H1-2 thumbs
+inside the wrists, Unitree B1 thighs inside the trunk); those pairs are now
+excluded automatically. Passive stability is not locomotion: treat non-Gazebo
+backends as display/visualization-grade for legged and humanoid robots until a
+class mission passes.
 | RGB/depth/camera info | Bumperbot sensor assets and RTAB-Map configuration | Not implemented in current bridge | Not implemented in current bridge | Not implemented in current bridge |
 | Joint states | Controller/plugin route | Implemented | Implemented | Implemented |
 | TF | Description/controller/estimator routes; ownership needs checks | Publishes `odom → base_footprint`; estimator conflict risk | Same | Same |

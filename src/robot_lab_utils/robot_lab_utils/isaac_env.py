@@ -76,3 +76,44 @@ def isaac_status(env=None):
     if not os.access(interpreter, os.X_OK):
         return False, "%s is not executable" % interpreter
     return True, interpreter
+
+
+#: Libraries bundled with Isaac Sim that must win over the host's copies.
+#: Isaac's torch (cu128) links its cuSPARSE against nvJitLink 12.8, but on a
+#: JetPack host another Kit extension loads the system CUDA 12.6
+#: libnvJitLink.so.12 first; torch then binds to that older soname, the
+#: import fails with "undefined symbol: __nvJitLinkCreate_12_8", and Isaac's
+#: deprecation manager shuts the app down during extension startup.  The
+#: bundled library exports every symbol the system one does (12_0..12_8), so
+#: preloading it is safe for the other CUDA consumers.
+BUNDLED_PRELOADS = (
+    os.path.join("extsDeprecated", "omni.isaac.ml_archive", "pip_prebundle",
+                 "nvidia", "nvjitlink", "lib", "libnvJitLink.so.12"),
+)
+
+#: Host libraries the runtime has always preloaded (static TLS on aarch64).
+HOST_PRELOADS = ("/lib/aarch64-linux-gnu/libgomp.so.1",)
+
+
+def isaac_preload_libraries(interpreter, existing=""):
+    """LD_PRELOAD value for running the Isaac runtime with *interpreter*.
+
+    Bundled libraries found next to the interpreter come first, then the
+    host preloads, then whatever the caller already had, without duplicates.
+    """
+    root = os.path.dirname(os.path.abspath(interpreter)) if interpreter else ""
+    entries = []
+    for relative in BUNDLED_PRELOADS:
+        candidate = os.path.join(root, relative) if root else ""
+        if candidate and os.path.isfile(candidate):
+            entries.append(candidate)
+    for library in HOST_PRELOADS:
+        if os.path.isfile(library):
+            entries.append(library)
+    for library in (existing or "").replace(":", " ").split():
+        entries.append(library)
+    ordered = []
+    for library in entries:
+        if library not in ordered:
+            ordered.append(library)
+    return " ".join(ordered)

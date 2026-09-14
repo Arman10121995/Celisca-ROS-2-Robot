@@ -22,6 +22,76 @@ import struct
 import sys
 import threading
 
+# Upper bound on SimulationApp.close() before the runtime exits hard.
+_CLOSE_TIMEOUT_S = 5.0
+
+# Damping of the wheel joints' velocity drive. A pure damping drive (zero
+# stiffness) tracks a velocity target; the importer's default position
+# stiffness instead holds the wheels at their initial angle.
+_WHEEL_DRIVE_DAMPING = 1.0e4
+
+
+def _wheel_velocities(linear, angular, radius, separation):
+    """Differential-drive (left, right) wheel angular velocities in rad/s.
+
+    The spawner forwards /cmd_vel as ``[linear_x, angular_z]``.  Applying
+    those two numbers directly as the left and right wheel velocities made a
+    0.3 m/s forward command turn only the left wheel at 0.3 rad/s, so the
+    robot did not drive.
+    """
+    radius = max(float(radius), 1e-6)
+    half_track = float(separation) / 2.0
+    return ((float(linear) - float(angular) * half_track) / radius,
+            (float(linear) + float(angular) * half_track) / radius)
+
+
+def _isaac_quat_from_yaw(yaw):
+    """Scalar-first (w, x, y, z) quaternion for a yaw, as Isaac Sim expects.
+
+    Isaac Sim's core API is scalar-first.  The runtime used to pass ROS order
+    (x, y, z, w), which turns a yaw of 0 into (w=0, x=0, y=0, z=1): every
+    robot spawned rotated 180 degrees and a forward command drove it
+    backwards.
+    """
+    return (math.cos(yaw / 2.0), 0.0, 0.0, math.sin(yaw / 2.0))
+
+
+def _ros_quat_from_isaac(quaternion):
+    """Isaac's scalar-first (w, x, y, z) as ROS (x, y, z, w).
+
+    The state events carry ROS order, which is what the spawner publishes on
+    /odom/ground_truth and /imu/out; copying Isaac's order straight through
+    scrambled every published orientation.
+    """
+    w, x, y, z = (float(v) for v in list(quaternion)[:4])
+    return [x, y, z, w]
+
+
+def _author_wheel_velocity_drives(stage, joint_names,
+                                  damping=_WHEEL_DRIVE_DAMPING):
+    """Author zero-stiffness velocity drives on the named revolute joints.
+
+    Isaac Sim 6's URDF importer places joints under ``<robot>/Physics``,
+    beside the link hierarchy that holds the articulation root, so they are
+    not descendants of the root prim; searching only under the root found
+    none and the wheels kept their default drives.  The whole stage is
+    searched instead.  Returns the prim paths that were driven.
+    """
+    from pxr import Usd, UsdPhysics
+
+    names = {name for name in joint_names if name}
+    driven = []
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        if prim.GetName() not in names or prim.IsInstanceProxy():
+            continue
+        if not prim.IsA(UsdPhysics.RevoluteJoint):
+            continue
+        drive = UsdPhysics.DriveAPI.Apply(prim, "angular")
+        (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(0.0)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(damping))
+        driven.append(str(prim.GetPath()))
+    return sorted(driven)
+
 
 def _load_stl(path):
     """Return (vertices, triangles) for a binary or ASCII STL file."""
@@ -202,12 +272,20 @@ def run(cfg):
         failed = True
         _emit({"event": "error", "message": str(exc)[:500]})
     finally:
-        # SimulationApp.close() can SIGABRT during Kit teardown on ARM;
-        # the state pipeline is done either way, so exit hard afterward.
+        # SimulationApp.close() can SIGABRT - or hang - during Kit teardown on
+        # ARM; the state pipeline is done either way, so exit hard afterward.
+        # The watchdog bounds a hung close: if the ROS spawner was killed
+        # outright, stdin EOF is the only stop signal this process gets, and
+        # nothing else would ever end it.
+        watchdog = threading.Timer(
+            _CLOSE_TIMEOUT_S, lambda: os._exit(1 if failed else 0))
+        watchdog.daemon = True
+        watchdog.start()
         try:
             app.close()
         except Exception:
             pass
+        watchdog.cancel()
         _emit({"event": "exit"})
         try:
             sys.stdout.flush()
@@ -219,6 +297,72 @@ def run(cfg):
             except Exception:
                 pass
         os._exit(1 if failed else 0)
+
+
+def _add_world_shapes(stage, shapes):
+    """Create static collision prims from the spawner's world shapes.
+
+    The ROS-side spawner parses the SDF world (robot_lab_utils.sdf_world)
+    and hands over backend-neutral records, so primitives, the full pose
+    chain and model:// includes are honoured without ROS in this
+    interpreter.  Each prim carries translate -> orient -> scale ops.
+    """
+    import re
+    from pxr import Gf, UsdGeom, UsdPhysics
+
+    counts = {}
+    for index, shape in enumerate(shapes):
+        kind = shape.get("type")
+        size = [float(v) for v in (shape.get("size") or [])]
+        name = re.sub(r"[^A-Za-z0-9_]", "_",
+                      "%s_%s_%d" % (shape.get("model", "map"), kind, index))
+        path = "/World/map/%s" % name
+        scale = Gf.Vec3f(1.0, 1.0, 1.0)
+        if kind == "box":
+            prim = UsdGeom.Cube.Define(stage, path)
+            prim.CreateSizeAttr(1.0)  # unit cube scaled to full extents
+            scale = Gf.Vec3f(*[max(v, 1e-6) for v in (size + [1.0] * 3)[:3]])
+        elif kind == "plane":
+            prim = UsdGeom.Cube.Define(stage, path)
+            prim.CreateSizeAttr(1.0)  # thin box keeps the plane's pose/extent
+            full = (size + [100.0, 100.0])[:2]
+            scale = Gf.Vec3f(max(full[0], 1e-6), max(full[1], 1e-6), 0.01)
+        elif kind == "sphere":
+            prim = UsdGeom.Sphere.Define(stage, path)
+            prim.CreateRadiusAttr((size + [0.5])[0])
+        elif kind == "cylinder":
+            prim = UsdGeom.Cylinder.Define(stage, path)
+            radius, height = (size + [0.5, 1.0])[:2]
+            prim.CreateRadiusAttr(radius)
+            prim.CreateHeightAttr(height)
+            prim.CreateAxisAttr("Z")
+        elif kind == "mesh":
+            verts, tris = _load_stl(shape.get("mesh", ""))
+            if not verts:
+                _emit({"event": "log",
+                       "msg": "World mesh has no vertices: %s" % shape.get("mesh")})
+                continue
+            prim = UsdGeom.Mesh.Define(stage, path)
+            prim.CreatePointsAttr([Gf.Vec3f(*v) for v in verts])
+            prim.CreateFaceVertexCountsAttr([3] * len(tris))
+            prim.CreateFaceVertexIndicesAttr([i for tri in tris for i in tri])
+            scale = Gf.Vec3f(*[float(v) for v in
+                               (shape.get("scale") or [1.0, 1.0, 1.0])[:3]])
+        else:
+            continue
+        position = [float(v) for v in (shape.get("position") or [0, 0, 0])[:3]]
+        w, x, y, z = [float(v) for v in
+                      (shape.get("orientation") or [1, 0, 0, 0])[:4]]
+        prim.AddTranslateOp().Set(Gf.Vec3d(*position))
+        prim.AddOrientOp().Set(Gf.Quatf(w, Gf.Vec3f(x, y, z)))
+        prim.AddScaleOp().Set(scale)
+        UsdPhysics.CollisionAPI.Apply(prim.GetPrim())
+        counts[kind] = counts.get(kind, 0) + 1
+    _emit({"event": "log",
+           "msg": "World shapes created: %s" % (
+               ", ".join("%d %s" % (n, k) for k, n in sorted(counts.items()))
+               or "none")})
+    return counts
 
 
 def _run_stage(app, reader, cfg, state):
@@ -234,7 +378,11 @@ def _run_stage(app, reader, cfg, state):
         stage_utils.open_stage(cfg["world_stage"])
     else:
         stage_utils.create_new_stage()
-        if cfg.get("world_path") and os.path.isfile(cfg["world_path"]):
+        if cfg.get("world_shapes") is not None:
+            _add_world_shapes(stage_utils.get_current_stage(),
+                              cfg["world_shapes"])
+        elif cfg.get("world_path") and os.path.isfile(cfg["world_path"]):
+            # Fallback when the spawner could not pre-parse the world.
             _emit({"event": "log", "msg": "Loading SDF world: %s" % cfg["world_path"]})
             _add_sdf_meshes(stage_utils.get_current_stage(), cfg["world_path"])
         else:
@@ -298,9 +446,17 @@ def _run_stage(app, reader, cfg, state):
     _emit({"event": "debug_prim", "path": str(prim.GetPath()),
            "root": str(root_prim.GetPath())})
 
+    # Author velocity drives on the wheel joints before the world reset, so
+    # PhysX parses them with the articulation.
+    driven = _author_wheel_velocity_drives(
+        stage_obj, (cfg.get("left_wheel_joint", ""),
+                    cfg.get("right_wheel_joint", "")))
+    _emit({"event": "log",
+           "msg": "Wheel velocity drives: %s" % (driven or "none found")})
+
     from isaacsim.core.api.robots import Robot
     syaw = float(cfg.get("spawn_yaw", 0.0))
-    orn = (0.0, 0.0, math.sin(syaw / 2.0), math.cos(syaw / 2.0))
+    orn = _isaac_quat_from_yaw(syaw)
     robot = Robot(
         prim_path=str(root_prim.GetPath()), name=robot_name,
         position=(float(cfg.get("spawn_x", 0.0)),
@@ -331,9 +487,14 @@ def _run_stage(app, reader, cfg, state):
     rw_idx = dof_names.index(rw) if rw in dof_names else -1
     _emit({"event": "ready", "dofs": dof_names})
 
+    wheel_radius = float(cfg.get("wheel_radius", 0.033))
+    wheel_separation = float(cfg.get("wheel_separation", 0.17))
+    action_error_reported = False
     sim_step = 0
     while state["running"] and not reader.stop and app.is_running():
-        vl, vr = reader.cmd
+        linear, angular = reader.cmd
+        vl, vr = _wheel_velocities(linear, angular, wheel_radius,
+                                   wheel_separation)
         try:
             from isaacsim.core.utils.types import ArticulationAction
             idx, vels = [], []
@@ -348,8 +509,13 @@ def _run_stage(app, reader, cfg, state):
                     ArticulationAction(joint_velocities=vels,
                                        joint_indices=idx)
                 )
-        except Exception:
-            pass
+        except Exception as exc:
+            # Reported once: a silently swallowed failure here is exactly how
+            # a robot that never moves looks healthy in every other signal.
+            if not action_error_reported:
+                action_error_reported = True
+                _emit({"event": "log",
+                       "msg": "Wheel command failed: %s" % exc})
 
         world.step(render=True)
         sim_step += 1
@@ -359,7 +525,7 @@ def _run_stage(app, reader, cfg, state):
             pose = robot.get_world_pose()
             pos = [float(v) for v in pose[0]]
             q = pose[1]
-            orn = [float(q[0]), float(q[1]), float(q[2]), float(q[3])]
+            orn = _ros_quat_from_isaac(q)  # events carry ROS (x, y, z, w)
             lin = [float(v) for v in robot.get_linear_velocity()]
             ang = [float(v) for v in robot.get_angular_velocity()]
             jpos = [float(v) for v in robot.get_joint_positions()]

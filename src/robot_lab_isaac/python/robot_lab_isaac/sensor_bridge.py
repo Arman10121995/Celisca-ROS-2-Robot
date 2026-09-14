@@ -5,6 +5,7 @@ isaacsim Python API is available.  In offline mode (no isaacsim
 installed) the node logs a clear message and exits gracefully.
 """
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 
@@ -28,6 +29,13 @@ class IsaacSensorBridge(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = IsaacSensorBridge()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        # A stop from launch or the GUI, not a failure: without this every
+        # Isaac shutdown logged a traceback and "process has died".
+        pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()

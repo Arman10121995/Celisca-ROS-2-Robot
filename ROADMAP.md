@@ -1,8 +1,9 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-11. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
+Updated: 2026-09-14. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
 and truthful outcomes complete. 2026-09-11: selection fidelity work landed
-against R3.3/R3.4, R7.1, R6.1 and R8.1; R8.2 blocked with a named defect.
+against R3.3/R3.4, R7.1, R6.1 and R8.1; R8.2 unblocked 2026-09-14 (Isaac boots, loads
+worlds, drives in the commanded direction and stops cleanly).
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -465,6 +466,61 @@ Dependencies: `R5.1`, `R6.1`.
   PyBullet/small_house loads 57 joints in an 86-shape world (previously the
   robot failed to load and the world was empty). This is import fidelity, not
   the mission qualification this task requires.
+- Numerical-stability follow-up (2026-09-14): the `Nan, Inf or huge value in
+  QACC` warnings traced to one defect class, not general tuning. A passive
+  2 s drop test of all 17 robots found a single unstable model, the Unitree
+  H1-2, failing on the first step at a finger joint: its 1.9 g thumb links
+  start 3-5 mm inside the wrist link. MuJoCo auto-excludes only parent<->child
+  contacts, and these are grandparent<->grandchild. Disabling contacts, adding
+  joint armature, or flooring mass/inertia each removed the blow-up, which
+  isolated initial interpenetration as the trigger. The fix excludes exactly
+  the body pairs that interpenetrate at the model's own rest pose
+  (`_exclude_rest_pose_self_contacts`), leaving masses, inertias, joint
+  dynamics and legitimate self-collision untouched. It fires for two robots
+  only: H1-2 (both thumb/wrist pairs) and B1 (all four thigh/trunk pairs,
+  whose overlap had propped the passive legs at 0.37 m instead of the
+  physical 0.11 m). Verification: 17/17 robots step 2 s with no BADQACC;
+  `src/robot_lab_bringup/test/test_backend_assets.py` 11 passed (merge keeps
+  meshes, floating base present, H1-2 stable, non-overlapping robots
+  unchanged, PyBullet relative mesh paths, Isaac preload ordering). Passive
+  stability is not locomotion or control qualification.
+- Live-launch follow-up (2026-09-14): headless checks used a permissive fake
+  logger and so missed that every Berkeley Humanoid Lite and Unitree B2 spawn
+  in MuJoCo aborted with "Logger severity cannot be changed between calls".
+  rclpy caches one severity per logging call site, and the spawner routed
+  every level through a single `getattr(logger, level)(message)` line, so an
+  inertia-repair warning followed by the import-OK info message raised, and
+  the error path raised again. Each severity now has its own call site
+  (`_emit_log`). Evidence: reproduced with a real rclpy logger; BHL loads live
+  (24 bodies, 23 joints); `test_backend_assets.py` logs through a real rclpy
+  node. Strict live spawn matrix, graded on spawn-success markers rather than
+  the absence of launch errors (every robot, display mode, nav_empty,
+  headless): PyBullet 17/17 loaded with world geometry; MuJoCo 17/17 loaded
+  with all meshes staged (the four rows that first ran before the logger fix
+  were re-run on the fixed code); Gazebo 17/17 entities created. No fallback
+  models and no process deaths. unitree_b2w's Gazebo create call timed out
+  once while an Isaac run loaded the host and succeeded on retry; re-tested
+  on an idle host it spawned with no timeout.
+- Viewer follow-up (2026-09-14): with `gui:=true` each backend opens its own
+  window with a robot (Unitree Go2) in nav_maze: PyBullet "Bullet Physics
+  ExampleBrowser" (spawner in GUI mode), MuJoCo "MuJoCo : nav_maze" (viewer
+  opened, 14 bodies), Gazebo "Gazebo GUI" (entity created). Detected by window
+  title; no screenshots, as ImageMagick is not installed.
+- Shared-reader follow-up (2026-09-14): the PyBullet backend reads worlds
+  through `src/robot_lab_utils/robot_lab_utils/sdf_world.py`, the same reader
+  the Isaac backend uses, instead of its own ~170-line copy; the shared
+  reader's scalar-first quaternions are reordered to PyBullet's (x, y, z, w) by
+  a named helper. Evidence: all 26 worlds loaded through the pre-refactor
+  installed module and through the refactored source give the same 320 bodies,
+  shape types, dimensions and meshes, with every pose equal within 1e-4 m.
+- Regression evidence for the 2026-09-14 backend work, isolated ROS domain,
+  after rebuilding every changed package: registry 286 passed; GUI 41 passed;
+  bringup + maps 265 passed (new: `test_backend_assets.py`,
+  `test_isaac_runtime_shutdown.py`, `test_sdf_world.py`); adapter 154 passed
+  with the 8 pre-existing `test_r5_3_bhl_balance.py` failures that belong to
+  R5.3; `scripts/test_fast.sh` 423 passed, 1 skipped, PASS. A live PyBullet
+  launch of the rebuilt package loads nav_maze (16 shapes) and bumperbot with
+  no errors.
 
 ### R8.2 — Qualify Isaac on a named host configuration
 
@@ -474,25 +530,60 @@ Dependencies: `R5.1`, `R6.1`.
 - Implement: Validate Python/ROS subprocess boundary, runtime discovery, import, control, sensors and failures on a chosen compatible host. Implement needed LiDAR/RGB-D or gate modes; parameterize host paths. Historical Jetson startup reports are not qualification.
 - Acceptance: Live startup/reset/command/sensor/mission evidence recorded; child failure aborts cleanly; offline is never success. If engine cannot run, record exact blocker and continue other lanes.
 
-- Runtime-discovery follow-up (2026-09-11), task still BLOCKED:
-  - Fixed: the backend no longer requires `ISAAC_PYTHON` to be exported by
-    hand. `src/robot_lab_utils/robot_lab_utils/isaac_env.py` detects a local
-    installation (explicit `ISAAC_PYTHON` still wins), so the GUI reports Isaac
-    as available and the runtime child starts under Isaac's own Python 3.12.
-    Previously every launch degraded to offline mode and Isaac could not be
-    selected at all.
-  - Blocker: Kit aborts during extension startup on this Jetson AGX Orin.
-    `isaacsim.core.deprecation_manager.api` imports the bundled
-    `omni.isaac.ml_archive` torch, whose
-    `nvidia/cusparse/lib/libcusparse.so.12` requires `__nvJitLinkCreate_12_8`
-    from `libnvJitLink.so.12`, a symbol the device CUDA does not export.
-    Startup stops there. Reproduced twice: through the launch graph, and by
-    instantiating `SimulationApp` directly under
-    `IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh`.
-  - Unblock condition: install a Jetson-matched torch/CUDA into Isaac's own
-    Python, or exclude the deprecated ml_archive extension from the Kit
-    experience; then re-run the direct `SimulationApp` boot before re-testing
-    the launch graph. Offline mode remains not-success, per this task.
+- Runtime follow-up (2026-09-14), task UNBLOCKED, not yet qualified:
+  - Discovery (2026-09-11): `src/robot_lab_utils/robot_lab_utils/isaac_env.py`
+    finds a local installation, so Isaac is selectable and the runtime starts
+    under Isaac's own Python 3.12.
+  - Startup blocker resolved. Kit was not crashing: Isaac's deprecation
+    manager calls `exit_app()` when `import torch` fails. On JetPack another
+    Kit extension loads the system CUDA 12.6 `libnvJitLink.so.12` first, and
+    Isaac's bundled torch 2.11+cu128 then binds to it. Isaac ships its own
+    `libnvJitLink.so.12` (exports 12_0..12_8, a strict superset of the system
+    library), which the runtime now preloads (`isaac_preload_libraries`).
+    Evidence: `SimulationApp` boots and a physics `World` steps; through
+    `ros2 launch` the runtime reports ready in 245 s cold / 30 s warm with live
+    /joint_states, /odom/ground_truth and /clock at 50 Hz.
+  - Worlds: the runtime's own SDF reader loaded only `package://` meshes, all
+    at the origin, and no primitives. The spawner now parses the world with the
+    shared `src/robot_lab_utils/robot_lab_utils/sdf_world.py` and hands over
+    neutral shapes that the runtime creates as USD collision prims. Evidence:
+    26/26 maps build in Isaac's own USD (every shape a collision prim, box
+    bounds within 1e-6 m); a live nav_maze load creates all 16 boxes.
+  - Stop: `python.sh` runs Kit as a child instead of exec-ing it, so killing
+    the launched process orphaned Kit (13 GB and the GPU). The runtime now runs
+    in its own session and is stopped graceful -> SIGTERM -> SIGKILL across its
+    process group inside launch's 5 s escalation window; SIGTERM runs the same
+    cleanup; a watchdog bounds a hung `SimulationApp.close()`; the sensor
+    bridge no longer dies with a traceback on stop. Evidence: live SIGINT ->
+    launch exits in 2 s, every node finishes cleanly, 0 Kit processes remain;
+    `src/robot_lab_bringup/test/test_isaac_runtime_shutdown.py` 5 passed. The
+    Kit process shares the runtime's process group (pgid verified live), so
+    the group stop reaches it.
+    Earlier "Kit left running" observations were a test-harness artifact: a
+    background job in a non-interactive shell ignores SIGINT, so the signal
+    never reached launch.
+  - Drive: /cmd_vel did not move the robot, for three reasons. `[linear,
+    angular]` was applied directly as the left/right wheel velocities; the
+    imported wheel drives carry zero damping (no torque from a velocity
+    target), and the drive search looked only under the articulation root
+    while Isaac 6 places joints under `<robot>/Physics`; and quaternions were
+    passed to Isaac's scalar-first API in ROS order, spawning every robot
+    rotated 180 degrees and scrambling published orientations (confirmed from
+    Isaac's own `get_world_pose` docstring). All three are fixed
+    (`_wheel_velocities`, `_author_wheel_velocity_drives`,
+    `_isaac_quat_from_yaw` / `_ros_quat_from_isaac`). With the first two the
+    robot moved (0.000 m -> 0.256 m) but backwards, which the quaternion order
+    explains. After all three, measured in sim time (the headless Jetson runs
+    at a real-time factor of 0.18, which is why wall-clock distances looked
+    slow): heading 1.9 degrees for a +x command with a near-identity published
+    orientation; wheel joint velocities 9.27 / 8.36 rad/s against 9.09
+    commanded; body speed 0.25 m/s at the end of a 0.3 m/s command (0.18 m/s
+    averaged over the window including the start). The remaining ~15 % gap
+    between wheel and body speed (slip, caster drag, or the wheel collision
+    shape generated from the visual mesh) is not isolated.
+  - Open for qualification: the wheel/body speed gap, scan and RGB-D
+    publishers (Isaac provides neither), a class mission, and the named host
+    configuration record.
 
 ### R8.3 — Resource-bounded concurrent experiments
 

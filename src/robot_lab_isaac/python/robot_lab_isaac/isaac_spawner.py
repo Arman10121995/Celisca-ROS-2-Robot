@@ -21,9 +21,11 @@ offline mode.
 import json
 import os
 import re
+import signal
 import subprocess
 import tempfile
 import threading
+import time
 
 import rclpy
 from rclpy.clock import Clock, ClockType
@@ -85,6 +87,71 @@ def _strip_gazebo_tags(urdf_text):
     return urdf_text
 
 
+def _group_alive(pgid):
+    """True while any process remains in process group *pgid*."""
+    try:
+        os.killpg(pgid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _terminate_runtime(proc, graceful_timeout=2.0, term_timeout=2.0,
+                       kill_timeout=5.0):
+    """Stop the Isaac runtime and every process it started.
+
+    The runtime is started through Isaac's ``python.sh``, which runs the real
+    interpreter as a child instead of ``exec``-ing it.  Killing only
+    ``proc`` therefore killed the shell wrapper and orphaned Kit (~11 GB and
+    the GPU).  The runtime is started in its own session, so the whole
+    process group can be signalled.
+
+    Escalation is graceful (stdin EOF lets the runtime close Kit) ->
+    SIGTERM -> SIGKILL, and the first two stages together stay below
+    ros2 launch's own SIGINT->SIGTERM escalation, so the spawner finishes
+    cleaning up before launch starts killing it.
+
+    Returns how the group ended: "not-running", "graceful", "sigterm",
+    "sigkill" or "unkillable".
+    """
+    if proc is None:
+        return "not-running"
+    pgid = proc.pid  # start_new_session=True makes the runtime a group leader
+    if proc.poll() is not None and not _group_alive(pgid):
+        return "not-running"
+
+    def wait_for_group(timeout):
+        deadline = time.monotonic() + timeout
+        while True:
+            proc.poll()  # reap the leader so it does not linger as a zombie
+            if not _group_alive(pgid):
+                return True
+            if time.monotonic() >= deadline:
+                return False
+            time.sleep(0.05)
+
+    try:
+        if proc.stdin is not None:
+            proc.stdin.close()
+    except Exception:
+        pass
+    if wait_for_group(graceful_timeout):
+        return "graceful"
+    for sig, timeout, outcome in ((signal.SIGTERM, term_timeout, "sigterm"),
+                                  (signal.SIGKILL, kill_timeout, "sigkill")):
+        try:
+            os.killpg(pgid, sig)
+        except ProcessLookupError:
+            return outcome
+        except PermissionError:
+            pass
+        if wait_for_group(timeout):
+            return outcome
+    return "unkillable"
+
+
 class IsaacSpawner(Node):
     """Spawn robot + map into Isaac Sim via the runtime child process."""
 
@@ -105,6 +172,10 @@ class IsaacSpawner(Node):
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
         self.declare_parameter("right_wheel_joint", "wheel_right_joint")
+        # Same differential-drive geometry parameters as the PyBullet and
+        # MuJoCo spawners, so /cmd_vel means the same thing in every backend.
+        self.declare_parameter("wheel_radius", 0.033)
+        self.declare_parameter("wheel_separation", 0.17)
 
         if not self.has_parameter("use_sim_time"):
             self.declare_parameter("use_sim_time", True)
@@ -225,7 +296,14 @@ class IsaacSpawner(Node):
             "physics_rate": 60.0,
             "left_wheel_joint": self.get_parameter("left_wheel_joint").value,
             "right_wheel_joint": self.get_parameter("right_wheel_joint").value,
+            "wheel_radius": float(self.get_parameter("wheel_radius").value),
+            "wheel_separation": float(
+                self.get_parameter("wheel_separation").value),
         }
+        # The world is parsed here, on the ROS side, and handed over as plain
+        # records: the runtime's interpreter has no ROS package index, and its
+        # own SDF reader ignored primitives, poses and model:// includes.
+        cfg["world_shapes"] = self._world_shapes(cfg["world_path"])
 
         runtime_py = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "isaac_runtime.py"
@@ -236,7 +314,13 @@ class IsaacSpawner(Node):
         )
 
         env = dict(os.environ)
-        env.setdefault("LD_PRELOAD", "/lib/aarch64-linux-gnu/libgomp.so.1")
+        try:
+            from robot_lab_utils.isaac_env import isaac_preload_libraries
+            env["LD_PRELOAD"] = isaac_preload_libraries(
+                isaac_py, env.get("LD_PRELOAD", ""))
+        except ImportError:  # pragma: no cover - robot_lab_utils always present
+            env.setdefault("LD_PRELOAD", "/lib/aarch64-linux-gnu/libgomp.so.1")
+        self.get_logger().info("Isaac runtime LD_PRELOAD: %s" % env["LD_PRELOAD"])
         env.setdefault("ACCEPT_EULA", "YES")
         env.setdefault("OMNI_KIT_ACCEPT_EULA", "YES")
 
@@ -253,6 +337,9 @@ class IsaacSpawner(Node):
             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT, text=True, bufsize=1,
             cwd=os.path.dirname(runtime_py), env=env,
+            # Own process group, so shutdown reaches Kit as well as the
+            # python.sh wrapper that launched it (see _terminate_runtime).
+            start_new_session=True,
         )
         self._proc.stdin.write(json.dumps(cfg) + "\n")
         self._proc.stdin.flush()
@@ -261,6 +348,50 @@ class IsaacSpawner(Node):
         threading.Thread(target=self._drain_stdout, daemon=True).start()
         # Read structured events from the FIFO.
         threading.Thread(target=self._read_runtime, daemon=True).start()
+
+    def _world_shapes(self, world_path):
+        """Static world shapes for the runtime, or None to use its fallback.
+
+        Meshes are staged to binary STL, the only mesh format the runtime
+        reads; the vendored Gazebo model library ships Collada.
+        """
+        if not world_path or not os.path.isfile(world_path):
+            return []
+        try:
+            from ament_index_python.packages import get_package_share_directory
+            from robot_lab_utils.mesh_assets import (
+                mesh_staging_dir, stage_mesh_file)
+            from robot_lab_utils.sdf_world import (
+                extract_static_shapes, uri_resolver)
+        except ImportError as exc:
+            self.get_logger().warn(
+                "World geometry helpers unavailable (%s); the runtime falls "
+                "back to its mesh-only loader." % exc)
+            return None
+        model_dirs = []
+        try:
+            model_dirs.append(os.path.join(
+                get_package_share_directory("robot_lab_models"), "models"))
+        except Exception:
+            pass
+        shapes, skipped = extract_static_shapes(
+            world_path, uri_resolver(model_dirs, get_package_share_directory))
+        cache_dir = mesh_staging_dir("isaac_world", world_path)
+        loadable = []
+        for shape in shapes:
+            if shape["type"] == "mesh":
+                staged = stage_mesh_file(shape["mesh"], cache_dir)
+                if not staged or not staged.lower().endswith(".stl"):
+                    skipped.append("mesh not convertible to STL: %s"
+                                   % os.path.basename(shape["mesh"]))
+                    continue
+                shape = dict(shape, mesh=staged)
+            loadable.append(shape)
+        self.get_logger().info(
+            "World '%s': %d static shape(s) for Isaac, %d skipped%s"
+            % (os.path.basename(world_path), len(loadable), len(skipped),
+               (" (%s)" % "; ".join(skipped[:3])) if skipped else ""))
+        return loadable
 
     def _drain_stdout(self):
         try:
@@ -423,13 +554,19 @@ class IsaacSpawner(Node):
         self._imu_pub.publish(im)
 
     def shutdown(self):
+        # A second signal from launch's escalation must not abort cleanup
+        # half-way and leave Kit running.
+        try:
+            signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        except ValueError:  # not the main thread (tests)
+            pass
         proc = self._proc
         if proc is not None:
+            outcome = _terminate_runtime(proc)
             try:
-                proc.stdin.close()
-                proc.wait(timeout=15)
+                self.get_logger().info("Isaac runtime stopped (%s)" % outcome)
             except Exception:
-                proc.kill()
+                pass
         if self._fifo_path:
             try:
                 os.unlink(self._fifo_path)
@@ -438,13 +575,23 @@ class IsaacSpawner(Node):
             self._fifo_path = None
 
 
+def _raise_system_exit(_signum, _frame):
+    raise SystemExit(0)
+
+
 def main(args=None):
     rclpy.init(args=args)
+    # Without a handler SIGTERM ends the interpreter without running the
+    # `finally` below, which is what orphaned the Isaac runtime.
+    signal.signal(signal.SIGTERM, _raise_system_exit)
     node = IsaacSpawner()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, SystemExit):
         pass
+    except Exception as exc:  # ExternalShutdownException on launch SIGINT
+        if exc.__class__.__name__ != "ExternalShutdownException":
+            raise
     finally:
         node.shutdown()
         try:
