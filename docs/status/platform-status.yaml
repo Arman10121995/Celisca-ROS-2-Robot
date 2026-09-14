@@ -1,7 +1,7 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-11"
+updated: "2026-09-14"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -561,8 +561,12 @@ tasks:
           - "src/robot_lab_adapter/test/test_r5_3_bhl_balance.py"
           - "src/robot_lab_robots/config/robots.yaml"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "R5.3 active - codex. Deliver BHL joint/inertia/limit static validation, closed-loop balance core (ankle strategy + arm reaction, IMU feedback), safety monitor, 60+ unit tests, and a standing-pose-is-not-balance check."
+        evidence:
+          - "bhl_balance.py: closed-loop balance core - ankle strategy (differential ankle roll/pitch with hip-roll compensation), arm-reaction swing out of phase with roll, joint-space PD stance where a joint without a position measurement gets zero effort, efforts clamped to the URDF 20 N.m limit, bounded base-velocity interface, effort-residual contact estimation, latched SAFE_STOP monitor (tilt >= 0.70 rad or >=98% effort for 50 cycles, explicit reset), BodyState roll/pitch from IMU ZYX quaternion."
+          - "test_r5_3_bhl_balance.py: 56 unit tests pass (2026-09-14), including the standing-pose-is-not-balance check: a level body returns the nominal pose while non-zero roll/pitch changes ankle/hip/arm commands."
+          - "test_bhl_qualification.py: 23 registry static tests pass (2026-09-14) asserting BHL URDF joints/inertias/position limits; 56+23=79 BHL unit tests, above the 60+ acceptance bar."
+          - "humanoid_standing_controller.py stays a thin ROS wrapper over the pure-logic layer; the module docstring declares flat-ground stepping/walking and stop as future work."
+        next_action: "Balance core delivered and unit-qualified (79 tests green). Remaining acceptance: bounded perturbation recovery pass, measured flat-ground stepping/walking and stop, and falls/limits enforced in simulation."
       R5.4:
         title: "Integrate real multirotor SITL flight"
         state: "queued"
@@ -758,8 +762,11 @@ tasks:
           - "src/robot_lab_mujoco/"
           - "src/robot_lab_bringup/test/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Continue Claude's MuJoCo wheel/camera work from c6da1a9: verify mobile drive and RGB-D in an isolated simulation, repair spawn/reset state defects, and record bounded runtime evidence. Full R4 mission qualification remains outstanding."
+        evidence:
+          - "c6da1a9 + fbbf0fe: MuJoCo wheel actuators and RGB-D camera on the spawned robot; spawn/reset state defects repaired with a physics lock."
+          - "2026-09-14 isolated live smoke (src/robot_lab_bringup/test/test_mujoco_runtime.py with ROBOT_LAB_RUN_MUJOCO_SMOKE=1, MUJOCO_GL=egl; MuJoCo 3.12.0, bumperbot, nav_empty, spawn_yaw 0.7): 0.285 m forward in 1.5 s sim time at 0.2 m/s commanded with -0.003 m lateral drift; RGB 320x240 rgb8 and depth 32FC1 with finite fraction 1.0 (min 0.372 m) at registered optical-frame stamps; 131 clock / 132 odom / 14 scan / 14 rgb messages; /robot_lab/reset restores pose to 1.3e-5 m and ~0 speed. Artifacts: docs/status/evidence/mujoco-r81-smoke-2026-09-14/."
+          - "Smoke test repaired for this host's rclpy binding, which represents scalar uint8 - including the DiagnosticStatus.OK constant - as bytes; the health-level contract check normalises the representation without weakening it. Full adapter suite 164 passed (2026-09-14)."
+        next_action: "Isolated MuJoCo drive/RGB-D/reset smoke recorded. Remaining: the equivalent PyBullet smoke, then full R4 mission qualification on both backends."
       R8.2:
         title: "Qualify Isaac on a named host configuration"
         state: "queued"
