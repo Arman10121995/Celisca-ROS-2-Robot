@@ -27,7 +27,7 @@ def test_mujoco_drive_camera_and_reset(tmp_path, monkeypatch):
     mujoco = pytest.importorskip("mujoco")
     rclpy = pytest.importorskip("rclpy")
     from ament_index_python.packages import get_package_share_directory as share
-    from diagnostic_msgs.msg import DiagnosticArray
+    from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
     from geometry_msgs.msg import Twist
     from nav_msgs.msg import Odometry
     from rclpy.context import Context
@@ -108,7 +108,12 @@ def test_mujoco_drive_camera_and_reset(tmp_path, monkeypatch):
                    and stamp(latest["odom"]) >= 0.5)
         status = latest["health"].status[0]
         assert {item.key: item.value for item in status.values}["model_source"] == "urdf"
-        assert status.level == 0
+        # This platform's rclpy binding represents scalar uint8 - including
+        # the DiagnosticStatus.OK constant itself - as bytes, so normalise
+        # to an integer before comparing against the OK level.
+        level = status.level[0] if isinstance(status.level, (bytes, bytearray)) \
+            else status.level
+        assert level == 0, "health level %r is not OK" % (status.level,)
 
         # Camera output must be real, metric and registered in the optical frame.
         spin_until(lambda: stamp(latest["rgb"]) == stamp(latest["depth"])

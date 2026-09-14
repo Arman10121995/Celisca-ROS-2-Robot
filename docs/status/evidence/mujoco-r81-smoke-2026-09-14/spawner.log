@@ -1,0 +1,47 @@
+1789382865.389508 [173]     python: selected interface "lo" is not multicast-capable: disabling multicast
+[INFO] [1789382866.875456829] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[INFO] [1789382867.002817196] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[INFO] [1789382867.003638003] [mujoco_spawner]: Joints: ['wheel_right_joint', 'wheel_left_joint']   lw=wheel_left_joint rw=wheel_right_joint
+[INFO] [1789382867.004533368] [mujoco_spawner]: MuJoCo model loaded: 4 bodies, 3 joints
+[INFO] [1789382867.005009162] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[INFO] [1789382867.005432253] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[INFO] [1789382867.012040535] [mujoco_spawner]: MuJoCo spawner running.
+[INFO] [1789382872.628048550] [mujoco_spawner]: Simulation reset
+Exception ignored in: <function Renderer.__del__ at 0xffff7d605cf0>
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 343, in __del__
+    self.close()
+  File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 329, in close
+    self._gl_context.free()
+  File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 133, in free
+    EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+  File "/usr/lib/python3/dist-packages/OpenGL/platform/baseplatform.py", line 415, in __call__
+    return self( *args, **named )
+  File "/usr/lib/python3/dist-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglDestroyContext,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0xffff73d2f840>,
+		<OpenGL._opaque.EGLContext_pointer object at 0xffff70fec3c0>,
+	),
+	result = 0
+)
+Exception ignored in: <function GLContext.__del__ at 0xffff7d6055a0>
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 138, in __del__
+    self.free()
+  File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 133, in free
+    EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+  File "/usr/lib/python3/dist-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglDestroyContext,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0xffff73d2f840>,
+		<OpenGL._opaque.EGLContext_pointer object at 0xffff70fec3c0>,
+	),
+	result = 0
+)
