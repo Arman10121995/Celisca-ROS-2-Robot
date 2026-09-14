@@ -748,8 +748,8 @@ tasks:
     tasks:
       R8.1:
         title: "Qualify PyBullet and MuJoCo combinations"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "codex"
         depends_on:
           - "R5.1"
           - "R6.1"
@@ -759,7 +759,7 @@ tasks:
           - "src/robot_lab_bringup/test/"
         acceptance_ref: "ROADMAP.md"
         evidence: []
-        next_action: "Verify import fidelity, frames, stepping, contacts, limits, sensors/noise and reset. Do not silently substitute a generic box model. Start with mobile; add class/backend rows only after that class mission passes."
+        next_action: "Continue Claude's MuJoCo wheel/camera work from c6da1a9: verify mobile drive and RGB-D in an isolated simulation, repair spawn/reset state defects, and record bounded runtime evidence. Full R4 mission qualification remains outstanding."
       R8.2:
         title: "Qualify Isaac on a named host configuration"
         state: "queued"

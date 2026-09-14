@@ -766,6 +766,8 @@ class MuJoCoSpawner(Node):
         self._rw_qpos_adr = -1
         self._twist = Twist()
         self._twist_lock = threading.Lock()
+        # A reset service and the physics/rendering thread share MjData.
+        self._physics_lock = threading.RLock()
         self._last_cmd_time = time.monotonic()
         self._watchdog_timeout = 0.5  # stop if no cmd_vel for 500ms
         self._sim_t = 0.0
@@ -930,23 +932,8 @@ class MuJoCoSpawner(Node):
         # --- find the root body that contains the free joint ---
         self._find_body_and_joints()
 
-        # --- set spawn pose ---
-        sx = self.get_parameter("spawn_x").value
-        sy = self.get_parameter("spawn_y").value
-        sz = self.get_parameter("spawn_z").value
-        syaw = self.get_parameter("spawn_yaw").value
-
-        if self._body_id >= 0 and self._free_joint_qpos_adr >= 0:
-            adr = self._free_joint_qpos_adr
-            self._data.qpos[adr] = sx
-            self._data.qpos[adr + 1] = sy
-            self._data.qpos[adr + 2] = sz
-            self._data.qpos[adr + 3] = math.cos(syaw / 2.0)
-            self._data.qpos[adr + 4] = 0.0
-            self._data.qpos[adr + 5] = math.sin(syaw / 2.0)
-            self._data.qpos[adr + 6] = 0.0
-
-        mujoco.mj_forward(self._model, self._data)
+        # Spawn and reset use the same pose and initial physics state.
+        self._reset_physics()
 
         self.get_logger().info(
             "MuJoCo model loaded: %d bodies, %d joints"
@@ -1166,90 +1153,97 @@ class MuJoCoSpawner(Node):
         last_pub = 0.0
         last_scan = 0.0
         last_camera = 0.0
-        t0 = time.monotonic()
-        wr = self.get_parameter("wheel_radius").value
-        ws = self.get_parameter("wheel_separation").value
-
         while self._running and rclpy.ok():
             now = time.monotonic()
-            elapsed = now - t0
 
-            # cmd_vel — apply watchdog: stop if no recent command
-            with self._twist_lock:
-                t = self._twist
-                stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
-            if stale:
-                t = Twist()
-            vl = (t.linear.x - t.angular.z * ws / 2.0) / wr
-            vr = (t.linear.x + t.angular.z * ws / 2.0) / wr
-            clamp = 50.0
-            vl = max(-clamp, min(clamp, vl))
-            vr = max(-clamp, min(clamp, vr))
+            with self._physics_lock:
+                self._step_physics()
+                # Sensor rates describe simulated time. Scheduling the camera
+                # by wall time made a slow render immediately trigger another
+                # render, starving physics of all but one step per frame.
+                sim_time = self._sim_t
+                if self._sim_step == 1:
+                    # Publish immediately after spawn or a clock-reset service.
+                    last_pub = sim_time - pub_dt
+                    last_scan = sim_time - scan_dt
+                    last_camera = sim_time - camera_dt
+                try:
+                    if sim_time - last_pub + 1e-9 >= pub_dt:
+                        last_pub = sim_time
+                        self._pub_joint_states()
+                        self._pub_odom()
+                        self._pub_imu()
+                        self._pub_clock()
 
-            if self._lw_qpos_adr >= 0 and self._model.nu > 0:
-                self._set_velocity_actuator(self._lw_name, vl)
-            if self._rw_qpos_adr >= 0 and self._model.nu > 0:
-                self._set_velocity_actuator(self._rw_name, vr)
+                    if sim_time - last_scan + 1e-9 >= scan_dt:
+                        last_scan = sim_time
+                        self._pub_scan()
 
-            # A tick of physics_rate advances as many model timesteps as fit
-            # in it, and the published clock is physics time.  Counting ticks
-            # at 1/physics_rate while each mj_step advanced the model's own
-            # 2 ms made /clock run about twice as fast as the physics.
-            for _ in range(self._substeps):
-                mujoco.mj_step(self._model, self._data)
-            self._sim_step += 1
-            self._sim_t = float(self._data.time)
+                    if self._camera is not None and sim_time - last_camera + 1e-9 >= camera_dt:
+                        last_camera = sim_time
+                        self._pub_camera()
+                except Exception:
+                    # Launch's SIGINT can shut ROS down before this thread.
+                    if not rclpy.ok():
+                        break
+                    raise
 
-            bid = self._body_id
-            self._bpos = list(self._data.xpos[bid])
-            # xquat is scalar-first; the publishers use ROS (x, y, z, w).
-            # Copying it straight through published a level robot as rolled
-            # 180 degrees.
-            self._born = xyzw_from_wxyz(self._data.xquat[bid])
-
-            self._bang, self._blin = _body_frame_velocity(
-                self._model, self._data, bid)
-
-            self._jpos = []
-            self._jvel = []
-            for jn in self._joint_names:
-                adr = self._joint_name2id.get(jn, -1)
-                dadr = self._joint_name2dofadr.get(jn, -1)
-                if adr >= 0:
-                    self._jpos.append(float(self._data.qpos[adr]))
-                    self._jvel.append(float(self._data.qvel[dadr]))
-                else:
-                    self._jpos.append(0.0)
-                    self._jvel.append(0.0)
-
-            try:
-                if elapsed - last_pub >= pub_dt:
-                    last_pub = elapsed
-                    self._pub_joint_states()
-                    self._pub_odom()
-                    self._pub_imu()
-                    self._pub_clock()
-
-                if elapsed - last_scan >= scan_dt:
-                    last_scan = elapsed
-                    self._pub_scan()
-
-                if self._camera is not None and elapsed - last_camera >= camera_dt:
-                    last_camera = elapsed
-                    self._pub_camera()
-            except Exception:
-                # Launch's SIGINT shuts the ROS context down before
-                # destroy_node() stops this thread; publishing then raises.
-                if not rclpy.ok():
-                    break
-                raise
-
-            if self._viewer is not None and self._viewer.is_running():
-                self._viewer.sync()
+                if self._viewer is not None and self._viewer.is_running():
+                    self._viewer.sync()
 
             dt = time.monotonic() - now
             if dt < self._dt:
                 time.sleep(self._dt - dt)
+
+    def _step_physics(self):
+        """Apply the current command and advance one tick under the physics lock."""
+        with self._twist_lock:
+            command = self._twist
+            stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
+        if stale:
+            command = Twist()
+        radius = self.get_parameter("wheel_radius").value
+        track = self.get_parameter("wheel_separation").value
+        left = (command.linear.x - command.angular.z * track / 2.0) / radius
+        right = (command.linear.x + command.angular.z * track / 2.0) / radius
+        if self._lw_qpos_adr >= 0 and self._model.nu > 0:
+            self._set_velocity_actuator(self._lw_name, max(-50.0, min(50.0, left)))
+        if self._rw_qpos_adr >= 0 and self._model.nu > 0:
+            self._set_velocity_actuator(self._rw_name, max(-50.0, min(50.0, right)))
+        for _ in range(self._substeps):
+            mujoco.mj_step(self._model, self._data)
+        self._sim_step += 1
+        self._read_physics_state()
+
+    def _read_physics_state(self):
+        """Refresh publisher state from the model after a step or reset."""
+        self._sim_t = float(self._data.time)
+        self._bpos = list(self._data.xpos[self._body_id])
+        self._born = xyzw_from_wxyz(self._data.xquat[self._body_id])
+        self._bang, self._blin = _body_frame_velocity(
+            self._model, self._data, self._body_id)
+        self._jpos = [float(self._data.qpos[self._joint_name2id[name]])
+                      for name in self._joint_names]
+        self._jvel = [float(self._data.qvel[self._joint_name2dofadr[name]])
+                      for name in self._joint_names]
+
+    def _reset_physics(self):
+        """Restore all model state, spawn pose and a stopped command."""
+        mujoco.mj_resetData(self._model, self._data)
+        adr = self._free_joint_qpos_adr
+        if adr >= 0:
+            self._data.qpos[adr:adr + 3] = [
+                self.get_parameter("spawn_" + axis).value for axis in ("x", "y", "z")]
+            yaw = self.get_parameter("spawn_yaw").value
+            # Free-joint quaternion is (w, x, y, z); yaw rotates about z.
+            self._data.qpos[adr + 3:adr + 7] = [
+                math.cos(yaw / 2.0), 0.0, 0.0, math.sin(yaw / 2.0)]
+        with self._twist_lock:
+            self._twist = Twist()
+            self._last_cmd_time = 0.0
+        self._sim_step = 0
+        mujoco.mj_forward(self._model, self._data)
+        self._read_physics_state()
 
     def _set_velocity_actuator(self, joint_name, velocity):
         m = self._model
@@ -1310,31 +1304,15 @@ class MuJoCoSpawner(Node):
     def _on_reset(self, request, response):
         """Reset the simulation (R2.3)."""
         try:
-            if self._body_id >= 0 and self._model is not None:
-                # Reset robot position to spawn point.
-                sx = self.get_parameter("spawn_x").value
-                sy = self.get_parameter("spawn_y").value
-                sz = self.get_parameter("spawn_z").value
-                syaw = self.get_parameter("spawn_yaw").value
-                orn = _rpy_to_quat(0, 0, syaw)
-                # MuJoCo free joint qpos: [x, y, z, qw, qx, qy, qz]
-                adr = self._free_joint_qpos_adr
-                if adr >= 0:
-                    self._data.qpos[adr:adr + 3] = [sx, sy, sz]
-                    self._data.qpos[adr + 3:adr + 7] = [orn.w, orn.x, orn.y, orn.z]
-                    # Reset velocity.
-                    dadr = self._free_joint_qpos_adr
-                    self._data.qvel[dadr:dadr + 6] = [0, 0, 0, 0, 0, 0]
-                    mujoco.mj_forward(self._model, self._data)
-                # Reset simulation time.
-                self._sim_t = 0.0
-                self._sim_step = 0
-                self.get_logger().info("Simulation reset")
-                response.success = True
-                response.message = "Simulation reset successfully"
-            else:
-                response.success = False
-                response.message = "No robot loaded"
+            with self._physics_lock:
+                if self._body_id >= 0 and self._model is not None:
+                    self._reset_physics()
+                    self.get_logger().info("Simulation reset")
+                    response.success = True
+                    response.message = "Simulation reset successfully"
+                else:
+                    response.success = False
+                    response.message = "No robot loaded"
         except Exception as e:
             response.success = False
             response.message = f"Reset failed: {e}"
