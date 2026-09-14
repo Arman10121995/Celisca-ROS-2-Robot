@@ -1,7 +1,8 @@
 # Robot Lab support matrix
 
-Last updated: 2026-09-11. Baseline reviewed: `dff388f`; simulator
-coverage and the algorithm-selection contract re-measured 2026-09-11.
+Last updated: 2026-09-14. Baseline reviewed: `dff388f`; simulator
+coverage and the algorithm-selection contract re-measured 2026-09-11;
+PyBullet and MuJoCo live drive/RGB-D/reset smokes recorded 2026-09-14.
 
 This matrix reports implementation and evidence, not registry maturity labels.
 No new full missions, GUI sessions or hardware operations were performed by the
@@ -34,8 +35,8 @@ checks. One machine's cached installation does not prove universal support.
 | Backend/component | Implementation/evidence | Current limit |
 |---|---|---|
 | Gazebo (Ignition Fortress 6.18) | Primary launch/control path, robot/world assets, historical headless world-load notes. The launch executes `ign gazebo` 6 through Humble's binary `ros_gz_sim` 0.244 (verified 2026-09-14 from the running process name and the `ign-gazebo-6` plugin path); Gazebo Harmonic (gz-sim 8.15) is also installed but is not what this launch path runs | Strongest reference route; no fresh end-to-end navigation or all-world recertification |
-| PyBullet | Spawner, wheel command bridge, state/scan output; selected tests include basic real physics. 2026-09-11: loads all 17 robot descriptions and materialises static geometry for all 26 worlds (boxes/spheres/cylinders/planes/meshes, `model://` includes resolved, Collada staged to STL) | Partial runtime implementation, not complete ROS/navigation qualification |
-| MuJoCo | Model import, wheel-actuation bridge, state/scan output; selected tests include basic real physics. 2026-09-11: all 17 robots import with their assets and a floating base; MJCF worlds generated for all 26 maps | Partial runtime implementation, not complete ROS/navigation qualification |
+| PyBullet | Spawner, wheel command bridge, state/scan/RGB-D output; selected tests include basic real physics. 2026-09-11: loads all 17 robot descriptions and materialises static geometry for all 26 worlds (boxes/spheres/cylinders/planes/meshes, `model://` includes resolved, Collada staged to STL). 2026-09-14: live headless smoke passed (`test_pybullet_runtime.py` with `ROBOT_LAB_RUN_PYBULLET_SMOKE=1`) - bumperbot drives in the commanded direction (0.2 m/s commanded, avg 0.199 m/s over 4.5 s sim), RGB-D 320x240 rgb8+32FC1 at ~5 Hz sim cadence via a dedicated mirror render client, reset restores pose/velocity/command to 3.8e-5 m; Collada `<unit meter>` scaling fixed so world meshes materialise at metre scale | Not a full mission; warehouse spawn zones can intersect static geometry (R6.1); startup under-travel until wheel slip settles |
+| MuJoCo | Model import, wheel-actuation bridge, state/scan/RGB-D output; selected tests include basic real physics. 2026-09-11: all 17 robots import with their assets and a floating base; MJCF worlds generated for all 26 maps. 2026-09-14: live headless smoke passed (`test_mujoco_runtime.py` with `ROBOT_LAB_RUN_MUJOCO_SMOKE=1`, MuJoCo 3.12.0) - bumperbot drives 0.285 m in 1.5 s sim at 0.2 m/s commanded with -0.003 m lateral drift, RGB-D 320x240 rgb8+32FC1 (finite-depth fraction 1.0), reset restores pose to 1.3e-5 m | Not a full mission; navigation/auto-docking not qualified |
 | Isaac Sim | ROS spawner plus a separate runtime under Isaac's Python 3.12. 2026-09-14 on this Jetson AGX Orin: installation auto-detected; boots with Isaac's bundled `libnvJitLink` preloaded; through `ros2 launch` the runtime reaches ready (245 s cold, 30 s warm), publishes /joint_states, /odom/ground_truth and /clock at 50 Hz, builds SDF worlds as USD collision prims, and stops cleanly on SIGINT in 2 s with no Kit process left | Drives in the commanded direction with wheel velocities tracking the command, but body speed is ~15 % below it (cause not isolated); runs at a real-time factor of 0.18 headless on this Jetson; no scan or RGB-D publisher; no mission qualification |
 | ORB-SLAM3 | Optional external-library wrapper | Requires compatible dependencies including OpenCV/cv_bridge ABI; not required for reference simulation |
 

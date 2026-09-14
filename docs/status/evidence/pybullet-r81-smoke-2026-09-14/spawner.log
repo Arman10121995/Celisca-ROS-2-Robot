@@ -1,0 +1,24 @@
+pybullet build time: Sep  2 2026 15:04:54
+1789387613.030713 [174]     python: selected interface "lo" is not multicast-capable: disabling multicast
+[INFO] [1789387613.152013008] [pybullet_spawner]: PyBulletSpawner __init__ started
+[INFO] [1789387613.155827914] [pybullet_spawner]: Parameters declared
+[INFO] [1789387613.178340433] [pybullet_spawner]: Created /robot_lab/ready publisher
+[INFO] [1789387613.180607125] [pybullet_spawner]: Created /robot_lab/health publisher
+[INFO] [1789387613.182675742] [pybullet_spawner]: Created /robot_lab/reset service
+[INFO] [1789387613.863217840] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmppdeqj3zp.urdf
+[INFO] [1789387613.868130221] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[INFO] [1789387613.868993270] [pybullet_spawner]: Connecting to PyBullet...
+[INFO] [1789387613.880567969] [pybullet_spawner]: PyBullet connected with client_id=0
+[INFO] [1789387613.881561287] [pybullet_spawner]: PyBullet physics engine configured
+[INFO] [1789387613.895851178] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+base_footprint[INFO] [1789387614.710238353] [pybullet_spawner]: Loaded robot id=10 (15 joints)
+[INFO] [1789387614.710890336] [pybullet_spawner]: Friction from the description's <gazebo> blocks: caster_front_link=0.1, caster_rear_link=0.1, wheel_left_link=1, wheel_right_link=1
+[INFO] [1789387614.712957993] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+base_footprint[INFO] [1789387615.551832203] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[INFO] [1789387615.552649685] [pybullet_spawner]: Joints: ['wheel_right_joint', 'wheel_left_joint']  lw=wheel_left_joint rw=wheel_right_joint
+[INFO] [1789387615.872445096] [pybullet_spawner]: PyBullet spawner running
+[INFO] [1789387630.256273797] [pybullet_spawner]: Simulation reset

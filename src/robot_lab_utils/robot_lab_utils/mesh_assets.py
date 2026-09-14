@@ -84,10 +84,21 @@ def _parse_collada_mesh(dae_path):
         return "{%s}%s" % (ns, tag) if ns else tag
 
     up_axis = "Y_UP"
+    unit_metres = 1.0
     for asset in root.findall(_q("asset")):
         axis = asset.find(_q("up_axis"))
         if axis is not None and axis.text:
             up_axis = axis.text.strip()
+        # <unit meter="0.01" name="centimeter"/> declares how many metres
+        # one file unit is (Collada default 1.0).  AWS RoboMaker warehouse
+        # models export in centimetres; ignoring this made every world mesh
+        # 100x too large and the LiDAR/RGB-D geometry wrong (R8.1).
+        unit = asset.find(_q("unit"))
+        if unit is not None and unit.get("meter"):
+            try:
+                unit_metres = max(float(unit.get("meter")), 1e-9)
+            except ValueError:
+                pass
 
     vertices = []
     faces = []
@@ -163,7 +174,7 @@ def _parse_collada_mesh(dae_path):
 
     if not faces:
         raise ValueError("no triangle geometry found")
-    verts = np.array(vertices, dtype=np.float64)
+    verts = np.array(vertices, dtype=np.float64) * unit_metres
     if up_axis == "Y_UP":
         verts = verts[:, [0, 2, 1]] * np.array([1.0, -1.0, 1.0])
     elif up_axis == "X_UP":

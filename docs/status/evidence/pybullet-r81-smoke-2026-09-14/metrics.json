@@ -1,0 +1,24 @@
+{
+  "pybullet": true,
+  "robot": "bumperbot",
+  "world": "nav_empty",
+  "spawn_yaw_rad": 0.7,
+  "commanded_speed_mps": 0.2,
+  "forward_distance_m": 0.8950823937803951,
+  "lateral_distance_m": 0.0005040364249852547,
+  "drive_sim_seconds": 4.5,
+  "reset_position_error_m": 3.83644933234175e-05,
+  "reset_speed_mps": -6.841752149971281e-06,
+  "depth_finite_fraction": 0.6101432291666666,
+  "depth_min_m": 0.3723911643028259,
+  "received": {
+    "ready": 1,
+    "health": 17,
+    "odom": 269,
+    "clock": 268,
+    "rgb": 27,
+    "depth": 27,
+    "info": 27,
+    "scan": 26
+  }
+}

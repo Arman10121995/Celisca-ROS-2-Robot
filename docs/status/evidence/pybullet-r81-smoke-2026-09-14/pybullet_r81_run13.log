@@ -1,0 +1,5 @@
+pybullet build time: Sep  2 2026 15:04:54
+1789386797.251582 [174]     python: selected interface "lo" is not multicast-capable: disabling multicast
+{"commanded_speed_mps": 0.2, "depth_finite_fraction": 0.6101432291666666, "depth_min_m": 0.3723911643028259, "drive_sim_seconds": 4.5, "forward_distance_m": 0.8950823937803951, "lateral_distance_m": 0.0005040364249852547, "pybullet": true, "received": {"clock": 268, "depth": 27, "health": 17, "info": 27, "odom": 269, "ready": 1, "rgb": 27, "scan": 26}, "reset_position_error_m": 3.83644933234175e-05, "reset_speed_mps": -6.841752149971281e-06, "robot": "bumperbot", "spawn_yaw_rad": 0.7, "world": "nav_empty"}
+.
+1 passed in 20.39s

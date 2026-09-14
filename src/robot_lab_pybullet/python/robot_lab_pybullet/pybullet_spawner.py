@@ -59,13 +59,15 @@ def _apply_link_friction(robot_id, link_indices, friction):
     return applied
 
 
-def _render_rgbd(position, orientation_xyzw, camera):
+def _render_rgbd(position, orientation_xyzw, camera, client=0):
     """Render RGB and metric depth from a camera link frame.
 
     The link looks along its +x axis with +z up, as the OAK-D link does.
     Returns ``(rgb, depth)``: uint8 HxWx3 and float32 HxW metres along the
     optical axis, ``inf`` where nothing is within the far clip.  The tiny
-    software renderer needs no display or GPU.
+    software renderer needs no display or GPU.  ``client`` selects the
+    PyBullet client to render from, so the camera can use a dedicated
+    mirror world instead of stalling the physics client.
     """
     q = wxyz_from_xyzw(orientation_xyzw)
     eye = [float(v) for v in position]
@@ -73,15 +75,17 @@ def _render_rgbd(position, orientation_xyzw, camera):
     up = rotate((0.0, 0.0, 1.0), q)
     width, height = int(camera["width"]), int(camera["height"])
     view = p.computeViewMatrix(
-        eye, [e + f for e, f in zip(eye, forward)], list(up))
+        eye, [e + f for e, f in zip(eye, forward)], list(up),
+        physicsClientId=client)
     projection = p.computeProjectionMatrixFOV(
         fov=math.degrees(camera_model.vertical_fov(
             camera["horizontal_fov"], width, height)),
         aspect=float(width) / height,
-        nearVal=camera["near"], farVal=camera["far"])
+        nearVal=camera["near"], farVal=camera["far"],
+        physicsClientId=client)
     _, _, rgba, z_buffer, _ = p.getCameraImage(
         width, height, view, projection, renderer=p.ER_TINY_RENDERER,
-        flags=p.ER_NO_SEGMENTATION_MASK)
+        flags=p.ER_NO_SEGMENTATION_MASK, physicsClientId=client)
     rgb = np.asarray(rgba, dtype=np.uint8).reshape(height, width, 4)[:, :, :3]
     z_buffer = np.asarray(z_buffer, dtype=np.float64).reshape(height, width)
     depth = camera_model.linear_depth(
@@ -313,8 +317,12 @@ class PyBulletSpawner(Node):
         except Exception as e:
             self.get_logger().error("Failed to create /robot_lab/reset: %s" % e)
         self._ready = False
-        # Health timer created after init to avoid blocking
-        self._health_timer = None
+        # Wall-clock health timer - a default-clock timer would deadlock on
+        # sim time because this node is itself the /clock publisher (same
+        # contract and cadence as mujoco_spawner).
+        self._health_timer = self.create_timer(
+            1.0, self._publish_health,
+            clock=Clock(clock_type=ClockType.SYSTEM_TIME))
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
         # Wall-clock timer — see note in mujoco_spawner / above comment about
@@ -328,13 +336,16 @@ class PyBulletSpawner(Node):
     # ------------------------------------------------------------------
     # SDF world loading
     # ------------------------------------------------------------------
-    def _load_sdf_world(self, world_path: str) -> None:
-        """Materialise an SDF world's static geometry in PyBullet.
+    def _load_sdf_world(self, world_path: str, client: int = 0) -> None:
+        """Materialise an SDF world's static geometry in a PyBullet client.
 
         Parsing is the shared ``robot_lab_utils.sdf_world`` reader that the
         Isaac backend also uses (primitives, the full model -> link ->
         geometry pose chain, ``model://`` includes), so both backends build
         the same world from the same source instead of each keeping a copy.
+        ``client`` targets the physics client (default) or the mirror
+        render client, which must hold the same geometry for faithful
+        RGB-D rendering (R8.1).
         """
         from ament_index_python.packages import get_package_share_directory
         try:
@@ -359,7 +370,7 @@ class PyBulletSpawner(Node):
             return
         created = 0
         for shape in shapes:
-            if self._create_shape(shape):
+            if self._create_shape(shape, client=client):
                 created += 1
             else:
                 skipped.append("%s shape not created" % shape.get("type"))
@@ -387,7 +398,7 @@ class PyBulletSpawner(Node):
                 "could not convert mesh %s" % os.path.basename(path))
         return staged
 
-    def _create_shape(self, shape):
+    def _create_shape(self, shape, client: int = 0):
         """Create one static PyBullet body from a shared shape record."""
         kind = shape.get("type")
         size = [float(v) for v in (shape.get("size") or [])]
@@ -400,21 +411,26 @@ class PyBulletSpawner(Node):
                     full = (size + [100.0, 100.0])[:2]
                     half = [max(full[0], 1e-6) / 2.0,
                             max(full[1], 1e-6) / 2.0, 0.005]
-                collision = p.createCollisionShape(p.GEOM_BOX, halfExtents=half)
-                visual = p.createVisualShape(p.GEOM_BOX, halfExtents=half,
-                                             rgbaColor=colour)
+                collision = p.createCollisionShape(
+                    p.GEOM_BOX, halfExtents=half, physicsClientId=client)
+                visual = p.createVisualShape(
+                    p.GEOM_BOX, halfExtents=half, rgbaColor=colour,
+                    physicsClientId=client)
             elif kind == "sphere":
                 radius = (size + [0.5])[0]
-                collision = p.createCollisionShape(p.GEOM_SPHERE, radius=radius)
-                visual = p.createVisualShape(p.GEOM_SPHERE, radius=radius,
-                                             rgbaColor=colour)
+                collision = p.createCollisionShape(
+                    p.GEOM_SPHERE, radius=radius, physicsClientId=client)
+                visual = p.createVisualShape(
+                    p.GEOM_SPHERE, radius=radius, rgbaColor=colour,
+                    physicsClientId=client)
             elif kind == "cylinder":
                 radius, length = (size + [0.5, 1.0])[:2]
                 collision = p.createCollisionShape(
-                    p.GEOM_CYLINDER, radius=radius, height=length)
+                    p.GEOM_CYLINDER, radius=radius, height=length,
+                    physicsClientId=client)
                 visual = p.createVisualShape(
                     p.GEOM_CYLINDER, radius=radius, length=length,
-                    rgbaColor=colour)
+                    rgbaColor=colour, physicsClientId=client)
             elif kind == "mesh":
                 path = self._stage_mesh(shape.get("mesh", ""))
                 if not path:
@@ -422,10 +438,11 @@ class PyBulletSpawner(Node):
                 scale = [float(v) for v in
                          (shape.get("scale") or [1.0, 1.0, 1.0])[:3]]
                 collision = p.createCollisionShape(
-                    p.GEOM_MESH, fileName=path, meshScale=scale)
+                    p.GEOM_MESH, fileName=path, meshScale=scale,
+                    physicsClientId=client)
                 visual = p.createVisualShape(
                     p.GEOM_MESH, fileName=path, meshScale=scale,
-                    rgbaColor=colour)
+                    rgbaColor=colour, physicsClientId=client)
             else:
                 return False
         except Exception as exc:
@@ -437,6 +454,7 @@ class PyBulletSpawner(Node):
             baseVisualShapeIndex=visual,
             basePosition=[float(v) for v in shape.get("position", [0, 0, 0])],
             baseOrientation=_xyzw(shape.get("orientation", [1, 0, 0, 0])),
+            physicsClientId=client,
         )
         return True
 
@@ -551,7 +569,9 @@ class PyBulletSpawner(Node):
             tmp.name, [sx, sy, sz], [orn.x, orn.y, orn.z, orn.w],
             useFixedBase=False,
             flags=p.URDF_USE_INERTIA_FROM_FILE)
-        os.unlink(tmp.name)
+        # The URDF file is kept until the mirror render client (below) has
+        # loaded its own copy, then removed.
+        self._robot_urdf_path = tmp.name
         self.get_logger().info(f"Loaded robot id={self._robot_id}"
                                f" ({p.getNumJoints(self._robot_id)} joints)")
 
@@ -575,6 +595,72 @@ class PyBulletSpawner(Node):
                                                  _MAX_LATERAL_FRICTION))
                             for link in applied))
         self._camera = self._camera_setup()
+        # A dedicated DIRECT client renders the RGB-D camera: the tiny
+        # software renderer costs hundreds of ms per frame on this host,
+        # which would otherwise stall the physics loop below its 50 Hz
+        # publish contract.  The mirror world holds the same plane + robot
+        # and is posed from the physics loop's latest state snapshot before
+        # each render, so the image is geometrically faithful.
+        self._render_client = -1
+        self._camera_thread = None
+        self._cam_pose = None
+        if self._camera is not None:
+            try:
+                self._render_client = p.connect(p.DIRECT)
+                p.setAdditionalSearchPath(
+                    pybullet_data.getDataPath(),
+                    physicsClientId=self._render_client)
+                p.loadURDF("plane.urdf", physicsClientId=self._render_client)
+                self._render_robot_id = p.loadURDF(
+                    self._robot_urdf_path, [sx, sy, sz],
+                    [orn.x, orn.y, orn.z, orn.w],
+                    useFixedBase=False,
+                    flags=p.URDF_USE_INERTIA_FROM_FILE,
+                    physicsClientId=self._render_client)
+                self._render_joint_idx = {
+                    p.getJointInfo(self._render_robot_id, i,
+                                   physicsClientId=self._render_client)[1]
+                    .decode(): i
+                    for i in range(p.getNumJoints(
+                        self._render_robot_id,
+                        physicsClientId=self._render_client))}
+                # Mirror the same static world geometry so RGB-D frames see
+                # the environment, not just the ground plane.
+                wp = self.get_parameter("world_path").value
+                if wp and os.path.isfile(str(wp)):
+                    ext = os.path.splitext(str(wp))[1].lower()
+                    if ext in (".world", ".sdf"):
+                        self._load_sdf_world(
+                            str(wp), client=self._render_client)
+                    elif ext in (".stl", ".obj"):
+                        cid = p.createCollisionShape(
+                            p.GEOM_MESH, fileName=str(wp),
+                            physicsClientId=self._render_client)
+                        vid = p.createVisualShape(
+                            p.GEOM_MESH, fileName=str(wp),
+                            rgbaColor=[0.6, 0.6, 0.6, 1.0],
+                            physicsClientId=self._render_client)
+                        p.createMultiBody(
+                            baseCollisionShapeIndex=cid,
+                            baseVisualShapeIndex=vid, baseMass=0,
+                            physicsClientId=self._render_client)
+                    else:
+                        p.loadURDF(str(wp), useFixedBase=True,
+                                   physicsClientId=self._render_client)
+            except Exception as e:
+                self.get_logger().warn(
+                    f"Mirror render client unavailable ({e}); "
+                    "RGB-D camera disabled")
+                self._camera = None
+                if self._render_client >= 0:
+                    try:
+                        p.disconnect(physicsClientId=self._render_client)
+                    except Exception:
+                        pass
+                    self._render_client = -1
+            finally:
+                if os.path.exists(self._robot_urdf_path):
+                    os.unlink(self._robot_urdf_path)
         lw = self.get_parameter("left_wheel_joint").value
         rw = self.get_parameter("right_wheel_joint").value
         self._lw = self._joint_idx.get(lw, -1)
@@ -592,6 +678,12 @@ class PyBulletSpawner(Node):
         # Start physics thread
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
+        # Start the RGB-D render thread (mirror client, decoupled from
+        # physics so the software renderer cannot stall the publish rate).
+        if self._camera is not None:
+            self._camera_thread = threading.Thread(
+                target=self._camera_loop, daemon=True)
+            self._camera_thread.start()
         self.get_logger().info("PyBullet spawner running")
 
         # Signal readiness (R2.3).
@@ -601,10 +693,8 @@ class PyBulletSpawner(Node):
     def _loop(self):
         pub_dt = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
         scan_dt = 1.0 / max(self.get_parameter("scan_rate").value, 0.1)
-        camera_dt = 1.0 / max(self._camera["rate"], 0.1) if self._camera else 0.0
         last_pub = 0.0
         last_scan = 0.0
-        last_camera = 0.0
         t0 = time.monotonic()
         wr = self.get_parameter("wheel_radius").value
         ws = self.get_parameter("wheel_separation").value
@@ -652,20 +742,30 @@ class PyBulletSpawner(Node):
                 s = p.getJointState(self._robot_id, self._joint_idx[jn])
                 self._jpos.append(s[0])
                 self._jvel.append(s[1])
+            if self._camera is not None and self._camera.get("link", -1) >= 0:
+                # Snapshot the camera link pose for the render thread; the
+                # tiny renderer itself runs on the mirror client (R8.1).
+                st = p.getLinkState(self._robot_id, self._camera["link"],
+                                    computeForwardKinematics=True)
+                self._cam_pose = (list(st[4]), list(st[5]))
 
             try:
-                if elapsed - last_pub >= pub_dt:
-                    last_pub = elapsed
+                # A reset rewinds sim time; re-arm the publish gates so the
+                # reset stamp flows immediately (R2.3 reset contract).
+                last_pub = min(last_pub, self._sim_t)
+                last_scan = min(last_scan, self._sim_t)
+                # Publish gates use sim time so the stamped 50 Hz odom /
+                # 5 Hz scan contracts hold in sim seconds regardless of the
+                # wall real-time factor.
+                if self._sim_t - last_pub >= pub_dt:
+                    last_pub = self._sim_t
                     self._pub_joint_states()
                     self._pub_odom()
                     self._pub_imu()
                     self._pub_clock()
-                if elapsed - last_scan >= scan_dt:
-                    last_scan = elapsed
+                if self._sim_t - last_scan >= scan_dt:
+                    last_scan = self._sim_t
                     self._pub_scan()
-                if self._camera is not None and elapsed - last_camera >= camera_dt:
-                    last_camera = elapsed
-                    self._pub_camera()
             except Exception:
                 # Launch's SIGINT shuts the ROS context down before
                 # destroy_node() stops this thread; publishing then raises.
@@ -728,6 +828,18 @@ class PyBulletSpawner(Node):
                     self._robot_id, [sx, sy, sz], [orn.x, orn.y, orn.z, orn.w])
                 # Reset velocity.
                 p.resetBaseVelocity(self._robot_id, [0, 0, 0], [0, 0, 0])
+                # Zero actuated joint motion so the robot does not coast
+                # away from the spawn pose on pre-reset wheel spin (R6.1
+                # reset contract: velocities restored, not just the pose).
+                for i in range(p.getNumJoints(self._robot_id)):
+                    if p.getJointInfo(self._robot_id, i)[2] != p.JOINT_FIXED:
+                        p.resetJointState(self._robot_id, i, 0.0, 0.0)
+                # A still-fresh cmd_vel would re-accelerate the wheels on
+                # the next physics tick and drag the robot out of its reset
+                # pose, so the pending command is cleared as well.
+                with self._twist_lock:
+                    self._twist = Twist()
+                    self._last_cmd_time = 0.0
                 # Reset simulation time.
                 self._sim_t = 0.0
                 self._sim_step = 0
@@ -840,23 +952,70 @@ class PyBulletSpawner(Node):
             % (link, camera["width"], camera["height"], rate))
         return camera
 
-    def _pub_camera(self):
+    def _camera_loop(self):
+        """Render and publish RGB-D from the mirror client (R8.1).
+
+        Runs on its own thread: the tiny software renderer takes hundreds
+        of ms per frame on this host, so rendering inside the physics loop
+        collapsed the publish rate.  Each frame mirrors the latest physics
+        state snapshot into the dedicated render client, so the image is
+        geometrically faithful to the simulated world.  The publish gate
+        uses sim time so the stamped camera_rate contract holds in sim
+        seconds regardless of render duration.
+        """
         camera = self._camera
-        state = p.getLinkState(self._robot_id, camera["link"],
-                               computeForwardKinematics=True)
-        rgb, depth = _render_rgbd(state[4], state[5], camera)
-        stamp = self._stamp()
-        self._rgb_pub.publish(image_msg(stamp, camera["frame"], rgb, "rgb8"))
-        self._depth_pub.publish(
-            image_msg(stamp, camera["frame"], depth, "32FC1"))
-        self._camera_info_pub.publish(camera_info_msg(
-            stamp, camera["frame"], camera["width"], camera["height"],
-            camera["horizontal_fov"]))
+        camera_dt = 1.0 / max(camera["rate"], 0.1)
+        last_sim = -camera_dt
+        while self._running and rclpy.ok():
+            # A reset rewinds sim time; re-arm so the first post-reset frame
+            # flows immediately.
+            last_sim = min(last_sim, self._sim_t)
+            if (self._cam_pose is None or self._render_client < 0
+                    or self._sim_t - last_sim < camera_dt):
+                time.sleep(0.002)
+                continue
+            last_sim = self._sim_t
+            try:
+                # Stamp at the snapshot moment: the image reflects this sim
+                # time, and consecutive stamps then honour the camera_rate
+                # interval exactly regardless of render duration.
+                stamp = self._stamp()
+                p.resetBasePositionAndOrientation(
+                    self._render_robot_id, self._bpos, self._born,
+                    physicsClientId=self._render_client)
+                for jn, jp, jv in zip(self._joint_names, self._jpos,
+                                      self._jvel):
+                    ji = self._render_joint_idx.get(jn)
+                    if ji is not None:
+                        p.resetJointState(self._render_robot_id, ji, jp, jv,
+                                          physicsClientId=self._render_client)
+                rgb, depth = _render_rgbd(
+                    self._cam_pose[0], self._cam_pose[1], camera,
+                    client=self._render_client)
+                self._rgb_pub.publish(
+                    image_msg(stamp, camera["frame"], rgb, "rgb8"))
+                self._depth_pub.publish(
+                    image_msg(stamp, camera["frame"], depth, "32FC1"))
+                self._camera_info_pub.publish(camera_info_msg(
+                    stamp, camera["frame"], camera["width"], camera["height"],
+                    camera["horizontal_fov"]))
+            except Exception:
+                # Shutting down: the physics client may already be gone.
+                if not rclpy.ok() or not self._running:
+                    break
+                raise
 
     def destroy_node(self):
         self._running = False
         if self._thread and self._thread.is_alive():
             self._thread.join(timeout=2.0)
+        if getattr(self, "_camera_thread", None) and self._camera_thread.is_alive():
+            self._camera_thread.join(timeout=2.0)
+        if p is not None and getattr(self, "_render_client", -1) >= 0:
+            try:
+                p.disconnect(physicsClientId=self._render_client)
+            except Exception:
+                pass
         if p is not None and self._robot_id >= 0:
             try:
                 p.disconnect()
