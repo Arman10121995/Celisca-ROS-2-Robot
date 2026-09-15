@@ -567,7 +567,8 @@ tasks:
           - "test_r5_3_bhl_balance.py: 56 unit tests pass (2026-09-14), including the standing-pose-is-not-balance check: a level body returns the nominal pose while non-zero roll/pitch changes ankle/hip/arm commands."
           - "test_bhl_qualification.py: 23 registry static tests pass (2026-09-14) asserting BHL URDF joints/inertias/position limits; 56+23=79 BHL unit tests, above the 60+ acceptance bar."
           - "humanoid_standing_controller.py stays a thin ROS wrapper over the pure-logic layer; the module docstring declares flat-ground stepping/walking and stop as future work."
-        next_action: "Balance core delivered and unit-qualified (79 tests green). The vendored upstream source has ONNX checkpoints but is missing both declared assets and low-level controller submodules; resolve/pin them and verify model/policy observation and joint conventions before a MuJoCo walking probe. Remaining acceptance: bounded perturbation recovery pass, measured flat-ground stepping/walking and stop, and falls/limits enforced in simulation."
+          - "test_r5_3_bhl_policy.py: 15 unit tests pass (2026-09-15) for tracking_command helper - pure-logic tests verifying return type/shape/bounds, walk/turn phase reference tracking, lateral/yaw error corrections, input immutability, and clamping behavior for large errors. All tests pass."
+        next_action: "Balance core delivered and unit-qualified (79 tests green). Policy qualification helper tested (15 tests green). The vendored upstream source has ONNX checkpoints but is missing both declared assets and low-level controller submodules; resolve/pin them and verify model/policy observation and joint conventions before a MuJoCo walking probe. Remaining acceptance: bounded perturbation recovery pass, measured flat-ground stepping/walking and stop, and falls/limits enforced in simulation."
       R5.4:
         title: "Integrate real multirotor SITL flight"
         state: "queued"
