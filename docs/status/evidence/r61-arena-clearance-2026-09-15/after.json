@@ -1,0 +1,77 @@
+[
+  {
+    "arena": "nav_empty",
+    "valid": true,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 5.36,
+    "paths": [
+      {
+        "id": "spawn_to_center",
+        "minimum_clearance_m": 5.36,
+        "map_clearance_lower_bound_m": 5.249702264321488,
+        "length_m": 0.7071067811865476
+      }
+    ],
+    "errors": []
+  },
+  {
+    "arena": "nav_obstacle",
+    "valid": true,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.6215773105863908,
+    "paths": [
+      {
+        "id": "spawn_to_far_corner",
+        "minimum_clearance_m": 0.2068674539323273,
+        "map_clearance_lower_bound_m": 0.087450066591218,
+        "length_m": 21.2922032704029
+      }
+    ],
+    "errors": []
+  },
+  {
+    "arena": "nav_maze",
+    "valid": true,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.76,
+    "paths": [
+      {
+        "id": "spawn_to_exit",
+        "minimum_clearance_m": 0.20000099999999998,
+        "map_clearance_lower_bound_m": 0.08964566094067243,
+        "length_m": 29.48166407134644
+      }
+    ],
+    "errors": []
+  },
+  {
+    "arena": "nav_narrow_passage",
+    "valid": true,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.8599999999999997,
+    "paths": [
+      {
+        "id": "spawn_to_exit",
+        "minimum_clearance_m": 0.20678196134107069,
+        "map_clearance_lower_bound_m": 0.110530628655275,
+        "length_m": 21.759040406237986
+      }
+    ],
+    "errors": []
+  },
+  {
+    "arena": "nav_warehouse",
+    "valid": true,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.8599999999999997,
+    "paths": [
+      {
+        "id": "spawn_to_far_corner",
+        "minimum_clearance_m": 0.2010994306188883,
+        "map_clearance_lower_bound_m": 0.09050179140039642,
+        "length_m": 28.352875397891932
+      }
+    ],
+    "errors": []
+  }
+]

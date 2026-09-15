@@ -1,0 +1,100 @@
+[
+  {
+    "arena": "nav_empty",
+    "valid": true,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 5.36,
+    "paths": [
+      {
+        "id": "spawn_to_center",
+        "minimum_clearance_m": 5.36,
+        "map_clearance_lower_bound_m": 5.249702264321488,
+        "length_m": 0.7071067811865476
+      }
+    ],
+    "errors": []
+  },
+  {
+    "arena": "nav_obstacle",
+    "valid": false,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.6215773105863908,
+    "paths": [
+      {
+        "id": "spawn_to_far_corner",
+        "minimum_clearance_m": -0.14,
+        "map_clearance_lower_bound_m": -0.17535533905932738,
+        "length_m": 20.478522226936175
+      }
+    ],
+    "errors": [
+      "spawn_to_far_corner: footprint lacks map clearance (-0.175355 m)",
+      "spawn_to_far_corner segment 0: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_far_corner segment 1: footprint intersects geometry (-0.047152 m)",
+      "spawn_to_far_corner segment 3: footprint intersects geometry (-0.140000 m)"
+    ]
+  },
+  {
+    "arena": "nav_maze",
+    "valid": false,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.76,
+    "paths": [
+      {
+        "id": "spawn_to_exit",
+        "minimum_clearance_m": -0.14,
+        "map_clearance_lower_bound_m": -0.16929194843341938,
+        "length_m": 25.59524158061724
+      }
+    ],
+    "errors": [
+      "spawn_to_exit: footprint lacks map clearance (-0.169292 m)",
+      "spawn_to_exit segment 1: footprint intersects geometry (-0.005836 m)",
+      "spawn_to_exit segment 3: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_exit segment 4: footprint intersects geometry (-0.140000 m)"
+    ]
+  },
+  {
+    "arena": "nav_narrow_passage",
+    "valid": false,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.8599999999999997,
+    "paths": [
+      {
+        "id": "spawn_to_exit",
+        "minimum_clearance_m": -0.14,
+        "map_clearance_lower_bound_m": -0.17535533905932738,
+        "length_m": 16.97056274847714
+      }
+    ],
+    "errors": [
+      "spawn_to_exit: footprint lacks map clearance (-0.175355 m)",
+      "spawn_to_exit segment 0: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_exit segment 1: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_exit segment 2: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_exit segment 3: footprint intersects geometry (-0.140000 m)"
+    ]
+  },
+  {
+    "arena": "nav_warehouse",
+    "valid": false,
+    "footprint_radius_m": 0.14,
+    "spawn_clearance_m": 0.8599999999999997,
+    "paths": [
+      {
+        "id": "spawn_to_far_corner",
+        "minimum_clearance_m": -0.14,
+        "map_clearance_lower_bound_m": -0.17535533905932738,
+        "length_m": 25.36987432393242
+      }
+    ],
+    "errors": [
+      "spawn_to_far_corner: footprint lacks map clearance (-0.175355 m)",
+      "spawn_to_far_corner segment 0: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_far_corner segment 1: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_far_corner segment 2: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_far_corner segment 3: footprint intersects geometry (-0.140000 m)",
+      "spawn_to_far_corner segment 4: footprint intersects geometry (-0.140000 m)"
+    ]
+  }
+]

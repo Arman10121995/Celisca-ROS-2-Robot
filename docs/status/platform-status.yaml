@@ -6,7 +6,7 @@ goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
 audit_revision: "dff388f"
-documentation_only_revision: true
+documentation_only_revision: false
 supported_baseline:
   os: "Ubuntu 22.04"
   ros: "Humble"
@@ -519,8 +519,8 @@ tasks:
     tasks:
       R5.1:
         title: "Qualify Bumperbot and Labbot mobile tasks"
-        state: "done"
-        owner: "cline-agent"
+        state: "partial"
+        owner: null
         depends_on:
           - "R4.3"
         scope_paths:
@@ -532,11 +532,11 @@ tasks:
         evidence:
           - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/qualification.py"
           - "src/robot_lab/robot_lab_benchmark/test/test_r5_1_qualification.py"
-        next_action: "Complete — R5.1 done (qualification.py golden harness: extract_robot_description processes main+gazebo xacro overlays with is_ignition/is_sim mappings; RobotDescription extracts links/inertias, diff-drive wheels (joint/link/radius/y_offset/axis), wheel separation, base_footprint offset, base collision footprint, sensor types, ros2_control actuated joints; SENSOR_TYPE_ALIASES normalize classic (ray/depth) and ignition (gpu_lidar/rgbd_camera) dialects to one vocabulary; capabilities claimed only for sensors actually present. GOLDEN pinned from measured descriptions: bumperbot wheels 0.033 m, separation 0.1402 m, base offset 0.033 m, requires lidar+imu+depth, rgbd_capable; labbot wheels 0.06 m, separation 0.30 m, base offset 0.12 m, requires lidar+imu, no RGB-D claimed. Static checks: inertias (physical links positive mass+tensor), wheel count/radius/separation/joints/axis, base offset, footprint, sensors, rgbd-claim-vs-hardware, no-false-rgbd-claim, actuated joints. Honest handling verified on real descriptions: bumperbot base collision is a MESH so no circular radius is fabricated — check passes with mesh-defined detail directing consumers to mesh/costmap; labbot primitive footprint radius 0.15 m extracted. Both robots pass all golden checks with zero issues. qualify_robot() composes static+task-stage checks into QualificationReport; write_qualification_report() JSON output. 48 unit tests + real-description verification; full suite 476 green.) Advance to R5.2 (qualify Go2 locomotion)."
+        next_action: "2026-09-15 audit: preserve the two existing differential-drive workflows. Description/unit checks and Bumperbot open-arena MuJoCo/PyBullet missions are recorded, but the cited R5.1 evidence does not establish both robots completing obstacle navigation with watchdogs. Add named live Labbot and obstacle-world evidence before full mission qualification."
       R5.2:
         title: "Qualify Go2 locomotion"
-        state: "done"
-        owner: "cline-agent"
+        state: "partial"
+        owner: null
         depends_on:
           - "R5.1"
         scope_paths:
@@ -547,7 +547,7 @@ tasks:
         evidence:
           - "src/robot_lab_adapter/robot_lab_adapter/go2_locomotion.py"
           - "src/robot_lab_adapter/test/test_r5_2_go2_locomotion.py"
-        next_action: "Complete — R5.2 done (go2_locomotion.py, pure-logic locomotion core: constants honest to the Go2 description — 12 joints, effort limits from const.xacro hip/thigh 23.7 N·m and calf 35.55 N·m, PD gains from go2_robot_control.yaml, nominal stance inside position limits, tilt warn 0.35 rad / fall 0.70 rad, trot 0.70 s cycle with 0.5 duty, base-velocity limits vx 0.5/vy 0.3 m/s and wz 0.7 rad/s with accel limits 1.0/0.5/2.0; closed-loop joint-space PD stance where a joint with no position measurement is NOT driven (zero effort, never assumed at target); bounded base-velocity interface with clamp + first-order rate limiting; trot is diagonal-pair stepping, explicitly not claimed as MPC; effort-residual contact estimation with None for missing data; latched SAFE_STOP safety monitor on excessive tilt (0.70 rad) or sustained effort saturation (>=98% limit for 50 cycles) requiring explicit reset; BodyState.from_quaternion roll/pitch from IMU ZYX quaternion; ControlCycle issues flow all warnings. Honest findings: raw effort publishing is not gait control; contact is local effort-residual estimation, never assumed. 61 unit tests + full adapter suite 108 green.) Advance to R5.3 (qualify Berkeley Humanoid Lite balance and walking)."
+        next_action: "2026-09-15 acceptance audit: reopened from done to partial. The 61 pure-logic tests establish controller calculations, not stable simulated stance, walking, turning, stopping or terrain traversal. Wire and verify an actual MuJoCo locomotion controller/pinned upstream policy; retain measured pose/contact/effort and fall/command-loss tests."
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
         state: "active"
@@ -566,7 +566,7 @@ tasks:
           - "test_r5_3_bhl_balance.py: 56 unit tests pass (2026-09-14), including the standing-pose-is-not-balance check: a level body returns the nominal pose while non-zero roll/pitch changes ankle/hip/arm commands."
           - "test_bhl_qualification.py: 23 registry static tests pass (2026-09-14) asserting BHL URDF joints/inertias/position limits; 56+23=79 BHL unit tests, above the 60+ acceptance bar."
           - "humanoid_standing_controller.py stays a thin ROS wrapper over the pure-logic layer; the module docstring declares flat-ground stepping/walking and stop as future work."
-        next_action: "Balance core delivered and unit-qualified (79 tests green). Remaining acceptance: bounded perturbation recovery pass, measured flat-ground stepping/walking and stop, and falls/limits enforced in simulation."
+        next_action: "Balance core delivered and unit-qualified (79 tests green). The vendored upstream source has ONNX checkpoints but is missing both declared assets and low-level controller submodules; resolve/pin them and verify model/policy observation and joint conventions before a MuJoCo walking probe. Remaining acceptance: bounded perturbation recovery pass, measured flat-ground stepping/walking and stop, and falls/limits enforced in simulation."
       R5.4:
         title: "Integrate real multirotor SITL flight"
         state: "queued"
@@ -580,15 +580,33 @@ tasks:
         acceptance_ref: "ROADMAP.md"
         evidence: []
         next_action: "Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion."
+      R5.5:
+        title: "Integrate four-wheel Ackermann and reverse Ackermann workflows"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R5.1"
+          - "R3.3"
+        scope_paths:
+          - "src/robot_lab_robots/"
+          - "src/robot_lab_controller/"
+          - "src/robot_lab_adapter/"
+          - "src/robot_lab_bringup/"
+          - "src/robot_lab_mujoco/"
+          - "src/robot_lab/robot_lab_registry/"
+          - "src/robot_lab_gui/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "User requirement added 2026-09-15: a four-wheel robot with Ackermann and reverse Ackermann behavior. Clarify rear-wheel steering versus anti-Ackermann geometry; neither is equivalent to driving backwards. Implement articulated steering, correct wheel speeds and odometry, steering/rate/traction limits, reverse travel, watchdogs, parking/slalom/obstacle missions and GUI/CLI selection. Pin any imported model/controller and verify on MuJoCo first."
   R6:
     title: "Environment qualification"
-    state: "queued"
+    state: "partial"
     owner: null
     tasks:
       R6.1:
         title: "Qualify geometry map alignment and resets"
-        state: "queued"
-        owner: null
+        state: "partial"
+        owner: "codex"
         depends_on:
           - "R2.3"
           - "R3.1"
@@ -597,9 +615,14 @@ tasks:
           - "src/robot_lab_maps/config/arena_navigation.yaml"
           - "src/robot_lab/robot_lab_registry/config/environments.yaml"
           - "src/robot_lab_bringup/"
+          - "src/robot_lab_maps/test/"
+          - "src/robot_lab_maps/CMakeLists.txt"
+          - "src/robot_lab_maps/package.xml"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Preserve worlds/provenance; validate units, mesh/collision geometry, map origin/resolution, spawn/goal clearance and generation seeds. Bind reset to actual backend API rather than universal /gazebo/reset_world metadata."
+        evidence:
+          - "docs/status/evidence/r61-arena-clearance-2026-09-15/: before/after reports show all four nonempty navigation-arena reference routes crossed geometry; repaired routes now pass full swept-footprint geometry/map checks for a 0.14 m radius. World/map assets preserved; metadata synchronized with the registry."
+          - "2026-09-15: maps plus affected arena/metadata/benchmark-ledger tests: 114 passed in 15.30 s, including 27 new clearance regression tests; changed maps/registry packages rebuilt; CTest arena_clearance 27 passed and installed validator 5/5 passed."
+        next_action: "Static navigation-fixture repair complete for five box arenas and a declared 0.14 m circular footprint. Remaining: broader mesh/terrain/aerial geometry qualification, robot-specific footprints/curvature, safe runtime spawns and full reset/history checks. R8.1 obstacle missions must use the declared spawn and retain live evidence. Continue class locomotion work per the user goal (R5.3)."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
         state: "queued"
@@ -631,6 +654,19 @@ tasks:
         acceptance_ref: "ROADMAP.md"
         evidence: []
         next_action: "Provide height/elevation/voxel/mesh queries where needed, legged traversable surfaces and aerial free volumes/geofences. Do not infer 3D feasibility solely from a 2D occupancy projection."
+      R6.4:
+        title: "Expand diverse maps for ground, legged and aerial tasks"
+        state: "queued"
+        owner: null
+        depends_on:
+          - "R6.1"
+        scope_paths:
+          - "src/robot_lab_maps/"
+          - "src/robot_lab/robot_lab_registry/config/"
+          - "src/robot_lab_bringup/"
+        acceptance_ref: "ROADMAP.md"
+        evidence: []
+        next_action: "Preserve the 26 existing environments. Add at least six distinct seeded layouts across road/parking, uneven terrain/stairs/rubble, and volumetric indoor/outdoor flight; validate dimensions, clearance, representation, spawn/goals and reset. Qualify class-specific tasks after the corresponding robot controller works."
   R7:
     title: "Algorithm breadth"
     state: "queued"
@@ -928,12 +964,13 @@ handoff:
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R5.2 complete (go2_locomotion.py pure-logic locomotion core for the Unitree Go2: 12 joints with effort limits from const.xacro (hip/thigh 23.7 N·m, calf 35.55) and PD gains from go2_robot_control.yaml; closed-loop joint-space PD stance where a joint with no position measurement is NOT driven; bounded base-velocity interface with clamp and first-order rate limiting (vx 0.5/vy 0.3 m/s, wz 0.7 rad/s); trot gait is diagonal-pair stepping, explicitly not claimed as MPC; effort-residual contact estimation, None on missing data; latched SAFE_STOP on tilt >=0.70 rad or >=98% effort saturation for 50 cycles, explicit reset required; BodyState roll/pitch from IMU quaternion. Honest: raw effort publishing is not gait control; contact is never assumed. 61 unit tests; full adapter suite 108 green.) Read docs/AGENT_HANDOFF.md, inspect worktree/active owners, claim R5.3 (qualify Berkeley Humanoid Lite balance and walking: verify joints/inertias/limits; wire simulation wrapper; closed-loop balance before stepping/walking — a fixed pose is not proof of balance; declared stance-duration and bounded perturbation recovery pass; flat-ground stepping/walking and stop measured)."
+  next_action: "R6.1 static route repair is verified (114 tests and rebuilt packages); broader qualification remains partial. Prioritize complete MuJoCo robot workflows: BHL balance/walking (R5.3), Go2 locomotion (R5.2), four-wheel steering (R5.5), and real drone SITL (R5.4). Expand and qualify maps alongside each class (R6.2/R6.3/R6.4), then mode/algorithm comparisons. See docs/status/project-goal-2026-09-15.md. R8.1 obstacle missions and live distinct-planner comparisons remain open."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"
   no_runtime_repairs_completed_by_this_revision: false
   session_notes:
+    - "2026-09-15 user clarified the project goal: retain Bumperbot/Labbot, deliver a working humanoid, quadruped, multirotor and four-wheel Ackermann/reverse Ackermann platform across compatible modes/maps/algorithms, and add more diverse maps. Upstream reuse or development is authorized. R5.1/R5.2 reopened where unit-only evidence had been labeled complete; R5.5 and R6.4 added. Simulation qualification remains separate from physical hardware operation."
     - "2026-09-14 regression after rebuilding all changed packages (isolated ROS domain): registry 286, GUI 41, bringup+maps 265 passed; adapter 154 passed with the 8 pre-existing R5.3 test_r5_3_bhl_balance failures; scripts/test_fast.sh 423 passed, 1 skipped, PASS."
     - "2026-09-14 gui:=true viewer check: PyBullet, MuJoCo and Gazebo each open their own window with Unitree Go2 in nav_maze (window titles verified with xwininfo). PyBullet world loading moved onto the shared robot_lab_utils/sdf_world.py reader; pre- and post-refactor loaders are equivalent on all 26 worlds (320 bodies, poses within 1e-4 m)."
     - "2026-09-14 Isaac Sim unblocked on the Jetson: bundled libnvJitLink preload fixes Kit startup; worlds now parsed by the shared robot_lab_utils/sdf_world.py and built as USD collision prims (26/26 offline with Isaac's pxr, nav_maze live); runtime runs in its own session with graceful->SIGTERM->SIGKILL group stop (live: launch exits in 2 s, 0 Kit left). Drive had three bugs (wheel kinematics, zero-damping drives searched in the wrong subtree, ROS-order quaternions passed to scalar-first Isaac); all fixed and verified in sim time (heading 1.9 deg, wheel velocities track the command, ~15% wheel/body speed gap not isolated). Kit shares the runtime's process group (pgid verified live)."

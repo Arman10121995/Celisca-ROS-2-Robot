@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-14. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
+Updated: 2026-09-15. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
 and truthful outcomes complete. 2026-09-11: selection fidelity work landed
 against R3.3/R3.4, R7.1, R6.1 and R8.1; R8.2 unblocked 2026-09-14 (Isaac boots, loads
 worlds, drives in the commanded direction and stops cleanly).
@@ -22,8 +22,12 @@ their physical and data contracts are compatible**.
 
 The goal is complete only when all of the following are evidenced:
 
-- At least two mobile bases and one quadruped, humanoid and multirotor complete
-  their own class-appropriate simulated tasks. Manipulator support is an extension;
+- Preserve the two differential-drive bases (Bumperbot and Labbot), and deliver
+  one working quadruped, humanoid, multirotor and four-wheel platform with
+  Ackermann and reverse Ackermann steering. Each completes its class-appropriate
+  simulated tasks. Resolve whether reverse Ackermann means rear-wheel steering
+  or anti-Ackermann geometry; reverse travel alone does not satisfy that requirement.
+  Manipulator support is an extension;
   retain existing manipulator assets without claiming commandable support.
 - Existing worlds remain available. Navigation, terrain, stairs, stepping stones,
   aerial, moving-obstacle and degraded-sensor tasks have verified geometry,
@@ -40,6 +44,20 @@ The goal is complete only when all of the following are evidenced:
   checkout can reproduce the comparison.
 - Every advertised backend/robot/mode combination has its own qualification
   evidence. Four adapters do not imply universal cross-product support.
+- Each robot class has complete launch, control, sensing, stop/reset and recorded
+  mission workflows across compatible display, teleoperation, mapping,
+  autonomous-task and benchmark modes. Use suitable ground or 3D representations,
+  and expose unsupported combinations with a reason in both CLI and GUI.
+- Add at least six distinct, seeded environment layouts spanning ground vehicles,
+  legged terrain and aerial volumes, with at least three applicable environment
+  families per robot class in the final qualification matrix. Include learning
+  examples explaining the selected algorithms, assumptions, measurements and failures.
+
+The [2026-09-15 project goal and integration audit](docs/status/project-goal-2026-09-15.md)
+records the user's intended deliverable, current gaps and upstream candidates.
+Prioritize complete robot workflows over catalog expansion or repeated empty-world
+benchmarks. Reuse working upstream code where appropriate, pin its revision and
+model/policy assets, and test it on this host before advertising support.
 
 There is no universal "best" algorithm. Compare within declared input/model
 strata and publish accuracy, robustness, cost and failure tradeoffs. Republishers,
@@ -263,7 +281,8 @@ Dependencies: `R4.1`.
 - Files: `src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/`.
 - Implement: Remove hardcoded distance/collision/clearance. Measure contacts, footprint-aware clearance, trajectory distance and timestamp/frame-aligned truth/estimation error; collect CPU/memory/RTF and defined effort proxy. Record manifest/hash, revision/dirty state, dependencies, asset hashes, seeds, budgets, tolerances and artifact paths.
 - Acceptance: Known trajectories/contact fixtures yield correct values; one contact is not counted per scan; missing/NaN/stale data invalidate metrics instead of becoming zero; schema rejects invalid values and distinguishes measured versus derived metrics.
-- Status: Done.
+- Status: Partial (reopened 2026-09-15). The following unit evidence does not
+  establish the live locomotion acceptance above.
 - Evidence: `metrics.py` (MeasuredMetrics/DerivedMetrics/RunMetrics schema; trajectory_distance; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values; truthful None-on-missing semantics), `test_r4_2_metrics.py` (83 tests pass; full suite 197 green with R4.1+P6).
 
 ### R4.3 — Publish first reproducible planner comparison
@@ -310,6 +329,25 @@ Dependencies: `R5.1`.
 - Implement: Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion.
 - Acceptance: Simulated takeoff, hover, 3D waypoints, landing and command-loss failsafe pass; actual altitude/FCU state measured; no 2D follower or differential-drive controller substitutes for flight; no real FCU connection.
 
+### R5.5 — Integrate four-wheel Ackermann and reverse Ackermann workflows
+
+Dependencies: `R5.1`, `R3.3`.
+
+- Files: `src/robot_lab_robots/`, `src/robot_lab_controller/`,
+  `src/robot_lab_adapter/`, `src/robot_lab_bringup/`, `src/robot_lab_mujoco/`,
+  `src/robot_lab/robot_lab_registry/`, `src/robot_lab_gui/`.
+- Implement: A four-wheel model with articulated steering, physical inertias,
+  wheel contact and sensors; steering geometry, wheel-speed allocation and
+  odometry; speed/steering/rate limits and command-loss stop. Resolve the user's
+  reverse Ackermann terminology before implementing that variant. Support
+  forward and reverse travel in either selected steering mode. Integrate each
+  selection through the shared resolver, CLI and GUI command autofill.
+- Acceptance: On a named backend, measure straight travel, left/right turning
+  radius and wheel angles, reverse travel, braking and reset. Complete slalom,
+  parking and obstacle navigation with feasible curvature, swept footprint and
+  controller-limit checks. Steering variants must change the actual model/control
+  behavior; changing a catalog label is insufficient.
+
 ## R6 — Environment qualification
 
 ### R6.1 — Qualify geometry map alignment and resets
@@ -335,6 +373,23 @@ Dependencies: `R6.1`, `R5.2`, `R5.3`, `R5.4`.
 - Files: `src/robot_lab_maps/`, `src/robot_lab/robot_lab_registry/config/`, `src/robot_lab/robot_lab_benchmark/`.
 - Implement: Provide height/elevation/voxel/mesh queries where needed, legged traversable surfaces and aerial free volumes/geofences. Do not infer 3D feasibility solely from a 2D occupancy projection.
 - Acceptance: Class-appropriate terrain/flight missions pass; overhang, foothold and altitude collisions detected in validation; maps/trajectories and results carry dimensionality and frame metadata.
+
+### R6.4 — Expand diverse maps for ground, legged and aerial tasks
+
+Dependencies: `R6.1`; runtime qualification also requires the corresponding R5 task.
+
+- Files: `src/robot_lab_maps/`, `src/robot_lab/robot_lab_registry/config/`,
+  `src/robot_lab_bringup/`.
+- Implement: Preserve the existing 26 environments. Add at least six distinct
+  seeded layouts: road intersections and parking/slalom; uneven slopes and
+  rubble/stair transitions; indoor flight corridors with overhangs and outdoor
+  flight among trees/poles at varied heights. Reuse existing generators and
+  add physical dimensions, units, provenance and appropriate 2D/height/3D maps.
+- Acceptance: Each map's collision geometry agrees with its representation;
+  spawn, goals and routes are feasible for the declared robot footprint or
+  flight volume. Reset reproduces the declared state. Record at least one real
+  class-appropriate mission per added map, including failures, before calling
+  that map qualified. Pure visual changes do not count as new task diversity.
 
 ## R7 — Algorithm breadth
 

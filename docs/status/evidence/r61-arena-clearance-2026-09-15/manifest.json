@@ -1,0 +1,14 @@
+{
+  "base_revision": "2cb2bfe111076524d4ce70864f209cd06802f4e9",
+  "working_tree_changes": true,
+  "qualification": "static geometry and map swept-footprint fixtures; not live missions",
+  "radius_m": 0.14,
+  "reference_route_geometry_margin_m": 0.2,
+  "files_sha256": {
+    "src/robot_lab_maps/tools/arena_clearance.py": "a99f58d0f834d935e76c25d3c8f9d15e6d1a8f549e9f58ccd38db99a32e94778",
+    "src/robot_lab_maps/tools/validate_nav_arenas.py": "68cca01cc3a08c903e35a7e99a687d94a95b8fa6ab2aac5fc2242391f60cb251",
+    "src/robot_lab_maps/config/arena_navigation.yaml": "9d74bfc6b9f8532cf3d0307f0230de8baefc2da1076acd245cbfa20cddaa7147",
+    "src/robot_lab/robot_lab_registry/config/environments.yaml": "47ee7a34ee5ce354aa36b4b6db3957231a3054162ec8d7b3c43c1b5633728746",
+    "src/robot_lab_maps/test/test_arena_clearance.py": "420d77af0efb9d5cef7a54afb1a370ec6be2af9a0d429980eb727e5621faa28c"
+  }
+}

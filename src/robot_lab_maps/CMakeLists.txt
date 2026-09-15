@@ -34,6 +34,7 @@ install(
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(mjcf_worlds test/test_mjcf_worlds.py TIMEOUT 180)
+  ament_add_pytest_test(arena_clearance test/test_arena_clearance.py TIMEOUT 60)
 endif()
 
 ament_package()
