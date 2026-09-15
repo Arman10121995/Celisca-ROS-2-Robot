@@ -1,0 +1,142 @@
+{
+  "simulator": "pybullet",
+  "scenario_id": "point_to_point_navigation",
+  "environment_id": "nav_empty",
+  "robot_id": "bumperbot",
+  "goal_m": 1.5,
+  "goal_tolerance_m": 0.15,
+  "footprint_radius_m": 0.14,
+  "seeds": [
+    1101,
+    1102,
+    1103,
+    1104,
+    1105
+  ],
+  "outcomes": {
+    "success": 5
+  },
+  "trajectory_distance_m": {
+    "n": 5,
+    "mean": 1.3535447122571291,
+    "median": 1.35430579749139,
+    "min": 1.3514477585014333,
+    "max": 1.354695717686552,
+    "stdev": 0.0014155884966227093
+  },
+  "drive_sim_seconds": {
+    "n": 5,
+    "mean": 5.445833333,
+    "median": 5.458333333000001,
+    "min": 5.416666666,
+    "max": 5.458333333000001,
+    "stdev": 0.01863389990566794
+  },
+  "realtime_factor": {
+    "n": 5,
+    "mean": 0.3485855373879188,
+    "median": 0.3491342191285157,
+    "min": 0.34473945253696464,
+    "max": 0.3521110053379641,
+    "stdev": 0.0033832681663655737
+  },
+  "footprint_clearance_min_m": {
+    "n": 5,
+    "mean": 4.5116149520874025,
+    "median": 4.510894165039063,
+    "min": 4.510516510009766,
+    "max": 4.513611183166504,
+    "stdev": 0.0013473389186640216
+  },
+  "contact_events_total": 0,
+  "bag_total_messages": {
+    "n": 5,
+    "mean": 802.8,
+    "median": 803,
+    "min": 801,
+    "max": 804,
+    "stdev": 1.3038404810405297
+  },
+  "per_seed": [
+    {
+      "seed": 1101,
+      "outcome": "success",
+      "trajectory_distance_m": 1.35430579749139,
+      "footprint_clearance_min_m": 4.510894165039063,
+      "contact_events": 0,
+      "drive_sim_seconds": 5.458333333000001,
+      "realtime_factor": 0.3521110053379641,
+      "bag_message_counts": {
+        "/scan": 27,
+        "/odom/ground_truth": 265,
+        "/clock": 265,
+        "/cmd_vel": 245
+      },
+      "bag_total_messages": 802
+    },
+    {
+      "seed": 1102,
+      "outcome": "success",
+      "trajectory_distance_m": 1.354695717686552,
+      "footprint_clearance_min_m": 4.510516510009766,
+      "contact_events": 0,
+      "drive_sim_seconds": 5.458333333000001,
+      "realtime_factor": 0.3514912452347716,
+      "bag_message_counts": {
+        "/scan": 27,
+        "/odom/ground_truth": 264,
+        "/clock": 264,
+        "/cmd_vel": 246
+      },
+      "bag_total_messages": 801
+    },
+    {
+      "seed": 1103,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3514477585014333,
+      "footprint_clearance_min_m": 4.513611183166504,
+      "contact_events": 0,
+      "drive_sim_seconds": 5.416666666,
+      "realtime_factor": 0.34545176470137806,
+      "bag_message_counts": {
+        "/scan": 27,
+        "/odom/ground_truth": 266,
+        "/clock": 266,
+        "/cmd_vel": 245
+      },
+      "bag_total_messages": 804
+    },
+    {
+      "seed": 1104,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3527159498225343,
+      "footprint_clearance_min_m": 4.512402400970459,
+      "contact_events": 0,
+      "drive_sim_seconds": 5.4375,
+      "realtime_factor": 0.34473945253696464,
+      "bag_message_counts": {
+        "/scan": 27,
+        "/odom/ground_truth": 265,
+        "/clock": 265,
+        "/cmd_vel": 247
+      },
+      "bag_total_messages": 804
+    },
+    {
+      "seed": 1105,
+      "outcome": "success",
+      "trajectory_distance_m": 1.354558337783736,
+      "footprint_clearance_min_m": 4.510650501251221,
+      "contact_events": 0,
+      "drive_sim_seconds": 5.458333333000001,
+      "realtime_factor": 0.3491342191285157,
+      "bag_message_counts": {
+        "/scan": 27,
+        "/odom/ground_truth": 265,
+        "/clock": 265,
+        "/cmd_vel": 246
+      },
+      "bag_total_messages": 803
+    }
+  ]
+}

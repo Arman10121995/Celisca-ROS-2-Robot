@@ -1,0 +1,40 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-15-09-59-54-980756-molar1-18693
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [18770]
+[INFO] [pybullet_spawner-2]: process started with pid [18772]
+[robot_state_publisher-1] 1789459195.280384 [176] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [INFO] [1789459195.294005859] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1789459195.294147075] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1789459195.294166019] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1789459195.294176067] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1789459195.294184483] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1789459195.294191811] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1789459195.294198979] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1789459195.294206339] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1789459195.294214531] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789459195.294222339] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1789459195.294229603] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1789459195.294236963] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789459195.294244163] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1789459195.294251555] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789459195.294258691] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1789459195.294265987] [robot_state_publisher]: got segment wheel_right_link
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-2] 1789459195.770238 [176] pybullet_s: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-2] [INFO] [1789459195.855521679] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1789459195.860224883] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1789459195.872428317] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1789459195.874527263] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1789459195.876775329] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-2] [INFO] [1789459196.558598422] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpks_d9_hs.urdf
+[pybullet_spawner-2] [INFO] [1789459196.559169559] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1789459196.559638551] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1789459196.578621992] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1789459196.579185320] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1789459196.598827898] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1789459197.353822639] [pybullet_spawner]: Loaded robot id=10 (15 joints)
+[pybullet_spawner-2] [INFO] [1789459197.354474352] [pybullet_spawner]: Friction from the description's <gazebo> blocks: caster_front_link=0.1, caster_rear_link=0.1, wheel_left_link=1, wheel_right_link=1
+[pybullet_spawner-2] [INFO] [1789459197.356625457] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+[pybullet_spawner-2] base_footprintb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:

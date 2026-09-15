@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "result_id": "r4_1003",
+  "simulator": "mujoco",
+  "robot_id": "bumperbot",
+  "environment_id": "nav_empty",
+  "scenario_id": "point_to_point_navigation",
+  "seed": 1003,
+  "goal_m": 1.5,
+  "outcome": "success",
+  "metrics": {
+    "success": true,
+    "outcome": "success",
+    "trajectory_distance_m": 1.3524853350866621,
+    "footprint_clearance_min_m": 4.5193017578125,
+    "contact_events": 0,
+    "time_to_goal_sim_s": 5.479999999,
+    "drive_sim_seconds": 5.479999999,
+    "realtime_factor": 0.37567859257796826,
+    "goal_tolerance_m": 0.15,
+    "footprint_radius_m": 0.14,
+    "bag_capture": true,
+    "bag_message_counts": {
+      "/scan": 29,
+      "/odom/ground_truth": 282,
+      "/clock": 282,
+      "/cmd_vel": 229
+    }
+  },
+  "bag_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1003/bags/run_1003",
+  "trace_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1003/trace.csv",
+  "launch_log": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1003/launch.log",
+  "ts_utc": "2026-09-15T07:59:12.576774+00:00"
+}

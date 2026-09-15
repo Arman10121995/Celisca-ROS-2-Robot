@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "outcome": "success",
+  "trajectory_distance_m": 1.3527159498225343,
+  "footprint_clearance_min_m": 4.512402400970459,
+  "contact_events": 0,
+  "time_to_goal_sim_s": 5.4375,
+  "drive_sim_seconds": 5.4375,
+  "realtime_factor": 0.34473945253696464,
+  "goal_tolerance_m": 0.15,
+  "footprint_radius_m": 0.14,
+  "bag_capture": true,
+  "bag_message_counts": {
+    "/scan": 27,
+    "/odom/ground_truth": 265,
+    "/clock": 265,
+    "/cmd_vel": 247
+  }
+}

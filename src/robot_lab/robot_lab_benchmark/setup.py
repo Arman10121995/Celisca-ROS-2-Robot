@@ -19,6 +19,7 @@ setup(
     entry_points={
         'console_scripts': [
             'robot-lab-benchmark = robot_lab_benchmark.cli:main',
+            'robot-lab-live-mission = robot_lab_benchmark.live_mission:main',
         ],
     },
 )

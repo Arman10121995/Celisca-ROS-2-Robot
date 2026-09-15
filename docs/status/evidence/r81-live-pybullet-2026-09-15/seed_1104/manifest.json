@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "result_id": "r4_1104",
+  "simulator": "pybullet",
+  "robot_id": "bumperbot",
+  "environment_id": "nav_empty",
+  "scenario_id": "point_to_point_navigation",
+  "seed": 1104,
+  "goal_m": 1.5,
+  "outcome": "success",
+  "metrics": {
+    "success": true,
+    "outcome": "success",
+    "trajectory_distance_m": 1.3527159498225343,
+    "footprint_clearance_min_m": 4.512402400970459,
+    "contact_events": 0,
+    "time_to_goal_sim_s": 5.4375,
+    "drive_sim_seconds": 5.4375,
+    "realtime_factor": 0.34473945253696464,
+    "goal_tolerance_m": 0.15,
+    "footprint_radius_m": 0.14,
+    "bag_capture": true,
+    "bag_message_counts": {
+      "/scan": 27,
+      "/odom/ground_truth": 265,
+      "/clock": 265,
+      "/cmd_vel": 247
+    }
+  },
+  "bag_path": "/tmp/r81_pybullet_multi/r4_pybullet_point_to_point_navigation_nav_empty_1104/bags/run_1104",
+  "trace_path": "/tmp/r81_pybullet_multi/r4_pybullet_point_to_point_navigation_nav_empty_1104/trace.csv",
+  "launch_log": "/tmp/r81_pybullet_multi/r4_pybullet_point_to_point_navigation_nav_empty_1104/launch.log",
+  "ts_utc": "2026-09-15T08:01:18.907925+00:00"
+}

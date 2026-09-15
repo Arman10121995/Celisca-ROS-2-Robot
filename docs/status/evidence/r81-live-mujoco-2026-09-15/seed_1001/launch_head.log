@@ -1,0 +1,40 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-15-09-58-15-806470-molar1-17456
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [17545]
+[INFO] [mujoco_spawner-2]: process started with pid [17547]
+[robot_state_publisher-1] 1789459096.166861 [171] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [INFO] [1789459096.185954563] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1789459096.186112547] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1789459096.186131907] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1789459096.186141859] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1789459096.186150179] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1789459096.186157859] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1789459096.186165731] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1789459096.186173123] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1789459096.186181091] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789459096.186189091] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1789459096.186196547] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1789459096.186204163] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789459096.186211555] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1789459096.186219203] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789459096.186226307] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1789459096.186233667] [robot_state_publisher]: got segment wheel_right_link
+[mujoco_spawner-2] 1789459096.895997 [171] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] [INFO] [1789459098.183066840] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1789459098.280818670] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[mujoco_spawner-2] [INFO] [1789459098.282001039] [mujoco_spawner]: Joints: ['wheel_right_joint', 'wheel_left_joint']   lw=wheel_left_joint rw=wheel_right_joint
+[mujoco_spawner-2] [INFO] [1789459098.283528944] [mujoco_spawner]: MuJoCo model loaded: 4 bodies, 3 joints
+[mujoco_spawner-2] [INFO] [1789459098.284401585] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1789459098.285217586] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1789459098.290353302] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1789459113.804620877] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1789459113.809167217] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[mujoco_spawner-2] Traceback (most recent call last):
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner", line 33, in <module>
+[mujoco_spawner-2]     sys.exit(load_entry_point('robot_lab_mujoco==0.1.0', 'console_scripts', 'mujoco_spawner')())
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py", line 1496, in main
+[mujoco_spawner-2]     node.destroy_node()
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py", line 1481, in destroy_node

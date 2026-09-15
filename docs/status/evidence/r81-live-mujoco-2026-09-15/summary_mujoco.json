@@ -1,0 +1,172 @@
+[
+  {
+    "schema_version": "1.0",
+    "result_id": "r4_1001",
+    "simulator": "mujoco",
+    "robot_id": "bumperbot",
+    "environment_id": "nav_empty",
+    "scenario_id": "point_to_point_navigation",
+    "seed": 1001,
+    "goal_m": 1.5,
+    "outcome": "success",
+    "metrics": {
+      "success": true,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3559099172546758,
+      "footprint_clearance_min_m": 4.5194805717468265,
+      "contact_events": 0,
+      "time_to_goal_sim_s": 5.519999999,
+      "drive_sim_seconds": 5.519999999,
+      "realtime_factor": 0.37278054290908386,
+      "goal_tolerance_m": 0.15,
+      "footprint_radius_m": 0.14,
+      "bag_capture": true,
+      "bag_message_counts": {
+        "/scan": 29,
+        "/odom/ground_truth": 283,
+        "/clock": 283,
+        "/cmd_vel": 231
+      }
+    },
+    "bag_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1001/bags/run_1001",
+    "trace_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1001/trace.csv",
+    "launch_log": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1001/launch.log",
+    "ts_utc": "2026-09-15T07:58:33.803816+00:00"
+  },
+  {
+    "schema_version": "1.0",
+    "result_id": "r4_1002",
+    "simulator": "mujoco",
+    "robot_id": "bumperbot",
+    "environment_id": "nav_empty",
+    "scenario_id": "point_to_point_navigation",
+    "seed": 1002,
+    "goal_m": 1.5,
+    "outcome": "success",
+    "metrics": {
+      "success": true,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3559791701563932,
+      "footprint_clearance_min_m": 4.529666767120362,
+      "contact_events": 0,
+      "time_to_goal_sim_s": 5.799999999000001,
+      "drive_sim_seconds": 5.799999999000001,
+      "realtime_factor": 0.39275317767616985,
+      "goal_tolerance_m": 0.15,
+      "footprint_radius_m": 0.14,
+      "bag_capture": true,
+      "bag_message_counts": {
+        "/scan": 30,
+        "/odom/ground_truth": 299,
+        "/clock": 299,
+        "/cmd_vel": 232
+      }
+    },
+    "bag_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1002/bags/run_1002",
+    "trace_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1002/trace.csv",
+    "launch_log": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1002/launch.log",
+    "ts_utc": "2026-09-15T07:58:53.389261+00:00"
+  },
+  {
+    "schema_version": "1.0",
+    "result_id": "r4_1003",
+    "simulator": "mujoco",
+    "robot_id": "bumperbot",
+    "environment_id": "nav_empty",
+    "scenario_id": "point_to_point_navigation",
+    "seed": 1003,
+    "goal_m": 1.5,
+    "outcome": "success",
+    "metrics": {
+      "success": true,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3524853350866621,
+      "footprint_clearance_min_m": 4.5193017578125,
+      "contact_events": 0,
+      "time_to_goal_sim_s": 5.479999999,
+      "drive_sim_seconds": 5.479999999,
+      "realtime_factor": 0.37567859257796826,
+      "goal_tolerance_m": 0.15,
+      "footprint_radius_m": 0.14,
+      "bag_capture": true,
+      "bag_message_counts": {
+        "/scan": 29,
+        "/odom/ground_truth": 282,
+        "/clock": 282,
+        "/cmd_vel": 229
+      }
+    },
+    "bag_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1003/bags/run_1003",
+    "trace_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1003/trace.csv",
+    "launch_log": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1003/launch.log",
+    "ts_utc": "2026-09-15T07:59:12.576774+00:00"
+  },
+  {
+    "schema_version": "1.0",
+    "result_id": "r4_1004",
+    "simulator": "mujoco",
+    "robot_id": "bumperbot",
+    "environment_id": "nav_empty",
+    "scenario_id": "point_to_point_navigation",
+    "seed": 1004,
+    "goal_m": 1.5,
+    "outcome": "success",
+    "metrics": {
+      "success": true,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3506003626171164,
+      "footprint_clearance_min_m": 4.519336090087891,
+      "contact_events": 0,
+      "time_to_goal_sim_s": 5.459999999000001,
+      "drive_sim_seconds": 5.459999999000001,
+      "realtime_factor": 0.36595780163926817,
+      "goal_tolerance_m": 0.15,
+      "footprint_radius_m": 0.14,
+      "bag_capture": true,
+      "bag_message_counts": {
+        "/scan": 29,
+        "/odom/ground_truth": 281,
+        "/clock": 281,
+        "/cmd_vel": 234
+      }
+    },
+    "bag_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1004/bags/run_1004",
+    "trace_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1004/trace.csv",
+    "launch_log": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1004/launch.log",
+    "ts_utc": "2026-09-15T07:59:32.785196+00:00"
+  },
+  {
+    "schema_version": "1.0",
+    "result_id": "r4_1005",
+    "simulator": "mujoco",
+    "robot_id": "bumperbot",
+    "environment_id": "nav_empty",
+    "scenario_id": "point_to_point_navigation",
+    "seed": 1005,
+    "goal_m": 1.5,
+    "outcome": "success",
+    "metrics": {
+      "success": true,
+      "outcome": "success",
+      "trajectory_distance_m": 1.3503986505231351,
+      "footprint_clearance_min_m": 4.519695625305176,
+      "contact_events": 0,
+      "time_to_goal_sim_s": 5.459999999000001,
+      "drive_sim_seconds": 5.459999999000001,
+      "realtime_factor": 0.3812607803803086,
+      "goal_tolerance_m": 0.15,
+      "footprint_radius_m": 0.14,
+      "bag_capture": true,
+      "bag_message_counts": {
+        "/scan": 29,
+        "/odom/ground_truth": 282,
+        "/clock": 282,
+        "/cmd_vel": 221
+      }
+    },
+    "bag_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1005/bags/run_1005",
+    "trace_path": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1005/trace.csv",
+    "launch_log": "/tmp/r81_mujoco_multi/r4_mujoco_point_to_point_navigation_nav_empty_1005/launch.log",
+    "ts_utc": "2026-09-15T07:59:52.420977+00:00"
+  }
+]
