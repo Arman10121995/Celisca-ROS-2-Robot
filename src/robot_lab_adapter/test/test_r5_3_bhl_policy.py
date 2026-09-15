@@ -18,7 +18,7 @@ import numpy as np
 import pytest
 
 # Make the robot package importable (mirrors the R5.2 / R5.3 balance test harness).
-_robot_pkg = Path(__file__).resolve().parents[1].parent / "berkeley_humanoid_lite"
+_robot_pkg = Path(__file__).resolve().parents[1].parent / "robot_lab_robots" / "berkeley_humanoid_lite"
 _tools_dir = _robot_pkg / "tools"
 if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))

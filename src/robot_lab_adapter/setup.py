@@ -25,6 +25,7 @@ setup(
             'robot-lab-select = robot_lab_adapter.selectors:main',
             'joint-effort-commander = robot_lab_adapter.joint_effort_commander:main',
             'humanoid-standing-controller = robot_lab_adapter.humanoid_standing_controller:main',
+            'humanoid-policy-controller = robot_lab_adapter.humanoid_policy_controller:main',
             'mavros-offboard-controller = robot_lab_adapter.mavros_offboard_controller:main',
         ],
     },
