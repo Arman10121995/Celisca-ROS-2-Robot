@@ -61,3 +61,25 @@ five phases pass —
 No phase in either run hit a fall, non-foot contact, joint-limit or effort
 safety failure (worst joint-limit excess 0.0008 rad; effort fraction reaches
 1.0 momentarily, which the monitor permits at the clamped limit).
+
+## Upstream pins and convention verification (2026-09-15)
+
+- `Berkeley-Humanoid-Lite-Lowlevel` pinned at `652777cc7c49884e7cd7ddfada758dc1979bf627`
+  (current upstream `main` HEAD; the same commit whose conventions the
+  `qualify_policy.py` docstring cites).
+- `Berkeley-Humanoid-Lite-Assets` pinned at `fc90fedd008b1e56a22e3c5221548d6b24f49707`
+  (current upstream `main` HEAD, 199 MB — not vendored; the robot package's
+  own `mjcf/` + flattened `meshes/` serve the probe).
+- Observation order verified against the vendored training config
+  `source/berkeley_humanoid_lite/.../velocity/config/humanoid/env_cfg.py`
+  (order preserved): velocity_commands, base_ang_vel, projected_gravity,
+  joint_pos_rel, joint_vel, last_action — 3+3+3+22+22+22 = 75 dims, exactly
+  the layout `qualify_policy.py` assembles. The command ranges in
+  `CommandsCfg` (lin_vel_x ±1, lin_vel_y ±0.5, ang_vel_z ±1.5) are the same
+  bounds `tracking_command` clamps to; the 0.25 action scale with
+  default-offset targets and the `R(q).T @ [0,0,-1]` projected-gravity
+  convention match `quat_rotate_inverse` with `gravity_vector [0,0,-1]` in
+  the vendored `environments/mujoco.py`. The 55-dim sim2real deployment
+  loop (`mode, quat, gyro, q, dq, commands`) is a different, gamepad-driven
+  path and is not what these checkpoints consume.
+
