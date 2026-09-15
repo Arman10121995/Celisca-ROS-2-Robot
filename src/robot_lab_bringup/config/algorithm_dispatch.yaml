@@ -118,6 +118,8 @@ algorithms:
       node: {package: robot_lab_adapter, executable: joint-effort-commander}
     humanoid_standing_controller:
       node: {package: robot_lab_adapter, executable: humanoid-standing-controller}
+    humanoid_policy_controller:
+      node: {package: robot_lab_adapter, executable: humanoid-policy-controller}
     mavros_offboard_controller:
       node: {package: robot_lab_adapter, executable: mavros-offboard-controller}
     cleaning_controller:

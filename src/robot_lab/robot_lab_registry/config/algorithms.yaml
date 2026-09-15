@@ -872,6 +872,43 @@
   source:
     repository: internal
     license: Apache-2.0
+- id: humanoid_policy_controller
+  version: 1.0.0
+  name: Humanoid ONNX Policy Controller
+  description: >-
+    ONNX velocity-policy locomotion controller for the Berkeley Humanoid Lite;
+    runs the vendored upstream checkpoints (75-dim feed-forward observation over
+    onboard IMU + joint states, 25 Hz) and publishes Float64MultiArray position
+    targets consumed by a position forward_command_controller. Declared honesty
+    limits - command tracking open-loop is measurement-sensitive near the drift
+    bound (see R5.3 evidence); joint velocities default to zeros until
+    JointState carries them.
+  status: integrated
+  category: control
+  family: learned_policy
+  implementation:
+    package: robot_lab_adapter
+    plugin: HumanoidPolicyController
+    language: python
+  input_contract:
+    required_topics:
+    - /joint_states
+    - /bhl/imu
+    - /cmd_vel
+  output_contract:
+    provided_topics:
+    - /bhl_standing_controller/commands
+  required_capabilities:
+  - bipedal_locomotion
+  supported_robot_classes:
+  - humanoid
+  parameters:
+    command_rate_hz: 25.0
+    policy_name: policy_humanoid
+    default_num_joints: 22
+  source:
+    repository: internal
+    license: Apache-2.0
 - id: pid_controller
   version: 1.0.0
   name: PID Controller
