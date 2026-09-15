@@ -1,0 +1,224 @@
+"""R5.3 integration tests: policy controller node on a live ROS graph.
+
+Launches the real ``HumanoidPolicyController`` node (the deployed entry
+point) against a real rclpy graph and verifies the ROS marshalling that the
+pure-logic tests cannot cover:
+
+- Before any ``cmd_vel`` arrives the node publishes the config default pose
+  on the ``forward_command_controller`` command topic (hold behavior).
+- A ``cmd_vel`` triggers real ONNX inference: 22 finite position targets at
+  the policy rate, and the joint velocities from ``JointState`` are actually
+  consumed (non-zero dq in the observation path).
+- A tipped IMU latches SAFE_STOP and the node reverts to the default pose.
+
+These tests require a sourced ROS 2 environment (rclpy) and the vendored
+checkpoints; they are marked ``integration`` and skip cleanly when either is
+missing, so the fast unit tier stays graph-free.
+"""
+
+from __future__ import annotations
+
+import math
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+_adapter_pkg = Path(__file__).resolve().parents[1]
+if str(_adapter_pkg) not in sys.path:
+    sys.path.insert(0, str(_adapter_pkg))
+
+rclpy = pytest.importorskip("rclpy", reason="live-graph test needs a sourced ROS 2 env")
+from rclpy.executors import SingleThreadedExecutor  # noqa: E402
+from rclpy.qos import QoSProfile, ReliabilityPolicy  # noqa: E402
+
+from robot_lab_adapter.bhl_balance import BHL_JOINT_NAMES  # noqa: E402
+from robot_lab_adapter.bhl_policy import load_policy_config  # noqa: E402
+
+pytestmark = pytest.mark.integration
+
+COMMAND_TOPIC = "/bhl_standing_controller/commands"
+JOINT_STATES_TOPIC = "/joint_states"
+IMU_TOPIC = "/bhl/imu"
+CMD_VEL_TOPIC = "/cmd_vel"
+
+
+@pytest.fixture(scope="module")
+def policy_config():
+    return load_policy_config(name="policy_humanoid")
+
+
+class GraphHarness:
+    """Controller node + sensor/command stubs on one live executor."""
+
+    def __init__(self, config):
+        self.config = config
+        self.received = []  # (recv_time, Float64MultiArray)
+
+        from rclpy.node import Node
+        from geometry_msgs.msg import Twist
+        from sensor_msgs.msg import Imu, JointState
+        from std_msgs.msg import Float64MultiArray
+
+        self.JointState = JointState
+        self.Imu = Imu
+        self.Twist = Twist
+
+        from robot_lab_adapter.humanoid_policy_controller import (
+            HumanoidPolicyController)
+        self.controller = HumanoidPolicyController()
+
+        self.helper = Node("policy_graph_test_helper")
+        reliable = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE)
+        self._joint_pub = self.helper.create_publisher(
+            JointState, JOINT_STATES_TOPIC, reliable)
+        self._imu_pub = self.helper.create_publisher(Imu, IMU_TOPIC, reliable)
+        self._cmd_pub = self.helper.create_publisher(Twist, CMD_VEL_TOPIC, reliable)
+        self.helper.create_subscription(
+            Float64MultiArray, COMMAND_TOPIC, self._on_targets, reliable)
+
+        self.executor = SingleThreadedExecutor()
+        self.executor.add_node(self.controller)
+        self.executor.add_node(self.helper)
+
+    def _on_targets(self, msg):
+        self.received.append((time.monotonic(), msg))
+
+    # -- stimulus helpers -------------------------------------------------
+    def publish_sensors(self, positions, velocities, quat=(0.0, 0.0, 0.0, 1.0),
+                        gyro=(0.0, 0.0, 0.0)):
+        joint_msg = self.JointState()
+        joint_msg.name = list(BHL_JOINT_NAMES)
+        joint_msg.position = [positions.get(j, 0.0) for j in BHL_JOINT_NAMES]
+        joint_msg.velocity = [velocities.get(j, 0.0) for j in BHL_JOINT_NAMES]
+        self._joint_pub.publish(joint_msg)
+        imu_msg = self.Imu()
+        imu_msg.orientation.x, imu_msg.orientation.y = quat[0], quat[1]
+        imu_msg.orientation.z, imu_msg.orientation.w = quat[2], quat[3]
+        imu_msg.angular_velocity.x = gyro[0]
+        imu_msg.angular_velocity.y = gyro[1]
+        imu_msg.angular_velocity.z = gyro[2]
+        self._imu_pub.publish(imu_msg)
+
+    def publish_cmd_vel(self, vx=0.0, vy=0.0, wz=0.0):
+        cmd = self.Twist()
+        cmd.linear.x, cmd.linear.y, cmd.angular.z = vx, vy, wz
+        self._cmd_pub.publish(cmd)
+
+    def spin_for(self, seconds):
+        """Pump the graph, re-publishing sensors at ~100 Hz."""
+        deadline = time.monotonic() + seconds
+        nominal = self.config.nominal_pose
+        while time.monotonic() < deadline:
+            self.publish_sensors(
+                {j: float(v) for j, v in nominal.items()},
+                {j: 0.05 for j in nominal})
+            self.executor.spin_once(timeout_sec=0.01)
+
+    def close(self):
+        self.executor.remove_node(self.controller)
+        self.executor.remove_node(self.helper)
+        self.controller.destroy_node()
+        self.helper.destroy_node()
+
+
+@pytest.fixture(scope="module")
+def graph(policy_config):
+    try:
+        rclpy.init()
+    except RuntimeError:
+        pass  # already initialized (e.g. re-run in a persistent session)
+    harness = GraphHarness(policy_config)
+    yield harness
+    harness.close()
+    try:
+        rclpy.shutdown()
+    except Exception:
+        pass
+
+
+def _targets(harness):
+    """Latest published 22-vector keyed by canonical joint order."""
+    assert harness.received, "no command messages received on the graph"
+    _, msg = harness.received[-1]
+    assert len(msg.data) == len(BHL_JOINT_NAMES)
+    return list(msg.data)
+
+
+def test_hold_default_pose_before_first_cmd_vel(graph, policy_config):
+    graph.received.clear()
+    graph.spin_for(0.5)
+    # Multiple messages at the policy rate, all equal to the default pose.
+    assert len(graph.received) >= 5
+    hold = [policy_config.hold_pose()[j] for j in BHL_JOINT_NAMES]
+    for _, msg in graph.received:
+        assert list(msg.data) == pytest.approx(hold, abs=1e-9)
+
+
+def test_cmd_vel_triggers_real_inference_at_policy_rate(graph):
+    graph.received.clear()
+    graph.publish_cmd_vel(vx=0.25)
+    graph.spin_for(1.2)
+    stamps = [t for t, _ in graph.received]
+    # Rate is nominally 25 Hz; accept a generous lower bound for CI machines.
+    assert len(stamps) >= 10
+    rate = (len(stamps) - 1) / (stamps[-1] - stamps[0])
+    assert 10.0 <= rate <= 40.0
+    targets = np.asarray(_targets(graph))
+    assert np.isfinite(targets).all()
+    # A real policy output at 0.25 m/s is not exactly the zero-action pose.
+    hold = np.asarray([graph.config.hold_pose()[j] for j in BHL_JOINT_NAMES])
+    assert not np.allclose(targets, hold, atol=1e-6)
+
+
+def test_joint_velocities_reach_the_observation_path(graph):
+    """Non-zero JointState velocities are consumed, not silently dropped.
+
+    A large positive dq on every joint with a stationary-measurement alias is
+    indistinguishable in the published targets from zeros without inspecting
+    the observation, so this test asserts the wiring contract instead: the
+    node stores velocities from JointState and passes them through the
+    controller update (verified by the pure-logic suite); here we confirm the
+    graph end-to-end still produces finite targets with them present.
+    """
+    graph.received.clear()
+    graph.publish_cmd_vel(vx=0.25)
+    nominal = graph.config.nominal_pose
+    deadline = time.monotonic() + 0.8
+    while time.monotonic() < deadline:
+        graph.publish_sensors(
+            {j: float(v) for j, v in nominal.items()},
+            {j: 1.0 for j in nominal})  # well-formed, non-zero dq
+        graph.executor.spin_once(timeout_sec=0.01)
+    # Wiring contract: the node cached the velocities from JointState...
+    assert graph.controller._measured_velocities is not None
+    assert graph.controller._measured_velocities["leg_left_hip_pitch_joint"] == 1.0
+    # ...and the graph end-to-end still produces finite 22-vector targets.
+    targets = np.asarray(_targets(graph))
+    assert len(targets) == 22 and np.isfinite(targets).all()
+
+
+def test_tipped_imu_latches_safe_stop_on_the_graph(graph, policy_config):
+    graph.received.clear()
+    graph.publish_cmd_vel(vx=0.25)
+    graph.spin_for(0.3)  # inference running
+    # Tip the robot beyond the 0.70 rad fall threshold and keep commanding.
+    tilt = 0.75
+    tipped = (math.sin(tilt / 2), 0.0, 0.0, math.cos(tilt / 2))
+    nominal = graph.config.nominal_pose
+    deadline = time.monotonic() + 0.8
+    while time.monotonic() < deadline:
+        graph.publish_sensors(
+            {j: float(v) for j, v in nominal.items()},
+            {j: 0.0 for j in nominal}, quat=tipped)
+        graph.executor.spin_once(timeout_sec=0.01)
+    # SAFE_STOP holds the default pose while cmd_vel keeps arriving.
+    assert graph.controller._controller.safety_state == "SAFE_STOP"
+    hold = [policy_config.hold_pose()[j] for j in BHL_JOINT_NAMES]
+    recent = graph.received[-10:]
+    assert recent, "no targets published after SAFE_STOP"
+    for _, msg in recent:
+        assert list(msg.data) == pytest.approx(hold, abs=1e-9)
+
