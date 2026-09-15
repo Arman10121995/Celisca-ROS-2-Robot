@@ -74,30 +74,44 @@ _UPSTREAM_RELATIVE = os.path.join("_upstream", "Berkeley-Humanoid-Lite")
 
 
 
-def upstream_dir() -> Path:
-    """Resolve the vendored upstream tree, source tree or install share.
+def _usable_upstream(candidate: Path) -> bool:
+    """A candidate counts only if the pinned policy configs are really there.
 
-    Same resolution strategy as ``bhl_balance._urdf_path``: the package share
-    directory is authoritative when the workspace is sourced; otherwise the
-    source tree is searched upward for ``robot_lab_robots``.
+    A stale install-share copy of ``_upstream`` (built before the configs
+    were vendored) must not silently shadow the source tree.
     """
+    return ((candidate / "configs" / "policy_humanoid.yaml").is_file()
+            and (candidate / "configs" / "policy_humanoid_legs.yaml").is_file())
+
+
+def upstream_dir() -> Path:
+    """Resolve the vendored upstream tree: source tree first, install share second.
+
+    The source-tree copy is the pinned reference (submodule commits recorded
+    in the R5.3 evidence); an install-share copy is a build artifact that can
+    be stale (one was observed missing the ``policy_humanoid_legs`` config),
+    so it is only used when no source tree is found. Both candidates are
+    required to actually contain the policy configs.
+    """
+    directory = Path(__file__).resolve().parent
+    while True:
+        candidate = directory / "robot_lab_robots" / _UPSTREAM_RELATIVE
+        if _usable_upstream(candidate):
+            return candidate
+        parent = directory.parent
+        if parent == directory:
+            break
+        directory = parent
+
     try:
         from ament_index_python.packages import get_package_share_directory
         candidate = Path(get_package_share_directory("robot_lab_robots")) / _UPSTREAM_RELATIVE
-        if candidate.is_dir():
+        if _usable_upstream(candidate):
             return candidate
     except Exception:
         pass
 
-    directory = Path(__file__).resolve().parent
-    while True:
-        candidate = directory / "robot_lab_robots" / _UPSTREAM_RELATIVE
-        if candidate.is_dir():
-            return candidate
-        parent = directory.parent
-        if parent == directory:
-            return Path(__file__).resolve().parents[2] / "robot_lab_robots" / _UPSTREAM_RELATIVE
-        directory = parent
+    return Path(__file__).resolve().parents[2] / "robot_lab_robots" / _UPSTREAM_RELATIVE
 
 
 @dataclass(frozen=True)
@@ -121,6 +135,7 @@ class PolicyConfig:
     policy_dt: float
     physics_dt: float
     num_observations: int
+    default_base_position: np.ndarray
 
     @property
     def action_joints(self) -> Tuple[str, ...]:
@@ -192,6 +207,7 @@ def load_policy_config(
         policy_dt=float(cfg["policy_dt"]),
         physics_dt=float(cfg["physics_dt"]),
         num_observations=int(cfg["num_observations"]),
+        default_base_position=np.asarray(cfg["default_base_position"], dtype=float),
     )
 
 

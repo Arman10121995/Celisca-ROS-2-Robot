@@ -1,0 +1,146 @@
+{
+  "qualification": "native MuJoCo policy probe; ROS integration not established",
+  "policy": "policy_humanoid_legs",
+  "passed": false,
+  "tracking_feedback": null,
+  "mujoco_version": "3.12.0",
+  "onnxruntime_version": "1.23.2",
+  "physics_dt": 0.0005,
+  "policy_dt": 0.04,
+  "commands": {
+    "stand": [
+      0,
+      0,
+      0
+    ],
+    "perturb": [
+      0,
+      0,
+      0
+    ],
+    "walk": [
+      0.25,
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0,
+      0.6
+    ],
+    "stop": [
+      0,
+      0,
+      0
+    ]
+  },
+  "perturbation": {
+    "force_y_N": 5.0,
+    "duration_s": 0.2
+  },
+  "trial_protocol": "deterministic, no injected random seed",
+  "wall_seconds": 23.755586789000517,
+  "artifacts_sha256": {
+    "upstream/configs/policy_humanoid_legs.yaml": "ca278ff6b0c33d59a4fb118065d6817cd7ad2515ee4a15a8195627df2bd01ad9",
+    "upstream/checkpoints/policy_humanoid_legs.onnx": "5804335641c2ca286dbd879cf0e8a354d365dd23c037425da4966a815a03c64b",
+    "robot/mjcf/berkeley_humanoid_lite.xml": "11180b321229d335b5a5f14fa8adeee101daa12bed84dff33d32f265b5196dbf",
+    "robot/meshes/leg_right_knee_pitch_visual.stl": "de9bb40ea6e610c013758037b5b8311d544586d769b59306c29bbe59fd0f13bc",
+    "robot/meshes/arm_left_elbow_pitch_visual.stl": "dcc63a3258fcb2eadf773dac5ae01069c1cd56515903d957351a8c397042c6a5",
+    "robot/meshes/leg_left_knee_pitch_visual.stl": "956d76bc1a994c11d8a31ba58c4e510180ef03124d6f24c896449701fd04644e",
+    "robot/meshes/arm_left_shoulder_roll_visual.stl": "a43c68296d04993c1f15663787c32b1b9540ed778bb608de5931ac090260cc86",
+    "robot/meshes/arm_left_shoulder_pitch_visual.stl": "bb7424abee626edfcd38ca55789791fe48ca97c5a1d744d8efee12110e8e68b2",
+    "robot/meshes/leg_right_ankle_roll_visual.stl": "6f44c6e5d27b7e7ca78040be74d12134785fbeb20bde66810b5e56188c7df9b5",
+    "robot/meshes/arm_right_elbow_pitch_visual.stl": "01928d43bcd163cd8fa9dfc3222857eec0afd0297d449362e6bad5394a145aa0",
+    "robot/meshes/leg_left_hip_roll_visual.stl": "66ce0cf0153d8710c1c3cac947270e1855cdb62ef3a3e43ba2de20ad5d711356",
+    "robot/meshes/leg_right_hip_roll_visual.stl": "cb776ee7a9a016b0c09f5d8bbb2f81c7aa7abed8ad97c5e84ea0c7c4ee4ed3bd",
+    "robot/meshes/arm_right_shoulder_yaw_visual.stl": "76725f6aa833bff0ca29521d2474b0cd695b18ea6b05f141e23c7d1b9c3bd0af",
+    "robot/meshes/leg_left_ankle_pitch_visual.stl": "eb7216eba3c7af0c64379003d55112556db5e48a603bf99f200caa7f4735e48c",
+    "robot/meshes/leg_left_hip_yaw_visual.stl": "ed54b34914b5adf4a963dc266685f0b0d82cae98a0409490432c0199ce4abdaf",
+    "robot/meshes/arm_right_elbow_roll_visual.stl": "c74c94c93b8973879fb4ee5caf125f8ad2cccffb5ca2f8adc9f8ab1277cff46b",
+    "robot/meshes/arm_right_hand_link_visual.stl": "12551a89279aba71699fa9545d6d6dc815539e2411d3d069b71aea99352c444f",
+    "robot/meshes/base_visual.stl": "d9af91bf06e64d633fbe74f9700c9819952e7bb9d21b22101ef7c25e5e0a601c",
+    "robot/meshes/leg_right_ankle_pitch_visual.stl": "bec4d629b07813d9954c7219d02f51500413d19da10e743b17b966a703e183b1",
+    "robot/meshes/arm_right_shoulder_roll_visual.stl": "2ca18897c48d2e07d11e110ced7ff17925f6212a099281e3c8eb33f1c276d882",
+    "robot/meshes/leg_left_hip_pitch_visual.stl": "40940519f285ff6f5c1f927c60f0dc30fcedc8d46d0a62f8ce1865169424779f",
+    "robot/meshes/leg_right_hip_pitch_visual.stl": "8ad842e726a2396de47eca5ebb7feb1b060a440de537211080df3298a22c7d21",
+    "robot/meshes/arm_left_hand_link_visual.stl": "866509814110736425e6a53fb7ac7259fc6eeb0f6b7391d1a5dfe78192cfaefd",
+    "robot/meshes/arm_left_elbow_roll_visual.stl": "149d9aec09328004cd4009f53ddba2e3e76a3cb3a8421b74c5cf4a7a771b7830",
+    "robot/meshes/leg_left_ankle_roll_visual.stl": "96ff643402492843119787aa00f8d26412154bfd10e10df3651655853b81775c",
+    "robot/meshes/leg_right_hip_yaw_visual.stl": "8502e46e5e22229c7d5e8f54ff37ae8ef2b2f77270cc55df7c9a29fcc1ab3adf",
+    "robot/meshes/arm_left_shoulder_yaw_visual.stl": "63330719959b2fc97809af73d4f950b8f2973c11676eefba03b15fc269f36866",
+    "robot/meshes/arm_right_shoulder_pitch_visual.stl": "e9b44ad2e5e959303616dd42bdfa32647656d36a54ec7c89b5cbc9a93743be6f",
+    "robot/meshes/imu_2_visual.stl": "e06a07bf09851ec0748ba0b77fc1d47c3a17a2f8f6a0b09803514eadac046745"
+  },
+  "phases": [
+    {
+      "phase": "stand",
+      "passed": true,
+      "errors": [],
+      "simulated_seconds": 4.9999999999999485,
+      "forward_progress_m": -0.010675868491636441,
+      "lateral_drift_m": 0.003972097170738674,
+      "yaw_change_rad": 0.06647404132486201,
+      "maximum_tilt_rad": 0.05165990459567595,
+      "last_second_mean_speed_m_s": 9.95844725145641e-05,
+      "maximum_joint_limit_excess_rad": 0.0006997015525591733,
+      "maximum_effort_fraction": 1.0
+    },
+    {
+      "phase": "perturb",
+      "passed": true,
+      "errors": [],
+      "simulated_seconds": 5.000000000000782,
+      "forward_progress_m": 5.807539689220481e-05,
+      "lateral_drift_m": -0.00011640038410598253,
+      "yaw_change_rad": 0.008968098192824722,
+      "maximum_tilt_rad": 0.006640425165068941,
+      "last_second_mean_speed_m_s": 3.6626303868616025e-05,
+      "maximum_joint_limit_excess_rad": 0.00019841870307109547,
+      "maximum_effort_fraction": 0.67387264400099
+    },
+    {
+      "phase": "walk",
+      "passed": false,
+      "errors": [
+        "forward progress below 60% of commanded distance"
+      ],
+      "simulated_seconds": 9.999999999998009,
+      "forward_progress_m": 0.00564911704684731,
+      "lateral_drift_m": 0.0018343837783480362,
+      "yaw_change_rad": -0.0004879159384712367,
+      "maximum_tilt_rad": 0.026554209351979483,
+      "last_second_mean_speed_m_s": 0.008792194508114384,
+      "maximum_joint_limit_excess_rad": 0.00036405691978856603,
+      "maximum_effort_fraction": 0.7979303155057399
+    },
+    {
+      "phase": "turn",
+      "passed": false,
+      "errors": [
+        "yaw progress below 50% of commanded rotation"
+      ],
+      "simulated_seconds": 4.999999999988347,
+      "forward_progress_m": -0.0018767958493269609,
+      "lateral_drift_m": -0.0034839408011666903,
+      "yaw_change_rad": 0.10889784890450363,
+      "maximum_tilt_rad": 0.023541741984559685,
+      "last_second_mean_speed_m_s": 0.00011967587600513575,
+      "maximum_joint_limit_excess_rad": 0.00047064957416124455,
+      "maximum_effort_fraction": 1.0
+    },
+    {
+      "phase": "stop",
+      "passed": true,
+      "errors": [],
+      "simulated_seconds": 4.999999999988347,
+      "forward_progress_m": -0.004298219128071325,
+      "lateral_drift_m": 0.00140117731633619,
+      "yaw_change_rad": -0.09405342468987629,
+      "maximum_tilt_rad": 0.010035008784387997,
+      "last_second_mean_speed_m_s": 9.57334953778621e-05,
+      "maximum_joint_limit_excess_rad": 0.0004056637394642613,
+      "maximum_effort_fraction": 0.6565967616211333
+    }
+  ],
+  "not_run": []
+}

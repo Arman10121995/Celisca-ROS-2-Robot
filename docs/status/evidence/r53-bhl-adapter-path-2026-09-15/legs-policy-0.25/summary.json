@@ -1,0 +1,121 @@
+{
+  "qualification": "adapter-path validation: BhlPolicyController (the code the humanoid_policy_controller ROS node calls) on the native MuJoCo model, onboard state only",
+  "onboard_state_only": true,
+  "policy": "policy_humanoid_legs",
+  "passed": false,
+  "adapter_safe_stop": false,
+  "mujoco_version": "3.12.0",
+  "onnxruntime_version": "1.23.2",
+  "physics_dt": 0.0005,
+  "policy_dt": 0.04,
+  "commands": {
+    "stand": [
+      0,
+      0,
+      0
+    ],
+    "perturb": [
+      0,
+      0,
+      0
+    ],
+    "walk": [
+      0.25,
+      0,
+      0
+    ],
+    "turn": [
+      0,
+      0,
+      0.6
+    ],
+    "stop": [
+      0,
+      0,
+      0
+    ]
+  },
+  "perturbation": {
+    "force_y_N": 5.0,
+    "duration_s": 0.2
+  },
+  "trial_protocol": "deterministic, no injected random seed",
+  "wall_seconds": 24.399393304000114,
+  "artifacts_sha256": {
+    "upstream/configs/policy_humanoid_legs.yaml": "ca278ff6b0c33d59a4fb118065d6817cd7ad2515ee4a15a8195627df2bd01ad9",
+    "upstream/checkpoints/policy_humanoid_legs.onnx": "5804335641c2ca286dbd879cf0e8a354d365dd23c037425da4966a815a03c64b",
+    "robot/mjcf/berkeley_humanoid_lite.xml": "11180b321229d335b5a5f14fa8adeee101daa12bed84dff33d32f265b5196dbf"
+  },
+  "phases": [
+    {
+      "phase": "stand",
+      "passed": true,
+      "errors": [],
+      "simulated_seconds": 4.9999999999999485,
+      "forward_progress_m": -0.016386288258858506,
+      "lateral_drift_m": 0.0035911144281590627,
+      "yaw_change_rad": 0.06443227283069722,
+      "maximum_tilt_rad": 0.05122274938352468,
+      "last_second_mean_speed_m_s": 0.00011478576937473758,
+      "maximum_joint_limit_excess_rad": 0.0007158962357361731,
+      "maximum_effort_fraction": 1.0
+    },
+    {
+      "phase": "perturb",
+      "passed": true,
+      "errors": [],
+      "simulated_seconds": 5.000000000000782,
+      "forward_progress_m": 0.00010644701175046476,
+      "lateral_drift_m": -0.00012737820254795759,
+      "yaw_change_rad": 0.009396051770213756,
+      "maximum_tilt_rad": 0.006554736380222796,
+      "last_second_mean_speed_m_s": 3.992994328284613e-05,
+      "maximum_joint_limit_excess_rad": 0.0001973235088170609,
+      "maximum_effort_fraction": 0.6827321547706742
+    },
+    {
+      "phase": "walk",
+      "passed": false,
+      "errors": [
+        "forward progress below 60% of commanded distance"
+      ],
+      "simulated_seconds": 9.999999999998009,
+      "forward_progress_m": 0.0051778498179790855,
+      "lateral_drift_m": 0.0020084370448092844,
+      "yaw_change_rad": -0.00027290563541830515,
+      "maximum_tilt_rad": 0.02662934376766662,
+      "last_second_mean_speed_m_s": 0.00884690801754791,
+      "maximum_joint_limit_excess_rad": 0.000363374464416962,
+      "maximum_effort_fraction": 0.7981138223559775
+    },
+    {
+      "phase": "turn",
+      "passed": false,
+      "errors": [
+        "yaw progress below 50% of commanded rotation"
+      ],
+      "simulated_seconds": 4.999999999988347,
+      "forward_progress_m": -0.0013764773036704183,
+      "lateral_drift_m": -0.0036701449221502504,
+      "yaw_change_rad": 0.10945592952644032,
+      "maximum_tilt_rad": 0.02329649747774139,
+      "last_second_mean_speed_m_s": 0.00011628341755359107,
+      "maximum_joint_limit_excess_rad": 0.0004766000149664538,
+      "maximum_effort_fraction": 1.0
+    },
+    {
+      "phase": "stop",
+      "passed": true,
+      "errors": [],
+      "simulated_seconds": 4.999999999988347,
+      "forward_progress_m": -0.004292770630184837,
+      "lateral_drift_m": 0.0013772333887655938,
+      "yaw_change_rad": -0.09399173300244364,
+      "maximum_tilt_rad": 0.01002110851115081,
+      "last_second_mean_speed_m_s": 9.53924346800289e-05,
+      "maximum_joint_limit_excess_rad": 0.0004058308840711535,
+      "maximum_effort_fraction": 0.6582241051053864
+    }
+  ],
+  "not_run": []
+}
