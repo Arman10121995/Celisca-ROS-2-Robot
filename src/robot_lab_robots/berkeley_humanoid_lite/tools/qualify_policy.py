@@ -77,7 +77,25 @@ def assess_phase(name, rows, duration, command, start_xy, start_yaw, safety_fail
             'maximum_effort_fraction': max(row['effort_fraction'] for row in rows)}
 
 
-def qualify(robot_dir, upstream_dir, policy, speed, output):
+def tracking_command(command, phase_time, start_xy, start_yaw, xy, yaw):
+    """Ground-truth pose feedback for this isolated simulation experiment.
+
+    Track a straight reference or an in-place yaw ramp. Limits are the upstream
+    training command ranges, not claims of verified robot operating limits.
+    """
+    vx, _, wz = command
+    c, s = math.cos(start_yaw), math.sin(start_yaw)
+    target_xy = np.asarray(start_xy) + phase_time * vx * np.array([c, s])
+    world_velocity = vx * np.array([c, s]) + target_xy - xy
+    c, s = math.cos(yaw), math.sin(yaw)
+    yaw_error = math.atan2(math.sin(start_yaw + wz * phase_time - yaw),
+                           math.cos(start_yaw + wz * phase_time - yaw))
+    return np.clip([c * world_velocity[0] + s * world_velocity[1],
+                    -s * world_velocity[0] + c * world_velocity[1],
+                    wz + 2 * yaw_error], [-1., -.5, -1.5], [1., .5, 1.5])
+
+
+def qualify(robot_dir, upstream_dir, policy, speed, output, tracking_feedback=False):
     import mujoco
     import onnxruntime as ort
 
@@ -142,7 +160,12 @@ def qualify(robot_dir, upstream_dir, policy, speed, output):
         rows = []
         for _ in range(round(duration / cfg['policy_dt'])):
             gravity = rotation_state(data.sensor('imu_quat').data)[2]
-            obs = np.concatenate([commands[phase], data.sensor('imu_gyro').data, gravity,
+            policy_command = commands[phase]
+            if tracking_feedback and phase in ('walk', 'turn'):
+                policy_command = tracking_command(commands[phase], data.time - start_time,
+                                                   start_xy, start_yaw, data.qpos[:2],
+                                                   rotation_state(data.qpos[3:7])[0])
+            obs = np.concatenate([policy_command, data.sensor('imu_gyro').data, gravity,
                                   (data.qpos[qidx] - nominal)[indices], data.qvel[vidx][indices],
                                   previous]).astype(np.float32)[None, :]
             raw = np.asarray(session.run(None, {input_info.name: obs})[0])
@@ -186,6 +209,7 @@ def qualify(robot_dir, upstream_dir, policy, speed, output):
                        x=data.qpos[0], y=data.qpos[1], z=data.qpos[2], yaw=yaw, tilt=tilt,
                        speed=float(np.linalg.norm(data.qvel[:2])),
                        effort_fraction=max_effort, joint_limit_excess=max_excess,
+                       policy_vx=policy_command[0], policy_vy=policy_command[1], policy_wz=policy_command[2],
                        nonfoot_floor_contacts=nonfoot_contacts)
             rows.append(row)
             if safety_failure:
@@ -207,12 +231,14 @@ def qualify(robot_dir, upstream_dir, policy, speed, output):
     files = [cfg_path, checkpoint, model_path, *mesh_paths]
     result = {'qualification': 'native MuJoCo policy probe; ROS integration not established',
               'policy': policy, 'passed': len(reports) == len(PHASES) and all(r['passed'] for r in reports),
+              'tracking_feedback': 'perfect simulator pose, gains xy=1/s yaw=2/s' if tracking_feedback else None,
               'mujoco_version': mujoco.__version__, 'onnxruntime_version': ort.__version__,
               'physics_dt': cfg['physics_dt'], 'policy_dt': cfg['policy_dt'],
               'commands': commands, 'perturbation': {'force_y_N': 5.0, 'duration_s': .2},
               'trial_protocol': 'deterministic, no injected random seed',
               'wall_seconds': time.monotonic() - wall_start,
-              'artifacts_sha256': {str(p.relative_to(robot_dir.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
+              'artifacts_sha256': {('robot/' + str(p.relative_to(robot_dir)) if p.is_relative_to(robot_dir)
+                                   else 'upstream/' + str(p.relative_to(upstream_dir))): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in files}, 'phases': reports,
               'not_run': [name for name, _ in PHASES if name not in {r['phase'] for r in reports}]}
     (output / 'summary.json').write_text(json.dumps(result, indent=2, allow_nan=False) + '\n')
@@ -225,11 +251,14 @@ def main(argv=None):
     parser.add_argument('--upstream-dir', type=Path, default=UPSTREAM_DIR)
     parser.add_argument('--policy', choices=['policy_humanoid', 'policy_humanoid_legs'], default='policy_humanoid_legs')
     parser.add_argument('--speed', type=float, default=.5)
+    parser.add_argument('--tracking-feedback', action='store_true',
+                        help='add bounded reference tracking using perfect simulator pose (development only)')
     parser.add_argument('--out', type=Path, required=True)
     args = parser.parse_args(argv)
     if not math.isfinite(args.speed) or not 0 < args.speed <= .5:
         parser.error('--speed must be finite, positive and at most 0.5 m/s')
-    result = qualify(args.robot_dir.resolve(), args.upstream_dir.resolve(), args.policy, args.speed, args.out)
+    result = qualify(args.robot_dir.resolve(), args.upstream_dir.resolve(), args.policy, args.speed,
+                     args.out, args.tracking_feedback)
     return 0 if result['passed'] else 1
 
 

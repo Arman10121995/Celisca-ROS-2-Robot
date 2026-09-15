@@ -559,6 +559,7 @@ tasks:
           - "src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py"
           - "src/robot_lab_adapter/robot_lab_adapter/bhl_balance.py"
           - "src/robot_lab_adapter/test/test_r5_3_bhl_balance.py"
+          - "src/robot_lab_adapter/test/test_r5_3_bhl_policy.py"
           - "src/robot_lab_robots/config/robots.yaml"
         acceptance_ref: "ROADMAP.md"
         evidence:
