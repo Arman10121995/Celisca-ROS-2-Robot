@@ -50,3 +50,12 @@ runtime now authors `physxJoint:armature` 0.005 on driven wheel joints, and
 the spawner imports the description's own `<collision>` geometry by default,
 as Gazebo, PyBullet and MuJoCo do (every robot description has collision
 geometry on its structural links).
+
+## Mission qualification
+
+The mission half of R8.2 (a full R4 `point_to_point_navigation` run through the
+live stack) is recorded separately in
+[`../r82-isaac-mission-2026-09-16/`](../r82-isaac-mission-2026-09-16/README.md):
+five evaluation seeds (1201-1205), bumperbot in `nav_empty`, 5/5 truthful
+`success`, 1.3507 +/- 0.0004 m measured trajectory, mean 5.44 s sim, mean RTF
+0.131, with real `rosbag2` captures.

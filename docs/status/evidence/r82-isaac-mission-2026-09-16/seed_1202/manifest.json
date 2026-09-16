@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "result_id": "r4_1202",
+  "simulator": "isaac",
+  "robot_id": "bumperbot",
+  "environment_id": "nav_empty",
+  "scenario_id": "point_to_point_navigation",
+  "seed": 1202,
+  "goal_m": 1.5,
+  "outcome": "success",
+  "metrics": {
+    "success": true,
+    "outcome": "success",
+    "trajectory_distance_m": 1.3510070925064674,
+    "footprint_clearance_min_m": 4.518583164215088,
+    "contact_events": 0,
+    "time_to_goal_sim_s": 5.45,
+    "drive_sim_seconds": 5.45,
+    "realtime_factor": 0.1297673734031057,
+    "goal_tolerance_m": 0.15,
+    "footprint_radius_m": 0.14,
+    "bag_capture": true,
+    "bag_message_counts": {
+      "/scan": 27,
+      "/odom/ground_truth": 2111,
+      "/clock": 2111,
+      "/cmd_vel": 648
+    }
+  },
+  "bag_path": "/tmp/r82_isaac_mission/r4_isaac_point_to_point_navigation_nav_empty_1202/bags/run_1202",
+  "trace_path": "/tmp/r82_isaac_mission/r4_isaac_point_to_point_navigation_nav_empty_1202/trace.csv",
+  "launch_log": "/tmp/r82_isaac_mission/r4_isaac_point_to_point_navigation_nav_empty_1202/launch.log",
+  "ts_utc": "2026-09-16T08:38:39.769708+00:00"
+}

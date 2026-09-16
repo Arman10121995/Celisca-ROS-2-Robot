@@ -1,9 +1,11 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-15. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
+Updated: 2026-09-16. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
 and truthful outcomes complete. 2026-09-11: selection fidelity work landed
 against R3.3/R3.4, R7.1, R6.1 and R8.1; R8.2 unblocked 2026-09-14 (Isaac boots, loads
-worlds, drives in the commanded direction and stops cleanly).
+worlds, drives in the commanded direction and stops cleanly) and qualified
+2026-09-16 on a named Jetson host (live scan/RGB-D/drive/reset plus a
+five-seed R4 mission).
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -636,9 +638,21 @@ Dependencies: `R5.1`, `R6.1`.
     averaged over the window including the start). The remaining ~15 % gap
     between wheel and body speed (slip, caster drag, or the wheel collision
     shape generated from the visual mesh) is not isolated.
-  - Open for qualification: the wheel/body speed gap, scan and RGB-D
-    publishers (Isaac provides neither), a class mission, and the named host
-    configuration record.
+  - Closed 2026-09-16: `/scan` and RGB-D publishers are implemented and
+    verified live against the map ray-cast (360/360 rays within 5 cm; centre
+    depth 7.340 m vs 7.338 m), root-body odometry is re-expressed at the URDF
+    root, reset returns to the start pose with a monotonic clock, the
+    wheel-drive instability is fixed (rotor armature plus the description's own
+    collision geometry; 0.298 m/s at 0.3 commanded, yaw 0.587 rad/s at 0.6 on
+    this host), the named host is recorded (`evidence/r82-isaac-jetson-2026-09-16/host.json`),
+    and a class mission runs live: 5 evaluation seeds (1201-1205) complete
+    `point_to_point_navigation` in `nav_empty`, 5/5 truthful `success`,
+    1.3507 +/- 0.0004 m, mean 5.44 s sim, mean RTF 0.131
+    (`evidence/r82-isaac-mission-2026-09-16/`). The 2026-09-14 ~15 % wheel/body
+    speed gap is measured within about 1 % by the probe but not separately
+    isolated. Recorded limits, not waivers: bumperbot only, one open arena, the
+    mission controller consumes ground-truth odometry, `/scan` is published
+    every 12 physics steps, and obstacle-world missions remain R6.1/R8.1 work.
 
 ### R8.3 — Resource-bounded concurrent experiments
 

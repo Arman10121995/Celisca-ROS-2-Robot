@@ -252,6 +252,32 @@ def test_live_mission_pybullet_seed1101(tmp_path):
     assert proc.returncode == 0, proc.stderr[-3000:]
     _assert_live_record(out, "pybullet", 1101)
 
+
+@pytest.mark.skipif(
+    not os.environ.get("ROBOT_LAB_RUN_LIVE_MISSION"),
+    reason="live simulator mission is opt-in "
+           "(ROBOT_LAB_RUN_LIVE_MISSION=1)")
+def test_live_mission_isaac_seed1201(tmp_path):
+    """Seeded Isaac Sim R4 mission on an isolated domain (R8.2 evidence).
+
+    Mirrors the MuJoCo/PyBullet missions on ``robot_lab_isaac``
+    (ROS_DOMAIN_ID=201 for seed 1201 on base domain 200) with the same goal,
+    world, timeout and record assertions.  Isaac starts a Kit runtime in
+    its own process group, so the launch + mission takes longer than the
+    other backends (warm start ~30 s, then the R4 mission at a real-time
+    factor of ~0.13 on this Jetson).
+    """
+    out = tmp_path / "live_isaac"
+    cmd = _MISSION_RUN + ["--simulator", "isaac",
+                          "--seeds", "1201", "--goal", "1.5",
+                          "--world", "nav_empty", "--output", str(out),
+                          "--timeout", "40.0", "--domain", "200"]
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=900,
+                          env=_live_env())
+    assert proc.returncode == 0, proc.stderr[-3000:]
+    _assert_live_record(out, "isaac", 1201)
+
+
 class TestLaunchArguments:
     """Each backend's launch file takes its world and robot differently."""
 

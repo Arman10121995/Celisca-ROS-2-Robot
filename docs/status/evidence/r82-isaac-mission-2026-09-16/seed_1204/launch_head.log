@@ -1,0 +1,40 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-16-10-39-52-880349-molar1-55489
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [55553]
+[INFO] [isaac_spawner-2]: process started with pid [55555]
+[INFO] [sensor_bridge-3]: process started with pid [55557]
+[robot_state_publisher-1] 1789547993.208154 [204] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [INFO] [1789547993.221851741] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1789547993.222015517] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1789547993.222038237] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1789547993.222048189] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1789547993.222056061] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1789547993.222063357] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1789547993.222070653] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1789547993.222078013] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1789547993.222086013] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789547993.222093661] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1789547993.222100989] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1789547993.222108349] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789547993.222115453] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1789547993.222122461] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789547993.222129789] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1789547993.222136861] [robot_state_publisher]: got segment wheel_right_link
+[sensor_bridge-3] 1789547993.617514 [204] sensor_bri: selected interface "lo" is not multicast-capable: disabling multicast
+[sensor_bridge-3] [WARN] [1789547993.698192544] [isaac_sensor_bridge]: Isaac Sim Python API not available. Sensor bridge running in offline mode.
+[isaac_spawner-2] 1789547993.724403 [204] isaac_spaw: selected interface "lo" is not multicast-capable: disabling multicast
+[isaac_spawner-2] [INFO] [1789547994.540681433] [isaac_spawner]: URDF written to /workspace/molar/.tmp/tmpzyis7rmn.urdf
+[isaac_spawner-2] [INFO] [1789547994.549262364] [isaac_spawner]: World 'nav_empty.world': 9 static shape(s) for Isaac, 0 skipped
+[isaac_spawner-2] [INFO] [1789547994.550110332] [isaac_spawner]: Launching Isaac runtime: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_runtime.py (gui=False)
+[isaac_spawner-2] [INFO] [1789547994.551215901] [isaac_spawner]: Isaac runtime LD_PRELOAD: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/extsDeprecated/omni.isaac.ml_archive/pip_prebundle/nvidia/nvjitlink/lib/libnvJitLink.so.12 /lib/aarch64-linux-gnu/libgomp.so.1
+[isaac_spawner-2] [INFO] [1789548013.834033064] [isaac_spawner]: Isaac runtime: World shapes created: 9 box
+[isaac_spawner-2] [INFO] [1789548014.060236901] [isaac_spawner]: Isaac runtime: Default lighting added: ['/World/robot_lab_lights/dome', '/World/robot_lab_lights/sun']
+[isaac_spawner-2] [INFO] [1789548017.219540208] [isaac_spawner]: Isaac runtime: Wheel velocity drives: ['/World/Physics/wheel_left_joint', '/World/Physics/wheel_right_joint']
+[isaac_spawner-2] [INFO] [1789548018.413680824] [isaac_spawner]: Isaac reports root body 'base_link'; odometry is re-expressed at URDF root 'base_footprint' (offset [0.0, 0.0, 0.033])
+[isaac_spawner-2] [INFO] [1789548018.414284537] [isaac_spawner]: Isaac runtime ready (dofs=['wheel_right_joint', 'wheel_left_joint'])
+[isaac_spawner-2] [INFO] [1789548018.414760313] [isaac_spawner]: Isaac runtime: Scan: 360 rays every 12 steps from offset [-0.0050526, -0.0023221, 0.12079999999999999] of 'base_link' (root body 'base_link'); 15 robot bodies ignored
+[isaac_spawner-2] [INFO] [1789548018.534152170] [isaac_spawner]: Isaac runtime: RGB-D camera /World/Geometry/base_footprint/base_link/oakd_link/oakd_rgb_camera_frame/robot_lab_rgbd: 320x240 every 12 steps
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [sensor_bridge-3]: sending signal 'SIGINT' to process[sensor_bridge-3]
+[INFO] [isaac_spawner-2]: sending signal 'SIGINT' to process[isaac_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
