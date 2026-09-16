@@ -151,3 +151,18 @@ start tilt monitor → start policy → release with zero `cmd_vel`):
   motion). Fixing standing/walking requires closing that gap (onboard
   odometry/state feedback, actuation/gain verification against the training
   setup, or a retrained policy) — not more bringup orchestration.
+
+### Correction (later the same day) — the "no joint motion" reading above is wrong
+
+A subsequent controlled actuation probe
+(`../r53-bhl-actuation-2026-09-16/`) showed that position commands **do**
+move the joints — knees track 0.4 exactly, arms track 0.8 (clamped at the
+URDF limit 0.7854 where applicable) with both controllers active through the
+standard dispatch path — and that the robot **stands stably under zero
+commands** (tilt 0.0 over 10 s). The "pinned near zero" joints in this
+paused-start run are explained by the actual root cause: the policy node's
+pre-`cmd_vel` default-pose hold (bent legs) topples the straight-legged
+spawn, and the fall destroys the balance before the watched-joint transient
+is readable. The corrected root cause and the evidence live in the
+actuation-probe README; the paused-start mechanics above (load paused,
+activate after unpause) remain valid as recorded.

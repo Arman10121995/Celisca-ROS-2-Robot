@@ -251,3 +251,52 @@ def test_policy_joint_ordering_is_consistent_with_the_backend():
     assert set(config.joints) == set(BHL_JOINT_NAMES)
     assert len(config.joints) == len(BHL_JOINT_NAMES) == 22
 
+
+
+def test_policy_hold_pose_differs_from_the_zero_spawn_pose():
+    """R5.3 root cause (r53-bhl-actuation-2026-09-16): gazebo.launch.py spawns
+    the BHL with every joint at 0 rad and the installed gz_ros2_control
+    exposes no spawn-time joint-position mechanism, while the policy's
+    default pose bends the legs (hip_pitch -0.2, knee +0.4, ankle -0.3). At
+    startup the controller therefore drives the bent-pose targets into a
+    straight-legged free-falling robot -- a destabilizing transient that
+    tips the base past the 0.70 rad fall threshold before the policy can
+    stabilize. Pin the mismatch so a future initial-pose mechanism (or a
+    policy change) makes the delta explicit instead of silent."""
+    config = load_policy_config(name="policy_humanoid")
+    hold = config.hold_pose()
+
+    # The mismatch is the root cause: the spawn pose is all zeros (no
+    # initial-joint-position mechanism in the bringup: the ros2_control
+    # xacro declares only command/state interfaces, and gazebo.launch.py
+    # exposes spawn_x/y/z/yaw only), while the policy's hold pose bends
+    # the legs. Assert the mismatch, not equality.
+    spawn_pose = {joint: 0.0 for joint in config.joints}
+    mismatched = [j for j in config.joints if abs(hold[j] - spawn_pose[j]) > 1e-9]
+    assert mismatched, "precondition changed: hold pose is now the spawn pose"
+
+    # But the upstream default pose is NOT all zeros for the legs -- that is
+    # exactly the mismatch: hold_pose() URDF-clamps, and the upstream
+    # defaults (hip_pitch -0.2, knee +0.4, ankle -0.3) survive the clamp.
+    for leg in ("left", "right"):
+        assert hold[f"leg_{leg}_hip_pitch_joint"] == -0.2, (
+            f"leg_{leg} hip_pitch default no longer -0.2: the startup "
+            "transient analysis must be re-validated")
+        assert hold[f"leg_{leg}_knee_pitch_joint"] == 0.4
+        assert hold[f"leg_{leg}_ankle_pitch_joint"] == -0.3
+
+    # And the bringup really has no spawn-time joint-position mechanism to
+    # close the gap with today.
+    for path, needle in (
+        (Path(__file__).resolve().parents[2]
+         / "robot_lab_robots" / "berkeley_humanoid_lite" / "xacro"
+         / "bhl_ros2_control.xacro", "initial_value"),
+        (Path(__file__).resolve().parents[2]
+         / "robot_lab_description" / "launch" / "gazebo.launch.py",
+         "joint_position"),
+    ):
+        assert needle not in path.read_text(encoding="utf-8"), (
+            f"{path.name}: spawn-time joint-position mechanism detected -- "
+            "update the actuation evidence (r53-bhl-actuation-2026-09-16) "
+            "and re-validate the startup transient before relying on it")
+
