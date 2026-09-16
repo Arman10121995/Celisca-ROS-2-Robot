@@ -13,6 +13,10 @@ launchable and consumable through the platform's normal bringup path:
   observation consumes (the previously declared "zeros until JointState
   carries them" limitation is a property of missing publishers, not of the
   backend description).
+- Description frames: the BHL URDFs must not reuse one name for both a link
+  and a joint.  URDF->SDF conversion promotes each to a frame, so a shared
+  name makes the model unspawnable in Gazebo (the upstream export named the
+  dummy IMU link *and* its mount joint "imu").
 - Registry/dispatch: ``humanoid_policy_controller`` is cataloged in
   ``algorithms.yaml`` (control category), dispatched in
   ``algorithm_dispatch.yaml`` to a real console-script entry point of
@@ -29,8 +33,10 @@ from __future__ import annotations
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
+import pytest
 import yaml
 
 _HERE = Path(__file__).resolve().parent
@@ -117,6 +123,58 @@ def test_joint_macro_declares_position_command_and_full_state():
     assert '<command_interface name="position">' in body
     for state in ("position", "velocity", "effort"):
         assert f'<state_interface name="{state}"/>' in body
+
+
+# ----------------------------------------------------------------------------
+# Description: Gazebo/SDF frame-name uniqueness
+# ----------------------------------------------------------------------------
+
+_BHL_URDFS = (
+    _SRC / "robot_lab_robots" / "berkeley_humanoid_lite" / "urdf"
+    / "berkeley_humanoid_lite.urdf",
+    _SRC / "robot_lab_robots" / "berkeley_humanoid_lite" / "urdf"
+    / "berkeley_humanoid_lite_biped.urdf",
+)
+
+
+@pytest.mark.parametrize("urdf", _BHL_URDFS, ids=lambda path: path.name)
+def test_bhl_urdf_has_unique_link_and_joint_names(urdf):
+    """A link and a joint must not share one name.
+
+    URDF->SDF conversion promotes every link *and* every joint to a frame, so
+    the upstream export's duplicate "imu" (dummy IMU link + its mount joint)
+    made the model unspawnable: ign gazebo logged "Non-unique name[imu]
+    detected 2 times", "Error Code 2: frame with name[imu] already exists" and
+    FrameAttachedToGraph/PoseRelativeToGraph cycles.  ``ros_gz_sim create``
+    still printed "OK creation of entity", so the defect was invisible to a
+    spawn check graded on that marker.  The joint is now imu_mount_joint.
+    """
+    root = ET.parse(urdf).getroot()
+    links = [element.get("name") for element in root.findall("link")]
+    joints = [element.get("name") for element in root.findall("joint")]
+    assert len(links) == len(set(links)), "duplicate link names in %s" % urdf
+    assert len(joints) == len(set(joints)), "duplicate joint names in %s" % urdf
+    shared = sorted(set(links) & set(joints))
+    assert not shared, (
+        "names used by both a link and a joint in %s: %s (Gazebo frames must "
+        "be unique)" % (urdf, shared))
+
+
+def test_bhl_imu_frame_link_keeps_its_registry_name():
+    """The fix renames the mount joint, never the IMU frame link.
+
+    The registry IMU contract publishes in frame ``imu`` (the dummy link), and
+    the xacro layer attaches the simulated sensor to ``imu_2``; both names must
+    survive, only the colliding joint name changes.
+    """
+    root = ET.parse(_BHL_URDFS[0]).getroot()
+    links = {element.get("name") for element in root.findall("link")}
+    joints = {element.get("name") for element in root.findall("joint")}
+    assert "imu" in links
+    assert "imu_2" in links
+    assert "imu_frame" in joints
+    assert "imu_mount_joint" in joints
+    assert "imu" not in joints
 
 
 # ----------------------------------------------------------------------------

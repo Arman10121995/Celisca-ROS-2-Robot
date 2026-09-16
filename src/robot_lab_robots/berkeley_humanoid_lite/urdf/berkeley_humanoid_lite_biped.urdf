@@ -59,8 +59,14 @@
     <child link="imu"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <!-- Joint from base to imu_2 -->
-  <joint name="imu" type="fixed">
+  <!-- Joint from base to imu_2.
+       Deviation from the upstream onshape-to-robot export (2026-09-16): the
+       joint was named "imu", the same name as the dummy <link name="imu">
+       above.  URDF->SDF conversion promotes every link AND joint to a frame,
+       so a shared name made the model unspawnable in Gazebo.  Renamed to
+       imu_mount_joint; the link keeps the name "imu".  Guarded by
+       test_r5_3_bhl_backend_contract.py. -->
+  <joint name="imu_mount_joint" type="fixed">
     <origin xyz="0.061722 -1.49319e-16 0.68" rpy="-6.12323e-17 2.26485e-14 -2.65724e-15"/>
     <parent link="base"/>
     <child link="imu_2"/>

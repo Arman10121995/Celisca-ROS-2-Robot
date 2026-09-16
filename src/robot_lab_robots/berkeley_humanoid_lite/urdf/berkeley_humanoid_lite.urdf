@@ -59,8 +59,17 @@
     <child link="imu"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <!-- Joint from base to imu_2 -->
-  <joint name="imu" type="fixed">
+  <!-- Joint from base to imu_2.
+       Deviation from the upstream onshape-to-robot export (2026-09-16): the
+       joint was named "imu", the same name as the dummy <link name="imu">
+       above.  URDF->SDF conversion promotes every link AND joint to a frame,
+       so a shared name made the model unspawnable in Gazebo - ign gazebo
+       logged "Non-unique name[imu] detected 2 times" and "Error Code 2: frame
+       with name[imu] already exists" plus FrameAttachedToGraph cycles, and
+       the robot never existed in the world.  Renamed to imu_mount_joint; the
+       link keeps the name "imu" because the registry IMU contract's frame
+       references it.  Guarded by test_r5_3_bhl_backend_contract.py. -->
+  <joint name="imu_mount_joint" type="fixed">
     <origin xyz="0.061722 -5.97549e-17 0.68" rpy="-6.12323e-17 1.13243e-14 -1.20616e-15"/>
     <parent link="base"/>
     <child link="imu_2"/>
