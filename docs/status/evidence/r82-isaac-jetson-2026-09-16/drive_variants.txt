@@ -1,0 +1,48 @@
+avg_cfv0_arm0.005_merge0: VARIANT cfv=False armature=0.005 merge_fixed_joints=False damping=10000.0 hz=60.0
+avg_cfv0_arm0.005_merge0: ROOT /World/Geometry/base_footprint/base_link
+avg_cfv0_arm0.005_merge0: AVG settle speed 0.000 m/s yaw_rate 0.000 rad/s
+avg_cfv0_arm0.005_merge0: AVG straight speed 0.299 m/s yaw_rate 0.000 rad/s
+avg_cfv0_arm0.005_merge0: AVG turn speed 0.140 m/s yaw_rate 0.595 rad/s
+avg_cfv0_arm0.005_merge0: DIAG_DONE
+avg_cfv0_arm0.005_merge1: VARIANT cfv=False armature=0.005 merge_fixed_joints=True damping=10000.0 hz=60.0
+avg_cfv0_arm0.005_merge1: ROOT /World/Geometry/base_footprint
+avg_cfv0_arm0.005_merge1: AVG settle speed 0.000 m/s yaw_rate 0.000 rad/s
+avg_cfv0_arm0.005_merge1: AVG straight speed 0.300 m/s yaw_rate 0.000 rad/s
+avg_cfv0_arm0.005_merge1: AVG turn speed 0.140 m/s yaw_rate 0.590 rad/s
+avg_cfv0_arm0.005_merge1: DIAG_DONE
+avg_cfv1_arm0.005_merge0: VARIANT cfv=True armature=0.005 merge_fixed_joints=False damping=10000.0 hz=60.0
+avg_cfv1_arm0.005_merge0: ROOT /World/Geometry/base_footprint/base_link
+avg_cfv1_arm0.005_merge0: AVG settle speed 0.000 m/s yaw_rate -0.000 rad/s
+avg_cfv1_arm0.005_merge0: AVG straight speed 0.307 m/s yaw_rate 0.103 rad/s
+avg_cfv1_arm0.005_merge0: AVG turn speed 0.135 m/s yaw_rate 0.620 rad/s
+avg_cfv1_arm0.005_merge0: DIAG_DONE
+avg_cfv1_arm0.005_merge1: VARIANT cfv=True armature=0.005 merge_fixed_joints=True damping=10000.0 hz=60.0
+avg_cfv1_arm0.005_merge1: ROOT /World/Geometry/base_footprint
+avg_cfv1_arm0.005_merge1: AVG settle speed 0.000 m/s yaw_rate -0.000 rad/s
+avg_cfv1_arm0.005_merge1: AVG straight speed 0.306 m/s yaw_rate -0.046 rad/s
+avg_cfv1_arm0.005_merge1: AVG turn speed 0.132 m/s yaw_rate 0.595 rad/s
+avg_cfv1_arm0.005_merge1: DIAG_DONE
+cfv1_noarmature: ROOT /World/Geometry/base_footprint/base_link
+cfv1_noarmature: get_gains (array([[0., 0.]], dtype=float32), array([[572957.8, 572957.8]], dtype=float32))
+cfv1_noarmature: get_max_efforts [[3.4028235e+38 3.4028235e+38]]
+cfv1_noarmature: settle 59 jvel L/R 0.28 -0.07 speed 0.002 wz 0.003 z 0.0325
+cfv1_noarmature: settle 119 jvel L/R 0.58 -0.04 speed 0.001 wz 0.000 z 0.0325
+cfv1_noarmature: settle 179 jvel L/R 0.64 -0.08 speed 0.001 wz -0.000 z 0.0325
+cfv1_noarmature: straight 59 jvel L/R 9.19 7.91 speed 0.224 wz 0.105 z 0.0336
+cfv1_noarmature: straight 119 jvel L/R 3.43 9.84 speed 0.278 wz -0.318 z 0.0334
+cfv1_noarmature: straight 179 jvel L/R 22.38 12.13 speed 0.274 wz -0.122 z 0.0330
+cfv1_noarmature: turn 59 jvel L/R -24.39 12.04 speed 0.055 wz 0.006 z 0.0324
+cfv1_noarmature: turn 119 jvel L/R 3.90 5.13 speed 0.025 wz -0.069 z 0.0337
+cfv1_noarmature: turn 179 jvel L/R 1.59 8.84 speed 0.081 wz -0.017 z 0.0327
+cfv0_noarmature: ROOT /World/Geometry/base_footprint/base_link
+cfv0_noarmature: get_gains (array([[0., 0.]], dtype=float32), array([[572957.8, 572957.8]], dtype=float32))
+cfv0_noarmature: get_max_efforts [[3.4028235e+38 3.4028235e+38]]
+cfv0_noarmature: settle 59 jvel L/R 0.03 0.03 speed 0.001 wz 0.002 z 0.0330
+cfv0_noarmature: settle 119 jvel L/R -0.00 -0.01 speed 0.002 wz 0.001 z 0.0330
+cfv0_noarmature: settle 179 jvel L/R 0.05 0.04 speed 0.001 wz 0.001 z 0.0330
+cfv0_noarmature: straight 59 jvel L/R 12.62 31.03 speed 0.106 wz 0.722 z 0.0330
+cfv0_noarmature: straight 119 jvel L/R 27.74 3.29 speed 0.100 wz 0.551 z 0.0330
+cfv0_noarmature: straight 179 jvel L/R 21.48 -0.12 speed 0.162 wz 0.794 z 0.0330
+cfv0_noarmature: turn 59 jvel L/R 14.94 6.82 speed 0.021 wz -0.019 z 0.0330
+cfv0_noarmature: turn 119 jvel L/R 4.24 35.59 speed 0.063 wz 0.009 z 0.0330
+cfv0_noarmature: turn 179 jvel L/R 19.37 -0.84 speed 0.030 wz -0.139 z 0.0330

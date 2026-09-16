@@ -1,0 +1,51 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-16-10-05-12-602418-molar1-33621
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [33645]
+[INFO] [pybullet_spawner-2]: process started with pid [33647]
+[robot_state_publisher-1] [INFO] [1789545912.988552311] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1789545912.988682648] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1789545912.988701560] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1789545912.988711480] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1789545912.988719672] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1789545912.988727320] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1789545912.988735000] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1789545912.988742744] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1789545912.988750872] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789545912.988758840] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1789545912.988766392] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1789545912.988774200] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789545912.988782136] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1789545912.988790552] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789545912.988798008] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1789545912.988805432] [robot_state_publisher]: got segment wheel_right_link
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-2] [INFO] [1789545913.547351348] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1789545913.552064956] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1789545913.563817870] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1789545913.565780337] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1789545913.567881237] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-2] [INFO] [1789545914.241964329] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpnmw8wrj1.urdf
+[pybullet_spawner-2] [INFO] [1789545914.242640778] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1789545914.243512203] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1789545914.252441657] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1789545914.253110490] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1789545914.269298036] [pybullet_spawner]: SDF world 'nav_maze.world': 16 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1789545915.008130285] [pybullet_spawner]: Loaded robot id=17 (15 joints)
+[pybullet_spawner-2] [INFO] [1789545915.008812110] [pybullet_spawner]: Friction from the description's <gazebo> blocks: caster_front_link=0.1, caster_rear_link=0.1, wheel_left_link=1, wheel_right_link=1
+[pybullet_spawner-2] [INFO] [1789545915.010950001] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+[pybullet_spawner-2] base_footprintb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1789545915.738464213] [pybullet_spawner]: SDF world 'nav_maze.world': 16 static shape(s) created, 0 skipped
+[pybullet_spawner-2] [INFO] [1789545915.739226038] [pybullet_spawner]: Joints: ['wheel_right_joint', 'wheel_left_joint']  lw=wheel_left_joint rw=wheel_right_joint
+[pybullet_spawner-2] [INFO] [1789545916.039198130] [pybullet_spawner]: PyBullet spawner running
+[pybullet_spawner-2] [INFO] [1789545936.302332445] [pybullet_spawner]: Simulation reset
+[robot_state_publisher-1] [WARN] [1789545936.380355153] [robot_state_publisher]: Moved backwards in time, re-publishing joint transforms!
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [pybullet_spawner-2]: sending signal 'SIGINT' to process[pybullet_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1789545959.603379206] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 33645]
+[INFO] [pybullet_spawner-2]: process has finished cleanly [pid 33647]
+[pybullet_spawner-2] base_footprint

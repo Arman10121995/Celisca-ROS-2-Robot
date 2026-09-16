@@ -6,7 +6,7 @@ it spawns :mod:`robot_lab_isaac.isaac_runtime` under the dedicated Isaac
 Sim virtual environment (parameter ``isaac_python``) and exchanges
 clock/state/commands over a JSON event FIFO plus stdin commands.  The
 node publishes the ROS 2 topic contract (joint_states, odom, imu, scan,
-clock) and forwards /cmd_vel to the runtime child.
+RGB-D, clock) and forwards /cmd_vel to the runtime child.
 
 If the Isaac Sim python environment is missing or the child fails, the
 node logs a clear message and the rest of the launch graph continues in
@@ -18,6 +18,7 @@ offline mode.
     may abort during startup ("Cannot calculate frequency: TSC ran
     backwards").  In that case the node falls back to offline mode.
 """
+import base64
 import json
 import math
 import os
@@ -36,10 +37,14 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
-from sensor_msgs.msg import Imu, JointState, LaserScan
+from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
 from std_msgs.msg import Bool
 from std_srvs.srv import Trigger
 
+import numpy as np
+
+from robot_lab_utils import camera_model
+from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.sim_frames import (
     body_odometry, mounted_sensor_offsets, relative_frame, urdf_link_frames)
 
@@ -89,6 +94,18 @@ def _strip_gazebo_tags(urdf_text):
             r"<%s[^>]*>.*?</%s>" % (tag, tag), "", urdf_text, flags=re.DOTALL
         )
     return urdf_text
+
+
+def decode_rgbd_event(event):
+    """``(t, rgb, depth)`` arrays from a runtime ``rgbd`` event.
+
+    The runtime sends RGB uint8 and float32 depth as base64 of raw bytes.
+    """
+    width, height = int(event["width"]), int(event["height"])
+    rgb = np.frombuffer(base64.b64decode(event["rgb"]), dtype=np.uint8)
+    depth = np.frombuffer(base64.b64decode(event["depth"]), dtype="<f4")
+    return (float(event.get("t", 0.0)), rgb.reshape(height, width, 3),
+            depth.reshape(height, width).astype(np.float32))
 
 
 def _group_alive(pgid):
@@ -180,15 +197,31 @@ class IsaacSpawner(Node):
         # MuJoCo spawners, so /cmd_vel means the same thing in every backend.
         self.declare_parameter("wheel_radius", 0.033)
         self.declare_parameter("wheel_separation", 0.17)
-        # URDF import: build colliders from the visual meshes (True) or use
-        # the description's own <collision> geometry (False).
-        self.declare_parameter("collision_from_visuals", True)
+        # URDF import: use the description's own <collision> geometry, as
+        # Gazebo, PyBullet and MuJoCo do.  Colliders built from the visual
+        # meshes gave Bumperbot faceted convex-hull wheels and casters that
+        # bounced and dragged (0.10 rad/s yaw drift on a straight command);
+        # with the URDF spheres it drives straight and turns at the command.
+        self.declare_parameter("collision_from_visuals", False)
         # Planar scan, same parameters as the PyBullet and MuJoCo spawners.
         self.declare_parameter("laser_link_name", "laser_link")
         self.declare_parameter("scan_rate", 5.0)
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
+        # RGB-D camera rendered from the description's camera link with the
+        # Gazebo sensor's intrinsics, as in the PyBullet and MuJoCo bridges;
+        # 0 Hz disables it.
+        self.declare_parameter("camera_rate", 5.0)
+        self.declare_parameter("camera_link_name", camera_model.OAKD["link"])
+        self.declare_parameter("camera_optical_frame",
+                               camera_model.OAKD["optical_frame"])
+        self.declare_parameter("camera_width", camera_model.OAKD["width"])
+        self.declare_parameter("camera_height", camera_model.OAKD["height"])
+        self.declare_parameter("camera_horizontal_fov",
+                               camera_model.OAKD["horizontal_fov"])
+        self.declare_parameter("camera_near", camera_model.OAKD["near"])
+        self.declare_parameter("camera_far", camera_model.OAKD["far"])
 
         if not self.has_parameter("use_sim_time"):
             self.declare_parameter("use_sim_time", True)
@@ -228,6 +261,8 @@ class IsaacSpawner(Node):
         self._spawned = False
         self._twist = Twist()
         self._urdf_text = ""
+        self._camera = None  # camera settings once the runtime is launched
+        self._camera_error_reported = False
         self._root_offset = None  # Isaac's root body in the URDF root frame
 
     # ------------------------------------------------------------------
@@ -319,6 +354,7 @@ class IsaacSpawner(Node):
             "collision_from_visuals": bool(
                 self.get_parameter("collision_from_visuals").value),
             "scan": self._scan_config(urdf),
+            "camera": self._camera_config(urdf),
         }
         # The world is parsed here, on the ROS side, and handed over as plain
         # records: the runtime's interpreter has no ROS package index, and its
@@ -368,6 +404,39 @@ class IsaacSpawner(Node):
         threading.Thread(target=self._drain_stdout, daemon=True).start()
         # Read structured events from the FIFO.
         threading.Thread(target=self._read_runtime, daemon=True).start()
+
+    def _camera_config(self, urdf_text):
+        """Camera settings for the runtime; creates the image publishers.
+
+        The rate is 0 (no camera) when the description has no camera link.
+        """
+        link = self.get_parameter("camera_link_name").value
+        rate = float(self.get_parameter("camera_rate").value)
+        offsets = mounted_sensor_offsets(urdf_text, link) if rate > 0 else {}
+        config = {
+            "rate": rate if offsets else 0.0,
+            "link": link,
+            "width": int(self.get_parameter("camera_width").value),
+            "height": int(self.get_parameter("camera_height").value),
+            "horizontal_fov": float(
+                self.get_parameter("camera_horizontal_fov").value),
+            "near": float(self.get_parameter("camera_near").value),
+            "far": float(self.get_parameter("camera_far").value),
+            "offsets": {base: [list(position), list(quaternion)]
+                        for base, (position, quaternion) in offsets.items()},
+        }
+        if rate > 0 and not offsets:
+            self.get_logger().info(
+                "Robot has no '%s' link; no RGB-D camera is published." % link)
+        if config["rate"] > 0 and self._camera is None:
+            self._rgb_pub = self.create_publisher(
+                Image, camera_model.OAKD["rgb_topic"], 5)
+            self._depth_pub = self.create_publisher(
+                Image, camera_model.OAKD["depth_topic"], 5)
+            self._camera_info_pub = self.create_publisher(
+                CameraInfo, camera_model.OAKD["info_topic"], 5)
+        self._camera = config if config["rate"] > 0 else None
+        return config
 
     def _scan_config(self, urdf_text):
         """Scan settings for the runtime, including the laser link offsets.
@@ -477,6 +546,8 @@ class IsaacSpawner(Node):
                             self._state = msg
                     elif ev == "scan":
                         self._publish_scan(msg)
+                    elif ev == "rgbd":
+                        self._publish_rgbd(msg)
                     elif ev == "log":
                         self.get_logger().info(
                             "Isaac runtime: %s" % msg.get("msg"))
@@ -547,6 +618,27 @@ class IsaacSpawner(Node):
                 % (root_body, urdf_root,
                    [round(v, 4) for v in offset[0]]))
         return offset
+
+    def _publish_rgbd(self, event):
+        camera = self._camera
+        if camera is None:
+            return
+        try:
+            frame = decode_rgbd_event(event)
+        except (KeyError, TypeError, ValueError) as exc:
+            if not self._camera_error_reported:
+                self._camera_error_reported = True
+                self.get_logger().warn("Malformed RGB-D frame from the Isaac "
+                                       "runtime: %s" % exc)
+            return
+        t, rgb, depth = frame
+        stamp = Time(sec=int(t), nanosec=int((t - int(t)) * 1e9))
+        optical = self.get_parameter("camera_optical_frame").value
+        self._rgb_pub.publish(image_msg(stamp, optical, rgb, "rgb8"))
+        self._depth_pub.publish(image_msg(stamp, optical, depth, "32FC1"))
+        self._camera_info_pub.publish(camera_info_msg(
+            stamp, optical, camera["width"], camera["height"],
+            camera["horizontal_fov"]))
 
     def _publish_scan(self, event):
         ranges = [float(v) for v in (event.get("ranges") or [])]

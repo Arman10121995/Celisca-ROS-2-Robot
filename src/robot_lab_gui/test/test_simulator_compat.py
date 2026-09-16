@@ -12,6 +12,7 @@ Covers the R3.4+ GUI gating layer:
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 _SRC_GUI_DIR = Path(__file__).resolve().parent.parent
@@ -105,35 +106,35 @@ class SimulatorModeGatingTests(unittest.TestCase):
             ok, why = sc.simulator_supports_mode("gazebo", mode, MODE_PROFILES)
             self.assertTrue(ok, (mode, why))
 
-    def test_pybullet_mujoco_cannot_run_3d_slam(self):
-        for sim in ("pybullet", "mujoco"):
-            ok, why = sc.simulator_supports_mode(sim, "3d_slam", MODE_PROFILES)
-            self.assertFalse(ok)
-            self.assertIn("rgbd", why)
-            for mode in ("display", "loc", "slam", "nav"):
+    def test_every_backend_runs_every_mode(self):
+        """All bridges publish /scan and the OAK-D RGB-D topics."""
+        for sim in ("pybullet", "mujoco", "isaac"):
+            for mode in MODE_PROFILES:
                 ok, why = sc.simulator_supports_mode(sim, mode, MODE_PROFILES)
                 self.assertTrue(ok, (sim, mode, why))
 
-    def test_isaac_has_scan_but_no_rgbd(self):
-        for mode in ("display", "loc", "slam", "nav"):
-            ok, why = sc.simulator_supports_mode("isaac", mode, MODE_PROFILES)
-            self.assertTrue(ok, (mode, why))
-        ok, why = sc.simulator_supports_mode("isaac", "3d_slam", MODE_PROFILES)
-        self.assertFalse(ok)
-        self.assertIn("rgbd", why)
+    def test_missing_sensor_greys_out_the_modes_that_need_it(self):
+        gaps = dict(sc.SIMULATOR_FEATURE_GAPS, mujoco=("rgbd_camera",))
+        with mock.patch.object(sc, "SIMULATOR_FEATURE_GAPS", gaps):
+            ok, why = sc.simulator_supports_mode("mujoco", "3d_slam", MODE_PROFILES)
+            self.assertFalse(ok)
+            self.assertIn("rgbd", why)
+            self.assertTrue(
+                sc.simulator_supports_mode("mujoco", "nav", MODE_PROFILES)[0])
+            modes = sc.allowed_modes("mujoco", list(MODE_PROFILES), MODE_PROFILES)
+            self.assertEqual(modes, [m for m in MODE_PROFILES if m != "3d_slam"])
+            allowed = sc.allowed_simulators("3d_slam", MODE_PROFILES, env={})
+            self.assertFalse(allowed["mujoco"][0])
 
-    def test_allowed_simulators_for_3d_slam(self):
+    def test_allowed_simulators_follow_installation_for_3d_slam(self):
         allowed = sc.allowed_simulators("3d_slam", MODE_PROFILES, env={})
-        self.assertFalse(allowed["pybullet"][0])
-        self.assertFalse(allowed["mujoco"][0])
-        self.assertFalse(allowed["isaac"][0])
-        if allowed["gazebo"][0]:
-            self.assertEqual(allowed["gazebo"][1], "")
+        for sim in ("pybullet", "mujoco", "isaac", "gazebo"):
+            self.assertEqual(sc.simulator_status(sim, env={})[0], allowed[sim][0])
 
     def test_allowed_modes_preserves_order(self):
-        modes = sc.allowed_modes("mujoco", list(MODE_PROFILES), MODE_PROFILES)
-        self.assertNotIn("3d_slam", modes)
-        self.assertEqual(modes, [m for m in MODE_PROFILES if m != "3d_slam"])
+        self.assertEqual(
+            list(MODE_PROFILES),
+            sc.allowed_modes("mujoco", list(MODE_PROFILES), MODE_PROFILES))
 
 
 class CorrectionTests(unittest.TestCase):

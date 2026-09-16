@@ -1,0 +1,25 @@
+{
+  "recorded": "2026-09-16",
+  "host": {
+    "board": "NVIDIA Jetson AGX Orin Developer Kit",
+    "l4t": "R36 revision 5.2 (JetPack 6)",
+    "kernel": "Linux 5.15.199-tegra aarch64",
+    "os": "Ubuntu 22.04.5 LTS",
+    "cpu_cores": 12,
+    "memory_gib": 61,
+    "gpu": "Orin (nvgpu), driver 540.5.0",
+    "cuda_toolkit": "12.6"
+  },
+  "isaac_sim": {
+    "version": "6.0.1-rc.7 (local source build)",
+    "interpreter": "<ISAAC_SIM_PATH>/_build/linux-aarch64/release/python.sh (Python 3.12.13)",
+    "discovery": "robot_lab_utils.isaac_env.find_isaac_python: ISAAC_PYTHON, then ISAAC_SIM_PATH, then known install roots",
+    "required_preload": "Isaac's bundled extsDeprecated/omni.isaac.ml_archive/pip_prebundle/nvidia/nvjitlink/lib/libnvJitLink.so.12 before the system CUDA 12.6 copy (robot_lab_utils.isaac_env.isaac_preload_libraries)",
+    "physx_gpu": "unavailable: PhysX logs 'Failed to load CUDA module data. Cuda error code 222' and simulates on the CPU"
+  },
+  "ros": {
+    "distro": "humble",
+    "python": "3.10.12",
+    "boundary": "isaac_spawner (rclpy, Python 3.10) runs isaac_runtime.py under Isaac's Python 3.12 in its own process group; JSON commands on stdin, JSON events on a named FIFO"
+  }
+}

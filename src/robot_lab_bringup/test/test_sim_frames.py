@@ -14,6 +14,7 @@ on a non-Gazebo backend:
 * Isaac Sim had no scan at all, and its reset command was silently dropped.
 """
 import io
+import json
 import math
 import os
 import sys
@@ -520,6 +521,58 @@ class MujocoCameraTests(unittest.TestCase):
         depth = renderer.render()
         renderer.close()
         self.assertAlmostEqual(1.94, float(depth[60, 80]), delta=0.02)
+
+
+class IsaacCameraTests(unittest.TestCase):
+    """The Isaac runtime renders the OAK-D through a USD camera and sends
+    frames to the ROS spawner as base64 over the event FIFO."""
+
+    @classmethod
+    def setUpClass(cls):
+        from robot_lab_isaac import isaac_runtime
+        cls.runtime = isaac_runtime
+
+    def test_apertures_reproduce_the_horizontal_field_of_view(self):
+        from robot_lab_utils import camera_model
+        horizontal, vertical = self.runtime._camera_apertures(1.25, 320, 240, 18.0)
+        self.assertAlmostEqual(1.25, 2.0 * math.atan(horizontal / 36.0))
+        self.assertAlmostEqual(camera_model.vertical_fov(1.25, 320, 240),
+                               2.0 * math.atan(vertical / 36.0))
+
+    def test_usd_camera_rotation_matches_the_shared_camera_model(self):
+        from robot_lab_utils import camera_model
+        self.assertEqual(camera_model.LINK_TO_OPENGL_CAMERA,
+                         self.runtime._LINK_TO_USD_CAMERA)
+
+    def test_frames_round_trip_to_the_spawner(self):
+        try:
+            import numpy as np
+            from robot_lab_isaac.isaac_spawner import decode_rgbd_event
+        except Exception as exc:  # pragma: no cover - ROS environment only
+            self.skipTest("isaac spawner unavailable: %s" % exc)
+        rgba = np.zeros((2, 3, 4), dtype=np.uint8)
+        rgba[..., 0] = 200
+        rgba[1, 2] = (1, 2, 3, 255)
+        depth = np.array([[1.5, np.inf, 0.0], [200.0, np.nan, 2.25]],
+                         dtype=np.float32)
+        frame = self.runtime._encode_rgbd(rgba, depth, 3, 2, far=100.0)
+        json.dumps(frame)  # must survive the JSON event channel
+        frame.update(event="rgbd", t=4.5)
+        t, rgb, decoded = decode_rgbd_event(frame)
+        self.assertEqual(4.5, t)
+        self.assertEqual((2, 3, 3), rgb.shape)
+        self.assertEqual([1, 2, 3], rgb[1, 2].tolist())
+        self.assertEqual(200, int(rgb[0, 0, 0]))
+        self.assertEqual(1.5, float(decoded[0, 0]))
+        self.assertEqual(2.25, float(decoded[1, 2]))
+        # No return, zero, beyond the far clip and NaN all read as inf.
+        for row, col in ((0, 1), (0, 2), (1, 0), (1, 1)):
+            self.assertTrue(math.isinf(decoded[row, col]))
+
+    def test_annotators_without_an_image_yet_send_nothing(self):
+        import numpy as np
+        self.assertIsNone(self.runtime._encode_rgbd(
+            np.zeros(0), np.zeros(0), 320, 240, 100.0))
 
 
 class LaserScanGeometryTests(unittest.TestCase):

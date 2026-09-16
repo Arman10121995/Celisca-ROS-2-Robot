@@ -19,6 +19,7 @@ from robot_lab_benchmark.live_mission import (
     _env_flag,
     bag_topic_counts,
     decide_outcome,
+    launch_arguments,
 )
 from robot_lab_benchmark.truthful_outcomes import OutcomeKind
 
@@ -250,3 +251,22 @@ def test_live_mission_pybullet_seed1101(tmp_path):
                           env=_live_env())
     assert proc.returncode == 0, proc.stderr[-3000:]
     _assert_live_record(out, "pybullet", 1101)
+
+class TestLaunchArguments:
+    """Each backend's launch file takes its world and robot differently."""
+
+    def test_mujoco_and_isaac_select_the_world_by_name(self):
+        for simulator in ("mujoco", "isaac"):
+            args = launch_arguments(simulator, "nav_maze", "/r", "/m")
+            assert "world_name:=nav_maze" in args
+            assert "model:=/r/bumperbot/urdf/bumperbot.urdf.xacro" in args
+            assert "gui:=false" in args
+
+    def test_pybullet_loads_the_world_file(self):
+        args = launch_arguments("pybullet", "nav_maze", "/r", "/m")
+        assert "world_path:=/m/maps/nav_maze/worlds/nav_maze.world" in args
+
+    def test_isaac_passes_the_required_robot_xacro(self):
+        args = launch_arguments("isaac", "nav_empty", "/r", "/m")
+        assert args[:2] == ["robot_lab_isaac", "isaac_simulator.launch.py"]
+        assert "robot_xacro:=bumperbot/urdf/bumperbot.urdf.xacro" in args

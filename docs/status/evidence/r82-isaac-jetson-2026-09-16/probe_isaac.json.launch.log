@@ -1,0 +1,47 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-16-10-06-42-889404-molar1-34597
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [34621]
+[INFO] [isaac_spawner-2]: process started with pid [34623]
+[INFO] [sensor_bridge-3]: process started with pid [34625]
+[robot_state_publisher-1] [INFO] [1789546003.289128721] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1789546003.289273777] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1789546003.289294321] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1789546003.289304529] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1789546003.289313041] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1789546003.289320593] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1789546003.289327985] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1789546003.289335857] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1789546003.289343761] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789546003.289351569] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1789546003.289359121] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1789546003.289366769] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789546003.289374226] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1789546003.289381362] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1789546003.289388658] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1789546003.289396018] [robot_state_publisher]: got segment wheel_right_link
+[sensor_bridge-3] [WARN] [1789546003.695620651] [isaac_sensor_bridge]: Isaac Sim Python API not available. Sensor bridge running in offline mode.
+[isaac_spawner-2] [INFO] [1789546004.615687234] [isaac_spawner]: URDF written to /workspace/molar/.tmp/tmpr_3isnik.urdf
+[isaac_spawner-2] [INFO] [1789546004.626529328] [isaac_spawner]: World 'nav_maze.world': 16 static shape(s) for Isaac, 0 skipped
+[isaac_spawner-2] [INFO] [1789546004.627364529] [isaac_spawner]: Launching Isaac runtime: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_runtime.py (gui=False)
+[isaac_spawner-2] [INFO] [1789546004.628525874] [isaac_spawner]: Isaac runtime LD_PRELOAD: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/extsDeprecated/omni.isaac.ml_archive/pip_prebundle/nvidia/nvjitlink/lib/libnvJitLink.so.12 /lib/aarch64-linux-gnu/libgomp.so.1
+[isaac_spawner-2] [INFO] [1789546023.957792689] [isaac_spawner]: Isaac runtime: World shapes created: 16 box
+[isaac_spawner-2] [INFO] [1789546024.094743570] [isaac_spawner]: Isaac runtime: Default lighting added: ['/World/robot_lab_lights/dome', '/World/robot_lab_lights/sun']
+[isaac_spawner-2] [INFO] [1789546027.234249115] [isaac_spawner]: Isaac runtime: Wheel velocity drives: ['/World/Physics/wheel_left_joint', '/World/Physics/wheel_right_joint']
+[isaac_spawner-2] [INFO] [1789546028.406463957] [isaac_spawner]: Isaac reports root body 'base_link'; odometry is re-expressed at URDF root 'base_footprint' (offset [0.0, 0.0, 0.033])
+[isaac_spawner-2] [INFO] [1789546028.407229878] [isaac_spawner]: Isaac runtime ready (dofs=['wheel_right_joint', 'wheel_left_joint'])
+[isaac_spawner-2] [INFO] [1789546028.407731958] [isaac_spawner]: Isaac runtime: Scan: 360 rays every 12 steps from offset [-0.0050526, -0.0023221, 0.12079999999999999] of 'base_link' (root body 'base_link'); 15 robot bodies ignored
+[isaac_spawner-2] [INFO] [1789546028.530538630] [isaac_spawner]: Isaac runtime: RGB-D camera /World/Geometry/base_footprint/base_link/oakd_link/oakd_rgb_camera_frame/robot_lab_rgbd: 320x240 every 12 steps
+[isaac_spawner-2] [INFO] [1789546075.651530367] [isaac_spawner]: Reset command sent to Isaac runtime
+[isaac_spawner-2] [INFO] [1789546077.110428136] [isaac_spawner]: Isaac runtime: Reset applied: world returned to its initial state
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [sensor_bridge-3]: sending signal 'SIGINT' to process[sensor_bridge-3]
+[INFO] [isaac_spawner-2]: sending signal 'SIGINT' to process[isaac_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1789546083.979075926] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 34621]
+[INFO] [sensor_bridge-3]: process has finished cleanly [pid 34625]
+[isaac_spawner-2] [WARN] [1789546085.988490864] [isaac_spawner]: Isaac runtime exited (rc=-15)
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[isaac_spawner-2] [INFO] [1789546086.186553912] [isaac_spawner]: Isaac runtime stopped (sigterm)
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[INFO] [isaac_spawner-2]: process has finished cleanly [pid 34623]

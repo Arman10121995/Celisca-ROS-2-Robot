@@ -7,14 +7,18 @@ isaacsim >= 5.0 requires 3.12).  The parent ROS 2 node
 (:mod:`robot_lab_isaac.isaac_spawner`) spawns this script and exchanges
 line-delimited JSON over stdin/stdout:
 
-* stdin  — commands:  {"cmd_vel": [linear_x, angular_z]}  /  EOF stops
-* stdout — events:    {"event": "ready", "dofs": [...]}
+* stdin  — commands:  {"cmd_vel": [linear_x, angular_z]}, {"reset": true}
+                      /  EOF stops
+* FIFO   — events:    {"event": "ready", "dofs": [...], "root_body": ...}
                       {"event": "state", "t": ..., "pos": ..., ...}
+                      {"event": "scan", "t": ..., "ranges": [...]}
+                      {"event": "rgbd", "t": ..., "rgb": b64, "depth": b64}
                       {"event": "error", "message": "..."}
 
 The child owns SimulationApp, the stage (map meshes), the robot
 articulation and the physics loop.
 """
+import base64
 import json
 import math
 import os
@@ -29,6 +33,13 @@ _CLOSE_TIMEOUT_S = 5.0
 # stiffness) tracks a velocity target; the importer's default position
 # stiffness instead holds the wheels at their initial angle.
 _WHEEL_DRIVE_DAMPING = 1.0e4
+
+# Rotor inertia added to driven wheel joints (kg*m^2).  Bumperbot's 53 g
+# wheels have ~2e-5 kg*m^2 about the axle; under a velocity drive the PhysX
+# articulation then swung the wheels between -24 and +31 rad/s for a 9 rad/s
+# target.  0.005 is a small geared motor's reflected rotor inertia, the value
+# the MuJoCo bridge uses for the same reason.
+_WHEEL_ARMATURE = 0.005
 
 
 def _wheel_velocities(linear, angular, radius, separation):
@@ -189,9 +200,115 @@ def _prepare_scan(cfg, dt, robot, stage):
             "ignored": ignored}
 
 
+# Rotation from a camera link (x forward, z up) to a USD camera, which looks
+# along its -z axis with +y up; the same as camera_model.LINK_TO_OPENGL_CAMERA.
+_LINK_TO_USD_CAMERA = (0.5, 0.5, -0.5, -0.5)
+
+
+def _camera_apertures(horizontal_fov, width, height, focal_length):
+    """(horizontal, vertical) USD apertures giving *horizontal_fov*.
+
+    Only the aperture/focal-length ratio sets the field of view; square
+    pixels make the vertical aperture follow the image aspect.
+    """
+    horizontal = 2.0 * float(focal_length) * math.tan(float(horizontal_fov) / 2.0)
+    return horizontal, horizontal * float(height) / float(width)
+
+
+def _encode_rgbd(rgba, depth, width, height, far):
+    """JSON-safe RGB-D frame, or None while the annotators have no image yet.
+
+    Colour is RGB uint8 and depth float32 metres along the optical axis with
+    ``inf`` for no return, both base64 of their raw bytes.
+    """
+    import numpy as np
+
+    rgba = np.asarray(rgba)
+    depth = np.asarray(depth, dtype=np.float32)
+    if rgba.size != width * height * 4 or depth.size != width * height:
+        return None
+    rgb = np.ascontiguousarray(
+        rgba.reshape(height, width, 4)[:, :, :3], dtype=np.uint8)
+    depth = depth.reshape(height, width).copy()
+    depth[~np.isfinite(depth) | (depth <= 0.0) | (depth >= float(far))] = np.inf
+    return {"width": int(width), "height": int(height),
+            "rgb": base64.b64encode(rgb.tobytes()).decode("ascii"),
+            "depth": base64.b64encode(depth.astype("<f4").tobytes()).decode("ascii")}
+
+
+def _prepare_camera(cfg, dt, robot, stage):
+    """USD camera plus replicator annotators, or None when there is no camera.
+
+    The camera is parented to the camera link prim when the importer kept
+    one, otherwise to the articulation's root body at the link's offset.
+    """
+    camera_cfg = cfg.get("camera") or {}
+    rate = float(camera_cfg.get("rate", 0.0) or 0.0)
+    if rate <= 0.0:
+        return None
+    from pxr import Gf, UsdGeom
+
+    link = camera_cfg.get("link", "")
+    root_body = _articulation_root_body(robot)
+    parent, offset = None, [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 0.0]]
+    root_prim = None
+    for prim in stage.Traverse():
+        path = str(prim.GetPath())
+        if path.startswith("/World/Physics") or path.startswith("/World/map"):
+            continue
+        if prim.GetName() == link and parent is None:
+            parent = prim
+        if prim.GetName() == root_body and root_prim is None:
+            root_prim = prim
+    if parent is None:
+        offsets = camera_cfg.get("offsets") or {}
+        if root_prim is None or root_body not in offsets:
+            _emit({"event": "log",
+                   "msg": "Camera link '%s' not found; no RGB-D camera" % link})
+            return None
+        parent, offset = root_prim, offsets[root_body]
+
+    width, height = int(camera_cfg["width"]), int(camera_cfg["height"])
+    focal_length = 18.0
+    horizontal, vertical = _camera_apertures(
+        camera_cfg["horizontal_fov"], width, height, focal_length)
+    camera = UsdGeom.Camera.Define(
+        stage, parent.GetPath().AppendChild("robot_lab_rgbd"))
+    camera.CreateFocalLengthAttr(focal_length)
+    camera.CreateHorizontalApertureAttr(horizontal)
+    camera.CreateVerticalApertureAttr(vertical)
+    camera.CreateClippingRangeAttr(Gf.Vec2f(float(camera_cfg["near"]),
+                                            float(camera_cfg["far"])))
+    xformable = UsdGeom.Xformable(camera.GetPrim())
+    xformable.ClearXformOpOrder()
+    xformable.AddTranslateOp().Set(Gf.Vec3d(*[float(v) for v in offset[0]]))
+    w, x, y, z = _multiply_wxyz(offset[1], _LINK_TO_USD_CAMERA)
+    xformable.AddOrientOp().Set(Gf.Quatf(w, Gf.Vec3f(x, y, z)))
+
+    from isaacsim.core.utils.extensions import enable_extension
+    enable_extension("omni.replicator.core")
+    import omni.replicator.core as rep
+    render_product = rep.create.render_product(
+        str(camera.GetPath()), (width, height))
+    rgb = rep.AnnotatorRegistry.get_annotator("rgb")
+    depth = rep.AnnotatorRegistry.get_annotator("distance_to_image_plane")
+    rgb.attach([render_product])
+    depth.attach([render_product])
+    every = max(1, int(round(1.0 / (dt * rate))))
+    _emit({"event": "log",
+           "msg": "RGB-D camera %s: %dx%d every %d steps"
+                  % (camera.GetPath(), width, height, every)})
+    return {"rgb": rgb, "depth": depth, "every": every, "width": width,
+            "height": height, "far": float(camera_cfg["far"])}
+
+
 def _author_wheel_velocity_drives(stage, joint_names,
-                                  damping=_WHEEL_DRIVE_DAMPING):
+                                  damping=_WHEEL_DRIVE_DAMPING,
+                                  armature=_WHEEL_ARMATURE):
     """Author zero-stiffness velocity drives on the named revolute joints.
+
+    The joints also get rotor inertia (``physxJoint:armature``) when they
+    carry none, which keeps a velocity drive on a light wheel stable.
 
     Isaac Sim 6's URDF importer places joints under ``<robot>/Physics``,
     beside the link hierarchy that holds the articulation root, so they are
@@ -199,7 +316,7 @@ def _author_wheel_velocity_drives(stage, joint_names,
     none and the wheels kept their default drives.  The whole stage is
     searched instead.  Returns the prim paths that were driven.
     """
-    from pxr import Usd, UsdPhysics
+    from pxr import PhysxSchema, Usd, UsdPhysics
 
     names = {name for name in joint_names if name}
     driven = []
@@ -211,6 +328,11 @@ def _author_wheel_velocity_drives(stage, joint_names,
         drive = UsdPhysics.DriveAPI.Apply(prim, "angular")
         (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(0.0)
         (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(damping))
+        joint = PhysxSchema.PhysxJointAPI.Apply(prim)
+        current = joint.GetArmatureAttr().Get() if joint.GetArmatureAttr() else None
+        if armature and not current:
+            (joint.GetArmatureAttr() or joint.CreateArmatureAttr()).Set(
+                float(armature))
         driven.append(str(prim.GetPath()))
     return sorted(driven)
 
@@ -426,6 +548,26 @@ def run(cfg):
         os._exit(1 if failed else 0)
 
 
+def _ensure_lighting(stage):
+    """Add a dome and a sun light when the stage has no light of its own.
+
+    The SDF worlds' <light> elements are not converted, and an unlit USD
+    stage renders black: the RGB-D camera produced correct depth with an
+    all-zero colour image.  Returns the prim paths added.
+    """
+    from pxr import Gf, UsdGeom, UsdLux
+
+    if any(prim.HasAPI(UsdLux.LightAPI) for prim in stage.Traverse()):
+        return []
+    dome = UsdLux.DomeLight.Define(stage, "/World/robot_lab_lights/dome")
+    dome.CreateIntensityAttr(600.0)
+    sun = UsdLux.DistantLight.Define(stage, "/World/robot_lab_lights/sun")
+    sun.CreateIntensityAttr(2500.0)
+    sun.CreateAngleAttr(1.0)
+    UsdGeom.Xformable(sun.GetPrim()).AddRotateXYZOp().Set(Gf.Vec3f(-35.0, 20.0, 0.0))
+    return [str(dome.GetPath()), str(sun.GetPath())]
+
+
 def _add_world_shapes(stage, shapes):
     """Create static collision prims from the spawner's world shapes.
 
@@ -520,6 +662,12 @@ def _run_stage(app, reader, cfg, state):
         world.scene.add_ground_plane()
     except Exception:
         pass
+    try:
+        lights = _ensure_lighting(stage_utils.get_current_stage())
+        if lights:
+            _emit({"event": "log", "msg": "Default lighting added: %s" % lights})
+    except Exception as exc:
+        _emit({"event": "log", "msg": "Lighting not added: %s" % exc})
 
     try:
         from isaacsim.asset.importer.urdf import URDFImporterConfig, URDFImporter
@@ -537,7 +685,7 @@ def _run_stage(app, reader, cfg, state):
             imp_cfg.merge_fixed_joints = False
             imp_cfg.fix_base = False
             imp_cfg.collision_from_visuals = bool(
-                cfg.get("collision_from_visuals", True))
+                cfg.get("collision_from_visuals", False))
             imp_cfg.joint_drive_type = "force"
             usd_path = URDFImporter(imp_cfg).import_urdf()
             prim = stage_utils.add_reference_to_stage(usd_path, "/World")
@@ -621,6 +769,11 @@ def _run_stage(app, reader, cfg, state):
     except Exception as exc:
         scan = None
         _emit({"event": "log", "msg": "Scan unavailable: %s" % exc})
+    try:
+        camera = _prepare_camera(cfg, dt, robot, stage_obj)
+    except Exception as exc:
+        camera = None
+        _emit({"event": "log", "msg": "RGB-D camera unavailable: %s" % exc})
 
     wheel_radius = float(cfg.get("wheel_radius", 0.033))
     wheel_separation = float(cfg.get("wheel_separation", 0.17))
@@ -700,6 +853,21 @@ def _run_stage(app, reader, cfg, state):
                 scan = None
             else:
                 _emit({"event": "scan", "t": t, "ranges": ranges})
+
+        if camera is not None and sim_step % camera["every"] == 0:
+            try:
+                frame = _encode_rgbd(camera["rgb"].get_data(),
+                                     camera["depth"].get_data(),
+                                     camera["width"], camera["height"],
+                                     camera["far"])
+            except Exception as exc:
+                _emit({"event": "log",
+                       "msg": "RGB-D camera disabled after read failure: %s" % exc})
+                camera = None
+            else:
+                if frame is not None:
+                    frame.update(event="rgbd", t=t)
+                    _emit(frame)
 
     state["running"] = False
 

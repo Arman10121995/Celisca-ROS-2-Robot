@@ -2,7 +2,9 @@
 
 Last updated: 2026-09-14. Baseline reviewed: `dff388f`; simulator
 coverage and the algorithm-selection contract re-measured 2026-09-11;
-PyBullet and MuJoCo live drive/RGB-D/reset smokes recorded 2026-09-14.
+PyBullet and MuJoCo live drive/RGB-D/reset smokes recorded 2026-09-14;
+Isaac Sim sensors, drive and reset, and a cross-backend sensor probe
+(`scripts/sim_sensor_probe.sh`) recorded 2026-09-16.
 
 This matrix reports implementation and evidence, not registry maturity labels.
 No new full missions, GUI sessions or hardware operations were performed by the
@@ -51,10 +53,10 @@ live-verified ROS contract is not supported by this audit.
 | Interface | Gazebo route | PyBullet | MuJoCo | Isaac |
 |---|---|---|---|---|
 | Clock | Gazebo/ROS bridge route; verify advancement | Wrong type: `Time` on `/clock` | Wrong type: `Time` on `/clock` | Wrong type: `Time` on `/clock` |
-| Commands | `ros2_control` plus legacy controller/multiplexer | `/cmd_vel` to differential-drive wheels | `/cmd_vel` to wheel velocity actuators | `/cmd_vel` to runtime/wheel code; general control unqualified |
-| Odometry | Controller odometry and local EKF configuration | Simulator base state on `/odom` | Simulator body state on `/odom` | Runtime state on `/odom` |
+| Commands | `ros2_control` plus legacy controller/multiplexer | `/cmd_vel` to differential-drive wheels | `/cmd_vel` to wheel velocity actuators | `/cmd_vel` to differential-drive wheel velocity drives (damped, with rotor armature); legged/other control unqualified |
+| Odometry | Controller odometry and local EKF configuration | Base state on `/odom/ground_truth`, twist in the body frame | Body state on `/odom/ground_truth` (scalar-first quaternion converted, body-frame twist) | Root-body state re-expressed at the URDF root on `/odom/ground_truth`, body-frame twist |
 | IMU | Description/plugin/configuration assets | Implemented from simulator state | Implemented from simulator state | Implemented from runtime state |
-| 2D scan | LiDAR assets for compatible robots | Raycast output implemented | Raycast output implemented | No publisher in current spawner |
+| 2D scan | LiDAR assets for compatible robots | Batched ray tests from the laser link frame; 360/360 rays within 5 cm of the map (nav_maze, 2026-09-16) | Rays from the laser link pose, skipping the robot's own bodies; 360/360 within 5 cm | PhysX raycasts from the laser link, ignoring robot bodies; 360/360 within 5 cm |
 | World geometry | SDF worlds loaded natively | Parsed with the shared `sdf_world.py` reader (same as Isaac): primitives + meshes, `model://` resolved, Collada staged to STL (26/26 maps produce geometry; pre/post-refactor loaders equivalent within 1e-4 m) | MJCF generated from the same SDF by `robot_lab_maps/tools/gen_mjcf_worlds.py` (26/26 maps) | Spawner parses the SDF with `sdf_world.py`; the runtime creates USD collision prims: 26/26 maps build (box bounds within 1e-6 m), nav_maze verified live |
 | Robot import | Native URDF/xacro; 17/17 robots spawn live (`OK creation of entity`) | 17/17 robot descriptions load; 17/17 spawn live through `ros2 launch` with world geometry | 17/17 import with assets, defaults and a floating base; 17/17 spawn live through `ros2 launch` | Bumperbot imports and reaches ready live; other robots not yet run through Isaac |
 
@@ -66,11 +68,11 @@ inside the wrists, Unitree B1 thighs inside the trunk); those pairs are now
 excluded automatically. Passive stability is not locomotion: treat non-Gazebo
 backends as display/visualization-grade for legged and humanoid robots until a
 class mission passes.
-| RGB/depth/camera info | Bumperbot sensor assets and RTAB-Map configuration | Not implemented in current bridge | Not implemented in current bridge | Not implemented in current bridge |
+| RGB/depth/camera info | Bumperbot sensor assets and RTAB-Map configuration | OAK-D topics (320x240 rgb8, 32FC1 metres, pinhole camera_info) from the software renderer; centre depth 7.342 m vs 7.342 m ray-cast from the map | Same topics from an MJCF camera on the base; centre depth 7.339 m vs 7.339 m | Same topics from a USD camera plus replicator annotators, default lights added to unlit worlds; centre depth 7.340 m vs 7.338 m |
 | Joint states | Controller/plugin route | Implemented | Implemented | Implemented |
 | TF | Description/controller/estimator routes; ownership needs checks | Publishes `odom → base_footprint`; estimator conflict risk | Same | Same |
 | Ground truth vs measurements | Separation needs experiment-level verification | Truth reused as odometry; independent measurement/truth contract unqualified | Same limitation | Same limitation |
-| Reset/seed/readiness | /robot_lab/ready + /robot_lab/health + /robot_lab/reset contracts declared and tested (R2.3) | Same | Same | Same; Isaac offline reports WARN health (no physics) |
+| Reset/seed/readiness | /robot_lab/ready + /robot_lab/health + /robot_lab/reset contracts declared and tested (R2.3) | Reset restores the spawn pose (0.000 m) with a monotonic clock | Same | Reset now reaches the runtime (`world.reset()`; previously acknowledged but ignored): 0.000 m, monotonic clock; offline reports WARN health |
 
 The clock must be `rosgraph_msgs/msg/Clock`, not `builtin_interfaces/msg/Time`.
 Topic existence does not prove consumers can use its type or timing. Non-Gazebo
@@ -106,7 +108,7 @@ simulator viewer with `gui=true`.
 | Model display | RViz and backend viewer routes | Assets do not prove control; non-Gazebo display not headless-safe by default |
 | Known-map localization | AMCL plus EKF | Topic/frame/time agreement and accuracy against separate truth |
 | 2D SLAM | SLAM Toolbox configuration | Actual scan/odometry, TF, map consistency and completed task |
-| 3D SLAM | RTAB-Map configuration | RGB-D/camera info unavailable through current non-Gazebo bridges |
+| 3D SLAM | RTAB-Map configuration | RGB-D/camera info now published by the PyBullet, MuJoCo and Isaac bridges (depth checked against the map); no RTAB-Map mapping run qualified on any backend |
 | Navigation | Nav2, default SmacPlanner2D and Regulated Pure Pursuit | Reference task with explicit outcome and collision evidence |
 | Frontier mapping / cleaning | Substantial controller logic plus basic vacuum package | Reconcile duplication; measure coverage, completion and safety |
 | GUI | Profiles, browser, drive/map tools, benchmark/tests/health tabs, monitor | Not exercised in audit; divergent configuration sources; `algorithm` does not change launched stack |

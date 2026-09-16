@@ -2,7 +2,7 @@
 
 Drives a real seeded mission - bumperbot in a deterministic box arena
 (nav_empty) reaching a waypoint ahead of its spawn pose - through the R4.1
-lifecycle phases on the MuJoCo and PyBullet backends, recording real rosbag2
+lifecycle phases on the MuJoCo, PyBullet and Isaac Sim backends, recording real rosbag2
 artifacts, a trace table, R4.2 mission metrics computed with ``metrics.py``,
 and an R4.1-style manifest under the run directory.
 
@@ -193,13 +193,40 @@ SIMULATOR_LAUNCH = {
         "package": "robot_lab_mujoco",
         "file": "mujoco_simulator.launch.py",
         "gui": "false",
+        "world_by": "name",
     },
     "pybullet": {
         "package": "robot_lab_pybullet",
         "file": "pybullet_simulator.launch.py",
         "gui": "false",
+        "world_by": "path",
+    },
+    # Isaac resolves the SDF world from its name and requires robot_xacro.
+    "isaac": {
+        "package": "robot_lab_isaac",
+        "file": "isaac_simulator.launch.py",
+        "gui": "false",
+        "world_by": "name",
+        "extra": ["robot_xacro:=bumperbot/urdf/bumperbot.urdf.xacro"],
     },
 }
+
+BUMPERBOT_XACRO = "bumperbot/urdf/bumperbot.urdf.xacro"
+
+
+def launch_arguments(simulator: str, world: str, robots_share: str,
+                     maps_share: str) -> List[str]:
+    """``ros2 launch`` arguments starting Bumperbot in *world* on a backend."""
+    launch = SIMULATOR_LAUNCH[simulator]
+    if launch["world_by"] == "name":
+        world_arg = "world_name:=%s" % world
+    else:
+        world_arg = ("world_path:=%s/maps/%s/worlds/%s.world"
+                     % (maps_share, world, world))
+    return ([launch["package"], launch["file"],
+             "model:=%s/%s" % (robots_share, BUMPERBOT_XACRO),
+             "gui:=%s" % launch["gui"], world_arg]
+            + list(launch.get("extra", [])))
 
 
 def _stop_proc(proc, timeout):
@@ -494,23 +521,15 @@ def run_live_mission(simulator: str, seed: int, goal_m: float,
         "r4_%s_point_to_point_navigation_%s_%d" % (simulator, world, seed))
     run_dir.mkdir(parents=True, exist_ok=True)
 
-    xacro = ("%s/bumperbot/urdf/bumperbot.urdf.xacro"
-             % get_package_share_directory("robot_lab_robots"))
-    launch = SIMULATOR_LAUNCH[simulator]
-    if simulator == "mujoco":
-        world_arg = "world_name:=%s" % world
-    else:
-        world_arg = ("world_path:=%s/maps/%s/worlds/%s.world"
-                     % (get_package_share_directory("robot_lab_maps"),
-                        world, world))
+    arguments = launch_arguments(
+        simulator, world, get_package_share_directory("robot_lab_robots"),
+        get_package_share_directory("robot_lab_maps"))
     bash = ("source %s/setup.bash" % WORKSPACE_PREFIX)
     venv_activate = REPO_ROOT / ".venv" / "bin" / "activate"
     if venv_activate.exists():
         bash += " && source %s" % venv_activate
     export = "export ROS_DOMAIN_ID=%d ROS_LOCALHOST_ONLY=1" % domain_id
-    cmd = ("%s && %s && ros2 launch %s %s model:=%s gui:=%s %s"
-           % (bash, export, launch["package"], launch["file"], xacro,
-              launch["gui"], world_arg))
+    cmd = "%s && %s && ros2 launch %s" % (bash, export, " ".join(arguments))
     log_path = run_dir / "launch.log"
     env = dict(os.environ)
     env.update({"ROS_DOMAIN_ID": str(domain_id), "ROS_LOCALHOST_ONLY": "1"})
@@ -548,7 +567,7 @@ def _env_flag(name: str) -> bool:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--simulator", choices=["mujoco", "pybullet"],
+    parser.add_argument("--simulator", choices=sorted(SIMULATOR_LAUNCH),
                         required=True)
     parser.add_argument("--seeds", nargs="+", type=int, required=True)
     parser.add_argument("--goal", type=float, default=1.5)
