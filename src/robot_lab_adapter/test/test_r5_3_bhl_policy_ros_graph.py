@@ -4,12 +4,18 @@ Launches the real ``HumanoidPolicyController`` node (the deployed entry
 point) against a real rclpy graph and verifies the ROS marshalling that the
 pure-logic tests cannot cover:
 
-- Before any ``cmd_vel`` arrives the node publishes the config default pose
-  on the ``forward_command_controller`` command topic (hold behavior).
-- A ``cmd_vel`` triggers real ONNX inference: 22 finite position targets at
-  the policy rate, and the joint velocities from ``JointState`` are actually
-  consumed (non-zero dq in the observation path).
-- A tipped IMU latches SAFE_STOP and the node reverts to the default pose.
+- Before any ``cmd_vel`` arrives the node holds the *measured* pose on the
+  ``forward_command_controller`` command topic (spawn-pose hold: the config
+  default pose bends the legs and stepping there instantly is the startup
+  transient that toppled the earlier probes — see evidence
+  ``r53-bhl-actuation-2026-09-16``).
+- A ``cmd_vel`` ramps from the measured pose to the default pose over
+  ``settle_duration_s`` (injected short in these tests), then real ONNX
+  inference takes over: 22 finite position targets at the policy rate, with
+  the joint velocities from ``JointState`` actually consumed (non-zero dq in
+  the observation path).
+- A tipped IMU latches SAFE_STOP and the controller reverts to the default
+  pose.
 
 These tests require a sourced ROS 2 environment (rclpy) and the vendored
 checkpoints; they are marked ``integration`` and skip cleanly when either is
@@ -53,7 +59,7 @@ def policy_config():
 class GraphHarness:
     """Controller node + sensor/command stubs on one live executor."""
 
-    def __init__(self, config):
+    def __init__(self, config, settle_duration_s=0.08):
         self.config = config
         self.received = []  # (recv_time, Float64MultiArray)
 
@@ -68,7 +74,11 @@ class GraphHarness:
 
         from robot_lab_adapter.humanoid_policy_controller import (
             HumanoidPolicyController)
-        self.controller = HumanoidPolicyController()
+        # A short injected settle ramp: the deployed default (2 s) would
+        # dominate these tests' spin windows; the ramp itself is covered by
+        # the pure-logic StartupSettle tests.
+        self.controller = HumanoidPolicyController(
+            settle_duration_s=settle_duration_s)
 
         self.helper = Node("policy_graph_test_helper")
         reliable = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE)
@@ -147,14 +157,28 @@ def _targets(harness):
     return list(msg.data)
 
 
-def test_hold_default_pose_before_first_cmd_vel(graph, policy_config):
+def test_hold_measured_pose_before_first_cmd_vel(graph, policy_config):
+    """Pre-command targets follow the *measured* pose, not the default pose.
+
+    The measured pose is what the spawned robot is actually in (proven stable
+    under zero commands); the config default pose bends the legs and stepping
+    there instantly is the startup transient from evidence
+    ``r53-bhl-actuation-2026-09-16``.
+    """
     graph.received.clear()
-    graph.spin_for(0.5)
-    # Multiple messages at the policy rate, all equal to the default pose.
+    # Publish a distinctive measured pose; the hold must mirror it exactly.
+    measured = {
+        j: (0.1 if "hip_pitch" in j else 0.0) for j in BHL_JOINT_NAMES
+    }
+    deadline = time.monotonic() + 0.4
+    while time.monotonic() < deadline:
+        graph.publish_sensors(measured, {j: 0.0 for j in BHL_JOINT_NAMES})
+        graph.executor.spin_once(timeout_sec=0.01)
+    # Multiple messages at the policy rate, all equal to the measured pose.
     assert len(graph.received) >= 5
-    hold = [policy_config.hold_pose()[j] for j in BHL_JOINT_NAMES]
     for _, msg in graph.received:
-        assert list(msg.data) == pytest.approx(hold, abs=1e-9)
+        for joint, value in zip(BHL_JOINT_NAMES, msg.data):
+            assert value == pytest.approx(measured[joint], abs=1e-9)
 
 
 def test_cmd_vel_triggers_real_inference_at_policy_rate(graph):

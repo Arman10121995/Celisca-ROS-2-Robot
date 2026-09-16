@@ -20,9 +20,16 @@ live in ``bhl_policy`` and are unit-tested without a live ROS graph (see
 ``test/test_r5_3_bhl_policy_adapter.py``). This node only marshals ROS
 messages to and from that logic.
 
-The policy does not start driving until the first ``cmd_vel`` arrives; before
-that the node holds the config default pose (which is what the policy would
-command at zero action anyway).
+The policy does not start driving until the first ``cmd_vel`` arrives. Before
+that the node holds the *measured* pose (the straight-legged spawn pose,
+proven stable under zero commands) instead of the config default pose: the
+default pose bends the legs, and stepping there instantly into the standing
+biped is the startup transient that toppled the earlier probes (evidence
+``r53-bhl-actuation-2026-09-16``). On the first ``cmd_vel`` the node ramps
+from the measured pose to the default pose over ``settle_duration_s``
+(default 2 s, bounded), then hands over to the policy; a tilt at or beyond
+the fall threshold mid-ramp ends the ramp immediately so the controller's
+latched SAFE_STOP path takes over.
 """
 
 from __future__ import annotations
@@ -36,18 +43,20 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu, JointState
 from std_msgs.msg import Float64MultiArray
 
-from robot_lab_adapter.bhl_balance import BHL_JOINT_NAMES
+from robot_lab_adapter.bhl_balance import BHL_JOINT_NAMES, TILT_FALL_RAD
 from robot_lab_adapter.bhl_policy import (
     BhlPolicyController,
     POLICY_RATE_HZ,
+    StartupSettle,
     load_policy_config,
+    quaternion_tilt,
 )
 
 
 class HumanoidPolicyController(Node):
     """ONNX velocity-policy controller for the Berkeley Humanoid Lite."""
 
-    def __init__(self):
+    def __init__(self, settle_duration_s: Optional[float] = None):
         super().__init__("humanoid_policy_controller")
         self.declare_parameter("command_topic", "/bhl_standing_controller/commands")
         self.declare_parameter("joint_states_topic", "/joint_states")
@@ -55,6 +64,7 @@ class HumanoidPolicyController(Node):
         self.declare_parameter("cmd_vel_topic", "/cmd_vel")
         self.declare_parameter("policy_name", "policy_humanoid")
         self.declare_parameter("command_rate_hz", POLICY_RATE_HZ)
+        self.declare_parameter("settle_duration_s", 2.0)
 
         command_topic = self.get_parameter("command_topic").value
         joint_states_topic = self.get_parameter("joint_states_topic").value
@@ -62,8 +72,15 @@ class HumanoidPolicyController(Node):
         cmd_vel_topic = self.get_parameter("cmd_vel_topic").value
         policy_name = self.get_parameter("policy_name").value
         rate = float(self.get_parameter("command_rate_hz").value)
+        if settle_duration_s is None:
+            settle_duration = float(self.get_parameter("settle_duration_s").value)
+        else:
+            settle_duration = float(settle_duration_s)
 
         self._controller = BhlPolicyController(load_policy_config(name=policy_name))
+        self._settle = StartupSettle(
+            self._controller.config.hold_pose(), duration_s=settle_duration)
+        self._dt = 1.0 / rate
         self._measured_positions: Dict[str, float] = {}
         self._measured_velocities: Optional[Dict[str, float]] = None
         self._command = [0.0, 0.0, 0.0]
@@ -116,11 +133,33 @@ class HumanoidPolicyController(Node):
 
     def _on_timer(self) -> None:
         """One policy cycle: onboard state -> Float64MultiArray targets."""
+        if not self._measured_positions:
+            # No measurement yet: publishing anything would command blind.
+            return
         if not self._commanded:
-            # Hold the default pose until the first command arrives; this is
-            # exactly what the policy would command at zero action.
+            # Hold the measured pose until the first command arrives. The
+            # spawn pose (straight-legged) is proven stable under zero
+            # commands; stepping straight to the bent-leg default pose is
+            # the startup transient that toppled the earlier probes.
+            targets = self._settle.hold_targets(self._measured_positions)
             cycle_issues = []
-            targets = self._controller.config.hold_pose()
+        elif not self._settle.settled:
+            if not self._settle.active:
+                self._settle.start(self._measured_positions)
+                self.get_logger().info(
+                    "first cmd_vel: ramping from the measured pose to the "
+                    f"policy default pose over {self._settle.duration_s:.1f} s")
+            tilt = quaternion_tilt(*self._orientation)
+            if tilt >= TILT_FALL_RAD:
+                self.get_logger().error(
+                    f"settle ramp aborted: tilt {tilt:.2f} rad exceeds the "
+                    "fall threshold; handing over to the policy safety latch")
+                self._settle.finish()
+            targets, settled = self._settle.targets(
+                self._measured_positions, self._dt)
+            if settled:
+                self.get_logger().info("settle ramp complete: policy driving")
+            cycle_issues = []
         else:
             cycle = self._controller.update(
                 command=self._command,

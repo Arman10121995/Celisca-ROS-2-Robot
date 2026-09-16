@@ -302,6 +302,95 @@ def action_to_targets(
     return targets
 
 
+class StartupSettle:
+    """Hold the measured spawn pose, then ramp to the default pose on demand.
+
+    The BHL spawns straight-legged (every measured joint ~0 rad) while the
+    policy default pose bends the legs (hip_pitch -0.2, knee +0.4, ankle
+    -0.3 rad per side). Commanding that bent-leg pose instantly into the
+    standing biped destabilizes it: tilt rises past the 0.70 rad fall
+    threshold and the policy latches SAFE_STOP within seconds (decisively
+    reproduced in evidence ``r53-bhl-actuation-2026-09-16``, whose phase 1
+    also proves the measured straight-legged pose is stable under zero
+    commands). This is the startup transient that respects the spawn pose:
+
+    - before :meth:`start`, :meth:`hold_targets` returns the *measured*
+      pose, URDF-clamped (falling back to the policy pose for joints that
+      were not measured) - effectively zero commands on a settled robot;
+    - :meth:`start` captures that measured pose as the ramp origin;
+    - :meth:`targets` blends origin -> default pose linearly over
+      ``duration_s`` of accumulated ``dt``, clamped to the URDF limits;
+    - :meth:`finish` ends the ramp immediately (used when the tilt safety
+      threshold is crossed mid-ramp, so the controller's own SAFE_STOP path
+      takes over on the next update).
+    """
+
+    def __init__(self, hold_pose: Dict[str, float], duration_s: float) -> None:
+        duration_s = float(duration_s)
+        if duration_s <= 0.0:
+            raise ValueError(f"settle duration must be positive, got {duration_s}")
+        self._hold = {joint: float(value) for joint, value in hold_pose.items()}
+        self._duration = duration_s
+        self._origin: Optional[Dict[str, float]] = None
+        self._elapsed = 0.0
+        self._started = False
+
+    @property
+    def duration_s(self) -> float:
+        return self._duration
+
+    @property
+    def active(self) -> bool:
+        """True while a ramp is in progress (started, not yet settled)."""
+        return self._started and self._elapsed < self._duration
+
+    @property
+    def settled(self) -> bool:
+        """True once the ramp has run to completion (or been finished)."""
+        return self._started and self._elapsed >= self._duration
+
+    def hold_targets(self, measured: Optional[Dict[str, float]]) -> Dict[str, float]:
+        """Pre-command targets: the measured pose, URDF-clamped."""
+        targets: Dict[str, float] = {}
+        for joint, default in self._hold.items():
+            value = default
+            if measured and joint in measured:
+                value = float(measured[joint])
+            lo, hi = POSITION_LIMITS[joint]
+            targets[joint] = float(max(lo, min(hi, value)))
+        return targets
+
+    def start(self, measured: Optional[Dict[str, float]]) -> None:
+        """Capture the ramp origin from the latest measurement."""
+        self._origin = self.hold_targets(measured)
+        self._elapsed = 0.0
+        self._started = True
+
+    def finish(self) -> None:
+        """End the ramp immediately; subsequent targets are the hold pose."""
+        self._elapsed = self._duration
+
+    def targets(
+        self, measured: Optional[Dict[str, float]], dt: float
+    ) -> Tuple[Dict[str, float], bool]:
+        """Advance the ramp by ``dt``; return (targets, settled).
+
+        Before :meth:`start` this returns the measured-pose hold and
+        ``settled=False``. Every target is clamped to the URDF limits.
+        """
+        if not self._started:
+            return self.hold_targets(measured), False
+        self._elapsed += float(dt)
+        alpha = min(1.0, self._elapsed / self._duration)
+        origin = self._origin or {}
+        targets: Dict[str, float] = {}
+        for joint, default in self._hold.items():
+            start = origin.get(joint, default)
+            value = start + alpha * (default - start)
+            lo, hi = POSITION_LIMITS[joint]
+            targets[joint] = float(max(lo, min(hi, value)))
+        return targets, alpha >= 1.0
+
 
 @dataclass
 class BhlPolicyCycle:

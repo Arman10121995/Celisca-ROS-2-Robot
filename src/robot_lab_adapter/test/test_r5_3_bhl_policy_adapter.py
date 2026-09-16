@@ -39,6 +39,7 @@ if str(_adapter_pkg) not in sys.path:
 from robot_lab_adapter.bhl_balance import POSITION_LIMITS, TILT_FALL_RAD  # noqa: E402
 from robot_lab_adapter.bhl_policy import (  # noqa: E402
     BhlPolicyController,
+    StartupSettle,
     action_to_targets,
     build_observation,
     clamp_command,
@@ -438,6 +439,117 @@ def test_controller_works_with_legs_policy(legs_config):
 
 def test_policy_rate_matches_upstream_policy_dt(full_config):
     assert full_config.policy_dt == pytest.approx(1.0 / 25.0)
+
+
+# ----------------------------------------------------------------------------
+# StartupSettle: measured-pose hold + bounded ramp to the default pose
+# ----------------------------------------------------------------------------
+
+def _measured_spawn_pose(config):
+    """The straight-legged spawn pose (every joint at zero)."""
+    return {j: 0.0 for j in config.joints}
+
+
+def test_settle_rejects_nonpositive_duration(full_config):
+    with pytest.raises(ValueError, match="settle duration"):
+        StartupSettle(full_config.hold_pose(), duration_s=0.0)
+    with pytest.raises(ValueError, match="settle duration"):
+        StartupSettle(full_config.hold_pose(), duration_s=-1.0)
+
+
+def test_settle_hold_follows_the_measured_pose(full_config):
+    """Pre-command targets mirror the measured pose (URDF-clamped)."""
+    settle = StartupSettle(full_config.hold_pose(), duration_s=2.0)
+    measured = _measured_spawn_pose(full_config)
+    targets = settle.hold_targets(measured)
+    assert set(targets) == set(full_config.joints)
+    for joint, value in targets.items():
+        assert value == pytest.approx(measured[joint], abs=1e-12)
+
+    # Unmeasured joints fall back to the configured hold pose (clamped).
+    partial = {j: v for j, v in measured.items() if "arm_" not in j}
+    targets = settle.hold_targets(partial)
+    for joint, value in targets.items():
+        expected = partial.get(joint, full_config.hold_pose()[joint])
+        lo, hi = POSITION_LIMITS[joint]
+        assert value == pytest.approx(max(lo, min(hi, expected)), abs=1e-12)
+
+
+def test_settle_hold_clamps_to_urdf_limits(full_config):
+    """A measured pose outside the URDF range cannot be commanded verbatim."""
+    settle = StartupSettle(full_config.hold_pose(), duration_s=2.0)
+    joint = "leg_left_knee_pitch_joint"
+    lo, hi = POSITION_LIMITS[joint]
+    targets = settle.hold_targets({joint: lo - 1.0})
+    assert targets[joint] == pytest.approx(lo, abs=1e-12)
+    targets = settle.hold_targets({joint: hi + 1.0})
+    assert targets[joint] == pytest.approx(hi, abs=1e-12)
+
+
+def test_settle_ramp_runs_from_measured_to_default_pose(full_config):
+    """targets() blends measured -> default linearly over duration_s."""
+    measured = _measured_spawn_pose(full_config)
+    default = full_config.hold_pose()
+    settle = StartupSettle(default, duration_s=2.0)
+
+    # Before start: measured-pose hold, never settled.
+    targets, settled = settle.targets(measured, dt=1.0)
+    assert not settled and not settle.settled
+    assert targets["leg_left_knee_pitch_joint"] == pytest.approx(0.0, abs=1e-12)
+
+    settle.start(measured)
+    assert settle.active
+    # Halfway through the ramp, the knee is halfway to its +0.4 default.
+    targets, settled = settle.targets(measured, dt=1.0)
+    assert not settled
+    assert targets["leg_left_knee_pitch_joint"] == pytest.approx(
+        0.5 * default["leg_left_knee_pitch_joint"], abs=1e-12)
+    # Completing the duration settles and reaches the default pose.
+    targets, settled = settle.targets(measured, dt=1.0)
+    assert settled and settle.settled
+    for joint, value in targets.items():
+        assert value == pytest.approx(default[joint], abs=1e-12)
+
+
+def test_settle_ramp_does_not_advance_before_start(full_config):
+    """Repeated pre-start targets() calls never consume the ramp budget."""
+    settle = StartupSettle(full_config.hold_pose(), duration_s=1.0)
+    measured = _measured_spawn_pose(full_config)
+    for _ in range(10):
+        settle.targets(measured, dt=0.1)
+    assert not settle.settled
+    settle.start(measured)
+    targets, settled = settle.targets(measured, dt=0.5)
+    assert not settled  # only 0.5 s of the 1.0 s ramp consumed
+
+
+def test_settle_finish_ends_the_ramp_immediately(full_config):
+    """finish() is the tilt-abort path: hold pose from then on."""
+    settle = StartupSettle(full_config.hold_pose(), duration_s=10.0)
+    measured = _measured_spawn_pose(full_config)
+    settle.start(measured)
+    settle.targets(measured, dt=0.1)
+    settle.finish()
+    assert settle.settled and not settle.active
+    targets, settled = settle.targets(measured, dt=1.0)
+    assert settled
+    # The ramp aborts to the *hold* pose (the same default-pose hold the
+    # controller's SAFE_STOP path uses), not a half-ramped blend.
+    for joint, value in targets.items():
+        assert value == pytest.approx(full_config.hold_pose()[joint], abs=1e-12)
+
+
+def test_settle_targets_stay_urdf_clamped(full_config):
+    """No ramp point may command past the vendored URDF position limits."""
+    # An origin far beyond the limits exercises the clamping on every blend.
+    wild = {j: 10.0 for j in full_config.joints}
+    settle = StartupSettle(full_config.hold_pose(), duration_s=1.0)
+    settle.start(wild)
+    for _ in range(12):
+        targets, _ = settle.targets(wild, dt=0.1)
+        for joint, value in targets.items():
+            lo, hi = POSITION_LIMITS[joint]
+            assert lo - 1e-12 <= value <= hi + 1e-12
 
 
 
