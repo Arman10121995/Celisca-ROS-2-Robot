@@ -123,3 +123,31 @@ same bringup, and verified live (headless):
   `/imu/out`, `/joint_states`, `/bhl_standing_controller/commands` are live.
   Dispatch-path contract tests live in
   `robot_lab_bringup/test/test_sim_profiles.py`.
+
+## Paused-start variant (2026-09-16, later) — negative result, recorded
+
+`gazebo.launch.py` also gained a `paused:=true` argument (world does not step
+until unpaused via `/world/<name>/control`). The hypothesis was that pausing
+the physics until the controllers are active would beat the spawn-fall race.
+Probed end-to-end (`/tmp/r53paused/run_v3.sh`: launch paused → load
+`bhl_standing_controller` while paused → unpause → spawn both controllers →
+start tilt monitor → start policy → release with zero `cmd_vel`):
+
+- **Launch wiring works**: entity `bhl` is created while paused,
+  `controller_manager` comes up, `bhl_standing_controller` loads while paused
+  (ends `inactive`), and after unpause both `bhl_standing_controller` and
+  `joint_state_broadcaster` end **active**. Note: activation *while paused*
+  fails (`Failed to activate controller`) — the gz hardware interfaces only
+  come alive once the sim steps — so "load paused, activate after unpause" is
+  the workable pattern, and it succeeds.
+- **The balance goal still fails**: the policy connects at 25 Hz, publishes
+  targets, and still latches SAFE_STOP at **tilt 0.75 rad** ~3 s after start;
+  the robot then falls on to **tilt 1.67 rad** (flat). Final `/joint_states`
+  positions are pinned near zero despite the controller holding active
+  position-command targets — i.e. position commands did not move the joints
+  even with the controller active from the first unpaused step.
+- **Conclusion**: bringup ordering is *not* the blocker; the residual is the
+  documented command-tracking gap (policy position targets produce no joint
+  motion). Fixing standing/walking requires closing that gap (onboard
+  odometry/state feedback, actuation/gain verification against the training
+  setup, or a retrained policy) — not more bringup orchestration.

@@ -69,6 +69,17 @@ def generate_launch_description():
         description="Show the Gazebo GUI. 'false' runs headless (server only).",
     )
 
+    paused_arg = DeclareLaunchArgument(
+        name="paused",
+        default_value="false",
+        description=(
+            "Start the simulation paused (world does not step until "
+            "unpaused via /world/<name>/control). Useful when controllers "
+            "must be active before the robot physics starts (e.g. the R5.3 "
+            "Berkeley Humanoid Lite spawn-fall race)."
+        ),
+    )
+
     use_sim_time = LaunchConfiguration("use_sim_time")
     world_package = LaunchConfiguration("world_package")
     world_path_lc = LaunchConfiguration("world_path")
@@ -319,7 +330,11 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory("ros_gz_sim"), "launch"), "/gz_sim.launch.py"]),
                 launch_arguments={
-                    "gz_args": f"{w} -v 4 {'-s' if LaunchConfiguration('gui').perform(context) == 'false' else ''} -r",
+                    "gz_args": (
+                        f"{w} -v 4 "
+                        f"{'-s' if LaunchConfiguration('gui').perform(context) == 'false' else ''}"
+                        f"{'' if LaunchConfiguration('paused').perform(context) == 'true' else ' -r'}"
+                    ),
                     "on_exit_shutdown": "True"
                 }.items()
             )
@@ -410,6 +425,7 @@ def generate_launch_description():
         robot_name_arg,
         robot_package_arg,
         gui_arg,
+        paused_arg,
         robot_state_publisher_node,
         gazebo,
         gz_spawn_entity,
