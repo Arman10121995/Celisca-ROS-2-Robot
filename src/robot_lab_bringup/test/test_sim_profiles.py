@@ -23,6 +23,125 @@ MAPS = _load(MAPS_PATH)["maps"]
 ROBOTS = _load(ROBOTS_PATH)["robots"]
 
 
+# ---------------------------------------------------------------------------
+# R5.3: dispatch-path contract for the BHL live-backend bringup.
+#
+# The 2026-09-16 live proof (see
+# docs/status/evidence/r53-bhl-live-backend-2026-09-16/) verified the headless
+# Gazebo bringup of the commandable Berkeley Humanoid Lite directly through
+# robot_lab_description/gazebo.launch.py. The tests below pin the data that
+# lets the standard dispatch path reach the same bringup via
+# robot_lab_bringup/simulated_robot.launch.py: the profile must exist in
+# robots.yaml, point at the self-contained sim xacro, and carry a spawn name
+# matching the verified probe.
+# ---------------------------------------------------------------------------
+
+BHL_XACRO = (
+    SRC_DIR
+    / "robot_lab_robots"
+    / "berkeley_humanoid_lite"
+    / "xacro"
+    / "bhl_sim.xacro"
+)
+BHL_CONTROL_XACRO = (
+    SRC_DIR
+    / "robot_lab_robots"
+    / "berkeley_humanoid_lite"
+    / "xacro"
+    / "bhl_ros2_control.xacro"
+)
+BHL_CONTROLLERS_YAML = (
+    SRC_DIR
+    / "robot_lab_robots"
+    / "berkeley_humanoid_lite"
+    / "config"
+    / "bhl_controllers.yaml"
+)
+
+
+def test_bhl_sim_profile_is_registered():
+    assert "berkeley_humanoid_lite_sim" in ROBOTS, (
+        "berkeley_humanoid_lite_sim: missing from robots.yaml; the dispatch "
+        "path cannot reach the verified R5.3 live-backend bringup"
+    )
+
+
+def test_bhl_sim_profile_points_at_the_self_contained_sim_xacro():
+    config = ROBOTS["berkeley_humanoid_lite_sim"]
+    xacro = SRC_DIR / "robot_lab_robots" / config["xacro"]
+    assert xacro == BHL_XACRO, (
+        "berkeley_humanoid_lite_sim must expand bhl_sim.xacro (the only BHL "
+        "description that embeds the gz_ros2_control plugins and controller "
+        "parameters)"
+    )
+    assert xacro.is_file(), f"{xacro}: sim xacro missing"
+    xacro_text = xacro.read_text(encoding="utf-8")
+    assert "bhl_ros2_control.xacro" in xacro_text
+    assert "$(find robot_lab_robots)" in xacro_text, (
+        "sim xacro must resolve includes through the installed package share"
+    )
+
+
+def test_bhl_sim_profile_spawn_name_matches_the_verified_probe():
+    # The live proof spawned the robot under the name 'bhl'; the dispatch
+    # profile must produce the same entity name so the evidence stays
+    # reproducible.
+    config = ROBOTS["berkeley_humanoid_lite_sim"]
+    assert config.get("name") == "bhl"
+    # The verified probe world was nav_empty via gazebo.launch.py; the
+    # dispatch default (mode display, map empty) is the empty world, which
+    # uses the same ground plane and free-fall spawn behavior.
+    assert config.get("supported_modes") == ["display"]
+
+
+def test_bhl_controller_config_declares_the_verified_controllers():
+    config = yaml.safe_load(BHL_CONTROLLERS_YAML.read_text(encoding="utf-8"))
+    cm = config["controller_manager"]["ros__parameters"]
+    assert (
+        cm["bhl_standing_controller"]["type"]
+        == "forward_command_controller/ForwardCommandController"
+    )
+    assert (
+        cm["joint_state_broadcaster"]["type"]
+        == "joint_state_broadcaster/JointStateBroadcaster"
+    )
+    joints = config["bhl_standing_controller"]["ros__parameters"]["joints"]
+    assert len(joints) == 22, (
+        f"bhl_standing_controller: expected the 22 leg/arm joints, got {len(joints)}"
+    )
+    assert (
+        config["bhl_standing_controller"]["ros__parameters"]["interface_name"]
+        == "position"
+    )
+
+
+def test_bhl_sim_profile_declares_its_controllers_for_bringup():
+    # The description loads bhl_controllers.yaml itself; bringup must spawn
+    # (load/configure/activate) the declared controllers or the bringup
+    # reaches controller_manager without an active controller.
+    config = ROBOTS["berkeley_humanoid_lite_sim"]
+    assert config.get("controllers") == [
+        "joint_state_broadcaster",
+        "bhl_standing_controller",
+    ]
+
+
+def test_bhl_sim_xacro_wires_the_verified_backend_plugins():
+    """The sim xacro must carry the Ignition-side plugins the live proof
+    exercised: the ros2_control system bridge, the IMU system, and the IMU
+    sensor publishing on the bridged 'imu' topic."""
+    combined = BHL_XACRO.read_text(encoding="utf-8") + BHL_CONTROL_XACRO.read_text(
+        encoding="utf-8"
+    )
+    assert "ign_ros2_control-system" in combined
+    assert "ignition-gazebo-imu-system" in combined
+    assert "ignition-gazebo-sensors-system" in combined
+    assert "<topic>imu</topic>" in combined, (
+        "BHL IMU sensor must publish on the 'imu' topic that the gazebo "
+        "launch bridges to /imu/out"
+    )
+
+
 def test_expected_profiles_are_present():
     assert set(MODES) == {"display", "loc", "slam", "3d_slam", "nav"}
     # 14 legacy maps existed before P4.2; the P4.2/P4.3/P4.4/P4.5 arenas added more.

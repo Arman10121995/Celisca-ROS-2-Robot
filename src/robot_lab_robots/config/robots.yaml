@@ -29,6 +29,36 @@ robots:
     supported_modes: [display]
     supports_room_vacuum: false
 
+  # R5.3 (2026-09-16): the commandable sim profile of Berkeley Humanoid Lite.
+  # bhl_sim.xacro is self-contained: it embeds the gz_ros2_control system
+  # plugins and loads berkeley_humanoid_lite/config/bhl_controllers.yaml, so
+  # controller_manager + joint_state_broadcaster + bhl_standing_controller and
+  # the trunk IMU come up from the spawned description itself. This is the
+  # profile that reproduces the verified live-backend bringup through the
+  # dispatch path (see docs/status/evidence/r53-bhl-live-backend-2026-09-16/):
+  #   ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  #     mode:=display map_name:=empty robot_model:=berkeley_humanoid_lite_sim \
+  #     simulator:=gazebo gui:=false start_rviz:=false
+  # The policy node (humanoid-policy-controller) is dispatched separately via
+  # the algorithm registry; the onboard loop still lacks odometry feedback
+  # (IMU only), so it is expected to tilt and latch SAFE_STOP on this spawn.
+  berkeley_humanoid_lite_sim:
+    package: robot_lab_robots
+    xacro: berkeley_humanoid_lite/xacro/bhl_sim.xacro
+    name: bhl
+    supported_modes: [display]
+    features: [ros2_control]
+    supports_room_vacuum: false
+    # Controllers declared by the robot description itself (bhl_controllers.yaml
+    # is loaded by the gz_ros2_control plugin inside bhl_ros2_control.xacro);
+    # bringup only needs to spawn (load/configure/activate) them. Without these
+    # spawners the bringup reaches controller_manager but never activates a
+    # controller (the gap between the 2026-09-15 adapter-path evidence and the
+    # 2026-09-16 live-backend proof).
+    controllers:
+      - joint_state_broadcaster
+      - bhl_standing_controller
+
   unitree_a1:
     package: robot_lab_robots
     xacro: unitree/a1_description/xacro/robot.xacro

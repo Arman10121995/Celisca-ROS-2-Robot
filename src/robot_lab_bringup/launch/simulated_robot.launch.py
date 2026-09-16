@@ -639,6 +639,25 @@ def _build_simulation_actions(context):
                         launch_arguments=gazebo_args.items(),
                     )
                 )
+                # Robots that declare their own ros2_control stack (e.g. the
+                # R5.3 Berkeley Humanoid Lite sim profile, whose controllers
+                # are parameterized by the gz_ros2_control plugin inside the
+                # description) get their controllers spawned here, on top of
+                # the simulator bringup. The shared controller layer is
+                # display-skipped, so without this the bringup reaches
+                # controller_manager but never activates a controller.
+                for _robot_controller in robot_config.get("controllers", []):
+                    actions.append(
+                        Node(
+                            package="controller_manager",
+                            executable="spawner",
+                            arguments=[
+                                _robot_controller,
+                                "--controller-manager-timeout", "60",
+                            ],
+                            output="screen",
+                        )
+                    )
             return actions
 
         # PyBullet / MuJoCo / Isaac: their own viewer renders both the world

@@ -100,3 +100,26 @@ residual below.
   yet close the loop into stable standing/walking. This is the documented R5.3
   command-tracking gap (onboard-odometry feedback or a retrained policy). Not a
   backend defect — the backend path proven here is sound.
+
+## Dispatch-path integration (follow-up, same day)
+
+The probe above drove `gazebo.launch.py` directly. The standard dispatch path
+(`robot_lab_bringup/simulated_robot.launch.py`) was then wired to reach the
+same bringup, and verified live (headless):
+
+- `robots.yaml` gained the `berkeley_humanoid_lite_sim` profile (bhl_sim.xacro,
+  spawn name `bhl`, `supported_modes: [display]`, `features: [ros2_control]`)
+  declaring the robot's own `controllers:` list (`joint_state_broadcaster`,
+  `bhl_standing_controller`) — the description loads `bhl_controllers.yaml`
+  itself, so bringup only has to spawn the controllers.
+- `simulated_robot.launch.py` (display mode, gazebo) now spawns profile-declared
+  controllers via `controller_manager/spawner` (`--controller-manager-timeout 60`).
+  Before this, the dispatch path reached `controller_manager` but never activated
+  a controller — the same intermediate state diag.txt initially captured here.
+- Verified live (`ros2 launch robot_lab_bringup simulated_robot.launch.py
+  mode:=display map_name:=empty robot_model:=berkeley_humanoid_lite_sim
+  simulator:=gazebo gui:=false start_rviz:=false`): entity `bhl` spawns, both
+  controllers end **active** (`ros2 control list_controllers`), and
+  `/imu/out`, `/joint_states`, `/bhl_standing_controller/commands` are live.
+  Dispatch-path contract tests live in
+  `robot_lab_bringup/test/test_sim_profiles.py`.
