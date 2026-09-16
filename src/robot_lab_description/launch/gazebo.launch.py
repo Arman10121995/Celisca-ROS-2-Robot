@@ -63,6 +63,12 @@ def generate_launch_description():
         description="Package name of the robot description (used to populate GZ resource path for meshes)"
     )
 
+    gui_arg = DeclareLaunchArgument(
+        name="gui",
+        default_value="true",
+        description="Show the Gazebo GUI. 'false' runs headless (server only).",
+    )
+
     use_sim_time = LaunchConfiguration("use_sim_time")
     world_package = LaunchConfiguration("world_package")
     world_path_lc = LaunchConfiguration("world_path")
@@ -313,7 +319,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory("ros_gz_sim"), "launch"), "/gz_sim.launch.py"]),
                 launch_arguments={
-                    "gz_args": f"{w} -v 4 -r",
+                    "gz_args": f"{w} -v 4 {'-s' if LaunchConfiguration('gui').perform(context) == 'false' else ''} -r",
                     "on_exit_shutdown": "True"
                 }.items()
             )
@@ -403,6 +409,7 @@ def generate_launch_description():
         spawn_yaw_arg,
         robot_name_arg,
         robot_package_arg,
+        gui_arg,
         robot_state_publisher_node,
         gazebo,
         gz_spawn_entity,

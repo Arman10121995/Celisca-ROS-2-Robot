@@ -1,0 +1,23 @@
+--- controller_manager services ---
+/controller_manager/configure_controller
+/controller_manager/describe_parameters
+/controller_manager/get_parameter_types
+/controller_manager/get_parameters
+/controller_manager/list_controller_types
+/controller_manager/list_controllers
+/controller_manager/list_hardware_components
+/controller_manager/list_hardware_interfaces
+/controller_manager/list_parameters
+/controller_manager/load_controller
+/controller_manager/reload_controller_libraries
+/controller_manager/set_hardware_component_state
+/controller_manager/set_parameters
+/controller_manager/set_parameters_atomically
+/controller_manager/switch_controller
+/controller_manager/unload_controller
+--- joint/imu topics ---
+/imu/out
+/joint_states
+--- controllers ---
+1789549519.981107 [94]       ros2: selected interface "lo" is not multicast-capable: disabling multicast
+No controllers are currently loaded!

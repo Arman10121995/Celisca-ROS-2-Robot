@@ -1,0 +1,33 @@
+1789549594.418328 [94] humanoid-p: selected interface "lo" is not multicast-capable: disabling multicast
+[INFO] [1789549594.525326227] [humanoid_policy_controller]: HumanoidPolicyController: policy=policy_humanoid (/joint_states + /imu/out + /cmd_vel -> /bhl_standing_controller/commands) at 25.0 Hz over 22 joints
+[0;93m2026-09-16 11:06:44.270755320 [W:onnxruntime:Default, device_discovery.cc:164 DiscoverDevicesForPlatform] GPU device discovery failed: device_discovery.cc:89 ReadFileContents Failed to open file: "/sys/class/drm/card1/device/vendor"[m
+[ERROR] [1789549606.941212985] [humanoid_policy_controller]: safe_stop: tilt 0.79 rad exceeds fall threshold
+Traceback (most recent call last):
+  File "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/humanoid_policy_controller.py", line 148, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 685, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/robot_lab_adapter/humanoid-policy-controller", line 33, in <module>
+    sys.exit(load_entry_point('robot_lab_adapter==0.1.0', 'console_scripts', 'humanoid-policy-controller')())
+  File "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/humanoid_policy_controller.py", line 153, in main
+    rclpy.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+    return context.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
