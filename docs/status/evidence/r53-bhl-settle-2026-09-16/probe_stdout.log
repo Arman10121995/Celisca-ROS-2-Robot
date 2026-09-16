@@ -1,0 +1,28 @@
+[
+ {
+  "phase": "pre_policy_hold",
+  "tilt_end": 0.0,
+  "knee_left": -2.0437522221358537e-10,
+  "knee_right": 5.599637205098381e-11
+ },
+ {
+  "phase": "policy_idle_hold",
+  "tilt_end": 0.0,
+  "knee_left": -2.678755882567128e-09,
+  "knee_right": 3.2936615043596484e-09
+ },
+ {
+  "phase": "ramp_after_cmd_vel",
+  "tilt_end": 1.708,
+  "knee_left": 0.16530225386451133,
+  "knee_right": 0.25918929568089066
+ },
+ {
+  "phase": "post_ramp_stability",
+  "tilt_end": 1.778,
+  "knee_left": 0.17404111170994208,
+  "knee_right": 0.20643282703840987
+ }
+]
+max_tilt: 2.106 safe_stop: True
+probe rc: 0
