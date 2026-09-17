@@ -219,7 +219,7 @@ def test_policy_controller_is_cataloged_in_the_registry():
     assert entry["status"] == "integrated"
     assert entry["implementation"]["package"] == "robot_lab_adapter"
     assert entry["input_contract"]["required_topics"] == [
-        "/joint_states", "/bhl/imu", "/cmd_vel"]
+        "/joint_states", "/imu/out", "/cmd_vel"]
     # Command rate honest to the upstream policy_dt = 0.04 s.
     assert entry["parameters"]["command_rate_hz"] == 25.0
 

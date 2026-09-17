@@ -7,7 +7,8 @@ A thin ROS2 wrapper around the pure-logic policy adapter
   velocities (position targets are published either way; velocities feed the
   policy observation and are zeros until the first JointState with velocities
   arrives).
-- Subscribes to ``/bhl/imu`` (sensor_msgs/Imu) for the body quaternion used
+- Subscribes to ``/imu/out`` (sensor_msgs/Imu, the topic the Gazebo bridge
+  publishes) for the body quaternion used
   in the observation (projected gravity) and the latched tilt safety monitor.
 - Subscribes to ``cmd_vel`` (geometry_msgs/Twist) for the base-velocity
   command; the policy clamps it to the training command ranges.
@@ -78,7 +79,7 @@ class HumanoidPolicyController(Node):
         super().__init__("humanoid_policy_controller")
         self.declare_parameter("command_topic", "/bhl_standing_controller/commands")
         self.declare_parameter("joint_states_topic", "/joint_states")
-        self.declare_parameter("imu_topic", "/bhl/imu")
+        self.declare_parameter("imu_topic", "/imu/out")
         self.declare_parameter("cmd_vel_topic", "/cmd_vel")
         self.declare_parameter("policy_name", "policy_humanoid")
         self.declare_parameter("command_rate_hz", POLICY_RATE_HZ)

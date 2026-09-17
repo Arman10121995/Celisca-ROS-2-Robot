@@ -899,7 +899,7 @@
   input_contract:
     required_topics:
     - /joint_states
-    - /bhl/imu
+    - /imu/out
     - /cmd_vel
   output_contract:
     provided_topics:

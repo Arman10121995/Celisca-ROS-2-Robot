@@ -58,6 +58,18 @@ robots:
     controllers:
       - joint_state_broadcaster
       - bhl_standing_controller
+    # Onboard sensors (R5.3, 2026-09-17): the trunk IMU the description
+    # publishes on the gz topic 'imu', bridged by gazebo.launch.py to
+    # /imu/out. The adapter nodes' imu_topic defaults and the policy
+    # algorithm's required_topics both say /imu/out - a node defaulting to a
+    # topic with no publisher latches SAFE_STOP from the tilt=pi fallback on
+    # its first cycle (found in live traces before the spawn).
+    sensors:
+      - type: imu
+        name: trunk_imu
+        frame: imu_2
+        topic: /imu/out
+        message_type: sensor_msgs/msg/Imu
     # Spawn pose (R5.3, 2026-09-17): at the URDF rest pose the foot-sole
     # bottom is +0.076 m above the base origin (ankle_roll frame origin
     # z=0.090; sole box half-height 0.020 with collision origin z=0.006).

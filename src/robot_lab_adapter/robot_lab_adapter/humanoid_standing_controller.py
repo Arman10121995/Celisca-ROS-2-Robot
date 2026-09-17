@@ -5,7 +5,8 @@ A thin ROS2 wrapper around the pure-logic closed-loop balance core
 
 - Subscribes to ``/joint_states`` (best-effort) for measured positions and
   velocities (the D term of the effort loop needs the velocities).
-- Subscribes to ``/bhl/imu`` (sensor_msgs/Imu) for the body attitude used by
+- Subscribes to ``/imu/out`` (sensor_msgs/Imu, the topic the Gazebo bridge
+  publishes) for the body attitude used by
   the ankle-strategy balance and the latched safety monitor.
 - Publishes a ``Float64MultiArray`` of 22 values to the
   ``bhl_standing_controller`` command topic at the declared rate. With
@@ -60,7 +61,7 @@ class HumanoidStandingController(Node):
         super().__init__("humanoid_standing_controller")
         self.declare_parameter("command_topic", "/bhl_standing_controller/commands")
         self.declare_parameter("joint_states_topic", "/joint_states")
-        self.declare_parameter("imu_topic", "/bhl/imu")
+        self.declare_parameter("imu_topic", "/imu/out")
         self.declare_parameter("command_interface", "effort")
         self.declare_parameter("command_rate_hz", BALANCE_RATE_HZ)
 

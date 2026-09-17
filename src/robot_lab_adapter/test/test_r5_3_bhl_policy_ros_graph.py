@@ -54,7 +54,7 @@ pytestmark = pytest.mark.integration
 
 COMMAND_TOPIC = "/bhl_standing_controller/commands"
 JOINT_STATES_TOPIC = "/joint_states"
-IMU_TOPIC = "/bhl/imu"
+IMU_TOPIC = "/imu/out"
 CMD_VEL_TOPIC = "/cmd_vel"
 
 
