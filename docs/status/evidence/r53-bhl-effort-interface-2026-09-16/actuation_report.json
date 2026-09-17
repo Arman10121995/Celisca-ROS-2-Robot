@@ -1,0 +1,41 @@
+{
+  "commanded_torque_nm": 8.0,
+  "phase_s": 2.5,
+  "knee_positions_rad": {
+    "before": {
+      "leg_left_knee_pitch_joint": 2.4434600588306994,
+      "leg_right_knee_pitch_joint": 2.4434600891138833
+    },
+    "after_plus": {
+      "leg_left_knee_pitch_joint": 2.4434600705544125,
+      "leg_right_knee_pitch_joint": 2.443460103034429
+    },
+    "after_minus": {
+      "leg_left_knee_pitch_joint": -4.320031508050104e-08,
+      "leg_right_knee_pitch_joint": -4.637840057763296e-08
+    }
+  },
+  "delta_plus_nm_rad": {
+    "leg_left_knee_pitch_joint": 1.1723713111422285e-08,
+    "leg_right_knee_pitch_joint": 1.392054560511724e-08
+  },
+  "delta_minus_nm_rad": {
+    "leg_left_knee_pitch_joint": -2.4434601137547274,
+    "leg_right_knee_pitch_joint": -2.4434601494128296
+  },
+  "peak_abs_velocity_rad_s": {
+    "plus": {
+      "leg_left_knee_pitch_joint": 4.686628862771158e-09,
+      "leg_right_knee_pitch_joint": 5.561928695385632e-09
+    },
+    "minus": {
+      "leg_left_knee_pitch_joint": 15.00000001879918,
+      "leg_right_knee_pitch_joint": 15.000000021378145
+    }
+  },
+  "checks": {
+    "effort_moves_the_knees": true,
+    "opposite_torque_reverses_motion": true
+  },
+  "pass": true
+}

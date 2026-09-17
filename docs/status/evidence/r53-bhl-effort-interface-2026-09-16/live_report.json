@@ -1,0 +1,23 @@
+{
+  "imu_topic": "/imu/out",
+  "window_s": 12.0,
+  "joint_states_hz": 110.306,
+  "imu_hz": 99.838,
+  "command_hz": 50.005,
+  "command_messages": 601,
+  "samples": {
+    "joint_states": 1324,
+    "imu": 1198
+  },
+  "tilt_max_rad": 3.1416,
+  "max_abs_command": 0.8,
+  "max_abs_joint_position_rad": 2.4435,
+  "checks": {
+    "command_topic_live": true,
+    "joint_states_live": true,
+    "imu_live": true,
+    "command_is_effort_not_position": false,
+    "no_fall": false
+  },
+  "pass": false
+}
