@@ -530,7 +530,13 @@ def _build_simulation_actions(context):
         model_path = _package_file(robot_package, robot_xacro)
 
     gazebo_config = map_config.get("gazebo", {})
-    spawn_config = map_config.get("spawn", {})
+    # Robot-level spawn overrides win over map defaults. Needed for robots
+    # whose base frame does not sit at sole level (e.g. the R5.3 BHL biped,
+    # whose foot soles are +0.076 m above the base origin at the URDF rest
+    # pose): spawning it at the map default drops the model onto the ground
+    # and the slam topples it before the balance loop can react.
+    spawn_config = dict(map_config.get("spawn", {}))
+    spawn_config.update(robot_config.get("spawn", {}))
     initial_pose_config = map_config.get("initial_pose", {})
 
     world_package = _config_value(context, "world_package", gazebo_config.get("world_package", "robot_lab_maps"))

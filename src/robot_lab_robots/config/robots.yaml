@@ -58,6 +58,19 @@ robots:
     controllers:
       - joint_state_broadcaster
       - bhl_standing_controller
+    # Spawn pose (R5.3, 2026-09-17): at the URDF rest pose the foot-sole
+    # bottom is +0.076 m above the base origin (ankle_roll frame origin
+    # z=0.090; sole box half-height 0.020 with collision origin z=0.006).
+    # The empty map default (z=0.1) therefore drops the soles ~10 cm onto
+    # the ground; the slam topples the biped within ~0.2 s of physics start
+    # (tilt 0.000 until the first contact, then through the 0.70 rad fall
+    # threshold before the balance loop can act - verified in live traces).
+    # z=0.078 places the soles at ground level with a 2 mm settling margin.
+    spawn:
+      x: "0.0"
+      y: "0.0"
+      z: "0.078"
+      yaw: "0.0"
 
   unitree_a1:
     package: robot_lab_robots

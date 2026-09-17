@@ -12,10 +12,15 @@ Honest scope (R5.3 acceptance bar):
   arm commands to produce a righting moment. ``update(body=None)`` returns
   the nominal pose only as a safe open-loop fallback; with a measured body
   state the output differs, which is the balance signal.
-- **Ankle strategy**: body roll produces a differential ankle-roll command on
-  the stance feet (left/right opposite signs) plus hip-roll compensation,
-  shifting the ground-reaction line under the centre of mass. Body pitch
-  produces a differential ankle-pitch lean.
+- **Ankle strategy**: the BHL ankles are a *parallel* mechanism (FK at the
+  rest pose: both ankle-pitch axes on +Y, both ankle-roll axes on +X), so
+  body roll commands a SAME-SIGN ankle-roll correction on both legs and
+  body pitch a same-sign ankle-pitch lean; a differential roll command
+  would cancel through the pelvis and produce no net righting moment.
+  Hip roll adds a same-sign lateral CoM shift. The ankle gains are sized
+  so the combined restoring stiffness (2 * Kp * K = 168 N.m/rad) exceeds
+  the gravity topple stiffness (m*g*h ~= 108 N.m/rad) with a 1.5x margin
+  - a stable equilibrium, not a slowly diverging one.
 - **Arm reaction**: arms swing (shoulder-pitch) out of phase with roll to
   add a corrective inertial moment.
 - The balance target is converted to an estimated joint effort through a
@@ -172,16 +177,28 @@ NOMINAL_STANDING_POSE: Dict[str, float] = {
 STANCE_PD_LEGS: Tuple[float, float] = (120.0, 4.0)   # (Kp, Kd) N.m/rad
 STANCE_PD_ARMS: Tuple[float, float] = (60.0, 2.0)    # (Kp, Kd) N.m/rad
 
-#: Ankle-roll modulation per rad of body roll (left/right opposite signs).
-ANKLE_BALANCE_K_ROLL = 0.15
-#: Hip-roll modulation per rad of body roll.
+#: Ankle-roll modulation per rad of body roll (both legs, SAME sign - the
+#: BHL ankle-roll axes are parallel (+X/+X), so differential commands
+#: cancel and produce no net roll moment; see balance_targets).
+#: 0.7 -> combined restoring stiffness 2*120*0.7 = 168 N.m/rad, 1.5x the
+#: gravity topple stiffness (TOPPLE_STIFFNESS_NM_PER_RAD).
+ANKLE_BALANCE_K_ROLL = 0.7
+#: Hip-roll modulation per rad of body roll (same-sign lateral CoM shift).
 HIP_BALANCE_K_ROLL = 0.08
 #: Ankle-pitch modulation per rad of body pitch (both legs, same sign).
-ANKLE_BALANCE_K_PITCH = 0.12
+ANKLE_BALANCE_K_PITCH = 0.7
 #: Shoulder-pitch modulation per rad of body roll (arm reaction).
 ARM_BALANCE_K = 0.25
 #: Knee flex modulation per rad of combined tilt (softens stance under load).
 KNEE_BALANCE_K = 0.30
+
+# Gravity topple stiffness about the foot edge, estimated from the vendored
+# URDF: total mass 16.33 kg, CoM height ~0.675 m (base inertial origin, the
+# dominant upper-body mass). The ankle strategy must exceed this to make the
+# standing equilibrium stable; pinned by TestAnkleStrategy regression tests.
+TOPPLE_STIFFNESS_NM_PER_RAD = 16.33 * 9.81 * 0.675  # ~= 108 N.m/rad
+#: Required safety margin of the ankle restoring stiffness over gravity.
+ANKLE_STIFFNESS_MARGIN = 1.5
 
 # ----------------------------------------------------------------------
 # Safety thresholds (predeclared)
@@ -388,13 +405,31 @@ def balance_targets(
     pitch = body.pitch_rad
     tilt_mag = body.max_tilt_rad
 
-    # Roll -> differential ankle roll (left/right opposite signs).
+    # R5.3 (2026-09-17, live-validated + FK-checked): the BHL ankles are a
+    # PARALLEL mechanism - forward kinematics at the rest pose puts BOTH
+    # ankle-pitch axes on +Y and BOTH ankle-roll axes on +X. A differential
+    # ankle-roll command (the earlier draft) therefore produces *zero net
+    # roll moment*: the two internal torques cancel through the pelvis and
+    # the feet are twisted in opposite directions without righting the body.
+    # Both ankle pairs must be commanded same-sign.
+    #
+    # Gain justification: gravity topple stiffness about the foot edge is
+    # m*g*h ~= 16.33 kg * 9.81 * 0.675 m ~= 108 N.m/rad (total mass from the
+    # URDF, CoM height from the base inertial origin). With joint Kp = 120
+    # N.m/rad on each ankle and both legs contributing, K = 0.7 gives a
+    # combined restoring stiffness of 2 * 120 * 0.7 = 168 N.m/rad - a 1.5x
+    # margin over gravity, so small perturbations DECAY instead of growing
+    # (the earlier K = 0.12/0.15 gave ~29 N.m/rad: unstable by design, which
+    # is exactly the observed divergence). Per-ankle saturation then occurs
+    # at tilt 20 / (120 * 0.7) ~= 0.24 rad - inside the warn band, where the
+    # safety monitor takes over. TOPPLE_STIFFNESS_NM_PER_RAD below pins the
+    # estimate for a regression test.
     targets["leg_left_ankle_roll_joint"] += ANKLE_BALANCE_K_ROLL * roll
-    targets["leg_right_ankle_roll_joint"] -= ANKLE_BALANCE_K_ROLL * roll
-    # Hip roll assists the ankle strategy.
+    targets["leg_right_ankle_roll_joint"] += ANKLE_BALANCE_K_ROLL * roll
+    # Hip roll assists with a lateral CoM shift (same-sign pelvis lean).
     targets["leg_left_hip_roll_joint"] += HIP_BALANCE_K_ROLL * roll
-    targets["leg_right_hip_roll_joint"] -= HIP_BALANCE_K_ROLL * roll
-    # Pitch -> ankle pitch lean (same sign on both feet).
+    targets["leg_right_hip_roll_joint"] += HIP_BALANCE_K_ROLL * roll
+    # Pitch -> ankle pitch lean (same sign on both feet, parallel axes).
     targets["leg_left_ankle_pitch_joint"] += ANKLE_BALANCE_K_PITCH * pitch
     targets["leg_right_ankle_pitch_joint"] += ANKLE_BALANCE_K_PITCH * pitch
     # Arm reaction: arms swing against the roll direction.

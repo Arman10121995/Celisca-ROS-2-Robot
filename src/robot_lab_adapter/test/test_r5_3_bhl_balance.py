@@ -7,9 +7,13 @@ Covers the R5.3 acceptance bar, honestly:
   the description does not provide.
 - A fixed standing pose is NOT balance: when the IMU body state reports a
   non-zero roll or pitch, the balance targets strictly change.
-- Ankle strategy: body roll yields a differential ankle-roll command
-  (opposite signs on left/right); body pitch yields a same-sign ankle-pitch
-  lean; arms swing out of phase with roll (arm reaction).
+- Ankle strategy: the BHL ankles are a PARALLEL mechanism (both ankle-pitch
+  axes +Y, both ankle-roll axes +X at the rest pose), so body roll yields a
+  SAME-SIGN ankle-roll command on both legs and body pitch a same-sign
+  ankle-pitch lean; hip roll adds a same-sign lateral CoM shift; arms swing
+  out of phase with roll (arm reaction). The ankle gains give a combined
+  restoring stiffness (2*Kp*K = 168 N.m/rad) exceeding the gravity topple
+  stiffness (m*g*h ~= 108 N.m/rad) with a 1.5x margin.
 - Stance PD hold: a joint with no position measurement is *not driven*
   (zero effort), never assumed at target; all efforts clamp to the URDF
   20 N.m limit.
@@ -34,6 +38,7 @@ if str(_adapter_pkg) not in sys.path:
 from robot_lab_adapter.bhl_balance import (  # noqa: E402
     ANKLE_BALANCE_K_PITCH,
     ANKLE_BALANCE_K_ROLL,
+    ANKLE_STIFFNESS_MARGIN,
     ARM_BALANCE_K,
     BASE_VEL_LIMITS_PLACEHOLDER,
     BHL_ARM_JOINTS,
@@ -41,6 +46,7 @@ from robot_lab_adapter.bhl_balance import (  # noqa: E402
     BHL_LEG_JOINTS,
     BHL_LEGS,
     EFFORT_LIMIT,
+    HIP_BALANCE_K_ROLL,
     KNEE_BALANCE_K,
     EFFORT_SATURATION_CYCLES,
     POSITION_LIMITS,
@@ -50,6 +56,7 @@ from robot_lab_adapter.bhl_balance import (  # noqa: E402
     STANCE_PD_LEGS,
     TILT_FALL_RAD,
     TILT_WARN_RAD,
+    TOPPLE_STIFFNESS_NM_PER_RAD,
     BodyState,
     BhlBalanceController,
     BhlControlCycle,
@@ -186,14 +193,42 @@ class TestBalanceLaw:
 # R3: Ankle strategy
 # ----------------------------------------------------------------------
 class TestAnkleStrategy:
-    def test_ankle_roll_differential_opp_signs(self, nominal):
+    def test_ankle_roll_same_sign_parallel_axes(self, nominal):
+        # FK at the rest pose: both ankle-roll axes are +X (parallel
+        # mechanism). A differential command would cancel through the
+        # pelvis and produce zero net roll moment, so both ankles must
+        # receive the SAME-sign correction.
         body = BodyState(roll_rad=0.2, pitch_rad=0.0)
         targets = balance_targets(nominal, body)
         left_delta = targets["leg_left_ankle_roll_joint"] - nominal["leg_left_ankle_roll_joint"]
         right_delta = targets["leg_right_ankle_roll_joint"] - nominal["leg_right_ankle_roll_joint"]
         assert left_delta == pytest.approx(ANKLE_BALANCE_K_ROLL * 0.2, abs=1e-9)
-        assert right_delta == pytest.approx(-ANKLE_BALANCE_K_ROLL * 0.2, abs=1e-9)
-        assert (left_delta > 0) and (right_delta < 0)
+        assert right_delta == pytest.approx(ANKLE_BALANCE_K_ROLL * 0.2, abs=1e-9)
+        assert (left_delta > 0) and (right_delta > 0)
+
+    def test_hip_roll_same_sign_co_m_shift(self, nominal):
+        body = BodyState(roll_rad=0.2, pitch_rad=0.0)
+        targets = balance_targets(nominal, body)
+        left_delta = targets["leg_left_hip_roll_joint"] - nominal["leg_left_hip_roll_joint"]
+        right_delta = targets["leg_right_hip_roll_joint"] - nominal["leg_right_hip_roll_joint"]
+        assert left_delta == pytest.approx(HIP_BALANCE_K_ROLL * 0.2, abs=1e-9)
+        assert right_delta == pytest.approx(HIP_BALANCE_K_ROLL * 0.2, abs=1e-9)
+
+    def test_ankle_stiffness_beats_gravity_topple(self):
+        # Regression anchor for the 2026-09-17 live topple: the combined
+        # ankle restoring stiffness (both legs, joint Kp from the stance
+        # hold) must exceed the gravity topple stiffness m*g*h with the
+        # declared margin, or the standing equilibrium is unstable and the
+        # biped diverges exactly as observed live.
+        ankle_stiffness = (
+            2 * STANCE_PD_LEGS[0] * ANKLE_BALANCE_K_PITCH
+        )
+        assert ankle_stiffness >= (
+            ANKLE_STIFFNESS_MARGIN * TOPPLE_STIFFNESS_NM_PER_RAD
+        )
+        # And the roll channel must match (same K, same axes geometry).
+        roll_stiffness = 2 * STANCE_PD_LEGS[0] * ANKLE_BALANCE_K_ROLL
+        assert roll_stiffness == pytest.approx(ankle_stiffness)
 
     def test_ankle_roll_scales_with_tilt(self, nominal):
         big = balance_targets(nominal, BodyState(roll_rad=0.2, pitch_rad=0.0))
@@ -211,12 +246,14 @@ class TestAnkleStrategy:
         assert right_delta == pytest.approx(ANKLE_BALANCE_K_PITCH * 0.15, abs=1e-9)
 
     def test_hip_roll_helps_ankle_roll(self, nominal):
+        # Same-sign lateral CoM shift (parallel hip geometry, like the
+        # ankles - differential would only rotate the pelvis).
         body = BodyState(roll_rad=0.2, pitch_rad=0.0)
         targets = balance_targets(nominal, body)
         left_hip = targets["leg_left_hip_roll_joint"] - nominal["leg_left_hip_roll_joint"]
         right_hip = targets["leg_right_hip_roll_joint"] - nominal["leg_right_hip_roll_joint"]
-        assert left_hip == pytest.approx(0.08 * 0.2, abs=1e-9)
-        assert right_hip == pytest.approx(-0.08 * 0.2, abs=1e-9)
+        assert left_hip == pytest.approx(HIP_BALANCE_K_ROLL * 0.2, abs=1e-9)
+        assert right_hip == pytest.approx(HIP_BALANCE_K_ROLL * 0.2, abs=1e-9)
 
 
 # ----------------------------------------------------------------------
