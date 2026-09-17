@@ -300,6 +300,51 @@ class TestNoDriveOnMissingData:
         assert STANCE_PD_LEGS[0] > STANCE_PD_ARMS[0]
 
 
+class TestPdGainOverrides:
+    """The effort-interface nodes close the PD loop themselves (the controller
+    is a pure effort forwarder with no gains), so ``pd_effort_command`` must
+    let them select gains while defaulting to the balance law's convention."""
+
+    def test_default_gains_equal_explicit_module_constants(self, nominal):
+        positions = {j: v - 0.05 for j, v in _full_positions().items()}
+        default = pd_effort_command(nominal, positions)
+        explicit = pd_effort_command(
+            nominal, positions, None, STANCE_PD_LEGS, STANCE_PD_ARMS
+        )
+        for name in BHL_JOINT_NAMES:
+            assert default[name] == pytest.approx(explicit[name])
+        # Guard against a vacuous all-zero comparison.
+        assert any(abs(default[j]) > 1e-9 for j in BHL_JOINT_NAMES)
+
+    def test_larger_kp_asks_for_more_effort(self):
+        target = {j: 0.0 for j in BHL_JOINT_NAMES}
+        positions = {j: 0.0 for j in BHL_JOINT_NAMES}
+        target["leg_left_knee_pitch_joint"] = 0.2
+        soft = pd_effort_command(target, positions, None, (10.0, 2.0), (10.0, 2.0))
+        stiff = pd_effort_command(target, positions, None, (120.0, 4.0), (120.0, 4.0))
+        assert 0.0 < soft["leg_left_knee_pitch_joint"]
+        assert soft["leg_left_knee_pitch_joint"] < stiff["leg_left_knee_pitch_joint"]
+
+    def test_damping_term_opposes_velocity(self):
+        target = {j: 0.0 for j in BHL_JOINT_NAMES}
+        positions = {j: 0.0 for j in BHL_JOINT_NAMES}
+        velocities = {j: 0.0 for j in BHL_JOINT_NAMES}
+        velocities["leg_left_knee_pitch_joint"] = 1.0
+        efforts = pd_effort_command(
+            target, positions, velocities, (10.0, 2.0), (10.0, 2.0)
+        )
+        assert efforts["leg_left_knee_pitch_joint"] == pytest.approx(-2.0)
+
+    def test_overridden_gains_still_clamp_to_effort_limit(self):
+        target = {j: 0.0 for j in BHL_JOINT_NAMES}
+        positions = {j: 0.0 for j in BHL_JOINT_NAMES}
+        target["leg_left_knee_pitch_joint"] = 1.5  # large error
+        efforts = pd_effort_command(
+            target, positions, None, (1000.0, 0.0), (1000.0, 0.0)
+        )
+        assert efforts["leg_left_knee_pitch_joint"] == pytest.approx(EFFORT_LIMIT)
+
+
 # ----------------------------------------------------------------------
 # R6: Safety monitor
 # ----------------------------------------------------------------------

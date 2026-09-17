@@ -3,13 +3,18 @@
 A thin ROS2 wrapper around the pure-logic closed-loop balance core
 (:mod:`robot_lab_adapter.bhl_balance`). This node:
 
-- Subscribes to ``/joint_states`` (best-effort) for measured positions.
+- Subscribes to ``/joint_states`` (best-effort) for measured positions and
+  velocities (the D term of the effort loop needs the velocities).
 - Subscribes to ``/bhl/imu`` (sensor_msgs/Imu) for the body attitude used by
   the ankle-strategy balance and the latched safety monitor.
-- Publishes a ``Float64MultiArray`` of 22 position targets to the
-  ``bhl_standing_controller`` command topic at the declared rate. That
-  controller is an ``effort_controllers/JointGroupEffortController``
-  (kp=10.0, kd=2.0) which converts these position targets into joint efforts
+- Publishes a ``Float64MultiArray`` of 22 values to the
+  ``bhl_standing_controller`` command topic at the declared rate. With
+  ``command_interface:=effort`` (the default, matching the description's
+  effort command interface) those values are the joint-space PD efforts
+  ``tau = Kp*(q* - q) + Kd*(0 - qdot)``, clamped to +/-20 N.m, that the
+  ``effort_controllers/JointGroupEffortController`` forwards to the joints --
+  the loop is closed *here*, not inside the controller (which forwards).
+  ``command_interface:=position`` publishes the raw stance targets instead
   (see ``r53-bhl-effort-interface-2026-09-16``).
 
 The balance law itself is tested without a live ROS graph (see
@@ -56,15 +61,23 @@ class HumanoidStandingController(Node):
         self.declare_parameter("command_topic", "/bhl_standing_controller/commands")
         self.declare_parameter("joint_states_topic", "/joint_states")
         self.declare_parameter("imu_topic", "/bhl/imu")
+        self.declare_parameter("command_interface", "effort")
         self.declare_parameter("command_rate_hz", BALANCE_RATE_HZ)
 
         command_topic = self.get_parameter("command_topic").value
         joint_states_topic = self.get_parameter("joint_states_topic").value
         imu_topic = self.get_parameter("imu_topic").value
         rate = float(self.get_parameter("command_rate_hz").value)
+        interface = str(self.get_parameter("command_interface").value)
+        if interface not in ("effort", "position"):
+            self.get_logger().warning(
+                f"unknown command_interface '{interface}'; falling back to effort")
+            interface = "effort"
+        self._interface = interface
 
         self._controller = BhlBalanceController()
         self._measured_positions: dict = {}
+        self._measured_velocities: dict = {}
 
         sensor_qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.BEST_EFFORT)
         self._joint_sub = self.create_subscription(
@@ -83,23 +96,26 @@ class HumanoidStandingController(Node):
         self.get_logger().info(
             f"HumanoidStandingController: {joint_states_topic} + {imu_topic} "
             f"-> {command_topic} at {rate} Hz over {len(BHL_JOINT_NAMES)} joints "
-            f"(closed-loop balance)"
+            f"({interface} interface, closed-loop balance)"
         )
 
     def _on_joint_state(self, msg: JointState) -> None:
-        """Cache the latest measured joint positions keyed by name."""
+        """Cache the latest measured joint positions and velocities by name."""
         self._measured_positions = dict(zip(msg.name, msg.position))
+        if msg.velocity:
+            self._measured_velocities = dict(zip(msg.name, msg.velocity))
 
     def _on_imu(self, msg: Imu) -> None:
         """Cache the latest body attitude from the IMU."""
         self._body = quaternion_to_body_state(msg)
 
     def _on_timer(self) -> None:
-        """One balance cycle: targets -> Float64MultiArray."""
+        """One balance cycle: body state -> Float64MultiArray command."""
         dt = 1.0 / float(self.get_parameter("command_rate_hz").value)
         cycle = self._controller.update(
             dt=dt,
             measured_positions=self._measured_positions,
+            measured_velocities=self._measured_velocities,
             body=self._body,
         )
         for issue in cycle.issues:
@@ -107,8 +123,15 @@ class HumanoidStandingController(Node):
                 self.get_logger().warn(issue)
             elif "safe_stop" in issue:
                 self.get_logger().warning(f"SAFE_STOP: {issue}")
+        if self._interface == "effort":
+            # The balance core already computes the clamped PD efforts
+            # (zero-drive for unmeasured joints, zero on SAFE_STOP); the effort
+            # controller forwards them unchanged.
+            values = [cycle.efforts[j] for j in BHL_JOINT_NAMES]
+        else:
+            values = [cycle.position_targets[j] for j in BHL_JOINT_NAMES]
         msg = Float64MultiArray()
-        msg.data = [cycle.position_targets[j] for j in BHL_JOINT_NAMES]
+        msg.data = values
         self._command_pub.publish(msg)
 
 

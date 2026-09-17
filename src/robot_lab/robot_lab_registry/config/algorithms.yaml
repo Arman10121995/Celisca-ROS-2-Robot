@@ -845,10 +845,11 @@
 - id: humanoid_standing_controller
   version: 1.0.0
   name: Humanoid Standing Controller
-  description: Nominal standing-posture position target interface for humanoid robots;
-    publishes Float64MultiArray position targets that the standing controller
-    tracks with a PD effort loop (effort_controllers/JointGroupEffortController,
-    kp=10.0, kd=2.0) under the R5.3 effort-interface control path (P3.4)
+  description: Nominal standing-posture target interface for humanoid robots;
+    publishes Float64MultiArray position targets or, on the default effort
+    interface, the joint-space PD efforts (tau = Kp*(q* - q) + Kd*(0 - qdot),
+    clamped to +/-20 N.m) that the effort_controllers/JointGroupEffortController
+    forwards to the joints under the R5.3 effort-interface control path (P3.4)
   status: integrated
   category: control
   family: joint_position
@@ -879,13 +880,15 @@
   description: >-
     ONNX velocity-policy locomotion controller for the Berkeley Humanoid Lite;
     runs the vendored upstream checkpoints (75-dim feed-forward observation over
-    onboard IMU + joint states, 25 Hz) and publishes Float64MultiArray position
-    targets tracked by the standing controller's PD effort loop
-    (effort_controllers/JointGroupEffortController, kp=10.0, kd=2.0). Declared
-    honesty limits - command tracking open-loop is measurement-sensitive near the
-    drift bound (see R5.3 evidence); the effort path is wired and unit-verified
-    but live dispatch-path validation is still pending; joint velocities default
-    to zeros until JointState carries them.
+    onboard IMU + joint states, 25 Hz) and publishes Float64MultiArray values
+    that an effort_controllers/JointGroupEffortController forwards to the
+    joints: on the default effort interface the node converts its position
+    targets into joint-space PD efforts (tau = Kp*(q* - q) + Kd*(0 - qdot),
+    clamped to +/-20 N.m), because that controller type has no control law of
+    its own. Declared honesty limits - command tracking open-loop is
+    measurement-sensitive near the drift bound (see R5.3 evidence); the effort
+    path is wired and unit-verified but live dispatch-path validation is still
+    pending; joint velocities default to zeros until JointState carries them.
   status: integrated
   category: control
   family: learned_policy

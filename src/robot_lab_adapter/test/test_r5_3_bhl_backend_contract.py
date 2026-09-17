@@ -82,11 +82,16 @@ def test_backend_is_effort_joint_group_controller():
         "effort_controllers/JointGroupEffortController")
 
 
-def test_backend_declares_policy_pd_gains():
+def test_backend_declares_no_control_law_gains():
+    """JointGroupEffortController forwards efforts: it has no kp/kd (its base
+    class declares only ``joints``/``interface_name``). Gains in this file
+    would be silently ignored, so the config must not carry them - the PD law
+    lives on the publishing nodes instead."""
     config = _load_yaml(_CONTROLLERS_YAML)
     params = config[CONTROLLER_NAME]["ros__parameters"]
-    assert params["kp"] == 10.0
-    assert params["kd"] == 2.0
+    assert "kp" not in params
+    assert "kd" not in params
+    assert "interface_name" not in params
 
 
 def test_backend_commands_the_canonical_22_joints_in_order():

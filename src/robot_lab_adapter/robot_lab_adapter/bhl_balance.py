@@ -402,20 +402,28 @@ def pd_effort_command(
     targets: Dict[str, float],
     positions: Dict[str, float],
     velocities: Optional[Dict[str, float]] = None,
+    leg_gains: Optional[Tuple[float, float]] = None,
+    arm_gains: Optional[Tuple[float, float]] = None,
 ) -> Dict[str, float]:
     """Estimate joint-space PD efforts toward *targets* from measured state.
 
     Mirrors the R5.2 stance PD law: tau = Kp*(q* - q) + Kd*(0 - qdot), clamped
     per joint. A joint missing from ``positions`` receives zero effort (no
     measurement -> no drive).
+
+    ``leg_gains`` / ``arm_gains`` override the default ``(Kp, Kd)`` pairs so a
+    caller that drives the joints through an effort interface (e.g. the policy
+    node) can select its own gains without changing the balance law.
     """
     velocities = velocities or {}
+    leg = STANCE_PD_LEGS if leg_gains is None else leg_gains
+    arm = STANCE_PD_ARMS if arm_gains is None else arm_gains
     command: Dict[str, float] = {}
     for name in BHL_JOINT_NAMES:
         if name not in positions:
             command[name] = 0.0
             continue
-        kp, kd = STANCE_PD_LEGS if name in BHL_LEG_JOINTS else STANCE_PD_ARMS
+        kp, kd = leg if name in BHL_LEG_JOINTS else arm
         tau = kp * (targets[name] - positions[name]) + kd * (0.0 - velocities.get(name, 0.0))
         command[name] = clamp_effort(name, tau)
     return command

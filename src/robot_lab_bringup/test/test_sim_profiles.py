@@ -109,11 +109,12 @@ def test_bhl_controller_config_declares_the_verified_controllers():
     assert len(joints) == 22, (
         f"bhl_standing_controller: expected the 22 leg/arm joints, got {len(joints)}"
     )
-    assert (
-        config["bhl_standing_controller"]["ros__parameters"]["kp"] == 10.0
-    )
-    assert (
-        config["bhl_standing_controller"]["ros__parameters"]["kd"] == 2.0
+    # JointGroupEffortController is a pure effort forwarder: declaring kp/kd
+    # here would be silently ignored, so the config must not carry dead gains.
+    params = config["bhl_standing_controller"]["ros__parameters"]
+    assert "kp" not in params and "kd" not in params, (
+        "bhl_standing_controller is an effort forwarder with no control law; "
+        "kp/kd belong on the publishing nodes, not in this file"
     )
 
 

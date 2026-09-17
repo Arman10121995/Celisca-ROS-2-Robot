@@ -3,12 +3,12 @@
 Status: **wiring + contract complete and unit-verified; live dispatch-path
 validation of the effort path is pending** (see "Open item" below).
 
-Switches the Berkeley Humanoid Lite standing controller from a **position
-command** path (`forward_command_controller/ForwardCommandController` into the
+Switches the Berkeley Humanoid Lite joint drive from a **position command**
+path (`forward_command_controller/ForwardCommandController` into the
 ign_ros2_control Kirk position servo) to an **effort command** path
-(`effort_controllers/JointGroupEffortController`, kp=10.0, kd=2.0) so the
-policy's 22 position targets close a PD-effort loop inside gz-sim instead of
-driving position targets into a free-floating base with no feedback path.
+(`effort_controllers/JointGroupEffortController`), and closes the PD-effort
+loop in the publishing nodes so the policy's 22 targets are tracked as torques
+rather than issued as raw position commands into a free-floating base.
 
 ## Why this change
 
@@ -58,12 +58,12 @@ not restored.)
 **`src/robot_lab_robots/berkeley_humanoid_lite/config/bhl_controllers.yaml`** —
 `bhl_standing_controller.type` changed from
 `forward_command_controller/ForwardCommandController` to
-`effort_controllers/JointGroupEffortController`, and `kp: 10.0` / `kd: 2.0`
-were added. The 22-joint list is unchanged and still equals `BHL_JOINT_NAMES`
-(12 legs, then 10 arms) — verified by
+`effort_controllers/JointGroupEffortController`. The 22-joint list is unchanged
+and still equals `BHL_JOINT_NAMES` (12 legs, then 10 arms) — verified by
 `test_backend_commands_the_canonical_22_joints_in_order`, which matters because
 `JointGroupEffortController` maps command-vector entries onto its joint list
-positionally.
+positionally. The file deliberately declares **no `kp`/`kd`**
+(`test_backend_declares_no_control_law_gains`): see the correction below.
 
 The dispatch path already loads this exact file: `bhl_ros2_control.xacro`
 points the `IgnitionROS2ControlPlugin` / `GazeboSimROS2ControlPlugin`
@@ -75,28 +75,79 @@ earlier draft created a redundant `bhl_controllers_effort.yaml` and described
 pending dispatch wiring; that file was deleted — it referenced nothing, and its
 ankle joint order differed from the canonical order.)
 
-## Why these numbers
+## Where the PD law lives (correction to the first draft)
 
-- **kp=10.0, kd=2.0** — the low end of the training-consistent band the settle
-  README cited ("kp 10–20, kd 2"). Soft enough not to amplify free-floating-base
-  wobble, non-zero so position targets close a PD loop instead of stalling.
+**`JointGroupEffortController` has no control law.** It derives from
+`forward_command_controller::ForwardCommandController` and its header states it
+"forwards the commanded efforts down to a set of joints"; the installed library
+exposes only `interface_name` as a parameter name (no `kp`, `kd`, `ki` or
+`gains`). A first draft of this evidence declared `kp: 10.0` / `kd: 2.0` on the
+controller and claimed the controller closed the PD loop — that was **wrong**,
+and worse, a silently-ignored gain would have left the policy's position values
+(rad) being written to the effort interfaces as torques (N·m).
+
+The loop is therefore closed **in the publishing nodes**, before publishing:
+
+- `humanoid_policy_controller` and `humanoid_standing_controller` gained a
+  `command_interface` parameter (`effort` by default, matching the description;
+  `position` publishes raw targets and is kept for the position marshalling
+  path).
+- On the effort interface they convert their targets with
+  `bhl_balance.pd_effort_command`: `tau = Kp*(q* - q) + Kd*(0 - qdot)`, clamped
+  to ±20 N·m, with a joint that has no measurement receiving **zero effort**
+  (never a blind drive). The standing node publishes the `efforts` the balance
+  core already computes (zero on SAFE_STOP); the policy node computes them from
+  its own targets with node parameters `kp_legs`/`kd_legs`/`kp_arms`/`kd_arms`
+  (defaults `bhl_balance.STANCE_PD_LEGS` = (120, 4) legs, `STANCE_PD_ARMS` =
+  (60, 2) arms).
+- `pd_effort_command` gained optional `leg_gains`/`arm_gains` overrides so the
+  nodes can select gains without changing the balance law (pinned by
+  `TestPdGainOverrides` in `test_r5_3_bhl_balance.py`).
+
+Gains are the repo's existing, unit-tested stance-PD convention rather than an
+invented number: the vendored policy configs (`urdf/config.json`,
+`mjcf/config.json`) declare **no** kp/kd, so the "kp 10–20, kd 2" figure in the
+settle README's option (a) was a scoping estimate, not a value read out of the
+checkpoints. The gains are node parameters precisely so they can be tuned
+during live validation.
+
 - **±20 N·m** — the same bound as the URDF and `bhl_balance.py`
-  (`EFFORT_LIMIT = 20.0 N·m`).
+  (`EFFORT_LIMIT = 20.0 N·m`), enforced by `clamp_effort` in the node.
 
-## Contract tests (unit-verified, no live graph)
+## Contract tests and results
 
 - `src/robot_lab_bringup/test/test_sim_profiles.py::
   test_bhl_controller_config_declares_the_verified_controllers` — asserts the
-  controller type is `JointGroupEffortController` with kp=10.0, kd=2.0 and 22
-  joints.
+  controller is `JointGroupEffortController` with 22 joints and that the file
+  carries no dead `kp`/`kd`.
 - `src/robot_lab_adapter/test/test_r5_3_bhl_backend_contract.py` — asserts the
-  backend is an effort controller, declares the PD gains, commands the
+  backend is an effort controller, declares no control-law gains, commands the
   canonical 22 joints in order, and that the `bhl_joint` macro declares the
   `effort` command interface plus full position/velocity/effort state.
+- `src/robot_lab_adapter/test/test_r5_3_bhl_balance.py::TestPdGainOverrides` —
+  the gain-override API the nodes use, including clamping under large gains.
+- `src/robot_lab_adapter/test/test_r5_3_bhl_policy_ros_graph.py` — live rclpy
+  graph with real ONNX inference. The four original tests run the
+  `position` interface (regression cover for target marshalling); two new tests
+  run the deployed `effort` default and assert that the pre-command hold is
+  **zero drive** (not the measured pose, proving the wire semantics changed) and
+  that driving produces finite efforts inside ±20 N·m.
 
-Both suites pass under the repo's canonical runner
-(`PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q -p no:anyio`); the fast
-tier (`scripts/test_fast.sh`) is green.
+Results (2026-09-17): `scripts/test_fast.sh` **430 passed, 1 skipped, PASS** with
+registry cross-reference validation PASS; the full adapter suite (rclpy +
+onnxruntime) **243 passed** including all 6 graph tests; integration tier
+(xacro expansion + BHL qualification) **114 passed**.
+
+## What is still NOT verified
+
+The sim has not been run live against this corrected wiring. Every claim above
+is static or process-level: the xacro expands to 22 effort interfaces (0
+position, 66 state interfaces), the plugin is installed and registers the type,
+the node tests run on a real rclpy graph, but **no gz-sim physics run has
+executed with the node publishing efforts**. Confirming that the PD-effort loop
+actually holds the biped (and tuning the gains if not) is the remaining R5.3
+item; the earlier live actuation proof applied to the position path this change
+supersedes.
 
 ## What this does NOT claim
 
@@ -112,9 +163,11 @@ tier (`scripts/test_fast.sh`) is green.
   replaced the position one, the live proof in that README no longer applies to
   the current description. A live re-run is required before claiming the effort
   path actuates.
-- **Gains are not tuned for this sim.** kp/kd come from the policy's training
-  formulation; if the live robot is unstable or sluggish, gain tuning is the
-  follow-up, not wiring.
+- **Gains are not tuned for this sim.** The nodes default to the repo's
+  stance-PD convention (legs 120/4, arms 60/2); the vendored checkpoints
+  declare no gains, so these are a starting point. If the live robot is
+  unstable or sluggish, gain tuning is the follow-up — the gains are node
+  parameters for exactly that reason.
 
 ## Open item (R5.3)
 

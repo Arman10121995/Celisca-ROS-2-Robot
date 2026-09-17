@@ -8,17 +8,21 @@ pure-logic tests cannot cover:
   ``bhl_standing_controller`` command topic (spawn-pose hold: the config
   default pose bends the legs and stepping there instantly is the startup
   transient that toppled the earlier probes — see evidence
-  ``r53-bhl-actuation-2026-09-16``). The standing controller is now an
-  ``effort_controllers/JointGroupEffortController`` with kp=10.0, kd=2.0
-  (matching the upstream BHL policy PD gains) so the policy's position targets
-  close a PD-effort loop inside gz-sim; see ``r53-bhl-effort-interface-2026-09-16``.
+  ``r53-bhl-actuation-2026-09-16``).
+- Two command interfaces are exercised. The deployed default is
+  ``command_interface:=effort``: the node converts its position targets into
+  clamped PD efforts ``tau = kp*(q* - q) + kd*(0 - qdot)`` because
+  ``effort_controllers/JointGroupEffortController`` is a pure effort forwarder
+  with no control law of its own (see ``r53-bhl-effort-interface-2026-09-16``).
+  ``command_interface:=position`` publishes the raw position targets and is
+  covered here so the position marshalling path stays regression-tested.
 - A ``cmd_vel`` ramps from the measured pose to the default pose over
   ``settle_duration_s`` (injected short in these tests), then real ONNX
-  inference takes over: 22 finite position targets at the policy rate, with
-  the joint velocities from ``JointState`` actually consumed (non-zero dq in
-  the observation path).
-- A tipped IMU latches SAFE_STOP and the controller reverts to the default
-  pose.
+  inference takes over: 22 finite targets at the policy rate, with the joint
+  velocities from ``JointState`` actually consumed (non-zero dq in the
+  observation path).
+- A tipped IMU latches SAFE_STOP; on the effort interface the node publishes
+  zero efforts (no drive), on the position interface the default pose.
 
 These tests require a sourced ROS 2 environment (rclpy) and the vendored
 checkpoints; they are marked ``integration`` and skip cleanly when either is
@@ -43,7 +47,7 @@ rclpy = pytest.importorskip("rclpy", reason="live-graph test needs a sourced ROS
 from rclpy.executors import SingleThreadedExecutor  # noqa: E402
 from rclpy.qos import QoSProfile, ReliabilityPolicy  # noqa: E402
 
-from robot_lab_adapter.bhl_balance import BHL_JOINT_NAMES  # noqa: E402
+from robot_lab_adapter.bhl_balance import BHL_JOINT_NAMES, EFFORT_LIMIT  # noqa: E402
 from robot_lab_adapter.bhl_policy import load_policy_config  # noqa: E402
 
 pytestmark = pytest.mark.integration
@@ -62,7 +66,7 @@ def policy_config():
 class GraphHarness:
     """Controller node + sensor/command stubs on one live executor."""
 
-    def __init__(self, config, settle_duration_s=0.08):
+    def __init__(self, config, settle_duration_s=0.08, command_interface="position"):
         self.config = config
         self.received = []  # (recv_time, Float64MultiArray)
 
@@ -81,7 +85,8 @@ class GraphHarness:
         # dominate these tests' spin windows; the ramp itself is covered by
         # the pure-logic StartupSettle tests.
         self.controller = HumanoidPolicyController(
-            settle_duration_s=settle_duration_s)
+            settle_duration_s=settle_duration_s,
+            command_interface=command_interface)
 
         self.helper = Node("policy_graph_test_helper")
         reliable = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE)
@@ -150,6 +155,22 @@ def graph(policy_config):
         rclpy.shutdown()
     except Exception:
         pass
+
+
+@pytest.fixture(scope="module")
+def effort_graph(policy_config):
+    """The deployed default: the node closes the PD loop and publishes efforts.
+
+    ``JointGroupEffortController`` has no kp/kd of its own, so on this interface
+    the command topic carries the torques the node computed.
+    """
+    try:
+        rclpy.init()
+    except RuntimeError:
+        pass  # already initialized (e.g. re-run in a persistent session)
+    harness = GraphHarness(policy_config, command_interface="effort")
+    yield harness
+    harness.close()
 
 
 def _targets(harness):
@@ -248,4 +269,45 @@ def test_tipped_imu_latches_safe_stop_on_the_graph(graph, policy_config):
     assert recent, "no targets published after SAFE_STOP"
     for _, msg in recent:
         assert list(msg.data) == pytest.approx(hold, abs=1e-9)
+
+
+
+# ---------------------------------------------------------------------------
+# Effort interface (the deployed default)
+# ---------------------------------------------------------------------------
+
+def test_effort_interface_holds_with_zero_drive_before_cmd_vel(effort_graph):
+    """The pre-command hold on the effort interface is *zero drive*.
+
+    The node asks for ``tau = kp*(q* - q)`` with ``q*`` == the measured pose,
+    so every published value is ~0 even though the measured joints are not.
+    On the position interface those same values would equal the measured pose
+    (proving the two interfaces really differ on the wire).
+    """
+    effort_graph.received.clear()
+    measured = {j: (0.1 if "hip_pitch" in j else 0.0) for j in BHL_JOINT_NAMES}
+    deadline = time.monotonic() + 0.4
+    while time.monotonic() < deadline:
+        effort_graph.publish_sensors(measured, {j: 0.0 for j in BHL_JOINT_NAMES})
+        effort_graph.executor.spin_once(timeout_sec=0.01)
+    assert effort_graph.received, "no command messages received on the graph"
+    for _, msg in effort_graph.received:
+        assert list(msg.data) == pytest.approx([0.0] * len(BHL_JOINT_NAMES), abs=1e-6)
+
+
+def test_effort_interface_publishes_bounded_pd_efforts(effort_graph):
+    """Once driving, the command topic carries finite, clamped torques.
+
+    This is the contract the effort controller relies on: it forwards whatever
+    it receives straight to the joints, so the node -- not the controller --
+    must keep the values inside the +/-20 N.m URDF bound.
+    """
+    effort_graph.received.clear()
+    effort_graph.publish_cmd_vel(vx=0.25)
+    effort_graph.spin_for(1.2)
+    efforts = np.asarray(_targets(effort_graph))
+    assert len(efforts) == len(BHL_JOINT_NAMES)
+    assert np.isfinite(efforts).all()
+    assert np.any(np.abs(efforts) > 1e-9), "the PD loop is not driving"
+    assert np.all(np.abs(efforts) <= EFFORT_LIMIT), "effort exceeded the URDF bound"
 
