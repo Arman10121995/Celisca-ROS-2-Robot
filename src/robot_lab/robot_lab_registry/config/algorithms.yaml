@@ -845,9 +845,10 @@
 - id: humanoid_standing_controller
   version: 1.0.0
   name: Humanoid Standing Controller
-  description: Nominal standing-posture position command interface for humanoid robots;
-    publishes Float64MultiArray position targets consumed by a position forward_command_controller
-    (P3.4)
+  description: Nominal standing-posture position target interface for humanoid robots;
+    publishes Float64MultiArray position targets that the standing controller
+    tracks with a PD effort loop (effort_controllers/JointGroupEffortController,
+    kp=10.0, kd=2.0) under the R5.3 effort-interface control path (P3.4)
   status: integrated
   category: control
   family: joint_position
@@ -879,10 +880,12 @@
     ONNX velocity-policy locomotion controller for the Berkeley Humanoid Lite;
     runs the vendored upstream checkpoints (75-dim feed-forward observation over
     onboard IMU + joint states, 25 Hz) and publishes Float64MultiArray position
-    targets consumed by a position forward_command_controller. Declared honesty
-    limits - command tracking open-loop is measurement-sensitive near the drift
-    bound (see R5.3 evidence); joint velocities default to zeros until
-    JointState carries them.
+    targets tracked by the standing controller's PD effort loop
+    (effort_controllers/JointGroupEffortController, kp=10.0, kd=2.0). Declared
+    honesty limits - command tracking open-loop is measurement-sensitive near the
+    drift bound (see R5.3 evidence); the effort path is wired and unit-verified
+    but live dispatch-path validation is still pending; joint velocities default
+    to zeros until JointState carries them.
   status: integrated
   category: control
   family: learned_policy

@@ -5,10 +5,13 @@ point) against a real rclpy graph and verifies the ROS marshalling that the
 pure-logic tests cannot cover:
 
 - Before any ``cmd_vel`` arrives the node holds the *measured* pose on the
-  ``forward_command_controller`` command topic (spawn-pose hold: the config
+  ``bhl_standing_controller`` command topic (spawn-pose hold: the config
   default pose bends the legs and stepping there instantly is the startup
   transient that toppled the earlier probes — see evidence
-  ``r53-bhl-actuation-2026-09-16``).
+  ``r53-bhl-actuation-2026-09-16``). The standing controller is now an
+  ``effort_controllers/JointGroupEffortController`` with kp=10.0, kd=2.0
+  (matching the upstream BHL policy PD gains) so the policy's position targets
+  close a PD-effort loop inside gz-sim; see ``r53-bhl-effort-interface-2026-09-16``.
 - A ``cmd_vel`` ramps from the measured pose to the default pose over
   ``settle_duration_s`` (injected short in these tests), then real ONNX
   inference takes over: 22 finite position targets at the policy rate, with

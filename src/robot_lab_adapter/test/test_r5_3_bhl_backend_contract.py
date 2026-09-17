@@ -5,8 +5,10 @@ launchable and consumable through the platform's normal bringup path:
 
 - Backend: ``bhl_controllers.yaml`` commands the same 22 joints in the same
   canonical order as ``BHL_JOINT_NAMES`` (the order both adapter nodes publish
-  ``Float64MultiArray`` data in), through a position
-  ``forward_command_controller``.
+  ``Float64MultiArray`` data in), through an
+  ``effort_controllers/JointGroupEffortController`` (kp=10.0, kd=2.0) that
+  closes a PD-effort loop on the policy's position targets
+  (see ``r53-bhl-effort-interface-2026-09-16``).
 - Backend velocity reporting: ``bhl_ros2_control.xacro`` declares position +
   velocity state interfaces on every commanded joint, so the
   ``joint_state_broadcaster`` can report the joint velocities the policy
@@ -73,17 +75,27 @@ def _load_yaml(path):
 # Backend: bhl_controllers.yaml
 # ----------------------------------------------------------------------------
 
-def test_backend_is_position_forward_command_controller():
+def test_backend_is_effort_joint_group_controller():
     config = _load_yaml(_CONTROLLERS_YAML)
     manager = config["controller_manager"]["ros__parameters"]
     assert manager[CONTROLLER_NAME]["type"] == (
-        "forward_command_controller/ForwardCommandController")
+        "effort_controllers/JointGroupEffortController")
+
+
+def test_backend_declares_policy_pd_gains():
+    config = _load_yaml(_CONTROLLERS_YAML)
+    params = config[CONTROLLER_NAME]["ros__parameters"]
+    assert params["kp"] == 10.0
+    assert params["kd"] == 2.0
 
 
 def test_backend_commands_the_canonical_22_joints_in_order():
+    """The controller's joint list must equal the adapter's canonical order:
+    both adapter nodes publish Float64MultiArray data in BHL_JOINT_NAMES order,
+    and JointGroupEffortController maps command-vector entries onto its joint
+    list positionally, so a reorder would silently drive the wrong joints."""
     config = _load_yaml(_CONTROLLERS_YAML)
     params = config[CONTROLLER_NAME]["ros__parameters"]
-    assert params["interface_name"] == "position"
     assert tuple(params["joints"]) == tuple(BHL_JOINT_NAMES)
 
 
@@ -98,7 +110,7 @@ def _ros2_control_joint_declarations():
     for match in re.finditer(
             r'<xacro:bhl_joint name="([^"]+)"\s*/>', text):
         declarations[match.group(1)] = {
-            "command": "position",  # fixed inside the macro body
+            "command": "effort",  # fixed inside the macro body
             "state": re.findall(r'<state_interface name="(\w+)"/>', text),
         }
     return declarations
@@ -112,7 +124,7 @@ def test_every_backend_joint_declares_velocity_state_interface():
         assert "velocity" in declared["state"], joint
 
 
-def test_joint_macro_declares_position_command_and_full_state():
+def test_joint_macro_declares_effort_command_and_full_state():
     """The ``bhl_joint`` macro body, expanded for all 22 joints, is what the
     backend hardware interface actually implements."""
     text = _ROS2_CONTROL_XACRO.read_text()
@@ -120,7 +132,7 @@ def test_joint_macro_declares_position_command_and_full_state():
         r'<xacro:macro name="bhl_joint".*?</xacro:macro>', text, re.DOTALL)
     assert match, "bhl_joint macro not found in bhl_ros2_control.xacro"
     body = match.group(0)
-    assert '<command_interface name="position">' in body
+    assert '<command_interface name="effort">' in body
     for state in ("position", "velocity", "effort"):
         assert f'<state_interface name="{state}"/>' in body
 

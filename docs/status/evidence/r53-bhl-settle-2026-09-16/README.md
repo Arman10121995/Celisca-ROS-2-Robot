@@ -48,6 +48,11 @@ the standard dispatch path, using the same harness as
   dedicated standing/balance controller with CoM/odometry feedback for the
   squat-to-stand transition. Both are controller work, not bringup work.
 
+**Follow-up (2026-09-17):** option (a) is implemented — the joints are driven
+through an effort interface with the training PD gains. See
+`../r53-bhl-effort-interface-2026-09-16/README.md` (wired + unit-verified;
+live validation of the effort path still pending).
+
 ## Artifacts
 
 - `settle_report.json` — run 2 (12 s ramp) phase summary + timeline

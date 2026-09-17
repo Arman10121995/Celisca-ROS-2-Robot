@@ -99,7 +99,7 @@ def test_bhl_controller_config_declares_the_verified_controllers():
     cm = config["controller_manager"]["ros__parameters"]
     assert (
         cm["bhl_standing_controller"]["type"]
-        == "forward_command_controller/ForwardCommandController"
+        == "effort_controllers/JointGroupEffortController"
     )
     assert (
         cm["joint_state_broadcaster"]["type"]
@@ -110,8 +110,10 @@ def test_bhl_controller_config_declares_the_verified_controllers():
         f"bhl_standing_controller: expected the 22 leg/arm joints, got {len(joints)}"
     )
     assert (
-        config["bhl_standing_controller"]["ros__parameters"]["interface_name"]
-        == "position"
+        config["bhl_standing_controller"]["ros__parameters"]["kp"] == 10.0
+    )
+    assert (
+        config["bhl_standing_controller"]["ros__parameters"]["kd"] == 2.0
     )
 
 

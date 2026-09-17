@@ -11,9 +11,13 @@ A thin ROS2 wrapper around the pure-logic policy adapter
   in the observation (projected gravity) and the latched tilt safety monitor.
 - Subscribes to ``cmd_vel`` (geometry_msgs/Twist) for the base-velocity
   command; the policy clamps it to the training command ranges.
-- Publishes a ``Float64MultiArray`` of 22 position targets to the configured
-  ``forward_command_controller`` command topic at the policy decision rate
-  (25 Hz upstream).
+- Publishes a ``Float64MultiArray`` of 22 position targets to the
+  ``bhl_standing_controller`` command topic at the policy decision rate
+  (25 Hz upstream). That controller is an
+  ``effort_controllers/JointGroupEffortController`` (kp=10.0, kd=2.0) which
+  turns these position targets into joint efforts, so the policy's targets
+  close a PD-effort loop in gz-sim rather than issuing raw position commands
+  (see ``r53-bhl-effort-interface-2026-09-16``).
 
 The observation assembly, inference, action conversion and safety latch all
 live in ``bhl_policy`` and are unit-tested without a live ROS graph (see

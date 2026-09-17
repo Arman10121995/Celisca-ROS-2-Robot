@@ -5,17 +5,18 @@
 
   Additive to the vendored static upstream URDF (berkeley_humanoid_lite.urdf),
   included alongside it by bhl_sim.xacro. Declares the 22 effort-commandable
-  leg/arm joints with position command + position/velocity state interfaces,
-  the ros2_control/gz-sim system plugins, and the trunk IMU sensor that backs
-  the registry /imu contract.
+  leg/arm joints with effort command + position/velocity/effort state interfaces,
+  the ros2_control/gz-sim system plugins (effort_controllers/JointGroupEffortController
+  with kp=10.0, kd=2.0), and the trunk IMU sensor that backs the registry /imu
+  contract.
 -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="bhl_joint" params="name">
     <joint name="${name}">
-      <command_interface name="position">
-        <param name="min">-3.14159</param>
-        <param name="max">3.14159</param>
+      <command_interface name="effort">
+        <param name="min">-20.0</param>
+        <param name="max">20.0</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>

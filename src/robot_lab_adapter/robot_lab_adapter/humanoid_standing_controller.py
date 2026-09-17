@@ -6,8 +6,11 @@ A thin ROS2 wrapper around the pure-logic closed-loop balance core
 - Subscribes to ``/joint_states`` (best-effort) for measured positions.
 - Subscribes to ``/bhl/imu`` (sensor_msgs/Imu) for the body attitude used by
   the ankle-strategy balance and the latched safety monitor.
-- Publishes a ``Float64MultiArray`` of 22 position targets to the configured
-  ``forward_command_controller`` command topic at the declared rate.
+- Publishes a ``Float64MultiArray`` of 22 position targets to the
+  ``bhl_standing_controller`` command topic at the declared rate. That
+  controller is an ``effort_controllers/JointGroupEffortController``
+  (kp=10.0, kd=2.0) which converts these position targets into joint efforts
+  (see ``r53-bhl-effort-interface-2026-09-16``).
 
 The balance law itself is tested without a live ROS graph (see
 ``test/test_r5_3_bhl_balance.py``). This node only marshals ROS messages to

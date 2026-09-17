@@ -1,7 +1,13 @@
-# P3.4: ros2_control controller configuration for the Berkeley Humanoid Lite
-# simulated, commandable profile. The 22 leg/arm joints are position-commandable
-# via a joint group forward_command_controller (the floating base "base" link is
-# the gz-sim free-flying base); joint states are broadcast for state estimation.
+# ros2_control controller configuration for the Berkeley Humanoid Lite simulated,
+# commandable profile. As of R5.3 (2026-09-17) the standing controller is an
+# effort_controllers/JointGroupEffortController (kp=10.0, kd=2.0): the policy
+# publishes 22 position targets, and this controller closes a PD-effort loop
+# (tau = kp*(q* - q) + kd*(0 - qdot), clamped to the +/-20 N.m effort limits the
+# bhl_ros2_control.xacro declares). This matches the upstream BHL policy's
+# training control formulation; the earlier position
+# forward_command_controller path (ign_ros2_control Kirk position servo,
+# c=1000.0, kp=50.0) is superseded. See
+# docs/status/evidence/r53-bhl-effort-interface-2026-09-16/README.md.
 controller_manager:
   ros__parameters:
     update_rate: 200
@@ -10,11 +16,12 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster
 
     bhl_standing_controller:
-      type: forward_command_controller/ForwardCommandController
+      type: effort_controllers/JointGroupEffortController
 
 bhl_standing_controller:
   ros__parameters:
-    interface_name: position
+    kp: 10.0
+    kd: 2.0
     joints:
       - leg_left_hip_roll_joint
       - leg_left_hip_yaw_joint
