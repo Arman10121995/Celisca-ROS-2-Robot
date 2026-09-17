@@ -1,5 +1,57 @@
 # R5.3 evidence: BHL effort-interface control path, 2026-09-17
 
+## Live balance runs (2026-09-17, second session) — 2 of 3 failure modes fixed
+
+Three consecutive live runs of the dispatch path (`humanoid-standing-controller`
+on `/imu/out`, effort interface, fresh sim each time) with a 40 s IMU/joint
+trace starting before spawn. Findings, in the order they were fixed:
+
+1. **SAFE_STOP latch on every cycle — FIXED.** The nodes defaulted to
+   `imu_topic: /bhl/imu`, a topic with no publisher: the gz bridge publishes
+   the trunk IMU as gz `/imu` → ROS `/imu/out`. With no IMU the body state
+   fallback produced tilt = π, latching SAFE_STOP on the first cycle. Fix:
+   default `imu_topic` is now `/imu/out` in both
+   `humanoid_standing_controller.py` and `humanoid_policy_controller.py`
+   (verified live: the bridge topic carries a unit quaternion, tilt ≈ 0 at
+   spawn). `robots.yaml` (BHL `sensors.imu.topic`) and the
+   `algorithms.yaml`/contract-test required-topics list were aligned to
+   `/imu/out` — the registry previously declared `/imu`, which nothing
+   publishes on ROS.
+
+2. **Knee-buckle at the nominal stance — FIXED.** The draft nominal pose
+   (knees 0.8 rad, ankle pitch 0.1, arms offset) actively dragged the biped
+   out of its balanced spawn pose: the live trace showed tilt 0.000 until the
+   PD began pulling the knees toward 0.8, then the knees buckled (20 N.m
+   cannot hold that crouch) and the biped fell through 0.70 rad in ~1-2 s.
+   Fix: `NOMINAL_STANDING_POSE` is now the URDF rest pose (all 22 joints 0).
+   Live result: the robot stands in equilibrium at spawn (tilt 0.000, knees
+   0.000) — the first live-stable stance of the R5.3 effort path.
+
+3. **Rigid-body pivot topple — OPEN, control-design gap (not wiring).**
+   With the stable stance achieved, the biped still toppled: tilt 0.005 at
+   t≈0.16 s → 0.37 (0.5 s) → 0.66 (0.6 s) → 1.27 rad (0.8 s), then lying
+   still at 1.27 rad. The joints barely moved during the fall (knees within
+   0.02 rad): the body pivots about the foot edge like an inverted pendulum.
+   Analysis: ankle PD restoring stiffness is 120 N.m/rad saturating at the
+   URDF 20 N.m (≈0.167 rad), while the gravity toppling stiffness at the BHL
+   CoM height (0.675 m, ~13 kg) is ≈86 N.m/rad — marginal even with a 1:1
+   joint mapping, and the BHL's 45°-mounted leg axes mean body tilt does not
+   map 1:1 onto ankle joint error, so the effective restoring stiffness drops
+   below the toppling stiffness and the fall diverges. Holding stance
+   therefore needs more than the current proportional tilt law: gravity
+   compensation from the URDF dynamics, a proper leg Jacobian mapping
+   (tilt → joint torques through the 45° axes), and/or a hip strategy, plus
+   likely a pose with knees flexed inside (not at) the joint limits so the
+   ankles retain motion authority. This is the documented option (b)
+   fallback — a dedicated balance controller — now with quantitative
+   justification.
+
+Also fixed this session: `test_r5_3_bhl_balance.py::test_knee_softens_with_tilt`
+exercised knee softening at the knee's 0.0 lower limit (clamped, no headroom);
+it now runs at a flexed stance (0.5 rad) so the law is actually observable.
+
+# R5.3 evidence: BHL effort-interface control path, 2026-09-17
+
 Status: **wiring + contract complete and unit-verified; live dispatch-path
 validation of the effort path is pending** (see "Open item" below).
 

@@ -123,29 +123,39 @@ POSITION_LIMITS: Dict[str, Tuple[float, float]] = {
 #: Nominal standing pose [rad] - inside every joint's position limits.
 #: Knees are bent (~0.8 rad) so the legs carry a restoring moment; ankle
 #: pitch has a small toe-up bias; arms hang at the sides.
+# R5.3 (2026-09-17, live-validated): the nominal stance is the URDF rest pose
+# (every actuated joint at 0). The earlier draft stance (knees 0.8, ankle
+# pitch 0.1) actively dragged the biped out of its balanced rest pose at
+# spawn: the live tilt trace showed the robot standing at tilt 0.000 until the
+# PD began pulling the knees toward 0.8, after which the knees buckled (20
+# N.m is far too little to hold that crouch) and the biped fell through the
+# 0.70 rad fall threshold in ~1-2 s. At the all-zero rest pose the legs are
+# straight, gravity passes through the joint axes, and the PD hold is
+# statically stable - balance corrections (ankle strategy, arm reaction)
+# then act on perturbations instead of having to fight the stance itself.
 NOMINAL_STANDING_POSE: Dict[str, float] = {
     "leg_left_hip_roll_joint": 0.0,
     "leg_left_hip_yaw_joint": 0.0,
     "leg_left_hip_pitch_joint": 0.0,
-    "leg_left_knee_pitch_joint": 0.8,
-    "leg_left_ankle_pitch_joint": 0.1,
+    "leg_left_knee_pitch_joint": 0.0,
+    "leg_left_ankle_pitch_joint": 0.0,
     "leg_left_ankle_roll_joint": 0.0,
     "leg_right_hip_roll_joint": 0.0,
     "leg_right_hip_yaw_joint": 0.0,
     "leg_right_hip_pitch_joint": 0.0,
-    "leg_right_knee_pitch_joint": 0.8,
-    "leg_right_ankle_pitch_joint": 0.1,
+    "leg_right_knee_pitch_joint": 0.0,
+    "leg_right_ankle_pitch_joint": 0.0,
     "leg_right_ankle_roll_joint": 0.0,
-    "arm_left_shoulder_pitch_joint": -0.2,
-    "arm_left_shoulder_roll_joint": -0.5,
+    "arm_left_shoulder_pitch_joint": 0.0,
+    "arm_left_shoulder_roll_joint": 0.0,
     "arm_left_shoulder_yaw_joint": 0.0,
     "arm_left_elbow_roll_joint": 0.0,
-    "arm_left_elbow_pitch_joint": 0.5,
-    "arm_right_shoulder_pitch_joint": 0.2,
-    "arm_right_shoulder_roll_joint": 0.5,
+    "arm_left_elbow_pitch_joint": 0.0,
+    "arm_right_shoulder_pitch_joint": 0.0,
+    "arm_right_shoulder_roll_joint": 0.0,
     "arm_right_shoulder_yaw_joint": 0.0,
     "arm_right_elbow_roll_joint": 0.0,
-        "arm_right_elbow_pitch_joint": 0.5,
+    "arm_right_elbow_pitch_joint": 0.0,
 }
 
 # ----------------------------------------------------------------------

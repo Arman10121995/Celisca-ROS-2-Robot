@@ -243,8 +243,14 @@ class TestArmReaction:
         )
 
     def test_knee_softens_with_tilt(self, nominal):
-        flat = balance_targets(nominal, BodyState(roll_rad=0.0, pitch_rad=0.0))
-        tilted = balance_targets(nominal, BodyState(roll_rad=0.3, pitch_rad=0.3))
+        # Knee softening only has headroom when the stance carries knee
+        # flexion; the deployed nominal is the straight-legged URDF rest
+        # pose (knee 0 = clamped lower limit), so exercise the law with a
+        # flexed stance instead.
+        flexed = dict(nominal)
+        flexed["leg_left_knee_pitch_joint"] = 0.5
+        flat = balance_targets(flexed, BodyState(roll_rad=0.0, pitch_rad=0.0))
+        tilted = balance_targets(flexed, BodyState(roll_rad=0.3, pitch_rad=0.3))
         assert tilted["leg_left_knee_pitch_joint"] < flat["leg_left_knee_pitch_joint"]
 
 
