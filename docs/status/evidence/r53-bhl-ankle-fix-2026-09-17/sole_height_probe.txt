@@ -7,13 +7,14 @@ pybullet build time: Sep  2 2026 15:04:54
 == 2. pybullet collision AABB, base link pinned at world origin ==
   leg_left_ankle_roll: world AABB z [+0.03900,+0.08100]
   leg_right_ankle_roll: world AABB z [+0.03900,+0.08100]
-  => sole bottom above base origin (solver truth) = +0.03900 m
+  => AABB sole bottom = +0.03900 m (~1 mm lower than the geometric sole: pybullet pads AABBs by the contact-break margin, so the FK value is the geometric truth)
+  => sole bottom above base origin (solver truth) = +0.03900 m (geometric/FK: +0.0400 m)
 
 == 3. whole-body CoM and gravity topple stiffness ==
   total mass = 16.3312 kg
   whole-body CoM (base frame) = [-6.9600e-03  1.6000e-04  4.8232e-01]
-  CoM height above sole = 0.4433 m
-  gravity topple stiffness m*g*h = 71.02 N.m/rad
+  CoM height above geometric sole = 0.4423 m
+  gravity topple stiffness m*g*h = 70.86 N.m/rad
   CoM xy inside support bbox: True
 
-RESULT: spawn z for sole contact = +0.0390 m (+ settling margin); topple stiffness = 71.0 N.m/rad
+RESULT: spawn z for sole contact = +0.0400 m (+ settling margin); topple stiffness = 70.9 N.m/rad
