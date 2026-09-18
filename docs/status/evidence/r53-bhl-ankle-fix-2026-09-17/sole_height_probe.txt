@@ -1,0 +1,19 @@
+pybullet build time: Sep  2 2026 15:04:54
+== 1. URDF FK: every foot collision, base LINK frame, q=0 ==
+  leg_left_ankle_roll collision[0]: base-frame z range [+0.04000, +0.08000] x [-0.0840,+0.1360] y [+0.0210,+0.0930]
+  leg_right_ankle_roll collision[0]: base-frame z range [+0.04000, +0.08000] x [-0.0840,+0.1360] y [-0.0930,-0.0210]
+  => sole bottom above base origin = +0.04000 m
+
+== 2. pybullet collision AABB, base link pinned at world origin ==
+  leg_left_ankle_roll: world AABB z [+0.03900,+0.08100]
+  leg_right_ankle_roll: world AABB z [+0.03900,+0.08100]
+  => sole bottom above base origin (solver truth) = +0.03900 m
+
+== 3. whole-body CoM and gravity topple stiffness ==
+  total mass = 16.3312 kg
+  whole-body CoM (base frame) = [-6.9600e-03  1.6000e-04  4.8232e-01]
+  CoM height above sole = 0.4433 m
+  gravity topple stiffness m*g*h = 71.02 N.m/rad
+  CoM xy inside support bbox: True
+
+RESULT: spawn z for sole contact = +0.0390 m (+ settling margin); topple stiffness = 71.0 N.m/rad

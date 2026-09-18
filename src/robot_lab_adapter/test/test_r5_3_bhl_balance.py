@@ -13,7 +13,8 @@ Covers the R5.3 acceptance bar, honestly:
   ankle-pitch lean; hip roll adds a same-sign lateral CoM shift; arms swing
   out of phase with roll (arm reaction). The ankle gains give a combined
   restoring stiffness (2*Kp*K = 168 N.m/rad) exceeding the gravity topple
-  stiffness (m*g*h ~= 108 N.m/rad) with a 1.5x margin.
+  stiffness (m*g*h ~= 70.9 N.m/rad, CoM 0.4423 m above the soles) with a
+  ~2.4x margin.
 - Stance PD hold: a joint with no position measurement is *not driven*
   (zero effort), never assumed at target; all efforts clamp to the URDF
   20 N.m limit.

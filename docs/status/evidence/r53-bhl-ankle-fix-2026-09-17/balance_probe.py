@@ -13,6 +13,7 @@ arrests it, and tilt decays back below 0.15 rad without SAFE_STOP.
 """
 import json
 import math
+import os
 import sys
 import time
 
@@ -60,6 +61,9 @@ class Probe(Node):
 
 def main():
     hold_s = float(sys.argv[1]) if len(sys.argv) > 1 else 30.0
+    out_dir = sys.argv[2] if len(sys.argv) > 2 else "/tmp/r53ankle"
+    report_path = os.path.join(out_dir, "balance_report.json")
+    os.makedirs(out_dir, exist_ok=True)
     report = {"phases": [], "max_tilt": 0.0, "safe_stop": False,
               "tilt_series": [], "ankle_effort_series": [],
               "knee_series": []}
@@ -108,8 +112,9 @@ def main():
     phase("mid", third, 2 * third)
     phase("late", 2 * third, hold_s)
 
-    with open("/tmp/r53ankle/balance_report.json", "w") as f:
+    with open(report_path, "w") as f:
         json.dump(report, f, indent=1)
+    print("report:", report_path)
     print(json.dumps(report["phases"], indent=1))
     print("max_tilt:", report["max_tilt"], "safe_stop:", report["safe_stop"])
     rclpy.shutdown()

@@ -20,8 +20,9 @@ nohup ros2 run robot_lab_adapter humanoid-standing-controller \
     > "$OUT/standing.log" 2>&1 &
 STANDING_PID=$!
 
-# 2. trace FIRST - captures the spawn transient
-nohup python3 "$(dirname "$0")/balance_probe.py" 45 \
+# 2. trace FIRST - captures the spawn transient (OUT passed so the probe
+#    writes its report next to the other run artifacts)
+nohup python3 "$(dirname "$0")/balance_probe.py" 45 "$OUT" \
     > "$OUT/probe_stdout.log" 2>&1 &
 PROBE_PID=$!
 sleep 1

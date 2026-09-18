@@ -70,18 +70,28 @@ robots:
         frame: imu_2
         topic: /imu/out
         message_type: sensor_msgs/msg/Imu
-    # Spawn pose (R5.3, 2026-09-17): at the URDF rest pose the foot-sole
-    # bottom is +0.076 m above the base origin (ankle_roll frame origin
-    # z=0.090; sole box half-height 0.020 with collision origin z=0.006).
-    # The empty map default (z=0.1) therefore drops the soles ~10 cm onto
-    # the ground; the slam topples the biped within ~0.2 s of physics start
-    # (tilt 0.000 until the first contact, then through the 0.70 rad fall
-    # threshold before the balance loop can act - verified in live traces).
-    # z=0.078 places the soles at ground level with a 2 mm settling margin.
+    # Spawn pose (R5.3, 2026-09-18): at the URDF rest pose the foot-sole
+    # bottom is +0.0400 m above the base origin, verified three independent
+    # ways (docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/
+    # sole_height_probe.txt): full-SE(3) URDF forward kinematics of the sole
+    # collision box, pybullet's own collision AABB with the base link pinned
+    # at the origin (world AABB z [+0.039, +0.081], incl. the ~1 mm contact
+    # margin), and `gz sdf -p` on the exact model ign-gazebo spawns (model
+    # frame == base link frame; foot box center z=0.06, half-thickness 0.02).
+    # The earlier +0.076 m estimate ignored the Rx(90 deg) rotation of the
+    # sole box: the collision-origin z offset (0.006) lives in the rotated
+    # ankle_roll frame, and the box's 0.04 m "thickness" axis maps to the
+    # link-frame y axis, not z - the real sole spans z [0.04, 0.08] with its
+    # 0.22 m length along x.
+    # The empty map default (z=0.1) therefore drops the soles ~6 cm onto the
+    # ground; the earlier z=0.078 dropped them 3.8 cm (a symmetric flat drop,
+    # so the live trace shows tilt 0.000 with no tilt transient, but it is an
+    # avoidable impact on the ankle gears at every spawn).
+    # z=0.042 places the soles at ground level with a 2 mm settling margin.
     spawn:
       x: "0.0"
       y: "0.0"
-      z: "0.078"
+      z: "0.042"
       yaw: "0.0"
 
   unitree_a1:

@@ -180,7 +180,7 @@ STANCE_PD_ARMS: Tuple[float, float] = (60.0, 2.0)    # (Kp, Kd) N.m/rad
 #: Ankle-roll modulation per rad of body roll (both legs, SAME sign - the
 #: BHL ankle-roll axes are parallel (+X/+X), so differential commands
 #: cancel and produce no net roll moment; see balance_targets).
-#: 0.7 -> combined restoring stiffness 2*120*0.7 = 168 N.m/rad, 1.5x the
+#: 0.7 -> combined restoring stiffness 2*120*0.7 = 168 N.m/rad, ~2.4x the
 #: gravity topple stiffness (TOPPLE_STIFFNESS_NM_PER_RAD).
 ANKLE_BALANCE_K_ROLL = 0.7
 #: Hip-roll modulation per rad of body roll (same-sign lateral CoM shift).
@@ -192,11 +192,16 @@ ARM_BALANCE_K = 0.25
 #: Knee flex modulation per rad of combined tilt (softens stance under load).
 KNEE_BALANCE_K = 0.30
 
-# Gravity topple stiffness about the foot edge, estimated from the vendored
-# URDF: total mass 16.33 kg, CoM height ~0.675 m (base inertial origin, the
-# dominant upper-body mass). The ankle strategy must exceed this to make the
-# standing equilibrium stable; pinned by TestAnkleStrategy regression tests.
-TOPPLE_STIFFNESS_NM_PER_RAD = 16.33 * 9.81 * 0.675  # ~= 108 N.m/rad
+# Gravity topple stiffness about the foot edge, from the vendored URDF:
+# total mass 16.3312 kg, whole-body CoM at the rest pose z=0.4823 m in the
+# base frame, soles at z=+0.0400 m (verified against pybullet collision AABBs
+# and `gz sdf -p`; see docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/
+# sole_height_probe.txt), so the CoM height above the sole is 0.4423 m.
+# The earlier estimate (h=0.675 m, the base inertial origin) measured the CoM
+# above the base ORIGIN, not above the sole, and overestimated the topple
+# stiffness by ~1.5x. The ankle strategy must exceed this to make the standing
+# equilibrium stable; pinned by TestAnkleStrategy regression tests.
+TOPPLE_STIFFNESS_NM_PER_RAD = 16.3312 * 9.81 * 0.4423  # ~= 70.9 N.m/rad
 #: Required safety margin of the ankle restoring stiffness over gravity.
 ANKLE_STIFFNESS_MARGIN = 1.5
 
@@ -414,10 +419,12 @@ def balance_targets(
     # Both ankle pairs must be commanded same-sign.
     #
     # Gain justification: gravity topple stiffness about the foot edge is
-    # m*g*h ~= 16.33 kg * 9.81 * 0.675 m ~= 108 N.m/rad (total mass from the
-    # URDF, CoM height from the base inertial origin). With joint Kp = 120
+    # m*g*h ~= 16.3312 kg * 9.81 * 0.4423 m ~= 70.9 N.m/rad (total mass and
+    # whole-body CoM z=0.4823 m from the URDF inertials; sole at z=+0.0400 m,
+    # see TOPPLE_STIFFNESS_NM_PER_RAD and the sole_height_probe evidence).
+    # With joint Kp = 120
     # N.m/rad on each ankle and both legs contributing, K = 0.7 gives a
-    # combined restoring stiffness of 2 * 120 * 0.7 = 168 N.m/rad - a 1.5x
+    # combined restoring stiffness of 2 * 120 * 0.7 = 168 N.m/rad - a ~2.4x
     # margin over gravity, so small perturbations DECAY instead of growing
     # (the earlier K = 0.12/0.15 gave ~29 N.m/rad: unstable by design, which
     # is exactly the observed divergence). Per-ankle saturation then occurs
