@@ -217,7 +217,20 @@ EFFORT_SATURATION_CYCLES = 50  # sustained saturation at the control rate
 #: balance; stepping/walking gait generation is outside this layer.
 STANCE_DURATION_SECONDS = 1.0
 #: Balance control rate [Hz] (matches the standing-controller timer).
-BALANCE_RATE_HZ = 50.0
+#: R5.3 (2026-09-18, plant-swept in MuJoCo, see docs/status/evidence/
+#: r53-bhl-ankle-fix-2026-09-17/plant_rate_probe.txt): the SAME PD stance
+#: hold (Kp=120, Kd=4, +/-20 N.m) is stable at >= 125 Hz and DIVERGES at
+#: 50 Hz - the zero-order-hold torque staleness is discretely unstable for
+#: the low-inertia ankle/foot links, which is the root cause of the live
+#: ~5.7 s pivot topple (the biped stands still while the instability grows
+#: from numerical noise, then breaks away in ~0.6 s). 250 Hz gives margin
+#: over the measured 125 Hz stability edge; ign-gazebo's 100 Hz physics
+#: still sees a torque at most one physics step stale at this rate.
+#: The balance law itself was re-validated at 250 Hz with the SAME sign it
+#: already had (+K on same-sign ankles): perturbed-stance max tilt 0.008 rad
+#: with the reaction vs 0.129 rad with a flipped sign - the sign is right,
+#: only the rate was wrong.
+BALANCE_RATE_HZ = 250.0
 #: Effective control period [s].
 STANCE_DT = 1.0 / BALANCE_RATE_HZ
 #: Reserved for the future base-velocity (stepping) interface. Left as None

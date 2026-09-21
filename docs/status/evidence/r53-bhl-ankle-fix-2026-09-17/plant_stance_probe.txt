@@ -1,0 +1,21 @@
+pybullet build time: Sep  2 2026 15:04:54
+mode A: spawn z=-0.038, 1000 Hz sim, 50 Hz control, 15.0 s
+  t= 0.0 roll=-0.0000 pitch=-0.0000 z=+0.6370
+  t= 2.0 roll=-2.6697 pitch=-1.3585 z=+0.1010  [SAFE_STOP]
+  t= 4.0 roll=-1.8335 pitch=-0.8134 z=+0.1738  [SAFE_STOP]
+  t= 6.0 roll=+0.6457 pitch=+0.6727 z=+1.6636  [SAFE_STOP]
+  t= 8.0 roll=-1.3470 pitch=+1.4752 z=+0.0821  [SAFE_STOP]
+  t=10.0 roll=-1.3439 pitch=+1.4969 z=+0.0795  [SAFE_STOP]
+  t=12.0 roll=-1.5376 pitch=+1.4975 z=+0.0786  [SAFE_STOP]
+  t=14.0 roll=+1.7907 pitch=+1.5690 z=+0.0732  [SAFE_STOP]
+MODE A: safe_stop=True max_tilt=3.1313 -> FALLS
+mode B: spawn z=-0.038, 1000 Hz sim, 50 Hz control, 15.0 s
+  t= 0.0 roll=-0.0000 pitch=-0.0000 z=+0.6370
+  t= 2.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+  t= 4.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+  t= 6.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+  t= 8.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+  t=10.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+  t=12.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+  t=14.0 roll=+0.0000 pitch=+0.8926 z=+0.1071  [SAFE_STOP]
+MODE B: safe_stop=True max_tilt=2.8369 -> FALLS

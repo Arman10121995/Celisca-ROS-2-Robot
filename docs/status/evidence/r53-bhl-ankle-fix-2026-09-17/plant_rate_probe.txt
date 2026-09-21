@@ -1,0 +1,11 @@
+== 1. rate sweep, pure PD stance hold (Kp=120 Kd=4, +/-20 N.m) ==
+  rate=  500 Hz  k_sign=+0.0  -> HOLDS  max_tilt=0.0144
+  rate=  250 Hz  k_sign=+0.0  -> HOLDS  max_tilt=0.0144
+  rate=  125 Hz  k_sign=+0.0  -> HOLDS  max_tilt=0.0147
+  rate=   50 Hz  k_sign=+0.0  -> FALLS  max_tilt=0.7105
+  rate=   25 Hz  k_sign=+0.0  -> FALLS  max_tilt=0.7232
+== 2. balance-law sign at 250 Hz, perturbed at t=3 s ==
+  rate=  250 Hz  k_sign=+0.0  -> HOLDS  max_tilt=0.0144
+  rate=  250 Hz  k_sign=+0.7  -> HOLDS  max_tilt=0.0083
+  rate=  250 Hz  k_sign=-0.7  -> HOLDS  max_tilt=0.1288
+RESULT: control rate must be >= 125 Hz (50 Hz diverges); committed balance sign (+K) is correct and damps perturbations.

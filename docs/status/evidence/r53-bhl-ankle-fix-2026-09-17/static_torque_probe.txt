@@ -1,0 +1,30 @@
+pybullet build time: Sep  2 2026 15:04:54
+static gravity-holding torque per joint (N.m), q=0, base pinned:
+  imu_mount_joint                        +0.000
+  imu_frame                              +0.000
+  arm_left_shoulder_pitch_joint        +116.613  <-- EXCEEDS 20 N.m
+  arm_left_shoulder_roll_joint           -0.016
+  arm_left_shoulder_yaw_joint            +0.618
+  arm_left_elbow_pitch_joint             +0.000
+  arm_left_elbow_roll_joint              +0.000
+  arm_left_hand_l                        -0.007
+  arm_right_shoulder_pitch_joint         +0.793
+  arm_right_shoulder_roll_joint          -0.010
+  arm_right_shoulder_yaw_joint           +0.037
+  arm_right_elbow_pitch_joint            -0.010
+  arm_right_elbow_roll_joint             +0.006
+  arm_hand_r                             -0.778
+  leg_left_hip_roll_joint                +0.010
+  leg_left_hip_yaw_joint                 -0.037
+  leg_left_hip_pitch_joint               +0.010
+  leg_left_knee_pitch_joint              -0.231
+  leg_left_ankle_pitch_joint             -0.230
+  leg_left_ankle_roll_joint              -0.387
+  leg_right_hip_roll_joint               -0.359
+  leg_right_hip_yaw_joint                -0.359
+  leg_right_hip_pitch_joint              -0.000
+  leg_right_knee_pitch_joint             +0.231
+  leg_right_ankle_pitch_joint            +0.230
+  leg_right_ankle_roll_joint             -0.388
+max |tau| = 116.61 N.m (limit 20 N.m)
+joint order matches BHL_JOINT_NAMES for the leg/arm entries: False
