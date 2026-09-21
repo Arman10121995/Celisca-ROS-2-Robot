@@ -17,4 +17,4 @@ pybullet build time: Sep  2 2026 15:04:54
   gravity topple stiffness m*g*h = 70.86 N.m/rad
   CoM xy inside support bbox: True
 
-RESULT: spawn z for sole contact = +0.0400 m (+ settling margin); topple stiffness = 70.9 N.m/rad
+RESULT: sole bottom = +0.0400 m ABOVE the base origin, so the base origin must spawn at z = -0.0380 m (2 mm settling margin, NEGATIVE); topple stiffness = 70.9 N.m/rad

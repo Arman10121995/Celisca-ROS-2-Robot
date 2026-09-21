@@ -87,11 +87,19 @@ robots:
     # ground; the earlier z=0.078 dropped them 3.8 cm (a symmetric flat drop,
     # so the live trace shows tilt 0.000 with no tilt transient, but it is an
     # avoidable impact on the ankle gears at every spawn).
-    # z=0.042 places the soles at ground level with a 2 mm settling margin.
+    # z=-0.038 places the base origin 38 mm BELOW the ground, so the soles
+    # (base+0.040) sit 2 mm above it and settle into contact. The spawn z is
+    # NEGATIVE by geometry: sole_z = spawn_z + 0.040 >= 0 requires
+    # spawn_z >= -0.040. The earlier +0.078 (and a +0.042 draft) had the
+    # sign flipped and dropped the soles 3.8/8.2 cm on every spawn - a
+    # symmetric flat drop (tilt stays 0.000 through it) but an avoidable
+    # impact on the ankle gears. Plant-verified in pybullet: base at -0.038
+    # establishes 8 foot contacts with Fz ~ 157 N (the full weight) within
+    # 25 ms; the same robot at +0.042 never touches down.
     spawn:
       x: "0.0"
       y: "0.0"
-      z: "0.042"
+      z: "-0.038"
       yaw: "0.0"
 
   unitree_a1:

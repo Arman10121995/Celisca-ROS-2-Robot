@@ -19,9 +19,13 @@ z = 0.4823 m (base frame) -> CoM 0.4423 m above the sole; topple stiffness
 m*g*h ~= 70.9 N.m/rad. The earlier +0.076 m estimate (and spawn z=0.078)
 ignored the Rx(90 deg) rotation of the sole collision box. Cross-checks:
 `gz sdf -p` on the URDF keeps the model frame == base link frame and the
-foot box at center z=0.06 / half-thickness 0.02 (so ign-gazebo spawns with
--z <sole_z>), and a floating-base drop in pybullet topples (so a settle test
-cannot measure the standing sole - pin the base instead).
+foot box at center z=0.06 / half-thickness 0.02 (so ign-gazebo must spawn
+the base origin at -z = -(sole) + margin, i.e. a NEGATIVE z), and a
+floating-base drop in pybullet topples (so a settle test cannot measure
+the standing sole - pin the base instead). Plant cross-check (pybullet,
+floating base): base at z=-0.038 establishes 8 foot contacts with Fz ~157 N
+(the full weight) within 25 ms; the same robot at z=+0.042 never touches
+down - confirming the negative spawn sign empirically.
 """
 import math
 import xml.etree.ElementTree as ET
@@ -132,8 +136,9 @@ def main():
     print(f"  gravity topple stiffness m*g*h = {mass_total * 9.81 * h:.2f} N.m/rad")
     print(f"  CoM xy inside support bbox: "
           f"{-0.084 <= com[0] <= 0.136 and -0.093 <= com[1] <= 0.093}")
-    print(f"\nRESULT: spawn z for sole contact = {geometric_sole:+.4f} m "
-          f"(+ settling margin); topple stiffness = "
+    print(f"\nRESULT: sole bottom = {geometric_sole:+.4f} m ABOVE the base origin,"
+          f" so the base origin must spawn at z = {-geometric_sole + 0.002:+.4f} m"
+          f" (2 mm settling margin, NEGATIVE); topple stiffness = "
           f"{mass_total * 9.81 * h:.1f} N.m/rad")
 
 
