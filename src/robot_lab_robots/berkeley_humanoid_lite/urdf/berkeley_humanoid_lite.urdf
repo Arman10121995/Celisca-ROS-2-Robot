@@ -1,6 +1,37 @@
 <?xml version="1.0" ?>
 <!-- Generated using onshape-to-robot -->
 <!-- Onshape document_id: fc6443b1d89dcba950e85b60 -->
+<!-- robot_lab (R5.3, 2026-09-21): this export declared its joint losses in a
+     non-standard <joint_properties friction="0.1"/> tag, which every standard
+     consumer (urdfdom, sdformat's URDF->SDF conversion, pybullet) silently
+     drops. The spawned model therefore had NO joint losses at all, and the
+     R5.3 balance loop diverged on the loss-free plant (live Gazebo: tilt
+     0.000 -> 1.27 rad rigid-body topple; MuJoCo A/B in
+     docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/mjcf_friction_probe.py:
+     with the robot's own MJCF frictionloss=0.1 the committed law holds tilt at
+     0.0028 rad, with friction=0/damping=0/armature=0 - exactly what gz and
+     pybullet loaded from this file - it falls at t=0.5 s).
+     Rewritten as the standard <dynamics friction="0.1" damping="5.0"/>,
+     which urdfdom, sdformat (as axis/dynamics/friction, axis/dynamics/
+     damping) and pybullet all parse.
+     Value provenance, stated honestly:
+       friction=0.1  = the robot's own MJCF frictionloss value
+                       (mjcf/berkeley_humanoid_lite.xml).
+       damping=5.0   = NOT an upstream value: the MJCF declares no damping at
+                       all. It is a robot_lab choice, because the MJCF's
+                       armature="0.005" (rotor inertia, the term that really
+                       stabilizes its stance in MuJoCo) has no URDF form, and
+                       the live Gazebo engine (ign-physics5 / dartsim) exposes
+                       neither joint friction nor armature (no Friction/
+                       Armature feature in the ignition::physics5 Joint API),
+                       so joint damping is the only loss term the live plant
+                       can actually receive. MuJoCo sweep on the loss-free
+                       plant (docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/
+                       damping_probe.py): damping >= 5 holds the committed law's
+                       stance, damping 0/1/2 do not. Live-validated 2026-09-21:
+                       tilt <= 0.006 rad over 45 s in Gazebo, no SAFE_STOP.
+     Evidence: docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/ (see
+     live_damping_fix_2026-09-21.md). -->
 <robot name="berkeley-humanoid-lite">
   <!-- Link base -->
   <link name="base">
@@ -75,7 +106,7 @@
     <child link="imu_2"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Link arm_left_shoulder_pitch -->
   <link name="arm_left_shoulder_pitch">
@@ -204,7 +235,7 @@
     <child link="arm_left_hand_link"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_left_elbow_pitch to arm_left_elbow_roll -->
   <joint name="arm_left_elbow_roll_joint" type="revolute">
@@ -213,7 +244,7 @@
     <child link="arm_left_elbow_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_left_shoulder_yaw to arm_left_elbow_pitch -->
   <joint name="arm_left_elbow_pitch_joint" type="revolute">
@@ -222,7 +253,7 @@
     <child link="arm_left_elbow_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-4.49418e-13" upper="1.5708"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_left_shoulder_roll to arm_left_shoulder_yaw -->
   <joint name="arm_left_shoulder_yaw_joint" type="revolute">
@@ -231,7 +262,7 @@
     <child link="arm_left_shoulder_yaw"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_left_shoulder_pitch to arm_left_shoulder_roll -->
   <joint name="arm_left_shoulder_roll_joint" type="revolute">
@@ -240,7 +271,7 @@
     <child link="arm_left_shoulder_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.261799" upper="1.309"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from base to arm_left_shoulder_pitch -->
   <joint name="arm_left_shoulder_pitch_joint" type="revolute">
@@ -249,7 +280,7 @@
     <child link="arm_left_shoulder_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.5708" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Link arm_right_shoulder_pitch -->
   <link name="arm_right_shoulder_pitch">
@@ -378,7 +409,7 @@
     <child link="arm_right_hand_link"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_right_elbow_pitch to arm_right_elbow_roll -->
   <joint name="arm_right_elbow_roll_joint" type="revolute">
@@ -387,7 +418,7 @@
     <child link="arm_right_elbow_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_right_shoulder_yaw to arm_right_elbow_pitch -->
   <joint name="arm_right_elbow_pitch_joint" type="revolute">
@@ -396,7 +427,7 @@
     <child link="arm_right_elbow_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.5708" upper="-0"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_right_shoulder_roll to arm_right_shoulder_yaw -->
   <joint name="arm_right_shoulder_yaw_joint" type="revolute">
@@ -405,7 +436,7 @@
     <child link="arm_right_shoulder_yaw"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from arm_right_shoulder_pitch to arm_right_shoulder_roll -->
   <joint name="arm_right_shoulder_roll_joint" type="revolute">
@@ -414,7 +445,7 @@
     <child link="arm_right_shoulder_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.309" upper="0.261799"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from base to arm_right_shoulder_pitch -->
   <joint name="arm_right_shoulder_pitch_joint" type="revolute">
@@ -423,7 +454,7 @@
     <child link="arm_right_shoulder_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="1.5708"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Link leg_left_hip_roll -->
   <link name="leg_left_hip_roll">
@@ -558,7 +589,7 @@
     <child link="leg_left_ankle_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.261799" upper="0.261799"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_left_knee_pitch to leg_left_ankle_pitch -->
   <joint name="leg_left_ankle_pitch_joint" type="revolute">
@@ -567,7 +598,7 @@
     <child link="leg_left_ankle_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_left_hip_pitch to leg_left_knee_pitch -->
   <joint name="leg_left_knee_pitch_joint" type="revolute">
@@ -576,7 +607,7 @@
     <child link="leg_left_knee_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-2.63789e-13" upper="2.44346"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_left_hip_yaw to leg_left_hip_pitch -->
   <joint name="leg_left_hip_pitch_joint" type="revolute">
@@ -585,7 +616,7 @@
     <child link="leg_left_hip_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.89805" upper="0.981748"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_left_hip_roll to leg_left_hip_yaw -->
   <joint name="leg_left_hip_yaw_joint" type="revolute">
@@ -594,7 +625,7 @@
     <child link="leg_left_hip_yaw"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.981748" upper="0.589049"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from base to leg_left_hip_roll -->
   <joint name="leg_left_hip_roll_joint" type="revolute">
@@ -603,7 +634,7 @@
     <child link="leg_left_hip_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.174533" upper="1.5708"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Link leg_right_hip_roll -->
   <link name="leg_right_hip_roll">
@@ -738,7 +769,7 @@
     <child link="leg_right_ankle_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.261799" upper="0.261799"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_right_knee_pitch to leg_right_ankle_pitch -->
   <joint name="leg_right_ankle_pitch_joint" type="revolute">
@@ -747,7 +778,7 @@
     <child link="leg_right_ankle_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.785398" upper="0.785398"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_right_hip_pitch to leg_right_knee_pitch -->
   <joint name="leg_right_knee_pitch_joint" type="revolute">
@@ -756,7 +787,7 @@
     <child link="leg_right_knee_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.1191e-13" upper="2.44346"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_right_hip_yaw to leg_right_hip_pitch -->
   <joint name="leg_right_hip_pitch_joint" type="revolute">
@@ -765,7 +796,7 @@
     <child link="leg_right_hip_pitch"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.89805" upper="0.981748"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from leg_right_hip_roll to leg_right_hip_yaw -->
   <joint name="leg_right_hip_yaw_joint" type="revolute">
@@ -774,7 +805,7 @@
     <child link="leg_right_hip_yaw"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-0.589049" upper="0.981748"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
   <!-- Joint from base to leg_right_hip_roll -->
   <joint name="leg_right_hip_roll_joint" type="revolute">
@@ -783,6 +814,6 @@
     <child link="leg_right_hip_roll"/>
     <axis xyz="0 0 1"/>
     <limit effort="20" velocity="15" lower="-1.5708" upper="0.174533"/>
-    <joint_properties friction="0.1"/>
+    <dynamics friction="0.1" damping="5.0"/>
   </joint>
 </robot>

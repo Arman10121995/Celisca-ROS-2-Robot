@@ -1,0 +1,17 @@
+scene: /workspace/molar/.tmp/bhl_mjcf_p7c4lhsm/scene.xml
+model: 23 joints (12 leg, 10 arm), dt=2.0 ms, law at 250 Hz, spawn z=-0.038
+law: ankle K roll=0.7 pitch=0.7, leg PD=(120.0, 4.0), arm PD=(60.0, 2.0), |tau|<=20 N.m
+MJCF default joint class: armature=0.0050 frictionloss=0.1000
+
+A. MJCF defaults (what the vendored robot description declares)
+  armature=0.005 frictionloss=0.1                      -> HOLDS  max_tilt=0.0028
+B. as the URDF loaded before the fix (gz + pybullet: zero/zero)
+  armature=0 frictionloss=0                            -> FALLS  max_tilt=0.7047 at t=0.5
+  armature=0 frictionloss=0 + perturb t=3              -> FALLS  max_tilt=0.7047 at t=0.5
+C/D. single-term ablations
+  armature=0.005 only (no friction)                    -> HOLDS  max_tilt=0.0821
+  frictionloss=0.1 only (no armature)                  -> HOLDS  max_tilt=0.0028
+
+CONCLUSION: joint friction is the term the URDF had lost; with the
+standard <dynamics friction="0.1"/> tag (this commit) gz and pybullet
+load the same stabilizer MuJoCo gets from frictionloss=0.1.

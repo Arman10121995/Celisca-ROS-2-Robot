@@ -149,11 +149,14 @@ def main(args=None) -> None:
     node = HumanoidStandingController()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
+        # A stop from launch or the GUI, not a failure: without this every
+        # standing-controller shutdown logged a traceback and "process has died".
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":

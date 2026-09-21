@@ -620,6 +620,51 @@ def _urdf_path() -> str:
         directory = parent
 
 
+def bhl_urdf_path() -> str:
+    """Public accessor for the resolved BHL URDF path (see :func:`_urdf_path`).
+
+    Exposed so tests and tools can cross-check the description files (for
+    example against the sibling MJCF) without importing a private name.
+    """
+    return _urdf_path()
+
+
+#: Joint friction [N.m] every actuated BHL joint must declare in a *standard*
+#: ``<dynamics friction="...">`` URDF tag, matching the robot's own MJCF
+#: (mjcf/berkeley_humanoid_lite.xml ``frictionloss="0.1"``). The vendored
+#: export carried this in a non-standard ``<joint_properties>`` tag that
+#: urdfdom, sdformat and pybullet all silently drop, so the simulated biped
+#: ran with ZERO joint friction; the MuJoCo A/B probe
+#: (docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/) shows the committed
+#: balance law holds tilt at 0.0028 rad with this friction and falls at 0.5 s
+#: without it. Pinned by TestJointFrictionDeclaration.
+BHL_JOINT_FRICTION_NM = 0.1
+
+
+def parse_bhl_joint_dynamics() -> Dict[str, Dict[str, float]]:
+    """Parse the standard ``<dynamics>`` block of every revolute BHL joint.
+
+    Returns ``{joint_name: {"friction": float, "damping": float}}`` reading
+    only the standard tags that urdfdom / sdformat / pybullet actually load.
+    A joint whose friction is declared in a non-standard tag therefore shows
+    up as absent here, which is what makes the declaration regression-testable.
+    """
+    tree = ET.parse(_urdf_path())
+    root = tree.getroot()
+    out: Dict[str, Dict[str, float]] = {}
+    for j in root.iter("joint"):
+        if j.get("type") != "revolute":
+            continue
+        dyn = j.find("dynamics")
+        if dyn is None:
+            continue
+        out[j.get("name")] = {
+            "friction": float(dyn.get("friction", 0.0)),
+            "damping": float(dyn.get("damping", 0.0)),
+        }
+    return out
+
+
 def parse_bhl_joints() -> Dict[str, Dict[str, Optional[float]]]:
     """Parse actuated revolute joints from the BHL URDF.
 

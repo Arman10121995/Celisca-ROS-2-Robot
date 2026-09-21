@@ -7,7 +7,9 @@
 # loop is closed from the first controller-activation cycle.
 # Success: no SAFE_STOP, tilt stays well below 0.70 rad, no divergence trend.
 set -o pipefail
-OUT=/tmp/r53ankle2
+# Output dir overridable so repeat runs (e.g. after the 2026-09-21 joint-friction
+# fix) do not overwrite earlier evidence: OUT=/tmp/<new> bash run_stance.sh
+OUT=${OUT:-/tmp/r53ankle2}
 mkdir -p "$OUT"
 cd /home/molar1/bumperbot_ws
 source /opt/ros/humble/setup.bash
@@ -15,10 +17,23 @@ source install/setup.bash
 
 # 1. balance node FIRST - attached before the robot exists (warns on missing
 #    data, which is the designed no-fabrication behavior)
-nohup ros2 run robot_lab_adapter humanoid-standing-controller \
-    --ros-args -p imu_topic:=/imu/out -p command_interface:=effort \
-    > "$OUT/standing.log" 2>&1 &
-STANDING_PID=$!
+#    START_BALANCE=off is the PASSIVE control condition (2026-09-21): no node
+#    publishes /bhl_standing_controller/commands, so the effort controller
+#    holds its initial zero command and the plant runs on its own joint
+#    dynamics alone. It answers the honesty question "does the balance loop
+#    hold the stance, or is the stance passively stable from the description's
+#    joint losses?" - the same question the balance-core tests ask of a fixed
+#    pose. Usage: OUT=/tmp/x START_BALANCE=off bash run_stance.sh
+if [ "${START_BALANCE:-on}" = "on" ]; then
+    nohup ros2 run robot_lab_adapter humanoid-standing-controller \
+        --ros-args -p imu_topic:=/imu/out -p command_interface:=effort \
+        > "$OUT/standing.log" 2>&1 &
+    STANDING_PID=$!
+else
+    echo "START_BALANCE=off: passive condition, no balance node started" \
+        > "$OUT/standing.log"
+    STANDING_PID=""
+fi
 
 # 2. trace FIRST - captures the spawn transient (OUT passed so the probe
 #    writes its report next to the other run artifacts)
@@ -55,7 +70,8 @@ echo "probe rc: $?"
 # 6. final state
 ros2 control list_controllers > "$OUT/controllers_after.txt" 2>&1
 
-kill "$STANDING_PID" "$LAUNCH_PID" 2>/dev/null
+[ -n "$STANDING_PID" ] && kill "$STANDING_PID" 2>/dev/null
+kill "$LAUNCH_PID" 2>/dev/null
 sleep 4
 pkill -f 'ign gazebo' 2>/dev/null
 pkill -f robot_state_publisher 2>/dev/null

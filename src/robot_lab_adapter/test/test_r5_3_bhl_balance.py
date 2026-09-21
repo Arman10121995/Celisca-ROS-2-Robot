@@ -26,6 +26,7 @@ Covers the R5.3 acceptance bar, honestly:
 from __future__ import annotations
 
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -43,9 +44,11 @@ from robot_lab_adapter.bhl_balance import (  # noqa: E402
     ARM_BALANCE_K,
     BASE_VEL_LIMITS_PLACEHOLDER,
     BHL_ARM_JOINTS,
+    BHL_JOINT_FRICTION_NM,
     BHL_JOINT_NAMES,
     BHL_LEG_JOINTS,
     BHL_LEGS,
+    bhl_urdf_path,
     EFFORT_LIMIT,
     HIP_BALANCE_K_ROLL,
     KNEE_BALANCE_K,
@@ -67,6 +70,7 @@ from robot_lab_adapter.bhl_balance import (  # noqa: E402
     clamp_position,
     nominal_standing_pose,
     parse_bhl_joints,
+    parse_bhl_joint_dynamics,
     pd_effort_command,
 )
 
@@ -127,6 +131,46 @@ class TestEffortLimits:
         urdf = parse_bhl_joints()
         for name, d in urdf.items():
             assert d["velocity"] == 15.0
+
+
+# ----------------------------------------------------------------------
+# Joint friction declared in standard URDF tags
+# ----------------------------------------------------------------------
+class TestJointFrictionDeclaration:
+    """The R5.3 live-divergence defect (2026-09-21): the export declared joint
+    friction in a non-standard ``<joint_properties>`` tag that urdfdom,
+    sdformat and pybullet all silently drop, so every simulator ran the biped
+    with zero joint friction and the committed balance law diverged. These
+    tests fail if the declaration ever reverts to a tag the simulators ignore.
+    """
+
+    def test_every_actuated_joint_declares_standard_dynamics(self):
+        dynamics = parse_bhl_joint_dynamics()
+        missing = [n for n in BHL_JOINT_NAMES if n not in dynamics]
+        assert not missing, (
+            f"joints with no standard <dynamics> block (their friction is "
+            f"invisible to urdfdom/sdformat/pybullet): {missing}")
+
+    def test_friction_matches_the_robot_mjcf_value(self):
+        # The robot's own MJCF (mjcf/berkeley_humanoid_lite.xml) declares
+        # frictionloss="0.1" on every joint; the URDF must not declare less.
+        dynamics = parse_bhl_joint_dynamics()
+        for name in BHL_JOINT_NAMES:
+            assert dynamics[name]["friction"] == pytest.approx(
+                BHL_JOINT_FRICTION_NM), (
+                f"{name}: standard-tag friction "
+                f"{dynamics[name]['friction']} != MJCF "
+                f"frictionloss {BHL_JOINT_FRICTION_NM}")
+
+    def test_mjcf_and_urdf_agree_on_friction(self):
+        """Cross-check the URDF against the vendored MJCF text itself."""
+        urdf_dir = Path(bhl_urdf_path()).parent.parent
+        mjcf = urdf_dir / "mjcf" / "berkeley_humanoid_lite.xml"
+        if not mjcf.exists():  # pragma: no cover - vendored asset must exist
+            pytest.skip(f"MJCF not found at {mjcf}")
+        text = mjcf.read_text()
+        values = set(re.findall(r'frictionloss="([0-9.]+)"', text))
+        assert values == {f"{BHL_JOINT_FRICTION_NM}"}, values
 
 
 # ----------------------------------------------------------------------
