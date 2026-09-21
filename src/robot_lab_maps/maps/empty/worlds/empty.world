@@ -2,7 +2,15 @@
 <sdf version="1.7">
     <world name="empty_world">
         <physics type="ode">
-            <max_step_size>0.01</max_step_size>
+            <!-- 0.002 s (500 Hz), raised from 0.01 (R5.3 2026-09-18): the BHL
+                 effort-PD stance hold is discretely unstable when the control
+                 torque goes stale below the ~125 Hz plant stability edge
+                 (docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/
+                 plant_rate_probe.txt). 500 Hz physics also clears the gz
+                 ros2_control mismatch warning for the 200 Hz
+                 controller_manager rate and matches MuJoCo's default
+                 timestep used by the R5.3 plant validation. -->
+            <max_step_size>0.002</max_step_size>
         </physics>
         <light type="directional" name="sun">
             <cast_shadows>true</cast_shadows>

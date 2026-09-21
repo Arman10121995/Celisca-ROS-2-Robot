@@ -41,17 +41,21 @@ from robot_lab_adapter.bhl_balance import (
 )
 
 
-def quaternion_to_body_state(imu: Imu) -> BodyState:
+def quaternion_to_body_state(imu: Imu, invert_tilt: bool = False) -> BodyState:
     """Extract roll/pitch body state from an IMU message.
 
     Falls back to a zero-attitude BodyState if the orientation covariance
-    is invalid (honest missing-attitude handling).
+    is invalid (honest missing-attitude handling). ``invert_tilt`` negates
+    both angles (diagnostic switch for sensor-convention mismatches).
     """
     q = imu.orientation
     norm = math.sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
     if norm < 1e-6:
         return BodyState(roll_rad=0.0, pitch_rad=0.0)
-    return BodyState.from_quaternion(q.x, q.y, q.z, q.w)
+    body = BodyState.from_quaternion(q.x, q.y, q.z, q.w)
+    if invert_tilt:
+        body = BodyState(roll_rad=-body.roll_rad, pitch_rad=-body.pitch_rad)
+    return body
 
 
 class HumanoidStandingController(Node):
@@ -64,12 +68,16 @@ class HumanoidStandingController(Node):
         self.declare_parameter("imu_topic", "/imu/out")
         self.declare_parameter("command_interface", "effort")
         self.declare_parameter("command_rate_hz", BALANCE_RATE_HZ)
+        self.declare_parameter(
+            "imu_invert_tilt", False)
 
         command_topic = self.get_parameter("command_topic").value
         joint_states_topic = self.get_parameter("joint_states_topic").value
         imu_topic = self.get_parameter("imu_topic").value
         rate = float(self.get_parameter("command_rate_hz").value)
         interface = str(self.get_parameter("command_interface").value)
+        self._invert_tilt = bool(
+            self.get_parameter("imu_invert_tilt").value)
         if interface not in ("effort", "position"):
             self.get_logger().warning(
                 f"unknown command_interface '{interface}'; falling back to effort")
@@ -108,7 +116,7 @@ class HumanoidStandingController(Node):
 
     def _on_imu(self, msg: Imu) -> None:
         """Cache the latest body attitude from the IMU."""
-        self._body = quaternion_to_body_state(msg)
+        self._body = quaternion_to_body_state(msg, self._invert_tilt)
 
     def _on_timer(self) -> None:
         """One balance cycle: body state -> Float64MultiArray command."""
