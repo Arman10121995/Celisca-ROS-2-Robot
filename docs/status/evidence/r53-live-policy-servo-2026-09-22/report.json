@@ -1,0 +1,33 @@
+{
+  "passed": false,
+  "axis": "y",
+  "force_n": 0.0,
+  "criteria": {
+    "duration_s": 8,
+    "max_tilt_rad": 0.7,
+    "final_second_max_tilt_rad": 0.1,
+    "final_second_max_speed_m_s": 0.05,
+    "max_effort_nm": 20.0001,
+    "min_forward_progress_m": 0.375,
+    "max_lateral_displacement_m": 0.25
+  },
+  "controller": "humanoid_policy_controller",
+  "plant": {
+    "source": "urdf",
+    "root_body_id": 1,
+    "mass_kg": 16.71517,
+    "physics_timestep_s": 0.002,
+    "actuator_count": 22
+  },
+  "samples": 2001,
+  "duration_s": 8.003999999999342,
+  "impulse_ns": 0.0,
+  "max_tilt_rad": 1.9026218824601715,
+  "final_max_tilt_rad": 1.5703706920476739,
+  "final_max_speed_m_s": 1.4796132214722665e-05,
+  "max_effort_nm": 6.0,
+  "forward_progress_m": 0.10995656551435667,
+  "lateral_displacement_m": 0.0005034333125948279,
+  "displacement_m": 0.10995771798656628,
+  "controller_exit_code": 1
+}

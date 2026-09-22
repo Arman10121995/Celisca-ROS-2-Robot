@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "axis": "x",
+  "force_n": 0.0,
+  "criteria": {
+    "duration_s": 8,
+    "max_tilt_rad": 0.2,
+    "final_second_max_tilt_rad": 0.02,
+    "final_second_max_speed_m_s": 0.05,
+    "max_effort_nm": 20.0001
+  },
+  "plant": {
+    "source": "urdf",
+    "root_body_id": 1,
+    "mass_kg": 16.71517,
+    "physics_timestep_s": 0.002,
+    "actuator_count": 22
+  },
+  "samples": 2001,
+  "duration_s": 8.003999999999342,
+  "impulse_ns": 0.0,
+  "max_tilt_rad": 0.0018316644967629895,
+  "final_max_tilt_rad": 0.001225902085296106,
+  "final_max_speed_m_s": 3.170510069229083e-06,
+  "max_effort_nm": 0.7578087104130222,
+  "displacement_m": 0.00033672321765724925,
+  "controller_exit_code": 0
+}

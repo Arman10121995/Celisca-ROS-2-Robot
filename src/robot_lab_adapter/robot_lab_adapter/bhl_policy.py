@@ -190,6 +190,10 @@ def load_policy_config(
     if len(cfg["default_joint_positions"]) != len(cfg["joints"]):
         raise ValueError(f"{name}: default pose does not cover every joint")
     for arrays in ("joint_kp", "joint_kd", "effort_limits"):
+        if not all(math.isfinite(float(v)) and float(v) >= 0 for v in cfg[arrays]):
+            raise ValueError(f"{name}: {arrays} must be finite and nonnegative")
+        if arrays == "effort_limits" and any(float(v) == 0 for v in cfg[arrays]):
+            raise ValueError(f"{name}: effort limits must be positive")
         if len(cfg[arrays]) != len(cfg["joints"]):
             raise ValueError(f"{name}: {arrays} does not cover every joint")
     return PolicyConfig(

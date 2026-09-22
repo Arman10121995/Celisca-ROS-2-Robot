@@ -13,11 +13,12 @@ A thin ROS2 wrapper around the pure-logic policy adapter
 - Subscribes to ``cmd_vel`` (geometry_msgs/Twist) for the base-velocity
   command; the policy clamps it to the training command ranges.
 - Publishes a ``Float64MultiArray`` of 22 values to the
-  ``bhl_standing_controller`` command topic at the policy decision rate
-  (25 Hz upstream). With ``command_interface:=effort`` (the default, matching
+  ``bhl_standing_controller`` command topic at 250 Hz for effort servoing,
+  with policy decisions at 25 Hz upstream. With ``command_interface:=effort`` (the default, matching
   the description's effort command interface) the node converts the policy's
   position targets into joint-space PD efforts
-  ``tau = Kp*(q* - q) + Kd*(0 - qdot)``, clamped to +/-20 N.m, and the
+  ``tau = Kp*(q* - q) + Kd*(0 - qdot)`` using checkpoint gains and
+  limits (4 N.m arms / 6 N.m legs), additionally bounded by the URDF, and the
   ``effort_controllers/JointGroupEffortController`` forwards them to the
   joints. The PD loop is closed *here*: that controller type is a pure effort
   forwarder and has no kp/kd of its own. ``command_interface:=position``
@@ -43,6 +44,7 @@ latched SAFE_STOP path takes over.
 
 from __future__ import annotations
 
+import math
 from typing import Dict, Optional
 
 import rclpy
@@ -54,10 +56,9 @@ from std_msgs.msg import Float64MultiArray
 
 from robot_lab_adapter.bhl_balance import (
     BHL_JOINT_NAMES,
-    STANCE_PD_ARMS,
-    STANCE_PD_LEGS,
+    BALANCE_RATE_HZ,
+    EFFORT_LIMIT,
     TILT_FALL_RAD,
-    pd_effort_command,
 )
 from robot_lab_adapter.bhl_policy import (
     BhlPolicyController,
@@ -85,10 +86,7 @@ class HumanoidPolicyController(Node):
         self.declare_parameter("command_rate_hz", POLICY_RATE_HZ)
         self.declare_parameter("settle_duration_s", 2.0)
         self.declare_parameter("command_interface", "effort")
-        self.declare_parameter("kp_legs", STANCE_PD_LEGS[0])
-        self.declare_parameter("kd_legs", STANCE_PD_LEGS[1])
-        self.declare_parameter("kp_arms", STANCE_PD_ARMS[0])
-        self.declare_parameter("kd_arms", STANCE_PD_ARMS[1])
+        self.declare_parameter("effort_rate_hz", BALANCE_RATE_HZ)
 
         command_topic = self.get_parameter("command_topic").value
         joint_states_topic = self.get_parameter("joint_states_topic").value
@@ -110,14 +108,13 @@ class HumanoidPolicyController(Node):
                 f"unknown command_interface '{interface}'; falling back to effort")
             interface = "effort"
         self._interface = interface
-        self._leg_gains = (
-            float(self.get_parameter("kp_legs").value),
-            float(self.get_parameter("kd_legs").value))
-        self._arm_gains = (
-            float(self.get_parameter("kp_arms").value),
-            float(self.get_parameter("kd_arms").value))
-
         self._controller = BhlPolicyController(load_policy_config(name=policy_name))
+        config = self._controller.config
+        self._pd = dict(zip(config.joints, zip(config.kp, config.kd, config.effort_limits)))
+        effort_rate = float(self.get_parameter("effort_rate_hz").value)
+        if not math.isfinite(rate) or rate <= 0 or not math.isfinite(effort_rate) or effort_rate < rate:
+            raise ValueError("positive policy rate and effort rate >= policy rate required")
+        self._targets = {}
         self._settle = StartupSettle(
             self._controller.config.hold_pose(), duration_s=settle_duration)
         self._dt = 1.0 / rate
@@ -144,18 +141,21 @@ class HumanoidPolicyController(Node):
                        history=HistoryPolicy.KEEP_LAST),
         )
         self._timer = self.create_timer(1.0 / rate, self._on_timer)
+        self._effort_timer = (
+            self.create_timer(1.0 / effort_rate, self._on_effort_timer)
+            if interface == "effort" else None)
+
         self.get_logger().info(
             f"HumanoidPolicyController: policy={policy_name} "
             f"({joint_states_topic} + {imu_topic} + {cmd_vel_topic} -> "
             f"{command_topic}) at {rate} Hz over {len(BHL_JOINT_NAMES)} joints "
-            f"({interface} interface)"
+            f"({interface} interface; effort servo {effort_rate} Hz, checkpoint PD/limits)"
         )
 
     def _on_joint_state(self, msg: JointState) -> None:
         """Cache the latest measured joint state keyed by name."""
         self._measured_positions = dict(zip(msg.name, msg.position))
-        if msg.velocity:
-            self._measured_velocities = dict(zip(msg.name, msg.velocity))
+        self._measured_velocities = dict(zip(msg.name, msg.velocity)) if msg.velocity else None
 
     def _on_imu(self, msg: Imu) -> None:
         """Cache the latest IMU attitude and body-frame angular velocity."""
@@ -216,24 +216,43 @@ class HumanoidPolicyController(Node):
                 self.get_logger().error(issue)
             else:
                 self.get_logger().warning(issue)
-        if self._interface == "effort":
-            # Close the PD-effort loop here: JointGroupEffortController is a
-            # pure effort forwarder (no kp/kd of its own), so the node converts
-            # the policy's position targets into clamped PD efforts. A joint
-            # with no measurement gets zero effort (never a blind drive).
-            efforts = pd_effort_command(
-                targets,
-                self._measured_positions,
-                self._measured_velocities or {},
-                self._leg_gains,
-                self._arm_gains,
-            )
-            values = [efforts[j] for j in BHL_JOINT_NAMES]
-        else:
-            values = [targets[j] for j in BHL_JOINT_NAMES]
+        self._targets = targets
+        if self._interface == "position":
+            self._publish([targets[j] for j in BHL_JOINT_NAMES])
+
+    def _publish(self, values):
         msg = Float64MultiArray()
         msg.data = values
         self._command_pub.publish(msg)
+
+    def _on_effort_timer(self):
+        """Fresh-state PD between policy decisions, in checkpoint joint order."""
+        if not self._measured_positions or not self._targets:
+            return
+        if quaternion_tilt(*self._orientation) >= TILT_FALL_RAD:
+            # The public update checks tilt before inference and latches stop.
+            self._controller.update(
+                command=self._command, gyro=self._gyro, orientation=self._orientation,
+                measured_positions=self._measured_positions,
+                measured_velocities=self._measured_velocities)
+        if self._controller.safety_state == self._controller.SAFE_STOP:
+            self._publish([0.0] * len(BHL_JOINT_NAMES))
+            return
+        values = []
+        for joint in BHL_JOINT_NAMES:
+            target = (self._targets.get(joint) if self._commanded
+                      else self._measured_positions.get(joint))
+            measured = self._measured_positions.get(joint)
+            velocity = (self._measured_velocities or {}).get(joint, 0.0)
+            if target is None or measured is None or not all(
+                    math.isfinite(v) for v in (target, measured, velocity)):
+                values.append(0.0)
+                continue
+            kp, kd, limit = self._pd[joint]
+            bound = min(float(limit), EFFORT_LIMIT)
+            effort = kp * (target - measured) - kd * velocity
+            values.append(float(max(-bound, min(bound, effort))))
+        self._publish(values)
 
 
 def main(args=None) -> None:

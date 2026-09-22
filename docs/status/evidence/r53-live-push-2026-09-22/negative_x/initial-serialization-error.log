@@ -1,0 +1,29 @@
+1790065573.994299 [189]     python: selected interface "lo" is not multicast-capable: disabling multicast
+[WARN] [1790065574.879276611] [mujoco_spawner]: MuJoCo inertia repair: clamped non-physical mass/inertia entries.
+[INFO] [1790065575.455405412] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[INFO] [1790065575.648420423] [mujoco_spawner]: Joints: ['arm_left_shoulder_pitch_joint', 'arm_left_shoulder_roll_joint', 'arm_left_shoulder_yaw_joint', 'arm_left_elbow_pitch_joint', 'arm_left_elbow_roll_joint', 'arm_right_shoulder_pitch_joint', 'arm_right_shoulder_roll_joint', 'arm_right_shoulder_yaw_joint', 'arm_right_elbow_pitch_joint', 'arm_right_elbow_roll_joint', 'leg_left_hip_roll_joint', 'leg_left_hip_yaw_joint', 'leg_left_hip_pitch_joint', 'leg_left_knee_pitch_joint', 'leg_left_ankle_pitch_joint', 'leg_left_ankle_roll_joint', 'leg_right_hip_roll_joint', 'leg_right_hip_yaw_joint', 'leg_right_hip_pitch_joint', 'leg_right_knee_pitch_joint', 'leg_right_ankle_pitch_joint', 'leg_right_ankle_roll_joint']   lw= rw=
+[INFO] [1790065575.650156313] [mujoco_spawner]: Joint effort input: /bhl_standing_controller/commands (22 joints, URDF limits)
+[INFO] [1790065575.651535886] [mujoco_spawner]: MuJoCo model loaded: 24 bodies, 23 joints
+[INFO] [1790065575.652088969] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[INFO] [1790065575.652593605] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[INFO] [1790065575.656260712] [mujoco_spawner]: MuJoCo spawner running.
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py", line 163, in <module>
+    sys.exit(main())
+  File "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py", line 152, in main
+    (args.output / 'report.json').write_text(json.dumps(result, indent=2) + '\n')
+  File "/usr/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.10/json/encoder.py", line 201, in encode
+    chunks = list(chunks)
+  File "/usr/lib/python3.10/json/encoder.py", line 431, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.10/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.10/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.10/json/encoder.py", line 438, in _iterencode
+    o = _default(o)
+  File "/usr/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type int32 is not JSON serializable

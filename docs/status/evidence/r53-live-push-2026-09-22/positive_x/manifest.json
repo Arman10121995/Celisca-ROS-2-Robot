@@ -1,0 +1,33 @@
+{
+  "command": [
+    "src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py",
+    "docs/status/evidence/r53-live-push-2026-09-22/positive_x",
+    "--axis",
+    "x",
+    "--force",
+    "5"
+  ],
+  "backend_parameters": {
+    "model": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro",
+    "effort_controller_config": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/config/bhl_controllers.yaml",
+    "world_xml": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/mjcf/nav_empty.xml",
+    "robot_name": "bhl",
+    "spawn_z": "-0.038",
+    "gui": "false",
+    "physics_rate": "250.0",
+    "publish_rate": "250.0",
+    "use_sim_time": "true",
+    "camera_rate": "0.0"
+  },
+  "revision": "4260cf3625eda29c58bdf4c8125f7bee90d5ef27",
+  "git_status": " M src/robot_lab_adapter/robot_lab_adapter/humanoid_policy_controller.py\n M src/robot_lab_adapter/test/test_r5_3_bhl_policy_ros_graph.py\n?? docs/status/evidence/r53-live-push-2026-09-22/\n?? src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py\n",
+  "sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py": "814c5437270f4503dec138fe25447d43a22f09b3e4ac13f6e217955bddcdfa56",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py": "e726a38ec941edaa986fd7433ff41029d7d027a0516b03ffa3dd598cad5e7c80",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/bhl_balance.py": "4bf5a2b48a314f39fb05a5f25bf85ac05113ab03f4292b7217b9e100a41a79a5",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/humanoid_standing_controller.py": "eed335ddd7670a28554ed2a476c4108e6716289e06ea8ad6421dcc1dd478460d",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro": "6f01933121e41016915508ab7965b35947ad76134bd1b57df79f86ad15048f65",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/config/bhl_controllers.yaml": "75a8802cc431e5d22c52a2197326a0fd5585aced028c39af40e533e6b7bdac5f",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/mjcf/nav_empty.xml": "7436d85068f3923a36efef3ae8ce3f0ebec1e15e9ce3620e78efc105c21a6d9d"
+  }
+}

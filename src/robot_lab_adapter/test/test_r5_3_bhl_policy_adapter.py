@@ -232,7 +232,7 @@ def test_build_observation_layout_and_dtype(full_config):
     assert obs.shape == (75,)
     assert obs.dtype == np.float32
     assert list(obs[0:3]) == [0.25, 0.0, 0.0]
-    assert list(obs[3:6]) == [0.01, 0.02, 0.03]
+    assert list(obs[3:6]) == pytest.approx([0.01, 0.02, 0.03], abs=1e-7)
     assert list(obs[6:9]) == [0.0, 0.0, -1.0]
     # q - default block is zero at the default pose...
     assert np.allclose(obs[9:31], 0.0)
@@ -334,7 +334,7 @@ def test_controller_runs_inference_and_passes_command_through(full_config):
     assert len(session.fed) == 1
     fed = session.fed[0]["observations"]
     assert fed.shape == (1, 75)
-    assert list(fed[0][0:3]) == [0.2, 0.1, 0.3]
+    assert list(fed[0][0:3]) == pytest.approx([0.2, 0.1, 0.3], abs=1e-7)
     assert cycle.observation.shape == (75,)
     assert len(cycle.position_targets) == 22
 

@@ -311,3 +311,39 @@ def test_effort_interface_publishes_bounded_pd_efforts(effort_graph):
     assert np.any(np.abs(efforts) > 1e-9), "the PD loop is not driving"
     assert np.all(np.abs(efforts) <= EFFORT_LIMIT), "effort exceeded the URDF bound"
 
+
+
+def test_effort_servo_uses_checkpoint_gains_and_fresh_state(effort_graph, monkeypatch):
+    node = effort_graph.controller
+    node._commanded = True
+    node._targets = {j: .1 for j in BHL_JOINT_NAMES}
+    node._measured_positions = {j: 0.0 for j in BHL_JOINT_NAMES}
+    node._measured_velocities = {j: .1 for j in BHL_JOINT_NAMES}
+    published = []
+    monkeypatch.setattr(node, "_publish", published.append)
+    node._on_effort_timer()
+    expected = dict(zip(node._controller.config.joints,
+                        node._controller.config.kp * .1 - node._controller.config.kd * .1))
+    assert published[-1] == pytest.approx([expected[j] for j in BHL_JOINT_NAMES])
+    # No policy decision between samples: the servo must see the new velocity.
+    node._measured_velocities = {j: 100.0 for j in BHL_JOINT_NAMES}
+    node._on_effort_timer()
+    limits = dict(zip(node._controller.config.joints, node._controller.config.effort_limits))
+    assert published[-1] == pytest.approx([-limits[j] for j in BHL_JOINT_NAMES])
+    assert node._effort_timer.timer_period_ns == 4_000_000
+    assert node._timer.timer_period_ns == 40_000_000
+
+
+def test_effort_fall_stops_drive_even_between_policy_decisions(effort_graph, monkeypatch):
+    node = effort_graph.controller
+    node._targets = {j: .4 for j in BHL_JOINT_NAMES}
+    node._commanded = True
+    published = []
+    monkeypatch.setattr(node, "_publish", published.append)
+    node._orientation = (math.sin(.8 / 2), 0.0, 0.0, math.cos(.8 / 2))
+    node._on_effort_timer()
+    assert node._controller.safety_state == 'SAFE_STOP'
+    assert published[-1] == [0.0] * 22
+    node._orientation = (0.0, 0.0, 0.0, 1.0)
+    node._on_effort_timer()
+    assert published[-1] == [0.0] * 22

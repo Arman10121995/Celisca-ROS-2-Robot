@@ -1,0 +1,37 @@
+1790065711.965836 [189]     python: selected interface "lo" is not multicast-capable: disabling multicast
+[WARN] [1790065712.829882657] [mujoco_spawner]: MuJoCo inertia repair: clamped non-physical mass/inertia entries.
+[INFO] [1790065713.404473156] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[INFO] [1790065713.598579428] [mujoco_spawner]: Joints: ['arm_left_shoulder_pitch_joint', 'arm_left_shoulder_roll_joint', 'arm_left_shoulder_yaw_joint', 'arm_left_elbow_pitch_joint', 'arm_left_elbow_roll_joint', 'arm_right_shoulder_pitch_joint', 'arm_right_shoulder_roll_joint', 'arm_right_shoulder_yaw_joint', 'arm_right_elbow_pitch_joint', 'arm_right_elbow_roll_joint', 'leg_left_hip_roll_joint', 'leg_left_hip_yaw_joint', 'leg_left_hip_pitch_joint', 'leg_left_knee_pitch_joint', 'leg_left_ankle_pitch_joint', 'leg_left_ankle_roll_joint', 'leg_right_hip_roll_joint', 'leg_right_hip_yaw_joint', 'leg_right_hip_pitch_joint', 'leg_right_knee_pitch_joint', 'leg_right_ankle_pitch_joint', 'leg_right_ankle_roll_joint']   lw= rw=
+[INFO] [1790065713.600441940] [mujoco_spawner]: Joint effort input: /bhl_standing_controller/commands (22 joints, URDF limits)
+[INFO] [1790065713.601934983] [mujoco_spawner]: MuJoCo model loaded: 24 bodies, 23 joints
+[INFO] [1790065713.602632289] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[INFO] [1790065713.603226268] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[INFO] [1790065713.606553216] [mujoco_spawner]: MuJoCo spawner running.
+{
+  "passed": true,
+  "axis": "x",
+  "force_n": 5.0,
+  "criteria": {
+    "duration_s": 8,
+    "max_tilt_rad": 0.2,
+    "final_second_max_tilt_rad": 0.02,
+    "final_second_max_speed_m_s": 0.05,
+    "max_effort_nm": 20.0001
+  },
+  "plant": {
+    "source": "urdf",
+    "root_body_id": 1,
+    "mass_kg": 16.71517,
+    "physics_timestep_s": 0.002,
+    "actuator_count": 22
+  },
+  "samples": 2001,
+  "duration_s": 8.003999999999342,
+  "impulse_ns": 0.9999999999998899,
+  "max_tilt_rad": 0.016203431517699075,
+  "final_max_tilt_rad": 0.0012280685887251102,
+  "final_max_speed_m_s": 1.3563800234220977e-05,
+  "max_effort_nm": 2.223301952439805,
+  "displacement_m": 0.00043078142582949177,
+  "controller_exit_code": 0
+}
