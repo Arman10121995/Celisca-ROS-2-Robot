@@ -1,0 +1,34 @@
+{
+  "command": [
+    "src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py",
+    "docs/status/evidence/r53-live-policy-walk-2026-09-22/policy_walk",
+    "--force",
+    "0",
+    "--policy"
+  ],
+  "backend_parameters": {
+    "model": "/home/molar1/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro",
+    "effort_controller_config": "/home/molar1/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/config/bhl_controllers.yaml",
+    "world_xml": "/home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/mjcf/nav_empty.xml",
+    "robot_name": "bhl",
+    "spawn_z": "-0.038",
+    "gui": "false",
+    "physics_rate": "250.0",
+    "publish_rate": "250.0",
+    "use_sim_time": "true",
+    "camera_rate": "0.0"
+  },
+  "revision": "2e6c7ea770096af04eeca8c3180b0866004d9539",
+  "git_status": " M src/robot_lab_adapter/robot_lab_adapter/humanoid_policy_controller.py\n M src/robot_lab_adapter/test/test_r5_3_bhl_policy_ros_graph.py\n M src/robot_lab_bringup/test/test_mujoco_effort.py\n M src/robot_lab_mujoco/python/robot_lab_mujoco/joint_effort.py\n M src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py\n M src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py\n?? docs/status/evidence/r53-live-policy-walk-2026-09-22/\n",
+  "sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/tools/qualify_live_stance.py": "8044ce9ad75ed648585eca6090a5851f3a2453e6ddefa348e2d9761424ea2e20",
+    "/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py": "7eb0835b356a4e41d54613deaed9eac1acc566a3f4cb7af38854c4207c6b6654",
+    "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/bhl_balance.py": "4bf5a2b48a314f39fb05a5f25bf85ac05113ab03f4292b7217b9e100a41a79a5",
+    "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/humanoid_standing_controller.py": "eed335ddd7670a28554ed2a476c4108e6716289e06ea8ad6421dcc1dd478460d",
+    "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/humanoid_policy_controller.py": "5370a638633a29de96efe5cd13a33cb647b6af9b732e089ecc875b691b578874",
+    "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/bhl_policy.py": "ead8da525dcd8df2176c367e0f29befc74fb09aca516b8505867206ac95a20fe",
+    "/home/molar1/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/xacro/bhl_sim.xacro": "6f01933121e41016915508ab7965b35947ad76134bd1b57df79f86ad15048f65",
+    "/home/molar1/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/config/bhl_controllers.yaml": "75a8802cc431e5d22c52a2197326a0fd5585aced028c39af40e533e6b7bdac5f",
+    "/home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/mjcf/nav_empty.xml": "7436d85068f3923a36efef3ae8ce3f0ebec1e15e9ce3620e78efc105c21a6d9d"
+  }
+}

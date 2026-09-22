@@ -10,7 +10,7 @@
   </xacro:macro>
 
   <!-- Reusable OAK-D Pro / RGBD camera macro -->
-  <xacro:macro name="oakd" params="name:=oakd parent_link *origin model:=pro">
+  <xacro:macro name="oakd" params="name:=oakd parent_link *origin model:=pro mesh_visual:=true">
     <xacro:property name="baseline" value="0.075"/>
     <xacro:property name="oakd_pi" value="3.1415926535897931"/>
     <xacro:property name="base_frame" value="${name}_link"/>
@@ -24,7 +24,12 @@
     <link name="${base_frame}">
       <visual>
         <geometry>
-          <mesh filename="package://robot_lab_robots/description_common/meshes/oakd_${model}.stl" scale="1 1 1"/>
+          <xacro:if value="${mesh_visual}">
+            <mesh filename="package://robot_lab_robots/description_common/meshes/oakd_${model}.stl" scale="1 1 1"/>
+          </xacro:if>
+          <xacro:unless value="${mesh_visual}">
+            <box size="0.0225 0.097 0.03"/>
+          </xacro:unless>
         </geometry>
         <material name="dark_grey"/>
       </visual>

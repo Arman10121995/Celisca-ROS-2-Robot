@@ -1,0 +1,20 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-50-33-916018-molar1-198207
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [isaac_spawner-1]: process started with pid [198211]
+[isaac_spawner-1] 1790085034.752530 [84] isaac_spaw: selected interface "lo" is not multicast-capable: disabling multicast
+[isaac_spawner-1] [INFO] [1790085035.356849564] [isaac_spawner]: Robot-free run: loading world without a robot
+[isaac_spawner-1] [WARN] [1790085035.358542010] [isaac_spawner]: Robot has no 'laser_link' link; /scan originates 0.12 m above the base, as in the PyBullet and MuJoCo bridges.
+[isaac_spawner-1] [INFO] [1790085035.359899967] [isaac_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[isaac_spawner-1] [INFO] [1790085035.364600289] [isaac_spawner]: World 'nav_obstacle.world': 17 static shape(s) for Isaac, 0 skipped
+[isaac_spawner-1] [INFO] [1790085035.366239680] [isaac_spawner]: Launching Isaac runtime: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_runtime.py (gui=False)
+[isaac_spawner-1] [INFO] [1790085035.367890399] [isaac_spawner]: Isaac runtime LD_PRELOAD: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/extsDeprecated/omni.isaac.ml_archive/pip_prebundle/nvidia/nvjitlink/lib/libnvJitLink.so.12 /lib/aarch64-linux-gnu/libgomp.so.1
+[isaac_spawner-1] [INFO] [1790085057.353379799] [isaac_spawner]: Isaac runtime: World shapes created: 17 box
+[isaac_spawner-1] [INFO] [1790085057.549569796] [isaac_spawner]: Isaac runtime: Default lighting added: ['/World/robot_lab_lights/dome', '/World/robot_lab_lights/sun']
+[isaac_spawner-1] [INFO] [1790085058.310725519] [isaac_spawner]: Isaac runtime ready (dofs=[])
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [isaac_spawner-1]: sending signal 'SIGINT' to process[isaac_spawner-1]
+[isaac_spawner-1] [WARN] [1790085089.875804620] [isaac_spawner]: Isaac runtime exited (rc=0)
+[isaac_spawner-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[isaac_spawner-1] [INFO] [1790085089.877892164] [isaac_spawner]: Isaac runtime stopped (graceful)
+[isaac_spawner-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[INFO] [isaac_spawner-1]: process has finished cleanly [pid 198211]

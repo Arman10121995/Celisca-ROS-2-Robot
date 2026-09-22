@@ -189,6 +189,7 @@ class IsaacSpawner(Node):
         self.declare_parameter("spawn_z", 0.0)
         self.declare_parameter("spawn_yaw", 0.0)
         self.declare_parameter("gui", True)
+        self.declare_parameter("hold_position", "false")
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
@@ -312,25 +313,33 @@ class IsaacSpawner(Node):
             xacro = self.get_parameter("robot_xacro").value
             if pkg and xacro:
                 model = os.path.join(get_package_share_directory(pkg), xacro)
-        if not model or not os.path.isfile(str(model)):
-            raise RuntimeError("robot model not found: %r" % model)
-
-        urdf_text = _xacro_to_urdf(model)
-        pkg_map = {}
-        for pkg_name in re.findall(r"\$\(find\s+([^)]+)\)", urdf_text):
-            try:
-                pkg_map[pkg_name] = get_package_share_directory(pkg_name)
-            except Exception:
-                pass
-        rp = self.get_parameter("robot_package").value
-        if rp and rp not in pkg_map:
-            pkg_map[rp] = get_package_share_directory(rp)
-        urdf = _strip_gazebo_tags(_rewrite_package_uris(urdf_text, pkg_map))
-        self._urdf_text = urdf
-        fd, urdf_file = tempfile.mkstemp(suffix=".urdf", dir=tempfile.gettempdir())
-        with os.fdopen(fd, "w") as fh:
-            fh.write(urdf)
-        self.get_logger().info("URDF written to %s" % urdf_file)
+        robot_free = (not model) or str(model).strip().lower() == "none"
+        self._robot_free = robot_free
+        urdf_file = ""
+        urdf = ""
+        if not robot_free:
+            if not os.path.isfile(str(model)):
+                raise RuntimeError("robot model not found: %r" % model)
+            urdf_text = _xacro_to_urdf(model)
+            pkg_map = {}
+            for pkg_name in re.findall(r"\$\(find\s+([^)]+)\)", urdf_text):
+                try:
+                    pkg_map[pkg_name] = get_package_share_directory(pkg_name)
+                except Exception:
+                    pass
+            rp = self.get_parameter("robot_package").value
+            if rp and rp not in pkg_map:
+                pkg_map[rp] = get_package_share_directory(rp)
+            urdf = _strip_gazebo_tags(_rewrite_package_uris(urdf_text, pkg_map))
+            self._urdf_text = urdf
+            fd, urdf_file = tempfile.mkstemp(suffix=".urdf", dir=tempfile.gettempdir())
+            with os.fdopen(fd, "w") as fh:
+                fh.write(urdf)
+            self.get_logger().info("URDF written to %s" % urdf_file)
+        else:
+            # Robot-free display: no description to expand, world only.
+            self._urdf_text = ""
+            self.get_logger().info("Robot-free run: loading world without a robot")
 
         gui = self.get_parameter("gui").value
         if isinstance(gui, str):
@@ -340,12 +349,15 @@ class IsaacSpawner(Node):
             "world_path": str(self.get_parameter("world_path").value or ""),
             "urdf_file": urdf_file,
             "robot_name": self.get_parameter("robot_name").value,
+            "robot_free": bool(robot_free),
             "spawn_x": float(self.get_parameter("spawn_x").value),
             "spawn_y": float(self.get_parameter("spawn_y").value),
             "spawn_z": float(self.get_parameter("spawn_z").value),
             "spawn_yaw": float(self.get_parameter("spawn_yaw").value),
             "gui": bool(gui and os.environ.get("DISPLAY")),
             "physics_rate": 60.0,
+            # Display hold forwarded to the runtime: freeze joints at spawn.
+            "hold_position": str(self.get_parameter("hold_position").value or "auto"),
             "left_wheel_joint": self.get_parameter("left_wheel_joint").value,
             "right_wheel_joint": self.get_parameter("right_wheel_joint").value,
             "wheel_radius": float(self.get_parameter("wheel_radius").value),
@@ -707,6 +719,8 @@ class IsaacSpawner(Node):
         clock_msg = RosClock()
         clock_msg.clock = stamp
         self._clock_pub.publish(clock_msg)
+        if getattr(self, "_robot_free", False):
+            return
 
         js = JointState()
         js.header.stamp = stamp

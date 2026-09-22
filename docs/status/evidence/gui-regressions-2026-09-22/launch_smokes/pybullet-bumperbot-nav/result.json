@@ -1,0 +1,17 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "simulator:=pybullet",
+    "robot_model:=bumperbot",
+    "mode:=nav",
+    "map_name:=nav_obstacle",
+    "world_path:=maps/nav_obstacle/worlds/nav_obstacle.world",
+    "map_yaml:=maps/nav_obstacle/maps/map.yaml",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "code": 0
+}

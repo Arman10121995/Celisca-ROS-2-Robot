@@ -1,0 +1,37 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "simulator:=isaac",
+    "robot_model:=labbot",
+    "map_name:=nav_obstacle",
+    "mode:=3d_slam",
+    "gui:=false",
+    "start_rviz:=false",
+    "world_path:=maps/nav_obstacle/worlds/nav_obstacle.world",
+    "map_yaml:=maps/nav_obstacle/maps/map.yaml"
+  ],
+  "passed": true,
+  "checks": {
+    "clock_advances": true,
+    "no_startup_crash": true,
+    "measured_state": true,
+    "finite_joints": true,
+    "rgbd_received": true
+  },
+  "counts": {
+    "tf": 1633,
+    "ready": 1,
+    "clock": 1864,
+    "joints": 1863,
+    "odom": 1863,
+    "rgb": 18,
+    "depth": 18,
+    "map": 1
+  },
+  "final_sim_time": 3.633333333,
+  "settled_max_joint_speed": 0.371879905462265,
+  "launch_exit_code": 0
+}

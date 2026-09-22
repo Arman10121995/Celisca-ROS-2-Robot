@@ -345,6 +345,8 @@ tasks:
           - "src/robot_lab_bringup/config/sim_modes.yaml"
           - "src/robot_lab_bringup/launch/"
           - "src/robot_lab_gui/"
+          - "src/robot_lab_mapping/"
+          - "src/robot_lab/robot_lab_registry/config/robots.yaml"
           - "src/robot_lab_pybullet/"
           - "src/robot_lab_mujoco/"
           - "src/robot_lab_isaac/"
@@ -371,6 +373,8 @@ tasks:
           - "src/robot_lab/robot_lab_registry/config/"
           - "src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py"
           - "src/robot_lab_robots/config/robots.yaml"
+          - "src/robot_lab_robots/labbot/"
+          - "src/robot_lab_robots/description_common/"
           - "src/robot_lab_bringup/config/"
           - "src/robot_lab_adapter/robot_lab_adapter/launch_fragments.py"
         acceptance_ref: "ROADMAP.md"
@@ -428,12 +432,18 @@ tasks:
         next_action: "Complete — R3.3 done (resolver/executor, seven independent selectors, spawn/reset/params/seed, safe dry-run + --execute, legacy aliases, planner switching, LaunchConfiguration fix, single stack start). Advance to R3.4 (connect GUI to the common resolver: full composition controls replacing the ignored algorithm argument, filter by validator, show maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
       R3.4:
         title: "Connect GUI to the common resolver"
-        state: "done"
+        state: "active"
         owner: "codex"
         depends_on:
           - "R3.3"
         scope_paths:
           - "src/robot_lab_gui/"
+          - "src/robot_lab_bringup/"
+          - "src/robot_lab_description/"
+          - "src/robot_lab_mujoco/"
+          - "src/robot_lab_pybullet/"
+          - "src/robot_lab_isaac/"
+          - "src/robot_lab_robots/config/robots.yaml"
         acceptance_ref: "ROADMAP.md"
         evidence:
           - "gui_composition.py (new): headless GUI-adjacent composition logic that builds resolver.ExperimentRequest from GuiCompositionSelection, resolves via the SAME resolver/validator the CLI uses, and serializes the same manifest YAML the CLI --out writes; provides build_request, resolve_selection, command_for_selection, validation_lines, migrate_legacy_selection, manifest_to_yaml/from_yaml, manifest_running_summary, get_registry, ALGORITHM_SLOT_LABELS and ALGORITHM_CATEGORIES (all 7 slots: perception/localization/state_estimation/sensor_fusion/global_planning/local_planning/control)"
@@ -442,7 +452,7 @@ tasks:
           - "test_r3_4_gui_composition.py: 11 headless GUI-adjacent tests — CLI and GUI resolve identical manifests; GUI-saved profile reloaded by CLI resolves identically; manifest_to_yaml/from_yaml roundtrips; selection changes active nav2 plugin (a_star vs navfn differ only in global_planner_plugin); validator filters invalid selection (go2 without LiDAR rejected for amcl); legacy profile migration map_name->environment; profile delete never touches user artifacts; ensure_defaults never overwrites user profiles; manifest_running_summary exposes robot/environment/simulator/plugins/launch_file; CLI --out manifest loadable by GUI layer resolves to same command"
           - "Shared resolver/selector pipeline still passes: test_r3_2_composition_compatibility, test_r3_3_resolver_executor, test_selectors (44 passed)"
           - "docs/status/gui-command-autofill-2026-09-11.md: working-tree follow-up on 726707a; 37 GUI tests passed under Xvfb, including 10 real-Tk autofill/clipboard/run regression cases; GUI package rebuilt and installed-window smoke check passed. Preview, Copy and Run share resolved arguments; GUI/headless and vacuum choices refresh the command; map aliases normalize for validation. No simulator mission executed."
-        next_action: "Command autofill follow-up complete. Continue the platform's scenario-lifecycle and measured-mission work without treating GUI dispatch checks as simulator qualification."
+        next_action: "2026-09-22 user regression report: restore GUI map-only and robot-plus-map display across backends, stable humanoid display with measured joint states, Labbot Gazebo spawn, and mobile localization/SLAM/navigation launches. Inspect existing uncommitted fixes and validate actual installed launch routes; humanoid mode gating preference pending."
       R3.5:
         title: "Author benchmark scenario and experiment catalogs"
         state: "done"

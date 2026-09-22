@@ -1,0 +1,36 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "simulator:=isaac",
+    "robot_model:=bumperbot",
+    "map_name:=nav_obstacle",
+    "mode:=nav",
+    "gui:=false",
+    "start_rviz:=false",
+    "world_path:=maps/nav_obstacle/worlds/nav_obstacle.world",
+    "map_yaml:=maps/nav_obstacle/maps/map.yaml"
+  ],
+  "passed": true,
+  "checks": {
+    "clock_advances": true,
+    "no_startup_crash": true,
+    "measured_state": true,
+    "finite_joints": true
+  },
+  "counts": {
+    "map": 1,
+    "ready": 1,
+    "clock": 2478,
+    "joints": 2477,
+    "odom": 2477,
+    "tf": 278,
+    "rgb": 25,
+    "depth": 25
+  },
+  "final_sim_time": 5.083333333,
+  "settled_max_joint_speed": 0.011163968592882156,
+  "launch_exit_code": -15
+}

@@ -1,0 +1,64 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-39-51-921487-molar1-186656
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [186700]
+[INFO] [pybullet_spawner-2]: process started with pid [186702]
+[robot_state_publisher-1] 1790084392.372425 [62] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [INFO] [1790084392.383877009] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790084392.384064875] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790084392.384084426] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1790084392.384094346] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1790084392.384102602] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790084392.384110217] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790084392.384117449] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790084392.384124873] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790084392.384132809] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084392.384140392] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790084392.384147656] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790084392.384154920] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084392.384162056] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790084392.384169320] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084392.384176455] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1790084392.384183815] [robot_state_publisher]: got segment wheel_right_link
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:04:54
+[pybullet_spawner-2] 1790084392.883425 [62] pybullet_s: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-2] [INFO] [1790084392.971002116] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1790084392.975788113] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1790084392.987921564] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1790084392.989984284] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1790084392.991874498] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-2] [INFO] [1790084393.704640146] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpue40vdps.urdf
+[pybullet_spawner-2] [INFO] [1790084393.705925034] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1790084393.707077287] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1790084393.715457957] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1790084393.716041427] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1790084393.729611794] [pybullet_spawner]: SDF world 'nav_obstacle.world': 17 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790084394.502083462] [pybullet_spawner]: Loaded robot id=18 (15 joints)
+[pybullet_spawner-2] [INFO] [1790084394.502728306] [pybullet_spawner]: Friction from the description's <gazebo> blocks: caster_front_link=0.1, caster_rear_link=0.1, wheel_left_link=1, wheel_right_link=1
+[pybullet_spawner-2] [INFO] [1790084394.504774899] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+[pybullet_spawner-2] base_footprintb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790084395.228933569] [pybullet_spawner]: SDF world 'nav_obstacle.world': 17 static shape(s) created, 0 skipped
+[pybullet_spawner-2] [INFO] [1790084395.229730249] [pybullet_spawner]: Joints: ['wheel_right_joint', 'wheel_left_joint']  lw=wheel_left_joint rw=wheel_right_joint
+[pybullet_spawner-2] [INFO] [1790084395.549673107] [pybullet_spawner]: PyBullet spawner running
+[robot_state_publisher-1] [INFO] [1790084411.397281101] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 186700]
+[pybullet_spawner-2] Traceback (most recent call last):
+[pybullet_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/robot_lab_pybullet/pybullet_spawner", line 33, in <module>
+[pybullet_spawner-2]     sys.exit(load_entry_point('robot_lab_pybullet==0.1.0', 'console_scripts', 'pybullet_spawner')())
+[pybullet_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/python3.10/site-packages/robot_lab_pybullet/pybullet_spawner.py", line 1122, in main
+[pybullet_spawner-2]     rclpy.spin(node)
+[pybullet_spawner-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[pybullet_spawner-2]     executor.spin_once()
+[pybullet_spawner-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[pybullet_spawner-2]     self._spin_once_impl(timeout_sec)
+[pybullet_spawner-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+[pybullet_spawner-2]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[pybullet_spawner-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+[pybullet_spawner-2]     return next(self._cb_iter)
+[pybullet_spawner-2]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 685, in _wait_for_ready_callbacks
+[pybullet_spawner-2]     raise ExternalShutdownException()
+[pybullet_spawner-2] rclpy.executors.ExternalShutdownException
+[ERROR] [pybullet_spawner-2]: process has died [pid 186702, exit code 1, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/robot_lab_pybullet/pybullet_spawner --ros-args -r __node:=pybullet_spawner --params-file /workspace/molar/.tmp/launch_params_nieihmn1'].
+[pybullet_spawner-2] base_footprint

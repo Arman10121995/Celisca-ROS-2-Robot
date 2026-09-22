@@ -312,6 +312,69 @@ def test_effort_interface_publishes_bounded_pd_efforts(effort_graph):
     assert np.all(np.abs(efforts) <= EFFORT_LIMIT), "effort exceeded the URDF bound"
 
 
+def test_settle_ramp_servo_uses_stance_gains_with_tilt_feedback(
+        effort_graph, monkeypatch):
+    """The settle ramp is servoed to *stand*, not with the checkpoint gains.
+
+    The first live policy-servo run toppled during the measured -> default
+    pose ramp: the checkpoint policy PD (kp=20/10, kd=2) gives an ankle
+    restoring stiffness (~40 N.m/rad) far below the gravity topple stiffness
+    (~71 N.m/rad) and has no tilt feedback at all. The ramp must instead use
+    the balance core's stance PD (120/4 legs, 60/2 arms) plus the
+    ankle-strategy correction on the blended ramp targets, so a growing tilt
+    produces growing righting effort instead of a blind joint-space pull.
+    """
+    node = effort_graph.controller
+    measured = {j: 0.0 for j in BHL_JOINT_NAMES}
+    node._measured_positions = dict(measured)
+    node._measured_velocities = {j: 0.0 for j in BHL_JOINT_NAMES}
+    node._commanded = True  # a cmd_vel arrived; the ramp is running
+    node._settle.start(measured)
+    # Mid-ramp targets: halfway to the bent-knee default pose.
+    node._targets, _ = node._settle.targets(measured, node._settle.duration_s / 2)
+    published = []
+    monkeypatch.setattr(node, "_publish", published.append)
+
+    # Level body: stance PD on the ramp blend, far harder than kp=20.
+    node._on_effort_timer()
+    level = published[-1]
+    knee = BHL_JOINT_NAMES.index("leg_left_knee_pitch_joint")
+    default_knee = node._controller.config.hold_pose()["leg_left_knee_pitch_joint"]
+    raw = 120.0 * 0.5 * default_knee  # stance Kp on the halfway blend
+    assert level[knee] == pytest.approx(
+        max(-EFFORT_LIMIT, min(EFFORT_LIMIT, raw)), abs=1e-9)
+    assert abs(level[knee]) > 2.0  # the checkpoint kp=20 would give 2.0 N.m
+
+    # Tipped body: the ankle-strategy correction must add righting effort on
+    # the ankles (same-sign on both legs - the parallel-ankle requirement).
+    node._orientation = (math.sin(0.1 / 2), 0.0, 0.0, math.cos(0.1 / 2))
+    node._on_effort_timer()
+    tipped = published[-1]
+    ank_l = BHL_JOINT_NAMES.index("leg_left_ankle_roll_joint")
+    ank_r = BHL_JOINT_NAMES.index("leg_right_ankle_roll_joint")
+    assert tipped[ank_l] > level[ank_l] + 1e-9
+    assert tipped[ank_r] > level[ank_r] + 1e-9
+    # Arms swing out of phase with the roll (reaction).
+    sh_l = BHL_JOINT_NAMES.index("arm_left_shoulder_pitch_joint")
+    sh_r = BHL_JOINT_NAMES.index("arm_right_shoulder_pitch_joint")
+    assert (tipped[sh_l] - level[sh_l]) * (tipped[sh_r] - level[sh_r]) < 0
+
+    # Handover: once the ramp completes, the checkpoint gains drive again
+    # (still bounded by the checkpoint effort limit, here 6 N.m on the legs).
+    node._settle.finish()
+    node._orientation = (0.0, 0.0, 0.0, 1.0)
+    node._on_effort_timer()
+    handover = published[-1]
+    kp, kd, limit = node._pd["leg_left_knee_pitch_joint"]
+    bound = min(float(limit), EFFORT_LIMIT)
+    raw = kp * node._targets["leg_left_knee_pitch_joint"] - kd * 0.0
+    assert handover[knee] == pytest.approx(
+        max(-bound, min(bound, raw)), abs=1e-9)
+    # ...and it is genuinely the checkpoint law, not the stance law: the
+    # stance PD would command the full URDF-clamped 20 N.m here.
+    assert abs(handover[knee]) < EFFORT_LIMIT
+
+
 
 def test_effort_servo_uses_checkpoint_gains_and_fresh_state(effort_graph, monkeypatch):
     node = effort_graph.controller

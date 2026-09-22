@@ -1,0 +1,32 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "simulator:=pybullet",
+    "robot_model:=berkeley_humanoid_lite",
+    "map_name:=none",
+    "mode:=display",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "passed": true,
+  "checks": {
+    "clock_advances": true,
+    "no_startup_crash": true,
+    "measured_state": true,
+    "finite_joints": true,
+    "settled_display_joints": true
+  },
+  "counts": {
+    "ready": 1,
+    "joints": 702,
+    "clock": 701,
+    "odom": 701,
+    "tf": 233
+  },
+  "final_sim_time": 14.604166666,
+  "settled_max_joint_speed": 0.0006884950863595696,
+  "launch_exit_code": 0
+}

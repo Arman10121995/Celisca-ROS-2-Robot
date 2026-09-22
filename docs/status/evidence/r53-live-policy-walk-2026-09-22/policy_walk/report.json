@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "axis": "y",
+  "force_n": 0.0,
+  "criteria": {
+    "duration_s": 11.0,
+    "max_tilt_rad": 0.7,
+    "final_second_max_tilt_rad": 0.25,
+    "final_second_max_speed_m_s": 0.05,
+    "max_effort_nm": 20.0001,
+    "final_second_tilt_growth_rad": 0.02,
+    "final_second_pose_drift_m": 0.05,
+    "min_forward_progress_m": 0.375,
+    "min_settled_walk_tracking": 0.6,
+    "max_lateral_displacement_m": 0.25
+  },
+  "controller": "humanoid_policy_controller",
+  "plant": {
+    "source": "urdf",
+    "root_body_id": 1,
+    "mass_kg": 16.32918,
+    "physics_timestep_s": 0.002,
+    "actuator_count": 22
+  },
+  "samples": 2750,
+  "duration_s": 11.000000000000343,
+  "impulse_ns": 0.0,
+  "max_tilt_rad": 0.2328618064900152,
+  "final_max_tilt_rad": 0.13047951924316753,
+  "final_max_speed_m_s": 0.013846530961039778,
+  "max_effort_nm": 20.0,
+  "forward_progress_m": 0.610161167725356,
+  "lateral_displacement_m": 0.0038102340977978133,
+  "displacement_m": 0.610173064370962,
+  "final_second_tilt_growth_rad": 0.00013217107141658135,
+  "final_second_pose_drift_m": 0.00020098377847598952,
+  "final_second_mean_speed_m_s": 0.005116745406974435,
+  "walk_settled_window_s": [
+    4.004,
+    6.0
+  ],
+  "walk_settled_travel_speed_m_s": 0.25423485251898026,
+  "walk_settled_speed_m_s": 0.3419232222644344,
+  "walk_commanded_speed_m_s": 0.25,
+  "walk_settled_tracking_fraction": 1.016939410075921,
+  "walk_until_s": 6.0,
+  "stop_settle_s": 1.1879999999994304,
+  "controller_exit_code": 0
+}

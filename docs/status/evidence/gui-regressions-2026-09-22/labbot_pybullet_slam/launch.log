@@ -1,0 +1,163 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-48-26-623677-molar1-195079
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm perception=costmap_2d_observation -> navigation_costmap stack
+[robot_lab] algorithm localization=slam_toolbox -> slam stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[INFO] [robot_state_publisher-1]: process started with pid [195121]
+[INFO] [pybullet_spawner-2]: process started with pid [195126]
+[INFO] [joy_teleop-3]: process started with pid [195153]
+[INFO] [joy_node-4]: process started with pid [195175]
+[INFO] [twist_mux-5]: process started with pid [195192]
+[INFO] [twist_marker-6]: process started with pid [195197]
+[INFO] [joystick_relay.py-7]: process started with pid [195230]
+[INFO] [twist_relay-8]: process started with pid [195257]
+[INFO] [ekf_node-9]: process started with pid [195301]
+[INFO] [imu_republisher.py-10]: process started with pid [195313]
+[INFO] [map_saver_server-11]: process started with pid [195344]
+[INFO] [sync_slam_toolbox_node-12]: process started with pid [195362]
+[INFO] [lifecycle_manager-13]: process started with pid [195371]
+[INFO] [wheel_imu_fusion-14]: process started with pid [195431]
+[robot_state_publisher-1] 1790084907.126396 [82] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] Warning: link 'oakd_link' material 'dark_grey' undefined.
+[robot_state_publisher-1]          at line 84 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-1] Warning: link 'oakd_link' material 'dark_grey' undefined.
+[robot_state_publisher-1]          at line 84 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-1] [INFO] [1790084907.140250624] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790084907.140392093] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790084907.140410684] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1790084907.140420060] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790084907.140427804] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790084907.140435420] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790084907.140442748] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790084907.140450172] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084907.140458075] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790084907.140465435] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790084907.140472955] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084907.140480155] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790084907.140487419] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084907.140494747] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1790084907.140501850] [robot_state_publisher]: got segment wheel_right_link
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:04:54
+[joy_node-4] 1790084907.197612 [82]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] 1790084907.218801 [82]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] [INFO] [1790084907.225525134] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-5] [INFO] [1790084907.226383611] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-5] [INFO] [1790084907.226788883] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-5] [INFO] [1790084907.226929232] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[twist_marker-6] 1790084907.228114 [82] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_relay-8] 1790084907.315692 [82] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_node-9] 1790084907.349726 [82]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-13] 1790084907.485313 [82] lifecycle_: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-13] [INFO] [1790084907.515759293] [lifecycle_manager_slam]: Creating
+[lifecycle_manager-13] [INFO] [1790084907.523494360] [lifecycle_manager_slam]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[map_saver_server-11] 1790084907.526777 [82] map_saver_: selected interface "lo" is not multicast-capable: disabling multicast
+[sync_slam_toolbox_node-12] 1790084907.541331 [82] sync_slam_: selected interface "lo" is not multicast-capable: disabling multicast
+[sync_slam_toolbox_node-12] [INFO] [1790084907.548877246] [slam_toolbox]: Node using stack size 40000000
+[map_saver_server-11] [INFO] [1790084907.554976476] [map_saver_server]: 
+[map_saver_server-11] 	map_saver_server lifecycle node launched. 
+[map_saver_server-11] 	Waiting on external lifecycle transitions to activate
+[map_saver_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_saver_server-11] [INFO] [1790084907.570913706] [map_saver_server]: Creating
+[lifecycle_manager-13] [INFO] [1790084907.575612102] [lifecycle_manager_slam]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-13] [INFO] [1790084907.577285827] [lifecycle_manager_slam]: [34m[1mConfiguring map_saver_server[0m[0m
+[map_saver_server-11] [INFO] [1790084907.586859063] [map_saver_server]: Configuring
+[lifecycle_manager-13] [INFO] [1790084907.596623848] [lifecycle_manager_slam]: [34m[1mActivating map_saver_server[0m[0m
+[map_saver_server-11] [INFO] [1790084907.597620851] [map_saver_server]: Activating
+[map_saver_server-11] [INFO] [1790084907.597697713] [map_saver_server]: Creating bond (map_saver_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1790084907.715199507] [lifecycle_manager_slam]: Server map_saver_server connected with bond.
+[lifecycle_manager-13] [INFO] [1790084907.715296273] [lifecycle_manager_slam]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-13] [INFO] [1790084907.715316944] [lifecycle_manager_slam]: [34m[1mCreating bond timer...[0m[0m
+[sync_slam_toolbox_node-12] 1790084907.809509 [82] sync_slam_: selected interface "lo" is not multicast-capable: disabling multicast
+[sync_slam_toolbox_node-12] [INFO] [1790084907.895126535] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[sync_slam_toolbox_node-12] [INFO] [1790084907.897283386] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[joy_teleop-3] 1790084908.566228 [82] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-2] 1790084908.776377 [82] pybullet_s: selected interface "lo" is not multicast-capable: disabling multicast
+[imu_republisher.py-10] 1790084908.800773 [82]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[wheel_imu_fusion-14] 1790084909.111229 [82] wheel_imu_: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-2] [INFO] [1790084909.134862184] [pybullet_spawner]: PyBulletSpawner __init__ started
+[joystick_relay.py-7] 1790084909.154096 [82] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-2] [INFO] [1790084909.213906076] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1790084909.295552536] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1790084909.303587726] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1790084909.324532114] [pybullet_spawner]: Created /robot_lab/reset service
+[wheel_imu_fusion-14] [INFO] [1790084909.571985234] [sensor_fusion_wheel_imu_fusion]: wheel_imu_fusion ready
+[pybullet_spawner-2] [INFO] [1790084910.024044960] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpfjomfkmi.urdf
+[pybullet_spawner-2] [INFO] [1790084910.024608596] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1790084910.025065834] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1790084910.032646314] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1790084910.033248221] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1790084910.047315923] [pybullet_spawner]: SDF world 'nav_obstacle.world': 17 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790084910.051885522] [pybullet_spawner]: Loaded robot id=18 (14 joints)
+[pybullet_spawner-2] [INFO] [1790084910.052506885] [pybullet_spawner]: Friction from the description's <gazebo> blocks: caster_rear_link=0.1, wheel_left_link=1, wheel_right_link=1
+[pybullet_spawner-2] [INFO] [1790084910.056239318] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+[pybullet_spawner-2] base_footprintb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790084910.079206607] [pybullet_spawner]: SDF world 'nav_obstacle.world': 17 static shape(s) created, 0 skipped
+[pybullet_spawner-2] [INFO] [1790084910.080089660] [pybullet_spawner]: Joints: ['labbot_left_wheel_joint', 'labbot_right_wheel_joint']  lw=labbot_left_wheel_joint rw=labbot_right_wheel_joint
+[pybullet_spawner-2] [INFO] [1790084910.146375999] [pybullet_spawner]: PyBullet spawner running
+[sync_slam_toolbox_node-12] [WARN] [1790084910.399196944] [slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[sync_slam_toolbox_node-12] [WARN] [1790084910.399384716] [slam_toolbox]: maximum laser range setting (20.0 m) exceeds the capabilities of the used Lidar (12.0 m)
+[sync_slam_toolbox_node-12] Registering sensor: [Custom Described Lidar]
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [wheel_imu_fusion-14]: sending signal 'SIGINT' to process[wheel_imu_fusion-14]
+[INFO] [lifecycle_manager-13]: sending signal 'SIGINT' to process[lifecycle_manager-13]
+[INFO] [sync_slam_toolbox_node-12]: sending signal 'SIGINT' to process[sync_slam_toolbox_node-12]
+[INFO] [map_saver_server-11]: sending signal 'SIGINT' to process[map_saver_server-11]
+[INFO] [imu_republisher.py-10]: sending signal 'SIGINT' to process[imu_republisher.py-10]
+[INFO] [ekf_node-9]: sending signal 'SIGINT' to process[ekf_node-9]
+[INFO] [sync_slam_toolbox_node-12]: process has finished cleanly [pid 195362]
+[INFO] [twist_relay-8]: sending signal 'SIGINT' to process[twist_relay-8]
+[INFO] [joystick_relay.py-7]: sending signal 'SIGINT' to process[joystick_relay.py-7]
+[INFO] [twist_marker-6]: sending signal 'SIGINT' to process[twist_marker-6]
+[INFO] [twist_mux-5]: sending signal 'SIGINT' to process[twist_mux-5]
+[INFO] [joy_node-4]: sending signal 'SIGINT' to process[joy_node-4]
+[INFO] [joy_teleop-3]: sending signal 'SIGINT' to process[joy_teleop-3]
+[INFO] [pybullet_spawner-2]: sending signal 'SIGINT' to process[pybullet_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[lifecycle_manager-13] [INFO] [1790084931.102762526] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-13] [INFO] [1790084931.102900795] [lifecycle_manager_slam]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_slam)
+[lifecycle_manager-13] [INFO] [1790084931.102955098] [lifecycle_manager_slam]: [34m[1mTerminating bond timer...[0m[0m
+[sync_slam_toolbox_node-12] [INFO] [1790084931.105651617] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_saver_server-11] [INFO] [1790084931.108673154] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_saver_server-11] [INFO] [1790084931.108850622] [map_saver_server]: Running Nav2 LifecycleNode rcl preshutdown (map_saver_server)
+[map_saver_server-11] [INFO] [1790084931.108950588] [map_saver_server]: Deactivating
+[map_saver_server-11] [INFO] [1790084931.108973212] [map_saver_server]: Destroying bond (map_saver_server) to lifecycle manager.
+[map_saver_server-11] [INFO] [1790084931.119203557] [map_saver_server]: Cleaning up
+[map_saver_server-11] [INFO] [1790084931.119292803] [map_saver_server]: Destroying bond (map_saver_server) to lifecycle manager.
+[map_saver_server-11] [INFO] [1790084931.132807592] [map_saver_server]: Destroying
+[lifecycle_manager-13] [INFO] [1790084931.121229979] [lifecycle_manager_slam]: Destroying lifecycle_manager_slam
+[ekf_node-9] [INFO] [1790084931.141274710] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_relay-8] [INFO] [1790084931.153188892] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_marker-6] [INFO] [1790084931.170419603] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-5] [INFO] [1790084931.189095563] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-4] [INFO] [1790084931.194805619] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1790084931.212280837] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 195371]
+[INFO] [twist_relay-8]: process has finished cleanly [pid 195257]
+[INFO] [map_saver_server-11]: process has finished cleanly [pid 195344]
+[INFO] [twist_marker-6]: process has finished cleanly [pid 195197]
+[INFO] [twist_mux-5]: process has finished cleanly [pid 195192]
+[INFO] [joy_node-4]: process has finished cleanly [pid 195175]
+[INFO] [wheel_imu_fusion-14]: process has finished cleanly [pid 195431]
+[INFO] [imu_republisher.py-10]: process has finished cleanly [pid 195313]
+[joy_teleop-3] Traceback (most recent call last):
+[joy_teleop-3]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-3]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-3]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 442, in main
+[joy_teleop-3]     rclpy.shutdown()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+[joy_teleop-3]     _shutdown(context=context)
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+[joy_teleop-3]     return context.shutdown()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+[joy_teleop-3]     self.__context.shutdown()
+[joy_teleop-3] rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [joystick_relay.py-7]: process has finished cleanly [pid 195230]
+[INFO] [pybullet_spawner-2]: process has finished cleanly [pid 195126]
+[pybullet_spawner-2] base_footprint
+[ERROR] [joy_teleop-3]: process has died [pid 195153, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_cdx6i6hd'].
+[INFO] [ekf_node-9]: process has finished cleanly [pid 195301]
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 195121]

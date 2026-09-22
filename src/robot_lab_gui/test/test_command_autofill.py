@@ -252,3 +252,32 @@ def test_modes_needing_a_robot_are_disabled_without_one(app):
         assert app.mode_buttons[mode].instate(["disabled"]), (
             f"{mode} should be unavailable with no robot selected")
     assert app.mode_var.get() == "display"
+
+
+def test_labbot_rgbd_mode_builds_a_launch_command(app):
+    select(app, app.robot_combo, 'labbot')
+    select(app, app.map_combo, 'nav_obstacle')
+    app.mode_buttons['3d_slam'].invoke()
+    app.update()
+    command = displayed_command(app)
+    assert 'mode:=3d_slam' in command
+    assert 'robot_model:=labbot' in command
+    assert app.start_button.instate(['!disabled'])
+
+
+@pytest.mark.parametrize('robot', ['berkeley_humanoid_lite', 'berkeley_humanoid_lite_sim'])
+def test_unqualified_humanoid_modes_are_disabled(app, robot):
+    select(app, app.robot_combo, robot)
+    select(app, app.map_combo, 'nav_obstacle')
+    for mode in ('loc', 'nav'):
+        assert app.mode_buttons[mode].instate(['disabled'])
+
+
+def test_all_declared_occupancy_maps_pass_gui_validation(app):
+    select(app, app.robot_combo, 'bumperbot')
+    checked = []
+    for name, profile in app.map_profiles.items():
+        if profile.get('map', {}).get('has_2d_map'):
+            assert app._map_has_2d_map(name), name
+            checked.append(name)
+    assert len(checked) >= 20

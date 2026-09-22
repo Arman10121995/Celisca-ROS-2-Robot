@@ -1183,7 +1183,7 @@
   version: "1.0.0"
   name: "Labbot"
   ros_package: robot_lab_robots
-  description: "Second first-party differential-drive mobile robot with LIDAR and IMU; primitive-geometry description with no mesh dependencies"
+  description: "Second first-party differential-drive mobile robot with LIDAR, IMU and a simulated RGB-D camera"
   status: integrated
   robot_class: mobile
   maturity: simulated
@@ -1200,6 +1200,11 @@
     max_velocity: 0.8
     max_acceleration: 1.5
   sensors:
+    - type: camera
+      name: oakd_rgbd
+      frame: oakd_rgb_camera_optical_frame
+      topic: /oakd/rgb/image_raw
+      message_type: sensor_msgs/Image
     - type: lidar
       name: base_laser
       frame: laser_link
@@ -1234,6 +1239,8 @@
     - map
   capabilities:
     - navigation
+    - rgbd_camera
+    - mapping
     - localization
     - state_estimation
     - sensor_fusion

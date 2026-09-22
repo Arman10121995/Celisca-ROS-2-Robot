@@ -4,6 +4,7 @@ Loads a world + robot model, opens the MuJoCo passive viewer, runs the
 physics step loop, and publishes the ROS 2 topics required by the
 stack (joint_states, TF, odom, scan, imu, clock).
 """
+import copy
 import hashlib
 import math
 import os
@@ -43,7 +44,7 @@ from std_msgs.msg import Bool, Float64MultiArray
 from std_srvs.srv import Trigger
 
 from robot_lab_utils import camera_model
-from robot_lab_mujoco.joint_effort import JointEffortCommand
+from robot_lab_mujoco.joint_effort import JointEffortCommand, mjcf_joint_dynamics
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.sim_frames import (
     compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
@@ -331,7 +332,73 @@ def _inject_mujoco_compiler(urdf_text, mesh_dir):
     return ET.tostring(root, encoding="unicode")
 
 
-def _add_floating_base(mjcf_text, robot_name="robot"):
+def _urdf_root_inertial(urdf_text):
+    """Return the URDF root link's ``<inertial>`` as MJCF attributes (or None).
+
+    The MuJoCo URDF importer welds the root link to the world and DROPS its
+    ``<inertial>``, so the floating-base wrapper built on top of the export
+    would otherwise infer mass/inertia from its collision geoms. For the
+    Berkeley Humanoid Lite that produced a 4.830 kg uniform-box base at the
+    box centre instead of the URDF's 4.444 kg with its tensor and CoM 35 mm
+    lower - a plant the walking policy was not trained on.
+    """
+    try:
+        root = ET.fromstring(urdf_text)
+    except ET.ParseError:
+        return None
+    links = {link.get("name"): link for link in root.findall("link")}
+    children = {joint.find("child").get("link")
+                for joint in root.findall("joint")
+                if joint.find("child") is not None}
+    roots = [name for name in links if name not in children]
+    if len(roots) != 1:
+        return None
+    inertial = links[roots[0]].find("inertial")
+    if inertial is None:
+        return None
+    mass_elem = inertial.find("mass")
+    inertia = inertial.find("inertia")
+    if mass_elem is None or inertia is None:
+        return None
+    mass = float(mass_elem.get("value"))
+    if not math.isfinite(mass) or mass <= 0:
+        return None
+    values = []
+    for element in ("ixx", "iyy", "izz", "ixy", "ixz", "iyz"):
+        value = float(inertia.get(element, 0.0))
+        if not math.isfinite(value):
+            return None
+        values.append(value)
+    origin = inertial.find("origin")
+    xyz = origin.get("xyz", "0 0 0") if origin is not None else "0 0 0"
+    rpy = origin.get("rpy", "0 0 0") if origin is not None else "0 0 0"
+    pos = [float(v) for v in xyz.split()]
+    angles = [float(v) for v in rpy.split()]
+    if len(pos) != 3 or len(angles) != 3:
+        return None
+    attrs = {
+        "pos": " ".join("%.10g" % v for v in pos),
+        "mass": "%.10g" % mass,
+    }
+    roll, pitch, yaw = angles
+    if any(abs(v) > 1e-12 for v in angles):
+        # MJCF <inertial quat> orients the fullinertia frame (ZYX rpy here,
+        # the URDF fixed-frame convention), (w, x, y, z) order.
+        cr, sr = math.cos(roll / 2), math.sin(roll / 2)
+        cp, sp = math.cos(pitch / 2), math.sin(pitch / 2)
+        cy, sy = math.cos(yaw / 2), math.sin(yaw / 2)
+        attrs["quat"] = "%.10g %.10g %.10g %.10g" % (
+            cr * cp * cy + sr * sp * sy,
+            sr * cp * cy - cr * sp * sy,
+            cr * sp * cy + sr * cp * sy,
+            cr * cp * sy - sr * sp * cy,
+        )
+    # MJCF fullinertia order is (ixx, iyy, izz, ixy, ixz, iyz).
+    attrs["fullinertia"] = " ".join("%.10g" % v for v in values)
+    return attrs
+
+
+def _add_floating_base(mjcf_text, robot_name="robot", root_inertial=None):
     """Give an imported robot a floating base so it can move.
 
     MuJoCo's URDF importer welds the root link to the world (URDF has no
@@ -365,6 +432,22 @@ def _add_floating_base(mjcf_text, robot_name="robot"):
 
     base = ET.Element("body", {"name": "%s_base" % robot_name})
     ET.SubElement(base, "freejoint", {"name": "%s_freejoint" % robot_name})
+    # Restore the URDF root link's inertial on the wrapper (see
+    # _urdf_root_inertial): the importer dropped it, and a wrapper without an
+    # explicit inertial gets its mass/inertia INFERRED from its collision
+    # geoms - for the BHL a 4.830 kg uniform box at the box centre instead of
+    # the URDF's 4.444 kg with its tensor and CoM 35 mm lower.
+    if root_inertial:
+        ET.SubElement(base, "inertial", root_inertial)
+    else:
+        # Fallback for importers that DO keep the root inertial on the first
+        # movable child (the welded root-link body): hoist it so the wrapper
+        # does not end up with two inertials or lose it entirely.
+        first = movable[0]
+        if first.tag == "body":
+            root_inertial_elem = first.find("inertial")
+            if root_inertial_elem is not None:
+                base.append(copy.deepcopy(root_inertial_elem))
     for child in movable:
         worldbody.remove(child)
         base.append(child)
@@ -512,6 +595,43 @@ def _stage_world_meshes(mjcf_text, logger=None):
     return ET.tostring(root, encoding="unicode")
 
 
+def _native_joint_dynamics(model_path, names):
+    """Read joint losses from the robot's own MJCF next to its description.
+
+    The URDF's ``<dynamics damping="5.0">`` is a Gazebo stabiliser, not a
+    property of the robot: its own MJCF - the model its balance law and
+    walking policy were validated on - declares ``frictionloss="0.1"``,
+    ``armature="0.005"`` and no damping at all.  A plant imported from the
+    URDF therefore ran different joint dynamics than the controllers expect
+    (the R5.3 walking-policy plant divergence), so the effort path mirrors
+    the MJCF values instead.
+
+    Looks for ``mjcf/*.xml`` beside the description directory (a scene file
+    only ``<include>``s the robot file, so parsing it yields no joint element
+    and it is skipped naturally) and returns ``(path, {joint: {loss: value}})``
+    for the first file that names every configured effort joint, or
+    ``(None, None)`` when no file does.
+    """
+    directory = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(str(model_path)))),
+        "mjcf")
+    if not os.path.isdir(directory):
+        return None, None
+    wanted = set(names)
+    for entry in sorted(os.listdir(directory)):
+        if not entry.endswith(".xml"):
+            continue
+        path = os.path.join(directory, entry)
+        try:
+            with open(path, "r") as handle:
+                losses = mjcf_joint_dynamics(handle.read())
+        except (ET.ParseError, OSError, ValueError):
+            continue
+        if wanted <= set(losses):
+            return path, {name: losses[name] for name in names}
+    return None, None
+
+
 def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
                           base_dir=""):
     """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
@@ -549,7 +669,9 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         tmp.write(urdf_text)
         tmp.close()
         spec = mujoco.MjSpec.from_file(tmp.name)
-        mjcf = _add_floating_base(spec.to_xml(), robot_name or "robot")
+        mjcf = _add_floating_base(
+            spec.to_xml(), robot_name or "robot",
+            root_inertial=_urdf_root_inertial(urdf_text))
         mjcf = _exclude_rest_pose_self_contacts(mjcf, logger=logger)
         if placeholders:
             _emit_log(logger, "warning",
@@ -739,6 +861,12 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
+        # Display-mode hold: 'auto' holds joints only for the map-free display
+        # case, 'true' always holds joints at their spawn pose (passive
+        # visualization for humanoids that would otherwise fall/jump under
+        # gravity), 'false' runs full physics.  Bringup forwards
+        # mode:=display automatically.
+        self.declare_parameter("hold_position", "false")
         # RGB-D camera, rendered from the description's camera link with the
         # Gazebo sensor's intrinsics; 0 Hz disables it.  Rendering needs an
         # OpenGL context (GLFW with a display here).
@@ -874,6 +1002,7 @@ class MuJoCoSpawner(Node):
                     get_package_share_directory(pkg), xacro
                 )
 
+        self._robot_free = not model or str(model).strip().lower() == "none"
         use_fallback = False
         self._model_source = "fallback"
         if model and os.path.isfile(str(model)):
@@ -912,7 +1041,24 @@ class MuJoCoSpawner(Node):
                 effort_config = self.get_parameter("effort_controller_config").value
                 if effort_config:
                     self._effort_command = JointEffortCommand(effort_config, urdf)
-                    robot_mjcf = self._effort_command.add_actuators(robot_mjcf)
+                    # Mirror the robot's own MJCF joint losses instead of the
+                    # URDF's Gazebo-substitute damping (see
+                    # _native_joint_dynamics): the balance law and walking
+                    # policy were validated on the MJCF plant.
+                    path, native = _native_joint_dynamics(
+                        str(model), self._effort_command.names)
+                    if native is None:
+                        _emit_log(self.get_logger(), "warning",
+                                  "MuJoCo effort plant: no MJCF beside %s names "
+                                  "every effort joint; keeping the URDF "
+                                  "<dynamics> (damping=5.0 is a Gazebo "
+                                  "stabiliser the robot does not have)." % model)
+                    else:
+                        _emit_log(self.get_logger(), "info",
+                                  "MuJoCo effort plant: joint losses mirrored "
+                                  "from the robot's own MJCF (%s)." % path)
+                    robot_mjcf = self._effort_command.add_actuators(
+                        robot_mjcf, native)
                 robot_mjcf = _add_wheel_velocity_actuators(
                     robot_mjcf,
                     (self.get_parameter("left_wheel_joint").value,
@@ -927,6 +1073,9 @@ class MuJoCoSpawner(Node):
                             self.get_parameter("camera_horizontal_fov").value,
                             self.get_parameter("camera_width").value,
                             self.get_parameter("camera_height").value)))
+        elif self._robot_free:
+            robot_mjcf = "<mujoco><worldbody/></mujoco>"
+            self._model_source = "world_only"
         else:
             self.get_logger().warn("URDF not found; using fallback MJCF.")
             robot_mjcf = _FALLBACK_MJCF
@@ -961,6 +1110,40 @@ class MuJoCoSpawner(Node):
 
         # Spawn and reset use the same pose and initial physics state.
         self._reset_physics()
+
+        # Display-mode hold: freeze joints at the spawn pose so passive
+        # visualization (mode:=display) reflects stable joint_states instead
+        # of a collapse/jump under gravity.  'auto' holds only when the
+        # robot has no drive joints (the map-free display case); 'true'
+        # always holds; 'false' keeps full physics.  The hold is kinematic:
+        # qpos/qvel are clamped back to the spawn pose every tick and the
+        # base stays pinned at its spawn position, so no controller stack
+        # is needed.  (MuJoCo model arrays cannot be resized after
+        # MjData is created, so actuators are not added here.)
+        hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
+        has_drive = (getattr(self, "_lw_qpos_adr", -1) >= 0
+                     or getattr(self, "_rw_qpos_adr", -1) >= 0)
+        self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
+        self._hold_pose = {}
+        self._hold_base_pos = None
+        self._hold_base_quat = None
+        if self._hold_joints:
+            for name in list(getattr(self, "_joint_names", [])):
+                try:
+                    self._hold_pose[name] = float(
+                        self._data.qpos[self._joint_name2id[name]])
+                except Exception:
+                    continue
+            try:
+                adr = self._free_joint_qpos_adr
+                if adr is not None and adr >= 0:
+                    self._hold_base_pos = [float(v) for v in self._data.qpos[adr:adr + 3]]
+                    self._hold_base_quat = [float(v) for v in self._data.qpos[adr + 3:adr + 7]]
+            except Exception:
+                pass
+            self.get_logger().info(
+                "Display hold active (hold_position=%s): %d joint(s) frozen at spawn pose"
+                % (hold_mode, len(self._hold_pose)))
 
         self.get_logger().info(
             "MuJoCo model loaded: %d bodies, %d joints"
@@ -1197,14 +1380,16 @@ class MuJoCoSpawner(Node):
                 try:
                     if sim_time - last_pub + 1e-9 >= pub_dt:
                         last_pub = sim_time
-                        self._pub_joint_states()
-                        self._pub_odom()
-                        self._pub_imu()
+                        if not getattr(self, "_robot_free", False):
+                            self._pub_joint_states()
+                            self._pub_odom()
+                            self._pub_imu()
                         self._pub_clock()
 
                     if sim_time - last_scan + 1e-9 >= scan_dt:
                         last_scan = sim_time
-                        self._pub_scan()
+                        if not getattr(self, "_robot_free", False):
+                            self._pub_scan()
 
                     if self._camera is not None and sim_time - last_camera + 1e-9 >= camera_dt:
                         last_camera = sim_time
@@ -1224,6 +1409,40 @@ class MuJoCoSpawner(Node):
 
     def _step_physics(self):
         """Apply the current command and advance one tick under the physics lock."""
+        if getattr(self, "_hold_joints", False) and getattr(self, "_hold_pose", None):
+            # Display hold: keep the spawn pose exactly.  Stepping an
+            # uncontrolled humanoid lets it collapse under gravity (the RViz
+            # "jump like crazy"); instead advance only the clock and republish
+            # the frozen state so joint_states stays stable.
+            self._sim_step += 1
+            self._sim_t = float(self._sim_step * self._dt)
+            try:
+                self._data.time = self._sim_t
+            except Exception:
+                pass
+            adr = getattr(self, "_free_joint_qpos_adr", -1)
+            base_pos = getattr(self, "_hold_base_pos", None)
+            base_quat = getattr(self, "_hold_base_quat", None)
+            if adr is not None and adr >= 0 and base_pos is not None:
+                try:
+                    self._data.qpos[adr:adr + 3] = list(base_pos)
+                    if base_quat is not None:
+                        self._data.qpos[adr + 3:adr + 7] = list(base_quat)
+                    self._data.qvel[adr:adr + 6] = [0.0] * 6
+                except Exception:
+                    pass
+            for name, q0 in self._hold_pose.items():
+                try:
+                    self._data.qpos[self._joint_name2id[name]] = q0
+                    self._data.qvel[self._joint_name2dofadr[name]] = 0.0
+                except Exception:
+                    continue
+            try:
+                mujoco.mj_forward(self._model, self._data)
+            except Exception:
+                pass
+            self._read_physics_state()
+            return
         with self._twist_lock:
             command = self._twist
             stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout

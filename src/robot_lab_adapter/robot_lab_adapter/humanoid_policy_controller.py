@@ -37,9 +37,18 @@ default pose bends the legs, and stepping there instantly into the standing
 biped is the startup transient that toppled the earlier probes (evidence
 ``r53-bhl-actuation-2026-09-16``). On the first ``cmd_vel`` the node ramps
 from the measured pose to the default pose over ``settle_duration_s``
-(default 2 s, bounded), then hands over to the policy; a tilt at or beyond
-the fall threshold mid-ramp ends the ramp immediately so the controller's
-latched SAFE_STOP path takes over.
+(default 2 s, bounded), then hands over to the policy. The ramp itself is
+*stabilized*: it is servoed with the stance PD gains and the ankle-strategy
+tilt feedback from the balance core (:func:`bhl_balance.balance_targets`
+applied to the ramp blend), because the checkpoint policy gains are
+statically unstable for a standing biped (restoring stiffness
+2 * kp * ankle_k ~= 40 N.m/rad against a ~71 N.m/rad gravity topple
+stiffness) — the open-loop joint-space ramp toppled the robot in evidence
+``r53-live-policy-servo-2026-09-22`` before the policy ever drove. Once the
+ramp completes, the checkpoint gains take over on the policy phases where
+they were verified (``r53-bhl-adapter-path-2026-09-15``). A tilt at or beyond
+the fall threshold mid-ramp ends the ramp immediately and latches the
+controller's SAFE_STOP path (zero effort), exactly as in the driving phases.
 """
 
 from __future__ import annotations
@@ -48,6 +57,7 @@ import math
 from typing import Dict, Optional
 
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
 from geometry_msgs.msg import Twist
@@ -59,6 +69,9 @@ from robot_lab_adapter.bhl_balance import (
     BALANCE_RATE_HZ,
     EFFORT_LIMIT,
     TILT_FALL_RAD,
+    BodyState,
+    balance_targets,
+    pd_effort_command,
 )
 from robot_lab_adapter.bhl_policy import (
     BhlPolicyController,
@@ -149,7 +162,8 @@ class HumanoidPolicyController(Node):
             f"HumanoidPolicyController: policy={policy_name} "
             f"({joint_states_topic} + {imu_topic} + {cmd_vel_topic} -> "
             f"{command_topic}) at {rate} Hz over {len(BHL_JOINT_NAMES)} joints "
-            f"({interface} interface; effort servo {effort_rate} Hz, checkpoint PD/limits)"
+            f"({interface} interface; effort servo {effort_rate} Hz, "
+            "stance PD/ankle-strategy settle ramp, checkpoint PD/limits driving)"
         )
 
     def _on_joint_state(self, msg: JointState) -> None:
@@ -200,6 +214,10 @@ class HumanoidPolicyController(Node):
                 self._measured_positions, self._dt)
             if settled:
                 self.get_logger().info("settle ramp complete: policy driving")
+            elif not self._settle.active:
+                self.get_logger().error(
+                    "settle ramp aborted: handing over to the policy safety "
+                    "latch; the policy drive path stays zero-effort")
             cycle_issues = []
         else:
             cycle = self._controller.update(
@@ -238,6 +256,23 @@ class HumanoidPolicyController(Node):
         if self._controller.safety_state == self._controller.SAFE_STOP:
             self._publish([0.0] * len(BHL_JOINT_NAMES))
             return
+        if not self._commanded or (
+                self._settle.active and not self._settle.settled):
+            # Settle/hold phase: the checkpoint policy gains are statically
+            # unstable for a standing biped (restoring stiffness
+            # 2 * kp * ankle_k ~= 40 N.m/rad against the ~71 N.m/rad gravity
+            # topple stiffness), which is what toppled the first live
+            # policy-servo run during the joint-space ramp (evidence
+            # ``r53-live-policy-servo-2026-09-22``). The ramp is servoed with
+            # the stance PD + ankle-strategy gains the balance core was
+            # plant-swept with instead (docs/status/evidence/
+            # r53-bhl-ankle-fix-2026-09-17): tilt feedback stabilizes the
+            # bend-down, and the harder stance gains exceed topple stiffness.
+            stance = balance_targets(self._targets, self._body_state())
+            efforts = pd_effort_command(
+                stance, self._measured_positions, self._measured_velocities)
+            self._publish([efforts[j] for j in BHL_JOINT_NAMES])
+            return
         values = []
         for joint in BHL_JOINT_NAMES:
             target = (self._targets.get(joint) if self._commanded
@@ -254,6 +289,11 @@ class HumanoidPolicyController(Node):
             values.append(float(max(-bound, min(bound, effort))))
         self._publish(values)
 
+    def _body_state(self):
+        """Body roll/pitch from the cached IMU quaternion (balance-core type)."""
+        x, y, z, w = self._orientation
+        return BodyState.from_quaternion(x, y, z, w)
+
 
 def main(args=None) -> None:
     rclpy.init(args=args)
@@ -262,9 +302,15 @@ def main(args=None) -> None:
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
+    except ExternalShutdownException:
+        # A stop from launch or the probe's process-group SIGINT, not a
+        # failure: without this every SIGINT teardown logged an RCLError
+        # "rcl_shutdown already called" traceback and a non-zero exit.
+        pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":

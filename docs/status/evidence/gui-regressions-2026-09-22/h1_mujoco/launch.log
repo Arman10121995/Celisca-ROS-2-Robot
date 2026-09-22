@@ -1,0 +1,80 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-47-50-565893-molar1-194552
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [194592]
+[INFO] [mujoco_spawner-2]: process started with pid [194594]
+[robot_state_publisher-1] 1790084871.053646 [77] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [WARN] [1790084871.069785372] [kdl_parser]: The root link pelvis has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-1] [INFO] [1790084871.070086741] [robot_state_publisher]: got segment L_hand_base_link
+[robot_state_publisher-1] [INFO] [1790084871.070176691] [robot_state_publisher]: got segment L_index_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070192275] [robot_state_publisher]: got segment L_index_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070201171] [robot_state_publisher]: got segment L_middle_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070209715] [robot_state_publisher]: got segment L_middle_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070217523] [robot_state_publisher]: got segment L_pinky_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070224978] [robot_state_publisher]: got segment L_pinky_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070232626] [robot_state_publisher]: got segment L_ring_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070239890] [robot_state_publisher]: got segment L_ring_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070247410] [robot_state_publisher]: got segment L_thumb_distal
+[robot_state_publisher-1] [INFO] [1790084871.070254514] [robot_state_publisher]: got segment L_thumb_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070261618] [robot_state_publisher]: got segment L_thumb_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070269009] [robot_state_publisher]: got segment L_thumb_proximal_base
+[robot_state_publisher-1] [INFO] [1790084871.070276273] [robot_state_publisher]: got segment R_hand_base_link
+[robot_state_publisher-1] [INFO] [1790084871.070283313] [robot_state_publisher]: got segment R_index_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070290609] [robot_state_publisher]: got segment R_index_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070297745] [robot_state_publisher]: got segment R_middle_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070305233] [robot_state_publisher]: got segment R_middle_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070312528] [robot_state_publisher]: got segment R_pinky_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070319984] [robot_state_publisher]: got segment R_pinky_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070327344] [robot_state_publisher]: got segment R_ring_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070334672] [robot_state_publisher]: got segment R_ring_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070341968] [robot_state_publisher]: got segment R_thumb_distal
+[robot_state_publisher-1] [INFO] [1790084871.070349264] [robot_state_publisher]: got segment R_thumb_intermediate
+[robot_state_publisher-1] [INFO] [1790084871.070356688] [robot_state_publisher]: got segment R_thumb_proximal
+[robot_state_publisher-1] [INFO] [1790084871.070363951] [robot_state_publisher]: got segment R_thumb_proximal_base
+[robot_state_publisher-1] [INFO] [1790084871.070371343] [robot_state_publisher]: got segment camera_link
+[robot_state_publisher-1] [INFO] [1790084871.070378735] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790084871.070386319] [robot_state_publisher]: got segment left_ankle_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070393743] [robot_state_publisher]: got segment left_ankle_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070401007] [robot_state_publisher]: got segment left_elbow_link
+[robot_state_publisher-1] [INFO] [1790084871.070408302] [robot_state_publisher]: got segment left_hip_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070415662] [robot_state_publisher]: got segment left_hip_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070424014] [robot_state_publisher]: got segment left_hip_yaw_link
+[robot_state_publisher-1] [INFO] [1790084871.070431406] [robot_state_publisher]: got segment left_knee_link
+[robot_state_publisher-1] [INFO] [1790084871.070438638] [robot_state_publisher]: got segment left_shoulder_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070446286] [robot_state_publisher]: got segment left_shoulder_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070453581] [robot_state_publisher]: got segment left_shoulder_yaw_link
+[robot_state_publisher-1] [INFO] [1790084871.070460781] [robot_state_publisher]: got segment left_wrist_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070467949] [robot_state_publisher]: got segment left_wrist_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070475277] [robot_state_publisher]: got segment left_wrist_yaw_link
+[robot_state_publisher-1] [INFO] [1790084871.070482541] [robot_state_publisher]: got segment lidar_link
+[robot_state_publisher-1] [INFO] [1790084871.070489965] [robot_state_publisher]: got segment logo_link
+[robot_state_publisher-1] [INFO] [1790084871.070497388] [robot_state_publisher]: got segment pelvis
+[robot_state_publisher-1] [INFO] [1790084871.070504972] [robot_state_publisher]: got segment right_ankle_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070512524] [robot_state_publisher]: got segment right_ankle_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070569803] [robot_state_publisher]: got segment right_elbow_link
+[robot_state_publisher-1] [INFO] [1790084871.070583275] [robot_state_publisher]: got segment right_hip_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070591114] [robot_state_publisher]: got segment right_hip_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070598570] [robot_state_publisher]: got segment right_hip_yaw_link
+[robot_state_publisher-1] [INFO] [1790084871.070605866] [robot_state_publisher]: got segment right_knee_link
+[robot_state_publisher-1] [INFO] [1790084871.070613130] [robot_state_publisher]: got segment right_shoulder_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070620618] [robot_state_publisher]: got segment right_shoulder_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070627978] [robot_state_publisher]: got segment right_shoulder_yaw_link
+[robot_state_publisher-1] [INFO] [1790084871.070635081] [robot_state_publisher]: got segment right_wrist_pitch_link
+[robot_state_publisher-1] [INFO] [1790084871.070642537] [robot_state_publisher]: got segment right_wrist_roll_link
+[robot_state_publisher-1] [INFO] [1790084871.070649833] [robot_state_publisher]: got segment right_wrist_yaw_link
+[robot_state_publisher-1] [INFO] [1790084871.070657033] [robot_state_publisher]: got segment torso_link
+[mujoco_spawner-2] 1790084871.905882 [77] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] [WARN] [1790084873.290703564] [mujoco_spawner]: MuJoCo: excluded 2 self-contact pair(s) that interpenetrate at the rest pose: L_thumb_proximal/left_wrist_yaw_link, R_thumb_proximal/right_wrist_yaw_link
+[mujoco_spawner-2] [INFO] [1790084873.294745013] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790084873.477563687] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-2] [INFO] [1790084873.479605691] [mujoco_spawner]: Joints: ['left_hip_yaw_joint', 'left_hip_pitch_joint', 'left_hip_roll_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint', 'right_hip_yaw_joint', 'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint', 'torso_joint', 'left_shoulder_pitch_joint', 'left_shoulder_roll_joint', 'left_shoulder_yaw_joint', 'left_elbow_joint', 'left_wrist_roll_joint', 'left_wrist_pitch_joint', 'left_wrist_yaw_joint', 'L_thumb_proximal_yaw_joint', 'L_thumb_proximal_pitch_joint', 'L_thumb_intermediate_joint', 'L_thumb_distal_joint', 'L_index_proximal_joint', 'L_index_intermediate_joint', 'L_middle_proximal_joint', 'L_middle_intermediate_joint', 'L_ring_proximal_joint', 'L_ring_intermediate_joint', 'L_pinky_proximal_joint', 'L_pinky_intermediate_joint', 'right_shoulder_pitch_joint', 'right_shoulder_roll_joint', 'right_shoulder_yaw_joint', 'right_elbow_joint', 'right_wrist_roll_joint', 'right_wrist_pitch_joint', 'right_wrist_yaw_joint', 'R_thumb_proximal_yaw_joint', 'R_thumb_proximal_pitch_joint', 'R_thumb_intermediate_joint', 'R_thumb_distal_joint', 'R_index_proximal_joint', 'R_index_intermediate_joint', 'R_middle_proximal_joint', 'R_middle_intermediate_joint', 'R_ring_proximal_joint', 'R_ring_intermediate_joint', 'R_pinky_proximal_joint', 'R_pinky_intermediate_joint']   lw= rw=
+[mujoco_spawner-2] [INFO] [1790084873.482720984] [mujoco_spawner]: Display hold active (hold_position=auto): 51 joint(s) frozen at spawn pose
+[mujoco_spawner-2] [INFO] [1790084873.483358794] [mujoco_spawner]: MuJoCo model loaded: 53 bodies, 52 joints
+[mujoco_spawner-2] [INFO] [1790084873.483937181] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790084873.484485361] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790084873.485785397] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790084887.981081736] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 194592]
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 194594]

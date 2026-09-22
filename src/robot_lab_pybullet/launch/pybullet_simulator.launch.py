@@ -21,6 +21,14 @@ def _build_pybullet_actions(context):
     spawn_yaw = LaunchConfiguration("spawn_yaw")
     world_path = LaunchConfiguration("world_path")
     gui = LaunchConfiguration("gui")
+    # Display-mode hold: freeze the robot in its spawn pose.  'auto' lets the
+    # spawner decide (hold only in map-free display), 'true' forces the hold
+    # (passive display of legged/humanoid robots), 'false' forces full
+    # physics.  Bringup forwards mode:=display automatically.
+    try:
+        hold_position = LaunchConfiguration("hold_position")
+    except Exception:
+        hold_position = None
 
     actions = []
 
@@ -51,25 +59,30 @@ def _build_pybullet_actions(context):
         )
 
     # PyBullet physics engine + robot spawn
+    spawner_params = {
+        "model": LaunchConfiguration("model"),
+        "robot_name": robot_name,
+        "robot_package": robot_package,
+        "robot_xacro": robot_xacro,
+        "spawn_x": spawn_x,
+        "spawn_y": spawn_y,
+        "spawn_z": spawn_z,
+        "spawn_yaw": spawn_yaw,
+        "use_sim_time": use_sim_time,
+        "world_path": world_path,
+        "gui": gui,
+    }
+    for drive_key in ("left_wheel_joint", "right_wheel_joint", "wheel_radius", "wheel_separation"):
+        spawner_params[drive_key] = LaunchConfiguration(drive_key)
+    if hold_position is not None:
+        spawner_params["hold_position"] = ParameterValue(hold_position, value_type=str)
     actions.append(
         Node(
             package="robot_lab_pybullet",
             executable="pybullet_spawner",
             name="pybullet_spawner",
             output="screen",
-            parameters=[{
-                "model": LaunchConfiguration("model"),
-                "robot_name": robot_name,
-                "robot_package": robot_package,
-                "robot_xacro": robot_xacro,
-                "spawn_x": spawn_x,
-                "spawn_y": spawn_y,
-                "spawn_z": spawn_z,
-                "spawn_yaw": spawn_yaw,
-                "use_sim_time": use_sim_time,
-                "world_path": world_path,
-                "gui": gui,
-            }],
+            parameters=[spawner_params],
         )
     )
 
@@ -81,6 +94,10 @@ def _build_pybullet_actions(context):
 
 def generate_launch_description():
     return LaunchDescription([
+        DeclareLaunchArgument("left_wheel_joint", default_value="wheel_left_joint"),
+        DeclareLaunchArgument("right_wheel_joint", default_value="wheel_right_joint"),
+        DeclareLaunchArgument("wheel_radius", default_value="0.033"),
+        DeclareLaunchArgument("wheel_separation", default_value="0.17"),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),
@@ -94,6 +111,11 @@ def generate_launch_description():
         DeclareLaunchArgument("spawn_yaw", default_value="0.0"),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
         DeclareLaunchArgument("gui", default_value="true"),
-        DeclareLaunchArgument("world_path", default_value=""),
+        DeclareLaunchArgument(
+            "hold_position", default_value="false",
+            description="Display-mode joint hold: 'auto' holds only map-free "
+                        "display, 'true' always holds joints at spawn, "
+                        "'false' runs full physics.",
+        ),
         OpaqueFunction(function=_build_pybullet_actions),
     ])

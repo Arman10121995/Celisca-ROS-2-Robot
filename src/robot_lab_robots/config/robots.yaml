@@ -11,8 +11,13 @@ robots:
     package: robot_lab_robots
     xacro: labbot/urdf/labbot.urdf.xacro
     name: labbot
-    supported_modes: [display, loc, slam, nav]
-    features: [ros2_control, lidar_2d]
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    features: [ros2_control, lidar_2d, rgbd_camera]
+    drive:
+      left_wheel_joint: labbot_left_wheel_joint
+      right_wheel_joint: labbot_right_wheel_joint
+      wheel_radius: 0.06
+      wheel_separation: 0.30
     supports_room_vacuum: false
 
   berkeley_humanoid_lite:

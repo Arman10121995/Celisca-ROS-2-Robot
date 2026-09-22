@@ -110,7 +110,7 @@ def test_isaac_health_reports_offline_mode():
     from rclpy.executors import SingleThreadedExecutor
     from robot_lab_isaac.isaac_spawner import IsaacSpawner
 
-    rclpy.init()
+    rclpy.init(args=["--ros-args", "-p", "isaac_python:=''"])
     try:
         node = IsaacSpawner()
         health_msgs = []

@@ -1,0 +1,247 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-48-26-581493-molar1-195078
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm perception=pointcloud_segmenter -> node robot_lab_algorithms/pointcloud_segmenter
+[robot_lab] algorithm localization=rtabmap_localization -> rtabmap stack
+[robot_lab] algorithm state_estimation=ekf_3d_estimator -> node robot_lab_algorithms/ekf_3d_estimator
+[INFO] [robot_state_publisher-1]: process started with pid [195100]
+[INFO] [mujoco_spawner-2]: process started with pid [195102]
+[INFO] [joy_teleop-3]: process started with pid [195104]
+[INFO] [joy_node-4]: process started with pid [195106]
+[INFO] [twist_mux-5]: process started with pid [195108]
+[INFO] [twist_marker-6]: process started with pid [195157]
+[INFO] [joystick_relay.py-7]: process started with pid [195177]
+[INFO] [twist_relay-8]: process started with pid [195193]
+[INFO] [ekf_node-9]: process started with pid [195209]
+[INFO] [imu_republisher.py-10]: process started with pid [195212]
+[INFO] [rtabmap-11]: process started with pid [195241]
+[INFO] [pointcloud_segmenter-12]: process started with pid [195272]
+[INFO] [ekf_3d_estimator-13]: process started with pid [195276]
+[robot_state_publisher-1] 1790084907.104616 [81] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [INFO] [1790084907.132089933] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790084907.132239530] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790084907.132258377] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1790084907.132267977] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1790084907.132275401] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790084907.132282441] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790084907.132289641] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790084907.132296745] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790084907.132304232] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084907.132311656] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790084907.132318696] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790084907.132325896] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084907.132332968] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790084907.132339848] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790084907.132346824] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1790084907.132353831] [robot_state_publisher]: got segment wheel_right_link
+[joy_node-4] 1790084907.109660 [81]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] 1790084907.099571 [81]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] [INFO] [1790084907.113962286] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-5] [INFO] [1790084907.115124693] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-5] [INFO] [1790084907.115521645] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-5] [INFO] [1790084907.115857606] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[twist_marker-6] 1790084907.144934 [81] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_relay-8] 1790084907.202202 [81] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_node-9] 1790084907.260046 [81]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[joystick_relay.py-7] 1790084908.529019 [81] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_teleop-3] 1790084908.532978 [81] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[imu_republisher.py-10] 1790084908.592475 [81]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_3d_estimator-13] 1790084908.693136 [81] ekf_3d_est: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] 1790084909.112645 [81] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[pointcloud_segmenter-12] 1790084909.140034 [81] pointcloud: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_3d_estimator-13] [INFO] [1790084909.296841501] [state_estimation_ekf_3d_estimator]: ekf_3d_estimator ready
+[rtabmap-11] 1790084909.310043 [81]    rtabmap: selected interface "lo" is not multicast-capable: disabling multicast
+[pointcloud_segmenter-12] [INFO] [1790084909.383158071] [perception_pointcloud_segmenter]: pointcloud_segmenter ready
+[rtabmap-11] [WARN] [1790084909.392884200] [rtabmap]: Parameter "queue_size" has been renamed to "sync_queue_size" and will be removed in future versions! The value (20) is copied to "sync_queue_size".
+[rtabmap-11] [INFO] [1790084909.400941182] [rtabmap]: rtabmap(maps): latch                      = true
+[rtabmap-11] [INFO] [1790084909.401016028] [rtabmap]: rtabmap(maps): map_filter_radius          = 0.000000
+[rtabmap-11] [INFO] [1790084909.401054523] [rtabmap]: rtabmap(maps): map_filter_angle           = 30.000000
+[rtabmap-11] [INFO] [1790084909.401070043] [rtabmap]: rtabmap(maps): map_cleanup                = true
+[rtabmap-11] [INFO] [1790084909.401078555] [rtabmap]: rtabmap(maps): map_always_update          = false
+[rtabmap-11] [INFO] [1790084909.401087226] [rtabmap]: rtabmap(maps): map_empty_ray_tracing      = true
+[rtabmap-11] [INFO] [1790084909.401095066] [rtabmap]: rtabmap(maps): map_cache_loaded_on_init   = true
+[rtabmap-11] [INFO] [1790084909.401112698] [rtabmap]: rtabmap(maps): cloud_output_voxelized     = true
+[rtabmap-11] [INFO] [1790084909.401121818] [rtabmap]: rtabmap(maps): cloud_subtract_filtering   = false
+[rtabmap-11] [INFO] [1790084909.401129786] [rtabmap]: rtabmap(maps): cloud_subtract_filtering_min_neighbors = 2
+[rtabmap-11] [INFO] [1790084909.401417139] [rtabmap]: rtabmap(maps): octomap_tree_depth         = 16
+[rtabmap-11] [INFO] [1790084909.437692050] [rtabmap]: rtabmap: frame_id      = "base_footprint"
+[rtabmap-11] [INFO] [1790084909.437763601] [rtabmap]: rtabmap: odom_frame_id = "odom"
+[rtabmap-11] [INFO] [1790084909.437777648] [rtabmap]: rtabmap: ground_truth_frame_id = "" -> ground_truth_base_frame_id = "base_footprint"
+[rtabmap-11] [INFO] [1790084909.437786928] [rtabmap]: rtabmap: map_frame_id  = "map"
+[rtabmap-11] [INFO] [1790084909.437794992] [rtabmap]: rtabmap: log_to_rosout_level  = 4
+[rtabmap-11] [INFO] [1790084909.437803312] [rtabmap]: rtabmap: initial_pose  = ""
+[rtabmap-11] [INFO] [1790084909.437811312] [rtabmap]: rtabmap: use_action_for_goal  = false
+[rtabmap-11] [INFO] [1790084909.437818896] [rtabmap]: rtabmap: tf_delay      = 0.050000
+[rtabmap-11] [INFO] [1790084909.437835343] [rtabmap]: rtabmap: tf_tolerance  = 0.100000
+[rtabmap-11] [INFO] [1790084909.437843951] [rtabmap]: rtabmap: odom_sensor_sync   = false
+[rtabmap-11] [INFO] [1790084909.437851247] [rtabmap]: rtabmap: pub_loc_pose_only_when_localizing = false
+[rtabmap-11] [INFO] [1790084909.437862543] [rtabmap]: rtabmap: wait_for_transform = 0.200000
+[rtabmap-11] [INFO] [1790084909.437871886] [rtabmap]: rtabmap: staleness_factor = 0.000000
+[rtabmap-11] [INFO] [1790084909.437880270] [rtabmap]: rtabmap: gen_scan  = false
+[rtabmap-11] [INFO] [1790084909.437888270] [rtabmap]: rtabmap: gen_depth  = false
+[rtabmap-11] [INFO] [1790084909.463572109] [rtabmap]: Setting RTAB-Map parameter "Grid/3D"="true" (rosparam)
+[rtabmap-11] [INFO] [1790084909.463732202] [rtabmap]: Setting RTAB-Map parameter "Grid/CellSize"="0.05" (rosparam)
+[rtabmap-11] [INFO] [1790084909.463908774] [rtabmap]: Setting RTAB-Map parameter "Grid/DepthDecimation"="2" (rosparam)
+[rtabmap-11] [INFO] [1790084909.464613271] [rtabmap]: Setting RTAB-Map parameter "Grid/MaxGroundHeight"="0.20" (rosparam)
+[rtabmap-11] [INFO] [1790084909.464716085] [rtabmap]: Setting RTAB-Map parameter "Grid/MaxObstacleHeight"="2.0" (rosparam)
+[rtabmap-11] [INFO] [1790084909.464882514] [rtabmap]: Setting RTAB-Map parameter "Grid/MinGroundHeight"="-0.10" (rosparam)
+[rtabmap-11] [INFO] [1790084909.465232426] [rtabmap]: Setting RTAB-Map parameter "Grid/NormalsSegmentation"="false" (rosparam)
+[rtabmap-11] [INFO] [1790084909.465406694] [rtabmap]: Setting RTAB-Map parameter "Grid/RangeMax"="6.0" (rosparam)
+[rtabmap-11] [INFO] [1790084909.465508548] [rtabmap]: Setting RTAB-Map parameter "Grid/RangeMin"="0.30" (rosparam)
+[rtabmap-11] [INFO] [1790084909.470497659] [rtabmap]: Setting RTAB-Map parameter "Kp/DetectorStrategy"="6" (rosparam)
+[rtabmap-11] [INFO] [1790084909.471219243] [rtabmap]: Setting RTAB-Map parameter "Kp/MaxFeatures"="600" (rosparam)
+[rtabmap-11] [INFO] [1790084909.479199266] [rtabmap]: Setting RTAB-Map parameter "RGBD/AngularUpdate"="0.10" (rosparam)
+[rtabmap-11] [INFO] [1790084909.479355391] [rtabmap]: Setting RTAB-Map parameter "RGBD/CreateOccupancyGrid"="true" (rosparam)
+[rtabmap-11] [INFO] [1790084909.479879124] [rtabmap]: Setting RTAB-Map parameter "RGBD/LinearUpdate"="0.10" (rosparam)
+[rtabmap-11] [INFO] [1790084909.481071706] [rtabmap]: Setting RTAB-Map parameter "RGBD/NeighborLinkRefining"="true" (rosparam)
+[rtabmap-11] [INFO] [1790084909.481276086] [rtabmap]: Setting RTAB-Map parameter "RGBD/OptimizeFromGraphEnd"="false" (rosparam)
+[rtabmap-11] [INFO] [1790084909.481930824] [rtabmap]: Setting RTAB-Map parameter "RGBD/ProximityBySpace"="true" (rosparam)
+[rtabmap-11] [INFO] [1790084909.482994354] [rtabmap]: Setting RTAB-Map parameter "Reg/Strategy"="1" (rosparam)
+[rtabmap-11] [INFO] [1790084909.492840961] [rtabmap]: Setting RTAB-Map parameter "Vis/MaxDepth"="6.0" (rosparam)
+[rtabmap-11] [INFO] [1790084909.493228313] [rtabmap]: Setting RTAB-Map parameter "Vis/MinInliers"="12" (rosparam)
+[rtabmap-11] [INFO] [1790084909.495501032] [rtabmap]: RTAB-Map detection rate = 1.000000 Hz
+[rtabmap-11] [INFO] [1790084909.495635045] [rtabmap]: rtabmap: Using database from "/workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_bumperbot.db" (0 MB).
+[rtabmap-11] [INFO] [1790084909.555004954] [rtabmap]: rtabmap: Database version = "0.23.7".
+[rtabmap-11] [INFO] [1790084909.555097592] [rtabmap]: rtabmap: SLAM mode (Mem/IncrementalMemory=true)
+[rtabmap-11] [INFO] [1790084909.576109339] [rtabmap]: Setup callbacks
+[rtabmap-11] [INFO] [1790084909.576294423] [rtabmap]: rtabmap: subscribe_depth = true
+[rtabmap-11] [INFO] [1790084909.576322102] [rtabmap]: rtabmap: subscribe_rgb = true
+[rtabmap-11] [INFO] [1790084909.576336598] [rtabmap]: rtabmap: subscribe_stereo = false
+[rtabmap-11] [INFO] [1790084909.576349334] [rtabmap]: rtabmap: subscribe_rgbd = false (rgbd_cameras=1)
+[rtabmap-11] [INFO] [1790084909.576360438] [rtabmap]: rtabmap: subscribe_sensor_data = false
+[rtabmap-11] [INFO] [1790084909.576369941] [rtabmap]: rtabmap: subscribe_odom = false ("odom_frame_id" is set)
+[rtabmap-11] [INFO] [1790084909.576379317] [rtabmap]: rtabmap: subscribe_odom_info = false
+[rtabmap-11] [INFO] [1790084909.576388469] [rtabmap]: rtabmap: subscribe_user_data = false
+[rtabmap-11] [INFO] [1790084909.576396757] [rtabmap]: rtabmap: subscribe_scan = false
+[rtabmap-11] [INFO] [1790084909.576405493] [rtabmap]: rtabmap: subscribe_scan_cloud = false
+[rtabmap-11] [INFO] [1790084909.576413908] [rtabmap]: rtabmap: subscribe_scan_descriptor = false
+[rtabmap-11] [INFO] [1790084909.576422516] [rtabmap]: rtabmap: topic_queue_size = 10
+[rtabmap-11] [INFO] [1790084909.576431380] [rtabmap]: rtabmap: sync_queue_size  = 20
+[rtabmap-11] [INFO] [1790084909.576450740] [rtabmap]: rtabmap: qos_image       = 0
+[rtabmap-11] [INFO] [1790084909.576461139] [rtabmap]: rtabmap: qos_camera_info = 0
+[rtabmap-11] [INFO] [1790084909.576469235] [rtabmap]: rtabmap: qos_scan        = 0
+[rtabmap-11] [INFO] [1790084909.576477267] [rtabmap]: rtabmap: qos_odom        = 0
+[rtabmap-11] [INFO] [1790084909.576485171] [rtabmap]: rtabmap: qos_user_data   = 0
+[rtabmap-11] [INFO] [1790084909.576496339] [rtabmap]: rtabmap: approx_sync     = true
+[rtabmap-11] [INFO] [1790084909.576505139] [rtabmap]: rtabmap: image_transport = raw
+[rtabmap-11] [INFO] [1790084909.576513330] [rtabmap]: rtabmap: depth_transport = raw
+[rtabmap-11] [INFO] [1790084909.576543634] [rtabmap]: Setup depth callback
+[rtabmap-11] [INFO] [1790084909.583759001] [rtabmap]: 
+[rtabmap-11] rtabmap subscribed to (approx sync):
+[rtabmap-11]    /oakd/rgb/image_raw \
+[rtabmap-11]    /oakd/depth/image_raw \
+[rtabmap-11]    /oakd/rgb/camera_info
+[mujoco_spawner-2] [INFO] [1790084910.541557447] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790084910.630368461] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[mujoco_spawner-2] [INFO] [1790084910.631474229] [mujoco_spawner]: Joints: ['wheel_right_joint', 'wheel_left_joint']   lw=wheel_left_joint rw=wheel_right_joint
+[mujoco_spawner-2] [INFO] [1790084910.632743418] [mujoco_spawner]: MuJoCo model loaded: 4 bodies, 3 joints
+[mujoco_spawner-2] [INFO] [1790084910.633431404] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790084910.634019103] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790084910.637688305] [mujoco_spawner]: MuJoCo spawner running.
+[rtabmap-11] [INFO] [1790084911.709063108] [rtabmap]: rtabmap (1): Rate=1.00s, Limit=0.000s, Conversion=0.0007s, RTAB-Map=0.0156s, Maps update=0.0019s pub=0.0002s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084913.957295126] [rtabmap]: rtabmap (2): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0264s, Maps update=0.0009s pub=0.0000s delay=0.0200s (local map=1, WM=1)
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.496) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.500) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.502) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.502) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.505) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.552) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:29.554) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:31.472) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 0.004000 but the earliest data is at time 0.100000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-11] [33m[ WARN] (2026-09-22 15:48:31.695) Memory.cpp:6380::createSignature() Mem/SaveDepth16Format is set to false to use 32bits format but this is not compatible with the compressed depth format chosen (Mem/DepthCompressionFormat=".rvl"), depth images will be compressed in ".png" format instead. Explicitly set Mem/SaveDepth16Format to true to keep using ".rvl" format and images will be converted to 16bits for convenience (warning: that would remove all depth values over 65 meters). Explicitly set Mem/DepthCompressionFormat=".png" to suppress this warning. This warning is only printed once.[0m
+[rtabmap-11] [INFO] [1790084916.700275880] [rtabmap]: rtabmap (3): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0139s, Maps update=0.0008s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084918.963460149] [rtabmap]: rtabmap (4): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0116s, Maps update=0.0009s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084921.302651415] [rtabmap]: rtabmap (5): Rate=1.00s, Limit=0.000s, Conversion=0.0005s, RTAB-Map=0.0117s, Maps update=0.0009s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084923.582238809] [rtabmap]: rtabmap (6): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0135s, Maps update=0.0008s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084925.953721955] [rtabmap]: rtabmap (7): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0139s, Maps update=0.0013s pub=0.0001s delay=0.0600s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084928.267859709] [rtabmap]: rtabmap (8): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0122s, Maps update=0.0002s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084930.714143929] [rtabmap]: rtabmap (9): Rate=1.00s, Limit=0.000s, Conversion=0.0003s, RTAB-Map=0.0124s, Maps update=0.0002s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084933.085576658] [rtabmap]: rtabmap (10): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0119s, Maps update=0.0010s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[rtabmap-11] [INFO] [1790084935.401741931] [rtabmap]: rtabmap (11): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0119s, Maps update=0.0008s pub=0.0000s delay=0.0000s (local map=1, WM=1)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [ekf_3d_estimator-13]: sending signal 'SIGINT' to process[ekf_3d_estimator-13]
+[INFO] [pointcloud_segmenter-12]: sending signal 'SIGINT' to process[pointcloud_segmenter-12]
+[INFO] [rtabmap-11]: sending signal 'SIGINT' to process[rtabmap-11]
+[INFO] [imu_republisher.py-10]: sending signal 'SIGINT' to process[imu_republisher.py-10]
+[INFO] [ekf_node-9]: sending signal 'SIGINT' to process[ekf_node-9]
+[INFO] [twist_relay-8]: sending signal 'SIGINT' to process[twist_relay-8]
+[INFO] [joystick_relay.py-7]: sending signal 'SIGINT' to process[joystick_relay.py-7]
+[INFO] [twist_marker-6]: sending signal 'SIGINT' to process[twist_marker-6]
+[INFO] [twist_mux-5]: sending signal 'SIGINT' to process[twist_mux-5]
+[INFO] [joy_node-4]: sending signal 'SIGINT' to process[joy_node-4]
+[INFO] [joy_teleop-3]: sending signal 'SIGINT' to process[joy_teleop-3]
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[rtabmap-11] [INFO] [1790084936.077121809] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ekf_node-9] [INFO] [1790084936.089603563] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_relay-8] [INFO] [1790084936.095406066] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_marker-6] [INFO] [1790084936.105808600] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-5] [INFO] [1790084936.109456492] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-4] [INFO] [1790084936.125842197] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rtabmap-11] [INFO] [1790084936.127668463] [rtabmap]: Parameters are not saved (No configuration file provided...)
+[robot_state_publisher-1] [INFO] [1790084936.143331879] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [ekf_node-9]: process has finished cleanly [pid 195209]
+[INFO] [twist_relay-8]: process has finished cleanly [pid 195193]
+[INFO] [twist_mux-5]: process has finished cleanly [pid 195108]
+[INFO] [twist_marker-6]: process has finished cleanly [pid 195157]
+[INFO] [joy_node-4]: process has finished cleanly [pid 195106]
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 195100]
+[INFO] [imu_republisher.py-10]: process has finished cleanly [pid 195212]
+[INFO] [pointcloud_segmenter-12]: process has finished cleanly [pid 195272]
+[joy_teleop-3] Traceback (most recent call last):
+[joy_teleop-3]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-3]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-3]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 442, in main
+[joy_teleop-3]     rclpy.shutdown()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+[joy_teleop-3]     _shutdown(context=context)
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+[joy_teleop-3]     return context.shutdown()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+[joy_teleop-3]     self.__context.shutdown()
+[joy_teleop-3] rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [ekf_3d_estimator-13]: process has finished cleanly [pid 195276]
+[INFO] [joystick_relay.py-7]: process has finished cleanly [pid 195177]
+[mujoco_spawner-2] Exception ignored in: <function Renderer.__del__ at 0xffff61f428c0>
+[mujoco_spawner-2] Traceback (most recent call last):
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 343, in __del__
+[mujoco_spawner-2]     self.close()
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 329, in close
+[mujoco_spawner-2]     self._gl_context.free()
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 133, in free
+[mujoco_spawner-2]     EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+[mujoco_spawner-2]   File "/usr/lib/python3/dist-packages/OpenGL/platform/baseplatform.py", line 415, in __call__
+[mujoco_spawner-2]     return self( *args, **named )
+[mujoco_spawner-2]   File "/usr/lib/python3/dist-packages/OpenGL/error.py", line 230, in glCheckError
+[mujoco_spawner-2]     raise self._errorClass(
+[ERROR] [joy_teleop-3]: process has died [pid 195104, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_cu4gk2q4'].
+[mujoco_spawner-2] OpenGL.raw.EGL._errors.EGLError: EGLError(
+[mujoco_spawner-2] 	err = EGL_NOT_INITIALIZED,
+[mujoco_spawner-2] 	baseOperation = eglDestroyContext,
+[mujoco_spawner-2] 	cArguments = (
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLDisplay_pointer object at 0xffff3bf92640>,
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLContext_pointer object at 0xffff3bf92dc0>,
+[mujoco_spawner-2] 	),
+[mujoco_spawner-2] 	result = 0
+[mujoco_spawner-2] )
+[mujoco_spawner-2] Exception ignored in: <function GLContext.__del__ at 0xffff61f42170>
+[mujoco_spawner-2] Traceback (most recent call last):
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 138, in __del__
+[mujoco_spawner-2]     self.free()
+[mujoco_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/.venv/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 133, in free
+[mujoco_spawner-2]     EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+[mujoco_spawner-2]   File "/usr/lib/python3/dist-packages/OpenGL/error.py", line 230, in glCheckError
+[mujoco_spawner-2]     raise self._errorClass(
+[mujoco_spawner-2] OpenGL.raw.EGL._errors.EGLError: EGLError(
+[mujoco_spawner-2] 	err = EGL_NOT_INITIALIZED,
+[mujoco_spawner-2] 	baseOperation = eglDestroyContext,
+[mujoco_spawner-2] 	cArguments = (
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLDisplay_pointer object at 0xffff3bf92640>,
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLContext_pointer object at 0xffff3bf92dc0>,
+[mujoco_spawner-2] 	),
+[mujoco_spawner-2] 	result = 0
+[mujoco_spawner-2] )
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 195102]
+[rtabmap-11] rtabmap: Saving database/long-term memory... (located at /workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_bumperbot.db)
+[rtabmap-11] rtabmap: 2D occupancy grid map saved.
+[rtabmap-11] rtabmap: Saving database/long-term memory...done! (located at /workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_bumperbot.db, 1 MB)
+[INFO] [rtabmap-11]: process has finished cleanly [pid 195241]

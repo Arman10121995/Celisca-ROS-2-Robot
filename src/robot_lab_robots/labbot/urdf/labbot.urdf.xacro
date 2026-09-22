@@ -8,6 +8,11 @@
   <!-- Load Simulated or Real Hardware Interfaces -->
   <xacro:arg name="is_sim" default="true"/>
 
+  <xacro:include filename="$(find robot_lab_robots)/description_common/urdf/oakd_camera.xacro" />
+  <xacro:oakd name="oakd" parent_link="base_link" model="pro" mesh_visual="false">
+    <origin xyz="0.12 0 0.09" rpy="0 0 0"/>
+  </xacro:oakd>
+
   <!-- Include Gazebo Parameters -->
   <xacro:include filename="$(find robot_lab_robots)/labbot/urdf/labbot_gazebo.xacro" />
 

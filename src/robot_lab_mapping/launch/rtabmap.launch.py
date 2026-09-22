@@ -1,7 +1,8 @@
 import os
+import sysconfig
 from pathlib import Path
 
-from ament_index_python.packages import PackageNotFoundError, get_package_share_directory
+from ament_index_python.packages import PackageNotFoundError, get_package_share_directory, get_package_prefix
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
@@ -41,6 +42,17 @@ def _build_rtabmap_actions(context):
         ) from exc
 
     mapping_share = get_package_share_directory("robot_lab_mapping")
+    # Use the core libraries shipped alongside these ROS executables. A
+    # different /usr/local RTAB-Map build can pull missing camera ABIs into
+    # even an RGB-D simulation that has no RealSense hardware.
+    prefix = Path(get_package_prefix("rtabmap_slam"))
+    multiarch = sysconfig.get_config_var("MULTIARCH")
+    library_dirs = [prefix / "lib" / multiarch] if multiarch else []
+    library_dirs.append(prefix / "lib")
+    library_path = os.pathsep.join(str(p) for p in library_dirs if p.is_dir())
+    inherited = context.environment.get("LD_LIBRARY_PATH", "")
+    runtime_env = {"LD_LIBRARY_PATH": library_path + (os.pathsep + inherited if inherited else "")}
+
 
     use_sim_time = LaunchConfiguration("use_sim_time").perform(context)
     rgb_topic = LaunchConfiguration("rgb_topic").perform(context)
@@ -86,6 +98,7 @@ def _build_rtabmap_actions(context):
     if start_visual_odometry:
         actions.append(
             Node(
+                additional_env=runtime_env,
                 package="rtabmap_odom",
                 executable="rgbd_odometry",
                 name="rgbd_odometry",
@@ -98,6 +111,7 @@ def _build_rtabmap_actions(context):
     rtabmap_arguments = ["--delete_db_on_start"] if delete_db_on_start else []
     actions.append(
         Node(
+            additional_env=runtime_env,
             package="rtabmap_slam",
             executable="rtabmap",
             name="rtabmap",
@@ -111,6 +125,7 @@ def _build_rtabmap_actions(context):
     if start_rtabmap_viz:
         actions.append(
             Node(
+                additional_env=runtime_env,
                 package="rtabmap_viz",
                 executable="rtabmap_viz",
                 name="rtabmap_viz",

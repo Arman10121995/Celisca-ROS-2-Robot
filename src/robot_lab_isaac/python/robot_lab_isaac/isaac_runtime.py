@@ -677,108 +677,141 @@ def _run_stage(app, reader, cfg, state):
     robot_name = cfg.get("robot_name", "bumperbot")
     prim_path = "/World/%s" % robot_name
 
-    prim = None
-    if URDFImporter is not None:
-        # isaacsim 6.0 API: URDFImporter -> generated USD -> stage reference.
-        try:
-            imp_cfg = URDFImporterConfig(urdf_path=cfg["urdf_file"])
-            imp_cfg.merge_fixed_joints = False
-            imp_cfg.fix_base = False
-            imp_cfg.collision_from_visuals = bool(
-                cfg.get("collision_from_visuals", False))
-            imp_cfg.joint_drive_type = "force"
-            usd_path = URDFImporter(imp_cfg).import_urdf()
-            prim = stage_utils.add_reference_to_stage(usd_path, "/World")
-        except Exception:
-            prim = None
-    if prim is None:
-        # Legacy importer path (4.x/5.x style bindings).
-        try:
-            from isaacsim.asset.importer.urdf.impl import _urdf
-        except ImportError:
-            from omni.isaac.urdf import _urdf
-        cfg_impl = _urdf.ImportConfig()
-        cfg_impl.merge_fixed_joints = False
-        cfg_impl.fix_base = False
-        cfg_impl.import_inertia_tensor = True
-        prim = _urdf.import_urdf(cfg_impl, cfg["urdf_file"],
-                                 prim_path=prim_path)
-    if prim is None:
-        raise RuntimeError("URDF import failed (%s)" % cfg["urdf_file"])
+    robot_free = bool(cfg.get("robot_free")) or not cfg.get("urdf_file")
+    root_prim = None
+    if not robot_free:
+        prim = None
+        if URDFImporter is not None:
+            # isaacsim 6.0 API: URDFImporter -> generated USD -> stage reference.
+            try:
+                imp_cfg = URDFImporterConfig(urdf_path=cfg["urdf_file"])
+                imp_cfg.merge_fixed_joints = False
+                imp_cfg.fix_base = False
+                imp_cfg.collision_from_visuals = bool(
+                    cfg.get("collision_from_visuals", False))
+                imp_cfg.joint_drive_type = "force"
+                usd_path = URDFImporter(imp_cfg).import_urdf()
+                prim = stage_utils.add_reference_to_stage(usd_path, "/World")
+            except Exception:
+                prim = None
+        if prim is None:
+            # Legacy importer path (4.x/5.x style bindings).
+            try:
+                from isaacsim.asset.importer.urdf.impl import _urdf
+            except ImportError:
+                from omni.isaac.urdf import _urdf
+            cfg_impl = _urdf.ImportConfig()
+            cfg_impl.merge_fixed_joints = False
+            cfg_impl.fix_base = False
+            cfg_impl.import_inertia_tensor = True
+            prim = _urdf.import_urdf(cfg_impl, cfg["urdf_file"],
+                                     prim_path=prim_path)
+        if prim is None:
+            raise RuntimeError("URDF import failed (%s)" % cfg["urdf_file"])
 
     # Resolve the exact robot root: prefer /World/<robot_name>, else the
     # first child of /World carrying a PhysX ArticulationRoot API.
     from pxr import Usd, UsdPhysics
     stage_obj = stage_utils.get_current_stage()
-    root_prim = prim
-    cand = stage_obj.GetPrimAtPath("/World/%s" % robot_name)
-    if cand and cand.IsValid():
-        root_prim = cand
+    scan = None
+    camera = None
+    robot = None
+    dof_names = []
+    if not robot_free:
+        root_prim = prim
+        cand = stage_obj.GetPrimAtPath("/World/%s" % robot_name)
+        if cand and cand.IsValid():
+            root_prim = cand
+        else:
+            for cand_prim in Usd.PrimRange(stage_obj.GetPrimAtPath("/World")):
+                if cand_prim.IsValid() and UsdPhysics.ArticulationRootAPI(cand_prim):
+                    root_prim = cand_prim
+                    break
+        _emit({"event": "debug_prim", "path": str(prim.GetPath()),
+               "root": str(root_prim.GetPath())})
+
+    if not robot_free:
+        # Author velocity drives on the wheel joints before the world reset, so
+        # PhysX parses them with the articulation.
+        driven = _author_wheel_velocity_drives(
+            stage_obj, (cfg.get("left_wheel_joint", ""),
+                        cfg.get("right_wheel_joint", "")))
+        _emit({"event": "log",
+               "msg": "Wheel velocity drives: %s" % (driven or "none found")})
+
+        from isaacsim.core.api.robots import Robot
+        syaw = float(cfg.get("spawn_yaw", 0.0))
+        orn = _isaac_quat_from_yaw(syaw)
+        robot = Robot(
+            prim_path=str(root_prim.GetPath()), name=robot_name,
+            position=(float(cfg.get("spawn_x", 0.0)),
+                      float(cfg.get("spawn_y", 0.0)),
+                      float(cfg.get("spawn_z", 0.0))),
+            orientation=orn,
+        )
+        # The deprecated core API only initializes the PhysX articulation for
+        # objects registered in the world scene.
+        try:
+            world.scene.add(robot)
+        except Exception:
+            pass
+        world.reset()
+
+        # Give the articulation a moment to initialize, then read the DOFs.
+        try:
+            robot.initialize()
+        except Exception:
+            pass
+        try:
+            dof_names = list(robot.dof_names)
+        except Exception:
+            dof_names = []
     else:
-        for cand_prim in Usd.PrimRange(stage_obj.GetPrimAtPath("/World")):
-            if cand_prim.IsValid() and UsdPhysics.ArticulationRootAPI(cand_prim):
-                root_prim = cand_prim
-                break
-    _emit({"event": "debug_prim", "path": str(prim.GetPath()),
-           "root": str(root_prim.GetPath())})
-
-    # Author velocity drives on the wheel joints before the world reset, so
-    # PhysX parses them with the articulation.
-    driven = _author_wheel_velocity_drives(
-        stage_obj, (cfg.get("left_wheel_joint", ""),
-                    cfg.get("right_wheel_joint", "")))
-    _emit({"event": "log",
-           "msg": "Wheel velocity drives: %s" % (driven or "none found")})
-
-    from isaacsim.core.api.robots import Robot
-    syaw = float(cfg.get("spawn_yaw", 0.0))
-    orn = _isaac_quat_from_yaw(syaw)
-    robot = Robot(
-        prim_path=str(root_prim.GetPath()), name=robot_name,
-        position=(float(cfg.get("spawn_x", 0.0)),
-                  float(cfg.get("spawn_y", 0.0)),
-                  float(cfg.get("spawn_z", 0.0))),
-        orientation=orn,
-    )
-    # The deprecated core API only initializes the PhysX articulation for
-    # objects registered in the world scene.
-    try:
-        world.scene.add(robot)
-    except Exception:
-        pass
-    world.reset()
-
-    # Give the articulation a moment to initialize, then read the DOFs.
-    try:
-        robot.initialize()
-    except Exception:
-        pass
-    try:
-        dof_names = list(robot.dof_names)
-    except Exception:
-        dof_names = []
+        # Robot-free display: still step the world so the map renders; there
+        # is simply no articulation to drive or report joints for.
+        world.reset()
+        _emit({"event": "ready", "dofs": [],
+               "root_body": ""})
     lw = cfg.get("left_wheel_joint", "")
     rw = cfg.get("right_wheel_joint", "")
     lw_idx = dof_names.index(lw) if lw in dof_names else -1
     rw_idx = dof_names.index(rw) if rw in dof_names else -1
-    _emit({"event": "ready", "dofs": dof_names,
-           "root_body": _articulation_root_body(robot)})
+    if not robot_free:
+        _emit({"event": "ready", "dofs": dof_names,
+               "root_body": _articulation_root_body(robot)})
 
-    try:
-        scan = _prepare_scan(cfg, dt, robot, stage_obj)
-    except Exception as exc:
-        scan = None
-        _emit({"event": "log", "msg": "Scan unavailable: %s" % exc})
-    try:
-        camera = _prepare_camera(cfg, dt, robot, stage_obj)
-    except Exception as exc:
-        camera = None
-        _emit({"event": "log", "msg": "RGB-D camera unavailable: %s" % exc})
+    if not robot_free:
+        try:
+            scan = _prepare_scan(cfg, dt, robot, stage_obj)
+        except Exception as exc:
+            scan = None
+            _emit({"event": "log", "msg": "Scan unavailable: %s" % exc})
+        try:
+            camera = _prepare_camera(cfg, dt, robot, stage_obj)
+        except Exception as exc:
+            camera = None
+            _emit({"event": "log", "msg": "RGB-D camera unavailable: %s" % exc})
 
     wheel_radius = float(cfg.get("wheel_radius", 0.033))
     wheel_separation = float(cfg.get("wheel_separation", 0.17))
     action_error_reported = False
     sim_step = 0
+    # Display hold: freeze joints at spawn so passive visualization of
+    # legged/humanoid robots stays stable instead of collapsing under
+    # gravity (the RViz "jump like crazy").  'true' always holds; 'auto'
+    # holds only when there are no drive joints (the display case).
+    hold_mode = str(cfg.get("hold_position", "auto") or "auto").lower()
+    hold_joints = (hold_mode == "true") or (hold_mode == "auto" and lw_idx < 0 and rw_idx < 0)
+    hold_pose = None
+    if hold_joints and not robot_free and robot is not None:
+        try:
+            hold_pose = [float(v) for v in robot.get_joint_positions()]
+            # Hold with stiff position targets each tick.
+            from isaacsim.core.utils.types import ArticulationAction as _HoldAction
+            robot.apply_action(_HoldAction(joint_positions=list(hold_pose)))
+        except Exception:
+            hold_pose = None
+            hold_joints = False
     while state["running"] and not reader.stop and app.is_running():
         if reader.reset_requested:
             reader.reset_requested = False
@@ -793,6 +826,15 @@ def _run_stage(app, reader, cfg, state):
         linear, angular = reader.cmd
         vl, vr = _wheel_velocities(linear, angular, wheel_radius,
                                    wheel_separation)
+        if hold_joints and not robot_free and robot is not None and hold_pose is not None:
+            # Re-assert the frozen spawn pose instead of stepping physics
+            # freely; drive joints still follow /cmd_vel below.
+            try:
+                from isaacsim.core.utils.types import ArticulationAction
+                robot.apply_action(
+                    ArticulationAction(joint_positions=list(hold_pose)))
+            except Exception:
+                pass
         try:
             from isaacsim.core.utils.types import ArticulationAction
             idx, vels = [], []
@@ -802,7 +844,7 @@ def _run_stage(app, reader, cfg, state):
             if rw_idx >= 0:
                 idx.append(rw_idx)
                 vels.append(vr)
-            if idx:
+            if idx and robot is not None:
                 robot.apply_action(
                     ArticulationAction(joint_velocities=vels,
                                        joint_indices=idx)
@@ -820,23 +862,33 @@ def _run_stage(app, reader, cfg, state):
         t = sim_step * dt
 
         q = None
-        try:
-            pose = robot.get_world_pose()
-            pos = [float(v) for v in pose[0]]
-            q = [float(v) for v in pose[1]]
-            orn = _ros_quat_from_isaac(q)  # events carry ROS (x, y, z, w)
-            lin = [float(v) for v in robot.get_linear_velocity()]
-            ang = [float(v) for v in robot.get_angular_velocity()]
-            jpos = [float(v) for v in robot.get_joint_positions()]
-            jvel = [float(v) for v in robot.get_joint_velocities()]
-        except Exception:
+        if robot_free or robot is None:
+            # No articulation: still advance the clock so the world renders.
             q = None
             pos = [0.0, 0.0, 0.0]
             orn = [0.0, 0.0, 0.0, 1.0]
             lin = [0.0, 0.0, 0.0]
             ang = [0.0, 0.0, 0.0]
-            jpos = [0.0] * len(dof_names)
-            jvel = [0.0] * len(dof_names)
+            jpos = []
+            jvel = []
+        else:
+            try:
+                pose = robot.get_world_pose()
+                pos = [float(v) for v in pose[0]]
+                q = [float(v) for v in pose[1]]
+                orn = _ros_quat_from_isaac(q)  # events carry ROS (x, y, z, w)
+                lin = [float(v) for v in robot.get_linear_velocity()]
+                ang = [float(v) for v in robot.get_angular_velocity()]
+                jpos = [float(v) for v in robot.get_joint_positions()]
+                jvel = [float(v) for v in robot.get_joint_velocities()]
+            except Exception:
+                q = None
+                pos = [0.0, 0.0, 0.0]
+                orn = [0.0, 0.0, 0.0, 1.0]
+                lin = [0.0, 0.0, 0.0]
+                ang = [0.0, 0.0, 0.0]
+                jpos = [0.0] * len(dof_names)
+                jvel = [0.0] * len(dof_names)
 
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel})

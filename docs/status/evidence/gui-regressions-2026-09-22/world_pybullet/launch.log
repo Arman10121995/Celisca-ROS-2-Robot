@@ -1,0 +1,19 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-50-33-932113-molar1-198208
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [pybullet_spawner-1]: process started with pid [198215]
+[pybullet_spawner-1] pybullet build time: Sep  2 2026 15:04:54
+[pybullet_spawner-1] 1790085034.720827 [86] pybullet_s: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-1] [INFO] [1790085034.809065616] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-1] [INFO] [1790085034.812873060] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-1] [INFO] [1790085034.824602489] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-1] [INFO] [1790085034.826807789] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-1] [INFO] [1790085034.828866468] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-1] [INFO] [1790085035.330707143] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-1] [INFO] [1790085035.331236892] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-1] [INFO] [1790085035.339099807] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-1] [INFO] [1790085035.339668340] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-1] [INFO] [1790085035.356596321] [pybullet_spawner]: SDF world 'nav_obstacle.world': 17 static shape(s) created, 0 skipped
+[pybullet_spawner-1] [INFO] [1790085035.358186657] [pybullet_spawner]: PyBullet world-only display running
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [pybullet_spawner-1]: sending signal 'SIGINT' to process[pybullet_spawner-1]
+[INFO] [pybullet_spawner-1]: process has finished cleanly [pid 198215]

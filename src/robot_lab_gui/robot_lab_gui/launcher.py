@@ -142,7 +142,7 @@ def selection_value(value):
 MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
 MODE_TOOLTIPS = {
     "display": "Visualize a robot and/or a map in the selected simulator "
-               "(no physics stack, controllers or localization).",
+               "(unactuated legged robots hold their pose; no localization).",
     "loc": "Localization: localize against a known map.",
     "slam": "SLAM: build a 2D map while localizing.",
     "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",

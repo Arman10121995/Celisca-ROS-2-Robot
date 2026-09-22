@@ -3,7 +3,7 @@ from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.actions import SetEnvironmentVariable, DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -293,6 +293,15 @@ def _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config):
         )
 
 
+def _resolve_asset_override(value, package):
+    """Accept absolute/local files and the resolver's package-relative paths."""
+    if not value or Path(str(value)).is_absolute():
+        return value
+    if Path(str(value)).is_file():
+        return str(Path(str(value)).resolve())
+    return _package_file(package, value)
+
+
 def _resolve_world_path(gazebo_config):
     world_path = gazebo_config.get("world_path", "")
     if not world_path:
@@ -529,6 +538,7 @@ def _build_simulation_actions(context):
         robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
         model_path = _package_file(robot_package, robot_xacro)
 
+    drive_args = {key: str(value) for key, value in robot_config.get("drive", {}).items()}
     gazebo_config = map_config.get("gazebo", {})
     # Robot-level spawn overrides win over map defaults. Needed for robots
     # whose base frame does not sit at sole level (e.g. the R5.3 BHL biped,
@@ -550,9 +560,12 @@ def _build_simulation_actions(context):
     else:
         configured_world_path = _resolve_world_path(
             {**gazebo_config, "world_package": world_package})
-    world_path = _config_value(context, "world_path", configured_world_path)
+    world_path = _resolve_asset_override(
+        _config_value(context, "world_path", configured_world_path), world_package)
     configured_map_yaml = "" if map_free else _resolve_map_yaml(map_name, map_config)
-    map_yaml = _config_value(context, "map_yaml", configured_map_yaml)
+    map_yaml = _resolve_asset_override(
+        _config_value(context, "map_yaml", configured_map_yaml),
+        map_config.get("map", {}).get("package", "robot_lab_maps"))
     if not map_free and _as_bool(mode_config.get("requires_2d_map"), False) \
             and not _map_has_2d_map(map_name, map_config, map_yaml):
         raise RuntimeError(
@@ -570,6 +583,14 @@ def _build_simulation_actions(context):
     initial_pose_yaw = str(_config_value(context, "initial_pose_yaw", initial_pose_config.get("yaw", "0.0")))
 
     actions = []
+    # Older Cyclone builds exhaust their automatic participant range in a
+    # full Nav2/SLAM graph. Preserve any operator-supplied discovery config.
+    if not context.environment.get("CYCLONEDDS_URI"):
+        actions.append(SetEnvironmentVariable(
+            "CYCLONEDDS_URI", '<CycloneDDS><Domain><Discovery>'
+            '<ParticipantIndex>auto</ParticipantIndex>'
+            '<MaxAutoParticipantIndex>99</MaxAutoParticipantIndex>'
+            '</Discovery></Domain></CycloneDDS>'))
 
     if mode_name == "display":
         # Display mode visualizes what was selected in the chosen simulator's
@@ -592,9 +613,10 @@ def _build_simulation_actions(context):
         start_rviz = _auto_bool(context, "start_rviz", True)
 
         if simulator == "gazebo":
-            # Gazebo display: robot_state_publisher + RViz via display.launch.py,
-            # plus gz-sim itself when a world was selected so the map is visible.
-            if not robot_free:
+            # Robot-only Gazebo display uses the joint slider preview. With a
+            # world, Gazebo owns the robot description and measured joints;
+            # a second preview publisher would overwrite that state in RViz.
+            if not robot_free and map_free:
                 actions.append(
                     IncludeLaunchDescription(
                         PythonLaunchDescriptionSource(
@@ -652,7 +674,10 @@ def _build_simulation_actions(context):
                 # the simulator bringup. The shared controller layer is
                 # display-skipped, so without this the bringup reaches
                 # controller_manager but never activates a controller.
-                for _robot_controller in robot_config.get("controllers", []):
+                display_controllers = robot_config.get("controllers", [])
+                if not display_controllers and "ros2_control" in robot_config.get("features", []):
+                    display_controllers = ["joint_state_broadcaster"]
+                for _robot_controller in display_controllers:
                     actions.append(
                         Node(
                             package="controller_manager",
@@ -668,6 +693,10 @@ def _build_simulation_actions(context):
 
         # PyBullet / MuJoCo / Isaac: their own viewer renders both the world
         # and the robot, so the simulator launch is included directly.
+        # Display is passive visualization: joints hold their spawn pose so
+        # legged/humanoid robots do not collapse or jump under gravity while
+        # RViz reflects the simulator's joint_states (the pre-regression
+        # behaviour).  MuJoCo/Isaac honour the flag; PyBullet already has it.
         sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
         sim_share = get_package_share_directory(sim_pkg)
         display_args = {
@@ -685,6 +714,11 @@ def _build_simulation_actions(context):
             "use_sim_time": use_sim_time,
             "gui": gui_value,
         }
+        display_args.update(drive_args)
+        if simulator in ("mujoco", "isaac"):
+            display_args["hold_position"] = _launch_value(context, "display_hold")
+        elif simulator == "pybullet":
+            display_args["hold_position"] = _launch_value(context, "display_hold")
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
@@ -758,6 +792,8 @@ def _build_simulation_actions(context):
                     "spawn_yaw": spawn_yaw,
                     "use_sim_time": use_sim_time,
                     "gui": gui_value,
+                    "hold_position": "false",
+                    **drive_args,
                 }.items(),
             )
         )
@@ -776,6 +812,8 @@ def _build_simulation_actions(context):
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(controller_share, "controller.launch.py")),
                 launch_arguments={
+                    **{key: value for key, value in drive_args.items()
+                       if key in ("wheel_radius", "wheel_separation")},
                     "use_simple_controller": str(controller_config.get("use_simple_controller", "False")),
                     "use_python": str(controller_config.get("use_python", "False")),
                     "use_sim_time": use_sim_time,
@@ -928,6 +966,8 @@ def generate_launch_description():
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
     return LaunchDescription([
+        DeclareLaunchArgument("display_hold", default_value="auto",
+                              description="Hold unactuated robot poses in display; false enables free physics."),
         DeclareLaunchArgument(
             "mode",
             default_value="nav",

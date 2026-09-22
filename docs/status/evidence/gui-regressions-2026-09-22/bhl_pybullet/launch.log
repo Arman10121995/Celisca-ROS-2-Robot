@@ -1,0 +1,57 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-47-50-486958-molar1-194550
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [194564]
+[INFO] [pybullet_spawner-2]: process started with pid [194566]
+[robot_state_publisher-1] 1790084870.945743 [78] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [WARN] [1790084870.959661866] [kdl_parser]: The root link base has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-1] [INFO] [1790084870.960690580] [robot_state_publisher]: got segment arm_left_elbow_pitch
+[robot_state_publisher-1] [INFO] [1790084870.961356805] [robot_state_publisher]: got segment arm_left_elbow_roll
+[robot_state_publisher-1] [INFO] [1790084870.961842811] [robot_state_publisher]: got segment arm_left_hand_link
+[robot_state_publisher-1] [INFO] [1790084870.962284913] [robot_state_publisher]: got segment arm_left_shoulder_pitch
+[robot_state_publisher-1] [INFO] [1790084870.962683081] [robot_state_publisher]: got segment arm_left_shoulder_roll
+[robot_state_publisher-1] [INFO] [1790084870.963051745] [robot_state_publisher]: got segment arm_left_shoulder_yaw
+[robot_state_publisher-1] [INFO] [1790084870.963398457] [robot_state_publisher]: got segment arm_right_elbow_pitch
+[robot_state_publisher-1] [INFO] [1790084870.963750706] [robot_state_publisher]: got segment arm_right_elbow_roll
+[robot_state_publisher-1] [INFO] [1790084870.964079978] [robot_state_publisher]: got segment arm_right_hand_link
+[robot_state_publisher-1] [INFO] [1790084870.964395684] [robot_state_publisher]: got segment arm_right_shoulder_pitch
+[robot_state_publisher-1] [INFO] [1790084870.964712829] [robot_state_publisher]: got segment arm_right_shoulder_roll
+[robot_state_publisher-1] [INFO] [1790084870.965020502] [robot_state_publisher]: got segment arm_right_shoulder_yaw
+[robot_state_publisher-1] [INFO] [1790084870.965375214] [robot_state_publisher]: got segment base
+[robot_state_publisher-1] [INFO] [1790084870.965494636] [robot_state_publisher]: got segment imu
+[robot_state_publisher-1] [INFO] [1790084870.965516683] [robot_state_publisher]: got segment imu_2
+[robot_state_publisher-1] [INFO] [1790084870.965526539] [robot_state_publisher]: got segment leg_left_ankle_pitch
+[robot_state_publisher-1] [INFO] [1790084870.965536907] [robot_state_publisher]: got segment leg_left_ankle_roll
+[robot_state_publisher-1] [INFO] [1790084870.965545035] [robot_state_publisher]: got segment leg_left_hip_pitch
+[robot_state_publisher-1] [INFO] [1790084870.965552363] [robot_state_publisher]: got segment leg_left_hip_roll
+[robot_state_publisher-1] [INFO] [1790084870.965561130] [robot_state_publisher]: got segment leg_left_hip_yaw
+[robot_state_publisher-1] [INFO] [1790084870.965568522] [robot_state_publisher]: got segment leg_left_knee_pitch
+[robot_state_publisher-1] [INFO] [1790084870.965576138] [robot_state_publisher]: got segment leg_right_ankle_pitch
+[robot_state_publisher-1] [INFO] [1790084870.965583722] [robot_state_publisher]: got segment leg_right_ankle_roll
+[robot_state_publisher-1] [INFO] [1790084870.965591274] [robot_state_publisher]: got segment leg_right_hip_pitch
+[robot_state_publisher-1] [INFO] [1790084870.965600586] [robot_state_publisher]: got segment leg_right_hip_roll
+[robot_state_publisher-1] [INFO] [1790084870.965608361] [robot_state_publisher]: got segment leg_right_hip_yaw
+[robot_state_publisher-1] [INFO] [1790084870.965615625] [robot_state_publisher]: got segment leg_right_knee_pitch
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:04:54
+[pybullet_spawner-2] 1790084871.505808 [78] pybullet_s: selected interface "lo" is not multicast-capable: disabling multicast
+[pybullet_spawner-2] [INFO] [1790084871.591438122] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1790084871.596160483] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1790084871.608595447] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1790084871.610880037] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1790084871.612898233] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-2] [INFO] [1790084872.284422209] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpgjuj_19i.urdf
+[pybullet_spawner-2] [INFO] [1790084872.285004020] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1790084872.285465258] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1790084872.294767873] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1790084872.295318325] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1790084872.304861671] [pybullet_spawner]: SDF world 'empty.world': 1 static shape(s) created, 0 skipped
+[pybullet_spawner-2] [INFO] [1790084872.872643350] [pybullet_spawner]: Loaded robot id=2 (26 joints)
+[pybullet_spawner-2] [INFO] [1790084872.874657386] [pybullet_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[pybullet_spawner-2] [INFO] [1790084872.876577025] [pybullet_spawner]: Display hold active (hold_position=auto): 22 joint(s) frozen at spawn pose
+[pybullet_spawner-2] [INFO] [1790084872.878363898] [pybullet_spawner]: Joints: ['arm_left_shoulder_pitch_joint', 'arm_left_shoulder_roll_joint', 'arm_left_shoulder_yaw_joint', 'arm_left_elbow_pitch_joint', 'arm_left_elbow_roll_joint', 'arm_right_shoulder_pitch_joint', 'arm_right_shoulder_roll_joint', 'arm_right_shoulder_yaw_joint', 'arm_right_elbow_pitch_joint', 'arm_right_elbow_roll_joint', 'leg_left_hip_roll_joint', 'leg_left_hip_yaw_joint', 'leg_left_hip_pitch_joint', 'leg_left_knee_pitch_joint', 'leg_left_ankle_pitch_joint', 'leg_left_ankle_roll_joint', 'leg_right_hip_roll_joint', 'leg_right_hip_yaw_joint', 'leg_right_hip_pitch_joint', 'leg_right_knee_pitch_joint', 'leg_right_ankle_pitch_joint', 'leg_right_ankle_roll_joint']  lw=wheel_left_joint rw=wheel_right_joint
+[pybullet_spawner-2] [INFO] [1790084872.886371245] [pybullet_spawner]: PyBullet spawner running
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [pybullet_spawner-2]: sending signal 'SIGINT' to process[pybullet_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790084887.982577800] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 194564]
+[INFO] [pybullet_spawner-2]: process has finished cleanly [pid 194566]

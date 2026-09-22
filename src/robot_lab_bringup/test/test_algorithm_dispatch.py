@@ -189,3 +189,15 @@ def _FakeContext(values):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_resolver_package_relative_assets_resolve_at_launch(monkeypatch, tmp_path):
+    launch = _launch_module()
+    share = tmp_path / 'installed maps'
+    monkeypatch.setattr(launch, 'get_package_share_directory', lambda package: str(share))
+    for relative in ('maps/nav_obstacle/worlds/nav_obstacle.world', 'maps/nav_obstacle/maps/map.yaml'):
+        assert launch._resolve_asset_override(relative, 'robot_lab_maps') == str(share / relative)
+    local = tmp_path / 'custom.world'
+    local.write_text('<sdf/>')
+    assert launch._resolve_asset_override(str(local), 'robot_lab_maps') == str(local)
+    assert launch._resolve_asset_override('', 'robot_lab_maps') == ''

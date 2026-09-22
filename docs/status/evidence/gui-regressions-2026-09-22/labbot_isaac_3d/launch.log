@@ -1,0 +1,218 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-51-56-298661-molar1-199636
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm perception=pointcloud_segmenter -> node robot_lab_algorithms/pointcloud_segmenter
+[robot_lab] algorithm localization=rtabmap_localization -> rtabmap stack
+[robot_lab] algorithm state_estimation=ekf_3d_estimator -> node robot_lab_algorithms/ekf_3d_estimator
+[INFO] [robot_state_publisher-1]: process started with pid [199654]
+[INFO] [isaac_spawner-2]: process started with pid [199656]
+[INFO] [sensor_bridge-3]: process started with pid [199658]
+[INFO] [joy_teleop-4]: process started with pid [199660]
+[INFO] [joy_node-5]: process started with pid [199662]
+[INFO] [twist_mux-6]: process started with pid [199664]
+[INFO] [twist_marker-7]: process started with pid [199666]
+[INFO] [joystick_relay.py-8]: process started with pid [199670]
+[INFO] [twist_relay-9]: process started with pid [199678]
+[INFO] [ekf_node-10]: process started with pid [199680]
+[INFO] [imu_republisher.py-11]: process started with pid [199690]
+[INFO] [rtabmap-12]: process started with pid [199712]
+[INFO] [pointcloud_segmenter-13]: process started with pid [199714]
+[INFO] [ekf_3d_estimator-14]: process started with pid [199716]
+[robot_state_publisher-1] 1790085116.833449 [89] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] Warning: link 'oakd_link' material 'dark_grey' undefined.
+[robot_state_publisher-1]          at line 84 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-1] Warning: link 'oakd_link' material 'dark_grey' undefined.
+[robot_state_publisher-1]          at line 84 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-1] [INFO] [1790085116.849393929] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790085116.849515271] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790085116.849531943] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1790085116.849540966] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790085116.849548550] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790085116.849555814] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790085116.849562982] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790085116.849570566] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790085116.849578438] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790085116.849585382] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790085116.849592837] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790085116.849599973] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790085116.849607045] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790085116.849614309] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1790085116.849621445] [robot_state_publisher]: got segment wheel_right_link
+[twist_mux-6] 1790085116.844850 [89]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-6] [INFO] [1790085116.851181639] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-6] [INFO] [1790085116.852067413] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-6] [INFO] [1790085116.852229426] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-6] [INFO] [1790085116.852354032] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[twist_marker-7] 1790085116.853693 [89] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_relay-9] 1790085116.878355 [89] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_node-10] 1790085116.881518 [89]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_node-5] 1790085116.890043 [89]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[sensor_bridge-3] 1790085117.294716 [89] sensor_bri: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_teleop-4] 1790085117.492999 [89] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[sensor_bridge-3] [WARN] [1790085117.495393217] [isaac_sensor_bridge]: Isaac Sim Python API not available. Sensor bridge running in offline mode.
+[ekf_3d_estimator-14] 1790085117.517799 [89] ekf_3d_est: selected interface "lo" is not multicast-capable: disabling multicast
+[imu_republisher.py-11] 1790085117.580701 [89]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[pointcloud_segmenter-13] 1790085117.689171 [89] pointcloud: selected interface "lo" is not multicast-capable: disabling multicast
+[isaac_spawner-2] 1790085117.730621 [89] isaac_spaw: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_3d_estimator-14] [INFO] [1790085117.790914690] [state_estimation_ekf_3d_estimator]: ekf_3d_estimator ready
+[pointcloud_segmenter-13] [INFO] [1790085117.819353691] [perception_pointcloud_segmenter]: pointcloud_segmenter ready
+[joystick_relay.py-8] 1790085117.825021 [89] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[rtabmap-12] 1790085117.962097 [89]    rtabmap: selected interface "lo" is not multicast-capable: disabling multicast
+[rtabmap-12] [WARN] [1790085118.003149681] [rtabmap]: Parameter "queue_size" has been renamed to "sync_queue_size" and will be removed in future versions! The value (20) is copied to "sync_queue_size".
+[rtabmap-12] [INFO] [1790085118.012324287] [rtabmap]: rtabmap(maps): latch                      = true
+[rtabmap-12] [INFO] [1790085118.012404573] [rtabmap]: rtabmap(maps): map_filter_radius          = 0.000000
+[rtabmap-12] [INFO] [1790085118.012427517] [rtabmap]: rtabmap(maps): map_filter_angle           = 30.000000
+[rtabmap-12] [INFO] [1790085118.012440765] [rtabmap]: rtabmap(maps): map_cleanup                = true
+[rtabmap-12] [INFO] [1790085118.012449308] [rtabmap]: rtabmap(maps): map_always_update          = false
+[rtabmap-12] [INFO] [1790085118.012457532] [rtabmap]: rtabmap(maps): map_empty_ray_tracing      = true
+[rtabmap-12] [INFO] [1790085118.012465724] [rtabmap]: rtabmap(maps): map_cache_loaded_on_init   = true
+[rtabmap-12] [INFO] [1790085118.012473532] [rtabmap]: rtabmap(maps): cloud_output_voxelized     = true
+[rtabmap-12] [INFO] [1790085118.012481148] [rtabmap]: rtabmap(maps): cloud_subtract_filtering   = false
+[rtabmap-12] [INFO] [1790085118.012488572] [rtabmap]: rtabmap(maps): cloud_subtract_filtering_min_neighbors = 2
+[rtabmap-12] [INFO] [1790085118.012783030] [rtabmap]: rtabmap(maps): octomap_tree_depth         = 16
+[rtabmap-12] [INFO] [1790085118.040911029] [rtabmap]: rtabmap: frame_id      = "base_footprint"
+[rtabmap-12] [INFO] [1790085118.040984884] [rtabmap]: rtabmap: odom_frame_id = "odom"
+[rtabmap-12] [INFO] [1790085118.041000083] [rtabmap]: rtabmap: ground_truth_frame_id = "" -> ground_truth_base_frame_id = "base_footprint"
+[rtabmap-12] [INFO] [1790085118.041010867] [rtabmap]: rtabmap: map_frame_id  = "map"
+[rtabmap-12] [INFO] [1790085118.041019411] [rtabmap]: rtabmap: log_to_rosout_level  = 4
+[rtabmap-12] [INFO] [1790085118.041027827] [rtabmap]: rtabmap: initial_pose  = ""
+[rtabmap-12] [INFO] [1790085118.041054546] [rtabmap]: rtabmap: use_action_for_goal  = false
+[rtabmap-12] [INFO] [1790085118.041064306] [rtabmap]: rtabmap: tf_delay      = 0.050000
+[rtabmap-12] [INFO] [1790085118.041090834] [rtabmap]: rtabmap: tf_tolerance  = 0.100000
+[rtabmap-12] [INFO] [1790085118.041100977] [rtabmap]: rtabmap: odom_sensor_sync   = false
+[rtabmap-12] [INFO] [1790085118.041109009] [rtabmap]: rtabmap: pub_loc_pose_only_when_localizing = false
+[rtabmap-12] [INFO] [1790085118.041117457] [rtabmap]: rtabmap: wait_for_transform = 0.200000
+[rtabmap-12] [INFO] [1790085118.041126129] [rtabmap]: rtabmap: staleness_factor = 0.000000
+[rtabmap-12] [INFO] [1790085118.041134801] [rtabmap]: rtabmap: gen_scan  = false
+[rtabmap-12] [INFO] [1790085118.041142353] [rtabmap]: rtabmap: gen_depth  = false
+[rtabmap-12] [INFO] [1790085118.066667362] [rtabmap]: Setting RTAB-Map parameter "Grid/3D"="true" (rosparam)
+[rtabmap-12] [INFO] [1790085118.066857150] [rtabmap]: Setting RTAB-Map parameter "Grid/CellSize"="0.05" (rosparam)
+[rtabmap-12] [INFO] [1790085118.067932746] [rtabmap]: Setting RTAB-Map parameter "Grid/DepthDecimation"="2" (rosparam)
+[rtabmap-12] [INFO] [1790085118.068686427] [rtabmap]: Setting RTAB-Map parameter "Grid/MaxGroundHeight"="0.20" (rosparam)
+[rtabmap-12] [INFO] [1790085118.068815864] [rtabmap]: Setting RTAB-Map parameter "Grid/MaxObstacleHeight"="2.0" (rosparam)
+[rtabmap-12] [INFO] [1790085118.069025780] [rtabmap]: Setting RTAB-Map parameter "Grid/MinGroundHeight"="-0.10" (rosparam)
+[rtabmap-12] [INFO] [1790085118.069391437] [rtabmap]: Setting RTAB-Map parameter "Grid/NormalsSegmentation"="false" (rosparam)
+[rtabmap-12] [INFO] [1790085118.069601897] [rtabmap]: Setting RTAB-Map parameter "Grid/RangeMax"="6.0" (rosparam)
+[rtabmap-12] [INFO] [1790085118.069711975] [rtabmap]: Setting RTAB-Map parameter "Grid/RangeMin"="0.30" (rosparam)
+[rtabmap-12] [INFO] [1790085118.074467595] [rtabmap]: Setting RTAB-Map parameter "Kp/DetectorStrategy"="6" (rosparam)
+[rtabmap-12] [INFO] [1790085118.075307707] [rtabmap]: Setting RTAB-Map parameter "Kp/MaxFeatures"="600" (rosparam)
+[rtabmap-12] [INFO] [1790085118.083630905] [rtabmap]: Setting RTAB-Map parameter "RGBD/AngularUpdate"="0.10" (rosparam)
+[rtabmap-12] [INFO] [1790085118.083792502] [rtabmap]: Setting RTAB-Map parameter "RGBD/CreateOccupancyGrid"="true" (rosparam)
+[rtabmap-12] [INFO] [1790085118.084361867] [rtabmap]: Setting RTAB-Map parameter "RGBD/LinearUpdate"="0.10" (rosparam)
+[rtabmap-12] [INFO] [1790085118.085534293] [rtabmap]: Setting RTAB-Map parameter "RGBD/NeighborLinkRefining"="true" (rosparam)
+[rtabmap-12] [INFO] [1790085118.085746256] [rtabmap]: Setting RTAB-Map parameter "RGBD/OptimizeFromGraphEnd"="false" (rosparam)
+[rtabmap-12] [INFO] [1790085118.086399908] [rtabmap]: Setting RTAB-Map parameter "RGBD/ProximityBySpace"="true" (rosparam)
+[rtabmap-12] [INFO] [1790085118.087499343] [rtabmap]: Setting RTAB-Map parameter "Reg/Strategy"="1" (rosparam)
+[rtabmap-12] [INFO] [1790085118.097505581] [rtabmap]: Setting RTAB-Map parameter "Vis/MaxDepth"="6.0" (rosparam)
+[rtabmap-12] [INFO] [1790085118.097954660] [rtabmap]: Setting RTAB-Map parameter "Vis/MinInliers"="12" (rosparam)
+[rtabmap-12] [INFO] [1790085118.100584305] [rtabmap]: RTAB-Map detection rate = 1.000000 Hz
+[rtabmap-12] [INFO] [1790085118.101327523] [rtabmap]: rtabmap: Deleted database "/workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db" (--delete_db_on_start or -d are set).
+[rtabmap-12] [INFO] [1790085118.101392161] [rtabmap]: rtabmap: Using database from "/workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db" (0 MB).
+[rtabmap-12] [INFO] [1790085118.154067685] [rtabmap]: rtabmap: Database version = "0.23.7".
+[rtabmap-12] [INFO] [1790085118.154167299] [rtabmap]: rtabmap: SLAM mode (Mem/IncrementalMemory=true)
+[rtabmap-12] [INFO] [1790085118.176274807] [rtabmap]: Setup callbacks
+[rtabmap-12] [INFO] [1790085118.176467283] [rtabmap]: rtabmap: subscribe_depth = true
+[rtabmap-12] [INFO] [1790085118.176499122] [rtabmap]: rtabmap: subscribe_rgb = true
+[rtabmap-12] [INFO] [1790085118.176513874] [rtabmap]: rtabmap: subscribe_stereo = false
+[rtabmap-12] [INFO] [1790085118.176526962] [rtabmap]: rtabmap: subscribe_rgbd = false (rgbd_cameras=1)
+[rtabmap-12] [INFO] [1790085118.176538194] [rtabmap]: rtabmap: subscribe_sensor_data = false
+[rtabmap-12] [INFO] [1790085118.176548305] [rtabmap]: rtabmap: subscribe_odom = false ("odom_frame_id" is set)
+[rtabmap-12] [INFO] [1790085118.176557745] [rtabmap]: rtabmap: subscribe_odom_info = false
+[rtabmap-12] [INFO] [1790085118.176566961] [rtabmap]: rtabmap: subscribe_user_data = false
+[rtabmap-12] [INFO] [1790085118.176575441] [rtabmap]: rtabmap: subscribe_scan = false
+[rtabmap-12] [INFO] [1790085118.176586513] [rtabmap]: rtabmap: subscribe_scan_cloud = false
+[rtabmap-12] [INFO] [1790085118.176595249] [rtabmap]: rtabmap: subscribe_scan_descriptor = false
+[rtabmap-12] [INFO] [1790085118.176606000] [rtabmap]: rtabmap: topic_queue_size = 10
+[rtabmap-12] [INFO] [1790085118.176628272] [rtabmap]: rtabmap: sync_queue_size  = 20
+[rtabmap-12] [INFO] [1790085118.176639504] [rtabmap]: rtabmap: qos_image       = 0
+[rtabmap-12] [INFO] [1790085118.176651343] [rtabmap]: rtabmap: qos_camera_info = 0
+[rtabmap-12] [INFO] [1790085118.176660559] [rtabmap]: rtabmap: qos_scan        = 0
+[rtabmap-12] [INFO] [1790085118.176669199] [rtabmap]: rtabmap: qos_odom        = 0
+[rtabmap-12] [INFO] [1790085118.176677647] [rtabmap]: rtabmap: qos_user_data   = 0
+[rtabmap-12] [INFO] [1790085118.176685199] [rtabmap]: rtabmap: approx_sync     = true
+[rtabmap-12] [INFO] [1790085118.176692943] [rtabmap]: rtabmap: image_transport = raw
+[rtabmap-12] [INFO] [1790085118.176700078] [rtabmap]: rtabmap: depth_transport = raw
+[rtabmap-12] [INFO] [1790085118.176733134] [rtabmap]: Setup depth callback
+[rtabmap-12] [INFO] [1790085118.184725331] [rtabmap]: 
+[rtabmap-12] rtabmap subscribed to (approx sync):
+[rtabmap-12]    /oakd/rgb/image_raw \
+[rtabmap-12]    /oakd/depth/image_raw \
+[rtabmap-12]    /oakd/rgb/camera_info
+[isaac_spawner-2] [INFO] [1790085118.922318146] [isaac_spawner]: URDF written to /workspace/molar/.tmp/tmpjgb41kr1.urdf
+[isaac_spawner-2] [INFO] [1790085118.935368741] [isaac_spawner]: World 'nav_obstacle.world': 17 static shape(s) for Isaac, 0 skipped
+[isaac_spawner-2] [INFO] [1790085118.935969113] [isaac_spawner]: Launching Isaac runtime: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_runtime.py (gui=False)
+[isaac_spawner-2] [INFO] [1790085118.936792297] [isaac_spawner]: Isaac runtime LD_PRELOAD: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/extsDeprecated/omni.isaac.ml_archive/pip_prebundle/nvidia/nvjitlink/lib/libnvJitLink.so.12 /lib/aarch64-linux-gnu/libgomp.so.1
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.102) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.106) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.108) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.108) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.111) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.151) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:51:58.153) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[isaac_spawner-2] [INFO] [1790085146.642435285] [isaac_spawner]: Isaac runtime: World shapes created: 17 box
+[isaac_spawner-2] [INFO] [1790085147.301646772] [isaac_spawner]: Isaac runtime: Default lighting added: ['/World/robot_lab_lights/dome', '/World/robot_lab_lights/sun']
+[isaac_spawner-2] [INFO] [1790085150.739838264] [isaac_spawner]: Isaac runtime: Wheel velocity drives: ['/World/Physics/labbot_left_wheel_joint', '/World/Physics/labbot_right_wheel_joint']
+[isaac_spawner-2] [INFO] [1790085152.389506617] [isaac_spawner]: Isaac reports root body 'base_link'; odometry is re-expressed at URDF root 'base_footprint' (offset [0.0, 0.0, 0.12])
+[isaac_spawner-2] [INFO] [1790085152.390268427] [isaac_spawner]: Isaac runtime ready (dofs=['labbot_left_wheel_joint', 'labbot_right_wheel_joint'])
+[isaac_spawner-2] [INFO] [1790085152.390769057] [isaac_spawner]: Isaac runtime: Scan: 360 rays every 12 steps from offset [0.0, 0.0, 0.08000000000000002] of 'base_link' (root body 'base_link'); 14 robot bodies ignored
+[isaac_spawner-2] [INFO] [1790085152.583000866] [isaac_spawner]: Isaac runtime: RGB-D camera /World/Geometry/base_footprint/base_link/oakd_link/oakd_rgb_camera_frame/robot_lab_rgbd: 320x240 every 12 steps
+[rtabmap-12] [INFO] [1790085155.780243613] [rtabmap]: rtabmap (1): Rate=1.00s, Limit=0.000s, Conversion=0.0008s, RTAB-Map=0.0399s, Maps update=0.0095s pub=0.0003s delay=0.0333s (local map=1, WM=1)
+[rtabmap-12] [33m[ WARN] (2026-09-22 15:52:35.754) Memory.cpp:6380::createSignature() Mem/SaveDepth16Format is set to false to use 32bits format but this is not compatible with the compressed depth format chosen (Mem/DepthCompressionFormat=".rvl"), depth images will be compressed in ".png" format instead. Explicitly set Mem/SaveDepth16Format to true to keep using ".rvl" format and images will be converted to 16bits for convenience (warning: that would remove all depth values over 65 meters). Explicitly set Mem/DepthCompressionFormat=".png" to suppress this warning. This warning is only printed once.[0m
+[rtabmap-12] [INFO] [1790085168.407926792] [rtabmap]: rtabmap (2): Rate=1.00s, Limit=0.000s, Conversion=0.0005s, RTAB-Map=0.0590s, Maps update=0.0070s pub=0.0001s delay=0.0333s (local map=1, WM=1)
+[rtabmap-12] [INFO] [1790085180.242281620] [rtabmap]: rtabmap (3): Rate=1.00s, Limit=0.000s, Conversion=0.0005s, RTAB-Map=0.0527s, Maps update=0.0078s pub=0.0001s delay=0.0167s (local map=1, WM=1)
+[rtabmap-12] [INFO] [1790085190.743903306] [rtabmap]: rtabmap (4): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0388s, Maps update=0.0047s pub=0.0001s delay=0.0333s (local map=1, WM=1)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [ekf_3d_estimator-14]: sending signal 'SIGINT' to process[ekf_3d_estimator-14]
+[INFO] [pointcloud_segmenter-13]: sending signal 'SIGINT' to process[pointcloud_segmenter-13]
+[INFO] [rtabmap-12]: sending signal 'SIGINT' to process[rtabmap-12]
+[INFO] [imu_republisher.py-11]: sending signal 'SIGINT' to process[imu_republisher.py-11]
+[INFO] [ekf_node-10]: sending signal 'SIGINT' to process[ekf_node-10]
+[INFO] [twist_relay-9]: sending signal 'SIGINT' to process[twist_relay-9]
+[INFO] [joystick_relay.py-8]: sending signal 'SIGINT' to process[joystick_relay.py-8]
+[INFO] [twist_marker-7]: sending signal 'SIGINT' to process[twist_marker-7]
+[INFO] [twist_mux-6]: sending signal 'SIGINT' to process[twist_mux-6]
+[INFO] [joy_node-5]: sending signal 'SIGINT' to process[joy_node-5]
+[INFO] [joy_teleop-4]: sending signal 'SIGINT' to process[joy_teleop-4]
+[INFO] [sensor_bridge-3]: sending signal 'SIGINT' to process[sensor_bridge-3]
+[INFO] [isaac_spawner-2]: sending signal 'SIGINT' to process[isaac_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[rtabmap-12] [INFO] [1790085190.785229117] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ekf_node-10] [INFO] [1790085190.796254157] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_relay-9] [INFO] [1790085190.800421790] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_marker-7] [INFO] [1790085190.808643523] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-6] [INFO] [1790085190.811896294] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-5] [INFO] [1790085190.815164328] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rtabmap-12] [INFO] [1790085190.836972748] [rtabmap]: Parameters are not saved (No configuration file provided...)
+[robot_state_publisher-1] [INFO] [1790085190.851004547] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [ekf_node-10]: process has finished cleanly [pid 199680]
+[INFO] [twist_relay-9]: process has finished cleanly [pid 199678]
+[INFO] [twist_marker-7]: process has finished cleanly [pid 199666]
+[INFO] [twist_mux-6]: process has finished cleanly [pid 199664]
+[INFO] [joy_node-5]: process has finished cleanly [pid 199662]
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 199654]
+[INFO] [ekf_3d_estimator-14]: process has finished cleanly [pid 199716]
+[joy_teleop-4] Traceback (most recent call last):
+[joy_teleop-4]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-4]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-4]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 442, in main
+[joy_teleop-4]     rclpy.shutdown()
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+[joy_teleop-4]     _shutdown(context=context)
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+[joy_teleop-4]     return context.shutdown()
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+[joy_teleop-4]     self.__context.shutdown()
+[joy_teleop-4] rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [pointcloud_segmenter-13]: process has finished cleanly [pid 199714]
+[INFO] [imu_republisher.py-11]: process has finished cleanly [pid 199690]
+[INFO] [sensor_bridge-3]: process has finished cleanly [pid 199658]
+[INFO] [joystick_relay.py-8]: process has finished cleanly [pid 199670]
+[ERROR] [joy_teleop-4]: process has died [pid 199660, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_g_e2m0j5'].
+[rtabmap-12] rtabmap: Saving database/long-term memory... (located at /workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db)
+[rtabmap-12] rtabmap: 2D occupancy grid map saved.
+[rtabmap-12] rtabmap: Saving database/long-term memory...done! (located at /workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db, 1 MB)
+[INFO] [rtabmap-12]: process has finished cleanly [pid 199712]
+[isaac_spawner-2] [WARN] [1790085192.858910495] [isaac_spawner]: Isaac runtime exited (rc=-15)
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[isaac_spawner-2] [INFO] [1790085193.358318314] [isaac_spawner]: Isaac runtime stopped (sigterm)
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[INFO] [isaac_spawner-2]: process has finished cleanly [pid 199656]

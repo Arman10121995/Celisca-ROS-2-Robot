@@ -1,0 +1,14 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-50-33-929593-molar1-198209
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [mujoco_spawner-1]: process started with pid [198213]
+[mujoco_spawner-1] 1790085034.992832 [85] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-1] [INFO] [1790085035.623128171] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-1] [INFO] [1790085035.623789630] [mujoco_spawner]: Joints: []   lw= rw=
+[mujoco_spawner-1] [INFO] [1790085035.624644717] [mujoco_spawner]: Display hold active (hold_position=auto): 0 joint(s) frozen at spawn pose
+[mujoco_spawner-1] [INFO] [1790085035.625173090] [mujoco_spawner]: MuJoCo model loaded: 1 bodies, 0 joints
+[mujoco_spawner-1] [INFO] [1790085035.625680344] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-1] [INFO] [1790085035.626131439] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-1] [INFO] [1790085035.629232721] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [mujoco_spawner-1]: sending signal 'SIGINT' to process[mujoco_spawner-1]
+[INFO] [mujoco_spawner-1]: process has finished cleanly [pid 198213]

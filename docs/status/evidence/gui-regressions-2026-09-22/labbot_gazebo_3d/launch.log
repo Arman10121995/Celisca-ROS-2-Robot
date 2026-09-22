@@ -1,0 +1,531 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-15-51-56-292278-molar1-199635
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm perception=pointcloud_segmenter -> node robot_lab_algorithms/pointcloud_segmenter
+[robot_lab] algorithm localization=rtabmap_localization -> rtabmap stack
+[robot_lab] algorithm state_estimation=ekf_3d_estimator -> node robot_lab_algorithms/ekf_3d_estimator
+[INFO] [robot_state_publisher-1]: process started with pid [199928]
+[INFO] [ign gazebo-2]: process started with pid [199930]
+[INFO] [parameter_bridge-3]: process started with pid [199933]
+[INFO] [gz_pointcloud_to_optical.py-4]: process started with pid [199935]
+[INFO] [joy_teleop-5]: process started with pid [199937]
+[INFO] [joy_node-6]: process started with pid [199952]
+[INFO] [twist_mux-7]: process started with pid [199954]
+[INFO] [twist_marker-8]: process started with pid [199956]
+[INFO] [joystick_relay.py-9]: process started with pid [199958]
+[INFO] [twist_relay-10]: process started with pid [199960]
+[INFO] [ekf_node-11]: process started with pid [199971]
+[INFO] [imu_republisher.py-12]: process started with pid [199996]
+[INFO] [rtabmap-13]: process started with pid [200014]
+[INFO] [pointcloud_segmenter-14]: process started with pid [200016]
+[INFO] [ekf_3d_estimator-15]: process started with pid [200018]
+[robot_state_publisher-1] 1790085118.249654 [90] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] Warning: link 'oakd_link' material 'dark_grey' undefined.
+[robot_state_publisher-1]          at line 84 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-1] Warning: link 'oakd_link' material 'dark_grey' undefined.
+[robot_state_publisher-1]          at line 84 in ./urdf_parser/src/model.cpp
+[robot_state_publisher-1] [INFO] [1790085118.271591936] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790085118.271724094] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790085118.271823708] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1790085118.271836219] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790085118.271844571] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790085118.271852411] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790085118.271859931] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790085118.271867547] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790085118.271875707] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790085118.271883067] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790085118.271890330] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790085118.271897626] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790085118.271904730] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790085118.271912090] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1790085118.271919354] [robot_state_publisher]: got segment wheel_right_link
+[parameter_bridge-3] 1790085118.311781 [90] parameter_: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_node-6] 1790085118.276593 [90]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-7] 1790085118.265139 [90]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-7] [INFO] [1790085118.272172437] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-7] [INFO] [1790085118.273213953] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-7] [INFO] [1790085118.273379934] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-7] [INFO] [1790085118.275129308] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[twist_marker-8] 1790085118.264743 [90] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_relay-10] 1790085118.280739 [90] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_node-11] 1790085118.317247 [90]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mIgnition Gazebo Server v[0m[1;32m6.18.0[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world[0m[1;32m].[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32m3[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mNo systems loaded from SDF, loading defaults[0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [ServerConfig.cc:1043] [0m[1;36mLoaded ([0m[1;36m3[0m[1;36m) plugins from file [0m[1;36m[[0m[1;36m/home/molar1/.ignition/gazebo/6/server.config[0m[1;36m][0m
+[ign gazebo-2] [1;36m[Dbg] [Physics.cc:804] [0m[1;36mLoaded [[0m[1;36mignition::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/usr/lib/aarch64-linux-gnu/ign-physics-5/engine-plugins/libignition-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mCreate service on [[0m[1;32m/world/nav_obstacle/create[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mRemove service on [[0m[1;32m/world/nav_obstacle/remove[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/nav_obstacle/set_pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/nav_obstacle/set_pose_vector[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLight configuration service on [[0m[1;32m/world/nav_obstacle/light_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPhysics service on [[0m[1;32m/world/nav_obstacle/set_physics[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mSphericalCoordinates service on [[0m[1;32m/world/nav_obstacle/set_spherical_coordinates[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mEnable collision service on [[0m[1;32m/world/nav_obstacle/enable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mDisable collision service on [[0m[1;32m/world/nav_obstacle/disable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/nav_obstacle/visual_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/nav_obstacle/wheel_slip[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/nav_obstacle[0m[1;32m/control], [[0m[1;32m/world/nav_obstacle[0m[1;32m/control/state] and [[0m[1;32m/world/nav_obstacle[0m[1;32m/playback/control][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mnav_obstacle[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gz_pointcloud_to_optical.py-4] 1790085118.955250 [90]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_3d_estimator-15] 1790085118.982129 [90] ekf_3d_est: selected interface "lo" is not multicast-capable: disabling multicast
+[imu_republisher.py-12] 1790085118.989953 [90]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_teleop-5] 1790085119.009173 [90] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[joystick_relay.py-9] 1790085119.080465 [90] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[pointcloud_segmenter-14] 1790085119.107727 [90] pointcloud: selected interface "lo" is not multicast-capable: disabling multicast
+[rtabmap-13] 1790085119.222878 [90]    rtabmap: selected interface "lo" is not multicast-capable: disabling multicast
+[rtabmap-13] [WARN] [1790085119.256482298] [rtabmap]: Parameter "queue_size" has been renamed to "sync_queue_size" and will be removed in future versions! The value (20) is copied to "sync_queue_size".
+[rtabmap-13] [INFO] [1790085119.264849688] [rtabmap]: rtabmap(maps): latch                      = true
+[rtabmap-13] [INFO] [1790085119.266004930] [rtabmap]: rtabmap(maps): map_filter_radius          = 0.000000
+[rtabmap-13] [INFO] [1790085119.266782099] [rtabmap]: rtabmap(maps): map_filter_angle           = 30.000000
+[rtabmap-13] [INFO] [1790085119.267462021] [rtabmap]: rtabmap(maps): map_cleanup                = true
+[rtabmap-13] [INFO] [1790085119.268056186] [rtabmap]: rtabmap(maps): map_always_update          = false
+[rtabmap-13] [INFO] [1790085119.268637583] [rtabmap]: rtabmap(maps): map_empty_ray_tracing      = true
+[rtabmap-13] [INFO] [1790085119.269218467] [rtabmap]: rtabmap(maps): map_cache_loaded_on_init   = true
+[rtabmap-13] [INFO] [1790085119.269769753] [rtabmap]: rtabmap(maps): cloud_output_voxelized     = true
+[rtabmap-13] [INFO] [1790085119.270305678] [rtabmap]: rtabmap(maps): cloud_subtract_filtering   = false
+[rtabmap-13] [INFO] [1790085119.270833924] [rtabmap]: rtabmap(maps): cloud_subtract_filtering_min_neighbors = 2
+[rtabmap-13] [INFO] [1790085119.271750674] [rtabmap]: rtabmap(maps): octomap_tree_depth         = 16
+[pointcloud_segmenter-14] [INFO] [1790085119.303526571] [perception_pointcloud_segmenter]: pointcloud_segmenter ready
+[ekf_3d_estimator-15] [INFO] [1790085119.306746605] [state_estimation_ekf_3d_estimator]: ekf_3d_estimator ready
+[rtabmap-13] [INFO] [1790085119.315715359] [rtabmap]: rtabmap: frame_id      = "base_footprint"
+[rtabmap-13] [INFO] [1790085119.315789405] [rtabmap]: rtabmap: odom_frame_id = "odom"
+[rtabmap-13] [INFO] [1790085119.315803965] [rtabmap]: rtabmap: ground_truth_frame_id = "" -> ground_truth_base_frame_id = "base_footprint"
+[rtabmap-13] [INFO] [1790085119.315818621] [rtabmap]: rtabmap: map_frame_id  = "map"
+[rtabmap-13] [INFO] [1790085119.315827453] [rtabmap]: rtabmap: log_to_rosout_level  = 4
+[rtabmap-13] [INFO] [1790085119.315835869] [rtabmap]: rtabmap: initial_pose  = ""
+[rtabmap-13] [INFO] [1790085119.315843420] [rtabmap]: rtabmap: use_action_for_goal  = false
+[rtabmap-13] [INFO] [1790085119.315851228] [rtabmap]: rtabmap: tf_delay      = 0.050000
+[rtabmap-13] [INFO] [1790085119.315865756] [rtabmap]: rtabmap: tf_tolerance  = 0.100000
+[rtabmap-13] [INFO] [1790085119.315874236] [rtabmap]: rtabmap: odom_sensor_sync   = false
+[rtabmap-13] [INFO] [1790085119.315881980] [rtabmap]: rtabmap: pub_loc_pose_only_when_localizing = false
+[rtabmap-13] [INFO] [1790085119.315890172] [rtabmap]: rtabmap: wait_for_transform = 0.200000
+[rtabmap-13] [INFO] [1790085119.315898139] [rtabmap]: rtabmap: staleness_factor = 0.000000
+[rtabmap-13] [INFO] [1790085119.315913851] [rtabmap]: rtabmap: gen_scan  = false
+[rtabmap-13] [INFO] [1790085119.315922395] [rtabmap]: rtabmap: gen_depth  = false
+[parameter_bridge-3] [INFO] [1790085119.331340304] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790085119.334125530] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> /imu/out (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790085119.342890481] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[rtabmap-13] [INFO] [1790085119.351405292] [rtabmap]: Setting RTAB-Map parameter "Grid/3D"="true" (rosparam)
+[rtabmap-13] [INFO] [1790085119.351562985] [rtabmap]: Setting RTAB-Map parameter "Grid/CellSize"="0.05" (rosparam)
+[rtabmap-13] [INFO] [1790085119.351733317] [rtabmap]: Setting RTAB-Map parameter "Grid/DepthDecimation"="2" (rosparam)
+[rtabmap-13] [INFO] [1790085119.352433496] [rtabmap]: Setting RTAB-Map parameter "Grid/MaxGroundHeight"="0.20" (rosparam)
+[rtabmap-13] [INFO] [1790085119.352540150] [rtabmap]: Setting RTAB-Map parameter "Grid/MaxObstacleHeight"="2.0" (rosparam)
+[rtabmap-13] [INFO] [1790085119.352727026] [rtabmap]: Setting RTAB-Map parameter "Grid/MinGroundHeight"="-0.10" (rosparam)
+[rtabmap-13] [INFO] [1790085119.353071339] [rtabmap]: Setting RTAB-Map parameter "Grid/NormalsSegmentation"="false" (rosparam)
+[rtabmap-13] [INFO] [1790085119.353264488] [rtabmap]: Setting RTAB-Map parameter "Grid/RangeMax"="6.0" (rosparam)
+[rtabmap-13] [INFO] [1790085119.353364486] [rtabmap]: Setting RTAB-Map parameter "Grid/RangeMin"="0.30" (rosparam)
+[rtabmap-13] [INFO] [1790085119.357876814] [rtabmap]: Setting RTAB-Map parameter "Kp/DetectorStrategy"="6" (rosparam)
+[rtabmap-13] [INFO] [1790085119.358741598] [rtabmap]: Setting RTAB-Map parameter "Kp/MaxFeatures"="600" (rosparam)
+[rtabmap-13] [INFO] [1790085119.366575270] [rtabmap]: Setting RTAB-Map parameter "RGBD/AngularUpdate"="0.10" (rosparam)
+[rtabmap-13] [INFO] [1790085119.366749091] [rtabmap]: Setting RTAB-Map parameter "RGBD/CreateOccupancyGrid"="true" (rosparam)
+[rtabmap-13] [INFO] [1790085119.367329815] [rtabmap]: Setting RTAB-Map parameter "RGBD/LinearUpdate"="0.10" (rosparam)
+[rtabmap-13] [INFO] [1790085119.368457122] [rtabmap]: Setting RTAB-Map parameter "RGBD/NeighborLinkRefining"="true" (rosparam)
+[rtabmap-13] [INFO] [1790085119.368678973] [rtabmap]: Setting RTAB-Map parameter "RGBD/OptimizeFromGraphEnd"="false" (rosparam)
+[rtabmap-13] [INFO] [1790085119.369404687] [rtabmap]: Setting RTAB-Map parameter "RGBD/ProximityBySpace"="true" (rosparam)
+[parameter_bridge-3] [INFO] [1790085119.368990359] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera/image (gz.msgs.Image) -> /oakd/rgb/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[rtabmap-13] [INFO] [1790085119.370552185] [rtabmap]: Setting RTAB-Map parameter "Reg/Strategy"="1" (rosparam)
+[rtabmap-13] [INFO] [1790085119.379998818] [rtabmap]: Setting RTAB-Map parameter "Vis/MaxDepth"="6.0" (rosparam)
+[rtabmap-13] [INFO] [1790085119.380412570] [rtabmap]: Setting RTAB-Map parameter "Vis/MinInliers"="12" (rosparam)
+[rtabmap-13] [INFO] [1790085119.382632303] [rtabmap]: RTAB-Map detection rate = 1.000000 Hz
+[rtabmap-13] [INFO] [1790085119.382812652] [rtabmap]: rtabmap: Deleted database "/workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db" (--delete_db_on_start or -d are set).
+[rtabmap-13] [INFO] [1790085119.382866186] [rtabmap]: rtabmap: Using database from "/workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db" (0 MB).
+[parameter_bridge-3] [INFO] [1790085119.381743584] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera/camera_info (gz.msgs.CameraInfo) -> /oakd/rgb/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790085119.388850487] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera/depth_image (gz.msgs.Image) -> /oakd/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790085119.392990662] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera/points (gz.msgs.PointCloudPacked) -> /oakd/points_gz (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[rtabmap-13] [INFO] [1790085119.454908087] [rtabmap]: rtabmap: Database version = "0.23.7".
+[rtabmap-13] [INFO] [1790085119.455040277] [rtabmap]: rtabmap: SLAM mode (Mem/IncrementalMemory=true)
+[rtabmap-13] [INFO] [1790085119.490137645] [rtabmap]: Setup callbacks
+[rtabmap-13] [INFO] [1790085119.490460807] [rtabmap]: rtabmap: subscribe_depth = true
+[rtabmap-13] [INFO] [1790085119.490560869] [rtabmap]: rtabmap: subscribe_rgb = true
+[rtabmap-13] [INFO] [1790085119.490585348] [rtabmap]: rtabmap: subscribe_stereo = false
+[rtabmap-13] [INFO] [1790085119.490598500] [rtabmap]: rtabmap: subscribe_rgbd = false (rgbd_cameras=1)
+[rtabmap-13] [INFO] [1790085119.490609316] [rtabmap]: rtabmap: subscribe_sensor_data = false
+[rtabmap-13] [INFO] [1790085119.490618628] [rtabmap]: rtabmap: subscribe_odom = false ("odom_frame_id" is set)
+[rtabmap-13] [INFO] [1790085119.490627108] [rtabmap]: rtabmap: subscribe_odom_info = false
+[rtabmap-13] [INFO] [1790085119.490655523] [rtabmap]: rtabmap: subscribe_user_data = false
+[rtabmap-13] [INFO] [1790085119.490664899] [rtabmap]: rtabmap: subscribe_scan = false
+[rtabmap-13] [INFO] [1790085119.490672771] [rtabmap]: rtabmap: subscribe_scan_cloud = false
+[rtabmap-13] [INFO] [1790085119.490681219] [rtabmap]: rtabmap: subscribe_scan_descriptor = false
+[rtabmap-13] [INFO] [1790085119.490689474] [rtabmap]: rtabmap: topic_queue_size = 10
+[rtabmap-13] [INFO] [1790085119.490705570] [rtabmap]: rtabmap: sync_queue_size  = 20
+[rtabmap-13] [INFO] [1790085119.490714018] [rtabmap]: rtabmap: qos_image       = 0
+[rtabmap-13] [INFO] [1790085119.490721506] [rtabmap]: rtabmap: qos_camera_info = 0
+[rtabmap-13] [INFO] [1790085119.490729186] [rtabmap]: rtabmap: qos_scan        = 0
+[rtabmap-13] [INFO] [1790085119.490736354] [rtabmap]: rtabmap: qos_odom        = 0
+[rtabmap-13] [INFO] [1790085119.490743553] [rtabmap]: rtabmap: qos_user_data   = 0
+[rtabmap-13] [INFO] [1790085119.490750817] [rtabmap]: rtabmap: approx_sync     = true
+[rtabmap-13] [INFO] [1790085119.490758209] [rtabmap]: rtabmap: image_transport = raw
+[rtabmap-13] [INFO] [1790085119.490765921] [rtabmap]: rtabmap: depth_transport = raw
+[rtabmap-13] [INFO] [1790085119.490798752] [rtabmap]: Setup depth callback
+[rtabmap-13] [INFO] [1790085119.502697178] [rtabmap]: 
+[rtabmap-13] rtabmap subscribed to (approx sync):
+[rtabmap-13]    /oakd/rgb/image_raw \
+[rtabmap-13]    /oakd/depth/image_raw \
+[rtabmap-13]    /oakd/rgb/camera_info
+[INFO] [create-16]: process started with pid [200273]
+[create-16] 1790085119.774034 [90]     create: selected interface "lo" is not multicast-capable: disabling multicast
+[create-16] [INFO] [1790085119.784256877] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-16] [INFO] [1790085120.021731159] [ros_gz_sim]: Requested creation of entity.
+[create-16] [INFO] [1790085120.021836757] [ros_gz_sim]: OK creation of entity.
+[INFO] [spawner-17]: process started with pid [200292]
+[INFO] [create-16]: process has finished cleanly [pid 200273]
+[ign gazebo-2] [1;33m[Wrn] [SimulationRunner.cc:662] [0m[1;33mFound additional publishers on /stats,[0m[1;33m using namespaced stats topic only[0m[1;33m[0m
+[ign gazebo-2] [1;33m[Wrn] [SimulationRunner.cc:695] [0m[1;33mFound additional publishers on /clock,[0m[1;33m using namespaced clock topic only[0m[1;33m[0m
+[rtabmap-13] [INFO] [1790085120.683997858] [rtabmap]: rtabmap (1): Rate=1.00s, Limit=0.000s, Conversion=0.0006s, RTAB-Map=0.0330s, Maps update=0.0003s pub=0.0002s delay=0.3500s (local map=1, WM=1)
+[ign gazebo-2] [INFO] [1790085120.747505301] [GazeboSimROS2ControlPlugin]: robot_param_node is robot_state_publisher
+[ign gazebo-2] [INFO] [1790085120.748670622] [GazeboSimROS2ControlPlugin]: robot_param_node is robot_description
+[ign gazebo-2] 1790085120.760159 [90]       ruby: selected interface "lo" is not multicast-capable: disabling multicast
+[ign gazebo-2] [INFO] [1790085120.847853822] [gz_ros2_control]: connected to service!! robot_state_publisher asking for robot_description
+[ign gazebo-2] [INFO] [1790085120.848942089] [gz_ros2_control]: Received URDF from param server
+[ign gazebo-2] [INFO] [1790085120.850882019] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_joint'] (Entity='105') is skipped.
+[ign gazebo-2] [INFO] [1790085120.850947586] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_imu_joint'] (Entity='106') is skipped.
+[ign gazebo-2] [INFO] [1790085120.850963042] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_left_camera_joint'] (Entity='107') is skipped.
+[ign gazebo-2] [INFO] [1790085120.850974210] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_left_camera_optical_joint'] (Entity='108') is skipped.
+[ign gazebo-2] [INFO] [1790085120.850984257] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_rgb_camera_joint'] (Entity='109') is skipped.
+[ign gazebo-2] [INFO] [1790085120.850993793] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_rgb_camera_optical_joint'] (Entity='110') is skipped.
+[ign gazebo-2] [INFO] [1790085120.851002977] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_right_camera_joint'] (Entity='111') is skipped.
+[ign gazebo-2] [INFO] [1790085120.851012673] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_right_camera_optical_joint'] (Entity='112') is skipped.
+[spawner-17] 1790085120.851742 [90]    spawner: selected interface "lo" is not multicast-capable: disabling multicast
+[ign gazebo-2] [INFO] [1790085120.890633954] [gz_ros2_control]: The position_proportional_gain has been set to: 0.1
+[ign gazebo-2] [INFO] [1790085120.890773471] [gz_ros2_control]: Loading joint: labbot_left_wheel_joint
+[ign gazebo-2] [INFO] [1790085120.890805951] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790085120.890898397] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790085120.890930300] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790085120.890945084] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790085120.890955068] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790085120.890987707] [gz_ros2_control]: Loading joint: labbot_right_wheel_joint
+[ign gazebo-2] [INFO] [1790085120.891001979] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790085120.891011643] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790085120.891020826] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790085120.891071577] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790085120.891090969] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790085120.891247222] [gz_ros2_control]: Loading sensor: imu
+[ign gazebo-2] [INFO] [1790085120.891266934] [gz_ros2_control]: 	State:
+[ign gazebo-2] [WARN] [1790085120.891278133] [gz_ros2_control]: IMU sensor 'imu' not found in hardware_info, skipping.
+[ign gazebo-2] [INFO] [1790085120.891367156] [resource_manager]: Initialize hardware 'RobotSystem' 
+[ign gazebo-2] [WARN] [1790085120.891410323] [gz_ros2_control]: The ign_ros2_control plugin got renamed to gz_ros2_control.
+[ign gazebo-2] Update the <ros2_control> tag and gazebo plugin to
+[ign gazebo-2] <hardware>
+[ign gazebo-2]   <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+[ign gazebo-2] </hardware>
+[ign gazebo-2] <gazebo>
+[ign gazebo-2]   <plugin filename="gz_ros2_control-system"name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+[ign gazebo-2]     ...
+[ign gazebo-2]   </plugin>
+[ign gazebo-2] </gazebo>
+[ign gazebo-2] [INFO] [1790085120.891494737] [resource_manager]: Successful initialization of hardware 'RobotSystem'
+[ign gazebo-2] [INFO] [1790085120.891569552] [resource_manager]: 'configure' hardware 'RobotSystem' 
+[ign gazebo-2] [INFO] [1790085120.891578480] [gz_ros2_control]: System Successfully configured!
+[ign gazebo-2] [INFO] [1790085120.891599279] [resource_manager]: Successful 'configure' of hardware 'RobotSystem'
+[ign gazebo-2] [INFO] [1790085120.891608175] [resource_manager]: 'activate' hardware 'RobotSystem' 
+[ign gazebo-2] [INFO] [1790085120.892294850] [resource_manager]: Successful 'activate' of hardware 'RobotSystem'
+[ign gazebo-2] [INFO] [1790085120.892322913] [gz_ros2_control]: Loading controller_manager
+[ign gazebo-2] [INFO] [1790085121.010795052] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:664] [0m[1;36mPublishers [Address, Message Type]:[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:669] [0m[1;36m  [0m[1;36mtcp://139.30.204.225:34473[0m[1;36m, [0m[1;36mignition.msgs.WorldStatistics[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:697] [0m[1;36mPublishers [Address, Message Type]:[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:702] [0m[1;36m  [0m[1;36mtcp://139.30.204.225:34473[0m[1;36m, [0m[1;36mignition.msgs.Clock[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m2[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mign_ros2_control::IgnitionROS2ControlPlugin[0m[1;36m] for entity [[0m[1;36m74[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::Imu[0m[1;36m] for entity [[0m[1;36m74[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:506] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:431] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::Sensors[0m[1;36m] for entity [[0m[1;36m74[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [UserCommands.cc:1303] [0m[1;36mCreated entity [[0m[1;36m74[0m[1;36m] named [[0m[1;36mlabbot[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:411] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:258] [0m[1;36mWaiting for init[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationFeatures.cc:71] [0m[1;36mSimulation timestep set to: [0m[1;36m0.01[0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/nav_obstacle/scene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/nav_obstacle/scene/deletion[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/nav_obstacle/state[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/nav_obstacle[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:610] [0m[1;36mInitialization needed[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:270] [0m[1;36mInitializing render context[0m[1;36m[0m
+[spawner-17] [INFO] [1790085121.090051758] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[ign gazebo-2] [INFO] [1790085121.096249430] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[ign gazebo-2] [INFO] [1790085121.096551664] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ign gazebo-2] libEGL warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+[ign gazebo-2] libEGL warning: MESA-LOADER: failed to open nvidia-drm: /usr/lib/dri/nvidia-drm_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/aarch64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+[ign gazebo-2] 
+[ign gazebo-2] libEGL warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+[rtabmap-13] [INFO] [1790085121.380814131] [rtabmap]: rtabmap (2): Rate=1.00s, Limit=0.000s, Conversion=0.0005s, RTAB-Map=0.0123s, Maps update=0.0007s pub=0.0000s delay=0.0300s (local map=1, WM=1)
+[ign gazebo-2] libEGL warning: egl: failed to create dri2 screen
+[rtabmap-13] [WARN] [1790085121.782813264] []: Messages of type 2 arrived out of order (will print only once)
+[spawner-17] [INFO] [1790085121.795606969] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.384) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.388) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.391) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.391) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.393) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.451) Features2d.cpp:661::create() BRIEF, FREAK and DAISY features cannot be used because OpenCV was not built with xfeatures2d module. GFTT/ORB is used instead.[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.454) Memory.cpp:987::parseParameters() Mem/UseOdomFeatures is enabled, but Vis/FeatureType and Kp/DetectorStrategy parameters are not the same! Disabling Mem/UseOdomFeatures...[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:51:59.829) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 79.670000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:00.034) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 79.700000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:00.238) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Could not find a connection between 'odom' and 'base_footprint' because they are not part of the same tree.Tf has two or more unconnected trees. (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:00.442) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 80.060000 but the earliest data is at time 80.360000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:00.648) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 80.260000 but the earliest data is at time 80.360000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:00.662) Memory.cpp:6380::createSignature() Mem/SaveDepth16Format is set to false to use 32bits format but this is not compatible with the compressed depth format chosen (Mem/DepthCompressionFormat=".rvl"), depth images will be compressed in ".png" format instead. Explicitly set Mem/SaveDepth16Format to true to keep using ".rvl" format and images will be converted to 16bits for convenience (warning: that would remove all depth values over 65 meters). Explicitly set Mem/DepthCompressionFormat=".png" to suppress this warning. This warning is only printed once.[0m
+[INFO] [spawner-17]: process has finished cleanly [pid 200292]
+[rtabmap-13] [WARN] [1790085122.233690813] []: Messages of type 0 arrived out of order (will print only once)
+[rtabmap-13] [WARN] [1790085122.235093314] []: Messages of type 1 arrived out of order (will print only once)
+[INFO] [spawner-18]: process started with pid [200460]
+[spawner-18] 1790085122.842316 [90]    spawner: selected interface "lo" is not multicast-capable: disabling multicast
+[rtabmap-13] [INFO] [1790085122.879970599] [rtabmap]: rtabmap (3): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0453s, Maps update=0.0026s pub=0.0001s delay=0.2000s (local map=1, WM=1)
+[ign gazebo-2] [INFO] [1790085123.019407774] [controller_manager]: Loading controller 'robot_lab_controller'
+[spawner-18] [INFO] [1790085123.144607080] [spawner_robot_lab_controller]: [94mLoaded [1mrobot_lab_controller[0m
+[ign gazebo-2] [INFO] [1790085123.150014848] [controller_manager]: Configuring controller 'robot_lab_controller'
+[spawner-18] [INFO] [1790085123.204049131] [spawner_robot_lab_controller]: [92mConfigured and activated [1mrobot_lab_controller[0m
+[INFO] [spawner-18]: process has finished cleanly [pid 200460]
+[rtabmap-13] [INFO] [1790085123.863815477] [rtabmap]: rtabmap (4): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0121s, Maps update=0.0009s pub=0.0000s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:02.022) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 0.040000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:02.232) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 0.140000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:02.433) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 0.400000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:02.632) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 0.570000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:02.830) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 0.730000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:03.038) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 1.000000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:03.241) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 1.190000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:03.437) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 1.390000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:03.643) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 1.590000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:03.849) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 1.750000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:04.056) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 1.950000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [WARN] [1790085124.507089537] [rtabmap]: rtabmap: Did not receive data since 5 seconds! Make sure the input topics are published ("$ ros2 topic hz my_topic") and the timestamps in their header are set. If topics are coming from different computers, make sure the clocks of the computers are synchronized ("ntpdate"). Ajusting topic_queue_size (10) and sync_queue_size (20) can also help for better synchronization if framerates and/or delays are different. If topics are not published at the same rate, you could increase "sync_queue_size" and/or "topic_queue_size" parameters (current=20 and 10 respectively).
+[rtabmap-13] rtabmap subscribed to (approx sync):
+[rtabmap-13]    /oakd/rgb/image_raw \
+[rtabmap-13]    /oakd/depth/image_raw \
+[rtabmap-13]    /oakd/rgb/camera_info
+[rtabmap-13] [INFO] [1790085125.136569178] [rtabmap]: rtabmap (5): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0349s, Maps update=0.0002s pub=0.0000s delay=0.1700s (local map=1, WM=1)
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [ImuSensor.cc:148] [0m[1;36mIMU data for [[0m[1;36mlabbot::base_footprint::imu[0m[1;36m] advertised on [[0m[1;36mimu[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RenderUtil.cc:2591] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:284] [0m[1;36mRendering Thread initialized[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:610] [0m[1;36mInitialization needed[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RgbdCameraSensor.cc:219] [0m[1;36mRGB images for [[0m[1;36mlabbot::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera[0m[1;36m/image][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RgbdCameraSensor.cc:233] [0m[1;36mDepth images for [[0m[1;36mlabbot::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera[0m[1;36m/depth_image][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RgbdCameraSensor.cc:247] [0m[1;36mPoints for [[0m[1;36mlabbot::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera[0m[1;36m/points][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [CameraSensor.cc:705] [0m[1;36mCamera info for [[0m[1;36mlabbot::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_obstacle/model/labbot/link/oakd_rgb_camera_frame/sensor/rgbd_camera/camera_info[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Lidar.cc:138] [0m[1;36mLaser scans for [[0m[1;36mlabbot::base_footprint::lidar[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [GpuLidarSensor.cc:163] [0m[1;36mLidar points for [[0m[1;36mlabbot::base_footprint::lidar[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[rtabmap-13] [INFO] [1790085126.163593078] [rtabmap]: rtabmap (6): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0216s, Maps update=0.0013s pub=0.0001s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:04.284) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 2.150000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:04.489) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 2.380000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:04.696) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 2.610000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:04.891) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 2.810000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:05.098) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 2.980000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:05.298) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 3.240000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:05.497) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 3.400000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:05.725) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 3.600000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:05.930) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 3.870000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:06.137) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 4.030000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:06.345) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 4.230000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [INFO] [1790085127.379780404] [rtabmap]: rtabmap (7): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0255s, Maps update=0.0010s pub=0.0001s delay=0.1800s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085128.392050301] [rtabmap]: rtabmap (8): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0137s, Maps update=0.0002s pub=0.0000s delay=0.1700s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:06.543) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 4.490000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:06.739) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 4.660000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:06.946) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 4.860000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:07.142) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 5.020000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:07.349) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 5.220000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:07.558) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 5.420000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:07.765) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 5.650000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:07.963) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 5.850000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:08.169) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 6.040000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:08.374) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 6.240000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:08.582) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 6.440000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:08.778) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 6.670000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:08.983) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 6.870000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:09.183) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 7.070000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [INFO] [1790085129.397614253] [rtabmap]: rtabmap (9): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0118s, Maps update=0.0010s pub=0.0001s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [WARN] [1790085129.507343656] [rtabmap]: rtabmap: Did not receive data since 5 seconds! Make sure the input topics are published ("$ ros2 topic hz my_topic") and the timestamps in their header are set. If topics are coming from different computers, make sure the clocks of the computers are synchronized ("ntpdate"). Ajusting topic_queue_size (10) and sync_queue_size (20) can also help for better synchronization if framerates and/or delays are different. If topics are not published at the same rate, you could increase "sync_queue_size" and/or "topic_queue_size" parameters (current=20 and 10 respectively).
+[rtabmap-13] rtabmap subscribed to (approx sync):
+[rtabmap-13]    /oakd/rgb/image_raw \
+[rtabmap-13]    /oakd/depth/image_raw \
+[rtabmap-13]    /oakd/rgb/camera_info
+[rtabmap-13] [INFO] [1790085130.404916644] [rtabmap]: rtabmap (10): Rate=1.00s, Limit=0.000s, Conversion=0.0006s, RTAB-Map=0.0127s, Maps update=0.0013s pub=0.0001s delay=0.1400s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:09.380) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 7.270000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:09.580) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 7.460000 but the earliest data is at time 79.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:09.785) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 7.660000 but the earliest data is at time 79.870000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:09.980) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 7.860000 but the earliest data is at time 80.070000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:10.191) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 8.090000 but the earliest data is at time 80.320000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:10.387) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 8.260000 but the earliest data is at time 80.470000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:10.595) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 8.520000 but the earliest data is at time 80.720000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:10.800) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 8.680000 but the earliest data is at time 80.920000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:11.005) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 8.880000 but the earliest data is at time 81.120000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:11.200) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 9.080000 but the earliest data is at time 81.320000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:11.404) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 9.280000 but the earliest data is at time 81.520000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [INFO] [1790085131.614924893] [rtabmap]: rtabmap (11): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0117s, Maps update=0.0014s pub=0.0000s delay=0.1700s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085132.631771179] [rtabmap]: rtabmap (12): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0215s, Maps update=0.0033s pub=0.0001s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085133.654200149] [rtabmap]: rtabmap (13): Rate=1.00s, Limit=0.000s, Conversion=0.0004s, RTAB-Map=0.0235s, Maps update=0.0009s pub=0.0000s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:11.600) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 9.480000 but the earliest data is at time 81.720000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:11.799) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 9.710000 but the earliest data is at time 81.920000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:11.999) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 9.870000 but the earliest data is at time 82.160000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:12.205) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 10.100000 but the earliest data is at time 82.310000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:12.399) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 10.270000 but the earliest data is at time 82.510000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:12.605) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 10.470000 but the earliest data is at time 82.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:12.802) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 10.700000 but the earliest data is at time 82.910000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:13.007) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 10.930000 but the earliest data is at time 83.160000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:13.216) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 11.060000 but the earliest data is at time 83.310000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:13.421) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 11.290000 but the earliest data is at time 83.510000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:13.628) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 11.490000 but the earliest data is at time 83.700000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:13.866) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 11.750000 but the earliest data is at time 83.960000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:14.071) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 11.920000 but the earliest data is at time 84.160000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [WARN] [1790085134.506886379] [rtabmap]: rtabmap: Did not receive data since 5 seconds! Make sure the input topics are published ("$ ros2 topic hz my_topic") and the timestamps in their header are set. If topics are coming from different computers, make sure the clocks of the computers are synchronized ("ntpdate"). Ajusting topic_queue_size (10) and sync_queue_size (20) can also help for better synchronization if framerates and/or delays are different. If topics are not published at the same rate, you could increase "sync_queue_size" and/or "topic_queue_size" parameters (current=20 and 10 respectively).
+[rtabmap-13] rtabmap subscribed to (approx sync):
+[rtabmap-13]    /oakd/rgb/image_raw \
+[rtabmap-13]    /oakd/depth/image_raw \
+[rtabmap-13]    /oakd/rgb/camera_info
+[rtabmap-13] [INFO] [1790085134.702181369] [rtabmap]: rtabmap (14): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0149s, Maps update=0.0003s pub=0.0000s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085135.739486547] [rtabmap]: rtabmap (15): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0093s, Maps update=0.0046s pub=0.0002s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:14.275) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 12.150000 but the earliest data is at time 84.330000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:14.479) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 12.350000 but the earliest data is at time 84.540000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:14.685) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 12.580000 but the earliest data is at time 84.740000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:14.898) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 12.810000 but the earliest data is at time 84.990000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:15.105) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 12.970000 but the earliest data is at time 85.170000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:15.311) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 13.170000 but the earliest data is at time 85.380000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:15.517) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 13.370000 but the earliest data is at time 85.580000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:15.722) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 13.600000 but the earliest data is at time 85.810000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:15.931) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 13.800000 but the earliest data is at time 86.010000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:16.127) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 14.000000 but the earliest data is at time 86.210000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:16.342) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 14.160000 but the earliest data is at time 86.450000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [INFO] [1790085136.765326769] [rtabmap]: rtabmap (16): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0110s, Maps update=0.0016s pub=0.0001s delay=0.1400s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085137.984924166] [rtabmap]: rtabmap (17): Rate=1.00s, Limit=0.000s, Conversion=0.0010s, RTAB-Map=0.0167s, Maps update=0.0011s pub=0.0001s delay=0.1600s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:16.541) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 14.390000 but the earliest data is at time 86.660000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:16.750) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 14.590000 but the earliest data is at time 86.860000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:16.947) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 14.790000 but the earliest data is at time 87.060000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:17.142) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 15.020000 but the earliest data is at time 87.260000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:17.347) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 15.190000 but the earliest data is at time 87.410000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:17.555) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 15.380000 but the earliest data is at time 87.610000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:17.750) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 15.580000 but the earliest data is at time 87.860000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:17.964) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 15.780000 but the earliest data is at time 88.060000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:18.160) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 16.010000 but the earliest data is at time 88.260000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:18.367) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 16.210000 but the earliest data is at time 88.460000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:18.626) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 16.410000 but the earliest data is at time 88.700000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:18.803) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 16.640000 but the earliest data is at time 88.910000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [INFO] [1790085139.073512829] [rtabmap]: rtabmap (18): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0461s, Maps update=0.0003s pub=0.0000s delay=0.2000s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:19.025) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 16.870000 but the earliest data is at time 89.060000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [WARN] [1790085139.506835794] [rtabmap]: rtabmap: Did not receive data since 5 seconds! Make sure the input topics are published ("$ ros2 topic hz my_topic") and the timestamps in their header are set. If topics are coming from different computers, make sure the clocks of the computers are synchronized ("ntpdate"). Ajusting topic_queue_size (10) and sync_queue_size (20) can also help for better synchronization if framerates and/or delays are different. If topics are not published at the same rate, you could increase "sync_queue_size" and/or "topic_queue_size" parameters (current=20 and 10 respectively).
+[rtabmap-13] rtabmap subscribed to (approx sync):
+[rtabmap-13]    /oakd/rgb/image_raw \
+[rtabmap-13]    /oakd/depth/image_raw \
+[rtabmap-13]    /oakd/rgb/camera_info
+[rtabmap-13] [INFO] [1790085140.204142324] [rtabmap]: rtabmap (19): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0637s, Maps update=0.0025s pub=0.0001s delay=0.2100s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085141.382805625] [rtabmap]: rtabmap (20): Rate=1.00s, Limit=0.000s, Conversion=0.0005s, RTAB-Map=0.1022s, Maps update=0.0003s pub=0.0001s delay=0.2100s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:19.241) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 17.030000 but the earliest data is at time 89.310000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:19.466) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 17.300000 but the earliest data is at time 89.510000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:19.674) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 17.500000 but the earliest data is at time 89.660000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:19.879) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 17.690000 but the earliest data is at time 89.860000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:20.136) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 17.920000 but the earliest data is at time 90.110000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:20.358) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 18.160000 but the earliest data is at time 90.310000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:20.603) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 18.320000 but the earliest data is at time 90.510000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:20.822) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 18.490000 but the earliest data is at time 90.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:21.019) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 18.720000 but the earliest data is at time 90.860000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:21.278) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 18.850000 but the earliest data is at time 91.110000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:21.517) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 19.050000 but the earliest data is at time 91.260000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [INFO] [1790085142.729832614] [rtabmap]: rtabmap (21): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0492s, Maps update=0.0003s pub=0.0000s delay=0.2000s (local map=1, WM=1)
+[rtabmap-13] [INFO] [1790085143.949088723] [rtabmap]: rtabmap (22): Rate=1.00s, Limit=0.000s, Conversion=0.0003s, RTAB-Map=0.0636s, Maps update=0.0003s pub=0.0001s delay=0.2000s (local map=1, WM=1)
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:21.802) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 19.280000 but the earliest data is at time 91.510000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:22.043) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 19.540000 but the earliest data is at time 91.710000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:22.215) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 19.570000 but the earliest data is at time 91.910000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:22.436) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 20.000000 but the earliest data is at time 92.050000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:22.678) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 20.200000 but the earliest data is at time 92.310000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:22.887) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 20.430000 but the earliest data is at time 92.510000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:23.106) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 20.660000 but the earliest data is at time 92.760000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:23.434) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 20.860000 but the earliest data is at time 92.960000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:23.652) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 21.190000 but the earliest data is at time 93.160000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:23.882) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 21.390000 but the earliest data is at time 93.360000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:24.111) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 21.590000 but the earliest data is at time 93.500000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [WARN] [1790085144.506953855] [rtabmap]: rtabmap: Did not receive data since 5 seconds! Make sure the input topics are published ("$ ros2 topic hz my_topic") and the timestamps in their header are set. If topics are coming from different computers, make sure the clocks of the computers are synchronized ("ntpdate"). Ajusting topic_queue_size (10) and sync_queue_size (20) can also help for better synchronization if framerates and/or delays are different. If topics are not published at the same rate, you could increase "sync_queue_size" and/or "topic_queue_size" parameters (current=20 and 10 respectively).
+[rtabmap-13] rtabmap subscribed to (approx sync):
+[rtabmap-13]    /oakd/rgb/image_raw \
+[rtabmap-13]    /oakd/depth/image_raw \
+[rtabmap-13]    /oakd/rgb/camera_info
+[rtabmap-13] [INFO] [1790085145.094069628] [rtabmap]: rtabmap (23): Rate=1.00s, Limit=0.000s, Conversion=0.0002s, RTAB-Map=0.0496s, Maps update=0.0003s pub=0.0001s delay=0.2300s (local map=1, WM=1)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [ekf_3d_estimator-15]: sending signal 'SIGINT' to process[ekf_3d_estimator-15]
+[INFO] [pointcloud_segmenter-14]: sending signal 'SIGINT' to process[pointcloud_segmenter-14]
+[INFO] [rtabmap-13]: sending signal 'SIGINT' to process[rtabmap-13]
+[INFO] [imu_republisher.py-12]: sending signal 'SIGINT' to process[imu_republisher.py-12]
+[INFO] [ekf_node-11]: sending signal 'SIGINT' to process[ekf_node-11]
+[INFO] [twist_relay-10]: sending signal 'SIGINT' to process[twist_relay-10]
+[INFO] [joystick_relay.py-9]: sending signal 'SIGINT' to process[joystick_relay.py-9]
+[INFO] [twist_marker-8]: sending signal 'SIGINT' to process[twist_marker-8]
+[INFO] [twist_mux-7]: sending signal 'SIGINT' to process[twist_mux-7]
+[INFO] [joy_node-6]: sending signal 'SIGINT' to process[joy_node-6]
+[INFO] [joy_teleop-5]: sending signal 'SIGINT' to process[joy_teleop-5]
+[INFO] [gz_pointcloud_to_optical.py-4]: sending signal 'SIGINT' to process[gz_pointcloud_to_optical.py-4]
+[INFO] [parameter_bridge-3]: sending signal 'SIGINT' to process[parameter_bridge-3]
+[INFO] [ign gazebo-2]: sending signal 'SIGINT' to process[ign gazebo-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[rtabmap-13] [INFO] [1790085145.794268002] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ekf_node-11] [INFO] [1790085145.811744051] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_relay-10] [INFO] [1790085145.827808926] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rtabmap-13] [INFO] [1790085145.844899030] [rtabmap]: Parameters are not saved (No configuration file provided...)
+[twist_marker-8] [INFO] [1790085145.854812216] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-7] [INFO] [1790085145.867753408] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-6] [INFO] [1790085145.885331375] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [parameter_bridge-3]: process has finished cleanly [pid 199933]
+[parameter_bridge-3] [INFO] [1790085145.913964553] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1790085145.928898187] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [twist_relay-10]: process has finished cleanly [pid 199960]
+[INFO] [twist_marker-8]: process has finished cleanly [pid 199956]
+[INFO] [twist_mux-7]: process has finished cleanly [pid 199954]
+[INFO] [ekf_node-11]: process has finished cleanly [pid 199971]
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 199928]
+[INFO] [joy_node-6]: process has finished cleanly [pid 199952]
+[INFO] [ekf_3d_estimator-15]: process has finished cleanly [pid 200018]
+[INFO] [imu_republisher.py-12]: process has finished cleanly [pid 199996]
+[INFO] [gz_pointcloud_to_optical.py-4]: process has finished cleanly [pid 199935]
+[INFO] [pointcloud_segmenter-14]: process has finished cleanly [pid 200016]
+[joy_teleop-5] Traceback (most recent call last):
+[joy_teleop-5]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-5]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-5]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 442, in main
+[joy_teleop-5]     rclpy.shutdown()
+[joy_teleop-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+[joy_teleop-5]     _shutdown(context=context)
+[joy_teleop-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+[joy_teleop-5]     return context.shutdown()
+[joy_teleop-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+[joy_teleop-5]     self.__context.shutdown()
+[joy_teleop-5] rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [joystick_relay.py-9]: process has finished cleanly [pid 199958]
+[ERROR] [joy_teleop-5]: process has died [pid 199937, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_7pxbfhw2'].
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:24.349) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 21.850000 but the earliest data is at time 93.760000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:24.617) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 22.080000 but the earliest data is at time 93.980000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:24.827) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 22.380000 but the earliest data is at time 94.180000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:25.042) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 22.540000 but the earliest data is at time 94.430000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:25.258) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 22.680000 but the earliest data is at time 94.630000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:25.534) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 22.840000 but the earliest data is at time 94.830000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:25.658) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 23.110000 but the earliest data is at time 94.970000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] [33m[ WARN] (2026-09-22 15:52:25.802) MsgConversion.cpp:2026::getTransform() (getting transform "odom" -> "base_footprint") Lookup would require extrapolation into the past.  Requested time 23.370000 but the earliest data is at time 95.150000, when looking up transform from frame [base_footprint] to frame [odom] (wait_for_transform=0.200000)[0m
+[rtabmap-13] rtabmap: Saving database/long-term memory... (located at /workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db)
+[rtabmap-13] rtabmap: 2D occupancy grid map saved.
+[rtabmap-13] rtabmap: Saving database/long-term memory...done! (located at /workspace/molar/ros_ws/bumperbot_ws/log/rtabmap/nav_obstacle_labbot.db, 1 MB)
+[INFO] [rtabmap-13]: process has finished cleanly [pid 200014]
+[ERROR] [ign gazebo-2]: process[ign gazebo-2] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [ign gazebo-2]: sending signal 'SIGTERM' to process[ign gazebo-2]
+[ERROR] [ign gazebo-2]: process has died [pid 199930, exit code -15, cmd 'ruby /usr/bin/ign gazebo /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world -v 4 -s -r --force-version 6'].
+[INFO] [launch]: process[ign gazebo-2] was required: shutting down launched system

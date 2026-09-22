@@ -22,6 +22,7 @@ except ImportError:
 import rclpy
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
+from rclpy.executors import ExternalShutdownException
 from builtin_interfaces.msg import Time
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector3
@@ -252,6 +253,12 @@ class PyBulletSpawner(Node):
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
+        # Display-mode hold: 'auto' lets the spawner hold joints only for the
+        # map-free display case, 'true' always holds joints at their spawn
+        # pose (passive visualization for legged/humanoid robots that would
+        # otherwise collapse/jump under gravity), 'false' runs full physics.
+        # Bringup forwards mode:=display automatically.
+        self.declare_parameter("hold_position", "false")
         # RGB-D camera, rendered from the description's camera link with the
         # Gazebo sensor's intrinsics; 0 Hz disables it.
         self.declare_parameter("camera_rate", 5.0)
@@ -287,6 +294,10 @@ class PyBulletSpawner(Node):
         self._jvel = []
         self._running = True
         self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
+        # Display-hold state (set in _spawn once joints are known).
+        self._hold_joints = False
+        self._hold_pose = {}
+        self._hold_base = None
 
         # Publishers
         self._pub_js = self.create_publisher(JointState, "/joint_states", 10)
@@ -481,40 +492,49 @@ class PyBulletSpawner(Node):
 
     def _spawn(self):
         from ament_index_python.packages import get_package_share_directory
-        # Resolve xacro
+        # Resolve xacro; an explicitly empty model means robot-free display
+        # (robot_model:=none): load only the world, no robot.  Treating that
+        # as an error was the "map-only display does nothing" bug in the
+        # non-Gazebo backends.
         model = self.get_parameter("model").value
         if not model:
             pkg = self.get_parameter("robot_package").value
             xacro = self.get_parameter("robot_xacro").value
             if pkg and xacro:
                 model = os.path.join(get_package_share_directory(pkg), xacro)
-        if not model or not os.path.isfile(str(model)):
-            self.get_logger().error(f"URDF not found: {model}")
-            return
-        urdf = _xacro_to_urdf(str(model))
-        pkg_map = {}
-        for pkg_name in re.findall(r"\$\(find\s+([^)]+)\)", urdf):
-            try:
-                pkg_map[pkg_name] = get_package_share_directory(pkg_name)
-            except Exception:
-                pass
-        rp = self.get_parameter("robot_package").value
-        if rp and rp not in pkg_map:
-            try:
-                pkg_map[rp] = get_package_share_directory(rp)
-            except Exception:
-                pass
-        urdf = _rewrite_package_uris(urdf, pkg_map)
-        urdf = _absolutize_mesh_paths(
-            urdf, os.path.dirname(os.path.abspath(str(model))))
-        # Per-link friction lives in the <gazebo> blocks that are removed next.
-        link_friction = gazebo_link_friction(urdf)
-        urdf = _strip_gazebo_tags(urdf)
+        robot_free = (not model) or str(model).strip().lower() == "none"
+        urdf = ""
+        tmp = None
+        link_friction = {}
+        if not robot_free:
+            if not os.path.isfile(str(model)):
+                self.get_logger().error(f"URDF not found: {model}")
+                return
+            urdf = _xacro_to_urdf(str(model))
+        if not robot_free:
+            pkg_map = {}
+            for pkg_name in re.findall(r"\$\(find\s+([^)]+)\)", urdf):
+                try:
+                    pkg_map[pkg_name] = get_package_share_directory(pkg_name)
+                except Exception:
+                    pass
+            rp = self.get_parameter("robot_package").value
+            if rp and rp not in pkg_map:
+                try:
+                    pkg_map[rp] = get_package_share_directory(rp)
+                except Exception:
+                    pass
+            urdf = _rewrite_package_uris(urdf, pkg_map)
+            urdf = _absolutize_mesh_paths(
+                urdf, os.path.dirname(os.path.abspath(str(model))))
+            # Per-link friction lives in the <gazebo> blocks that are removed next.
+            link_friction = gazebo_link_friction(urdf)
+            urdf = _strip_gazebo_tags(urdf)
 
-        tmp = tempfile.NamedTemporaryFile(suffix=".urdf", delete=False, mode="w")
-        tmp.write(urdf)
-        tmp.close()
-        self.get_logger().info(f"URDF written to {tmp.name}")
+            tmp = tempfile.NamedTemporaryFile(suffix=".urdf", delete=False, mode="w")
+            tmp.write(urdf)
+            tmp.close()
+            self.get_logger().info(f"URDF written to {tmp.name}")
 
         # Determine GUI mode: handle both boolean and string values from launch
         gui_param = self.get_parameter("gui").value
@@ -558,6 +578,14 @@ class PyBulletSpawner(Node):
                     p.loadURDF(str(wp), useFixedBase=True)
             except Exception as e:
                 self.get_logger().warn(f"World load error: {e}")
+
+        if robot_free:
+            self._ready = True
+            self._thread = threading.Thread(target=self._world_loop, daemon=True)
+            self._thread.start()
+            self._ready_pub.publish(Bool(data=True))
+            self.get_logger().info("PyBullet world-only display running")
+            return
 
         # Robot
         sx = self.get_parameter("spawn_x").value
@@ -666,6 +694,32 @@ class PyBulletSpawner(Node):
         self._lw = self._joint_idx.get(lw, -1)
         self._rw = self._joint_idx.get(rw, -1)
 
+        # Display-mode hold: joints stay at their spawn pose so RViz reflects
+        # stable joint_states instead of a collapse/jump under gravity.  This
+        # restores the pre-regression display behaviour for legged/humanoid
+        # robots (e.g. unitree_h1_2, berkeley_humanoid_lite) while wheeled
+        # robots still drive on /cmd_vel.  'auto' holds only when the robot
+        # has no drive joints configured (the map-free display case);
+        # 'true' always holds; 'false' keeps full physics.
+        hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
+        has_drive = self._lw >= 0 or self._rw >= 0
+        self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
+        if self._hold_joints:
+            self._hold_pose = {}
+            for jn in self._joint_names:
+                try:
+                    s = p.getJointState(self._robot_id, self._joint_idx[jn])
+                    self._hold_pose[jn] = float(s[0])
+                except Exception:
+                    self._hold_pose[jn] = 0.0
+            try:
+                self._hold_base = p.getBasePositionAndOrientation(self._robot_id)
+            except Exception:
+                self._hold_base = None
+            self.get_logger().info(
+                "Display hold active (hold_position=%s): %d joint(s) frozen at spawn pose"
+                % (hold_mode, len(self._hold_pose)))
+
         for i in range(p.getNumJoints(self._robot_id)):
             if p.getJointInfo(self._robot_id, i)[2] != p.JOINT_FIXED:
                 p.setJointMotorControl2(
@@ -689,6 +743,21 @@ class PyBulletSpawner(Node):
         # Signal readiness (R2.3).
         self._ready = True
         self._ready_pub.publish(Bool(data=True))
+
+    def _world_loop(self):
+        """Step a world without publishing fictitious robot state."""
+        while self._running and rclpy.ok():
+            start = time.monotonic()
+            p.stepSimulation()
+            self._sim_step += 1
+            self._sim_t = self._sim_step * self._dt
+            try:
+                self._pub_clock()
+            except Exception:
+                if not rclpy.ok():
+                    break
+                raise
+            time.sleep(max(0.0, self._dt - (time.monotonic() - start)))
 
     def _loop(self):
         pub_dt = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
@@ -714,6 +783,29 @@ class PyBulletSpawner(Node):
             clamp = 50.0
             vl = max(-clamp, min(clamp, vl))
             vr = max(-clamp, min(clamp, vr))
+            if getattr(self, "_hold_joints", False):
+                # Display hold: pin the base at its spawn pose and every
+                # non-drive joint with position control so humanoids/legged
+                # robots cannot collapse or jump under gravity; drive joints
+                # still follow /cmd_vel.
+                try:
+                    if getattr(self, "_hold_base", None) is not None:
+                        p.resetBasePositionAndOrientation(
+                            self._robot_id,
+                            list(self._hold_base[0]), list(self._hold_base[1]))
+                        p.resetBaseVelocity(self._robot_id, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0])
+                except Exception:
+                    pass
+                for jn, q0 in getattr(self, "_hold_pose", {}).items():
+                    idx = self._joint_idx.get(jn, -1)
+                    if idx < 0 or idx == self._lw or idx == self._rw:
+                        continue
+                    try:
+                        p.setJointMotorControl2(
+                            self._robot_id, idx, p.POSITION_CONTROL,
+                            targetPosition=q0, force=200.0)
+                    except Exception:
+                        pass
             if self._lw >= 0:
                 p.setJointMotorControl2(
                     self._robot_id, self._lw, p.VELOCITY_CONTROL,
@@ -862,9 +954,9 @@ class PyBulletSpawner(Node):
         status.name = "pybullet_spawner"
         status.hardware_id = "pybullet"
 
-        if self._ready and self._robot_id >= 0:
+        if self._ready:
             status.level = DiagnosticStatus.OK
-            status.message = "running"
+            status.message = "running" if self._robot_id >= 0 else "world-only display"
         elif self._robot_id < 0:
             status.level = DiagnosticStatus.WARN
             status.message = "no robot loaded"
@@ -1016,7 +1108,7 @@ class PyBulletSpawner(Node):
                 p.disconnect(physicsClientId=self._render_client)
             except Exception:
                 pass
-        if p is not None and self._robot_id >= 0:
+        if p is not None and p.isConnected():
             try:
                 p.disconnect()
             except Exception:
@@ -1029,7 +1121,7 @@ def main(args=None):
     node = PyBulletSpawner()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
         node.destroy_node()
