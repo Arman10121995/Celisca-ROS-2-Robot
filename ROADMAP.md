@@ -283,8 +283,8 @@ Dependencies: `R4.1`.
 - Files: `src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/`.
 - Implement: Remove hardcoded distance/collision/clearance. Measure contacts, footprint-aware clearance, trajectory distance and timestamp/frame-aligned truth/estimation error; collect CPU/memory/RTF and defined effort proxy. Record manifest/hash, revision/dirty state, dependencies, asset hashes, seeds, budgets, tolerances and artifact paths.
 - Acceptance: Known trajectories/contact fixtures yield correct values; one contact is not counted per scan; missing/NaN/stale data invalidate metrics instead of becoming zero; schema rejects invalid values and distinguishes measured versus derived metrics.
-- Status: Partial (reopened 2026-09-15). The following unit evidence does not
-  establish the live locomotion acceptance above.
+- Status: Done (metric extraction and fixture checks; runtime mission qualification
+  is tracked separately).
 - Evidence: `metrics.py` (MeasuredMetrics/DerivedMetrics/RunMetrics schema; trajectory_distance; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values; truthful None-on-missing semantics), `test_r4_2_metrics.py` (83 tests pass; full suite 197 green with R4.1+P6).
 
 ### R4.3 — Publish first reproducible planner comparison
@@ -312,7 +312,8 @@ Dependencies: `R5.1`.
 - Files: `src/robot_lab_robots/unitree/go2_description/`, `src/robot_lab_adapter/`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control.
 - Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
-- Status: Done.
+- Status: Partial (reopened 2026-09-15). The unit evidence below does not establish
+  the live locomotion acceptance above.
 - Evidence: `go2_locomotion.py` (constants honest to the Go2 description — 12 joints, effort limits from `const.xacro` (hip/thigh 23.7 N·m, calf 35.55), PD gains from `go2_robot_control.yaml`, nominal stance within position limits, tilt warn 0.35 rad / fall 0.70 rad, trot 0.70 s cycle with 0.5 duty, base-velocity limits vx 0.5 / vy 0.3 m/s / wz 0.7 rad/s and accel limits 1.0/0.5/2.0; closed-loop joint-space PD stance where a joint with no position measurement is *not driven* (zero effort, never assumed at target); bounded base-velocity interface with clamp + first-order rate limiting; trot is diagonal-pair stepping explicit about being *not* MPC; effort-residual contact estimation with None for missing data; latched SAFE_STOP safety monitor on tilt/effort saturation requiring explicit reset), `test_r5_2_go2_locomotion.py` (61 tests pass; full adapter suite 108 green including R3.3 launch/resolver/selector contracts). Honest findings: raw effort publishing is not gait control; contact is estimated locally from effort residuals, never assumed.
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
@@ -322,6 +323,13 @@ Dependencies: `R5.1`.
 - Files: `src/robot_lab_robots/berkeley_humanoid_lite/`, `src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Resume historical P3.4 after ownership check. Verify joints/inertias/limits; wire simulation wrapper; implement closed-loop balance before stepping/walking. A fixed pose is not proof of balance.
 - Acceptance: Declared stance-duration and bounded perturbation recovery pass; flat-ground stepping/walking and stop measured; falls/limits enforced. Stair qualification waits for flat-ground success.
+- 2026-09-22 progress: the actual MuJoCo ROS backend now accepts the configured
+  22-joint BHL effort stream with URDF bounds/losses, a command watchdog and reset
+  clearing. A common-launch run with the existing standing node holds for 12
+  simulated seconds; the matching passive condition falls. Command-loss/reset
+  and clean shutdown are checked. This establishes live stance actuation;
+  perturbation recovery and walking/turning remain separate acceptance items.
+  See [recorded evidence](docs/status/evidence/r53-mujoco-effort-2026-09-22/README.md).
 
 ### R5.4 — Integrate real multirotor SITL flight
 

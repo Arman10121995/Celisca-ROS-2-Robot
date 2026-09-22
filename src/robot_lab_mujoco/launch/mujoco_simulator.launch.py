@@ -79,6 +79,13 @@ def _build_mujoco_actions(context):
         )
 
     mujoco_xml = _resolve_mujoco_xml(context, world_name)
+    effort_config = LaunchConfiguration("effort_controller_config").perform(context)
+    # BHL uses the same named effort stream as its Gazebo ros2_control profile.
+    # Its balance law needs fresh state at 250 Hz; the wheel default is 50 Hz.
+    bhl = "berkeley_humanoid_lite" in model_path.replace("\\", "/").split("/")
+    if bhl and not effort_config:
+        effort_config = os.path.join(get_package_share_directory("robot_lab_robots"),
+                                     "berkeley_humanoid_lite", "config", "bhl_controllers.yaml")
 
     # MuJoCo physics engine + robot spawn
     actions.append(
@@ -89,6 +96,9 @@ def _build_mujoco_actions(context):
             output="screen",
             parameters=[{
                 "model": LaunchConfiguration("model"),
+                "effort_controller_config": effort_config,
+                "physics_rate": 250.0 if bhl else 240.0,
+                "publish_rate": 250.0 if bhl else 50.0,
                 "world_xml": mujoco_xml,
                 "robot_name": robot_name,
                 "robot_package": robot_package,
@@ -115,6 +125,7 @@ def generate_launch_description():
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),
         DeclareLaunchArgument("model", default_value=""),
+        DeclareLaunchArgument("effort_controller_config", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),
         DeclareLaunchArgument("robot_xacro", default_value=""),
         DeclareLaunchArgument("robot_name", default_value="bumperbot"),

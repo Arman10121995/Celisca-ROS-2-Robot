@@ -1,0 +1,49 @@
+Starting >>> robot_lab_bringup
+UpdateCTestConfiguration  from :/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/CTestConfiguration.ini
+Parse Config file:/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/CTestConfiguration.ini
+   Site: molar1
+   Build name: (empty)
+ Add coverage exclude regular expressions.
+Create new tag: 20260922-0806 - Experimental
+UpdateCTestConfiguration  from :/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/CTestConfiguration.ini
+Parse Config file:/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/CTestConfiguration.ini
+Test project /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 8
+    Start 8: mujoco_effort
+
+8: Test command: /workspace/molar/ros_ws/bumperbot_ws/.venv/bin/python3 "-u" "/opt/ros/humble/share/ament_cmake_test/cmake/run_test.py" "/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/test_results/robot_lab_bringup/mujoco_effort.xunit.xml" "--package-name" "robot_lab_bringup" "--output-file" "/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/ament_cmake_pytest/mujoco_effort.txt" "--command" "/workspace/molar/ros_ws/bumperbot_ws/.venv/bin/python3" "-u" "-m" "pytest" "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_mujoco_effort.py" "-o" "cache_dir=/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/ament_cmake_pytest/mujoco_effort/.cache" "--junit-xml=/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/test_results/robot_lab_bringup/mujoco_effort.xunit.xml" "--junit-prefix=robot_lab_bringup"
+8: Test timeout computed to be: 120
+8: -- run_test.py: invoking following command in '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup':
+8:  - /workspace/molar/ros_ws/bumperbot_ws/.venv/bin/python3 -u -m pytest /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_mujoco_effort.py -o cache_dir=/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/ament_cmake_pytest/mujoco_effort/.cache --junit-xml=/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/test_results/robot_lab_bringup/mujoco_effort.xunit.xml --junit-prefix=robot_lab_bringup
+8: ============================= test session starts ==============================
+8: platform linux -- Python 3.10.12, pytest-6.2.5, py-1.10.0, pluggy-1.6.0
+8: cachedir: build/robot_lab_bringup/ament_cmake_pytest/mujoco_effort/.cache
+8: rootdir: /workspace/molar/ros_ws/bumperbot_ws, configfile: pytest.ini
+8: collected 10 items
+8: 
+8: ../../src/robot_lab_bringup/test/test_mujoco_effort.py ..........        [100%]
+8: 
+8: - generated xml file: /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/test_results/robot_lab_bringup/mujoco_effort.xunit.xml -
+8: ============================== 10 passed in 0.46s ==============================
+8: -- run_test.py: return code 0
+8: -- run_test.py: verify result file '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_bringup/test_results/robot_lab_bringup/mujoco_effort.xunit.xml'
+1/1 Test #8: mujoco_effort ....................   Passed    1.02 sec
+
+The following tests passed:
+	mujoco_effort
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+pytest    =   1.02 sec*proc (1 test)
+
+Total Test time (real) =   1.03 sec
+Finished <<< robot_lab_bringup [1.14s]
+
+Summary: 1 package finished [1.52s]

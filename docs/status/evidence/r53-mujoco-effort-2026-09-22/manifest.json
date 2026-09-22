@@ -1,0 +1,25 @@
+{
+  "base_revision": "4edd8c9c50d3b1d1ba3e7c2cb0833e0829777c17",
+  "working_tree_changes": true,
+  "date": "2026-09-22",
+  "robot": "berkeley_humanoid_lite_sim",
+  "backend": "mujoco",
+  "world": "nav_empty",
+  "protocol": "one deterministic active run and one matched passive run; no injected random seed",
+  "duration_sim_s": 12,
+  "limits": {
+    "maximum_stance_tilt_rad": 0.2,
+    "maximum_effort_Nm": 20,
+    "effort_command_watchdog_wall_s": 0.5
+  },
+  "files_sha256": {
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/joint_effort.py": "be88391c13a3e0291890f3016dba35d2a927eb7cd3d0f222f544be6b3146cafd",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "e726a38ec941edaa986fd7433ff41029d7d027a0516b03ffa3dd598cad5e7c80",
+    "src/robot_lab_mujoco/launch/mujoco_simulator.launch.py": "2751ee3f0f48cd8ce5518c1e045c713f632414ef20cf7522f1afe18371face38",
+    "src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py": "eed335ddd7670a28554ed2a476c4108e6716289e06ea8ad6421dcc1dd478460d",
+    "src/robot_lab_adapter/robot_lab_adapter/bhl_balance.py": "4bf5a2b48a314f39fb05a5f25bf85ac05113ab03f4292b7217b9e100a41a79a5",
+    "src/robot_lab_robots/berkeley_humanoid_lite/urdf/berkeley_humanoid_lite.urdf": "acc09e46461f8b362b078fc7ab292f9aba31ed8efe3a6c4859cbcc7ed5b7cd70",
+    "src/robot_lab_robots/berkeley_humanoid_lite/config/bhl_controllers.yaml": "75a8802cc431e5d22c52a2197326a0fd5585aced028c39af40e533e6b7bdac5f",
+    "docs/status/evidence/r53-mujoco-effort-2026-09-22/probe.py": "83b6a11097dae68443198b92f36a599b090e5791d4a4f3bcad5ab6b53786a4c1"
+  }
+}

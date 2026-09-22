@@ -8,6 +8,7 @@ import hashlib
 import math
 import os
 import re
+import signal
 import shutil
 import struct
 import subprocess
@@ -38,10 +39,11 @@ from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Float64MultiArray
 from std_srvs.srv import Trigger
 
 from robot_lab_utils import camera_model
+from robot_lab_mujoco.joint_effort import JointEffortCommand
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.sim_frames import (
     compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
@@ -716,6 +718,7 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("robot_xacro", "")
         self.declare_parameter("model", "")
         self.declare_parameter("world_xml", "")
+        self.declare_parameter("effort_controller_config", "")
         self.declare_parameter("spawn_x", 0.0)
         self.declare_parameter("spawn_y", 0.0)
         self.declare_parameter("spawn_z", 0.0)
@@ -766,6 +769,9 @@ class MuJoCoSpawner(Node):
         self._rw_qpos_adr = -1
         self._twist = Twist()
         self._twist_lock = threading.Lock()
+        self._effort_command = None
+        self._effort_actuators = []
+        self._effort_subscription = None
         # A reset service and the physics/rendering thread share MjData.
         self._physics_lock = threading.RLock()
         self._last_cmd_time = time.monotonic()
@@ -823,6 +829,12 @@ class MuJoCoSpawner(Node):
         with self._twist_lock:
             self._twist = msg
             self._last_cmd_time = time.monotonic()
+
+    def _on_joint_effort(self, msg):
+        with self._twist_lock:
+            valid = self._effort_command.receive(msg.data, time.monotonic())
+        if not valid:
+            self.get_logger().error("Rejected invalid joint-effort command; cleared all efforts")
 
     def _try_spawn(self):
         if self._model is not None:
@@ -897,6 +909,10 @@ class MuJoCoSpawner(Node):
                 base_dir=os.path.dirname(os.path.abspath(str(model))))
             if robot_mjcf != _FALLBACK_MJCF:
                 self._model_source = "urdf"
+                effort_config = self.get_parameter("effort_controller_config").value
+                if effort_config:
+                    self._effort_command = JointEffortCommand(effort_config, urdf)
+                    robot_mjcf = self._effort_command.add_actuators(robot_mjcf)
                 robot_mjcf = _add_wheel_velocity_actuators(
                     robot_mjcf,
                     (self.get_parameter("left_wheel_joint").value,
@@ -931,6 +947,17 @@ class MuJoCoSpawner(Node):
 
         # --- find the root body that contains the free joint ---
         self._find_body_and_joints()
+        if self._effort_command is not None:
+            self._effort_actuators = [mujoco.mj_name2id(
+                self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, name + "_effort")
+                for name in self._effort_command.names]
+            if min(self._effort_actuators) < 0:
+                raise ValueError("configured effort actuator is missing")
+            if self._effort_subscription is None:
+                self._effort_subscription = self.create_subscription(
+                    Float64MultiArray, self._effort_command.topic, self._on_joint_effort, 1)
+            self.get_logger().info("Joint effort input: %s (%d joints, URDF limits)" % (
+                self._effort_command.topic, len(self._effort_actuators)))
 
         # Spawn and reset use the same pose and initial physics state.
         self._reset_physics()
@@ -1210,6 +1237,10 @@ class MuJoCoSpawner(Node):
             self._set_velocity_actuator(self._lw_name, max(-50.0, min(50.0, left)))
         if self._rw_qpos_adr >= 0 and self._model.nu > 0:
             self._set_velocity_actuator(self._rw_name, max(-50.0, min(50.0, right)))
+        if self._effort_command is not None:
+            with self._twist_lock:
+                values = self._effort_command.command(time.monotonic(), self._watchdog_timeout)
+            self._data.ctrl[self._effort_actuators] = values
         for _ in range(self._substeps):
             mujoco.mj_step(self._model, self._data)
         self._sim_step += 1
@@ -1241,6 +1272,8 @@ class MuJoCoSpawner(Node):
         with self._twist_lock:
             self._twist = Twist()
             self._last_cmd_time = 0.0
+            if self._effort_command is not None:
+                self._effort_command.clear()
         self._sim_step = 0
         mujoco.mj_forward(self._model, self._data)
         self._read_physics_state()
@@ -1275,7 +1308,8 @@ class MuJoCoSpawner(Node):
         m.name = list(self._joint_names)
         m.position = list(self._jpos)
         m.velocity = list(self._jvel)
-        m.effort = [0.0] * len(self._joint_names)
+        m.effort = [float(self._data.qfrc_actuator[self._joint_name2dofadr[name]])
+                    for name in self._joint_names]
         self._js_pub.publish(m)
 
     def _pub_odom(self):
@@ -1492,6 +1526,10 @@ def main(args=None):
         # cleanup and made every stop report "process has died".
         pass
     finally:
+        # A group SIGINT reaches this process directly and again when launch
+        # forwards it. Do not interrupt the physics-thread join and leave native
+        # MuJoCo work running while Python tears down the process.
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         try:
             node.destroy_node()
         except Exception:

@@ -1,0 +1,51 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-22-10-01-06-633574-molar1-19284
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [19286]
+[INFO] [mujoco_spawner-2]: process started with pid [19288]
+[robot_state_publisher-1] 1790064067.091332 [186] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [WARN] [1790064067.106476276] [kdl_parser]: The root link base has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-1] [INFO] [1790064067.106674229] [robot_state_publisher]: got segment arm_left_elbow_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106744053] [robot_state_publisher]: got segment arm_left_elbow_roll
+[robot_state_publisher-1] [INFO] [1790064067.106759893] [robot_state_publisher]: got segment arm_left_hand_link
+[robot_state_publisher-1] [INFO] [1790064067.106768821] [robot_state_publisher]: got segment arm_left_shoulder_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106777205] [robot_state_publisher]: got segment arm_left_shoulder_roll
+[robot_state_publisher-1] [INFO] [1790064067.106784885] [robot_state_publisher]: got segment arm_left_shoulder_yaw
+[robot_state_publisher-1] [INFO] [1790064067.106792149] [robot_state_publisher]: got segment arm_right_elbow_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106799221] [robot_state_publisher]: got segment arm_right_elbow_roll
+[robot_state_publisher-1] [INFO] [1790064067.106806421] [robot_state_publisher]: got segment arm_right_hand_link
+[robot_state_publisher-1] [INFO] [1790064067.106813525] [robot_state_publisher]: got segment arm_right_shoulder_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106821109] [robot_state_publisher]: got segment arm_right_shoulder_roll
+[robot_state_publisher-1] [INFO] [1790064067.106828309] [robot_state_publisher]: got segment arm_right_shoulder_yaw
+[robot_state_publisher-1] [INFO] [1790064067.106835509] [robot_state_publisher]: got segment base
+[robot_state_publisher-1] [INFO] [1790064067.106842645] [robot_state_publisher]: got segment imu
+[robot_state_publisher-1] [INFO] [1790064067.106849973] [robot_state_publisher]: got segment imu_2
+[robot_state_publisher-1] [INFO] [1790064067.106857045] [robot_state_publisher]: got segment leg_left_ankle_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106864341] [robot_state_publisher]: got segment leg_left_ankle_roll
+[robot_state_publisher-1] [INFO] [1790064067.106871541] [robot_state_publisher]: got segment leg_left_hip_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106878517] [robot_state_publisher]: got segment leg_left_hip_roll
+[robot_state_publisher-1] [INFO] [1790064067.106885589] [robot_state_publisher]: got segment leg_left_hip_yaw
+[robot_state_publisher-1] [INFO] [1790064067.106892437] [robot_state_publisher]: got segment leg_left_knee_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106899445] [robot_state_publisher]: got segment leg_right_ankle_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106906517] [robot_state_publisher]: got segment leg_right_ankle_roll
+[robot_state_publisher-1] [INFO] [1790064067.106913461] [robot_state_publisher]: got segment leg_right_hip_pitch
+[robot_state_publisher-1] [INFO] [1790064067.106920661] [robot_state_publisher]: got segment leg_right_hip_roll
+[robot_state_publisher-1] [INFO] [1790064067.106927573] [robot_state_publisher]: got segment leg_right_hip_yaw
+[robot_state_publisher-1] [INFO] [1790064067.106934709] [robot_state_publisher]: got segment leg_right_knee_pitch
+[mujoco_spawner-2] 1790064067.888791 [186] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] [WARN] [1790064068.723666190] [mujoco_spawner]: MuJoCo inertia repair: clamped non-physical mass/inertia entries.
+[mujoco_spawner-2] [INFO] [1790064069.283445739] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790064069.473765352] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-2] [INFO] [1790064069.474973387] [mujoco_spawner]: Joints: ['arm_left_shoulder_pitch_joint', 'arm_left_shoulder_roll_joint', 'arm_left_shoulder_yaw_joint', 'arm_left_elbow_pitch_joint', 'arm_left_elbow_roll_joint', 'arm_right_shoulder_pitch_joint', 'arm_right_shoulder_roll_joint', 'arm_right_shoulder_yaw_joint', 'arm_right_elbow_pitch_joint', 'arm_right_elbow_roll_joint', 'leg_left_hip_roll_joint', 'leg_left_hip_yaw_joint', 'leg_left_hip_pitch_joint', 'leg_left_knee_pitch_joint', 'leg_left_ankle_pitch_joint', 'leg_left_ankle_roll_joint', 'leg_right_hip_roll_joint', 'leg_right_hip_yaw_joint', 'leg_right_hip_pitch_joint', 'leg_right_knee_pitch_joint', 'leg_right_ankle_pitch_joint', 'leg_right_ankle_roll_joint']   lw= rw=
+[mujoco_spawner-2] [INFO] [1790064069.476731312] [mujoco_spawner]: Joint effort input: /bhl_standing_controller/commands (22 joints, URDF limits)
+[mujoco_spawner-2] [INFO] [1790064069.477885618] [mujoco_spawner]: MuJoCo model loaded: 24 bodies, 23 joints
+[mujoco_spawner-2] [INFO] [1790064069.478388340] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790064069.478827797] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790064069.482794527] [mujoco_spawner]: MuJoCo spawner running.
+[mujoco_spawner-2] [INFO] [1790064091.340327002] [mujoco_spawner]: Simulation reset
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790064091.343841827] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1790064091.350317491] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 19286]
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 19288]
