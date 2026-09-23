@@ -48,7 +48,9 @@ from std_srvs.srv import Trigger
 from robot_lab_utils import camera_model
 from robot_lab_mujoco.joint_effort import JointEffortCommand, mjcf_joint_dynamics
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
+from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 from robot_lab_utils.sim_frames import (
+    urdf_link_frames,
     compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
     yaw_of)
 
@@ -1003,6 +1005,7 @@ class MuJoCoSpawner(Node):
         self._blin = [0.0, 0.0, 0.0]
         self._bang = [0.0, 0.0, 0.0]
         self._laser_offset = None  # laser link pose in the free body's frame
+        self._base_frame = "base_footprint"  # odometry child: URDF root link
         self._camera = None
         self._jpos = []
         self._jvel = []
@@ -1123,6 +1126,11 @@ class MuJoCoSpawner(Node):
             # scan origin is the laser link's pose in that frame.
             self._laser_offset = offset_from_root(
                 urdf, self.get_parameter("laser_link_name").value)
+            self._base_frame = urdf_link_frames(urdf)[1] or "base_footprint"
+            if self._laser_offset is None:
+                # The scan is cast from above the root link; give it that frame.
+                self._scan_frame_tf = publish_fallback_scan_frame(
+                    self, self._base_frame, self.get_parameter("laser_link_name").value)
             robot_mjcf = _build_mjcf_from_urdf(
                 urdf, pkg_map, logger=self.get_logger(),
                 robot_name=self.get_parameter("robot_name").value,
@@ -1602,7 +1610,7 @@ class MuJoCoSpawner(Node):
         m = Odometry()
         m.header.stamp = self._stamp()
         m.header.frame_id = "odom"
-        m.child_frame_id = "base_footprint"
+        m.child_frame_id = self._base_frame
         m.pose.pose.position = Point(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
         m.pose.pose.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])

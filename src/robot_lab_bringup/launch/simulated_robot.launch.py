@@ -273,6 +273,18 @@ def _clear_spawn_height(model_path, spawn_z):
     return clear_spawn_z(spawn_z, lowest)
 
 
+def _urdf_root_link(model_path):
+    """Root link of the robot description, or '' when it cannot be read."""
+    import subprocess
+    from robot_lab_utils.sim_frames import urdf_link_frames
+    try:
+        urdf = subprocess.run(["xacro", model_path], capture_output=True,
+                              text=True, check=True, timeout=60).stdout
+        return urdf_link_frames(urdf)[1] or ""
+    except Exception:
+        return ""
+
+
 def _launch_file(package_share, *path_parts):
     return os.path.join(package_share, "launch", *path_parts)
 
@@ -353,7 +365,8 @@ def _resolve_robot_config(robot_configs, robot_model, explicit_robot_xacro):
     )
 
 
-def _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config):
+def _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
+                             simulator=None):
     if not robot_config:
         return
 
@@ -364,13 +377,12 @@ def _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config):
             f"Supported modes: {supported_modes}"
         )
 
-    required_features = mode_config.get("required_features", [])
-    robot_features = robot_config.get("features", [])
-    missing = [feature for feature in required_features if feature not in robot_features]
+    from robot_lab_utils.mode_capability import describe_missing, missing_features
+    missing = missing_features(robot_config, mode_name, simulator, mode_config)
     if missing:
         raise RuntimeError(
-            f"Robot '{robot_model}' cannot run mode '{mode_name}'. "
-            f"Missing required robot features: {missing}"
+            f"Robot '{robot_model}' cannot run mode '{mode_name}' in "
+            f"{simulator or 'this simulator'}: {describe_missing(missing)}"
         )
 
 
@@ -613,13 +625,18 @@ def _build_simulation_actions(context):
             robot_model,
             _launch_value(context, "robot_xacro"),
         )
-        _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config)
+        _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
+                                 _launch_value(context, "simulator"))
         robot_package = _config_value(context, "robot_package", robot_config.get("package", "robot_lab_robots"))
         robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
         robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
         model_path = _package_file(robot_package, robot_xacro)
 
     drive_args = {key: str(value) for key, value in robot_config.get("drive", {}).items()}
+    # Localization runs in the robot's own root frame (base_footprint for
+    # the wheeled bases, 'base' or 'pelvis' for legged and humanoid ones).
+    base_frame = "" if robot_free or mode_name == "display" else _urdf_root_link(model_path)
+
     gazebo_config = map_config.get("gazebo", {})
     # Robot-level spawn overrides win over map defaults. Needed for robots
     # whose base frame does not sit at sole level (e.g. the R5.3 BHL biped,
@@ -912,7 +929,11 @@ def _build_simulation_actions(context):
                     "spawn_yaw": spawn_yaw,
                     "use_sim_time": use_sim_time,
                     "gui": gui_value,
-                    "hold_position": "false",
+                    # A robot without drive wheels (a humanoid or dog in
+                    # loc) stands on the same joint hold as in display mode;
+                    # otherwise it collapses and scans the floor.  Wheeled
+                    # robots are never held ('auto' in the spawners).
+                    "hold_position": _launch_value(context, "display_hold"),
                     **drive_args,
                 }.items(),
             )
@@ -968,6 +989,7 @@ def _build_simulation_actions(context):
                     "map_yaml": map_yaml,
                     "use_sim_time": use_sim_time,
                     "robot_model": robot_model,
+                    "base_frame": base_frame,
                     "initial_pose_x": initial_pose_x,
                     "initial_pose_y": initial_pose_y,
                     "initial_pose_yaw": initial_pose_yaw,
@@ -987,6 +1009,7 @@ def _build_simulation_actions(context):
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "robot_model": robot_model,
+                    "base_frame": base_frame,
                     "odom0": _odom0_topic,
                 }.items(),
             )
@@ -1123,7 +1146,9 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument("display_hold", default_value="auto",
-                              description="Hold unactuated robot poses in display; false enables free physics."),
+                              description="Hold the joints of robots without drive wheels or "
+                                          "their own controllers at their spawn pose (PyBullet, "
+                                          "MuJoCo, Isaac; Gazebo in display); false enables free physics."),
         DeclareLaunchArgument(
             "mode",
             default_value="nav",

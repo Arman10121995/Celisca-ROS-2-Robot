@@ -47,6 +47,7 @@ import numpy as np
 
 from robot_lab_utils import camera_model
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
+from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 from robot_lab_utils.sim_frames import (
     body_odometry, mounted_sensor_offsets, relative_frame, urdf_link_frames)
 
@@ -264,6 +265,7 @@ class IsaacSpawner(Node):
         self._spawned = False
         self._twist = Twist()
         self._urdf_text = ""
+        self._base_frame = "base_footprint"
         self._camera = None  # camera settings once the runtime is launched
         self._camera_error_reported = False
         self._root_offset = None  # Isaac's root body in the URDF root frame
@@ -334,6 +336,9 @@ class IsaacSpawner(Node):
                 pkg_map[rp] = get_package_share_directory(rp)
             urdf = _strip_gazebo_tags(_rewrite_package_uris(urdf_text, pkg_map))
             self._urdf_text = urdf
+            # Odometry child frame: the description's root link (was fixed to
+            # base_footprint, which most non-wheeled robots do not have).
+            self._base_frame = urdf_link_frames(urdf)[1] or "base_footprint"
             fd, urdf_file = tempfile.mkstemp(suffix=".urdf", dir=tempfile.gettempdir())
             with os.fdopen(fd, "w") as fh:
                 fh.write(urdf)
@@ -474,6 +479,9 @@ class IsaacSpawner(Node):
             self.get_logger().warn(
                 "Robot has no '%s' link; /scan originates 0.12 m above the "
                 "base, as in the PyBullet and MuJoCo bridges." % link)
+            # Stamp those scans in a frame that exists.
+            self._scan_frame_tf = publish_fallback_scan_frame(
+                self, urdf_root or "base_footprint", link)
         return {
             "rate": float(self.get_parameter("scan_rate").value),
             "samples": int(self.get_parameter("scan_samples").value),
@@ -744,7 +752,7 @@ class IsaacSpawner(Node):
         om = Odometry()
         om.header.stamp = stamp
         om.header.frame_id = "odom"
-        om.child_frame_id = "base_footprint"
+        om.child_frame_id = self._base_frame
         om.pose.pose.position = Point(x=pos[0], y=pos[1], z=pos[2])
         om.pose.pose.orientation = Quaternion(
             x=orn[0], y=orn[1], z=orn[2], w=orn[3])

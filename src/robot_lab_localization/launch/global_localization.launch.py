@@ -114,6 +114,12 @@ def generate_launch_description():
         )
         if os.path.exists(overlay):
             amcl_parameters.insert(1, overlay)
+        # The robot's root link, when the caller knows it, wins over the
+        # overlay default (robots without an overlay used base_footprint,
+        # a frame most of them do not have).
+        base_frame = LaunchConfiguration("base_frame").perform(context).strip()
+        if base_frame:
+            amcl_parameters.append({"base_frame_id": base_frame})
         return [
             Node(
                 package="nav2_amcl",
@@ -148,6 +154,11 @@ def generate_launch_description():
             "robot_model",
             default_value="bumperbot",
             description="Robot id; loads config/robots/<robot_model>.yaml overlay if present",
+        ),
+        DeclareLaunchArgument(
+            "base_frame",
+            default_value="",
+            description="Robot base frame for AMCL; empty keeps the overlay/default",
         ),
         initial_pose_x_arg,
         initial_pose_y_arg,

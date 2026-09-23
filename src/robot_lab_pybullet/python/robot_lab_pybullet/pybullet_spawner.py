@@ -38,8 +38,9 @@ import numpy as np
 
 from robot_lab_utils import camera_model
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
-from robot_lab_utils.sim_frames import rotate, world_to_body, wxyz_from_xyzw
+from robot_lab_utils.sim_frames import rotate, urdf_link_frames, world_to_body, wxyz_from_xyzw
 from robot_lab_utils.urdf_contact import gazebo_link_friction
+from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 
 # Display-hold motor force for joints whose URDF declares no effort limit.
 _HOLD_FORCE = 200.0
@@ -98,6 +99,49 @@ def _render_rgbd(position, orientation_xyzw, camera, client=0):
         z_buffer, camera["near"], camera["far"]).astype(np.float32)
     depth[z_buffer >= 1.0] = np.inf
     return rgb, depth
+
+
+# PyBullet applies URDF joint damping as an explicit force, stable only
+# while damping * dt / I stays below about 1 (I: the joint's effective
+# inertia).  Berkeley Humanoid Lite's elbow roll links weigh 0.8 g with
+# 1e-8 kg*m^2 of inertia under damping 5, so its arms diverged on the first
+# steps and the whole robot was thrown across the world at up to 110 m/s.
+_DAMPING_STABILITY = 0.5
+
+
+def _cap_joint_damping(robot_id, dt):
+    """Lower each joint's damping to its stability bound; returns the joints.
+
+    A joint's effective inertia is 1 / (M^-1)_ii, the inertia it shows when
+    every other joint and the floating base are free to move (M: the
+    joint-space mass matrix at the current pose, base rows first).  The
+    diagonal M_ii overstates it for a light link on a heavy chain, and a
+    bound built from it still let the humanoid's arms diverge.
+    """
+    movable = [i for i in range(p.getNumJoints(robot_id))
+               if p.getJointInfo(robot_id, i)[2] in (p.JOINT_REVOLUTE, p.JOINT_PRISMATIC)]
+    if not movable:
+        return []
+    positions = [p.getJointState(robot_id, i)[0] for i in movable]
+    try:
+        matrix = p.calculateMassMatrix(robot_id, positions)
+    except Exception:
+        return []
+    offset = len(matrix) - len(movable)
+    try:
+        inverse = np.linalg.inv(np.asarray(matrix, dtype=float))
+    except np.linalg.LinAlgError:
+        return []
+    capped = []
+    for row, joint in enumerate(movable):
+        info = p.getJointInfo(robot_id, joint)
+        damping = float(info[6])
+        inertia = 1.0 / max(float(inverse[offset + row][offset + row]), 1e-12)
+        limit = _DAMPING_STABILITY * inertia / dt
+        if damping > limit:
+            p.changeDynamics(robot_id, joint, jointDamping=limit)
+            capped.append(info[1].decode())
+    return capped
 
 
 def _planar_scan(ray_batch, origin, yaw, samples, range_min, range_max,
@@ -281,6 +325,9 @@ class PyBulletSpawner(Node):
         self._robot_id = -1
         self._link_idx = {}
         self._camera = None
+        self._base_frame = "base_footprint"
+        # Root link frame in PyBullet's base (inertial) frame; see _base_link_pose.
+        self._base_inertial_offset = None
         self._joint_idx = {}
         self._joint_names = []
         self._lw = -1
@@ -550,6 +597,7 @@ class PyBulletSpawner(Node):
                 urdf, os.path.dirname(os.path.abspath(str(model))))
             # Per-link friction lives in the <gazebo> blocks that are removed next.
             link_friction = gazebo_link_friction(urdf)
+            self._base_frame = urdf_link_frames(urdf)[1] or "base_footprint"
             urdf = _strip_gazebo_tags(urdf)
 
             tmp = tempfile.NamedTemporaryFile(suffix=".urdf", delete=False, mode="w")
@@ -645,6 +693,11 @@ class PyBulletSpawner(Node):
             p.resetBasePositionAndOrientation(self._robot_id, base_position, base_orientation)
             self.get_logger().info("Spawn ground clearance: raised root by %.4f m" % lift)
         self._spawn_base_pose = (base_position, base_orientation)
+        capped = _cap_joint_damping(self._robot_id, self._dt)
+        if capped:
+            self.get_logger().info(
+                "Joint damping capped for stability on %d joint(s): %s"
+                % (len(capped), ", ".join(capped[:6])))
         friction_links = dict(self._link_idx)
         friction_links[p.getBodyInfo(self._robot_id)[0].decode()] = -1
         applied = _apply_link_friction(
@@ -656,6 +709,10 @@ class PyBulletSpawner(Node):
                                                  _MAX_LATERAL_FRICTION))
                             for link in applied))
         self._camera = self._camera_setup()
+        if self.get_parameter("laser_link_name").value not in self._link_idx:
+            # The scan is cast from above the root link; give it that frame.
+            self._scan_frame_tf = publish_fallback_scan_frame(
+                self, self._base_frame, self.get_parameter("laser_link_name").value)
         # A dedicated DIRECT client renders the RGB-D camera: the tiny
         # software renderer costs hundreds of ms per frame on this host,
         # which would otherwise stall the physics loop below its 50 Hz
@@ -845,7 +902,7 @@ class PyBulletSpawner(Node):
             self._sim_step += 1
             self._sim_t = self._sim_step * self._dt
 
-            pos, orn = p.getBasePositionAndOrientation(self._robot_id)
+            pos, orn = self._base_link_pose()
             lv, av = p.getBaseVelocity(self._robot_id)
             self._bpos = list(pos)
             self._born = list(orn)
@@ -913,7 +970,7 @@ class PyBulletSpawner(Node):
         m = Odometry()
         m.header.stamp = self._stamp()
         m.header.frame_id = "odom"
-        m.child_frame_id = "base_footprint"
+        m.child_frame_id = self._base_frame
         m.pose.pose.position = Point(x=self._bpos[0], y=self._bpos[1], z=self._bpos[2])
         m.pose.pose.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
@@ -1122,6 +1179,19 @@ class PyBulletSpawner(Node):
                 if not rclpy.ok() or not self._running:
                     break
                 raise
+
+    def _base_link_pose(self):
+        """World pose of the root link frame, not of its centre of mass.
+
+        PyBullet reports the base's inertial frame, which for a description
+        with an offset <inertial> (Berkeley Humanoid Lite, the Unitree
+        robots) is not where the link frame - and so the odometry frame - is.
+        """
+        pos, orn = p.getBasePositionAndOrientation(self._robot_id)
+        if self._base_inertial_offset is None:
+            info = p.getDynamicsInfo(self._robot_id, -1)
+            self._base_inertial_offset = p.invertTransform(info[3], info[4])
+        return p.multiplyTransforms(pos, orn, *self._base_inertial_offset)
 
     def destroy_node(self):
         self._running = False

@@ -32,9 +32,48 @@ ALGORITHM_SLOTS = [
     'control',
 ]
 
+# Bringup robot profile (robot_lab_robots/config/robots.yaml) -> registry
+# robot.  The GUI and the launch speak profile ids; the registry catalogs a
+# robot once, so several profiles (variants of one model) map to it.
 ROBOT_ALIASES = {
     'unitree_go2': 'go2',
+    'unitree_a1': 'a1',
+    'unitree_aliengo': 'aliengo',
+    'unitree_b1': 'b1',
+    'unitree_b2': 'b2',
+    'unitree_b2_mujoco': 'b2',
+    'unitree_b2w': 'b2w',
+    'unitree_g1': 'g1',
+    'unitree_g1_29dof': 'g1',
+    'unitree_go1': 'go1',
+    'unitree_go2w': 'go2w',
+    'unitree_h1_2': 'h1_2',
+    'berkeley_humanoid_lite_sim': 'berkeley_humanoid_lite',
+    'berkeley_humanoid_lite_biped': 'berkeley_humanoid_lite',
 }
+
+# Registry robot -> bringup profile launched for it when the request named
+# the registry id (e.g. the CLI's `go2`).  The launch only knows profiles:
+# robot_model:=go2 failed with "Unknown robot_model".
+LAUNCH_PROFILES = {
+    'go2': 'unitree_go2',
+    'a1': 'unitree_a1',
+    'aliengo': 'unitree_aliengo',
+    'b1': 'unitree_b1',
+    'b2': 'unitree_b2',
+    'b2w': 'unitree_b2w',
+    'g1': 'unitree_g1',
+    'go1': 'unitree_go1',
+    'go2w': 'unitree_go2w',
+    'h1_2': 'unitree_h1_2',
+}
+
+
+def launch_profile(requested: Optional[str], registry_id: str) -> str:
+    """Bringup profile to launch: the requested profile, else the registry id's."""
+    if requested and requested in ROBOT_ALIASES:
+        return requested
+    return LAUNCH_PROFILES.get(registry_id, registry_id)
 
 ENVIRONMENT_ALIASES = {
     'terrain_rough': 'outdoor_terrain',
@@ -255,7 +294,7 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
 
     # Concrete launch arguments.
     launch_args: Dict[str, str] = {
-        'robot_model': robot_id,
+        'robot_model': launch_profile(request.robot_id, robot_id),
         'simulator': simulator or 'gazebo',
         'use_sim_time': 'false' if simulator == 'real' else 'true',
     }

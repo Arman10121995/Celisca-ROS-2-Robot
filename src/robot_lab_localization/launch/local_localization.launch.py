@@ -31,6 +31,10 @@ def _setup(context, *args, **kwargs):
         "use_sim_time": use_sim_time,
         "odom0": odom0_topic,
     })
+    # The robot's root link, when the caller knows it (see global launch).
+    base_frame = LaunchConfiguration("base_frame").perform(context).strip()
+    if base_frame:
+        parameters.append({"base_link_frame": base_frame})
 
     robot_localization = Node(
         package="robot_localization",
@@ -65,6 +69,11 @@ def generate_launch_description():
             "robot_model",
             default_value="bumperbot",
             description="Robot id; loads config/robots/<robot_model>.yaml overlay if present",
+        ),
+        DeclareLaunchArgument(
+            "base_frame",
+            default_value="",
+            description="Robot base frame for the EKF; empty keeps the overlay/default",
         ),
         DeclareLaunchArgument(
             "odom0",

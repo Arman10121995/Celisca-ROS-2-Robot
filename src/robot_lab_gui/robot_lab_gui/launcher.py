@@ -15,6 +15,18 @@ from ament_index_python.packages import get_package_share_directory
 from .process_control import stop_group
 
 try:
+    from robot_lab_utils.mode_capability import (
+        describe_missing as describe_missing_features,
+        missing_features as missing_robot_features,
+    )
+except ImportError:  # pragma: no cover - robot_lab_utils is a dependency
+    def missing_robot_features(_config, _mode, _simulator=None, _mode_config=None):
+        return []
+
+    def describe_missing_features(missing):
+        return "robot lacks " + ", ".join(missing)
+
+try:
     import rclpy
     from geometry_msgs.msg import Twist
 except ImportError:
@@ -951,7 +963,19 @@ class SimulationLauncherGui(tk.Tk):
         simulator = self.simulator_var.get()
         return [mode for mode in self._robot_map_modes()
                 if not simulator
-                or _simulator_supports_mode(simulator, mode, self.mode_profiles)]
+                or (_simulator_supports_mode(simulator, mode, self.mode_profiles)
+                    and self._robot_can_run(mode, simulator))]
+
+    def _robot_can_run(self, mode, simulator):
+        """Whether the selected robot has what *mode* needs in *simulator*.
+
+        A robot-free run has nothing to check; the sensor/motion model is
+        robot_lab_utils.mode_capability, shared with the bringup launch.
+        """
+        if self._robot_free():
+            return True
+        return not missing_robot_features(
+            self._robot_config(), mode, simulator, self.mode_profiles.get(mode))
 
     def _robot_free(self):
         return is_none_selection(self.robot_var.get())
@@ -968,7 +992,6 @@ class SimulationLauncherGui(tk.Tk):
         simulator = self.simulator_var.get()
         robot_config = self._robot_config()
         robot_supported = robot_config.get("supported_modes", ["display"])
-        robot_features = robot_config.get("features", [])
         robot_free = self._robot_free()
         map_free = self._map_free()
 
@@ -992,13 +1015,17 @@ class SimulationLauncherGui(tk.Tk):
                 reasons[mode] = ("map '%s' has no 2D occupancy map; build one "
                                  "with SLAM first" % self.map_var.get())
                 continue
-            missing_features = [
-                feature for feature in self._mode_required_features(mode)
-                if not robot_free and feature not in robot_features
-            ]
-            if missing_features:
-                reasons[mode] = ("robot lacks %s" % ", ".join(missing_features))
-                continue
+            if not robot_free:
+                missing_features = missing_robot_features(
+                    robot_config, mode, simulator or None,
+                    self.mode_profiles.get(mode))
+                if missing_features and not simulator:
+                    # No simulator chosen yet: fine if any backend supplies it.
+                    if self._robot_runs_somewhere(mode):
+                        missing_features = []
+                if missing_features:
+                    reasons[mode] = describe_missing_features(missing_features)
+                    continue
             if simulator:
                 supported, why = self._simulator_mode_support(simulator, mode)
                 if not supported:
@@ -1024,7 +1051,6 @@ class SimulationLauncherGui(tk.Tk):
         """Modes the robot+map support, independent of the simulator choice."""
         robot_config = self._robot_config()
         robot_supported = robot_config.get("supported_modes", ["display"])
-        robot_features = robot_config.get("features", [])
         robot_free = self._robot_free()
         map_free = self._map_free()
         map_has_2d_map = False if map_free else self._map_has_2d_map()
@@ -1039,12 +1065,16 @@ class SimulationLauncherGui(tk.Tk):
             if not map_free and self._mode_requires_2d_map(mode) \
                     and not map_has_2d_map:
                 continue
-            if not robot_free and any(
-                    feature not in robot_features
-                    for feature in self._mode_required_features(mode)):
+            if not robot_free and not self._robot_runs_somewhere(mode):
                 continue
             supported.append(mode)
         return supported
+
+    def _robot_runs_somewhere(self, mode):
+        """Whether some simulator gives the robot everything *mode* needs."""
+        return any(not missing_robot_features(
+            self._robot_config(), mode, simulator, self.mode_profiles.get(mode))
+            for simulator in SIMULATOR_ORDER)
 
     def _resolve_compatibility(self):
         """Fix-point cascade correcting mode <-> simulator compatibility.
