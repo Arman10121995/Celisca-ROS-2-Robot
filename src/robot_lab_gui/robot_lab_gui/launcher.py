@@ -12,6 +12,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
 from ament_index_python.packages import get_package_share_directory
+from .process_control import stop_group
 
 try:
     import rclpy
@@ -1983,7 +1984,7 @@ class SimulationLauncherGui(tk.Tk):
                 stderr=subprocess.STDOUT,
                 text=True,
                 bufsize=1,
-                preexec_fn=os.setsid,
+                start_new_session=True,
                 env=subprocess_env(),
             )
         except OSError as exc:
@@ -1998,10 +1999,17 @@ class SimulationLauncherGui(tk.Tk):
 
     def _read_process_output(self):
         assert self.process is not None
-        for line in self.process.stdout:
-            self.output_queue.put(("line", line))
-        return_code = self.process.wait()
-        self._launch_running = False
+        process = self.process
+        def read_lines():
+            for line in process.stdout:
+                self.output_queue.put(("line", line))
+        reader = threading.Thread(target=read_lines, daemon=True)
+        reader.start()
+        # Do not wait for pipe EOF first: an orphaned server can retain that
+        # pipe indefinitely after ros2 launch has exited.
+        return_code = process.wait()
+        stop_group(process.pid, interrupt_timeout=0.0)
+        reader.join(timeout=1.0)
         self.output_queue.put(("done", return_code))
 
     def _poll_output(self):
@@ -2251,22 +2259,11 @@ class SimulationLauncherGui(tk.Tk):
         self.output_queue.put(("cline", f"[{label} exited with code {return_code}]\n"))
 
     def _stop_launch(self):
-        if not self.process or self.process.poll() is not None:
+        if not self.process or not self._launch_running:
             return
         self._stop_drive()
         self.status_var.set("Stopping...")
-        try:
-            os.killpg(os.getpgid(self.process.pid), signal.SIGINT)
-        except OSError:
-            return
-        self.after(5000, self._terminate_if_running)
-
-    def _terminate_if_running(self):
-        if self.process and self.process.poll() is None:
-            try:
-                os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
-            except OSError:
-                pass
+        threading.Thread(target=stop_group, args=(self.process.pid,), daemon=False).start()
 
     # ---- Control-center APIs used by the lab tabs ----
     def show_tab(self, title):
@@ -2285,7 +2282,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def start_launch_command(self, command):
         """Start an arbitrary launch command in the main launch slot."""
-        if self.process and self.process.poll() is None:
+        if self._launch_running or (self.process and self.process.poll() is None):
             messagebox.showinfo(
                 "Launch running",
                 "Stop the current launch before starting another one.",
@@ -2299,7 +2296,7 @@ class SimulationLauncherGui(tk.Tk):
                 stderr=subprocess.STDOUT,
                 text=True,
                 bufsize=1,
-                preexec_fn=os.setsid,
+                start_new_session=True,
                 env=subprocess_env(),
             )
         except OSError as exc:
@@ -2365,11 +2362,8 @@ class SimulationLauncherGui(tk.Tk):
         monitor = getattr(self, "live_monitor_tab", None)
         if monitor is not None:
             monitor.shutdown()
-        if self.process and self.process.poll() is None:
-            try:
-                os.killpg(os.getpgid(self.process.pid), signal.SIGINT)
-            except OSError:
-                pass
+        if self.process and self._launch_running:
+            threading.Thread(target=stop_group, args=(self.process.pid,), daemon=False).start()
         if self.ros_node is not None:
             self.ros_node.destroy_node()
             self.ros_node = None

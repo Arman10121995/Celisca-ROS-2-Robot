@@ -17,7 +17,8 @@
         </skin>
         <animation name="walk">
             <filename>package://robot_lab_description/meshes/MaleVisitorWalkDownloaded.dae</filename>
-            <interpolate_x>true</interpolate_x>
+            <!-- This clip walks in place: advance it by time, not root X displacement. -->
+            <interpolate_x>false</interpolate_x>
         </animation>
         <script>
             <loop>true</loop>

@@ -91,7 +91,7 @@ def test_bhl_sim_profile_spawn_name_matches_the_verified_probe():
     # The verified probe world was nav_empty via gazebo.launch.py; the
     # dispatch default (mode display, map empty) is the empty world, which
     # uses the same ground plane and free-fall spawn behavior.
-    assert config.get("supported_modes") == ["display"]
+    assert "display" in config.get("supported_modes", [])
 
 
 def test_bhl_controller_config_declares_the_verified_controllers():

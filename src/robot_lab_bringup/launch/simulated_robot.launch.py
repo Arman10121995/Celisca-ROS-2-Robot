@@ -1,4 +1,5 @@
 import os
+import uuid
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
@@ -547,7 +548,6 @@ def _build_simulation_actions(context):
     # and the slam topples it before the balance loop can react.
     spawn_config = dict(map_config.get("spawn", {}))
     spawn_config.update(robot_config.get("spawn", {}))
-    initial_pose_config = map_config.get("initial_pose", {})
 
     world_package = _config_value(context, "world_package", gazebo_config.get("world_package", "robot_lab_maps"))
     # A map-free display run still needs a ground plane to stand on, so it
@@ -573,16 +573,24 @@ def _build_simulation_actions(context):
             "Use mode:=slam to create one first, then save it into the maps package and set has_2d_map: true."
         )
 
-    spawn_x = str(_config_value(context, "spawn_x", spawn_config.get("x", "0.0")))
-    spawn_y = str(_config_value(context, "spawn_y", spawn_config.get("y", "0.0")))
-    spawn_z = str(_config_value(context, "spawn_z", spawn_config.get("z", "0.0")))
-    spawn_yaw = str(_config_value(context, "spawn_yaw", spawn_config.get("yaw", "0.0")))
+    spawn_x = str(float(_config_value(context, "spawn_x", spawn_config.get("x", "0.0"))))
+    spawn_y = str(float(_config_value(context, "spawn_y", spawn_config.get("y", "0.0"))))
+    spawn_z = str(float(_config_value(context, "spawn_z", spawn_config.get("z", "0.0"))))
+    spawn_yaw = str(float(_config_value(context, "spawn_yaw", spawn_config.get("yaw", "0.0"))))
 
-    initial_pose_x = str(_config_value(context, "initial_pose_x", initial_pose_config.get("x", "0.0")))
-    initial_pose_y = str(_config_value(context, "initial_pose_y", initial_pose_config.get("y", "0.0")))
-    initial_pose_yaw = str(_config_value(context, "initial_pose_yaw", initial_pose_config.get("yaw", "0.0")))
+    initial_pose_x = str(float(_config_value(context, "initial_pose_x", spawn_x)))
+    initial_pose_y = str(float(_config_value(context, "initial_pose_y", spawn_y)))
+    initial_pose_yaw = str(float(_config_value(context, "initial_pose_yaw", spawn_yaw)))
 
     actions = []
+    if _launch_value(context, "simulator") == "gazebo":
+        # GUI/server/bridges must share a transport partition, but must not
+        # discover a previous launch's world. Respect explicitly supplied IDs.
+        partition = (context.environment.get("IGN_PARTITION") or
+                     context.environment.get("GZ_PARTITION") or
+                     "robot_lab_" + uuid.uuid4().hex)
+        actions.extend([SetEnvironmentVariable("IGN_PARTITION", partition),
+                        SetEnvironmentVariable("GZ_PARTITION", partition)])
     # Older Cyclone builds exhaust their automatic participant range in a
     # full Nav2/SLAM graph. Preserve any operator-supplied discovery config.
     if not context.environment.get("CYCLONEDDS_URI"):

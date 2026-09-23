@@ -159,6 +159,17 @@ def _articulation_root_body(robot):
     return ""
 
 
+def _spawn_body_pose(cfg, root_body):
+    """Translate the requested URDF-root pose to PhysX's root rigid body."""
+    position = [float(cfg.get("spawn_" + axis, 0.0)) for axis in "xyz"]
+    quaternion = _isaac_quat_from_yaw(float(cfg.get("spawn_yaw", 0.0)))
+    offset = cfg.get("root_offsets", {}).get(root_body)
+    if offset is not None:
+        position, _ = _mounted_origin_and_yaw(position, quaternion, offset)
+        quaternion = _multiply_wxyz(quaternion, offset[1])
+    return position, quaternion
+
+
 def _prepare_scan(cfg, dt, robot, stage):
     """Settings for the planar scan, or None when scanning is off.
 
@@ -626,6 +637,8 @@ def _add_world_shapes(stage, shapes):
         prim.AddOrientOp().Set(Gf.Quatf(w, Gf.Vec3f(x, y, z)))
         prim.AddScaleOp().Set(scale)
         UsdPhysics.CollisionAPI.Apply(prim.GetPrim())
+        if kind == "mesh":
+            UsdPhysics.MeshCollisionAPI.Apply(prim.GetPrim()).CreateApproximationAttr("none")
         counts[kind] = counts.get(kind, 0) + 1
     _emit({"event": "log",
            "msg": "World shapes created: %s" % (
@@ -766,6 +779,15 @@ def _run_stage(app, reader, cfg, state):
             dof_names = list(robot.dof_names)
         except Exception:
             dof_names = []
+        # PhysX reports/moves the root rigid body, not necessarily the URDF
+        # root frame selected in the GUI. Apply its fixed offset after the
+        # importer has identified that body; preserve it for world.reset().
+        spawn_position, spawn_orientation = _spawn_body_pose(
+            cfg, _articulation_root_body(robot))
+        robot.set_world_pose(position=spawn_position, orientation=spawn_orientation)
+        robot.set_default_state(position=spawn_position, orientation=spawn_orientation)
+        robot.set_linear_velocity([0.0, 0.0, 0.0])
+        robot.set_angular_velocity([0.0, 0.0, 0.0])
     else:
         # Robot-free display: still step the world so the map renders; there
         # is simply no articulation to drive or report joints for.
@@ -777,6 +799,9 @@ def _run_stage(app, reader, cfg, state):
     lw_idx = dof_names.index(lw) if lw in dof_names else -1
     rw_idx = dof_names.index(rw) if rw in dof_names else -1
     if not robot_free:
+        _emit({"event": "log", "msg": "Initial articulation pose %s; root body %s; URDF offset %s" % (
+            robot.get_world_pose(), _articulation_root_body(robot),
+            cfg.get("root_offsets", {}).get(_articulation_root_body(robot)))})
         _emit({"event": "ready", "dofs": dof_names,
                "root_body": _articulation_root_body(robot)})
 

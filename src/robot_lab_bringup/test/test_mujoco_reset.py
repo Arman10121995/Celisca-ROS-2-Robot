@@ -29,7 +29,7 @@ def node():
     rclpy.init(args=[
         "--ros-args", "-p", "gui:=false", "-p", "camera_rate:=0.0",
         "-p", "spawn_x:=1.0", "-p", "spawn_y:=-0.5",
-        "-p", "spawn_z:=0.02", "-p", "spawn_yaw:=0.7",
+        "-p", "spawn_z:=0.2", "-p", "spawn_yaw:=0.7",
         "-p", "model:=" + share("robot_lab_robots") + "/bumperbot/urdf/bumperbot.urdf.xacro",
         "-p", "world_xml:=" + share("robot_lab_maps") + "/mjcf/nav_empty.xml",
     ])
@@ -48,9 +48,19 @@ def node():
 
 def test_spawn_yaw_rotates_about_vertical_axis(node):
     adr = node._free_joint_qpos_adr
-    np.testing.assert_allclose(node._data.qpos[adr:adr + 3], [1.0, -0.5, 0.02])
+    np.testing.assert_allclose(node._data.qpos[adr:adr + 3], [1.0, -0.5, 0.2])
     np.testing.assert_allclose(node._data.qpos[adr + 3:adr + 7],
                                [math.cos(0.35), 0, 0, math.sin(0.35)])
+
+
+def test_reset_lifts_an_intersecting_robot_above_the_floor(node):
+    from rclpy.parameter import Parameter
+    node.set_parameters([Parameter('spawn_z', value=-1.0)])
+    node._reset_physics()
+    assert node._data.qpos[node._free_joint_qpos_adr + 2] > 0.0
+    # The actual floor contact distances, not only the requested root Z,
+    # must be nonpenetrating before physics takes its first step.
+    assert all(contact.dist >= 0 for contact in node._data.contact)
 
 
 def test_reset_restores_physics_clock_joints_and_clears_forces(node):
@@ -88,7 +98,7 @@ def test_reset_updates_odometry_before_next_physics_tick(node):
         node._pub_odom()
         odom = publisher.publish.call_args.args[0]
     position = odom.pose.pose.position
-    np.testing.assert_allclose([position.x, position.y, position.z], [1.0, -0.5, 0.02])
+    np.testing.assert_allclose([position.x, position.y, position.z], [1.0, -0.5, 0.2])
     orientation = odom.pose.pose.orientation
     np.testing.assert_allclose([orientation.x, orientation.y, orientation.z, orientation.w],
                                [0, 0, math.sin(0.35), math.cos(0.35)])

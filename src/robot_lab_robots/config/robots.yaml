@@ -24,7 +24,8 @@ robots:
     package: robot_lab_robots
     xacro: berkeley_humanoid_lite/urdf/berkeley_humanoid_lite.urdf
     name: berkeley_humanoid_lite
-    supported_modes: [display]
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    features: [ros2_control, lidar_2d, rgbd_camera]
     supports_room_vacuum: false
 
   berkeley_humanoid_lite_biped:
@@ -51,8 +52,8 @@ robots:
     package: robot_lab_robots
     xacro: berkeley_humanoid_lite/xacro/bhl_sim.xacro
     name: bhl
-    supported_modes: [display]
-    features: [ros2_control]
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    features: [ros2_control, lidar_2d, rgbd_camera]
     supports_room_vacuum: false
     # Controllers declared by the robot description itself (bhl_controllers.yaml
     # is loaded by the gz_ros2_control plugin inside bhl_ros2_control.xacro);

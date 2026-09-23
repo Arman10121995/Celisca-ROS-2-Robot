@@ -95,7 +95,7 @@ def generate_launch_description():
             pkg_share = get_package_share_directory(pkg)
         except Exception:
             pkg_share = robot_lab_description
-        if pkg == "maps":
+        if pkg in ("maps", "robot_lab_maps"):
             # Consolidated: maps/maps/<name>/worlds/<name>.world
             return os.path.join(pkg_share, "maps", name, "worlds", f"{name}.world")
         else:
@@ -245,35 +245,23 @@ def generate_launch_description():
             expl = LaunchConfiguration("world_path").perform(context)
         except Exception:
             pass
-        if expl and os.path.exists(expl):
+        if expl and not os.path.isfile(expl):
+            raise RuntimeError("Selected Gazebo world does not exist: " + expl)
+        if expl:
             w = expl
         else:
             wname = LaunchConfiguration("world_name").perform(context)
             wpkg = LaunchConfiguration("world_package").perform(context)
             try:
                 wshare = get_package_share_directory(wpkg)
-                if wpkg == "maps":
+                if wpkg in ("maps", "robot_lab_maps"):
                     w = os.path.join(wshare, "maps", wname, "worlds", f"{wname}.world")
                 else:
                     w = os.path.join(wshare, "worlds", f"{wname}.world")
             except Exception:
                 w = os.path.join(robot_lab_description, "worlds", f"{wname}.world")
             if not os.path.exists(w):
-                w = os.path.join(robot_lab_description, "worlds", "empty.world")
-
-        # Clean any previous Gazebo GUI config. This prevents the GUI from latching
-        # onto a stale world name (e.g. "simple_box") from ~/.ignition/.../gui.config
-        # while the server correctly loads the requested map's world. Without this,
-        # the 3D view can show the wrong environment even though /map (RViz) is correct.
-        for cfg in [
-            os.path.expanduser("~/.ignition/gazebo/6/gui.config"),
-            os.path.expanduser("~/.gz/sim/6/gui.config"),
-        ]:
-            if os.path.isfile(cfg):
-                try:
-                    os.remove(cfg)
-                except Exception:
-                    pass
+                raise RuntimeError("Selected Gazebo world does not exist: " + w)
 
         # Build GZ_SIM_RESOURCE_PATH (only executed for actual simulation)
         try:
@@ -358,7 +346,7 @@ def generate_launch_description():
         else:
             try:
                 wp_share = get_package_share_directory(wpkg)
-                if wpkg == "maps":
+                if wpkg in ("maps", "robot_lab_maps"):
                     candidate = os.path.join(wp_share, "maps", wname, "worlds", f"{wname}.world")
                 else:
                     candidate = os.path.join(wp_share, "worlds", f"{wname}.world")

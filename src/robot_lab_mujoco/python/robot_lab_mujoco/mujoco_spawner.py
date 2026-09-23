@@ -589,6 +589,11 @@ def _stage_world_meshes(mjcf_text, logger=None):
         for note in notes[:1]:
             _emit_log(logger, "warning", "MuJoCo world mesh: " + note)
 
+    from robot_lab_mujoco.world_collision import add_static_mesh_collisions
+    collision_meshes = add_static_mesh_collisions(root)
+    if collision_meshes:
+        _emit_log(logger, "info", "MuJoCo static triangle collision: %d mesh(es)." % collision_meshes)
+
     if converted or placeholders:
         _emit_log(logger, "info", "MuJoCo world meshes staged: %d converted, %d placeholder(s)."
                      % (converted, placeholders))
@@ -1495,6 +1500,27 @@ class MuJoCoSpawner(Node):
                 self._effort_command.clear()
         self._sim_step = 0
         mujoco.mj_forward(self._model, self._data)
+        # Place the lowest robot collision surface above the ground plane.
+        # A trunk-rooted robot and a wheel-footprint-rooted robot cannot use
+        # the same literal root z when the GUI selects a zero-height spawn.
+        if adr >= 0:
+            bottom = float("inf")
+            for geom_id in range(self._model.ngeom):
+                body_id = int(self._model.geom_bodyid[geom_id])
+                while body_id > 0 and body_id != self._body_id:
+                    body_id = int(self._model.body_parentid[body_id])
+                if body_id != self._body_id or not (
+                        self._model.geom_contype[geom_id] or self._model.geom_conaffinity[geom_id]):
+                    continue
+                bounds = self._model.geom_aabb[geom_id]
+                z_row = self._data.geom_xmat[geom_id].reshape(3, 3)[2]
+                z_min = self._data.geom_xpos[geom_id, 2] + z_row @ bounds[:3] - abs(z_row) @ bounds[3:]
+                bottom = min(bottom, float(z_min))
+            lift = max(0.0, .002 - bottom)
+            self._data.qpos[adr + 2] += lift
+            if lift > .001:
+                self.get_logger().info("Spawn ground clearance: raised root by %.4f m" % lift)
+            mujoco.mj_forward(self._model, self._data)
         self._read_physics_state()
 
     def _set_velocity_actuator(self, joint_name, velocity):

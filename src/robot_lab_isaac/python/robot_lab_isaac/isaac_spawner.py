@@ -341,6 +341,11 @@ class IsaacSpawner(Node):
             self._urdf_text = ""
             self.get_logger().info("Robot-free run: loading world without a robot")
 
+        root_offsets = {}
+        if not robot_free:
+            frames, root = urdf_link_frames(self._urdf_text)
+            root_offsets = {name: relative_frame(frames, name, root) for name in frames}
+
         gui = self.get_parameter("gui").value
         if isinstance(gui, str):
             gui = gui.lower() in ("true", "1", "yes")
@@ -350,6 +355,7 @@ class IsaacSpawner(Node):
             "urdf_file": urdf_file,
             "robot_name": self.get_parameter("robot_name").value,
             "robot_free": bool(robot_free),
+            "root_offsets": root_offsets,
             "spawn_x": float(self.get_parameter("spawn_x").value),
             "spawn_y": float(self.get_parameter("spawn_y").value),
             "spawn_z": float(self.get_parameter("spawn_z").value),

@@ -1,7 +1,7 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-22"
+updated: "2026-09-23"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -635,13 +635,21 @@ tasks:
     tasks:
       R6.1:
         title: "Qualify geometry map alignment and resets"
-        state: "partial"
+        state: "active"
         owner: "codex"
         depends_on:
           - "R2.3"
           - "R3.1"
         scope_paths:
-          - "src/robot_lab_maps/tools/"
+          - "src/robot_lab_maps/"
+          - "src/robot_lab_utils/"
+          - "src/robot_lab_mujoco/"
+          - "src/robot_lab_pybullet/"
+          - "src/robot_lab_isaac/"
+          - "src/robot_lab_description/"
+          - "src/robot_lab_adapter/"
+          - "src/robot_lab_gui/"
+          - "src/robot_lab_robots/"
           - "src/robot_lab_maps/config/arena_navigation.yaml"
           - "src/robot_lab/robot_lab_registry/config/environments.yaml"
           - "src/robot_lab_bringup/"
@@ -652,7 +660,7 @@ tasks:
         evidence:
           - "docs/status/evidence/r61-arena-clearance-2026-09-15/: before/after reports show all four nonempty navigation-arena reference routes crossed geometry; repaired routes now pass full swept-footprint geometry/map checks for a 0.14 m radius. World/map assets preserved; metadata synchronized with the registry."
           - "2026-09-15: maps plus affected arena/metadata/benchmark-ledger tests: 114 passed in 15.30 s, including 27 new clearance regression tests; changed maps/registry packages rebuilt; CTest arena_clearance 27 passed and installed validator 5/5 passed."
-        next_action: "Static navigation-fixture repair complete for five box arenas and a declared 0.14 m circular footprint. Remaining: broader mesh/terrain/aerial geometry qualification, robot-specific footprints/curvature, safe runtime spawns and full reset/history checks. R8.1 obstacle missions must use the declared spawn and retain live evidence. Continue class locomotion work per the user goal (R5.3)."
+        next_action: "2026-09-23 user regression: correct world selection and Celisca initial pose, robot ground clearance in MuJoCo/Isaac and PyBullet dog display, actor world loading, and Bumperbot depth-camera cloud geometry. Preserve user humanoid profile edits; measure collision/frame geometry before changing offsets."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
         state: "queued"

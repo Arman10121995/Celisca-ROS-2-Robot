@@ -286,6 +286,22 @@ class IsaacScanTests(unittest.TestCase):
         self.assertEqual([0.2, 0.1], reader.cmd)
         self.assertTrue(reader.stop)  # EOF
 
+    def test_spawn_and_odometry_use_the_same_root_frame(self):
+        # An importer may choose an offset/rotated rigid body. Converting
+        # its spawn back to the URDF root must recover the GUI selection.
+        offset = ((0.1, -0.02, 0.033), _yaw_quaternion(0.4))
+        cfg = dict(spawn_x=1.0, spawn_y=2.0, spawn_z=0.0,
+                   spawn_yaw=math.pi / 2, root_offsets={"base_link": offset})
+        position, quaternion = self.runtime._spawn_body_pose(cfg, "base_link")
+        self.assertAlmostEqual(0.033, position[2])
+        recovered, orientation, _, _ = sim_frames.body_odometry(
+            position, sim_frames.xyzw_from_wxyz(quaternion),
+            (0, 0, 0), (0, 0, 0), offset)
+        for expected, actual in zip((1.0, 2.0, 0.0), recovered):
+            self.assertAlmostEqual(expected, actual)
+        self.assertAlmostEqual(math.pi / 2,
+            sim_frames.yaw_of(sim_frames.wxyz_from_xyzw(orientation)))
+
 
 class PybulletScanTests(unittest.TestCase):
     """rayTestBatch hits are (body, link, fraction, position, normal); the

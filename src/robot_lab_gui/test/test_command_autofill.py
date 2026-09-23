@@ -266,11 +266,12 @@ def test_labbot_rgbd_mode_builds_a_launch_command(app):
 
 
 @pytest.mark.parametrize('robot', ['berkeley_humanoid_lite', 'berkeley_humanoid_lite_sim'])
-def test_unqualified_humanoid_modes_are_disabled(app, robot):
+def test_humanoid_mode_buttons_follow_the_selected_profile(app, robot):
     select(app, app.robot_combo, robot)
     select(app, app.map_combo, 'nav_obstacle')
     for mode in ('loc', 'nav'):
-        assert app.mode_buttons[mode].instate(['disabled'])
+        enabled = mode in app.robot_profiles[robot].get('supported_modes', [])
+        assert app.mode_buttons[mode].instate(['!disabled' if enabled else 'disabled'])
 
 
 def test_all_declared_occupancy_maps_pass_gui_validation(app):

@@ -450,7 +450,7 @@ class PyBulletSpawner(Node):
                          (shape.get("scale") or [1.0, 1.0, 1.0])[:3]]
                 collision = p.createCollisionShape(
                     p.GEOM_MESH, fileName=path, meshScale=scale,
-                    physicsClientId=client)
+                    flags=p.GEOM_FORCE_CONCAVE_TRIMESH, physicsClientId=client)
                 visual = p.createVisualShape(
                     p.GEOM_MESH, fileName=path, meshScale=scale,
                     rgbaColor=colour, physicsClientId=client)
@@ -612,6 +612,18 @@ class PyBulletSpawner(Node):
             self._joint_idx[jn] = i
             if info[2] != p.JOINT_FIXED:
                 self._joint_names.append(jn)
+        # URDF roots are not uniformly at sole level (dog roots are at the
+        # trunk). Lift only an intersecting spawn, using actual collision
+        # bounds, before freezing a display pose or taking the first step.
+        min_z = min(p.getAABB(self._robot_id, link)[0][2]
+                    for link in range(-1, p.getNumJoints(self._robot_id)))
+        base_position, base_orientation = p.getBasePositionAndOrientation(self._robot_id)
+        lift = max(0.0, .002 - min_z)
+        if lift > 0:
+            base_position = (base_position[0], base_position[1], base_position[2] + lift)
+            p.resetBasePositionAndOrientation(self._robot_id, base_position, base_orientation)
+            self.get_logger().info("Spawn ground clearance: raised root by %.4f m" % lift)
+        self._spawn_base_pose = (base_position, base_orientation)
         friction_links = dict(self._link_idx)
         friction_links[p.getBodyInfo(self._robot_id)[0].decode()] = -1
         applied = _apply_link_friction(
@@ -916,8 +928,8 @@ class PyBulletSpawner(Node):
                 sz = self.get_parameter("spawn_z").value
                 syaw = self.get_parameter("spawn_yaw").value
                 orn = _rpy_quaternion(0, 0, syaw)
-                p.resetBasePositionAndOrientation(
-                    self._robot_id, [sx, sy, sz], [orn.x, orn.y, orn.z, orn.w])
+                pose = getattr(self, "_spawn_base_pose", ([sx, sy, sz], [orn.x, orn.y, orn.z, orn.w]))
+                p.resetBasePositionAndOrientation(self._robot_id, *pose)
                 # Reset velocity.
                 p.resetBaseVelocity(self._robot_id, [0, 0, 0], [0, 0, 0])
                 # Zero actuated joint motion so the robot does not coast

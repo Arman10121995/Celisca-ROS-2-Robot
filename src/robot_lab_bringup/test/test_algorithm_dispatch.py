@@ -11,6 +11,7 @@ import sys
 import unittest
 
 import yaml
+import pytest
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _BRINGUP = os.path.dirname(_HERE)
@@ -201,3 +202,52 @@ def test_resolver_package_relative_assets_resolve_at_launch(monkeypatch, tmp_pat
     local.write_text('<sdf/>')
     assert launch._resolve_asset_override(str(local), 'robot_lab_maps') == str(local)
     assert launch._resolve_asset_override('', 'robot_lab_maps') == ''
+
+
+def _scene_actions(**selection):
+    from launch import LaunchContext
+    from launch.actions import DeclareLaunchArgument
+    module = _launch_module()
+    context = LaunchContext()
+    for action in module.generate_launch_description().entities:
+        if isinstance(action, DeclareLaunchArgument):
+            action.execute(context)
+    context.launch_configurations.update(gui='false', start_rviz='false', **selection)
+    return context, module._build_simulation_actions(context)
+
+
+@pytest.mark.parametrize('backend', ['gazebo', 'mujoco', 'isaac', 'pybullet'])
+@pytest.mark.parametrize('robot', ['bumperbot', 'labbot'])
+@pytest.mark.parametrize('arena', ['celisca_floor_1', 'celisca_floor_2',
+    'celisca_floor_1_furniture', 'celisca_floor_2_furniture', 'celisca_f1_actor', 'celisca_f2_actor'])
+def test_selected_celisca_world_and_localization_share_spawn(backend, robot, arena):
+    from launch.actions import IncludeLaunchDescription
+    _, actions = _scene_actions(simulator=backend, robot_model=robot,
+        map_name=arena, mode='nav', spawn_x='5', spawn_y='2', spawn_yaw='0.7')
+    includes = [dict(a.launch_arguments) for a in actions if isinstance(a, IncludeLaunchDescription)]
+    world = next(a for a in includes if 'world_path' in a)
+    localization = next(a for a in includes if 'initial_pose_x' in a)
+    assert world['world_path'].endswith('/maps/' + arena + '/worlds/' + arena + '.world')
+    assert localization['map_yaml'].endswith('/maps/' + arena + '/maps/map.yaml')
+    for axis, expected in [('x', '5.0'), ('y', '2.0'), ('yaw', '0.7')]:
+        assert world['spawn_' + axis] == localization['initial_pose_' + axis] == expected
+
+
+def test_gazebo_launches_isolate_transport_and_preserve_explicit_partition(monkeypatch):
+    from launch.actions import SetEnvironmentVariable
+    monkeypatch.delenv('IGN_PARTITION', raising=False)
+    monkeypatch.delenv('GZ_PARTITION', raising=False)
+    def partition():
+        from unittest.mock import patch
+        # LaunchContext uses os.environ. Each real ros2 launch has a fresh
+        # process; restore the environment to emulate that here.
+        with patch.dict(os.environ):
+            context, actions = _scene_actions(simulator='gazebo', robot_model='bumperbot',
+                map_name='celisca_floor_1', mode='display')
+            for action in actions:
+                if isinstance(action, SetEnvironmentVariable): action.execute(context)
+            assert context.environment['GZ_PARTITION'] == context.environment['IGN_PARTITION']
+            return context.environment['IGN_PARTITION']
+    assert partition() != partition()
+    monkeypatch.setenv('IGN_PARTITION', 'user_selected_partition')
+    assert partition() == 'user_selected_partition'
