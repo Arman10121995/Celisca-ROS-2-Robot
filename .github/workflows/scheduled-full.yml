@@ -28,6 +28,12 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
+          # The ubuntu-22.04 runner image preinstalls LLVM's libunwind-14-dev,
+          # which conflicts with libunwind-dev. slam_toolbox and rtabmap
+          # pull that in through libgoogle-glog-dev, so apt reported "held
+          # broken packages" and every run since the workflow was added
+          # stopped here, before the build or any test ran.
+          sudo apt-get remove -y libunwind-14-dev || true
           source /opt/ros/humble/setup.bash
           rosdep update
           rosdep install --from-paths src --ignore-src -r -y

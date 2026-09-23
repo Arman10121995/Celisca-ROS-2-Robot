@@ -15,11 +15,10 @@
   <url type="repository">https://github.com/ros2/robot_lab.git</url>
   <url type="bugtracker">https://github.com/ros2/robot_lab/issues</url>
 
-  <buildtool_depend>ament_python</buildtool_depend>
 
   <exec_depend>python3</exec_depend>
-  <exec_depend>pyyaml</exec_depend>
-  <exec_depend>jsonschema</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>python3-jsonschema</exec_depend>
   
   <test_depend>ament_cmake_pytest</test_depend>
   <test_depend>python3-pytest</test_depend>

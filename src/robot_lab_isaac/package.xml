@@ -8,9 +8,8 @@
 
   <depend>rclpy</depend>
   <depend>launch_ros</depend>
-  <buildtool_depend>ament_python</buildtool_depend>
   <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_flake8</test_depend>
+  <test_depend>ament_flake8</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>
