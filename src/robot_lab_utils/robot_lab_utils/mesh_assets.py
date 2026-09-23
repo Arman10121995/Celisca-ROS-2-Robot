@@ -70,7 +70,7 @@ def _resolve_mesh_source(uri, pkg_map, base_dir=""):
 
 # Bump when the converter's output changes, so meshes staged by an older
 # version are not reused from the content-addressed cache.
-_CONVERTER_VERSION = "2"
+_CONVERTER_VERSION = "3"
 
 
 def _node_matrix(node, q):
@@ -351,7 +351,7 @@ _MUJOCO_MAX_STL_FACES = 180000  # MuJoCo decoder cap is 200000; keep headroom
 # collision BVH / mesh, so a 180k-facet furniture map takes minutes to load
 # (it looks like a hang).  Map meshes are capped far below the decoder limit
 # instead.
-_WORLD_MAX_STL_FACES = 30000
+_WORLD_MAX_STL_FACES = 150000
 
 
 def _binary_stl_face_count(path):
@@ -489,6 +489,8 @@ def stage_mesh_file(source, cache_dir, stem=None,
     """
     if not source or not os.path.isfile(source):
         return ""
+    if max_faces == _WORLD_MAX_STL_FACES:
+        return stage_world_mesh(source)
     extension = os.path.splitext(source)[1].lower()
     if extension in (".obj", ".msh"):
         return source
@@ -510,3 +512,47 @@ def stage_mesh_file(source, cache_dir, stem=None,
         return staged
     except Exception:
         return ""
+
+
+def stage_world_mesh(source, mujoco_format=False):
+    """Simplify connected surfaces, never sample and discard triangles.
+
+    Non-manifold furniture may prevent reaching the requested face budget.
+    Keep those remaining faces; MuJoCo uses OBJ above its STL decoder limit.
+    All backends share this cache, so expensive conversion happens once.
+    """
+    import trimesh
+    stat = os.stat(source)
+    cache = mesh_staging_dir('world_surface',
+        '%s:%s:%s:%s' % (os.path.realpath(source), stat.st_mtime_ns,
+                          stat.st_size, _WORLD_MAX_STL_FACES))
+    staged = os.path.join(cache, 'surface.stl')
+    if not os.path.isfile(staged):
+        if source.lower().endswith('.stl') and not _is_ascii_stl(source) \
+                and _binary_stl_face_count(source) <= _WORLD_MAX_STL_FACES:
+            return source
+        mesh = trimesh.load(source, force='mesh', process=True)
+        vertices, faces = np.asarray(mesh.vertices), np.asarray(mesh.faces)
+        if len(faces) > _WORLD_MAX_STL_FACES:
+            import fast_simplification
+            for _ in range(2):
+                # Opposite-winding duplicates create non-manifold edges
+                # that prevent the quadric simplifier collapsing a surface.
+                _, indices = np.unique(np.sort(faces, axis=1), axis=0, return_index=True)
+                faces = faces[np.sort(indices)]
+                if len(faces) <= _WORLD_MAX_STL_FACES:
+                    break
+                vertices, faces = fast_simplification.simplify(
+                    vertices, faces, target_count=_WORLD_MAX_STL_FACES, agg=7)
+        temporary = staged + '.%d.tmp' % os.getpid()
+        _write_binary_stl(temporary, vertices, faces)
+        os.replace(temporary, staged)
+    if mujoco_format and _binary_stl_face_count(staged) > _MUJOCO_MAX_STL_FACES:
+        obj = os.path.join(cache, 'surface.obj')
+        if not os.path.isfile(obj):
+            mesh = trimesh.load(staged, force='mesh', process=True)
+            temporary = obj + '.%d.tmp' % os.getpid()
+            mesh.export(temporary, file_type='obj', include_normals=False)
+            os.replace(temporary, obj)
+        return obj
+    return staged

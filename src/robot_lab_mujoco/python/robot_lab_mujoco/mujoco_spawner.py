@@ -559,54 +559,19 @@ def _stage_world_meshes(mjcf_text, logger=None):
     if not assets:
         return mjcf_text
 
-    cache_dir = _mesh_staging_dir("world", mjcf_text)
-    converted = placeholders = 0
+    from robot_lab_utils.mesh_assets import stage_world_mesh
     for mesh in assets:
         source = mesh.get("file") or ""
-        extension = os.path.splitext(source)[1].lower()
-        if extension in (".obj", ".msh"):
-            continue
-        stem = re.sub(r"[^A-Za-z0-9_.-]+", "_",
-                      os.path.splitext(os.path.basename(source))[0] or "mesh")
-        # Map meshes get the world facet budget: MuJoCo builds a convex hull
-        # for every mesh at compile time, so a full-facet map mesh (~3.3M
-        # facets) takes minutes of CPU and looks exactly like a hang.
-        staged = os.path.join(cache_dir,
-                              "%s_%df.stl" % (stem, _WORLD_MAX_STL_FACES))
-        notes = []
-        if extension == ".stl" and os.path.isfile(source):
-            result = _stage_stl(source, staged, notes, source, _WORLD_MAX_STL_FACES)
-            if result:
-                mesh.set("file", result)
-                for note in notes[:1]:
-                    _emit_log(logger, "info", "MuJoCo world mesh: " + note)
-                continue
-        if os.path.isfile(source):
-            try:
-                vertices, faces = _parse_collada_mesh(source)
-                if len(faces) > _WORLD_MAX_STL_FACES:
-                    vertices, faces = _cap_faces(vertices, faces,
-                                                 _WORLD_MAX_STL_FACES)
-                _write_binary_stl(staged, vertices, faces)
-                mesh.set("file", staged)
-                converted += 1
-                continue
-            except Exception as exc:
-                notes.append("%s: %s" % (os.path.basename(source), exc))
-        _write_placeholder_stl(staged)
-        mesh.set("file", staged)
-        placeholders += 1
-        for note in notes[:1]:
-            _emit_log(logger, "warning", "MuJoCo world mesh: " + note)
+        mesh.set("file", stage_world_mesh(source, mujoco_format=True))
+        # These are visual/raycast triangles; rigid flex below owns contact.
+        # A detailed convex hull adds cost but cannot represent an open room.
+        mesh.set("maxhullvert", "4")
 
     from robot_lab_mujoco.world_collision import add_static_mesh_collisions
     collision_meshes = add_static_mesh_collisions(root)
     if collision_meshes:
         _emit_log(logger, "info", "MuJoCo static triangle collision: %d mesh(es)." % collision_meshes)
 
-    if converted or placeholders:
-        _emit_log(logger, "info", "MuJoCo world meshes staged: %d converted, %d placeholder(s)."
-                     % (converted, placeholders))
     return ET.tostring(root, encoding="unicode")
 
 
@@ -686,6 +651,33 @@ def _hide_collision_proxies(mjcf_text, logger=None):
     return ET.tostring(root, encoding="unicode")
 
 
+def _contact_geoms(urdf_text):
+    """Keep explicitly authored link friction through fixed-link fusion."""
+    from robot_lab_utils.urdf_contact import gazebo_link_friction
+    friction = gazebo_link_friction(urdf_text)
+    root = ET.fromstring(urdf_text)
+    geoms = {}
+    for link in root.findall('link'):
+        if link.get('name') not in friction:
+            continue
+        for index, collision in enumerate(link.findall('collision')):
+            name = collision.get('name') or link.get('name') + '_contact_' + str(index)
+            collision.set('name', name)
+            geoms[name] = min(1.0, max(0.0, friction[link.get('name')]))
+    return ET.tostring(root, encoding='unicode'), geoms
+
+
+def _apply_contact_geoms(mjcf_text, friction):
+    root = ET.fromstring(mjcf_text)
+    for geom in root.iter('geom'):
+        if geom.get('name') in friction:
+            geom.set('friction', '%g 0.005 0.0001' % friction[geom.get('name')])
+            # Otherwise MuJoCo combines the caster's low friction with the
+            # floor using max(), turning a rolling support into a sticky skid.
+            geom.set('priority', '1')
+    return ET.tostring(root, encoding='unicode')
+
+
 def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
                           base_dir=""):
     """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
@@ -716,6 +708,8 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
             _emit_log(logger, "warning", "MuJoCo inertia repair: clamped non-physical "
                             "mass/inertia entries.")
         urdf_text = _inject_mujoco_compiler(urdf_text, cache_dir)
+        urdf_text, contact_friction = _contact_geoms(urdf_text)
+        urdf_text = _strip_gazebo_tags(urdf_text)
 
         tmp = tempfile.NamedTemporaryFile(
             suffix=".urdf", delete=False, mode="w"
@@ -726,6 +720,7 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         mjcf = _add_floating_base(
             spec.to_xml(), robot_name or "robot",
             root_inertial=_urdf_root_inertial(urdf_text))
+        mjcf = _apply_contact_geoms(mjcf, contact_friction)
         mjcf = _hide_collision_proxies(mjcf, logger=logger)
         mjcf = _exclude_rest_pose_self_contacts(mjcf, logger=logger)
         if placeholders:
@@ -1122,7 +1117,6 @@ class MuJoCoSpawner(Node):
                     pkg_map[rp] = get_package_share_directory(rp)
                 except Exception:
                     pass
-            urdf = _strip_gazebo_tags(urdf)
             # The free-joint body carries the URDF root link's frame, so the
             # scan origin is the laser link's pose in that frame.
             self._laser_offset = offset_from_root(

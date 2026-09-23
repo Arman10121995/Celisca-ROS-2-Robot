@@ -107,10 +107,8 @@ def _build_isaac_actions(context):
 
     if spawn_robot:
         # Robot description + state publisher (mirrors gazebo.launch.py).
-        robot_description = ParameterValue(
-            Command(["xacro ", LaunchConfiguration("model")]),
-            value_type=str,
-        )
+        from robot_lab_utils.robot_description import load_description
+        robot_description = ParameterValue(load_description(model_path), value_type=str)
         actions.append(
             Node(
                 package="robot_state_publisher",

@@ -221,10 +221,14 @@ def _scene_actions(**selection):
 @pytest.mark.parametrize('arena', ['celisca_floor_1', 'celisca_floor_2',
     'celisca_floor_1_furniture', 'celisca_floor_2_furniture', 'celisca_f1_actor', 'celisca_f2_actor'])
 def test_selected_celisca_world_and_localization_share_spawn(backend, robot, arena):
-    from launch.actions import IncludeLaunchDescription
+    from launch.actions import IncludeLaunchDescription, RegisterEventHandler
     _, actions = _scene_actions(simulator=backend, robot_model=robot,
         map_name=arena, mode='nav', spawn_x='5', spawn_y='2', spawn_yaw='0.7')
-    includes = [dict(a.launch_arguments) for a in actions if isinstance(a, IncludeLaunchDescription)]
+    # Non-Gazebo stacks start after the readiness gate; inspect those
+    # conditional launch actions as well as the immediate simulator include.
+    nested = [child for action in actions if isinstance(action, RegisterEventHandler)
+              for _, children in action.describe_conditional_sub_entities() for child in children]
+    includes = [dict(a.launch_arguments) for a in actions + nested if isinstance(a, IncludeLaunchDescription)]
     world = next(a for a in includes if 'world_path' in a)
     localization = next(a for a in includes if 'initial_pose_x' in a)
     assert world['world_path'].endswith('/maps/' + arena + '/worlds/' + arena + '.world')

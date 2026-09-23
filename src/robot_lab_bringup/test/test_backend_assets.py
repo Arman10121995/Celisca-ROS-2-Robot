@@ -56,7 +56,7 @@ def _robot_mjcf(spawner, robot_id, logger=None):
         except Exception:
             pass
     return spawner._build_mjcf_from_urdf(
-        spawner._strip_gazebo_tags(urdf), packages, logger=logger,
+        urdf, packages, logger=logger,
         robot_name=robot_id, base_dir=os.path.dirname(os.path.abspath(path)))
 
 

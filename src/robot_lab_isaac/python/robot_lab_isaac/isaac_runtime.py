@@ -623,6 +623,7 @@ def _add_world_shapes(stage, shapes):
                        "msg": "World mesh has no vertices: %s" % shape.get("mesh")})
                 continue
             prim = UsdGeom.Mesh.Define(stage, path)
+            prim.CreateDoubleSidedAttr(True)
             prim.CreatePointsAttr([Gf.Vec3f(*v) for v in verts])
             prim.CreateFaceVertexCountsAttr([3] * len(tris))
             prim.CreateFaceVertexIndicesAttr([i for tri in tris for i in tri])

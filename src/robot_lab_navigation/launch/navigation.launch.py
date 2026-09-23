@@ -18,6 +18,40 @@ from launch_ros.actions import Node
 # changes both the active plugin and its supporting parameters.
 LOCAL_PLANNER_EXTRA_PARAMS = {
     "dwb_core::DWBLocalPlanner": {
+        # DWB's kinematic defaults are zero. RPP's desired_linear_vel does
+        # not configure its sampler, so selecting DWB previously produced
+        # "No valid trajectories out of 0" for every navigation goal.
+        "FollowPath.min_vel_x": 0.0,
+        "FollowPath.min_vel_y": 0.0,
+        "FollowPath.max_vel_x": 0.3,
+        "FollowPath.max_vel_y": 0.0,
+        "FollowPath.max_vel_theta": 1.0,
+        "FollowPath.min_speed_xy": 0.0,
+        "FollowPath.max_speed_xy": 0.3,
+        "FollowPath.min_speed_theta": 0.0,
+        "FollowPath.acc_lim_x": 0.5,
+        "FollowPath.acc_lim_y": 0.0,
+        "FollowPath.acc_lim_theta": 1.5,
+        "FollowPath.decel_lim_x": -0.5,
+        "FollowPath.decel_lim_y": 0.0,
+        "FollowPath.decel_lim_theta": -1.5,
+        "FollowPath.vx_samples": 20,
+        "FollowPath.vy_samples": 1,
+        "FollowPath.vtheta_samples": 20,
+        "FollowPath.sim_time": 1.7,
+        "FollowPath.linear_granularity": 0.05,
+        "FollowPath.angular_granularity": 0.025,
+        "FollowPath.trans_stopped_velocity": 0.05,
+        "FollowPath.BaseObstacle.scale": 0.02,
+        "FollowPath.PathAlign.scale": 32.0,
+        "FollowPath.PathAlign.forward_point_distance": 0.1,
+        "FollowPath.GoalAlign.scale": 24.0,
+        "FollowPath.GoalAlign.forward_point_distance": 0.1,
+        "FollowPath.PathDist.scale": 32.0,
+        "FollowPath.GoalDist.scale": 24.0,
+        "FollowPath.RotateToGoal.scale": 32.0,
+        "FollowPath.RotateToGoal.slowing_factor": 5.0,
+        "FollowPath.RotateToGoal.lookahead_time": -1.0,
         "FollowPath.critics": [
             "RotateToGoal", "Oscillation", "BaseObstacle",
             "GoalAlign", "PathAlign", "PathDist", "GoalDist",

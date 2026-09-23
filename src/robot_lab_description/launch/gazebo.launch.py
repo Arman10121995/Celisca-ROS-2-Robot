@@ -163,18 +163,17 @@ def generate_launch_description():
         """
         if not _truthy("spawn_robot", context):
             return []
+        from robot_lab_utils.robot_description import load_description
+        urdf = load_description(LaunchConfiguration("model").perform(context),
+                                "is_ignition:=" + is_ignition)
         if not _truthy("display_plugins", context):
             return [Node(
                 package="robot_state_publisher",
                 executable="robot_state_publisher",
-                parameters=[{"robot_description": robot_description,
+                parameters=[{"robot_description": ParameterValue(urdf, value_type=str),
                              "use_sim_time": use_sim_time}])]
         from robot_lab_utils.gazebo_display import (
             add_display_plugins, has_ros2_control, joint_state_topic)
-        urdf = subprocess.run(
-            ["xacro", LaunchConfiguration("model").perform(context),
-             "is_ignition:=" + is_ignition],
-            capture_output=True, text=True, check=True, timeout=60).stdout
         actions = [Node(
             package="robot_state_publisher",
             executable="robot_state_publisher",

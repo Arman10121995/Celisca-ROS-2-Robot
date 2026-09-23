@@ -62,6 +62,13 @@ def add_display_plugins(urdf_text, hold=False):
         return urdf_text
     blocks = [JOINT_STATE_PUBLISHER]
     if hold:
+        # Joint servos alone cannot balance a free humanoid torso. This is
+        # a passive preview: disable gravity while retaining measured joint
+        # state and the simulator's pose. Physical runs use hold=False.
+        for link in ET.fromstring(urdf_text).findall('link'):
+            block = ET.Element('gazebo', reference=link.get('name'))
+            ET.SubElement(block, 'gravity').text = 'false'
+            blocks.append(ET.tostring(block, encoding='unicode'))
         for name in holdable_joints(urdf_text):
             blocks.append(
                 '<gazebo><plugin filename="ignition-gazebo-joint-position-'
