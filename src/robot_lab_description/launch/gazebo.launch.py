@@ -1,4 +1,5 @@
 import os
+import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
 from os import pathsep
@@ -80,6 +81,25 @@ def generate_launch_description():
         ),
     )
 
+    display_plugins_arg = DeclareLaunchArgument(
+        name="display_plugins",
+        default_value="false",
+        description=(
+            "Display runs: give a robot without <ros2_control> Gazebo's "
+            "JointStatePublisher system and bridge it to /joint_states, so "
+            "RViz places its links from the simulated joints."
+        ),
+    )
+    display_hold_arg = DeclareLaunchArgument(
+        name="display_hold",
+        default_value="false",
+        description=(
+            "With display_plugins: hold every movable joint at its rest "
+            "angle with a joint velocity servo, so legged and humanoid robots "
+            "stand instead of collapsing (as in the other backends)."
+        ),
+    )
+
     use_sim_time = LaunchConfiguration("use_sim_time")
     world_package = LaunchConfiguration("world_package")
     world_path_lc = LaunchConfiguration("world_path")
@@ -131,13 +151,52 @@ def generate_launch_description():
 
     spawn_robot = LaunchConfiguration("spawn_robot")
 
-    robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        condition=IfCondition(spawn_robot),
-        parameters=[{"robot_description": robot_description,
-                     "use_sim_time": use_sim_time}]
-    )
+    def _truthy(name, context):
+        return LaunchConfiguration(name).perform(context).strip().lower() in (
+            "true", "1", "yes", "on")
+
+    def make_robot_state_publisher(context):
+        """robot_state_publisher, plus the display joint-state bridge.
+
+        The spawned model is read from robot_description, so display
+        plugins added here reach Gazebo as well as robot_state_publisher.
+        """
+        if not _truthy("spawn_robot", context):
+            return []
+        if not _truthy("display_plugins", context):
+            return [Node(
+                package="robot_state_publisher",
+                executable="robot_state_publisher",
+                parameters=[{"robot_description": robot_description,
+                             "use_sim_time": use_sim_time}])]
+        from robot_lab_utils.gazebo_display import (
+            add_display_plugins, has_ros2_control, joint_state_topic)
+        urdf = subprocess.run(
+            ["xacro", LaunchConfiguration("model").perform(context),
+             "is_ignition:=" + is_ignition],
+            capture_output=True, text=True, check=True, timeout=60).stdout
+        actions = [Node(
+            package="robot_state_publisher",
+            executable="robot_state_publisher",
+            parameters=[{
+                "robot_description": add_display_plugins(
+                    urdf, hold=_truthy("display_hold", context)),
+                "use_sim_time": use_sim_time}])]
+        if not has_ros2_control(urdf):
+            topic = joint_state_topic(
+                get_sdf_world_name(resolve_world_file(context),
+                                   LaunchConfiguration("world_name").perform(context)),
+                LaunchConfiguration("robot_name").perform(context))
+            actions.append(Node(
+                package="ros_gz_bridge",
+                executable="parameter_bridge",
+                name="joint_state_bridge",
+                arguments=[topic + "@sensor_msgs/msg/JointState[ignition.msgs.Model"],
+                remappings=[(topic, "/joint_states")],
+                parameters=[{"use_sim_time": use_sim_time}]))
+        return actions
+
+    robot_state_publisher_node = OpaqueFunction(function=make_robot_state_publisher)
 
     def get_sdf_world_name(world_file_path, fallback):
         try:
@@ -331,6 +390,25 @@ def generate_launch_description():
 
     gazebo = OpaqueFunction(function=make_gazebo)
 
+    def resolve_world_file(context):
+        """The world file Gazebo loads (explicit path, else package lookup)."""
+        wname = LaunchConfiguration("world_name").perform(context)
+        wpkg = LaunchConfiguration("world_package").perform(context)
+        explicit_world = LaunchConfiguration("world_path").perform(context)
+        if explicit_world and os.path.exists(explicit_world):
+            return explicit_world
+        try:
+            wp_share = get_package_share_directory(wpkg)
+            if wpkg in ("maps", "robot_lab_maps"):
+                candidate = os.path.join(wp_share, "maps", wname, "worlds", f"{wname}.world")
+            else:
+                candidate = os.path.join(wp_share, "worlds", f"{wname}.world")
+            if os.path.exists(candidate):
+                return candidate
+        except Exception:
+            pass
+        return os.path.join(robot_lab_description, "worlds", f"{wname}.world")
+
     def spawn_entity_function(context):
         # Resolve the actual world name from SDF
         wname = LaunchConfiguration("world_name").perform(context)
@@ -414,6 +492,8 @@ def generate_launch_description():
         robot_package_arg,
         gui_arg,
         paused_arg,
+        display_plugins_arg,
+        display_hold_arg,
         robot_state_publisher_node,
         gazebo,
         gz_spawn_entity,

@@ -193,6 +193,33 @@ def _load_yaml(path):
 
 
 
+def _description_has_ros2_control(model_path):
+    """Whether the robot description (after xacro) has a <ros2_control> block."""
+    import subprocess
+    try:
+        urdf = subprocess.run(["xacro", model_path], capture_output=True,
+                              text=True, check=True, timeout=60).stdout
+    except Exception:
+        return False
+    return "<ros2_control" in urdf
+
+
+def _clear_spawn_height(model_path, spawn_z):
+    """Spawn height keeping the robot's rest-pose collision geometry above z=0."""
+    import subprocess
+    from robot_lab_utils.urdf_extent import (
+        clear_spawn_z, lowest_collision_z, package_resolver)
+    try:
+        urdf = subprocess.run(["xacro", model_path], capture_output=True,
+                              text=True, check=True, timeout=60).stdout
+        lowest = lowest_collision_z(urdf, package_resolver(
+            get_package_share_directory, os.path.dirname(model_path)))
+    except Exception as exc:
+        print("[robot_lab] spawn clearance not computed (%s)" % exc)
+        return spawn_z
+    return clear_spawn_z(spawn_z, lowest)
+
+
 def _launch_file(package_share, *path_parts):
     return os.path.join(package_share, "launch", *path_parts)
 
@@ -578,6 +605,16 @@ def _build_simulation_actions(context):
     spawn_z = str(float(_config_value(context, "spawn_z", spawn_config.get("z", "0.0"))))
     spawn_yaw = str(float(_config_value(context, "spawn_yaw", spawn_config.get("yaw", "0.0"))))
 
+    if _launch_value(context, "simulator") == "gazebo" and not robot_free:
+        # The other backends lift a robot whose legs start inside the floor
+        # from their own collision bounds; Gazebo spawns blind, so the root
+        # height is raised here from the description's collision geometry.
+        cleared = _clear_spawn_height(model_path, float(spawn_z))
+        if cleared > float(spawn_z) + 1e-4:
+            print("[robot_lab] spawn z %.3f -> %.3f m: keeps %s's lowest "
+                  "collision point above the floor" % (float(spawn_z), cleared, robot_model))
+            spawn_z = str(cleared)
+
     initial_pose_x = str(float(_config_value(context, "initial_pose_x", spawn_x)))
     initial_pose_y = str(float(_config_value(context, "initial_pose_y", spawn_y)))
     initial_pose_yaw = str(float(_config_value(context, "initial_pose_yaw", spawn_yaw)))
@@ -591,6 +628,15 @@ def _build_simulation_actions(context):
                      "robot_lab_" + uuid.uuid4().hex)
         actions.extend([SetEnvironmentVariable("IGN_PARTITION", partition),
                         SetEnvironmentVariable("GZ_PARTITION", partition)])
+        # Gazebo's server can outlive this launch (see partition_reaper);
+        # a detached watcher stops whatever is left in this partition.
+        import subprocess
+        import sys
+        subprocess.Popen(
+            [sys.executable, "-m", "robot_lab_utils.partition_reaper",
+             str(os.getpid()), partition],
+            start_new_session=True, stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     # Older Cyclone builds exhaust their automatic participant range in a
     # full Nav2/SLAM graph. Preserve any operator-supplied discovery config.
     if not context.environment.get("CYCLONEDDS_URI"):
@@ -621,23 +667,11 @@ def _build_simulation_actions(context):
         start_rviz = _auto_bool(context, "start_rviz", True)
 
         if simulator == "gazebo":
-            # Robot-only Gazebo display uses the joint slider preview. With a
-            # world, Gazebo owns the robot description and measured joints;
-            # a second preview publisher would overwrite that state in RViz.
-            if not robot_free and map_free:
-                actions.append(
-                    IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource(
-                            _launch_file(description_share, "display.launch.py")),
-                        launch_arguments={
-                            "model": model_path,
-                            "rviz_config": rviz_config,
-                            "start_rviz": str(start_rviz),
-                            "use_sim_time": use_sim_time,
-                        }.items(),
-                    )
-                )
-            elif start_rviz and rviz_config:
+            # Gazebo runs for every display selection, like the other
+            # backends: a robot without a map is spawned into the empty
+            # world (it used to get only the RViz joint-slider preview, so
+            # Gazebo never opened).  Joint states come from the simulation.
+            if start_rviz and rviz_config and not robot_free:
                 actions.append(
                     Node(
                         package="rviz2",
@@ -647,56 +681,66 @@ def _build_simulation_actions(context):
                         parameters=[{"use_sim_time": _as_bool(use_sim_time, True)}],
                     )
                 )
-            if not map_free or robot_free:
-                gazebo_args = {
-                    "world_name": world_name,
-                    "world_package": world_package,
-                    "world_path": world_path,
-                    "use_sim_time": use_sim_time,
-                    "gui": gui_value,
-                }
-                if not robot_free:
-                    gazebo_args.update({
-                        "model": model_path,
-                        "robot_package": robot_package,
-                        "robot_xacro": robot_xacro,
-                        "robot_name": robot_name,
-                        "spawn_x": spawn_x,
-                        "spawn_y": spawn_y,
-                        "spawn_z": spawn_z,
-                        "spawn_yaw": spawn_yaw,
-                    })
-                else:
-                    gazebo_args["spawn_robot"] = "false"
+            gazebo_args = {
+                "world_name": world_name,
+                "world_package": world_package,
+                "world_path": world_path,
+                "use_sim_time": use_sim_time,
+                "gui": gui_value,
+            }
+            if not robot_free:
+                hold = _launch_value(context, "display_hold").strip().lower()
+                gazebo_args.update({
+                    # Joint states for robots without ros2_control, and
+                    # the same display hold as the other backends
+                    # ('auto' is harmless for ros2_control robots, whose
+                    # controllers own their joints).
+                    "display_plugins": "true",
+                    "display_hold": "false" if hold == "false" else "true",
+                    "model": model_path,
+                    "robot_package": robot_package,
+                    "robot_xacro": robot_xacro,
+                    "robot_name": robot_name,
+                    "spawn_x": spawn_x,
+                    "spawn_y": spawn_y,
+                    "spawn_z": spawn_z,
+                    "spawn_yaw": spawn_yaw,
+                })
+            else:
+                gazebo_args["spawn_robot"] = "false"
+            actions.append(
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        _launch_file(description_share, "gazebo.launch.py")),
+                    launch_arguments=gazebo_args.items(),
+                )
+            )
+            # Robots that declare their own ros2_control stack (e.g. the
+            # R5.3 Berkeley Humanoid Lite sim profile, whose controllers
+            # are parameterized by the gz_ros2_control plugin inside the
+            # description) get their controllers spawned here, on top of
+            # the simulator bringup. The shared controller layer is
+            # display-skipped, so without this the bringup reaches
+            # controller_manager but never activates a controller.
+            display_controllers = robot_config.get("controllers", [])
+            # Decided by the description itself: a profile can list the
+            # ros2_control feature for a model that carries no
+            # <ros2_control> block, and a spawner for it only waits and fails.
+            if not display_controllers and not robot_free \
+                    and _description_has_ros2_control(model_path):
+                display_controllers = ["joint_state_broadcaster"]
+            for _robot_controller in display_controllers:
                 actions.append(
-                    IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource(
-                            _launch_file(description_share, "gazebo.launch.py")),
-                        launch_arguments=gazebo_args.items(),
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=[
+                            _robot_controller,
+                            "--controller-manager-timeout", "60",
+                        ],
+                        output="screen",
                     )
                 )
-                # Robots that declare their own ros2_control stack (e.g. the
-                # R5.3 Berkeley Humanoid Lite sim profile, whose controllers
-                # are parameterized by the gz_ros2_control plugin inside the
-                # description) get their controllers spawned here, on top of
-                # the simulator bringup. The shared controller layer is
-                # display-skipped, so without this the bringup reaches
-                # controller_manager but never activates a controller.
-                display_controllers = robot_config.get("controllers", [])
-                if not display_controllers and "ros2_control" in robot_config.get("features", []):
-                    display_controllers = ["joint_state_broadcaster"]
-                for _robot_controller in display_controllers:
-                    actions.append(
-                        Node(
-                            package="controller_manager",
-                            executable="spawner",
-                            arguments=[
-                                _robot_controller,
-                                "--controller-manager-timeout", "60",
-                            ],
-                            output="screen",
-                        )
-                    )
             return actions
 
         # PyBullet / MuJoCo / Isaac: their own viewer renders both the world

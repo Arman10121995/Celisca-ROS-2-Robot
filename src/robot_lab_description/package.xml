@@ -24,6 +24,7 @@
   <exec_depend condition="$ROS_DISTRO == humble">ign_ros2_control</exec_depend>
   <exec_depend>robot_lab_robots</exec_depend>
   <exec_depend>robot_lab_models</exec_depend>
+  <exec_depend>robot_lab_utils</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

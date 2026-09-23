@@ -112,6 +112,9 @@
     <axis xyz="0 1 0"/>
   </joint>
 
+  <!-- Two passive casters, front and rear, so the drive wheels at the
+       base centre are not the only support along the fore-aft axis:
+       with one caster the body could pitch onto its unsupported end. -->
   <!-- Rear passive caster: sphere radius 0.03 m -->
   <link name="caster_rear_link">
     <inertial>
@@ -138,6 +141,34 @@
     <parent link="base_link"/>
     <child link="caster_rear_link"/>
     <origin xyz="-0.12 0 -0.09" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Front passive caster: sphere radius 0.03 m -->
+  <link name="caster_front_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="1.8e-5" ixy="0" ixz="0" iyy="1.8e-5" iyz="0" izz="1.8e-5"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+      <material name="labbot_black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_front_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_front_link"/>
+    <origin xyz="0.12 0 -0.09" rpy="0 0 0"/>
   </joint>
 
   <!-- IMU -->
@@ -196,6 +227,11 @@
     <origin xyz="0 0 0.08" rpy="0 0 0"/>
   </joint>
 
+  <!-- Used by the shared OAK-D macro, which expects the including robot
+       to define it (Bumperbot does). -->
+  <material name="dark_grey">
+    <color rgba="0.3 0.3 0.3 1"/>
+  </material>
   <material name="labbot_grey">
     <color rgba="0.5 0.5 0.5 1"/>
   </material>

@@ -802,6 +802,46 @@ def _body_frame_velocity(model, data, body_id):
             [float(v) for v in velocity[3:6]])
 
 
+# Display hold stiffness (N*m/rad) and the stability bound on it.  An
+# explicit spring on a light link is stable only while kp * dt^2 / I stays
+# well below 1.  Held joints get rotor inertia (armature, as a geared motor
+# has) so an ankle carrying a whole humanoid can be stiff enough without
+# its light foot link limiting the spring; the damping is critical for each
+# spring and integrated implicitly.
+_HOLD_STIFFNESS = 3000.0
+_HOLD_STABILITY = 0.3
+_HOLD_ARMATURE = 0.05
+
+
+def _add_joint_hold_springs(model, data, joint_names):
+    """Spring-damp each named hinge/slide joint to its current position.
+
+    Uses MuJoCo's passive joint springs (``jnt_stiffness``/``qpos_spring``)
+    and dof damping, so the hold runs inside every physics step.  Returns
+    the number of joints held.
+    """
+    timestep = float(model.opt.timestep)
+    held = 0
+    for name in joint_names:
+        joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
+        # jnt_type is a NumPy int, which never equals the mjtJoint enum.
+        if joint < 0 or int(model.jnt_type[joint]) not in (
+                int(mujoco.mjtJoint.mjJNT_HINGE), int(mujoco.mjtJoint.mjJNT_SLIDE)):
+            continue
+        dof = model.jnt_dofadr[joint]
+        qpos = model.jnt_qposadr[joint]
+        added = max(0.0, _HOLD_ARMATURE - float(model.dof_armature[dof]))
+        model.dof_armature[dof] += added
+        inertia = max(float(model.dof_M0[dof]) + added, 1e-9)
+        stiffness = min(_HOLD_STIFFNESS, _HOLD_STABILITY * inertia / timestep ** 2)
+        model.jnt_stiffness[joint] = stiffness
+        model.qpos_spring[qpos] = float(data.qpos[qpos])
+        model.dof_damping[dof] = max(float(model.dof_damping[dof]),
+                                     2.0 * math.sqrt(stiffness * inertia))
+        held += 1
+    return held
+
+
 def _physics_substeps(period, timestep):
     """Model timesteps per physics tick, so physics time keeps pace."""
     return max(1, int(round(float(period) / max(float(timestep), 1e-9))))
@@ -1116,39 +1156,28 @@ class MuJoCoSpawner(Node):
         # Spawn and reset use the same pose and initial physics state.
         self._reset_physics()
 
-        # Display-mode hold: freeze joints at the spawn pose so passive
-        # visualization (mode:=display) reflects stable joint_states instead
-        # of a collapse/jump under gravity.  'auto' holds only when the
-        # robot has no drive joints (the map-free display case); 'true'
-        # always holds; 'false' keeps full physics.  The hold is kinematic:
-        # qpos/qvel are clamped back to the spawn pose every tick and the
-        # base stays pinned at its spawn position, so no controller stack
-        # is needed.  (MuJoCo model arrays cannot be resized after
-        # MjData is created, so actuators are not added here.)
+        # Display-mode hold: joints keep their spawn pose through physics,
+        # not by freezing the state.  Each held joint gets a passive
+        # spring-damper to its spawn angle, so a legged or humanoid robot
+        # stands instead of collapsing, while the simulation still moves it:
+        # it settles onto the floor, sags under load and responds to pushes
+        # (e.g. dragging it in the viewer), and /joint_states reports that
+        # motion to RViz.  The previous kinematic hold clamped qpos and
+        # pinned the base every tick, so the published joints never changed.
+        # 'auto' holds robots without drive wheels, 'true' holds every
+        # robot, 'false' leaves all joints free.
         hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
         has_drive = (getattr(self, "_lw_qpos_adr", -1) >= 0
                      or getattr(self, "_rw_qpos_adr", -1) >= 0)
         self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
-        self._hold_pose = {}
-        self._hold_base_pos = None
-        self._hold_base_quat = None
         if self._hold_joints:
-            for name in list(getattr(self, "_joint_names", [])):
-                try:
-                    self._hold_pose[name] = float(
-                        self._data.qpos[self._joint_name2id[name]])
-                except Exception:
-                    continue
-            try:
-                adr = self._free_joint_qpos_adr
-                if adr is not None and adr >= 0:
-                    self._hold_base_pos = [float(v) for v in self._data.qpos[adr:adr + 3]]
-                    self._hold_base_quat = [float(v) for v in self._data.qpos[adr + 3:adr + 7]]
-            except Exception:
-                pass
+            held = _add_joint_hold_springs(
+                self._model, self._data,
+                [name for name in self._joint_names
+                 if name not in (self._lw_name, self._rw_name)])
             self.get_logger().info(
-                "Display hold active (hold_position=%s): %d joint(s) frozen at spawn pose"
-                % (hold_mode, len(self._hold_pose)))
+                "Display hold active (hold_position=%s): %d joint(s) held at "
+                "their spawn pose by spring-dampers" % (hold_mode, held))
 
         self.get_logger().info(
             "MuJoCo model loaded: %d bodies, %d joints"
@@ -1414,40 +1443,6 @@ class MuJoCoSpawner(Node):
 
     def _step_physics(self):
         """Apply the current command and advance one tick under the physics lock."""
-        if getattr(self, "_hold_joints", False) and getattr(self, "_hold_pose", None):
-            # Display hold: keep the spawn pose exactly.  Stepping an
-            # uncontrolled humanoid lets it collapse under gravity (the RViz
-            # "jump like crazy"); instead advance only the clock and republish
-            # the frozen state so joint_states stays stable.
-            self._sim_step += 1
-            self._sim_t = float(self._sim_step * self._dt)
-            try:
-                self._data.time = self._sim_t
-            except Exception:
-                pass
-            adr = getattr(self, "_free_joint_qpos_adr", -1)
-            base_pos = getattr(self, "_hold_base_pos", None)
-            base_quat = getattr(self, "_hold_base_quat", None)
-            if adr is not None and adr >= 0 and base_pos is not None:
-                try:
-                    self._data.qpos[adr:adr + 3] = list(base_pos)
-                    if base_quat is not None:
-                        self._data.qpos[adr + 3:adr + 7] = list(base_quat)
-                    self._data.qvel[adr:adr + 6] = [0.0] * 6
-                except Exception:
-                    pass
-            for name, q0 in self._hold_pose.items():
-                try:
-                    self._data.qpos[self._joint_name2id[name]] = q0
-                    self._data.qvel[self._joint_name2dofadr[name]] = 0.0
-                except Exception:
-                    continue
-            try:
-                mujoco.mj_forward(self._model, self._data)
-            except Exception:
-                pass
-            self._read_physics_state()
-            return
         with self._twist_lock:
             command = self._twist
             stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout

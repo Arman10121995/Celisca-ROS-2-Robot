@@ -39,6 +39,9 @@ from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.sim_frames import rotate, world_to_body, wxyz_from_xyzw
 from robot_lab_utils.urdf_contact import gazebo_link_friction
 
+# Display-hold motor force for joints whose URDF declares no effort limit.
+_HOLD_FORCE = 200.0
+
 # Upper bound for friction taken from <gazebo><mu1>: descriptions use values
 # like 1e15 to mean "no slip" in Gazebo's solver.
 _MAX_LATERAL_FRICTION = 1.0
@@ -719,17 +722,16 @@ class PyBulletSpawner(Node):
         if self._hold_joints:
             self._hold_pose = {}
             for jn in self._joint_names:
+                index = self._joint_idx[jn]
                 try:
-                    s = p.getJointState(self._robot_id, self._joint_idx[jn])
-                    self._hold_pose[jn] = float(s[0])
+                    angle = float(p.getJointState(self._robot_id, index)[0])
                 except Exception:
-                    self._hold_pose[jn] = 0.0
-            try:
-                self._hold_base = p.getBasePositionAndOrientation(self._robot_id)
-            except Exception:
-                self._hold_base = None
+                    angle = 0.0
+                # URDF <limit effort>; unlimited or missing -> a generous cap.
+                effort = float(p.getJointInfo(self._robot_id, index)[10])
+                self._hold_pose[jn] = (angle, effort if effort > 0 else _HOLD_FORCE)
             self.get_logger().info(
-                "Display hold active (hold_position=%s): %d joint(s) frozen at spawn pose"
+                "Display hold active (hold_position=%s): %d joint(s) held at spawn pose by position motors"
                 % (hold_mode, len(self._hold_pose)))
 
         for i in range(p.getNumJoints(self._robot_id)):
@@ -796,26 +798,20 @@ class PyBulletSpawner(Node):
             vl = max(-clamp, min(clamp, vl))
             vr = max(-clamp, min(clamp, vr))
             if getattr(self, "_hold_joints", False):
-                # Display hold: pin the base at its spawn pose and every
-                # non-drive joint with position control so humanoids/legged
-                # robots cannot collapse or jump under gravity; drive joints
-                # still follow /cmd_vel.
-                try:
-                    if getattr(self, "_hold_base", None) is not None:
-                        p.resetBasePositionAndOrientation(
-                            self._robot_id,
-                            list(self._hold_base[0]), list(self._hold_base[1]))
-                        p.resetBaseVelocity(self._robot_id, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0])
-                except Exception:
-                    pass
-                for jn, q0 in getattr(self, "_hold_pose", {}).items():
+                # Display hold: every non-drive joint servos to its spawn
+                # angle through the physics engine's position motor, within
+                # the joint's own effort limit.  The base is free, so the
+                # robot stands on the floor and still moves physically
+                # (settling, sagging, pushes), and /joint_states reflects
+                # that; pinning the base and forcing 200 N*m froze it.
+                for jn, (q0, force) in getattr(self, "_hold_pose", {}).items():
                     idx = self._joint_idx.get(jn, -1)
                     if idx < 0 or idx == self._lw or idx == self._rw:
                         continue
                     try:
                         p.setJointMotorControl2(
                             self._robot_id, idx, p.POSITION_CONTROL,
-                            targetPosition=q0, force=200.0)
+                            targetPosition=q0, force=force)
                     except Exception:
                         pass
             if self._lw >= 0:

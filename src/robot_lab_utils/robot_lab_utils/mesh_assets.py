@@ -26,7 +26,7 @@ import numpy as np
 
 def _mesh_staging_dir(robot_name, urdf_text):
     """Per-robot, content-addressed cache dir for converted meshes."""
-    tag = hashlib.sha1(urdf_text.encode("utf-8")).hexdigest()[:12]
+    tag = hashlib.sha1((_CONVERTER_VERSION + urdf_text).encode("utf-8")).hexdigest()[:12]
     safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(robot_name or "robot"))
     path = os.path.join(
         tempfile.gettempdir(), "robot_lab_mujoco_meshes", safe_name, tag
@@ -68,12 +68,89 @@ def _resolve_mesh_source(uri, pkg_map, base_dir=""):
     return ""
 
 
+# Bump when the converter's output changes, so meshes staged by an older
+# version are not reused from the content-addressed cache.
+_CONVERTER_VERSION = "2"
+
+
+def _node_matrix(node, q):
+    """4x4 local transform of a Collada <node> (transform elements in order)."""
+    matrix = np.eye(4)
+    for element in node:
+        tag = element.tag.rsplit("}", 1)[-1]
+        try:
+            values = [float(v) for v in (element.text or "").split()]
+        except ValueError:
+            continue
+        local = np.eye(4)
+        if tag == "matrix" and len(values) == 16:
+            local = np.array(values).reshape(4, 4)
+        elif tag == "translate" and len(values) == 3:
+            local[:3, 3] = values
+        elif tag == "scale" and len(values) == 3:
+            local[:3, :3] = np.diag(values)
+        elif tag == "rotate" and len(values) == 4:
+            axis = np.array(values[:3])
+            norm = np.linalg.norm(axis)
+            if norm < 1e-12:
+                continue
+            x, y, z = axis / norm
+            angle = np.radians(values[3])
+            c, s_, t = np.cos(angle), np.sin(angle), 1.0 - np.cos(angle)
+            local[:3, :3] = [[t * x * x + c, t * x * y - s_ * z, t * x * z + s_ * y],
+                             [t * x * y + s_ * z, t * y * y + c, t * y * z - s_ * x],
+                             [t * x * z - s_ * y, t * y * z + s_ * x, t * z * z + c]]
+        else:
+            continue
+        matrix = matrix @ local
+    return matrix
+
+
+def _geometry_instances(root, q):
+    """``(geometry id, 4x4 world transform)`` for every instanced geometry.
+
+    Transforms come from the <visual_scene> node hierarchy that <scene>
+    instantiates.  Exporters such as Blender put a 90 degree rotation on the
+    node rather than in the vertices; ignoring it showed Unitree legs and
+    trunks rotated a quarter turn against their collision shapes, so each
+    robot appeared twice, crossed.  Empty when the file has no scene.
+    """
+    scenes = {}
+    for library in root.findall(q("library_visual_scenes")):
+        for scene in library.findall(q("visual_scene")):
+            scenes["#" + (scene.get("id") or "")] = scene
+    chosen = None
+    scene_ref = root.find(q("scene"))
+    if scene_ref is not None:
+        instance = scene_ref.find(q("instance_visual_scene"))
+        if instance is not None:
+            chosen = scenes.get(instance.get("url", ""))
+    if chosen is None and scenes:
+        chosen = next(iter(scenes.values()))
+    if chosen is None:
+        return []
+    instances = []
+
+    def walk(node, parent):
+        world = parent @ _node_matrix(node, q)
+        for inst in node.findall(q("instance_geometry")):
+            instances.append((inst.get("url", "").lstrip("#"), world))
+        for child in node.findall(q("node")):
+            walk(child, world)
+
+    for node in chosen.findall(q("node")):
+        walk(node, np.eye(4))
+    return instances
+
+
 def _parse_collada_mesh(dae_path):
-    """Minimal Collada reader -> (vertices Nx3, faces Mx3) in Z-up order.
+    """Minimal Collada reader -> (vertices Nx3, faces Mx3) in Z-up metres.
 
     Supports the triangle/polygon primitives a robot URDF references for
-    display.  Raises ValueError when the file contains no usable geometry
-    (the caller then falls back to a placeholder box).
+    display, placed by the file's scene-graph node transforms, then scaled
+    by <unit> and rotated from the declared <up_axis> to Z-up.  Raises
+    ValueError when the file contains no usable geometry (the caller then
+    falls back to a placeholder box).
     """
     tree = ET.parse(dae_path)
     root = tree.getroot()
@@ -100,45 +177,87 @@ def _parse_collada_mesh(dae_path):
             except ValueError:
                 pass
 
-    vertices = []
-    faces = []
+    geometries = {}
     for geometry in root.iter(_q("geometry")):
         mesh = geometry.find(_q("mesh"))
         if mesh is None:
             continue
-        sources = {}
-        for source in mesh.findall(_q("source")):
-            arr = source.find(_q("float_array"))
-            if arr is None or not arr.text or not source.get("id"):
-                continue
-            try:
-                sources["#" + source.get("id")] = [
-                    float(v) for v in arr.text.split()
-                ]
-            except ValueError:
-                continue
-        vertex_position = {}
-        for vtx in mesh.findall(_q("vertices")):
-            for inp in vtx.findall(_q("input")):
-                if inp.get("semantic") == "POSITION":
-                    vertex_position["#" + (vtx.get("id") or "")] = \
-                        inp.get("source", "")
+        vertices, faces = _collada_mesh_triangles(mesh, _q)
+        if faces:
+            geometries[geometry.get("id") or ""] = (
+                np.array(vertices, dtype=np.float64), faces)
 
-        for prim_tag in ("triangles", "polylist"):
-            for prim in mesh.findall(_q(prim_tag)):
-                inputs = prim.findall(_q("input"))
-                if not inputs:
-                    continue
-                stride = max(int(inp.get("offset", 0)) for inp in inputs) + 1
-                vertex_offset = None
-                positions = None
-                for inp in inputs:
-                    if inp.get("semantic") == "VERTEX":
-                        vertex_offset = int(inp.get("offset", 0))
-                        src = inp.get("source", "")
-                        positions = sources.get(vertex_position.get(src, src))
-                if vertex_offset is None or not positions:
-                    continue
+    instances = [(gid, m) for gid, m in _geometry_instances(root, _q)
+                 if gid in geometries]
+    if not instances:
+        # No scene graph (or it references nothing we parsed): every
+        # geometry once, untransformed, as the reader always did.
+        instances = [(gid, np.eye(4)) for gid in geometries]
+
+    all_vertices, all_faces = [], []
+    for gid, matrix in instances:
+        vertices, faces = geometries[gid]
+        base = sum(len(v) for v in all_vertices)
+        all_vertices.append(vertices @ matrix[:3, :3].T + matrix[:3, 3])
+        all_faces.extend((a + base, b + base, c + base) for a, b, c in faces)
+    if not all_faces:
+        raise ValueError("no triangle geometry found")
+    verts = np.vstack(all_vertices) * unit_metres
+    if up_axis == "Y_UP":
+        verts = verts[:, [0, 2, 1]] * np.array([1.0, -1.0, 1.0])
+    elif up_axis == "X_UP":
+        verts = verts[:, [1, 0, 2]] * np.array([-1.0, 1.0, 1.0])
+    tris = np.array(all_faces, dtype=np.int64)
+    return verts, tris
+
+
+def _collada_mesh_triangles(mesh, _q):
+    """(vertices, faces) of one Collada <mesh>, polygons fanned to triangles."""
+    vertices = []
+    faces = []
+    sources = {}
+    for source in mesh.findall(_q("source")):
+        arr = source.find(_q("float_array"))
+        if arr is None or not arr.text or not source.get("id"):
+            continue
+        try:
+            sources["#" + source.get("id")] = [
+                float(v) for v in arr.text.split()
+            ]
+        except ValueError:
+            continue
+    vertex_position = {}
+    for vtx in mesh.findall(_q("vertices")):
+        for inp in vtx.findall(_q("input")):
+            if inp.get("semantic") == "POSITION":
+                vertex_position["#" + (vtx.get("id") or "")] = \
+                    inp.get("source", "")
+
+    for prim_tag in ("triangles", "polylist", "polygons"):
+        for prim in mesh.findall(_q(prim_tag)):
+            inputs = prim.findall(_q("input"))
+            if not inputs:
+                continue
+            stride = max(int(inp.get("offset", 0)) for inp in inputs) + 1
+            vertex_offset = None
+            positions = None
+            for inp in inputs:
+                if inp.get("semantic") == "VERTEX":
+                    vertex_offset = int(inp.get("offset", 0))
+                    src = inp.get("source", "")
+                    positions = sources.get(vertex_position.get(src, src))
+            if vertex_offset is None or not positions:
+                continue
+            groups = []
+            if prim_tag == "polygons":
+                # One <p> per polygon.
+                for p_elem in prim.findall(_q("p")):
+                    try:
+                        idx = [int(v) for v in (p_elem.text or "").split()]
+                    except ValueError:
+                        continue
+                    groups.append(idx)
+            else:
                 p_elem = prim.find(_q("p"))
                 if p_elem is None or not p_elem.text:
                     continue
@@ -160,27 +279,21 @@ def _parse_collada_mesh(dae_path):
                     if count < 3 or cursor + count * stride > len(idx):
                         cursor += max(count, 0) * stride
                         continue
-                    group = idx[cursor:cursor + count * stride]
+                    groups.append(idx[cursor:cursor + count * stride])
                     cursor += count * stride
-                    corner_ids = group[vertex_offset::stride]
-                    base = len(vertices)
-                    for vi in corner_ids:
-                        if 0 <= vi * 3 + 2 < len(positions):
-                            vertices.append(positions[vi * 3:vi * 3 + 3])
-                        else:
-                            vertices.append([0.0, 0.0, 0.0])
-                    for k in range(1, len(corner_ids) - 1):
-                        faces.append((base, base + k, base + k + 1))
-
-    if not faces:
-        raise ValueError("no triangle geometry found")
-    verts = np.array(vertices, dtype=np.float64) * unit_metres
-    if up_axis == "Y_UP":
-        verts = verts[:, [0, 2, 1]] * np.array([1.0, -1.0, 1.0])
-    elif up_axis == "X_UP":
-        verts = verts[:, [1, 0, 2]] * np.array([-1.0, 1.0, 1.0])
-    tris = np.array(faces, dtype=np.int64)
-    return verts, tris
+            for group in groups:
+                corner_ids = group[vertex_offset::stride]
+                if len(corner_ids) < 3:
+                    continue
+                base = len(vertices)
+                for vi in corner_ids:
+                    if 0 <= vi * 3 + 2 < len(positions):
+                        vertices.append(positions[vi * 3:vi * 3 + 3])
+                    else:
+                        vertices.append([0.0, 0.0, 0.0])
+                for k in range(1, len(corner_ids) - 1):
+                    faces.append((base, base + k, base + k + 1))
+    return vertices, faces
 
 
 def _write_binary_stl(stl_path, vertices, faces):

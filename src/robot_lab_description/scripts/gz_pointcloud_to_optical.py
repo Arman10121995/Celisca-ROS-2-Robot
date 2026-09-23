@@ -11,6 +11,7 @@ import struct
 import numpy as np
 import rclpy
 from rclpy._rclpy_pybind11 import RCLError
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import PointCloud2, PointField
 
@@ -102,8 +103,13 @@ def main():
     node = GazeboPointCloudToOptical()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
         pass
+    except RuntimeError:
+        # A cloud taken while launch is shutting the context down fails to
+        # convert; that is a stop, not a crash.
+        if rclpy.ok():
+            raise
     finally:
         node.destroy_node()
         if rclpy.ok():
