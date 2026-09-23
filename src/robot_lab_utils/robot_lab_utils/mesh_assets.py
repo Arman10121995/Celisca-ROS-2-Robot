@@ -297,24 +297,32 @@ def _collada_mesh_triangles(mesh, _q):
 
 
 def _write_binary_stl(stl_path, vertices, faces):
-    """Write a binary STL; facet normals are recomputed from the winding."""
-    tris = vertices[faces]
-    v1 = tris[:, 1] - tris[:, 0]
-    v2 = tris[:, 2] - tris[:, 0]
-    normals = np.cross(v1, v2)
-    norm = np.linalg.norm(normals, axis=1)
-    norm[norm == 0.0] = 1.0
-    normals = normals / norm[:, None]
+    """Write a binary STL; facet normals are recomputed from the winding.
+
+    The whole facet array is packed in one vectorised step: a per-facet
+    Python loop costs minutes on the map meshes (millions of facets), which
+    is what made a furniture world look like a hang.
+    """
+    tris = np.asarray(vertices, dtype=np.float64)[np.asarray(faces, dtype=np.int64)]
+    if len(tris) == 0:
+        facet_bytes = b""
+    else:
+        v1 = tris[:, 1] - tris[:, 0]
+        v2 = tris[:, 2] - tris[:, 0]
+        normals = np.cross(v1, v2)
+        norm = np.linalg.norm(normals, axis=1)
+        norm[norm == 0.0] = 1.0
+        normals = normals / norm[:, None]
+        # 50-byte facet record: normal(3f) 3 vertices(3f) attribute(H).
+        records = np.zeros((len(tris), 50), dtype=np.uint8)
+        floats = np.concatenate(
+            [normals, tris.reshape(len(tris), 9)], axis=1).astype("<f4")
+        records[:, :48] = floats.view(np.uint8).reshape(-1, 48)
+        facet_bytes = records.tobytes()
     with open(stl_path, "wb") as fh:
         fh.write(b"\0" * 80)
-        fh.write(struct.pack("<I", len(faces)))
-        for normal, tri in zip(normals, tris):
-            fh.write(struct.pack("<3f", float(normal[0]), float(normal[1]),
-                                 float(normal[2])))
-            for vertex in tri:
-                fh.write(struct.pack("<3f", float(vertex[0]), float(vertex[1]),
-                                     float(vertex[2])))
-            fh.write(struct.pack("<H", 0))
+        fh.write(struct.pack("<I", len(tris)))
+        fh.write(facet_bytes)
 
 
 def _write_placeholder_stl(stl_path, size=0.025):
@@ -336,6 +344,14 @@ def _write_placeholder_stl(stl_path, size=0.025):
 
 
 _MUJOCO_MAX_STL_FACES = 180000  # MuJoCo decoder cap is 200000; keep headroom
+
+# World/map meshes are the collision geometry of a whole floor plan and are
+# two orders of magnitude heavier than a robot's meshes: MuJoCo builds a
+# convex hull for every mesh at compile time and the other backends cook a
+# collision BVH / mesh, so a 180k-facet furniture map takes minutes to load
+# (it looks like a hang).  Map meshes are capped far below the decoder limit
+# instead.
+_WORLD_MAX_STL_FACES = 30000
 
 
 def _binary_stl_face_count(path):
@@ -383,28 +399,28 @@ def _is_ascii_stl(path):
     return head.lstrip().startswith(b"solid") and b"facet" in head
 
 
-def _stage_stl(source, staged, notes, uri):
+def _stage_stl(source, staged, notes, uri, max_faces=_MUJOCO_MAX_STL_FACES):
     """Stage one STL mesh (binary copy, ASCII/beyond-cap conversion)."""
     if (os.path.exists(staged) and not _is_ascii_stl(staged)
-            and 0 < _binary_stl_face_count(staged) <= _MUJOCO_MAX_STL_FACES):
+            and 0 < _binary_stl_face_count(staged) <= max_faces):
         return staged
     if _is_ascii_stl(source):
         try:
             verts, faces = _parse_ascii_stl(source)
-            verts, faces = _cap_faces(verts, faces)
+            verts, faces = _cap_faces(verts, faces, max_faces)
             _write_binary_stl(staged, verts, faces)
             return staged
         except Exception as exc:
             notes.append("mesh '%s' not convertible (%s); placeholder used"
                          % (os.path.basename(uri), exc))
             return ""
-    if _binary_stl_face_count(source) > _MUJOCO_MAX_STL_FACES:
+    if _binary_stl_face_count(source) > max_faces:
         try:
             verts, faces = _read_binary_stl(source)
-            verts, faces = _cap_faces(verts, faces)
+            verts, faces = _cap_faces(verts, faces, max_faces)
             _write_binary_stl(staged, verts, faces)
-            notes.append("mesh '%s' decimated to %d faces (MuJoCo limit)"
-                         % (os.path.basename(uri), len(faces)))
+            notes.append("mesh '%s' decimated to %d faces (limit %d)"
+                         % (os.path.basename(uri), len(faces), max_faces))
             return staged
         except Exception as exc:
             notes.append("mesh '%s' not convertible (%s); placeholder used"
@@ -457,14 +473,19 @@ is_ascii_stl = _is_ascii_stl
 stage_stl = _stage_stl
 parse_ascii_stl = _parse_ascii_stl
 MAX_STL_FACES = _MUJOCO_MAX_STL_FACES
+WORLD_MAX_STL_FACES = _WORLD_MAX_STL_FACES
 
 
-def stage_mesh_file(source, cache_dir, stem=None):
+def stage_mesh_file(source, cache_dir, stem=None,
+                    max_faces=_MUJOCO_MAX_STL_FACES):
     """Stage one mesh file into *cache_dir*, converting when needed.
 
     Returns the path of a file the physics backends can load, or '' when the
     source could not be resolved.  Collada is converted to binary STL; STL is
     normalised (ASCII -> binary, face cap); OBJ/MSH are passed through.
+    *max_faces* is the facet budget — the backends pass
+    :data:`WORLD_MAX_STL_FACES` for map meshes, whose collision cost dominates
+    the load time, and keep the default for robot meshes.
     """
     if not source or not os.path.isfile(source):
         return ""
@@ -474,11 +495,17 @@ def stage_mesh_file(source, cache_dir, stem=None):
     os.makedirs(cache_dir, exist_ok=True)
     stem = re.sub(r"[^A-Za-z0-9_.-]+", "_",
                   stem or os.path.splitext(os.path.basename(source))[0] or "mesh")
-    staged = os.path.join(cache_dir, stem + ".stl")
+    # The facet budget is part of the cache key: a mesh staged for one budget
+    # must not be reused for another.
+    suffix = (".stl" if max_faces == _MUJOCO_MAX_STL_FACES
+              else "_%df.stl" % max_faces)
+    staged = os.path.join(cache_dir, stem + suffix)
     if extension == ".stl":
-        return _stage_stl(source, staged, [], source) or ""
+        return _stage_stl(source, staged, [], source, max_faces) or ""
     try:
         vertices, faces = _parse_collada_mesh(source)
+        if len(faces) > max_faces:
+            vertices, faces = _cap_faces(vertices, faces, max_faces)
         _write_binary_stl(staged, vertices, faces)
         return staged
     except Exception:

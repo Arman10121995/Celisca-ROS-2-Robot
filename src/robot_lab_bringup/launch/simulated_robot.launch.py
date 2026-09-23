@@ -1,10 +1,14 @@
 import os
 import uuid
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import SetEnvironmentVariable, DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.actions import (DeclareLaunchArgument, ExecuteProcess,
+                            IncludeLaunchDescription, OpaqueFunction,
+                            RegisterEventHandler, SetEnvironmentVariable)
+from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -18,6 +22,10 @@ except ImportError:
 MODE_ALIASES = {
     "nave": "nav",
 }
+
+# How long the localization/mapping/navigation stack waits for the simulator
+# before starting anyway (the wait is a gate, not a hard requirement).
+SIMULATOR_READY_TIMEOUT = 180
 
 # Maps simulator name → (package_share_key, launch_file_relative_path)
 _SIMULATOR_DISPATCH = {
@@ -193,25 +201,70 @@ def _load_yaml(path):
 
 
 
+_URDF_TEXT_CACHE = {}
+
+
+def _xacro_urdf(model_path):
+    """Expanded URDF text for *model_path* ('' when xacro fails).
+
+    Cached: the same description is inspected for ros2_control, spawn
+    clearance and the RViz fixed frame during one launch.
+    """
+    import subprocess
+    if not model_path:
+        return ""
+    if model_path not in _URDF_TEXT_CACHE:
+        try:
+            _URDF_TEXT_CACHE[model_path] = subprocess.run(
+                ["xacro", model_path], capture_output=True, text=True,
+                check=True, timeout=60).stdout
+        except Exception:
+            _URDF_TEXT_CACHE[model_path] = ""
+    return _URDF_TEXT_CACHE[model_path]
+
+
 def _description_has_ros2_control(model_path):
     """Whether the robot description (after xacro) has a <ros2_control> block."""
-    import subprocess
+    return "<ros2_control" in _xacro_urdf(model_path)
+
+
+def _rviz_fixed_frame(model_path):
+    """RViz fixed frame for a robot description ('' when unknown).
+
+    The shipped RViz configs use ``base_footprint``, the root link of the
+    wheeled robots.  A description rooted at ``base``/``trunk`` (Unitree, the
+    Berkeley Humanoid Lite) has no such frame: TF never contains it, so RViz
+    reports "Fixed Frame [base_footprint] does not exist" and draws neither
+    the model nor its joint states.  Pass the description's own root link to
+    RViz in that case.
+    """
+    urdf = _xacro_urdf(model_path)
+    if not urdf:
+        return ""
     try:
-        urdf = subprocess.run(["xacro", model_path], capture_output=True,
-                              text=True, check=True, timeout=60).stdout
-    except Exception:
-        return False
-    return "<ros2_control" in urdf
+        root = ET.fromstring(urdf)
+    except ET.ParseError:
+        return ""
+    links = [link.get("name") for link in root.findall("link") if link.get("name")]
+    if "base_footprint" in links:
+        return "base_footprint"
+    children = set()
+    for joint in root.findall("joint"):
+        child = joint.find("child")
+        if child is not None and child.get("link"):
+            children.add(child.get("link"))
+    roots = [name for name in links if name not in children]
+    return roots[0] if roots else ""
 
 
 def _clear_spawn_height(model_path, spawn_z):
     """Spawn height keeping the robot's rest-pose collision geometry above z=0."""
-    import subprocess
     from robot_lab_utils.urdf_extent import (
         clear_spawn_z, lowest_collision_z, package_resolver)
     try:
-        urdf = subprocess.run(["xacro", model_path], capture_output=True,
-                              text=True, check=True, timeout=60).stdout
+        urdf = _xacro_urdf(model_path)
+        if not urdf:
+            return spawn_z
         lowest = lowest_collision_z(urdf, package_resolver(
             get_package_share_directory, os.path.dirname(model_path)))
     except Exception as exc:
@@ -665,6 +718,15 @@ def _build_simulation_actions(context):
             gui_value = "true" if os.environ.get("DISPLAY") else "false"
         rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
         start_rviz = _auto_bool(context, "start_rviz", True)
+        # RViz needs a fixed frame that exists in TF.  The configs ship with
+        # 'base_footprint' (the wheeled robots' root link); a description
+        # rooted at 'base'/'trunk' has no such frame, and RViz then reports
+        # "Fixed Frame [base_footprint] does not exist" and draws nothing —
+        # however fresh the simulator's joint states are.
+        rviz_arguments = ["-d", rviz_config]
+        rviz_frame = "" if robot_free else _rviz_fixed_frame(model_path)
+        if rviz_frame:
+            rviz_arguments += ["-f", rviz_frame]
 
         if simulator == "gazebo":
             # Gazebo runs for every display selection, like the other
@@ -676,7 +738,7 @@ def _build_simulation_actions(context):
                     Node(
                         package="rviz2",
                         executable="rviz2",
-                        arguments=["-d", rviz_config],
+                        arguments=rviz_arguments,
                         output="screen",
                         parameters=[{"use_sim_time": _as_bool(use_sim_time, True)}],
                     )
@@ -782,7 +844,7 @@ def _build_simulation_actions(context):
                 Node(
                     package="rviz2",
                     executable="rviz2",
-                    arguments=["-d", rviz_config],
+                    arguments=rviz_arguments,
                     output="screen",
                     parameters=[{"use_sim_time": _as_bool(use_sim_time, True)}],
                 )
@@ -881,8 +943,18 @@ def _build_simulation_actions(context):
             )
         )
 
+    # Localization, mapping and navigation all need the simulator running:
+    # PyBullet, MuJoCo and Isaac build their model asynchronously (seconds to
+    # tens of seconds) and only start publishing /clock, TF and joint states
+    # once the robot exists.  A nav2 stack started first never recovers —
+    # its costmaps time out on map->base_footprint forever and every goal is
+    # rejected — so these sections are gated on the simulator's first
+    # /joint_states instead of racing its load.  Gazebo loads in seconds and
+    # starts everything at once, as before.
+    gated_actions = []
+
     if _section_enabled(mode_config.get("global_localization")):
-        actions.append(
+        gated_actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(localization_share, "global_localization.launch.py")),
                 launch_arguments={
@@ -903,7 +975,7 @@ def _build_simulation_actions(context):
     _odom0_topic = "/robot_lab_controller/odom" if _sim == "gazebo" else "/odom/ground_truth"
 
     if _section_enabled(mode_config.get("local_localization")):
-        actions.append(
+        gated_actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(localization_share, "local_localization.launch.py")),
                 launch_arguments={
@@ -922,7 +994,7 @@ def _build_simulation_actions(context):
         slam_backend = algorithm_selection.get("localization", "")
         if slam_backend:
             slam_args["slam_backend"] = slam_backend
-        actions.append(
+        gated_actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(mapping_share, "slam.launch.py")),
                 launch_arguments=slam_args.items(),
@@ -931,7 +1003,7 @@ def _build_simulation_actions(context):
 
     rtabmap_config = mode_config.get("rtabmap", {})
     if _section_enabled(rtabmap_config):
-        actions.append(
+        gated_actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(mapping_share, "rtabmap.launch.py")),
                 launch_arguments={
@@ -983,7 +1055,7 @@ def _build_simulation_actions(context):
             "global_planner_plugin": global_plugin,
             "local_planner_plugin": local_plugin,
         }
-        actions.append(
+        gated_actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(navigation_share, "navigation.launch.py")),
                 launch_arguments=nav_args.items(),
@@ -992,7 +1064,26 @@ def _build_simulation_actions(context):
 
     # Selections that run as their own process (planners, estimators,
     # perception pipelines and controllers that are not stack plugins).
-    actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time))
+    gated_actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time))
+
+    if gated_actions and _launch_value(context, "simulator") != "gazebo":
+        # Gate: the sections above start once the simulator has published its
+        # first /joint_states (see the note where gated_actions is declared).
+        # The timeout keeps a broken backend from hiding the whole stack
+        # forever; a late start still runs, just without the race.
+        ready_gate = ExecuteProcess(
+            cmd=["bash", "-c",
+                 "timeout %d ros2 topic echo --once /joint_states "
+                 ">/dev/null 2>&1 || true" % SIMULATOR_READY_TIMEOUT],
+            name="simulator_ready_gate",
+            output="log",
+        )
+        actions.append(ready_gate)
+        actions.append(RegisterEventHandler(
+            OnProcessExit(target_action=ready_gate,
+                          on_exit=list(gated_actions))))
+    else:
+        actions.extend(gated_actions)
 
     rviz_enabled = _auto_bool(
         context,
@@ -1001,11 +1092,18 @@ def _build_simulation_actions(context):
     )
     rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
     if rviz_enabled and rviz_config:
+        # Same fixed-frame rule as display mode: a robot whose description has
+        # no 'base_footprint' link must be shown on its own root link, or RViz
+        # cannot resolve the frame and draws neither model nor joint states.
+        nav_rviz_arguments = ["-d", rviz_config]
+        nav_rviz_frame = "" if robot_free else _rviz_fixed_frame(model_path)
+        if nav_rviz_frame:
+            nav_rviz_arguments += ["-f", nav_rviz_frame]
         actions.append(
             Node(
                 package="rviz2",
                 executable="rviz2",
-                arguments=["-d", rviz_config],
+                arguments=nav_rviz_arguments,
                 output="screen",
                 parameters=[{"use_sim_time": _as_bool(use_sim_time, True)}],
             )

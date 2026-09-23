@@ -493,7 +493,7 @@ class IsaacSpawner(Node):
         try:
             from ament_index_python.packages import get_package_share_directory
             from robot_lab_utils.mesh_assets import (
-                mesh_staging_dir, stage_mesh_file)
+                WORLD_MAX_STL_FACES, mesh_staging_dir, stage_mesh_file)
             from robot_lab_utils.sdf_world import (
                 extract_static_shapes, uri_resolver)
         except ImportError as exc:
@@ -513,7 +513,11 @@ class IsaacSpawner(Node):
         loadable = []
         for shape in shapes:
             if shape["type"] == "mesh":
-                staged = stage_mesh_file(shape["mesh"], cache_dir)
+                # Map meshes are capped hard: the USD triangle mesh and its
+                # PhysX collision cook are what make a full-facet furniture
+                # map take minutes to open.
+                staged = stage_mesh_file(shape["mesh"], cache_dir,
+                                         max_faces=WORLD_MAX_STL_FACES)
                 if not staged or not staged.lower().endswith(".stl"):
                     skipped.append("mesh not convertible to STL: %s"
                                    % os.path.basename(shape["mesh"]))

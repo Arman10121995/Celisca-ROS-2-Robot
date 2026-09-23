@@ -22,7 +22,9 @@ def add_static_mesh_collisions(root):
         if geom.get('type') != 'mesh' or (geom.get('contype') == '0' and geom.get('conaffinity') == '0'):
             continue
         asset = assets[geom.get('mesh')]
-        mesh = trimesh.load(asset.get('file'), force='mesh', process=True)
+        # process=False: the flex only needs the raw triangle soup, and
+        # trimesh's processing (vertex merge/cleanup) is pure overhead here.
+        mesh = trimesh.load(asset.get('file'), force='mesh', process=False)
         vertices = np.asarray(mesh.vertices, dtype=float)
         faces = np.asarray(mesh.faces, dtype=int)
         tri = vertices[faces]

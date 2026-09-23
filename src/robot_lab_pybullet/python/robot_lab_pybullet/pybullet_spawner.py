@@ -393,23 +393,39 @@ class PyBulletSpawner(Node):
             % (os.path.basename(world_path), created, len(skipped)))
 
     def _stage_mesh(self, path):
-        """Return a loadable mesh path, converting Collada when needed."""
+        """Return a loadable mesh path, converted and face-capped if needed.
+
+        STL/OBJ are natively loadable, but a map mesh can carry millions of
+        facets: PyBullet builds a collision BVH *and* a renderer mesh from
+        the file, which stalls the GUI for minutes on a furniture map.
+        Oversized STLs are decimated to the world facet budget, small ones
+        (and the other native formats) are used straight from the source.
+        """
         extension = os.path.splitext(path)[1].lower()
-        if extension in (".obj", ".stl"):
-            return path
         try:
             from robot_lab_utils.mesh_assets import (
-                mesh_staging_dir, stage_mesh_file)
+                WORLD_MAX_STL_FACES, binary_stl_face_count, mesh_staging_dir,
+                stage_mesh_file)
         except ImportError:
             self.get_logger().warn(
                 "robot_lab_utils.mesh_assets unavailable; "
                 "skipping mesh %s" % os.path.basename(path))
             return ""
+        if extension in (".obj", ".msh"):
+            return path
+        if extension == ".stl" and os.path.isfile(path):
+            faces = binary_stl_face_count(path)
+            if 0 < faces <= WORLD_MAX_STL_FACES:
+                return path
         cache_dir = mesh_staging_dir("pybullet_world", os.path.dirname(path))
-        staged = stage_mesh_file(path, cache_dir)
+        staged = stage_mesh_file(path, cache_dir, max_faces=WORLD_MAX_STL_FACES)
         if not staged:
             self.get_logger().warn(
                 "could not convert mesh %s" % os.path.basename(path))
+            return ""
+        self.get_logger().info(
+            "World mesh '%s': staged %d face(s) for PyBullet"
+            % (os.path.basename(path), binary_stl_face_count(staged)))
         return staged
 
     def _create_shape(self, shape, client: int = 0):

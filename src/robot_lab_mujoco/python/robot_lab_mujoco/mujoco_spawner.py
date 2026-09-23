@@ -138,6 +138,7 @@ _FALLBACK_MJCF = """<mujoco model="fallback_robot">
 # its tests already reference.
 from robot_lab_utils.mesh_assets import (  # noqa: E402
     _MUJOCO_MAX_STL_FACES,
+    _WORLD_MAX_STL_FACES,
     _binary_stl_face_count,
     _cap_faces,
     _is_ascii_stl,
@@ -567,16 +568,25 @@ def _stage_world_meshes(mjcf_text, logger=None):
             continue
         stem = re.sub(r"[^A-Za-z0-9_.-]+", "_",
                       os.path.splitext(os.path.basename(source))[0] or "mesh")
-        staged = os.path.join(cache_dir, stem + ".stl")
+        # Map meshes get the world facet budget: MuJoCo builds a convex hull
+        # for every mesh at compile time, so a full-facet map mesh (~3.3M
+        # facets) takes minutes of CPU and looks exactly like a hang.
+        staged = os.path.join(cache_dir,
+                              "%s_%df.stl" % (stem, _WORLD_MAX_STL_FACES))
         notes = []
         if extension == ".stl" and os.path.isfile(source):
-            result = _stage_stl(source, staged, notes, source)
+            result = _stage_stl(source, staged, notes, source, _WORLD_MAX_STL_FACES)
             if result:
                 mesh.set("file", result)
+                for note in notes[:1]:
+                    _emit_log(logger, "info", "MuJoCo world mesh: " + note)
                 continue
         if os.path.isfile(source):
             try:
                 vertices, faces = _parse_collada_mesh(source)
+                if len(faces) > _WORLD_MAX_STL_FACES:
+                    vertices, faces = _cap_faces(vertices, faces,
+                                                 _WORLD_MAX_STL_FACES)
                 _write_binary_stl(staged, vertices, faces)
                 mesh.set("file", staged)
                 converted += 1
@@ -637,6 +647,45 @@ def _native_joint_dynamics(model_path, names):
     return None, None
 
 
+def _hide_collision_proxies(mjcf_text, logger=None):
+    """Move collision geoms into MuJoCo's hidden collision group (3).
+
+    MuJoCo's URDF import keeps the physics geometry (URDF ``<collision>``) in
+    geom group 0 — a group the viewer draws — next to the visual meshes it
+    puts in group 1.  A viewer therefore draws every link twice: the mesh and
+    its collision proxy, which for these descriptions is an axis-rotated
+    box/cylinder (reported as "the robot is copied twice and pasted
+    orthogonally").  Group 3 is the conventional collision group: hidden by
+    default, one checkbox away in the viewer's Rendering tab, and irrelevant
+    to physics.  Bodies with no visual geometry keep their geoms visible, so
+    a primitive-only description does not turn invisible.
+    """
+    try:
+        root = ET.fromstring(mjcf_text)
+    except ET.ParseError:
+        return mjcf_text
+    hidden = 0
+    for body in root.iter("body"):
+        geoms = body.findall("geom")
+        visual = [geom for geom in geoms
+                  if geom.get("contype") == "0"
+                  and geom.get("conaffinity") == "0"]
+        if not visual:
+            continue
+        for geom in geoms:
+            if geom in visual:
+                continue
+            if geom.get("group") in (None, "", "0"):
+                geom.set("group", "3")
+                hidden += 1
+    if not hidden:
+        return mjcf_text
+    _emit_log(logger, "info",
+              "MuJoCo: %d collision proxy geom(s) moved to group 3 "
+              "(viewer Rendering tab to show them)." % hidden)
+    return ET.tostring(root, encoding="unicode")
+
+
 def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
                           base_dir=""):
     """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
@@ -677,6 +726,7 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         mjcf = _add_floating_base(
             spec.to_xml(), robot_name or "robot",
             root_inertial=_urdf_root_inertial(urdf_text))
+        mjcf = _hide_collision_proxies(mjcf, logger=logger)
         mjcf = _exclude_rest_pose_self_contacts(mjcf, logger=logger)
         if placeholders:
             _emit_log(logger, "warning",
