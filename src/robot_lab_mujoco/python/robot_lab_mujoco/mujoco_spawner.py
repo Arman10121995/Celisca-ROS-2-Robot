@@ -31,6 +31,8 @@ except ImportError:
     mujoco = types.SimpleNamespace(viewer=None)
 
 import rclpy
+
+from robot_lab_utils.process_lifetime import exit_with_parent
 from rclpy.clock import Clock, ClockType
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
@@ -1800,6 +1802,9 @@ class MuJoCoSpawner(Node):
 
 
 def main(args=None):
+    # Die with the launch that started this node, even if it never sends a
+    # stop signal (see robot_lab_utils.process_lifetime).
+    exit_with_parent()
     rclpy.init(args=args)
     node = MuJoCoSpawner()
     try:

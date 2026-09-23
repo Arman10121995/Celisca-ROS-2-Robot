@@ -30,6 +30,8 @@ import threading
 import time
 
 import rclpy
+
+from robot_lab_utils.process_lifetime import exit_with_parent
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
@@ -796,6 +798,8 @@ def main(args=None):
     # Without a handler SIGTERM ends the interpreter without running the
     # `finally` below, which is what orphaned the Isaac runtime.
     signal.signal(signal.SIGTERM, _raise_system_exit)
+    # Stop (and take the runtime down) if the launch dies without stopping us.
+    exit_with_parent()
     node = IsaacSpawner()
     try:
         rclpy.spin(node)

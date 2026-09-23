@@ -7,13 +7,19 @@ process lives on as an orphan: it keeps simulating the old world, keeps its
 controller_manager on the ROS graph, and a later run in the same partition
 or domain sees that stale world and those stale controllers.
 
-Every bringup run gets its own Gazebo transport partition, and every process
-it starts inherits it, so the leftovers are exactly the processes whose
-environment carries that partition.  This watcher is started detached from
-the launch, waits for the launch process to exit, gives its children a grace
-period, then terminates whatever still carries the partition.
+The same happens outside Gazebo: robot_state_publisher, simulator
+spawners, Nav2 and RViz outlive a launch that is killed rather than stopped,
+and keep publishing into the ROS domain of the next run.
+
+Every bringup run gets its own run id (``ROBOT_LAB_RUN_ID``) and, with
+Gazebo, its own transport partition; every process it starts inherits both,
+so the leftovers are exactly the processes whose environment carries them.
+This watcher is started detached from the launch, waits for the launch
+process to exit, gives its children a grace period, then terminates whatever
+still carries the marker.
 
 Usage: python3 -m robot_lab_utils.partition_reaper <launch pid> <partition>
+       python3 -m robot_lab_utils.partition_reaper <launch pid> NAME=VALUE
 """
 import os
 import signal
@@ -21,9 +27,16 @@ import sys
 import time
 
 
+def _markers(marker):
+    """Environment entries identifying a run: NAME=VALUE, or a partition."""
+    if "=" in marker:
+        return {marker.encode()}
+    return {b"IGN_PARTITION=" + marker.encode(), b"GZ_PARTITION=" + marker.encode()}
+
+
 def processes_in_partition(partition, exclude=()):
-    """PIDs whose environment has IGN_PARTITION or GZ_PARTITION = *partition*."""
-    wanted = {b"IGN_PARTITION=" + partition.encode(), b"GZ_PARTITION=" + partition.encode()}
+    """PIDs whose environment carries *partition* (see ``_markers``)."""
+    wanted = _markers(partition)
     found = []
     for entry in os.listdir("/proc"):
         if not entry.isdigit() or int(entry) in exclude:
@@ -39,13 +52,12 @@ def processes_in_partition(partition, exclude=()):
 
 
 def _alive(pid):
+    """True while *pid* exists and has not exited (zombies count as exited)."""
     try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
+        with open("/proc/%d/stat" % pid) as stat:
+            return stat.read().rsplit(")", 1)[1].split()[0] != "Z"
+    except (OSError, IndexError):
         return False
-    except PermissionError:
-        return True
-    return True
 
 
 def reap(partition, grace=5.0, exclude=()):

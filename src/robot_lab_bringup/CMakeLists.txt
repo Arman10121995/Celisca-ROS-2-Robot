@@ -31,6 +31,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(mujoco_world_collision test/test_mujoco_world_collision.py TIMEOUT 120)
   ament_add_pytest_test(description_resources test/test_description_resources.py TIMEOUT 120)
   ament_add_pytest_test(world_mesh_staging test/test_world_mesh_staging.py TIMEOUT 120)
+  ament_add_pytest_test(process_lifetime test/test_process_lifetime.py TIMEOUT 60)
 endif()
 
 ament_package()

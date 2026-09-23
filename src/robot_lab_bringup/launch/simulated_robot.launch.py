@@ -673,6 +673,20 @@ def _build_simulation_actions(context):
     initial_pose_yaw = str(float(_config_value(context, "initial_pose_yaw", spawn_yaw)))
 
     actions = []
+    # Every process this launch starts carries a run id, and a detached
+    # watcher stops whatever still carries it once the launch has exited
+    # (see robot_lab_utils.partition_reaper): Gazebo servers, state
+    # publishers or Nav2 left behind by a killed launch otherwise keep
+    # publishing into the next run's ROS graph.
+    run_id = "robot_lab_run_" + uuid.uuid4().hex
+    actions.append(SetEnvironmentVariable("ROBOT_LAB_RUN_ID", run_id))
+    import subprocess
+    import sys
+    subprocess.Popen(
+        [sys.executable, "-m", "robot_lab_utils.partition_reaper",
+         str(os.getpid()), "ROBOT_LAB_RUN_ID=" + run_id],
+        start_new_session=True, stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if _launch_value(context, "simulator") == "gazebo":
         # GUI/server/bridges must share a transport partition, but must not
         # discover a previous launch's world. Respect explicitly supplied IDs.
@@ -681,15 +695,7 @@ def _build_simulation_actions(context):
                      "robot_lab_" + uuid.uuid4().hex)
         actions.extend([SetEnvironmentVariable("IGN_PARTITION", partition),
                         SetEnvironmentVariable("GZ_PARTITION", partition)])
-        # Gazebo's server can outlive this launch (see partition_reaper);
-        # a detached watcher stops whatever is left in this partition.
-        import subprocess
-        import sys
-        subprocess.Popen(
-            [sys.executable, "-m", "robot_lab_utils.partition_reaper",
-             str(os.getpid()), partition],
-            start_new_session=True, stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
     # Older Cyclone builds exhaust their automatic participant range in a
     # full Nav2/SLAM graph. Preserve any operator-supplied discovery config.
     if not context.environment.get("CYCLONEDDS_URI"):
