@@ -14,6 +14,7 @@ import shutil
 import struct
 import subprocess
 import tempfile
+import sys
 import threading
 import time
 import xml.etree.ElementTree as ET
@@ -1839,9 +1840,18 @@ def main(args=None):
         # forwards it. Do not interrupt the physics-thread join and leave native
         # MuJoCo work running while Python tears down the process.
         signal.signal(signal.SIGINT, signal.SIG_IGN)
+        had_viewer = getattr(node, "_viewer", None) is not None
         try:
             node.destroy_node()
         except Exception:
             pass
         if rclpy.ok():
             rclpy.shutdown()
+        if had_viewer:
+            # The passive viewer's render thread still owns its OpenGL
+            # context; Python's interpreter teardown then segfaults on the
+            # Jetson (exit -11, "process has died" on every stop).  Cleanup
+            # is complete here, so leave without that teardown.
+            sys.stdout.flush()
+            sys.stderr.flush()
+            os._exit(0)
