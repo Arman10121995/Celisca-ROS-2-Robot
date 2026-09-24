@@ -503,7 +503,7 @@ class IsaacSpawner(Node):
         try:
             from ament_index_python.packages import get_package_share_directory
             from robot_lab_utils.mesh_assets import (
-                WORLD_MAX_STL_FACES, mesh_staging_dir, stage_mesh_file)
+                stage_world_mesh)
             from robot_lab_utils.sdf_world import (
                 extract_static_shapes, uri_resolver)
         except ImportError as exc:
@@ -519,15 +519,18 @@ class IsaacSpawner(Node):
             pass
         shapes, skipped = extract_static_shapes(
             world_path, uri_resolver(model_dirs, get_package_share_directory))
-        cache_dir = mesh_staging_dir("isaac_world", world_path)
         loadable = []
         for shape in shapes:
             if shape["type"] == "mesh":
-                # Map meshes are capped hard: the USD triangle mesh and its
-                # PhysX collision cook are what make a full-facet furniture
-                # map take minutes to open.
-                staged = stage_mesh_file(shape["mesh"], cache_dir,
-                                         max_faces=WORLD_MAX_STL_FACES)
+                # Map meshes are simplified to the world facet budget: the
+                # USD triangle mesh and its PhysX collision cook are what
+                # make a full-facet furniture map take minutes to open.
+                # Surfaces are simplified, not thinned: keeping every Nth
+                # facet left the Celisca furniture walls full of holes.
+                try:
+                    staged = stage_world_mesh(shape["mesh"])
+                except Exception:
+                    staged = ""
                 if not staged or not staged.lower().endswith(".stl"):
                     skipped.append("mesh not convertible to STL: %s"
                                    % os.path.basename(shape["mesh"]))

@@ -453,8 +453,7 @@ class PyBulletSpawner(Node):
         extension = os.path.splitext(path)[1].lower()
         try:
             from robot_lab_utils.mesh_assets import (
-                WORLD_MAX_STL_FACES, binary_stl_face_count, mesh_staging_dir,
-                stage_mesh_file)
+                WORLD_MAX_STL_FACES, binary_stl_face_count, stage_world_mesh)
         except ImportError:
             self.get_logger().warn(
                 "robot_lab_utils.mesh_assets unavailable; "
@@ -466,8 +465,14 @@ class PyBulletSpawner(Node):
             faces = binary_stl_face_count(path)
             if 0 < faces <= WORLD_MAX_STL_FACES:
                 return path
-        cache_dir = mesh_staging_dir("pybullet_world", os.path.dirname(path))
-        staged = stage_mesh_file(path, cache_dir, max_faces=WORLD_MAX_STL_FACES)
+        # Simplified as connected surfaces (the MuJoCo path's staging).
+        # Capping kept every Nth facet, so a 3.9M-facet Celisca furniture
+        # map showed walls with most of their triangles missing.
+        try:
+            staged = stage_world_mesh(path)
+        except Exception as exc:
+            self.get_logger().warn("world mesh %s: %s" % (os.path.basename(path), exc))
+            staged = ""
         if not staged:
             self.get_logger().warn(
                 "could not convert mesh %s" % os.path.basename(path))

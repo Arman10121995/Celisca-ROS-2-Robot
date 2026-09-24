@@ -473,6 +473,7 @@ is_ascii_stl = _is_ascii_stl
 stage_stl = _stage_stl
 parse_ascii_stl = _parse_ascii_stl
 MAX_STL_FACES = _MUJOCO_MAX_STL_FACES
+load_indexed_mesh = None  # bound below, after its definition
 WORLD_MAX_STL_FACES = _WORLD_MAX_STL_FACES
 
 
@@ -514,6 +515,70 @@ def stage_mesh_file(source, cache_dir, stem=None,
         return ""
 
 
+def _load_indexed_mesh(source):
+    """(vertices, faces) with shared vertices, without optional packages.
+
+    trimesh reads Collada only through pycollada, which the system Python
+    that runs the ROS nodes does not have: every Collada world (small_house,
+    the warehouses, Celisca furniture) failed to stage and the MuJoCo
+    spawner retried forever ("missing pip install pycollada") without ever
+    opening.  Collada and STL go through this module's own readers.
+    """
+    extension = os.path.splitext(source)[1].lower()
+    if extension == ".dae":
+        vertices, faces = _parse_collada_mesh(source)
+    elif extension == ".stl":
+        vertices, faces = (_parse_ascii_stl(source) if _is_ascii_stl(source)
+                           else _read_binary_stl(source))
+    else:
+        import trimesh
+        mesh = trimesh.load(source, force='mesh', process=True)
+        return np.asarray(mesh.vertices, dtype=float), np.asarray(mesh.faces, dtype=np.int64)
+    vertices = np.asarray(vertices, dtype=float)
+    faces = np.asarray(faces, dtype=np.int64)
+    # Weld coincident corners (STL and the Collada reader emit a triangle
+    # soup) so the surface is connected for simplification.
+    keys = np.round(vertices / 1e-6).astype(np.int64)
+    unique, inverse = np.unique(keys, axis=0, return_inverse=True)
+    welded = np.zeros((len(unique), 3))
+    welded[inverse.ravel()] = vertices
+    faces = inverse.ravel()[faces]
+    keep = ((faces[:, 0] != faces[:, 1]) & (faces[:, 1] != faces[:, 2])
+            & (faces[:, 0] != faces[:, 2]))
+    return welded, faces[keep]
+
+
+def _cluster_simplify(vertices, faces, target_faces):
+    """Vertex-clustering decimation to about *target_faces* triangles.
+
+    Used when fast_simplification is not installed.  Vertices are merged on
+    a grid whose cell grows until the budget is met; surfaces thinner than a
+    cell collapse, but no triangle is discarded at random, so walls keep
+    their extent and stay closed.
+    """
+    extent = float(np.max(np.ptp(vertices, axis=0))) if len(vertices) else 0.0
+    if not extent:
+        return vertices, faces
+    cell = extent / 4096.0
+    for _ in range(24):
+        keys = np.floor(vertices / cell).astype(np.int64)
+        unique, inverse = np.unique(keys, axis=0, return_inverse=True)
+        inverse = inverse.ravel()
+        mapped = inverse[faces]
+        keep = ((mapped[:, 0] != mapped[:, 1]) & (mapped[:, 1] != mapped[:, 2])
+                & (mapped[:, 0] != mapped[:, 2]))
+        mapped = mapped[keep]
+        _, first = np.unique(np.sort(mapped, axis=1), axis=0, return_index=True)
+        mapped = mapped[np.sort(first)]
+        if len(mapped) <= target_faces:
+            sums = np.zeros((len(unique), 3))
+            np.add.at(sums, inverse, vertices)
+            counts = np.bincount(inverse, minlength=len(unique))[:, None]
+            return sums / np.maximum(counts, 1), mapped
+        cell *= 1.15  # small steps: land near the budget, keep detail
+    return vertices, faces
+
+
 def stage_world_mesh(source, mujoco_format=False):
     """Simplify connected surfaces, never sample and discard triangles.
 
@@ -531,11 +596,17 @@ def stage_world_mesh(source, mujoco_format=False):
         if source.lower().endswith('.stl') and not _is_ascii_stl(source) \
                 and _binary_stl_face_count(source) <= _WORLD_MAX_STL_FACES:
             return source
-        mesh = trimesh.load(source, force='mesh', process=True)
-        vertices, faces = np.asarray(mesh.vertices), np.asarray(mesh.faces)
+        vertices, faces = _load_indexed_mesh(source)
         if len(faces) > _WORLD_MAX_STL_FACES:
-            import fast_simplification
-            for _ in range(2):
+            try:
+                import fast_simplification
+            except ImportError:
+                # Optional pip package; the ROS interpreter usually lacks it.
+                fast_simplification = None
+            if fast_simplification is None:
+                vertices, faces = _cluster_simplify(vertices, faces,
+                                                    _WORLD_MAX_STL_FACES)
+            for _ in range(2 if fast_simplification is not None else 0):
                 # Opposite-winding duplicates create non-manifold edges
                 # that prevent the quadric simplifier collapsing a surface.
                 _, indices = np.unique(np.sort(faces, axis=1), axis=0, return_index=True)
@@ -543,7 +614,10 @@ def stage_world_mesh(source, mujoco_format=False):
                 if len(faces) <= _WORLD_MAX_STL_FACES:
                     break
                 vertices, faces = fast_simplification.simplify(
-                    vertices, faces, target_count=_WORLD_MAX_STL_FACES, agg=7)
+                    vertices, faces, target_count=_WORLD_MAX_STL_FACES,
+                    # agg 7 thinned 0.1 m walls to 86% of their volume;
+                    # 3 keeps closed surfaces closed at full volume.
+                    agg=3)
         temporary = staged + '.%d.tmp' % os.getpid()
         _write_binary_stl(temporary, vertices, faces)
         os.replace(temporary, staged)
@@ -556,3 +630,6 @@ def stage_world_mesh(source, mujoco_format=False):
             os.replace(temporary, obj)
         return obj
     return staged
+
+
+load_indexed_mesh = _load_indexed_mesh
