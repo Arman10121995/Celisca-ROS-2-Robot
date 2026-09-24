@@ -882,9 +882,6 @@ class PyBulletSpawner(Node):
         last_pub = 0.0
         last_scan = 0.0
         t0 = time.monotonic()
-        wr = self.get_parameter("wheel_radius").value
-        ws = self.get_parameter("wheel_separation").value
-
         while self._running and rclpy.ok():
             now = time.monotonic()
             elapsed = now - t0
@@ -895,8 +892,11 @@ class PyBulletSpawner(Node):
                 stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
             if stale:
                 t = Twist()
-            vl = (t.linear.x - t.angular.z * ws / 2.0) / wr
-            vr = (t.linear.x + t.angular.z * ws / 2.0) / wr
+                if self._drive.kind == "diff":
+                    self._drive.reset()
+            targets = self._drive.targets(t.linear.x, t.angular.z, dt=self._dt)
+            vl = targets.velocity.get(self._drive.left, 0.0)
+            vr = targets.velocity.get(self._drive.right, 0.0)
             clamp = 50.0
             vl = max(-clamp, min(clamp, vl))
             vr = max(-clamp, min(clamp, vr))
@@ -928,7 +928,6 @@ class PyBulletSpawner(Node):
                         self._robot_id, self._rw, p.VELOCITY_CONTROL,
                         targetVelocity=vr, force=5.0)
             else:
-                targets = self._drive.targets(t.linear.x, t.angular.z, dt=self._dt)
                 for joint, rate in targets.velocity.items():
                     idx = self._joint_idx.get(joint, -1)
                     if idx >= 0:

@@ -28,6 +28,7 @@ PYTEST=(python3 -m pytest -q -p no:anyio)
 REG_TEST="src/robot_lab/robot_lab_registry/test"
 ADP_TEST="src/robot_lab_adapter/test"
 BRG_TEST="src/robot_lab_bringup/test"
+GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
   "$REG_TEST/test_p5_algorithm_breadth.py"
@@ -43,6 +44,8 @@ FAST_TESTS=(
   "$ADP_TEST/test_namespaces.py"
   "$ADP_TEST/test_r3_3_resolver_executor.py"
   "$BRG_TEST/test_sim_profiles.py"
+  "$BRG_TEST/test_drive_kinematics.py"
+  "$GUI_TEST/test_drive_control.py"
 )
 
 INTEGRATION_TESTS=(

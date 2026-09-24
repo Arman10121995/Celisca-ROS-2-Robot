@@ -147,7 +147,7 @@ def convert_world(world_path, name=None):
         # floor as a thin box, which is kept as well.  A Celisca world's
         # visible ground must match its 40 x 25 m SDF physics floor, or the
         # default 200 x 200 m plane dwarfs the building in the viewer.
-        ground_size = "20 12.5 0.1" if name.startswith("celisca_") else "100 100 0.1"
+        ground_size = "22 13.75 0.1" if name.startswith("celisca_") else "100 100 0.1"
         ET.SubElement(worldbody, "geom",
                       {"type": "plane", "size": ground_size,
                        "rgba": "0.35 0.37 0.4 1"})

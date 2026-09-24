@@ -57,11 +57,32 @@ class DriveTargets:
 class DiffDrive:
     kind = "diff"
 
-    def __init__(self, left_wheel_joint, right_wheel_joint, wheel_radius, wheel_separation):
+    def __init__(self, left_wheel_joint, right_wheel_joint, wheel_radius,
+                 wheel_separation, max_speed=None, max_accel=None,
+                 max_angular_speed=None, max_angular_accel=None):
         self.left = left_wheel_joint
         self.right = right_wheel_joint
         self.radius = float(wheel_radius)
         self.track = float(wheel_separation)
+        if self.radius <= 0 or self.track <= 0:
+            raise ValueError("wheel_radius and wheel_separation must be positive")
+        self.max_speed = self._limit(max_speed)
+        self.max_accel = self._limit(max_accel)
+        self.max_angular_speed = self._limit(max_angular_speed)
+        self.max_angular_accel = self._limit(max_angular_accel)
+        self._vx = self._wz = 0.0
+
+    @staticmethod
+    def _limit(value):
+        if value is None:
+            return None
+        value = float(value)
+        if not math.isfinite(value) or value <= 0:
+            raise ValueError("drive limits must be finite and positive")
+        return value
+
+    def reset(self):
+        self._vx = self._wz = 0.0
 
     @property
     def wheel_joints(self):
@@ -70,6 +91,23 @@ class DiffDrive:
     steer_joints = ()
 
     def targets(self, vx, wz, dt=None):
+        vx, wz = float(vx), float(wz)
+        if not math.isfinite(vx):
+            vx = 0.0
+        if not math.isfinite(wz):
+            wz = 0.0
+        if self.max_speed is not None:
+            vx = max(-self.max_speed, min(self.max_speed, vx))
+        if self.max_angular_speed is not None:
+            wz = max(-self.max_angular_speed, min(self.max_angular_speed, wz))
+        if dt is not None and dt > 0:
+            if self.max_accel is not None:
+                step = self.max_accel * dt
+                vx = self._vx + max(-step, min(step, vx - self._vx))
+            if self.max_angular_accel is not None:
+                step = self.max_angular_accel * dt
+                wz = self._wz + max(-step, min(step, wz - self._wz))
+        self._vx, self._wz = vx, wz
         left = (vx - wz * self.track / 2.0) / self.radius
         right = (vx + wz * self.track / 2.0) / self.radius
         return DriveTargets({self.left: left, self.right: right}, {}, (vx, wz))
@@ -217,7 +255,11 @@ def drive_from_config(config, left_wheel_joint="", right_wheel_joint="",
     return DiffDrive(config.get("left_wheel_joint", left_wheel_joint),
                      config.get("right_wheel_joint", right_wheel_joint),
                      _float(config, "wheel_radius", wheel_radius),
-                     _float(config, "wheel_separation", wheel_separation))
+                     _float(config, "wheel_separation", wheel_separation),
+                     max_speed=config.get("max_speed"),
+                     max_accel=config.get("max_accel"),
+                     max_angular_speed=config.get("max_angular_speed"),
+                     max_angular_accel=config.get("max_angular_accel"))
 
 
 def parse_drive_config(text):

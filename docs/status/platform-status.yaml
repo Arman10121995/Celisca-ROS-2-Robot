@@ -530,8 +530,8 @@ tasks:
     tasks:
       R5.1:
         title: "Qualify Bumperbot and Labbot mobile tasks"
-        state: "partial"
-        owner: null
+        state: "active"
+        owner: codex
         depends_on:
           - "R4.3"
         scope_paths:
@@ -666,7 +666,8 @@ tasks:
           - "2026-09-15: maps plus affected arena/metadata/benchmark-ledger tests: 114 passed in 15.30 s, including 27 new clearance regression tests; changed maps/registry packages rebuilt; CTest arena_clearance 27 passed and installed validator 5/5 passed."
           - "docs/status/evidence/r61-sim-workflows-2026-09-23/ (claude, continuing this task at the user's request): Nav2 goals succeed 16/16 (bumperbot/labbot x nav_obstacle/celisca_floor_1 x PyBullet/MuJoCo/Gazebo/Isaac), plus the GUI's exact command, RViz-style /goal_pose goals and ~7 m Celisca goals; legged/humanoid localization per backend; six orphaned spawners found publishing into the shared domain (now reaped by run id); MuJoCo mesh maps open again (pycollada missing in the ROS interpreter; Celisca flex compile 84-134 s -> 0.5 s)."
           - "docs/status/evidence/r61-celisca-drive-2026-09-24/: Celisca/furniture world scales and 2D-map coordinates aligned, six map spawns moved into a clear corridor, map-only furniture displayed in PyBullet; GUI /key_vel drives Bumperbot/Labbot in localization, SLAM and 3D SLAM across live PyBullet/MuJoCo/Gazebo/Isaac probes; resized Celisca RViz-style navigation goals succeeded in all four backends (including floor-2 furniture in PyBullet). Final combined source suite 320 passed, 2 skipped."
-        next_action: "Qualify the remaining Celisca furniture/actor map and robot combinations across all backends, including dynamic actor behavior and geometric map-to-collision alignment beyond the tested corridors. Continue collision/spawn/reset qualification on every registered environment. Humanoid/quadruped/drone locomotion and mode enablement remain separate R5 work, gated by real controller and mission evidence."
+          - "docs/status/evidence/r61-celisca-teleop-2026-09-24/: all six Celisca world meshes, 2D map coordinates, MuJoCo planes, and spawn/initial poses enlarged together by 10% after the user found them slightly small. PyBullet Bumperbot furnished-floor-1 goal succeeded (0.75 m requested; 0.254 m map-frame error); a longer MuJoCo goal timed out after only 0.22 m in 120 wall seconds and remains unqualified. GUI Drive has 10 Hz bounded increment ramps, WASD enable, Linux joystick input, and immediate stop; source/Tk tests pass."
+        next_action: "Qualify the remaining Celisca furniture/actor map and robot combinations across all backends, including dynamic actor behavior and geometric map-to-collision alignment beyond the tested corridors. Investigate the slow furnished-map MuJoCo run (0.22 m in 120 wall seconds) before claiming its new 1.1-scale navigation. Continue collision/spawn/reset qualification on every registered environment. Humanoid/quadruped/drone locomotion and mode enablement remain separate R5 work, gated by real controller and mission evidence."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
         state: "queued"
@@ -1010,7 +1011,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R5.3"
+  next_task: "R5.1"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"

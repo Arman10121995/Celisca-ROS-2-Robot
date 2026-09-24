@@ -48,6 +48,31 @@ def test_diff_drive_matches_the_bridges_formula():
     assert targets.position == {}
 
 
+def test_diff_drive_limits_speed_and_acceleration_and_reset():
+    drive = drive_from_config({
+        "max_speed": 0.8, "max_accel": 1.5,
+        "max_angular_speed": 2.0, "max_angular_accel": 4.0,
+    }, "l", "r", 0.06, 0.3)
+    first = drive.targets(100.0, 100.0, dt=0.1)
+    assert first.twist == pytest.approx((0.15, 0.4))
+    for _ in range(20):
+        last = drive.targets(100.0, 100.0, dt=0.1)
+    assert last.twist == pytest.approx((0.8, 2.0))
+    assert drive.body_twist(last.velocity["l"], last.velocity["r"]) == \
+        pytest.approx(last.twist)
+    decel = drive.targets(0.0, 0.0, dt=0.1)
+    assert decel.twist == pytest.approx((0.65, 1.6))
+    drive.reset()  # watchdog/reset must zero accumulated commands
+    assert drive.targets(0.0, 0.0, dt=0.1).twist == (0.0, 0.0)
+
+
+def test_diff_drive_rejects_invalid_limit_configuration():
+    with pytest.raises(ValueError):
+        drive_from_config({"max_speed": -1}, "l", "r")
+    with pytest.raises(ValueError):
+        drive_from_config({"max_accel": float("nan")}, "l", "r")
+
+
 def test_straight_line_rolls_every_wheel_at_the_same_rate():
     targets = _car().targets(0.5, 0.0)
     for joint in ("fl_wheel", "fr_wheel", "rl_wheel", "rr_wheel"):

@@ -5,6 +5,11 @@ robots:
     name: bumperbot
     supported_modes: [display, loc, slam, 3d_slam, nav]
     features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
+    drive:
+      max_speed: 1.0
+      max_accel: 2.0
+      max_angular_speed: 2.0
+      max_angular_accel: 4.0
     supports_room_vacuum: true
 
   labbot:
@@ -18,6 +23,10 @@ robots:
       right_wheel_joint: labbot_right_wheel_joint
       wheel_radius: 0.06
       wheel_separation: 0.30
+      max_speed: 0.8
+      max_accel: 1.5
+      max_angular_speed: 2.0
+      max_angular_accel: 4.0
     supports_room_vacuum: false
 
   # R5.5 four-wheel car-like robots (robot_lab_utils/drive_kinematics.py).

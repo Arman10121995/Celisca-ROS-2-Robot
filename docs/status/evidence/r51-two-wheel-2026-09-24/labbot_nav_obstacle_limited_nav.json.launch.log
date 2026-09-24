@@ -1,0 +1,440 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-24-12-37-15-494083-molar1-774003
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm localization=amcl -> global_localization stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[robot_lab] algorithm global_planning=a_star_planner -> plugin nav2_smac_planner/SmacPlanner2D
+[robot_lab] algorithm local_planning=dwb_local_planner -> plugin dwb_core::DWBLocalPlanner
+[robot_lab] algorithm control=simple_controller -> controller stack
+[INFO] [robot_state_publisher-1]: process started with pid [774046]
+[INFO] [mujoco_spawner-2]: process started with pid [774048]
+[INFO] [joy_teleop-3]: process started with pid [774050]
+[INFO] [joy_node-4]: process started with pid [774052]
+[INFO] [twist_mux-5]: process started with pid [774054]
+[INFO] [twist_marker-6]: process started with pid [774056]
+[INFO] [joystick_relay.py-7]: process started with pid [774058]
+[INFO] [twist_relay-8]: process started with pid [774060]
+[INFO] [simulator_ready_gate-9]: process started with pid [774062]
+[twist_marker-6] 1790246236.335273 [141] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] 1790246236.345133 [141]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_relay-8] 1790246236.352218 [141] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] [INFO] [1790246236.352438879] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-5] [INFO] [1790246236.353321459] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-5] [INFO] [1790246236.353667515] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-5] [INFO] [1790246236.354150278] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[robot_state_publisher-1] 1790246236.354155 [141] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_node-4] 1790246236.356921 [141]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] [INFO] [1790246236.374414574] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790246236.374589362] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790246236.374609202] [robot_state_publisher]: got segment caster_front_link
+[robot_state_publisher-1] [INFO] [1790246236.374619250] [robot_state_publisher]: got segment caster_rear_link
+[robot_state_publisher-1] [INFO] [1790246236.374627507] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790246236.374635155] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790246236.374642675] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790246236.374650515] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790246236.374658611] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790246236.374666099] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790246236.374673492] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790246236.374681012] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790246236.374688180] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790246236.374695540] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790246236.374702676] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-1] [INFO] [1790246236.374709876] [robot_state_publisher]: got segment wheel_right_link
+[joy_teleop-3] 1790246236.816322 [141] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[joystick_relay.py-7] 1790246236.836353 [141] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] 1790246237.232385 [141] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] [INFO] [1790246238.125755434] [mujoco_spawner]: MuJoCo: 8 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-2] [INFO] [1790246238.131024832] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790246238.140853085] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[mujoco_spawner-2] [INFO] [1790246238.141655855] [mujoco_spawner]: Joints: ['labbot_left_wheel_joint', 'labbot_right_wheel_joint']   lw=labbot_left_wheel_joint rw=labbot_right_wheel_joint
+[mujoco_spawner-2] [INFO] [1790246238.142745703] [mujoco_spawner]: MuJoCo model loaded: 4 bodies, 3 joints
+[mujoco_spawner-2] [INFO] [1790246238.143275091] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790246238.143756638] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790246238.183826466] [mujoco_spawner]: MuJoCo spawner running.
+[INFO] [simulator_ready_gate-9]: process has finished cleanly [pid 774062]
+[INFO] [amcl-11]: process started with pid [774244]
+[INFO] [map_server-10]: process started with pid [774242]
+[INFO] [lifecycle_manager-12]: process started with pid [774246]
+[INFO] [ekf_node-13]: process started with pid [774248]
+[INFO] [imu_republisher.py-14]: process started with pid [774250]
+[INFO] [controller_server-15]: process started with pid [774252]
+[INFO] [planner_server-16]: process started with pid [774254]
+[INFO] [smoother_server-17]: process started with pid [774256]
+[INFO] [bt_navigator-18]: process started with pid [774258]
+[INFO] [behavior_server-19]: process started with pid [774260]
+[INFO] [lifecycle_manager-20]: process started with pid [774264]
+[INFO] [wheel_imu_fusion-21]: process started with pid [774280]
+[lifecycle_manager-12] 1790246238.608297 [141] lifecycle_: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-12] [INFO] [1790246238.617842840] [lifecycle_manager_localization]: Creating
+[amcl-11] 1790246238.619567 [141]       amcl: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-12] [INFO] [1790246238.620584918] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[ekf_node-13] 1790246238.626848 [141]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[amcl-11] [0m[INFO] [1790246238.629051924] [amcl]: 
+[amcl-11] 	amcl lifecycle node launched. 
+[amcl-11] 	Waiting on external lifecycle transitions to activate
+[amcl-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.[0m
+[amcl-11] [0m[INFO] [1790246238.630890430] [amcl]: Creating[0m
+[map_server-10] 1790246238.635296 [141] map_server: selected interface "lo" is not multicast-capable: disabling multicast
+[smoother_server-17] 1790246238.647952 [141] smoother_s: selected interface "lo" is not multicast-capable: disabling multicast
+[controller_server-15] 1790246238.652123 [141] controller: selected interface "lo" is not multicast-capable: disabling multicast
+[map_server-10] [INFO] [1790246238.652952877] [map_server]: 
+[map_server-10] 	map_server lifecycle node launched. 
+[map_server-10] 	Waiting on external lifecycle transitions to activate
+[map_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-10] [INFO] [1790246238.653241364] [map_server]: Creating
+[lifecycle_manager-20] 1790246238.658584 [141] lifecycle_: selected interface "lo" is not multicast-capable: disabling multicast
+[planner_server-16] 1790246238.658584 [141] planner_se: selected interface "lo" is not multicast-capable: disabling multicast
+[bt_navigator-18] 1790246238.659571 [141] bt_navigat: selected interface "lo" is not multicast-capable: disabling multicast
+[controller_server-15] [INFO] [1790246238.661302153] [controller_server]: 
+[controller_server-15] 	controller_server lifecycle node launched. 
+[controller_server-15] 	Waiting on external lifecycle transitions to activate
+[controller_server-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-20] [INFO] [1790246238.666196887] [lifecycle_manager_navigation]: Creating
+[bt_navigator-18] [INFO] [1790246238.667228078] [bt_navigator]: 
+[bt_navigator-18] 	bt_navigator lifecycle node launched. 
+[bt_navigator-18] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-18] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-18] [INFO] [1790246238.667368113] [bt_navigator]: Creating
+[planner_server-16] [INFO] [1790246238.667485972] [planner_server]: 
+[planner_server-16] 	planner_server lifecycle node launched. 
+[planner_server-16] 	Waiting on external lifecycle transitions to activate
+[planner_server-16] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-20] [INFO] [1790246238.668586444] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[behavior_server-19] 1790246238.671094 [141] behavior_s: selected interface "lo" is not multicast-capable: disabling multicast
+[smoother_server-17] [INFO] [1790246238.672123644] [smoother_server]: 
+[smoother_server-17] 	smoother_server lifecycle node launched. 
+[smoother_server-17] 	Waiting on external lifecycle transitions to activate
+[smoother_server-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-16] [INFO] [1790246238.674570739] [planner_server]: Creating
+[controller_server-15] [INFO] [1790246238.683870308] [controller_server]: Creating controller server
+[planner_server-16] [INFO] [1790246238.685856176] [global_costmap.global_costmap]: 
+[planner_server-16] 	global_costmap lifecycle node launched. 
+[planner_server-16] 	Waiting on external lifecycle transitions to activate
+[planner_server-16] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-15] [INFO] [1790246238.687695386] [local_costmap.local_costmap]: 
+[controller_server-15] 	local_costmap lifecycle node launched. 
+[controller_server-15] 	Waiting on external lifecycle transitions to activate
+[controller_server-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-19] [INFO] [1790246238.689611461] [behavior_server]: 
+[behavior_server-19] 	behavior_server lifecycle node launched. 
+[behavior_server-19] 	Waiting on external lifecycle transitions to activate
+[behavior_server-19] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-15] [INFO] [1790246238.690947139] [local_costmap.local_costmap]: Creating Costmap
+[planner_server-16] [INFO] [1790246238.691393805] [global_costmap.global_costmap]: Creating Costmap
+[smoother_server-17] [INFO] [1790246238.706507104] [smoother_server]: Creating smoother server
+[lifecycle_manager-12] [INFO] [1790246238.741564884] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-12] [INFO] [1790246238.743400957] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-10] [INFO] [1790246238.764308659] [map_server]: Configuring
+[map_server-10] [INFO] [1790246238.764448758] [map_io]: Loading yaml file: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/maps/map.yaml
+[map_server-10] [INFO] [1790246238.764848255] [map_io]: resolution: 0.05
+[map_server-10] [INFO] [1790246238.764868191] [map_io]: origin[0]: -9.5
+[map_server-10] [INFO] [1790246238.764874559] [map_io]: origin[1]: -9.5
+[map_server-10] [INFO] [1790246238.764879168] [map_io]: origin[2]: 0
+[map_server-10] [INFO] [1790246238.764884032] [map_io]: free_thresh: 0.196
+[map_server-10] [INFO] [1790246238.764888672] [map_io]: occupied_thresh: 0.65
+[map_server-10] [INFO] [1790246238.764894400] [map_io]: mode: trinary
+[map_server-10] [INFO] [1790246238.764901472] [map_io]: negate: 0
+[map_server-10] [INFO] [1790246238.765236520] [map_io]: Loading image_file: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/maps/map.pgm
+[map_server-10] [INFO] [1790246238.790461214] [map_io]: Read map /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/maps/map.pgm: 380 X 380 map @ 0.05 m/cell
+[lifecycle_manager-12] [INFO] [1790246238.802654800] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-11] [0m[INFO] [1790246238.803003864] [amcl]: Configuring[0m
+[amcl-11] [0m[INFO] [1790246238.803174332] [amcl]: initTransforms[0m
+[amcl-11] [0m[INFO] [1790246238.813097691] [amcl]: initPubSub[0m
+[amcl-11] [0m[INFO] [1790246238.819321831] [amcl]: Subscribed to map topic.[0m
+[lifecycle_manager-12] [INFO] [1790246238.824909380] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[map_server-10] [INFO] [1790246238.825187306] [map_server]: Activating
+[map_server-10] [INFO] [1790246238.826138784] [map_server]: Creating bond (map_server) to lifecycle manager.
+[amcl-11] [0m[INFO] [1790246238.827352987] [amcl]: Received a 380 X 380 map @ 0.050 m/pix[0m
+[lifecycle_manager-20] [INFO] [1790246238.860973550] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-20] [INFO] [1790246238.861093201] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-15] [INFO] [1790246238.861504474] [controller_server]: Configuring controller interface
+[controller_server-15] [INFO] [1790246238.862876601] [controller_server]: getting goal checker plugins..
+[controller_server-15] [INFO] [1790246238.863705772] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-15] [INFO] [1790246238.863806414] [local_costmap.local_costmap]: Configuring
+[controller_server-15] [INFO] [1790246238.876838131] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-15] [INFO] [1790246238.887923052] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-15] [INFO] [1790246238.900140670] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-15] [INFO] [1790246238.900272673] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-15] [INFO] [1790246238.904002357] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-15] [INFO] [1790246238.917385890] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-15] [INFO] [1790246238.920854543] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-15] [INFO] [1790246238.923099938] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-15] [INFO] [1790246238.927939119] [controller_server]: Created controller : FollowPath of type dwb_core::DWBLocalPlanner
+[lifecycle_manager-12] [INFO] [1790246238.933786322] [lifecycle_manager_localization]: Server map_server connected with bond.
+[lifecycle_manager-12] [INFO] [1790246238.933877620] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[amcl-11] [0m[INFO] [1790246238.934154138] [amcl]: Activating[0m
+[amcl-11] [0m[INFO] [1790246238.934261597] [amcl]: initialPoseReceived[0m
+[controller_server-15] [INFO] [1790246238.934317630] [controller_server]: Setting transform_tolerance to 0.200000
+[amcl-11] [0m[INFO] [1790246238.934936748] [amcl]: Setting pose (0.404000): -7.000 -7.000 0.000[0m
+[amcl-11] [0m[INFO] [1790246238.935972803] [amcl]: Creating bond (amcl) to lifecycle manager.[0m
+[controller_server-15] [INFO] [1790246238.963778196] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+[controller_server-15] [INFO] [1790246238.965964869] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.966410287] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [INFO] [1790246238.968471133] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.968934184] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [INFO] [1790246238.969776571] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.970223717] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-15] [INFO] [1790246238.972213489] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.972704732] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-15] [INFO] [1790246238.974763883] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.975214357] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-15] [INFO] [1790246238.976032711] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.976445040] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [INFO] [1790246238.977198593] [controller_server]: Critic plugin initialized
+[controller_server-15] [INFO] [1790246238.977239810] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-20] [INFO] [1790246238.991933900] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-16] [INFO] [1790246238.992336629] [planner_server]: Configuring
+[planner_server-16] [INFO] [1790246238.992403767] [global_costmap.global_costmap]: Configuring
+[planner_server-16] [INFO] [1790246238.998406110] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-16] [INFO] [1790246239.012246196] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-16] [INFO] [1790246239.015973000] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-16] [INFO] [1790246239.017044992] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-16] [INFO] [1790246239.023271692] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-16] [INFO] [1790246239.043253452] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[lifecycle_manager-12] [INFO] [1790246239.043431472] [lifecycle_manager_localization]: Server amcl connected with bond.
+[lifecycle_manager-12] [INFO] [1790246239.043515570] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-12] [INFO] [1790246239.043538035] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[planner_server-16] [INFO] [1790246239.045148119] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-16] [INFO] [1790246239.054210082] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-16] [INFO] [1790246239.072035890] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 380 X 380 at 0.050000 m/pix
+[planner_server-16] [INFO] [1790246239.080205674] [planner_server]: Created global planner plugin GridBased of type nav2_smac_planner/SmacPlanner2D
+[planner_server-16] [INFO] [1790246239.081038524] [planner_server]: Configuring GridBased of type SmacPlanner2D
+[planner_server-16] [INFO] [1790246239.088231198] [planner_server]: Configured plugin GridBased of type SmacPlanner2D with tolerance 0.12, maximum iterations 1000000, max on approach iterations 1000, and allowing unknown traversal.
+[planner_server-16] [INFO] [1790246239.088317696] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-20] [INFO] [1790246239.100027431] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-17] [INFO] [1790246239.100365486] [smoother_server]: Configuring smoother server
+[smoother_server-17] [INFO] [1790246239.109975910] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-17] [INFO] [1790246239.114354216] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-20] [INFO] [1790246239.124208965] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-18] [INFO] [1790246239.124608878] [bt_navigator]: Configuring
+[imu_republisher.py-14] 1790246239.130068 [141]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[wheel_imu_fusion-21] 1790246239.158268 [141] wheel_imu_: selected interface "lo" is not multicast-capable: disabling multicast
+[amcl-11] [0m[INFO] [1790246239.198272548] [amcl]: createLaserObject[0m
+[lifecycle_manager-20] [INFO] [1790246239.264564724] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-19] [INFO] [1790246239.266053813] [behavior_server]: Configuring
+[behavior_server-19] [INFO] [1790246239.280777280] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-19] [INFO] [1790246239.283367354] [behavior_server]: Configuring spin
+[behavior_server-19] [INFO] [1790246239.303780580] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-19] [INFO] [1790246239.305803089] [behavior_server]: Configuring backup
+[behavior_server-19] [INFO] [1790246239.324339057] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-19] [INFO] [1790246239.325858579] [behavior_server]: Configuring wait
+[lifecycle_manager-20] [INFO] [1790246239.339512326] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-15] [INFO] [1790246239.339836685] [controller_server]: Activating
+[controller_server-15] [INFO] [1790246239.339927535] [local_costmap.local_costmap]: Activating
+[controller_server-15] [INFO] [1790246239.339955184] [local_costmap.local_costmap]: Checking transform
+[controller_server-15] [INFO] [1790246239.340167189] [local_costmap.local_costmap]: start
+[wheel_imu_fusion-21] [INFO] [1790246239.493772748] [sensor_fusion_wheel_imu_fusion]: wheel_imu_fusion ready
+[controller_server-15] [INFO] [1790246239.541474427] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790246239.646417806] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-20] [INFO] [1790246239.646567218] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-16] [INFO] [1790246239.647178976] [planner_server]: Activating
+[planner_server-16] [INFO] [1790246239.647317795] [global_costmap.global_costmap]: Activating
+[planner_server-16] [INFO] [1790246239.647367204] [global_costmap.global_costmap]: Checking transform
+[planner_server-16] [INFO] [1790246239.647530471] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 0.804000 but the earliest data is at time 1.604000, when looking up transform from frame [base_footprint] to frame [map]
+[planner_server-16] [INFO] [1790246240.147556220] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 1.144000 but the earliest data is at time 1.604000, when looking up transform from frame [base_footprint] to frame [map]
+[planner_server-16] [INFO] [1790246240.647546760] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 1.404000 but the earliest data is at time 1.604000, when looking up transform from frame [base_footprint] to frame [map]
+[planner_server-16] [INFO] [1790246241.147975836] [global_costmap.global_costmap]: start
+[planner_server-16] [INFO] [1790246242.199533089] [planner_server]: Activating plugin GridBased of type SmacPlanner2D
+[planner_server-16] [INFO] [1790246242.201090404] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790246242.307024871] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-20] [INFO] [1790246242.307166187] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-17] [INFO] [1790246242.307747672] [smoother_server]: Activating
+[smoother_server-17] [INFO] [1790246242.307827673] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790246242.413458838] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-20] [INFO] [1790246242.413551224] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-18] [INFO] [1790246242.413997122] [bt_navigator]: Activating
+[bt_navigator-18] [INFO] [1790246242.524763346] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790246242.630372462] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-20] [INFO] [1790246242.630506193] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-19] [INFO] [1790246242.631155199] [behavior_server]: Activating
+[behavior_server-19] [INFO] [1790246242.631247330] [behavior_server]: Activating spin
+[behavior_server-19] [INFO] [1790246242.631293603] [behavior_server]: Activating backup
+[behavior_server-19] [INFO] [1790246242.631326819] [behavior_server]: Activating wait
+[behavior_server-19] [INFO] [1790246242.631364356] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-20] [INFO] [1790246242.738280062] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-20] [INFO] [1790246242.738367232] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-20] [INFO] [1790246242.738393248] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[bt_navigator-18] [INFO] [1790246245.911084769] [bt_navigator]: Begin navigating from current location (-7.00, -7.00) to (-5.00, -7.00)
+[controller_server-15] [INFO] [1790246245.932929833] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [WARN] [1790246245.933121741] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-15] [INFO] [1790246246.983437078] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246248.033430657] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246249.033471487] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246250.083444544] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246251.083429973] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246252.133426221] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246253.183437136] [controller_server]: Passing new path to controller.
+[bt_navigator-18] [WARN] [1790246254.057916558] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-15] [INFO] [1790246254.183420714] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246255.233475205] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246256.233431287] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246257.283429192] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246258.333427716] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246259.333416124] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246260.383440656] [controller_server]: Passing new path to controller.
+[controller_server-15] [INFO] [1790246261.342686081] [controller_server]: Reached the goal!
+[bt_navigator-18] [INFO] [1790246261.381906944] [bt_navigator]: Goal succeeded
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [wheel_imu_fusion-21]: sending signal 'SIGINT' to process[wheel_imu_fusion-21]
+[INFO] [lifecycle_manager-20]: sending signal 'SIGINT' to process[lifecycle_manager-20]
+[INFO] [behavior_server-19]: sending signal 'SIGINT' to process[behavior_server-19]
+[INFO] [bt_navigator-18]: sending signal 'SIGINT' to process[bt_navigator-18]
+[INFO] [smoother_server-17]: sending signal 'SIGINT' to process[smoother_server-17]
+[INFO] [planner_server-16]: sending signal 'SIGINT' to process[planner_server-16]
+[INFO] [controller_server-15]: sending signal 'SIGINT' to process[controller_server-15]
+[INFO] [imu_republisher.py-14]: sending signal 'SIGINT' to process[imu_republisher.py-14]
+[INFO] [ekf_node-13]: sending signal 'SIGINT' to process[ekf_node-13]
+[INFO] [lifecycle_manager-12]: sending signal 'SIGINT' to process[lifecycle_manager-12]
+[INFO] [amcl-11]: sending signal 'SIGINT' to process[amcl-11]
+[INFO] [map_server-10]: sending signal 'SIGINT' to process[map_server-10]
+[INFO] [twist_relay-8]: sending signal 'SIGINT' to process[twist_relay-8]
+[INFO] [joystick_relay.py-7]: sending signal 'SIGINT' to process[joystick_relay.py-7]
+[INFO] [twist_marker-6]: sending signal 'SIGINT' to process[twist_marker-6]
+[INFO] [twist_mux-5]: sending signal 'SIGINT' to process[twist_mux-5]
+[INFO] [joy_node-4]: sending signal 'SIGINT' to process[joy_node-4]
+[INFO] [joy_teleop-3]: sending signal 'SIGINT' to process[joy_teleop-3]
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[lifecycle_manager-20] [INFO] [1790246261.731663639] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-20] [INFO] [1790246261.731953981] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[lifecycle_manager-20] [INFO] [1790246261.733661187] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[behavior_server-19] [INFO] [1790246261.740969667] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-19] [INFO] [1790246261.741219657] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[behavior_server-19] [INFO] [1790246261.741391085] [behavior_server]: Deactivating
+[behavior_server-19] [INFO] [1790246261.741485551] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[bt_navigator-18] [INFO] [1790246261.747734424] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-18] [INFO] [1790246261.747894236] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-18] [INFO] [1790246261.748062368] [bt_navigator]: Deactivating
+[bt_navigator-18] [INFO] [1790246261.748126241] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[behavior_server-19] [INFO] [1790246261.752208443] [behavior_server]: Cleaning up
+[smoother_server-17] [INFO] [1790246261.754871030] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-17] [INFO] [1790246261.755051610] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[smoother_server-17] [INFO] [1790246261.755189469] [smoother_server]: Deactivating
+[smoother_server-17] [INFO] [1790246261.755235454] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[bt_navigator-18] [INFO] [1790246261.760451601] [bt_navigator]: Cleaning up
+[planner_server-16] [INFO] [1790246261.760808120] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-16] [INFO] [1790246261.760982652] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-16] [INFO] [1790246261.761134752] [planner_server]: Deactivating
+[planner_server-16] [INFO] [1790246261.761228802] [global_costmap.global_costmap]: Deactivating
+[smoother_server-17] [INFO] [1790246261.765799366] [smoother_server]: Cleaning up
+[controller_server-15] [INFO] [1790246261.766689914] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-15] [INFO] [1790246261.766892414] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[controller_server-15] [INFO] [1790246261.767079138] [controller_server]: Deactivating
+[controller_server-15] [INFO] [1790246261.767174149] [local_costmap.local_costmap]: Deactivating
+[behavior_server-19] [INFO] [1790246261.774785612] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[ekf_node-13] [INFO] [1790246261.777757550] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-12] [INFO] [1790246261.782784316] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-12] [INFO] [1790246261.782967968] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[lifecycle_manager-12] [INFO] [1790246261.783067683] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[amcl-11] [0m[INFO] [1790246261.787248031] [rclcpp]: signal_handler(SIGINT/SIGTERM)[0m
+[amcl-11] [0m[INFO] [1790246261.787479908] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)[0m
+[amcl-11] [0m[INFO] [1790246261.787660776] [amcl]: Deactivating[0m
+[amcl-11] [0m[INFO] [1790246261.787739081] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[map_server-10] [INFO] [1790246261.791276887] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-10] [INFO] [1790246261.791487644] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-10] [INFO] [1790246261.791606783] [map_server]: Deactivating
+[map_server-10] [INFO] [1790246261.791635775] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[twist_relay-8] [INFO] [1790246261.796040128] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-11] [0m[INFO] [1790246261.798292498] [amcl]: Cleaning up[0m
+[map_server-10] [INFO] [1790246261.802068517] [map_server]: Cleaning up
+[map_server-10] [INFO] [1790246261.802239081] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[twist_marker-6] [INFO] [1790246261.804800545] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-11] [0m[INFO] [1790246261.810134007] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[twist_mux-5] [INFO] [1790246261.810760740] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-4] [INFO] [1790246261.817801695] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-17] [INFO] [1790246261.826616226] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[robot_state_publisher-1] [INFO] [1790246261.833234195] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-17] [INFO] [1790246261.919640034] [smoother_server]: Destroying
+[map_server-10] [INFO] [1790246261.933485235] [map_server]: Destroying
+[behavior_server-19] [INFO] [1790246261.938406559] [behavior_server]: Destroying
+[controller_server-15] [INFO] [1790246261.940387499] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[amcl-11] [0m[INFO] [1790246261.942357558] [amcl]: Destroying[0m
+[lifecycle_manager-12] [INFO] [1790246261.947728045] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization
+[controller_server-15] [INFO] [1790246261.950683726] [controller_server]: Cleaning up
+[controller_server-15] [INFO] [1790246261.951063574] [local_costmap.local_costmap]: Cleaning up
+[controller_server-15] [INFO] [1790246261.979092959] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[INFO] [twist_relay-8]: process has finished cleanly [pid 774060]
+[INFO] [twist_marker-6]: process has finished cleanly [pid 774056]
+[INFO] [twist_mux-5]: process has finished cleanly [pid 774054]
+[bt_navigator-18] [INFO] [1790246262.029509141] [bt_navigator]: Completed Cleaning up
+[bt_navigator-18] [INFO] [1790246262.029622936] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [wheel_imu_fusion-21]: process has finished cleanly [pid 774280]
+[INFO] [joy_node-4]: process has finished cleanly [pid 774052]
+[bt_navigator-18] [INFO] [1790246262.040451782] [bt_navigator]: Destroying
+[controller_server-15] [INFO] [1790246262.048124175] [local_costmap.local_costmap]: Destroying
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 774046]
+[controller_server-15] [INFO] [1790246262.071161450] [controller_server]: Destroying
+[INFO] [smoother_server-17]: process has finished cleanly [pid 774256]
+[INFO] [ekf_node-13]: process has finished cleanly [pid 774248]
+[lifecycle_manager-20] [INFO] [1790246262.101735722] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation
+[mujoco_spawner-2] Exception ignored in: <function Renderer.__del__ at 0xffff685c23b0>
+[mujoco_spawner-2] Traceback (most recent call last):
+[mujoco_spawner-2]   File "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 343, in __del__
+[mujoco_spawner-2]     self.close()
+[mujoco_spawner-2]   File "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py", line 329, in close
+[mujoco_spawner-2]     self._gl_context.free()
+[mujoco_spawner-2]   File "/home/molar1/.local/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 133, in free
+[mujoco_spawner-2]     EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+[mujoco_spawner-2]   File "/usr/lib/python3/dist-packages/OpenGL/platform/baseplatform.py", line 415, in __call__
+[mujoco_spawner-2]     return self( *args, **named )
+[mujoco_spawner-2]   File "/usr/lib/python3/dist-packages/OpenGL/error.py", line 230, in glCheckError
+[mujoco_spawner-2]     raise self._errorClass(
+[INFO] [lifecycle_manager-12]: process has finished cleanly [pid 774246]
+[joy_teleop-3] Traceback (most recent call last):
+[joy_teleop-3]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-3]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-3]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 442, in main
+[joy_teleop-3]     rclpy.shutdown()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+[joy_teleop-3]     _shutdown(context=context)
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+[joy_teleop-3]     return context.shutdown()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+[joy_teleop-3]     self.__context.shutdown()
+[joy_teleop-3] rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [map_server-10]: process has finished cleanly [pid 774242]
+[INFO] [imu_republisher.py-14]: process has finished cleanly [pid 774250]
+[planner_server-16] [INFO] [1790246262.148276298] [planner_server]: Deactivating plugin GridBased of type SmacPlanner2D
+[planner_server-16] [INFO] [1790246262.148388237] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-16] [INFO] [1790246262.158669455] [planner_server]: Cleaning up
+[INFO] [behavior_server-19]: process has finished cleanly [pid 774260]
+[planner_server-16] [INFO] [1790246262.171299365] [global_costmap.global_costmap]: Cleaning up
+[planner_server-16] [INFO] [1790246262.174934613] [planner_server]: Cleaning up plugin GridBased of type SmacPlanner2D
+[planner_server-16] [INFO] [1790246262.175148986] [planner_server]: Destroying plugin GridBased of type SmacPlanner2D
+[planner_server-16] [INFO] [1790246262.182921125] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[INFO] [joystick_relay.py-7]: process has finished cleanly [pid 774058]
+[planner_server-16] [INFO] [1790246262.189167662] [global_costmap.global_costmap]: Destroying
+[mujoco_spawner-2] OpenGL.raw.EGL._errors.EGLError: EGLError(
+[mujoco_spawner-2] 	err = EGL_NOT_INITIALIZED,
+[mujoco_spawner-2] 	baseOperation = eglDestroyContext,
+[mujoco_spawner-2] 	cArguments = (
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLDisplay_pointer object at 0xffff602ccdc0>,
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLContext_pointer object at 0xffff602cd540>,
+[mujoco_spawner-2] 	),
+[mujoco_spawner-2] 	result = 0
+[mujoco_spawner-2] )
+[mujoco_spawner-2] Exception ignored in: <function GLContext.__del__ at 0xffff685c1cf0>
+[mujoco_spawner-2] Traceback (most recent call last):
+[mujoco_spawner-2]   File "/home/molar1/.local/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 138, in __del__
+[mujoco_spawner-2]     self.free()
+[mujoco_spawner-2]   File "/home/molar1/.local/lib/python3.10/site-packages/mujoco/egl/__init__.py", line 133, in free
+[mujoco_spawner-2]     EGL.eglDestroyContext(EGL_DISPLAY, self._context)
+[mujoco_spawner-2]   File "/usr/lib/python3/dist-packages/OpenGL/error.py", line 230, in glCheckError
+[mujoco_spawner-2]     raise self._errorClass(
+[mujoco_spawner-2] OpenGL.raw.EGL._errors.EGLError: EGLError(
+[mujoco_spawner-2] 	err = EGL_NOT_INITIALIZED,
+[mujoco_spawner-2] 	baseOperation = eglDestroyContext,
+[mujoco_spawner-2] 	cArguments = (
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLDisplay_pointer object at 0xffff602ccdc0>,
+[mujoco_spawner-2] 		<OpenGL._opaque.EGLContext_pointer object at 0xffff602cd540>,
+[mujoco_spawner-2] 	),
+[mujoco_spawner-2] 	result = 0
+[mujoco_spawner-2] )
+[planner_server-16] [INFO] [1790246262.198527196] [planner_server]: Destroying
+[INFO] [amcl-11]: process has finished cleanly [pid 774244]
+[ERROR] [joy_teleop-3]: process has died [pid 774050, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_l8abtkyo'].
+[INFO] [lifecycle_manager-20]: process has finished cleanly [pid 774264]
+[INFO] [controller_server-15]: process has finished cleanly [pid 774252]
+[INFO] [bt_navigator-18]: process has finished cleanly [pid 774258]
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 774048]
+[INFO] [planner_server-16]: process has finished cleanly [pid 774254]

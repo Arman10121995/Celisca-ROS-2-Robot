@@ -13,6 +13,7 @@ from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
 from ament_index_python.packages import get_package_share_directory
 from .process_control import stop_group
+from .drive_control import LinuxJoystick, RampDrive
 
 try:
     from robot_lab_utils.mode_capability import (
@@ -425,6 +426,10 @@ class SimulationLauncherGui(tk.Tk):
         self.ros_node = None
         self.cmd_vel_pub = None
         self.drive_repeat_job = None
+        self.drive_model = RampDrive()
+        self.drive_buttons = set()
+        self.drive_keys = set()
+        self.drive_joystick = LinuxJoystick()
         self.current_drive = (0.0, 0.0)
         self._launch_running = False
         self._last_fixes = []
@@ -438,8 +443,10 @@ class SimulationLauncherGui(tk.Tk):
         self.mode_var = tk.StringVar(value="display")
         self.simulator_var = tk.StringVar(value="gazebo")
         self.launch_kind_var = tk.StringVar(value="simulation")
-        self.drive_linear_var = tk.DoubleVar(value=0.25)
-        self.drive_angular_var = tk.DoubleVar(value=0.8)
+        self.drive_linear_var = tk.DoubleVar(value=0.025)
+        self.drive_angular_var = tk.DoubleVar(value=0.08)
+        self.drive_input_enabled = tk.BooleanVar(value=False)
+        self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
         self.command_var = tk.StringVar()
         self._prepared_command = []
@@ -448,6 +455,9 @@ class SimulationLauncherGui(tk.Tk):
 
         self.mode_buttons = {}
         self._build_ui()
+        self.bind_all("<KeyPress>", self._drive_key_press, add="+")
+        self.bind_all("<KeyRelease>", self._drive_key_release, add="+")
+        self.bind_all("<FocusOut>", lambda _event: self.drive_keys.clear(), add="+")
         self._update_from_selection()
         self.after(100, self._poll_output)
         self.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -836,24 +846,33 @@ class SimulationLauncherGui(tk.Tk):
         speed_frame.grid(row=26, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
-        ttk.Label(speed_frame, text="Linear").grid(row=0, column=0, sticky="w", padx=(0, 4))
+        ttk.Label(speed_frame, text="Δ linear / 0.1 s").grid(row=0, column=0, sticky="w", padx=(0, 4))
         ttk.Spinbox(
             speed_frame,
-            from_=0.05,
-            to=1.0,
-            increment=0.05,
+            from_=0.005,
+            to=0.1,
+            increment=0.005,
             textvariable=self.drive_linear_var,
             width=6,
         ).grid(row=0, column=1, sticky="ew", padx=(0, 8))
-        ttk.Label(speed_frame, text="Angular").grid(row=0, column=2, sticky="w", padx=(0, 4))
+        ttk.Label(speed_frame, text="Δ angular / 0.1 s").grid(row=0, column=2, sticky="w", padx=(0, 4))
         ttk.Spinbox(
             speed_frame,
-            from_=0.1,
-            to=2.0,
-            increment=0.1,
+            from_=0.01,
+            to=0.2,
+            increment=0.01,
             textvariable=self.drive_angular_var,
             width=6,
         ).grid(row=0, column=3, sticky="ew")
+
+        input_frame = ttk.Frame(speed_frame)
+        input_frame.grid(row=1, column=0, columnspan=4, sticky="ew", pady=(6, 0))
+        ttk.Checkbutton(
+            input_frame, text="Enable WASD + joystick",
+            variable=self.drive_input_enabled,
+            command=self._toggle_drive_input,
+        ).pack(side="left")
+        ttk.Label(input_frame, textvariable=self.drive_status_var).pack(side="left", padx=8)
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
         self.save_map_button.grid(row=27, column=0, sticky="ew", pady=(0, 4))
@@ -2152,8 +2171,35 @@ class SimulationLauncherGui(tk.Tk):
 
     def _bind_drive_button(self, button, linear_scale, angular_scale):
         button.bind("<ButtonPress-1>", lambda _event: self._start_drive(linear_scale, angular_scale))
-        button.bind("<ButtonRelease-1>", lambda _event: self._stop_drive())
-        button.bind("<Leave>", lambda _event: self._stop_drive())
+        button.bind("<ButtonRelease-1>", lambda _event: self._release_drive(linear_scale, angular_scale))
+        button.bind("<Leave>", lambda _event: self._release_drive(linear_scale, angular_scale))
+
+    def _toggle_drive_input(self):
+        if not self.drive_input_enabled.get():
+            self.drive_keys.clear()
+            self.drive_joystick.close()
+            self.drive_status_var.set("Keyboard/joystick off")
+        else:
+            self.drive_status_var.set("WASD active; looking for joystick")
+        self._schedule_drive()
+
+    def _drive_key_press(self, event):
+        if not self.drive_input_enabled.get():
+            return
+        if isinstance(event.widget, (tk.Entry, tk.Text, ttk.Entry,
+                                     ttk.Spinbox, ttk.Combobox)):
+            return
+        key = event.keysym.lower()
+        if key in ("w", "a", "s", "d"):
+            self.drive_keys.add(key)
+            self._schedule_drive()
+
+    def _drive_key_release(self, event):
+        self.drive_keys.discard(event.keysym.lower())
+
+    def _schedule_drive(self):
+        if self.drive_repeat_job is None:
+            self._repeat_drive()
 
     def _ensure_ros_publisher(self):
         if rclpy is None or Twist is None:
@@ -2187,25 +2233,58 @@ class SimulationLauncherGui(tk.Tk):
         subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=subprocess_env())
 
     def _start_drive(self, linear_scale, angular_scale):
-        if self.drive_repeat_job is not None:
-            self.after_cancel(self.drive_repeat_job)
-            self.drive_repeat_job = None
-        linear = float(self.drive_linear_var.get()) * linear_scale
-        angular = float(self.drive_angular_var.get()) * angular_scale
-        self.current_drive = (linear, angular)
-        self._repeat_drive()
+        self.drive_buttons.add((linear_scale, angular_scale))
+        self._schedule_drive()
+
+    def _release_drive(self, linear_scale, angular_scale):
+        self.drive_buttons.discard((linear_scale, angular_scale))
 
     def _repeat_drive(self):
-        linear, angular = self.current_drive
+        self.drive_repeat_job = None
+        robot = self.robot_var.get()
+        drive_profile = self.robot_profiles.get(robot, {}).get("drive", {})
+        self.drive_model.max_linear = float(
+            drive_profile.get("max_speed", 0.8 if robot == "labbot" else 1.0))
+        # This policy's forward walk/stop passed, but turning fell in live
+        # MuJoCo trials; do not command its unqualified axis from the pad.
+        self.drive_model.max_angular = (
+            0.0 if robot == "berkeley_humanoid_lite_sim"
+            and self.simulator_var.get() == "mujoco" else 2.0)
+        if self.drive_model.max_angular == 0.0:
+            self.drive_model.angular = 0.0
+        linear_input = sum(value[0] for value in self.drive_buttons)
+        angular_input = sum(value[1] for value in self.drive_buttons)
+        if self.drive_input_enabled.get():
+            linear_input += int("w" in self.drive_keys) - int("s" in self.drive_keys)
+            angular_input += int("a" in self.drive_keys) - int("d" in self.drive_keys)
+            joy_linear, joy_angular = self.drive_joystick.poll()
+            linear_input += joy_linear
+            angular_input += joy_angular
+            if self.drive_joystick.path:
+                self.drive_status_var.set(f"WASD + {self.drive_joystick.path}")
+        try:
+            linear_step = float(self.drive_linear_var.get())
+            angular_step = float(self.drive_angular_var.get())
+        except (ValueError, tk.TclError):
+            linear_step, angular_step = 0.025, 0.08
+        linear, angular = self.drive_model.step(
+            linear_input, angular_input, linear_step, angular_step)
+        self.current_drive = (linear, angular)
         self._publish_drive(linear, angular)
-        if linear != 0.0 or angular != 0.0:
+        if (self.drive_buttons or self.drive_keys or self.drive_input_enabled.get()
+                or abs(linear) > 1e-9 or abs(angular) > 1e-9):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self):
         if self.drive_repeat_job is not None:
             self.after_cancel(self.drive_repeat_job)
             self.drive_repeat_job = None
-        self.current_drive = (0.0, 0.0)
+        self.drive_input_enabled.set(False)
+        self.drive_joystick.close()
+        self.drive_status_var.set("Keyboard/joystick off")
+        self.drive_buttons.clear()
+        self.drive_keys.clear()
+        self.current_drive = self.drive_model.stop()
         self._publish_drive(0.0, 0.0)
 
     def _default_map_save_dir(self):

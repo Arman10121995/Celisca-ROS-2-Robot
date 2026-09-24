@@ -323,6 +323,8 @@ class IsaacSpawner(Node):
         twist = self._twist
         if now - self._last_cmd_time > 0.5:
             twist = Twist()
+            if self._drive.kind == "diff":
+                self._drive.reset()
         targets = self._drive.targets(twist.linear.x, twist.angular.z, dt=dt)
         try:
             proc.stdin.write(json.dumps({"joint_targets": {

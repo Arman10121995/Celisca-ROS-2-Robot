@@ -15,7 +15,7 @@
       <link name="link">
         <collision name="collision">
           <geometry>
-            <box><size>40 25 0.1</size></box>
+            <box><size>44 27.5 0.1</size></box>
           </geometry>
           <surface>
             <friction>
@@ -28,7 +28,7 @@
         </collision>
         <visual name="visual">
           <geometry>
-            <box><size>40 25 0.1</size></box>
+            <box><size>44 27.5 0.1</size></box>
           </geometry>
           <material>
             <ambient>0.3 0.3 0.3 1</ambient>
@@ -40,14 +40,14 @@
 
     <model name="celisca_floor_2_furniture">
       <static>true</static>
-      <pose>0.9 -2.7 0 0 0 0</pose>
+      <pose>0.99 -2.97 0 0 0 0</pose>
       <link name="link">
 
         <visual name="visual">
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl</uri>
-              <scale>0.575 0.575 0.575</scale>
+              <scale>0.6325 0.6325 0.6325</scale>
             </mesh>
           </geometry>
           <material>
@@ -62,7 +62,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl</uri>
-              <scale>0.575 0.575 0.575</scale>
+              <scale>0.6325 0.6325 0.6325</scale>
             </mesh>
           </geometry>
           <material>
@@ -76,7 +76,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl</uri>
-              <scale>0.575 0.575 0.575</scale>
+              <scale>0.6325 0.6325 0.6325</scale>
             </mesh>
           </geometry>
         </collision>

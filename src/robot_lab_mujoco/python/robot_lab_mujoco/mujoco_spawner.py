@@ -1583,6 +1583,8 @@ class MuJoCoSpawner(Node):
             stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
         if stale:
             command = Twist()
+            if self._drive.kind == "diff":
+                self._drive.reset()
         if self._model.nu > 0 and not getattr(self, "_robot_free", False):
             targets = self._drive.targets(
                 command.linear.x, command.angular.z, dt=self._dt)

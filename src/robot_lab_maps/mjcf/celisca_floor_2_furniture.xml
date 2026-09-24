@@ -4,12 +4,12 @@
   <option gravity="0 0 -9.81" />
   <compiler angle="radian" />
   <asset>
-    <mesh name="celisca_floor_2_furniture" file="/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl" scale="0.575 0.575 0.575" />
+    <mesh name="celisca_floor_2_furniture" file="/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl" scale="0.6325 0.6325 0.6325" />
   </asset>
   <worldbody>
-    <geom type="plane" size="20 12.5 0.1" rgba="0.35 0.37 0.4 1" />
-    <geom pos="0 0 -0.05" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="20 12.5 0.05" />
-    <geom pos="0.9 -2.7 0" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="mesh" mesh="celisca_floor_2_furniture" />
+    <geom type="plane" size="22 13.75 0.1" rgba="0.35 0.37 0.4 1" />
+    <geom pos="0 0 -0.05" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="22 13.75 0.05" />
+    <geom pos="0.99 -2.97 0" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="mesh" mesh="celisca_floor_2_furniture" />
     <light diffuse="0.8 0.8 0.8" pos="0 0 10" dir="0 0 -1" castshadow="true" />
     <light diffuse="0.3 0.3 0.3" pos="0 -6 6" dir="0 1 -1" />
   </worldbody>

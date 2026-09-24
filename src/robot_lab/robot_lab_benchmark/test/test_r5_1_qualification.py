@@ -7,7 +7,7 @@ Covers the R5.1 acceptance bar:
   were measured from the real robot sources.
 - Both bases pass the static golden checks; a tampered value fails.
 - Capabilities are claimed only when implemented: an RGB-D claim requires
-  a depth camera; Labbot (no RGB-D) does not claim it.
+  a depth camera. Both current robot descriptions include one.
 - Task-level qualification is injected; with no executor the report is
   honestly not a pass.
 - Truth and odometry trajectories stay separate; odometry drift is
@@ -19,6 +19,8 @@ from __future__ import annotations
 import dataclasses
 import json
 import math
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -130,6 +132,7 @@ def _labbot_urdf():
         _wheel_joint("labbot_right_wheel_joint", "base_link", "labbot_right_wheel_link", "-0.15"),
         _sensor("lidar", "ray"),
         _sensor("imu", "imu"),
+        _sensor("oakd", "depth"),
         "<ros2_control name='diff_drive'><joint name='labbot_left_wheel_joint'>"
         "<command_interface name='velocity'/></joint>"
         "<joint name='labbot_right_wheel_joint'><command_interface name='velocity'/>"
@@ -155,6 +158,25 @@ def _all_stages_pass(robot_id, spec):
 
 
 class TestDescriptionExtraction:
+    @pytest.mark.parametrize("robot_id", ("bumperbot", "labbot"))
+    def test_installed_robot_description_matches_golden(self, robot_id):
+        """Qualify the actual xacro used by bringup, not only a fixture."""
+        if shutil.which("xacro") is None:
+            pytest.skip("ROS xacro executable is not installed")
+        yaml = pytest.importorskip("yaml")
+        ament = pytest.importorskip("ament_index_python.packages")
+        profiles = yaml.safe_load((
+            _benchmark_pkg.parents[1] / "robot_lab_robots" / "config" / "robots.yaml"
+        ).read_text())["robots"]
+        share = Path(ament.get_package_share_directory("robot_lab_robots"))
+        model = share / profiles[robot_id]["xacro"]
+        urdf = subprocess.run(
+            ["xacro", str(model)], check=True, capture_output=True, text=True,
+            timeout=60).stdout
+        checks, issues = run_static_checks(
+            parse_robot_description(urdf), golden_for(robot_id))
+        assert not issues, [(c.name, c.detail) for c in checks if not c.passed]
+
     def test_bumperbot_parse(self):
         desc = parse_robot_description(_bumperbot_urdf())
         assert desc.robot_name == "bumperbot"
@@ -186,10 +208,9 @@ class TestDescriptionExtraction:
         desc = parse_robot_description(_bumperbot_urdf(with_rgbd=True))
         assert {"ray", "imu", "depth"} <= set(desc.sensor_types)
 
-    def test_labbot_sensors_exclude_depth(self):
+    def test_labbot_sensors_include_depth(self):
         desc = parse_robot_description(_labbot_urdf())
-        assert {"ray", "imu"} <= set(desc.sensor_types)
-        assert "depth" not in desc.sensor_types
+        assert {"ray", "imu", "depth"} <= set(desc.sensor_types)
 
     def test_actuated_joints_from_ros2_control(self):
         desc = parse_robot_description(_bumperbot_urdf())
@@ -224,9 +245,9 @@ class TestCapabilities:
         desc = parse_robot_description(_bumperbot_urdf(with_rgbd=False))
         assert "rgbd" not in desc.capabilities
 
-    def test_labbot_does_not_claim_rgbd(self):
+    def test_labbot_claims_rgbd(self):
         desc = parse_robot_description(_labbot_urdf())
-        assert "rgbd" not in desc.capabilities
+        assert "rgbd" in desc.capabilities
 
     def test_both_claim_diff_drive_lidar_imu(self):
         for xml in (_bumperbot_urdf(), _labbot_urdf()):
@@ -340,14 +361,15 @@ class TestStaticChecks:
         assert not fp.passed
 
     def test_rgbd_claim_follows_depth_hardware(self):
-        # capabilities are derived, so a false claim is impossible by
-        # construction: labbot (no depth) never claims rgbd, and adding a
-        # depth sensor to the description is what produces the claim
+        # Capabilities are derived from sensors, so removing the depth camera
+        # removes the RGB-D claim and fails the current Labbot golden.
         desc = parse_robot_description(_labbot_urdf())
-        assert "rgbd" not in desc.capabilities
-        with_depth = dataclasses.replace(
-            desc, sensor_types=desc.sensor_types + ("rgbd_camera",))
-        assert "rgbd" in with_depth.capabilities
+        assert "rgbd" in desc.capabilities
+        without_depth = dataclasses.replace(
+            desc, sensor_types=tuple(t for t in desc.sensor_types if t != "depth"))
+        assert "rgbd" not in without_depth.capabilities
+        _, issues = run_static_checks(without_depth, golden_for("labbot"))
+        assert issues
 
 
 # ----------------------------------------------------------------------
@@ -453,6 +475,6 @@ class TestReportOutput:
         assert math.isclose(g.wheel_separation, 0.1402203698837279, abs_tol=1e-9)
         assert math.isclose(GOLDEN["labbot"].wheel_separation, 0.30, abs_tol=1e-9)
 
-    def test_labbot_golden_is_not_rgbd_capable(self):
-        assert GOLDEN["labbot"].rgbd_capable is False
-        assert "depth" not in GOLDEN["labbot"].required_sensor_types
+    def test_labbot_golden_includes_rgbd(self):
+        assert GOLDEN["labbot"].rgbd_capable is True
+        assert "depth" in GOLDEN["labbot"].required_sensor_types

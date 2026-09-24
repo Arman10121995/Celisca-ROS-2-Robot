@@ -85,6 +85,38 @@ def test_command_is_filled_and_run_is_visible_on_open(app):
     assert app.start_button.winfo_rooty() < app.winfo_rooty() + app.winfo_height()
 
 
+def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
+    with patch.object(app, "_publish_drive") as publish, \
+            patch.object(app.drive_joystick, "poll", return_value=(0.0, 0.0)):
+        app._start_drive(1.0, 0.0)
+        assert app.current_drive == (0.025, 0.0)
+        app._repeat_drive()
+        assert app.current_drive == (0.05, 0.0)
+        app._release_drive(1.0, 0.0)
+        app._repeat_drive()
+        assert app.current_drive == (0.025, 0.0)
+        app._repeat_drive()
+        assert app.current_drive == (0.0, 0.0)
+
+        app.drive_input_enabled.set(True)
+        app._toggle_drive_input()
+        app._drive_key_press(Mock(keysym="w", widget=app))
+        app._repeat_drive()
+        assert app.current_drive == (0.025, 0.0)
+        app._drive_key_press(Mock(keysym="a", widget=app))
+        app._repeat_drive()
+        assert app.current_drive == (0.05, 0.08)
+        app._drive_key_release(Mock(keysym="w"))
+        app._drive_key_release(Mock(keysym="a"))
+        app._repeat_drive()
+        assert app.current_drive == (0.025, 0.0)
+        app._stop_drive()
+        assert app.current_drive == (0.0, 0.0)
+        assert publish.call_args.args == (0.0, 0.0)
+    app.drive_input_enabled.set(False)
+    app._toggle_drive_input()
+
+
 @pytest.mark.parametrize("label,value", [("GUI", "true"), ("Headless", "false"), ("Auto", "auto")])
 def test_gui_radio_immediately_updates_command(app, label, value):
     for widget in widgets(app):

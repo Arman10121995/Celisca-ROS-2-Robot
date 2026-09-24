@@ -360,7 +360,8 @@ class RobotGolden:
 #: y=+-0.15, base_link 0.12 m above base_footprint. Sensor requirements use
 #: the *normalized* vocabulary (lidar/imu/depth) so both classic Gazebo
 #: (ray/depth) and Ignition/Gz (gpu_lidar/rgbd_camera) dialects qualify.
-#: Labbot has no RGB-D sensor and none is claimed. Bumperbot's base
+# Labbot now has the shared OAK-D RGB-D description and declares the camera
+# in its profile. Bumperbot's base
 #: collision is a mesh, so its footprint is mesh-defined (no circular
 #: radius is fabricated).
 GOLDEN: Dict[str, RobotGolden] = {
@@ -380,9 +381,9 @@ GOLDEN: Dict[str, RobotGolden] = {
         wheel_separation=0.30,
         base_footprint_offset_z=0.12,
         wheel_joints=("labbot_left_wheel_joint", "labbot_right_wheel_joint"),
-        required_sensor_types=("lidar", "imu"),
+        required_sensor_types=("lidar", "imu", "depth"),
         required_actuated_joints=2,
-        rgbd_capable=False,
+        rgbd_capable=True,
     ),
 }
 
