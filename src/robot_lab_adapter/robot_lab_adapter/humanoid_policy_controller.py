@@ -138,7 +138,11 @@ class HumanoidPolicyController(Node):
         self._gyro = (0.0, 0.0, 0.0)
         self._commanded = False
 
-        sensor_qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.BEST_EFFORT)
+        # The policy closes a 250 Hz effort loop on live simulator state. A
+        # ten-sample sensor queue can feed it measurements already 40 ms old
+        # when the ROS graph is busy (e.g. localization + RViz); prefer the
+        # newest sample over processing a backlog of obsolete joint/IMU data.
+        sensor_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.BEST_EFFORT)
         self._joint_sub = self.create_subscription(
             JointState, joint_states_topic, self._on_joint_state, sensor_qos
         )

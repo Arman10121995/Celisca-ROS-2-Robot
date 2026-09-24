@@ -284,7 +284,8 @@ def test_humanoid_mode_buttons_follow_what_the_robot_can_do(app, robot, simulato
     if app.simulator_var.get() != simulator:
         pytest.skip('%s not selectable on this host' % simulator)
     assert app.mode_buttons['loc'].instate(['!disabled' if can_localize else 'disabled'])
-    # No walking gait: mapping by moving and navigation stay unavailable.
+    # MuJoCo localization can walk with the Drive pad. Mapping and
+    # navigation stay unavailable until their sensor/goal paths qualify.
     for mode in ('slam', 'nav'):
         assert app.mode_buttons[mode].instate(['disabled'])
     if can_localize:

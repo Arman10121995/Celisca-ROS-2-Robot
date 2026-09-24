@@ -39,11 +39,19 @@ def main():
     parser.add_argument('--axis', choices=['x', 'y'], default='y')
     parser.add_argument('--force', type=float, default=5.0)
     parser.add_argument('--policy', action='store_true', help='probe policy walk/stop instead of standing')
+    parser.add_argument('--command-start', type=float, default=1.0,
+                        help='simulated second to start the policy walk (default: 1)')
+    parser.add_argument('--spawn-x', type=float, default=0.0)
+    parser.add_argument('--spawn-y', type=float, default=0.0)
     args = parser.parse_args()
     if not math.isfinite(args.force) or abs(args.force) > 10:
         parser.error('force must be finite and bounded to +/-10 N')
     if args.policy and args.force != 0:
         parser.error('policy walk probe requires --force 0')
+    if not math.isfinite(args.command_start) or args.command_start < 0:
+        parser.error('--command-start must be finite and nonnegative')
+    if not all(math.isfinite(v) for v in (args.spawn_x, args.spawn_y)):
+        parser.error('spawn coordinates must be finite')
     args.output.mkdir(parents=True, exist_ok=True)
     robot = Path(share('robot_lab_robots')) / 'berkeley_humanoid_lite'
     params = {
@@ -51,6 +59,7 @@ def main():
         'effort_controller_config': str(robot / 'config/bhl_controllers.yaml'),
         'world_xml': str(Path(share('robot_lab_maps')) / 'mjcf/nav_empty.xml'),
         'robot_name': 'bhl', 'spawn_z': '-0.038', 'gui': 'false',
+        'spawn_x': str(args.spawn_x), 'spawn_y': str(args.spawn_y),
         'physics_rate': '250.0', 'publish_rate': '250.0',
         'use_sim_time': 'true', 'camera_rate': '0.0',
     }
@@ -80,8 +89,8 @@ def main():
     # stop budget the reference qualification gives its stop phase
     # (qualify_policy.PHASES), so the final-second settling check is applied
     # after the vehicle has actually had time to stop.
-    walk_until = 6.0
-    budget = 11.0 if args.policy else 8.0
+    walk_until = args.command_start + 5.0
+    budget = args.command_start + 10.0 if args.policy else 8.0
 
     class PushSpawner(MuJoCoSpawner):
         def _step_physics(self):
@@ -145,7 +154,7 @@ def main():
             rclpy.spin_once(node, timeout_sec=.01)
             if args.policy and records:
                 t = records[-1]['t']
-                if t >= 1 and t - last_command_t >= .04:
+                if t >= args.command_start and t - last_command_t >= .04:
                     cmd = Twist()
                     cmd.linear.x = .25 if t < walk_until else 0.0
                     command_pub.publish(cmd)

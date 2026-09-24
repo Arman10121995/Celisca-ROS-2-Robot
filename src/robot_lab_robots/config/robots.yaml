@@ -158,8 +158,10 @@ robots:
     package: robot_lab_robots
     xacro: berkeley_humanoid_lite/xacro/bhl_sim.xacro
     name: bhl
-    # As berkeley_humanoid_lite: localization in the PyBullet/MuJoCo/Isaac
-    # bridges only; no LiDAR or camera in the description, no gait yet.
+    # Localization is available through the PyBullet/MuJoCo bridges. The
+    # MuJoCo localization launch also starts the ONNX effort policy, so the
+    # GUI Drive pad can walk this profile. Mapping/navigation remain gated:
+    # there is no qualified LiDAR/camera navigation stack for this biped.
     supported_modes: [display, loc]
     features: [ros2_control]
     supports_room_vacuum: false

@@ -936,6 +936,28 @@ def _build_simulation_actions(context):
         if gui_value == "auto":
             gui_value = "true" if os.environ.get("DISPLAY") else "false"
 
+        # The simulated BHL is an effort-driven biped. In localization mode
+        # the GUI Drive pad publishes /key_vel, which twist_mux forwards to
+        # the policy; the simulator's passive joint hold must be off so the
+        # policy can move the legs. Start the controller before the backend
+        # so it is ready for the first joint/IMU measurements.
+        bhl_policy_active = (
+            robot_model == "berkeley_humanoid_lite_sim"
+            and simulator == "mujoco" and mode_name == "loc"
+        )
+        if bhl_policy_active:
+            actions.append(
+                Node(
+                    package="robot_lab_adapter",
+                    executable="humanoid-policy-controller",
+                    output="screen",
+                    parameters=[{
+                        "use_sim_time": _as_bool(use_sim_time, True),
+                        "cmd_vel_topic": "/robot_lab_controller/cmd_vel_unstamped",
+                    }],
+                )
+            )
+
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(sim_share, sim_launch)),
@@ -957,7 +979,8 @@ def _build_simulation_actions(context):
                     # loc) stands on the same joint hold as in display mode;
                     # otherwise it collapses and scans the floor.  Wheeled
                     # robots are never held ('auto' in the spawners).
-                    "hold_position": _launch_value(context, "display_hold"),
+                    "hold_position": ("false" if bhl_policy_active else
+                                      _launch_value(context, "display_hold")),
                     **drive_args,
                 }.items(),
             )

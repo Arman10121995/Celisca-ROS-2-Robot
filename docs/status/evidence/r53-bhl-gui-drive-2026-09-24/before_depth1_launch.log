@@ -1,0 +1,230 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-24-11-36-40-558363-molar1-727335
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm localization=amcl -> global_localization stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[INFO] [robot_state_publisher-1]: process started with pid [727350]
+[INFO] [mujoco_spawner-2]: process started with pid [727352]
+[INFO] [joy_teleop-3]: process started with pid [727354]
+[INFO] [joy_node-4]: process started with pid [727356]
+[INFO] [twist_mux-5]: process started with pid [727358]
+[INFO] [twist_marker-6]: process started with pid [727360]
+[INFO] [joystick_relay.py-7]: process started with pid [727362]
+[INFO] [twist_relay-8]: process started with pid [727364]
+[INFO] [simulator_ready_gate-9]: process started with pid [727366]
+[twist_marker-6] 1790242601.464366 [111] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-1] 1790242601.469984 [111] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] 1790242601.478241 [111]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_node-4] 1790242601.484575 [111]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_relay-8] 1790242601.486757 [111] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-5] [INFO] [1790242601.488660565] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-5] [INFO] [1790242601.490703285] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-5] [INFO] [1790242601.491781445] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[robot_state_publisher-1] [WARN] [1790242601.492144287] [kdl_parser]: The root link base has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-1] [INFO] [1790242601.492352380] [robot_state_publisher]: got segment arm_left_elbow_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492424795] [robot_state_publisher]: got segment arm_left_elbow_roll
+[robot_state_publisher-1] [INFO] [1790242601.492439610] [robot_state_publisher]: got segment arm_left_hand_link
+[robot_state_publisher-1] [INFO] [1790242601.492448698] [robot_state_publisher]: got segment arm_left_shoulder_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492457082] [robot_state_publisher]: got segment arm_left_shoulder_roll
+[robot_state_publisher-1] [INFO] [1790242601.492464506] [robot_state_publisher]: got segment arm_left_shoulder_yaw
+[robot_state_publisher-1] [INFO] [1790242601.492472186] [robot_state_publisher]: got segment arm_right_elbow_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492479386] [robot_state_publisher]: got segment arm_right_elbow_roll
+[robot_state_publisher-1] [INFO] [1790242601.492487066] [robot_state_publisher]: got segment arm_right_hand_link
+[robot_state_publisher-1] [INFO] [1790242601.492494298] [robot_state_publisher]: got segment arm_right_shoulder_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492501785] [robot_state_publisher]: got segment arm_right_shoulder_roll
+[robot_state_publisher-1] [INFO] [1790242601.492509145] [robot_state_publisher]: got segment arm_right_shoulder_yaw
+[robot_state_publisher-1] [INFO] [1790242601.492516505] [robot_state_publisher]: got segment base
+[robot_state_publisher-1] [INFO] [1790242601.492524057] [robot_state_publisher]: got segment imu
+[robot_state_publisher-1] [INFO] [1790242601.492531577] [robot_state_publisher]: got segment imu_2
+[robot_state_publisher-1] [INFO] [1790242601.492539129] [robot_state_publisher]: got segment leg_left_ankle_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492546809] [robot_state_publisher]: got segment leg_left_ankle_roll
+[robot_state_publisher-1] [INFO] [1790242601.492554105] [robot_state_publisher]: got segment leg_left_hip_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492561529] [robot_state_publisher]: got segment leg_left_hip_roll
+[robot_state_publisher-1] [INFO] [1790242601.492568984] [robot_state_publisher]: got segment leg_left_hip_yaw
+[robot_state_publisher-1] [INFO] [1790242601.492650423] [robot_state_publisher]: got segment leg_left_knee_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492669559] [robot_state_publisher]: got segment leg_right_ankle_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492679191] [robot_state_publisher]: got segment leg_right_ankle_roll
+[robot_state_publisher-1] [INFO] [1790242601.492686967] [robot_state_publisher]: got segment leg_right_hip_pitch
+[robot_state_publisher-1] [INFO] [1790242601.492694614] [robot_state_publisher]: got segment leg_right_hip_roll
+[robot_state_publisher-1] [INFO] [1790242601.492702294] [robot_state_publisher]: got segment leg_right_hip_yaw
+[robot_state_publisher-1] [INFO] [1790242601.492709558] [robot_state_publisher]: got segment leg_right_knee_pitch
+[twist_mux-5] [INFO] [1790242601.495192272] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[joy_teleop-3] 1790242601.950942 [111] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[joystick_relay.py-7] 1790242602.021113 [111] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] 1790242602.457301 [111] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-2] [WARN] [1790242603.325609122] [mujoco_spawner]: MuJoCo inertia repair: clamped non-physical mass/inertia entries.
+[mujoco_spawner-2] [INFO] [1790242603.694848775] [mujoco_spawner]: MuJoCo: 11 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-2] [INFO] [1790242603.961447020] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790242603.991647221] [mujoco_spawner]: MuJoCo effort plant: joint losses mirrored from the robot's own MJCF (/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/berkeley_humanoid_lite/mjcf/berkeley_humanoid_lite.xml).
+[mujoco_spawner-2] [INFO] [1790242604.184129725] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-2] [INFO] [1790242604.185707684] [mujoco_spawner]: Joints: ['arm_left_shoulder_pitch_joint', 'arm_left_shoulder_roll_joint', 'arm_left_shoulder_yaw_joint', 'arm_left_elbow_pitch_joint', 'arm_left_elbow_roll_joint', 'arm_right_shoulder_pitch_joint', 'arm_right_shoulder_roll_joint', 'arm_right_shoulder_yaw_joint', 'arm_right_elbow_pitch_joint', 'arm_right_elbow_roll_joint', 'leg_left_hip_roll_joint', 'leg_left_hip_yaw_joint', 'leg_left_hip_pitch_joint', 'leg_left_knee_pitch_joint', 'leg_left_ankle_pitch_joint', 'leg_left_ankle_roll_joint', 'leg_right_hip_roll_joint', 'leg_right_hip_yaw_joint', 'leg_right_hip_pitch_joint', 'leg_right_knee_pitch_joint', 'leg_right_ankle_pitch_joint', 'leg_right_ankle_roll_joint']   lw= rw=
+[mujoco_spawner-2] [INFO] [1790242604.188101407] [mujoco_spawner]: Joint effort input: /bhl_standing_controller/commands (22 joints, URDF limits)
+[mujoco_spawner-2] [INFO] [1790242604.190125504] [mujoco_spawner]: MuJoCo model loaded: 24 bodies, 23 joints
+[mujoco_spawner-2] [INFO] [1790242604.190747702] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790242604.191311469] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790242604.195541483] [mujoco_spawner]: MuJoCo spawner running.
+[INFO] [simulator_ready_gate-9]: process has finished cleanly [pid 727366]
+[INFO] [amcl-11]: process started with pid [727570]
+[INFO] [map_server-10]: process started with pid [727568]
+[INFO] [lifecycle_manager-12]: process started with pid [727572]
+[INFO] [ekf_node-13]: process started with pid [727574]
+[INFO] [imu_republisher.py-14]: process started with pid [727576]
+[INFO] [wheel_imu_fusion-15]: process started with pid [727578]
+[lifecycle_manager-12] 1790242604.601221 [111] lifecycle_: selected interface "lo" is not multicast-capable: disabling multicast
+[amcl-11] 1790242604.611064 [111]       amcl: selected interface "lo" is not multicast-capable: disabling multicast
+[ekf_node-13] 1790242604.612365 [111]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-12] [INFO] [1790242604.614811748] [lifecycle_manager_localization]: Creating
+[map_server-10] 1790242604.618231 [111] map_server: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-12] [INFO] [1790242604.619212000] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[amcl-11] [0m[INFO] [1790242604.626577293] [amcl]:
+[amcl-11] 	amcl lifecycle node launched.
+[amcl-11] 	Waiting on external lifecycle transitions to activate
+[amcl-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.[0m
+[amcl-11] [0m[INFO] [1790242604.628984711] [amcl]: Creating[0m
+[map_server-10] [INFO] [1790242604.642457557] [map_server]:
+[map_server-10] 	map_server lifecycle node launched.
+[map_server-10] 	Waiting on external lifecycle transitions to activate
+[map_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-10] [INFO] [1790242604.644171099] [map_server]: Creating
+[lifecycle_manager-12] [INFO] [1790242604.774351501] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-12] [INFO] [1790242604.774459916] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-10] [INFO] [1790242604.774880837] [map_server]: Configuring
+[map_server-10] [INFO] [1790242604.774993571] [map_io]: Loading yaml file: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.yaml
+[map_server-10] [INFO] [1790242604.775414205] [map_io]: resolution: 0.05
+[map_server-10] [INFO] [1790242604.775430813] [map_io]: origin[0]: -7
+[map_server-10] [INFO] [1790242604.775437372] [map_io]: origin[1]: -7
+[map_server-10] [INFO] [1790242604.775442396] [map_io]: origin[2]: 0
+[map_server-10] [INFO] [1790242604.775448028] [map_io]: free_thresh: 0.196
+[map_server-10] [INFO] [1790242604.775453660] [map_io]: occupied_thresh: 0.65
+[map_server-10] [INFO] [1790242604.775460156] [map_io]: mode: trinary
+[map_server-10] [INFO] [1790242604.775467324] [map_io]: negate: 0
+[map_server-10] [INFO] [1790242604.775751640] [map_io]: Loading image_file: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.pgm
+[map_server-10] [INFO] [1790242604.789151719] [map_io]: Read map /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.pgm: 280 X 280 map @ 0.05 m/cell
+[lifecycle_manager-12] [INFO] [1790242604.797855807] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-11] [0m[INFO] [1790242604.798215193] [amcl]: Configuring[0m
+[amcl-11] [0m[INFO] [1790242604.798384151] [amcl]: initTransforms[0m
+[amcl-11] [0m[INFO] [1790242604.810945779] [amcl]: initPubSub[0m
+[amcl-11] [0m[INFO] [1790242604.816461725] [amcl]: Subscribed to map topic.[0m
+[lifecycle_manager-12] [INFO] [1790242604.822695292] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[map_server-10] [INFO] [1790242604.822968792] [map_server]: Activating
+[map_server-10] [INFO] [1790242604.823368017] [map_server]: Creating bond (map_server) to lifecycle manager.
+[amcl-11] [0m[INFO] [1790242604.824836379] [amcl]: Received a 280 X 280 map @ 0.050 m/pix[0m
+[lifecycle_manager-12] [INFO] [1790242604.928390060] [lifecycle_manager_localization]: Server map_server connected with bond.
+[lifecycle_manager-12] [INFO] [1790242604.928473867] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[amcl-11] [0m[INFO] [1790242604.928853765] [amcl]: Activating[0m
+[amcl-11] [0m[INFO] [1790242604.928944164] [amcl]: initialPoseReceived[0m
+[amcl-11] [0m[INFO] [1790242604.929181664] [amcl]: Setting pose (0.404000): -0.500 -0.500 0.000[0m
+[amcl-11] [0m[INFO] [1790242604.929778391] [amcl]: Creating bond (amcl) to lifecycle manager.[0m
+[amcl-11] [0m[INFO] [1790242604.967898949] [amcl]: createLaserObject[0m
+[wheel_imu_fusion-15] 1790242605.028185 [111] wheel_imu_: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-12] [INFO] [1790242605.034377080] [lifecycle_manager_localization]: Server amcl connected with bond.
+[lifecycle_manager-12] [INFO] [1790242605.034468023] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-12] [INFO] [1790242605.034492855] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[imu_republisher.py-14] 1790242605.067085 [111]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[wheel_imu_fusion-15] [INFO] [1790242605.291829131] [sensor_fusion_wheel_imu_fusion]: wheel_imu_fusion ready
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[amcl-11] [0m[INFO] [1790242694.695557033] [rclcpp]: signal_handler(SIGINT/SIGTERM)[0m
+[amcl-11] [0m[INFO] [1790242694.695733126] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)[0m
+[amcl-11] [0m[INFO] [1790242694.695857188] [amcl]: Deactivating[0m
+[amcl-11] [0m[INFO] [1790242694.695900227] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[lifecycle_manager-12] [INFO] [1790242694.695476426] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-12] [INFO] [1790242694.695665735] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[lifecycle_manager-12] [INFO] [1790242694.695757958] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[INFO] [wheel_imu_fusion-15]: sending signal 'SIGINT' to process[wheel_imu_fusion-15]
+[INFO] [imu_republisher.py-14]: sending signal 'SIGINT' to process[imu_republisher.py-14]
+[INFO] [ekf_node-13]: sending signal 'SIGINT' to process[ekf_node-13]
+[INFO] [lifecycle_manager-12]: sending signal 'SIGINT' to process[lifecycle_manager-12]
+[INFO] [amcl-11]: sending signal 'SIGINT' to process[amcl-11]
+[INFO] [map_server-10]: sending signal 'SIGINT' to process[map_server-10]
+[ERROR] [ekf_node-13]: process has died [pid 727574, exit code -2, cmd '/opt/ros/humble/lib/robot_localization/ekf_node --ros-args -r __node:=ekf_filter_node --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_localization/share/robot_lab_localization/config/ekf.yaml --params-file /workspace/molar/.tmp/launch_params_dnnp06xv --params-file /workspace/molar/.tmp/launch_params__zkbpq57'].
+[INFO] [twist_relay-8]: sending signal 'SIGINT' to process[twist_relay-8]
+[INFO] [joystick_relay.py-7]: sending signal 'SIGINT' to process[joystick_relay.py-7]
+[INFO] [twist_marker-6]: sending signal 'SIGINT' to process[twist_marker-6]
+[INFO] [twist_mux-5]: sending signal 'SIGINT' to process[twist_mux-5]
+[ERROR] [twist_relay-8]: process has died [pid 727364, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/lib/robot_lab_controller/twist_relay --ros-args -r __node:=twist_relay --params-file /workspace/molar/.tmp/launch_params_g1f1bwp4'].
+[INFO] [joy_node-4]: sending signal 'SIGINT' to process[joy_node-4]
+[ERROR] [twist_marker-6]: process has died [pid 727360, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/twist_marker --ros-args --params-file /workspace/molar/.tmp/launch_params_ishwdjrc -r /twist:=robot_lab_controller/cmd_vel_unstamped'].
+[INFO] [joy_teleop-3]: sending signal 'SIGINT' to process[joy_teleop-3]
+[ERROR] [twist_mux-5]: process has died [pid 727358, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /workspace/molar/.tmp/launch_params_uq5qg1bj --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_locks.yaml --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_topics.yaml -r /cmd_vel_out:=robot_lab_controller/cmd_vel_unstamped'].
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[twist_marker-6] [INFO] [1790242694.695498058] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_relay-8] [INFO] [1790242694.695500714] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-10] [INFO] [1790242694.695600872] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-10] [INFO] [1790242694.695748518] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-10] [INFO] [1790242694.695859428] [map_server]: Deactivating
+[map_server-10] [INFO] [1790242694.695890948] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[twist_mux-5] [INFO] [1790242694.695847652] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1790242694.695948483] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-4] [INFO] [1790242694.696430843] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ekf_node-13] [INFO] [1790242694.696459451] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-11] [0m[INFO] [1790242694.706407487] [amcl]: Cleaning up[0m
+[map_server-10] [INFO] [1790242694.706290176] [map_server]: Cleaning up
+[map_server-10] [INFO] [1790242694.706411391] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[wheel_imu_fusion-15] Traceback (most recent call last):
+[wheel_imu_fusion-15]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/robot_lab_algorithms/wheel_imu_fusion", line 33, in <module>
+[wheel_imu_fusion-15]     sys.exit(load_entry_point('robot_lab_algorithms==0.1.0', 'console_scripts', 'wheel_imu_fusion')())
+[wheel_imu_fusion-15]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/sensor_fusion.py", line 233, in wheel_imu_fusion_main
+[wheel_imu_fusion-15]     return _run(WheelImuFusionNode, 'wheel_imu_fusion', args=args)
+[wheel_imu_fusion-15]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/_runtime.py", line 66, in run
+[wheel_imu_fusion-15]     return spin_node(node)
+[wheel_imu_fusion-15]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/_runtime.py", line 45, in spin_node
+[wheel_imu_fusion-15]     node.destroy_node()
+[wheel_imu_fusion-15]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1691, in destroy_node
+[wheel_imu_fusion-15]     self.destroy_service(self._services[0])
+[wheel_imu_fusion-15]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1615, in destroy_service
+[amcl-11] [0m[INFO] [1790242694.719078488] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[wheel_imu_fusion-15]     service.destroy()
+[wheel_imu_fusion-15]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/service.py", line 93, in destroy
+[wheel_imu_fusion-15]     self.__service.destroy_when_not_in_use()
+[wheel_imu_fusion-15] KeyboardInterrupt
+[imu_republisher.py-14] Traceback (most recent call last):
+[imu_republisher.py-14]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py", line 54, in <module>
+[amcl-11] [0m[INFO] [1790242694.724349317] [rclcpp]: signal_handler(SIGINT/SIGTERM)[0m
+[imu_republisher.py-14]     main()
+[imu_republisher.py-14]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py", line 49, in main
+[imu_republisher.py-14]     node.destroy_node()
+[imu_republisher.py-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1687, in destroy_node
+[imu_republisher.py-14]     self.destroy_subscription(self._subscriptions[0])
+[imu_republisher.py-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1583, in destroy_subscription
+[imu_republisher.py-14]     subscription.destroy()
+[imu_republisher.py-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/subscription.py", line 80, in destroy
+[map_server-10] [INFO] [1790242694.727259192] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[imu_republisher.py-14]     self.handle.destroy_when_not_in_use()
+[imu_republisher.py-14] KeyboardInterrupt
+[joystick_relay.py-7] Traceback (most recent call last):
+[joystick_relay.py-7]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 302, in <module>
+[joystick_relay.py-7]     main()
+[joystick_relay.py-7]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 297, in main
+[joystick_relay.py-7]     node.destroy_node()
+[joystick_relay.py-7]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1691, in destroy_node
+[joystick_relay.py-7]     self.destroy_service(self._services[0])
+[joystick_relay.py-7]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1615, in destroy_service
+[joystick_relay.py-7]     service.destroy()
+[joystick_relay.py-7]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/service.py", line 93, in destroy
+[joystick_relay.py-7]     self.__service.destroy_when_not_in_use()
+[joystick_relay.py-7] KeyboardInterrupt
+[joy_node-4] [INFO] [1790242694.744206894] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-12] [INFO] [1790242694.746957411] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1790242694.752965572] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-10] [INFO] [1790242694.826964796] [map_server]: Destroying
+[amcl-11] [0m[INFO] [1790242694.831644306] [amcl]: Destroying[0m
+[lifecycle_manager-12] [INFO] [1790242694.832114411] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization
+[INFO] [joy_node-4]: process has finished cleanly [pid 727356]
+[joy_teleop-3] Traceback (most recent call last):
+[joy_teleop-3]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-3]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-3]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 441, in main
+[joy_teleop-3]     node.destroy_node()
+[joy_teleop-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1696, in destroy_node
+[joy_teleop-3]     self.__node.destroy_when_not_in_use()
+[joy_teleop-3] KeyboardInterrupt
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 727350]
+[INFO] [lifecycle_manager-12]: process has finished cleanly [pid 727572]
+[ERROR] [wheel_imu_fusion-15]: process has died [pid 727578, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/robot_lab_algorithms/wheel_imu_fusion --ros-args -r __node:=sensor_fusion_wheel_imu_fusion --params-file /workspace/molar/.tmp/launch_params_v00iw22c'].
+[INFO] [map_server-10]: process has finished cleanly [pid 727568]
+[ERROR] [imu_republisher.py-14]: process has died [pid 727576, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py --ros-args --params-file /workspace/molar/.tmp/launch_params_2ylngkxz'].
+[ERROR] [joy_teleop-3]: process has died [pid 727354, exit code -2, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_q6ox9nhd'].
+[ERROR] [joystick_relay.py-7]: process has died [pid 727362, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/joystick_relay.py --ros-args --params-file /workspace/molar/.tmp/launch_params_vzp56jwh --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_joy.yaml -r joy_vel_out:=joy_vel -r joy_vel_in:=input_joy/cmd_vel'].
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 727352]
+[INFO] [amcl-11]: process has finished cleanly [pid 727570]

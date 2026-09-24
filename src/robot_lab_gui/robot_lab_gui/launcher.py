@@ -1755,6 +1755,9 @@ class SimulationLauncherGui(tk.Tk):
             f"Modes: {', '.join(MODE_LABELS.get(m, m) for m in supported_modes) or 'none'}",
             f"Cleaning missions: {'yes' if supports_vacuum else 'no'}",
         ]
+        if (self.robot_var.get() == "berkeley_humanoid_lite_sim"
+                and self.simulator_var.get() == "mujoco"):
+            lines.append("Drive: forward/stop in Localization; turning is not yet stable")
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):
