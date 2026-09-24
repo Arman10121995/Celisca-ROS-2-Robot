@@ -1388,6 +1388,8 @@
     obstacle_clearance_m: 0.15
     collision_stop_time_s: 0.5
     max_tilt_rad: 0.0
+    restricted_modes:
+      - manual_high_velocity
   compute_limits:
     cpu_cores: 2
     memory_mb: 768
@@ -1500,6 +1502,8 @@
     obstacle_clearance_m: 0.15
     collision_stop_time_s: 0.5
     max_tilt_rad: 0.0
+    restricted_modes:
+      - manual_high_velocity
   compute_limits:
     cpu_cores: 2
     memory_mb: 768
@@ -1612,6 +1616,8 @@
     obstacle_clearance_m: 0.15
     collision_stop_time_s: 0.5
     max_tilt_rad: 0.0
+    restricted_modes:
+      - manual_high_velocity
   compute_limits:
     cpu_cores: 2
     memory_mb: 768
