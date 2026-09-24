@@ -1,0 +1,5 @@
+gui_pb {"stack_ready_wall_s": 7.5, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 19.3, "final_error_estimate_m": 0.263, "final_truth_xy": [-5.22, -7.05]}
+topic_pybullet {"stack_ready_wall_s": 6.4, "start": [0.0, -0.0], "goal": [1.85, 0.77], "outcome": "succeeded", "wall_s": 13.9, "final_error_estimate_m": 0.264}
+topic_gazebo {"stack_ready_wall_s": 7.0, "start": [-0.0, 0.0], "goal": [1.85, 0.77], "outcome": "succeeded", "wall_s": 7.0, "final_error_estimate_m": 0.256}
+far_bumperbot {"stack_ready_wall_s": 11.9, "start": [-0.0, 0.0], "goal": [6.47, 2.68], "outcome": "succeeded", "wall_s": 134.6, "final_error_estimate_m": 0.24}
+far_labbot {"stack_ready_wall_s": 9.3, "start": [-0.0, -0.0], "goal": [6.47, 2.68], "outcome": "succeeded", "wall_s": 114.8, "final_error_estimate_m": 0.244}

@@ -1,0 +1,16 @@
+pybullet bumperbot nav_obstacle {"stack_ready_wall_s": 6.9, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 19.3, "final_error_estimate_m": 0.271, "final_truth_xy": [-5.23, -7.03]} errors=1
+pybullet bumperbot celisca_floor_1 {"stack_ready_wall_s": 7.6, "start": [-0.0, 0.0], "goal": [2.0, 0.0], "outcome": "succeeded", "wall_s": 20.8, "final_error_estimate_m": 0.266, "final_truth_xy": [1.74, -0.01]} errors=1
+pybullet labbot nav_obstacle {"stack_ready_wall_s": 4.2, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 12.9, "final_error_estimate_m": 0.232, "final_truth_xy": [-5.21, -7.04]} errors=1
+pybullet labbot celisca_floor_1 {"stack_ready_wall_s": 4.9, "start": [0.0, -0.0], "goal": [1.85, 0.77], "outcome": "succeeded", "wall_s": 14.0, "final_error_estimate_m": 0.264, "final_truth_xy": [1.59, 0.67]} errors=1
+mujoco bumperbot nav_obstacle {"stack_ready_wall_s": 5.8, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 16.2, "final_error_estimate_m": 0.277, "final_truth_xy": [-5.24, -6.99]} errors=1
+mujoco bumperbot celisca_floor_1 {"stack_ready_wall_s": 153.4, "start": [-0.0, 0.0], "goal": [2.0, 0.0], "outcome": "succeeded", "wall_s": 47.6, "final_error_estimate_m": 0.274, "final_truth_xy": [1.72, 0.01]} errors=1
+mujoco labbot nav_obstacle {"stack_ready_wall_s": 4.1, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 12.4, "final_error_estimate_m": 0.278, "final_truth_xy": [-5.26, -7.05]} errors=2
+mujoco labbot celisca_floor_1 {"stack_ready_wall_s": 160.5, "start": [-0.0, -0.0], "goal": [1.85, 0.77], "outcome": "succeeded", "wall_s": 46.2, "final_error_estimate_m": 0.267, "final_truth_xy": [1.58, 0.68]} errors=1
+gazebo bumperbot nav_obstacle {"stack_ready_wall_s": 7.2, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 6.6, "final_error_estimate_m": 0.269} errors=3
+gazebo bumperbot celisca_floor_1 {"stack_ready_wall_s": 8.0, "start": [-0.0, 0.0], "goal": [1.85, 0.77], "outcome": "succeeded", "wall_s": 8.1, "final_error_estimate_m": 0.265} errors=4
+gazebo labbot nav_obstacle {"stack_ready_wall_s": 5.9, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 6.6, "final_error_estimate_m": 0.28} errors=3
+gazebo labbot celisca_floor_1 {"stack_ready_wall_s": 6.8, "start": [-0.0, 0.0], "goal": [1.85, 0.77], "outcome": "succeeded", "wall_s": 7.1, "final_error_estimate_m": 0.265} errors=5
+isaac bumperbot nav_obstacle {"stack_ready_wall_s": 43.6, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 51.2, "final_error_estimate_m": 0.272, "final_truth_xy": [-5.24, -6.98]} errors=1
+isaac bumperbot celisca_floor_1 {"stack_ready_wall_s": 43.5, "start": [-0.0, 0.0], "goal": [2.0, 0.0], "outcome": "succeeded", "wall_s": 72.0, "final_error_estimate_m": 0.273, "final_truth_xy": [1.73, 0.0]} errors=1
+isaac labbot nav_obstacle {"stack_ready_wall_s": 33.0, "start": [-7.0, -7.0], "goal": [-5.0, -7.0], "outcome": "succeeded", "wall_s": 45.0, "final_error_estimate_m": 0.227, "final_truth_xy": [-5.21, -7.07]} errors=1
+isaac labbot celisca_floor_1 {"stack_ready_wall_s": 39.0, "start": [0.0, 0.0], "goal": [2.0, 0.0], "outcome": "succeeded", "wall_s": 63.5, "final_error_estimate_m": 0.229, "final_truth_xy": [1.82, -0.0]} errors=1
