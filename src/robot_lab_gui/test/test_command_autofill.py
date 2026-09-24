@@ -266,12 +266,30 @@ def test_labbot_rgbd_mode_builds_a_launch_command(app):
 
 
 @pytest.mark.parametrize('robot', ['berkeley_humanoid_lite', 'berkeley_humanoid_lite_sim'])
-def test_humanoid_mode_buttons_follow_the_selected_profile(app, robot):
+@pytest.mark.parametrize('simulator, can_localize', [
+    ('pybullet', True),   # bridge casts the scan and holds the stance
+    ('mujoco', True),
+    ('gazebo', False),    # no LiDAR in the description
+    ('isaac', False),     # Isaac's joint hold does not keep it standing
+])
+def test_humanoid_mode_buttons_follow_what_the_robot_can_do(app, robot, simulator,
+                                                            can_localize):
     select(app, app.robot_combo, robot)
     select(app, app.map_combo, 'nav_obstacle')
-    for mode in ('loc', 'nav'):
-        enabled = mode in app.robot_profiles[robot].get('supported_modes', [])
-        assert app.mode_buttons[mode].instate(['!disabled' if enabled else 'disabled'])
+    if simulator not in app.simulator_combo['values']:
+        pytest.skip('%s not installed' % simulator)
+    select(app, app.simulator_combo, simulator)
+    if app.simulator_var.get() != simulator:
+        pytest.skip('%s not selectable on this host' % simulator)
+    assert app.mode_buttons['loc'].instate(['!disabled' if can_localize else 'disabled'])
+    # No walking gait: mapping by moving and navigation stay unavailable.
+    for mode in ('slam', 'nav'):
+        assert app.mode_buttons[mode].instate(['disabled'])
+    if can_localize:
+        app.mode_buttons['loc'].invoke()
+        command = app._prepared_command
+        assert 'mode:=loc' in command
+        assert 'robot_model:=%s' % robot in command
 
 
 def test_all_declared_occupancy_maps_pass_gui_validation(app):

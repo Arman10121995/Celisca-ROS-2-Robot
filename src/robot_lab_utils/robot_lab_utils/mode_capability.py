@@ -14,6 +14,11 @@ follows /cmd_vel:
   bases).  Legged and humanoid robots have no velocity-tracking gait in this
   lab yet, so they can localize where they stand but not map by moving or
   navigate.
+* ``stands`` - the robot stays upright without a controller.  Wheeled bases
+  do; the PyBullet and MuJoCo bridges hold a legged or humanoid robot's
+  joints at its spawn pose.  Isaac's hold does not keep them in place
+  (measured 2026-09-23: dogs drifted up to 1.9 m, one robot was thrown
+  across the map, H1-2 produced NaN poses), so there they are display-only.
 
 Robot features come from robot_lab_robots/config/robots.yaml.
 """
@@ -21,15 +26,15 @@ Robot features come from robot_lab_robots/config/robots.yaml.
 # Features the simulator bridges provide for any robot.
 BRIDGE_FEATURES = {
     "gazebo": (),
-    "pybullet": ("lidar_2d",),
-    "mujoco": ("lidar_2d",),
+    "pybullet": ("lidar_2d", "stands"),
+    "mujoco": ("lidar_2d", "stands"),
     "isaac": ("lidar_2d",),
 }
 
 # What each mode needs from the robot (sim_modes.yaml may add more).
 MODE_ROBOT_FEATURES = {
     "display": (),
-    "loc": ("lidar_2d",),
+    "loc": ("lidar_2d", "stands"),
     "slam": ("lidar_2d", "velocity_base"),
     "3d_slam": ("rgbd_camera", "velocity_base"),
     "nav": ("lidar_2d", "velocity_base"),
@@ -40,12 +45,16 @@ FEATURE_LABELS = {
                 "PyBullet, MuJoCo and Isaac bridges cast one for any robot)",
     "rgbd_camera": "an RGB-D camera link",
     "velocity_base": "a base that drives on /cmd_vel (no walking gait yet)",
+    "stands": "a stable stance without a controller (the PyBullet and "
+              "MuJoCo bridges hold its joints; Isaac's hold does not)",
 }
 
 
 def robot_features(robot_config, simulator=None):
     """Features of a robot profile, plus what *simulator* adds for any robot."""
     features = set((robot_config or {}).get("features", []))
+    if "velocity_base" in features:
+        features.add("stands")  # a wheeled base rests on its wheels
     if simulator:
         features.update(BRIDGE_FEATURES.get(simulator, ()))
     return features

@@ -107,11 +107,11 @@ robots:
     # impact on the ankle gears. Plant-verified in pybullet: base at -0.038
     # establishes 8 foot contacts with Fz ~ 157 N (the full weight) within
     # 25 ms; the same robot at +0.042 never touches down.
+    # Only the height is robot-specific: x, y and yaw come from the map, as
+    # for every other robot (a fixed 0,0 put it inside obstacles and gave
+    # AMCL the wrong start).
     spawn:
-      x: "0.0"
-      y: "0.0"
       z: "-0.038"
-      yaw: "0.0"
 
   unitree_a1:
     package: robot_lab_robots
@@ -202,6 +202,8 @@ robots:
     xacro: quadrotor_sitl/urdf/quadrotor_sitl.urdf.xacro
     name: quadrotor_sitl
     supported_modes: [display, loc, slam, 3d_slam, nav]
-    features: [ros2_control, lidar_2d, rgbd_camera]
+    # 'stands': it rests on its landing gear.  It has no thrust or flight
+    # controller here (R5.4), so no velocity_base: slam/nav stay disabled.
+    features: [ros2_control, lidar_2d, rgbd_camera, stands]
     supports_room_vacuum: false
     robot_class: aerial

@@ -1139,7 +1139,19 @@ class MuJoCoSpawner(Node):
                 self._model_source = "urdf"
                 effort_config = self.get_parameter("effort_controller_config").value
                 if effort_config:
-                    self._effort_command = JointEffortCommand(effort_config, urdf)
+                    try:
+                        self._effort_command = JointEffortCommand(effort_config, urdf)
+                    except ValueError as exc:
+                        # The launch picks the Berkeley Humanoid Lite effort
+                        # profile by model path, which also matches the
+                        # legs-only biped: its missing arm joints made every
+                        # spawn fail.  Run without the effort input instead.
+                        _emit_log(self.get_logger(), "warning",
+                                  "Effort controller profile %s does not fit "
+                                  "this robot (%s); running without joint "
+                                  "effort input." % (effort_config, exc))
+                        self._effort_command = None
+                if self._effort_command is not None:
                     # Mirror the robot's own MJCF joint losses instead of the
                     # URDF's Gazebo-substitute damping (see
                     # _native_joint_dynamics): the balance law and walking
