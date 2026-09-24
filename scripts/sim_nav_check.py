@@ -102,6 +102,8 @@ def main(argv=None):
     parser.add_argument("--clearance", type=float, default=0.35)
     parser.add_argument("--base", default="base_footprint")
     parser.add_argument("--timeout", type=float, default=600.0)
+    parser.add_argument("--via-topic", action="store_true",
+                        help="publish the goal on /goal_pose as RViz's 2D Goal Pose does")
     args = parser.parse_args(argv)
 
     rclpy.init()
@@ -132,6 +134,32 @@ def main(argv=None):
     result.update(start=[round(v, 2) for v in start],
                   goal=[round(goal_xy[0], 2), round(goal_xy[1], 2)])
     sent = time.monotonic()
+    if args.via_topic:
+        from geometry_msgs.msg import PoseStamped
+        from action_msgs.msg import GoalStatusArray
+        statuses = []
+        node.create_subscription(GoalStatusArray, "/navigate_to_pose/_action/status",
+                                 lambda m: statuses.append(m), 10)
+        publisher = node.create_publisher(PoseStamped, "/goal_pose", 10)
+        node.spin_until(lambda: publisher.get_subscription_count() > 0, 30.0)
+        goal.pose.header.stamp = node.get_clock().now().to_msg()
+        publisher.publish(goal.pose)
+
+        def finished():
+            for message in statuses[-1:]:
+                for status in message.status_list:
+                    if status.status in STATUS and status.status != GoalStatus.STATUS_UNKNOWN:
+                        return True
+            return False
+        node.spin_until(finished, args.timeout)
+        last = statuses[-1].status_list[-1].status if statuses and statuses[-1].status_list else None
+        result["outcome"] = STATUS.get(last, "no goal accepted" if last is None else str(last))
+        result["wall_s"] = round(time.monotonic() - sent, 1)
+        final = node.pose(args.base)
+        if final:
+            result["final_error_estimate_m"] = round(math.hypot(final[0] - goal_xy[0], final[1] - goal_xy[1]), 3)
+        print(json.dumps(result))
+        return 0 if result["outcome"] == "succeeded" else 1
     future = node.action.send_goal_async(goal)
     node.spin_until(future.done, 30.0)
     handle = future.result() if future.done() else None
