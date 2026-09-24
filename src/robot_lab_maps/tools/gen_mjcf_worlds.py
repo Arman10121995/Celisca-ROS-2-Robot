@@ -144,9 +144,12 @@ def convert_world(world_path, name=None):
     has_plane = any(geom["type"] == "plane" for geom in geoms)
     if not has_plane:
         # Every world needs something to stand on; box arenas model their
-        # floor as a thin box, which is kept as well.
+        # floor as a thin box, which is kept as well.  A Celisca world's
+        # visible ground must match its 40 x 25 m SDF physics floor, or the
+        # default 200 x 200 m plane dwarfs the building in the viewer.
+        ground_size = "20 12.5 0.1" if name.startswith("celisca_") else "100 100 0.1"
         ET.SubElement(worldbody, "geom",
-                      {"type": "plane", "size": "100 100 0.1",
+                      {"type": "plane", "size": ground_size,
                        "rgba": "0.35 0.37 0.4 1"})
     for geom in geoms:
         ET.SubElement(worldbody, "geom", geom)

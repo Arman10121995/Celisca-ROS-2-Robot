@@ -391,7 +391,10 @@ class PyBulletSpawner(Node):
             1.0, self._publish_health,
             clock=Clock(clock_type=ClockType.SYSTEM_TIME))
 
+        self._last_mux_cmd_time = 0.0
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
+        self.create_subscription(Twist, "/robot_lab_controller/cmd_vel_unstamped",
+                                 self._on_mux_cmd, 10)
         # Wall-clock timer — see note in mujoco_spawner / above comment about
         # the use_sim_time deadlock (this node publishes /clock itself).
         self._timer = self.create_timer(
@@ -547,9 +550,20 @@ class PyBulletSpawner(Node):
         return True
 
     def _on_cmd(self, msg):
+        # In interactive modes twist_mux arbitrates GUI/joystick commands
+        # against Nav2's /cmd_vel.  Keep raw /cmd_vel usable when running the
+        # spawner alone (for example the drive checks and display mode).
+        if time.monotonic() - getattr(self, "_last_mux_cmd_time", 0.0) < 1.0:
+            return
         with self._twist_lock:
             self._twist = msg
             self._last_cmd_time = time.monotonic()
+
+    def _on_mux_cmd(self, msg):
+        self._last_mux_cmd_time = time.monotonic()
+        with self._twist_lock:
+            self._twist = msg
+            self._last_cmd_time = self._last_mux_cmd_time
 
     def _try_spawn(self):
         if self._robot_id >= 0:

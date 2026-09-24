@@ -71,7 +71,7 @@
       <link name="link">
         <collision name="collision">
           <geometry>
-            <box><size>100 100 0.1</size></box>
+            <box><size>40 25 0.1</size></box>
           </geometry>
           <surface>
             <friction>
@@ -84,7 +84,7 @@
         </collision>
         <visual name="visual">
           <geometry>
-            <box><size>100 100 0.1</size></box>
+            <box><size>40 25 0.1</size></box>
           </geometry>
           <material>
             <ambient>0.3 0.3 0.3 1</ambient>
@@ -102,7 +102,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_f2_actor/meshes/celisca_floor_2.stl</uri>
-              <scale>3 3 3</scale>
+              <scale>1 1 1</scale>
             </mesh>
           </geometry>
           <material>
@@ -117,7 +117,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_f2_actor/meshes/celisca_floor_2.stl</uri>
-              <scale>3 3 3</scale>
+              <scale>1 1 1</scale>
             </mesh>
           </geometry>
           <material>
@@ -131,7 +131,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_f2_actor/meshes/celisca_floor_2.stl</uri>
-              <scale>3 3 3</scale>
+              <scale>1 1 1</scale>
             </mesh>
           </geometry>
         </collision>

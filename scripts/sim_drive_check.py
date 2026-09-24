@@ -36,9 +36,9 @@ def _yaw(q):
 
 
 class DriveCheck(Node):
-    def __init__(self, odom_topic):
+    def __init__(self, odom_topic, cmd_topic="/cmd_vel"):
         super().__init__("sim_drive_check")
-        self.pub = self.create_publisher(Twist, "/cmd_vel", 10)
+        self.pub = self.create_publisher(Twist, cmd_topic, 10)
         self.samples = []
         self.create_subscription(Odometry, odom_topic, self._on_odom, qos_profile_sensor_data)
 
@@ -58,7 +58,12 @@ class DriveCheck(Node):
         start = time.monotonic()
         while time.monotonic() - start < duration:
             self.pub.publish(twist)
-            rclpy.spin_once(self, timeout_sec=0.05)
+            # Match the GUI's 10 Hz button repeat.  Spinning between sends
+            # also lets odometry callbacks run when the mux is active.
+            next_send = time.monotonic() + 0.1
+            while time.monotonic() < next_send:
+                rclpy.spin_once(self, timeout_sec=min(
+                    0.02, max(0.0, next_send - time.monotonic())))
         window = [s for s in self.samples if start + settle <= s[0] <= start + duration]
         if len(window) < 2:
             return None
@@ -77,17 +82,22 @@ class DriveCheck(Node):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--odom", default="/odom/ground_truth")
+    parser.add_argument("--cmd-topic", default="/cmd_vel",
+                        help="Use /key_vel to exercise the GUI's drive path")
+    parser.add_argument("--quick", action="store_true",
+                        help="Run the straight and stop phases only")
     parser.add_argument("--timeout", type=float, default=240.0)
     parser.add_argument("--warmup", type=float, default=3.0)
     args = parser.parse_args()
     rclpy.init()
-    node = DriveCheck(args.odom)
-    result = {"odom": args.odom, "phases": []}
+    node = DriveCheck(args.odom, args.cmd_topic)
+    result = {"odom": args.odom, "cmd_topic": args.cmd_topic, "phases": []}
     if not node.wait_for_odom(args.timeout):
         result["error"] = "no odometry on %s" % args.odom
     else:
         node.run_phase(0.0, 0.0, args.warmup)
-        for name, vx, wz, duration in PHASES:
+        phases = (PHASES[0], PHASES[-1]) if args.quick else PHASES
+        for name, vx, wz, duration in phases:
             measured = node.run_phase(vx, wz, duration)
             result["phases"].append({"phase": name, "command": [vx, wz],
                                      "measured": measured})

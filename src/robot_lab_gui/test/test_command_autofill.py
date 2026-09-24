@@ -47,7 +47,9 @@ def app():
             yield gui
         finally:
             for job in gui.tk.call("after", "info"):
-                gui.after_cancel(job)
+                # Cancel in Tcl without deleting the callback command twice:
+                # each widget removes its own registered commands on destroy.
+                gui.tk.call("after", "cancel", job)
             gui.destroy()
 
 

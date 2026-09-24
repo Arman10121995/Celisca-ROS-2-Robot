@@ -2,6 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 
 from pathlib import Path
+import math
 
 import pytest
 import yaml
@@ -174,6 +175,40 @@ def test_map_profile_references_exist(map_name, map_config):
     metadata = _load(map_yaml)
     image_path = map_yaml.parent / metadata["image"]
     assert image_path.is_file(), f"{map_name}: missing map image {image_path}"
+
+
+@pytest.mark.parametrize("map_name", [name for name in MAPS if name.startswith("celisca_")])
+def test_celisca_spawn_has_nav_clearance(map_name):
+    """A robot starting in a lethal cell cannot plan, even with a free goal."""
+    profile = MAPS[map_name]
+    spawn, initial = profile["spawn"], profile["initial_pose"]
+    assert (float(spawn["x"]), float(spawn["y"])) == (
+        float(initial["x"]), float(initial["y"]))
+
+    map_yaml = SRC_DIR / "robot_lab_maps" / profile["map"]["path"]
+    metadata = _load(map_yaml)
+    with (map_yaml.parent / metadata["image"]).open("rb") as image:
+        assert image.readline().strip() == b"P5"
+        dimensions = image.readline()
+        while dimensions.startswith(b"#"):
+            dimensions = image.readline()
+        width, height = map(int, dimensions.split())
+        assert image.readline().strip() == b"255"
+        pixels = image.read()
+    assert len(pixels) == width * height
+
+    resolution = float(metadata["resolution"])
+    origin = metadata["origin"]
+    cx = int((float(spawn["x"]) - origin[0]) / resolution)
+    cy = height - 1 - int((float(spawn["y"]) - origin[1]) / resolution)
+    radius = math.ceil(0.35 / resolution)
+    assert radius <= cx < width - radius
+    assert radius <= cy < height - radius
+    for row in range(cy - radius, cy + radius + 1):
+        for col in range(cx - radius, cx + radius + 1):
+            assert pixels[row * width + col] >= 250, (
+                f"{map_name}: spawn ({spawn['x']}, {spawn['y']}) lacks 0.35 m "
+                "occupancy-map clearance")
 
 
 @pytest.mark.parametrize("robot_name,robot_config", ROBOTS.items())

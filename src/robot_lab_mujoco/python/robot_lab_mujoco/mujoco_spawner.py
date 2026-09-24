@@ -1072,7 +1072,10 @@ class MuJoCoSpawner(Node):
             clock=Clock(clock_type=ClockType.SYSTEM_TIME))
 
         # --- subscriptions ---
+        self._last_mux_cmd_time = 0.0
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
+        self.create_subscription(Twist, "/robot_lab_controller/cmd_vel_unstamped",
+                                 self._on_mux_cmd, 10)
 
         # --- timer to attempt spawn ---
         # NOTE: use an explicit wall-clock timer. With use_sim_time=true the
@@ -1105,9 +1108,17 @@ class MuJoCoSpawner(Node):
         return drive
 
     def _on_cmd(self, msg):
+        if time.monotonic() - getattr(self, "_last_mux_cmd_time", 0.0) < 1.0:
+            return
         with self._twist_lock:
             self._twist = msg
             self._last_cmd_time = time.monotonic()
+
+    def _on_mux_cmd(self, msg):
+        self._last_mux_cmd_time = time.monotonic()
+        with self._twist_lock:
+            self._twist = msg
+            self._last_cmd_time = self._last_mux_cmd_time
 
     def _on_joint_effort(self, msg):
         with self._twist_lock:
