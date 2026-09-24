@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<!--
+  Four-wheel car-like robot (R5.5), primitive geometry only.
+
+  One axle steers (two revolute knuckles), the other is fixed; all four wheels
+  are driven.  base_footprint is the centre of the FIXED axle on the ground:
+  the one point of a car that never moves sideways, so /cmd_vel and odometry
+  mean what they mean for a differential drive (see
+  robot_lab_utils/drive_kinematics.py).
+
+  steer_axle:=front  an ordinary car; the body extends forward of base_footprint.
+  steer_axle:=rear   rear-wheel steering; the fixed axle is at the front and the
+                     body extends backward, so the tail swings out in turns.
+
+  Dimensions: wheelbase 0.32 m, track 0.28 m, wheel radius 0.05 m, body
+  0.48 x 0.22 x 0.08 m, 4.6 kg.  The drive limits the virtual centre wheel
+  to +/-0.58 rad, a 0.49 m minimum turning radius (planners use 0.5 m); the
+  inner wheel then turns 0.75 rad, inside the +/-0.8 rad joint limit.
+-->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="car_wheel_inertial" params="">
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="2.28e-4" ixy="0" ixz="0" iyy="3.75e-4" iyz="0" izz="2.28e-4"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="car_wheel" params="name">
+    <link name="${name}_link">
+      <xacro:car_wheel_inertial/>
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="0.05" length="0.04"/>
+        </geometry>
+        <material name="car_tyre"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="0.05" length="0.04"/>
+        </geometry>
+      </collision>
+    </link>
+    <gazebo reference="${name}_link">
+      <mu1>1.2</mu1>
+      <mu2>1.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="ackermann_car" params="robot_name steer_axle">
+    <xacro:property name="steer_x" value="${0.32 if steer_axle == 'front' else -0.32}"/>
+    <xacro:property name="body_x" value="${steer_x / 2}"/>
+    <xacro:property name="fixed_axle" value="${'rear' if steer_axle == 'front' else 'front'}"/>
+
+    <link name="base_footprint"/>
+
+    <!-- base_link: centre of the fixed axle, at wheel-centre height. -->
+    <link name="base_link">
+      <inertial>
+        <origin xyz="${body_x} 0 0.04" rpy="0 0 0"/>
+        <mass value="3.0"/>
+        <inertia ixx="1.37e-2" ixy="0" ixz="0" iyy="5.92e-2" iyz="0" izz="6.97e-2"/>
+      </inertial>
+      <visual>
+        <origin xyz="${body_x} 0 0.04" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.48 0.22 0.08"/>
+        </geometry>
+        <material name="car_body"/>
+      </visual>
+      <collision>
+        <origin xyz="${body_x} 0 0.04" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.48 0.22 0.08"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="base_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Fixed axle: driven wheels whose spin gives the odometry. -->
+    <xacro:car_wheel name="${fixed_axle}_left_wheel"/>
+    <joint name="${fixed_axle}_left_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${fixed_axle}_left_wheel_link"/>
+      <origin xyz="0 0.14 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="5.0" velocity="40.0"/>
+    </joint>
+
+    <xacro:car_wheel name="${fixed_axle}_right_wheel"/>
+    <joint name="${fixed_axle}_right_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${fixed_axle}_right_wheel_link"/>
+      <origin xyz="0 -0.14 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="5.0" velocity="40.0"/>
+    </joint>
+
+    <!-- Steered axle: a knuckle per side turns about z, the wheel spins in it. -->
+    <xacro:macro name="steered_corner" params="side y">
+      <link name="${steer_axle}_${side}_knuckle_link">
+        <inertial>
+          <mass value="0.1"/>
+          <inertia ixx="4e-5" ixy="0" ixz="0" iyy="4e-5" iyz="0" izz="4e-5"/>
+        </inertial>
+        <visual>
+          <geometry>
+            <cylinder radius="0.012" length="0.05"/>
+          </geometry>
+          <material name="car_metal"/>
+        </visual>
+      </link>
+      <joint name="${steer_axle}_${side}_steer_joint" type="revolute">
+        <parent link="base_link"/>
+        <child link="${steer_axle}_${side}_knuckle_link"/>
+        <origin xyz="${steer_x} ${y} 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-0.8" upper="0.8" effort="10.0" velocity="3.0"/>
+        <dynamics damping="0.1"/>
+      </joint>
+      <xacro:car_wheel name="${steer_axle}_${side}_wheel"/>
+      <joint name="${steer_axle}_${side}_wheel_joint" type="continuous">
+        <parent link="${steer_axle}_${side}_knuckle_link"/>
+        <child link="${steer_axle}_${side}_wheel_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="5.0" velocity="40.0"/>
+      </joint>
+    </xacro:macro>
+    <xacro:steered_corner side="left" y="0.14"/>
+    <xacro:steered_corner side="right" y="-0.14"/>
+
+    <!-- IMU at the body centre. -->
+    <link name="imu_link">
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+      <visual>
+        <geometry>
+          <box size="0.02 0.02 0.01"/>
+        </geometry>
+        <material name="car_metal"/>
+      </visual>
+    </link>
+    <joint name="imu_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="imu_link"/>
+      <origin xyz="${body_x} 0 0.085" rpy="0 0 0"/>
+    </joint>
+
+    <!-- 2D LiDAR on a mast above the body centre. -->
+    <link name="laser_link">
+      <inertial>
+        <mass value="0.05"/>
+        <inertia ixx="1.16e-5" ixy="0" ixz="0" iyy="1.16e-5" iyz="0" izz="1.56e-5"/>
+      </inertial>
+      <visual>
+        <geometry>
+          <cylinder radius="0.03" length="0.04"/>
+        </geometry>
+        <material name="car_metal"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.03" length="0.04"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="laser_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="laser_link"/>
+      <origin xyz="${body_x} 0 0.16" rpy="0 0 0"/>
+    </joint>
+    <link name="laser_mast_link">
+      <visual>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.01" length="0.06"/>
+        </geometry>
+        <material name="car_metal"/>
+      </visual>
+    </link>
+    <joint name="laser_mast_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="laser_mast_link"/>
+      <origin xyz="${body_x} 0 0.08" rpy="0 0 0"/>
+    </joint>
+
+    <!-- RGB-D camera on the front bumper, looking ahead, below the scan plane. -->
+    <xacro:oakd name="oakd" parent_link="base_link" model="pro" mesh_visual="false">
+      <origin xyz="${body_x + 0.23} 0 0.10" rpy="0 0 0"/>
+    </xacro:oakd>
+
+    <material name="dark_grey">
+      <color rgba="0.3 0.3 0.3 1"/>
+    </material>
+    <material name="car_body">
+      <color rgba="0.85 0.35 0.1 1"/>
+    </material>
+    <material name="car_tyre">
+      <color rgba="0.05 0.05 0.05 1"/>
+    </material>
+    <material name="car_metal">
+      <color rgba="0.6 0.6 0.65 1"/>
+    </material>
+
+    <!-- ros2_control: position-commanded steering, velocity-commanded wheels. -->
+    <ros2_control name="${robot_name}_system" type="system">
+      <xacro:if value="$(arg is_sim)">
+        <xacro:if value="$(arg is_ignition)">
+          <hardware>
+            <plugin>ign_ros2_control/IgnitionSystem</plugin>
+          </hardware>
+        </xacro:if>
+        <xacro:unless value="$(arg is_ignition)">
+          <hardware>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+          </hardware>
+        </xacro:unless>
+      </xacro:if>
+      <xacro:unless value="$(arg is_sim)">
+        <hardware>
+          <plugin>mock_components/GenericSystem</plugin>
+        </hardware>
+      </xacro:unless>
+      <xacro:macro name="steer_interface" params="joint">
+        <joint name="${joint}">
+          <command_interface name="position">
+            <param name="min">-0.8</param>
+            <param name="max">0.8</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </xacro:macro>
+      <xacro:macro name="wheel_interface" params="joint">
+        <joint name="${joint}">
+          <command_interface name="velocity">
+            <param name="min">-40</param>
+            <param name="max">40</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </xacro:macro>
+      <xacro:steer_interface joint="${steer_axle}_left_steer_joint"/>
+      <xacro:steer_interface joint="${steer_axle}_right_steer_joint"/>
+      <xacro:wheel_interface joint="${fixed_axle}_left_wheel_joint"/>
+      <xacro:wheel_interface joint="${fixed_axle}_right_wheel_joint"/>
+      <xacro:wheel_interface joint="${steer_axle}_left_wheel_joint"/>
+      <xacro:wheel_interface joint="${steer_axle}_right_wheel_joint"/>
+    </ros2_control>
+
+    <gazebo>
+      <xacro:if value="$(arg is_ignition)">
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <parameters>$(find robot_lab_robots)/ackermann_car/config/${steer_axle}_steer_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu"/>
+        <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <parameters>$(find robot_lab_robots)/ackermann_car/config/${steer_axle}_steer_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+      </xacro:unless>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+      <sensor name="imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <gz_frame_id>imu_link</gz_frame_id>
+        <topic>imu</topic>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="laser_link">
+      <sensor name="lidar" type="gpu_lidar">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <topic>scan</topic>
+        <update_rate>5</update_rate>
+        <gz_frame_id>laser_link</gz_frame_id>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1.00000</resolution>
+              <min_angle>0.000000</min_angle>
+              <max_angle>6.280000</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120000</min>
+            <max>12.0</max>
+            <resolution>0.02</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

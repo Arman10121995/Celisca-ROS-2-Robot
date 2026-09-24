@@ -21,6 +21,7 @@ except ImportError:
 
 import rclpy
 
+from robot_lab_utils.drive_kinematics import drive_from_config, parse_drive_config
 from robot_lab_utils.process_lifetime import exit_with_parent
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
@@ -293,6 +294,9 @@ class PyBulletSpawner(Node):
         self.declare_parameter("wheel_separation", 0.17)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
         self.declare_parameter("right_wheel_joint", "wheel_right_joint")
+        # The robot's whole drive block as JSON (drive_kinematics); empty
+        # for the differential-drive parameters above.
+        self.declare_parameter("drive_config", "")
         self.get_logger().info("Parameters declared")
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
@@ -788,6 +792,11 @@ class PyBulletSpawner(Node):
         rw = self.get_parameter("right_wheel_joint").value
         self._lw = self._joint_idx.get(lw, -1)
         self._rw = self._joint_idx.get(rw, -1)
+        self._drive = self._make_drive()
+        # Every joint the drive commands (a car's four wheels and steering).
+        self._drive_idx = {self._joint_idx[j] for j in
+                           list(self._drive.wheel_joints) + list(self._drive.steer_joints)
+                           if j in self._joint_idx}
 
         # Display-mode hold: joints stay at their spawn pose so RViz reflects
         # stable joint_states instead of a collapse/jump under gravity.  This
@@ -886,7 +895,8 @@ class PyBulletSpawner(Node):
                 # that; pinning the base and forcing 200 N*m froze it.
                 for jn, (q0, force) in getattr(self, "_hold_pose", {}).items():
                     idx = self._joint_idx.get(jn, -1)
-                    if idx < 0 or idx == self._lw or idx == self._rw:
+                    if idx < 0 or idx == self._lw or idx == self._rw \
+                            or idx in self._drive_idx:
                         continue
                     try:
                         p.setJointMotorControl2(
@@ -894,14 +904,29 @@ class PyBulletSpawner(Node):
                             targetPosition=q0, force=force)
                     except Exception:
                         pass
-            if self._lw >= 0:
-                p.setJointMotorControl2(
-                    self._robot_id, self._lw, p.VELOCITY_CONTROL,
-                    targetVelocity=vl, force=5.0)
-            if self._rw >= 0:
-                p.setJointMotorControl2(
-                    self._robot_id, self._rw, p.VELOCITY_CONTROL,
-                    targetVelocity=vr, force=5.0)
+            if self._drive.kind == "diff":
+                if self._lw >= 0:
+                    p.setJointMotorControl2(
+                        self._robot_id, self._lw, p.VELOCITY_CONTROL,
+                        targetVelocity=vl, force=5.0)
+                if self._rw >= 0:
+                    p.setJointMotorControl2(
+                        self._robot_id, self._rw, p.VELOCITY_CONTROL,
+                        targetVelocity=vr, force=5.0)
+            else:
+                targets = self._drive.targets(t.linear.x, t.angular.z, dt=self._dt)
+                for joint, rate in targets.velocity.items():
+                    idx = self._joint_idx.get(joint, -1)
+                    if idx >= 0:
+                        p.setJointMotorControl2(
+                            self._robot_id, idx, p.VELOCITY_CONTROL,
+                            targetVelocity=max(-clamp, min(clamp, rate)), force=5.0)
+                for joint, angle in targets.position.items():
+                    idx = self._joint_idx.get(joint, -1)
+                    if idx >= 0:
+                        p.setJointMotorControl2(
+                            self._robot_id, idx, p.POSITION_CONTROL,
+                            targetPosition=angle, force=10.0, maxVelocity=3.0)
 
             p.stepSimulation()
             self._sim_step += 1
@@ -994,6 +1019,25 @@ class PyBulletSpawner(Node):
         m.linear_acceleration_covariance = [0.1,0.0,0.0, 0.0,0.1,0.0, 0.0,0.0,0.1]
         self._imu_pub.publish(m)
 
+    def _make_drive(self):
+        """Wheel/steering model for /cmd_vel (differential unless configured)."""
+        args = (self.get_parameter("left_wheel_joint").value,
+                self.get_parameter("right_wheel_joint").value,
+                self.get_parameter("wheel_radius").value,
+                self.get_parameter("wheel_separation").value)
+        try:
+            drive = drive_from_config(
+                parse_drive_config(self.get_parameter("drive_config").value), *args)
+        except ValueError as exc:
+            self.get_logger().error("drive_config rejected (%s); using a "
+                                    "differential drive" % exc)
+            drive = drive_from_config({}, *args)
+        if drive.kind != "diff":
+            self.get_logger().info(
+                "Drive: %s, wheels %s, steering %s"
+                % (drive.kind, drive.wheel_joints, list(drive.steer_joints)))
+        return drive
+
     def _on_reset(self, request, response):
         """Reset the simulation (R2.3)."""
         try:
@@ -1008,6 +1052,8 @@ class PyBulletSpawner(Node):
                 p.resetBasePositionAndOrientation(self._robot_id, *pose)
                 # Reset velocity.
                 p.resetBaseVelocity(self._robot_id, [0, 0, 0], [0, 0, 0])
+                if getattr(self, "_drive", None) is not None and hasattr(self._drive, "reset"):
+                    self._drive.reset()
                 # Zero actuated joint motion so the robot does not coast
                 # away from the spawn pose on pre-reset wheel spin (R6.1
                 # reset contract: velocities restored, not just the pose).

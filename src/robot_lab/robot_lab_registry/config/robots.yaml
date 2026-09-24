@@ -1282,3 +1282,344 @@
     - differential
   created: "2026-09-05"
   updated: "2026-09-05"
+
+
+# ============================================================================
+# First-party four-wheel car-like robots (R5.5)
+# ============================================================================
+
+- id: ackermann_car
+  version: "1.0.0"
+  name: "Ackermann Car"
+  ros_package: robot_lab_robots
+  description: "Four-wheel car with front Ackermann steering and four driven wheels; LIDAR, IMU, RGB-D"
+  status: integrated
+  robot_class: mobile
+  maturity: simulated
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators:
+    - gazebo
+    - ignition
+    - pybullet
+    - mujoco
+    - isaac
+  locomotion:
+    type: ackermann
+    dof: 6
+    max_velocity: 1.0
+    max_acceleration: 1.5
+    steer_axle: front
+    min_turning_radius_m: 0.49
+  sensors:
+    - type: camera
+      name: oakd_rgbd
+      frame: oakd_rgb_camera_optical_frame
+      topic: /oakd/rgb/image_raw
+      message_type: sensor_msgs/Image
+    - type: lidar
+      name: base_laser
+      frame: laser_link
+      topic: /scan
+      message_type: sensor_msgs/LaserScan
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+    - type: odometry
+      name: odometry
+      frame: odom
+      topic: /odom
+      message_type: nav_msgs/Odometry
+  actuators:
+    - type: steering
+      name: left_steer
+      joint: front_left_steer_joint
+    - type: steering
+      name: right_steer
+      joint: front_right_steer_joint
+    - type: wheel
+      name: rear_left_wheel
+      joint: rear_left_wheel_joint
+    - type: wheel
+      name: rear_right_wheel
+      joint: rear_right_wheel_joint
+    - type: wheel
+      name: front_left_wheel
+      joint: front_left_wheel_joint
+    - type: wheel
+      name: front_right_wheel
+      joint: front_right_wheel_joint
+  command_interfaces:
+    - geometry_msgs/Twist
+  state_interfaces:
+    - nav_msgs/Odometry
+    - sensor_msgs/JointState
+  frames:
+    - base_footprint
+    - base_link
+    - laser_link
+    - odom
+    - map
+  capabilities:
+    - navigation
+    - rgbd_camera
+    - mapping
+    - localization
+    - state_estimation
+    - sensor_fusion
+    - control
+    - costmap
+    - car_steering
+  dependencies:
+    - robot_lab_robots
+    - robot_lab_controller
+  assets:
+    urdf: robot_lab_robots/ackermann_car/urdf/ackermann_car.urdf.xacro
+    xacro: robot_lab_robots/ackermann_car/urdf/ackermann_car_macro.xacro
+    meshes: []
+  safety_limits:
+    max_velocity: 1.0
+    max_acceleration: 1.5
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.15
+    collision_stop_time_s: 0.5
+    max_tilt_rad: 0.0
+  compute_limits:
+    cpu_cores: 2
+    memory_mb: 768
+    min_real_time_factor: 0.5
+    notes: "LIDAR + IMU + RGB-D; primitive geometry"
+  tags:
+    - first-party
+    - ackermann
+    - front_steering
+  created: "2026-09-24"
+  updated: "2026-09-24"
+
+- id: rear_steer_car
+  version: "1.0.0"
+  name: "Rear-Steer Car"
+  ros_package: robot_lab_robots
+  description: "Four-wheel car with rear-wheel (reverse) Ackermann steering: the fixed axle leads and the tail swings out in turns"
+  status: integrated
+  robot_class: mobile
+  maturity: simulated
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators:
+    - gazebo
+    - ignition
+    - pybullet
+    - mujoco
+    - isaac
+  locomotion:
+    type: ackermann
+    dof: 6
+    max_velocity: 1.0
+    max_acceleration: 1.5
+    steer_axle: rear
+    min_turning_radius_m: 0.49
+  sensors:
+    - type: camera
+      name: oakd_rgbd
+      frame: oakd_rgb_camera_optical_frame
+      topic: /oakd/rgb/image_raw
+      message_type: sensor_msgs/Image
+    - type: lidar
+      name: base_laser
+      frame: laser_link
+      topic: /scan
+      message_type: sensor_msgs/LaserScan
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+    - type: odometry
+      name: odometry
+      frame: odom
+      topic: /odom
+      message_type: nav_msgs/Odometry
+  actuators:
+    - type: steering
+      name: left_steer
+      joint: rear_left_steer_joint
+    - type: steering
+      name: right_steer
+      joint: rear_right_steer_joint
+    - type: wheel
+      name: front_left_wheel
+      joint: front_left_wheel_joint
+    - type: wheel
+      name: front_right_wheel
+      joint: front_right_wheel_joint
+    - type: wheel
+      name: rear_left_wheel
+      joint: rear_left_wheel_joint
+    - type: wheel
+      name: rear_right_wheel
+      joint: rear_right_wheel_joint
+  command_interfaces:
+    - geometry_msgs/Twist
+  state_interfaces:
+    - nav_msgs/Odometry
+    - sensor_msgs/JointState
+  frames:
+    - base_footprint
+    - base_link
+    - laser_link
+    - odom
+    - map
+  capabilities:
+    - navigation
+    - rgbd_camera
+    - mapping
+    - localization
+    - state_estimation
+    - sensor_fusion
+    - control
+    - costmap
+    - car_steering
+  dependencies:
+    - robot_lab_robots
+    - robot_lab_controller
+  assets:
+    urdf: robot_lab_robots/ackermann_car/urdf/rear_steer_car.urdf.xacro
+    xacro: robot_lab_robots/ackermann_car/urdf/ackermann_car_macro.xacro
+    meshes: []
+  safety_limits:
+    max_velocity: 1.0
+    max_acceleration: 1.5
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.15
+    collision_stop_time_s: 0.5
+    max_tilt_rad: 0.0
+  compute_limits:
+    cpu_cores: 2
+    memory_mb: 768
+    min_real_time_factor: 0.5
+    notes: "LIDAR + IMU + RGB-D; primitive geometry"
+  tags:
+    - first-party
+    - ackermann
+    - rear_steering
+  created: "2026-09-24"
+  updated: "2026-09-24"
+
+- id: anti_ackermann_car
+  version: "1.0.0"
+  name: "Anti-Ackermann Car"
+  ros_package: robot_lab_robots
+  description: "The front-steered car with anti-Ackermann geometry (outer wheel steers more; the wheels scrub at low speed)"
+  status: integrated
+  robot_class: mobile
+  maturity: simulated
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators:
+    - gazebo
+    - ignition
+    - pybullet
+    - mujoco
+    - isaac
+  locomotion:
+    type: ackermann
+    dof: 6
+    max_velocity: 1.0
+    max_acceleration: 1.5
+    steer_axle: front
+    min_turning_radius_m: 0.49
+  sensors:
+    - type: camera
+      name: oakd_rgbd
+      frame: oakd_rgb_camera_optical_frame
+      topic: /oakd/rgb/image_raw
+      message_type: sensor_msgs/Image
+    - type: lidar
+      name: base_laser
+      frame: laser_link
+      topic: /scan
+      message_type: sensor_msgs/LaserScan
+    - type: imu
+      name: imu
+      frame: imu_link
+      topic: /imu
+      message_type: sensor_msgs/Imu
+    - type: odometry
+      name: odometry
+      frame: odom
+      topic: /odom
+      message_type: nav_msgs/Odometry
+  actuators:
+    - type: steering
+      name: left_steer
+      joint: front_left_steer_joint
+    - type: steering
+      name: right_steer
+      joint: front_right_steer_joint
+    - type: wheel
+      name: rear_left_wheel
+      joint: rear_left_wheel_joint
+    - type: wheel
+      name: rear_right_wheel
+      joint: rear_right_wheel_joint
+    - type: wheel
+      name: front_left_wheel
+      joint: front_left_wheel_joint
+    - type: wheel
+      name: front_right_wheel
+      joint: front_right_wheel_joint
+  command_interfaces:
+    - geometry_msgs/Twist
+  state_interfaces:
+    - nav_msgs/Odometry
+    - sensor_msgs/JointState
+  frames:
+    - base_footprint
+    - base_link
+    - laser_link
+    - odom
+    - map
+  capabilities:
+    - navigation
+    - rgbd_camera
+    - mapping
+    - localization
+    - state_estimation
+    - sensor_fusion
+    - control
+    - costmap
+    - car_steering
+  dependencies:
+    - robot_lab_robots
+    - robot_lab_controller
+  assets:
+    urdf: robot_lab_robots/ackermann_car/urdf/ackermann_car.urdf.xacro
+    xacro: robot_lab_robots/ackermann_car/urdf/ackermann_car_macro.xacro
+    meshes: []
+  safety_limits:
+    max_velocity: 1.0
+    max_acceleration: 1.5
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.15
+    collision_stop_time_s: 0.5
+    max_tilt_rad: 0.0
+  compute_limits:
+    cpu_cores: 2
+    memory_mb: 768
+    min_real_time_factor: 0.5
+    notes: "LIDAR + IMU + RGB-D; primitive geometry"
+  tags:
+    - first-party
+    - ackermann
+    - anti_ackermann
+  created: "2026-09-24"
+  updated: "2026-09-24"

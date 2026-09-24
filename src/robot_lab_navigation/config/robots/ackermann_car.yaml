@@ -1,0 +1,17 @@
+# Per-robot navigation overlay for 'ackermann_car' (front-steered car: the fixed rear axle is the base frame and the body extends 0.42 m ahead of it).
+# The footprint polygon replaces robot_radius; the car-specific planner and
+# path-follower settings come from navigation.launch.py (motion_model:=ackermann).
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      robot_base_frame: base_footprint
+      footprint: "[[0.42, 0.17], [0.42, -0.17], [-0.10, -0.17], [-0.10, 0.17]]"
+      inflation_layer:
+        inflation_radius: 0.35
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      robot_base_frame: base_footprint
+      footprint: "[[0.42, 0.17], [0.42, -0.17], [-0.10, -0.17], [-0.10, 0.17]]"
+      inflation_layer:
+        inflation_radius: 0.35

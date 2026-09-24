@@ -33,6 +33,7 @@ except ImportError:
 
 import rclpy
 
+from robot_lab_utils.drive_kinematics import drive_from_config, parse_drive_config
 from robot_lab_utils.process_lifetime import exit_with_parent
 from rclpy.clock import Clock, ClockType
 from rclpy.executors import ExternalShutdownException
@@ -802,6 +803,36 @@ def _add_wheel_velocity_actuators(mjcf_text, joint_names, force_limit=5.0,
     return ET.tostring(root, encoding="unicode")
 
 
+def _add_steer_position_actuators(mjcf_text, joint_names, kp=50.0,
+                                  force_limit=10.0, armature=0.01):
+    """Position servos for a car's steering joints (none are imported).
+
+    Critically damped (dampratio 1), with rotor inertia on the joint so the
+    servo stays stable at the physics step (see the wheel actuators).
+    """
+    try:
+        root = ET.fromstring(mjcf_text)
+    except ET.ParseError:
+        return mjcf_text
+    hinges = {joint.get("name"): joint for joint in root.iter("joint")
+              if joint.get("name") and joint.get("type", "hinge") == "hinge"}
+    missing = [name for name in joint_names if name in hinges]
+    if not missing:
+        return mjcf_text
+    actuator = root.find("actuator")
+    if actuator is None:
+        actuator = ET.SubElement(root, "actuator")
+    for name in missing:
+        if not hinges[name].get("armature"):
+            hinges[name].set("armature", "%g" % armature)
+        ET.SubElement(actuator, "position", {
+            "name": name + "_position", "joint": name, "kp": "%g" % kp,
+            "dampratio": "1", "forcelimited": "true",
+            "forcerange": "%g %g" % (-force_limit, force_limit),
+        })
+    return ET.tostring(root, encoding="unicode")
+
+
 def _add_camera_to_base(mjcf_text, name, offset, fovy_degrees):
     """Attach a fixed camera to the floating base at a camera link's pose.
 
@@ -952,6 +983,9 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("wheel_separation", 0.17)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
         self.declare_parameter("right_wheel_joint", "wheel_right_joint")
+        # The robot's whole drive block as JSON (drive_kinematics); empty
+        # for the differential-drive parameters above.
+        self.declare_parameter("drive_config", "")
         self.declare_parameter("laser_link_name", "laser_link")
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
@@ -992,6 +1026,8 @@ class MuJoCoSpawner(Node):
         self._rw_qpos_adr = -1
         self._twist = Twist()
         self._twist_lock = threading.Lock()
+        self._drive = self._make_drive()
+        self._actuator_ids = {}
         self._effort_command = None
         self._effort_actuators = []
         self._effort_subscription = None
@@ -1048,6 +1084,25 @@ class MuJoCoSpawner(Node):
             clock=Clock(clock_type=ClockType.SYSTEM_TIME),
         )
         self._thread = None
+
+    def _make_drive(self):
+        """Wheel/steering model for /cmd_vel (differential unless configured)."""
+        args = (self.get_parameter("left_wheel_joint").value,
+                self.get_parameter("right_wheel_joint").value,
+                self.get_parameter("wheel_radius").value,
+                self.get_parameter("wheel_separation").value)
+        try:
+            drive = drive_from_config(
+                parse_drive_config(self.get_parameter("drive_config").value), *args)
+        except ValueError as exc:
+            self.get_logger().error("drive_config rejected (%s); using a "
+                                    "differential drive" % exc)
+            drive = drive_from_config({}, *args)
+        if drive.kind != "diff":
+            self.get_logger().info(
+                "Drive: %s, wheels %s, steering %s"
+                % (drive.kind, drive.wheel_joints, list(drive.steer_joints)))
+        return drive
 
     def _on_cmd(self, msg):
         with self._twist_lock:
@@ -1172,9 +1227,9 @@ class MuJoCoSpawner(Node):
                     robot_mjcf = self._effort_command.add_actuators(
                         robot_mjcf, native)
                 robot_mjcf = _add_wheel_velocity_actuators(
-                    robot_mjcf,
-                    (self.get_parameter("left_wheel_joint").value,
-                     self.get_parameter("right_wheel_joint").value))
+                    robot_mjcf, self._drive.wheel_joints)
+                robot_mjcf = _add_steer_position_actuators(
+                    robot_mjcf, self._drive.steer_joints)
                 camera_offset = offset_from_root(
                     urdf, self.get_parameter("camera_link_name").value)
                 if camera_offset is not None \
@@ -1241,7 +1296,9 @@ class MuJoCoSpawner(Node):
             held = _add_joint_hold_springs(
                 self._model, self._data,
                 [name for name in self._joint_names
-                 if name not in (self._lw_name, self._rw_name)])
+                 if name not in (self._lw_name, self._rw_name)
+                 and name not in self._drive.wheel_joints
+                 and name not in self._drive.steer_joints])
             self.get_logger().info(
                 "Display hold active (hold_position=%s): %d joint(s) held at "
                 "their spawn pose by spring-dampers" % (hold_mode, held))
@@ -1515,14 +1572,13 @@ class MuJoCoSpawner(Node):
             stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
         if stale:
             command = Twist()
-        radius = self.get_parameter("wheel_radius").value
-        track = self.get_parameter("wheel_separation").value
-        left = (command.linear.x - command.angular.z * track / 2.0) / radius
-        right = (command.linear.x + command.angular.z * track / 2.0) / radius
-        if self._lw_qpos_adr >= 0 and self._model.nu > 0:
-            self._set_velocity_actuator(self._lw_name, max(-50.0, min(50.0, left)))
-        if self._rw_qpos_adr >= 0 and self._model.nu > 0:
-            self._set_velocity_actuator(self._rw_name, max(-50.0, min(50.0, right)))
+        if self._model.nu > 0 and not getattr(self, "_robot_free", False):
+            targets = self._drive.targets(
+                command.linear.x, command.angular.z, dt=self._dt)
+            for joint, rate in targets.velocity.items():
+                self._set_actuator(joint, "_velocity", max(-50.0, min(50.0, rate)))
+            for joint, angle in targets.position.items():
+                self._set_actuator(joint, "_position", angle)
         if self._effort_command is not None:
             with self._twist_lock:
                 values = self._effort_command.command(time.monotonic(), self._watchdog_timeout)
@@ -1547,6 +1603,8 @@ class MuJoCoSpawner(Node):
     def _reset_physics(self):
         """Restore all model state, spawn pose and a stopped command."""
         mujoco.mj_resetData(self._model, self._data)
+        if hasattr(self._drive, "reset"):
+            self._drive.reset()
         adr = self._free_joint_qpos_adr
         if adr >= 0:
             self._data.qpos[adr:adr + 3] = [
@@ -1584,6 +1642,18 @@ class MuJoCoSpawner(Node):
                 self.get_logger().info("Spawn ground clearance: raised root by %.4f m" % lift)
             mujoco.mj_forward(self._model, self._data)
         self._read_physics_state()
+
+    def _set_actuator(self, joint_name, suffix, value):
+        """Set the control of the actuator the bridge added for a drive joint."""
+        key = joint_name + suffix
+        index = self._actuator_ids.get(key)
+        if index is None:
+            index = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, key)
+            self._actuator_ids[key] = index
+        if index >= 0:
+            self._data.ctrl[index] = value
+        elif suffix == "_velocity":
+            self._set_velocity_actuator(joint_name, value)
 
     def _set_velocity_actuator(self, joint_name, velocity):
         m = self._model

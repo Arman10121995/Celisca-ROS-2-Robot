@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- Front-steered four-wheel car (Ackermann steering); see ackermann_car_macro.xacro. -->
+<robot name="ackermann_car" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="is_ignition" default="true"/>
+  <xacro:arg name="is_sim" default="true"/>
+  <xacro:include filename="$(find robot_lab_robots)/description_common/urdf/oakd_camera.xacro"/>
+  <xacro:include filename="$(find robot_lab_robots)/ackermann_car/urdf/ackermann_car_macro.xacro"/>
+  <xacro:ackermann_car robot_name="ackermann_car" steer_axle="front"/>
+</robot>

@@ -31,6 +31,7 @@ import time
 
 import rclpy
 
+from robot_lab_utils.drive_kinematics import drive_from_config, parse_drive_config
 from robot_lab_utils.process_lifetime import exit_with_parent
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
@@ -44,6 +45,9 @@ from std_msgs.msg import Bool
 from std_srvs.srv import Trigger
 
 import numpy as np
+
+# Rate at which a car's wheel and steering targets are sent to the runtime.
+_DRIVE_RATE = 50.0
 
 from robot_lab_utils import camera_model
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
@@ -201,6 +205,10 @@ class IsaacSpawner(Node):
         # MuJoCo spawners, so /cmd_vel means the same thing in every backend.
         self.declare_parameter("wheel_radius", 0.033)
         self.declare_parameter("wheel_separation", 0.17)
+        # The robot's whole drive block as JSON (drive_kinematics).  A car's
+        # wheel and steering targets are computed here, where
+        # robot_lab_utils is importable, and sent to the runtime by joint.
+        self.declare_parameter("drive_config", "")
         # URDF import: use the description's own <collision> geometry, as
         # Gazebo, PyBullet and MuJoCo do.  Colliders built from the visual
         # meshes gave Bumperbot faceted convex-hull wheels and casters that
@@ -251,8 +259,14 @@ class IsaacSpawner(Node):
             clock=Clock(clock_type=ClockType.SYSTEM_TIME))
 
         self.create_subscription(Twist, "/cmd_vel", self._on_cmd, 10)
+        self._drive = self._make_drive()
+        self._last_cmd_time = 0.0
+        self._last_drive_time = None
 
         wall = Clock(clock_type=ClockType.SYSTEM_TIME)
+        if self._drive.kind != "diff":
+            self._drive_timer = self.create_timer(
+                1.0 / _DRIVE_RATE, self._send_drive_targets, clock=wall)
         self._timer = self.create_timer(0.5, self._try_spawn, clock=wall)
         rate = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
         self._pub_timer = self.create_timer(rate, self._publish, clock=wall)
@@ -271,8 +285,55 @@ class IsaacSpawner(Node):
         self._root_offset = None  # Isaac's root body in the URDF root frame
 
     # ------------------------------------------------------------------
+    def _make_drive(self):
+        """Wheel/steering model for /cmd_vel (differential unless configured)."""
+        args = (self.get_parameter("left_wheel_joint").value,
+                self.get_parameter("right_wheel_joint").value,
+                self.get_parameter("wheel_radius").value,
+                self.get_parameter("wheel_separation").value)
+        try:
+            drive = drive_from_config(
+                parse_drive_config(self.get_parameter("drive_config").value), *args)
+        except ValueError as exc:
+            self.get_logger().error("drive_config rejected (%s); using a "
+                                    "differential drive" % exc)
+            drive = drive_from_config({}, *args)
+        if drive.kind != "diff":
+            self.get_logger().info(
+                "Drive: %s, wheels %s, steering %s"
+                % (drive.kind, drive.wheel_joints, list(drive.steer_joints)))
+        return drive
+
+    def _send_drive_targets(self):
+        """Stream a car's joint targets to the runtime at _DRIVE_RATE.
+
+        The steering rate and acceleration limits need a steady step, and
+        a stale command (no /cmd_vel for 0.5 s) brings the car to a stop.
+        """
+        proc = self._proc
+        if proc is None or proc.stdin is None:
+            return
+        now = time.monotonic()
+        dt = 1.0 / _DRIVE_RATE if self._last_drive_time is None \
+            else min(now - self._last_drive_time, 0.2)
+        self._last_drive_time = now
+        twist = self._twist
+        if now - self._last_cmd_time > 0.5:
+            twist = Twist()
+        targets = self._drive.targets(twist.linear.x, twist.angular.z, dt=dt)
+        try:
+            proc.stdin.write(json.dumps({"joint_targets": {
+                "velocity": targets.velocity,
+                "position": targets.position}}) + "\n")
+            proc.stdin.flush()
+        except Exception:
+            pass
+
     def _on_cmd(self, msg):
         self._twist = msg
+        self._last_cmd_time = time.monotonic()
+        if self._drive.kind != "diff":
+            return  # streamed by _send_drive_targets
         proc = self._proc
         if proc is not None and proc.stdin is not None:
             try:
@@ -376,6 +437,10 @@ class IsaacSpawner(Node):
             "wheel_radius": float(self.get_parameter("wheel_radius").value),
             "wheel_separation": float(
                 self.get_parameter("wheel_separation").value),
+            # Joints the drive commands: all get velocity drives (wheels) or
+            # position drives (steering) in the runtime.
+            "drive_wheel_joints": list(self._drive.wheel_joints),
+            "drive_steer_joints": list(self._drive.steer_joints),
             "collision_from_visuals": bool(
                 self.get_parameter("collision_from_visuals").value),
             "scan": self._scan_config(urdf),

@@ -108,6 +108,9 @@ def _build_mujoco_actions(context):
     }
     for drive_key in ("left_wheel_joint", "right_wheel_joint", "wheel_radius", "wheel_separation"):
         spawner_params[drive_key] = LaunchConfiguration(drive_key)
+    # The whole drive block as JSON (a car's steering joints and limits).
+    spawner_params["drive_config"] = ParameterValue(
+        LaunchConfiguration("drive_config"), value_type=str)
     if hold_position is not None:
         try:
             spawner_params["hold_position"] = ParameterValue(hold_position, value_type=str)
@@ -135,6 +138,7 @@ def generate_launch_description():
         DeclareLaunchArgument("right_wheel_joint", default_value="wheel_right_joint"),
         DeclareLaunchArgument("wheel_radius", default_value="0.033"),
         DeclareLaunchArgument("wheel_separation", default_value="0.17"),
+        DeclareLaunchArgument("drive_config", default_value=""),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),

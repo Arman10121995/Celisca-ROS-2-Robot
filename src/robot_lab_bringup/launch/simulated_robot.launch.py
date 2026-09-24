@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 import xml.etree.ElementTree as ET
@@ -36,6 +37,10 @@ _SIMULATOR_DISPATCH = {
 }
 
 _VALID_SIMULATORS = frozenset(_SIMULATOR_DISPATCH)
+
+# Drive keys the simulator launch files declare as arguments of their own.
+_DIFF_DRIVE_KEYS = ("left_wheel_joint", "right_wheel_joint",
+                    "wheel_radius", "wheel_separation")
 
 # Canonical algorithm categories (identical to the registry taxonomy and to
 # the `algorithm_category` of every selectable step in sim_modes.yaml).  Each
@@ -470,7 +475,7 @@ def _mode_step_categories(mode_config):
     return categories
 
 
-def _resolve_algorithm_selection(context, mode_config, dispatch):
+def _resolve_algorithm_selection(context, mode_config, dispatch, robot_config=None):
     """Resolve every algorithm launch argument into a concrete decision.
 
     Returns ``(selection, plugins, nodes, notes)``:
@@ -487,6 +492,11 @@ def _resolve_algorithm_selection(context, mode_config, dispatch):
     """
     mode_categories = _mode_step_categories(mode_config)
     defaults = _mode_step_defaults(mode_config)
+    # A robot can replace a mode default it cannot use (a car's local
+    # planner must not turn it on the spot): robots.yaml default_algorithms.
+    for category, algorithm in ((robot_config or {}).get("default_algorithms") or {}).items():
+        if category in defaults:
+            defaults[category] = str(algorithm)
     selection, plugins, nodes, notes = {}, {}, [], []
 
     # Backwards compatibility: the deprecated single `algorithm:=` argument
@@ -525,6 +535,13 @@ def _resolve_algorithm_selection(context, mode_config, dispatch):
                 "%s algorithm '%s' cannot be launched: %s"
                 % (category, requested, entry["unavailable"])
             )
+        unsuitable = set(entry.get("not_for_features") or []) \
+            & set((robot_config or {}).get("features") or [])
+        if unsuitable:
+            raise RuntimeError(
+                "%s algorithm '%s' cannot drive this robot (%s): %s"
+                % (category, requested, ", ".join(sorted(unsuitable)),
+                   entry.get("not_for_reason", "incompatible motion model")))
         selection[category] = requested
         if entry.get("plugin"):
             plugins[category] = str(entry["plugin"])
@@ -632,7 +649,14 @@ def _build_simulation_actions(context):
         robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
         model_path = _package_file(robot_package, robot_xacro)
 
-    drive_args = {key: str(value) for key, value in robot_config.get("drive", {}).items()}
+    # The simulator bridges take the differential-drive keys as arguments
+    # and the whole drive block (a car's steering too) as JSON; see
+    # robot_lab_utils.drive_kinematics.
+    drive_config = robot_config.get("drive", {}) or {}
+    drive_args = {key: str(value) for key, value in drive_config.items()
+                  if key in _DIFF_DRIVE_KEYS}
+    drive_args["drive_config"] = json.dumps(drive_config, sort_keys=True)
+    drive_type = str(drive_config.get("type", "diff"))
     # Localization runs in the robot's own root frame (base_footprint for
     # the wheeled bases, 'base' or 'pelvis' for legged and humanoid ones).
     base_frame = "" if robot_free or mode_name == "display" else _urdf_root_link(model_path)
@@ -879,7 +903,7 @@ def _build_simulation_actions(context):
     # that silently ignores it.
     dispatch = _load_algorithm_dispatch(bringup_share)
     algorithm_selection, algorithm_plugins, algorithm_nodes, algorithm_notes = \
-        _resolve_algorithm_selection(context, mode_config, dispatch)
+        _resolve_algorithm_selection(context, mode_config, dispatch, robot_config)
     for note in algorithm_notes:
         print("[robot_lab] algorithm %s" % note)
 
@@ -955,6 +979,8 @@ def _build_simulation_actions(context):
                 launch_arguments={
                     **{key: value for key, value in drive_args.items()
                        if key in ("wheel_radius", "wheel_separation")},
+                    "drive_type": drive_type,
+                    "drive_config": drive_args["drive_config"],
                     "use_simple_controller": str(controller_config.get("use_simple_controller", "False")),
                     "use_python": str(controller_config.get("use_python", "False")),
                     "use_sim_time": use_sim_time,
@@ -1083,6 +1109,7 @@ def _build_simulation_actions(context):
             "robot_model": robot_model,
             "global_planner_plugin": global_plugin,
             "local_planner_plugin": local_plugin,
+            "motion_model": "ackermann" if drive_type == "ackermann" else "diff",
         }
         gated_actions.append(
             IncludeLaunchDescription(

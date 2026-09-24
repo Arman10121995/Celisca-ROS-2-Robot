@@ -612,8 +612,8 @@ tasks:
         next_action: "Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion."
       R5.5:
         title: "Integrate four-wheel Ackermann and reverse Ackermann workflows"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "claude"
         depends_on:
           - "R5.1"
           - "R3.3"

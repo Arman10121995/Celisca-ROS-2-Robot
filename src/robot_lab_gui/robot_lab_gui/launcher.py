@@ -494,6 +494,22 @@ class SimulationLauncherGui(tk.Tk):
                     "(missing from algorithm_dispatch.yaml)")
         return entry.get("unavailable", "") or ""
 
+    def _algorithm_unsuitable_reason(self, category, algorithm_id):
+        """Why *algorithm_id* cannot drive the selected robot, or ''.
+
+        algorithm_dispatch.yaml's ``not_for_features`` against the robot
+        profile's features (e.g. DWB turns a robot on the spot, which a car
+        with ``car_steering`` cannot do); the launch refuses the same pairs.
+        """
+        entry = (self.algorithm_dispatch.get(category) or {}).get(algorithm_id) or {}
+        excluded = set(entry.get("not_for_features") or [])
+        if not excluded or self._robot_free():
+            return ""
+        features = set((self._robot_config() or {}).get("features") or [])
+        if excluded & features:
+            return entry.get("not_for_reason", "incompatible with this robot")
+        return ""
+
     def _algorithms_for_category(self, category):
         """Runnable algorithm IDs for *category*.
 
@@ -504,7 +520,13 @@ class SimulationLauncherGui(tk.Tk):
             a["id"] for a in self.algorithms
             if a.get("category") == category
             and not self._algorithm_unavailable_reason(category, a["id"])
+            and not self._algorithm_unsuitable_reason(category, a["id"])
         ]
+
+    def _robot_default_algorithm(self, category):
+        """The robot profile's replacement for a mode default, or ''."""
+        defaults = (self._robot_config() or {}).get("default_algorithms") or {}
+        return str(defaults.get(category, "") or "")
 
     def _algorithm_name(self, algorithm_id):
         """Return the human-readable name for an algorithm ID."""
@@ -1288,11 +1310,21 @@ class SimulationLauncherGui(tk.Tk):
             combo.configure(values=[NONE_LABEL] + algorithms)
             if var is not None:
                 current = var.get()
-                if current and not is_none_selection(current) \
+                robot_default = self._robot_default_algorithm(category_name)
+                mode_default = _mode_default_algorithms(
+                    self.mode_var.get(), self.mode_profiles).get(category_name)
+                if robot_default in algorithms and current == mode_default:
+                    var.set(robot_default)
+                elif current and not is_none_selection(current) \
                         and current not in algorithms:
-                    self._cleared_selections.append(
-                        (category_name, self._algorithm_name(current)))
-                    var.set(NONE_LABEL)
+                    if robot_default in algorithms:
+                        # The robot names what replaces a mode default it
+                        # cannot run (a car's path follower, say).
+                        var.set(robot_default)
+                    else:
+                        self._cleared_selections.append(
+                            (category_name, self._algorithm_name(current)))
+                        var.set(NONE_LABEL)
             if algorithms:
                 combo.configure(state="readonly")
                 tip = ("%d algorithm(s) compatible with this robot/simulator."

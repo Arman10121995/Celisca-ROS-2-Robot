@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- Rear-steered four-wheel car (reverse Ackermann: the steering axle is at
+     the back, the fixed axle at the front); see ackermann_car_macro.xacro. -->
+<robot name="rear_steer_car" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="is_ignition" default="true"/>
+  <xacro:arg name="is_sim" default="true"/>
+  <xacro:include filename="$(find robot_lab_robots)/description_common/urdf/oakd_camera.xacro"/>
+  <xacro:include filename="$(find robot_lab_robots)/ackermann_car/urdf/ackermann_car_macro.xacro"/>
+  <xacro:ackermann_car robot_name="rear_steer_car" steer_axle="rear"/>
+</robot>

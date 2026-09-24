@@ -348,6 +348,36 @@ def _author_wheel_velocity_drives(stage, joint_names,
     return sorted(driven)
 
 
+def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
+                                  damping=0.1, max_force=10.0,
+                                  armature=0.01):
+    """Position drives on a car's steering joints.
+
+    USD angular drive gains are per degree: 5 N*m/deg is ~290 N*m/rad, a
+    stiff servo; PhysX drives are implicit, so it stays stable on the light
+    knuckle.  Returns the prim paths that were driven.
+    """
+    from pxr import PhysxSchema, Usd, UsdPhysics
+
+    names = {name for name in joint_names if name}
+    driven = []
+    if not names:
+        return driven
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        if prim.GetName() not in names or prim.IsInstanceProxy():
+            continue
+        if not prim.IsA(UsdPhysics.RevoluteJoint):
+            continue
+        drive = UsdPhysics.DriveAPI.Apply(prim, "angular")
+        (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(float(stiffness))
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(damping))
+        (drive.GetMaxForceAttr() or drive.CreateMaxForceAttr()).Set(float(max_force))
+        joint = PhysxSchema.PhysxJointAPI.Apply(prim)
+        (joint.GetArmatureAttr() or joint.CreateArmatureAttr()).Set(float(armature))
+        driven.append(str(prim.GetPath()))
+    return sorted(driven)
+
+
 def _load_stl(path):
     """Return (vertices, triangles) for a binary or ASCII STL file."""
     with open(path, "rb") as fh:
@@ -384,6 +414,7 @@ class _StdinReader(threading.Thread):
     def __init__(self):
         super().__init__()
         self.cmd = [0.0, 0.0]
+        self.joint_targets = None  # {"velocity": {joint: rad/s}, "position": {joint: rad}}
         self.stop = False
         self.reset_requested = False
 
@@ -399,6 +430,8 @@ class _StdinReader(threading.Thread):
                     continue
                 if "cmd_vel" in msg:
                     self.cmd = list(msg["cmd_vel"])[:2]
+                elif "joint_targets" in msg:
+                    self.joint_targets = msg["joint_targets"]
                 elif msg.get("reset"):
                     # Sent by the spawner's /robot_lab/reset service, which
                     # used to report success while this reader ignored it.
@@ -748,10 +781,15 @@ def _run_stage(app, reader, cfg, state):
         # Author velocity drives on the wheel joints before the world reset, so
         # PhysX parses them with the articulation.
         driven = _author_wheel_velocity_drives(
-            stage_obj, (cfg.get("left_wheel_joint", ""),
-                        cfg.get("right_wheel_joint", "")))
+            stage_obj, [cfg.get("left_wheel_joint", ""),
+                        cfg.get("right_wheel_joint", "")]
+            + list(cfg.get("drive_wheel_joints", [])))
         _emit({"event": "log",
                "msg": "Wheel velocity drives: %s" % (driven or "none found")})
+        steered = _author_steer_position_drives(
+            stage_obj, cfg.get("drive_steer_joints", []))
+        if steered:
+            _emit({"event": "log", "msg": "Steering position drives: %s" % steered})
 
         from isaacsim.core.api.robots import Robot
         syaw = float(cfg.get("spawn_yaw", 0.0))
@@ -861,27 +899,52 @@ def _run_stage(app, reader, cfg, state):
                     ArticulationAction(joint_positions=list(hold_pose)))
             except Exception:
                 pass
-        try:
-            from isaacsim.core.utils.types import ArticulationAction
-            idx, vels = [], []
-            if lw_idx >= 0:
-                idx.append(lw_idx)
-                vels.append(vl)
-            if rw_idx >= 0:
-                idx.append(rw_idx)
-                vels.append(vr)
-            if idx and robot is not None:
-                robot.apply_action(
-                    ArticulationAction(joint_velocities=vels,
-                                       joint_indices=idx)
-                )
-        except Exception as exc:
-            # Reported once: a silently swallowed failure here is exactly how
-            # a robot that never moves looks healthy in every other signal.
-            if not action_error_reported:
-                action_error_reported = True
-                _emit({"event": "log",
-                       "msg": "Wheel command failed: %s" % exc})
+        targets = reader.joint_targets
+        if targets is not None and robot is not None and not robot_free:
+            # A car: per-joint wheel rates and steering angles computed on
+            # the ROS side (robot_lab_utils.drive_kinematics).
+            try:
+                from isaacsim.core.utils.types import ArticulationAction
+                for kind in ("velocity", "position"):
+                    pairs = [(dof_names.index(name), float(value))
+                             for name, value in (targets.get(kind) or {}).items()
+                             if name in dof_names]
+                    if not pairs:
+                        continue
+                    idx = [i for i, _ in pairs]
+                    values = [v for _, v in pairs]
+                    if kind == "velocity":
+                        robot.apply_action(ArticulationAction(
+                            joint_velocities=values, joint_indices=idx))
+                    else:
+                        robot.apply_action(ArticulationAction(
+                            joint_positions=values, joint_indices=idx))
+            except Exception as exc:
+                if not action_error_reported:
+                    action_error_reported = True
+                    _emit({"event": "log", "msg": "Drive command failed: %s" % exc})
+        else:
+            try:
+                from isaacsim.core.utils.types import ArticulationAction
+                idx, vels = [], []
+                if lw_idx >= 0:
+                    idx.append(lw_idx)
+                    vels.append(vl)
+                if rw_idx >= 0:
+                    idx.append(rw_idx)
+                    vels.append(vr)
+                if idx and robot is not None:
+                    robot.apply_action(
+                        ArticulationAction(joint_velocities=vels,
+                                           joint_indices=idx)
+                    )
+            except Exception as exc:
+                # Reported once: a silently swallowed failure here is exactly how
+                # a robot that never moves looks healthy in every other signal.
+                if not action_error_reported:
+                    action_error_reported = True
+                    _emit({"event": "log",
+                           "msg": "Wheel command failed: %s" % exc})
 
         world.step(render=True)
         sim_step += 1

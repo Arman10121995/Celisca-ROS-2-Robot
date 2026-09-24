@@ -1,7 +1,8 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, OpaqueFunction, TimerAction
 from launch_ros.actions import Node
-from launch.substitutions import LaunchConfiguration
+from launch_ros.parameter_descriptions import ParameterValue
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.conditions import UnlessCondition, IfCondition
 
 
@@ -97,6 +98,50 @@ def generate_launch_description():
         ]
     )
 
+    drive_type_arg = DeclareLaunchArgument(
+        "drive_type",
+        default_value="diff",
+        description="'diff' (diff_drive_controller / simple controller) or "
+                    "'ackermann' (a car: steering + wheel forward controllers "
+                    "driven by ackermann_controller.py)",
+    )
+    drive_config_arg = DeclareLaunchArgument(
+        "drive_config",
+        default_value="",
+        description="The robot's drive block as JSON (robots.yaml)",
+    )
+    is_car = PythonExpression(["'", LaunchConfiguration("drive_type"), "' == 'ackermann'"])
+    is_diff = PythonExpression(["'", LaunchConfiguration("drive_type"), "' != 'ackermann'"])
+
+    # A car: steering positions and wheel rates from its own node, which
+    # also publishes the fixed-axle odometry on /robot_lab_controller/odom.
+    car_controllers = GroupAction(
+        condition=IfCondition(is_car),
+        actions=[
+            TimerAction(
+                period=3.0,
+                actions=[
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=["car_steering_controller", "car_wheel_controller",
+                                   "--controller-manager", "/controller_manager"],
+                        parameters=[{"use_sim_time": use_sim_time}],
+                    ),
+                ],
+            ),
+            Node(
+                package="robot_lab_controller",
+                executable="ackermann_controller.py",
+                parameters=[{
+                    "drive_config": ParameterValue(
+                        LaunchConfiguration("drive_config"), value_type=str),
+                    "use_sim_time": use_sim_time,
+                }],
+            ),
+        ],
+    )
+
     wheel_controller_spawner = TimerAction(
         period=4.0,
         actions=[
@@ -110,11 +155,13 @@ def generate_launch_description():
                 parameters=[{"use_sim_time": use_sim_time}],
                 condition=UnlessCondition(use_simple_controller),
             )
-        ]
+        ],
+        condition=IfCondition(is_diff),
     )
 
     simple_controller = GroupAction(
-        condition=IfCondition(use_simple_controller),
+        condition=IfCondition(PythonExpression([
+            "'", use_simple_controller, "'.lower() == 'true' and ", is_diff])),
         actions=[
             TimerAction(
                 period=3.0,
@@ -166,7 +213,10 @@ def generate_launch_description():
             wheel_separation_arg,
             wheel_radius_error_arg,
             wheel_separation_error_arg,
+            drive_type_arg,
+            drive_config_arg,
             joint_state_broadcaster_spawner,
+            car_controllers,
             wheel_controller_spawner,
             simple_controller,
             noisy_controller_launch,

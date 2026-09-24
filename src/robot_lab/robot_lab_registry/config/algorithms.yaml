@@ -581,6 +581,77 @@
   tags:
   - potential_field
   - smooth
+- id: hybrid_a_star_planner
+  version: 1.0.0
+  name: Hybrid A* Planner
+  description: Nav2 Smac Hybrid-A* - searches continuous headings with Dubins or
+    Reeds-Shepp motion primitives, so plans respect a minimum turning radius (car-like
+    robots) and may include reversing
+  status: integrated
+  category: global_planning
+  family: kinodynamic_search
+  implementation:
+    package: nav2_smac_planner
+    plugin: nav2_smac_planner/SmacPlannerHybrid
+    language: cpp
+  input_contract:
+    required_topics:
+    - /map
+    - /goal_pose
+  output_contract:
+    provided_topics:
+    - /plan
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    minimum_turning_radius: 0.4
+    motion_model_for_search: DUBIN
+  source:
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
+  tags:
+  - kinodynamic
+  - ackermann
+  - hybrid_a_star
+  created: '2026-09-24'
+  updated: '2026-09-24'
+- id: state_lattice_planner
+  version: 1.0.0
+  name: State Lattice Planner
+  description: Nav2 Smac State Lattice - searches a lattice of precomputed motion
+    primitives (the nav2 sample set at 5 cm, 0.5 m turning radius, differential or
+    Ackermann by the robot's motion model)
+  status: integrated
+  category: global_planning
+  family: kinodynamic_search
+  implementation:
+    package: nav2_smac_planner
+    plugin: nav2_smac_planner/SmacPlannerLattice
+    language: cpp
+  input_contract:
+    required_topics:
+    - /map
+    - /goal_pose
+  output_contract:
+    provided_topics:
+    - /plan
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  parameters:
+    lattice_primitives: 5cm_resolution/0.5m_turning_radius
+  source:
+    repository: https://github.com/ros-planning/navigation2
+    license: Apache-2.0
+  tags:
+  - kinodynamic
+  - lattice
+  - ackermann
+  created: '2026-09-24'
+  updated: '2026-09-24'
 - id: teb_local_planner
   version: 1.0.0
   name: TEB Local Planner

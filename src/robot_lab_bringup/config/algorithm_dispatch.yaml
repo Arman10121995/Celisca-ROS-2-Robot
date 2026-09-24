@@ -20,6 +20,9 @@
 #              reason rather than starting a broken graph.
 #
 # `requires_mode` (optional, list) restricts an entry to specific modes.
+# `not_for_features` (optional, list) refuses the entry for robots that
+# declare any of these features in robot_lab_robots/config/robots.yaml, with
+# `not_for_reason`; the GUI leaves it out of the robot's choices.
 algorithms:
   perception:
     laser_scan_to_pointcloud:
@@ -84,6 +87,10 @@ algorithms:
       plugin: nav2_smac_planner/SmacPlanner2D
     navfn_planner:
       plugin: nav2_navfn_planner/NavfnPlanner
+    hybrid_a_star_planner:
+      plugin: nav2_smac_planner/SmacPlannerHybrid
+    state_lattice_planner:
+      plugin: nav2_smac_planner/SmacPlannerLattice
     dijkstra_planner:
       plugin: nav2_navfn_planner/NavfnPlanner
     rrt_planner:
@@ -94,6 +101,8 @@ algorithms:
   local_planning:
     dwb_local_planner:
       plugin: dwb_core::DWBLocalPlanner
+      not_for_features: [car_steering]
+      not_for_reason: "its trajectory samples and RotateToGoal critic turn the robot on the spot, which a car cannot do"
     mppi_controller:
       plugin: nav2_mppi_controller::MPPIController
     teb_local_planner:
@@ -110,6 +119,8 @@ algorithms:
       stack: controller
     noisy_controller:
       node: {package: robot_lab_controller, executable: noisy_controller}
+      not_for_features: [car_steering]
+      not_for_reason: "it commands the two wheels of a differential drive"
     twist_relay:
       node: {package: robot_lab_controller, executable: twist_relay}
     pid_controller:

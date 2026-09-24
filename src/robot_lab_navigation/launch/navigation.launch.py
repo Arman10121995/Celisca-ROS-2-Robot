@@ -75,8 +75,94 @@ LOCAL_PLANNER_EXTRA_PARAMS = {
     },
 }
 
+# Global planner plugins that need their own parameters.  The state
+# lattice planner reads its motion primitives from a file; the defaults
+# shipped with nav2_smac_planner are used (5 cm, 0.5 m turning radius), in
+# the variant matching the robot's motion model.
+GLOBAL_PLANNER_EXTRA_PARAMS = {
+    "nav2_smac_planner/SmacPlannerHybrid": {
+        "GridBased.minimum_turning_radius": 0.4,
+        "GridBased.motion_model_for_search": "DUBIN",
+        "GridBased.angle_quantization_bins": 72,
+        "GridBased.analytic_expansion_ratio": 3.5,
+        "GridBased.analytic_expansion_max_length": 3.0,
+        "GridBased.reverse_penalty": 2.0,
+        "GridBased.change_penalty": 0.0,
+        "GridBased.non_straight_penalty": 1.2,
+        "GridBased.cost_penalty": 2.0,
+        "GridBased.retrospective_penalty": 0.015,
+        "GridBased.lookup_table_size": 20.0,
+        "GridBased.cache_obstacle_heuristic": False,
+        "GridBased.allow_unknown": True,
+        "GridBased.max_planning_time": 5.0,
+    },
+    "nav2_smac_planner/SmacPlannerLattice": {
+        "GridBased.allow_unknown": True,
+        "GridBased.max_planning_time": 5.0,
+        "GridBased.reverse_penalty": 2.0,
+        "GridBased.change_penalty": 0.05,
+        "GridBased.non_straight_penalty": 1.05,
+        "GridBased.cost_penalty": 2.0,
+        "GridBased.rotation_penalty": 5.0,
+        "GridBased.retrospective_penalty": 0.015,
+        "GridBased.lookup_table_size": 20.0,
+        "GridBased.cache_obstacle_heuristic": False,
+        "GridBased.allow_reverse_expansion": False,
+    },
+}
+
+# What a car-like robot (motion_model:=ackermann) changes: it cannot turn
+# on the spot, so nothing may rotate it in place, plans respect its
+# turning radius (0.5 m for the lab's cars) and it may back up to turn
+# around.  The final heading is not controlled by a path follower that
+# cannot rotate in place, so goals are position goals (the heading
+# tolerance is a full turn).
+CAR_TURNING_RADIUS = 0.5
+CAR_PARAMS = {
+    "planner_server": {
+        "GridBased.minimum_turning_radius": CAR_TURNING_RADIUS,
+        "GridBased.motion_model_for_search": "REEDS_SHEPP",
+        "GridBased.allow_reverse_expansion": True,
+    },
+    "controller_server": {
+        "FollowPath.use_rotate_to_heading": False,
+        "FollowPath.allow_reversing": True,
+        "FollowPath.lookahead_dist": 0.8,
+        "FollowPath.min_lookahead_dist": 0.5,
+        "FollowPath.max_lookahead_dist": 1.2,
+        "FollowPath.desired_linear_vel": 0.4,
+        "FollowPath.regulated_linear_scaling_min_radius": 0.6,
+        "FollowPath.motion_model": "Ackermann",
+        "FollowPath.AckermannConstraints.min_turning_r": CAR_TURNING_RADIUS,
+        "FollowPath.vx_min": -0.3,
+        "general_goal_checker.yaw_goal_tolerance": 6.3,
+    },
+}
+
 _PLANNER_SERVERS = {"planner_server"}
 _CONTROLLER_SERVERS = {"controller_server"}
+
+
+def _lattice_file(motion_model):
+    """Default lattice primitives for the motion model (0.5 m turning radius)."""
+    try:
+        share = get_package_share_directory("nav2_smac_planner")
+    except Exception:
+        return ""
+    variant = "ackermann" if motion_model == "ackermann" else "diff"
+    return os.path.join(share, "sample_primitives", "5cm_resolution",
+                        "0.5m_turning_radius", variant, "output.json")
+
+
+def _motion_model_overrides(exec_name, motion_model, global_planner_plugin):
+    """Parameters the robot's motion model sets on top of the plugin choice."""
+    overrides = {}
+    if exec_name in _PLANNER_SERVERS \
+            and global_planner_plugin == "nav2_smac_planner/SmacPlannerLattice":
+        overrides["GridBased.lattice_filepath"] = _lattice_file(motion_model)
+    if motion_model == "ackermann":
+        overrides.update(CAR_PARAMS.get(exec_name, {}))
+    return [overrides] if overrides else []
 
 
 def _planner_parameter_overrides(exec_name, global_planner_plugin, local_planner_plugin):
@@ -89,7 +175,9 @@ def _planner_parameter_overrides(exec_name, global_planner_plugin, local_planner
     behavior while an explicit selection changes the active plugin.
     """
     if exec_name in _PLANNER_SERVERS:
-        return [{"GridBased.plugin": global_planner_plugin}]
+        overrides = {"GridBased.plugin": global_planner_plugin}
+        overrides.update(GLOBAL_PLANNER_EXTRA_PARAMS.get(global_planner_plugin, {}))
+        return [overrides]
     if exec_name in _CONTROLLER_SERVERS:
         overrides = {"FollowPath.plugin": local_planner_plugin}
         overrides.update(LOCAL_PLANNER_EXTRA_PARAMS.get(local_planner_plugin, {}))
@@ -103,6 +191,7 @@ def _setup(context, *args, **kwargs):
     robot_model = LaunchConfiguration("robot_model").perform(context)
     global_planner_plugin = LaunchConfiguration("global_planner_plugin").perform(context)
     local_planner_plugin = LaunchConfiguration("local_planner_plugin").perform(context)
+    motion_model = LaunchConfiguration("motion_model").perform(context).strip().lower()
 
     overlay = os.path.join(pkg, "config", "robots", f"{robot_model}.yaml")
     overlay_params = [overlay] if os.path.exists(overlay) else []
@@ -112,6 +201,8 @@ def _setup(context, *args, **kwargs):
         parameters.append({"use_sim_time": use_sim_time})
         parameters.extend(_planner_parameter_overrides(
             exec_name, global_planner_plugin, local_planner_plugin))
+        parameters.extend(_motion_model_overrides(
+            exec_name, motion_model, global_planner_plugin))
         if exec_name == "bt_navigator":
             # Resolve the default behavior tree from the installed package
             # share (portable) instead of an absolute source path.
@@ -178,6 +269,12 @@ def generate_launch_description():
                 "Local planner plugin class for controller_server (resolved from the "
                 "registry planner selection by the experiment resolver)"
             ),
+        ),
+        DeclareLaunchArgument(
+            "motion_model",
+            default_value="diff",
+            description="'diff' (turns on the spot) or 'ackermann' (a car: "
+                        "turning-radius-aware planning, no rotation in place)",
         ),
         OpaqueFunction(function=_setup),
     ])
