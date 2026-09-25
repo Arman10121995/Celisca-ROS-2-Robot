@@ -28,12 +28,13 @@ The same limited Bumperbot probe also passed on PyBullet: 0.754 m forward,
 
 | Robot | `nav_empty` | `nav_obstacle` |
 |---|---|---|
-| Bumperbot | succeeded, 0.273 m map-frame goal error | succeeded, 0.266 m |
-| Labbot | succeeded, 0.282 m | succeeded, 0.269 m |
+| Bumperbot | succeeded, 0.272 m map-frame goal error | succeeded, 0.273 m |
+| Labbot | succeeded, 0.274 m | succeeded, 0.277 m |
 
-The four `*_nav.json` reports and `.launch.log` files contain the Nav2 result,
-selected start/goal, truth final pose, and stack lifecycle. Both maps started
-from the configured `(-7, -7)` pose and selected a goal near `(-5, -7)`.
+The four `*_limited_nav.json` reports and `.launch.log` files contain the
+Nav2 result, selected start/goal, truth final pose, and stack lifecycle on
+the final bounded-drive code. The clear map started at `(-0.5, -0.5)` and
+the obstacle map at `(-7, -7)`; each selected a free goal 2 m ahead.
 These missions demonstrate clear and obstacle-map navigation on one backend;
 they do not establish every map/backend pair or a zero-contact count.
 
@@ -41,7 +42,7 @@ The golden static harness now processes the actual installed xacros for both
 robots. Labbot's xacro includes the shared OAK-D RGB-D sensor, and its live
 MuJoCo launch log reports a 320×240, 5 Hz RGB-D camera; the old golden fixture
 incorrectly declared no depth sensor. `test_r5_1_qualification.py`: 41
-passed. `scripts/test_tiers.sh fast`: 440 passed; integration: 117 passed;
-physics: 6 passed. `probe_drive.py` and the JSON files make the live checks
+passed. The 2026-09-24 GitHub ROS 2 CI run `35989437894` passed all tiers;
+the scheduled full suite `35992128283` also passed. `probe_drive.py` and the JSON files make the live checks
 repeatable; the initial probe failures (an integer ROS field and a wrong
 estimate topic) were repaired before the fresh runs above.

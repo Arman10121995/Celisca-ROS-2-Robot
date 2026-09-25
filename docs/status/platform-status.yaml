@@ -530,7 +530,7 @@ tasks:
     tasks:
       R5.1:
         title: "Qualify Bumperbot and Labbot mobile tasks"
-        state: "active"
+        state: "done"
         owner: codex
         depends_on:
           - "R4.3"
@@ -543,11 +543,12 @@ tasks:
         evidence:
           - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/qualification.py"
           - "src/robot_lab/robot_lab_benchmark/test/test_r5_1_qualification.py"
-        next_action: "2026-09-15 audit: preserve the two existing differential-drive workflows. Description/unit checks and Bumperbot open-arena MuJoCo/PyBullet missions are recorded, but the cited R5.1 evidence does not establish both robots completing obstacle navigation with watchdogs. Add named live Labbot and obstacle-world evidence before full mission qualification."
+          - "docs/status/evidence/r51-two-wheel-2026-09-24/: bounded-drive MuJoCo Bumperbot and Labbot forward/turn/reverse/stop/watchdog probes passed with separate truth and EKF odometry; all four clear/obstacle Nav2 missions succeeded on final code; bounded-drive PyBullet Bumperbot probe also passed. Actual installed xacros pass golden static checks. GitHub ROS 2 CI and scheduled full suite passed."
+        next_action: "Complete on MuJoCo, with an additional PyBullet Bumperbot drive pass. This does not imply every backend/map combination or physical hardware is qualified. Continue R5.2 Go2 locomotion."
       R5.2:
         title: "Qualify Go2 locomotion"
-        state: "partial"
-        owner: null
+        state: "active"
+        owner: codex
         depends_on:
           - "R5.1"
         scope_paths:
@@ -1011,16 +1012,17 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R5.1"
+  next_task: "R5.2"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R5.3 MuJoCo localization now starts the humanoid ONNX policy and accepts GUI Drive commands (2026-09-24). Forward walk/stop passed twice, but the startup bend remains intermittent: the pure-turn trial fell before policy handoff even with slower or tilt-aware ramps, so turning/navigation are not qualified. Stabilize startup, then test repeated forward/reverse/turn, command loss, terrain and maps. Continue Go2 locomotion (R5.2), four-wheel steering (R5.5), real drone SITL (R5.4), map qualification (R6.2/R6.3/R6.4), and algorithm comparisons. See docs/status/project-goal-2026-09-15.md."
+  next_action: "R5.1 completed on MuJoCo after live bounded drive/watchdog and clear/obstacle Nav2 passes for both differential bases (2026-09-24 evidence). Continue R5.2 Go2 stance, gait and terrain qualification. R5.3 humanoid forward walk/stop passed but startup bending and turning remain unqualified. Continue four-wheel steering (R5.5), real drone SITL (R5.4), map qualification (R6.2/R6.3/R6.4), and algorithm comparisons. See docs/status/project-goal-2026-09-15.md."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"
   no_runtime_repairs_completed_by_this_revision: false
   session_notes:
+    - "2026-09-25 R5.1: final bounded-drive MuJoCo probes passed forward/turn/reverse/stop/watchdog for Bumperbot and Labbot; final clear/obstacle Nav2 reruns succeeded 4/4. PyBullet Bumperbot bounded-drive probe passed. GUI WASD/joystick/drive increments and synchronized 1.1-scale Celisca maps are recorded under R6.1; GitHub CI 35989437894 and scheduled full suite 35992128283 passed. Next R5.2 Go2 live locomotion."
     - "2026-09-24 R6.1: GUI /key_vel now reaches the non-Gazebo spawners through twist_mux with raw /cmd_vel fallback; live drive measured in PyBullet loc/3D SLAM, MuJoCo SLAM, Gazebo loc, Isaac loc. Celisca plain/furniture world footprints reduced and map metadata, MuJoCo MJCF and spawn poses synchronized. The initial resized floor-2 furniture/Labbot goal aborted (start in lethal space at y=0); after moving all six Celisca spawns to y=1, floor-2 furniture succeeded. One resized Celisca /goal_pose goal succeeded per backend. Evidence: docs/status/evidence/r61-celisca-drive-2026-09-24/. Full robot/map matrix and walking humanoid remain unqualified."
     - "2026-09-23/24 (claude, continuing codex R6.1 at the user's request): display hold is physical (MuJoCo joint springs, PyBullet position motors, free base) so /joint_states follow the simulation; Gazebo opens for robot-only display with joint states from its JointStatePublisher system and a lifted spawn; Collada node transforms applied (Unitree legs were rotated 90 degrees in MuJoCo/PyBullet); PyBullet joint damping capped at its explicit-integration bound (BHL was thrown at 110 m/s); Labbot has front and rear casters; odometry uses the URDF root link and a fallback scan frame is published, so non-wheeled robots localize; GUI/launch mode gating from robot_lab_utils/mode_capability.py (legged/humanoid: loc in PyBullet/MuJoCo only; slam/nav need a velocity base); resolver maps bringup profiles <-> registry ids (robot_model:=go2 failed to launch); every run's processes reaped by ROBOT_LAB_RUN_ID; CI green for the first time (runner libunwind conflict, invalid rosdep keys)."
     - "2026-09-16 R8.2 completed (continuing claude's lane): the 2026-09-16 Isaac sensor/drive/reset probe was extended with a live R4 mission - 5 evaluation seeds (1201-1205), bumperbot, nav_empty, 1.5 m goal ahead of the spawn pose, one isolated ROS domain per seed. Result: 5/5 truthful success, 0 contact events, 1.3507 +/- 0.0004 m measured trajectory, mean 5.44 s sim, mean real-time factor 0.131, real rosbag2 captures of 4840-4897 msgs/run. Evidence: docs/status/evidence/r82-isaac-mission-2026-09-16/ (summary, stats, per-seed manifests/metrics/trace and launch heads). Cross-backend comparison against the MuJoCo (1.3531 +/- 0.0027 m, RTF 0.378) and PyBullet (1.3535 +/- 0.0014 m, RTF 0.349) R8.1 seed sets recorded in docs/status/support-matrix.md. Residual Isaac limits are recorded in the task, not waived: open arena only, truth odometry drives the mission controller, /scan every 12 physics steps, PhysX on the CPU, other robots unrun. Verification after the change (isolated ROS domain): benchmark suite 238 passed / 3 skipped, bringup suite 300 passed / 2 skipped, scripts/test_fast.sh 423 passed / 1 skipped PASS, registry cross-reference validation PASS; the new opt-in Isaac live test passed for real in 70.65 s."
