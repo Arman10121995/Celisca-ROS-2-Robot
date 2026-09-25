@@ -270,6 +270,18 @@ class TestTrotGait:
                 assert lo <= value <= hi
 
 
+def test_direct_foot_forces_override_motor_effort_contact_heuristic():
+    core = Go2LocomotionCore()
+    pose = nominal_stance_pose()
+    velocities = {name: 0.0 for name in JOINT_NAMES}
+    cycle = core.update(
+        0.004, pose, velocities, measured_efforts=velocities,
+        measured_contact_forces={"FL": 12.0, "FR": 0.0,
+                                 "RL": 15.0, "RR": 0.0})
+    assert cycle.contacts == {"FL": True, "FR": False,
+                              "RL": True, "RR": False}
+
+
 # ------------------------------------------------------------------
 # Effort-residual contact estimation
 # ------------------------------------------------------------------

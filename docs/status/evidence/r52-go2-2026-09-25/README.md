@@ -7,9 +7,13 @@ effort-joint armature. The latter two are scoped to the Go2 effort launch;
 the URDF-imported model was unstable at 2 ms and at 250 Hz sampled feedback
 without armature. The node limits efforts to the URDF limits, has a command
 watchdog and latched tilt/effort safety stop with an explicit reset service.
-The core's motor-effort residual is only a contact heuristic: the MuJoCo
-ideal motor reports actuator effort, not direct foot-ground force. The
-contact output is not yet qualified against physics contact truth.
+The original motor-effort residual was only a contact heuristic: the MuJoCo
+ideal motor reports actuator effort, not direct foot-ground force. A later
+backend update now publishes `/go2/foot_contact_forces` in FL, FR, RL, RR
+order from MuJoCo contact normal forces against world geometry. The core
+uses those direct forces when available. `go2_contact_stance.json` records
+1,002 contact messages during a four-second upright stance; all four feet
+were loaded after touchdown.
 
 Command (the probe was started before launch to capture startup):
 

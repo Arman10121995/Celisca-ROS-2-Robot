@@ -320,8 +320,8 @@ Dependencies: `R5.1`.
 - Evidence: [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits
-  efforts and joint targets, reports an unqualified motor-effort contact
-  heuristic, and
+  efforts and joint targets, uses direct MuJoCo foot-to-world contact forces
+  when available (the older motor-effort fallback remains a heuristic), and
   latches tilt/effort safety stops; its pure tests cover these laws but do
   not substitute for measured displacement, turning and terrain missions.
 - An [opt-in pretrained Go2 policy trial](docs/status/evidence/r52-go2-policy-2026-09-25/README.md)
@@ -331,6 +331,8 @@ Dependencies: `R5.1`.
   default and Go2 velocity-base/SLAM/navigation remains unavailable in the GUI.
   The GUI offers an explicit Go2/MuJoCo/localization policy checkbox and
   auto-fills the corresponding launch argument for controlled experiments.
+  Direct foot-force telemetry during forward motion showed a two-foot support
+  pattern in 25 of 29 trace samples; the policy still fails the stair task.
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 

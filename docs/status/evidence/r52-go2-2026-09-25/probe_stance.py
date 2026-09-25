@@ -38,6 +38,8 @@ def main():
     node = Node("go2_stance_probe")
     state = {"sim": None, "truth": [], "joint_messages": 0,
              "effort_messages": 0, "max_command_nm": 0.0,
+             "contact_messages": 0, "latest_forces": None,
+             "peak_foot_force_n": {leg: 0.0 for leg in ("FL", "FR", "RL", "RR")},
              "joint_names": [], "latest_q": {}, "latest_v": {},
              "latest_efforts": {}, "latest_tau": 0.0,
              "trace": [], "yaw": []}
@@ -62,6 +64,10 @@ def main():
                                        "max_effort_nm": round(state["latest_tau"], 2),
                                        "rr_calf_rad": round(state["latest_q"].get(
                                            "RR_calf_joint", 0.0), 3)}
+                if state["latest_forces"] is not None:
+                    point["foot_force_n"] = {
+                        leg: round(force, 2)
+                        for leg, force in state["latest_forces"].items()}
                 if args.trace_joints:
                     point["q"] = {k: round(v, 3) for k, v in state["latest_q"].items()}
                     point["v"] = {k: round(v, 3) for k, v in state["latest_v"].items()}
@@ -83,11 +89,22 @@ def main():
             [f"{leg}_{kind}_joint" for leg in ("FL", "FR", "RL", "RR")
              for kind in ("hip", "thigh", "calf")], msg.data))
 
+    def contacts(msg):
+        if len(msg.data) != 4:
+            return
+        state["contact_messages"] += 1
+        state["latest_forces"] = dict(zip(("FL", "FR", "RL", "RR"), msg.data))
+        for leg, force in state["latest_forces"].items():
+            state["peak_foot_force_n"][leg] = max(
+                state["peak_foot_force_n"][leg], force)
+
     node.create_subscription(Clock, "/clock", clock, 10)
     node.create_subscription(Odometry, "/odom/ground_truth", truth, 10)
     node.create_subscription(JointState, "/joint_states", joints, 10)
     node.create_subscription(Float64MultiArray,
                              "/go2_group_effort_controller/commands", efforts, 10)
+    node.create_subscription(Float64MultiArray,
+                             "/go2/foot_contact_forces", contacts, 10)
     start = None
     deadline = time.monotonic() + args.wall_timeout
     last_command_at = float("-inf")
@@ -111,6 +128,8 @@ def main():
               "truth_count": len(samples), "joint_messages": state["joint_messages"],
               "joint_count": len(state["joint_names"]),
               "effort_messages": state["effort_messages"],
+              "contact_messages": state["contact_messages"],
+              "peak_foot_force_n": state["peak_foot_force_n"],
               "max_command_nm": state["max_command_nm"]}
     result["trace"] = state["trace"]
     if samples:

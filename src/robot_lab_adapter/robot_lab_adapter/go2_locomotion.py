@@ -509,6 +509,7 @@ class Go2LocomotionCore:
         measured_efforts: Optional[Dict[str, float]] = None,
         body: Optional[BodyState] = None,
         velocity_command: Optional[BaseVelocity] = None,
+        measured_contact_forces: Optional[Dict[str, float]] = None,
     ) -> ControlCycle:
         """Run one control cycle.
 
@@ -559,6 +560,13 @@ class Go2LocomotionCore:
                     position_error={},
                 )
             contacts = estimate_leg_contacts(observations, self.stance_flags())
+        if measured_contact_forces is not None:
+            contacts = {
+                leg: (force >= 2.0 if force is not None and math.isfinite(force)
+                      else None)
+                for leg in LEG_PREFIXES
+                for force in (measured_contact_forces.get(leg),)
+            }
 
         if not self.safety.gait_permitted():
             efforts = self.safety.safe_stop_efforts()

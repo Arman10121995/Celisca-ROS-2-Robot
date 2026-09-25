@@ -37,16 +37,25 @@ traces for moving trials.
 | `go2_policy_reverse06_live` | -0.6 m/s request yielded about -1.0 m X; max tilt 0.063 rad | Reverse displacement works above the dead zone; tracking is not calibrated |
 | `go2_policy_stairs` | Started at (-7.5,-4.0) facing the first `terrain_stairs` ledge; +0.5 m/s for 7 s moved only +0.118 m, max effort reached 35.55 N m | Named terrain task fails at first ledge |
 
+After direct MuJoCo foot-contact telemetry was added,
+`go2_policy_contact_forward.json` repeated the flat-ground command:
++0.831 m during the drive window, 0.005 m stopped drift, 0.033 rad peak
+tilt and 1,751 direct foot-contact messages. In the 29 trace samples taken
+during motion, 25 had exactly two feet loaded above 2 N. This measures the
+diagonal support pattern; it does not establish robust terrain traversal.
+
 The trial does **not** complete R5.2. The policy does not reliably track
-small reverse commands and cannot climb the tested ledge. Its contact
-heuristic still lacks a direct foot-ground measurement, and other maps,
-fall recovery and navigation have not been qualified. GUI velocity-base,
+small reverse commands and cannot climb the tested ledge. Direct foot-ground
+forces are now published, but the blind ONNX policy does not consume them;
+other maps, fall recovery and navigation have not been qualified. GUI velocity-base,
 SLAM and navigation support for Go2 therefore stay disabled. Next work is
-reverse calibration or training, direct foot-contact telemetry, flat-ground
-tracking and terrain tests with a policy trained for those conditions.
+reverse calibration or training, flat-ground tracking and terrain tests with
+a policy trained for those conditions.
 
 The affected Go2 core/policy, bringup-profile, MuJoCo-effort, GUI-drive and
 registry Go2 tests passed together (335 tests). After the GUI checkbox was
 added, 34 GUI-drive/policy tests passed under Xvfb. The adapter and bringup
 packages built, and `go2_policy_path:=auto` resolved the installed ONNX graph
 and its external data in the live forward run.
+After direct-contact telemetry was added, the focused Go2 core/policy and
+MuJoCo effort tests passed (88 tests).

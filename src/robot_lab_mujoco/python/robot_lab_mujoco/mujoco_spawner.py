@@ -929,6 +929,22 @@ def _physics_substeps(period, timestep):
     return max(1, int(round(float(period) / max(float(timestep), 1e-9))))
 
 
+def _foot_world_contact_forces(model, data, foot_geom_ids):
+    """Normal contact force [N] for named feet against static world geoms."""
+    forces = [0.0] * len(foot_geom_ids)
+    foot_index = {geom_id: index for index, geom_id in enumerate(foot_geom_ids)}
+    contact_force = np.zeros(6)
+    for contact_index in range(data.ncon):
+        contact = data.contact[contact_index]
+        for foot_id, other_id in ((int(contact.geom1), int(contact.geom2)),
+                                  (int(contact.geom2), int(contact.geom1))):
+            if foot_id not in foot_index or model.geom_bodyid[other_id] != 0:
+                continue
+            mujoco.mj_contactForce(model, data, contact_index, contact_force)
+            forces[foot_index[foot_id]] += max(0.0, float(contact_force[0]))
+    return forces
+
+
 def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
                         geomid):
     """Distance along a ray to the first geom not belonging to the robot.
@@ -1034,6 +1050,8 @@ class MuJoCoSpawner(Node):
         self._actuator_ids = {}
         self._effort_command = None
         self._effort_actuators = []
+        self._go2_foot_ids = []
+        self._go2_contact_pub = None
         self._effort_subscription = None
         # A reset service and the physics/rendering thread share MjData.
         self._physics_lock = threading.RLock()
@@ -1284,6 +1302,17 @@ class MuJoCoSpawner(Node):
 
         # --- find the root body that contains the free joint ---
         self._find_body_and_joints()
+        if self.get_parameter("robot_name").value == "unitree_go2":
+            self._go2_foot_ids = [mujoco.mj_name2id(
+                self._model, mujoco.mjtObj.mjOBJ_GEOM,
+                leg + "_foot_contact_0") for leg in ("FL", "FR", "RL", "RR")]
+            if min(self._go2_foot_ids) < 0:
+                self.get_logger().warning(
+                    "Go2 direct foot-contact telemetry unavailable: a foot geom is missing")
+                self._go2_foot_ids = []
+            else:
+                self._go2_contact_pub = self.create_publisher(
+                    Float64MultiArray, "/go2/foot_contact_forces", 10)
         if self._effort_command is not None:
             self._effort_actuators = [mujoco.mj_name2id(
                 self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, name + "_effort")
@@ -1569,6 +1598,11 @@ class MuJoCoSpawner(Node):
                         last_pub = sim_time
                         if not getattr(self, "_robot_free", False):
                             self._pub_joint_states()
+                            if self._go2_contact_pub is not None:
+                                forces = Float64MultiArray()
+                                forces.data = _foot_world_contact_forces(
+                                    self._model, self._data, self._go2_foot_ids)
+                                self._go2_contact_pub.publish(forces)
                             self._pub_odom()
                             self._pub_imu()
                         self._pub_clock()

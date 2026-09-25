@@ -50,6 +50,7 @@ class Go2StanceGaitController(Node):
         self._positions = {}
         self._velocities = {}
         self._efforts = {}
+        self._foot_forces = None
         self._body = None
         self._orientation = None
         self._angular_velocity = None
@@ -63,6 +64,9 @@ class Go2StanceGaitController(Node):
         self.create_subscription(
             Imu, self.get_parameter("imu_topic").value,
             self._on_imu, sensor_qos)
+        self.create_subscription(
+            Float64MultiArray, "/go2/foot_contact_forces",
+            self._on_foot_contacts, sensor_qos)
         self.create_subscription(
             Twist, self.get_parameter("cmd_vel_topic").value,
             self._on_twist, 10)
@@ -94,6 +98,10 @@ class Go2StanceGaitController(Node):
             vx=float(msg.linear.x), vy=float(msg.linear.y), wz=float(msg.angular.z))
         self._cmd_at = time.monotonic()
 
+    def _on_foot_contacts(self, msg):
+        if len(msg.data) == 4:
+            self._foot_forces = dict(zip(("FL", "FR", "RL", "RR"), msg.data))
+
     def _reset_safety(self, _request, response):
         self._core.safety.reset()
         self._cmd = BaseVelocity()
@@ -117,7 +125,8 @@ class Go2StanceGaitController(Node):
             cycle = self._core.update(
                 self._period, self._positions, self._velocities,
                 self._efforts if self._efforts else None,
-                body=self._body, velocity_command=command)
+                body=self._body, velocity_command=command,
+                measured_contact_forces=self._foot_forces)
             efforts, state = cycle.efforts, cycle.safety_state
         if state != self._last_safety_state:
             self.get_logger().warning(

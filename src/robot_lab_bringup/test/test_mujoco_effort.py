@@ -69,6 +69,26 @@ def test_go2_launch_asset_accepts_all_twelve_effort_joints():
     assert set(effort.names) <= declared
 
 
+def test_foot_contact_telemetry_measures_world_normal_force():
+    mujoco = pytest.importorskip('mujoco')
+    from robot_lab_mujoco.mujoco_spawner import _foot_world_contact_forces
+
+    xml = '''<mujoco><worldbody>
+      <geom name="floor" type="plane" size="2 2 .1"/>
+      <body pos="0 0 .1"><freejoint/>
+        <geom name="FL_foot_contact_0" type="sphere" size=".1" mass="1"/>
+      </body>
+    </worldbody></mujoco>'''
+    model = mujoco.MjModel.from_xml_string(xml)
+    data = mujoco.MjData(model)
+    for _ in range(300):
+        mujoco.mj_step(model, data)
+    foot = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM,
+                            'FL_foot_contact_0')
+    force = _foot_world_contact_forces(model, data, [foot])[0]
+    assert 8.0 < force < 12.0
+
+
 def test_actuators_apply_named_torque_and_preserve_declared_losses(command):
     mujoco = pytest.importorskip('mujoco')
     # XML order deliberately differs from command order.
