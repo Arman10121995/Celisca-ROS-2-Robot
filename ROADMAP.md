@@ -333,6 +333,8 @@ Dependencies: `R5.1`.
   auto-fills the corresponding launch argument for controlled experiments.
   Direct foot-force telemetry during forward motion showed a two-foot support
   pattern in 25 of 29 trace samples; the policy still fails the stair task.
+  Reverse feedforward dead-zone compensation maps negative linear velocity to
+  the active range of the policy, achieving -1.125 m displacement at -0.25 m/s.
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 

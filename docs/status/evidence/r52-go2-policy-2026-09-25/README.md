@@ -35,6 +35,8 @@ traces for moving trials.
 | `go2_policy_turn_live` | +1.776 rad yaw during +0.5 rad/s command for 3 s; 0.356 m XY drift; max tilt 0.050 rad | Turns, but drift/tracking need tighter qualification |
 | `go2_policy_reverse_live` | -0.25 m/s request yielded only ~0.02 m net X and 0.278 rad yaw | Low-speed reverse fails |
 | `go2_policy_reverse06_live` | -0.6 m/s request yielded about -1.0 m X; max tilt 0.063 rad | Reverse displacement works above the dead zone; tracking is not calibrated |
+| `go2_policy_reverse_comp025` | Continuous feedforward dead zone compensation (-0.25 m/s maps to -0.55 policy command): -1.125 m drive delta X over 3 s, 0.079 m settle drift, max tilt 0.079 rad | Reverse dead zone successfully bypassed; linear tracking remains approximate |
+| `go2_policy_turn_repeat` | +0.5 rad/s yaw command for 3 s repeated with contact telemetry: +1.487 rad yaw change, 0.224 m X delta, 0.114 m stop settle drift, max tilt 0.072 rad | Repeat trial confirms turning capability and measures turning drift |
 | `go2_policy_stairs` | Started at (-7.5,-4.0) facing the first `terrain_stairs` ledge; +0.5 m/s for 7 s moved only +0.118 m, max effort reached 35.55 N m | Named terrain task fails at first ledge |
 
 After direct MuJoCo foot-contact telemetry was added,
