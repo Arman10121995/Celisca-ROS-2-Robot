@@ -634,22 +634,49 @@ class TestFallRecovery:
         efforts = recovery.update(0.0, True, fallen_body, {}, {})
         assert all(e == 0.0 for e in efforts.values())
 
-    def test_succeeds_only_when_measured_tilt_returns(self):
+    def test_succeeds_only_after_sustained_upright_height_and_support(self):
         recovery = FallRecovery()
         fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
         recovery.update(0.0, True, fallen_body, self._positions(), {})
+        forces = {leg: 15.0 for leg in LEG_PREFIXES}
+        recovery.update(1.0, True, BodyState(0.01, 0.0, 0.35),
+                        self._positions(), {}, forces)
+        assert recovery.status == FallRecovery.ATTEMPTING
         efforts = recovery.update(
-            1.0, True, BodyState(0.01, 0.0, 0.35), self._positions(), {})
+            1.6, True, BodyState(0.01, 0.0, 0.35),
+            self._positions(), {}, forces)
         assert recovery.status == FallRecovery.SUCCEEDED
         assert all(e == 0.0 for e in efforts.values())
+
+    def test_transient_airborne_height_is_not_recovery(self):
+        recovery = FallRecovery()
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        recovery.update(0.0, True, fallen_body, self._positions(), {})
+        one_foot = {leg: (14.0 if leg == "RL" else 0.0) for leg in LEG_PREFIXES}
+        recovery.update(1.0, True, BodyState(0.1, 0.0, 0.47),
+                        self._positions(), {}, one_foot)
+        recovery.update(1.6, True, BodyState(0.1, 0.0, 0.47),
+                        self._positions(), {}, one_foot)
+        assert recovery.status == FallRecovery.ATTEMPTING
+        forces = {leg: 10.0 for leg in LEG_PREFIXES}
+        recovery.update(2.0, True, BodyState(0.1, 0.0, 0.35),
+                        self._positions(), {}, forces)
+        recovery.update(2.2, True, BodyState(0.1, 0.0, 0.14),
+                        self._positions(), {}, forces)
+        recovery.update(2.8, True, BodyState(0.1, 0.0, 0.35),
+                        self._positions(), {}, forces)
+        assert recovery.status == FallRecovery.ATTEMPTING
 
     def test_upright_tilt_without_measured_standing_height_is_not_success(self):
         recovery = FallRecovery()
         fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
         recovery.update(0.0, True, fallen_body, self._positions(), {})
-        recovery.update(1.0, True, BodyState(0.01, 0.0, 0.14), self._positions(), {})
+        forces = {leg: 15.0 for leg in LEG_PREFIXES}
+        recovery.update(1.0, True, BodyState(0.01, 0.0, 0.14),
+                        self._positions(), {}, forces)
         assert recovery.status == FallRecovery.ATTEMPTING
-        recovery.update(2.0, True, BodyState(0.01, 0.0), self._positions(), {})
+        recovery.update(2.0, True, BodyState(0.01, 0.0),
+                        self._positions(), {}, forces)
         assert recovery.status == FallRecovery.ATTEMPTING
 
     def test_expired_window_fails_and_stops_driving(self):
@@ -664,6 +691,23 @@ class TestFallRecovery:
         assert recovery.attempts == 1
         assert all(e == 0.0 for e in again.values())
 
+    def test_zero_effort_delay_starts_timeout_only_when_attempt_begins(self):
+        recovery = FallRecovery(start_delay_s=1.0, timeout_s=2.0)
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        waiting = recovery.update(0.0, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.WAITING
+        assert all(e == 0.0 for e in waiting.values())
+        recovery.update(0.99, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.WAITING
+        driving = recovery.update(1.0, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.ATTEMPTING
+        assert driving["FL_thigh_joint"] > 0.0
+        recovery.update(2.9, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.ATTEMPTING
+        stopped = recovery.update(3.1, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.FAILED
+        assert all(e == 0.0 for e in stopped.values())
+
     def test_rejects_unsafe_parameters(self):
         with pytest.raises(ValueError):
             FallRecovery(timeout_s=0.0)
@@ -673,6 +717,8 @@ class TestFallRecovery:
             FallRecovery(gain_scale=1.5)
         with pytest.raises(ValueError):
             FallRecovery(damping_scale=0.0)
+        with pytest.raises(ValueError):
+            FallRecovery(start_delay_s=-0.1)
 
     def test_reset_returns_to_idle(self):
         recovery = FallRecovery()

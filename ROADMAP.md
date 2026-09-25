@@ -341,7 +341,11 @@ Dependencies: `R5.1`.
   get-up actor was ported to ONNX and tested twice against the same 60 N
   collapse: the bounded trials started at 3.800/3.808 s but timed out at
   10.696/10.840 s, both ending inverted at 0.057 m. The actor path fails
-  closed and stays off by default.
+  closed and stays off by default. A 1 s delayed-start trial briefly crossed
+  the old height/tilt success thresholds while airborne, then collapsed;
+  success now also requires three loaded feet for 0.5 s. The rebuilt delayed
+  repeat timed out and ended inverted at 0.057 m, so the delay is not a
+  qualified remedy.
   Repeatability, terrain traversal, fall
   handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
@@ -363,7 +367,8 @@ Dependencies: `R5.1`.
   35.55 N.m max effort), so do not claim terrain traversal. Next implement a
   target-domain adaptation/retraining or a different whole-body get-up
   strategy; both the nominal-pose and ported learned actor failed the named
-  60 N collapse. Do not enable GUI velocity-base, SLAM or
+  60 N collapse. The delayed actor also failed after its midair false success
+  was corrected. Do not enable GUI velocity-base, SLAM or
   navigation modes.
   Note for future runs: this host's CycloneDDS port range caps usable
   `ROS_DOMAIN_ID` at about 232. See the [Go2 tutorial](docs/tutorials/go2.md)

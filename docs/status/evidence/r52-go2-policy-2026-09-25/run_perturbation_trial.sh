@@ -15,6 +15,7 @@ RECOVERY_S="${RECOVERY_S:-2.0}"
 # Opt-in re-stand attempt; off by default because it is not qualified.
 FALL_RECOVERY="${FALL_RECOVERY:-false}"
 FALL_RECOVERY_TIMEOUT_S="${FALL_RECOVERY_TIMEOUT_S:-4.0}"
+FALL_RECOVERY_DELAY_S="${FALL_RECOVERY_DELAY_S:-0.0}"
 RECOVERY_POLICY_PATH="${RECOVERY_POLICY_PATH:-}"
 TRACE_JOINTS="${TRACE_JOINTS:-false}"
 SOURCE_REVISION="$(git -C "$ROOT" rev-parse --short HEAD)"
@@ -57,12 +58,12 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" <<'PY'
 import json
 import sys
 import hashlib
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, recovery_policy_path, trace_joints, revision, dirty = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
@@ -76,6 +77,7 @@ Path(out).write_text(json.dumps({
     "recovery_window_s": float(recovery),
     "enable_fall_recovery": fall_recovery.strip().lower() in ("true", "1", "yes"),
     "fall_recovery_timeout_s": float(fall_timeout),
+    "fall_recovery_start_delay_s": float(fall_delay),
     "recovery_policy_path": recovery_policy_path,
     "trace_joints": trace_joints.strip().lower() in ("true", "1", "yes"),
     "source_sha256": {
@@ -113,6 +115,7 @@ ROS_DOMAIN_ID="$DOMAIN" setsid ros2 launch robot_lab_bringup simulated_robot.lau
     enable_fall_recovery:="$FALL_RECOVERY" \
     go2_recovery_policy_path:="$RECOVERY_POLICY_PATH" \
     fall_recovery_timeout_s:="$FALL_RECOVERY_TIMEOUT_S" \
+    fall_recovery_start_delay_s:="$FALL_RECOVERY_DELAY_S" \
     > "$launch_log" 2>&1 &
 launch_pid=$!
 set +e

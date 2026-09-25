@@ -188,6 +188,7 @@ def test_go2_fall_recovery_launch_flags_are_opt_in_and_typed():
     assert '"enable_fall_recovery", default_value="false"' in launch_text
     for name, default in (
         ("fall_recovery_timeout_s", "4.0"),
+        ("fall_recovery_start_delay_s", "0.0"),
         ("fall_recovery_gain_scale", "0.5"),
         ("fall_recovery_damping_scale", "0.5"),
     ):

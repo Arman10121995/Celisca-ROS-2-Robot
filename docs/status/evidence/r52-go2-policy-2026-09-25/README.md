@@ -239,6 +239,32 @@ actor is **not a qualified get-up controller on this plant**.
 The explicit guard and timeout prevent continued drive after failure, but
 target-domain adaptation or a different whole-body strategy is still needed.
 
+### Delayed-start hypothesis and false-success correction
+
+`fall_recovery_start_delay_s` adds an opt-in, zero-effort settling interval;
+its default is 0 and the active timeout starts when the interval ends. This
+tested whether the learned actor works better from a settled fallen pose.
+Both trials used the same `nav_empty` 60 N pulse, a 1.0 s delay, an 8 s active
+window and an 18 s probe.
+
+The initial delayed run
+([`fall_nju_recovery_delay1_20260925T60N/`](fall_nju_recovery_delay1_20260925T60N/probe.json))
+recorded `waiting → attempting → succeeded` at 3.816/4.608/4.948 s. That
+`succeeded` state was **false**: the body briefly rose to 0.472 m in the air,
+but at 5.004 s only one foot showed contact (13.97 N) and at 5.104 s no foot
+had contact. The controller cut effort and the body fell to 0.089 m. Tilt and
+height alone cannot establish supported standing.
+
+`FallRecovery` now requires at least three feet loaded above 2 N while tilt
+stays below 0.35 rad and body height stays above 0.25 m for 0.5 s. A drop in
+any condition resets the dwell timer. The rebuilt repeat
+([`fall_nju_recovery_delay1_supported_20260925T60N/`](fall_nju_recovery_delay1_supported_20260925T60N/probe.json))
+recorded `waiting → attempting → failed` at 3.796/4.612/11.604 s, 4,498
+safety messages, zero probe/launch return codes and no inference error. The
+robot never met the support criterion and ended inverted at 0.057 m. The
+delayed actor is therefore **not** a recovery solution; the corrected success
+test prevents a midair rebound from being mislabeled as one.
+
 Two defects found and fixed while producing this evidence, both worth keeping:
 
 - The first attempt produced a physically contradictory result (0.040 rad peak

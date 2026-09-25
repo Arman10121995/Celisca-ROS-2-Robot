@@ -184,7 +184,8 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 
 It drives the nominal stance pose with elevated bounded gains for a bounded
 window and reports success only if measured tilt returns below the warn
-threshold and simulator ground-truth body height reaches 0.25 m. In the clean
+threshold, simulator ground-truth body height reaches 0.25 m, and at least
+three feet stay loaded above 2 N for 0.5 s. In the clean
 60 N repeat, `fallen` latched at 3.796 s, recovery changed from `idle` to
 `attempting`, then `failed` at 10.628 s. The robot finished upside down at
 0.057 m height. The earlier 0.139 m collapse did not confirm an attempt: the
@@ -209,6 +210,11 @@ the controller alive, then timed out with the robot inverted at 0.057 m.
 This is an experimental comparison, not a qualified recovery behavior. Its
 model provenance, MIT license and observation contract are in
 `src/robot_lab_adapter/policies/go2_recovery_nju/SOURCE.md`.
+An optional `fall_recovery_start_delay_s:=1.0` waits with zero effort before
+starting the active timeout. It did not solve the 60 N fall. An initial delayed
+trial falsely reported success while the body was airborne with only one foot
+loaded, then collapsed. The supported-standing dwell check above corrected
+that result; the rebuilt delayed repeat reported `failed` and ended inverted.
 
 A caution learned here: a launch override typed as a string can kill the
 controller at startup (`InvalidParameterTypeException`), leaving the robot

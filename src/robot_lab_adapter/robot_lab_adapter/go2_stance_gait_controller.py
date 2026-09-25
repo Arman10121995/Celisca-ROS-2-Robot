@@ -67,6 +67,7 @@ class Go2StanceGaitController(Node):
         # shown to right the robot on this plant.
         self.declare_parameter("enable_fall_recovery", False)
         self.declare_parameter("fall_recovery_timeout_s", 4.0)
+        self.declare_parameter("fall_recovery_start_delay_s", 0.0)
         self.declare_parameter("fall_recovery_gain_scale", 0.5)
         self.declare_parameter("fall_recovery_damping_scale", 0.5)
         self.declare_parameter("recovery_policy_path", "")
@@ -101,6 +102,8 @@ class Go2StanceGaitController(Node):
             FallRecovery(
                 timeout_s=_param_float(
                     self, "fall_recovery_timeout_s", 4.0),
+                start_delay_s=_param_float(
+                    self, "fall_recovery_start_delay_s", 0.0),
                 gain_scale=_param_float(
                     self, "fall_recovery_gain_scale", 0.5),
                 damping_scale=_param_float(
@@ -206,17 +209,17 @@ class Go2StanceGaitController(Node):
                 measured_contact_forces=self._foot_forces)
             efforts, state = cycle.efforts, cycle.safety_state
         if self._recovery is not None and self._core.safety.fallen:
+            now = time.monotonic()
+            forces = (self._foot_forces if now - self._foot_forces_at < 0.1
+                      else None)
             recovered = self._recovery.update(
-                time.monotonic(), self._core.safety.fallen, self._body,
-                self._positions, self._velocities)
+                now, self._core.safety.fallen, self._body,
+                self._positions, self._velocities, forces)
             efforts = {name: recovered.get(name, 0.0) for name in JOINT_NAMES}
             if (self._recovery_policy is not None
                     and self._recovery.status == FallRecovery.ATTEMPTING):
-                now = time.monotonic()
                 if now - self._last_recovery_policy_at >= RECOVERY_POLICY_DT_S:
                     try:
-                        forces = (self._foot_forces if now - self._foot_forces_at < 0.1
-                                  else None)
                         self._recovery_policy.step(
                             self._positions, self._velocities,
                             self._angular_velocity, self._body, forces)

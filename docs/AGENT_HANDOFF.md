@@ -79,6 +79,16 @@ unqualified; next adapt/retrain the actor to this plant or implement another
 measured whole-body get-up strategy. Keep `go2_reverse_command_map:=inverse`, the
 `go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
 
+A 1 s zero-effort start delay was tried next. The first delayed actor trial
+reported `succeeded` at 4.948 s only because the body was airborne at 0.472 m
+with at most one loaded foot; it subsequently fell to 0.089 m. Recovery success
+now requires height and upright tilt **plus at least three feet above 2 N for
+0.5 s**. The rebuilt repeat in domain 220 recorded
+`waiting → attempting → failed` at 3.796/4.612/11.604 s, ended inverted at
+0.057 m and returned zero from probe/launch. The delay is another measured
+negative, while the support/dwell check fixes a false success. The delay flag
+`fall_recovery_start_delay_s` defaults to 0. Keep all recovery options opt-in.
+
 Four five-case flat-ground suites now pass bounded screening. Note for future
 runs: this host caps a usable `ROS_DOMAIN_ID` at about 232; higher values fail
 at node creation and are a setup error, not a system result. Also check contract

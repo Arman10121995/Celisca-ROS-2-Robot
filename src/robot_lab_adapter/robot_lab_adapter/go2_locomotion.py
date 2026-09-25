@@ -105,6 +105,9 @@ FALL_CONFIRM_CYCLES = 25
 FALL_RECOVER_TIMEOUT_S = 4.0
 FALL_RECOVER_TILT_RAD = TILT_WARN_RAD
 FALL_RECOVER_MIN_HEIGHT_M = 0.25
+FALL_RECOVER_MIN_LOADED_FEET = 3
+FALL_RECOVER_CONTACT_N = 2.0
+FALL_RECOVER_SUCCESS_DWELL_S = 0.5
 
 #: Duty factor and cycle time for the bounded trot.
 TROT_CYCLE_SECONDS = 0.7
@@ -487,14 +490,17 @@ class FallRecovery:
 
     This is a re-stand **attempt**, not a demonstrated get-up. It drives the
     nominal stance pose with elevated (still bounded) gains for at most
-    ``timeout_s`` and reports success only when *measured* tilt returns below
-    ``success_tilt_rad`` and body height reaches the standing threshold. If the
+    ``timeout_s`` after an optional zero-effort settling delay, and reports
+    success only when *measured* tilt returns below
+    ``success_tilt_rad``, body height reaches the standing threshold, and at
+    least three feet stay loaded for a measured dwell. If the
     window expires first, it gives up and commands
     zero effort; it never silently resumes walking, and it never clears the
     latched :attr:`SafetyState.fallen` flag on its own.
     """
 
     IDLE = "idle"
+    WAITING = "waiting"
     ATTEMPTING = "attempting"
     SUCCEEDED = "succeeded"
     FAILED = "failed"
@@ -502,12 +508,15 @@ class FallRecovery:
     def __init__(
         self,
         timeout_s: float = FALL_RECOVER_TIMEOUT_S,
+        start_delay_s: float = 0.0,
         success_tilt_rad: float = FALL_RECOVER_TILT_RAD,
         gain_scale: float = 0.5,
         damping_scale: float = 0.5,
     ) -> None:
         if not math.isfinite(timeout_s) or timeout_s <= 0.0:
             raise ValueError("timeout_s must be positive")
+        if not math.isfinite(start_delay_s) or start_delay_s < 0.0:
+            raise ValueError("start_delay_s must be nonnegative")
         if not math.isfinite(success_tilt_rad) or success_tilt_rad <= 0.0:
             raise ValueError("success_tilt_rad must be positive")
         if not 0.0 < gain_scale <= 1.0:
@@ -515,9 +524,12 @@ class FallRecovery:
         if damping_scale <= 0.0:
             raise ValueError("damping_scale must be positive")
         self.timeout_s = timeout_s
+        self.start_delay_s = start_delay_s
         self.success_tilt_rad = success_tilt_rad
         self.status = self.IDLE
         self.started_at: Optional[float] = None
+        self.active_started_at: Optional[float] = None
+        self.success_candidate_at: Optional[float] = None
         self.attempts = 0
         self._stance = StanceController(
             target=nominal_stance_pose(),
@@ -528,6 +540,8 @@ class FallRecovery:
     def reset(self) -> None:
         self.status = self.IDLE
         self.started_at = None
+        self.active_started_at = None
+        self.success_candidate_at = None
 
     def update(
         self,
@@ -536,6 +550,7 @@ class FallRecovery:
         body: Optional[BodyState],
         positions: Dict[str, float],
         velocities: Dict[str, float],
+        measured_contact_forces: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         """Return the re-stand effort for this cycle (``{}`` means zero drive).
 
@@ -545,17 +560,37 @@ class FallRecovery:
         if self.status in (self.SUCCEEDED, self.FAILED) or not fallen:
             return {joint: 0.0 for joint in JOINT_NAMES}
         if self.status == self.IDLE:
-            self.status = self.ATTEMPTING
+            self.status = self.WAITING if self.start_delay_s > 0.0 else self.ATTEMPTING
             self.started_at = now_s
+            if self.status == self.ATTEMPTING:
+                self.active_started_at = now_s
             self.attempts += 1
-        if self.started_at is not None and now_s - self.started_at > self.timeout_s:
+        if self.status == self.WAITING:
+            if self.started_at is not None and now_s - self.started_at < self.start_delay_s:
+                return {joint: 0.0 for joint in JOINT_NAMES}
+            self.status = self.ATTEMPTING
+            self.active_started_at = now_s
+        if self.active_started_at is not None and now_s - self.active_started_at > self.timeout_s:
             self.status = self.FAILED
             return {joint: 0.0 for joint in JOINT_NAMES}
-        if (body is not None and body.max_tilt_rad < self.success_tilt_rad
-                and body.body_height_m is not None
-                and body.body_height_m >= FALL_RECOVER_MIN_HEIGHT_M):
-            self.status = self.SUCCEEDED
-            return {joint: 0.0 for joint in JOINT_NAMES}
+        loaded_feet = sum(
+            1 for leg in LEG_PREFIXES
+            if measured_contact_forces is not None
+            and math.isfinite(measured_contact_forces.get(leg, float("nan")))
+            and measured_contact_forces[leg] >= FALL_RECOVER_CONTACT_N)
+        stable_candidate = (
+            body is not None and body.max_tilt_rad < self.success_tilt_rad
+            and body.body_height_m is not None
+            and body.body_height_m >= FALL_RECOVER_MIN_HEIGHT_M
+            and loaded_feet >= FALL_RECOVER_MIN_LOADED_FEET)
+        if stable_candidate:
+            if self.success_candidate_at is None:
+                self.success_candidate_at = now_s
+            elif now_s - self.success_candidate_at >= FALL_RECOVER_SUCCESS_DWELL_S:
+                self.status = self.SUCCEEDED
+                return {joint: 0.0 for joint in JOINT_NAMES}
+        else:
+            self.success_candidate_at = None
         efforts = self._stance.effort_command(positions, velocities)
         for joint in JOINT_NAMES:
             if joint not in positions:

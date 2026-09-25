@@ -1020,6 +1020,8 @@ def _build_simulation_actions(context):
                         _launch_value(context, "enable_fall_recovery")),
                     "fall_recovery_timeout_s": _as_float(
                         _launch_value(context, "fall_recovery_timeout_s"), 4.0),
+                    "fall_recovery_start_delay_s": _as_float(
+                        _launch_value(context, "fall_recovery_start_delay_s"), 0.0),
                     "fall_recovery_gain_scale": _as_float(
                         _launch_value(context, "fall_recovery_gain_scale"), 0.5),
                     "fall_recovery_damping_scale": _as_float(
@@ -1345,6 +1347,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "fall_recovery_timeout_s", default_value="4.0",
             description="Bounded window for the Go2 re-stand attempt."),
+        DeclareLaunchArgument(
+            "fall_recovery_start_delay_s", default_value="0.0",
+            description="Opt-in zero-effort settling delay before Go2 recovery "
+                        "starts; timeout begins after this delay."),
         DeclareLaunchArgument(
             "fall_recovery_gain_scale", default_value="0.5",
             description="Stance gain scale used during the Go2 re-stand attempt."),
