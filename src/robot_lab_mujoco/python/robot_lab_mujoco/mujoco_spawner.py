@@ -997,6 +997,12 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("physics_rate", 240.0)
         self.declare_parameter("physics_timestep", 0.0)
         self.declare_parameter("effort_joint_armature", 0.0)
+        # Optional diagnostic external-force pulse in the floating body frame.
+        # The bringup path sets these only for an explicit Go2 perturbation run.
+        self.declare_parameter("perturbation_force_n", 0.0)
+        self.declare_parameter("perturbation_start_s", 0.0)
+        self.declare_parameter("perturbation_duration_s", 0.0)
+        self.declare_parameter("perturbation_axis", 1)  # 0=x, 1=y, 2=z
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("scan_rate", 5.0)
         self.declare_parameter("wheel_radius", 0.033)
@@ -1071,6 +1077,14 @@ class MuJoCoSpawner(Node):
         self._running = True
         self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
         self._substeps = 1  # model timesteps per physics tick
+        perturbation_axis = int(self.get_parameter("perturbation_axis").value)
+        if perturbation_axis not in (0, 1, 2):
+            raise ValueError("perturbation_axis must be 0, 1 or 2")
+        for name in ("perturbation_force_n", "perturbation_start_s", "perturbation_duration_s"):
+            value = float(self.get_parameter(name).value)
+            if not math.isfinite(value) or value < 0.0:
+                raise ValueError(name + " must be finite and nonnegative")
+        self._perturbation_axis = perturbation_axis
 
         # --- publishers ---
         self._js_pub = self.create_publisher(JointState, "/joint_states", 10)
@@ -1649,9 +1663,19 @@ class MuJoCoSpawner(Node):
                 values = self._effort_command.command(time.monotonic(), self._watchdog_timeout)
             self._data.ctrl[self._effort_actuators] = values
         for _ in range(self._substeps):
+            self._apply_perturbation()
             mujoco.mj_step(self._model, self._data)
         self._sim_step += 1
         self._read_physics_state()
+
+    def _apply_perturbation(self):
+        """Apply the optional bounded body-frame force pulse before a step."""
+        self._data.xfrc_applied[self._body_id, :] = 0.0
+        force = float(self.get_parameter("perturbation_force_n").value)
+        start = float(self.get_parameter("perturbation_start_s").value)
+        duration = float(self.get_parameter("perturbation_duration_s").value)
+        if force > 0.0 and duration > 0.0 and start <= self._data.time < start + duration:
+            self._data.xfrc_applied[self._body_id, self._perturbation_axis] = force
 
     def _read_physics_state(self):
         """Refresh publisher state from the model after a step or reset."""
@@ -1698,6 +1722,8 @@ class MuJoCoSpawner(Node):
             if self._effort_command is not None:
                 self._effort_command.clear()
         self._sim_step = 0
+        if hasattr(self._data, "xfrc_applied"):
+            self._data.xfrc_applied[:, :] = 0.0
         mujoco.mj_forward(self._model, self._data)
         # Place the lowest robot collision surface above the ground plane.
         # A trunk-rooted robot and a wheel-footprint-rooted robot cannot use

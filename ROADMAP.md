@@ -324,8 +324,15 @@ Dependencies: `R5.1`.
   overdrives the tested reverse grid; the opt-in inverse map reduces overdrive at
   -0.25 to -0.45 m/s but leaves -0.15 m/s in a deadband. Both flat-ground suites
   passed all bounded screening checks, but the named stairs task fails at the first
-  ledge with only 0.115 m drive displacement and 0.527 rad peak tilt. Repeatability,
-  terrain traversal, fall handling and navigation remain unqualified.
+  ledge with only 0.115 m drive displacement and 0.527 rad peak tilt. Bounded
+  disturbance rejection is now measured at one point: a 0.2 s 35 N lateral trunk
+  pulse produces a measurable response (0.070 rad peak tilt versus the 0.030 rad
+  stance baseline) and the robot settles upright with no SAFE_STOP, while 60 N
+  exceeds the envelope, collapses to 0.139 m and correctly latches `safe_stop`.
+  The 5 N and 20 N pulses are recorded negative controls with no response above
+  stance noise. Standing back up after a fall is still not implemented, so
+  repeatability, terrain traversal, fall handling and navigation remain
+  unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits
@@ -333,12 +340,17 @@ Dependencies: `R5.1`.
   when available (the older motor-effort fallback remains a heuristic), and
   latches tilt/effort safety stops; its pure tests cover these laws but do
   not substitute for measured displacement, turning and terrain missions.
-- **Next action:** Keep `go2_reverse_command_map:=inverse` opt-in. Record the two
-  flat-ground suite repeats as repeatable bounded screening evidence. The named
-  `terrain_stairs` task fails at the first ledge (0.115 m displacement, 0.527 rad
-  peak tilt, 35.55 N.m max effort), so do not claim terrain traversal. Next run a
-  bounded fall/perturbation recovery test and preserve the first-failure trace; do
-  not enable GUI velocity-base, SLAM or navigation modes. See the [Go2 tutorial](docs/tutorials/go2.md)
+- **Next action:** Keep `go2_reverse_command_map:=inverse` and the new
+  `go2_perturbation_*` arguments opt-in. The two flat-ground suite repeats stand
+  as repeatable bounded screening evidence. Bounded perturbation recovery is
+  measured at a single point (35 N recovers, 60 N collapses with a correct
+  `safe_stop`), the named `terrain_stairs` task still fails at the first ledge
+  (0.115 m displacement, 0.527 rad peak tilt, 35.55 N.m max effort), so do not
+  claim terrain traversal. Next implement and qualify explicit fall detection
+  plus a get-up behavior, then repeat the five-case flat-ground suite across
+  multiple seeds. Do not enable GUI velocity-base, SLAM or navigation modes.
+  Note for future runs: this host's CycloneDDS port range caps usable
+  `ROS_DOMAIN_ID` at about 232. See the [Go2 tutorial](docs/tutorials/go2.md)
   and [workflow](docs/WORKFLOW.md).
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking

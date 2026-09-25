@@ -136,11 +136,34 @@ records 0.115 m drive displacement, a 0.35 rad tilt-warning crossing at 3.212 s,
 attitude recovery and the process exits cleanly, but the task fails at the first
 ledge. Do not relabel this as a successful terrain traversal.
 
-The next R5.2 experiment is bounded fall/perturbation recovery with an explicit
-first-failure trace. A command-loss stop, a tilt warning/recovery, and a process
-that exits cleanly are not equivalent to recovering from a fall. Record the
-perturbation time, body height, tilt, contact pattern, effort, safety state and
-cleanup outcome.
+Bounded perturbation recovery is now measured. A diagnostic body-frame force
+pulse is opt-in through `go2_perturbation_force_n`, `go2_perturbation_start_s`,
+`go2_perturbation_duration_s` and `go2_perturbation_axis`, and the controller
+republishes its latched safety state on `/go2/safety_state` so the probe records
+real transitions:
+
+```bash
+ROS_DOMAIN_ID=231 FORCE_N=35.0 \
+  docs/status/evidence/r52-go2-policy-2026-09-25/run_perturbation_trial.sh \
+  /tmp/go2-perturbation
+```
+
+The recorded sweep used a 0.2 s lateral pulse at 3.0 s with a 2.0 s recovery
+window:
+
+| pulse | peak tilt | final height | safety state | screening |
+|---:|---:|---:|---|---|
+| 5 N | 0.030 rad | 0.368 m | `nominal` | pass, below noise floor |
+| 20 N | 0.030 rad | 0.368 m | `nominal` | pass, below noise floor |
+| 35 N | 0.070 rad | 0.373 m | `nominal` | pass, measurable and bounded |
+| 60 N | 0.717 rad | 0.139 m | `safe_stop` | fail, collapse |
+
+Read this carefully. The stance baseline is about 0.030 rad, so 5 N and 20 N are
+**negative controls**: their response is not distinguishable from noise and must
+not be cited as stability. 35 N is the smallest tested magnitude with a clearly
+measurable response, and the robot settles upright. 60 N exceeds the envelope:
+the robot collapses and the fail-safe latches correctly, which is a fall and not
+a recovery. Standing back up after a fall is still unimplemented.
 
 ## Interpret the result correctly
 
@@ -148,10 +171,15 @@ cleanup outcome.
 - A turn is not a terrain or navigation qualification.
 - A settle after command loss is useful safety evidence, not proof of balanced
   recovery from a fall.
+- A perturbation below the noise floor is not evidence of disturbance rejection.
+  Compare the pulse window against the pre-pulse window before reporting.
+- A latched `safe_stop` proves the fail-safe fired, not that the robot recovered.
 - Direct foot-force telemetry is required before claiming a support pattern;
   it is not automatically consumed by the blind ONNX policy.
 - A failed stairs trial remains a failed named task. Do not hide it by
   switching to an easier map without recording the new cell separately.
+- This host's CycloneDDS port range caps usable `ROS_DOMAIN_ID` at about 232.
+  Higher values fail at node creation with an out-of-range multicast port.
 
 After any trial, update the R5.2 evidence README and the machine-readable
 ledger with the revision, exact command, seed/protocol, raw artifact paths and

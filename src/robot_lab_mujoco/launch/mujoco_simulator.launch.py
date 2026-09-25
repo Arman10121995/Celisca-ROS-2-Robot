@@ -99,6 +99,14 @@ def _build_mujoco_actions(context):
             LaunchConfiguration("physics_timestep"), value_type=float),
         "effort_joint_armature": ParameterValue(
             LaunchConfiguration("effort_joint_armature"), value_type=float),
+        "perturbation_force_n": ParameterValue(
+            LaunchConfiguration("perturbation_force_n"), value_type=float),
+        "perturbation_start_s": ParameterValue(
+            LaunchConfiguration("perturbation_start_s"), value_type=float),
+        "perturbation_duration_s": ParameterValue(
+            LaunchConfiguration("perturbation_duration_s"), value_type=float),
+        "perturbation_axis": ParameterValue(
+            LaunchConfiguration("perturbation_axis"), value_type=int),
         "publish_rate": 250.0 if high_rate_effort else 50.0,
         "world_xml": mujoco_xml,
         "robot_name": robot_name,
@@ -153,6 +161,10 @@ def generate_launch_description():
         DeclareLaunchArgument("effort_controller_config", default_value=""),
         DeclareLaunchArgument("physics_timestep", default_value="0.0"),
         DeclareLaunchArgument("effort_joint_armature", default_value="0.0"),
+        DeclareLaunchArgument("perturbation_force_n", default_value="0.0"),
+        DeclareLaunchArgument("perturbation_start_s", default_value="0.0"),
+        DeclareLaunchArgument("perturbation_duration_s", default_value="0.0"),
+        DeclareLaunchArgument("perturbation_axis", default_value="1"),
         DeclareLaunchArgument("initial_joint_positions", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),
         DeclareLaunchArgument("robot_xacro", default_value=""),

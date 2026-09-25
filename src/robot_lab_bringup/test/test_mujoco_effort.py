@@ -89,6 +89,36 @@ def test_foot_contact_telemetry_measures_world_normal_force():
     assert 8.0 < force < 12.0
 
 
+def test_optional_perturbation_force_is_bounded_and_cleared():
+    mujoco = pytest.importorskip("mujoco")
+    from types import SimpleNamespace
+    from robot_lab_mujoco.mujoco_spawner import MuJoCoSpawner
+
+    model = mujoco.MjModel.from_xml_string(
+        '<mujoco><worldbody><body><freejoint/>'
+        '<geom type="sphere" size=".1" mass="1"/></body></worldbody></mujoco>')
+    data = mujoco.MjData(model)
+    node = object.__new__(MuJoCoSpawner)
+    node._data = data
+    node._body_id = 1
+    node._perturbation_axis = 1
+    values = {
+        "perturbation_force_n": 5.0,
+        "perturbation_start_s": 0.1,
+        "perturbation_duration_s": 0.2,
+    }
+    node.get_parameter = lambda name: SimpleNamespace(value=values[name])
+    data.time = 0.05
+    node._apply_perturbation()
+    assert data.xfrc_applied[1, 1] == 0.0
+    data.time = 0.15
+    node._apply_perturbation()
+    assert data.xfrc_applied[1, 1] == 5.0
+    data.time = 0.31
+    node._apply_perturbation()
+    assert not data.xfrc_applied.any()
+
+
 def test_actuators_apply_named_torque_and_preserve_declared_losses(command):
     mujoco = pytest.importorskip('mujoco')
     # XML order deliberately differs from command order.

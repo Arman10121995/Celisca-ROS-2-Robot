@@ -93,6 +93,57 @@ runner and analyzer are `run_flat_ground_suite.sh` and
 `analyze_flat_ground_suite.py`; hermetic coverage is in
 `src/robot_lab_adapter/test/test_r5_2_go2_reverse_sweep.py`.
 
+## Bounded perturbation and recovery (2026-09-25)
+
+A diagnostic body-frame force pulse was added behind explicit opt-in launch
+arguments (`go2_perturbation_force_n`, `go2_perturbation_start_s`,
+`go2_perturbation_duration_s`, `go2_perturbation_axis`, all defaulting to
+disabled). The MuJoCo spawner applies the pulse through `xfrc_applied` on the
+free-joint body, and the Go2 controller now republishes its latched safety state
+on `/go2/safety_state` so the probe can record transitions instead of inferring
+them. The runner is `run_perturbation_trial.sh`; the probe records pre/pulse/
+recovery windows plus the first threshold breach.
+
+All trials used `nav_empty`, the opt-in policy with `go2_reverse_command_map:=inverse`,
+a 0.2 s lateral (y-axis) pulse starting at 3.0 s, and a 2.0 s recovery window.
+
+| pulse | pre-pulse max tilt | pulse window | recovery window | final height | safety state | recovery screening |
+|---:|---:|---:|---:|---:|---|---|
+| 5 N | 0.030 rad | 0.026 rad | 0.029 rad | 0.368 m | `nominal` | pass (below noise floor) |
+| 20 N | 0.030 rad | 0.026 rad | 0.029 rad | 0.368 m | `nominal` | pass (below noise floor) |
+| 35 N | 0.030 rad | 0.032 rad | 0.066 rad | 0.373 m | `nominal` | **pass — measured, bounded** |
+| 60 N | 0.030 rad | 0.059 rad | 0.717 rad | 0.139 m | `safe_stop` | **fail — collapse** |
+
+Interpretation, with its limits:
+
+- 5 N and 20 N produce **no response distinguishable from nominal stance noise**;
+  the pulse-window tilt is actually below the pre-pulse window. These are not
+  stability evidence. The static tipping estimate for this stance
+  (`m·g·half_width / trunk_height ≈ 30 N`) is consistent with the foot friction
+  and the balance controller absorbing the smaller pulses.
+- 35 N is the smallest tested magnitude with a clearly measurable response
+  (peak tilt 0.070 rad, roughly 2.3x the 0.030 rad stance baseline). The
+  disturbance appears in the recovery window and the robot settles upright,
+  remaining `nominal` with no SAFE_STOP. This is a single measured
+  perturbation-recovery point, not a qualified disturbance envelope.
+- 60 N exceeds the recovery envelope: the robot collapses to 0.139 m and the
+  controller latches `safe_stop`, first breaching the 0.35 rad threshold at
+  3.548 s. The fail-safe behaved correctly, but this is a fall, not a recovery.
+- Safety-state telemetry is itself measured: 1,729–1,750 `/go2/safety_state`
+  messages per trial, with a recorded transition to `safe_stop` only in the
+  60 N case.
+- Two environment/harness findings are retained as negative evidence: the first
+  attempt used `ROS_DOMAIN_ID=241`, which is outside this host's CycloneDDS port
+  range and failed at node creation
+  (`perturbation_trial_20260925T152342Z/`), and a 20 N parameter-probe launch
+  was left running and was explicitly terminated.
+
+Fall **recovery** (standing back up after the collapse) is still not
+implemented or qualified. Only disturbance rejection below the tipping
+threshold has been measured.
+
+
+
 The trial does **not** complete R5.2. The policy does not reliably track
 small reverse commands and cannot climb the tested ledge. Direct foot-ground
 forces are now published, but the blind ONNX policy does not consume them;

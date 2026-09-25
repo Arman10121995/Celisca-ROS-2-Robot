@@ -1030,6 +1030,15 @@ def _build_simulation_actions(context):
                        if go2_controller_active else {}),
                     **({"effort_joint_armature": "0.01"}
                        if go2_controller_active else {}),
+                    **({"perturbation_force_n": _launch_value(
+                         context, "go2_perturbation_force_n"),
+                         "perturbation_start_s": _launch_value(
+                             context, "go2_perturbation_start_s"),
+                         "perturbation_duration_s": _launch_value(
+                             context, "go2_perturbation_duration_s"),
+                         "perturbation_axis": _launch_value(
+                             context, "go2_perturbation_axis")}
+                       if go2_controller_active else {}),
                     **({"physics_timestep": _launch_value(
                         context, "bhl_physics_timestep")}
                        if bhl_policy_active else {}),
@@ -1280,6 +1289,19 @@ def generate_launch_description():
             description="Opt-in Go2 reverse observation map: 'feedforward' preserves "
                         "the measured dead-zone compensation; 'inverse' uses the "
                         "R5.2 sweep-fitted candidate and remains experimental."),
+        DeclareLaunchArgument(
+            "go2_perturbation_force_n", default_value="0.0",
+            description="Opt-in Go2 MuJoCo body-frame force pulse in newtons; "
+                        "0.0 disables the diagnostic perturbation."),
+        DeclareLaunchArgument(
+            "go2_perturbation_start_s", default_value="0.0",
+            description="Simulation-time start of the Go2 force pulse in seconds."),
+        DeclareLaunchArgument(
+            "go2_perturbation_duration_s", default_value="0.0",
+            description="Duration of the Go2 force pulse in seconds; 0.0 disables it."),
+        DeclareLaunchArgument(
+            "go2_perturbation_axis", default_value="1",
+            description="Go2 body-frame force axis: 0=x, 1=y, 2=z."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

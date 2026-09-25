@@ -1,0 +1,23 @@
+1790349824.076008 [241]    python3: Failed to create discovery multicast socket for domain 241: resulting port number (67650) is out of range
+[ERROR] [1790349824.076196525] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'error not set, at ./src/rcl/node.c:263'
+
+with this new error message:
+
+  'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+[ERROR] [1790349824.076285651] [rcl]: Failed to fini publisher for node: 1
+Traceback (most recent call last):
+  File "/home/molar1/bumperbot_ws/docs/status/evidence/r52-go2-2026-09-25/probe_stance.py", line 245, in <module>
+    main()
+  File "/home/molar1/bumperbot_ws/docs/status/evidence/r52-go2-2026-09-25/probe_stance.py", line 43, in main
+    node = Node("go2_stance_probe")
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+    self.__node = _rclpy.Node(
+rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415

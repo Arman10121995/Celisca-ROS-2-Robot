@@ -79,6 +79,13 @@ artifact directory outside the source tree. Never kill all ROS or simulator
 processes to clean up another run. Prefer the repository's task-specific probe
 and capture both stdout/stderr and machine-readable output.
 
+On this host the CycloneDDS port arithmetic caps a usable `ROS_DOMAIN_ID` at
+about 232 (`7400 + 4 * domain` must stay below the local ephemeral port range).
+A higher value fails at node creation with `resulting port number ... is out of
+range`, which is a setup error, not a negative result for the system under
+test. Pick a domain, verify it starts, and keep every concurrent run in its own
+domain.
+
 A minimal built-workspace launch is:
 
 ```bash

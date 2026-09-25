@@ -162,6 +162,20 @@ def test_go2_reverse_command_map_launch_flag_is_opt_in():
     assert 'context, "go2_reverse_command_map"' in launch_text
 
 
+def test_go2_perturbation_launch_flags_are_opt_in():
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8")
+    for name, default in (
+        ("go2_perturbation_force_n", "0.0"),
+        ("go2_perturbation_start_s", "0.0"),
+        ("go2_perturbation_duration_s", "0.0"),
+        ("go2_perturbation_axis", "1"),
+    ):
+        assert f'"{name}", default_value="{default}"' in launch_text
+        assert f'"{name[4:]}": _launch_value(' in launch_text
+    assert "go2_controller_active else {}" in launch_text
+
+
 def test_bhl_physics_timestep_launch_override_is_opt_in():
     launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
         encoding="utf-8")

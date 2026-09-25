@@ -11,7 +11,7 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import JointState
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, String
 from rclpy.node import Node
 
 
@@ -33,6 +33,11 @@ def main():
     parser.add_argument("--drive-start", type=float, default=1.0)
     parser.add_argument("--drive-end", type=float, default=4.0)
     parser.add_argument("--drop-command-after-drive", action="store_true")
+    parser.add_argument("--perturbation-start", type=float, default=None)
+    parser.add_argument("--perturbation-duration", type=float, default=None)
+    parser.add_argument("--perturbation-force-n", type=float, default=None)
+    parser.add_argument("--perturbation-axis", type=int, default=1)
+    parser.add_argument("--recovery-window", type=float, default=2.0)
     args = parser.parse_args()
     rclpy.init()
     node = Node("go2_stance_probe")
@@ -42,7 +47,9 @@ def main():
              "peak_foot_force_n": {leg: 0.0 for leg in ("FL", "FR", "RL", "RR")},
              "joint_names": [], "latest_q": {}, "latest_v": {},
              "latest_efforts": {}, "latest_tau": 0.0,
-             "trace": [], "yaw": []}
+             "trace": [], "yaw": [], "safety_states": [],
+             "safety_transitions": [], "safety_messages": 0,
+             "latest_safety_state": "unavailable"}
     cmd_pub = node.create_publisher(
         Twist, "/robot_lab_controller/cmd_vel_unstamped", 10)
 
@@ -61,6 +68,7 @@ def main():
                                        "xyz": [round(p.x, 3), round(p.y, 3), round(p.z, 3)],
                                        "yaw_rad": round(state["yaw"][-1], 3),
                                        "tilt_rad": round(tilt(q), 3),
+                                       "safety_state": state["latest_safety_state"],
                                        "max_effort_nm": round(state["latest_tau"], 2),
                                        "rr_calf_rad": round(state["latest_q"].get(
                                            "RR_calf_joint", 0.0), 3)}
@@ -89,6 +97,15 @@ def main():
             [f"{leg}_{kind}_joint" for leg in ("FL", "FR", "RL", "RR")
              for kind in ("hip", "thigh", "calf")], msg.data))
 
+    def safety(msg):
+        state["safety_messages"] += 1
+        if state["sim"] is not None and msg.data != state["latest_safety_state"]:
+            state["safety_transitions"].append({
+                "sim_s": round(state["sim"], 3), "state": msg.data})
+        state["latest_safety_state"] = msg.data
+        if state["sim"] is not None:
+            state["safety_states"].append((state["sim"], msg.data))
+
     def contacts(msg):
         if len(msg.data) != 4:
             return
@@ -105,6 +122,7 @@ def main():
                              "/go2_group_effort_controller/commands", efforts, 10)
     node.create_subscription(Float64MultiArray,
                              "/go2/foot_contact_forces", contacts, 10)
+    node.create_subscription(String, "/go2/safety_state", safety, 10)
     start = None
     deadline = time.monotonic() + args.wall_timeout
     last_command_at = float("-inf")
@@ -130,8 +148,62 @@ def main():
               "effort_messages": state["effort_messages"],
               "contact_messages": state["contact_messages"],
               "peak_foot_force_n": state["peak_foot_force_n"],
-              "max_command_nm": state["max_command_nm"]}
+              "max_command_nm": state["max_command_nm"],
+              "safety_messages": state["safety_messages"],
+              "safety_transitions": state["safety_transitions"],
+              "final_safety_state": state["latest_safety_state"]}
     result["trace"] = state["trace"]
+    if args.perturbation_start is not None and samples:
+        origin = samples[0][0]
+        start = origin + args.perturbation_start
+        end = start + (args.perturbation_duration or 0.0)
+        recovery_end = min(samples[-1][0], end + args.recovery_window)
+        def window(lo, hi):
+            values = [sample for sample in samples if lo <= sample[0] <= hi]
+            return {
+                "sample_count": len(values),
+                "max_tilt_rad": max((sample[4] for sample in values), default=None),
+                "min_height_m": min((sample[3] for sample in values), default=None),
+            }
+        def safety_at(sim_s):
+            current = "unavailable"
+            for transition in state["safety_transitions"]:
+                if transition["sim_s"] <= sim_s:
+                    current = transition["state"]
+            return current
+        first_failure = next(({
+            "sim_s": round(sample[0], 3),
+            "tilt_rad": round(sample[4], 4),
+            "height_m": round(sample[3], 4),
+            "safety_state": safety_at(sample[0]),
+        } for sample in samples
+            if sample[0] >= start and sample[4] >= 0.35), None)
+        safe_stop_seen = any(
+            transition["state"].lower() == "safe_stop"
+            and transition["sim_s"] >= start
+            for transition in state["safety_transitions"])
+        pulse = window(start, end)
+        recovery = window(end, recovery_end)
+        result["perturbation"] = {
+            "requested_force_n": args.perturbation_force_n,
+            "axis": args.perturbation_axis,
+            "start_sim_s": round(start, 3),
+            "end_sim_s": round(end, 3),
+            "recovery_end_sim_s": round(recovery_end, 3),
+            "pre": window(start - 0.5, start),
+            "pulse": pulse,
+            "recovery": recovery,
+            "first_failure": first_failure,
+            "safe_stop_seen": safe_stop_seen,
+            "recovery_screening_pass": (
+                not safe_stop_seen
+                and recovery["max_tilt_rad"] is not None
+                and recovery["max_tilt_rad"] < 0.35
+                and recovery["min_height_m"] is not None
+                and recovery["min_height_m"] > 0.15
+            ),
+        }
+
     if samples:
         result.update(min_height_m=min(s[3] for s in samples),
                       final_height_m=samples[-1][3],

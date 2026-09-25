@@ -10,7 +10,7 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 from sensor_msgs.msg import Imu, JointState
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, String
 from std_srvs.srv import Trigger
 
 from robot_lab_adapter.go2_locomotion import (
@@ -75,6 +75,7 @@ class Go2StanceGaitController(Node):
             self._on_twist, 10)
         self._pub = self.create_publisher(
             Float64MultiArray, self.get_parameter("effort_topic").value, 10)
+        self._safety_pub = self.create_publisher(String, "/go2/safety_state", 10)
         self.create_service(Trigger, "/go2_controller/reset_safety", self._reset_safety)
         self.create_timer(self._period, self._on_timer)
         self.get_logger().info(
@@ -136,6 +137,9 @@ class Go2StanceGaitController(Node):
                 "Go2 safety %s: %s" %
                 (state, self._core.safety.reason or "attitude recovered"))
             self._last_safety_state = state
+        safety_msg = String()
+        safety_msg.data = state
+        self._safety_pub.publish(safety_msg)
         msg = Float64MultiArray()
         msg.data = [efforts[name] for name in JOINT_NAMES]
         self._pub.publish(msg)
