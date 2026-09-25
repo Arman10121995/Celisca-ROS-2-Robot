@@ -93,6 +93,24 @@ python3 docs/status/evidence/r52-go2-2026-09-25/probe_stance.py \
   > /tmp/go2-reverse.json 2> /tmp/go2-reverse.log
 ```
 
+For the next R5.2 iteration, run the reproducible sweep first; it records
+raw probe JSON/logs and a summary instead of relying on one hand-copied trial:
+
+```bash
+docs/status/evidence/r52-go2-policy-2026-09-25/run_reverse_sweep.sh \
+  --out-dir /tmp/go2-reverse-sweep \
+  --domain-base 201 \
+  --commands=-0.15,-0.25,-0.35,-0.45
+```
+
+The recorded baseline is
+[`reverse_sweep_20260925_rerun/`](reverse_sweep_20260925_rerun/summary.json).
+It bypasses the old reverse dead zone but overdrives low-speed commands
+(observed/requested ratios 1.11–1.62). Treat the current feed-forward map as
+a measured baseline, not a qualified velocity controller. Next test an explicit
+opt-in inverse-map or retrained policy A/B; do not change the default or claim
+velocity tracking from displacement alone.
+
 For the next R5.2 iteration, sweep several negative commands around the measured
 dead zone with identical initialization. Report command, actual displacement,
 tracking error, yaw drift, tilt, effort and contact count. Then repeat

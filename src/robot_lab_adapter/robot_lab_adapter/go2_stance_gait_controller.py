@@ -35,6 +35,7 @@ class Go2StanceGaitController(Node):
         self.declare_parameter("damping_scale", 0.2)
         self.declare_parameter("enable_experimental_gait", False)
         self.declare_parameter("policy_path", "")
+        self.declare_parameter("reverse_command_map", "feedforward")
         rate = float(self.get_parameter("command_rate_hz").value)
         if rate <= 0.0:
             raise ValueError("command_rate_hz must be positive")
@@ -42,7 +43,9 @@ class Go2StanceGaitController(Node):
         self._timeout = float(self.get_parameter("command_timeout_s").value)
         self._gait_enabled = bool(self.get_parameter("enable_experimental_gait").value)
         policy_path = str(self.get_parameter("policy_path").value)
-        self._policy = Go2VelocityPolicy(policy_path) if policy_path else None
+        reverse_command_map = str(self.get_parameter("reverse_command_map").value)
+        self._policy = (Go2VelocityPolicy(policy_path, reverse_map=reverse_command_map)
+                        if policy_path else None)
         self._last_policy_at = float("-inf")
         self._core = Go2LocomotionCore(
             gain_scale=float(self.get_parameter("gain_scale").value),

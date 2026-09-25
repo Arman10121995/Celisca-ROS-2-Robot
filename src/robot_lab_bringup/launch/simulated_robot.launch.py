@@ -992,6 +992,8 @@ def _build_simulation_actions(context):
                     "enable_experimental_gait": _as_bool(
                         _launch_value(context, "go2_enable_experimental_gait")),
                     "policy_path": go2_policy_path,
+                    "reverse_command_map": _launch_value(
+                        context, "go2_reverse_command_map"),
                 }],
             ))
 
@@ -1273,6 +1275,11 @@ def generate_launch_description():
             description="Optional ONNX Go2 velocity policy ('auto' uses the "
                         "bundled flat-ground model); experimental until "
                         "the model and stop/turn/terrain behavior are qualified."),
+        DeclareLaunchArgument(
+            "go2_reverse_command_map", default_value="feedforward",
+            description="Opt-in Go2 reverse observation map: 'feedforward' preserves "
+                        "the measured dead-zone compensation; 'inverse' uses the "
+                        "R5.2 sweep-fitted candidate and remains experimental."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

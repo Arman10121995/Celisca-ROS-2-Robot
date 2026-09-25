@@ -1,0 +1,127 @@
+{
+  "task": "R5.2 Go2 reverse-calibration sweep",
+  "source_manifest": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/manifest.json",
+  "trial_count": 4,
+  "complete_count": 4,
+  "trials": [
+    {
+      "command_vx_mps": -0.15,
+      "ros_domain_id": 191,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "sim_duration_s": 6.996,
+      "drive_delta_x_m": -0.73,
+      "observed_vx_mps": -0.24333333333333332,
+      "tracking_ratio": 1.6222222222222222,
+      "yaw_change_rad": 0.2179981539496442,
+      "stop_delta_xy_m": 0.048,
+      "max_tilt_rad": 0.056879185034089855,
+      "xy_drift_m": 0.6001338451613422,
+      "max_command_nm": 19.355180740356445,
+      "effort_messages": 1746,
+      "contact_messages": 1751,
+      "peak_foot_force_n": {
+        "FL": 113.4994628166663,
+        "FR": 142.97693084275818,
+        "RL": 119.83592002350287,
+        "RR": 108.23512535527334
+      },
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/1_reverse__0p15.json",
+      "probe_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/1_reverse__0p15.probe.log",
+      "launch_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/1_reverse__0p15.launch.log"
+    },
+    {
+      "command_vx_mps": -0.25,
+      "ros_domain_id": 192,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "sim_duration_s": 6.9959999999999996,
+      "drive_delta_x_m": -1.084,
+      "observed_vx_mps": -0.36133333333333334,
+      "tracking_ratio": 1.4453333333333334,
+      "yaw_change_rad": 0.20767064684922543,
+      "stop_delta_xy_m": 0.099,
+      "max_tilt_rad": 0.07778364130628929,
+      "xy_drift_m": 1.080822265696816,
+      "max_command_nm": 18.343460083007812,
+      "effort_messages": 1749,
+      "contact_messages": 1752,
+      "peak_foot_force_n": {
+        "FL": 132.02192575009607,
+        "FR": 170.56465157029305,
+        "RL": 142.52233997973664,
+        "RR": 133.2171523533074
+      },
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/2_reverse__0p25.json",
+      "probe_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/2_reverse__0p25.probe.log",
+      "launch_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/2_reverse__0p25.launch.log"
+    },
+    {
+      "command_vx_mps": -0.35,
+      "ros_domain_id": 193,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "sim_duration_s": 6.996,
+      "drive_delta_x_m": -1.283,
+      "observed_vx_mps": -0.42766666666666664,
+      "tracking_ratio": 1.2219047619047618,
+      "yaw_change_rad": 0.18427405323676607,
+      "stop_delta_xy_m": 0.034,
+      "max_tilt_rad": 0.06292400230281615,
+      "xy_drift_m": 1.31463990184729,
+      "max_command_nm": 19.794031143188477,
+      "effort_messages": 1747,
+      "contact_messages": 1750,
+      "peak_foot_force_n": {
+        "FL": 154.4511483726238,
+        "FR": 197.77452679632287,
+        "RL": 130.78607278332734,
+        "RR": 159.09299205282406
+      },
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/3_reverse__0p35.json",
+      "probe_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/3_reverse__0p35.probe.log",
+      "launch_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/3_reverse__0p35.launch.log"
+    },
+    {
+      "command_vx_mps": -0.45,
+      "ros_domain_id": 194,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "sim_duration_s": 6.996,
+      "drive_delta_x_m": -1.493,
+      "observed_vx_mps": -0.4976666666666667,
+      "tracking_ratio": 1.105925925925926,
+      "yaw_change_rad": 0.2130737978668948,
+      "stop_delta_xy_m": 0.041,
+      "max_tilt_rad": 0.060881767182588004,
+      "xy_drift_m": 1.5658304575541941,
+      "max_command_nm": 20.986417770385742,
+      "effort_messages": 1750,
+      "contact_messages": 1751,
+      "peak_foot_force_n": {
+        "FL": 169.19789760344406,
+        "FR": 186.9538516192919,
+        "RL": 146.10120754473203,
+        "RR": 150.33859681789409
+      },
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/4_reverse__0p45.json",
+      "probe_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/4_reverse__0p45.probe.log",
+      "launch_log": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/4_reverse__0p45.launch.log"
+    }
+  ],
+  "interpretation": {
+    "dead_zone_candidates": [],
+    "reverse_motion_commands": [
+      -0.15,
+      -0.25,
+      -0.35,
+      -0.45
+    ],
+    "safety_or_launch_failures": [],
+    "limitations": [
+      "A displacement threshold is a screening metric, not a velocity-tracking qualification.",
+      "Each command is run sequentially with a distinct ROS domain; repeat seeds remain required.",
+      "Terrain, fall recovery and navigation are outside this sweep."
+    ]
+  }
+}

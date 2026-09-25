@@ -80,12 +80,29 @@ def test_projected_gravity_is_body_frame():
     np.testing.assert_allclose(projected_gravity(0, 1, 0, 0), [0, 0, 1])
 
 
-def test_reverse_policy_feedforward_is_continuous_and_bounded():
+def test_reverse_policy_maps_are_continuous_bounded_and_selectable():
     assert policy_forward_command(0.25) == 0.25
     assert policy_forward_command(0.0) == 0.0
     assert policy_forward_command(-0.25) == pytest.approx(-0.55)
     assert policy_forward_command(-0.8) == pytest.approx(-0.99)
     assert policy_forward_command(-0.001) < 0.0
+    assert policy_forward_command(-0.1, "inverse") == pytest.approx(-0.207, abs=1e-3)
+    assert policy_forward_command(-0.2, "inverse") == pytest.approx(-0.414)
+    assert policy_forward_command(-0.25, "inverse") == pytest.approx(-0.462)
+    assert policy_forward_command(-0.45, "inverse") == pytest.approx(-0.655)
+    with pytest.raises(ValueError, match="reverse_map"):
+        policy_forward_command(0.1, "invalid")
+    with pytest.raises(ValueError, match="reverse_map"):
+        Go2VelocityPolicy("unused", session=Session(), reverse_map="invalid")
+
+
+def test_inverse_policy_map_reaches_the_observation():
+    session = Session()
+    policy = Go2VelocityPolicy("unused", session=session, reverse_map="inverse")
+    q = dict(zip(JOINT_NAMES, POLICY_DEFAULT))
+    dq = {name: 0.0 for name in JOINT_NAMES}
+    policy.step(q, dq, (0.0, 0.0, 0.0), (0, 0, 0, 1), BaseVelocity(vx=-0.25))
+    assert session.observation[0, 6] == pytest.approx(-0.462, abs=1e-3)
 
 
 def test_bundled_policy_and_adapter_match_deploy_contract():

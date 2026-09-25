@@ -46,6 +46,24 @@ tilt and 1,751 direct foot-contact messages. In the 29 trace samples taken
 during motion, 25 had exactly two feet loaded above 2 N. This measures the
 diagonal support pattern; it does not establish robust terrain traversal.
 
+The four-command rerun is in [`reverse_sweep_20260925_rerun/`](reverse_sweep_20260925_rerun/summary.json). It used sequential isolated ROS domains 191–194, the same 7 s probe, `nav_empty`, `go2_policy_path:=auto`, and commands from 1–4 s. All four trials completed with bounded tilt (`0.061–0.078 rad`), 1,750–1,752 direct foot-contact messages, and no launch/probe failure:
+
+| requested reverse command | drive ΔX | observed mean vx | ratio | verdict |
+|---:|---:|---:|---:|---|
+| -0.15 m/s | -0.730 m | -0.243 m/s | 1.62 | motion, overdriven |
+| -0.25 m/s | -1.084 m | -0.361 m/s | 1.45 | motion, overdriven |
+| -0.35 m/s | -1.283 m | -0.428 m/s | 1.22 | motion, overdriven |
+| -0.45 m/s | -1.493 m | -0.498 m/s | 1.11 | motion, closest |
+
+The current reverse feed-forward map is
+`policy_command = -min(1.0, 0.8 * |requested| + 0.35)`; the sweep measurements
+are consistent with that map, but the resulting low-speed response is not
+velocity tracking. The sweep therefore retires the “does reverse move at all?”
+question for this plant and makes the next task an opt-in inverse-map/retraining
+A/B, not an unconditional controller replacement. The runner and analyzer are
+`run_reverse_sweep.sh` and `analyze_reverse_sweep.py`; their hermetic regression
+tests are in `src/robot_lab_adapter/test/test_r5_2_go2_reverse_sweep.py`.
+
 The trial does **not** complete R5.2. The policy does not reliably track
 small reverse commands and cannot climb the tested ledge. Direct foot-ground
 forces are now published, but the blind ONNX policy does not consume them;

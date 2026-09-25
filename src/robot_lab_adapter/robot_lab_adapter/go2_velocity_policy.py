@@ -19,20 +19,37 @@ POLICY_KP = np.array([20.0, 20.0, 40.0] * 4, dtype=np.float32)
 POLICY_KD = np.array([1.0, 1.0, 2.0] * 4, dtype=np.float32)
 POLICY_ACTION_SCALE = 0.5
 POLICY_DT = 0.02
+REVERSE_COMMAND_MAPS = ("feedforward", "inverse")
+# Fitted from the 2026-09-25 four-command R5.2 sweep: the measured reverse
+# speed is approximately 1.0367 * policy_command_magnitude - 0.2291 m/s.
+# The inverse candidate ramps from zero over a 0.20 m/s requested deadband so
+# a zero command cannot inject a finite reverse step.
+REVERSE_INVERSE_SLOPE = 1.0367
+REVERSE_INVERSE_OFFSET = 0.2291
+REVERSE_INVERSE_DEADBAND_MPS = 0.20
 
 
-def policy_forward_command(vx: float) -> float:
-    """Compensate the measured reverse dead zone of the flat-ground policy.
+def policy_forward_command(vx: float, reverse_map: str = "feedforward") -> float:
+    """Map a requested forward/reverse velocity to the policy observation.
 
-    ROS trials at -0.25, -0.4 and -0.6 m/s found near-zero, 0.08 and
-    0.34 m/s backward motion respectively. This continuous feed-forward map
-    sends -0.25 m/s as about -0.55 in the policy's command observation;
-    the capped range remains within the model's trained [-1, 2] m/s range.
+    The default feed-forward map bypasses the measured reverse dead zone. The
+    opt-in inverse map is fitted to the R5.2 sweep and ramps continuously from
+    zero through a bounded low-speed deadband.
     """
+    if reverse_map not in REVERSE_COMMAND_MAPS:
+        raise ValueError("reverse_map must be 'feedforward' or 'inverse'")
     if vx >= 0:
         return vx
     magnitude = abs(vx)
-    return -min(1.0, 0.8 * magnitude + 0.35 * min(1.0, magnitude / 0.1))
+    if reverse_map == "feedforward":
+        return -min(1.0, 0.8 * magnitude + 0.35 * min(1.0, magnitude / 0.1))
+    # Keep zero command at zero, then use the measured inverse relation.
+    if magnitude <= REVERSE_INVERSE_DEADBAND_MPS:
+        boundary = (REVERSE_INVERSE_DEADBAND_MPS + REVERSE_INVERSE_OFFSET) \
+            / REVERSE_INVERSE_SLOPE
+        return -magnitude / REVERSE_INVERSE_DEADBAND_MPS * boundary
+    policy_magnitude = (magnitude + REVERSE_INVERSE_OFFSET) / REVERSE_INVERSE_SLOPE
+    return -min(1.0, policy_magnitude)
 
 
 def projected_gravity(x: float, y: float, z: float, w: float) -> np.ndarray:
@@ -48,7 +65,9 @@ def projected_gravity(x: float, y: float, z: float, w: float) -> np.ndarray:
 class Go2VelocityPolicy:
     """Run a 45-observation/12-action ONNX Go2 policy at 50 Hz."""
 
-    def __init__(self, path: str, session=None):
+    def __init__(self, path: str, session=None, reverse_map: str = "feedforward"):
+        if reverse_map not in REVERSE_COMMAND_MAPS:
+            raise ValueError("reverse_map must be 'feedforward' or 'inverse'")
         if session is None:
             import onnxruntime as ort
             session = ort.InferenceSession(path, providers=["CPUExecutionProvider"])
@@ -57,6 +76,7 @@ class Go2VelocityPolicy:
                 or len(outputs) != 1 or outputs[0].shape != [1, 12]:
             raise ValueError("Go2 policy requires one [1,45] input and one [1,12] output")
         self.session = session
+        self.reverse_map = reverse_map
         self.input_name = inputs[0].name
         self.last_action = np.zeros(12, dtype=np.float32)
         self.target = POLICY_DEFAULT.copy()
@@ -72,7 +92,7 @@ class Go2VelocityPolicy:
         dq = np.asarray([velocities[name] for name in JOINT_NAMES], dtype=np.float32)
         grav = projected_gravity(*orientation)
         obs = np.concatenate((angular_velocity, grav,
-                              (policy_forward_command(command.vx),
+                              (policy_forward_command(command.vx, self.reverse_map),
                                command.vy, command.wz),
                               q - POLICY_DEFAULT, dq, self.last_action),
                              dtype=np.float32).reshape(1, 45)
