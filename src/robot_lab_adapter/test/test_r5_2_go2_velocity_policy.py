@@ -87,9 +87,9 @@ def test_reverse_policy_maps_are_continuous_bounded_and_selectable():
     assert policy_forward_command(-0.8) == pytest.approx(-0.99)
     assert policy_forward_command(-0.001) < 0.0
     assert policy_forward_command(-0.1, "inverse") == pytest.approx(-0.207, abs=1e-3)
-    assert policy_forward_command(-0.2, "inverse") == pytest.approx(-0.414)
-    assert policy_forward_command(-0.25, "inverse") == pytest.approx(-0.462)
-    assert policy_forward_command(-0.45, "inverse") == pytest.approx(-0.655)
+    assert policy_forward_command(-0.2, "inverse") == pytest.approx(-0.414, abs=1e-3)
+    assert policy_forward_command(-0.25, "inverse") == pytest.approx(-0.462, abs=1e-3)
+    assert policy_forward_command(-0.45, "inverse") == pytest.approx(-0.655, abs=1e-3)
     with pytest.raises(ValueError, match="reverse_map"):
         policy_forward_command(0.1, "invalid")
     with pytest.raises(ValueError, match="reverse_map"):

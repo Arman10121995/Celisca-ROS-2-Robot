@@ -14,13 +14,13 @@ teleoperation, mapping, autonomous tasks and benchmarking; flight and legged
 terrain require suitable representations. An unsupported combination must report
 why it cannot run. Physical hardware operation remains a separate milestone.
 
-## Current evidence at source revision `93d59dd` (2026-09-25)
+## Current evidence at source revision `57d8fe4` (2026-09-25)
 
 | Requirement | Current evidence | Remaining acceptance |
 |---|---|---|
 | Two differential-drive robots | Existing Bumperbot/Labbot workflows and description checks; Bumperbot drive/RGB-D/reset checks and five open-arena trials each on MuJoCo and PyBullet | Fresh Labbot missions and obstacle-world tests; distinguish deterministic repeated trials from randomized conditions |
 | Humanoid | BHL model imports; 79 balance/description unit checks; live effort stance/startup evidence; held-turn/walk stall diagnosed as a policy fixed point | Sustained flat-ground walking/turning/stopping, bounded fall handling, then terrain; target-domain retraining or a new measured hypothesis |
-| Quadruped | Go2 model imports; measured short stance, opt-in flat-ground policy forward/stop/turn, command-loss stop, direct foot contacts and reverse dead-zone compensation | Repeatable flat-ground velocity tracking, terrain traversal, fall handling and navigation; R5.2 is active |
+| Quadruped | Go2 model imports; measured short stance, opt-in flat-ground policy forward/stop/turn, command-loss stop, direct foot contacts, feed-forward reverse sweep and opt-in inverse reverse A/B | Repeatable flat-ground velocity tracking, terrain traversal, fall handling and navigation; R5.2 is active |
 | Drone | Quadrotor description and offboard wrapper | Real thrust/rotor and FCU-SITL integration, takeoff/hover/3D waypoints/landing/failsafe |
 | Four-wheel robot | No current Ackermann robot/control integration found | Model, steering, wheel dynamics/odometry, sensors and complete driving missions (R5.5) |
 | Maps | 26 existing environment entries; assets and conversion checks | Class-specific geometry/route/reset qualification and at least six diverse additions (R6.4) |

@@ -45,14 +45,16 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
-At source revision `93d59dd` (2026-09-25), `R5.2` is the active next task.
+At source revision `57d8fe4` (2026-09-25), `R5.2` is the active next task.
 Continue from the Go2 evidence under
-`docs/status/evidence/r52-go2-policy-2026-09-25/`: first calibrate the reverse
-dead zone on flat ground, then repeat forward/reverse/turn/stop with matched
-initialization and direct foot-contact telemetry. `R5.3` is partial: its
+`docs/status/evidence/r52-go2-policy-2026-09-25/`: the feed-forward and
+opt-in inverse reverse sweeps are recorded. The inverse map reduces low-speed
+overdrive but leaves -0.15 m/s in a deadband. Next repeat forward/reverse/turn/stop
+with the selected candidate under matched initialization and direct
+foot-contact telemetry, then test terrain and bounded fall handling. `R5.3` is partial: its
 contact-fidelity defect is fixed, but the BHL held-turn/walk stall remains a
 policy fixed point and further rate/filter/contact tuning is retired.
 
-The current fast check is 461 passed/1 skipped; the latest map suite is 35
+The current fast check is 464 passed/1 skipped after the inverse-map change; the latest map suite is 35
 passed. These are scoped checks, not a platform-wide qualification. Start with
 [`docs/WORKFLOW.md`](WORKFLOW.md) and the [Go2 tutorial](tutorials/go2.md).

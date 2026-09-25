@@ -64,6 +64,21 @@ A/B, not an unconditional controller replacement. The runner and analyzer are
 `run_reverse_sweep.sh` and `analyze_reverse_sweep.py`; their hermetic regression
 tests are in `src/robot_lab_adapter/test/test_r5_2_go2_reverse_sweep.py`.
 
+The opt-in inverse-map A/B is in [`reverse_sweep_20260925_inverse/`](reverse_sweep_20260925_inverse/summary.json), using the same probe, world, timing and command grid in isolated domains 201–204. It reduces low-speed overdrive but is not a qualification:
+
+| requested reverse command | inverse drive ΔX | observed mean vx | ratio | verdict |
+|---:|---:|---:|---:|---|
+| -0.15 m/s | -0.067 m | -0.022 m/s | 0.15 | inside candidate deadband |
+| -0.25 m/s | -0.684 m | -0.228 m/s | 0.91 | improved, still approximate |
+| -0.35 m/s | -1.107 m | -0.369 m/s | 1.05 | near requested |
+| -0.45 m/s | -1.261 m | -0.420 m/s | 0.93 | near requested |
+
+All four inverse trials completed with peak tilt `0.038–0.079 rad`,
+1,751–1,752 direct foot-contact messages and no launch/probe failure. Keep
+`go2_reverse_command_map:=inverse` opt-in; it improves this measured grid but
+does not establish repeatable velocity tracking, terrain traversal or fall
+recovery.
+
 The trial does **not** complete R5.2. The policy does not reliably track
 small reverse commands and cannot climb the tested ledge. Direct foot-ground
 forces are now published, but the blind ONNX policy does not consume them;

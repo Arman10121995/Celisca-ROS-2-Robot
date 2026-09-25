@@ -101,15 +101,18 @@ docs/status/evidence/r52-go2-policy-2026-09-25/run_reverse_sweep.sh \
   --out-dir /tmp/go2-reverse-sweep \
   --domain-base 201 \
   --commands=-0.15,-0.25,-0.35,-0.45
+# For the opt-in fitted candidate, add: --map inverse
 ```
 
-The recorded baseline is
-[`reverse_sweep_20260925_rerun/`](reverse_sweep_20260925_rerun/summary.json).
+The recorded feed-forward baseline is
+[`reverse_sweep_20260925_rerun/summary.json`](../status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/summary.json).
 It bypasses the old reverse dead zone but overdrives low-speed commands
-(observed/requested ratios 1.11–1.62). Treat the current feed-forward map as
-a measured baseline, not a qualified velocity controller. Next test an explicit
-opt-in inverse-map or retrained policy A/B; do not change the default or claim
-velocity tracking from displacement alone.
+(observed/requested ratios 1.11–1.62). The recorded inverse candidate is
+[`reverse_sweep_20260925_inverse/summary.json`](../status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_inverse/summary.json):
+it reduces overdrive at `-0.25` to `-0.45 m/s` (ratios 0.91–1.05) but leaves
+`-0.15 m/s` inside its deadband (ratio 0.15). Run the candidate explicitly with
+`--map inverse`; do not change the default or claim velocity tracking from
+ displacement alone.
 
 For the next R5.2 iteration, sweep several negative commands around the measured
 dead zone with identical initialization. Report command, actual displacement,

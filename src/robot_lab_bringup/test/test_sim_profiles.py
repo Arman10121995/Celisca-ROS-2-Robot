@@ -154,6 +154,14 @@ def test_bhl_rec_torque_filter_launch_flag_is_opt_in():
     assert '"bhl_enable_torque_filter"' in launch_text
 
 
+def test_go2_reverse_command_map_launch_flag_is_opt_in():
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8")
+    assert '"go2_reverse_command_map", default_value="feedforward"' in launch_text
+    assert '"reverse_command_map": _launch_value(' in launch_text
+    assert 'context, "go2_reverse_command_map"' in launch_text
+
+
 def test_bhl_physics_timestep_launch_override_is_opt_in():
     launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
         encoding="utf-8")

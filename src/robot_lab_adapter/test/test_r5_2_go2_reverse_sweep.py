@@ -18,7 +18,8 @@ sys.modules[_spec.name] = analyzer
 _spec.loader.exec_module(analyzer)
 
 
-def _write_trial(root: Path, command: float, delta_x: float, domain: int) -> None:
+def _write_trial(root: Path, command: float, delta_x: float, domain: int,
+                 reverse_map: str = "feedforward") -> None:
     result = {
         "sim_duration_s": 7.0,
         "motion": {"drive_delta_x_m": delta_x, "stop_delta_xy_m": 0.04},
@@ -33,6 +34,7 @@ def _write_trial(root: Path, command: float, delta_x: float, domain: int) -> Non
     (root / "trial.json").write_text(json.dumps(result))
     meta = {
         "command_vx_mps": command,
+        "reverse_command_map": reverse_map,
         "ros_domain_id": domain,
         "probe_result": "trial.json",
         "probe_log": "trial.probe.log",
@@ -46,12 +48,13 @@ def _write_trial(root: Path, command: float, delta_x: float, domain: int) -> Non
 def test_analyzer_reports_observed_velocity_and_screening_interpretation(tmp_path):
     manifest = tmp_path / "manifest.json"
     manifest.write_text(json.dumps({"drive_start_s": 1.0, "drive_end_s": 4.0}))
-    _write_trial(tmp_path, -0.25, -0.3, 181)
+    _write_trial(tmp_path, -0.25, -0.3, 181, reverse_map="inverse")
     trials = analyzer.load_trials(manifest)
     assert len(trials) == 1
     assert trials[0]["observed_vx_mps"] == pytest.approx(-0.1)
     assert trials[0]["tracking_ratio"] == pytest.approx(0.4)
     assert trials[0]["contact_messages"] == 80
+    assert trials[0]["reverse_command_map"] == "inverse"
 
 
 def test_analyzer_flags_missing_result_without_crashing(tmp_path):

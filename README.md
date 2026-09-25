@@ -4,7 +4,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status reconciled on **2026-09-25**, against source revision `93d59dd`. The
+Status reconciled on **2026-09-25**, against source revision `57d8fe4`. The
 2026-09-07 audit remains the historical baseline for its recorded checks; later
 runtime evidence is tracked in the [current status ledger](docs/status/platform-status.yaml)
 and the R5.2/R5.3 evidence directories.
@@ -37,7 +37,7 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-The current fast development check at `93d59dd` is **461 passed, 1 skipped**,
+The current fast development check at `57d8fe4` is **464 passed, 1 skipped**,
 with registry cross-reference validation passing. The latest R5.3 contact-fidelity
 check also reports **35 passed** for `robot_lab_maps`. These are scoped source
 and static checks: they do not prove all simulator missions, GUI sessions,
@@ -111,7 +111,7 @@ Paths below are relative to `src/`; only the registry and benchmark packages liv
 
 - **Bumperbot:** reference differential-drive description, sensors, control, mapping, localization, navigation and cleaning workflows. R5.1 recorded bounded forward/turn/reverse/stop/watchdog and clear/obstacle Nav2 missions on MuJoCo, with a PyBullet Bumperbot drive pass; broader backend/map coverage remains open.
 - **Labbot:** lightweight differential-drive description and navigation-related configuration; needs independent end-to-end qualification.
-- **Go2:** the standard MuJoCo route now has measured bounded stance, an opt-in flat-ground ONNX policy, forward/stop, turning and command-loss evidence. It remains partial: low-speed reverse tracking, terrain traversal, fall handling and navigation are not qualified.
+- **Go2:** the standard MuJoCo route has measured bounded stance, an opt-in flat-ground ONNX policy, forward/stop, turning, command-loss and direct foot-contact evidence. A measured feed-forward versus opt-in inverse reverse sweep reduces low-speed overdrive but leaves the lowest tested request inside a deadband. Terrain, fall handling and navigation remain unqualified.
 - **Berkeley Humanoid Lite:** the standard MuJoCo route has measured stance/startup-bend evidence and an effort-policy path. The held-turn/walk stall is diagnosed as a policy fixed point; torque filtering, 2 kHz physics-only and fresh intra-interval PD A/B tests did not revive sustained motion. A duplicate generated-world ground contact was fixed, but contact duplication was not the stall remedy. Target-domain retraining or a new measured hypothesis is next; walking and terrain are not established.
 - **Quadrotor SITL:** description and MAVROS-related controller code exist; a complete flight/SITL mission is not established.
 - **Other cataloged robots:** imported descriptions span legged, humanoid and manipulator models. Asset availability is not locomotion/control support.

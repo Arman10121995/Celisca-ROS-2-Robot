@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-25. Current source revision: `93d59dd`. Runtime audit
+Updated: 2026-09-25. Current source revision: `57d8fe4`. Runtime audit
 baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
 R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
 tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
@@ -314,28 +314,28 @@ Dependencies: `R5.1`.
 - Files: `src/robot_lab_robots/unitree/go2_description/`, `src/robot_lab_adapter/`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control.
 - Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
-- Status: Partial. The standard MuJoCo launch holds Go2 upright under measured
+- **Status:** Partial. The standard MuJoCo launch holds Go2 upright under measured
   12-joint effort control for short trials; a 20-second run showed gradual sag
   and drift. The hand-authored experimental trot is disabled by default because
   it moves backward for both forward and reverse requests. The opt-in bundled
   flat-ground ONNX policy has measured forward motion, a stop, a large turn,
-  command-loss stop, direct foot-contact telemetry and a reverse dead-zone
-  compensation trial. Low-speed reverse tracking, terrain traversal, fall
-  handling and navigation remain unqualified.
-- Evidence: [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
+  command-loss stop, direct foot-contact telemetry and two matched reverse A/Bs.
+  The feed-forward map overdrives the tested reverse grid; the opt-in inverse map
+  reduces overdrive at -0.25 to -0.45 m/s but leaves -0.15 m/s in a deadband.
+  Terrain traversal, fall handling and navigation remain unqualified.
+- **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits
   efforts and joint targets, uses direct MuJoCo foot-to-world contact forces
   when available (the older motor-effort fallback remains a heuristic), and
   latches tilt/effort safety stops; its pure tests cover these laws but do
   not substitute for measured displacement, turning and terrain missions.
-- Next action: Continue the R5.2 policy lane from this partial state. First run a
-  matched flat-ground reverse-calibration sweep around the measured dead zone,
-  then repeat forward/reverse/turn/stop with identical initialization and
-  record drift, tilt, effort and direct foot contacts. Test the named stairs
-  task only after flat-ground tracking is repeatable; do not enable GUI
-  velocity-base, SLAM or navigation modes from the current evidence. See the
-  [Go2 tutorial](docs/tutorials/go2.md) and [workflow](docs/WORKFLOW.md).
+- **Next action:** Keep `go2_reverse_command_map:=inverse` opt-in. Repeat
+  forward/reverse/turn/stop with the selected candidate under identical
+  initialization and direct foot-contact telemetry. Then test the named stairs
+  task and bounded fall handling; do not enable GUI velocity-base, SLAM or
+  navigation modes. See the [Go2 tutorial](docs/tutorials/go2.md) and
+  [workflow](docs/WORKFLOW.md).
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 

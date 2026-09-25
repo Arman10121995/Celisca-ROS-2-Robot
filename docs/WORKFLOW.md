@@ -32,7 +32,7 @@ simulator. Run it before live work:
 scripts/test_fast.sh
 ```
 
-At revision `93d59dd` the recorded result is **461 passed, 1 skipped**, with
+At revision `57d8fe4` the recorded result is **464 passed, 1 skipped**, with
 registry cross-reference validation passing. The result is a source/static
 gate, not a clean build, GUI mission or simulator qualification. For a
 ROS-dependent check, source the intended environment first:

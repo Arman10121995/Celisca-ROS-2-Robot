@@ -1,0 +1,16 @@
+{
+  "tool": "run_reverse_sweep.sh",
+  "source_root": "/home/molar1/bumperbot_ws",
+  "domain_base": 201,
+  "duration_s": 7.0,
+  "drive_start_s": 1.0,
+  "drive_end_s": 4.0,
+  "commands": [
+    -0.15,
+    -0.25,
+    -0.35,
+    -0.45
+  ],
+  "reverse_command_map": "inverse",
+  "trials": []
+}

@@ -1,12 +1,12 @@
 # Robot Lab support matrix
 
-Last updated: 2026-09-25. Current source revision: `93d59dd`.
+Last updated: 2026-09-25. Current source revision: `57d8fe4`.
 The 2026-09-07 audit at `dff388f` remains the historical selected-test
 baseline. Later evidence includes PyBullet/MuJoCo live drive, RGB-D and reset
 smokes (2026-09-14), Isaac Sim sensor/drive/reset and five-seed R4 mission
 (2026-09-16), R5.1 bounded mobile missions (2026-09-24), R5.2 Go2 stance and
-opt-in policy trials, and the R5.3 BHL contact-fidelity audit (2026-09-25).
-The current fast check is 461 passed/1 skipped; the latest map suite is 35
+opt-in policy trials, the measured R5.2 feed-forward/inverse reverse A/B, and the R5.3 BHL contact-fidelity audit (2026-09-25).
+The current fast check is 464 passed/1 skipped; the latest map suite is 35
 passed. These scoped results do not certify all combinations.
 
 This matrix reports implementation and evidence, not registry maturity labels.
@@ -94,7 +94,7 @@ robot/backend/task combinations with evidence.
 |---|---|---|---|
 | Bumperbot / mobile | Description, LiDAR/RGB-D, wheel control, localization, mapping, Nav2, cleaning | `display`, `loc`, `slam`, `3d_slam`, `nav` | Strongest Gazebo reference path; recertify seeded navigation, contracts and measured result |
 | Labbot / mobile | Lightweight description, LiDAR, differential-drive config, static checks | `display`, `loc`, `slam`, `nav` | Partial; needs its own control/localization/navigation mission |
-| Go2 / legged | Description, 12 effort-joint assets, IMU/RGB/odometry config, guarded stance controller and opt-in flat-ground ONNX policy | `display`; explicit Go2/MuJoCo/localization policy checkbox | Partial live evidence: short stance, forward/stop, large turn, command-loss stop and direct foot contacts; low-speed reverse, terrain, fall recovery and navigation remain unqualified |
+| Go2 / legged | Description, 12 effort-joint assets, IMU/RGB/odometry config, guarded stance controller and opt-in flat-ground ONNX policy | `display`; explicit Go2/MuJoCo/localization policy checkbox | Partial live evidence: short stance, forward/stop, large turn, command-loss stop and direct foot contacts. The opt-in inverse reverse map improves the measured -0.25 to -0.45 m/s grid but leaves -0.15 m/s in a deadband; terrain, fall recovery and navigation remain unqualified |
 | Berkeley Humanoid Lite / humanoid | Description, 22-joint effort/standing assets, IMU/odometry, effort policy and safety diagnostics | `display`; opt-in effort-policy route | Partial live stance/startup evidence. Held walking/turning stalls at a policy fixed point; rate/filter/contact tuning was negative. Target-domain retraining or a new measured hypothesis is required before walking/terrain claims |
 | Quadrotor SITL / aerial | Description, sensor assets, MAVROS offboard-related code | Advertises all five modes | Overbroad; no verified autopilot/SITL takeoff–waypoints–landing route; Nav2 modes do not establish flight |
 | Other Unitree/legacy robots, including manipulator assets | Descriptions, meshes and metadata | Generally `display` or no matching profile | Catalog/model availability only; individual spawn/actuation/task qualification needed |
@@ -183,7 +183,7 @@ rows name their revision and scope explicitly.
 |---|---|---|
 | Package discovery | 26 | Includes optional ORB-SLAM3 |
 | Selected source tests | 485 passed, 1 failed | Historical 2026-09-07 audit at `dff388f`; failure constructed `DeadReckoning` without ROS initialization |
-| Current fast suite | 461 passed, 1 skipped | `scripts/test_fast.sh` at `93d59dd`; includes registry cross-reference validation |
+| Current fast suite | 464 passed, 1 skipped | `scripts/test_fast.sh` at `57d8fe4`; includes registry cross-reference validation |
 | Current map suite | 35 passed | `robot_lab_maps` after generated-world contact fix; generator `--check` also passes |
 | Registry cross-references | Passed | Not compatibility correctness |
 | Adversarial composition checks | Invalid combinations accepted | Unknown simulator/wrong-category validation gaps |

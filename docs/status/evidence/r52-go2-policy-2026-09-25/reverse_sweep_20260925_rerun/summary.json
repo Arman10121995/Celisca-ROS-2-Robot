@@ -1,11 +1,13 @@
 {
   "task": "R5.2 Go2 reverse-calibration sweep",
+  "reverse_command_map": "feedforward",
   "source_manifest": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/manifest.json",
   "trial_count": 4,
   "complete_count": 4,
   "trials": [
     {
       "command_vx_mps": -0.15,
+      "reverse_command_map": "feedforward",
       "ros_domain_id": 191,
       "probe_returncode": 0,
       "launch_returncode": 0,
@@ -32,6 +34,7 @@
     },
     {
       "command_vx_mps": -0.25,
+      "reverse_command_map": "feedforward",
       "ros_domain_id": 192,
       "probe_returncode": 0,
       "launch_returncode": 0,
@@ -58,6 +61,7 @@
     },
     {
       "command_vx_mps": -0.35,
+      "reverse_command_map": "feedforward",
       "ros_domain_id": 193,
       "probe_returncode": 0,
       "launch_returncode": 0,
@@ -84,6 +88,7 @@
     },
     {
       "command_vx_mps": -0.45,
+      "reverse_command_map": "feedforward",
       "ros_domain_id": 194,
       "probe_returncode": 0,
       "launch_returncode": 0,
