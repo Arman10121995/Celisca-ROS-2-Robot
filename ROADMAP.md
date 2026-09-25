@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-25. Current source revision: `e7a8cda`. Runtime audit
+Updated: 2026-09-25. Current source revision: `d06a411`. Runtime audit
 baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
 R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
 tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):

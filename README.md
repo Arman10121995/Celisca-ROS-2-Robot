@@ -4,7 +4,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status reconciled on **2026-09-25**, against source revision `e7a8cda`. The
+Status reconciled on **2026-09-25**, against source revision `d06a411`. The
 2026-09-07 audit remains the historical baseline for its recorded checks; later
 runtime evidence is tracked in the [current status ledger](docs/status/platform-status.yaml)
 and the R5.2/R5.3 evidence directories.
@@ -37,7 +37,7 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-The current fast development check at `e7a8cda` is **465 passed, 1 skipped**,
+The current fast development check at `d06a411` is **466 passed, 1 skipped**,
 with registry cross-reference validation passing. The latest R5.3 contact-fidelity
 check also reports **35 passed** for `robot_lab_maps`. These are scoped source
 and static checks: they do not prove all simulator missions, GUI sessions,

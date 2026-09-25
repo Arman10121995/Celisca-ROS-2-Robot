@@ -1,6 +1,6 @@
 # Robot Lab support matrix
 
-Last updated: 2026-09-25. Current source revision: `e7a8cda`.
+Last updated: 2026-09-25. Current source revision: `d06a411`.
 The 2026-09-07 audit at `dff388f` remains the historical selected-test
 baseline. Later evidence includes PyBullet/MuJoCo live drive, RGB-D and reset
 smokes (2026-09-14), Isaac Sim sensor/drive/reset and five-seed R4 mission
@@ -183,7 +183,7 @@ rows name their revision and scope explicitly.
 |---|---|---|
 | Package discovery | 26 | Includes optional ORB-SLAM3 |
 | Selected source tests | 485 passed, 1 failed | Historical 2026-09-07 audit at `dff388f`; failure constructed `DeadReckoning` without ROS initialization |
-| Current fast suite | 465 passed, 1 skipped | `scripts/test_fast.sh` at `e7a8cda`; includes registry cross-reference validation |
+| Current fast suite | 466 passed, 1 skipped | `scripts/test_fast.sh` at `d06a411`; includes registry cross-reference validation |
 | Current map suite | 35 passed | `robot_lab_maps` after generated-world contact fix; generator `--check` also passes |
 | Registry cross-references | Passed | Not compatibility correctness |
 | Adversarial composition checks | Invalid combinations accepted | Unknown simulator/wrong-category validation gaps |

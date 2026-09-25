@@ -1,6 +1,6 @@
 # Robot Lab architecture: current implementation and target
 
-Current documentation snapshot: source revision `e7a8cda`, 2026-09-25. The
+Current documentation snapshot: source revision `d06a411`, 2026-09-25. The
 2026-09-07 audit at `dff388f` remains historical evidence for its exact scope;
 later runtime results are recorded in the [status ledger](../status/platform-status.yaml)
 and evidence directories. This page separates implemented wiring from target
@@ -303,7 +303,7 @@ Progress from schema/references to assets/install, launch construction, numerica
 correctness, ROS contracts, scenario smoke and repeated measured benchmarks.
 Each level proves only its own scope.
 
-At `e7a8cda`, the fast suite records 465 passed and 1 skipped, and the latest
+At `d06a411`, the fast suite records 466 passed and 1 skipped, and the latest
 contact-fidelity map suite records 35 passed.
 or all-missions certification. The 2026-09-07 audit remains the source for its
 historical selected counts and exclusions; use the [workflow](../WORKFLOW.md) for

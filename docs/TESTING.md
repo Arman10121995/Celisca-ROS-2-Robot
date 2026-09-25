@@ -2,7 +2,7 @@
 
 Separation of test tiers (task **R1.2**). The authoritative runner and
 manifests live in `scripts/test_tiers.sh`; the fast PR suite is
-`scripts/test_fast.sh`. The current source snapshot is `e7a8cda` (2026-09-25);
+`scripts/test_fast.sh`. The current source snapshot is `d06a411` (2026-09-25);
 the dated 2026-09-07 audit remains historical evidence for its selected counts.
 
 ## Tier taxonomy
@@ -40,7 +40,7 @@ bash -c 'source /opt/ros/humble/setup.bash && scripts/test_tiers.sh integration'
 scripts/test_tiers.sh all               # fast + physics + integration
 ```
 
-The current recorded fast result is **465 passed, 1 skipped** at `e7a8cda`.
+The current recorded fast result is **466 passed, 1 skipped** at `d06a411`.
 The fast tier does not claim a clean build, all-backend mission matrix, GUI
 qualification or hardware operation. For live evidence, follow
 [`WORKFLOW.md`](WORKFLOW.md) and the task-specific tutorials.

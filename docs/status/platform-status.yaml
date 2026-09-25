@@ -2,7 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-09-25"
-current_revision: "e7a8cda"
+current_revision: "d06a411"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -19,9 +19,9 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
-  fast_suite: "465 passed, 1 skipped at e7a8cda via scripts/test_fast.sh"
-  map_suite: "35 passed at e7a8cda after generated-world contact correction"
-  registry_cross_references: "pass at e7a8cda"
+  fast_suite: "466 passed, 1 skipped at d06a411 via scripts/test_fast.sh"
+  map_suite: "35 passed at d06a411 after generated-world contact correction"
+  registry_cross_references: "pass at d06a411"
   limitation: "Scoped source/static checks, not a clean build, universal mission matrix, GUI task qualification or hardware test."
 
 baseline:
@@ -105,7 +105,7 @@ baseline:
       scope: "ScenarioLifecycle phase machine + OutcomeKind taxonomy (9 outcomes, priority-ordered classify_outcome, deterministic result IDs, manifest recording, timestamped rosbag2 paths, launch-failure abort)"
       command_ref: "src/robot_lab/robot_lab_benchmark/test/test_r4_1_lifecycle_truthful_outcomes.py"
   other_checks:
-    registry_cross_references: "pass at e7a8cda; still not compatibility correctness"
+    registry_cross_references: "pass at d06a411; still not compatibility correctness"
     invalid_simulator_probe: "rejected by typed composition validation"
     wrong_category_probe: "rejected by typed composition validation"
     missing_capability_probe: "rejected or reported as an actionable warning by the shared validator"

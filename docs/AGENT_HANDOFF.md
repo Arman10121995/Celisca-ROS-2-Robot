@@ -45,7 +45,7 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
-At source revision `e7a8cda` (2026-09-25), `R5.2` is the active next task.
+At source revision `d06a411` (2026-09-25), `R5.2` is the active next task.
 Continue from the Go2 evidence under
 `docs/status/evidence/r52-go2-policy-2026-09-25/`: the feed-forward and
 opt-in inverse reverse sweeps are recorded. The inverse map reduces low-speed
@@ -53,10 +53,22 @@ overdrive but leaves -0.15 m/s in a deadband. Two five-case inverse flat-ground
 suites passed all bounded screening checks. The named `terrain_stairs` task then
 failed at the first ledge with 0.115 m drive displacement and 0.527 rad peak tilt;
 the process recovered and cleaned up, so this is a failed task rather than a
-launch crash. Next run a bounded fall/perturbation recovery test and preserve the
-first-failure trace before any retraining claim. `R5.3` is partial: its
-contact-fidelity defect is fixed, but the BHL held-turn/walk stall remains a
-policy fixed point and further rate/filter/contact tuning is retired.
+launch crash.
+
+Bounded perturbation recovery is now measured. With the opt-in diagnostic force
+pulse, 5 N and 20 N produce no response above stance noise and are retained as
+negative controls; 35 N produces a measurable 0.070 rad peak tilt and settles
+upright with no SAFE_STOP; 60 N exceeds the envelope, collapses to 0.139 m and
+correctly latches `safe_stop`. Fall recovery itself is still unimplemented, so
+the next step is explicit fall detection plus a get-up behavior, then repeating
+the five-case flat-ground suite across multiple seeds. Keep
+`go2_reverse_command_map:=inverse` and the `go2_perturbation_*` arguments opt-in.
+Note that this host caps a usable `ROS_DOMAIN_ID` at about 232; higher values
+fail at node creation and are a setup error, not a system result.
+
+`R5.3` is partial: its contact-fidelity defect is fixed, but the BHL held-turn/walk
+stall remains a policy fixed point and further rate/filter/contact tuning is
+retired.
 
 The current fast check is 465 passed/1 skipped after the inverse-map change; the latest map suite is 35
 passed. These are scoped checks, not a platform-wide qualification. Start with
