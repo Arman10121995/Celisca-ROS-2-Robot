@@ -1,11 +1,15 @@
 # Robot Lab architecture: current implementation and target
 
-Documentation baseline: source commit `dff388f`, audited 2026-09-07. This page
-separates code that exists from architecture still to implement. It is not a
-claim that every described combination runs successfully.
+Current documentation snapshot: source revision `93d59dd`, 2026-09-25. The
+2026-09-07 audit at `dff388f` remains historical evidence for its exact scope;
+later runtime results are recorded in the [status ledger](../status/platform-status.yaml)
+and evidence directories. This page separates implemented wiring from target
+architecture and does not claim universal runtime qualification.
 
-Start with [the support matrix](../status/support-matrix.md) and
-[the audit](../status/audit-2026-09-07.md). Implementation order, task ownership,
+Start with [the support matrix](../status/support-matrix.md), the [current
+status ledger](../status/platform-status.yaml) and the [operational workflow](../WORKFLOW.md).
+The 2026-09-07 [audit](../status/audit-2026-09-07.md) remains historical
+evidence for its exact scope. Implementation order, task ownership,
 and acceptance criteria belong in [ROADMAP.md](../../ROADMAP.md); an agent
 resuming work must also read [AGENT_HANDOFF.md](../AGENT_HANDOFF.md).
 
@@ -21,10 +25,12 @@ counts.
 
 The current repository has a substantial Bumperbot-oriented ROS stack, robot and
 map assets, four simulator launch adapters, a desktop GUI, algorithm examples,
-and benchmark/reporting foundations. Its main execution path still uses legacy
-mode profiles. Independent composition is incomplete, runtime contracts are
-inconsistent, and benchmark results contain placeholders. One reproducible,
-measured end-to-end experiment is the next integration milestone.
+and benchmark/reporting foundations. The shared resolver/CLI path and GUI
+composition path now share typed validation and resolved manifests, while
+runtime compatibility remains combination-specific. Non-Gazebo clock, truth,
+command-watchdog, TF and readiness contracts have been repaired, but class
+locomotion, terrain, aerial flight and broad algorithm comparison remain
+partial. The active continuation task is R5.2 Go2 locomotion.
 
 ## Actual source-tree and package map
 
@@ -37,8 +43,8 @@ src/
   robot_lab/
     robot_lab_registry/     # catalogs, schemas, validation, query CLI
     robot_lab_benchmark/    # result records, runner/reporting foundations
-  robot_lab_adapter/        # incomplete selectors/composition/legacy adapters
-  robot_lab_bringup/        # current profile-driven launch orchestration
+  robot_lab_adapter/        # shared resolver, selectors and class adapters
+  robot_lab_bringup/        # profile-driven launch orchestration
   robot_lab_description/    # Gazebo/display launch and description support
   robot_lab_robots/         # consolidated first-party and vendored robot assets
   robot_lab_maps/           # worlds, occupancy maps, arena tools and metadata
@@ -46,7 +52,7 @@ src/
   robot_lab_pybullet/       # PyBullet bridge and spawner
   robot_lab_mujoco/         # MuJoCo bridge and spawner
   robot_lab_isaac/          # ROS bridge plus external Isaac runtime process
-  robot_lab_algorithms/     # numerical examples and partial ROS adapters
+  robot_lab_algorithms/     # numerical examples and ROS adapters
   robot_lab_gui/            # Tkinter launch/control center
   robot_lab_*/              # ROS stack, hardware utilities and examples below
   ORB_SLAM3/                # optional external-library wrapper
@@ -95,11 +101,11 @@ Its configuration sources are:
 
 | Mode | Current launch intent | Qualification caveat |
 |---|---|---|
-| `display` | Gazebo selection uses RViz; other selections include their simulator viewer | Non-Gazebo display forwards `gui=true`; not universally physics-free or headless-safe |
-| `loc` | Known-map AMCL plus local EKF and drive controls | Needs compatible map, sensor topics, clock and TF |
+| `display` | Gazebo selection uses RViz; other selections include their simulator viewer | Non-Gazebo display forwards `gui=true`; headless display behavior remains backend-specific |
+| `loc` | Known-map AMCL plus local EKF and drive controls | Needs compatible map, sensor topics, clock and TF; legged/humanoid localization is not a locomotion qualification |
 | `slam` | SLAM Toolbox plus local state estimation | Needs working scan/odometry; not qualified on every backend |
-| `3d_slam` | RTAB-Map with RGB, depth, camera info and optional points | Non-Gazebo bridges lack required RGB-D despite mode allowlists |
-| `nav` | Known-map localization plus Nav2 | Strongest route is Bumperbot/Gazebo; no fresh mission recertification in this audit |
+| `3d_slam` | RTAB-Map with RGB, depth, camera info and optional points | RGB-D exists on recorded PyBullet/MuJoCo/Isaac smokes; no complete RTAB-Map mission is claimed |
+| `nav` | Known-map localization plus Nav2 | Bumperbot has measured open-arena missions; other robot/backend/map cells remain separate |
 
 Configured Nav2 defaults are SmacPlanner2D and Regulated Pure Pursuit; do not infer
 the active implementation from the registry inventory. Gazebo uses the
@@ -109,26 +115,24 @@ those bridges publish `/odom`. The joystick multiplexer targets
 `robot_lab_controller/cmd_vel_unstamped`, while the bridges subscribe to
 `/cmd_vel`. These need deliberate adapters and tests.
 
-### Registry/composition route: not working orchestration
+### Shared resolver and GUI composition route
 
-Separate [registry catalogs](../../src/robot_lab/robot_lab_registry/config)
-describe robots, environments, algorithms, scenarios and experiments. At the
-baseline they contain 20 robots, 26 environments, 43 algorithms, 18 scenarios and
-15 experiments. These are metadata counts, not successful-run counts.
+The registry catalogs describe robots, environments, algorithms, scenarios and
+experiments. The current CLI resolver and GUI composition layer share typed
+validation, legacy aliases, resolved manifests, planner plugin selection and
+unsupported-combination diagnostics. This is an implemented composition path,
+not proof that every catalog cell can execute a mission. GUI execution and
+class-specific readiness still require the exact workflow and evidence below.
 
-Current gaps that a new agent must not mistake for completed integration:
+Current boundaries that remain important:
 
-- Registry and launch-profile IDs differ, for example `go2` versus `unitree_go2`;
-  there are 20 catalog robots but 17 main launch profiles.
-- `robot-lab launch` prints configuration; execution is explicitly unimplemented.
-- `select_robot.launch.py` describes the robot rather than spawning it.
-- `select_components.launch.py` fails construction by concatenating strings with
-  `LaunchConfiguration` objects.
-- The main launch file declares `algorithm` but does not apply its value. GUI
-  selection therefore does not prove a different algorithm ran.
-- Capability validation is disabled; category/simulator mismatches can pass
-  registry composition validation. Main-launch simulator-name validation does
-  not repair this separate validation path.
+- Catalog and legacy profile counts still differ; aliases are explicit rather
+  than silently merged.
+- Dry-run by default proves manifest construction and validation only. `--execute`
+  or a GUI Run action must still pass readiness, task and cleanup checks.
+- A planner selector changing a Nav2 plugin is not a benchmark comparison.
+- Absolute topics, frame IDs, simulator truth and estimator inputs must be
+  checked for each exact robot/backend/map cell.
 
 ## Target architecture to implement
 
@@ -187,10 +191,11 @@ names are not all present in current code.
 | Ground truth | Dedicated `ground_truth/*` state/contact streams, excluded from estimators unless explicitly testing a truth-fed baseline |
 | Readiness | Expected type, rate, timestamp progress, finite values, TF connectivity, active lifecycle and process health—not topic existence alone |
 
-All three non-Gazebo spawners currently publish `builtin_interfaces/msg/Time` on
-`/clock`, use absolute topics, publish `odom → base_footprint` TF, and derive
-odometry from simulator state. They do not satisfy this target. Separate raw
-measurements, estimates and simulator truth before comparing filters.
+The non-Gazebo spawners now publish `rosgraph_msgs/msg/Clock` on `/clock`,
+expose simulator truth separately from controller odometry, and no longer
+publish the estimator-owned `odom → base_footprint` edge. Commands and
+watchdogs are adapter-specific, so topic names, QoS and class controllers still
+require explicit tests. Do not infer estimator quality from simulator truth.
 
 Specify compatible QoS for every pair, including sensors, static metadata and
 TF. Put numerical tolerances for timestamp skew, rates and transform age in each
@@ -298,10 +303,11 @@ Progress from schema/references to assets/install, launch construction, numerica
 correctness, ROS contracts, scenario smoke and repeated measured benchmarks.
 Each level proves only its own scope.
 
-The recorded audit found 485 passing selected source tests and one failure, plus
-five passing selected backend tests. It did not certify full missions, GUI,
-all optional engines or hardware. CI has branch-coverage and ignored-failure gaps.
-Use the linked audit for exact limits, not a blanket passing-platform badge.
+At `93d59dd`, the fast suite records 461 passed and 1 skipped, and the latest
+contact-fidelity map suite records 35 passed. These checks are not a clean-build
+or all-missions certification. The 2026-09-07 audit remains the source for its
+historical selected counts and exclusions; use the [workflow](../WORKFLOW.md) for
+current reproduction and evidence rules.
 
 When completing a roadmap task, update evidence, support matrix and machine status
 together. Keep historical counts dated. Verify licenses per asset/dependency;

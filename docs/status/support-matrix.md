@@ -1,16 +1,18 @@
 # Robot Lab support matrix
 
-Last updated: 2026-09-16. Baseline reviewed: `dff388f`; simulator
-coverage and the algorithm-selection contract re-measured 2026-09-11;
-PyBullet and MuJoCo live drive/RGB-D/reset smokes recorded 2026-09-14;
-Isaac Sim sensors, drive and reset, and a cross-backend sensor probe
-(`scripts/sim_sensor_probe.sh`) recorded 2026-09-16; a live R4 mission on
-Isaac Sim over five evaluation seeds recorded 2026-09-16
-([`evidence/r82-isaac-mission-2026-09-16/`](evidence/r82-isaac-mission-2026-09-16/README.md)).
+Last updated: 2026-09-25. Current source revision: `93d59dd`.
+The 2026-09-07 audit at `dff388f` remains the historical selected-test
+baseline. Later evidence includes PyBullet/MuJoCo live drive, RGB-D and reset
+smokes (2026-09-14), Isaac Sim sensor/drive/reset and five-seed R4 mission
+(2026-09-16), R5.1 bounded mobile missions (2026-09-24), R5.2 Go2 stance and
+opt-in policy trials, and the R5.3 BHL contact-fidelity audit (2026-09-25).
+The current fast check is 461 passed/1 skipped; the latest map suite is 35
+passed. These scoped results do not certify all combinations.
 
 This matrix reports implementation and evidence, not registry maturity labels.
-No new full missions, GUI sessions or hardware operations were performed by the
-audit. See [audit evidence](audit-2026-09-07.md),
+It distinguishes the dated 2026-09-07 audit from later scoped runtime evidence.
+No new universal mission, GUI-session or hardware qualification is claimed.
+See the [workflow](../WORKFLOW.md), [audit evidence](audit-2026-09-07.md),
 [architecture](../architecture/overview.md), [ROADMAP.md](../../ROADMAP.md) and
 [agent handoff](../AGENT_HANDOFF.md).
 
@@ -27,8 +29,9 @@ audit. See [audit evidence](audit-2026-09-07.md),
 
 These are documentation/evidence distinctions, not new YAML schema values.
 Existing registry `integrated` labels are overbroad and do not substitute for
-scenario qualification. The audit did not freshly establish scenario-qualified
-or benchmarked status for a complete platform combination.
+scenario qualification. The 2026-09-07 audit did not freshly establish scenario-qualified
+or benchmarked status for a complete platform combination. Later exact-cell
+records are listed explicitly below; no universal promotion is implied.
 
 ## Platform and simulator support
 
@@ -54,7 +57,7 @@ live-verified ROS contract is not supported by this audit.
 
 | Interface | Gazebo route | PyBullet | MuJoCo | Isaac |
 |---|---|---|---|---|
-| Clock | Gazebo/ROS bridge route; verify advancement | Wrong type: `Time` on `/clock` | Wrong type: `Time` on `/clock` | Wrong type: `Time` on `/clock` |
+| Clock | Gazebo/ROS bridge route; verify advancement | `rosgraph_msgs/msg/Clock` on `/clock`; monotonic/reset checked | `rosgraph_msgs/msg/Clock` on `/clock`; monotonic/reset checked | `rosgraph_msgs/msg/Clock` on `/clock`; monotonic/reset checked |
 | Commands | `ros2_control` plus legacy controller/multiplexer | `/cmd_vel` to differential-drive wheels | `/cmd_vel` to wheel velocity actuators | `/cmd_vel` to differential-drive wheel velocity drives (damped, with rotor armature); legged/other control unqualified |
 | Odometry | Controller odometry and local EKF configuration | Base state on `/odom/ground_truth`, twist in the body frame | Body state on `/odom/ground_truth` (scalar-first quaternion converted, body-frame twist) | Root-body state re-expressed at the URDF root on `/odom/ground_truth`, body-frame twist |
 | IMU | Description/plugin/configuration assets | Implemented from simulator state | Implemented from simulator state | Implemented from runtime state |
@@ -72,16 +75,14 @@ backends as display/visualization-grade for legged and humanoid robots until a
 class mission passes.
 | RGB/depth/camera info | Bumperbot sensor assets and RTAB-Map configuration | OAK-D topics (320x240 rgb8, 32FC1 metres, pinhole camera_info) from the software renderer; centre depth 7.342 m vs 7.342 m ray-cast from the map | Same topics from an MJCF camera on the base; centre depth 7.339 m vs 7.339 m | Same topics from a USD camera plus replicator annotators, default lights added to unlit worlds; centre depth 7.340 m vs 7.338 m |
 | Joint states | Controller/plugin route | Implemented | Implemented | Implemented |
-| TF | Description/controller/estimator routes; ownership needs checks | Publishes `odom → base_footprint`; estimator conflict risk | Same | Same |
-| Ground truth vs measurements | Separation needs experiment-level verification | Truth reused as odometry; independent measurement/truth contract unqualified | Same limitation | Same limitation |
+| TF | Description/controller/estimator routes; ownership needs checks | Simulator does not publish estimator-owned `odom → base_footprint`; controller/estimator ownership is tested separately | Same | Same |
+| Ground truth vs measurements | Separation needs experiment-level verification | Dedicated truth stream; controller odometry is separate | Same limitation | Same limitation |
 | Reset/seed/readiness | /robot_lab/ready + /robot_lab/health + /robot_lab/reset contracts declared and tested (R2.3) | Reset restores the spawn pose (0.000 m) with a monotonic clock | Same | Reset now reaches the runtime (`world.reset()`; previously acknowledged but ignored): 0.000 m, monotonic clock; offline reports WARN health |
 
-The clock must be `rosgraph_msgs/msg/Clock`, not `builtin_interfaces/msg/Time`.
-Topic existence does not prove consumers can use its type or timing. Non-Gazebo
-bridges use absolute topics. The legacy EKF consumes
-`/robot_lab_controller/odom`, while they publish `/odom`; joystick multiplexer
-output also differs from their command subscription. Repair these before claiming
-backend equivalence.
+The non-Gazebo bridges now use the typed simulation clock and separate truth from
+controller odometry. Topic existence alone still does not prove that a
+consumer has compatible QoS, frame, timestamp or estimator semantics. Absolute
+topic names and class-specific command paths remain exact-cell checks.
 
 ## Robot support
 
@@ -93,8 +94,8 @@ robot/backend/task combinations with evidence.
 |---|---|---|---|
 | Bumperbot / mobile | Description, LiDAR/RGB-D, wheel control, localization, mapping, Nav2, cleaning | `display`, `loc`, `slam`, `3d_slam`, `nav` | Strongest Gazebo reference path; recertify seeded navigation, contracts and measured result |
 | Labbot / mobile | Lightweight description, LiDAR, differential-drive config, static checks | `display`, `loc`, `slam`, `nav` | Partial; needs its own control/localization/navigation mission |
-| Go2 / legged | Description, 12 effort-joint assets, IMU/RGB/odometry config, commander | `display` under `unitree_go2` | Joint assets are not walking; qualify locomotion, falls and traversal |
-| Berkeley Humanoid Lite / humanoid | Description, 22 position-joint/standing assets, IMU/estimated-odometry code | `display`; biped variant also display-only | Standing commands are not verified balance/walking; needs stability and task qualification |
+| Go2 / legged | Description, 12 effort-joint assets, IMU/RGB/odometry config, guarded stance controller and opt-in flat-ground ONNX policy | `display`; explicit Go2/MuJoCo/localization policy checkbox | Partial live evidence: short stance, forward/stop, large turn, command-loss stop and direct foot contacts; low-speed reverse, terrain, fall recovery and navigation remain unqualified |
+| Berkeley Humanoid Lite / humanoid | Description, 22-joint effort/standing assets, IMU/odometry, effort policy and safety diagnostics | `display`; opt-in effort-policy route | Partial live stance/startup evidence. Held walking/turning stalls at a policy fixed point; rate/filter/contact tuning was negative. Target-domain retraining or a new measured hypothesis is required before walking/terrain claims |
 | Quadrotor SITL / aerial | Description, sensor assets, MAVROS offboard-related code | Advertises all five modes | Overbroad; no verified autopilot/SITL takeoff–waypoints–landing route; Nav2 modes do not establish flight |
 | Other Unitree/legacy robots, including manipulator assets | Descriptions, meshes and metadata | Generally `display` or no matching profile | Catalog/model availability only; individual spawn/actuation/task qualification needed |
 
@@ -113,8 +114,8 @@ simulator viewer with `gui=true`.
 | 3D SLAM | RTAB-Map configuration | RGB-D/camera info now published by the PyBullet, MuJoCo and Isaac bridges (depth checked against the map); no RTAB-Map mapping run qualified on any backend |
 | Navigation | Nav2, default SmacPlanner2D and Regulated Pure Pursuit | Reference task with explicit outcome and collision evidence |
 | Frontier mapping / cleaning | Substantial controller logic plus basic vacuum package | Reconcile duplication; measure coverage, completion and safety |
-| GUI | Profiles, browser, drive/map tools, benchmark/tests/health tabs, monitor | Not exercised in audit; divergent configuration sources; `algorithm` does not change launched stack |
-| Independent experiment CLI | Queries, validation, configuration output | `robot-lab launch` execution unfinished; component launch construction fails |
+| GUI | Profiles, browser, drive/map tools, benchmark/tests/health tabs, monitor | Composition preview/validation and command autofill are tested; a GUI-launched mission still needs exact readiness, cleanup and artifact evidence |
+| Independent experiment CLI | Typed resolver, validation, manifest output and live execute path | Default dry-run is not a mission; each executed robot/backend/map/task cell still needs scenario evidence |
 | Multi-robot | Namespace-related foundations | No concurrent qualification; absolute topics/TF prevent assuming isolation |
 
 Current allowlists accept combinations beyond runtime capabilities. Unsupported
@@ -152,9 +153,11 @@ relevant backend/robot task has evidence.
 | Aerial | 2 | `aerial_course`, `aerial_indoor` | Geometry exists; no verified flight mission |
 | Variants | 2 | `nav_dynamic`, `nav_sensor_degraded` | Actors and occlusion; not a general sensor noise/dropout framework |
 
-Spawn zones, goals and reference paths are recorded for deterministic arenas.
-Import fidelity, world/map transforms, free-space spawns, actor resets and
-class-appropriate tasks still need qualification. A 3D world is not a 3D planner.
+Navigation arenas are generated from the same SDF sources used by the bridge.
+When an SDF world already contains a ground collision, the MuJoCo fallback
+plane is visual-only; this prevents duplicate foot contacts. Geometry tests
+and generator checks pass, but this plant-parity fix does not qualify humanoid
+locomotion or terrain traversal.
 
 ## Benchmark infrastructure
 
@@ -164,7 +167,7 @@ class-appropriate tasks still need qualification. A 3D world is not a 3D planner
 | Launch/reset/run/stop | Lifecycle helper code | Fail on startup/reset error; readiness/outcomes cannot be replaced by waiting |
 | Metrics and ground truth | Extraction/helper code | Remove fixed executor metrics; measure contacts, clearance, trajectory and separate truth |
 | Seeds/baselines | Manifest/reference/regression utilities | Apply seeds to actual engines/algorithms, repeat and store raw artifacts |
-| CLI and GUI | Commands/UI exist | ROS executable discovery broken in audited install; no trusted single-command path |
+| CLI and GUI | Shared typed resolver, validation, manifest output and command autofill | Each live cell still needs readiness, task outcome, cleanup and artifact checks |
 | Comparison | Reporting/threshold logic | No validated end-to-end comparative benchmark established |
 
 Do not publish placeholder scores. A zero collision count without a contact
@@ -172,14 +175,16 @@ measurement source is unknown, not collision-free.
 
 ## Test evidence
 
-This is the recorded audit result, not a live CI badge or the result of this
-documentation edit. Exact selection/exclusions belong in the linked audit.
+This table combines the dated audit with later scoped checks. Exact historical
+selection and exclusions belong to the [audit](audit-2026-09-07.md); current
+rows name their revision and scope explicitly.
 
 | Check | Recorded result | Scope |
 |---|---|---|
 | Package discovery | 26 | Includes optional ORB-SLAM3 |
-| Selected source tests | 485 passed, 1 failed | Many metadata/static/numerical checks; failure constructs `DeadReckoning` without ROS initialization |
-| Selected backend tests | 5 passed | Includes basic PyBullet/MuJoCo physics, not navigation |
+| Selected source tests | 485 passed, 1 failed | Historical 2026-09-07 audit at `dff388f`; failure constructed `DeadReckoning` without ROS initialization |
+| Current fast suite | 461 passed, 1 skipped | `scripts/test_fast.sh` at `93d59dd`; includes registry cross-reference validation |
+| Current map suite | 35 passed | `robot_lab_maps` after generated-world contact fix; generator `--check` also passes |
 | Registry cross-references | Passed | Not compatibility correctness |
 | Adversarial composition checks | Invalid combinations accepted | Unknown simulator/wrong-category validation gaps |
 | Excluded runtime tests | Nine launch/reset/recording and one Isaac startup case | Not run; not passing evidence |
@@ -196,9 +201,9 @@ claiming green CI.
 - Hardware HIL: physical Bumperbot validation remains separate and blocked pending
   the device and safe operator setup; simulation checks do not authorize actuation.
 - Cross-backend clock, command, odometry, TF, sensor and namespace contracts differ;
-  missing sensors must block incompatible modes.
-- Registry maturity and launch profiles disagree. Legged/humanoid locomotion and
-  aerial SITL flight are not qualified.
+  missing sensors and class-specific controllers must block incompatible modes.
+- Registry maturity and launch profiles disagree. Go2 locomotion and BHL walking
+  are partial; aerial SITL flight is not qualified.
 - Algorithm selection, several wrappers and numerical methods need implementation
   or correctness work.
 - Benchmark lifecycle, outcomes and metrics are not trustworthy for comparison yet.

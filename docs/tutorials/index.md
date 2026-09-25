@@ -1,9 +1,10 @@
 # Robot Lab learning examples
 
-These tutorials demonstrate numerical APIs already present in the repository.
-They are not simulator benchmarks, live ROS algorithm integrations, or evidence
-that five alternatives per category are working. The historical P7.4 tutorial
-delivery means these documents exist; it does not qualify the platform.
+These tutorials demonstrate numerical APIs and one opt-in class-specific
+runtime workflow already present in the repository. They are not universal
+simulator benchmarks or evidence that five alternatives per category are
+working. The historical P7.4 tutorial delivery means these documents exist; it
+does not qualify the platform.
 
 The [roadmap](../../ROADMAP.md) defines implementation and qualification work.
 An agent continuing that work must start with the
@@ -43,9 +44,12 @@ pure numerical examples. For workspace setup, follow the current root
 | Localization | [Dead reckoning](localization.md) | Manually supplied body-twist integration; ROS initialization is required |
 | State Estimation | [Diagonal filter](state_estimation.md) | Constant-velocity prediction plus independent scalar corrections |
 | Sensor Fusion | [Complementary tilt filter](sensor_fusion.md) | The current filter's numerical response and axis-convention caveat |
+| Locomotion policy | [Go2 flat-ground policy](go2.md) | Opt-in MuJoCo stance, command-loss stop, forward/turn and reverse dead-zone evidence; not terrain/navigation qualification |
 
 There are no completed tutorial comparisons for local planning or control.
-These five documents do not constitute five algorithms in any category.
+The Go2 tutorial is a bounded runtime evidence walkthrough, not a replacement
+for a fair algorithm comparison. These documents do not constitute five
+algorithms in any category.
 
 ## What must precede a full comparison
 

@@ -14,13 +14,13 @@ teleoperation, mapping, autonomous tasks and benchmarking; flight and legged
 terrain require suitable representations. An unsupported combination must report
 why it cannot run. Physical hardware operation remains a separate milestone.
 
-## Current evidence at checkout `2cb2bfe`
+## Current evidence at source revision `93d59dd` (2026-09-25)
 
 | Requirement | Current evidence | Remaining acceptance |
 |---|---|---|
 | Two differential-drive robots | Existing Bumperbot/Labbot workflows and description checks; Bumperbot drive/RGB-D/reset checks and five open-arena trials each on MuJoCo and PyBullet | Fresh Labbot missions and obstacle-world tests; distinguish deterministic repeated trials from randomized conditions |
-| Humanoid | Berkeley Humanoid Lite model imports; 79 balance/description unit checks | Simulated stance and perturbation recovery, commanded walking/turning/stopping, fall handling, then terrain |
-| Quadruped | Go2 model imports and 61 locomotion-core unit checks | Measured stance, walking, turning, stop and terrain; R5.2 reopened from done to partial |
+| Humanoid | BHL model imports; 79 balance/description unit checks; live effort stance/startup evidence; held-turn/walk stall diagnosed as a policy fixed point | Sustained flat-ground walking/turning/stopping, bounded fall handling, then terrain; target-domain retraining or a new measured hypothesis |
+| Quadruped | Go2 model imports; measured short stance, opt-in flat-ground policy forward/stop/turn, command-loss stop, direct foot contacts and reverse dead-zone compensation | Repeatable flat-ground velocity tracking, terrain traversal, fall handling and navigation; R5.2 is active |
 | Drone | Quadrotor description and offboard wrapper | Real thrust/rotor and FCU-SITL integration, takeoff/hover/3D waypoints/landing/failsafe |
 | Four-wheel robot | No current Ackermann robot/control integration found | Model, steering, wheel dynamics/odometry, sensors and complete driving missions (R5.5) |
 | Maps | 26 existing environment entries; assets and conversion checks | Class-specific geometry/route/reset qualification and at least six diverse additions (R6.4) |
@@ -63,9 +63,9 @@ adoption; compare joint order, actuator limits and observation conventions.
 1. Finish the current R6.1 navigation-fixture repair. The old reference routes
    cross obstacles in all four nonempty box arenas; checking waypoint occupancy
    alone missed them. Check full swept footprints against geometry and maps.
-2. Continue MuJoCo humanoid balance/walking (R5.3), then Go2 locomotion (R5.2),
-   obtaining one complete measured workflow per class. Reuse compatible policies
-   where they provide a stronger starting point than the current analytic core.
+2. Continue Go2 flat-ground policy calibration (R5.2), then return to BHL
+   balance/walking (R5.3) only for a new measured hypothesis or target-domain
+   retraining. Do not repeat the retired rate/filter/contact tuning sequence.
 3. Add four-wheel steering/control (R5.5) and complete flight SITL (R5.4), each
    through the common resolver and launch workflow.
 4. Expand maps alongside each class: ground intersections/parking, uneven

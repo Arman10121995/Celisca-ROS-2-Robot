@@ -4,7 +4,10 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status reconciled on **2026-09-07**, against source revision `dff388f`. This documentation update does not fix or qualify runtime code.
+Status reconciled on **2026-09-25**, against source revision `93d59dd`. The
+2026-09-07 audit remains the historical baseline for its recorded checks; later
+runtime evidence is tracked in the [current status ledger](docs/status/platform-status.yaml)
+and the R5.2/R5.3 evidence directories.
 
 ## Start here
 
@@ -12,11 +15,12 @@ Status reconciled on **2026-09-07**, against source revision `dff388f`. This doc
 - [Implementation roadmap](ROADMAP.md): ordered work, dependencies and acceptance criteria toward the full platform.
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
 - [Machine-readable status](docs/status/platform-status.yaml) and [support matrix](docs/status/support-matrix.md): current state, not historical completion claims.
+- [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
 
 ## What exists, and what that means
 
-| Inventory at the audited revision | Evidence and limitation |
+| Catalog inventory at the audited revision | Evidence and limitation |
 |---|---|
 | 26 discoverable ROS packages | Includes optional `orbslam3`; discovery is not a clean build result |
 | 20 registry robots across 5 classes | 5 labeled `integrated`, 15 `cataloged`; labels are not independent task qualification |
@@ -28,9 +32,17 @@ Status reconciled on **2026-09-07**, against source revision `dff388f`. This doc
 
 ### Verification snapshot
 
-The 2026-09-07 audit reported **485 passing, 1 failing, 9 deselected** source tests, plus **5 passing, 1 deselected** selected backend tests. The failure constructs `DeadReckoning` without initializing ROS. Passing backend checks include basic PyBullet/MuJoCo physics, not complete navigation missions.
+The dated 2026-09-07 audit reported **485 passing, 1 failing, 9 deselected**
+source tests, plus **5 passing, 1 deselected** selected backend tests. That audit
+is retained as historical evidence at `dff388f`; it is not a current platform
+qualification badge.
 
-No clean rebuild, full simulator mission, interactive GUI session or hardware test was performed in that audit. Stored `colcon` results also contain failures. There is therefore no justified blanket “all tests passing,” “CI passing,” or “all simulators qualified” claim. See the audit for exact scope and reproduction commands.
+The current fast development check at `93d59dd` is **461 passed, 1 skipped**,
+with registry cross-reference validation passing. The latest R5.3 contact-fidelity
+check also reports **35 passed** for `robot_lab_maps`. These are scoped source
+and static checks: they do not prove all simulator missions, GUI sessions,
+optional-engine qualification or hardware operation. See the
+[workflow](docs/WORKFLOW.md) for the evidence boundary and commands.
 
 ## How it currently works
 
@@ -97,9 +109,10 @@ Paths below are relative to `src/`; only the registry and benchmark packages liv
 
 ### Robots and environments
 
-- **Bumperbot:** reference differential-drive description, sensors, control, mapping, localization, navigation and cleaning workflows. Strongest integration path, but not freshly mission-qualified in this audit.
+- **Bumperbot:** reference differential-drive description, sensors, control, mapping, localization, navigation and cleaning workflows. R5.1 recorded bounded forward/turn/reverse/stop/watchdog and clear/obstacle Nav2 missions on MuJoCo, with a PyBullet Bumperbot drive pass; broader backend/map coverage remains open.
 - **Labbot:** lightweight differential-drive description and navigation-related configuration; needs independent end-to-end qualification.
-- **Go2 and Berkeley Humanoid Lite:** descriptions, joint-control and sensor assets exist. Their main launch profiles allow `display` only; walking and terrain traversal are not established.
+- **Go2:** the standard MuJoCo route now has measured bounded stance, an opt-in flat-ground ONNX policy, forward/stop, turning and command-loss evidence. It remains partial: low-speed reverse tracking, terrain traversal, fall handling and navigation are not qualified.
+- **Berkeley Humanoid Lite:** the standard MuJoCo route has measured stance/startup-bend evidence and an effort-policy path. The held-turn/walk stall is diagnosed as a policy fixed point; torque filtering, 2 kHz physics-only and fresh intra-interval PD A/B tests did not revive sustained motion. A duplicate generated-world ground contact was fixed, but contact duplication was not the stall remedy. Target-domain retraining or a new measured hypothesis is next; walking and terrain are not established.
 - **Quadrotor SITL:** description and MAVROS-related controller code exist; a complete flight/SITL mission is not established.
 - **Other cataloged robots:** imported descriptions span legged, humanoid and manipulator models. Asset availability is not locomotion/control support.
 
@@ -119,7 +132,7 @@ The 26 environments comprise 14 legacy/general worlds, 5 deterministic navigatio
 
 These counts do **not** establish five distinct, mathematically validated, ROS-connected alternatives per category. Several entry points only spin an empty ROS node; perception entry points also have object/node mismatches. Some named methods are simplified approximations. MPC, LQR and nonlinear-control breadth remains future work.
 
-Benchmark code includes schemas, output/report generation, orchestration helpers and regression thresholds. Some measurements are fixed placeholders, and orchestration can report success without a successful mission. **Do not use its current results to rank algorithms.** The benchmark `ros2 run` executable installation also needs repair.
+Benchmark code includes schemas, output/report generation, orchestration helpers and regression thresholds. Some measurements are fixed placeholders, and orchestration can report success without a successful mission. **Do not use its current results to rank algorithms.** Use the [operational workflow](docs/WORKFLOW.md) and the current evidence ledger to distinguish static checks, live trials and qualified scenarios.
 
 ### Simulator and GUI limits
 
@@ -127,11 +140,18 @@ Gazebo is the reference integration route. PyBullet and MuJoCo have physics engi
 
 Asset coverage across backends is no longer the limit: all 17 robot
 descriptions import into PyBullet and MuJoCo, and all 26 maps exist for both
-(MuJoCo worlds are generated from the same Gazebo `.world` sources by
+(MuJoCo worlds are generated from the same SDF sources by
 `robot_lab_maps/tools/gen_mjcf_worlds.py`; the PyBullet backend parses the SDF
-directly). What remains unqualified is the runtime contract, not the geometry.
+directly). Generated fallback planes are visual-only when an SDF ground
+collision exists, preventing duplicate MuJoCo contacts. Runtime contract
+qualification, not asset geometry, is the remaining limit.
 
-The three non-Gazebo spawners publish the wrong message type on `/clock`; command/odometry wiring needs reconciliation. Their camera coverage is insufficient for `3d_slam`, and Isaac lacks scan publication. Isaac Sim is detected and launched automatically where it is installed. On the Jetson baseline it now boots (the runtime preloads Isaac's own bundled `libnvJitLink`, which the host CUDA 12.6 copy otherwise shadows), loads SDF worlds as USD collision geometry and stops cleanly; it drives in the commanded direction, but missions and sensor coverage are not yet qualified — see the support matrix before selecting a backend.
+The simulator clock, truth/odometry, command-watchdog, TF and readiness contracts
+have been repaired for the non-Gazebo bridges. This does not make the backends
+interchangeable: absolute topic names, estimator inputs, class-specific
+controllers and task-specific sensors still require explicit qualification.
+Isaac Sim has live scan/RGB-D/drive/reset and five-seed R4 mission evidence on a
+named Jetson host, but not universal robot/backend coverage.
 
 The Tkinter GUI has launch profiles, process logs, registry browsing, drive/map tools, vacuum/benchmark/test/health tabs and telemetry monitoring. These are interface features, not proof that each underlying workflow works. Its algorithm slots are built from the active mode's pipeline steps, list only algorithms the bringup layer can actually start, and are applied to the launch; modes and backends that the current selection cannot run are disabled with the reason attached rather than silently re-selected.
 
@@ -148,17 +168,24 @@ python3 -m robot_lab_registry.cli describe experiment bumperbot_simulation -c sr
 python3 -m robot_lab_registry.cli validate -c src/robot_lab/robot_lab_registry/config --cross-references
 ```
 
-`describe` takes a **singular entity type plus its ID**; `validate` requires `-c`. Cross-reference validation passes at the audited revision, but capability/category/simulator validation has known gaps: passing validation does not prove a runnable composition.
+`describe` takes a **singular entity type plus its ID**; `validate` requires `-c`.
+Cross-reference validation passes at the current source snapshot, but passing
+validation does not prove a runnable robot/backend/task composition. The
+`launch` subcommand is safe dry-run by default; add `--execute` only after the
+resolved manifest and isolation plan have been reviewed.
 
-Preview only—this does not launch a robot, including with `--no-dry-run`:
+Preview only—the `launch` subcommand is dry-run by default and does not start
+a robot:
 
 ```bash
 python3 -m robot_lab_registry.cli launch \
-  -c src/robot_lab/robot_lab_registry/config --dry-run \
+  -c src/robot_lab/robot_lab_registry/config \
   --composition '{"robot_id":"bumperbot","environment_id":"small_office","simulator":"gazebo","algorithm_ids":{"localization":"amcl"}}'
 ```
 
-For an already built ROS 2 Humble workspace, the intended entry points are below. Their syntax follows the source; they were **not mission-tested in the latest audit**:
+For an already built ROS 2 Humble workspace, use the [operational workflow](docs/WORKFLOW.md)
+for isolated launch, readiness, recording and cleanup. A minimal display command
+is:
 
 ```bash
 source /opt/ros/humble/setup.bash

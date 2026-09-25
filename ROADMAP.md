@@ -1,11 +1,11 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-16. Runtime audit baseline: `dff388f`. R4.1 scenario lifecycle
-and truthful outcomes complete. 2026-09-11: selection fidelity work landed
-against R3.3/R3.4, R7.1, R6.1 and R8.1; R8.2 unblocked 2026-09-14 (Isaac boots, loads
-worlds, drives in the commanded direction and stops cleanly) and qualified
-2026-09-16 on a named Jetson host (live scan/RGB-D/drive/reset plus a
-five-seed R4 mission).
+Updated: 2026-09-25. Current source revision: `93d59dd`. Runtime audit
+baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
+R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
+tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
+`R5.2` is the active next task, while `R5.3` remains partial after a bounded
+negative locomotion diagnosis.
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -69,23 +69,25 @@ a simulation-only release. Reduced-scope releases must explicitly list exclusion
 
 ## Achieved foundation and historical reconciliation
 
-The [audit](docs/status/audit-2026-09-07.md) records 26 ROS packages, 20 robot
-entries, 26 environments, 43 algorithms, 18 scenarios and 15 experiments.
-Selected tests passed 490 cases and failed one; this is not mission qualification.
+The historical 2026-09-07 audit recorded 26 ROS packages, 20 robot
+entries, 26 environments, 43 algorithms, 18 scenarios and 15 experiments, with
+490 selected passes and one failure. That is not current mission qualification;
+later scoped results are in the status ledger and evidence directories.
 Useful work includes descriptions/worlds, arena generators, the Bumperbot-oriented
 mode launcher, Nav2/AMCL/EKF/SLAM configurations, catalogs/query tools, GUI,
 numerical examples, backend code and result/reporting helpers.
 
-Catalog maturity labels have **not** been changed in this documentation revision.
-They overstate runtime support; R3.1 reconciles metadata and its tests together.
+Catalog maturity labels remain catalog metadata and are not changed by this
+documentation update. R3.1 evidence gates and later exact-cell records prevent
+those labels from being treated as universal runtime claims.
 
 | Legacy phase | Audited state | Retained work / remaining obligation | Recovery |
 |---|---|---|---|
 | P0 baseline | Partial; reverify | Hardware parsing/profile tests exist; installs, paths, topics and CI need repair | R1, R2, R9 |
 | P1 foundation | Partial | Catalog/schema/query code exists; compatibility checks insufficient | R3.1, R3.2 |
 | P2 composition | Partial | Selector/fragment classes exist; actual launch and applied choices incomplete | R3.3–R3.5 |
-| P3 robots | Partial | Richer assets exist; Go2/BHL display profiles and unproven flight/locomotion | R5 |
-| P3.4 humanoid | Partial, no current owner asserted | Standing-related code is not balance/walking qualification; check live ownership | R5.3 |
+| P3 robots | Partial | Go2 has measured stance and opt-in flat-ground policy motion; BHL has stance/startup evidence but no sustained walking; flight remains unqualified | R5 |
+| P3.4 humanoid | Partial, ledger owner `codex` | BHL effort control and diagnostics are implemented; the held-turn/walk stall is not solved by rate, filter or contact duplication tuning | R5.3 |
 | P4 environments | Assets/static checks implemented | Geometry/generators retained; runtime reset, actors and 3D traversal unqualified | R6 |
 | P5 algorithms | Partial | Counts/kernels exist; empty/broken ROS entry points and simplified methods | R7 |
 | P6 benchmarking | Partial | Reporting helpers exist; placeholder metrics and false-success paths | R4 |
@@ -312,11 +314,14 @@ Dependencies: `R5.1`.
 - Files: `src/robot_lab_robots/unitree/go2_description/`, `src/robot_lab_adapter/`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control.
 - Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
-- Status: Partial. The standard MuJoCo launch now holds Go2 upright under
-  measured 12-joint effort control for short trials, though a 20-second run
-  showed gradual sag and drift. The hand-authored experimental trot moves backward
-  for both forward and reverse requests, so it is disabled by default and no
-  velocity-base, navigation or terrain qualification is claimed.
+- Status: Partial. The standard MuJoCo launch holds Go2 upright under measured
+  12-joint effort control for short trials; a 20-second run showed gradual sag
+  and drift. The hand-authored experimental trot is disabled by default because
+  it moves backward for both forward and reverse requests. The opt-in bundled
+  flat-ground ONNX policy has measured forward motion, a stop, a large turn,
+  command-loss stop, direct foot-contact telemetry and a reverse dead-zone
+  compensation trial. Low-speed reverse tracking, terrain traversal, fall
+  handling and navigation remain unqualified.
 - Evidence: [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits
@@ -324,17 +329,13 @@ Dependencies: `R5.1`.
   when available (the older motor-effort fallback remains a heuristic), and
   latches tilt/effort safety stops; its pure tests cover these laws but do
   not substitute for measured displacement, turning and terrain missions.
-- An [opt-in pretrained Go2 policy trial](docs/status/evidence/r52-go2-policy-2026-09-25/README.md)
-  produced forward displacement, a commanded turn and a stopped/watched-out
-  flat-ground run through the standard MuJoCo launch. Low-speed reverse and
-  the first ledge in `terrain_stairs` failed; the policy is not yet the
-  default and Go2 velocity-base/SLAM/navigation remains unavailable in the GUI.
-  The GUI offers an explicit Go2/MuJoCo/localization policy checkbox and
-  auto-fills the corresponding launch argument for controlled experiments.
-  Direct foot-force telemetry during forward motion showed a two-foot support
-  pattern in 25 of 29 trace samples; the policy still fails the stair task.
-  Reverse feedforward dead-zone compensation maps negative linear velocity to
-  the active range of the policy, achieving -1.125 m displacement at -0.25 m/s.
+- Next action: Continue the R5.2 policy lane from this partial state. First run a
+  matched flat-ground reverse-calibration sweep around the measured dead zone,
+  then repeat forward/reverse/turn/stop with identical initialization and
+  record drift, tilt, effort and direct foot contacts. Test the named stairs
+  task only after flat-ground tracking is repeatable; do not enable GUI
+  velocity-base, SLAM or navigation modes from the current evidence. See the
+  [Go2 tutorial](docs/tutorials/go2.md) and [workflow](docs/WORKFLOW.md).
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 
@@ -393,6 +394,11 @@ Dependencies: `R5.1`.
   the native 11, but common/native policy A/B still stalls (8-13 s dyaw
   0.0058-0.0066 rad). Actuator-rate, contact-duplication, and filter tuning are
   therefore retired; target-domain retraining is the remaining recommendation.
+  R5.3 is therefore partial, not a completed walking qualification. A generated
+  fallback plane was made visual-only when an SDF ground collision exists, which
+  restored common/native passive contact counts from 22/11 to 11/11; the common
+  ROS launch still produced only 0.00725 rad of yaw from 8–13 s. Do not promote
+  BHL walking, terrain or navigation modes from this evidence.
   One attempted run toppled in the
   ramp while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
   9.3/12); the identical re-run on an idle machine passed the bend at 0.271 rad

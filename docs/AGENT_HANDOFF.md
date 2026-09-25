@@ -1,6 +1,9 @@
 # Agent Handoff Protocol
 
-How to resume work on Robot Lab. Read this before changing anything.
+These are the repository's current operating rules. The dated
+[2026-09-07 audit](status/audit-2026-09-07.md) is historical evidence, not the
+current source snapshot; use [`platform-status.yaml`](status/platform-status.yaml)
+for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Read first, in this order
 
@@ -27,9 +30,9 @@ How to resume work on Robot Lab. Read this before changing anything.
   `partial` means useful work exists but acceptance has not passed. A `blocked`
   task must name the exact prerequisite, the attempted checks and the unblock action.
 - **Do not silently weaken tests.** If evidence fails, reopen the task and record it.
-- **No runtime implementation was completed by the R0 documentation revision.**
-  Documentation claims must match the audited revision `dff388f` until newer
-  evidence exists.
+- **Record scope with every claim.** Name the source revision, host/backend,
+  command, seed, artifact paths and what was not tested. Do not copy a historical
+  audit count into a current qualification claim.
 
 ## Commit discipline
 
@@ -40,7 +43,16 @@ How to resume work on Robot Lab. Read this before changing anything.
 - One logical change per commit; include the task ID in the message
   (e.g. `R1.1: fix benchmark executable ROS placement`).
 
-## Hardware
+## Current continuation
 
-Physical HIL work (R9.4) requires equipment, a safe setup and explicit operator
-authorization. No documentation update authorizes hardware motion.
+At source revision `93d59dd` (2026-09-25), `R5.2` is the active next task.
+Continue from the Go2 evidence under
+`docs/status/evidence/r52-go2-policy-2026-09-25/`: first calibrate the reverse
+dead zone on flat ground, then repeat forward/reverse/turn/stop with matched
+initialization and direct foot-contact telemetry. `R5.3` is partial: its
+contact-fidelity defect is fixed, but the BHL held-turn/walk stall remains a
+policy fixed point and further rate/filter/contact tuning is retired.
+
+The current fast check is 461 passed/1 skipped; the latest map suite is 35
+passed. These are scoped checks, not a platform-wide qualification. Start with
+[`docs/WORKFLOW.md`](WORKFLOW.md) and the [Go2 tutorial](tutorials/go2.md).

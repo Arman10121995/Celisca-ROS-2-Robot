@@ -2,6 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-09-25"
+current_revision: "93d59dd"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -11,12 +12,18 @@ supported_baseline:
   os: "Ubuntu 22.04"
   ros: "Humble"
   architecture: "arm64 is the documented development target; CI host qualification is tracked separately"
-  qualification: "No fresh clean build, GUI task, full robot mission or hardware qualification in the 2026-09-07 audit."
+  qualification: "The 2026-09-07 audit had no fresh clean build, GUI task, full robot mission or hardware qualification. Later scoped evidence is recorded in task entries and docs/WORKFLOW.md; universal qualification is still absent."
   simulators:
     gazebo: "Primary configured path; historical startup reports, not freshly mission-qualified. 2026-09-14: the launch runs Ignition Gazebo 6.18 (Fortress) through Humble's binary ros_gz_sim 0.244; Gazebo Harmonic (gz-sim 8.15) is installed but not used by this path."
     pybullet: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robot descriptions load and 26/26 worlds produce static geometry."
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
+current_verification:
+  fast_suite: "461 passed, 1 skipped at 93d59dd via scripts/test_fast.sh"
+  map_suite: "35 passed at 93d59dd after generated-world contact correction"
+  registry_cross_references: "pass at 93d59dd"
+  limitation: "Scoped source/static checks, not a clean build, universal mission matrix, GUI task qualification or hardware test."
+
 baseline:
   recorded_on: "2026-09-07"
   revision: "dff388f"
@@ -48,7 +55,7 @@ baseline:
     experiments:
       integrated: 13
       cataloged: 2
-  catalog_label_warning: "Counts describe current source YAML labels, not verified capabilities. Runtime catalogs unchanged by this documentation revision; reconcile in R3.1."
+  catalog_label_warning: "Counts describe current source YAML labels, not verified capabilities. Treat labels as catalog metadata; exact runtime evidence is recorded per task and support cell."
   tests:
     scope: "Selected source tests plus selected backend tests from pre-documentation audit; not the full suite."
     total: 491
@@ -98,12 +105,12 @@ baseline:
       scope: "ScenarioLifecycle phase machine + OutcomeKind taxonomy (9 outcomes, priority-ordered classify_outcome, deterministic result IDs, manifest recording, timestamped rosbag2 paths, launch-failure abort)"
       command_ref: "src/robot_lab/robot_lab_benchmark/test/test_r4_1_lifecycle_truthful_outcomes.py"
   other_checks:
-    registry_cross_references: "pass; insufficient evidence of compatibility"
-    invalid_simulator_probe: "incorrectly accepted"
-    wrong_category_probe: "incorrectly accepted"
-    missing_capability_probe: "incorrectly accepted"
-    select_components_launch_generation: "TypeError"
-    benchmark_ros2_run: "No executable found; executable installed under bin"
+    registry_cross_references: "pass at 93d59dd; still not compatibility correctness"
+    invalid_simulator_probe: "rejected by typed composition validation"
+    wrong_category_probe: "rejected by typed composition validation"
+    missing_capability_probe: "rejected or reported as an actionable warning by the shared validator"
+    select_components_launch_generation: "constructs successfully after the R3.3 fix"
+    benchmark_ros2_run: "resolver and installed entry points checked; live mission evidence remains task-specific"
   historical_colcon_results:
     total: 81
     failures: 31
@@ -547,10 +554,10 @@ tasks:
           - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/qualification.py"
           - "src/robot_lab/robot_lab_benchmark/test/test_r5_1_qualification.py"
           - "docs/status/evidence/r51-two-wheel-2026-09-24/: bounded-drive MuJoCo Bumperbot and Labbot forward/turn/reverse/stop/watchdog probes passed with separate truth and EKF odometry; all four clear/obstacle Nav2 missions succeeded on final code; bounded-drive PyBullet Bumperbot probe also passed. Actual installed xacros pass golden static checks. GitHub ROS 2 CI and scheduled full suite passed."
-        next_action: "Complete on MuJoCo, with an additional PyBullet Bumperbot drive pass. This does not imply every backend/map combination or physical hardware is qualified. Continue R5.2 Go2 locomotion."
+        next_action: "R5.1 is complete for the recorded MuJoCo/PyBullet cells. Continue R5.2 Go2 flat-ground policy calibration and qualify reverse tracking, turning drift, terrain and bounded fall handling before enabling higher-level Go2 modes."
       R5.2:
         title: "Qualify Go2 locomotion"
-        state: "partial"
+        state: "active"
         owner: codex
         depends_on:
           - "R5.1"
@@ -570,10 +577,10 @@ tasks:
           - "src/robot_lab_adapter/test/test_r5_2_go2_locomotion.py"
           - "docs/status/evidence/r52-go2-2026-09-25/: standard MuJoCo launch produced 8 s stable measured Go2 stance (0.332 m minimum height, 0.0032 rad peak tilt, 0.0042 m drift, 12 joints and 1,999 effort messages). Forward and reverse experimental gait commands both displaced the robot backward; gait is gated off by default."
           - "docs/status/evidence/r52-go2-policy-2026-09-25/: opt-in bundled ONNX policy moved +0.805 m during a 3 s +0.25 m/s request and stopped within 0.004 m after settling; command-loss stop passed and +0.5 rad/s turn yielded +1.776 rad (repeat trial: +1.487 rad). Direct foot-to-world force telemetry in a repeat trial showed exactly two loaded feet in 25/29 moving trace samples. Reverse feedforward dead-zone compensation produced -1.125 m displacement at -0.25 m/s command; terrain_stairs ledge blocked travel. These are measured partial results, not a navigation/terrain qualification."
-        next_action: "The bundled Go2 policy is opt-in through a GUI checkbox because -0.25 m/s reverse barely moves and terrain_stairs fails at its first ledge; 20 s stance also shows sag/drift. Qualify reverse tracking and turning drift, train/adapt for named terrain, and test physics foot forces across more contact situations. Prove bounded fall handling and navigation before enabling GUI velocity-base, SLAM or navigation modes."
+        next_action: "R5.2 is active. Run a matched flat-ground reverse-calibration sweep around the measured dead zone, then repeat forward/reverse/turn/stop with identical initialization and direct foot-contact telemetry. Test terrain only after repeatable flat-ground tracking; do not enable GUI velocity-base, SLAM or navigation modes. See docs/tutorials/go2.md and docs/WORKFLOW.md."
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
-        state: "active"
+        state: "partial"
         owner: codex
         depends_on:
           - "R5.1"
@@ -1044,7 +1051,7 @@ handoff:
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R5.1 completed on MuJoCo after live bounded drive/watchdog and clear/obstacle Nav2 passes for both differential bases (2026-09-24 evidence). Continue R5.2 Go2 stance, gait and terrain qualification. R5.3 humanoid startup bend and forward walk/stop pass, but a held pure-turn command only yaws the body for about 2 s before the open-loop policy stops stepping (the 2026-09-25 diagnosis identifies a policy fixed point: the summed joint-effort spread collapses to ~0.2 N.m with the command live, and an implemented boost-only yaw servo commanding up to the 1.5 rad/s training limit did not revive it, so command feedback is refuted. A source audit refuted the gain-mismatch theory; the verified missing law is Recoil's 2 kHz torque EMA. Its opt-in rate-composed 250 Hz mode passed 155 R5.3 tests but a matched live A/B was negative (8-13 s dyaw 0.0098 rad versus 0.0120 rad baseline, effort spread 0.17 N.m). A physics-rate-only 2 kHz A/B was also negative (dyaw 0.0054 rad, effort spread 0.18 N.m), so both remain off. Headless held-250 Hz versus fresh-2 kHz PD is also negative (dyaw 0.0058 versus 0.0077 rad, effort spread near 21 N.m), so actuator-rate tuning is retired. Contact audit/fix removed a duplicate collidable fallback floor (passive contacts 22->11 native parity), but common/native policy A/B still stalls; rate/filter/contact tuning is retired. Next: target-domain retraining or a new measured hypothesis) and sustained walking is not yet repeatable (2026-09-25 instrumented runs). Continue four-wheel steering (R5.5), real drone SITL (R5.4), map qualification (R6.2/R6.3/R6.4), and algorithm comparisons. See docs/status/project-goal-2026-09-15.md."
+  next_action: "R5.1 is complete for its recorded cells. R5.2 is active: calibrate the Go2 flat-ground policy's reverse dead zone, then repeat forward/reverse/turn/stop and terrain with direct foot-contact evidence. R5.3 is partial: its duplicate generated-world contact was fixed, but the BHL policy fixed-point stall remains; do not resume rate/filter/contact tuning without a new measured hypothesis. Continue R5.4, R5.5, R6.2-R6.4 and algorithm breadth after the active lane. See docs/WORKFLOW.md and docs/tutorials/go2.md."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-09-07.md"
