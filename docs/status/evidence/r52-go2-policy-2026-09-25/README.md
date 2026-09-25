@@ -140,6 +140,56 @@ Interpretation, with its limits:
 
 Fall **recovery** (standing back up after the collapse) is still not
 implemented or qualified. Only disturbance rejection below the tipping
+
+## Fall detection and the re-stand attempt (2026-09-25)
+
+`SafetyState` now carries a latched `fallen` flag that is distinct from
+SAFE_STOP: SAFE_STOP means "stop driving", while `fallen` means "a get-up
+attempt is required". It is debounced by `FALL_CONFIRM_CYCLES` consecutive
+at-or-above-threshold observations so a single tilt spike cannot report a fall,
+and it is cleared only by an explicit `reset()` — never by attitude recovering.
+
+`FallRecovery` is an opt-in, bounded **re-stand attempt** (default off,
+`enable_fall_recovery:=true`). It drives the nominal stance pose with elevated
+bounded gains for at most `fall_recovery_timeout_s`, succeeds only when
+*measured* tilt returns below the warn threshold, gives up to zero effort when
+the window expires, and never clears the latched `fallen` flag by itself. It is
+deliberately labelled an attempt, not a get-up.
+
+Live result against the 60 N collapse
+([`fall_recovery_trial_20260925T60N_fixed/`](fall_recovery_trial_20260925T60N_fixed/probe.json),
+domain 231, 16 s trial, 8 s recovery window):
+
+| metric | value |
+|---|---|
+| peak tilt | 0.754 rad |
+| final height | 0.139 m |
+| final safety state | `safe_stop` |
+| `/go2/safety_state` messages | 3,995 |
+| first threshold breach | 3.58 s at 0.357 rad |
+| recovery screening | **fail** |
+
+**The re-stand attempt did not right the robot.** Driving the nominal stance
+pose with elevated PD gains is not sufficient from the collapsed pose on this
+plant; it needs real whole-body repositioning, which is not implemented. The
+feature therefore stays off by default, and fall recovery remains unqualified.
+
+Two defects found and fixed while producing this evidence, both worth keeping:
+
+- The first attempt produced a physically contradictory result (0.040 rad peak
+  tilt with a 0.057 m body height) and **zero** safety messages. The controller
+  had died at startup: `InvalidParameterTypeException`, because the launch
+  passed `fall_recovery_timeout_s` as a string into a DOUBLE parameter. That
+  trial was invalid and has been removed rather than reported. Numeric
+  recovery parameters are now converted with `_as_float` in the launch, the
+  controller tolerates string-typed overrides, and a launch-contract test
+  (`test_go2_fall_recovery_launch_flags_are_opt_in_and_typed`) prevents
+  recurrence.
+- Fall recovery must never be inferred from a surviving process. The
+  pre-existing `joy_teleop` and `imu_republisher` teardown races still appear
+  in the logs; they are unrelated to this feature.
+
+
 threshold has been measured.
 
 

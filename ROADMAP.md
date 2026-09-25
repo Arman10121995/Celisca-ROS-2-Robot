@@ -330,9 +330,13 @@ Dependencies: `R5.1`.
   stance baseline) and the robot settles upright with no SAFE_STOP, while 60 N
   exceeds the envelope, collapses to 0.139 m and correctly latches `safe_stop`.
   The 5 N and 20 N pulses are recorded negative controls with no response above
-  stance noise. Standing back up after a fall is still not implemented, so
-  repeatability, terrain traversal, fall handling and navigation remain
-  unqualified.
+  stance noise. Bounded disturbance rejection is therefore measured at one
+  point only. Fall detection is implemented (latched, debounced, distinct from
+  SAFE_STOP) and an opt-in nominal-pose re-stand attempt is unit-tested, but
+  the measured 60 N trial shows that attempt does **not** right the robot
+  (0.139 m final height); whole-body repositioning is not implemented, so
+  standing back up remains unqualified. Repeatability, terrain traversal, fall
+  handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits
@@ -344,11 +348,14 @@ Dependencies: `R5.1`.
   `go2_perturbation_*` arguments opt-in. The two flat-ground suite repeats stand
   as repeatable bounded screening evidence. Bounded perturbation recovery is
   measured at a single point (35 N recovers, 60 N collapses with a correct
-  `safe_stop`), the named `terrain_stairs` task still fails at the first ledge
-  (0.115 m displacement, 0.527 rad peak tilt, 35.55 N.m max effort), so do not
-  claim terrain traversal. Next implement and qualify explicit fall detection
-  plus a get-up behavior, then repeat the five-case flat-ground suite across
-  multiple seeds. Do not enable GUI velocity-base, SLAM or navigation modes.
+  `safe_stop`), and the opt-in re-stand attempt is a measured negative: driving
+  the nominal pose with elevated PD gains does not right the collapsed robot
+  (0.139 m final height in the 16 s trial). The named `terrain_stairs` task
+  still fails at the first ledge (0.115 m displacement, 0.527 rad peak tilt,
+  35.55 N.m max effort), so do not claim terrain traversal. Next implement a
+  real whole-body repositioning/get-up strategy rather than nominal-pose PD,
+  then re-run the 60 N collapse. Do not enable GUI velocity-base, SLAM or
+  navigation modes.
   Note for future runs: this host's CycloneDDS port range caps usable
   `ROS_DOMAIN_ID` at about 232. See the [Go2 tutorial](docs/tutorials/go2.md)
   and [workflow](docs/WORKFLOW.md).

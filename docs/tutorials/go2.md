@@ -163,7 +163,35 @@ Read this carefully. The stance baseline is about 0.030 rad, so 5 N and 20 N are
 not be cited as stability. 35 N is the smallest tested magnitude with a clearly
 measurable response, and the robot settles upright. 60 N exceeds the envelope:
 the robot collapses and the fail-safe latches correctly, which is a fall and not
-a recovery. Standing back up after a fall is still unimplemented.
+a recovery.
+
+## Fall detection and the re-stand attempt
+
+Fall detection is always on and latches a `fallen` flag that is distinct from
+`safe_stop`. It is debounced so a single tilt spike cannot report a fall, and it
+clears only on an explicit safety reset.
+
+The re-stand attempt is **opt-in and off by default**:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  mode:=loc simulator:=mujoco robot_model:=unitree_go2 \
+  map_name:=nav_empty go2_policy_path:=auto \
+  enable_fall_recovery:=true fall_recovery_timeout_s:=8.0
+```
+
+It drives the nominal stance pose with elevated bounded gains for a bounded
+window and reports success only if measured tilt returns below the warn
+threshold. Measured against the 60 N collapse over 16 s, it did **not** work:
+the robot stayed collapsed at 0.139 m. Nominal-pose PD is not enough from a
+fallen pose; real whole-body repositioning is not implemented. Do not enable
+this expecting the robot to stand up.
+
+A caution learned here: a launch override typed as a string can kill the
+controller at startup (`InvalidParameterTypeException`), leaving the robot
+completely uncontrolled while the process list still looks healthy. Check
+`/go2/safety_state` message counts before trusting any trial — a trial with zero
+safety messages is invalid, not a good result.
 
 ## Interpret the result correctly
 
@@ -174,6 +202,10 @@ a recovery. Standing back up after a fall is still unimplemented.
 - A perturbation below the noise floor is not evidence of disturbance rejection.
   Compare the pulse window against the pre-pulse window before reporting.
 - A latched `safe_stop` proves the fail-safe fired, not that the robot recovered.
+- The opt-in re-stand attempt is a measured negative: it does not right the
+  robot. Enabling it is an experiment, not a fix.
+- Zero messages on a contract topic means the producer died; that trial is
+  invalid regardless of how good the other numbers look.
 - Direct foot-force telemetry is required before claiming a support pattern;
   it is not automatically consumed by the blind ONNX policy.
 - A failed stairs trial remains a failed named task. Do not hide it by

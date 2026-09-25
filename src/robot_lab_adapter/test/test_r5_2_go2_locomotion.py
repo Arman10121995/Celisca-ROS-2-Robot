@@ -36,6 +36,7 @@ from robot_lab_adapter.go2_locomotion import (
     CONTACT_RESIDUAL_THRESHOLD_NM,
     EFFORT_LIMITS,
     EFFORT_SATURATION_CYCLES,
+    FALL_CONFIRM_CYCLES,
     JOINT_KINDS,
     JOINT_NAMES,
     LEG_PREFIXES,
@@ -51,6 +52,7 @@ from robot_lab_adapter.go2_locomotion import (
     BaseVelocity,
     BodyState,
     ControlCycle,
+    FallRecovery,
     Go2LocomotionCore,
     LegObservation,
     SafetyState,
@@ -547,3 +549,110 @@ class TestLocomotionCore:
             body=BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0),
         )
         assert any("safe_stop" in issue for issue in cycle.issues)
+
+
+# ----------------------------------------------------------------------
+# Fall detection and the bounded re-stand attempt (R5.2 fall handling)
+# ----------------------------------------------------------------------
+
+
+class TestFallDetection:
+    def test_single_tilt_spike_safe_stops_without_reporting_fall(self):
+        safety = SafetyState()
+        safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
+        assert safety.state == SafetyState.SAFE_STOP
+        assert safety.fallen is False
+
+    def test_sustained_tilt_latches_fallen_and_reset_clears_it(self):
+        safety = SafetyState()
+        for _ in range(FALL_CONFIRM_CYCLES):
+            safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
+        assert safety.fallen is True
+        assert "sustained tilt" in safety.fall_reason
+        # Attitude recovering must NOT silently clear the latched fall.
+        safety.observe_body(BodyState(roll_rad=0.0, pitch_rad=0.0))
+        assert safety.fallen is True
+        safety.reset()
+        assert safety.fallen is False
+        assert safety.fall_reason is None
+
+    def test_interrupted_tilt_does_not_accumulate_to_a_fall(self):
+        safety = SafetyState()
+        for _ in range(FALL_CONFIRM_CYCLES - 1):
+            safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
+        safety.observe_body(BodyState(roll_rad=0.0, pitch_rad=0.0))
+        for _ in range(FALL_CONFIRM_CYCLES - 1):
+            safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
+        assert safety.fallen is False
+
+    def test_fall_flag_never_permits_gait(self):
+        safety = SafetyState()
+        for _ in range(FALL_CONFIRM_CYCLES):
+            safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
+        assert safety.gait_permitted() is False
+
+
+class TestFallRecovery:
+    def _positions(self, value=0.0):
+        return {name: value for name in JOINT_NAMES}
+
+    def test_idle_without_a_fall_commands_zero(self):
+        recovery = FallRecovery()
+        efforts = recovery.update(
+            0.0, False, BodyState(0.0, 0.0), self._positions(), {})
+        assert recovery.status == FallRecovery.IDLE
+        assert all(e == 0.0 for e in efforts.values())
+
+    def test_attempt_drives_measured_joints_toward_nominal_stance(self):
+        recovery = FallRecovery()
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        efforts = recovery.update(0.0, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.ATTEMPTING
+        assert recovery.attempts == 1
+        thigh = "FL_thigh_joint"
+        assert efforts[thigh] > 0.0  # target 0.72 rad is above the 0.0 pose
+        assert efforts["FL_calf_joint"] < 0.0
+
+    def test_unmeasured_joint_is_never_driven(self):
+        recovery = FallRecovery()
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        efforts = recovery.update(0.0, True, fallen_body, {}, {})
+        assert all(e == 0.0 for e in efforts.values())
+
+    def test_succeeds_only_when_measured_tilt_returns(self):
+        recovery = FallRecovery()
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        recovery.update(0.0, True, fallen_body, self._positions(), {})
+        efforts = recovery.update(
+            1.0, True, BodyState(0.01, 0.0), self._positions(), {})
+        assert recovery.status == FallRecovery.SUCCEEDED
+        assert all(e == 0.0 for e in efforts.values())
+
+    def test_expired_window_fails_and_stops_driving(self):
+        recovery = FallRecovery(timeout_s=1.0)
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        recovery.update(0.0, True, fallen_body, self._positions(), {})
+        efforts = recovery.update(2.0, True, fallen_body, self._positions(), {})
+        assert recovery.status == FallRecovery.FAILED
+        assert all(e == 0.0 for e in efforts.values())
+        # A terminal state must not restart on its own.
+        again = recovery.update(3.0, True, fallen_body, self._positions(), {})
+        assert recovery.attempts == 1
+        assert all(e == 0.0 for e in again.values())
+
+    def test_rejects_unsafe_parameters(self):
+        with pytest.raises(ValueError):
+            FallRecovery(timeout_s=0.0)
+        with pytest.raises(ValueError):
+            FallRecovery(gain_scale=0.0)
+        with pytest.raises(ValueError):
+            FallRecovery(gain_scale=1.5)
+        with pytest.raises(ValueError):
+            FallRecovery(damping_scale=0.0)
+
+    def test_reset_returns_to_idle(self):
+        recovery = FallRecovery()
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        recovery.update(0.0, True, fallen_body, self._positions(), {})
+        recovery.reset()
+        assert recovery.status == FallRecovery.IDLE

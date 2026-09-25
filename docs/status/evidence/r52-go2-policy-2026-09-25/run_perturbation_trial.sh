@@ -12,6 +12,9 @@ FORCE_N="${FORCE_N:-5.0}"
 START_S="${START_S:-3.0}"
 PULSE_S="${PULSE_S:-0.2}"
 RECOVERY_S="${RECOVERY_S:-2.0}"
+# Opt-in re-stand attempt; off by default because it is not qualified.
+FALL_RECOVERY="${FALL_RECOVERY:-false}"
+FALL_RECOVERY_TIMEOUT_S="${FALL_RECOVERY_TIMEOUT_S:-4.0}"
 
 mkdir -p "$OUT_DIR"
 OUT_DIR="$(cd "$OUT_DIR" && pwd)"
@@ -82,6 +85,8 @@ ROS_DOMAIN_ID="$DOMAIN" setsid ros2 launch robot_lab_bringup simulated_robot.lau
     go2_perturbation_start_s:="$START_S" \
     go2_perturbation_duration_s:="$PULSE_S" \
     go2_perturbation_axis:=1 \
+    enable_fall_recovery:="$FALL_RECOVERY" \
+    fall_recovery_timeout_s:="$FALL_RECOVERY_TIMEOUT_S" \
     > "$launch_log" 2>&1 &
 launch_pid=$!
 set +e

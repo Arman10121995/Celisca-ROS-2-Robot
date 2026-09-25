@@ -95,6 +95,15 @@ TILT_FALL_RAD = 0.70      # ~40 degrees: force SAFE_STOP
 EFFORT_SATURATION_FRACTION = 0.98
 EFFORT_SATURATION_CYCLES = 50  # sustained saturation at control rate
 
+#: A single tilt spike must not be reported as a fall. The fall flag needs
+#: this many consecutive at-or-above-fall observations before it latches.
+FALL_CONFIRM_CYCLES = 25
+
+#: A re-stand attempt succeeds only when measured tilt returns below the warn
+#: threshold, and is abandoned after this bounded window.
+FALL_RECOVER_TIMEOUT_S = 4.0
+FALL_RECOVER_TILT_RAD = TILT_WARN_RAD
+
 #: Duty factor and cycle time for the bounded trot.
 TROT_CYCLE_SECONDS = 0.7
 TROT_DUTY = 0.5
@@ -387,27 +396,45 @@ class SafetyState:
         self.state = self.NOMINAL
         self.saturation_counters: Dict[str, int] = {j: 0 for j in JOINT_NAMES}
         self.reason: Optional[str] = None
+        #: Latched "the robot is down" flag, distinct from SAFE_STOP. SAFE_STOP
+        #: means "stop driving"; this means "a get-up attempt is required". It
+        #: is deliberately *not* cleared by attitude recovering, only by reset().
+        self.fallen = False
+        self.fall_reason: Optional[str] = None
+        self._fall_cycles = 0
 
     def reset(self) -> None:
         self.state = self.NOMINAL
         self.saturation_counters = {j: 0 for j in JOINT_NAMES}
         self.reason = None
+        self.fallen = False
+        self.fall_reason = None
+        self._fall_cycles = 0
 
     def observe_body(self, body: BodyState) -> List[str]:
         """Update state from attitude; returns any new issue strings."""
         issues: List[str] = []
         tilt = body.max_tilt_rad
         if tilt >= TILT_FALL_RAD:
+            self._fall_cycles += 1
+            if self._fall_cycles >= FALL_CONFIRM_CYCLES and not self.fallen:
+                self.fallen = True
+                self.fall_reason = (
+                    "sustained tilt %.2f rad at or above the fall threshold"
+                    % tilt)
+                issues.append("fallen: " + self.fall_reason)
             self._enter_safe_stop(f"tilt {tilt:.2f} rad exceeds fall threshold")
             issues.append(f"safe_stop: tilt {tilt:.2f} rad exceeds fall threshold")
-        elif tilt >= TILT_WARN_RAD:
-            if self.state == self.NOMINAL:
-                self.state = self.WARN
-                self.reason = f"tilt {tilt:.2f} rad exceeds warn threshold"
-                issues.append(f"warn: {self.reason}")
-        elif self.state == self.WARN:
-            self.state = self.NOMINAL
-            self.reason = None
+        else:
+            self._fall_cycles = 0
+            if tilt >= TILT_WARN_RAD:
+                if self.state == self.NOMINAL:
+                    self.state = self.WARN
+                    self.reason = f"tilt {tilt:.2f} rad exceeds warn threshold"
+                    issues.append(f"warn: {self.reason}")
+            elif self.state == self.WARN:
+                self.state = self.NOMINAL
+                self.reason = None
         return issues
 
     def observe_efforts(
@@ -446,6 +473,84 @@ class SafetyState:
     def safe_stop_efforts(self) -> Dict[str, float]:
         """Damped zero effort for every joint: the SAFE_STOP command."""
         return {joint: 0.0 for joint in JOINT_NAMES}
+
+
+class FallRecovery:
+    """Bounded, opt-in re-stand attempt after a latched fall.
+
+    This is a re-stand **attempt**, not a demonstrated get-up. It drives the
+    nominal stance pose with elevated (still bounded) gains for at most
+    ``timeout_s`` and reports success only when *measured* tilt returns below
+    ``success_tilt_rad``. If the window expires first, it gives up and commands
+    zero effort; it never silently resumes walking, and it never clears the
+    latched :attr:`SafetyState.fallen` flag on its own.
+    """
+
+    IDLE = "idle"
+    ATTEMPTING = "attempting"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+
+    def __init__(
+        self,
+        timeout_s: float = FALL_RECOVER_TIMEOUT_S,
+        success_tilt_rad: float = FALL_RECOVER_TILT_RAD,
+        gain_scale: float = 0.5,
+        damping_scale: float = 0.5,
+    ) -> None:
+        if not math.isfinite(timeout_s) or timeout_s <= 0.0:
+            raise ValueError("timeout_s must be positive")
+        if not math.isfinite(success_tilt_rad) or success_tilt_rad <= 0.0:
+            raise ValueError("success_tilt_rad must be positive")
+        if not 0.0 < gain_scale <= 1.0:
+            raise ValueError("gain_scale must be within (0, 1]")
+        if damping_scale <= 0.0:
+            raise ValueError("damping_scale must be positive")
+        self.timeout_s = timeout_s
+        self.success_tilt_rad = success_tilt_rad
+        self.status = self.IDLE
+        self.started_at: Optional[float] = None
+        self.attempts = 0
+        self._stance = StanceController(
+            target=nominal_stance_pose(),
+            gain_scale=gain_scale,
+            damping_scale=damping_scale,
+        )
+
+    def reset(self) -> None:
+        self.status = self.IDLE
+        self.started_at = None
+
+    def update(
+        self,
+        now_s: float,
+        fallen: bool,
+        body: Optional[BodyState],
+        positions: Dict[str, float],
+        velocities: Dict[str, float],
+    ) -> Dict[str, float]:
+        """Return the re-stand effort for this cycle (``{}`` means zero drive).
+
+        ``body`` and ``positions`` may be missing: without measurements this
+        degrades to zero effort rather than assuming a pose.
+        """
+        if self.status in (self.SUCCEEDED, self.FAILED) or not fallen:
+            return {joint: 0.0 for joint in JOINT_NAMES}
+        if self.status == self.IDLE:
+            self.status = self.ATTEMPTING
+            self.started_at = now_s
+            self.attempts += 1
+        if self.started_at is not None and now_s - self.started_at > self.timeout_s:
+            self.status = self.FAILED
+            return {joint: 0.0 for joint in JOINT_NAMES}
+        if body is not None and body.max_tilt_rad < self.success_tilt_rad:
+            self.status = self.SUCCEEDED
+            return {joint: 0.0 for joint in JOINT_NAMES}
+        efforts = self._stance.effort_command(positions, velocities)
+        for joint in JOINT_NAMES:
+            if joint not in positions:
+                efforts[joint] = 0.0
+        return efforts
 
 
 # ----------------------------------------------------------------------

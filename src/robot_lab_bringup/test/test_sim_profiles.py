@@ -176,6 +176,26 @@ def test_go2_perturbation_launch_flags_are_opt_in():
     assert "go2_controller_active else {}" in launch_text
 
 
+def test_go2_fall_recovery_launch_flags_are_opt_in_and_typed():
+    """Recovery is opt-in, and numeric overrides must not arrive as strings.
+
+    A string-typed override for a DOUBLE parameter raises
+    InvalidParameterTypeException inside the controller, which kills the node at
+    startup and silently removes all effort control.
+    """
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8")
+    assert '"enable_fall_recovery", default_value="false"' in launch_text
+    for name, default in (
+        ("fall_recovery_timeout_s", "4.0"),
+        ("fall_recovery_gain_scale", "0.5"),
+        ("fall_recovery_damping_scale", "0.5"),
+    ):
+        assert f'"{name}", default_value="{default}"' in launch_text
+        assert f'"{name}": _as_float(' in launch_text
+    assert '"enable_fall_recovery": _as_bool(' in launch_text
+
+
 def test_bhl_physics_timestep_launch_override_is_opt_in():
     launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
         encoding="utf-8")

@@ -309,6 +309,21 @@ def _config_value(context, launch_argument, default):
     return value
 
 
+def _as_float(value, default=0.0):
+    """Coerce a launch substitution/string value to float.
+
+    Node parameters arrive as strings; declaring them as DOUBLE/DOUBLE_ARRAY
+    would reject a plain string, so numeric recovery parameters are converted
+    here instead of relying on ``declare_parameter`` type inference.
+    """
+    if value is None:
+        return default
+    try:
+        return float(str(value).strip())
+    except (TypeError, ValueError):
+        return default
+
+
 def _as_bool(value, default=False):
     if value is None:
         return default
@@ -994,6 +1009,14 @@ def _build_simulation_actions(context):
                     "policy_path": go2_policy_path,
                     "reverse_command_map": _launch_value(
                         context, "go2_reverse_command_map"),
+                    "enable_fall_recovery": _as_bool(
+                        _launch_value(context, "enable_fall_recovery")),
+                    "fall_recovery_timeout_s": _as_float(
+                        _launch_value(context, "fall_recovery_timeout_s"), 4.0),
+                    "fall_recovery_gain_scale": _as_float(
+                        _launch_value(context, "fall_recovery_gain_scale"), 0.5),
+                    "fall_recovery_damping_scale": _as_float(
+                        _launch_value(context, "fall_recovery_damping_scale"), 0.5),
                 }],
             ))
 
@@ -1302,6 +1325,20 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "go2_perturbation_axis", default_value="1",
             description="Go2 body-frame force axis: 0=x, 1=y, 2=z."),
+        DeclareLaunchArgument(
+            "enable_fall_recovery", default_value="false",
+            description="Opt-in experimental Go2 re-stand attempt after a "
+                        "detected fall; off by default because it is not "
+                        "qualified on this plant."),
+        DeclareLaunchArgument(
+            "fall_recovery_timeout_s", default_value="4.0",
+            description="Bounded window for the Go2 re-stand attempt."),
+        DeclareLaunchArgument(
+            "fall_recovery_gain_scale", default_value="0.5",
+            description="Stance gain scale used during the Go2 re-stand attempt."),
+        DeclareLaunchArgument(
+            "fall_recovery_damping_scale", default_value="0.5",
+            description="Stance damping scale used during the Go2 re-stand attempt."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

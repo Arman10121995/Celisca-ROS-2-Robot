@@ -1,0 +1,42 @@
+{
+  "tool": "run_flat_ground_suite.sh",
+  "source_root": "/home/molar1/bumperbot_ws",
+  "domain_base": 216,
+  "duration_s": 7.0,
+  "drive_start_s": 1.0,
+  "drive_end_s": 4.0,
+  "reverse_command_map": "inverse",
+  "cases": [
+    {
+      "case": "forward_stop",
+      "vx": 0.25,
+      "wz": 0.0,
+      "drop": false
+    },
+    {
+      "case": "reverse_stop",
+      "vx": -0.35,
+      "wz": 0.0,
+      "drop": false
+    },
+    {
+      "case": "turn_stop",
+      "vx": 0.0,
+      "wz": 0.5,
+      "drop": false
+    },
+    {
+      "case": "forward_command_loss",
+      "vx": 0.25,
+      "wz": 0.0,
+      "drop": true
+    },
+    {
+      "case": "zero_settle",
+      "vx": 0.0,
+      "wz": 0.0,
+      "drop": false
+    }
+  ],
+  "trials": []
+}

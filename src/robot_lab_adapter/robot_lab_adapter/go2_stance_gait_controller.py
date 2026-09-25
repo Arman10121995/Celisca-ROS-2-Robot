@@ -14,9 +14,33 @@ from std_msgs.msg import Float64MultiArray, String
 from std_srvs.srv import Trigger
 
 from robot_lab_adapter.go2_locomotion import (
-    BaseVelocity, BodyState, Go2LocomotionCore, JOINT_NAMES,
+    BaseVelocity, BodyState, FallRecovery, Go2LocomotionCore, JOINT_NAMES,
 )
 from robot_lab_adapter.go2_velocity_policy import Go2VelocityPolicy
+
+
+def _param_float(node, name, default):
+    """Read a float parameter tolerating a string-typed launch override."""
+    value = node.get_parameter(name).value
+    if isinstance(value, str):
+        try:
+            return float(value.strip())
+        except ValueError:
+            return default
+    return float(value)
+
+
+def _as_flag(node, name, default=False):
+    """Read a boolean parameter tolerating a string-typed launch override."""
+    value = node.get_parameter(name).value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in ("true", "1", "yes", "on"):
+            return True
+        if normalized in ("false", "0", "no", "off"):
+            return False
+        return default
+    return bool(value)
 
 
 class Go2StanceGaitController(Node):
@@ -36,6 +60,13 @@ class Go2StanceGaitController(Node):
         self.declare_parameter("enable_experimental_gait", False)
         self.declare_parameter("policy_path", "")
         self.declare_parameter("reverse_command_map", "feedforward")
+        # Fall recovery is opt-in and experimental. Off by default: a re-stand
+        # attempt drives the nominal pose with elevated gains and has not been
+        # shown to right the robot on this plant.
+        self.declare_parameter("enable_fall_recovery", False)
+        self.declare_parameter("fall_recovery_timeout_s", 4.0)
+        self.declare_parameter("fall_recovery_gain_scale", 0.5)
+        self.declare_parameter("fall_recovery_damping_scale", 0.5)
         rate = float(self.get_parameter("command_rate_hz").value)
         if rate <= 0.0:
             raise ValueError("command_rate_hz must be positive")
@@ -60,6 +91,17 @@ class Go2StanceGaitController(Node):
         self._cmd = BaseVelocity()
         self._cmd_at = float("-inf")
         self._last_safety_state = self._core.safety.state
+        self._recovery = (
+            FallRecovery(
+                timeout_s=_param_float(
+                    self, "fall_recovery_timeout_s", 4.0),
+                gain_scale=_param_float(
+                    self, "fall_recovery_gain_scale", 0.5),
+                damping_scale=_param_float(
+                    self, "fall_recovery_damping_scale", 0.5),
+            )
+            if _as_flag(self, "enable_fall_recovery", False)
+            else None)
         sensor_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.BEST_EFFORT)
         self.create_subscription(
             JointState, self.get_parameter("joint_states_topic").value,
@@ -113,6 +155,8 @@ class Go2StanceGaitController(Node):
         if self._policy:
             self._policy.reset()
             self._last_policy_at = float("-inf")
+        if self._recovery is not None:
+            self._recovery.reset()
         response.success = True
         response.message = "Go2 safety latch reset; command is zero"
         return response
@@ -132,6 +176,11 @@ class Go2StanceGaitController(Node):
                 body=self._body, velocity_command=command,
                 measured_contact_forces=self._foot_forces)
             efforts, state = cycle.efforts, cycle.safety_state
+        if self._recovery is not None and self._core.safety.fallen:
+            recovered = self._recovery.update(
+                time.monotonic(), self._core.safety.fallen, self._body,
+                self._positions, self._velocities)
+            efforts = {name: recovered.get(name, 0.0) for name in JOINT_NAMES}
         if state != self._last_safety_state:
             self.get_logger().warning(
                 "Go2 safety %s: %s" %

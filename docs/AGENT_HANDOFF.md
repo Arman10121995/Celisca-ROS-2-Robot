@@ -59,12 +59,19 @@ Bounded perturbation recovery is now measured. With the opt-in diagnostic force
 pulse, 5 N and 20 N produce no response above stance noise and are retained as
 negative controls; 35 N produces a measurable 0.070 rad peak tilt and settles
 upright with no SAFE_STOP; 60 N exceeds the envelope, collapses to 0.139 m and
-correctly latches `safe_stop`. Fall recovery itself is still unimplemented, so
-the next step is explicit fall detection plus a get-up behavior, then repeating
-the five-case flat-ground suite across multiple seeds. Keep
-`go2_reverse_command_map:=inverse` and the `go2_perturbation_*` arguments opt-in.
-Note that this host caps a usable `ROS_DOMAIN_ID` at about 232; higher values
-fail at node creation and are a setup error, not a system result.
+correctly latches `safe_stop`. Fall detection is implemented (latched, debounced,
+distinct from SAFE_STOP) and an opt-in nominal-pose re-stand attempt is
+unit-tested, but the measured 60 N trial shows that attempt does **not** right
+the robot. Whole-body repositioning is not implemented, so fall recovery is
+still unqualified and the next step is a real get-up strategy rather than
+nominal-pose PD. Keep `go2_reverse_command_map:=inverse`, the
+`go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
+
+Four five-case flat-ground suites now pass bounded screening. Note for future
+runs: this host caps a usable `ROS_DOMAIN_ID` at about 232; higher values fail
+at node creation and are a setup error, not a system result. Also check contract
+topic message counts before trusting a trial — a launch override typed as a
+string once killed the controller at startup and left the robot uncontrolled.
 
 `R5.3` is partial: its contact-fidelity defect is fixed, but the BHL held-turn/walk
 stall remains a policy fixed point and further rate/filter/contact tuning is
