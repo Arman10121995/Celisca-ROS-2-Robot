@@ -194,6 +194,9 @@ def test_go2_fall_recovery_launch_flags_are_opt_in_and_typed():
         assert f'"{name}", default_value="{default}"' in launch_text
         assert f'"{name}": _as_float(' in launch_text
     assert '"enable_fall_recovery": _as_bool(' in launch_text
+    assert '"go2_recovery_policy_path", default_value=""' in launch_text
+    assert '"recovery_policy_path": go2_recovery_path' in launch_text
+    assert '"go2_recovery_nju", "policy.onnx"' in launch_text
 
 
 def test_bhl_physics_timestep_launch_override_is_opt_in():

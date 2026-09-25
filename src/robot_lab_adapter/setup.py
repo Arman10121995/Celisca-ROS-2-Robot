@@ -18,6 +18,11 @@ setup(
             'policies/go2_velocity_flat/deploy.yaml',
             'policies/go2_velocity_flat/SOURCE.md',
         ]),
+        ('share/' + package_name + '/policies/go2_recovery_nju', [
+            'policies/go2_recovery_nju/policy.onnx',
+            'policies/go2_recovery_nju/SOURCE.md',
+            'policies/go2_recovery_nju/LICENSE',
+        ]),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

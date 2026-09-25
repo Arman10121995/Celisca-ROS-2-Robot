@@ -67,9 +67,16 @@ warning-or-higher samples following a fall-threshold trip. A clean repeat in
 domain 228 records `/go2/fallen` at 3.796 s and `/go2/recovery_state`
 `idle → attempting → failed` at 3.796/10.628 s; it finishes upside down at
 0.057 m. Recovery success now also requires measured standing height. The
-nominal-pose attempt is a valid negative; whole-body repositioning is not
-implemented, so fall recovery remains unqualified. Next implement a real
-get-up strategy and repeat the 60 N collapse. Keep `go2_reverse_command_map:=inverse`, the
+nominal-pose attempt is a valid negative. A pinned MIT-licensed NJU-RLC
+recovery actor was then exported to ONNX and wired behind
+`go2_recovery_policy_path:=auto` plus `enable_fall_recovery:=true`. Its valid
+bounded 60 N trials started at 3.800/3.808 s, timed out at 10.696/10.840 s
+and both ended inverted at 0.057 m; the first raw-action trial produced a non-finite action and
+failed closed. Rebuild `robot_lab_adapter` after Python edits: its installed
+module is a copy despite `--symlink-install`, and three intermediate runs
+using a stale installed module were discarded. Fall recovery remains
+unqualified; next adapt/retrain the actor to this plant or implement another
+measured whole-body get-up strategy. Keep `go2_reverse_command_map:=inverse`, the
 `go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
 
 Four five-case flat-ground suites now pass bounded screening. Note for future

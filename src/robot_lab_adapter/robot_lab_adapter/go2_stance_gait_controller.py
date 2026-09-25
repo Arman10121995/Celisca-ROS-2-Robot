@@ -18,6 +18,7 @@ from robot_lab_adapter.go2_locomotion import (
     BaseVelocity, BodyState, FallRecovery, Go2LocomotionCore, JOINT_NAMES,
 )
 from robot_lab_adapter.go2_velocity_policy import Go2VelocityPolicy
+from robot_lab_adapter.go2_recovery_policy import Go2RecoveryPolicy, RECOVERY_POLICY_DT_S
 
 
 def _param_float(node, name, default):
@@ -68,6 +69,7 @@ class Go2StanceGaitController(Node):
         self.declare_parameter("fall_recovery_timeout_s", 4.0)
         self.declare_parameter("fall_recovery_gain_scale", 0.5)
         self.declare_parameter("fall_recovery_damping_scale", 0.5)
+        self.declare_parameter("recovery_policy_path", "")
         rate = float(self.get_parameter("command_rate_hz").value)
         if rate <= 0.0:
             raise ValueError("command_rate_hz must be positive")
@@ -86,6 +88,7 @@ class Go2StanceGaitController(Node):
         self._velocities = {}
         self._efforts = {}
         self._foot_forces = None
+        self._foot_forces_at = float("-inf")
         self._body = None
         self._body_height = None
         self._body_height_at = float("-inf")
@@ -105,6 +108,12 @@ class Go2StanceGaitController(Node):
             )
             if _as_flag(self, "enable_fall_recovery", False)
             else None)
+        recovery_path = str(self.get_parameter("recovery_policy_path").value)
+        if recovery_path and self._recovery is None:
+            raise ValueError("recovery_policy_path requires enable_fall_recovery:=true")
+        self._recovery_policy = (Go2RecoveryPolicy(recovery_path)
+                                 if recovery_path else None)
+        self._last_recovery_policy_at = float("-inf")
         sensor_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.BEST_EFFORT)
         self.create_subscription(
             JointState, self.get_parameter("joint_states_topic").value,
@@ -163,6 +172,7 @@ class Go2StanceGaitController(Node):
     def _on_foot_contacts(self, msg):
         if len(msg.data) == 4:
             self._foot_forces = dict(zip(("FL", "FR", "RL", "RR"), msg.data))
+            self._foot_forces_at = time.monotonic()
 
     def _reset_safety(self, _request, response):
         self._core.safety.reset()
@@ -173,6 +183,9 @@ class Go2StanceGaitController(Node):
             self._last_policy_at = float("-inf")
         if self._recovery is not None:
             self._recovery.reset()
+        if self._recovery_policy is not None:
+            self._recovery_policy.reset()
+            self._last_recovery_policy_at = float("-inf")
         response.success = True
         response.message = "Go2 safety latch reset; command is zero"
         return response
@@ -197,6 +210,26 @@ class Go2StanceGaitController(Node):
                 time.monotonic(), self._core.safety.fallen, self._body,
                 self._positions, self._velocities)
             efforts = {name: recovered.get(name, 0.0) for name in JOINT_NAMES}
+            if (self._recovery_policy is not None
+                    and self._recovery.status == FallRecovery.ATTEMPTING):
+                now = time.monotonic()
+                if now - self._last_recovery_policy_at >= RECOVERY_POLICY_DT_S:
+                    try:
+                        forces = (self._foot_forces if now - self._foot_forces_at < 0.1
+                                  else None)
+                        self._recovery_policy.step(
+                            self._positions, self._velocities,
+                            self._angular_velocity, self._body, forces)
+                        self._last_recovery_policy_at = now
+                    except Exception as exc:
+                        # The experimental inference path must fail closed even
+                        # if ONNX Runtime raises outside our input checks.
+                        self._recovery.status = FallRecovery.FAILED
+                        self.get_logger().error("Go2 recovery policy failed: %s" % exc)
+                efforts = (self._recovery_policy.efforts(
+                    self._positions, self._velocities)
+                    if self._recovery.status == FallRecovery.ATTEMPTING
+                    else {name: 0.0 for name in JOINT_NAMES})
         if state != self._last_safety_state:
             self.get_logger().warning(
                 "Go2 safety %s: %s" %

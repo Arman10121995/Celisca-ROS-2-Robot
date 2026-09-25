@@ -15,6 +15,8 @@ RECOVERY_S="${RECOVERY_S:-2.0}"
 # Opt-in re-stand attempt; off by default because it is not qualified.
 FALL_RECOVERY="${FALL_RECOVERY:-false}"
 FALL_RECOVERY_TIMEOUT_S="${FALL_RECOVERY_TIMEOUT_S:-4.0}"
+RECOVERY_POLICY_PATH="${RECOVERY_POLICY_PATH:-}"
+TRACE_JOINTS="${TRACE_JOINTS:-false}"
 SOURCE_REVISION="$(git -C "$ROOT" rev-parse --short HEAD)"
 SOURCE_DIRTY="$(git -C "$ROOT" status --porcelain --untracked-files=no | wc -l)"
 
@@ -55,11 +57,12 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$SOURCE_REVISION" "$SOURCE_DIRTY" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" <<'PY'
 import json
 import sys
+import hashlib
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, revision, dirty = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, recovery_policy_path, trace_joints, revision, dirty = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
@@ -73,10 +76,26 @@ Path(out).write_text(json.dumps({
     "recovery_window_s": float(recovery),
     "enable_fall_recovery": fall_recovery.strip().lower() in ("true", "1", "yes"),
     "fall_recovery_timeout_s": float(fall_timeout),
+    "recovery_policy_path": recovery_policy_path,
+    "trace_joints": trace_joints.strip().lower() in ("true", "1", "yes"),
+    "source_sha256": {
+        name: hashlib.sha256((Path(root) / name).read_bytes()).hexdigest()
+        for name in (
+            "src/robot_lab_adapter/robot_lab_adapter/go2_locomotion.py",
+            "src/robot_lab_adapter/robot_lab_adapter/go2_stance_gait_controller.py",
+            "src/robot_lab_adapter/robot_lab_adapter/go2_recovery_policy.py",
+            "src/robot_lab_adapter/policies/go2_recovery_nju/policy.onnx",
+            "src/robot_lab_bringup/launch/simulated_robot.launch.py",
+        ) if (Path(root) / name).exists()
+    },
 }, indent=2) + "\n")
 PY
 
-ROS_DOMAIN_ID="$DOMAIN" /usr/bin/python3 "$PROBE" \
+trace_args=()
+if [[ "$TRACE_JOINTS" == "true" ]]; then
+    trace_args+=(--trace-joints)
+fi
+ROS_DOMAIN_ID="$DOMAIN" /usr/bin/python3 "$PROBE" "${trace_args[@]}" \
     --duration "$DURATION" --wall-timeout 60 \
     --perturbation-start "$START_S" --perturbation-duration "$PULSE_S" \
     --perturbation-force-n "$FORCE_N" --recovery-window "$RECOVERY_S" \
@@ -92,6 +111,7 @@ ROS_DOMAIN_ID="$DOMAIN" setsid ros2 launch robot_lab_bringup simulated_robot.lau
     go2_perturbation_duration_s:="$PULSE_S" \
     go2_perturbation_axis:=1 \
     enable_fall_recovery:="$FALL_RECOVERY" \
+    go2_recovery_policy_path:="$RECOVERY_POLICY_PATH" \
     fall_recovery_timeout_s:="$FALL_RECOVERY_TIMEOUT_S" \
     > "$launch_log" 2>&1 &
 launch_pid=$!

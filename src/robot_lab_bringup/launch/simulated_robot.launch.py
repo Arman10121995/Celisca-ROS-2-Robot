@@ -970,6 +970,12 @@ def _build_simulation_actions(context):
             go2_policy_path = os.path.join(
                 get_package_share_directory("robot_lab_adapter"), "policies",
                 "go2_velocity_flat", "policy.onnx")
+        go2_recovery_path = (_launch_value(context, "go2_recovery_policy_path")
+                             if go2_controller_active else "")
+        if go2_recovery_path == "auto":
+            go2_recovery_path = os.path.join(
+                get_package_share_directory("robot_lab_adapter"), "policies",
+                "go2_recovery_nju", "policy.onnx")
         go2_initial_positions = json.dumps({
             f"{leg}_{kind}_joint": value
             for leg in ("FL", "FR", "RL", "RR")
@@ -1007,6 +1013,7 @@ def _build_simulation_actions(context):
                     "enable_experimental_gait": _as_bool(
                         _launch_value(context, "go2_enable_experimental_gait")),
                     "policy_path": go2_policy_path,
+                    "recovery_policy_path": go2_recovery_path,
                     "reverse_command_map": _launch_value(
                         context, "go2_reverse_command_map"),
                     "enable_fall_recovery": _as_bool(
@@ -1307,6 +1314,11 @@ def generate_launch_description():
             description="Optional ONNX Go2 velocity policy ('auto' uses the "
                         "bundled flat-ground model); experimental until "
                         "the model and stop/turn/terrain behavior are qualified."),
+        DeclareLaunchArgument(
+            "go2_recovery_policy_path", default_value="",
+            description="Optional NJU-RLC Go2 get-up ONNX actor ('auto' uses the "
+                        "bundled model); requires enable_fall_recovery:=true and "
+                        "remains experimental until a live get-up trial passes."),
         DeclareLaunchArgument(
             "go2_reverse_command_map", default_value="feedforward",
             description="Opt-in Go2 reverse observation map: 'feedforward' preserves "

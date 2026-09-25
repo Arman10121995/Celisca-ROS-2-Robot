@@ -337,7 +337,12 @@ Dependencies: `R5.1`.
   fall trigger and publishing the fall/recovery states, a clean repeat confirms
   the opt-in attempt starts and times out without recovery: the robot ends
   upside down at 0.057 m. Whole-body repositioning is not implemented, so
-  standing back up remains unqualified. Repeatability, terrain traversal, fall
+  standing back up remains unqualified. An additional opt-in NJU-RLC learned
+  get-up actor was ported to ONNX and tested twice against the same 60 N
+  collapse: the bounded trials started at 3.800/3.808 s but timed out at
+  10.696/10.840 s, both ending inverted at 0.057 m. The actor path fails
+  closed and stays off by default.
+  Repeatability, terrain traversal, fall
   handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
@@ -356,8 +361,9 @@ Dependencies: `R5.1`.
   requires measured standing height, not only upright tilt. The named `terrain_stairs` task
   still fails at the first ledge (0.115 m displacement, 0.527 rad peak tilt,
   35.55 N.m max effort), so do not claim terrain traversal. Next implement a
-  real whole-body repositioning/get-up strategy rather than nominal-pose PD,
-  then re-run the 60 N collapse. Do not enable GUI velocity-base, SLAM or
+  target-domain adaptation/retraining or a different whole-body get-up
+  strategy; both the nominal-pose and ported learned actor failed the named
+  60 N collapse. Do not enable GUI velocity-base, SLAM or
   navigation modes.
   Note for future runs: this host's CycloneDDS port range caps usable
   `ROS_DOMAIN_ID` at about 232. See the [Go2 tutorial](docs/tutorials/go2.md)

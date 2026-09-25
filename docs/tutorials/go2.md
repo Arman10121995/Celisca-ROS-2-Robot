@@ -192,6 +192,24 @@ old detector missed the brief fall-threshold crossing. Nominal-pose PD is not en
 fallen pose; real whole-body repositioning is not implemented. Do not enable
 this expecting the robot to stand up.
 
+An opt-in learned actor from the MIT-licensed NJU-RLC Go2 recovery checkpoint
+can replace the nominal-pose attempt for experiments:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  mode:=loc simulator:=mujoco robot_model:=unitree_go2 \
+  map_name:=nav_empty go2_policy_path:=auto \
+  enable_fall_recovery:=true go2_recovery_policy_path:=auto \
+  fall_recovery_timeout_s:=8.0
+```
+
+It uses measured joints, IMU and direct foot forces, and requires ONNX Runtime.
+On the same 60 N collapse its bounded action path entered `attempting`, kept
+the controller alive, then timed out with the robot inverted at 0.057 m.
+This is an experimental comparison, not a qualified recovery behavior. Its
+model provenance, MIT license and observation contract are in
+`src/robot_lab_adapter/policies/go2_recovery_nju/SOURCE.md`.
+
 A caution learned here: a launch override typed as a string can kill the
 controller at startup (`InvalidParameterTypeException`), leaving the robot
 completely uncontrolled while the process list still looks healthy. Check

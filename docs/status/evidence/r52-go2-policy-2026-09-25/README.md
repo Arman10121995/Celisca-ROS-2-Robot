@@ -199,6 +199,46 @@ This is a **valid negative**: the nominal-pose PD attempt ran and did not
 right the robot. It remains off by default. Whole-body repositioning is still
 needed for a get-up strategy.
 
+### Opt-in learned get-up actor
+
+The MIT-licensed [NJU-RLC Go2 recovery actor](../../../../src/robot_lab_adapter/policies/go2_recovery_nju/SOURCE.md)
+was exported to a bundled ONNX graph with the upstream 57-value proprioceptive
+observation, 10-frame history and 12-joint output. It is enabled only with
+`enable_fall_recovery:=true go2_recovery_policy_path:=auto`; the default remains
+off. The adapter uses direct foot forces, measured joint state and IMU, a 50 Hz
+actor step, 250 Hz effort output, 40/1 PD, bounded actions/targets/efforts, and
+the same latched timeout/success logic. The exported ONNX graph matched the
+upstream PyTorch output within `3.875e-7` on the recorded zero-input parity
+check and within `1.336e-5` on 50 seeded random input pairs. See the source
+note for the pinned checkpoint and license.
+
+The first 60 N trial
+([`fall_nju_recovery_trial_20260925T60N/`](fall_nju_recovery_trial_20260925T60N/probe.json))
+used the unbounded raw actor action. Recovery began at 3.800 s, moved the
+legs, then produced a non-finite action and failed closed at 8.588 s. The
+robot ended inverted at 0.057 m. Intermediate runs after an action-clipping
+source edit still used the old installed Python module, so they were discarded
+as setup errors rather than described as guarded-policy evidence.
+
+The valid bounded repeat
+([`fall_nju_recovery_bounded_20260925T60N/`](fall_nju_recovery_bounded_20260925T60N/probe.json))
+rebuilt the installed adapter and verified its action guard before launch. It
+used ROS domain 223, `nav_empty`, a 0.2 s 60 N lateral pulse, a 16 s probe and
+an 8 s opt-in recovery window. Probe and launch returned zero; 3,997 safety
+messages were observed. `fallen` latched and recovery started at 3.800 s.
+There was no non-finite-action error; recovery timed out at 10.696 s and the
+robot again ended inverted at 0.057 m. Height rose only to 0.199 m during the
+attempt. After the final inference exception guard was rebuilt, a matched
+repeat in domain 222
+([`fall_nju_recovery_bounded_repeat_20260925T60N/`](fall_nju_recovery_bounded_repeat_20260925T60N/probe.json))
+confirmed the negative: probe and launch returned zero, 3,998 safety messages
+arrived, recovery began at 3.808 s and timed out at 10.840 s with no inference
+error, and the final height was again 0.057 m with the robot inverted. Its
+manifest records SHA-256 of the final installed source inputs and model. This
+actor is **not a qualified get-up controller on this plant**.
+The explicit guard and timeout prevent continued drive after failure, but
+target-domain adaptation or a different whole-body strategy is still needed.
+
 Two defects found and fixed while producing this evidence, both worth keeping:
 
 - The first attempt produced a physically contradictory result (0.040 rad peak

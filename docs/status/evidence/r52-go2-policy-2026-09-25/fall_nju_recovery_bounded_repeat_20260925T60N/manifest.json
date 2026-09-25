@@ -1,0 +1,23 @@
+{
+  "tool": "run_perturbation_trial.sh",
+  "source_root": "/workspace/molar/ros_ws/bumperbot_ws",
+  "source_revision": "abf08fb",
+  "tracked_modified_files_at_launch": 10,
+  "ros_domain_id": 222,
+  "duration_s": 16.0,
+  "force_n": 60.0,
+  "start_s": 3.0,
+  "pulse_s": 0.2,
+  "recovery_window_s": 10.0,
+  "enable_fall_recovery": true,
+  "fall_recovery_timeout_s": 8.0,
+  "recovery_policy_path": "auto",
+  "trace_joints": true,
+  "source_sha256": {
+    "src/robot_lab_adapter/robot_lab_adapter/go2_locomotion.py": "bff98c1895d420418725ba3d04f5e79d333796ce2089d7c6012266c7bd97e845",
+    "src/robot_lab_adapter/robot_lab_adapter/go2_stance_gait_controller.py": "b267608fefdaff6133945b1c2b4fd56d78fbba40b46d8af61e8728fb18df7970",
+    "src/robot_lab_adapter/robot_lab_adapter/go2_recovery_policy.py": "de4157adec282c0f18039f801f3e4372acee6becbb5d7f59e5514dc95c0b11f7",
+    "src/robot_lab_adapter/policies/go2_recovery_nju/policy.onnx": "11a40a6c8d4dde82aeb1d17c3ec29b4ddbe97a0a69a120700a83e02b1d781a51",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "807e5cca57458f1ac660d39daeb8e9c9f50255b27ed99b25ea41551bbdd7e2f8"
+  }
+}
