@@ -21,6 +21,20 @@ POLICY_ACTION_SCALE = 0.5
 POLICY_DT = 0.02
 
 
+def policy_forward_command(vx: float) -> float:
+    """Compensate the measured reverse dead zone of the flat-ground policy.
+
+    ROS trials at -0.25, -0.4 and -0.6 m/s found near-zero, 0.08 and
+    0.34 m/s backward motion respectively. This continuous feed-forward map
+    sends -0.25 m/s as about -0.55 in the policy's command observation;
+    the capped range remains within the model's trained [-1, 2] m/s range.
+    """
+    if vx >= 0:
+        return vx
+    magnitude = abs(vx)
+    return -min(1.0, 0.8 * magnitude + 0.35 * min(1.0, magnitude / 0.1))
+
+
 def projected_gravity(x: float, y: float, z: float, w: float) -> np.ndarray:
     """Unit world down direction expressed in the IMU/body frame."""
     norm = math.sqrt(x*x + y*y + z*z + w*w)
@@ -58,7 +72,8 @@ class Go2VelocityPolicy:
         dq = np.asarray([velocities[name] for name in JOINT_NAMES], dtype=np.float32)
         grav = projected_gravity(*orientation)
         obs = np.concatenate((angular_velocity, grav,
-                              (command.vx, command.vy, command.wz),
+                              (policy_forward_command(command.vx),
+                               command.vy, command.wz),
                               q - POLICY_DEFAULT, dq, self.last_action),
                              dtype=np.float32).reshape(1, 45)
         if not np.isfinite(obs).all():

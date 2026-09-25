@@ -16,6 +16,7 @@ from robot_lab_adapter.go2_locomotion import BaseVelocity, JOINT_NAMES
 from robot_lab_adapter.go2_velocity_policy import (
     Go2VelocityPolicy, POLICY_DEFAULT, POLICY_KP, POLICY_KD,
     POLICY_ACTION_SCALE, projected_gravity,
+    policy_forward_command,
 )
 
 
@@ -77,6 +78,14 @@ def test_invalid_observation_and_action_fail_closed():
 def test_projected_gravity_is_body_frame():
     np.testing.assert_allclose(projected_gravity(0, 0, 0, 1), [0, 0, -1])
     np.testing.assert_allclose(projected_gravity(0, 1, 0, 0), [0, 0, 1])
+
+
+def test_reverse_policy_feedforward_is_continuous_and_bounded():
+    assert policy_forward_command(0.25) == 0.25
+    assert policy_forward_command(0.0) == 0.0
+    assert policy_forward_command(-0.25) == pytest.approx(-0.55)
+    assert policy_forward_command(-0.8) == pytest.approx(-0.99)
+    assert policy_forward_command(-0.001) < 0.0
 
 
 def test_bundled_policy_and_adapter_match_deploy_contract():
