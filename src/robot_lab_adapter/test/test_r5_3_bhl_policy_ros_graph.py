@@ -410,3 +410,55 @@ def test_effort_fall_stops_drive_even_between_policy_decisions(effort_graph, mon
     node._orientation = (0.0, 0.0, 0.0, 1.0)
     node._on_effort_timer()
     assert published[-1] == [0.0] * 22
+
+
+def test_yaw_servo_wiring_is_opt_in_and_boost_only():
+    """Node wiring for the yaw servo: off by default, direction preserved.
+
+    The servo changes the policy's *observation* (the command block), not the
+    action scaling, so it is invisible in the published targets; this asserts
+    the wiring directly. With the default gain 0 the operator's command
+    reaches the policy unchanged; with a gain the shortfall is boosted,
+    clamped to the training range, and never reversed, so a released stick
+    still commands exactly zero (the qualified stop path).
+    """
+    from robot_lab_adapter.bhl_policy import YAW_COMMAND_LIMIT
+    from robot_lab_adapter.humanoid_policy_controller import (
+        HumanoidPolicyController)
+    try:
+        rclpy.init()
+    except RuntimeError:
+        pass  # already initialized (e.g. re-run in a persistent session)
+    off = HumanoidPolicyController(settle_duration_s=0.05)
+    try:
+        assert not off._yaw_servo.enabled
+        assert off._servo_note() == ""
+        off._command = [0.0, 0.0, 0.3]
+        off._gyro = (0.0, 0.0, 0.0)
+        assert off._policy_command() == [0.0, 0.0, 0.3]
+    finally:
+        off.destroy_node()
+    on = HumanoidPolicyController(settle_duration_s=0.05, yaw_servo_gain=4.0)
+    try:
+        assert on._servo_note().startswith(", boost-only yaw servo gain=4")
+        on._command = [0.0, 0.0, 0.3]
+        on._gyro = (0.0, 0.0, 0.0)
+        boosted = on._policy_command()
+        assert boosted[0] == 0.0 and boosted[1] == 0.0
+        assert boosted[2] == pytest.approx(YAW_COMMAND_LIMIT)
+        # Non-turning is a full shortfall: the boost saturates upside.
+        assert on._policy_command()[2] == pytest.approx(YAW_COMMAND_LIMIT)
+        # Turning as commanded: the 80 ms measurement filter settles and the
+        # boost fades back to the operator's reference.
+        on._gyro = (0.0, 0.0, 0.3)
+        for _ in range(12):
+            tracking = on._policy_command()[2]
+        assert tracking == pytest.approx(0.3, abs=0.02)
+        # Released stick: exactly zero, never a command against the spin.
+        on._command = [0.0, 0.0, 0.0]
+        assert on._policy_command() == [0.0, 0.0, 0.0]
+        on._command = [0.0, 0.0, -0.3]
+        on._gyro = (0.0, 0.0, 0.3)
+        assert on._policy_command()[2] < 0
+    finally:
+        on.destroy_node()

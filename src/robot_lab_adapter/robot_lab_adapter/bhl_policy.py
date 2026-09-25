@@ -44,6 +44,10 @@ Honest scope:
   tracking that follows is real, not hidden.
 - Body tilt at or beyond the fall threshold (0.70 rad, shared with the
   balance core) latches SAFE_STOP; recovery requires an explicit ``reset()``.
+- The opt-in boost-only yaw servo (:class:`YawRateBoost`) lives here too: it
+  is the node's ``yaw_servo_gain > 0`` path, is off by default, and its class
+  docstring carries the measured defect (a held pure-turn command collapsing
+  the policy's stepping limit cycle) and its honest scope.
 """
 
 from __future__ import annotations
@@ -64,6 +68,9 @@ COMMAND_WIDTH = 3
 
 #: Training command ranges (vx, vy, wz); commands are clamped to these.
 COMMAND_LIMITS: Tuple[float, float, float] = (1.0, 0.5, 1.5)
+
+#: Training command limit for the yaw rate [rad/s] (``ang_vel_z`` range).
+YAW_COMMAND_LIMIT = COMMAND_LIMITS[2]
 
 #: Policy decision rate [Hz] (upstream policy_dt = 0.04 s).
 POLICY_RATE_HZ = 25.0
@@ -223,6 +230,92 @@ def clamp_command(command: Sequence[float]) -> np.ndarray:
     return np.clip(np.asarray(command, dtype=float),
                    [-COMMAND_LIMITS[0], -COMMAND_LIMITS[1], -COMMAND_LIMITS[2]],
                    COMMAND_LIMITS)
+
+
+class YawRateBoost:
+    """Boost-only closed-loop correction of the policy's yaw command.
+
+    The vendored checkpoint is a memoryless feed-forward network, and on this
+    plant it can converge to a *standing* action while a pure-turn command is
+    still held. Measured 2026-09-25 (``turn_pos03_gait_25hz_b``, held
+    +0.3 rad/s from 3 s): the summed-|joint effort| spread inside a window
+    drops from 9.4 N.m (3-4 s, yaw +0.35 rad/s) to 0.16-0.20 N.m (5-13 s,
+    yaw +0.001 rad/s) - the policy parks at a constant target, it does not
+    step and slip. The action is a function of the command input, so raising
+    the commanded rate is the one lever that can move the policy off that
+    fixed point without retraining.
+
+    The servo is deliberately one-sided:
+
+    - it only ever *raises* ``|wz|``, and only while the low-passed measured
+      body-frame yaw rate falls short of the reference in the reference's
+      direction; it never commands against the reference, so a released stick
+      still commands exactly zero and the qualified stop behaviour is
+      unchanged;
+    - the boosted command is clamped to the training command range, so the
+      policy never sees a yaw command outside what it was trained on;
+    - a non-finite input returns the reference unchanged (the qualified
+      open-loop behaviour) rather than a fabricated correction.
+
+    Honest scope: this is an opt-in deployment aid for a real defect, not a
+    fix of the root cause (the policy's own limit cycle); ``yaw_servo_gain``
+    defaults to 0 (disabled) and the class has no effect while the reference
+    is zero. It is unit-tested and, like the rest of this layer, has no ROS
+    dependency.
+    """
+
+    def __init__(self, gain: float = 0.0, limit: float = YAW_COMMAND_LIMIT,
+                 filter_tau_s: float = 0.08):
+        for name, value in (("gain", gain), ("limit", limit),
+                            ("filter_tau_s", filter_tau_s)):
+            if not math.isfinite(value):
+                raise ValueError(f"{name} must be finite")
+        if gain < 0:
+            raise ValueError("gain must be non-negative (boost-only servo)")
+        if limit <= 0:
+            raise ValueError("limit must be positive")
+        if limit > YAW_COMMAND_LIMIT:
+            raise ValueError(
+                f"limit {limit} exceeds the training yaw range "
+                f"(+/-{YAW_COMMAND_LIMIT})")
+        if filter_tau_s < 0:
+            raise ValueError("filter_tau_s must be non-negative")
+        self.gain = float(gain)
+        self.limit = float(limit)
+        self.filter_tau_s = float(filter_tau_s)
+        self._measured = 0.0
+
+    @property
+    def enabled(self) -> bool:
+        """True when the servo can change a command (``gain > 0``)."""
+        return self.gain > 0.0
+
+    def reset(self) -> None:
+        """Forget the filtered measurement."""
+        self._measured = 0.0
+
+    def command(self, reference: float, measured_yaw_rate: float,
+                dt: float) -> float:
+        """Yaw command for one policy cycle.
+
+        ``reference`` is the operator's yaw-rate command [rad/s],
+        ``measured_yaw_rate`` the latest body-frame yaw rate [rad/s] and
+        ``dt`` the cycle period [s] used to low-pass the measurement.
+        """
+        if not all(math.isfinite(v) for v in
+                   (reference, measured_yaw_rate, dt)):
+            return float(reference)
+        if dt > 0:
+            alpha = (1.0 if self.filter_tau_s <= 0
+                     else min(1.0, dt / self.filter_tau_s))
+            self._measured += alpha * (float(measured_yaw_rate)
+                                       - self._measured)
+        if not self.enabled or reference == 0.0:
+            return float(reference)
+        direction = 1.0 if reference > 0 else -1.0
+        deficit = max(0.0, abs(reference) - direction * self._measured)
+        boosted = abs(reference) + self.gain * deficit
+        return direction * min(self.limit, boosted)
 
 
 def quaternion_gravity(x: float, y: float, z: float, w: float) -> np.ndarray:

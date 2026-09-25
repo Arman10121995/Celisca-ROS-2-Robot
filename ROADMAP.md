@@ -364,6 +364,22 @@ Dependencies: `R5.1`.
   turning. The earlier "negative yaw bias" is retired: the zero-command bend
   window drifts -0.39 to +0.23 rad depending on the run.
   See [recorded evidence](docs/status/evidence/r53-bhl-gui-drive-2026-09-24/README.md).
+- 2026-09-25 second-pass diagnosis: the stall is a policy fixed point, not a
+  plant slip and not a command-path effect. `probe_key_vel.py`
+  (`BHL_PROBE_EFFORT_VECTOR=1`) now records the full 22-value effort vector at
+  full rate and `analyze_turn_gait.py` prints a per-window digest; in a clean
+  25 Hz run the summed-|effort| spread falls from ~10 N.m at 3-5 s (turn at
+  1.2x command) to 0.16-0.23 N.m from 5 s to 13 s with the post-mux command
+  still live in every sample. Command feedback was implemented, unit-tested
+  and then refuted live: the opt-in boost-only yaw servo (`yaw_servo_gain`,
+  launch flag `bhl_enable_yaw_servo`, off by default) commanded an implied
+  1.38-1.50 rad/s through the stall at gain 4 and the yaw still collapsed to
+  <=0.013 rad/s. The remaining candidates are the plant/actuator loop versus
+  the upstream motor model (250 Hz `position_kp=50`, `velocity_kp=2`, torque
+  filter) or a domain-matched retrain. One attempted run toppled in the ramp
+  while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
+  9.3/12); the identical re-run on an idle machine passed the bend at 0.271 rad
+  peak tilt, confirming the bend's CPU-contention sensitivity.
 
 ### R5.4 — Integrate real multirotor SITL flight
 

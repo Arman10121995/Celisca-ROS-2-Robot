@@ -11,7 +11,12 @@ A thin ROS2 wrapper around the pure-logic policy adapter
   publishes) for the body quaternion used
   in the observation (projected gravity) and the latched tilt safety monitor.
 - Subscribes to ``cmd_vel`` (geometry_msgs/Twist) for the base-velocity
-  command; the policy clamps it to the training command ranges.
+  command; the policy clamps it to the training command ranges. With
+  ``yaw_servo_gain`` > 0 (off by default) the yaw part of that command is
+  additionally closed in the loop on the measured body yaw rate: a held
+  pure-turn command was measured to collapse the policy's stepping limit
+  cycle, and the boost-only servo (``bhl_policy.YawRateBoost``) raises the
+  commanded rate toward the training limit while the robot fails to turn.
 - Publishes a ``Float64MultiArray`` of 22 values to the
   ``bhl_standing_controller`` command topic at 250 Hz for effort servoing,
   with policy decisions at 25 Hz upstream. With ``command_interface:=effort`` (the default, matching
@@ -77,6 +82,8 @@ from robot_lab_adapter.bhl_policy import (
     BhlPolicyController,
     POLICY_RATE_HZ,
     StartupSettle,
+    YAW_COMMAND_LIMIT,
+    YawRateBoost,
     load_policy_config,
     quaternion_tilt,
 )
@@ -89,6 +96,7 @@ class HumanoidPolicyController(Node):
         self,
         settle_duration_s: Optional[float] = None,
         command_interface: Optional[str] = None,
+        yaw_servo_gain: Optional[float] = None,
     ):
         super().__init__("humanoid_policy_controller")
         self.declare_parameter("command_topic", "/bhl_standing_controller/commands")
@@ -98,6 +106,9 @@ class HumanoidPolicyController(Node):
         self.declare_parameter("policy_name", "policy_humanoid")
         self.declare_parameter("command_rate_hz", POLICY_RATE_HZ)
         self.declare_parameter("settle_duration_s", 2.0)
+        self.declare_parameter("yaw_servo_gain", 0.0)
+        self.declare_parameter("yaw_servo_limit", YAW_COMMAND_LIMIT)
+        self.declare_parameter("yaw_servo_filter_tau_s", 0.08)
         self.declare_parameter("command_interface", "effort")
         self.declare_parameter("effort_rate_hz", BALANCE_RATE_HZ)
 
@@ -127,6 +138,12 @@ class HumanoidPolicyController(Node):
         effort_rate = float(self.get_parameter("effort_rate_hz").value)
         if not math.isfinite(rate) or rate <= 0 or not math.isfinite(effort_rate) or effort_rate < rate:
             raise ValueError("positive policy rate and effort rate >= policy rate required")
+        self._yaw_servo = YawRateBoost(
+            gain=(float(self.get_parameter("yaw_servo_gain").value)
+                  if yaw_servo_gain is None else float(yaw_servo_gain)),
+            limit=float(self.get_parameter("yaw_servo_limit").value),
+            filter_tau_s=float(
+                self.get_parameter("yaw_servo_filter_tau_s").value))
         self._targets = {}
         self._settle = StartupSettle(
             self._controller.config.hold_pose(), duration_s=settle_duration)
@@ -167,8 +184,17 @@ class HumanoidPolicyController(Node):
             f"({joint_states_topic} + {imu_topic} + {cmd_vel_topic} -> "
             f"{command_topic}) at {rate} Hz over {len(BHL_JOINT_NAMES)} joints "
             f"({interface} interface; effort servo {effort_rate} Hz, "
-            "stance PD/ankle-strategy settle ramp, checkpoint PD/limits driving)"
+            "stance PD/ankle-strategy settle ramp, checkpoint PD/limits "
+            f"driving{self._servo_note()})"
         )
+
+    def _servo_note(self) -> str:
+        """Startup log fragment for the opt-in yaw servo (empty when off)."""
+        if not self._yaw_servo.enabled:
+            return ""
+        return (f", boost-only yaw servo gain={self._yaw_servo.gain:g} "
+                f"limit=+/-{self._yaw_servo.limit:g} rad/s "
+                f"filter_tau={self._yaw_servo.filter_tau_s:g} s")
 
     def _on_joint_state(self, msg: JointState) -> None:
         """Cache the latest measured joint state keyed by name."""
@@ -189,6 +215,19 @@ class HumanoidPolicyController(Node):
         """Cache the latest base-velocity command (policy clamps it)."""
         self._command = [msg.linear.x, msg.linear.y, msg.angular.z]
         self._commanded = True
+
+    def _policy_command(self):
+        """Command for this policy cycle, with the opt-in yaw servo applied.
+
+        The servo reads the same body-frame yaw rate the policy observation
+        uses (``self._gyro[2]``), so no second measurement source is
+        introduced. With ``yaw_servo_gain`` at its 0 default, and whenever
+        the operator's yaw reference is zero, this is the operator's command
+        unchanged.
+        """
+        return [self._command[0], self._command[1],
+                self._yaw_servo.command(
+                    self._command[2], self._gyro[2], self._dt)]
 
     def _on_timer(self) -> None:
         """One policy cycle: onboard state -> Float64MultiArray targets."""
@@ -225,7 +264,7 @@ class HumanoidPolicyController(Node):
             cycle_issues = []
         else:
             cycle = self._controller.update(
-                command=self._command,
+                command=self._policy_command(),
                 gyro=self._gyro,
                 orientation=self._orientation,
                 measured_positions=self._measured_positions,

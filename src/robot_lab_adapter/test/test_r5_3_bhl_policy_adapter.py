@@ -14,6 +14,10 @@ ONNX velocity checkpoints into URDF-clamped joint-position targets:
 - Action conversion: ``default + action_scale * clip(action, limits)`` for
   action joints, default pose for non-action joints, every target clamped to
   the vendored URDF position limits.
+- The opt-in boost-only yaw servo (``YawRateBoost``): disabled by default,
+  raises ``|wz|`` toward the training limit only while the low-passed measured
+  body yaw rate falls short, never commands against the reference, and
+  returns the reference unchanged on non-finite input.
 - Controller with a stub inference session: observation passthrough to the
   session, hold-and-warn on missing measurements (no fabricated inference),
   latched SAFE_STOP on excessive tilt or invalid (NaN/wrong-shape) policy
@@ -40,6 +44,8 @@ from robot_lab_adapter.bhl_balance import POSITION_LIMITS, TILT_FALL_RAD  # noqa
 from robot_lab_adapter.bhl_policy import (  # noqa: E402
     BhlPolicyController,
     StartupSettle,
+    YAW_COMMAND_LIMIT,
+    YawRateBoost,
     action_to_targets,
     build_observation,
     clamp_command,
@@ -550,6 +556,74 @@ def test_settle_targets_stay_urdf_clamped(full_config):
         for joint, value in targets.items():
             lo, hi = POSITION_LIMITS[joint]
             assert lo - 1e-12 <= value <= hi + 1e-12
+
+
+# ----------------------------------------------------------------------------
+# Opt-in boost-only yaw servo
+# ----------------------------------------------------------------------------
+
+def test_yaw_servo_disabled_passes_every_command_through():
+    """Default (gain 0): the qualified open-loop command path is unchanged."""
+    servo = YawRateBoost()
+    assert not servo.enabled
+    assert servo.limit == YAW_COMMAND_LIMIT
+    assert servo.command(0.3, 0.0, 0.04) == 0.3
+    assert servo.command(-0.3, 0.0, 0.04) == -0.3
+    # The measurement filter still runs, but it cannot leak into the output.
+    assert servo.command(0.0, 5.0, 0.04) == 0.0
+    assert servo.command(0.75, -5.0, 0.04) == 0.75
+
+
+def test_yaw_servo_boosts_only_in_the_reference_direction():
+    """Boost-only: no deficit means no change, over-tracking never reverses."""
+    servo = YawRateBoost(gain=4.0, filter_tau_s=0.0)  # unfiltered: alpha = 1
+    assert servo.command(0.3, 0.0, 0.04) == pytest.approx(1.5)
+    assert servo.command(0.3, 0.15, 0.04) == pytest.approx(0.9)
+    assert servo.command(0.3, 0.3, 0.04) == pytest.approx(0.3)
+    assert servo.command(0.3, 0.5, 0.04) == pytest.approx(0.3)
+    assert servo.command(0.3, -0.5, 0.04) == pytest.approx(1.5)
+    assert servo.command(-0.3, 0.0, 0.04) == pytest.approx(-1.5)
+    assert servo.command(-0.3, 0.5, 0.04) == pytest.approx(-1.5)
+
+
+def test_yaw_servo_boost_never_leaves_the_training_range():
+    """A huge gain still cannot command past the trained yaw command."""
+    servo = YawRateBoost(gain=50.0, filter_tau_s=0.0)
+    assert servo.command(1.0, -1.0, 0.04) == YAW_COMMAND_LIMIT
+    assert servo.command(-1.0, 1.0, 0.04) == -YAW_COMMAND_LIMIT
+    with pytest.raises(ValueError):
+        YawRateBoost(gain=1.0, limit=YAW_COMMAND_LIMIT + 0.1)
+
+
+def test_yaw_servo_rejects_invalid_parameters():
+    with pytest.raises(ValueError):
+        YawRateBoost(gain=-1.0)
+    with pytest.raises(ValueError):
+        YawRateBoost(limit=0.0)
+    with pytest.raises(ValueError):
+        YawRateBoost(filter_tau_s=-0.1)
+    with pytest.raises(ValueError):
+        YawRateBoost(gain=float('nan'))
+
+
+def test_yaw_servo_filters_the_measured_rate_and_reset_clears_it():
+    """25 Hz cycles at tau 80 ms: alpha 0.5, so the deficit halves each cycle."""
+    servo = YawRateBoost(gain=1.0, filter_tau_s=0.08)
+    assert servo.command(0.3, 0.3, 0.04) == pytest.approx(0.45)
+    assert servo.command(0.3, 0.3, 0.04) == pytest.approx(0.375)
+    assert servo.command(0.3, 0.3, 0.04) == pytest.approx(0.3375)
+    assert servo.command(0.0, 0.0, 0.04) == 0.0
+    servo.command(0.3, 0.3, 0.04)
+    servo.reset()
+    assert servo.command(0.3, 0.3, 0.04) == pytest.approx(0.45)
+
+
+def test_yaw_servo_never_fabricates_a_correction():
+    """Non-finite inputs fall back to the operator's command unchanged."""
+    servo = YawRateBoost(gain=4.0)
+    assert servo.command(0.3, float('nan'), 0.04) == 0.3
+    assert servo.command(0.3, 0.0, float('inf')) == 0.3
+    assert math.isnan(servo.command(float('nan'), 0.0, 0.04))
 
 
 

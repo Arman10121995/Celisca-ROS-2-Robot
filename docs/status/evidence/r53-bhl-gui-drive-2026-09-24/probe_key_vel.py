@@ -34,6 +34,8 @@ def main():
     speed = float(os.getenv('BHL_PROBE_SPEED', '.25'))
     yaw_rate = float(os.getenv('BHL_PROBE_YAW', '0'))
     rate = float(os.getenv('BHL_PROBE_RATE_HZ', '10'))
+    effort_vector = os.getenv('BHL_PROBE_EFFORT_VECTOR', '0') not in ('0', '', 'false', 'no')
+
     if not all(math.isfinite(v)
                for v in (stop_t, start_t, speed, yaw_rate, rate)):
         raise ValueError('probe controls must be finite')
@@ -47,6 +49,7 @@ def main():
     state = {
         't': None, 'xy': None, 'yaw': None, 'tilt': None,
         'cmd': [0.0, 0.0],
+        'effort': None,
         'messages': {'odom': 0, 'imu': 0, 'joint': 0, 'effort': 0,
                      'clock': 0, 'mux': 0},
         'effort_times': [], 'records': [],
@@ -72,9 +75,16 @@ def main():
     def on_joint(_msg):
         state['messages']['joint'] += 1
 
-    def on_effort(_msg):
+    def on_effort(msg):
         state['messages']['effort'] += 1
         state['effort_times'].append(time.monotonic())
+        if effort_vector:
+            values = [float(v) for v in msg.data]
+            if values and all(math.isfinite(v) for v in values):
+                # Last full effort vector, for gait-activity analysis; the
+                # scalar effort counter alone cannot tell a stepping policy
+                # from one parked at a fixed target.
+                state['effort'] = [round(v, 3) for v in values]
 
     def on_mux(msg):
         state['cmd'] = [msg.linear.x, msg.angular.z]
@@ -119,6 +129,7 @@ def main():
                     round(t, 3), *state['xy'], state['tilt'],
                     state['messages']['effort'], state['yaw'],
                     round(state['cmd'][0], 3), round(state['cmd'][1], 3),
+                    *( [state['effort']] if effort_vector else [] ),
                 ])
                 last_record = t
         command_pub.publish(Twist())
@@ -135,10 +146,13 @@ def main():
             'max_tilt': max(r[3] for r in records),
             'end_tilt': records[-1][3],
             'messages': state['messages'],
+            'effort_vector': effort_vector,
             'mux_last_command': state['cmd'],
             'effort_rate_wall': (len(effort_times) /
                                  (effort_times[-1] - effort_times[0])),
-            'records': records[::10],
+            # The effort vector is a 25 Hz gait signal: it is only useful at
+            # full rate, so the usual 10x decimation is skipped for it.
+            'records': records if effort_vector else records[::10],
         }
         print(json.dumps(report, indent=2))
     finally:

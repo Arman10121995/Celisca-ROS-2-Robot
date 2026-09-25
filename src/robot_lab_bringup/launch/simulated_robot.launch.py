@@ -972,6 +972,10 @@ def _build_simulation_actions(context):
                     parameters=[{
                         "use_sim_time": _as_bool(use_sim_time, True),
                         "cmd_vel_topic": "/robot_lab_controller/cmd_vel_unstamped",
+                        "yaw_servo_gain": (
+                            4.0 if _as_bool(
+                                _launch_value(context, "bhl_enable_yaw_servo"))
+                            else 0.0),
                     }],
                 )
             )
@@ -1236,6 +1240,12 @@ def generate_launch_description():
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "bhl_enable_yaw_servo", default_value="false",
+            description="Opt-in boost-only closed-loop yaw servo for the BHL "
+                        "policy controller: raises the commanded yaw rate "
+                        "toward the training limit while the measured body "
+                        "yaw rate falls short. Unqualified experiment."),
         DeclareLaunchArgument(
             "go2_enable_experimental_gait", default_value="false",
             description="Allow unqualified Go2 stepping experiments; the "
