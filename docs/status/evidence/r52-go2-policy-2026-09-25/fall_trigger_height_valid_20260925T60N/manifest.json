@@ -1,0 +1,14 @@
+{
+  "tool": "run_perturbation_trial.sh",
+  "source_root": "/workspace/molar/ros_ws/bumperbot_ws",
+  "ros_domain_id": 228,
+  "duration_s": 16.0,
+  "force_n": 60.0,
+  "start_s": 3.0,
+  "pulse_s": 0.2,
+  "recovery_window_s": 10.0,
+  "enable_fall_recovery": true,
+  "fall_recovery_timeout_s": 8.0,
+  "source_revision": "0be23d2 + uncommitted R5.2 fall-detector changes",
+  "source_notes": "The exact changes are committed with this evidence directory."
+}

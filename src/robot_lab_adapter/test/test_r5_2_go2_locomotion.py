@@ -585,6 +585,21 @@ class TestFallDetection:
             safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
         assert safety.fallen is False
 
+    def test_brief_trip_then_persistent_warning_latches_fall(self):
+        safety = SafetyState()
+        safety.observe_body(BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0))
+        for _ in range(FALL_CONFIRM_CYCLES - 1):
+            safety.observe_body(BodyState(roll_rad=0.52, pitch_rad=0.0))
+        assert safety.fallen is True
+        assert safety.state == SafetyState.SAFE_STOP
+
+    def test_warning_without_fall_threshold_trip_does_not_latch_fall(self):
+        safety = SafetyState()
+        for _ in range(FALL_CONFIRM_CYCLES * 2):
+            safety.observe_body(BodyState(roll_rad=0.52, pitch_rad=0.0))
+        assert safety.fallen is False
+        assert safety.state == SafetyState.WARN
+
     def test_fall_flag_never_permits_gait(self):
         safety = SafetyState()
         for _ in range(FALL_CONFIRM_CYCLES):
@@ -624,9 +639,18 @@ class TestFallRecovery:
         fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
         recovery.update(0.0, True, fallen_body, self._positions(), {})
         efforts = recovery.update(
-            1.0, True, BodyState(0.01, 0.0), self._positions(), {})
+            1.0, True, BodyState(0.01, 0.0, 0.35), self._positions(), {})
         assert recovery.status == FallRecovery.SUCCEEDED
         assert all(e == 0.0 for e in efforts.values())
+
+    def test_upright_tilt_without_measured_standing_height_is_not_success(self):
+        recovery = FallRecovery()
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+        recovery.update(0.0, True, fallen_body, self._positions(), {})
+        recovery.update(1.0, True, BodyState(0.01, 0.0, 0.14), self._positions(), {})
+        assert recovery.status == FallRecovery.ATTEMPTING
+        recovery.update(2.0, True, BodyState(0.01, 0.0), self._positions(), {})
+        assert recovery.status == FallRecovery.ATTEMPTING
 
     def test_expired_window_fails_and_stops_driving(self):
         recovery = FallRecovery(timeout_s=1.0)

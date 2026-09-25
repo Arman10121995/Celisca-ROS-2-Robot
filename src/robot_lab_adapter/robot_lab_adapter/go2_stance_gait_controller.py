@@ -6,11 +6,12 @@ import time
 
 import rclpy
 from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 from sensor_msgs.msg import Imu, JointState
-from std_msgs.msg import Float64MultiArray, String
+from std_msgs.msg import Bool, Float64MultiArray, String
 from std_srvs.srv import Trigger
 
 from robot_lab_adapter.go2_locomotion import (
@@ -86,6 +87,8 @@ class Go2StanceGaitController(Node):
         self._efforts = {}
         self._foot_forces = None
         self._body = None
+        self._body_height = None
+        self._body_height_at = float("-inf")
         self._orientation = None
         self._angular_velocity = None
         self._cmd = BaseVelocity()
@@ -110,6 +113,8 @@ class Go2StanceGaitController(Node):
             Imu, self.get_parameter("imu_topic").value,
             self._on_imu, sensor_qos)
         self.create_subscription(
+            Odometry, "/odom/ground_truth", self._on_ground_truth, sensor_qos)
+        self.create_subscription(
             Float64MultiArray, "/go2/foot_contact_forces",
             self._on_foot_contacts, sensor_qos)
         self.create_subscription(
@@ -118,6 +123,8 @@ class Go2StanceGaitController(Node):
         self._pub = self.create_publisher(
             Float64MultiArray, self.get_parameter("effort_topic").value, 10)
         self._safety_pub = self.create_publisher(String, "/go2/safety_state", 10)
+        self._fallen_pub = self.create_publisher(Bool, "/go2/fallen", 10)
+        self._recovery_pub = self.create_publisher(String, "/go2/recovery_state", 10)
         self.create_service(Trigger, "/go2_controller/reset_safety", self._reset_safety)
         self.create_timer(self._period, self._on_timer)
         self.get_logger().info(
@@ -134,10 +141,19 @@ class Go2StanceGaitController(Node):
     def _on_imu(self, msg):
         q = msg.orientation
         if q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w > 1e-6:
-            self._body = BodyState.from_quaternion(q.x, q.y, q.z, q.w)
+            attitude = BodyState.from_quaternion(q.x, q.y, q.z, q.w)
+            height = (self._body_height if time.monotonic() - self._body_height_at < 0.2
+                      else None)
+            self._body = BodyState(attitude.roll_rad, attitude.pitch_rad, height)
             self._orientation = (q.x, q.y, q.z, q.w)
             a = msg.angular_velocity
             self._angular_velocity = (a.x, a.y, a.z)
+
+    def _on_ground_truth(self, msg):
+        height = float(msg.pose.pose.position.z)
+        if 0.0 <= height < 5.0:
+            self._body_height = height
+            self._body_height_at = time.monotonic()
 
     def _on_twist(self, msg):
         self._cmd = BaseVelocity(
@@ -189,6 +205,12 @@ class Go2StanceGaitController(Node):
         safety_msg = String()
         safety_msg.data = state
         self._safety_pub.publish(safety_msg)
+        fallen_msg = Bool()
+        fallen_msg.data = self._core.safety.fallen
+        self._fallen_pub.publish(fallen_msg)
+        recovery_msg = String()
+        recovery_msg.data = self._recovery.status if self._recovery else "disabled"
+        self._recovery_pub.publish(recovery_msg)
         msg = Float64MultiArray()
         msg.data = [efforts[name] for name in JOINT_NAMES]
         self._pub.publish(msg)

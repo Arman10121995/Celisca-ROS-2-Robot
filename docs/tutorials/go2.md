@@ -169,7 +169,9 @@ a recovery.
 
 Fall detection is always on and latches a `fallen` flag that is distinct from
 `safe_stop`. It is debounced so a single tilt spike cannot report a fall, and it
-clears only on an explicit safety reset.
+clears only on an explicit safety reset. After a trip above 0.70 rad, 25
+consecutive warning-or-higher samples latch `fallen`; `/go2/fallen` and
+`/go2/recovery_state` show the actual transition.
 
 The re-stand attempt is **opt-in and off by default**:
 
@@ -182,16 +184,20 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 
 It drives the nominal stance pose with elevated bounded gains for a bounded
 window and reports success only if measured tilt returns below the warn
-threshold. Measured against the 60 N collapse over 16 s, it did **not** work:
-the robot stayed collapsed at 0.139 m. Nominal-pose PD is not enough from a
+threshold and simulator ground-truth body height reaches 0.25 m. In the clean
+60 N repeat, `fallen` latched at 3.796 s, recovery changed from `idle` to
+`attempting`, then `failed` at 10.628 s. The robot finished upside down at
+0.057 m height. The earlier 0.139 m collapse did not confirm an attempt: the
+old detector missed the brief fall-threshold crossing. Nominal-pose PD is not enough from a
 fallen pose; real whole-body repositioning is not implemented. Do not enable
 this expecting the robot to stand up.
 
 A caution learned here: a launch override typed as a string can kill the
 controller at startup (`InvalidParameterTypeException`), leaving the robot
 completely uncontrolled while the process list still looks healthy. Check
-`/go2/safety_state` message counts before trusting any trial — a trial with zero
-safety messages is invalid, not a good result.
+`/go2/safety_state`, `/go2/fallen` and `/go2/recovery_state` message counts and
+transitions before trusting any trial — a trial with zero contract messages is
+invalid, not a good result.
 
 ## Interpret the result correctly
 

@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-25. Current source revision: `d06a411`. Runtime audit
+Updated: 2026-09-25. Continuation baseline: `0be23d2`. Runtime audit
 baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
 R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
 tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
@@ -332,9 +332,11 @@ Dependencies: `R5.1`.
   The 5 N and 20 N pulses are recorded negative controls with no response above
   stance noise. Bounded disturbance rejection is therefore measured at one
   point only. Fall detection is implemented (latched, debounced, distinct from
-  SAFE_STOP) and an opt-in nominal-pose re-stand attempt is unit-tested, but
-  the measured 60 N trial shows that attempt does **not** right the robot
-  (0.139 m final height); whole-body repositioning is not implemented, so
+  SAFE_STOP). The original 60 N run collapsed to 0.139 m, but its detector
+  never confirmed that a re-stand attempt began. After correcting the brief-trip
+  fall trigger and publishing the fall/recovery states, a clean repeat confirms
+  the opt-in attempt starts and times out without recovery: the robot ends
+  upside down at 0.057 m. Whole-body repositioning is not implemented, so
   standing back up remains unqualified. Repeatability, terrain traversal, fall
   handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
@@ -350,7 +352,8 @@ Dependencies: `R5.1`.
   measured at a single point (35 N recovers, 60 N collapses with a correct
   `safe_stop`), and the opt-in re-stand attempt is a measured negative: driving
   the nominal pose with elevated PD gains does not right the collapsed robot
-  (0.139 m final height in the 16 s trial). The named `terrain_stairs` task
+  (0.057 m final height in the valid 16 s attempt). Recovery success now also
+  requires measured standing height, not only upright tilt. The named `terrain_stairs` task
   still fails at the first ledge (0.115 m displacement, 0.527 rad peak tilt,
   35.55 N.m max effort), so do not claim terrain traversal. Next implement a
   real whole-body repositioning/get-up strategy rather than nominal-pose PD,

@@ -15,6 +15,8 @@ RECOVERY_S="${RECOVERY_S:-2.0}"
 # Opt-in re-stand attempt; off by default because it is not qualified.
 FALL_RECOVERY="${FALL_RECOVERY:-false}"
 FALL_RECOVERY_TIMEOUT_S="${FALL_RECOVERY_TIMEOUT_S:-4.0}"
+SOURCE_REVISION="$(git -C "$ROOT" rev-parse --short HEAD)"
+SOURCE_DIRTY="$(git -C "$ROOT" status --porcelain --untracked-files=no | wc -l)"
 
 mkdir -p "$OUT_DIR"
 OUT_DIR="$(cd "$OUT_DIR" && pwd)"
@@ -53,20 +55,24 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$SOURCE_REVISION" "$SOURCE_DIRTY" <<'PY'
 import json
 import sys
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, revision, dirty = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
+    "source_revision": revision,
+    "tracked_modified_files_at_launch": int(dirty),
     "ros_domain_id": int(domain),
     "duration_s": float(duration),
     "force_n": float(force),
     "start_s": float(start),
     "pulse_s": float(pulse),
     "recovery_window_s": float(recovery),
+    "enable_fall_recovery": fall_recovery.strip().lower() in ("true", "1", "yes"),
+    "fall_recovery_timeout_s": float(fall_timeout),
 }, indent=2) + "\n")
 PY
 
@@ -97,7 +103,12 @@ stop_owned "$launch_pid"
 launch_rc=$?
 launch_pid=""
 set -e
-printf '%s\n' "{"probe_returncode": $probe_rc, "launch_returncode": $launch_rc}" > "$OUT_DIR/returncodes.json"
+printf '{"probe_returncode": %d, "launch_returncode": %d}\n' \
+    "$probe_rc" "$launch_rc" > "$OUT_DIR/returncodes.json"
+if [[ "$probe_rc" -ne 0 ]]; then
+    echo "Perturbation probe exited with status $probe_rc" >&2
+    exit "$probe_rc"
+fi
 [[ -s "$result" ]] || { echo "Perturbation probe produced no JSON" >&2; exit 1; }
 python3 - "$result" <<'PY'
 import json

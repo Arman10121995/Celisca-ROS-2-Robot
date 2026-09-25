@@ -45,12 +45,13 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
-At source revision `d06a411` (2026-09-25), `R5.2` is the active next task.
+After baseline revision `0be23d2` (2026-09-25), `R5.2` is the active next task.
 Continue from the Go2 evidence under
 `docs/status/evidence/r52-go2-policy-2026-09-25/`: the feed-forward and
 opt-in inverse reverse sweeps are recorded. The inverse map reduces low-speed
 overdrive but leaves -0.15 m/s in a deadband. Two five-case inverse flat-ground
-suites passed all bounded screening checks. The named `terrain_stairs` task then
+suites passed all bounded screening checks (four runs total, including two
+later repeats). The named `terrain_stairs` task then
 failed at the first ledge with 0.115 m drive displacement and 0.527 rad peak tilt;
 the process recovered and cleaned up, so this is a failed task rather than a
 launch crash.
@@ -59,12 +60,16 @@ Bounded perturbation recovery is now measured. With the opt-in diagnostic force
 pulse, 5 N and 20 N produce no response above stance noise and are retained as
 negative controls; 35 N produces a measurable 0.070 rad peak tilt and settles
 upright with no SAFE_STOP; 60 N exceeds the envelope, collapses to 0.139 m and
-correctly latches `safe_stop`. Fall detection is implemented (latched, debounced,
-distinct from SAFE_STOP) and an opt-in nominal-pose re-stand attempt is
-unit-tested, but the measured 60 N trial shows that attempt does **not** right
-the robot. Whole-body repositioning is not implemented, so fall recovery is
-still unqualified and the next step is a real get-up strategy rather than
-nominal-pose PD. Keep `go2_reverse_command_map:=inverse`, the
+correctly latches `safe_stop`. The original 60 N re-stand run was inconclusive:
+the brief >0.70 rad interval tripped SAFE_STOP but never latched `fallen`, so
+the attempt never began. The corrected detector latches after 25 consecutive
+warning-or-higher samples following a fall-threshold trip. A clean repeat in
+domain 228 records `/go2/fallen` at 3.796 s and `/go2/recovery_state`
+`idle → attempting → failed` at 3.796/10.628 s; it finishes upside down at
+0.057 m. Recovery success now also requires measured standing height. The
+nominal-pose attempt is a valid negative; whole-body repositioning is not
+implemented, so fall recovery remains unqualified. Next implement a real
+get-up strategy and repeat the 60 N collapse. Keep `go2_reverse_command_map:=inverse`, the
 `go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
 
 Four five-case flat-ground suites now pass bounded screening. Note for future
@@ -77,6 +82,6 @@ string once killed the controller at startup and left the robot uncontrolled.
 stall remains a policy fixed point and further rate/filter/contact tuning is
 retired.
 
-The current fast check is 465 passed/1 skipped after the inverse-map change; the latest map suite is 35
+The current fast check is 467 passed/1 skipped after the fall-detector change; the latest map suite is 35
 passed. These are scoped checks, not a platform-wide qualification. Start with
 [`docs/WORKFLOW.md`](WORKFLOW.md) and the [Go2 tutorial](tutorials/go2.md).

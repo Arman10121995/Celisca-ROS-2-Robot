@@ -11,7 +11,7 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import JointState
-from std_msgs.msg import Float64MultiArray, String
+from std_msgs.msg import Bool, Float64MultiArray, String
 from rclpy.node import Node
 
 
@@ -49,7 +49,10 @@ def main():
              "latest_efforts": {}, "latest_tau": 0.0,
              "trace": [], "yaw": [], "safety_states": [],
              "safety_transitions": [], "safety_messages": 0,
-             "latest_safety_state": "unavailable"}
+             "latest_safety_state": "unavailable",
+             "fallen_messages": 0, "fallen_transitions": [],
+             "latest_fallen": None, "recovery_messages": 0,
+             "recovery_transitions": [], "latest_recovery_state": "unavailable"}
     cmd_pub = node.create_publisher(
         Twist, "/robot_lab_controller/cmd_vel_unstamped", 10)
 
@@ -69,6 +72,8 @@ def main():
                                        "yaw_rad": round(state["yaw"][-1], 3),
                                        "tilt_rad": round(tilt(q), 3),
                                        "safety_state": state["latest_safety_state"],
+                                       "fallen": state["latest_fallen"],
+                                       "recovery_state": state["latest_recovery_state"],
                                        "max_effort_nm": round(state["latest_tau"], 2),
                                        "rr_calf_rad": round(state["latest_q"].get(
                                            "RR_calf_joint", 0.0), 3)}
@@ -115,6 +120,20 @@ def main():
             state["peak_foot_force_n"][leg] = max(
                 state["peak_foot_force_n"][leg], force)
 
+    def fallen(msg):
+        state["fallen_messages"] += 1
+        if state["sim"] is not None and msg.data != state["latest_fallen"]:
+            state["fallen_transitions"].append({
+                "sim_s": round(state["sim"], 3), "fallen": msg.data})
+        state["latest_fallen"] = msg.data
+
+    def recovery_status(msg):
+        state["recovery_messages"] += 1
+        if state["sim"] is not None and msg.data != state["latest_recovery_state"]:
+            state["recovery_transitions"].append({
+                "sim_s": round(state["sim"], 3), "state": msg.data})
+        state["latest_recovery_state"] = msg.data
+
     node.create_subscription(Clock, "/clock", clock, 10)
     node.create_subscription(Odometry, "/odom/ground_truth", truth, 10)
     node.create_subscription(JointState, "/joint_states", joints, 10)
@@ -123,6 +142,8 @@ def main():
     node.create_subscription(Float64MultiArray,
                              "/go2/foot_contact_forces", contacts, 10)
     node.create_subscription(String, "/go2/safety_state", safety, 10)
+    node.create_subscription(Bool, "/go2/fallen", fallen, 10)
+    node.create_subscription(String, "/go2/recovery_state", recovery_status, 10)
     start = None
     deadline = time.monotonic() + args.wall_timeout
     last_command_at = float("-inf")
@@ -151,7 +172,13 @@ def main():
               "max_command_nm": state["max_command_nm"],
               "safety_messages": state["safety_messages"],
               "safety_transitions": state["safety_transitions"],
-              "final_safety_state": state["latest_safety_state"]}
+              "final_safety_state": state["latest_safety_state"],
+              "fallen_messages": state["fallen_messages"],
+              "fallen_transitions": state["fallen_transitions"],
+              "final_fallen": state["latest_fallen"],
+              "recovery_messages": state["recovery_messages"],
+              "recovery_transitions": state["recovery_transitions"],
+              "final_recovery_state": state["latest_recovery_state"]}
     result["trace"] = state["trace"]
     if args.perturbation_start is not None and samples:
         origin = samples[0][0]

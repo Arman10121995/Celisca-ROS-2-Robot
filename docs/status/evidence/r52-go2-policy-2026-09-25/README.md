@@ -146,13 +146,15 @@ implemented or qualified. Only disturbance rejection below the tipping
 `SafetyState` now carries a latched `fallen` flag that is distinct from
 SAFE_STOP: SAFE_STOP means "stop driving", while `fallen` means "a get-up
 attempt is required". It is debounced by `FALL_CONFIRM_CYCLES` consecutive
-at-or-above-threshold observations so a single tilt spike cannot report a fall,
+warning-or-higher observations *after* a fall-threshold trip, so a single tilt
+spike cannot report a fall,
 and it is cleared only by an explicit `reset()` — never by attitude recovering.
 
 `FallRecovery` is an opt-in, bounded **re-stand attempt** (default off,
 `enable_fall_recovery:=true`). It drives the nominal stance pose with elevated
 bounded gains for at most `fall_recovery_timeout_s`, succeeds only when
-*measured* tilt returns below the warn threshold, gives up to zero effort when
+*measured* tilt returns below the warn threshold **and** simulator ground-truth
+body height reaches at least 0.25 m, gives up to zero effort when
 the window expires, and never clears the latched `fallen` flag by itself. It is
 deliberately labelled an attempt, not a get-up.
 
@@ -169,10 +171,33 @@ domain 231, 16 s trial, 8 s recovery window):
 | first threshold breach | 3.58 s at 0.357 rad |
 | recovery screening | **fail** |
 
-**The re-stand attempt did not right the robot.** Driving the nominal stance
-pose with elevated PD gains is not sufficient from the collapsed pose on this
-plant; it needs real whole-body repositioning, which is not implemented. The
-feature therefore stays off by default, and fall recovery remains unqualified.
+Correction: that run did **not** establish whether the re-stand attempt worked.
+The brief crossing above 0.70 rad entered `safe_stop`, then settled near
+0.52 rad before the old 25-cycle, above-0.70-rad fall detector could latch.
+Recovery was gated on the unobserved `fallen` flag and likely never started.
+Its low body height proves a collapse, but its result cannot be attributed to
+an attempted recovery.
+
+The corrected detector latches after 25 warning-or-higher cycles following a
+fall-threshold trip, and `/go2/fallen` and `/go2/recovery_state` now expose
+the actual controller state. A clean repeat with the measured-height success
+check is in
+[`fall_trigger_height_valid_20260925T60N/`](fall_trigger_height_valid_20260925T60N/probe.json).
+It used domain 228, the same 0.2 s 60 N pulse, a 16 s trial and an opt-in 8 s
+attempt. Probe and launch return codes were both zero; each controller topic
+published 3,991 messages.
+
+| measured transition/result | value |
+|---|---|
+| `fallen: false → true` | 3.796 s |
+| `recovery_state: idle → attempting → failed` | 3.796 s → 10.628 s |
+| peak tilt | 3.142 rad; the body rolled onto its back |
+| final body height | 0.057 m |
+| final safety/recovery state | `safe_stop` / `failed` |
+
+This is a **valid negative**: the nominal-pose PD attempt ran and did not
+right the robot. It remains off by default. Whole-body repositioning is still
+needed for a get-up strategy.
 
 Two defects found and fixed while producing this evidence, both worth keeping:
 
@@ -188,10 +213,6 @@ Two defects found and fixed while producing this evidence, both worth keeping:
 - Fall recovery must never be inferred from a surviving process. The
   pre-existing `joy_teleop` and `imu_republisher` teardown races still appear
   in the logs; they are unrelated to this feature.
-
-
-threshold has been measured.
-
 
 
 The trial does **not** complete R5.2. The policy does not reliably track

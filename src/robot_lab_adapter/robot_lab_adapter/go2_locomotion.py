@@ -14,9 +14,10 @@ Honest scope (R5.2 acceptance bar):
   turns the bounded twist into per-leg joint-space swing/stance targets.
   It is a bounded stepping gait, *not* a claim of model-predictive or
   full-body dynamics control.
-- Contact output is a motor-effort residual heuristic per leg, not a direct
-  foot-contact force measurement; body state
-  (roll/pitch) comes from the IMU quaternion; falls and excessive tilt
+- Contact output prefers measured MuJoCo foot-to-world force, falling back to
+  the motor-effort residual heuristic when direct force is unavailable. Body state
+  (roll/pitch) comes from the IMU quaternion; simulator body height comes from
+  ground-truth odometry for the experimental recovery success check. Falls and excessive tilt
   force a SAFE_STOP (damped zero effort), never silent continuation.
 - All 12 joints are effort-commandable with per-joint limits taken from
   the Go2 description (const.xacro): hip/thigh 23.7 N·m, calf 35.55 N·m.
@@ -95,14 +96,15 @@ TILT_FALL_RAD = 0.70      # ~40 degrees: force SAFE_STOP
 EFFORT_SATURATION_FRACTION = 0.98
 EFFORT_SATURATION_CYCLES = 50  # sustained saturation at control rate
 
-#: A single tilt spike must not be reported as a fall. The fall flag needs
-#: this many consecutive at-or-above-fall observations before it latches.
+#: A single tilt spike must not be reported as a fall. After a fall-threshold
+#: trip, the flag needs this many consecutive warn-or-higher observations.
 FALL_CONFIRM_CYCLES = 25
 
-#: A re-stand attempt succeeds only when measured tilt returns below the warn
-#: threshold, and is abandoned after this bounded window.
+#: A re-stand attempt succeeds only with measured upright tilt and standing
+#: body height, and is abandoned after this bounded window.
 FALL_RECOVER_TIMEOUT_S = 4.0
 FALL_RECOVER_TILT_RAD = TILT_WARN_RAD
+FALL_RECOVER_MIN_HEIGHT_M = 0.25
 
 #: Duty factor and cycle time for the bounded trot.
 TROT_CYCLE_SECONDS = 0.7
@@ -402,6 +404,7 @@ class SafetyState:
         self.fallen = False
         self.fall_reason: Optional[str] = None
         self._fall_cycles = 0
+        self._tilt_trip_seen = False
 
     def reset(self) -> None:
         self.state = self.NOMINAL
@@ -410,23 +413,27 @@ class SafetyState:
         self.fallen = False
         self.fall_reason = None
         self._fall_cycles = 0
+        self._tilt_trip_seen = False
 
     def observe_body(self, body: BodyState) -> List[str]:
         """Update state from attitude; returns any new issue strings."""
         issues: List[str] = []
         tilt = body.max_tilt_rad
         if tilt >= TILT_FALL_RAD:
+            self._tilt_trip_seen = True
+            self._enter_safe_stop(f"tilt {tilt:.2f} rad exceeds fall threshold")
+            issues.append(f"safe_stop: tilt {tilt:.2f} rad exceeds fall threshold")
+        if self._tilt_trip_seen and tilt >= TILT_WARN_RAD:
             self._fall_cycles += 1
             if self._fall_cycles >= FALL_CONFIRM_CYCLES and not self.fallen:
                 self.fallen = True
                 self.fall_reason = (
-                    "sustained tilt %.2f rad at or above the fall threshold"
-                    % tilt)
+                    "sustained tilt %.2f rad after a fall-threshold trip" % tilt)
                 issues.append("fallen: " + self.fall_reason)
-            self._enter_safe_stop(f"tilt {tilt:.2f} rad exceeds fall threshold")
-            issues.append(f"safe_stop: tilt {tilt:.2f} rad exceeds fall threshold")
-        else:
+        elif not self.fallen:
             self._fall_cycles = 0
+            self._tilt_trip_seen = False
+        if tilt < TILT_FALL_RAD:
             if tilt >= TILT_WARN_RAD:
                 if self.state == self.NOMINAL:
                     self.state = self.WARN
@@ -481,7 +488,8 @@ class FallRecovery:
     This is a re-stand **attempt**, not a demonstrated get-up. It drives the
     nominal stance pose with elevated (still bounded) gains for at most
     ``timeout_s`` and reports success only when *measured* tilt returns below
-    ``success_tilt_rad``. If the window expires first, it gives up and commands
+    ``success_tilt_rad`` and body height reaches the standing threshold. If the
+    window expires first, it gives up and commands
     zero effort; it never silently resumes walking, and it never clears the
     latched :attr:`SafetyState.fallen` flag on its own.
     """
@@ -543,7 +551,9 @@ class FallRecovery:
         if self.started_at is not None and now_s - self.started_at > self.timeout_s:
             self.status = self.FAILED
             return {joint: 0.0 for joint in JOINT_NAMES}
-        if body is not None and body.max_tilt_rad < self.success_tilt_rad:
+        if (body is not None and body.max_tilt_rad < self.success_tilt_rad
+                and body.body_height_m is not None
+                and body.body_height_m >= FALL_RECOVER_MIN_HEIGHT_M):
             self.status = self.SUCCEEDED
             return {joint: 0.0 for joint in JOINT_NAMES}
         efforts = self._stance.effort_command(positions, velocities)
