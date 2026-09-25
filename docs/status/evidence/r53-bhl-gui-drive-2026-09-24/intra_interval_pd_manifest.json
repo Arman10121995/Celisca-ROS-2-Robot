@@ -1,0 +1,52 @@
+{
+  "task": "R5.3 BHL intra-interval PD A/B",
+  "date": "2026-09-25",
+  "base_revision": "b32c2047e0582ed19a4a17573a80be25eda4d357",
+  "result": "negative",
+  "claim": "Recomputing checkpoint PD from fresh native-model state at 2 kHz did not revive sustained turning in the matched delayed-command diagnostic.",
+  "harness": {
+    "script": "probe_intra_interval_pd.py",
+    "model": "vendored native MJCF with qualification floor; common backend mirrors its joint losses",
+    "policy": "policy_humanoid",
+    "controller": "BhlPolicyController",
+    "startup": "zero command through 1 s, StartupSettle 1-3 s, +0.3 rad/s from 3-13 s, zero after",
+    "physics_dt_s": 0.0005,
+    "policy_dt_s": 0.04,
+    "common_pd_hz": 250,
+    "fresh_pd_hz": 2000,
+    "spawn_z": -0.038,
+    "qualification_boundary": "headless diagnostic only; not a common ROS launch or hardware result"
+  },
+  "results": {
+    "held_250hz_pd": {
+      "dyaw_3_to_4_rad": 0.260252,
+      "dyaw_4_to_5_rad": 0.241563,
+      "dyaw_5_to_6_rad": 0.006465,
+      "dyaw_8_to_13_rad": 0.005845,
+      "mean_yaw_rate_8_to_13_rad_s": 0.001138,
+      "mean_effort_spread_8_to_13_nm": 20.871650,
+      "std_effort_spread_8_to_13_nm": 0.261717,
+      "max_tilt_8_to_13_rad": 0.127346
+    },
+    "fresh_2khz_pd": {
+      "dyaw_3_to_4_rad": 0.252685,
+      "dyaw_4_to_5_rad": 0.319253,
+      "dyaw_5_to_6_rad": 0.012566,
+      "dyaw_8_to_13_rad": 0.007698,
+      "mean_yaw_rate_8_to_13_rad_s": 0.001516,
+      "mean_effort_spread_8_to_13_nm": 21.325407,
+      "std_effort_spread_8_to_13_nm": 0.291821,
+      "max_tilt_8_to_13_rad": 0.126875
+    }
+  },
+  "interpretation": "Fresh 2 kHz PD changes early yaw and produces a small late-yaw difference, but both modes collapse to the same parked-policy effort level. This refutes intra-interval PD refresh alone as the stall remedy for this matched native-model diagnostic.",
+  "sha256": {
+    "intra_interval_pd_ab.json": "7407caeddf24ca28899f92a40cd3ba25ac21b1269d71b61cceb93e4e777f7762",
+    "probe_intra_interval_pd.py": "6f577f51d23a816f01a80bed55105431aebd5f487cda8e8a188a51037a5414ac"
+  },
+  "limitations": [
+    "The native MJCF diagnostic is not the full common ROS graph and does not include GUI/twist_mux behavior.",
+    "No contact-fidelity A/B or target-domain retraining was attempted.",
+    "The result is a negative diagnostic, not a claim that all high-rate control implementations are equivalent."
+  ]
+}

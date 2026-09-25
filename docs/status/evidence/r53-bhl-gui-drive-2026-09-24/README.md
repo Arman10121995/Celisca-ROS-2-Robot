@@ -349,3 +349,25 @@ MuJoCo contact fidelity and policy domain robustness remain separate open items.
 Post-change verification: bringup profiles 201 passed; `scripts/test_fast.sh`
 461 passed, 1 skipped, registry validation PASS; launch show-args and YAML/JSON/
 hash checks pass.
+
+## 2026-09-25 fifth pass (fresh intra-interval PD diagnostic)
+
+To test the remaining rate hypothesis without adding a speculative runtime
+position-target backend, `probe_intra_interval_pd.py` runs the native MJCF with
+`BhlPolicyController`, `StartupSettle`, checkpoint gains/limits, spawn z=-0.038,
+and the same zero-to-turn schedule. Both modes use 2 kHz physics and 25 Hz policy
+inference. The held mode recomputes PD at 250 Hz and holds torque for eight
+physics steps; the fresh mode recomputes it from current q/dq at every step.
+
+| PD update | dyaw 3-4 / 4-5 s | dyaw 8-13 s | mean effort spread 8-13 s | spread std 8-13 s |
+| --- | ---: | ---: | ---: | ---: |
+| held 250 Hz | 0.2603 / 0.2416 rad | 0.00585 rad | 20.87 N.m | 0.262 N.m |
+| fresh 2 kHz | 0.2527 / 0.3193 rad | 0.00770 rad | 21.33 N.m | 0.292 N.m |
+
+Fresh PD changes early yaw but both modes collapse to the same parked-policy
+signature. This is a third **negative bounded result**: intra-interval PD/encoder
+refresh alone does not explain or fix the stall. The diagnostic, JSON output,
+hashes, and limitations are retained in `probe_intra_interval_pd.py`,
+`intra_interval_pd_ab.json`, and `intra_interval_pd_manifest.json`. It is not a
+common ROS launch qualification. Further actuator-rate tuning is retired; the
+remaining choices are contact-fidelity evidence or target-domain retraining.

@@ -385,9 +385,12 @@ Dependencies: `R5.1`.
   effort spread returned to the same 0.17 N.m parked level, so it remains off.
   A physics-rate-only A/B at the native 2 kHz (`bhl_physics_timestep:=0.0005`)
   is also negative: 8-13 s dyaw is 0.0054 rad and effort spread returns to
-  0.18 N.m, despite early yaw increasing. Fresh 2 kHz intra-interval encoder
-  feedback, MuJoCo contact fidelity, or a domain-matched retrain remain
-  candidates. One attempted run toppled in the
+  0.18 N.m, despite early yaw increasing. A matched headless native-model A/B
+  that recomputes PD from fresh q/dq at every 2 kHz step is also negative:
+  8-13 s dyaw is 0.0077 rad versus 0.0058 held-PD, with both effort spreads
+  near 21 N.m. Actuator-rate tuning is therefore retired. MuJoCo contact
+  fidelity or a domain-matched retrain remain candidates. One attempted run
+  toppled in the
   ramp while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
   9.3/12); the identical re-run on an idle machine passed the bend at 0.271 rad
   peak tilt, confirming the bend's CPU-contention sensitivity.
