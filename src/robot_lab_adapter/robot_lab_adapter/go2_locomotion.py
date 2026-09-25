@@ -109,6 +109,49 @@ FALL_RECOVER_MIN_LOADED_FEET = 3
 FALL_RECOVER_CONTACT_N = 2.0
 FALL_RECOVER_SUCCESS_DWELL_S = 0.5
 
+#: Beyond this tilt the trunk has rolled *past* the point a standing controller
+#: can act from. :func:`classify_fall_pose` reports ``inverted`` here: the body
+#: is on its back, and righting it needs a roll-over primitive, not a stand-up
+#: one. Recorded 60 N trials ended at tilt 3.142 rad (pi) and 0.057 m, so this
+#: separates "the controller failed" from "the pose was never recoverable".
+FALL_INVERTED_TILT_RAD = 2.4
+
+
+#: Terminal-pose classes returned by :func:`classify_fall_pose`.
+FALL_POSE_UPRIGHT = "upright"
+FALL_POSE_COLLAPSED = "collapsed"
+FALL_POSE_INVERTED = "inverted"
+FALL_POSE_UNKNOWN = "unknown"
+
+
+def classify_fall_pose(body: Optional["BodyState"]) -> str:
+    """Classify where the body ended up, from measured attitude and height.
+
+    Distinguishes the two reasons a re-stand attempt can fail, which the
+    bounded attempt must not conflate:
+
+    - ``collapsed``: down but the trunk is not rolled past vertical. This is
+      the pose a stand-up controller is meant to act from.
+    - ``inverted``: the body is on its back or side, past
+      :data:`FALL_INVERTED_TILT_RAD`. Standing effort cannot right it.
+
+    Missing attitude or height reports ``unknown`` rather than guessing, so an
+    unqualified result is never mistaken for a measured one.
+    """
+    if body is None:
+        return FALL_POSE_UNKNOWN
+    tilt = body.max_tilt_rad
+    if not math.isfinite(tilt):
+        return FALL_POSE_UNKNOWN
+    if tilt >= FALL_INVERTED_TILT_RAD:
+        return FALL_POSE_INVERTED
+    if body.body_height_m is None or not math.isfinite(body.body_height_m):
+        return FALL_POSE_UNKNOWN
+    if body.body_height_m >= FALL_RECOVER_MIN_HEIGHT_M and \
+            tilt < TILT_WARN_RAD:
+        return FALL_POSE_UPRIGHT
+    return FALL_POSE_COLLAPSED
+
 #: Duty factor and cycle time for the bounded trot.
 TROT_CYCLE_SECONDS = 0.7
 TROT_DUTY = 0.5
@@ -497,6 +540,12 @@ class FallRecovery:
     window expires first, it gives up and commands
     zero effort; it never silently resumes walking, and it never clears the
     latched :attr:`SafetyState.fallen` flag on its own.
+
+    A failure is only ever reported as :attr:`FAILED` when the measured
+    terminal pose was one a stand-up controller can act from. If the attempt
+    ends with the trunk rolled past :data:`FALL_INVERTED_TILT_RAD` the result
+    is :attr:`UNRECOVERABLE`, which records that the pose itself was outside
+    this controller's reach rather than implying the gains were too weak.
     """
 
     IDLE = "idle"
@@ -504,6 +553,11 @@ class FallRecovery:
     ATTEMPTING = "attempting"
     SUCCEEDED = "succeeded"
     FAILED = "failed"
+    #: The attempt ended with the body inverted; standing effort cannot right it.
+    UNRECOVERABLE = "unrecoverable"
+
+    #: Terminal states: the attempt is over and will not restart by itself.
+    TERMINAL_STATES = (SUCCEEDED, FAILED, UNRECOVERABLE)
 
     def __init__(
         self,
@@ -531,6 +585,8 @@ class FallRecovery:
         self.active_started_at: Optional[float] = None
         self.success_candidate_at: Optional[float] = None
         self.attempts = 0
+        #: Pose class measured when the attempt reached a terminal state.
+        self.terminal_pose: Optional[str] = None
         self._stance = StanceController(
             target=nominal_stance_pose(),
             gain_scale=gain_scale,
@@ -542,6 +598,7 @@ class FallRecovery:
         self.started_at = None
         self.active_started_at = None
         self.success_candidate_at = None
+        self.terminal_pose = None
 
     def update(
         self,
@@ -557,7 +614,7 @@ class FallRecovery:
         ``body`` and ``positions`` may be missing: without measurements this
         degrades to zero effort rather than assuming a pose.
         """
-        if self.status in (self.SUCCEEDED, self.FAILED) or not fallen:
+        if self.status in self.TERMINAL_STATES or not fallen:
             return {joint: 0.0 for joint in JOINT_NAMES}
         if self.status == self.IDLE:
             self.status = self.WAITING if self.start_delay_s > 0.0 else self.ATTEMPTING
@@ -571,7 +628,13 @@ class FallRecovery:
             self.status = self.ATTEMPTING
             self.active_started_at = now_s
         if self.active_started_at is not None and now_s - self.active_started_at > self.timeout_s:
-            self.status = self.FAILED
+            # Distinguish a genuine controller failure from a pose that no
+            # standing effort can right: an inverted terminal pose is reported
+            # as UNRECOVERABLE so the evidence does not imply weak gains.
+            self.terminal_pose = classify_fall_pose(body)
+            self.status = (
+                self.UNRECOVERABLE
+                if self.terminal_pose == FALL_POSE_INVERTED else self.FAILED)
             return {joint: 0.0 for joint in JOINT_NAMES}
         loaded_feet = sum(
             1 for leg in LEG_PREFIXES
@@ -588,6 +651,7 @@ class FallRecovery:
                 self.success_candidate_at = now_s
             elif now_s - self.success_candidate_at >= FALL_RECOVER_SUCCESS_DWELL_S:
                 self.status = self.SUCCEEDED
+                self.terminal_pose = classify_fall_pose(body)
                 return {joint: 0.0 for joint in JOINT_NAMES}
         else:
             self.success_candidate_at = None

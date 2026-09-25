@@ -95,6 +95,34 @@ at node creation and are a setup error, not a system result. Also check contract
 topic message counts before trusting a trial — a launch override typed as a
 string once killed the controller at startup and left the robot uncontrolled.
 
+Fall *diagnosis* is now separated from fall *tuning*. `classify_fall_pose()`
+reads the terminal pose from measured attitude and height as
+`upright`/`collapsed`/`inverted`/`unknown`, and an attempt expiring with the
+trunk past `FALL_INVERTED_TILT_RAD` (2.4 rad) reports the new terminal state
+`unrecoverable` instead of `failed`. `failed` means the controller ran its
+window from a recoverable pose and fell short; `unrecoverable` means the pose
+itself is out of reach of standing effort. Both are terminal. The recorded
+terminal poses are 35 N → upright (0.056 rad, 0.373 m), 60 N without recovery →
+collapsed (0.518 rad, 0.139 m), and 60 N with the actor → inverted (3.142 rad,
+0.057 m), so the actor trials are re-filed as out-of-envelope, not weak gains.
+
+The actor was also re-mapped onto the measured per-joint Go2 gains (it had used
+one flat `RECOVERY_KP = 40.0`, 2x hot on the hips and ~0.13x cold on thigh and
+calf) with a 3 rad/s target slew. A valid 60 N repeat in domain 214 cut peak
+measured joint velocity 5.1x, 55.31 → 10.81 rad/s, and returned
+`attempting → unrecoverable` at 3.792/10.820 s — but the trunk still crossed
+2.4 rad at 4.364 s and ended inverted, so **the get-up is still unqualified and
+the next change must target the actor's action at a collapsed pose, not the
+gains.** Do not keep tuning actuator bandwidth against this task.
+
+One discarded defect worth remembering: the first corrected run
+(`fall_invalid_numpy_type_20260925T60N/`) returned `numpy.float32` efforts,
+which raised `AssertionError` in the `std_msgs/Float64MultiArray` setter and
+killed the controller 0.4 s after the fall. It *looked* like a clean
+non-inversion only because a dead node commands no torque. The float cast is
+restored and a regression test pins the published type; treat any trial whose
+contract message count collapses as invalid, not as a good result.
+
 `R5.3` is partial: its contact-fidelity defect is fixed, but the BHL held-turn/walk
 stall remains a policy fixed point and further rate/filter/contact tuning is
 retired.

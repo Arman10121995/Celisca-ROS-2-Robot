@@ -346,6 +346,18 @@ Dependencies: `R5.1`.
   success now also requires three loaded feet for 0.5 s. The rebuilt delayed
   repeat timed out and ended inverted at 0.057 m, so the delay is not a
   qualified remedy.
+  Terminal fall pose is now classified from measured attitude and height
+  (`upright`/`collapsed`/`inverted`/`unknown`), and an attempt expiring with the
+  trunk past 2.4 rad reports the distinct terminal state `unrecoverable`
+  instead of `failed`. This separates a controller shortfall from a pose that
+  no standing effort can right, and re-files the three prior 60 N actor trials
+  as out-of-envelope rather than as weak gains. The actor was also re-mapped
+  onto the measured per-joint Go2 gains (it had used one flat `RECOVERY_KP=40`,
+  2x hot on the hips and ~0.13x cold on the load-bearing thigh and calf) with a
+  3 rad/s target slew, which cut peak measured joint velocity from 55.3 to
+  10.8 rad/s. The roll-over still happens during the attempt (the trunk crosses
+  2.4 rad about 0.6 s in), so the 60 N get-up stays a negative — now for a
+  measured reason, with the diagnosis separated from the tuning.
   Repeatability, terrain traversal, fall
   handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
@@ -368,7 +380,10 @@ Dependencies: `R5.1`.
   target-domain adaptation/retraining or a different whole-body get-up
   strategy; both the nominal-pose and ported learned actor failed the named
   60 N collapse. The delayed actor also failed after its midair false success
-  was corrected. Do not enable GUI velocity-base, SLAM or
+  was corrected, and the gain-corrected actor still rolls the robot onto its
+  back during the attempt, so the next change must address the actor's action
+  at a collapsed pose rather than the actuator gains. Do not enable GUI
+  velocity-base, SLAM or
   navigation modes.
   Note for future runs: this host's CycloneDDS port range caps usable
   `ROS_DOMAIN_ID` at about 232. See the [Go2 tutorial](docs/tutorials/go2.md)

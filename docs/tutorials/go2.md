@@ -216,9 +216,36 @@ trial falsely reported success while the body was airborne with only one foot
 loaded, then collapsed. The supported-standing dwell check above corrected
 that result; the rebuilt delayed repeat reported `failed` and ended inverted.
 
+### `unrecoverable` is not `failed`
+
+The two verdicts answer different questions, and the state you see tells you
+which one you are looking at:
+
+- `failed` — the attempt ran its full window from a pose a stand-up controller
+  can act from, and did not stand up. This is a controller shortfall.
+- `unrecoverable` — the attempt ended with the trunk rolled past
+  `FALL_INVERTED_TILT_RAD` (2.4 rad, i.e. past vertical, body on its back).
+  Standing effort cannot right that; it needs a roll-over primitive that is not
+  implemented. This is an out-of-envelope pose, not weak gains.
+
+Both are terminal and neither restarts on its own. Reading `unrecoverable` as
+`failed` sends you off tuning gains that were never the problem.
+
+The actor is mapped onto this plant through the **measured** per-joint Go2
+gains (hip 100/5, thigh 300/8, calf 300/8 at a 0.2 scale) instead of one flat
+gain, and its 50 Hz joint target is slew-limited to 3 rad/s. On the recorded
+60 N repeat this cut peak measured joint velocity from 55.3 to 10.8 rad/s — but
+the trunk still rolled past vertical during the attempt, so the verdict is
+`unrecoverable` and the get-up is still unqualified. Lower actuator violence
+did not buy a successful stand-up on its own.
+
 A caution learned here: a launch override typed as a string can kill the
 controller at startup (`InvalidParameterTypeException`), leaving the robot
-completely uncontrolled while the process list still looks healthy. Check
+completely uncontrolled while the process list still looks healthy. The same
+applies to any type error in a published message: a `numpy.float32` effort
+raised `AssertionError` inside the `std_msgs/Float64MultiArray` setter and killed
+the controller 0.4 s after the fall. The run then *looked* like a clean
+non-inversion because a dead node applies no torque. Check
 `/go2/safety_state`, `/go2/fallen` and `/go2/recovery_state` message counts and
 transitions before trusting any trial — a trial with zero contract messages is
 invalid, not a good result.

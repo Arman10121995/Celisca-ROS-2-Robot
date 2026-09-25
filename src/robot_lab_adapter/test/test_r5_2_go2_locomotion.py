@@ -37,6 +37,11 @@ from robot_lab_adapter.go2_locomotion import (
     EFFORT_LIMITS,
     EFFORT_SATURATION_CYCLES,
     FALL_CONFIRM_CYCLES,
+    FALL_INVERTED_TILT_RAD,
+    FALL_POSE_COLLAPSED,
+    FALL_POSE_INVERTED,
+    FALL_POSE_UNKNOWN,
+    FALL_POSE_UPRIGHT,
     JOINT_KINDS,
     JOINT_NAMES,
     LEG_PREFIXES,
@@ -60,6 +65,7 @@ from robot_lab_adapter.go2_locomotion import (
     clamp_base_velocity,
     clamp_effort,
     clamp_position,
+    classify_fall_pose,
     estimate_leg_contacts,
     joint_kind,
     leg_in_stance,
@@ -607,6 +613,65 @@ class TestFallDetection:
         assert safety.gait_permitted() is False
 
 
+class TestFallPoseClassification:
+    """Terminal-pose classification, checked against the recorded 60 N values.
+
+    The 2026-09-25 60 N trials ended at 3.1416 rad and 0.057 m (inverted),
+    while the 35 N trial ended at 0.056 rad and 0.373 m (upright) and the
+    pre-recovery 60 N collapse at 0.518 rad and 0.139 m (collapsed).
+    """
+
+    def test_recorded_upright_35n_trial_is_upright(self):
+        assert classify_fall_pose(
+            BodyState(roll_rad=0.056, pitch_rad=0.0, body_height_m=0.373)
+        ) == FALL_POSE_UPRIGHT
+
+    def test_recorded_collapsed_60n_pose_is_collapsed(self):
+        assert classify_fall_pose(
+            BodyState(roll_rad=0.518, pitch_rad=0.0, body_height_m=0.139)
+        ) == FALL_POSE_COLLAPSED
+
+    def test_recorded_inverted_60n_terminal_pose_is_inverted(self):
+        assert classify_fall_pose(
+            BodyState(roll_rad=3.1416, pitch_rad=0.0, body_height_m=0.057)
+        ) == FALL_POSE_INVERTED
+
+    def test_inverted_is_detected_on_pitch_too(self):
+        assert classify_fall_pose(
+            BodyState(roll_rad=0.0, pitch_rad=math.pi, body_height_m=0.057)
+        ) == FALL_POSE_INVERTED
+
+    def test_inverted_takes_priority_over_standing_height(self):
+        """A high body reading must not mask a rolled-over trunk: the first
+        delayed trial briefly read 0.472 m airborne and looked recoverable."""
+        assert classify_fall_pose(
+            BodyState(roll_rad=FALL_INVERTED_TILT_RAD, pitch_rad=0.0,
+                      body_height_m=0.47)
+        ) == FALL_POSE_INVERTED
+
+    def test_low_body_height_alone_is_not_inverted(self):
+        assert classify_fall_pose(
+            BodyState(roll_rad=0.05, pitch_rad=0.0, body_height_m=0.06)
+        ) == FALL_POSE_COLLAPSED
+
+    def test_tilt_above_warn_is_not_upright(self):
+        assert classify_fall_pose(
+            BodyState(roll_rad=TILT_WARN_RAD, pitch_rad=0.0, body_height_m=0.40)
+        ) == FALL_POSE_COLLAPSED
+
+    def test_missing_measurements_are_unknown_not_guessed(self):
+        assert classify_fall_pose(None) == FALL_POSE_UNKNOWN
+        assert classify_fall_pose(BodyState(0.5, 0.0)) == FALL_POSE_UNKNOWN
+        assert classify_fall_pose(
+            BodyState(0.05, 0.0, float("nan"))) == FALL_POSE_UNKNOWN
+        assert classify_fall_pose(
+            BodyState(float("nan"), 0.0, 0.30)) == FALL_POSE_UNKNOWN
+
+    def test_inverted_threshold_is_past_vertical(self):
+        assert FALL_INVERTED_TILT_RAD > TILT_FALL_RAD
+        assert FALL_INVERTED_TILT_RAD < math.pi
+
+
 class TestFallRecovery:
     def _positions(self, value=0.0):
         return {name: value for name in JOINT_NAMES}
@@ -690,6 +755,59 @@ class TestFallRecovery:
         again = recovery.update(3.0, True, fallen_body, self._positions(), {})
         assert recovery.attempts == 1
         assert all(e == 0.0 for e in again.values())
+
+    def test_collapsed_pose_expiry_is_failed_not_unrecoverable(self):
+        """A recoverable terminal pose must report FAILED, so a real
+        controller shortfall is not filed as an out-of-envelope pose."""
+        recovery = FallRecovery(timeout_s=1.0)
+        collapsed = BodyState(roll_rad=0.52, pitch_rad=0.0, body_height_m=0.139)
+        recovery.update(0.0, True, collapsed, self._positions(), {})
+        efforts = recovery.update(2.0, True, collapsed, self._positions(), {})
+        assert recovery.status == FallRecovery.FAILED
+        assert recovery.terminal_pose == FALL_POSE_COLLAPSED
+        assert all(e == 0.0 for e in efforts.values())
+
+    def test_inverted_pose_expiry_is_unrecoverable(self):
+        """The recorded 60 N trials ended at tilt ~pi on the body. Standing
+        effort cannot right that, so the verdict must not imply weak gains."""
+        recovery = FallRecovery(timeout_s=1.0)
+        inverted = BodyState(roll_rad=math.pi, pitch_rad=0.0, body_height_m=0.057)
+        recovery.update(0.0, True, inverted, self._positions(), {})
+        efforts = recovery.update(2.0, True, inverted, self._positions(), {})
+        assert recovery.status == FallRecovery.UNRECOVERABLE
+        assert recovery.terminal_pose == FALL_POSE_INVERTED
+        assert all(e == 0.0 for e in efforts.values())
+        # Like FAILED, it is terminal and must not restart on its own.
+        again = recovery.update(3.0, True, inverted, self._positions(), {})
+        assert recovery.attempts == 1
+        assert all(e == 0.0 for e in again.values())
+
+    def test_unrecoverable_is_a_terminal_state(self):
+        assert FallRecovery.UNRECOVERABLE in FallRecovery.TERMINAL_STATES
+        assert FallRecovery.FAILED in FallRecovery.TERMINAL_STATES
+        assert FallRecovery.SUCCEEDED in FallRecovery.TERMINAL_STATES
+        assert FallRecovery.ATTEMPTING not in FallRecovery.TERMINAL_STATES
+
+    def test_success_records_the_measured_pose(self):
+        recovery = FallRecovery()
+        recovery.update(0.0, True, BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0),
+                        self._positions(), {})
+        forces = {leg: 15.0 for leg in LEG_PREFIXES}
+        upright = BodyState(0.01, 0.0, 0.35)
+        recovery.update(1.0, True, upright, self._positions(), {}, forces)
+        recovery.update(1.6, True, upright, self._positions(), {}, forces)
+        assert recovery.status == FallRecovery.SUCCEEDED
+        assert recovery.terminal_pose == FALL_POSE_UPRIGHT
+
+    def test_reset_clears_the_recorded_terminal_pose(self):
+        recovery = FallRecovery(timeout_s=1.0)
+        inverted = BodyState(roll_rad=math.pi, pitch_rad=0.0, body_height_m=0.057)
+        recovery.update(0.0, True, inverted, self._positions(), {})
+        recovery.update(2.0, True, inverted, self._positions(), {})
+        assert recovery.terminal_pose == FALL_POSE_INVERTED
+        recovery.reset()
+        assert recovery.terminal_pose is None
+        assert recovery.status == FallRecovery.IDLE
 
     def test_zero_effort_delay_starts_timeout_only_when_attempt_begins(self):
         recovery = FallRecovery(start_delay_s=1.0, timeout_s=2.0)

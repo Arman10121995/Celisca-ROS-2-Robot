@@ -265,6 +265,64 @@ robot never met the support criterion and ended inverted at 0.057 m. The
 delayed actor is therefore **not** a recovery solution; the corrected success
 test prevents a midair rebound from being mislabeled as one.
 
+### Terminal-pose diagnosis: `unrecoverable` vs `failed`
+
+Classifying the terminal pose of every recorded 60 N trial changed how the
+negative results should be read. Upright is tilt ~0 at standing height; a body
+lying on its back reads tilt ~pi.
+
+| trial | final tilt | final height | pose |
+|---|---|---|---|
+| 35 N (no recovery) | 0.056 | 0.373 m | upright |
+| 60 N, no recovery | 0.518 | 0.139 m | collapsed |
+| 60 N, actor (3 trials) | 3.142 | 0.057 m | **inverted** |
+
+`classify_fall_pose()` now reports `upright` / `collapsed` / `inverted` /
+`unknown` from measured attitude and height, and an attempt expiring with the
+trunk past `FALL_INVERTED_TILT_RAD` (2.4 rad) reports the new terminal state
+`unrecoverable` instead of `failed`. This separates two different negative
+results: a stand-up controller that ran its full window from a recoverable pose
+and fell short (`failed`) versus a pose no standing effort can right
+(`unrecoverable`). Both stay terminal and neither restarts. Missing attitude or
+height reports `unknown` rather than guessing.
+
+### Plant-parity fix and its measured effect
+
+The actor used one flat `RECOVERY_KP = 40.0` for all 12 joints while the
+measured Go2 gains are hip 100 / thigh 300 / calf 300 — 2x hot on the hips and
+~0.13x cold on the load-bearing thigh and calf — and it stepped its 50 Hz joint
+target with no rate limit. The first corrected run
+([`fall_invalid_numpy_type_20260925T60N/`](fall_invalid_numpy_type_20260925T60N/probe.json))
+is **invalid and kept only as a defect record**: the rewritten effort path
+returned a `numpy.float32`, which raised `AssertionError` in the
+`std_msgs/Float64MultiArray` setter and killed the controller 0.4 s after the
+fall. That run appeared to show a clean non-inversion (max tilt 0.775 rad at
+0.139 m) purely because a dead node commands no torque. The type cast was
+restored and a regression test now pins every published effort to `float`. This
+is exactly the message-count check in [`WORKFLOW.md`](../../../WORKFLOW.md)
+catching a real controller kill rather than a launch error.
+
+The rebuilt valid repeat
+([`fall_nju_recovery_gainslew_20260925T60N/`](fall_nju_recovery_gainslew_20260925T60N/probe.json),
+ROS domain 214, 4,491 effort messages, zero probe/launch return codes) used the
+measured per-joint gains at a 0.2 scale plus a 3 rad/s target slew:
+
+| | before | after |
+|---|---|---|
+| peak measured joint velocity | 55.31 rad/s | **10.81 rad/s** |
+| recovery states | `waiting → attempting → failed` | `attempting → unrecoverable` |
+| terminal pose | inverted, 0.057 m | inverted, 0.057 m |
+
+The plant-parity change cut peak actuator violence by 5.1x and produced the
+correct `unrecoverable` verdict, but **it did not prevent the roll-over**. The
+trunk was at 0.671 rad when the attempt began at 3.792 s and then rose
+monotonically through 0.962/1.674/1.933 rad to 3.130 rad by 4.47 s, crossing the
+2.4 rad inverted threshold at 4.364 s — about 0.6 s into the attempt. The
+learned actor is still driving the roll-over on this plant, only far less
+violently, so the 60 N get-up remains unqualified. The next hypothesis must
+address the actor's action at a collapsed pose (retraining or a different
+whole-body strategy), not the actuator bandwidth.
+
 Two defects found and fixed while producing this evidence, both worth keeping:
 
 - The first attempt produced a physically contradictory result (0.040 rad peak
