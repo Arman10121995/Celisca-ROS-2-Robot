@@ -127,7 +127,9 @@ contract message count collapses as invalid, not as a good result.
 stall remains a policy fixed point and further rate/filter/contact tuning is
 retired.
 
-The current fast check is 559 passed/1 skipped after adding the Go2 core,
-velocity and recovery adapter tests to the CI fast tier; the latest map suite is 35
+The current fast check is 580 passed/1 skipped after adding the Go2 core,
+velocity and recovery adapter tests plus the fall-pose classification,
+`unrecoverable` terminal-state and actor gain/slew parity tests to the CI fast
+tier; the latest map suite is 35
 passed. These are scoped checks, not a platform-wide qualification. Start with
 [`docs/WORKFLOW.md`](WORKFLOW.md) and the [Go2 tutorial](tutorials/go2.md).
