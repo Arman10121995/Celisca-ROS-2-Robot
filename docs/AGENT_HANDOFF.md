@@ -45,14 +45,16 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
-At source revision `7b1b1cb` (2026-09-25), `R5.2` is the active next task.
+At source revision `e7a8cda` (2026-09-25), `R5.2` is the active next task.
 Continue from the Go2 evidence under
 `docs/status/evidence/r52-go2-policy-2026-09-25/`: the feed-forward and
 opt-in inverse reverse sweeps are recorded. The inverse map reduces low-speed
-overdrive but leaves -0.15 m/s in a deadband. The five-case inverse flat-ground
-suite also passed all bounded screening checks. Next repeat that suite under
-matched initialization and direct foot-contact telemetry, then test terrain and
-bounded fall handling. `R5.3` is partial: its
+overdrive but leaves -0.15 m/s in a deadband. Two five-case inverse flat-ground
+suites passed all bounded screening checks. The named `terrain_stairs` task then
+failed at the first ledge with 0.115 m drive displacement and 0.527 rad peak tilt;
+the process recovered and cleaned up, so this is a failed task rather than a
+launch crash. Next run a bounded fall/perturbation recovery test and preserve the
+first-failure trace before any retraining claim. `R5.3` is partial: its
 contact-fidelity defect is fixed, but the BHL held-turn/walk stall remains a
 policy fixed point and further rate/filter/contact tuning is retired.
 

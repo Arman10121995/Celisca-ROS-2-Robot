@@ -9,9 +9,9 @@ The recorded evidence is under
 [`docs/status/evidence/r52-go2-policy-2026-09-25/`](../status/evidence/r52-go2-policy-2026-09-25/README.md).
 At the current source snapshot, the policy has produced measured forward
 motion, a stop, a large turn, command-loss stop, feed-forward/inverse reverse A/Bs
-and a five-case inverse-map flat-ground screening suite. The suite passed all
-bounded checks, but repeatable low-speed tracking, the first stairs ledge, fall
-recovery and navigation remain open.
+and two five-case inverse-map flat-ground screening suites. The suites passed all
+bounded checks, but the named stairs task failed at the first ledge; low-speed
+tracking, terrain, fall recovery and navigation remain open.
 
 ## Prerequisites and safety
 
@@ -94,31 +94,53 @@ python3 docs/status/evidence/r52-go2-2026-09-25/probe_stance.py \
   > /tmp/go2-reverse.json 2> /tmp/go2-reverse.log
 ```
 
-For the next R5.2 iteration, run the reproducible sweep first; it records
-raw probe JSON/logs and a summary instead of relying on one hand-copied trial:
+For the next R5.2 iteration, run the reproducible suite first; it records raw
+probe JSON/logs and a summary instead of relying on one hand-copied trial. The
+five-case runner also includes command loss and zero-command settle:
 
 ```bash
-docs/status/evidence/r52-go2-policy-2026-09-25/run_reverse_sweep.sh \
-  --out-dir /tmp/go2-reverse-sweep \
-  --domain-base 201 \
-  --commands=-0.15,-0.25,-0.35,-0.45
-# For the opt-in fitted candidate, add: --map inverse
+docs/status/evidence/r52-go2-policy-2026-09-25/run_flat_ground_suite.sh \
+  --out-dir /tmp/go2-flat-suite \
+  --domain-base 211 \
+  --map inverse
 ```
 
-The recorded feed-forward baseline is
-[`reverse_sweep_20260925_rerun/summary.json`](../status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_rerun/summary.json).
-It bypasses the old reverse dead zone but overdrives low-speed commands
-(observed/requested ratios 1.11–1.62). The recorded inverse candidate is
-[`reverse_sweep_20260925_inverse/summary.json`](../status/evidence/r52-go2-policy-2026-09-25/reverse_sweep_20260925_inverse/summary.json):
-it reduces overdrive at `-0.25` to `-0.45 m/s` (ratios 0.91–1.05) but leaves
-`-0.15 m/s` inside its deadband (ratio 0.15). Run the candidate explicitly with
-`--map inverse`; do not change the default or claim velocity tracking from
- displacement alone.
+The recorded two-run flat-ground comparison is:
 
-For the next R5.2 iteration, sweep several negative commands around the measured
-dead zone with identical initialization. Report command, actual displacement,
-tracking error, yaw drift, tilt, effort and contact count. Then repeat
-forward/reverse/turn/stop before attempting terrain.
+| case | first drive ΔX | repeat drive ΔX | first/repeat peak tilt |
+|---|---:|---:|---:|
+| forward +0.25 m/s | +0.832 m | +0.836 m | 0.034 / 0.031 rad |
+| reverse -0.35 m/s | -1.065 m | -1.111 m | 0.078 / 0.078 rad |
+| turn +0.5 rad/s | +1.496 rad | +1.481 rad | 0.059 / 0.056 rad |
+| forward command loss | +0.797 m | +0.802 m | 0.032 / 0.041 rad |
+| zero command | 0.000 m | 0.000 m | 0.030 / 0.030 rad |
+
+Both suites passed all five bounded screening checks, with 1,750–1,752 direct
+foot-contact messages per trial and clean process exits. This supports repeatable
+bounded screening, not velocity-tracking qualification. The raw records are under
+[`flat_ground_suite_20260925/`](../status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/summary.json)
+and [`flat_ground_suite_20260925_repeat/`](../status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925_repeat/summary.json).
+
+The opt-in inverse-map calibration remains a deadband-limited candidate: the
+recorded inverse sweep improves the -0.25 to -0.45 m/s grid but leaves -0.15 m/s
+inside its deadband. Run the candidate explicitly with `--map inverse`; do not
+change the default or claim velocity tracking from displacement alone.
+
+## Named terrain and fall handling
+
+The current inverse-map named terrain trial is
+[`terrain_stairs_inverse_20260925.json`](../status/evidence/r52-go2-policy-2026-09-25/terrain_stairs_inverse_20260925.json).
+It starts at the recorded first-ledge spawn, commands +0.5 m/s from 1–8 s, and
+records 0.115 m drive displacement, a 0.35 rad tilt-warning crossing at 3.212 s,
+0.527 rad peak tilt and 35.55 N.m maximum effort. The controller later reports
+attitude recovery and the process exits cleanly, but the task fails at the first
+ledge. Do not relabel this as a successful terrain traversal.
+
+The next R5.2 experiment is bounded fall/perturbation recovery with an explicit
+first-failure trace. A command-loss stop, a tilt warning/recovery, and a process
+that exits cleanly are not equivalent to recovering from a fall. Record the
+perturbation time, body height, tilt, contact pattern, effort, safety state and
+cleanup outcome.
 
 ## Interpret the result correctly
 

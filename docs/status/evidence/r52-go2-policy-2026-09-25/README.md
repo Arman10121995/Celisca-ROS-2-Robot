@@ -88,7 +88,7 @@ The bounded screening checks passed: forward `+0.277 m/s` observed for
 `+0.25 m/s` requested, reverse `-0.355 m/s` for `-0.35 m/s`, turn
 `+0.499 rad/s` for `+0.5 rad/s`, command-loss stop drift `0.015 m`, and zero
 command with no drive displacement or yaw. This is one sequential suite, not
-repeatability, velocity-tracking, terrain or navigation qualification. The suite
+velocity-tracking, terrain or navigation qualification. The suite
 runner and analyzer are `run_flat_ground_suite.sh` and
 `analyze_flat_ground_suite.py`; hermetic coverage is in
 `src/robot_lab_adapter/test/test_r5_2_go2_reverse_sweep.py`.
@@ -98,8 +98,35 @@ small reverse commands and cannot climb the tested ledge. Direct foot-ground
 forces are now published, but the blind ONNX policy does not consume them;
 other maps, fall recovery and navigation have not been qualified. GUI velocity-base,
 SLAM and navigation support for Go2 therefore stay disabled. Next work is
-reverse calibration or training, flat-ground tracking and terrain tests with
-a policy trained for those conditions.
+bounded fall/perturbation recovery, then retraining or a new measured hypothesis
+for terrain and navigation.
+
+The matched repeat is in
+[`flat_ground_suite_20260925_repeat/`](flat_ground_suite_20260925_repeat/summary.json),
+with the same five cases, world, timing and inverse map in isolated domains
+221–225. It again passed all five bounded screening checks: forward drive ΔX
+`+0.836 m`, reverse `-1.111 m`, turn `+1.481 rad`, command-loss forward `+0.802 m`,
+and zero displacement/yaw. Compared with the first suite, the largest absolute
+drive-delta difference was `0.048 m` for reverse; peak tilt remained
+`0.0298–0.0783 rad`, with 1,750–1,752 contact messages and clean process exits.
+This supports repeatable bounded flat-ground screening, not velocity tracking,
+terrain or navigation qualification.
+
+The current inverse-map terrain trial is
+[`terrain_stairs_inverse_20260925.json`](terrain_stairs_inverse_20260925.json).
+It starts at the recorded first-ledge spawn and commands `+0.5 m/s` from 1–8 s.
+The probe and launch return codes were both `0`, but the task failed: drive ΔX
+was only `0.115 m`, tilt crossed the `0.35 rad` warning threshold at `3.212 s`,
+peak tilt reached `0.527 rad`, and maximum effort reached `35.55 N m`. The
+controller later reported attitude recovery and the launch cleaned up, so this
+is a failed named terrain task with clean teardown, not a launch crash. The
+checksum record is
+[`terrain_stairs_inverse_20260925_manifest.json`](terrain_stairs_inverse_20260925_manifest.json).
+
+The next R5.2 experiment is bounded fall/perturbation recovery. Record the
+perturbation time, body height, tilt, contact pattern, effort, safety state and
+first-failure trace. A command-loss stop, tilt warning/recovery and clean process
+exit are not equivalent to recovering from a fall.
 
 The affected Go2 core/policy, bringup-profile, MuJoCo-effort, GUI-drive and
 registry Go2 tests passed together (335 tests). After the GUI checkbox was

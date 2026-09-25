@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-25. Current source revision: `7b1b1cb`. Runtime audit
+Updated: 2026-09-25. Current source revision: `e7a8cda`. Runtime audit
 baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
 R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
 tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
@@ -320,11 +320,12 @@ Dependencies: `R5.1`.
   it moves backward for both forward and reverse requests. The opt-in bundled
   flat-ground ONNX policy has measured forward motion, a stop, a large turn,
   command-loss stop, direct foot-contact telemetry, two matched reverse A/Bs and
-  a five-case inverse-map flat-ground screening suite. The feed-forward map
+  a two-run, five-case inverse-map flat-ground screening suite. The feed-forward map
   overdrives the tested reverse grid; the opt-in inverse map reduces overdrive at
-  -0.25 to -0.45 m/s but leaves -0.15 m/s in a deadband. The suite passed all
-  bounded screening checks, but repeatability, terrain traversal, fall handling
-  and navigation remain unqualified.
+  -0.25 to -0.45 m/s but leaves -0.15 m/s in a deadband. Both flat-ground suites
+  passed all bounded screening checks, but the named stairs task fails at the first
+  ledge with only 0.115 m drive displacement and 0.527 rad peak tilt. Repeatability,
+  terrain traversal, fall handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits
@@ -332,12 +333,13 @@ Dependencies: `R5.1`.
   when available (the older motor-effort fallback remains a heuristic), and
   latches tilt/effort safety stops; its pure tests cover these laws but do
   not substitute for measured displacement, turning and terrain missions.
-- **Next action:** Keep `go2_reverse_command_map:=inverse` opt-in. Repeat
-  forward/reverse/turn/stop with the selected candidate under identical
-  initialization and direct foot-contact telemetry. Then test the named stairs
-  task and bounded fall handling; do not enable GUI velocity-base, SLAM or
-  navigation modes. See the [Go2 tutorial](docs/tutorials/go2.md) and
-  [workflow](docs/WORKFLOW.md).
+- **Next action:** Keep `go2_reverse_command_map:=inverse` opt-in. Record the two
+  flat-ground suite repeats as repeatable bounded screening evidence. The named
+  `terrain_stairs` task fails at the first ledge (0.115 m displacement, 0.527 rad
+  peak tilt, 35.55 N.m max effort), so do not claim terrain traversal. Next run a
+  bounded fall/perturbation recovery test and preserve the first-failure trace; do
+  not enable GUI velocity-base, SLAM or navigation modes. See the [Go2 tutorial](docs/tutorials/go2.md)
+  and [workflow](docs/WORKFLOW.md).
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 
