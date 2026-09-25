@@ -976,6 +976,8 @@ def _build_simulation_actions(context):
                             4.0 if _as_bool(
                                 _launch_value(context, "bhl_enable_yaw_servo"))
                             else 0.0),
+                        "torque_filter_enabled": _as_bool(
+                            _launch_value(context, "bhl_enable_torque_filter")),
                     }],
                 )
             )
@@ -1026,6 +1028,9 @@ def _build_simulation_actions(context):
                        if go2_controller_active else {}),
                     **({"effort_joint_armature": "0.01"}
                        if go2_controller_active else {}),
+                    **({"physics_timestep": _launch_value(
+                        context, "bhl_physics_timestep")}
+                       if bhl_policy_active else {}),
                     **drive_args,
                 }.items(),
             )
@@ -1246,6 +1251,19 @@ def generate_launch_description():
                         "policy controller: raises the commanded yaw rate "
                         "toward the training limit while the measured body "
                         "yaw rate falls short. Unqualified experiment."),
+        DeclareLaunchArgument(
+            "bhl_enable_torque_filter", default_value="false",
+            description="Opt-in BHL Recoil torque EMA. Uses the pinned motor "
+                        "configuration alpha and preserves its 2 kHz time "
+                        "constant at the 250 Hz effort-command rate. "
+                        "Experimental; matched live A/B did not revive the "
+                        "sustained turn."),
+        DeclareLaunchArgument(
+            "bhl_physics_timestep", default_value="0.0",
+            description="Optional BHL MuJoCo physics timestep in seconds; "
+                        "0.0 preserves the current merged-model default. "
+                        "Use 0.0005 for the upstream 2 kHz qualification rate "
+                        "as an opt-in experiment."),
         DeclareLaunchArgument(
             "go2_enable_experimental_gait", default_value="false",
             description="Allow unqualified Go2 stepping experiments; the "

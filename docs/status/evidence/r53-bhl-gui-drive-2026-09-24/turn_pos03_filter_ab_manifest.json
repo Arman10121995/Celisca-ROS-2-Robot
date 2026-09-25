@@ -1,0 +1,87 @@
+{
+  "task": "R5.3 BHL Recoil torque-filter A/B",
+  "date": "2026-09-25",
+  "base_revision": "b32c2047e0582ed19a4a17573a80be25eda4d357",
+  "revision_note": "Run against the uncommitted working-tree implementation described by this manifest; the base revision identifies where the continuation resumed. The later bhl_physics_timestep passthrough was not enabled in these runs and its default preserves the same path.",
+  "result": "negative",
+  "claim": "The opt-in Recoil torque EMA did not revive the sustained pure-turn gait and remains off by default.",
+  "build": {
+    "command": "source /opt/ros/humble/setup.bash && source install/setup.bash && colcon build --symlink-install --packages-select robot_lab_adapter robot_lab_bringup --event-handlers console_direct+",
+    "result": "2 packages finished; build warnings only"
+  },
+  "tests": {
+    "r5_3_adapter_backend_ros_graph": "155 passed",
+    "bringup_profiles": "200 passed",
+    "fast_tier": "460 passed, 1 skipped; registry cross-reference validation PASS",
+    "static": "py_compile, platform-status YAML parse, and git diff --check passed"
+  },
+  "common": {
+    "simulator": "mujoco",
+    "map": "nav_empty",
+    "robot_model": "berkeley_humanoid_lite_sim",
+    "mode": "loc",
+    "spawn_xy": [-0.5, -0.5],
+    "spawn_yaw": 0.0,
+    "command_window_s": [3.0, 13.0],
+    "command": {"linear_x": 0.0, "angular_z": 0.3},
+    "command_rate_hz": 25,
+    "effort_vector": true,
+    "post_stop_observation_s": 5.0,
+    "launch_base": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=mujoco map_name:=nav_empty robot_model:=berkeley_humanoid_lite_sim gui:=false start_rviz:=false",
+    "probe_command": "BHL_PROBE_TOPIC=/key_vel BHL_PROBE_SPEED=0 BHL_PROBE_YAW=0.3 BHL_PROBE_START_T=3 BHL_PROBE_STOP_T=13 BHL_PROBE_RATE_HZ=25 BHL_PROBE_EFFORT_VECTOR=1 python3 probe_key_vel.py",
+    "execution": "Sequential isolated-domain runs; each setsid launch process group was interrupted and reaped after its probe."
+  },
+  "runs": [
+    {
+      "name": "turn_pos03_baseline_rerun_25hz",
+      "ros_domain_id": 73,
+      "torque_filter_enabled": false,
+      "probe_exit_code": 0,
+      "duration_s": 17.992,
+      "effort_messages": 4482,
+      "peak_tilt_rad": 0.2584475053933083,
+      "end_tilt_rad": 0.1270181959680693,
+      "yaw_rate_rad_s": {
+        "3_to_4": 0.062,
+        "4_to_5": 0.282,
+        "5_to_6": 0.008,
+        "8_to_13": "0.001 to 0.003"
+      },
+      "dyaw_8_to_13_rad": 0.011953,
+      "effort_spread_nm": {"5_to_6": 0.58, "8_to_9": 0.17},
+      "teardown": "Policy controller logged RCLError: context is not valid only after the complete trace during process-group shutdown."
+    },
+    {
+      "name": "turn_pos03_filter_25hz",
+      "ros_domain_id": 74,
+      "torque_filter_enabled": true,
+      "probe_exit_code": 0,
+      "duration_s": 17.992,
+      "effort_messages": 4482,
+      "peak_tilt_rad": 0.14658205232304422,
+      "end_tilt_rad": 0.12668966914717195,
+      "yaw_rate_rad_s": {
+        "3_to_4": 0.250,
+        "4_to_5": 0.216,
+        "5_to_6": 0.006,
+        "8_to_13": "0.001 to 0.002"
+      },
+      "dyaw_8_to_13_rad": 0.009808,
+      "effort_spread_nm": {"5_to_6": 0.59, "8_to_9": 0.17},
+      "startup_log": "Recoil torque EMA alpha=0.269597322@2kHz (effective 0.918997419@250Hz)",
+      "teardown": "Policy controller exited cleanly; auxiliary joy_teleop and imu_republisher logged ExternalShutdownException races."
+    }
+  ],
+  "sha256": {
+    "turn_pos03_baseline_rerun_25hz.json": "e1ac3884a0e45b0089f114871595b88c372e3c3730f7a3bd8bbadb3d6f0a73a5",
+    "turn_pos03_baseline_rerun_25hz.log": "3376d6ebc0ccc24ad590e21e9d65b482c369caf750fa0ea08f86280590276825",
+    "turn_pos03_filter_25hz.json": "229233599589cf19307355383981bb3fee1df5767e6d27a9712741532e6be5a7",
+    "turn_pos03_filter_25hz.log": "462fbf25db87580afab6453def5b2906f44a6285b78b5781b55cdf1b91ad1c22"
+  },
+  "limitations": [
+    "The lower filtered-run peak tilt is a single-run observation, not a qualification claim.",
+    "The model does not provide fresh 2 kHz encoder feedback inside each 250 Hz effort interval.",
+    "MuJoCo contact fidelity and policy domain robustness remain unmatched.",
+    "Retained teardown races are cleanup work; both complete measurement traces finished before shutdown."
+  ]
+}

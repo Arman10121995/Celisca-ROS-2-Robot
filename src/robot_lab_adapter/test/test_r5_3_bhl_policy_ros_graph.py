@@ -412,6 +412,57 @@ def test_effort_fall_stops_drive_even_between_policy_decisions(effort_graph, mon
     assert published[-1] == [0.0] * 22
 
 
+def test_recoil_torque_filter_wiring_is_opt_in_and_resets_on_stop():
+    """The default path is unchanged; the opt-in path loads and applies EMA."""
+    from robot_lab_adapter.bhl_policy import MOTOR_TORQUE_FILTER_ALPHA
+    from robot_lab_adapter.humanoid_policy_controller import (
+        HumanoidPolicyController)
+    try:
+        rclpy.init()
+    except RuntimeError:
+        pass
+    off = HumanoidPolicyController(settle_duration_s=0.05)
+    try:
+        assert off._effort_filters is None
+        assert off._filter_note() == ""
+    finally:
+        off.destroy_node()
+
+    on = HumanoidPolicyController(
+        settle_duration_s=0.05, torque_filter_enabled=True)
+    try:
+        filters = list(on._effort_filters.values())
+        assert filters
+        effective = 1.0 - (1.0 - MOTOR_TORQUE_FILTER_ALPHA) ** 8.0
+        assert all(f.alpha == pytest.approx(effective) for f in filters)
+        assert "Recoil torque EMA" in on._filter_note()
+
+        on._commanded = True
+        on._targets = {j: 0.1 for j in BHL_JOINT_NAMES}
+        on._measured_positions = {j: 0.0 for j in BHL_JOINT_NAMES}
+        on._measured_velocities = {j: 0.0 for j in BHL_JOINT_NAMES}
+        published = []
+        on._publish = published.append
+        on._on_effort_timer()
+        # BHL_JOINT_NAMES starts with a leg, whose checkpoint Kp is 20.
+        assert published[-1][0] == pytest.approx(2.0 * effective)
+
+        # Invalid feedback clears that channel rather than filtering stale
+        # torque, and SAFE_STOP clears every channel before publishing zero.
+        on._measured_positions.pop(BHL_JOINT_NAMES[0])
+        on._on_effort_timer()
+        assert published[-1][0] == 0.0
+        on._measured_positions[BHL_JOINT_NAMES[0]] = 0.0
+        on._on_effort_timer()
+        assert published[-1][0] != 0.0
+        on._orientation = (math.sin(0.8 / 2), 0.0, 0.0, math.cos(0.8 / 2))
+        on._on_effort_timer()
+        assert published[-1] == [0.0] * len(BHL_JOINT_NAMES)
+        assert all(f.value == 0.0 for f in filters)
+    finally:
+        on.destroy_node()
+
+
 def test_yaw_servo_wiring_is_opt_in_and_boost_only():
     """Node wiring for the yaw servo: off by default, direction preserved.
 

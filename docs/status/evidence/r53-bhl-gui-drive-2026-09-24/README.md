@@ -238,3 +238,114 @@ ROS-graph integration tests 10 passed (both including the new servo tests),
 launch-contract tests 3 passed, bringup algorithm-dispatch tests 61 passed,
 and the fast tier (`scripts/test_fast.sh`) 459 passed, 1 skipped, PASS with the
 registry cross-reference check passing.
+
+## 2026-09-25 third pass (Recoil audit and opt-in torque EMA)
+
+A source-level audit corrected the actuator-gain statement in the second pass.
+At pinned `Berkeley-Humanoid-Lite-Lowlevel` commit
+`652777cc7c49884e7cd7ddfada758dc1979bf627`, `RealHumanoid::run()` reads
+`joint_kp`, `joint_kd`, and `effort_limits` from the locomotion policy YAML and
+writes them to every motor before enabling position mode. They are therefore
+the same checkpoint values already used by Robot Lab (arms 10/2 and 4 N.m,
+legs 20/2 and 6 N.m), not 50/2 from `motor_configuration.json`. The persisted
+`gear_ratio=-15` maps motor-side encoder/velocity/torque to the joint side; the
+firmware then applies the already-joint-side policy gains and limits.
+
+The remaining verified motor-loop difference is the torque EMA. The pinned
+configuration stores `torque_filter_alpha=0.2695973217487335`. Recoil firmware
+(reviewed at `T-K-233/Recoil-Motor-Controller-BESC` commit `3571ab6`, whose
+position loop is unchanged from its initial source) computes every 0.5 ms:
+
+```text
+tau_filtered = alpha * tau_target + (1 - alpha) * tau_previous
+tau_setpoint = clamp(tau_filtered, -torque_limit, torque_limit)
+```
+
+Robot Lab publishes effort at 250 Hz. Applying the raw 0.2696 coefficient only
+at that rate would slow the filter by roughly 8x. The new pure-logic
+`BhlTorqueFilter` instead composes the eight 2 kHz updates per held target,
+giving an effective 250 Hz coefficient of `0.9189974191960218`. Missing or
+non-finite state resets that channel; SAFE_STOP resets all channels before
+publishing zero. The behavior is off by default and exposed experimentally as
+`bhl_enable_torque_filter:=true`; the startup line reports both the pinned
+2 kHz alpha and the effective command-rate alpha.
+
+Focused verification (the host's unrelated `anyio` pytest plugin is disabled as
+required by the existing test environment):
+
+```text
+policy adapter: 51 passed
+R5.3 adapter/backend/ROS-graph suite: 155 passed
+bringup profile suite (including launch contract): 200 passed
+scripts/test_fast.sh: 460 passed, 1 skipped, registry validation PASS
+python3 -m py_compile: pass
+git diff --check: pass
+```
+
+Matched live A/B trials were then run sequentially after the user-owned GUI
+stack exited, in isolated ROS domains 73 (default) and 74
+(`bhl_enable_torque_filter:=true`).
+Both used `nav_empty`, spawn `(-0.5,-0.5)`, a zero command through the 2 s bend,
+then `+0.3 rad/s` from 3-13 s at 25 Hz, five post-stop seconds, and full effort
+capture. The retained artifacts are
+`turn_pos03_baseline_rerun_25hz.{json,log}` and
+`turn_pos03_filter_25hz.{json,log}`. Commands, metrics, hashes, limitations,
+and teardown notes are retained in `turn_pos03_filter_ab_manifest.json`.
+
+| Run | peak / end tilt | yaw rate 3-4 / 4-5 / 5-6 s | yaw rate 8-13 s | dyaw 8-13 s | effort spread 5-6 / 8-9 s |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| default | 0.258 / 0.127 rad | +0.062 / +0.282 / +0.008 rad/s | +0.001 to +0.003 rad/s | 0.01195 rad | 0.58 / 0.17 N.m |
+| Recoil EMA | 0.147 / 0.127 rad | +0.250 / +0.216 / +0.006 rad/s | +0.001 to +0.002 rad/s | 0.00981 rad | 0.59 / 0.17 N.m |
+
+Both probes returned zero after 4,482 effort messages, completed the settle
+without SAFE_STOP, and retained the post-mux command throughout. The filter
+lowered peak tilt and changed the first two seconds of yaw, but the policy again
+parked at the same effort-spread level and did not sustain the turn. This is a
+**negative A/B result**: the verified Recoil torque EMA is not a remedy for the
+fixed-point stall, so it remains opt-in and off by default. The lower tilt is a
+single-run observation, not a qualification claim.
+
+The baseline log records an `RCLError: context is not valid` from the policy
+controller only during process-group teardown, after the complete 18 s trace;
+the filter run's controller exits cleanly. `joy_teleop` and `imu_republisher`
+show the known uncaught `ExternalShutdownException` race on teardown in both
+runs. These retained shutdown defects do not affect the measured windows but
+remain cleanup work.
+
+This models only the Recoil target/filter shape. Fresh 2 kHz encoder feedback
+inside each Robot Lab 250 Hz effort interval, MuJoCo contact fidelity, and the
+policy's domain robustness remain unmatched; the next live experiment should
+target one of those only if a bounded, testable hypothesis is defined.
+
+## 2026-09-25 fourth pass (native 2 kHz physics-rate A/B)
+
+The native policy qualification uses `physics_dt=0.0005` (2 kHz), while the
+common MuJoCo path previously inherited the merged-model default `0.002` (500
+Hz). The new opt-in `bhl_physics_timestep:=0.0005` launch argument passes the
+native rate into the MuJoCo backend; `0.0` preserves the existing default.
+This is intentionally a physics-rate-only experiment: the common ROS effort
+command remains 250 Hz, so it does not reproduce fresh 2 kHz encoder feedback
+inside each interval.
+
+A matched run in isolated domain 75 used the same `nav_empty` spawn, delayed
+`+0.3 rad/s` turn, 25 Hz command stream, and full effort capture. The probe
+timeout was raised to 240 s through `BHL_PROBE_TIMEOUT_S` because the slower
+physics rate is intentional. The retained artifacts are
+`turn_pos03_timestep2khz_25hz.{json,log}` and
+`turn_pos03_timestep2khz_manifest.json`.
+
+| Physics rate | peak / end tilt | yaw rate 3-4 / 4-5 s | dyaw 8-13 s | effort spread 8-9 s |
+| --- | ---: | ---: | ---: | ---: |
+| 500 Hz default | 0.258 / 0.127 rad | +0.062 / +0.282 rad/s | 0.01195 rad | 0.17 N.m |
+| 2 kHz override | 0.406 / 0.128 rad | +0.222 / +0.357 rad/s | 0.00541 rad | 0.18 N.m |
+
+The 2 kHz trial increased early yaw and transient tilt but did not prevent the
+same parked-policy effort signature; it completed without SAFE_STOP or a fall.
+This is another **negative A/B result**, not a qualification claim. It refutes
+physics timestep alone as the stall remedy. The remaining untested difference
+is the native qualification's fresh PD/encoder update inside each 2 kHz step.
+MuJoCo contact fidelity and policy domain robustness remain separate open items.
+
+Post-change verification: bringup profiles 201 passed; `scripts/test_fast.sh`
+461 passed, 1 skipped, registry validation PASS; launch show-args and YAML/JSON/
+hash checks pass.

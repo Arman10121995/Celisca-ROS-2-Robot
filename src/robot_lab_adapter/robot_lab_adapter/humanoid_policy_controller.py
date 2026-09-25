@@ -28,7 +28,9 @@ A thin ROS2 wrapper around the pure-logic policy adapter
   joints. The PD loop is closed *here*: that controller type is a pure effort
   forwarder and has no kp/kd of its own. ``command_interface:=position``
   publishes the raw position targets instead
-  (see ``r53-bhl-effort-interface-2026-09-16``).
+  (see ``r53-bhl-effort-interface-2026-09-16``). The opt-in
+  ``torque_filter_enabled`` path adds the Recoil firmware's torque EMA while
+  preserving its physical time constant at this node's command rate.
 
 The observation assembly, inference, action conversion and safety latch all
 live in ``bhl_policy`` and are unit-tested without a live ROS graph (see
@@ -80,12 +82,15 @@ from robot_lab_adapter.bhl_balance import (
 )
 from robot_lab_adapter.bhl_policy import (
     BhlPolicyController,
+    BhlTorqueFilter,
     POLICY_RATE_HZ,
     StartupSettle,
     YAW_COMMAND_LIMIT,
     YawRateBoost,
+    load_motor_torque_filter_alpha,
     load_policy_config,
     quaternion_tilt,
+    torque_filter_alpha_for_rate,
 )
 
 
@@ -97,6 +102,8 @@ class HumanoidPolicyController(Node):
         settle_duration_s: Optional[float] = None,
         command_interface: Optional[str] = None,
         yaw_servo_gain: Optional[float] = None,
+        torque_filter_enabled: Optional[bool] = None,
+        torque_filter_alpha: Optional[float] = None,
     ):
         super().__init__("humanoid_policy_controller")
         self.declare_parameter("command_topic", "/bhl_standing_controller/commands")
@@ -111,6 +118,10 @@ class HumanoidPolicyController(Node):
         self.declare_parameter("yaw_servo_filter_tau_s", 0.08)
         self.declare_parameter("command_interface", "effort")
         self.declare_parameter("effort_rate_hz", BALANCE_RATE_HZ)
+        self.declare_parameter("torque_filter_enabled", False)
+        # Zero means "load the pinned upstream value" when enabled. Keeping the
+        # parameter non-empty also lets launch/tooling inspect the selected law.
+        self.declare_parameter("torque_filter_alpha", 0.0)
 
         command_topic = self.get_parameter("command_topic").value
         joint_states_topic = self.get_parameter("joint_states_topic").value
@@ -138,6 +149,25 @@ class HumanoidPolicyController(Node):
         effort_rate = float(self.get_parameter("effort_rate_hz").value)
         if not math.isfinite(rate) or rate <= 0 or not math.isfinite(effort_rate) or effort_rate < rate:
             raise ValueError("positive policy rate and effort rate >= policy rate required")
+        self._effort_rate_hz = effort_rate
+        filter_enabled = bool(
+            self.get_parameter("torque_filter_enabled").value
+            if torque_filter_enabled is None else torque_filter_enabled)
+        filter_alpha = float(
+            self.get_parameter("torque_filter_alpha").value
+            if torque_filter_alpha is None else torque_filter_alpha)
+        if not math.isfinite(filter_alpha):
+            raise ValueError("BHL torque_filter_alpha must be finite")
+        if filter_enabled and filter_alpha == 0.0:
+            filter_alpha = load_motor_torque_filter_alpha()
+        self._torque_filter_raw_alpha = filter_alpha
+        effective_filter_alpha = (
+            torque_filter_alpha_for_rate(filter_alpha, effort_rate)
+            if filter_enabled else filter_alpha)
+        self._effort_filters: Optional[Dict[str, BhlTorqueFilter]] = (
+            {joint: BhlTorqueFilter(effective_filter_alpha)
+             for joint in BHL_JOINT_NAMES}
+            if filter_enabled and interface == "effort" else None)
         self._yaw_servo = YawRateBoost(
             gain=(float(self.get_parameter("yaw_servo_gain").value)
                   if yaw_servo_gain is None else float(yaw_servo_gain)),
@@ -185,8 +215,17 @@ class HumanoidPolicyController(Node):
             f"{command_topic}) at {rate} Hz over {len(BHL_JOINT_NAMES)} joints "
             f"({interface} interface; effort servo {effort_rate} Hz, "
             "stance PD/ankle-strategy settle ramp, checkpoint PD/limits "
-            f"driving{self._servo_note()})"
+            f"driving{self._filter_note()}{self._servo_note()})"
         )
+
+    def _filter_note(self) -> str:
+        """Startup log fragment for the opt-in Recoil torque filter."""
+        if not self._effort_filters:
+            return ""
+        raw_alpha = self._torque_filter_raw_alpha
+        effective_alpha = next(iter(self._effort_filters.values())).alpha
+        return (f", Recoil torque EMA alpha={raw_alpha:.9g}@2kHz "
+                f"(effective {effective_alpha:.9g}@{self._effort_rate_hz:g}Hz)")
 
     def _servo_note(self) -> str:
         """Startup log fragment for the opt-in yaw servo (empty when off)."""
@@ -286,6 +325,23 @@ class HumanoidPolicyController(Node):
         msg.data = values
         self._command_pub.publish(msg)
 
+    def _reset_effort_filters(self) -> None:
+        """Clear filtered torque so SAFE_STOP cannot leave a residual command."""
+        if self._effort_filters:
+            for torque_filter in self._effort_filters.values():
+                torque_filter.reset()
+
+    def _filter_efforts(self, values, valid=None) -> list:
+        """Apply the optional per-joint EMA, resetting invalid channels to zero."""
+        if not self._effort_filters:
+            return list(values)
+        if valid is None:
+            valid = [math.isfinite(float(value)) for value in values]
+        return [
+            self._effort_filters[joint].update(value, bool(is_valid))
+            for joint, value, is_valid in zip(BHL_JOINT_NAMES, values, valid)
+        ]
+
     def _on_effort_timer(self):
         """Fresh-state PD between policy decisions, in checkpoint joint order."""
         if not self._measured_positions or not self._targets:
@@ -297,6 +353,7 @@ class HumanoidPolicyController(Node):
                 measured_positions=self._measured_positions,
                 measured_velocities=self._measured_velocities)
         if self._controller.safety_state == self._controller.SAFE_STOP:
+            self._reset_effort_filters()
             self._publish([0.0] * len(BHL_JOINT_NAMES))
             return
         if not self._commanded or (
@@ -314,9 +371,11 @@ class HumanoidPolicyController(Node):
             stance = balance_targets(self._targets, self._body_state())
             efforts = pd_effort_command(
                 stance, self._measured_positions, self._measured_velocities)
-            self._publish([efforts[j] for j in BHL_JOINT_NAMES])
+            values = [efforts[j] for j in BHL_JOINT_NAMES]
+            self._publish(self._filter_efforts(values))
             return
         values = []
+        valid = []
         for joint in BHL_JOINT_NAMES:
             target = (self._targets.get(joint) if self._commanded
                       else self._measured_positions.get(joint))
@@ -325,12 +384,14 @@ class HumanoidPolicyController(Node):
             if target is None or measured is None or not all(
                     math.isfinite(v) for v in (target, measured, velocity)):
                 values.append(0.0)
+                valid.append(False)
                 continue
             kp, kd, limit = self._pd[joint]
             bound = min(float(limit), EFFORT_LIMIT)
             effort = kp * (target - measured) - kd * velocity
             values.append(float(max(-bound, min(bound, effort))))
-        self._publish(values)
+            valid.append(True)
+        self._publish(self._filter_efforts(values, valid))
 
     def _body_state(self):
         """Body roll/pitch from the cached IMU quaternion (balance-core type)."""

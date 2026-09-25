@@ -1,0 +1,64 @@
+{
+  "task": "R5.3 BHL native-physics-rate A/B",
+  "date": "2026-09-25",
+  "base_revision": "b32c2047e0582ed19a4a17573a80be25eda4d357",
+  "result": "negative",
+  "claim": "Changing only MuJoCo physics timestep to the native 2 kHz rate did not revive sustained pure turning; intra-interval PD/encoder feedback remains untested.",
+  "launch": {
+    "base": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=mujoco map_name:=nav_empty robot_model:=berkeley_humanoid_lite_sim gui:=false start_rviz:=false",
+    "baseline_physics_timestep": "merged-model default 0.002 s (500 Hz)",
+    "candidate_physics_timestep": "0.0005 s (2 kHz)",
+    "candidate_flag": "bhl_physics_timestep:=0.0005"
+  },
+  "probe": {
+    "topic": "/key_vel",
+    "command": {"linear_x": 0.0, "angular_z": 0.3},
+    "command_window_s": [3.0, 13.0],
+    "command_rate_hz": 25,
+    "effort_vector": true,
+    "post_stop_observation_s": 5.0,
+    "timeout_s": 240
+  },
+  "runs": [
+    {
+      "name": "turn_pos03_baseline_rerun_25hz",
+      "physics_timestep_s": 0.002,
+      "probe_exit_code": 0,
+      "peak_tilt_rad": 0.2584475053933083,
+      "end_tilt_rad": 0.1270181959680693,
+      "effort_messages": 4482,
+      "dyaw_8_to_13_rad": 0.011953,
+      "effort_spread_8_to_9_nm": 0.17
+    },
+    {
+      "name": "turn_pos03_timestep2khz_25hz",
+      "physics_timestep_s": 0.0005,
+      "probe_exit_code": 0,
+      "peak_tilt_rad": 0.4055770402469212,
+      "end_tilt_rad": 0.1275367718864219,
+      "effort_messages": 4479,
+      "yaw_rate_3_to_4_rad_s": 0.222,
+      "yaw_rate_4_to_5_rad_s": 0.357,
+      "dyaw_8_to_13_rad": 0.005415,
+      "effort_spread_5_to_6_nm": 0.71,
+      "effort_spread_8_to_9_nm": 0.18,
+      "wall_effort_rate_hz": 149.34,
+      "startup_log": "MuJoCo physics timestep: 0.0005 s"
+    }
+  ],
+  "post_change_verification": {
+    "bringup_profiles": "201 passed",
+    "fast_tier": "461 passed, 1 skipped; registry cross-reference validation PASS",
+    "launch_contract": "installed --show-args exposes bhl_physics_timestep default 0.0; composed world include received 0.0005"
+  },
+  "sha256": {
+    "turn_pos03_timestep2khz_25hz.json": "85d111c713c0088d3a7461b5cee9ac1877361c7f4af60cc392e73288fe68f952",
+    "turn_pos03_timestep2khz_25hz.log": "4005303a2d0528ed46cfc33e517837f3ac418a6f2483ef5124a3018074444aa9"
+  },
+  "limitations": [
+    "The candidate changes physics integration rate only; the common ROS effort command remains 250 Hz.",
+    "The native direct qualification recomputes PD inside its 2 kHz loop, so this A/B does not reproduce fresh intra-interval encoder feedback.",
+    "The 2 kHz trial had a higher transient tilt (0.406 rad) but no SAFE_STOP or fall.",
+    "Auxiliary ROS nodes logged teardown shutdown races after the complete trace; they are not used as pass criteria."
+  ]
+}

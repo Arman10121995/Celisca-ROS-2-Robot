@@ -374,10 +374,21 @@ Dependencies: `R5.1`.
   and then refuted live: the opt-in boost-only yaw servo (`yaw_servo_gain`,
   launch flag `bhl_enable_yaw_servo`, off by default) commanded an implied
   1.38-1.50 rad/s through the stall at gain 4 and the yaw still collapsed to
-  <=0.013 rad/s. The remaining candidates are the plant/actuator loop versus
-  the upstream motor model (250 Hz `position_kp=50`, `velocity_kp=2`, torque
-  filter) or a domain-matched retrain. One attempted run toppled in the ramp
-  while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
+  <=0.013 rad/s. A source audit then corrected the actuator-gain hypothesis:
+  the pinned physical low-level program overwrites `motor_configuration.json`'s
+  stored 50/2 gains and torque limit with the same checkpoint gains already used
+  here (arms 10/2, legs 20/2, effort limits 4/6 N.m). The verified missing
+  low-level behavior is the Recoil 2 kHz torque EMA (`alpha=0.2695973`); an
+  opt-in, rate-composed 250 Hz equivalent and SAFE_STOP/invalid-state resets are
+  implemented. Its matched live A/B is negative: peak tilt fell from 0.258 to
+  0.147 rad, but 8-13 s yaw advanced only 0.0098 rad with the command live and
+  effort spread returned to the same 0.17 N.m parked level, so it remains off.
+  A physics-rate-only A/B at the native 2 kHz (`bhl_physics_timestep:=0.0005`)
+  is also negative: 8-13 s dyaw is 0.0054 rad and effort spread returns to
+  0.18 N.m, despite early yaw increasing. Fresh 2 kHz intra-interval encoder
+  feedback, MuJoCo contact fidelity, or a domain-matched retrain remain
+  candidates. One attempted run toppled in the
+  ramp while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
   9.3/12); the identical re-run on an idle machine passed the bend at 0.271 rad
   peak tilt, confirming the bend's CPU-contention sensitivity.
 

@@ -48,10 +48,14 @@ Honest scope:
   is the node's ``yaw_servo_gain > 0`` path, is off by default, and its class
   docstring carries the measured defect (a held pure-turn command collapsing
   the policy's stepping limit cycle) and its honest scope.
+- :class:`BhlTorqueFilter` reproduces the pinned Recoil torque EMA. It is also
+  opt-in; :func:`torque_filter_alpha_for_rate` preserves the firmware's 2 kHz
+  physical time constant when targets are sampled at Robot Lab's 250 Hz rate.
 """
 
 from __future__ import annotations
 
+import json
 import math
 import os
 from dataclasses import dataclass, field
@@ -62,6 +66,15 @@ import numpy as np
 import yaml
 
 from robot_lab_adapter.bhl_balance import POSITION_LIMITS, TILT_FALL_RAD
+#: Recoil torque-filter alpha from the pinned upstream motor configuration.
+#: The firmware applies ``alpha * new + (1 - alpha) * previous`` after the
+#: position/velocity PD calculation.  Keep this fallback independent of runtime
+#: package installation; :func:`load_motor_torque_filter_alpha` verifies it
+#: against the vendored JSON whenever the opt-in filter is enabled.
+MOTOR_TORQUE_FILTER_ALPHA = 0.2695973217487335
+#: Recoil runs its position controller at 2 kHz inside the 10 kHz FOC loop.
+MOTOR_POSITION_RATE_HZ = 2000.0
+
 
 #: Base-velocity command width in the observation (vx, vy, wz).
 COMMAND_WIDTH = 3
@@ -221,6 +234,89 @@ def load_policy_config(
         default_base_position=np.asarray(cfg["default_base_position"], dtype=float),
     )
 
+
+def load_motor_torque_filter_alpha(path=None) -> float:
+    """Load and validate the pinned Recoil torque-filter coefficient.
+
+    The physical deployment's position gains and limits are overwritten from
+    the locomotion policy YAML at startup, but ``gear_ratio`` and
+    ``torque_filter_alpha`` remain in the motor configuration.  Only the latter
+    changes the joint-side effort law and is therefore reproduced here.
+    """
+    config_path = (Path(path) if path is not None else
+                   upstream_dir() / "motor_configuration.json")
+    try:
+        with config_path.open(encoding="utf-8") as handle:
+            config = json.load(handle)
+        alpha = float(config["position_controller"]["torque_filter_alpha"])
+    except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError) as exc:
+        raise ValueError(
+            f"invalid BHL motor torque-filter configuration at {config_path}: "
+            f"{exc}") from exc
+    if not math.isfinite(alpha) or not 0.0 < alpha <= 1.0:
+        raise ValueError("BHL torque_filter_alpha must be finite and in (0, 1]")
+    return alpha
+
+
+def torque_filter_alpha_for_rate(
+        alpha: float,
+        rate_hz: float,
+        reference_rate_hz: float = MOTOR_POSITION_RATE_HZ,
+) -> float:
+    """Convert Recoil's per-update EMA alpha to an arbitrary command rate.
+
+    A Robot Lab effort cycle holds one PD target across several physical 2 kHz
+    firmware updates.  Composing ``N`` EMAs preserves the physical time
+    constant: ``1 - (1 - alpha_reference) ** N``.  This is why applying the raw
+    0.2696 coefficient only at 250 Hz would make the filter eight times slower.
+    """
+    values = (alpha, rate_hz, reference_rate_hz)
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("torque-filter rates and alpha must be finite")
+    if not 0.0 < alpha <= 1.0:
+        raise ValueError("torque-filter alpha must be in (0, 1]")
+    if rate_hz <= 0.0 or reference_rate_hz <= 0.0:
+        raise ValueError("torque-filter rates must be positive")
+    return 1.0 - (1.0 - alpha) ** (reference_rate_hz / rate_hz)
+
+
+class BhlTorqueFilter:
+    """One joint's Recoil torque EMA, including safe invalid-state reset.
+
+    Recoil computes ``alpha * torque_target + (1 - alpha) * previous`` and then
+    applies the configured torque limit.  Robot Lab clamps the PD target before
+    this class, so filtering that bounded target preserves the same bound.
+    Unlike a normal low-pass command, missing/non-finite state must not leave a
+    stale filtered torque active; it clears this joint's state and returns zero.
+    """
+
+    def __init__(self, alpha: float = MOTOR_TORQUE_FILTER_ALPHA):
+        if not math.isfinite(alpha) or not 0.0 < alpha <= 1.0:
+            raise ValueError("torque-filter alpha must be finite and in (0, 1]")
+        self.alpha = float(alpha)
+        self._value = 0.0
+
+    @property
+    def value(self) -> float:
+        return self._value
+
+    def reset(self) -> None:
+        self._value = 0.0
+
+    def update(self, target: float, valid: bool = True) -> float:
+        if not valid:
+            self.reset()
+            return 0.0
+        try:
+            target = float(target)
+        except (TypeError, ValueError):
+            self.reset()
+            return 0.0
+        if not math.isfinite(target):
+            self.reset()
+            return 0.0
+        self._value = self.alpha * target + (1.0 - self.alpha) * self._value
+        return self._value
 
 
 def clamp_command(command: Sequence[float]) -> np.ndarray:

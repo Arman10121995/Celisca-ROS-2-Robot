@@ -43,15 +43,19 @@ if str(_adapter_pkg) not in sys.path:
 from robot_lab_adapter.bhl_balance import POSITION_LIMITS, TILT_FALL_RAD  # noqa: E402
 from robot_lab_adapter.bhl_policy import (  # noqa: E402
     BhlPolicyController,
+    BhlTorqueFilter,
+    MOTOR_TORQUE_FILTER_ALPHA,
     StartupSettle,
     YAW_COMMAND_LIMIT,
     YawRateBoost,
     action_to_targets,
     build_observation,
     clamp_command,
+    load_motor_torque_filter_alpha,
     load_policy_config,
     quaternion_gravity,
     quaternion_tilt,
+    torque_filter_alpha_for_rate,
     upstream_dir,
 )
 
@@ -626,4 +630,50 @@ def test_yaw_servo_never_fabricates_a_correction():
     assert math.isnan(servo.command(float('nan'), 0.0, 0.04))
 
 
+
+# ---------------------------------------------------------------------------
+# Opt-in Recoil torque filter
+# ---------------------------------------------------------------------------
+
+
+def test_motor_filter_alpha_comes_from_pinned_upstream_config():
+    path = upstream_dir() / "motor_configuration.json"
+    assert load_motor_torque_filter_alpha(path) == pytest.approx(
+        MOTOR_TORQUE_FILTER_ALPHA, abs=1e-15)
+
+
+def test_motor_filter_alpha_is_composed_for_250_hz_commands():
+    """A 250 Hz target is held for eight 2 kHz firmware updates."""
+    effective = torque_filter_alpha_for_rate(MOTOR_TORQUE_FILTER_ALPHA, 250.0)
+    assert effective == pytest.approx(0.9189974191960218)
+    assert torque_filter_alpha_for_rate(
+        MOTOR_TORQUE_FILTER_ALPHA, 2000.0) == pytest.approx(
+            MOTOR_TORQUE_FILTER_ALPHA)
+
+
+def test_torque_filter_matches_recoil_ema_for_a_bounded_pd_target():
+    torque_filter = BhlTorqueFilter(0.25)
+    assert torque_filter.update(4.0) == pytest.approx(1.0)
+    assert torque_filter.update(-4.0) == pytest.approx(-0.25)
+    assert torque_filter.update(2.0) == pytest.approx(0.3125)
+    # The node clamps targets before this class; filtering cannot expand that
+    # bound when the previous filtered value is also inside it.
+    assert abs(torque_filter.update(100.0)) <= 100.0
+
+
+def test_torque_filter_resets_on_invalid_state_and_rejects_bad_alpha():
+    torque_filter = BhlTorqueFilter(0.5)
+    torque_filter.update(4.0)
+    assert torque_filter.update(float("nan")) == 0.0
+    assert torque_filter.update(None) == 0.0
+    assert torque_filter.value == 0.0
+    torque_filter.update(4.0)
+    assert torque_filter.update(0.0, valid=False) == 0.0
+    assert torque_filter.reset() is None
+    assert torque_filter.value == 0.0
+    for invalid in (0.0, -0.1, 1.1, float("nan")):
+        with pytest.raises(ValueError):
+            BhlTorqueFilter(invalid)
+    with pytest.raises(ValueError):
+        torque_filter_alpha_for_rate(0.5, 0.0)
 

@@ -146,6 +146,22 @@ def test_bhl_sim_xacro_wires_the_verified_backend_plugins():
     )
 
 
+def test_bhl_rec_torque_filter_launch_flag_is_opt_in():
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8")
+    assert '"bhl_enable_torque_filter", default_value="false"' in launch_text
+    assert '"torque_filter_enabled": _as_bool(' in launch_text
+    assert '"bhl_enable_torque_filter"' in launch_text
+
+
+def test_bhl_physics_timestep_launch_override_is_opt_in():
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8")
+    assert '"bhl_physics_timestep", default_value="0.0"' in launch_text
+    assert '"physics_timestep": _launch_value(' in launch_text
+    assert 'context, "bhl_physics_timestep"' in launch_text
+
+
 def test_expected_profiles_are_present():
     assert set(MODES) == {"display", "loc", "slam", "3d_slam", "nav"}
     # 14 legacy maps existed before P4.2; the P4.2/P4.3/P4.4/P4.5 arenas added more.

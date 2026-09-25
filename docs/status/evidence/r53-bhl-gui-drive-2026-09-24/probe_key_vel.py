@@ -6,10 +6,12 @@ BHL_PROBE_TOPIC (/key_vel), BHL_PROBE_SPEED (0.25 m/s),
 BHL_PROBE_YAW (0 rad/s), BHL_PROBE_START_T (1 simulated second: when the
 speed/yaw command turns on; a zero twist is still published from t=1 so the
 controller's settle ramp runs exactly as in a GUI drive),
-BHL_PROBE_STOP_T (6 simulated seconds), BHL_PROBE_RATE_HZ (10 Hz), and
+BHL_PROBE_STOP_T (6 simulated seconds), BHL_PROBE_RATE_HZ (10 Hz),
 BHL_PROBE_MUX_TOPIC (/robot_lab_controller/cmd_vel_unstamped: the post-mux
-twist the policy actually consumes). The probe observes five more seconds
-after stop, and every record ends with the last post-mux (vx, wz) seen.
+twist the policy actually consumes), and BHL_PROBE_TIMEOUT_S (wall-clock
+seconds, default 90; raise only for intentionally slower physics rates). The
+probe observes five more seconds after stop, and every record ends with the
+last post-mux (vx, wz) seen.
 """
 import json
 import math
@@ -34,12 +36,13 @@ def main():
     speed = float(os.getenv('BHL_PROBE_SPEED', '.25'))
     yaw_rate = float(os.getenv('BHL_PROBE_YAW', '0'))
     rate = float(os.getenv('BHL_PROBE_RATE_HZ', '10'))
+    timeout_s = float(os.getenv('BHL_PROBE_TIMEOUT_S', '90'))
     effort_vector = os.getenv('BHL_PROBE_EFFORT_VECTOR', '0') not in ('0', '', 'false', 'no')
 
     if not all(math.isfinite(v)
-               for v in (stop_t, start_t, speed, yaw_rate, rate)):
+               for v in (stop_t, start_t, speed, yaw_rate, rate, timeout_s)):
         raise ValueError('probe controls must be finite')
-    if stop_t <= 1 or rate <= 0:
+    if stop_t <= 1 or rate <= 0 or timeout_s <= 0:
         raise ValueError('stop time must exceed 1 s and rate must be positive')
     if start_t < 0 or start_t >= stop_t:
         raise ValueError('start time must be non-negative and before stop')
@@ -104,8 +107,9 @@ def main():
     try:
         wall_start = time.monotonic()
         while (state['t'] is None or state['xy'] is None or state['tilt'] is None):
-            if time.monotonic() - wall_start > 30:
-                raise RuntimeError('no clock, odometry, or IMU within 30 s')
+            if time.monotonic() - wall_start > timeout_s:
+                raise RuntimeError(
+                    f'no clock, odometry, or IMU within {timeout_s:g} s')
             rclpy.spin_once(node, timeout_sec=.02)
         sim_start = state['t']
         start_xy = list(state['xy'])
@@ -113,8 +117,9 @@ def main():
         last_pub = float('-inf')
         last_record = float('-inf')
         while state['t'] - sim_start < stop_t + 5:
-            if time.monotonic() - wall_start > 90:
-                raise RuntimeError('simulation did not finish within 90 s')
+            if time.monotonic() - wall_start > timeout_s:
+                raise RuntimeError(
+                    f'simulation did not finish within {timeout_s:g} s')
             rclpy.spin_once(node, timeout_sec=.01)
             t = state['t'] - sim_start
             if t >= 1 and time.monotonic() - last_pub >= 1 / rate:
