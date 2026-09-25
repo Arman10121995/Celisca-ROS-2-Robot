@@ -388,9 +388,12 @@ Dependencies: `R5.1`.
   0.18 N.m, despite early yaw increasing. A matched headless native-model A/B
   that recomputes PD from fresh q/dq at every 2 kHz step is also negative:
   8-13 s dyaw is 0.0077 rad versus 0.0058 held-PD, with both effort spreads
-  near 21 N.m. Actuator-rate tuning is therefore retired. MuJoCo contact
-  fidelity or a domain-matched retrain remain candidates. One attempted run
-  toppled in the
+  near 21 N.m. A contact audit then found and fixed a duplicate collidable
+  fallback floor in generated worlds: common passive contacts fell from 22 to
+  the native 11, but common/native policy A/B still stalls (8-13 s dyaw
+  0.0058-0.0066 rad). Actuator-rate, contact-duplication, and filter tuning are
+  therefore retired; target-domain retraining is the remaining recommendation.
+  One attempted run toppled in the
   ramp while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
   9.3/12); the identical re-run on an idle machine passed the bend at 0.271 rad
   peak tilt, confirming the bend's CPU-contention sensitivity.

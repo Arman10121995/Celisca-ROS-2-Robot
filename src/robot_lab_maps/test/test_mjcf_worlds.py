@@ -89,6 +89,31 @@ class MjcfWorldTests(unittest.TestCase):
                 self.assertGreaterEqual(len(geoms), max(1, boxes // 2),
                                         "%s lost obstacle geometry" % name)
 
+    def test_fallback_plane_is_visual_only_when_ground_box_exists(self):
+        """Do not duplicate a source ground collision with a plane contact."""
+        generated, _ = gen_mjcf_worlds.convert_world(
+            self.worlds["nav_empty"], "nav_empty")
+        root = ET.fromstring(generated)
+        planes = [geom for geom in root.find("worldbody").findall("geom")
+                  if geom.get("type") == "plane"]
+        self.assertEqual(1, len(planes))
+        self.assertEqual("0", planes[0].get("contype"))
+        self.assertEqual("0", planes[0].get("conaffinity"))
+
+    def test_visual_fallback_never_replaces_all_collision_geometry(self):
+        for name, path in self.worlds.items():
+            generated, _ = gen_mjcf_worlds.convert_world(path, name)
+            root = ET.fromstring(generated)
+            geoms = root.find("worldbody").findall("geom")
+            fallbacks = [geom for geom in geoms
+                         if geom.get("type") == "plane"
+                         and geom.get("contype") == "0"
+                         and geom.get("conaffinity") == "0"]
+            if fallbacks:
+                self.assertTrue(
+                    any(geom.get("type") != "plane" for geom in geoms),
+                    f"{name}: visual fallback removed all collision geometry")
+
     def test_actors_are_skipped_and_reported(self):
         """Scripted movers are not static geometry; they must not be silent."""
         _, skipped = gen_mjcf_worlds.convert_world(

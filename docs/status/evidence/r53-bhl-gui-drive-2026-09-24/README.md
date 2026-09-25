@@ -371,3 +371,39 @@ hashes, and limitations are retained in `probe_intra_interval_pd.py`,
 `intra_interval_pd_ab.json`, and `intra_interval_pd_manifest.json`. It is not a
 common ROS launch qualification. Further actuator-rate tuning is retired; the
 remaining choices are contact-fidelity evidence or target-domain retraining.
+
+## 2026-09-25 sixth pass (contact fidelity and duplicate-floor correction)
+
+The compiled-model audit found that `nav_empty.world` already supplies a
+16×16×0.1 ground collision, while `gen_mjcf_worlds.py` added a second
+200×200 fallback plane at the same top height. Both were collidable, doubling
+passive foot contacts in the common plant (22 versus 11 native). The fallback
+plane is now visual-only (`contype=0`, `conaffinity=0`); the SDF ground box
+remains authoritative. All 21 affected generated worlds were regenerated;
+the full `robot_lab_maps` test suite passes 35 tests and the generator check
+reports all worlds up to date.
+
+After the correction, the passive traces both reach 11 contacts and similar
+penetration. The matched policy diagnostic still stalls on the common plant:
+
+| Plant / PD | dyaw 8–13 s | mean effort spread 8–13 s |
+| --- | ---: | ---: |
+| native / held 250 Hz | 0.00585 rad | 20.87 N·m |
+| native / fresh 2 kHz | 0.00770 rad | 21.33 N·m |
+| common / held 250 Hz | 0.00661 rad | 21.41 N·m |
+| common / fresh 2 kHz | 0.00576 rad | 20.99 N·m |
+
+The actual common ROS launch was then rerun in isolated domain 76 with the
+corrected installed world. `turn_pos03_contactfix_25hz.{json,log}` completed
+4,483 effort messages without SAFE_STOP or a fall (peak tilt 0.216 rad), but
+8-13 s yaw advanced only 0.00725 rad. The real launch therefore confirms the
+headless negative result.
+
+This removes a real contact artifact but does not revive sustained turning.
+Contact duplication is therefore not the stall remedy. The audit, fix, policy
+comparison, hashes, and limitations are retained in
+`probe_contact_parity.py`, `probe_contact_policy_ab.py`,
+`contact_parity.json`, `contact_policy_ab.json`, and
+`contact_fidelity_manifest.json`. The remaining recommendation is target-domain
+retraining; further rate/filter/contact tuning is not supported by these
+bounded results.

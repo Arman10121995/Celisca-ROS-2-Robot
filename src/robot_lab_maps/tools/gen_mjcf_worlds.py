@@ -143,13 +143,16 @@ def convert_world(world_path, name=None):
     worldbody = ET.SubElement(mujoco, "worldbody")
     has_plane = any(geom["type"] == "plane" for geom in geoms)
     if not has_plane:
-        # Every world needs something to stand on; box arenas model their
-        # floor as a thin box, which is kept as well.  A Celisca world's
-        # visible ground must match its 40 x 25 m SDF physics floor, or the
-        # default 200 x 200 m plane dwarfs the building in the viewer.
+        # Every world needs something to stand on; the SDF ground collision is
+        # authoritative. This fallback is visual scenery only: a collidable
+        # plane at the same z as a source ground box doubles every foot contact
+        # in MuJoCo (measured 22 common vs 11 native BHL passive contacts).
+        # A Celisca world's visible ground must match its 40 x 25 m SDF physics
+        # floor, or the default 200 x 200 m plane dwarfs the building.
         ground_size = "22 13.75 0.1" if name.startswith("celisca_") else "100 100 0.1"
         ET.SubElement(worldbody, "geom",
                       {"type": "plane", "size": ground_size,
+                       "contype": "0", "conaffinity": "0",
                        "rgba": "0.35 0.37 0.4 1"})
     for geom in geoms:
         ET.SubElement(worldbody, "geom", geom)

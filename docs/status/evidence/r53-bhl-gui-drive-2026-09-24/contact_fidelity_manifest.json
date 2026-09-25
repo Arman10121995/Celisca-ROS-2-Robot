@@ -1,0 +1,61 @@
+{
+  "task": "R5.3 BHL contact-fidelity audit and duplicate-floor correction",
+  "date": "2026-09-25",
+  "base_revision": "36b49bf",
+  "result": "mixed",
+  "claim": "The common nav_empty plant duplicated the SDF ground box with a collidable fallback plane; making the fallback visual-only restores native passive contact count, but the policy stall remains.",
+  "source_audit": {
+    "native_floor": "qualification_floor plane, friction 1/.005/.0001",
+    "common_world_before_fix": "generated nav_empty had a visual/collision plane plus the SDF 16x16x0.1 ground box at the same top height",
+    "passive_contacts_before_fix": {"native": 11, "common": 22},
+    "passive_contacts_after_fix": {"native": 11, "common": 11},
+    "passive_penetration_after_fix": {"native_max": 0.0156473, "common_max": 0.0157857},
+    "options_equal": true
+  },
+  "fix": {
+    "file": "src/robot_lab_maps/tools/gen_mjcf_worlds.py",
+    "behavior": "Fallback planes emitted when the source has no explicit plane now use contype=0 and conaffinity=0; the SDF ground collision remains authoritative.",
+    "regression_test": "src/robot_lab_maps/test/test_mjcf_worlds.py",
+    "regenerated_worlds": 21
+  },
+  "policy_ab_after_fix": {
+    "native_held_250hz": {"dyaw_8_to_13_rad": 0.005845, "mean_effort_spread_nm": 20.872},
+    "native_fresh_2khz": {"dyaw_8_to_13_rad": 0.007698, "mean_effort_spread_nm": 21.325},
+    "common_held_250hz": {"dyaw_8_to_13_rad": 0.006607, "mean_effort_spread_nm": 21.406},
+    "common_fresh_2khz": {"dyaw_8_to_13_rad": 0.005757, "mean_effort_spread_nm": 20.994},
+    "interpretation": "The contact-count correction removes a real plant artifact, but neither common-model mode revives sustained turning; contact duplication is not the stall remedy."
+  },
+  "verification": {
+    "mjcf_world_tests": "8 passed; full robot_lab_maps test suite 35 passed",
+    "generator_check": "All MJCF worlds are up to date.",
+    "contact_parity_and_policy_probes": "executed successfully",
+    "prior_fast_tier": "461 passed, 1 skipped; registry validation PASS"
+  },
+  "sha256": {
+    "contact_parity.json": "2041f2a18f9c63c490c23dd98f48670ce5f38b7c7939c4f9ca5d43ba952bcda5",
+    "contact_policy_ab.json": "42a9f01d6b41acd7bca930efbd23c5706e30feb3a6545540b45181bf9fba11cb",
+    "probe_contact_parity.py": "d0653684dba5344c74a8874f5390742135e964307bac70f019be42db6ab298fb",
+    "probe_contact_policy_ab.py": "eaba13da670035073b0928b67605fa0bfb72f88f3ed5ace785d1f79d319c8463",
+    "src/robot_lab_maps/tools/gen_mjcf_worlds.py": "70b1056dea292812b7097e7d3c2e7704af0a92581df2541bf45c9b7887ef7df8",
+    "src/robot_lab_maps/test/test_mjcf_worlds.py": "afb266ccdb7758a0a3499d94eb285862615492602ea5614fd74a82914426aa90",
+    "turn_pos03_contactfix_25hz.json": "36a12c0d8998d331f2dd2f475bebfcb3e416a8ace2e50537fe738fc781aa3f5c",
+    "turn_pos03_contactfix_25hz.log": "43abbf2abbed51fd16affd19b34203286ac300b6fee21cd673a1a4e4a6948b57"
+  },
+  "live_common_after_fix": {
+    "artifact": "turn_pos03_contactfix_25hz.{json,log}",
+    "ros_domain_id": 76,
+    "probe_exit_code": 0,
+    "peak_tilt_rad": 0.215727,
+    "end_tilt_rad": 0.125811,
+    "dyaw_8_to_13_rad": 0.007250,
+    "effort_messages": 4483,
+    "safe_stop": false,
+    "fall": false,
+    "interpretation": "The actual common ROS path still enters the same parked turn state after the contact-count fix."
+  },
+  "limitations": [
+    "The common and native compiled models still differ in body count, imported body values, and non-local static obstacle geometry; the passive floor-contact trace is the bounded comparison.",
+    "The policy A/B is headless and does not include the full ROS GUI/twist_mux graph.",
+    "A target-domain retrain remains a separate open path."
+  ]
+}

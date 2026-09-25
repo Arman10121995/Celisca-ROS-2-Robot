@@ -79,9 +79,16 @@ def run(policy_name, fresh_pd):
     def measured():
         q = {name: float(data.qpos[adr]) for name, adr in zip(config.joints, qadr)}
         dq = {name: float(data.qvel[adr]) for name, adr in zip(config.joints, vadr)}
-        quat_wxyz = data.sensor("imu_quat").data
-        orientation = tuple(float(quat_wxyz[i]) for i in (1, 2, 3, 0))
-        gyro = tuple(float(v) for v in data.sensor("imu_gyro").data)
+        try:
+            quat_wxyz = data.sensor("imu_quat").data
+            orientation = tuple(float(quat_wxyz[i]) for i in (1, 2, 3, 0))
+            gyro = tuple(float(v) for v in data.sensor("imu_gyro").data)
+        except (KeyError, IndexError):
+            # The common URDF-imported plant publishes attitude through the
+            # spawner rather than retaining native MJCF sensor elements.
+            quat_wxyz = data.qpos[3:7]
+            orientation = tuple(float(quat_wxyz[i]) for i in (1, 2, 3, 0))
+            gyro = tuple(float(v) for v in data.qvel[3:6])
         return q, dq, orientation, gyro
 
     def efforts(q, dq, orientation):
@@ -119,8 +126,7 @@ def run(policy_name, fresh_pd):
 
             if fresh_pd or step % effort_period_steps == 0:
                 last_effort = current
-            quat_wxyz = data.sensor("imu_quat").data
-            x, y, z, w = (float(quat_wxyz[i]) for i in (1, 2, 3, 0))
+            x, y, z, w = orientation
             yaw = math.atan2(2.0 * (w * z + x * y),
                             1.0 - 2.0 * (y * y + z * z))
             tilt = math.acos(max(-1.0, min(1.0, 1.0 - 2.0 * (x * x + y * y))))
