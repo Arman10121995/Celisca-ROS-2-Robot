@@ -314,7 +314,7 @@ Dependencies: `R5.1`.
 - Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
 - Status: Partial. The standard MuJoCo launch now holds Go2 upright under
   measured 12-joint effort control for short trials, though a 20-second run
-  showed gradual sag and drift. The experimental gait still moves backward
+  showed gradual sag and drift. The hand-authored experimental trot moves backward
   for both forward and reverse requests, so it is disabled by default and no
   velocity-base, navigation or terrain qualification is claimed.
 - Evidence: [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
@@ -324,6 +324,13 @@ Dependencies: `R5.1`.
   heuristic, and
   latches tilt/effort safety stops; its pure tests cover these laws but do
   not substitute for measured displacement, turning and terrain missions.
+- An [opt-in pretrained Go2 policy trial](docs/status/evidence/r52-go2-policy-2026-09-25/README.md)
+  produced forward displacement, a commanded turn and a stopped/watched-out
+  flat-ground run through the standard MuJoCo launch. Low-speed reverse and
+  the first ledge in `terrain_stairs` failed; the policy is not yet the
+  default and Go2 velocity-base/SLAM/navigation remains unavailable in the GUI.
+  The GUI offers an explicit Go2/MuJoCo/localization policy checkbox and
+  auto-fills the corresponding launch argument for controlled experiments.
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 

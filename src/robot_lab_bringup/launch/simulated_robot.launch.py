@@ -950,10 +950,18 @@ def _build_simulation_actions(context):
             and simulator == "mujoco" and mode_name == "loc"
         )
         go2_mujoco = robot_model == "unitree_go2" and simulator == "mujoco"
+        go2_policy_path = _launch_value(context, "go2_policy_path") if go2_controller_active else ""
+        if go2_policy_path == "auto":
+            go2_policy_path = os.path.join(
+                get_package_share_directory("robot_lab_adapter"), "policies",
+                "go2_velocity_flat", "policy.onnx")
         go2_initial_positions = json.dumps({
             f"{leg}_{kind}_joint": value
             for leg in ("FL", "FR", "RL", "RR")
-            for kind, value in (("hip", 0.0), ("thigh", 0.72), ("calf", -1.45))
+            for kind, value in (("hip", (-0.1 if leg.endswith("L") else 0.1)
+                                  if go2_policy_path else 0.0),
+                                ("thigh", 0.9 if go2_policy_path else 0.72),
+                                ("calf", -1.8 if go2_policy_path else -1.45))
         }) if go2_mujoco else ""
         if bhl_policy_active:
             actions.append(
@@ -977,6 +985,7 @@ def _build_simulation_actions(context):
                     "cmd_vel_topic": "/robot_lab_controller/cmd_vel_unstamped",
                     "enable_experimental_gait": _as_bool(
                         _launch_value(context, "go2_enable_experimental_gait")),
+                    "policy_path": go2_policy_path,
                 }],
             ))
 
@@ -1231,6 +1240,11 @@ def generate_launch_description():
             "go2_enable_experimental_gait", default_value="false",
             description="Allow unqualified Go2 stepping experiments; the "
                         "measured gait does not yet track forward/reverse commands."),
+        DeclareLaunchArgument(
+            "go2_policy_path", default_value="",
+            description="Optional ONNX Go2 velocity policy ('auto' uses the "
+                        "bundled flat-ground model); experimental until "
+                        "the model and stop/turn/terrain behavior are qualified."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

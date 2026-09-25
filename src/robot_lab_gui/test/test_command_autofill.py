@@ -150,6 +150,20 @@ def test_command_tracks_robot_map_mode_backend_and_planner(app):
     assert "global_planning:=navfn_planner" in command
 
 
+def test_go2_policy_opt_in_autofills_only_its_supported_launch(app):
+    select(app, app.robot_combo, "unitree_go2")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["loc"].invoke()
+    assert app.go2_policy_checkbox.instate(["!disabled"])
+    app.go2_policy_checkbox.invoke()
+    assert "go2_policy_path:=auto" in displayed_command(app)
+    select(app, app.simulator_combo, "gazebo")
+    assert app.go2_policy_checkbox.instate(["disabled"])
+    assert "go2_policy_path:=auto" not in displayed_command(app)
+    select(app, app.simulator_combo, "mujoco")
+    assert "go2_policy_path:=auto" in displayed_command(app)
+
+
 def test_room_vacuum_choice_changes_launch_file(app):
     app.vacuum_radio.invoke()
     assert displayed_command(app)[3] == "simulated_room_vacuum.launch.py"

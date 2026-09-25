@@ -446,6 +446,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_linear_var = tk.DoubleVar(value=0.025)
         self.drive_angular_var = tk.DoubleVar(value=0.08)
         self.drive_input_enabled = tk.BooleanVar(value=False)
+        self.go2_policy_var = tk.BooleanVar(value=False)
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
         self.command_var = tk.StringVar()
@@ -816,6 +817,17 @@ class SimulationLauncherGui(tk.Tk):
                        style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=(4, 0))
 
         self.bg_processes = {}
+
+        self.go2_policy_checkbox = ttk.Checkbutton(
+            controls,
+            text="Go2 flat-ground policy (experimental)",
+            variable=self.go2_policy_var,
+            command=self._update_validation_and_command,
+        )
+        self.go2_policy_checkbox.grid(row=23, column=0, sticky="w", pady=(6, 0))
+        add_tooltip(self.go2_policy_checkbox,
+                    "MuJoCo localization only. Forward and turn were measured; "
+                    "slow reverse and stairs still fail qualification.")
 
         ttk.Label(controls, text="Drive").grid(row=24, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
@@ -1669,8 +1681,18 @@ class SimulationLauncherGui(tk.Tk):
                                            if notes else ""))
         self._set_command(command)
 
+    def _go2_policy_selectable(self):
+        return (self.robot_var.get() == "unitree_go2"
+                and self.simulator_var.get() == "mujoco"
+                and self.mode_var.get() == "loc"
+                and self.launch_kind_var.get() == "simulation")
+
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
+        if command and self.go2_policy_var.get() and self._go2_policy_selectable():
+            command = [part for part in command
+                       if not part.startswith("go2_policy_path:=")]
+            command.append("go2_policy_path:=auto")
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -1742,6 +1764,8 @@ class SimulationLauncherGui(tk.Tk):
             self.launch_kind_var.set("simulation")
         self.vacuum_radio.state(["!disabled"] if supports_vacuum else ["disabled"])
         self.save_map_button.state(["!disabled"] if self.mode_var.get() in ("slam", "3d_slam") else ["disabled"])
+        self.go2_policy_checkbox.state(
+            ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
 
         # Clear cached compatibility results (robot/mode/map changed)
         self._compat_cache.clear()

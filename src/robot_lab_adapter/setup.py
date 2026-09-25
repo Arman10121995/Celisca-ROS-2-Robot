@@ -12,6 +12,12 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/select_robot.launch.py', 'launch/select_components.launch.py']),
         ('share/' + package_name + '/config', []),
+        ('share/' + package_name + '/policies/go2_velocity_flat', [
+            'policies/go2_velocity_flat/policy.onnx',
+            'policies/go2_velocity_flat/policy.onnx.data',
+            'policies/go2_velocity_flat/deploy.yaml',
+            'policies/go2_velocity_flat/SOURCE.md',
+        ]),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

@@ -32,6 +32,7 @@ def main():
     parser.add_argument("--drive-wz", type=float, default=0.0)
     parser.add_argument("--drive-start", type=float, default=1.0)
     parser.add_argument("--drive-end", type=float, default=4.0)
+    parser.add_argument("--drop-command-after-drive", action="store_true")
     args = parser.parse_args()
     rclpy.init()
     node = Node("go2_stance_probe")
@@ -56,6 +57,7 @@ def main():
             if not state["trace"] or state["sim"] - state["trace"][-1]["sim_s"] >= args.trace_interval:
                 point = {"sim_s": round(state["sim"], 3),
                                        "xyz": [round(p.x, 3), round(p.y, 3), round(p.z, 3)],
+                                       "yaw_rad": round(state["yaw"][-1], 3),
                                        "tilt_rad": round(tilt(q), 3),
                                        "max_effort_nm": round(state["latest_tau"], 2),
                                        "rr_calf_rad": round(state["latest_q"].get(
@@ -99,7 +101,8 @@ def main():
             if args.drive_start <= elapsed < args.drive_end:
                 cmd.linear.x = args.drive_vx
                 cmd.angular.z = args.drive_wz
-            cmd_pub.publish(cmd)
+            if not (args.drop_command_after_drive and elapsed >= args.drive_end):
+                cmd_pub.publish(cmd)
             last_command_at = time.monotonic()
         if start is not None and state["sim"] - start >= args.duration:
             break
@@ -125,6 +128,23 @@ def main():
                         and result.get("xy_drift_m", 99) < 0.1
                         and result["joint_count"] >= 12
                         and result["effort_messages"] > 20)
+    if samples and (args.drive_vx or args.drive_wz):
+        trace = result["trace"]
+        def point_at(offset):
+            return min(trace, key=lambda item: abs(
+                item["sim_s"] - samples[0][0] - offset))
+        before = point_at(args.drive_start)
+        during = point_at(args.drive_end)
+        stopped = point_at(min(args.duration, args.drive_end + 1.0))
+        final = trace[-1]
+        result["motion"] = {
+            "drive_delta_x_m": round(during["xyz"][0] - before["xyz"][0], 3),
+            "drive_delta_yaw_rad": round(during["yaw_rad"] - before["yaw_rad"], 3),
+            "stop_delta_xy_m": round(math.hypot(
+                final["xyz"][0] - stopped["xyz"][0],
+                final["xyz"][1] - stopped["xyz"][1]), 3),
+            "stop_delta_yaw_rad": round(final["yaw_rad"] - stopped["yaw_rad"], 3),
+        }
     print(json.dumps(result, indent=2))
     node.destroy_node()
     rclpy.shutdown()
