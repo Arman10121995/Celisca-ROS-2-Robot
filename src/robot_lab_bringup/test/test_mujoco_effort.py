@@ -49,6 +49,26 @@ def test_watchdog_and_reset(command):
     np.testing.assert_equal(command.command(2.1, .5), [0, 0])
 
 
+def test_go2_launch_asset_accepts_all_twelve_effort_joints():
+    """The bringup profile must resolve to the commandable sim xacro."""
+    from ament_index_python.packages import get_package_share_directory
+    from robot_lab_mujoco.mujoco_spawner import _xacro_to_urdf
+
+    robots = Path(get_package_share_directory('robot_lab_robots'))
+    config = robots / 'unitree/go2_description/config/go2_controllers.yaml'
+    xacro = robots / 'unitree/go2_description/xacro/go2_sim.xacro'
+    urdf = _xacro_to_urdf(str(xacro))
+    effort = JointEffortCommand(config, urdf)
+    assert len(effort.names) == 12
+    assert len(set(effort.names)) == 12
+    assert effort.topic == '/go2_group_effort_controller/commands'
+    root = ET.fromstring(urdf)
+    control = root.find('ros2_control')
+    assert control is not None
+    declared = {joint.get('name') for joint in control.findall('joint')}
+    assert set(effort.names) <= declared
+
+
 def test_actuators_apply_named_torque_and_preserve_declared_losses(command):
     mujoco = pytest.importorskip('mujoco')
     # XML order deliberately differs from command order.

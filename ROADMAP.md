@@ -312,9 +312,18 @@ Dependencies: `R5.1`.
 - Files: `src/robot_lab_robots/unitree/go2_description/`, `src/robot_lab_adapter/`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control.
 - Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
-- Status: Partial (reopened 2026-09-15). The unit evidence below does not establish
-  the live locomotion acceptance above.
-- Evidence: `go2_locomotion.py` (constants honest to the Go2 description — 12 joints, effort limits from `const.xacro` (hip/thigh 23.7 N·m, calf 35.55), PD gains from `go2_robot_control.yaml`, nominal stance within position limits, tilt warn 0.35 rad / fall 0.70 rad, trot 0.70 s cycle with 0.5 duty, base-velocity limits vx 0.5 / vy 0.3 m/s / wz 0.7 rad/s and accel limits 1.0/0.5/2.0; closed-loop joint-space PD stance where a joint with no position measurement is *not driven* (zero effort, never assumed at target); bounded base-velocity interface with clamp + first-order rate limiting; trot is diagonal-pair stepping explicit about being *not* MPC; effort-residual contact estimation with None for missing data; latched SAFE_STOP safety monitor on tilt/effort saturation requiring explicit reset), `test_r5_2_go2_locomotion.py` (61 tests pass; full adapter suite 108 green including R3.3 launch/resolver/selector contracts). Honest findings: raw effort publishing is not gait control; contact is estimated locally from effort residuals, never assumed.
+- Status: Partial. The standard MuJoCo launch now holds Go2 upright under
+  measured 12-joint effort control for short trials, though a 20-second run
+  showed gradual sag and drift. The experimental gait still moves backward
+  for both forward and reverse requests, so it is disabled by default and no
+  velocity-base, navigation or terrain qualification is claimed.
+- Evidence: [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
+  has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
+  and the failed bidirectional drive trials. `go2_locomotion.py` limits
+  efforts and joint targets, reports an unqualified motor-effort contact
+  heuristic, and
+  latches tilt/effort safety stops; its pure tests cover these laws but do
+  not substitute for measured displacement, turning and terrain missions.
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 

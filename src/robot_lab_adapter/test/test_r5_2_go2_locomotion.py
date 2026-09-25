@@ -134,6 +134,14 @@ class TestStance:
         command = stance.effort_command(pose, {j: 0.0 for j in JOINT_NAMES})
         assert command["FL_thigh_joint"] > 0.0  # pulls forward toward target
 
+    def test_gain_scale_reduces_simulator_startup_effort(self):
+        pose = nominal_stance_pose()
+        pose["FL_thigh_joint"] -= 0.1
+        command = StanceController(gain_scale=0.15).effort_command(pose, {})
+        assert command["FL_thigh_joint"] == pytest.approx(4.5)
+        with pytest.raises(ValueError):
+            Go2LocomotionCore(gain_scale=0.0)
+
     def test_damping_opposes_velocity(self):
         stance = StanceController()
         pose = nominal_stance_pose()
@@ -230,12 +238,22 @@ class TestTrotGait:
             assert targets[name] == NOMINAL_STANCE[joint_kind(name)]
 
     def test_swing_leg_lifts_foot(self):
-        # phase 0.75: FL/RR swing; swing thigh retracts (bounded offset)
+        # At mid swing the calf folds while the thigh passes its center.
         targets = trot_joint_targets(0.75, BaseVelocity(vx=BASE_VEL_LIMITS["vx"]))
         expected = clamp_position(
-            "FL_thigh_joint", NOMINAL_STANCE["thigh"] + SWING_THIGH_OFFSET_RAD
+            "FL_calf_joint", NOMINAL_STANCE["calf"] + SWING_CALF_OFFSET_RAD
         )
-        assert targets["FL_thigh_joint"] == expected
+        assert targets["FL_calf_joint"] == expected
+
+    def test_forward_stance_sweeps_foot_backward(self):
+        start = trot_joint_targets(0.0, BaseVelocity(vx=0.25))["FL_thigh_joint"]
+        end = trot_joint_targets(0.49, BaseVelocity(vx=0.25))["FL_thigh_joint"]
+        assert start < NOMINAL_STANCE["thigh"] < end
+
+    def test_yaw_gives_opposite_sides_opposite_stride(self):
+        targets = trot_joint_targets(0.0, BaseVelocity(wz=0.5))
+        assert targets["FL_thigh_joint"] > NOMINAL_STANCE["thigh"]
+        assert targets["RR_thigh_joint"] < NOMINAL_STANCE["thigh"]
 
     def test_zero_velocity_means_no_swing_offset(self):
         targets = trot_joint_targets(0.75, BaseVelocity())

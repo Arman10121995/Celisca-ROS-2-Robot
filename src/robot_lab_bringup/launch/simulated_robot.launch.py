@@ -945,6 +945,16 @@ def _build_simulation_actions(context):
             robot_model == "berkeley_humanoid_lite_sim"
             and simulator == "mujoco" and mode_name == "loc"
         )
+        go2_controller_active = (
+            robot_model == "unitree_go2"
+            and simulator == "mujoco" and mode_name == "loc"
+        )
+        go2_mujoco = robot_model == "unitree_go2" and simulator == "mujoco"
+        go2_initial_positions = json.dumps({
+            f"{leg}_{kind}_joint": value
+            for leg in ("FL", "FR", "RL", "RR")
+            for kind, value in (("hip", 0.0), ("thigh", 0.72), ("calf", -1.45))
+        }) if go2_mujoco else ""
         if bhl_policy_active:
             actions.append(
                 Node(
@@ -957,6 +967,18 @@ def _build_simulation_actions(context):
                     }],
                 )
             )
+        if go2_controller_active:
+            actions.append(Node(
+                package="robot_lab_adapter",
+                executable="go2-stance-gait-controller",
+                output="screen",
+                parameters=[{
+                    "use_sim_time": _as_bool(use_sim_time, True),
+                    "cmd_vel_topic": "/robot_lab_controller/cmd_vel_unstamped",
+                    "enable_experimental_gait": _as_bool(
+                        _launch_value(context, "go2_enable_experimental_gait")),
+                }],
+            ))
 
         actions.append(
             IncludeLaunchDescription(
@@ -979,8 +1001,18 @@ def _build_simulation_actions(context):
                     # loc) stands on the same joint hold as in display mode;
                     # otherwise it collapses and scans the floor.  Wheeled
                     # robots are never held ('auto' in the spawners).
-                    "hold_position": ("false" if bhl_policy_active else
+                    "hold_position": ("false" if bhl_policy_active or go2_controller_active else
                                       _launch_value(context, "display_hold")),
+                    **({"effort_controller_config": os.path.join(
+                        get_package_share_directory("robot_lab_robots"),
+                        "unitree", "go2_description", "config", "go2_controllers.yaml")}
+                       if go2_controller_active else {}),
+                    **({"initial_joint_positions": go2_initial_positions}
+                       if go2_mujoco else {}),
+                    **({"physics_timestep": "0.001"}
+                       if go2_controller_active else {}),
+                    **({"effort_joint_armature": "0.01"}
+                       if go2_controller_active else {}),
                     **drive_args,
                 }.items(),
             )
@@ -1195,6 +1227,10 @@ def generate_launch_description():
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "go2_enable_experimental_gait", default_value="false",
+            description="Allow unqualified Go2 stepping experiments; the "
+                        "measured gait does not yet track forward/reverse commands."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

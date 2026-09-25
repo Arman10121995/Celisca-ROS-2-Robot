@@ -1,0 +1,863 @@
+{
+  "sim_duration_s": 7.996,
+  "truth_count": 2001,
+  "joint_messages": 2001,
+  "joint_count": 12,
+  "effort_messages": 1999,
+  "max_command_nm": 19.926459888190266,
+  "trace": [
+    {
+      "sim_s": 0.004,
+      "xyz": [
+        -0.5,
+        -0.5,
+        0.349
+      ],
+      "tilt_rad": 0.0,
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -1.45
+    },
+    {
+      "sim_s": 0.108,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.001,
+      "max_effort_nm": 5.78,
+      "rr_calf_rad": -1.47
+    },
+    {
+      "sim_s": 0.208,
+      "xyz": [
+        -0.505,
+        -0.5,
+        0.336
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.9,
+      "rr_calf_rad": -1.468
+    },
+    {
+      "sim_s": 0.308,
+      "xyz": [
+        -0.503,
+        -0.5,
+        0.336
+      ],
+      "tilt_rad": 0.001,
+      "max_effort_nm": 4.33,
+      "rr_calf_rad": -1.464
+    },
+    {
+      "sim_s": 0.408,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.336
+      ],
+      "tilt_rad": 0.001,
+      "max_effort_nm": 4.89,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 0.512,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.336
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.81,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 0.616,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.71,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 0.716,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 0.816,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 0.916,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.77,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.02,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.77,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.124,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.228,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.332,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.436,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.544,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.648,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.752,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.856,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 1.96,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.064,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.335
+      ],
+      "tilt_rad": 0.002,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.168,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.272,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.376,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.484,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.592,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.696,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.8,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 2.908,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.012,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.116,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.22,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.328,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.432,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.54,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.648,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.756,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.864,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 3.968,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.072,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.176,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.28,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.384,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.488,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.592,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.696,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.8,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 4.904,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.008,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.112,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.216,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.32,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.424,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.528,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.628,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.732,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.836,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 5.94,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.044,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.144,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.248,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.352,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.456,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.56,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.66,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.764,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.868,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 6.972,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.076,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.18,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.28,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.384,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.488,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.592,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.692,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.796,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    },
+    {
+      "sim_s": 7.9,
+      "xyz": [
+        -0.504,
+        -0.5,
+        0.334
+      ],
+      "tilt_rad": 0.003,
+      "max_effort_nm": 4.78,
+      "rr_calf_rad": -1.466
+    }
+  ],
+  "min_height_m": 0.3322158429419342,
+  "final_height_m": 0.3342938815793046,
+  "max_tilt_rad": 0.0031134037355875165,
+  "xy_drift_m": 0.004182535097964267,
+  "yaw_change_rad": -1.7149386034992167e-06,
+  "passed": true
+}

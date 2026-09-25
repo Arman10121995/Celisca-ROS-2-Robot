@@ -9,12 +9,10 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster
 
     go2_group_effort_controller:
-      type: forward_command_controller/ForwardCommandController
+      type: effort_controllers/JointGroupEffortController
 
 go2_group_effort_controller:
   ros__parameters:
-    front:
-      type: effort
     joints:
       - FL_hip_joint
       - FL_thigh_joint
@@ -28,8 +26,3 @@ go2_group_effort_controller:
       - RR_hip_joint
       - RR_thigh_joint
       - RR_calf_joint
-    command_interfaces:
-      - effort
-    state_interfaces:
-      - position
-      - velocity

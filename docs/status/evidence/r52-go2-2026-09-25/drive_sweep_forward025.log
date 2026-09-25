@@ -1,0 +1,200 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-25-10-37-41-286639-molar1-1214518
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm localization=amcl -> global_localization stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[INFO] [go2-stance-gait-controller-1]: process started with pid [1214557]
+[INFO] [robot_state_publisher-2]: process started with pid [1214559]
+[INFO] [mujoco_spawner-3]: process started with pid [1214561]
+[INFO] [joy_teleop-4]: process started with pid [1214563]
+[INFO] [joy_node-5]: process started with pid [1214565]
+[INFO] [twist_mux-6]: process started with pid [1214567]
+[INFO] [twist_marker-7]: process started with pid [1214569]
+[INFO] [joystick_relay.py-8]: process started with pid [1214571]
+[INFO] [twist_relay-9]: process started with pid [1214573]
+[INFO] [simulator_ready_gate-10]: process started with pid [1214578]
+[robot_state_publisher-2] 1790325462.327419 [102] robot_stat: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-2] [INFO] [1790325462.346894528] [robot_state_publisher]: got segment FL_calf
+[twist_relay-9] 1790325462.347410 [102] twist_rela: selected interface "lo" is not multicast-capable: disabling multicast
+[twist_mux-6] 1790325462.348165 [102]  twist_mux: selected interface "lo" is not multicast-capable: disabling multicast
+[robot_state_publisher-2] [INFO] [1790325462.349676895] [robot_state_publisher]: got segment FL_calf_rotor
+[robot_state_publisher-2] [INFO] [1790325462.350409383] [robot_state_publisher]: got segment FL_foot
+[robot_state_publisher-2] [INFO] [1790325462.351076782] [robot_state_publisher]: got segment FL_hip
+[robot_state_publisher-2] [INFO] [1790325462.351101774] [robot_state_publisher]: got segment FL_hip_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351114702] [robot_state_publisher]: got segment FL_thigh
+[robot_state_publisher-2] [INFO] [1790325462.351124495] [robot_state_publisher]: got segment FL_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351135279] [robot_state_publisher]: got segment FR_calf
+[robot_state_publisher-2] [INFO] [1790325462.351143823] [robot_state_publisher]: got segment FR_calf_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351151439] [robot_state_publisher]: got segment FR_foot
+[robot_state_publisher-2] [INFO] [1790325462.351159343] [robot_state_publisher]: got segment FR_hip
+[robot_state_publisher-2] [INFO] [1790325462.351167343] [robot_state_publisher]: got segment FR_hip_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351174703] [robot_state_publisher]: got segment FR_thigh
+[robot_state_publisher-2] [INFO] [1790325462.351182671] [robot_state_publisher]: got segment FR_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351190447] [robot_state_publisher]: got segment RL_calf
+[robot_state_publisher-2] [INFO] [1790325462.351200559] [robot_state_publisher]: got segment RL_calf_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351208207] [robot_state_publisher]: got segment RL_foot
+[robot_state_publisher-2] [INFO] [1790325462.351215696] [robot_state_publisher]: got segment RL_hip
+[robot_state_publisher-2] [INFO] [1790325462.351223376] [robot_state_publisher]: got segment RL_hip_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351230512] [robot_state_publisher]: got segment RL_thigh
+[robot_state_publisher-2] [INFO] [1790325462.351237680] [robot_state_publisher]: got segment RL_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351244784] [robot_state_publisher]: got segment RR_calf
+[robot_state_publisher-2] [INFO] [1790325462.351252336] [robot_state_publisher]: got segment RR_calf_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351260720] [robot_state_publisher]: got segment RR_foot
+[robot_state_publisher-2] [INFO] [1790325462.351267856] [robot_state_publisher]: got segment RR_hip
+[robot_state_publisher-2] [INFO] [1790325462.351275504] [robot_state_publisher]: got segment RR_hip_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351282608] [robot_state_publisher]: got segment RR_thigh
+[robot_state_publisher-2] [INFO] [1790325462.351289808] [robot_state_publisher]: got segment RR_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790325462.351296944] [robot_state_publisher]: got segment base
+[robot_state_publisher-2] [INFO] [1790325462.351304433] [robot_state_publisher]: got segment front_camera
+[robot_state_publisher-2] [INFO] [1790325462.351311377] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1790325462.351320593] [robot_state_publisher]: got segment trunk
+[twist_mux-6] [INFO] [1790325462.356959598] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-6] [INFO] [1790325462.358406302] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-6] [INFO] [1790325462.358654721] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-6] [INFO] [1790325462.358821570] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[twist_marker-7] 1790325462.358325 [102] twist_mark: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_node-5] 1790325462.360140 [102]   joy_node: selected interface "lo" is not multicast-capable: disabling multicast
+[joy_teleop-4] 1790325462.865013 [102] joy_teleop: selected interface "lo" is not multicast-capable: disabling multicast
+[joystick_relay.py-8] 1790325462.875368 [102] joystick_r: selected interface "lo" is not multicast-capable: disabling multicast
+[go2-stance-gait-controller-1] 1790325462.948846 [102] go2-stance: selected interface "lo" is not multicast-capable: disabling multicast
+[go2-stance-gait-controller-1] [INFO] [1790325463.063627332] [go2_stance_gait_controller]: Go2 closed-loop stance/gait: 12 effort joints at 250.0 Hz
+[mujoco_spawner-3] 1790325463.313885 [102] mujoco_spa: selected interface "lo" is not multicast-capable: disabling multicast
+[mujoco_spawner-3] [INFO] [1790325464.440447068] [mujoco_spawner]: MuJoCo: 18 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-3] [INFO] [1790325464.497153920] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-3] [WARN] [1790325464.508866974] [mujoco_spawner]: MuJoCo effort plant: no MJCF beside /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/go2_description/xacro/go2_sim.xacro names every effort joint; keeping the URDF <dynamics> (damping=5.0 is a Gazebo stabiliser the robot does not have).
+[mujoco_spawner-3] [INFO] [1790325464.554701900] [mujoco_spawner]: MuJoCo physics timestep: 0.0010 s
+[mujoco_spawner-3] [INFO] [1790325464.557004549] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-3] [INFO] [1790325464.557993328] [mujoco_spawner]: Joints: ['FR_hip_joint', 'FR_thigh_joint', 'FR_calf_joint', 'FL_hip_joint', 'FL_thigh_joint', 'FL_calf_joint', 'RR_hip_joint', 'RR_thigh_joint', 'RR_calf_joint', 'RL_hip_joint', 'RL_thigh_joint', 'RL_calf_joint']   lw= rw=
+[mujoco_spawner-3] [INFO] [1790325464.558869913] [mujoco_spawner]: MuJoCo effort joint armature: 0.0100 kg m^2
+[mujoco_spawner-3] [INFO] [1790325464.560885199] [mujoco_spawner]: Joint effort input: /go2_group_effort_controller/commands (12 joints, URDF limits)
+[mujoco_spawner-3] [INFO] [1790325464.563165032] [mujoco_spawner]: Spawn ground clearance: raised root by 0.2491 m
+[mujoco_spawner-3] [INFO] [1790325464.564004305] [mujoco_spawner]: MuJoCo model loaded: 14 bodies, 13 joints
+[mujoco_spawner-3] [INFO] [1790325464.564487254] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-3] [INFO] [1790325464.564917243] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-3] [INFO] [1790325464.574807045] [mujoco_spawner]: MuJoCo spawner running.
+[INFO] [simulator_ready_gate-10]: process has finished cleanly [pid 1214578]
+[INFO] [amcl-12]: process started with pid [1214801]
+[INFO] [map_server-11]: process started with pid [1214799]
+[INFO] [lifecycle_manager-13]: process started with pid [1214803]
+[INFO] [ekf_node-14]: process started with pid [1214805]
+[INFO] [imu_republisher.py-15]: process started with pid [1214807]
+[INFO] [wheel_imu_fusion-16]: process started with pid [1214809]
+[lifecycle_manager-13] 1790325464.977560 [102] lifecycle_: selected interface "lo" is not multicast-capable: disabling multicast
+[amcl-12] 1790325464.985869 [102]       amcl: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-13] [INFO] [1790325464.994742902] [lifecycle_manager_localization]: Creating
+[ekf_node-14] 1790325464.997699 [102]   ekf_node: selected interface "lo" is not multicast-capable: disabling multicast
+[amcl-12] [0m[INFO] [1790325465.000699894] [amcl]:
+[amcl-12] 	amcl lifecycle node launched.
+[amcl-12] 	Waiting on external lifecycle transitions to activate
+[amcl-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.[0m
+[amcl-12] [0m[INFO] [1790325465.002463018] [amcl]: Creating[0m
+[map_server-11] 1790325465.009149 [102] map_server: selected interface "lo" is not multicast-capable: disabling multicast
+[lifecycle_manager-13] [INFO] [1790325465.014771502] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[map_server-11] [INFO] [1790325465.023837839] [map_server]:
+[map_server-11] 	map_server lifecycle node launched.
+[map_server-11] 	Waiting on external lifecycle transitions to activate
+[map_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-11] [INFO] [1790325465.025817380] [map_server]: Creating
+[lifecycle_manager-13] [INFO] [1790325465.134027501] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-13] [INFO] [1790325465.134350512] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-11] [INFO] [1790325465.136774698] [map_server]: Configuring
+[map_server-11] [INFO] [1790325465.136913164] [map_io]: Loading yaml file: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.yaml
+[map_server-11] [INFO] [1790325465.137328432] [map_io]: resolution: 0.05
+[map_server-11] [INFO] [1790325465.137349136] [map_io]: origin[0]: -7
+[map_server-11] [INFO] [1790325465.137354961] [map_io]: origin[1]: -7
+[map_server-11] [INFO] [1790325465.137359281] [map_io]: origin[2]: 0
+[map_server-11] [INFO] [1790325465.137364241] [map_io]: free_thresh: 0.196
+[map_server-11] [INFO] [1790325465.137368785] [map_io]: occupied_thresh: 0.65
+[map_server-11] [INFO] [1790325465.137374353] [map_io]: mode: trinary
+[map_server-11] [INFO] [1790325465.137381137] [map_io]: negate: 0
+[map_server-11] [INFO] [1790325465.137691988] [map_io]: Loading image_file: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.pgm
+[map_server-11] [INFO] [1790325465.149143983] [map_io]: Read map /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.pgm: 280 X 280 map @ 0.05 m/cell
+[lifecycle_manager-13] [INFO] [1790325465.160597098] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-12] [0m[INFO] [1790325465.161935736] [amcl]: Configuring[0m
+[amcl-12] [0m[INFO] [1790325465.162104826] [amcl]: initTransforms[0m
+[amcl-12] [0m[INFO] [1790325465.172183398] [amcl]: initPubSub[0m
+[amcl-12] [0m[INFO] [1790325465.180350910] [amcl]: Subscribed to map topic.[0m
+[lifecycle_manager-13] [INFO] [1790325465.190130439] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[map_server-11] [INFO] [1790325465.190480778] [map_server]: Activating
+[map_server-11] [INFO] [1790325465.190807086] [map_server]: Creating bond (map_server) to lifecycle manager.
+[amcl-12] [0m[INFO] [1790325465.193032838] [amcl]: Received a 280 X 280 map @ 0.050 m/pix[0m
+[lifecycle_manager-13] [INFO] [1790325465.294789545] [lifecycle_manager_localization]: Server map_server connected with bond.
+[lifecycle_manager-13] [INFO] [1790325465.294884778] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[amcl-12] [0m[INFO] [1790325465.296065399] [amcl]: Activating[0m
+[amcl-12] [0m[INFO] [1790325465.296193912] [amcl]: initialPoseReceived[0m
+[amcl-12] [0m[INFO] [1790325465.296403739] [amcl]: Setting pose (0.632000): -0.500 -0.500 0.000[0m
+[amcl-12] [0m[INFO] [1790325465.296995777] [amcl]: Creating bond (amcl) to lifecycle manager.[0m
+[amcl-12] [0m[INFO] [1790325465.300777577] [amcl]: createLaserObject[0m
+[lifecycle_manager-13] [INFO] [1790325465.399972113] [lifecycle_manager_localization]: Server amcl connected with bond.
+[lifecycle_manager-13] [INFO] [1790325465.400058706] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-13] [INFO] [1790325465.400080627] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[wheel_imu_fusion-16] 1790325465.431105 [102] wheel_imu_: selected interface "lo" is not multicast-capable: disabling multicast
+[imu_republisher.py-15] 1790325465.454594 [102]    python3: selected interface "lo" is not multicast-capable: disabling multicast
+[wheel_imu_fusion-16] [INFO] [1790325465.754775887] [sensor_fusion_wheel_imu_fusion]: wheel_imu_fusion ready
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [wheel_imu_fusion-16]: sending signal 'SIGINT' to process[wheel_imu_fusion-16]
+[INFO] [imu_republisher.py-15]: sending signal 'SIGINT' to process[imu_republisher.py-15]
+[INFO] [ekf_node-14]: sending signal 'SIGINT' to process[ekf_node-14]
+[INFO] [lifecycle_manager-13]: sending signal 'SIGINT' to process[lifecycle_manager-13]
+[INFO] [amcl-12]: sending signal 'SIGINT' to process[amcl-12]
+[INFO] [map_server-11]: sending signal 'SIGINT' to process[map_server-11]
+[INFO] [twist_relay-9]: sending signal 'SIGINT' to process[twist_relay-9]
+[INFO] [joystick_relay.py-8]: sending signal 'SIGINT' to process[joystick_relay.py-8]
+[INFO] [twist_marker-7]: sending signal 'SIGINT' to process[twist_marker-7]
+[INFO] [twist_mux-6]: sending signal 'SIGINT' to process[twist_mux-6]
+[INFO] [joy_node-5]: sending signal 'SIGINT' to process[joy_node-5]
+[INFO] [joy_teleop-4]: sending signal 'SIGINT' to process[joy_teleop-4]
+[INFO] [mujoco_spawner-3]: sending signal 'SIGINT' to process[mujoco_spawner-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [go2-stance-gait-controller-1]: sending signal 'SIGINT' to process[go2-stance-gait-controller-1]
+[ekf_node-14] [INFO] [1790325472.912726425] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-13] [INFO] [1790325472.915377044] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-13] [INFO] [1790325472.915548822] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[lifecycle_manager-13] [INFO] [1790325472.915618551] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[amcl-12] [0m[INFO] [1790325472.918305970] [rclcpp]: signal_handler(SIGINT/SIGTERM)[0m
+[amcl-12] [0m[INFO] [1790325472.918473140] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)[0m
+[amcl-12] [0m[INFO] [1790325472.918576949] [amcl]: Deactivating[0m
+[amcl-12] [0m[INFO] [1790325472.918610678] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[map_server-11] [INFO] [1790325472.921146064] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-11] [INFO] [1790325472.921370898] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-11] [INFO] [1790325472.921508883] [map_server]: Deactivating
+[map_server-11] [INFO] [1790325472.921541556] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[twist_relay-9] [INFO] [1790325472.924879286] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-12] [0m[INFO] [1790325472.928983489] [amcl]: Cleaning up[0m
+[twist_marker-7] [INFO] [1790325472.929157218] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-11] [INFO] [1790325472.932157441] [map_server]: Cleaning up
+[map_server-11] [INFO] [1790325472.932266178] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[twist_mux-6] [INFO] [1790325472.932329155] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-5] [INFO] [1790325472.934901086] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-12] [0m[INFO] [1790325472.938257088] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[robot_state_publisher-2] [INFO] [1790325472.944158653] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-11] [INFO] [1790325473.094771498] [map_server]: Destroying
+[amcl-12] [0m[INFO] [1790325473.100626982] [amcl]: Destroying[0m
+[lifecycle_manager-13] [INFO] [1790325473.101574256] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization
+[INFO] [ekf_node-14]: process has finished cleanly [pid 1214805]
+[INFO] [twist_relay-9]: process has finished cleanly [pid 1214573]
+[INFO] [twist_marker-7]: process has finished cleanly [pid 1214569]
+[INFO] [twist_mux-6]: process has finished cleanly [pid 1214567]
+[INFO] [joy_node-5]: process has finished cleanly [pid 1214565]
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 1214559]
+[INFO] [imu_republisher.py-15]: process has finished cleanly [pid 1214807]
+[INFO] [wheel_imu_fusion-16]: process has finished cleanly [pid 1214809]
+[INFO] [map_server-11]: process has finished cleanly [pid 1214799]
+[joy_teleop-4] Traceback (most recent call last):
+[joy_teleop-4]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-4]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-4]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 442, in main
+[joy_teleop-4]     rclpy.shutdown()
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+[joy_teleop-4]     _shutdown(context=context)
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+[joy_teleop-4]     return context.shutdown()
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+[joy_teleop-4]     self.__context.shutdown()
+[joy_teleop-4] rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [amcl-12]: process has finished cleanly [pid 1214801]
+[INFO] [go2-stance-gait-controller-1]: process has finished cleanly [pid 1214557]
+[INFO] [joystick_relay.py-8]: process has finished cleanly [pid 1214571]
+[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 1214803]
+[INFO] [mujoco_spawner-3]: process has finished cleanly [pid 1214561]
+[ERROR] [joy_teleop-4]: process has died [pid 1214563, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_lzrtzt1t'].

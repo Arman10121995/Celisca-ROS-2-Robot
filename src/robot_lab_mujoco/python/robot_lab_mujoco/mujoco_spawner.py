@@ -7,6 +7,7 @@ stack (joint_states, TF, odom, scan, imu, clock).
 import copy
 import hashlib
 import math
+import json
 import os
 import re
 import signal
@@ -971,12 +972,15 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("spawn_y", 0.0)
         self.declare_parameter("spawn_z", 0.0)
         self.declare_parameter("spawn_yaw", 0.0)
+        self.declare_parameter("initial_joint_positions", "")
         # use_sim_time is auto-declared by rclpy when passed via launch
         # overrides — only declare it if not already present.
         if not self.has_parameter("use_sim_time"):
             self.declare_parameter("use_sim_time", True)
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
+        self.declare_parameter("physics_timestep", 0.0)
+        self.declare_parameter("effort_joint_armature", 0.0)
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("scan_rate", 5.0)
         self.declare_parameter("wheel_radius", 0.033)
@@ -1268,6 +1272,12 @@ class MuJoCoSpawner(Node):
 
         # --- build model ---
         self._model = mujoco.MjModel.from_xml_string(world_mjcf)
+        physics_timestep = float(self.get_parameter("physics_timestep").value)
+        if physics_timestep < 0 or not math.isfinite(physics_timestep):
+            raise ValueError("physics_timestep must be finite and nonnegative")
+        if physics_timestep:
+            self._model.opt.timestep = physics_timestep
+            self.get_logger().info("MuJoCo physics timestep: %.4f s" % physics_timestep)
         self._data = mujoco.MjData(self._model)
         self._substeps = _physics_substeps(self._dt, self._model.opt.timestep)
         self._camera = self._camera_setup()
@@ -1280,6 +1290,14 @@ class MuJoCoSpawner(Node):
                 for name in self._effort_command.names]
             if min(self._effort_actuators) < 0:
                 raise ValueError("configured effort actuator is missing")
+            armature = float(self.get_parameter("effort_joint_armature").value)
+            if armature < 0 or not math.isfinite(armature):
+                raise ValueError("effort_joint_armature must be finite and nonnegative")
+            if armature:
+                for name in self._effort_command.names:
+                    self._model.dof_armature[self._joint_name2dofadr[name]] = armature
+                self.get_logger().info(
+                    "MuJoCo effort joint armature: %.4f kg m^2" % armature)
             if self._effort_subscription is None:
                 self._effort_subscription = self.create_subscription(
                     Float64MultiArray, self._effort_command.topic, self._on_joint_effort, 1)
@@ -1626,6 +1644,20 @@ class MuJoCoSpawner(Node):
             # Free-joint quaternion is (w, x, y, z); yaw rotates about z.
             self._data.qpos[adr + 3:adr + 7] = [
                 math.cos(yaw / 2.0), 0.0, 0.0, math.sin(yaw / 2.0)]
+        initial_joints = self.get_parameter("initial_joint_positions").value
+        if initial_joints:
+            positions = json.loads(initial_joints)
+            if not isinstance(positions, dict):
+                raise ValueError("initial_joint_positions must be a JSON object")
+            for name, value in positions.items():
+                if name not in self._joint_name2id or not math.isfinite(float(value)):
+                    raise ValueError("invalid initial joint position for " + str(name))
+                joint_id = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_JOINT, name)
+                value = float(value)
+                if self._model.jnt_limited[joint_id]:
+                    lower, upper = self._model.jnt_range[joint_id]
+                    value = max(lower, min(upper, value))
+                self._data.qpos[self._joint_name2id[name]] = value
         with self._twist_lock:
             self._twist = Twist()
             self._last_cmd_time = 0.0

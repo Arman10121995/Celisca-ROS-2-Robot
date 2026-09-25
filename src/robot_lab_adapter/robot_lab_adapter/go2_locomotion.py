@@ -14,7 +14,8 @@ Honest scope (R5.2 acceptance bar):
   turns the bounded twist into per-leg joint-space swing/stance targets.
   It is a bounded stepping gait, *not* a claim of model-predictive or
   full-body dynamics control.
-- Contact estimation is effort-residual based per leg; body state
+- Contact output is a motor-effort residual heuristic per leg, not a direct
+  foot-contact force measurement; body state
   (roll/pitch) comes from the IMU quaternion; falls and excessive tilt
   force a SAFE_STOP (damped zero effort), never silent continuation.
 - All 12 joints are effort-commandable with per-joint limits taken from
@@ -142,6 +143,8 @@ class StanceController:
     """
 
     target: Dict[str, float] = field(default_factory=nominal_stance_pose)
+    gain_scale: float = 1.0
+    damping_scale: float = 1.0
 
     def __post_init__(self) -> None:
         # Targets are always clamped to the measured position limits.
@@ -170,7 +173,8 @@ class StanceController:
             q = positions[name]
             qdot = velocities.get(name, 0.0)
             kp, kd = PD_GAINS[joint_kind(name)]
-            tau = kp * (q_star - q) + kd * (0.0 - qdot)
+            tau = self.gain_scale * kp * (q_star - q) \
+                + self.damping_scale * kd * (0.0 - qdot)
             command[name] = clamp_effort(name, tau)
         return command
 
@@ -228,10 +232,12 @@ def rate_limit_base_velocity(
 #: Diagonal pairs of the trot: (FL, RR) and (FR, RL).
 TROT_DIAGONAL_PAIRS: Tuple[Tuple[str, str], Tuple[str, str]] = (("FL", "RR"), ("FR", "RL"))
 
-#: Swing-target offsets [rad] applied to the nominal stance during swing:
-#: thigh retracts and calf folds to lift the foot. Bounded and small.
+#: Swing lift [rad]; the thigh sweeps forward while the folded calf clears
+#: the floor. A stance leg sweeps backward relative to the trunk.
 SWING_THIGH_OFFSET_RAD = 0.35
 SWING_CALF_OFFSET_RAD = -0.5
+MAX_STRIDE_RAD = SWING_THIGH_OFFSET_RAD
+STRIDE_RAD_PER_MPS = 0.8
 
 
 def leg_phase(leg: str, phase: float) -> float:
@@ -253,26 +259,34 @@ def leg_in_stance(leg: str, phase: float) -> bool:
 def trot_joint_targets(phase: float, velocity: BaseVelocity) -> Dict[str, float]:
     """Joint-space swing/stance targets for all 12 joints at *phase*.
 
-    Honest bounded stepping: stance legs hold the nominal pose; swing legs
-    apply fixed bounded thigh/calf offsets to lift the foot. Forward/lateral
-    velocity modulates swing height slightly (faster -> higher step). This
-    is *not* an MPC or full-body-dynamics solution.
+    Stance feet sweep backward relative to the trunk; swing feet return
+    forward with a folded calf for clearance. Yaw commands give left and
+    right legs different fore-aft speeds. This is a bounded joint-space
+    stepping law, not a model-predictive dynamics controller.
     """
-    step_scale = min(1.0, (abs(velocity.vx) + abs(velocity.vy)) / BASE_VEL_LIMITS["vx"])
     targets: Dict[str, float] = {}
     for name in JOINT_NAMES:
         leg = name.split("_")[0]
         kind = joint_kind(name)
-        if leg_in_stance(leg, phase):
-            targets[name] = NOMINAL_STANCE[kind]
+        p = leg_phase(leg, phase)
+        side = 1.0 if leg in ("FL", "RL") else -1.0
+        fore_aft_speed = velocity.vx - side * velocity.wz * (HIP_LATERAL_OFFSET_M + 0.0465)
+        amplitude = max(-MAX_STRIDE_RAD, min(MAX_STRIDE_RAD,
+                                            STRIDE_RAD_PER_MPS * fore_aft_speed))
+        if p < TROT_DUTY:
+            sweep = -amplitude + 2.0 * amplitude * p / TROT_DUTY
+            lift = 0.0
         else:
-            if kind == "thigh":
-                raw = NOMINAL_STANCE[kind] + SWING_THIGH_OFFSET_RAD * step_scale
-            elif kind == "calf":
-                raw = NOMINAL_STANCE[kind] + SWING_CALF_OFFSET_RAD * step_scale
-            else:
-                raw = NOMINAL_STANCE[kind]
-            targets[name] = clamp_position(name, raw)
+            swing_p = (p - TROT_DUTY) / (1.0 - TROT_DUTY)
+            sweep = amplitude * (1.0 - 2.0 * swing_p)
+            lift = math.sin(math.pi * swing_p) * min(
+                1.0, abs(fore_aft_speed) / BASE_VEL_LIMITS["vx"])
+        raw = NOMINAL_STANCE[kind]
+        if kind == "thigh":
+            raw += sweep
+        elif kind == "calf":
+            raw += SWING_CALF_OFFSET_RAD * lift
+        targets[name] = clamp_position(name, raw)
     return targets
 
 
@@ -294,10 +308,11 @@ class LegObservation:
 
 
 def leg_contact_residual(leg: str, observation: LegObservation) -> float:
-    """Mean absolute effort residual across the leg's three joints [N·m].
+    """Mean absolute motor-effort residual across the leg's joints [N·m].
 
-    A stance leg carrying load shows measured efforts close to the PD
-    command; a swinging leg shows a large residual (no ground reaction).
+    This is a command-tracking heuristic. An ideal effort motor reports
+    actuator torque almost equal to the command even without ground contact;
+    physics foot-contact truth is still required for contact qualification.
     """
     residuals = []
     for kind in JOINT_KINDS:
@@ -460,8 +475,15 @@ class Go2LocomotionCore:
     unit-testable.
     """
 
-    def __init__(self, initial_velocity: Optional[BaseVelocity] = None) -> None:
+    def __init__(self, initial_velocity: Optional[BaseVelocity] = None,
+                 gain_scale: float = 1.0, damping_scale: float = 1.0) -> None:
         self.phase = 0.0
+        if not math.isfinite(gain_scale) or gain_scale <= 0.0 or gain_scale > 1.0:
+            raise ValueError("gain_scale must be within (0, 1]")
+        if not math.isfinite(damping_scale) or damping_scale <= 0.0:
+            raise ValueError("damping_scale must be positive")
+        self.gain_scale = gain_scale
+        self.damping_scale = damping_scale
         self.velocity = clamp_base_velocity(initial_velocity or BaseVelocity())
         self.safety = SafetyState()
         self._last_commanded: Dict[str, float] = {j: 0.0 for j in JOINT_NAMES}
@@ -503,7 +525,8 @@ class Go2LocomotionCore:
             issues.extend(self.safety.observe_body(body))
 
         targets = trot_joint_targets(self.phase, self.velocity)
-        stance = StanceController(target=targets)
+        stance = StanceController(target=targets, gain_scale=self.gain_scale,
+                                  damping_scale=self.damping_scale)
         efforts = stance.effort_command(
             measured_positions, measured_velocities or {}
         )

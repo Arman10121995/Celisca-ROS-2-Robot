@@ -1,7 +1,7 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-24"
+updated: "2026-09-25"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -304,6 +304,7 @@ tasks:
         scope_paths:
           - "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py"
           - "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py"
+          - "src/robot_lab_bringup/test/test_mujoco_effort.py"
           - "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py"
           - "src/robot_lab_bringup/test/"
         acceptance_ref: "ROADMAP.md"
@@ -547,7 +548,7 @@ tasks:
         next_action: "Complete on MuJoCo, with an additional PyBullet Bumperbot drive pass. This does not imply every backend/map combination or physical hardware is qualified. Continue R5.2 Go2 locomotion."
       R5.2:
         title: "Qualify Go2 locomotion"
-        state: "active"
+        state: "partial"
         owner: codex
         depends_on:
           - "R5.1"
@@ -555,11 +556,17 @@ tasks:
           - "src/robot_lab_robots/unitree/go2_description/"
           - "src/robot_lab_adapter/"
           - "src/robot_lab_robots/config/robots.yaml"
+          - "src/robot_lab_bringup/launch/simulated_robot.launch.py"
+          - "src/robot_lab_mujoco/launch/mujoco_simulator.launch.py"
+          - "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py"
+          - "docs/status/evidence/r52-go2-2026-09-25/"
+          - "ROADMAP.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
           - "src/robot_lab_adapter/robot_lab_adapter/go2_locomotion.py"
           - "src/robot_lab_adapter/test/test_r5_2_go2_locomotion.py"
-        next_action: "2026-09-15 acceptance audit: reopened from done to partial. The 61 pure-logic tests establish controller calculations, not stable simulated stance, walking, turning, stopping or terrain traversal. Wire and verify an actual MuJoCo locomotion controller/pinned upstream policy; retain measured pose/contact/effort and fall/command-loss tests."
+          - "docs/status/evidence/r52-go2-2026-09-25/: standard MuJoCo launch produced 8 s stable measured Go2 stance (0.332 m minimum height, 0.0032 rad peak tilt, 0.0042 m drift, 12 joints and 1,999 effort messages). Forward and reverse experimental gait commands both displaced the robot backward; gait is gated off by default."
+        next_action: "Short-duration upright stance passes on MuJoCo, but 20 s sag/drift remains and R5.2 locomotion is partial. Integrate and validate a velocity-tracking Go2 gait/policy against this exact model and effort plant; demonstrate forward/reverse/turn/stop, fall and command-loss handling, then a named terrain task with real foot-contact and effort evidence. Current motor-effort residual is not direct contact truth. Keep GUI SLAM/navigation gated until those trials pass."
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
         state: "active"

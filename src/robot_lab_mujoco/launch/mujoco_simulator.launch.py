@@ -90,11 +90,16 @@ def _build_mujoco_actions(context):
                                      "berkeley_humanoid_lite", "config", "bhl_controllers.yaml")
 
     # MuJoCo physics engine + robot spawn
+    high_rate_effort = bhl or bool(effort_config)
     spawner_params = {
         "model": LaunchConfiguration("model"),
         "effort_controller_config": effort_config,
-        "physics_rate": 250.0 if bhl else 240.0,
-        "publish_rate": 250.0 if bhl else 50.0,
+        "physics_rate": 250.0 if high_rate_effort else 240.0,
+        "physics_timestep": ParameterValue(
+            LaunchConfiguration("physics_timestep"), value_type=float),
+        "effort_joint_armature": ParameterValue(
+            LaunchConfiguration("effort_joint_armature"), value_type=float),
+        "publish_rate": 250.0 if high_rate_effort else 50.0,
         "world_xml": mujoco_xml,
         "robot_name": robot_name,
         "robot_package": robot_package,
@@ -103,6 +108,8 @@ def _build_mujoco_actions(context):
         "spawn_y": ParameterValue(spawn_y, value_type=float),
         "spawn_z": ParameterValue(spawn_z, value_type=float),
         "spawn_yaw": ParameterValue(spawn_yaw, value_type=float),
+        "initial_joint_positions": ParameterValue(
+            LaunchConfiguration("initial_joint_positions"), value_type=str),
         "use_sim_time": use_sim_time,
         "gui": gui,
     }
@@ -144,6 +151,9 @@ def generate_launch_description():
         DeclareLaunchArgument("world_path", default_value=""),
         DeclareLaunchArgument("model", default_value=""),
         DeclareLaunchArgument("effort_controller_config", default_value=""),
+        DeclareLaunchArgument("physics_timestep", default_value="0.0"),
+        DeclareLaunchArgument("effort_joint_armature", default_value="0.0"),
+        DeclareLaunchArgument("initial_joint_positions", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),
         DeclareLaunchArgument("robot_xacro", default_value=""),
         DeclareLaunchArgument("robot_name", default_value="bumperbot"),
