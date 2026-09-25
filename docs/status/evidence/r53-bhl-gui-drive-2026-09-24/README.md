@@ -19,16 +19,20 @@ below, not a proof that no other timing or gait sensitivity remains.
 | `after_depth1_manual_controller.json` | same, after queue change | map default | same | 1.32 m | 0.22 rad | upright |
 | `integrated_25hz.json` | `/key_vel` → mux → policy started by common launch | map default | same | 1.75 m | 0.18 rad | upright |
 | `integrated_10hz.json` | same, GUI's 10 Hz publish rate | map default | same | 0.75 m | 0.22 rad | upright |
+| `turn_pos03_live.json` | `/key_vel` → mux → common launch | map default | wz=+0.3 rad/s, 5 simulated s | yaw -0.45 rad | 0.30 rad | upright (settle passed) |
+| `turn_neg03_live.json` | `/key_vel` → mux → common launch | map default | wz=-0.3 rad/s, 5 simulated s | yaw -0.67 rad | 0.21 rad | upright (settle passed) |
 
-An additional 0.3 rad/s pure-turn command **failed** twice. With the original
-2 s startup bend, tilt crossed the 0.70 rad safety threshold during the bend
-and the body fell (`turn_2s.json`, `turn_2s_launch.log`). A 4 s bend still
-fell (`turn_4s.json`, `turn_4s_launch.log`), so that experiment was reverted.
-An experimental tilt-triggered retreat also recovered once but then fell
-(`turn_tilt_guard.json`, `turn_tilt_guard_launch.log`); it was reverted too.
-The turn command does not affect the joint targets until the bend completes;
-the failure exposes startup-bend sensitivity in the full ROS graph, not a
-qualified turning defect or success. More startup/stance work is required.
+An earlier 0.3 rad/s pure-turn command under high system load **failed** (`turn_2s.json`).
+With the 2 s startup bend under contention, tilt crossed the 0.70 rad safety threshold
+during the bend and the body fell (`turn_2s.json`, `turn_2s_launch.log`). A 4 s bend still
+fell (`turn_4s.json`, `turn_4s_launch.log`). An experimental tilt-triggered retreat also
+recovered once but then fell (`turn_tilt_guard.json`, `turn_tilt_guard_launch.log`).
+In repeat isolated trials (`turn_pos03_live.json` and `turn_neg03_live.json`), the
+startup bend completed reliably (peak tilt during bend <= 0.13 rad, total trial peak tilt
+0.21–0.30 rad), and the robot remained upright with a stable 5-second post-command stop
+(settled end tilt 0.12–0.13 rad). However, yaw tracking is noisy and exhibits negative
+yaw bias (-0.45 to -0.67 rad), showing that open-loop onboard-only yaw tracking needs
+further calibration. Full terrain, reverse, and navigation remain unqualified.
 
 Each run continued for five simulated seconds after the stop command; the
 last two finished near 0.13 rad tilt with negligible final pose drift. The
