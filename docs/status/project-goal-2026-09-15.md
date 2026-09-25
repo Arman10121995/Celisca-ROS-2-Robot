@@ -14,7 +14,7 @@ teleoperation, mapping, autonomous tasks and benchmarking; flight and legged
 terrain require suitable representations. An unsupported combination must report
 why it cannot run. Physical hardware operation remains a separate milestone.
 
-## Current evidence at source revision `57d8fe4` (2026-09-25)
+## Current evidence at source revision `7b1b1cb` (2026-09-25)
 
 | Requirement | Current evidence | Remaining acceptance |
 |---|---|---|

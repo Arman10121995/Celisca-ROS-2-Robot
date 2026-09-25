@@ -1,0 +1,140 @@
+{
+  "task": "R5.2 Go2 flat-ground inverse-map screening suite",
+  "source_revision": "7b1b1cb",
+  "ros_domains": [
+    211,
+    212,
+    213,
+    214,
+    215
+  ],
+  "trial_count": 5,
+  "screening_pass_count": 5,
+  "artifacts": [
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/analyze_flat_ground_suite.py",
+      "sha256": "4db4aee6a6378703f999a7e0f1187dfa2072700eed8f3992d8f38e9dda78a7d5",
+      "bytes": 5359
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/run_flat_ground_suite.sh",
+      "sha256": "1d3b07b1ff4235ae2b3606915c2e5e84ca69ba5711dbf1b3081eb37b633428ec",
+      "bytes": 6412
+    },
+    {
+      "path": "src/robot_lab_adapter/test/test_r5_2_go2_reverse_sweep.py",
+      "sha256": "3cd39854da0bae0b9ec86d685ed978044f2987503f77cfb2296d2f58749dcdbe",
+      "bytes": 5374
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/1_forward-stop.json",
+      "sha256": "7b719e30df96e06549ad5d81eea006c0af6b1a47ef6a4243df19c24b2ebf5d3a",
+      "bytes": 22614
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/1_forward-stop.launch.log",
+      "sha256": "2183422bcdb915a1d572454b9c258f8cd2dc5b98e5817a46aef1c65cb7613488",
+      "bytes": 23465
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/1_forward-stop.meta.json",
+      "sha256": "2ecd3d5fb34d2e34e63952cc75f198432f3b80d2936cd4dd76b0d7133c1907bf",
+      "bytes": 692
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/1_forward-stop.probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/2_reverse-stop.json",
+      "sha256": "592a73681ad0f9faf1e16d0a7caa99073a2bd860414f9a627e8cc92bf3d0486b",
+      "bytes": 22591
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/2_reverse-stop.launch.log",
+      "sha256": "ba497885e57d473d8cb42414ce43c42c916ec71f063eef937d23d33a23ca6077",
+      "bytes": 20902
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/2_reverse-stop.meta.json",
+      "sha256": "3d99de3fcc27233c24ed03f5a3364a3caa16a772a1a30de2ffd7971e93572614",
+      "bytes": 693
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/2_reverse-stop.probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/3_turn-stop.json",
+      "sha256": "1dc70f5038b3321b0c6ae8d736d6a9671f5b6cee73a1c52cc696081447b4f8bb",
+      "bytes": 22557
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/3_turn-stop.launch.log",
+      "sha256": "2284a41b83ebba4ab5740f197832c2ccadbca7eb0b8fb5798b53d0dc4015100e",
+      "bytes": 20682
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/3_turn-stop.meta.json",
+      "sha256": "099ad8ebd284bf323deb63b8b482e0cb1d15185d11727f0cc1f418c7c7915bcd",
+      "bytes": 679
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/3_turn-stop.probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/4_forward-command-loss.json",
+      "sha256": "d307d9d5e3ba8a869b8b45e78fdc15f88b3340ebc9ecd450a1549ccfa4b760ce",
+      "bytes": 22732
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/4_forward-command-loss.launch.log",
+      "sha256": "ff81fd09fba906fa0cfc6cad745ce7a882ef658ec5f837c51a23038812c6fb84",
+      "bytes": 20442
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/4_forward-command-loss.meta.json",
+      "sha256": "d7947d20f93113130025be784c47e1eb7f6407fdf7c9abb44f38c95d48a5d980",
+      "bytes": 723
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/4_forward-command-loss.probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/5_zero-settle.json",
+      "sha256": "e2d1209f049212699ea983fc2fe6ecf097d4c05edfead44812941ad19ea1b162",
+      "bytes": 22700
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/5_zero-settle.launch.log",
+      "sha256": "62141e09c78977d895e9852eef8af41ac3ba6675150bad2d17d92ba289ceb88f",
+      "bytes": 20902
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/5_zero-settle.meta.json",
+      "sha256": "313745beb6f5fc7412f91d9684ccebb71575b68f50db64a872a3ba570a1591db",
+      "bytes": 687
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/5_zero-settle.probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/manifest.json",
+      "sha256": "8bf6dd309f9b96a4a14655f62bc1ad3eda3031ad561cde7f990e518fd8f8892d",
+      "bytes": 737
+    },
+    {
+      "path": "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/summary.json",
+      "sha256": "6212f6786eeb4590625e1a391166161848a9ac8c402f3c7f7630015ee679372e",
+      "bytes": 7661
+    }
+  ]
+}

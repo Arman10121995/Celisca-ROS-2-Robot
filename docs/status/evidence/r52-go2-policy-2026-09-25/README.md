@@ -79,6 +79,20 @@ All four inverse trials completed with peak tilt `0.038–0.079 rad`,
 does not establish repeatable velocity tracking, terrain traversal or fall
 recovery.
 
+The five-case inverse-map suite is in
+[`flat_ground_suite_20260925/`](flat_ground_suite_20260925/summary.json). It used
+the same MuJoCo launch, `nav_empty`, 7 s probe and command window in isolated
+ROS domains 211–215. All five cases completed with zero probe/launch return codes,
+`0.030–0.078 rad` peak tilt and 1,750–1,751 direct foot-contact messages each.
+The bounded screening checks passed: forward `+0.277 m/s` observed for
+`+0.25 m/s` requested, reverse `-0.355 m/s` for `-0.35 m/s`, turn
+`+0.499 rad/s` for `+0.5 rad/s`, command-loss stop drift `0.015 m`, and zero
+command with no drive displacement or yaw. This is one sequential suite, not
+repeatability, velocity-tracking, terrain or navigation qualification. The suite
+runner and analyzer are `run_flat_ground_suite.sh` and
+`analyze_flat_ground_suite.py`; hermetic coverage is in
+`src/robot_lab_adapter/test/test_r5_2_go2_reverse_sweep.py`.
+
 The trial does **not** complete R5.2. The policy does not reliably track
 small reverse commands and cannot climb the tested ledge. Direct foot-ground
 forces are now published, but the blind ONNX policy does not consume them;

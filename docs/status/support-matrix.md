@@ -1,12 +1,12 @@
 # Robot Lab support matrix
 
-Last updated: 2026-09-25. Current source revision: `57d8fe4`.
+Last updated: 2026-09-25. Current source revision: `7b1b1cb`.
 The 2026-09-07 audit at `dff388f` remains the historical selected-test
 baseline. Later evidence includes PyBullet/MuJoCo live drive, RGB-D and reset
 smokes (2026-09-14), Isaac Sim sensor/drive/reset and five-seed R4 mission
 (2026-09-16), R5.1 bounded mobile missions (2026-09-24), R5.2 Go2 stance and
-opt-in policy trials, the measured R5.2 feed-forward/inverse reverse A/B, and the R5.3 BHL contact-fidelity audit (2026-09-25).
-The current fast check is 464 passed/1 skipped; the latest map suite is 35
+opt-in policy trials, the measured R5.2 feed-forward/inverse reverse A/B, the R5.2 five-case flat-ground screening suite, and the R5.3 BHL contact-fidelity audit (2026-09-25).
+The current fast check is 465 passed/1 skipped; the latest map suite is 35
 passed. These scoped results do not certify all combinations.
 
 This matrix reports implementation and evidence, not registry maturity labels.
@@ -183,7 +183,7 @@ rows name their revision and scope explicitly.
 |---|---|---|
 | Package discovery | 26 | Includes optional ORB-SLAM3 |
 | Selected source tests | 485 passed, 1 failed | Historical 2026-09-07 audit at `dff388f`; failure constructed `DeadReckoning` without ROS initialization |
-| Current fast suite | 464 passed, 1 skipped | `scripts/test_fast.sh` at `57d8fe4`; includes registry cross-reference validation |
+| Current fast suite | 465 passed, 1 skipped | `scripts/test_fast.sh` at `7b1b1cb`; includes registry cross-reference validation |
 | Current map suite | 35 passed | `robot_lab_maps` after generated-world contact fix; generator `--check` also passes |
 | Registry cross-references | Passed | Not compatibility correctness |
 | Adversarial composition checks | Invalid combinations accepted | Unknown simulator/wrong-category validation gaps |

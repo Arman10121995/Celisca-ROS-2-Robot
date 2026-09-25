@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-25. Current source revision: `57d8fe4`. Runtime audit
+Updated: 2026-09-25. Current source revision: `7b1b1cb`. Runtime audit
 baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
 R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
 tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
@@ -319,10 +319,12 @@ Dependencies: `R5.1`.
   and drift. The hand-authored experimental trot is disabled by default because
   it moves backward for both forward and reverse requests. The opt-in bundled
   flat-ground ONNX policy has measured forward motion, a stop, a large turn,
-  command-loss stop, direct foot-contact telemetry and two matched reverse A/Bs.
-  The feed-forward map overdrives the tested reverse grid; the opt-in inverse map
-  reduces overdrive at -0.25 to -0.45 m/s but leaves -0.15 m/s in a deadband.
-  Terrain traversal, fall handling and navigation remain unqualified.
+  command-loss stop, direct foot-contact telemetry, two matched reverse A/Bs and
+  a five-case inverse-map flat-ground screening suite. The feed-forward map
+  overdrives the tested reverse grid; the opt-in inverse map reduces overdrive at
+  -0.25 to -0.45 m/s but leaves -0.15 m/s in a deadband. The suite passed all
+  bounded screening checks, but repeatability, terrain traversal, fall handling
+  and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
   has an eight-second stance pass, launch logs, ROS truth/joint/effort traces,
   and the failed bidirectional drive trials. `go2_locomotion.py` limits

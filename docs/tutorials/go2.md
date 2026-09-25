@@ -8,8 +8,9 @@ qualified.
 The recorded evidence is under
 [`docs/status/evidence/r52-go2-policy-2026-09-25/`](../status/evidence/r52-go2-policy-2026-09-25/README.md).
 At the current source snapshot, the policy has produced measured forward
-motion, a stop, a large turn, command-loss stop and a reverse dead-zone
-compensation trial. Low-speed reverse tracking, the first stairs ledge, fall
+motion, a stop, a large turn, command-loss stop, feed-forward/inverse reverse A/Bs
+and a five-case inverse-map flat-ground screening suite. The suite passed all
+bounded checks, but repeatable low-speed tracking, the first stairs ledge, fall
 recovery and navigation remain open.
 
 ## Prerequisites and safety
