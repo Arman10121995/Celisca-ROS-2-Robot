@@ -350,6 +350,20 @@ Dependencies: `R5.1`.
   and clean shutdown are checked. This establishes live stance actuation;
   perturbation recovery and walking/turning remain separate acceptance items.
   See [recorded evidence](docs/status/evidence/r53-mujoco-effort-2026-09-22/README.md).
+- 2026-09-25 progress: the MuJoCo GUI-drive path now records the post-mux twist
+  on every sample of a run, and the command path is verified end to end for
+  `/key_vel` -> twist_mux -> the ONNX effort policy. Four delayed-turn runs and
+  four walk runs all completed the 2 s startup bend upright (peak tilt
+  0.16-0.25 rad, end tilt 0.12-0.13 rad, no falls or safe-stops), repeating the
+  earlier isolated-bend result. A held +/-0.3 rad/s pure-turn command, however,
+  only turns the body for about two seconds (0.41-1.16x of the commanded rate)
+  and then the policy stops stepping: 0.001-0.008 rad of yaw over 8-13 s with
+  the command still live in 4/4 runs. One of four walk runs also stalled at ~7 s
+  (0.67 m) with the command live while the same 10 Hz stream sustained 2.00 m in
+  a repeat, so the open-loop tracking gap covers sustained motion, not only
+  turning. The earlier "negative yaw bias" is retired: the zero-command bend
+  window drifts -0.39 to +0.23 rad depending on the run.
+  See [recorded evidence](docs/status/evidence/r53-bhl-gui-drive-2026-09-24/README.md).
 
 ### R5.4 — Integrate real multirotor SITL flight
 
