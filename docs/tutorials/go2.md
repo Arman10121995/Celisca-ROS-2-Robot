@@ -272,7 +272,14 @@ second input (`fall_recovery_roll_free_hip_rad:=`, splaying the *other* pair
 instead) was measured too: it does not hold the trunk under the gate either.
 Treat the flags as measurement knobs, not settings.
 
-Do not expect this to catch a fall either. Measured on both axes, the debounced
+**On the falls this harness can actually produce, enabling it is worse than
+leaving it off.** Three repeats of the 60 N lateral impulse with
+`enable_fall_recovery:=false` all end in the same propped side-rest (0.52 rad /
+0.139 m); three with it on all end inverted, and 1.0 s / 2.0 s start delays do
+not help. The recovery publishes zero effort for the whole fallen period, so the
+nominal stance drive that props the rest is never applied.
+
+Do not expect it to catch a fall either. Measured on both axes, the debounced
 `fallen` latch is 0.66 s late on lateral impulses *because* those falls are
 ballistic, and already on time on a sustained forward push — where the catchable
 collapse lasts 0.42 s against a ~2.3 s get-up.

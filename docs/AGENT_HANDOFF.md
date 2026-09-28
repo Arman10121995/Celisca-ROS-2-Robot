@@ -293,6 +293,18 @@ whether it runs, stops, or is disabled -- while at 1.0 authority it actively
 inverts a pose that would have rested stably. The next roll primitive has to
 change the outcome, not the ending pose.
 
+The most important result is a null control on the *real* use case, not a placed
+pose (`fall_ladder_null_perturb_20260928Tf60*`, domains 226-230): 60 N lateral
+with recovery **off** ends in the same propped side-rest (0.52 rad / 0.139 m)
+3 runs out of 3, while 60 N with it **on** ends inverted 3 out of 3, and 1.0 s /
+2.0 s start delays do not help (both still reach 3.14 rad). So on every reachable
+perturbation here, `enable_fall_recovery:=true` ends **worse** than `false`. The
+delays localise it: the trunk is stable at ~0.5 rad before the attempt starts, so
+the harm is not the ladder's waypoints but that the recovery publishes zero
+effort for the whole fallen period -- the nominal stance drive that props the
+rest is never applied. Cheapest next policy change is to keep the stance drive
+until the attempt actually starts.
+
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
 (`fall_ladder_gather_20260928T*`, domains 226-228) all end **inverted** again
