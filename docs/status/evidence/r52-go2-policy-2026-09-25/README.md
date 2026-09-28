@@ -703,7 +703,7 @@ window the trunk does exactly what the null control does: it settles into the
 same 0.52 rad / 0.139 m rest and holds it to within 0.01 rad / 0.001 m for the
 whole waiting window, at 0.0 Nm under the core's `safe_stop` (every 0.1 s
 sample from 3.85 s to 4.58 s in the repeat). Then the attempt starts and the
-inversion starts with it: `attempting:tuck` at 4.68 s with a 35.5 Nm peak,
+inversion starts with it: `attempting:tuck` at 4.68 s with a 35.5 Nm command sample,
 tilt 0.53 rad at 4.69 s, 1.50 rad at 4.79 s, 3.14 rad by 5.30 s — with the
 tuck briefly levering the trunk *up* to 0.18 m on the way over. All three
 delayed runs end `unrecoverable:tuck`, and the repeat (domain 229) reproduces the
@@ -716,14 +716,44 @@ This supersedes the mechanism written when these trials were first committed
 the robot. The traces rule that out: the core's `safe_stop` already zeroes
 effort in **both** arms — the null rest itself happens at 0.0 Nm from 3.75 s
 onward — so no stance drive is being lost, and the rest needs none. The calf
-trace rules out a leg sweep too (`rr_calf_rad` moves −2.729 → −2.70 rad across
-the whole flip). What differs with recovery on is only that the ladder
-*re-engages* from a rest the null control keeps forever, and it does so at
+trace rules out a leg sweep as *the* cause too: the RR calf barely moves across
+the flip in the domain-226 run (−2.729 → −2.70 rad) while it folds 1.2 rad
+during engagement in its repeat (−1.49 → −2.69 rad) — a sweep present in one,
+absent in the other, the same inversion in both, and the successful runs fold
+the same calf without ever flipping. What differs with recovery on is only
+that the ladder *re-engages* from a rest the null control keeps forever, and it does so at
 every delay measured: `fall_recovery_start_delay_s` cannot help, because it
 only moves *when* the ladder engages, never *whether* it engages on a pose
 that should be left alone. The "keep the stance drive until the attempt
 starts" policy proposed in that same commit rests on this refuted premise and
 is not motivated by any measurement here.
+
+What the engagement actually commands is pinned down as well — the source read
+against every recorded attempt by [`analyze_tuck_entry.py`](analyze_tuck_entry.py)
+→ [`tuck_entry.json`](tuck_entry.json). Entering `tuck` issues the `TUCK_POSE`
+waypoint PD — hip 0.0 / thigh 1.35 / calf −2.70 at Kp 100/300/300 with the
+launch authority 0.5/0.5 — clamped to 23.7 Nm on hip/thigh and 35.55 Nm on
+calf, and it engages with no pose gate at all (the 0.8 rad gate guards only
+`stand`). Three things that follow are checkable in the records and bound what
+the mechanism can be:
+
+- The engagement spike does not classify outcomes. Across the 74 recorded
+  attempts the first command sample spans 0.0–35.55 Nm, and the settled
+  0.52 rad / 0.139 m rest inverts under a 35.55 Nm sample (`d1.0`, `d1.0b`),
+  a 6.9 Nm sample (`d2.0`), and a 3.15 Nm sample (the no-delay 50 N run). The
+  probe samples the command topic instantaneously every ~0.1 s, so a clamp
+  episode between samples is invisible, and the run-wide `max_command_nm`
+  (35.55 Nm) carries no timestamp — the invariant is the command engaging on
+  that rest, not the size of the spike it was sampled at.
+- The same command saturates the same clamp in runs that *succeed*: the placed
+  1.4 rad pitch rest (0.266 m, calf at −1.80) engages at 35.55 Nm and rights
+  1.40 → 1.28 rad within 0.4 s. What differs is the rest, not the command — a
+  0.266 m pitched rest rights, a 0.139 m settled side-rest flips.
+- The traced RR calf cannot explain the spike either: it is 1.2 rad off the
+  tuck target in `d1.0b` (its own command clamps) but already at target in
+  `d1.0` and `d2.0`, and all three invert identically. `trace_joints` is off
+  for every ladder trial, so the other legs' angles and all per-joint efforts
+  are unrecorded.
 
 That is the sharpest safety statement in this document, and it is the reason the
 feature stays off by default on evidence rather than caution: on every reachable
@@ -732,13 +762,17 @@ perturbation measured here, `enable_fall_recovery:=true` ends worse than
 is a first phase that cannot tip a settled trunk — a change to the primitive,
 not to its schedule — and that belongs with whoever owns the recovery next.
 
-These stay open as *questions*, not as queued work: what in phase 1's
-waypoint/gain design produces the ~35.5 Nm engagement pulse that flips a
-settled trunk (the harm localises to `attempting:tuck`, so the answer is the
-tuck waypoints, not the trigger or the delay), and whether a first phase that
-cannot do that would make the feature shippable at all. The diagonal hazard
-above — the drive ending corner-rests on their backs at 0.5 authority — stays
-open in the same sense: recorded, deliberately not guarded.
+These stay open as *questions*, not as queued work. The first is narrower than
+when the delayed runs were committed: what in phase 1 flips a *settled*
+side-lying trunk is pinned to the ungated `TUCK_POSE` PD engaging on that rest
+(spike size and leg sweep are both out, per the three points above), so what
+remains is *which* joint's ground reaction tips it — and the probes cannot
+answer that: only the RR calf is traced, at ~0.1 s, and `trace_joints` is off
+for every ladder trial. Answering it needs per-joint effort tracing, a new
+measurement deliberately not run here. Whether a first phase that cannot do
+that would make the feature shippable at all stays open in the same sense. So
+does the diagonal hazard above — the drive ending corner-rests on their backs
+at 0.5 authority: recorded, deliberately not guarded.
 
 
 The brace held the hips at zero because this project had no measured

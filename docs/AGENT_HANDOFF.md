@@ -306,10 +306,14 @@ perturbation here, `enable_fall_recovery:=true` ends **worse** than `false`.
 The delays localise it to the ladder's engagement, not to timing: the core's
 `safe_stop` zeroes effort in *both* arms (the null rest is passive, at 0.0 Nm
 from 3.75 s on), the trunk holds the null's rest for the whole waiting window,
-and the inversion begins at `attempting:tuck` -- a 35.5 Nm engagement pulse
-rolls a settled 0.52 rad trunk to 3.14 rad in ~0.4 s, ending
-`unrecoverable:tuck` in every delayed run; a repeat in domain 229 reproduces
-the original to within 0.06 s on every transition. An earlier reading of these
+and the inversion begins at `attempting:tuck` -- the ungated `TUCK_POSE`
+waypoint PD engages on the settled 0.52 rad / 0.139 m rest and rolls it to
+3.14 rad in ~0.4 s, ending `unrecoverable:tuck` in every delayed run; a repeat
+in domain 229 reproduces the original to within 0.06 s on every transition.
+The spike size is not the mechanism (`analyze_tuck_entry.py` ->
+`tuck_entry.json`): attempts invert under engagement samples spanning
+0.0-35.55 Nm, and successful get-ups clamp the same 35.55 Nm -- what differs
+is the rest pose. An earlier reading of these
 trials blaming the recovery's zero-effort window is superseded: no stance
 drive is being lost, and `fall_recovery_start_delay_s` cannot help because it
 only moves *when* the ladder engages, never *whether* it engages on a rest the
@@ -340,10 +344,14 @@ to its schedule. Keep `go2_reverse_command_map:=inverse`, the
 
 Open follow-up questions (open, not queued work):
 
-1. What in the tuck path flips a *settled* side-lying trunk? The harm
-   localises to one event -- the ~35.5 Nm engagement pulse at `attempting:tuck`
-   that takes a 0.52 rad rest to 3.14 rad in ~0.4 s -- so the answer is in
-   phase 1's waypoint/gain design, not in the trigger or the delay.
+1. What in the tuck path flips a *settled* side-lying trunk? Narrowed by
+   `analyze_tuck_entry.py`: the event is the ungated `TUCK_POSE` PD (hip 0 /
+   thigh 1.35 / calf -2.70, authority 0.5) engaging on the rest -- spike size
+   and leg sweep are out (engagement samples span 0.0-35.55 Nm across
+   attempts; the same command righted a 0.266 m pitched rest while clamping
+   the same joint) -- so what remains is *which* joint's ground reaction tips
+   it. Only the RR calf is traced, so answering that needs per-joint effort
+   tracing: a new measurement, not run.
 2. Does the diagonal band's harm at the qualified 0.5 authority need a guard?
    At 0.5 the ladder's own drive ends a corner-rest diagonal on its back while
    at 0.2 the same pose rights itself; this is recorded as a hazard and

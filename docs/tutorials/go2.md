@@ -282,8 +282,9 @@ leaving it off.** Three repeats of the 60 N lateral impulse with
 2.0 s start delays do not help. The delays show why: during the wait the trunk
 holds exactly the null's rest at zero effort (the core's `safe_stop` already
 stops both arms — there is no stance drive being lost), and the inversion starts
-the moment `attempting:tuck` drives — a 35.5 Nm pulse rolls the settled trunk
-over in ~0.4 s, in both a 1.0 s-delay run and its repeat to within 0.06 s on
+the moment `attempting:tuck` drives — its ungated waypoint PD engages on the
+settled rest and rolls the trunk over in ~0.4 s (both runs sample 35.5 Nm at
+engagement), in both a 1.0 s-delay run and its repeat to within 0.06 s on
 every transition. It is the ladder engaging, not its timing, that flips a
 settled fall. The feature therefore stays **off by default on evidence** —
 what could change that is a first phase that cannot tip a settled trunk, a

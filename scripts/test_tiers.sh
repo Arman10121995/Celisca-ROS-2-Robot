@@ -47,6 +47,7 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_velocity_policy.py"
   "$ADP_TEST/test_r5_2_go2_recovery_policy.py"
   "$ADP_TEST/test_r5_2_go2_reverse_sweep.py"
+  "$ADP_TEST/test_r5_2_go2_tuck_entry.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_drive_kinematics.py"
   "$GUI_TEST/test_drive_control.py"
