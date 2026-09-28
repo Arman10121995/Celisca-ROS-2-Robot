@@ -9,6 +9,8 @@ OUT_DIR="${1:-$SCRIPT_DIR/perturbation_trial_$(date -u +%Y%m%dT%H%M%SZ)}"
 DOMAIN="${ROS_DOMAIN_ID:-231}"
 DURATION="${DURATION_S:-7}"
 FORCE_N="${FORCE_N:-5.0}"
+#: Body-frame axis of the pulse: 0=x (forward), 1=y (lateral), 2=z (up).
+PERTURBATION_AXIS="${PERTURBATION_AXIS:-1}"
 START_S="${START_S:-3.0}"
 PULSE_S="${PULSE_S:-0.2}"
 RECOVERY_S="${RECOVERY_S:-2.0}"
@@ -18,6 +20,22 @@ FALL_RECOVERY_TIMEOUT_S="${FALL_RECOVERY_TIMEOUT_S:-4.0}"
 FALL_RECOVERY_DELAY_S="${FALL_RECOVERY_DELAY_S:-0.0}"
 RECOVERY_POLICY_PATH="${RECOVERY_POLICY_PATH:-}"
 TRACE_JOINTS="${TRACE_JOINTS:-false}"
+# Optional spawn height. Empty keeps the map default. A non-zero height makes
+# the trial a drop test: the robot free-falls onto its feet, which is the only
+# mechanism here that can leave it down but *not* inverted (a lateral push
+# always rolls it fully over), i.e. the only way to exercise the get-up ladder
+# from a settled fallen pose.
+SPAWN_Z="${SPAWN_Z:-}"
+# Optional spawn attitude, in radians. Nonzero values place a *settled* fallen
+# pose (the MuJoCo spawner composes Rz(yaw)*Ry(pitch)*Rx(roll)), which is the
+# only way to exercise the ladder: a perturbed or dropped robot on these maps
+# either stays upright or rolls fully over, so there is no fall amplitude that
+# leaves it down but not inverted.
+SPAWN_PITCH="${SPAWN_PITCH:-}"
+SPAWN_ROLL="${SPAWN_ROLL:-}"
+# Optional lateral hip input for the roll phase's braced pair. Left empty (and
+# never passed as an empty launch argument) unless a sign is being measured.
+ROLL_BRACE_HIP="${ROLL_BRACE_HIP:-}"
 SOURCE_REVISION="$(git -C "$ROOT" rev-parse --short HEAD)"
 SOURCE_DIRTY="$(git -C "$ROOT" status --porcelain --untracked-files=no | wc -l)"
 
@@ -58,12 +76,12 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" <<'PY'
 import json
 import sys
 import hashlib
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
@@ -72,9 +90,14 @@ Path(out).write_text(json.dumps({
     "ros_domain_id": int(domain),
     "duration_s": float(duration),
     "force_n": float(force),
+    "perturbation_axis": int(perturbation_axis),
     "start_s": float(start),
     "pulse_s": float(pulse),
     "recovery_window_s": float(recovery),
+    "spawn_z_m": (float(spawn_z) if spawn_z else None),
+    "spawn_pitch_rad": (float(spawn_pitch) if spawn_pitch else 0.0),
+    "spawn_roll_rad": (float(spawn_roll) if spawn_roll else 0.0),
+    "roll_brace_hip_rad": (float(roll_brace_hip) if roll_brace_hip else 0.0),
     "enable_fall_recovery": fall_recovery.strip().lower() in ("true", "1", "yes"),
     "fall_recovery_timeout_s": float(fall_timeout),
     "fall_recovery_start_delay_s": float(fall_delay),
@@ -97,10 +120,33 @@ trace_args=()
 if [[ "$TRACE_JOINTS" == "true" ]]; then
     trace_args+=(--trace-joints)
 fi
+# An empty path means "keep the built-in sequenced get-up ladder": passing
+# ``go2_recovery_policy_path:=`` with no value is a malformed launch argument,
+# so the argument is only added when a learned actor was actually requested.
+recovery_policy_args=()
+if [[ -n "$RECOVERY_POLICY_PATH" ]]; then
+    recovery_policy_args+=(go2_recovery_policy_path:="$RECOVERY_POLICY_PATH")
+fi
+# An empty spawn height keeps the map's default (feet on the ground). A value
+# turns the trial into a drop test, which is recorded in the manifest.
+spawn_args=()
+if [[ -n "$SPAWN_Z" ]]; then
+    spawn_args+=(spawn_z:="$SPAWN_Z")
+fi
+if [[ -n "$SPAWN_PITCH" ]]; then
+    spawn_args+=(spawn_pitch:="$SPAWN_PITCH")
+fi
+if [[ -n "$SPAWN_ROLL" ]]; then
+    spawn_args+=(spawn_roll:="$SPAWN_ROLL")
+fi
+if [[ -n "$ROLL_BRACE_HIP" ]]; then
+    spawn_args+=(fall_recovery_roll_brace_hip_rad:="$ROLL_BRACE_HIP")
+fi
 ROS_DOMAIN_ID="$DOMAIN" /usr/bin/python3 "$PROBE" "${trace_args[@]}" \
     --duration "$DURATION" --wall-timeout 60 \
     --perturbation-start "$START_S" --perturbation-duration "$PULSE_S" \
-    --perturbation-force-n "$FORCE_N" --recovery-window "$RECOVERY_S" \
+    --perturbation-force-n "$FORCE_N" --perturbation-axis "$PERTURBATION_AXIS" \
+    --recovery-window "$RECOVERY_S" \
     > "$result" 2> "$probe_log" &
 probe_pid=$!
 sleep 1
@@ -111,9 +157,10 @@ ROS_DOMAIN_ID="$DOMAIN" setsid ros2 launch robot_lab_bringup simulated_robot.lau
     go2_perturbation_force_n:="$FORCE_N" \
     go2_perturbation_start_s:="$START_S" \
     go2_perturbation_duration_s:="$PULSE_S" \
-    go2_perturbation_axis:=1 \
+    go2_perturbation_axis:="$PERTURBATION_AXIS" \
+    ${spawn_args[@]+"${spawn_args[@]}"} \
     enable_fall_recovery:="$FALL_RECOVERY" \
-    go2_recovery_policy_path:="$RECOVERY_POLICY_PATH" \
+    ${recovery_policy_args[@]+"${recovery_policy_args[@]}"} \
     fall_recovery_timeout_s:="$FALL_RECOVERY_TIMEOUT_S" \
     fall_recovery_start_delay_s:="$FALL_RECOVERY_DELAY_S" \
     > "$launch_log" 2>&1 &

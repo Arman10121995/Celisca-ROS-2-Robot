@@ -713,6 +713,11 @@ def _build_simulation_actions(context):
     spawn_y = str(float(_config_value(context, "spawn_y", spawn_config.get("y", "0.0"))))
     spawn_z = str(float(_config_value(context, "spawn_z", spawn_config.get("z", "0.0"))))
     spawn_yaw = str(float(_config_value(context, "spawn_yaw", spawn_config.get("yaw", "0.0"))))
+    # Optional spawn attitude for a *placed* fallen pose (get-up tests): a
+    # perturbed robot here either stays upright or rolls fully over, so the
+    # only way to exercise a recovery sequence is to spawn it already down.
+    spawn_pitch = str(float(_config_value(context, "spawn_pitch", "0.0")))
+    spawn_roll = str(float(_config_value(context, "spawn_roll", "0.0")))
 
     if _launch_value(context, "simulator") == "gazebo" and not robot_free:
         # The other backends lift a robot whose legs start inside the floor
@@ -1026,6 +1031,12 @@ def _build_simulation_actions(context):
                         _launch_value(context, "fall_recovery_gain_scale"), 0.5),
                     "fall_recovery_damping_scale": _as_float(
                         _launch_value(context, "fall_recovery_damping_scale"), 0.5),
+                    # Opt-in lateral hip input for the roll phase (0.0 = the
+                    # qualified sagittal-only brace); the sign is a measurement
+                    # question, so it is never a default.
+                    "fall_recovery_roll_brace_hip_rad": _as_float(
+                        _launch_value(context,
+                                      "fall_recovery_roll_brace_hip_rad"), 0.0),
                 }],
             ))
 
@@ -1044,6 +1055,10 @@ def _build_simulation_actions(context):
                     "spawn_y": spawn_y,
                     "spawn_z": spawn_z,
                     "spawn_yaw": spawn_yaw,
+                    # Placed-fallen-pose spawn attitude; MuJoCo-only, since the
+                    # other backends spawn blind and never place a tilted root.
+                    **({"spawn_pitch": spawn_pitch, "spawn_roll": spawn_roll}
+                       if simulator == "mujoco" else {}),
                     "use_sim_time": use_sim_time,
                     "gui": gui_value,
                     # A robot without drive wheels (a humanoid or dog in
@@ -1357,6 +1372,12 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "fall_recovery_damping_scale", default_value="0.5",
             description="Stance damping scale used during the Go2 re-stand attempt."),
+        DeclareLaunchArgument(
+            "fall_recovery_roll_brace_hip_rad", default_value="0.0",
+            description="Opt-in lateral hip target [rad] for the roll phase's "
+                        "braced pair, mirrored per side and clamped to the hip "
+                        "limits. 0.0 is the qualified sagittal-only brace; any "
+                        "other value is an unqualified experiment."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "
@@ -1511,6 +1532,18 @@ def generate_launch_description():
             "spawn_yaw",
             default_value="auto",
             description="Initial robot spawn yaw. 'auto' uses sim_maps.yaml.",
+        ),
+        DeclareLaunchArgument(
+            "spawn_pitch",
+            default_value="0.0",
+            description="Initial spawn pitch (rad) about body y. Nonzero places "
+                        "a settled fallen pose for get-up tests (MuJoCo).",
+        ),
+        DeclareLaunchArgument(
+            "spawn_roll",
+            default_value="0.0",
+            description="Initial spawn roll (rad) about body x. Nonzero places "
+                        "a settled fallen pose for get-up tests (MuJoCo).",
         ),
         DeclareLaunchArgument(
             "initial_pose_x",

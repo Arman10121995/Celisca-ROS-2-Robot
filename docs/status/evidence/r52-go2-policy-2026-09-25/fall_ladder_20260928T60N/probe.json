@@ -1,0 +1,2936 @@
+{
+  "sim_duration_s": 13.999999999,
+  "truth_count": 3501,
+  "joint_messages": 3502,
+  "joint_count": 12,
+  "effort_messages": 3498,
+  "contact_messages": 3502,
+  "peak_foot_force_n": {
+    "FL": 267.9646610528364,
+    "FR": 87.32905095528093,
+    "RL": 220.6271980703225,
+    "RR": 83.59257199110642
+  },
+  "max_command_nm": 35.55,
+  "safety_messages": 3498,
+  "safety_transitions": [
+    {
+      "sim_s": 0.004,
+      "state": "nominal"
+    },
+    {
+      "sim_s": 3.572,
+      "state": "warn"
+    },
+    {
+      "sim_s": 3.712,
+      "state": "safe_stop"
+    }
+  ],
+  "final_safety_state": "safe_stop",
+  "fallen_messages": 3498,
+  "fallen_transitions": [
+    {
+      "sim_s": 0.004,
+      "fallen": false
+    },
+    {
+      "sim_s": 3.808,
+      "fallen": true
+    }
+  ],
+  "final_fallen": true,
+  "recovery_messages": 3498,
+  "recovery_transitions": [
+    {
+      "sim_s": 0.004,
+      "state": "idle"
+    },
+    {
+      "sim_s": 3.808,
+      "state": "attempting:tuck"
+    },
+    {
+      "sim_s": 4.152,
+      "state": "attempting:roll"
+    },
+    {
+      "sim_s": 4.768,
+      "state": "unrecoverable:roll"
+    }
+  ],
+  "final_recovery_state": "unrecoverable:roll",
+  "trace": [
+    {
+      "sim_s": 0.004,
+      "xyz": [
+        -0.5,
+        -0.5,
+        0.305
+      ],
+      "yaw_rad": -0.0,
+      "tilt_rad": 0.0,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 13.94,
+      "rr_calf_rad": -1.792,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 0.104,
+      "xyz": [
+        -0.505,
+        -0.5,
+        0.309
+      ],
+      "yaw_rad": 0.001,
+      "tilt_rad": 0.006,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.26,
+      "rr_calf_rad": -1.697,
+      "foot_force_n": {
+        "FL": 27.07,
+        "FR": 26.26,
+        "RL": 33.85,
+        "RR": 34.45
+      }
+    },
+    {
+      "sim_s": 0.204,
+      "xyz": [
+        -0.507,
+        -0.5,
+        0.32
+      ],
+      "yaw_rad": 0.002,
+      "tilt_rad": 0.011,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.71,
+      "rr_calf_rad": -1.639,
+      "foot_force_n": {
+        "FL": 26.41,
+        "FR": 21.74,
+        "RL": 35.44,
+        "RR": 35.43
+      }
+    },
+    {
+      "sim_s": 0.304,
+      "xyz": [
+        -0.502,
+        -0.501,
+        0.326
+      ],
+      "yaw_rad": 0.004,
+      "tilt_rad": 0.012,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.24,
+      "rr_calf_rad": -1.601,
+      "foot_force_n": {
+        "FL": 30.64,
+        "FR": 33.67,
+        "RL": 33.07,
+        "RR": 33.28
+      }
+    },
+    {
+      "sim_s": 0.404,
+      "xyz": [
+        -0.495,
+        -0.501,
+        0.333
+      ],
+      "yaw_rad": 0.008,
+      "tilt_rad": 0.013,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.81,
+      "rr_calf_rad": -1.56,
+      "foot_force_n": {
+        "FL": 33.47,
+        "FR": 35.79,
+        "RL": 29.22,
+        "RR": 32.2
+      }
+    },
+    {
+      "sim_s": 0.508,
+      "xyz": [
+        -0.492,
+        -0.5,
+        0.34
+      ],
+      "yaw_rad": 0.014,
+      "tilt_rad": 0.015,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.25,
+      "rr_calf_rad": -1.509,
+      "foot_force_n": {
+        "FL": 30.01,
+        "FR": 36.76,
+        "RL": 32.08,
+        "RR": 27.31
+      }
+    },
+    {
+      "sim_s": 0.612,
+      "xyz": [
+        -0.49,
+        -0.499,
+        0.348
+      ],
+      "yaw_rad": 0.024,
+      "tilt_rad": 0.016,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 6.33,
+      "rr_calf_rad": -1.454,
+      "foot_force_n": {
+        "FL": 21.7,
+        "FR": 44.4,
+        "RL": 44.43,
+        "RR": 19.35
+      }
+    },
+    {
+      "sim_s": 0.712,
+      "xyz": [
+        -0.487,
+        -0.498,
+        0.356
+      ],
+      "yaw_rad": 0.038,
+      "tilt_rad": 0.017,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 6.84,
+      "rr_calf_rad": -1.4,
+      "foot_force_n": {
+        "FL": 16.66,
+        "FR": 47.46,
+        "RL": 48.96,
+        "RR": 14.68
+      }
+    },
+    {
+      "sim_s": 0.812,
+      "xyz": [
+        -0.481,
+        -0.497,
+        0.362
+      ],
+      "yaw_rad": 0.055,
+      "tilt_rad": 0.018,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.94,
+      "rr_calf_rad": -1.359,
+      "foot_force_n": {
+        "FL": 17.76,
+        "FR": 45.45,
+        "RL": 44.07,
+        "RR": 12.82
+      }
+    },
+    {
+      "sim_s": 0.92,
+      "xyz": [
+        -0.474,
+        -0.497,
+        0.366
+      ],
+      "yaw_rad": 0.071,
+      "tilt_rad": 0.021,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.4,
+      "rr_calf_rad": -1.332,
+      "foot_force_n": {
+        "FL": 30.11,
+        "FR": 40.94,
+        "RL": 33.7,
+        "RR": 19.07
+      }
+    },
+    {
+      "sim_s": 1.028,
+      "xyz": [
+        -0.47,
+        -0.497,
+        0.367
+      ],
+      "yaw_rad": 0.083,
+      "tilt_rad": 0.024,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 3.37,
+      "rr_calf_rad": -1.328,
+      "foot_force_n": {
+        "FL": 42.96,
+        "FR": 30.48,
+        "RL": 20.45,
+        "RR": 31.06
+      }
+    },
+    {
+      "sim_s": 1.132,
+      "xyz": [
+        -0.469,
+        -0.498,
+        0.366
+      ],
+      "yaw_rad": 0.084,
+      "tilt_rad": 0.025,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.65,
+      "rr_calf_rad": -1.333,
+      "foot_force_n": {
+        "FL": 53.86,
+        "FR": 17.75,
+        "RL": 9.08,
+        "RR": 45.91
+      }
+    },
+    {
+      "sim_s": 1.236,
+      "xyz": [
+        -0.469,
+        -0.499,
+        0.366
+      ],
+      "yaw_rad": 0.074,
+      "tilt_rad": 0.024,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.96,
+      "rr_calf_rad": -1.333,
+      "foot_force_n": {
+        "FL": 60.37,
+        "FR": 9.89,
+        "RL": 5.38,
+        "RR": 51.56
+      }
+    },
+    {
+      "sim_s": 1.344,
+      "xyz": [
+        -0.469,
+        -0.502,
+        0.366
+      ],
+      "yaw_rad": 0.065,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 3.95,
+      "rr_calf_rad": -1.334,
+      "foot_force_n": {
+        "FL": 39.98,
+        "FR": 32.12,
+        "RL": 18.22,
+        "RR": 36.92
+      }
+    },
+    {
+      "sim_s": 1.452,
+      "xyz": [
+        -0.471,
+        -0.501,
+        0.367
+      ],
+      "yaw_rad": 0.072,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.65,
+      "rr_calf_rad": -1.329,
+      "foot_force_n": {
+        "FL": 28.07,
+        "FR": 43.43,
+        "RL": 34.49,
+        "RR": 19.88
+      }
+    },
+    {
+      "sim_s": 1.556,
+      "xyz": [
+        -0.473,
+        -0.501,
+        0.369
+      ],
+      "yaw_rad": 0.086,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.68,
+      "rr_calf_rad": -1.321,
+      "foot_force_n": {
+        "FL": 29.12,
+        "FR": 38.58,
+        "RL": 35.21,
+        "RR": 23.12
+      }
+    },
+    {
+      "sim_s": 1.664,
+      "xyz": [
+        -0.473,
+        -0.501,
+        0.37
+      ],
+      "yaw_rad": 0.099,
+      "tilt_rad": 0.025,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 3.7,
+      "rr_calf_rad": -1.313,
+      "foot_force_n": {
+        "FL": 35.93,
+        "FR": 30.27,
+        "RL": 27.69,
+        "RR": 31.61
+      }
+    },
+    {
+      "sim_s": 1.768,
+      "xyz": [
+        -0.47,
+        -0.501,
+        0.37
+      ],
+      "yaw_rad": 0.105,
+      "tilt_rad": 0.025,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.49,
+      "rr_calf_rad": -1.313,
+      "foot_force_n": {
+        "FL": 46.86,
+        "FR": 21.2,
+        "RL": 14.5,
+        "RR": 41.74
+      }
+    },
+    {
+      "sim_s": 1.872,
+      "xyz": [
+        -0.467,
+        -0.501,
+        0.368
+      ],
+      "yaw_rad": 0.1,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.81,
+      "rr_calf_rad": -1.322,
+      "foot_force_n": {
+        "FL": 58.77,
+        "FR": 12.49,
+        "RL": 6.34,
+        "RR": 51.42
+      }
+    },
+    {
+      "sim_s": 1.976,
+      "xyz": [
+        -0.465,
+        -0.504,
+        0.367
+      ],
+      "yaw_rad": 0.088,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.45,
+      "rr_calf_rad": -1.331,
+      "foot_force_n": {
+        "FL": 49.35,
+        "FR": 26.67,
+        "RL": 9.8,
+        "RR": 42.97
+      }
+    },
+    {
+      "sim_s": 2.08,
+      "xyz": [
+        -0.466,
+        -0.506,
+        0.367
+      ],
+      "yaw_rad": 0.086,
+      "tilt_rad": 0.029,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.41,
+      "rr_calf_rad": -1.34,
+      "foot_force_n": {
+        "FL": 30.46,
+        "FR": 45.96,
+        "RL": 28.96,
+        "RR": 23.41
+      }
+    },
+    {
+      "sim_s": 2.184,
+      "xyz": [
+        -0.471,
+        -0.505,
+        0.368
+      ],
+      "yaw_rad": 0.098,
+      "tilt_rad": 0.028,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.52,
+      "rr_calf_rad": -1.336,
+      "foot_force_n": {
+        "FL": 28.64,
+        "FR": 41.35,
+        "RL": 34.07,
+        "RR": 22.22
+      }
+    },
+    {
+      "sim_s": 2.288,
+      "xyz": [
+        -0.474,
+        -0.504,
+        0.37
+      ],
+      "yaw_rad": 0.112,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.49,
+      "rr_calf_rad": -1.322,
+      "foot_force_n": {
+        "FL": 30.9,
+        "FR": 32.4,
+        "RL": 32.57,
+        "RR": 29.31
+      }
+    },
+    {
+      "sim_s": 2.392,
+      "xyz": [
+        -0.472,
+        -0.504,
+        0.371
+      ],
+      "yaw_rad": 0.12,
+      "tilt_rad": 0.025,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 3.9,
+      "rr_calf_rad": -1.312,
+      "foot_force_n": {
+        "FL": 39.23,
+        "FR": 25.28,
+        "RL": 22.59,
+        "RR": 37.14
+      }
+    },
+    {
+      "sim_s": 2.5,
+      "xyz": [
+        -0.467,
+        -0.504,
+        0.37
+      ],
+      "yaw_rad": 0.122,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.6,
+      "rr_calf_rad": -1.315,
+      "foot_force_n": {
+        "FL": 48.81,
+        "FR": 21.42,
+        "RL": 11.25,
+        "RR": 43.59
+      }
+    },
+    {
+      "sim_s": 2.604,
+      "xyz": [
+        -0.463,
+        -0.505,
+        0.368
+      ],
+      "yaw_rad": 0.114,
+      "tilt_rad": 0.027,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.94,
+      "rr_calf_rad": -1.329,
+      "foot_force_n": {
+        "FL": 58.4,
+        "FR": 15.67,
+        "RL": 0.0,
+        "RR": 49.0
+      }
+    },
+    {
+      "sim_s": 2.708,
+      "xyz": [
+        -0.463,
+        -0.508,
+        0.367
+      ],
+      "yaw_rad": 0.104,
+      "tilt_rad": 0.029,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.09,
+      "rr_calf_rad": -1.343,
+      "foot_force_n": {
+        "FL": 43.57,
+        "FR": 33.36,
+        "RL": 11.47,
+        "RR": 41.04
+      }
+    },
+    {
+      "sim_s": 2.812,
+      "xyz": [
+        -0.466,
+        -0.509,
+        0.367
+      ],
+      "yaw_rad": 0.105,
+      "tilt_rad": 0.03,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.08,
+      "rr_calf_rad": -1.346,
+      "foot_force_n": {
+        "FL": 29.87,
+        "FR": 44.07,
+        "RL": 28.99,
+        "RR": 24.92
+      }
+    },
+    {
+      "sim_s": 2.92,
+      "xyz": [
+        -0.471,
+        -0.508,
+        0.369
+      ],
+      "yaw_rad": 0.117,
+      "tilt_rad": 0.028,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 4.43,
+      "rr_calf_rad": -1.337,
+      "foot_force_n": {
+        "FL": 30.53,
+        "FR": 37.02,
+        "RL": 33.11,
+        "RR": 26.5
+      }
+    },
+    {
+      "sim_s": 3.024,
+      "xyz": [
+        -0.472,
+        -0.506,
+        0.37
+      ],
+      "yaw_rad": 0.128,
+      "tilt_rad": 0.026,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.22,
+      "rr_calf_rad": -1.32,
+      "foot_force_n": {
+        "FL": 37.06,
+        "FR": 25.54,
+        "RL": 31.46,
+        "RR": 30.95
+      }
+    },
+    {
+      "sim_s": 3.128,
+      "xyz": [
+        -0.471,
+        -0.474,
+        0.373
+      ],
+      "yaw_rad": 0.136,
+      "tilt_rad": 0.033,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 7.59,
+      "rr_calf_rad": -1.29,
+      "foot_force_n": {
+        "FL": 76.71,
+        "FR": 0.0,
+        "RL": 52.75,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.232,
+      "xyz": [
+        -0.468,
+        -0.415,
+        0.381
+      ],
+      "yaw_rad": 0.147,
+      "tilt_rad": 0.049,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 6.81,
+      "rr_calf_rad": -1.409,
+      "foot_force_n": {
+        "FL": 40.44,
+        "FR": 0.0,
+        "RL": 78.42,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.336,
+      "xyz": [
+        -0.455,
+        -0.357,
+        0.377
+      ],
+      "yaw_rad": 0.15,
+      "tilt_rad": 0.127,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 8.41,
+      "rr_calf_rad": -1.396,
+      "foot_force_n": {
+        "FL": 66.79,
+        "FR": 0.0,
+        "RL": 49.16,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.44,
+      "xyz": [
+        -0.437,
+        -0.29,
+        0.355
+      ],
+      "yaw_rad": 0.169,
+      "tilt_rad": 0.199,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 6.08,
+      "rr_calf_rad": -1.381,
+      "foot_force_n": {
+        "FL": 57.52,
+        "FR": 0.0,
+        "RL": 52.49,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.544,
+      "xyz": [
+        -0.415,
+        -0.206,
+        0.316
+      ],
+      "yaw_rad": 0.208,
+      "tilt_rad": 0.313,
+      "safety_state": "nominal",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.32,
+      "rr_calf_rad": -1.349,
+      "foot_force_n": {
+        "FL": 26.4,
+        "FR": 0.0,
+        "RL": 43.74,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.652,
+      "xyz": [
+        -0.39,
+        -0.102,
+        0.227
+      ],
+      "yaw_rad": 0.261,
+      "tilt_rad": 0.556,
+      "safety_state": "warn",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 5.97,
+      "rr_calf_rad": -1.151,
+      "foot_force_n": {
+        "FL": 17.3,
+        "FR": 0.0,
+        "RL": 22.22,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.76,
+      "xyz": [
+        -0.372,
+        -0.003,
+        0.143
+      ],
+      "yaw_rad": 0.326,
+      "tilt_rad": 0.652,
+      "safety_state": "safe_stop",
+      "fallen": false,
+      "recovery_state": "idle",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -1.183,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.864,
+      "xyz": [
+        -0.374,
+        0.053,
+        0.164
+      ],
+      "yaw_rad": 0.375,
+      "tilt_rad": 1.042,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:tuck",
+      "max_effort_nm": 8.71,
+      "rr_calf_rad": -2.522,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 46.89,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 3.968,
+      "xyz": [
+        -0.38,
+        0.095,
+        0.164
+      ],
+      "yaw_rad": 0.4,
+      "tilt_rad": 1.683,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:tuck",
+      "max_effort_nm": 5.83,
+      "rr_calf_rad": -2.7,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.072,
+      "xyz": [
+        -0.394,
+        0.13,
+        0.168
+      ],
+      "yaw_rad": 0.422,
+      "tilt_rad": 1.931,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:tuck",
+      "max_effort_nm": 1.16,
+      "rr_calf_rad": -2.7,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.176,
+      "xyz": [
+        -0.414,
+        0.172,
+        0.161
+      ],
+      "yaw_rad": 0.401,
+      "tilt_rad": 2.17,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:roll",
+      "max_effort_nm": 23.7,
+      "rr_calf_rad": -2.701,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.28,
+      "xyz": [
+        -0.438,
+        0.199,
+        0.127
+      ],
+      "yaw_rad": 0.34,
+      "tilt_rad": 2.655,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:roll",
+      "max_effort_nm": 0.35,
+      "rr_calf_rad": -2.7,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.384,
+      "xyz": [
+        -0.447,
+        0.22,
+        0.055
+      ],
+      "yaw_rad": 0.352,
+      "tilt_rad": 3.041,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:roll",
+      "max_effort_nm": 35.55,
+      "rr_calf_rad": -2.116,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.488,
+      "xyz": [
+        -0.472,
+        0.247,
+        0.084
+      ],
+      "yaw_rad": 0.335,
+      "tilt_rad": 2.792,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:roll",
+      "max_effort_nm": 35.55,
+      "rr_calf_rad": -2.349,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.592,
+      "xyz": [
+        -0.489,
+        0.255,
+        0.073
+      ],
+      "yaw_rad": 0.332,
+      "tilt_rad": 3.043,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:roll",
+      "max_effort_nm": 1.92,
+      "rr_calf_rad": -2.695,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.696,
+      "xyz": [
+        -0.504,
+        0.27,
+        0.076
+      ],
+      "yaw_rad": 0.39,
+      "tilt_rad": 3.092,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "attempting:roll",
+      "max_effort_nm": 8.47,
+      "rr_calf_rad": -0.956,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.8,
+      "xyz": [
+        -0.527,
+        0.284,
+        0.087
+      ],
+      "yaw_rad": 0.323,
+      "tilt_rad": 2.907,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.761,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 4.904,
+      "xyz": [
+        -0.547,
+        0.287,
+        0.062
+      ],
+      "yaw_rad": 0.288,
+      "tilt_rad": 3.101,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.71,
+      "foot_force_n": {
+        "FL": 0.0,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.012,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.141,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.731,
+      "foot_force_n": {
+        "FL": 1.15,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.116,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.57,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.216,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.32,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.424,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.528,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.628,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.736,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.836,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 5.94,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.048,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.156,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.256,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.36,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.464,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.568,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.668,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.772,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.876,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 6.98,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.084,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.184,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.288,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.392,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.496,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.6,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.7,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.804,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 7.908,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.012,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.116,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.22,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.324,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.428,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.532,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.636,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.736,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.84,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 8.944,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.048,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.152,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.252,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.356,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.46,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.564,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.668,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.772,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.876,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 9.98,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.084,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.188,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.292,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.396,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.5,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.608,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.712,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.816,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 10.92,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.024,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.128,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.232,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.336,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.44,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.544,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.648,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.752,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.856,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 11.96,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.064,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.168,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.272,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.376,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.48,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.584,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.692,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.796,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 12.9,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.004,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.108,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.216,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.32,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.424,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.528,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.636,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.74,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.844,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    },
+    {
+      "sim_s": 13.948,
+      "xyz": [
+        -0.55,
+        0.289,
+        0.057
+      ],
+      "yaw_rad": 0.297,
+      "tilt_rad": 3.142,
+      "safety_state": "safe_stop",
+      "fallen": true,
+      "recovery_state": "unrecoverable:roll",
+      "max_effort_nm": 0.0,
+      "rr_calf_rad": -2.726,
+      "foot_force_n": {
+        "FL": 2.61,
+        "FR": 0.0,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    }
+  ],
+  "perturbation": {
+    "requested_force_n": 60.0,
+    "axis": 1,
+    "start_sim_s": 3.004,
+    "end_sim_s": 3.204,
+    "recovery_end_sim_s": 5.204,
+    "pre": {
+      "sample_count": 126,
+      "max_tilt_rad": 0.029912155322270102,
+      "min_height_m": 0.3664826428003385
+    },
+    "pulse": {
+      "sample_count": 50,
+      "max_tilt_rad": 0.04322601776583163,
+      "min_height_m": 0.3700374562547959
+    },
+    "recovery": {
+      "sample_count": 500,
+      "max_tilt_rad": 3.141590333778295,
+      "min_height_m": 0.0506483636079372
+    },
+    "first_failure": {
+      "sim_s": 3.568,
+      "tilt_rad": 0.3555,
+      "height_m": 0.3011,
+      "safety_state": "nominal"
+    },
+    "safe_stop_seen": true,
+    "recovery_screening_pass": false
+  },
+  "min_height_m": 0.0506483636079372,
+  "final_height_m": 0.056998278530779045,
+  "max_tilt_rad": 3.141592645348181,
+  "xy_drift_m": 0.7907236645136305,
+  "yaw_change_rad": 0.29724256713751374,
+  "passed": false
+}

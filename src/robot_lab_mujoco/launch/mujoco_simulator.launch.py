@@ -49,6 +49,8 @@ def _build_mujoco_actions(context):
     spawn_y = LaunchConfiguration("spawn_y")
     spawn_z = LaunchConfiguration("spawn_z")
     spawn_yaw = LaunchConfiguration("spawn_yaw")
+    spawn_pitch = LaunchConfiguration("spawn_pitch")
+    spawn_roll = LaunchConfiguration("spawn_roll")
     gui = LaunchConfiguration("gui")
     try:
         hold_position = LaunchConfiguration("hold_position")
@@ -116,6 +118,8 @@ def _build_mujoco_actions(context):
         "spawn_y": ParameterValue(spawn_y, value_type=float),
         "spawn_z": ParameterValue(spawn_z, value_type=float),
         "spawn_yaw": ParameterValue(spawn_yaw, value_type=float),
+        "spawn_pitch": ParameterValue(spawn_pitch, value_type=float),
+        "spawn_roll": ParameterValue(spawn_roll, value_type=float),
         "initial_joint_positions": ParameterValue(
             LaunchConfiguration("initial_joint_positions"), value_type=str),
         "use_sim_time": use_sim_time,
@@ -173,6 +177,14 @@ def generate_launch_description():
         DeclareLaunchArgument("spawn_y", default_value="0.0"),
         DeclareLaunchArgument("spawn_z", default_value="0.0"),
         DeclareLaunchArgument("spawn_yaw", default_value="0.0"),
+        DeclareLaunchArgument(
+            "spawn_pitch", default_value="0.0",
+            description="Spawn pitch (rad) about body y. Nonzero places a "
+                        "fallen pose for get-up tests."),
+        DeclareLaunchArgument(
+            "spawn_roll", default_value="0.0",
+            description="Spawn roll (rad) about body x. Nonzero places a "
+                        "fallen pose for get-up tests."),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
         DeclareLaunchArgument("gui", default_value="true"),
         DeclareLaunchArgument(

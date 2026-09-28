@@ -62,14 +62,18 @@ class Go2StanceGaitController(Node):
         self.declare_parameter("enable_experimental_gait", False)
         self.declare_parameter("policy_path", "")
         self.declare_parameter("reverse_command_map", "feedforward")
-        # Fall recovery is opt-in and experimental. Off by default: a re-stand
-        # attempt drives the nominal pose with elevated gains and has not been
+        # Fall recovery is opt-in and experimental. Off by default: the
+        # sequenced get-up ladder (tuck -> roll -> crouch -> stand) is bounded
+        # and never stands from a trunk past its gate, but it has not been
         # shown to right the robot on this plant.
         self.declare_parameter("enable_fall_recovery", False)
         self.declare_parameter("fall_recovery_timeout_s", 4.0)
         self.declare_parameter("fall_recovery_start_delay_s", 0.0)
         self.declare_parameter("fall_recovery_gain_scale", 0.5)
         self.declare_parameter("fall_recovery_damping_scale", 0.5)
+        # Opt-in lateral hip input for the roll phase's braced pair, 0.0 by
+        # default: the roll sign this plant needs is not qualified yet.
+        self.declare_parameter("fall_recovery_roll_brace_hip_rad", 0.0)
         self.declare_parameter("recovery_policy_path", "")
         rate = float(self.get_parameter("command_rate_hz").value)
         if rate <= 0.0:
@@ -98,6 +102,7 @@ class Go2StanceGaitController(Node):
         self._cmd = BaseVelocity()
         self._cmd_at = float("-inf")
         self._last_safety_state = self._core.safety.state
+        self._last_recovery_label = ""
         self._recovery = (
             FallRecovery(
                 timeout_s=_param_float(
@@ -108,6 +113,8 @@ class Go2StanceGaitController(Node):
                     self, "fall_recovery_gain_scale", 0.5),
                 damping_scale=_param_float(
                     self, "fall_recovery_damping_scale", 0.5),
+                roll_brace_hip_rad=_param_float(
+                    self, "fall_recovery_roll_brace_hip_rad", 0.0),
             )
             if _as_flag(self, "enable_fall_recovery", False)
             else None)
@@ -244,8 +251,16 @@ class Go2StanceGaitController(Node):
         fallen_msg = Bool()
         fallen_msg.data = self._core.safety.fallen
         self._fallen_pub.publish(fallen_msg)
+        # The ladder phase travels with the status ("attempting:roll") so a
+        # trial trace shows where the get-up attempt was, not just that it was
+        # running. Note that an opt-in learned recovery actor replaces the
+        # joint-space ladder for the whole attempt when one is configured.
+        recovery_label = self._recovery.state_label if self._recovery else "disabled"
+        if recovery_label != self._last_recovery_label:
+            self.get_logger().info("Go2 recovery %s" % recovery_label)
+            self._last_recovery_label = recovery_label
         recovery_msg = String()
-        recovery_msg.data = self._recovery.status if self._recovery else "disabled"
+        recovery_msg.data = recovery_label
         self._recovery_pub.publish(recovery_msg)
         msg = Float64MultiArray()
         msg.data = [efforts[name] for name in JOINT_NAMES]

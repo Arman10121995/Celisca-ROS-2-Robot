@@ -182,16 +182,92 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
   enable_fall_recovery:=true fall_recovery_timeout_s:=8.0
 ```
 
-It drives the nominal stance pose with elevated bounded gains for a bounded
-window and reports success only if measured tilt returns below the warn
-threshold, simulator ground-truth body height reaches 0.25 m, and at least
-three feet stay loaded above 2 N for 0.5 s. In the clean
-60 N repeat, `fallen` latched at 3.796 s, recovery changed from `idle` to
-`attempting`, then `failed` at 10.628 s. The robot finished upside down at
-0.057 m height. The earlier 0.139 m collapse did not confirm an attempt: the
-old detector missed the brief fall-threshold crossing. Nominal-pose PD is not enough from a
-fallen pose; real whole-body repositioning is not implemented. Do not enable
-this expecting the robot to stand up.
+It drives a **bounded ladder of joint-space waypoints** rather than a single
+pose, because the traces show what a single pose does from a fallen trunk: the
+stance drive levers the trunk over its feet and ends inverted at 0.057 m.
+
+| phase | waypoint (hip / thigh / calf per leg) | purpose |
+|---|---|---|
+| `tuck` | 0.00 / 1.35 / -2.70 | fold the legs in: retract the lever that flips a down trunk |
+| `roll` | loaded pair 0.00 / 0.10 / -0.90 | brace the legs the trunk is measured to rest on, retract the others |
+| `crouch` | 0.00 / 1.10 / -2.20 | feet under the hips at a low standing height |
+| `stand` | nominal stance | the standing pose, and only then |
+
+Every transition reads measured attitude, each phase is time-bounded (0.4 / 0.7
+/ 0.6 s), the roll count is bounded (2), and the standing pose is commanded only
+from `stand`, which is entered only once measured tilt is under the 0.8 rad
+gate. `/go2/recovery_state` publishes the phase with the status
+(`attempting:tuck`, `attempting:roll`, ...) so a trial trace shows where the
+attempt is. Success still requires measured tilt below 0.35 rad, 0.25 m
+ground-truth body height, three loaded feet and a 0.5 s dwell; an unmeasured
+attitude holds the phase instead of guessing one.
+
+In the 60 N repeat the ladder behaved as designed but the fall was already
+ballistic ([`fall_ladder_20260928T60N/`](../status/evidence/r52-go2-policy-2026-09-25/fall_ladder_20260928T60N/probe.json),
+domain 230, 14 s probe, 8 s window, no learned actor):
+
+| measured transition/result | value |
+|---|---|
+| `fallen: false → true` | 3.864 s |
+| `recovery_state` | `idle → attempting:tuck` (3.864 s) → `attempting:roll` (4.176 s) → `unrecoverable:roll` (4.800 s) |
+| retraction, RR calf | -1.183 rad → -2.700 rad within 0.1 s of the latch |
+| tilt while the ladder ran | 0.652 → 1.042 → 1.683 → 1.931 → 2.170 → 3.041 rad (~3.6 rad/s) |
+| peak tilt / final height | 3.1416 rad / 0.057 m |
+| commanded effort after the verdict | 0.0 N·m |
+
+The ladder's guarantee held — the standing pose was never driven from a trunk
+past the gate, and the attempt stopped 0.94 s after it began, 5.8 s earlier than
+the old single-phase attempt — but it did not prevent the inversion, because the
+debounced `fallen` latch fires 0.66 s after the pulse when the trunk is already
+at 1.042 rad and rolling at ~3.6 rad/s. A matched 45 N control
+([`fall_ladder_20260928T45N/`](../status/evidence/r52-go2-policy-2026-09-25/fall_ladder_20260928T45N/probe.json))
+never topples at all (0.1485 rad peak tilt, no `safe_stop`, `fallen` never
+latched, `recovery_state` stayed `idle`).
+
+A 21-trial sweep
+([`ladder_sweep.json`](../status/evidence/r52-go2-policy-2026-09-25/ladder_sweep.json),
+reduced by `analyze_ladder_sweep.py`) widened that gap and closed it: lateral
+impulses 45–60 N, sustained lateral 40–50 N over 1.2–1.5 s, forward shoves up to
+70 N and drops from 0.9/1.4 m. Everything either stays upright or rolls fully
+over; every toppling case latches `fallen` at 0.51–1.16 rad and 2.6–7.2 rad/s.
+There is no perturbation on these maps that leaves the robot down but not
+inverted, so the *trigger* — not the sequence — is what limits a fall trial.
+
+To measure the sequence itself, spawn the robot already down. `spawn_pitch` and
+`spawn_roll` place a settled fallen pose (both default to `0.0`):
+
+```bash
+# 1.4 rad nose-down, then the ladder: measured stand at 0.33 m, held to 20 s
+FORCE_N=0.0 SPAWN_PITCH=1.4 FALL_RECOVERY=true \
+  FALL_RECOVERY_TIMEOUT_S=8.0 DURATION_S=20 \
+  ../status/evidence/r52-go2-policy-2026-09-25/run_perturbation_trial.sh \
+  /tmp/placed_pitch
+```
+
+From that pose the ladder walks `tuck → roll → crouch → stand`, reports
+`succeeded:stand` at **2.324 s** and holds the robot standing (0.329 m, 28–35 N
+per foot) for the rest of the trial. A flank-down pose (`SPAWN_ROLL=1.4`) is a
+measured negative: the brace holds the hips at zero, and the trunk gets no
+closer to upright. The measured capture envelope is pitch 0.8–1.6 rad
+(recovered in ~2.3 s) and **nothing on the roll axis above the 0.8 rad gate**
+with the default brace.
+
+The brace's lateral input is a separate, **unqualified** experiment. The default
+keeps the hips at zero; `fall_recovery_roll_brace_hip_rad:=0.8` splays the braced
+pair outward (mirrored per side, clamped to the ±1.0472 rad hip range), which is
+also what the runner's `ROLL_BRACE_HIP` sets. Measured on a placed 1.4 rad flank
+pose, the sign is **positive** — negative drives the trunk onto its back at
+3.14 rad / 0.057 m — and +0.8 rad is the magnitude that brings the trunk under
+the gate (to 0.66 rad), at which point the ladder leaves the roll phase for
+`crouch` and then fails there, because the crouch returns the hips to zero.
+Treat it as a measurement knob, not a setting.
+
+Two things to know before relying on this: it is measured from
+a *placed* pose, because no perturbation on these maps leaves the robot down but
+not inverted, and the hold after success is conditional on measured standing
+evidence — lose it and the drive stops. Do not enable this expecting a perturbed
+robot to stand up.
+
 
 An opt-in learned actor from the MIT-licensed NJU-RLC Go2 recovery checkpoint
 can replace the nominal-pose attempt for experiments:

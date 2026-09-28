@@ -339,6 +339,280 @@ Two defects found and fixed while producing this evidence, both worth keeping:
   in the logs; they are unrelated to this feature.
 
 
+### Sequenced get-up ladder (2026-09-28)
+
+Every single-phase attempt above drove the nominal stance pose straight from a
+down trunk, and the traces say why that ends inverted: from a fallen pose the
+stance drive's thigh/calf torques lever the trunk over its feet instead of
+raising it. `FallRecovery` now advances a bounded ladder of predeclared
+joint-space waypoints, and the standing pose is only ever commanded from its
+last phase:
+
+| phase | waypoint (hip / thigh / calf per leg) | purpose |
+|---|---|---|
+| `tuck` | 0.00 / 1.35 / -2.70 | fold the legs in, retracting the lever that flips a down trunk |
+| `roll` | loaded pair 0.00 / 0.10 / -0.90, other pair tucked | brace the legs the trunk is *measured* to rest on and push the trunk back over them |
+| `crouch` | 0.00 / 1.10 / -2.20 | feet under the hips at a low standing height |
+| `stand` | nominal stance | the standing pose, entered only under the gate |
+
+`brace_legs(roll_rad, pitch_rad)` picks the pair from measured attitude (a
+positive roll lifts the left flank, so a trunk resting on its right side braces
+FR/RR; pitch decides when it dominates). Each phase is bounded (0.4 / 0.7 /
+0.6 s), the roll count is bounded (2 cycles), the attempt window still bounds
+everything, a trunk past `FALL_INVERTED_TILT_RAD` (2.4 rad) ends the attempt as
+`unrecoverable`, and an unmeasured attitude holds the phase instead of guessing
+one. `/go2/recovery_state` now publishes the phase with the status
+(`attempting:tuck`, `attempting:roll`, ...), which is what makes the trace below
+readable.
+
+The 60 N lateral pulse that produced every negative above
+([`fall_ladder_20260928T60N/`](fall_ladder_20260928T60N/probe.json), ROS domain
+230, 0.2 s pulse at 3.0 s, 14 s probe, 8 s window, no learned actor, revision
+`1893f65` with four tracked files modified and five source/model hashes in the
+manifest):
+
+| measured transition/result | value |
+|---|---|
+| probe / launch return codes | `0` / `0` |
+| `fallen: false → true` | 3.864 s |
+| `recovery_state` | `idle → attempting:tuck` (3.864 s) → `attempting:roll` (4.176 s) → `unrecoverable:roll` (4.800 s) |
+| retraction, RR calf | -1.183 rad (3.760 s) → -2.700 rad (3.968 s) |
+| tilt while the ladder ran | 0.652 → 1.042 → 1.683 → 1.931 → 2.170 → 3.041 rad (~3.6 rad/s) |
+| peak tilt / final height | 3.1416 rad / 0.057 m |
+| commanded effort after the verdict | 0.0 N·m |
+
+Two honest readings of the same trace. The ladder did what it guarantees: the
+standing pose was never driven from a trunk past the gate, the retraction
+executed within 0.1 s of the latch, the attempt ended 0.94 s after it began as
+`unrecoverable`, and the robot was then left at zero effort — 5.8 s earlier
+than the single-phase attempt, which kept driving until 10.628 s. The ladder
+did **not** prevent the inversion. The debounced `fallen` latch fires 0.66 s
+*after* the 0.2 s pulse, when the trunk is already at 1.042 rad and rolling at
+~3.6 rad/s, and no joint-space PD effort available on this plant arrests that.
+Preventing the inversion therefore needs the retraction to start *before* the
+fall is confirmed, or a perturbation-triggered pre-emptive retraction — not a
+stronger get-up sequence.
+
+A matched 45 N control
+([`fall_ladder_20260928T45N/`](fall_ladder_20260928T45N/probe.json), same domain
+and pulse width, 12 s probe) shows the ladder is not self-triggering: peak tilt
+0.1485 rad, minimum body height 0.3539 m, no SAFE_STOP, `fallen` never latched
+and `recovery_state` stayed `idle` for all 2,995 messages.
+
+
+#### Amplitude sweep: the window the ladder can act in is empty (2026-09-28)
+
+[`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
+directory to what the trace measured — whether `fallen` latched, at what tilt
+and tilt *rate*, how far the ladder advanced, and where the robot ended — and
+writes [`ladder_sweep.json`](ladder_sweep.json). 33 trials, all with probe and
+launch return code 0: the five perturbation families below, plus the
+placed-pose runs in the sections that follow.
+
+| family | trials | outcome |
+|---|---|---|
+| lateral impulse, 0.2 s | 45, 48 N | never topple (peak 0.149 / 0.283 rad) |
+| lateral impulse, 0.2 s | 50–60 N | latch at 3.81–4.08 s, all end inverted at 3.1416 rad / 0.057 m |
+| lateral sustained, 1.2–1.5 s | 40, 45, 50 N | a 3–7x larger impulse, still all inverted |
+| forward (body x) | 45 N / 1.0 s, 60 N / 0.3 s, 70 N / 0.5 s | no topple, then inverted, inverted |
+| drop from `spawn_z` | 0.9 m, 1.4 m | lands on its feet, peak tilt 0.040 rad, never topples |
+
+Every trial that toppled latched `fallen` with the trunk already at 0.51–1.16 rad
+and rolling at **2.6–7.2 rad/s** (the rate is averaged over the 0.2 s after the
+latch: a slope across the 0.1 s samples that bracket the latch is meaningless on
+a tumbling body, and reported a *falling* tilt while the trunk was rolling over).
+The consequence is the important one: on these maps there is **no** measured
+amplitude, axis, pulse width or drop height that leaves the robot down but not
+inverted, so no fall trial can show a get-up, and the binding constraint in every
+one of them is the *trigger* — the debounced latch fires 0.2–0.5 s after the
+trunk is already on the floor and rotating at ~6 rad/s.
+
+
+#### Placed-pose harness: measuring the ladder from a settled fallen pose
+
+Because a perturbation can no longer produce a recoverable collapse, the fallen
+pose has to be *placed*. `mujoco_spawner.py` gained `spawn_pitch` / `spawn_roll`
+(after `spawn_yaw`, both 0.0 by default), composing
+`Rz(yaw) * Ry(pitch) * Rx(roll)` in the same ZYX convention the adapter extracts
+attitude with; the root is still lifted by the existing orientation-aware floor
+clearance, so a tilted robot is placed *settled* rather than dropped. Both launch
+files and `run_perturbation_trial.sh` (`SPAWN_PITCH`, `SPAWN_ROLL`) forward them,
+and every manifest records the requested pose. Two tests in `test_mujoco_reset.py`
+pin the convention (yaw-only is bit-identical to the old quaternion, a 90 deg
+pitch is a pure y rotation, and the adapter's ZYX read-back returns what was
+requested) and the floor clearance of a pitched root.
+
+
+#### Placed 1.4 rad nose-down: the ladder stands the robot up
+
+[`fall_ladder_placed_20260928Tpitch1.4/`](fall_ladder_placed_20260928Tpitch1.4/probe.json)
+(domain 229, no perturbation, 20 s probe, 8 s window, revision `1893f65`) latched
+`fallen` at 0.100 s and ran the ladder: `tuck` (0.104) → `roll` (0.408) → `tuck`
+(0.900) → `crouch` (1.212) → `stand` (1.748) → three retries → `succeeded:stand`
+(4.948 s). The sequence did the job: measured tilt went 1.40 → 0.31 → 0.17 → 0.03
+rad and the trunk stood at 0.33 m with 27–36 N on all four feet.
+
+It then fell, and the trace says why in one sample:
+
+| measured | pre-fix | post-fix repeat |
+|---|---|---|
+| `recovery_state` | `succeeded:stand` at 4.948 s | `succeeded:stand` at 5.688 s |
+| `max_effort_nm` in that sample | 0.0 | 4.8 |
+| final tilt / height | 0.00 rad / **0.057 m** (flat on its belly) | 0.01 rad / **0.329 m** |
+| feet after success | 6.4–7.0 N (trunk resting) | 28–35 N each, held to 20 s |
+
+The node calls `FallRecovery.update()` for as long as `fallen` is latched, and a
+succeeded attempt returned zero effort — so zero effort *was* the command, and
+the ladder dropped the robot it had just stood up. A succeeded attempt now holds
+the nominal stance, conditional on the *same* measured evidence that granted the
+success (tilt under the gate, height ≥ 0.25 m, ≥ 3 loaded feet); the moment that
+evidence is gone the drive stops, so the hold cannot mask a fall, and neither
+`failed` nor `unrecoverable` ever holds. The repeat
+([`fall_ladder_placed_hold_20260928Tpitch1.4/`](fall_ladder_placed_hold_20260928Tpitch1.4/probe.json),
+bit-identical to the latch and to the success) then holds 0.329–0.330 m at
+0.01 rad with ~5 N·m of stance effort for the remaining 14 s. Three unit tests in
+`TestFallRecoveryLadder` pin the hold, the stop, and the no-leak-into-a-bounded-stop.
+
+What was still wrong, and measured: the first `stand` extension **catapulted** the
+robot (0.44 → 0.56 m with no feet loaded, tilt growing to 0.81 rad), the ladder
+then re-tucked and needed 4.5 s and three retries before it settled.
+
+
+#### Slewing the stand pose in (the catapult, fixed and measured)
+
+The catapult was the `stand` phase stepping its target straight from the crouch
+waypoint to the nominal stance, so the legs were driven 0.75 rad of knee error in
+one cycle. `FALL_RECOVER_STAND_S` (0.6 s) now slews that target in from the
+crouch waypoint instead; the end of the slew *is* the nominal stance, so the
+standing pose is still reached, and still only from the `stand` phase. The
+post-success hold is unaffected: a robot measured standing gets the full pose
+immediately.
+
+[`fall_ladder_placed_slew_20260928Tpitch1.4/`](fall_ladder_placed_slew_20260928Tpitch1.4/probe.json)
+— same placed 1.4 rad nose-down pose, same domain 229, same 20 s probe and 8 s
+window, source hash `49aaf4bd…`:
+
+| measured | step target | slewed target |
+|---|---|---|
+| ladder timeline | 7 transitions, 3 retries | `tuck` 0.100 → `roll` 0.392 → `tuck` 0.812 → `crouch` 1.128 → `stand` 1.660 |
+| `succeeded:stand` | 5.688 s | **2.324 s** |
+| peak tilt after the spawn pose | 1.931 rad (the catapult) | 1.402 rad (the spawn value, never exceeded) |
+| minimum height | 0.076 m | 0.104 m |
+| height through the stand phase | 0.221 → 0.443 → 0.561 → 0.456 m (airborne) | 0.222 → 0.248 → 0.274 → 0.301 → 0.323 → 0.331 m (monotone, feet loaded 25–38 N throughout) |
+| final tilt / height | 0.01 rad / 0.329 m | 0.01 rad / 0.329 m |
+
+So the get-up went from 5.7 s with three self-inflicted retries to 2.3 s with
+none, and the robot is standing and loaded at the end of both. Two flags on this
+trial must be read carefully rather than quoted: the probe's
+`recovery_screening_pass` is `true` with `first_failure: null`, but that check
+covers only the window *after* the (empty) pulse, 3.2–5.2 s; and the whole-run
+`passed` flag is `false` **by construction**, because a trial that starts fallen
+cannot satisfy a whole-run screen of `min_height > 0.15 m` and
+`max_tilt < 0.35 rad` (this one: 0.104 m and 1.402 rad). The evidence is the
+trace, not the flags.
+
+
+
+#### Capture envelope: how far the ladder can be handed a fallen robot
+
+With placement in place, the useful question is no longer "did a perturbation
+produce a recoverable fall" but "**from which settled poses can the ladder still
+put the robot up**". Eight further trials
+(`fall_ladder_envelope_20260928T*`, domains 226–230, no perturbation, 20 s probe,
+8 s window) walk both axes, with the slewed build:
+
+| placed pose | `fallen` latched | ladder | final tilt / height | outcome |
+|---|---|---|---|---|
+| pitch 0.6 rad | no (0.60 < 0.70 rad trip) | never engaged | 0.02 rad / 0.365 m | robot recovers by itself |
+| pitch 0.9 rad | yes | `tuck,crouch,stand` | 0.01 rad / 0.329 m | **recovered at 1.464 s** |
+| pitch 1.2 rad | yes | `tuck,roll,tuck,crouch,stand` | 0.01 rad / 0.329 m | **recovered at 2.356 s** |
+| pitch 1.6 rad | yes | `tuck,roll,tuck,crouch,stand` | 0.01 rad / 0.329 m | **recovered at 2.296 s** |
+| pitch 1.8 rad | yes | `tuck,tuck` | 3.1416 rad / 0.057 m | inverted: the trunk rolls over inside the retraction |
+| roll 0.6 rad | no (0.60 < 0.70 rad trip) | never engaged | 0.02 rad / 0.365 m | robot recovers by itself |
+| roll 0.9 / 1.2 / 1.4 rad | yes | `tuck,roll,tuck,roll` | 0.52 rad / 0.139 m | `failed:roll`, left on its right flank |
+
+Two numbers fall out of that, and they are what the remaining work has to be
+built against:
+
+- **Pitch-dominated collapses are recoverable from ~0.8 to ~1.6 rad**, and the
+  time is flat at ~2.3 s across that range. The upper edge is between 1.6 and
+  1.8 rad, where the trunk's own weight rolls it over inside the retraction.
+- **Roll-dominated collapses are not recoverable at all** above the 0.8 rad gate:
+  0.9, 1.2 and 1.4 rad all end identically at 0.52 rad / 0.139 m on the right
+  flank. The sagittal-only brace cannot right a trunk lying on its side, so a
+  lateral hip input has to exist *before* any trigger work can pay off for the
+  case the perturbation trials actually produce (they all roll).
+
+A future pre-fall retraction therefore has a measurable target: engage below
+~1.6 rad of pitch, and expect nothing from the roll axis until the brace does.
+
+
+#### The roll sign, measured (the hip input that the ladder was missing)
+
+The brace held the hips at zero because this project had no measured
+ground-contact torque sign for the roll axis. The placed-pose harness can produce
+one. `roll_phase_pose()` takes an optional `hip_rad` for the braced pair, signed
+like the spawn pose's splayed stance (right leg positive, left leg mirrored,
+clamped to the measured hip range ±1.0472 rad) and threaded through
+`fall_recovery_roll_brace_hip_rad:=` and the runner's `ROLL_BRACE_HIP`. It is
+**0.0 by default** — the default is still the qualified sagittal-only brace, and
+the four trials below are the measurement, not a new default.
+
+Same placed 1.4 rad flank pose, domains 226–229, 20 s probe, 8 s window
+(`fall_ladder_hip_20260928T*`):
+
+| braced hip | trunk tilt during the brace | minimum | where it ended | verdict |
+|---|---|---|---|---|
+| 0.0 (default) | 1.57 → 1.87 rad (worse) | 1.56 rad | 0.52 rad / 0.139 m on the right flank | `failed:roll` |
+| **+0.4 rad** | 1.25 → 1.39 rad | 1.08 rad | 0.52 rad / 0.139 m | `failed:roll` |
+| **+0.8 rad** | 1.08 → **0.86 rad** | **0.66 rad** | 1.43 rad / 0.139 m | **`failed:crouch`** |
+| −0.4 rad | 1.88 → 3.07 rad | 1.88 rad | 3.1416 rad / 0.057 m | `unrecoverable:roll` (onto its back) |
+| −0.8 rad | 2.08 → 3.09 rad | 2.08 rad | 2.72 rad / 0.057 m | `unrecoverable:roll` (onto its back) |
+
+Three things follow, and they are the first positive result on the roll axis:
+
+1. **The sign is positive** (the braced pair splays *outward*). The negative sign
+   is not merely worse, it drives the trunk onto its back.
+2. **0.8 rad is the magnitude that beats the gate** from a 1.4 rad flank: the
+   trunk comes down to 0.66 rad, under the 0.8 rad gate, so the ladder does what
+   it has never done on this axis — it leaves the roll phase and enters `crouch`.
+3. The failure then moves to `crouch`, which drives the hips back to zero and
+   levers the trunk over again. So the follow-up is to carry the measured hip
+   input through the crouch phase and re-measure, not to re-guess the sign.
+
+This is a measured sign, not a tuned constant, and it stays opt-in until the
+crouch-side behaviour is measured too.
+
+
+#### Placed 1.4 rad flank: a measured negative (before the hip input)
+
+[`fall_ladder_placed_20260928Troll1.4/`](fall_ladder_placed_20260928Troll1.4/probe.json)
+and its post-fix repeat
+([`...placed_hold_20260928Troll1.4/`](fall_ladder_placed_hold_20260928Troll1.4/probe.json))
+both end `failed:roll` at ~1.9 s after two bounded roll cycles, one on the right
+side (0.52 rad, 0.139 m, 10 N on FR/RR) and one inverted (3.1416 rad, 0.057 m).
+The trunk lies on a *stable* flank here — it does not roll on to its back by
+itself — and measured tilt got slightly *worse* during the attempt (1.40 →
+1.87 rad). That is the result the hip measurement above answers: the
+sagittal-only brace could not right it, and the next section shows which
+lateral input does.
+
+
+#### Where this leaves the ladder
+
+One demonstrated get-up (placed chest-down → standing, loaded, and held, in
+2.324 s and without a retry, once the stand pose is slewed in), a measured
+capture envelope (**pitch 0.8–1.6 rad recoverable at ~2.3 s; nothing on the roll
+axis above the 0.8 rad gate**), two measured negatives (a ballistic fall cannot
+be caught after the debounced latch, and a flank-lying trunk cannot be righted by
+the current brace), and a harness that can now measure the sequence at all. The
+feature stays **off by default**: on these maps the only route to a recoverable
+collapse is a retraction that starts before the fall is confirmed, which is
+still unmeasured work — and it would have to engage below ~1.6 rad of *pitch*,
+which no lateral perturbation here ever produces.
+
+
+
 The trial does **not** complete R5.2. The policy does not reliably track
 small reverse commands and cannot climb the tested ledge. Direct foot-ground
 forces are now published, but the blind ONNX policy does not consume them;

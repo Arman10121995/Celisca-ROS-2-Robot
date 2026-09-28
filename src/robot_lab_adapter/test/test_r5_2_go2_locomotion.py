@@ -33,7 +33,9 @@ if str(_adapter_pkg) not in sys.path:
 from robot_lab_adapter.go2_locomotion import (
     BASE_ACC_LIMITS,
     BASE_VEL_LIMITS,
+    BRACE_POSE,
     CONTACT_RESIDUAL_THRESHOLD_NM,
+    CROUCH_POSE,
     EFFORT_LIMITS,
     EFFORT_SATURATION_CYCLES,
     FALL_CONFIRM_CYCLES,
@@ -42,18 +44,27 @@ from robot_lab_adapter.go2_locomotion import (
     FALL_POSE_INVERTED,
     FALL_POSE_UNKNOWN,
     FALL_POSE_UPRIGHT,
+    FALL_RECOVER_CROUCH_S,
+    FALL_RECOVER_GATE_TILT_RAD,
+    FALL_RECOVER_MAX_ROLL_CYCLES,
+    FALL_RECOVER_ROLL_S,
+    FALL_RECOVER_STAND_S,
+    FALL_RECOVER_SUCCESS_DWELL_S,
+    FALL_RECOVER_TUCK_S,
     JOINT_KINDS,
     JOINT_NAMES,
     LEG_PREFIXES,
     NOMINAL_STANCE,
     PD_GAINS,
     POSITION_LIMITS,
+    RECOVERY_PHASES,
     SWING_CALF_OFFSET_RAD,
     SWING_THIGH_OFFSET_RAD,
     TILT_FALL_RAD,
     TILT_WARN_RAD,
     TROT_CYCLE_SECONDS,
     TROT_DUTY,
+    TUCK_POSE,
     BaseVelocity,
     BodyState,
     ControlCycle,
@@ -62,6 +73,7 @@ from robot_lab_adapter.go2_locomotion import (
     LegObservation,
     SafetyState,
     StanceController,
+    brace_legs,
     clamp_base_velocity,
     clamp_effort,
     clamp_position,
@@ -72,6 +84,8 @@ from robot_lab_adapter.go2_locomotion import (
     leg_phase,
     nominal_stance_pose,
     rate_limit_base_velocity,
+    recovery_pose,
+    roll_phase_pose,
     trot_joint_targets,
 )
 
@@ -844,3 +858,361 @@ class TestFallRecovery:
         recovery.update(0.0, True, fallen_body, self._positions(), {})
         recovery.reset()
         assert recovery.status == FallRecovery.IDLE
+
+
+class TestFallRecoveryLadder:
+    """The sequenced get-up ladder: tuck -> roll -> crouch -> stand.
+
+    The recorded 60 N failure was a *single-phase* attempt: it drove the
+    nominal stance pose from a down trunk at 0.14 m and ended inverted at tilt
+    ~pi. These tests pin the invariants that failure motivated: the standing
+    pose is withheld until measured tilt is under the gate, the roll phase
+    braces the pair the trunk is measured to rest on, phases and roll cycles
+    are bounded, and a missing attitude holds the phase instead of guessing.
+    """
+
+    #: The ladder tests run the same PD law at a small gain scale so the
+    #: commanded effort stays inside the per-joint limits: at the runtime 0.5
+    #: scale every joint saturates from a zero-position measurement and
+    #: different waypoints then clamp to the same number, which would hide
+    #: *which* waypoint is being driven.
+    GAIN_SCALE = 0.02
+
+    def _positions(self, value=0.0):
+        return {name: value for name in JOINT_NAMES}
+
+    def _stance(self, target, positions):
+        return StanceController(target=target, gain_scale=self.GAIN_SCALE,
+                                damping_scale=self.GAIN_SCALE
+                                ).effort_command(positions, {})
+
+    def _recovery(self, **kwargs):
+        return FallRecovery(gain_scale=self.GAIN_SCALE,
+                            damping_scale=self.GAIN_SCALE, **kwargs)
+
+    def _collapsed(self, tilt=1.2, height=0.14):
+        return BodyState(roll_rad=tilt, pitch_rad=0.0, body_height_m=height)
+
+    def test_first_cycle_retracts_the_legs_instead_of_driving_stance(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        efforts = recovery.update(0.0, True, self._collapsed(), positions, {})
+        assert recovery.status == FallRecovery.ATTEMPTING
+        assert recovery.phase == FallRecovery.TUCK
+        assert recovery.state_label == "attempting:tuck"
+        assert recovery.roll_cycles == 0
+        assert efforts == pytest.approx(
+            self._stance(recovery_pose("tuck"), positions))
+        standing = self._stance(nominal_stance_pose(), positions)
+        assert any(abs(efforts[j] - standing[j]) > 1e-6 for j in JOINT_NAMES)
+
+    def test_standing_pose_is_withheld_while_the_trunk_stays_past_the_gate(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        standing = self._stance(nominal_stance_pose(), positions)
+        collapsed = self._collapsed()
+        for t in (0.0, 0.5, 1.2, 1.9, 2.6):
+            efforts = recovery.update(t, True, collapsed, positions, {})
+            if recovery.status != FallRecovery.ATTEMPTING:
+                break
+            assert recovery.phase in (FallRecovery.TUCK, FallRecovery.ROLL)
+            assert any(abs(efforts[j] - standing[j]) > 1e-6 for j in JOINT_NAMES)
+        # Two bounded roll cycles, then the ladder stops instead of pushing on.
+        assert recovery.status == FallRecovery.FAILED
+        assert recovery.roll_cycles == FALL_RECOVER_MAX_ROLL_CYCLES
+        assert recovery.terminal_pose == FALL_POSE_COLLAPSED
+        assert recovery.last_reason.startswith("roll cycles exhausted")
+
+    def test_roll_phase_braces_the_pair_the_trunk_rests_on(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        collapsed = self._collapsed()
+        recovery.update(0.0, True, collapsed, positions, {})
+        rolled = recovery.update(FALL_RECOVER_TUCK_S, True, collapsed, positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        assert recovery.roll_cycles == 1
+        assert recovery.state_label == "attempting:roll"
+        assert rolled == pytest.approx(
+            self._stance(roll_phase_pose(1.2, 0.0), positions))
+        # With the legs measured at the tuck waypoint, the loaded pair is
+        # driven toward the straight waypoint -- thigh back toward zero
+        # (negative effort) and calf opened toward the limit (positive
+        # effort) -- while the other pair is already home.
+        tuck_positions = recovery_pose("tuck")
+        efforts = recovery.update(FALL_RECOVER_TUCK_S + 0.05, True, collapsed,
+                                  tuck_positions, {})
+        assert efforts["FR_thigh_joint"] < 0.0
+        assert efforts["FR_calf_joint"] > 0.0
+        assert efforts["FL_thigh_joint"] == pytest.approx(0.0)
+        assert efforts["FL_calf_joint"] == pytest.approx(0.0)
+
+    def test_roll_phase_follows_the_measured_attitude(self):
+        assert brace_legs(1.2, 0.0) == ("FR", "RR")
+        assert brace_legs(-1.2, 0.0) == ("FL", "RL")
+        assert brace_legs(0.0, 1.2) == ("RL", "RR")
+        assert brace_legs(-0.1, -1.2) == ("FL", "FR")
+        left = roll_phase_pose(-1.2, 0.0)
+        right = roll_phase_pose(1.2, 0.0)
+        assert left["FL_thigh_joint"] == pytest.approx(BRACE_POSE["thigh"])
+        assert left["FR_thigh_joint"] == pytest.approx(TUCK_POSE["thigh"])
+        assert right["FL_thigh_joint"] == pytest.approx(TUCK_POSE["thigh"])
+        assert right["FR_thigh_joint"] == pytest.approx(BRACE_POSE["thigh"])
+
+    def test_ladder_reaches_stand_only_after_a_measured_gate_pass(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        collapsed = self._collapsed()
+        recovery.update(0.0, True, collapsed, positions, {})
+        assert recovery.phase == FallRecovery.TUCK
+        recovery.update(FALL_RECOVER_TUCK_S, True, collapsed, positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        # The roll primitive brings the trunk back under the gate.
+        recovered = BodyState(roll_rad=0.45, pitch_rad=0.0, body_height_m=0.14)
+        recovery.update(FALL_RECOVER_TUCK_S + FALL_RECOVER_ROLL_S, True,
+                        recovered, positions, {})
+        assert recovery.phase == FallRecovery.CROUCH
+        assert recovery.state_label == "attempting:crouch"
+        efforts = recovery.update(
+            FALL_RECOVER_TUCK_S + FALL_RECOVER_ROLL_S + FALL_RECOVER_CROUCH_S,
+            True, recovered, positions, {})
+        assert recovery.phase == FallRecovery.STAND
+        assert recovery.state_label == "attempting:stand"
+        # The standing pose is slewed in over the bounded stand window and is
+        # reached exactly at its end; the slew itself is pinned by
+        # test_stand_phase_slews_the_pose_instead_of_stepping_to_it.
+        stand_at = (FALL_RECOVER_TUCK_S + FALL_RECOVER_ROLL_S
+                    + FALL_RECOVER_CROUCH_S)
+        recovery.update(stand_at + FALL_RECOVER_STAND_S, True,
+                        recovered, positions, {})
+        assert recovery.phase == FallRecovery.STAND
+        efforts = recovery.update(stand_at + FALL_RECOVER_STAND_S + 0.1, True,
+                                  recovered, positions, {})
+        assert efforts == pytest.approx(
+            self._stance(nominal_stance_pose(), positions))
+
+    def test_a_trunk_that_climbs_back_out_of_the_gate_is_not_levered_further(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        nearly_up = BodyState(roll_rad=0.4, pitch_rad=0.0, body_height_m=0.14)
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        recovery.update(FALL_RECOVER_TUCK_S, True, nearly_up, positions, {})
+        assert recovery.phase == FallRecovery.CROUCH
+        recovery.update(FALL_RECOVER_TUCK_S + FALL_RECOVER_CROUCH_S, True,
+                        nearly_up, positions, {})
+        assert recovery.phase == FallRecovery.STAND
+        # The trunk rolls back past the gate: back down the ladder it goes.
+        efforts = recovery.update(
+            FALL_RECOVER_TUCK_S + FALL_RECOVER_CROUCH_S + 0.1, True,
+            self._collapsed(tilt=1.0), positions, {})
+        assert recovery.phase == FallRecovery.TUCK
+        assert efforts == pytest.approx(
+            self._stance(recovery_pose("tuck"), positions))
+
+    def test_inverted_trunk_never_enters_the_roll_phase(self):
+        recovery = self._recovery(timeout_s=1.0)
+        positions = self._positions()
+        inverted = BodyState(roll_rad=FALL_INVERTED_TILT_RAD + 0.1,
+                             pitch_rad=0.0, body_height_m=0.057)
+        recovery.update(0.0, True, inverted, positions, {})
+        assert recovery.phase == FallRecovery.TUCK
+        recovery.update(FALL_RECOVER_TUCK_S, True, inverted, positions, {})
+        assert recovery.phase == FallRecovery.TUCK       # re-retracted, not rolled
+        assert recovery.roll_cycles == 0
+        recovery.update(1.5, True, inverted, positions, {})
+        assert recovery.status == FallRecovery.UNRECOVERABLE
+        assert recovery.terminal_pose == FALL_POSE_INVERTED
+        assert recovery.state_label == "unrecoverable:tuck"
+
+    def test_unmeasured_attitude_holds_the_phase_instead_of_advancing(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        efforts = recovery.update(2.0, True, None, positions, {})
+        assert recovery.phase == FallRecovery.TUCK
+        assert recovery.status == FallRecovery.ATTEMPTING
+        assert efforts == pytest.approx(
+            self._stance(recovery_pose("tuck"), positions))
+
+    def _succeed(self, recovery, positions, forces, standing):
+        """Drive the ladder to a *measured* success; returns that time."""
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        recovery.update(1.0, True, standing, positions, {}, forces)
+        recovery.update(1.0 + FALL_RECOVER_SUCCESS_DWELL_S, True, standing,
+                        positions, {}, forces)
+        return 1.0 + FALL_RECOVER_SUCCESS_DWELL_S
+
+    def test_completed_get_up_holds_the_nominal_stance(self):
+        # Measured motivation: the placed 1.4 rad nose-down trial reached
+        # 0.33 m with four feet loaded, reported `succeeded:stand`, and was flat
+        # on its belly 0.24 s later. The node calls update() for as long as
+        # `fallen` is latched, so a zero-effort return at success is a command
+        # that drops the robot the ladder just stood up.
+        recovery = self._recovery()
+        positions = self._positions()
+        forces = {leg: 25.0 for leg in LEG_PREFIXES}
+        standing = BodyState(roll_rad=0.01, pitch_rad=0.0, body_height_m=0.33)
+        now = self._succeed(recovery, positions, forces, standing)
+        assert recovery.status == FallRecovery.SUCCEEDED
+        held = recovery.update(now + 0.1, True, standing, positions, {}, forces)
+        assert held == pytest.approx(
+            self._stance(nominal_stance_pose(), positions))
+        assert any(abs(value) > 0.0 for value in held.values())
+        assert recovery.state_label.startswith("succeeded")
+
+    def test_completed_get_up_stops_driving_when_the_evidence_is_gone(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        forces = {leg: 25.0 for leg in LEG_PREFIXES}
+        standing = BodyState(roll_rad=0.01, pitch_rad=0.0, body_height_m=0.33)
+        now = self._succeed(recovery, positions, forces, standing)
+        # Height lost: the robot is back down, so the hold must stop.
+        dropped = BodyState(roll_rad=0.05, pitch_rad=0.0, body_height_m=0.14)
+        efforts = recovery.update(now + 0.1, True, dropped, positions, {}, forces)
+        assert all(value == 0.0 for value in efforts.values())
+        # Support lost -- airborne, or tipped onto its side -- stops it too.
+        one_foot = {leg: (25.0 if leg == "RR" else 0.0) for leg in LEG_PREFIXES}
+        tipped = BodyState(roll_rad=0.4, pitch_rad=0.0, body_height_m=0.33)
+        efforts = recovery.update(now + 0.2, True, tipped, positions, {}, one_foot)
+        assert all(value == 0.0 for value in efforts.values())
+        # The decision is measured, never latched: standing again re-enables
+        # the hold, and no measurement at all keeps it stopped.
+        again = recovery.update(now + 0.3, True, standing, positions, {}, forces)
+        assert any(abs(value) > 0.0 for value in again.values())
+        unknown = recovery.update(now + 0.4, True, None, positions, {}, forces)
+        assert all(value == 0.0 for value in unknown.values())
+        assert recovery.status == FallRecovery.SUCCEEDED
+
+    def test_a_bounded_stop_never_holds_the_stance(self):
+        # The hold belongs to a measured success only: a bounded stop keeps
+        # publishing nothing even when the robot is back inside the gate.
+        recovery = self._recovery()
+        positions = self._positions()
+        collapsed = self._collapsed()
+        for t in (0.0, FALL_RECOVER_TUCK_S,
+                  FALL_RECOVER_TUCK_S + FALL_RECOVER_ROLL_S, 1.0, 2.0, 3.0):
+            recovery.update(t, True, collapsed, positions, {})
+            if recovery.status != FallRecovery.ATTEMPTING:
+                break
+        assert recovery.status == FallRecovery.FAILED
+        forces = {leg: 25.0 for leg in LEG_PREFIXES}
+        standing = BodyState(roll_rad=0.01, pitch_rad=0.0, body_height_m=0.33)
+        efforts = recovery.update(3.2, True, standing, positions, {}, forces)
+        assert all(value == 0.0 for value in efforts.values())
+        assert recovery.status == FallRecovery.FAILED
+
+    def test_stand_phase_slews_the_pose_in_instead_of_stepping_to_it(self):
+        # Measured: stepping to the nominal stance out of the crouch over-drives
+        # the legs -- the placed nose-down trial catapulted the trunk to 0.56 m
+        # with no foot loaded and tilt to 0.81 rad, and the ladder then spent
+        # three retries undoing its own stand-up. The stand phase must slew.
+        recovery = self._recovery(timeout_s=20.0)
+        positions = self._positions()
+        nearly_up = BodyState(roll_rad=0.45, pitch_rad=0.0, body_height_m=0.14)
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        recovery.update(FALL_RECOVER_TUCK_S, True, nearly_up, positions, {})
+        assert recovery.phase == FallRecovery.CROUCH
+        crouch_effort = self._stance(recovery_pose("crouch"), positions)
+        stand_effort = self._stance(nominal_stance_pose(), positions)
+        stand_at = FALL_RECOVER_TUCK_S + FALL_RECOVER_CROUCH_S
+        # Entering the phase drives the crouch waypoint, not a step to standing.
+        entry = recovery.update(stand_at, True, nearly_up, positions, {})
+        assert recovery.phase == FallRecovery.STAND
+        assert entry == pytest.approx(crouch_effort)
+        assert any(abs(entry[j] - stand_effort[j]) > 1e-3 for j in JOINT_NAMES)
+        # Halfway through the bounded slew the command is strictly between the
+        # two waypoints -- progress, never a jump.
+        half = recovery.update(stand_at + FALL_RECOVER_STAND_S / 2.0, True,
+                               nearly_up, positions, {})
+        assert any(abs(half[j] - crouch_effort[j]) > 1e-6 for j in JOINT_NAMES)
+        assert any(abs(half[j] - stand_effort[j]) > 1e-6 for j in JOINT_NAMES)
+        # At the end of the slew the target *is* the nominal stance, and it
+        # stays there for as long as the phase runs.
+        done = recovery.update(stand_at + FALL_RECOVER_STAND_S, True,
+                               nearly_up, positions, {})
+        assert done == pytest.approx(stand_effort)
+        later = recovery.update(stand_at + 5.0, True, nearly_up, positions, {})
+        assert later == pytest.approx(stand_effort)
+
+    def test_roll_phase_lateral_hip_input_is_opt_in_and_mirrored(self):
+        # The default stays the qualified sagittal-only brace: hips at zero.
+        default = roll_phase_pose(1.2, 0.0)
+        assert all(default[f"{leg}_hip_joint"] == pytest.approx(0.0)
+                   for leg in LEG_PREFIXES)
+        # A nonzero input reaches the *braced* pair only, mirrored per side,
+        # because the Go2's hip roll axes are opposed.
+        braced = roll_phase_pose(1.2, 0.0, 0.4)
+        assert braced["FR_hip_joint"] == pytest.approx(0.4)
+        assert braced["RR_hip_joint"] == pytest.approx(0.4)
+        assert braced["FL_hip_joint"] == pytest.approx(0.0)
+        assert braced["RL_hip_joint"] == pytest.approx(0.0)
+        left = roll_phase_pose(-1.2, 0.0, 0.4)
+        assert left["FL_hip_joint"] == pytest.approx(-0.4)
+        assert left["FR_hip_joint"] == pytest.approx(0.0)
+        # The rest of the braced waypoint is unchanged, and the input is
+        # clamped to the measured hip limits.
+        assert braced["FR_thigh_joint"] == pytest.approx(BRACE_POSE["thigh"])
+        assert roll_phase_pose(1.2, 0.0, 9.0)[f"{'FR'}_hip_joint"] == pytest.approx(
+            clamp_position("FR_hip_joint", 9.0))
+        # The recovery passes it through, and refuses a non-finite value.
+        recovery = self._recovery(roll_brace_hip_rad=0.4)
+        recovery.update(0.0, True, self._collapsed(), positions := self._positions(), {})
+        efforts = recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(),
+                                  positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        assert efforts == pytest.approx(
+            self._stance(roll_phase_pose(1.2, 0.0, 0.4), positions))
+        with pytest.raises(ValueError):
+            FallRecovery(roll_brace_hip_rad=float("nan"))
+
+    def test_bounds_waypoints_and_gate_are_predeclared_and_consistent(self):
+        assert FallRecovery.PHASES == (FallRecovery.TUCK, FallRecovery.ROLL,
+                                       FallRecovery.CROUCH, FallRecovery.STAND)
+        assert RECOVERY_PHASES == FallRecovery.PHASES
+        # The gate sits inside the fall band: at or above the tilt a stand-up
+        # is refused for anyway, and below the roll-over threshold.
+        assert TILT_FALL_RAD <= FALL_RECOVER_GATE_TILT_RAD < FALL_INVERTED_TILT_RAD
+        assert FALL_RECOVER_MAX_ROLL_CYCLES >= 1
+        tuck, crouch, stand = (recovery_pose("tuck"), recovery_pose("crouch"),
+                               recovery_pose("stand"))
+        assert stand == nominal_stance_pose()
+        thigh, calf = "FL_thigh_joint", "FL_calf_joint"
+        assert tuck[thigh] > crouch[thigh] > stand[thigh]
+        assert tuck[calf] < crouch[calf] < stand[calf]
+        assert recovery_pose("brace")[thigh] < stand[thigh]
+
+    def test_ladder_waypoints_stay_inside_the_measured_position_limits(self):
+        poses = [recovery_pose(kind) for kind in ("tuck", "brace", "crouch")]
+        poses += [roll_phase_pose(roll, pitch) for roll, pitch in
+                  ((1.2, 0.0), (-1.2, 0.0), (0.0, 1.2), (0.0, -1.2))]
+        for pose in poses:
+            assert set(pose) == set(JOINT_NAMES)
+            for name, value in pose.items():
+                assert value == pytest.approx(clamp_position(name, value))
+        with pytest.raises(ValueError):
+            recovery_pose("somersault")
+
+    def test_ladder_rejects_unsafe_parameters(self):
+        with pytest.raises(ValueError):
+            FallRecovery(gate_tilt_rad=0.0)
+        with pytest.raises(ValueError):
+            FallRecovery(gate_tilt_rad=FALL_INVERTED_TILT_RAD)
+        with pytest.raises(ValueError):
+            FallRecovery(tuck_s=0.0)
+        with pytest.raises(ValueError):
+            FallRecovery(roll_s=-0.1)
+        with pytest.raises(ValueError):
+            FallRecovery(crouch_s=0.0)
+        with pytest.raises(ValueError):
+            FallRecovery(max_roll_cycles=0)
+
+    def test_reset_clears_the_ladder_state(self):
+        recovery = self._recovery()
+        positions = self._positions()
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(), positions, {})
+        assert recovery.roll_cycles == 1
+        recovery.reset()
+        assert recovery.phase is None
+        assert recovery.roll_cycles == 0
+        assert recovery.last_reason is None
+        assert recovery.state_label == FallRecovery.IDLE

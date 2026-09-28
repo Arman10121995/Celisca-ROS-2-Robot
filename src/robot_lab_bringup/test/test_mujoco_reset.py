@@ -53,6 +53,43 @@ def test_spawn_yaw_rotates_about_vertical_axis(node):
                                [math.cos(0.35), 0, 0, math.sin(0.35)])
 
 
+def test_spawn_attitude_quaternion_matches_the_adapter_convention():
+    from robot_lab_mujoco.mujoco_spawner import _spawn_attitude_quaternion
+    # Yaw alone is exactly the quaternion the spawner published before the
+    # pitch/roll options existed.
+    np.testing.assert_allclose(
+        _spawn_attitude_quaternion(0.7, 0.0, 0.0),
+        [math.cos(0.35), 0.0, 0.0, math.sin(0.35)], atol=1e-12)
+    # A 90 degree pitch is a pure rotation about body y.
+    np.testing.assert_allclose(
+        _spawn_attitude_quaternion(0.0, math.pi / 2.0, 0.0),
+        [math.cos(math.pi / 4.0), 0.0, math.sin(math.pi / 4.0), 0.0], atol=1e-12)
+    # The adapter's ZYX extraction reads back what was requested, which is what
+    # the safety monitor measures as tilt.
+    w, x, y, z = _spawn_attitude_quaternion(0.0, 1.2, 0.4)
+    roll = math.atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y))
+    pitch = math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x))))
+    assert roll == pytest.approx(0.4, abs=1e-9)
+    assert pitch == pytest.approx(1.2, abs=1e-9)
+
+
+def test_reset_places_a_pitched_pose_clear_of_the_floor(node):
+    from rclpy.parameter import Parameter
+    node.set_parameters([
+        Parameter('spawn_pitch', value=1.2),
+        Parameter('spawn_roll', value=0.0),
+    ])
+    node._reset_physics()
+    adr = node._free_joint_qpos_adr
+    # A fallen pose is *placed*, not fallen into: the attitude is the request
+    # and the root is lifted so the rotated robot does not intersect the floor.
+    w, x, y, z = node._data.qpos[adr + 3:adr + 7]
+    pitch = math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x))))
+    assert pitch == pytest.approx(1.2, abs=1e-9)
+    assert node._data.qpos[adr + 2] > 0.0
+    assert all(contact.dist >= 0 for contact in node._data.contact)
+
+
 def test_reset_lifts_an_intersecting_robot_above_the_floor(node):
     from rclpy.parameter import Parameter
     node.set_parameters([Parameter('spawn_z', value=-1.0)])

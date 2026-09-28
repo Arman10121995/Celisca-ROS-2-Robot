@@ -72,12 +72,79 @@ recovery actor was then exported to ONNX and wired behind
 `go2_recovery_policy_path:=auto` plus `enable_fall_recovery:=true`. Its valid
 bounded 60 N trials started at 3.800/3.808 s, timed out at 10.696/10.840 s
 and both ended inverted at 0.057 m; the first raw-action trial produced a non-finite action and
-failed closed. Rebuild `robot_lab_adapter` after Python edits: its installed
+failed closed. Fall recovery itself is now a bounded sequenced ladder
+(`tuck -> roll -> crouch -> stand`) in `go2_locomotion.py`: each phase has a
+predeclared waypoint and a time bound, the roll count is bounded, the nominal
+stance pose is commanded only once *measured* tilt is under the 0.8 rad gate,
+a trunk past 2.4 rad ends the attempt as `unrecoverable`, and an unmeasured
+attitude holds the phase instead of guessing one. `/go2/recovery_state`
+publishes the phase with the status (`attempting:tuck`, `attempting:roll`, ...).
+Its 60 N trial (domain 230) recorded
+`idle -> attempting:tuck -> attempting:roll -> unrecoverable:roll` at
+3.864/4.176/4.800 s and stopped driving 5.8 s earlier than the single-phase
+attempt; the debounced fall latch fires 0.66 s after the pulse at 1.042 rad and
+~3.6 rad/s, so the inversion is still not prevented. A matched 45 N control
+never topples and leaves the ladder idle. A 21-trial sweep since then
+(`analyze_ladder_sweep.py` -> `ladder_sweep.json`; lateral impulses 45-60 N,
+sustained lateral 40-50 N over 1.2-1.5 s, forward 45-70 N, drops from 0.9/1.4 m)
+shows the window the ladder can act in is **empty on these maps**: every
+toppling trial latches `fallen` at 0.51-1.16 rad already rolling 2.6-7.2 rad/s
+and ends inverted at 3.1416 rad / 0.057 m, and everything gentler stays
+upright. The trigger, not the sequence, limits a fall trial. To measure the
+sequence anyway, `mujoco_spawner.py` now takes `spawn_pitch`/`spawn_roll`
+(composing Rz(yaw)*Ry(pitch)*Rx(roll), 0.0 by default, plumbed through both
+launches and recorded in the manifest) so a settled fallen pose can be
+*placed*; `run_perturbation_trial.sh` gained `PERTURBATION_AXIS`, `SPAWN_Z`,
+`SPAWN_PITCH` and `SPAWN_ROLL` for it. From a placed 1.4 rad nose-down pose the
+ladder runs `tuck -> roll -> crouch -> stand`, reported `succeeded:stand` at
+4.948 s with 0.33 m and 27-36 N on all four feet, and then **fell**, because a
+succeeded attempt returned zero effort and the node keeps calling
+`FallRecovery.update()` while `fallen` is latched: zero effort *was* the
+command. That is fixed - a succeeded attempt now holds the nominal stance
+while the same measured evidence that granted the success persists, and stops
+the instant it is gone (3 tests; `failed`/`unrecoverable` never hold). The
+repeat is bit-identical to the success and holds 0.329 m at 0.01 rad with
+28-35 N per foot for the rest of the 20 s trial. A placed 1.4 rad flank pose
+is a measured negative in both runs: the sagittal-only brace (hips at zero)
+does not right a trunk lying on a stable flank, so the roll phase needs a
+qualified lateral hip input. The `stand` phase used to *step* its target from
+the crouch waypoint to the nominal stance, which catapulted the robot (0.56 m
+airborne, tilt to 0.81 rad) and cost three retries; it now slews the target in
+over `FALL_RECOVER_STAND_S` (0.6 s) and the same placed trial succeeds at
+2.324 s with no retry and a monotone 0.222 -> 0.331 m rise, holding 0.329 m
+afterwards. Read that trial's flags carefully: the probe's whole-run `passed`
+is `false` *by construction* (a trial that starts fallen cannot meet
+`min_height > 0.15 m` / `max_tilt < 0.35 rad`) and `recovery_screening_pass`
+only covers 3.2-5.2 s, so the trace is the evidence. Eight placed-pose trials
+(`fall_ladder_envelope_20260928T*`, domains 226-230) then measured the **capture
+envelope**: pitch 0.9/1.2/1.6 rad all recover (1.464/2.356/2.296 s) and end at
+0.01 rad / 0.329 m, pitch 1.8 rad inverts inside the retraction, 0.6 rad never
+trips the fall threshold, and roll 0.9/1.2/1.4 rad all end `failed:roll` at
+0.52 rad / 0.139 m. So pitch-dominated collapses are recoverable from ~0.8 to
+~1.6 rad, and the roll axis is not recoverable at all above the gate: a
+pre-fall retraction has to engage below ~1.6 rad of *pitch*, which is not the
+axis any perturbation here produces, and a lateral hip input for the brace has
+to come first. That input is now measured: `roll_phase_pose(..., hip_rad=)`
+threads an opt-in, per-side-mirrored hip target for the braced pair through
+`fall_recovery_roll_brace_hip_rad:=` (default 0.0) and the runner's
+`ROLL_BRACE_HIP`. Four placed 1.4 rad flank trials
+(`fall_ladder_hip_20260928T{p,n}{04,08}`, domains 226-229) show the sign is
+**positive/outward** (negative drives the trunk onto its back: 3.14 rad /
+0.057 m), that +0.4 only slows the tilt, and that **+0.8 rad brings the trunk
+to 0.66 rad, under the 0.8 rad gate, so the ladder leaves the roll phase for the
+first time and reaches `crouch`** — where it then fails, because the crouch
+drives the hips back to zero. Next: carry the measured hip input through the
+crouch phase and re-measure; the default stays the qualified sagittal-only
+brace until then. Still open: trigger latency, and the crouch-side hip input.
+Rebuild `robot_lab_adapter` after Python edits: its installed
 module is a copy despite `--symlink-install`, and three intermediate runs
-using a stale installed module were discarded. Fall recovery remains
-unqualified; next adapt/retrain the actor to this plant or implement another
-measured whole-body get-up strategy. Keep `go2_reverse_command_map:=inverse`, the
-`go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
+using a stale installed module were discarded. Two more trials were lost by
+editing `run_perturbation_trial.sh` while it was executing (bash reads a script
+incrementally); keep ROS domains <= 230 or CycloneDDS refuses to bind. Fall
+recovery remains off by default; next measure a retraction that starts before
+the fall is confirmed, and ramp the `stand` entry. Keep
+`go2_reverse_command_map:=inverse`, the `go2_perturbation_*` arguments and
+`enable_fall_recovery` opt-in.
 
 A 1 s zero-effort start delay was tried next. The first delayed actor trial
 reported `succeeded` at 4.948 s only because the body was airborne at 0.472 m

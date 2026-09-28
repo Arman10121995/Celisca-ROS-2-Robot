@@ -970,6 +970,33 @@ def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
     return -1.0
 
 
+def _spawn_attitude_quaternion(yaw: float, pitch: float, roll: float) -> list:
+    """Free-joint ``(w, x, y, z)`` for a ZYX spawn attitude.
+
+    Composes ``Rz(yaw) * Ry(pitch) * Rx(roll)``, which is the convention the
+    adapter extracts attitude with. With ``pitch = roll = 0`` this is the
+    yaw-only quaternion the spawner has always used.
+
+    A nonzero pitch or roll is how a *settled* fallen pose is placed for a
+    get-up test: a perturbed or dropped robot on these maps either stays
+    upright or rolls fully over, so a recovery ladder can never be measured
+    from a fall it did not choose.
+    """
+    values = (float(yaw), float(pitch), float(roll))
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("spawn attitude angles must be finite")
+    yaw, pitch, roll = values
+    cy, sy = math.cos(yaw / 2.0), math.sin(yaw / 2.0)
+    cp, sp = math.cos(pitch / 2.0), math.sin(pitch / 2.0)
+    cr, sr = math.cos(roll / 2.0), math.sin(roll / 2.0)
+    return [
+        cr * cp * cy + sr * sp * sy,
+        sr * cp * cy - cr * sp * sy,
+        cr * sp * cy + sr * cp * sy,
+        cr * cp * sy - sr * sp * cy,
+    ]
+
+
 class MuJoCoSpawner(Node):
     """Spawn a robot into a MuJoCo world, open the GUI viewer, and
     publish joint_states, TF, odom, scan, imu, and clock."""
@@ -988,6 +1015,11 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("spawn_y", 0.0)
         self.declare_parameter("spawn_z", 0.0)
         self.declare_parameter("spawn_yaw", 0.0)
+        # Optional spawn attitude beyond yaw: a nonzero pitch/roll places a
+        # *settled* fallen pose, which is the only way to measure a get-up.
+        # Both stay 0.0 for every normal run.
+        self.declare_parameter("spawn_pitch", 0.0)
+        self.declare_parameter("spawn_roll", 0.0)
         self.declare_parameter("initial_joint_positions", "")
         # use_sim_time is auto-declared by rclpy when passed via launch
         # overrides — only declare it if not already present.
@@ -1698,10 +1730,12 @@ class MuJoCoSpawner(Node):
         if adr >= 0:
             self._data.qpos[adr:adr + 3] = [
                 self.get_parameter("spawn_" + axis).value for axis in ("x", "y", "z")]
-            yaw = self.get_parameter("spawn_yaw").value
-            # Free-joint quaternion is (w, x, y, z); yaw rotates about z.
-            self._data.qpos[adr + 3:adr + 7] = [
-                math.cos(yaw / 2.0), 0.0, 0.0, math.sin(yaw / 2.0)]
+            # Free-joint quaternion is (w, x, y, z). Yaw rotates about z; the
+            # optional pitch/roll place a settled fallen pose for get-up tests.
+            self._data.qpos[adr + 3:adr + 7] = _spawn_attitude_quaternion(
+                self.get_parameter("spawn_yaw").value,
+                self.get_parameter("spawn_pitch").value,
+                self.get_parameter("spawn_roll").value)
         initial_joints = self.get_parameter("initial_joint_positions").value
         if initial_joints:
             positions = json.loads(initial_joints)

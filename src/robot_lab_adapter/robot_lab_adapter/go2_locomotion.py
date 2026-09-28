@@ -19,6 +19,11 @@ Honest scope (R5.2 acceptance bar):
   (roll/pitch) comes from the IMU quaternion; simulator body height comes from
   ground-truth odometry for the experimental recovery success check. Falls and excessive tilt
   force a SAFE_STOP (damped zero effort), never silent continuation.
+- The opt-in get-up attempt is a bounded ladder of predeclared joint-space
+  waypoints (tuck -> roll -> crouch -> stand) whose transitions read measured
+  attitude only: the standing pose is commanded only once measured tilt is
+  back under the stand-up gate, and the roll count is bounded. It is a
+  measured-feedback sequence, not a trained get-up policy.
 - All 12 joints are effort-commandable with per-joint limits taken from
   the Go2 description (const.xacro): hip/thigh 23.7 N·m, calf 35.55 N·m.
   **Raw effort publishing is not gait control**: every effort command is
@@ -109,6 +114,62 @@ FALL_RECOVER_MIN_LOADED_FEET = 3
 FALL_RECOVER_CONTACT_N = 2.0
 FALL_RECOVER_SUCCESS_DWELL_S = 0.5
 
+#: Sequenced get-up ladder (R5.2 recovery attempt). Recorded 60 N trials drove
+#: straight to the nominal stance pose from a down trunk at 0.14 m body height
+#: and ended *inverted* at tilt ~pi and 0.057 m: from a fallen pose the stance
+#: drive's thigh/calf torques lever the trunk over its feet instead of raising
+#: it. The ladder stages the same bounded joint-space PD effort through
+#: measured waypoints -- fold the legs in (retract the lever), brace the legs
+#: the trunk rests on (roll), put the feet under the hips (crouch), then stand
+#: -- and commands the standing pose only from the ``stand`` phase, which is
+#: entered only when *measured* tilt is below
+#: :data:`FALL_RECOVER_GATE_TILT_RAD`. This is a bounded, measured-feedback
+#: sequence, not a trained get-up policy: the gate, the phase bounds and the
+#: bounded roll count are invariants a test can check, whether the roll
+#: primitive rights this plant is a measurement question.
+FALL_RECOVER_GATE_TILT_RAD = 0.8
+FALL_RECOVER_TUCK_S = 0.4
+FALL_RECOVER_ROLL_S = 0.7
+FALL_RECOVER_CROUCH_S = 0.6
+#: The standing pose is *slewed* in from the crouch waypoint over this time
+#: rather than stepped to. A step was measured to over-drive the legs out of
+#: the crouch: the placed 1.4 rad nose-down trial left the ground at 0.56 m
+#: with no foot loaded and the trunk pitching to 0.81 rad, and the ladder then
+#: needed three retries to undo its own stand-up.
+FALL_RECOVER_STAND_S = 0.6
+FALL_RECOVER_MAX_ROLL_CYCLES = 2
+
+#: Ladder waypoints [rad] per joint kind, inside the measured position limits
+#: (const.xacro). Forward kinematics with L1 = L2 = 0.213 m places the foot
+#: this far below its hip in each pose:
+#:
+#:   tuck   (1.35, -2.70): 0.09 m, directly under the hip (leg folded flat)
+#:   crouch (1.10, -2.20): 0.19 m, directly under the hip
+#:   brace  (0.10, -0.90): 0.36 m, 0.13 m behind the hip (straightest the
+#:          measured calf limit allows: 0.36 m is longer than the 0.32 m
+#:          standing drop, so a braced leg can push the trunk up past it)
+TUCK_POSE: Dict[str, float] = {"hip": 0.0, "thigh": 1.35, "calf": -2.70}
+BRACE_POSE: Dict[str, float] = {"hip": 0.0, "thigh": 0.10, "calf": -0.90}
+CROUCH_POSE: Dict[str, float] = {"hip": 0.0, "thigh": 1.10, "calf": -2.20}
+
+#: Ladder waypoints by name, indexed by joint kind.
+RECOVERY_WAYPOINTS: Dict[str, Dict[str, float]] = {
+    "tuck": TUCK_POSE,
+    "brace": BRACE_POSE,
+    "crouch": CROUCH_POSE,
+    "stand": NOMINAL_STANCE,
+}
+
+#: Ladder phase names, in the order :class:`FallRecovery` enters them.
+RECOVERY_PHASE_TUCK = "tuck"
+RECOVERY_PHASE_ROLL = "roll"
+RECOVERY_PHASE_CROUCH = "crouch"
+RECOVERY_PHASE_STAND = "stand"
+RECOVERY_PHASES: Tuple[str, ...] = (
+    RECOVERY_PHASE_TUCK, RECOVERY_PHASE_ROLL,
+    RECOVERY_PHASE_CROUCH, RECOVERY_PHASE_STAND,
+)
+
 #: Beyond this tilt the trunk has rolled *past* the point a standing controller
 #: can act from. :func:`classify_fall_pose` reports ``inverted`` here: the body
 #: is on its back, and righting it needs a roll-over primitive, not a stand-up
@@ -175,6 +236,72 @@ def clamp_position(joint_name: str, position: float) -> float:
     """Clamp a joint-space target to the joint's measured position range."""
     lo, hi = POSITION_LIMITS[joint_kind(joint_name)]
     return max(lo, min(hi, position))
+
+
+# ----------------------------------------------------------------------
+# Sequenced get-up waypoints (recovery ladder)
+# ----------------------------------------------------------------------
+
+
+def recovery_pose(kind: str) -> Dict[str, float]:
+    """All 12 clamped joint targets for a predeclared ladder waypoint.
+
+    ``kind`` indexes the measured waypoint table: ``tuck``, ``brace``,
+    ``crouch`` or ``stand`` (the nominal stance pose).
+    """
+    if kind not in RECOVERY_WAYPOINTS:
+        raise ValueError(f"not a recovery waypoint: {kind!r}")
+    return {
+        name: clamp_position(name, RECOVERY_WAYPOINTS[kind][joint_kind(name)])
+        for name in JOINT_NAMES
+    }
+
+
+def brace_legs(roll_rad: float, pitch_rad: float) -> Tuple[str, ...]:
+    """The leg pair the trunk is resting on, from *measured* attitude.
+
+    A positive roll lifts the left flank, so the right legs are the ones
+    trapped under the trunk; a positive pitch tips the trunk back onto its
+    rear legs. The larger of the two measured angles decides, so a level
+    trunk is never silently assumed to be lying on one side.
+    """
+    if abs(roll_rad) >= abs(pitch_rad):
+        return ("FR", "RR") if roll_rad > 0.0 else ("FL", "RL")
+    return ("RL", "RR") if pitch_rad > 0.0 else ("FL", "FR")
+
+
+def roll_phase_pose(roll_rad: float, pitch_rad: float,
+                    hip_rad: float = 0.0) -> Dict[str, float]:
+    """Joint targets for the roll phase: brace the loaded pair, retract the rest.
+
+    The pair the trunk rests on is driven toward the straight waypoint (the
+    longest push the measured calf limit allows), while the other pair folds to
+    the tuck waypoint, so the trunk's mass moves over the braced side instead
+    of being levered over the feet.
+
+    ``hip_rad`` is an **opt-in, unqualified** lateral input for the braced pair,
+    signed like the spawn pose's splayed stance (right leg positive, left leg
+    mirrored) and clamped to the measured hip limits. It is 0.0 by default
+    because the sign that actually rolls this plant's trunk back over its feet
+    has not been qualified: a lateral ground reaction at a foot *below* the
+    trunk's centre of mass is a pitch moment, not a roll one, so the roll axis
+    needs a measured answer rather than an assumed one. Placed-pose trials are
+    how that gets measured; the sign is not a default.
+    """
+    braced = brace_legs(roll_rad, pitch_rad)
+    pose: Dict[str, float] = {}
+    for name in JOINT_NAMES:
+        leg = name.split("_")[0]
+        table = BRACE_POSE if leg in braced else TUCK_POSE
+        if joint_kind(name) == "hip":
+            if leg in braced:
+                # The Go2's hip roll axes are opposed, so a splay is mirrored.
+                outward = hip_rad if leg.endswith("R") else -hip_rad
+                pose[name] = clamp_position(name, outward)
+                continue
+            table = TUCK_POSE
+        pose[name] = clamp_position(name, table[joint_kind(name)])
+    return pose
 
 
 # ----------------------------------------------------------------------
@@ -529,23 +656,44 @@ class SafetyState:
 
 
 class FallRecovery:
-    """Bounded, opt-in re-stand attempt after a latched fall.
+    """Bounded, opt-in sequenced get-up attempt after a latched fall.
 
-    This is a re-stand **attempt**, not a demonstrated get-up. It drives the
-    nominal stance pose with elevated (still bounded) gains for at most
-    ``timeout_s`` after an optional zero-effort settling delay, and reports
-    success only when *measured* tilt returns below
-    ``success_tilt_rad``, body height reaches the standing threshold, and at
-    least three feet stay loaded for a measured dwell. If the
-    window expires first, it gives up and commands
-    zero effort; it never silently resumes walking, and it never clears the
+    This is a get-up **attempt**, not a demonstrated get-up. It advances a
+    bounded ladder of predeclared joint-space waypoints, using measured state
+    only:
+
+    ``tuck`` (fold the legs in) -> ``roll`` (brace the legs the trunk rests
+    on, retract the others) -> ``crouch`` (feet under the hips) -> ``stand``
+    (the nominal stance pose).
+
+    The ladder replaces the single-phase version of this class, which drove
+    the nominal stance pose straight from a fallen trunk and *rolled the trunk
+    over*: the recorded 60 N trials ended inverted at tilt ~pi and 0.057 m
+    body height, the opposite of standing up. Two rules follow from that
+    evidence, and they are what this class guarantees:
+
+    - the nominal standing pose is commanded only from the ``stand`` phase,
+      and that phase is entered only once *measured* tilt is under
+      ``gate_tilt_rad``;
+    - every phase is bounded, the roll count is bounded, and the attempt
+      window ends the attempt anyway — a trunk that stays past the gate is
+      never levered further over, and the ladder never restarts by itself.
+
+    Success is reported only from measured evidence: tilt below
+    ``success_tilt_rad``, body height at or above the standing threshold, at
+    least three feet loaded above the contact threshold, held for a measured
+    dwell. A phase entered without a measured attitude is held, never guessed.
+    A succeeded attempt then *keeps* that evidence by holding the nominal
+    stance: the node calls this method for as long as ``fallen`` is latched, so
+    a zero-effort return at success is a command that drops the robot it just
+    stood up. The hold stops the moment the same evidence is gone, and neither
+    the other terminal states nor the latched :attr:`SafetyState.fallen` flag
+    are ever cleared from here.
+    When the attempt stops, a terminal pose rolled past
+    :data:`FALL_INVERTED_TILT_RAD` is reported as :attr:`UNRECOVERABLE` rather
+    than :attr:`FAILED`, so the evidence does not imply the gains were merely
+    too weak. It never silently resumes walking, and it never clears the
     latched :attr:`SafetyState.fallen` flag on its own.
-
-    A failure is only ever reported as :attr:`FAILED` when the measured
-    terminal pose was one a stand-up controller can act from. If the attempt
-    ends with the trunk rolled past :data:`FALL_INVERTED_TILT_RAD` the result
-    is :attr:`UNRECOVERABLE`, which records that the pose itself was outside
-    this controller's reach rather than implying the gains were too weak.
     """
 
     IDLE = "idle"
@@ -559,6 +707,13 @@ class FallRecovery:
     #: Terminal states: the attempt is over and will not restart by itself.
     TERMINAL_STATES = (SUCCEEDED, FAILED, UNRECOVERABLE)
 
+    #: Ladder phases; :attr:`PHASES` is the order they are entered in.
+    TUCK = RECOVERY_PHASE_TUCK
+    ROLL = RECOVERY_PHASE_ROLL
+    CROUCH = RECOVERY_PHASE_CROUCH
+    STAND = RECOVERY_PHASE_STAND
+    PHASES = RECOVERY_PHASES
+
     def __init__(
         self,
         timeout_s: float = FALL_RECOVER_TIMEOUT_S,
@@ -566,6 +721,13 @@ class FallRecovery:
         success_tilt_rad: float = FALL_RECOVER_TILT_RAD,
         gain_scale: float = 0.5,
         damping_scale: float = 0.5,
+        gate_tilt_rad: float = FALL_RECOVER_GATE_TILT_RAD,
+        tuck_s: float = FALL_RECOVER_TUCK_S,
+        roll_s: float = FALL_RECOVER_ROLL_S,
+        crouch_s: float = FALL_RECOVER_CROUCH_S,
+        stand_s: float = FALL_RECOVER_STAND_S,
+        roll_brace_hip_rad: float = 0.0,
+        max_roll_cycles: int = FALL_RECOVER_MAX_ROLL_CYCLES,
     ) -> None:
         if not math.isfinite(timeout_s) or timeout_s <= 0.0:
             raise ValueError("timeout_s must be positive")
@@ -577,21 +739,61 @@ class FallRecovery:
             raise ValueError("gain_scale must be within (0, 1]")
         if damping_scale <= 0.0:
             raise ValueError("damping_scale must be positive")
+        # The gate is the tilt a stand-up may still be driven from: above zero
+        # and below the roll-over threshold, or the ladder would never stand
+        # (gate 0) or would stand from an inverted trunk (gate past vertical).
+        if not 0.0 < gate_tilt_rad < FALL_INVERTED_TILT_RAD:
+            raise ValueError(
+                "gate_tilt_rad must be within (0, FALL_INVERTED_TILT_RAD)")
+        for name, value in (("tuck_s", tuck_s), ("roll_s", roll_s),
+                            ("crouch_s", crouch_s), ("stand_s", stand_s)):
+            if not math.isfinite(value) or value <= 0.0:
+                raise ValueError(f"{name} must be positive")
+        if max_roll_cycles < 1:
+            raise ValueError("max_roll_cycles must be at least one")
+        if not math.isfinite(roll_brace_hip_rad):
+            raise ValueError("roll_brace_hip_rad must be finite")
         self.timeout_s = timeout_s
         self.start_delay_s = start_delay_s
         self.success_tilt_rad = success_tilt_rad
+        self.gate_tilt_rad = gate_tilt_rad
+        self.tuck_s = tuck_s
+        self.roll_s = roll_s
+        self.crouch_s = crouch_s
+        self.stand_s = stand_s
+        self.roll_brace_hip_rad = roll_brace_hip_rad
+        self.max_roll_cycles = max_roll_cycles
         self.status = self.IDLE
         self.started_at: Optional[float] = None
         self.active_started_at: Optional[float] = None
         self.success_candidate_at: Optional[float] = None
+        #: Ladder phase, or None while no attempt is running.
+        self.phase: Optional[str] = None
+        self.phase_started_at: Optional[float] = None
+        #: Roll (brace-and-push) cycles spent inside this attempt.
+        self.roll_cycles = 0
+        #: Why the attempt stopped, when it did.
+        self.last_reason: Optional[str] = None
         self.attempts = 0
         #: Pose class measured when the attempt reached a terminal state.
         self.terminal_pose: Optional[str] = None
+        self._gain_scale = gain_scale
+        self._damping_scale = damping_scale
         self._stance = StanceController(
             target=nominal_stance_pose(),
             gain_scale=gain_scale,
             damping_scale=damping_scale,
         )
+
+    @property
+    def state_label(self) -> str:
+        """``status`` with the ladder phase appended once the attempt begins.
+
+        The ROS node publishes this on ``/go2/recovery_state`` so a trial
+        trace shows *where* in the ladder the attempt was: the recorded traces
+        before the ladder existed only ever showed ``attempting``.
+        """
+        return self.status if self.phase is None else f"{self.status}:{self.phase}"
 
     def reset(self) -> None:
         self.status = self.IDLE
@@ -599,6 +801,10 @@ class FallRecovery:
         self.active_started_at = None
         self.success_candidate_at = None
         self.terminal_pose = None
+        self.phase = None
+        self.phase_started_at = None
+        self.roll_cycles = 0
+        self.last_reason = None
 
     def update(
         self,
@@ -614,6 +820,19 @@ class FallRecovery:
         ``body`` and ``positions`` may be missing: without measurements this
         degrades to zero effort rather than assuming a pose.
         """
+        if self.status == self.SUCCEEDED:
+            # A completed get-up must keep driving the pose it just reached.
+            # Releasing the drive here drops a robot that is *standing*: the
+            # placed 1.4 rad nose-down trial reached 0.33 m with four feet
+            # loaded, reported ``succeeded:stand`` at 4.948 s, and was flat on
+            # its belly at 0.057 m 0.24 s later — the node keeps calling this
+            # method while ``fallen`` is latched, so zero effort *is* the
+            # command. The hold is conditional on the same measured evidence
+            # that granted the success, so leaving the standing envelope stops
+            # the drive instead of masking a fall.
+            if self._standing_evidence(body, measured_contact_forces):
+                return self._hold_efforts(positions, velocities)
+            return {joint: 0.0 for joint in JOINT_NAMES}
         if self.status in self.TERMINAL_STATES or not fallen:
             return {joint: 0.0 for joint in JOINT_NAMES}
         if self.status == self.IDLE:
@@ -621,32 +840,18 @@ class FallRecovery:
             self.started_at = now_s
             if self.status == self.ATTEMPTING:
                 self.active_started_at = now_s
+                self._enter_phase(self.TUCK, now_s)
             self.attempts += 1
         if self.status == self.WAITING:
             if self.started_at is not None and now_s - self.started_at < self.start_delay_s:
                 return {joint: 0.0 for joint in JOINT_NAMES}
             self.status = self.ATTEMPTING
             self.active_started_at = now_s
+            self._enter_phase(self.TUCK, now_s)
         if self.active_started_at is not None and now_s - self.active_started_at > self.timeout_s:
-            # Distinguish a genuine controller failure from a pose that no
-            # standing effort can right: an inverted terminal pose is reported
-            # as UNRECOVERABLE so the evidence does not imply weak gains.
-            self.terminal_pose = classify_fall_pose(body)
-            self.status = (
-                self.UNRECOVERABLE
-                if self.terminal_pose == FALL_POSE_INVERTED else self.FAILED)
+            self._end_attempt(body, "get-up window expired")
             return {joint: 0.0 for joint in JOINT_NAMES}
-        loaded_feet = sum(
-            1 for leg in LEG_PREFIXES
-            if measured_contact_forces is not None
-            and math.isfinite(measured_contact_forces.get(leg, float("nan")))
-            and measured_contact_forces[leg] >= FALL_RECOVER_CONTACT_N)
-        stable_candidate = (
-            body is not None and body.max_tilt_rad < self.success_tilt_rad
-            and body.body_height_m is not None
-            and body.body_height_m >= FALL_RECOVER_MIN_HEIGHT_M
-            and loaded_feet >= FALL_RECOVER_MIN_LOADED_FEET)
-        if stable_candidate:
+        if self._standing_evidence(body, measured_contact_forces):
             if self.success_candidate_at is None:
                 self.success_candidate_at = now_s
             elif now_s - self.success_candidate_at >= FALL_RECOVER_SUCCESS_DWELL_S:
@@ -655,11 +860,212 @@ class FallRecovery:
                 return {joint: 0.0 for joint in JOINT_NAMES}
         else:
             self.success_candidate_at = None
+        # The ladder is advanced only after the standing check: measured
+        # evidence that the trunk is already up wins over phase timing, so a
+        # robot that came up is never re-retracted by a stale phase.
+        self._advance_ladder(now_s, body)
+        if self.status in self.TERMINAL_STATES:
+            return {joint: 0.0 for joint in JOINT_NAMES}
+        efforts = self._phase_efforts(positions, velocities, body, now_s)
+        for joint in JOINT_NAMES:
+            if joint not in positions:
+                efforts[joint] = 0.0
+        return efforts
+
+    def _standing_evidence(
+        self,
+        body: Optional[BodyState],
+        measured_contact_forces: Optional[Dict[str, float]],
+    ) -> bool:
+        """Measured evidence of standing, exactly as the success gate defines it.
+
+        Shared by the success dwell and the post-success hold, so a get-up can
+        never be declared on evidence its own hold would reject: tilt under
+        :attr:`success_tilt_rad`, body height at or above
+        :data:`FALL_RECOVER_MIN_HEIGHT_M`, and at least
+        :data:`FALL_RECOVER_MIN_LOADED_FEET` feet above
+        :data:`FALL_RECOVER_CONTACT_N`. A missing measurement is never
+        evidence: no body or no contact data means ``False``.
+        """
+        loaded_feet = sum(
+            1 for leg in LEG_PREFIXES
+            if measured_contact_forces is not None
+            and math.isfinite(measured_contact_forces.get(leg, float("nan")))
+            and measured_contact_forces[leg] >= FALL_RECOVER_CONTACT_N)
+        return (
+            body is not None
+            and body.max_tilt_rad < self.success_tilt_rad
+            and body.body_height_m is not None
+            and body.body_height_m >= FALL_RECOVER_MIN_HEIGHT_M
+            and loaded_feet >= FALL_RECOVER_MIN_LOADED_FEET)
+
+    def _hold_efforts(
+        self,
+        positions: Dict[str, float],
+        velocities: Dict[str, float],
+    ) -> Dict[str, float]:
+        """Nominal-stance PD that keeps a *completed* get-up standing.
+
+        The same stance law the ``stand`` phase drives, at the recovery's own
+        gain scales, with the missing-measurement rule used everywhere in this
+        file: a joint without a measurement gets zero effort, never an assumed
+        pose.
+        """
         efforts = self._stance.effort_command(positions, velocities)
         for joint in JOINT_NAMES:
             if joint not in positions:
                 efforts[joint] = 0.0
         return efforts
+
+    # -- ladder internals (all transitions read *measured* state) --------
+
+    @staticmethod
+    def _measured_tilt(body: Optional[BodyState]) -> Optional[float]:
+        """Measured tilt [rad], or None when it is missing or not finite."""
+        if body is None:
+            return None
+        tilt = body.max_tilt_rad
+        return tilt if math.isfinite(tilt) else None
+
+    def _enter_phase(self, phase: str, now_s: float) -> None:
+        if phase not in self.PHASES:
+            raise ValueError(f"not a recovery phase: {phase!r}")
+        self.phase = phase
+        self.phase_started_at = now_s
+
+    def _enter_roll(self, now_s: float) -> None:
+        self.roll_cycles += 1
+        self._enter_phase(self.ROLL, now_s)
+
+    def _end_attempt(self, body: Optional[BodyState], reason: str) -> None:
+        """Stop driving and record why, from the *measured* terminal pose.
+
+        An inverted terminal pose is reported as UNRECOVERABLE rather than
+        FAILED so the evidence does not imply the gains were merely too weak;
+        a collapsed one stays FAILED, a controller shortfall.
+        """
+        self.terminal_pose = classify_fall_pose(body)
+        self.status = (self.UNRECOVERABLE
+                       if self.terminal_pose == FALL_POSE_INVERTED
+                       else self.FAILED)
+        self.last_reason = reason
+
+    def _advance_ladder(self, now_s: float, body: Optional[BodyState]) -> None:
+        """Advance the bounded ladder, or end the attempt, on measured tilt.
+
+        Without a measured attitude the phase is held (and the attempt window
+        still bounds it): the ladder never guesses a transition. ``stand`` is
+        entered only once the trunk is measured under ``gate_tilt_rad``, and a
+        trunk that climbs back out of the gate goes back down the ladder
+        instead of being levered further over.
+        """
+        if self.phase_started_at is None:
+            return
+        tilt = self._measured_tilt(body)
+        if tilt is None:
+            return
+        elapsed = now_s - self.phase_started_at
+        if self.phase == self.TUCK:
+            if elapsed < self.tuck_s:
+                return
+            if tilt >= FALL_INVERTED_TILT_RAD:
+                # Legs in the air: there is nothing to brace against, so the
+                # bounded answer is to keep the legs retracted and let the
+                # window decide, never to drive a standing pose from here.
+                self._enter_phase(self.TUCK, now_s)
+            elif tilt >= self.gate_tilt_rad:
+                self._enter_roll(now_s)
+            else:
+                self._enter_phase(self.CROUCH, now_s)
+            return
+        if self.phase == self.ROLL:
+            if elapsed < self.roll_s:
+                return
+            if tilt >= FALL_INVERTED_TILT_RAD:
+                self._end_attempt(
+                    body, "trunk rolled past %.1f rad during the roll phase"
+                    % FALL_INVERTED_TILT_RAD)
+            elif tilt >= self.gate_tilt_rad:
+                self._retry_or_end(body, now_s)
+            else:
+                self._enter_phase(self.CROUCH, now_s)
+            return
+        if self.phase == self.CROUCH:
+            if elapsed < self.crouch_s:
+                return
+            if tilt >= FALL_INVERTED_TILT_RAD:
+                self._end_attempt(
+                    body, "trunk rolled past %.1f rad during the crouch phase"
+                    % FALL_INVERTED_TILT_RAD)
+            elif tilt >= self.gate_tilt_rad:
+                self._retry_or_end(body, now_s)
+            else:
+                self._enter_phase(self.STAND, now_s)
+            return
+        if tilt >= FALL_INVERTED_TILT_RAD:
+            self._end_attempt(
+                body, "standing pose drove the trunk past %.1f rad"
+                % FALL_INVERTED_TILT_RAD)
+        elif tilt >= self.gate_tilt_rad:
+            self._retry_or_end(body, now_s)
+
+    def _retry_or_end(self, body: Optional[BodyState], now_s: float) -> None:
+        """Spend another roll cycle, or stop once the bounded count is used."""
+        if self.roll_cycles >= self.max_roll_cycles:
+            self._end_attempt(
+                body, "roll cycles exhausted above the %.2f rad gate"
+                % self.gate_tilt_rad)
+        else:
+            self._enter_phase(self.TUCK, now_s)
+
+    def _stand_target(self, now_s: float) -> Dict[str, float]:
+        """The standing pose, slewed in from the crouch waypoint.
+
+        Stepping straight to the nominal stance was measured to over-drive the
+        legs out of the crouch: the placed 1.4 rad nose-down trial left the
+        ground at 0.56 m with no foot loaded, pitched the trunk to 0.81 rad and
+        then cost the ladder three retries to undo its own stand-up. Slewing the
+        target over :attr:`stand_s` keeps the drive bounded, and the end of the
+        slew *is* the nominal stance, so the standing pose is still reached (and
+        still only from this phase).
+        """
+        stance = nominal_stance_pose()
+        if self.phase_started_at is None:
+            return stance
+        alpha = (now_s - self.phase_started_at) / self.stand_s
+        if alpha >= 1.0:
+            return stance
+        crouch = recovery_pose("crouch")
+        alpha = max(0.0, alpha)
+        return {
+            name: clamp_position(
+                name, crouch[name] + alpha * (stance[name] - crouch[name]))
+            for name in JOINT_NAMES
+        }
+
+    def _phase_efforts(
+        self,
+        positions: Dict[str, float],
+        velocities: Dict[str, float],
+        body: Optional[BodyState],
+        now_s: float,
+    ) -> Dict[str, float]:
+        """Clamped joint-space PD effort toward this phase's waypoint."""
+        if self.phase == self.STAND:
+            target = self._stand_target(now_s)
+            stance = StanceController(target=target, gain_scale=self._gain_scale,
+                                      damping_scale=self._damping_scale)
+            return stance.effort_command(positions, velocities)
+        if self.phase == self.CROUCH:
+            target = recovery_pose("crouch")
+        elif self.phase == self.ROLL and body is not None:
+            target = roll_phase_pose(body.roll_rad, body.pitch_rad,
+                                     self.roll_brace_hip_rad)
+        else:
+            target = recovery_pose("tuck")
+        stance = StanceController(target=target, gain_scale=self._gain_scale,
+                                  damping_scale=self._damping_scale)
+        return stance.effort_command(positions, velocities)
 
 
 # ----------------------------------------------------------------------
