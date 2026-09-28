@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 77 trials, all with probe and
-launch return code 0 (27 unrecoverable, 21 failed, 20 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 82 trials, all with probe and
+launch return code 0 (27 unrecoverable, 25 failed, 21 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -635,6 +635,37 @@ here", and it deliberately does **not** become a guard rule: refusing to attempt
 whenever a pose looks like a corner-rest would be a control rule fitted to three
 chaotic samples, which is the over-fitting this document has avoided everywhere
 else. It is recorded as a hazard for whoever owns the recovery policy next.
+
+
+##### Null controls: what the ladder is actually worth
+
+The authority work raised an obvious worry -- the placed pitch pose "succeeded"
+at gain 0.2, so maybe it rights itself under gravity and the ladder is riding a
+self-righting motion. Three null controls with `enable_fall_recovery:=false`, no
+get-up drive at all, settle that (`fall_ladder_null_20260928T*`, domains
+226-228). With the authority runs they give the one table that says what the
+ladder is worth per pose:
+
+| placed pose | no recovery | gain 0.2 | gain 0.5 (qualified) | gain 1.0 |
+|---|---|---|---|---|
+| pitch 1.4 | collapses prone, 0.00 rad / 0.057 m | `succeeded:stand` 2.38 s, **0.280 m** | `succeeded:stand` 2.32-2.41 s, **0.329 m** | `unrecoverable`, 3.14 rad / 0.057 m |
+| diagonal 0.9 / 0.9 | collapses prone, 0.00 rad / 0.057 m | `succeeded:stand` 1.54 s, 0.280 m | `failed:roll`, 0.00 rad / 0.057 m | not run |
+| flank 1.4 | side rest, **0.52 rad / 0.139 m** | 0.52 rad / 0.139 m | 0.52-0.76 rad / 0.139 m | `unrecoverable`, 3.14 rad / 0.057 m |
+
+Read row by row:
+
+- **Pitch: the ladder's value is real and large.** With no drive the robot falls
+  prone at 0.057 m; at the qualified authority it reaches the full nominal
+  0.329 m and holds it, four runs out of four. The self-righting worry is
+  refuted -- the null control never gets up.
+- **Diagonal: real at low authority, harmful at the qualified one.** 0.2 authority
+  reaches 0.280 m; 0.5 drives it onto its back.
+- **Flank: the ladder's measured contribution is indistinguishable from doing
+  nothing.** It rests at 0.52 rad / 0.139 m whether the ladder runs, stops, or
+  is disabled -- and at 1.0 authority the ladder actively inverts a pose that
+  would otherwise have rested stably. That is the sharpest statement of the roll
+  axis's state: the next primitive has to change the *outcome*, not the pose the
+  robot ends in.
 
 
 The brace held the hips at zero because this project had no measured

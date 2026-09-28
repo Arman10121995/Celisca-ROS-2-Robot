@@ -277,6 +277,22 @@ two low-authority runs disagree on the final state (0.280 m vs 0.057 m), so the
 band is chaotic. Deliberately *not* turned into a guard rule: that would be a
 control rule fitted to three chaotic samples.
 
+Null controls close the loop, and they are the most useful table in the evidence
+README (`fall_ladder_null_20260928T*`, domains 226-228, recovery disabled):
+
+  placed pose     no recovery            gain 0.2          gain 0.5        gain 1.0
+  pitch 1.4       prone 0.057 m          success 0.280 m   success 0.329 m  inverted
+  diagonal .9/.9  prone 0.057 m          success 0.280 m   inverted         --
+  flank 1.4       side rest 0.52/0.139   0.52/0.139        0.52-0.76/0.139 inverted
+
+So: the pitch value is **real and large** (the null control never gets up, and
+0.5 authority reaches the full nominal 0.329 m, 4 runs out of 4); the diagonal is
+real at 0.2 and harmful at 0.5; and for a pure flank **the ladder's measured
+contribution is indistinguishable from doing nothing** -- same 0.52 rad / 0.139 m
+whether it runs, stops, or is disabled -- while at 1.0 authority it actively
+inverts a pose that would have rested stably. The next roll primitive has to
+change the outcome, not the ending pose.
+
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
 (`fall_ladder_gather_20260928T*`, domains 226-228) all end **inverted** again
