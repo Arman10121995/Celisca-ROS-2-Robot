@@ -230,8 +230,11 @@ reduced by `analyze_ladder_sweep.py`) widened that gap and closed it: lateral
 impulses 45–60 N, sustained lateral 40–50 N over 1.2–1.5 s, forward shoves up to
 70 N and drops from 0.9/1.4 m. Everything either stays upright or rolls fully
 over; every toppling case latches `fallen` at 0.51–1.16 rad and 2.6–7.2 rad/s.
-There is no perturbation on these maps that leaves the robot down but not
+There is no perturbation in that sweep that leaves the robot down but not
 inverted, so the *trigger* — not the sequence — is what limits a fall trial.
+(The recovery-off null control below *did* later produce exactly that pose —
+a 60 N lateral resting at 0.52 rad / 0.139 m — and with the ladder engaged it
+inverts, which is that section's headline.)
 
 To measure the sequence itself, spawn the robot already down. `spawn_pitch` and
 `spawn_roll` place a settled fallen pose (both default to `0.0`):
@@ -274,10 +277,15 @@ Treat the flags as measurement knobs, not settings.
 
 **On the falls this harness can actually produce, enabling it is worse than
 leaving it off.** Three repeats of the 60 N lateral impulse with
-`enable_fall_recovery:=false` all end in the same propped side-rest (0.52 rad /
-0.139 m); three with it on all end inverted, and 1.0 s / 2.0 s start delays do
-not help. The recovery publishes zero effort for the whole fallen period, so the
-nominal stance drive that props the rest is never applied.
+`enable_fall_recovery:=false` all end in the same settled side-rest (0.52 rad /
+0.139 m); every run with it on ends inverted (3.14 rad / 0.057 m), and 1.0 s /
+2.0 s start delays do not help. The delays show why: during the wait the trunk
+holds exactly the null's rest at zero effort (the core's `safe_stop` already
+stops both arms — there is no stance drive being lost), and the inversion starts
+the moment `attempting:tuck` drives — a 35.5 Nm pulse rolls the settled trunk
+over in ~0.4 s, in both a 1.0 s-delay run and its repeat to within 0.06 s on
+every transition. It is the ladder engaging, not its timing, that flips a
+settled fall.
 
 Do not expect it to catch a fall either. Measured on both axes, the debounced
 `fallen` latch is 0.66 s late on lateral impulses *because* those falls are
@@ -290,9 +298,11 @@ inverts instead of standing, and at 0.3/0.2 the drive is too weak to move the
 robot at all. That default is a measured operating point in a narrow window, not
 caution.
 
-Two things to know before relying on this: it is measured from
-a *placed* pose, because no perturbation on these maps leaves the robot down but
-not inverted, and the hold after success is conditional on measured standing
+Two things to know before relying on this: the get-up itself is measured from
+a *placed* pose — with the ladder engaged every reachable perturbation ends
+inverted, and only a start delay lets it engage from the settled 60 N rest
+(where it flips that too, as above) — and the hold after success is conditional
+on measured standing
 evidence — lose it and the drive stops. Do not enable this expecting a perturbed
 robot to stand up.
 

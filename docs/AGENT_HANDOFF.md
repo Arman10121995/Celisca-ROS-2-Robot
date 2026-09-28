@@ -287,23 +287,32 @@ README (`fall_ladder_null_20260928T*`, domains 226-228, recovery disabled):
 
 So: the pitch value is **real and large** (the null control never gets up, and
 0.5 authority reaches the full nominal 0.329 m, 4 runs out of 4); the diagonal is
-real at 0.2 and harmful at 0.5; and for a pure flank **the ladder's measured
-contribution is indistinguishable from doing nothing** -- same 0.52 rad / 0.139 m
-whether it runs, stops, or is disabled -- while at 1.0 authority it actively
-inverts a pose that would have rested stably. The next roll primitive has to
-change the outcome, not the ending pose.
+real at 0.2 and harmful at 0.5; and for a pure flank the ladder's measured
+contribution is doing nothing or worse -- stopped or disabled the trunk rests at
+0.52 rad / 0.139 m, a running ladder lands there in one run and inverts in its
+post-fix repeat -- while at 1.0 authority it always inverts a pose that would
+have rested stably. The next roll primitive has to change the outcome, not the
+ending pose.
 
 The most important result is a null control on the *real* use case, not a placed
 pose (`fall_ladder_null_perturb_20260928Tf60*`, domains 226-230): 60 N lateral
-with recovery **off** ends in the same propped side-rest (0.52 rad / 0.139 m)
-3 runs out of 3, while 60 N with it **on** ends inverted 3 out of 3, and 1.0 s /
-2.0 s start delays do not help (both still reach 3.14 rad). So on every reachable
-perturbation here, `enable_fall_recovery:=true` ends **worse** than `false`. The
-delays localise it: the trunk is stable at ~0.5 rad before the attempt starts, so
-the harm is not the ladder's waypoints but that the recovery publishes zero
-effort for the whole fallen period -- the nominal stance drive that props the
-rest is never applied. Cheapest next policy change is to keep the stance drive
-until the attempt actually starts.
+with recovery **off** ends in the same settled side-rest (0.52 rad / 0.139 m)
+3 runs out of 3, while with it **on** every run ends inverted (3.14 rad /
+0.057 m), and 1.0 s / 2.0 s start delays do not help. So on every reachable
+perturbation here, `enable_fall_recovery:=true` ends **worse** than `false`.
+The delays localise it to the ladder's engagement, not to timing: the core's
+`safe_stop` zeroes effort in *both* arms (the null rest is passive, at 0.0 Nm
+from 3.75 s on), the trunk holds the null's rest for the whole waiting window,
+and the inversion begins at `attempting:tuck` -- a 35.5 Nm engagement pulse
+rolls a settled 0.52 rad trunk to 3.14 rad in ~0.4 s, ending
+`unrecoverable:tuck` in every delayed run; a repeat in domain 229 reproduces
+the original to within 0.06 s on every transition. An earlier reading of these
+trials blaming the recovery's zero-effort window is superseded: no stance
+drive is being lost, and `fall_recovery_start_delay_s` cannot help because it
+only moves *when* the ladder engages, never *whether* it engages on a rest the
+null control keeps forever. The "keep the stance drive until the attempt
+starts" policy proposed alongside that reading rests on the same refuted
+premise.
 
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials

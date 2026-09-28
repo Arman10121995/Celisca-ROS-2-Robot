@@ -21,16 +21,14 @@ FALL_RECOVERY_DELAY_S="${FALL_RECOVERY_DELAY_S:-0.0}"
 RECOVERY_POLICY_PATH="${RECOVERY_POLICY_PATH:-}"
 TRACE_JOINTS="${TRACE_JOINTS:-false}"
 # Optional spawn height. Empty keeps the map default. A non-zero height makes
-# the trial a drop test: the robot free-falls onto its feet, which is the only
-# mechanism here that can leave it down but *not* inverted (a lateral push
-# always rolls it fully over), i.e. the only way to exercise the get-up ladder
-# from a settled fallen pose.
+# the trial a drop test: the robot free-falls onto its feet.
 SPAWN_Z="${SPAWN_Z:-}"
 # Optional spawn attitude, in radians. Nonzero values place a *settled* fallen
-# pose (the MuJoCo spawner composes Rz(yaw)*Ry(pitch)*Rx(roll)), which is the
-# only way to exercise the ladder: a perturbed or dropped robot on these maps
-# either stays upright or rolls fully over, so there is no fall amplitude that
-# leaves it down but not inverted.
+# pose (the MuJoCo spawner composes Rz(yaw)*Ry(pitch)*Rx(roll)). A perturbation
+# with the ladder engaged either stays upright or ends inverted, and with it
+# disabled only a 60 N lateral rests down-but-not-inverted (0.52 rad / 0.139 m,
+# the null control); a placed pose is still the only way to *choose* the
+# attitude the ladder starts from.
 SPAWN_PITCH="${SPAWN_PITCH:-}"
 SPAWN_ROLL="${SPAWN_ROLL:-}"
 # Optional lateral hip input for the roll phase's braced pair. Left empty (and

@@ -405,8 +405,10 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 89 trials, all with probe and
-launch return code 0 (30 unrecoverable, 29 failed, 21 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 90 trials, every one with
+launch return code 0 and all but one (`fall_ladder_drop_20260928Tz1.4`, probe
+return code 1) with probe return code 0 (31 unrecoverable, 29 failed,
+21 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -424,15 +426,21 @@ latch: a slope across the 0.1 s samples that bracket the latch is meaningless on
 a tumbling body, and reported a *falling* tilt while the trunk was rolling over).
 The consequence is the important one: on these maps there is **no** measured
 amplitude, axis, pulse width or drop height that leaves the robot down but not
-inverted, so no fall trial can show a get-up, and the binding constraint in every
+inverted *while the ladder is engaged* — every sweep trial ran it on — so no
+fall trial in this sweep can show a get-up, and the binding constraint in every
 one of them is the *trigger* — the debounced latch fires 0.2–0.5 s after the
-trunk is already on the floor and rotating at ~6 rad/s.
+trunk is already on the floor and rotating at ~6 rad/s. (The recovery-off null
+control in *Null controls on the actual use case* below later produces exactly
+that missing pose: a 60 N lateral resting at 0.52 rad / 0.139 m — and shows the
+engaged ladder is what inverts it.)
 
 
 #### Placed-pose harness: measuring the ladder from a settled fallen pose
 
-Because a perturbation can no longer produce a recoverable collapse, the fallen
-pose has to be *placed*. `mujoco_spawner.py` gained `spawn_pitch` / `spawn_roll`
+Because a perturbation with the ladder engaged never leaves the robot down but
+not inverted, the fallen pose used to measure the ladder has to be *placed*
+(a start delay can also reach the settled 60 N rest before engaging — the
+capstone section — but only at that one attitude). `mujoco_spawner.py` gained `spawn_pitch` / `spawn_roll`
 (after `spawn_yaw`, both 0.0 by default), composing
 `Rz(yaw) * Ry(pitch) * Rx(roll)` in the same ZYX convention the adapter extracts
 attitude with; the root is still lifted by the existing orientation-aware floor
@@ -650,7 +658,7 @@ ladder is worth per pose:
 |---|---|---|---|---|
 | pitch 1.4 | collapses prone, 0.00 rad / 0.057 m | `succeeded:stand` 2.38 s, **0.280 m** | `succeeded:stand` 2.32-2.41 s, **0.329 m** | `unrecoverable`, 3.14 rad / 0.057 m |
 | diagonal 0.9 / 0.9 | collapses prone, 0.00 rad / 0.057 m | `succeeded:stand` 1.54 s, 0.280 m | `failed:roll`, 0.00 rad / 0.057 m | not run |
-| flank 1.4 | side rest, **0.52 rad / 0.139 m** | 0.52 rad / 0.139 m | 0.52-0.76 rad / 0.139 m | `unrecoverable`, 3.14 rad / 0.057 m |
+| flank 1.4 | side rest, **0.52 rad / 0.139 m** | 0.52 rad / 0.139 m | 0.52-0.76 rad / 0.139 m, or inverted 3.14 rad / 0.057 m (one repeat diverged) | `unrecoverable`, 3.14 rad / 0.057 m |
 
 Read row by row:
 
@@ -660,47 +668,69 @@ Read row by row:
   refuted -- the null control never gets up.
 - **Diagonal: real at low authority, harmful at the qualified one.** 0.2 authority
   reaches 0.280 m; 0.5 drives it onto its back.
-- **Flank: the ladder's measured contribution is indistinguishable from doing
-  nothing.** It rests at 0.52 rad / 0.139 m whether the ladder runs, stops, or
-  is disabled -- and at 1.0 authority the ladder actively inverts a pose that
-  would otherwise have rested stably. That is the sharpest statement of the roll
-  axis's state: the next primitive has to change the *outcome*, not the pose the
-  robot ends in.
+- **Flank: the ladder's measured contribution is doing nothing, or worse.**
+  Stopped or disabled, the trunk rests at 0.52 rad / 0.139 m; a running ladder
+  lands back in that same rest in one run and inverted in its post-fix repeat
+  (§ *Placed 1.4 rad flank* below), and at 1.0 authority it always inverts a
+  pose that would otherwise have rested stably. That is the sharpest statement
+  of the roll axis's state: the next primitive has to change the *outcome*, not
+  the pose the robot ends in.
 
 
 ##### Null controls on the actual use case: the ladder is worse than nothing
 
 Every null control above disables the recovery on a *placed* pose. The real use
 case is a perturbed fall, so the same control was run on the headline 60 N lateral
-impulse, with repeats (`fall_ladder_null_perturb_20260928Tf60*` and
-`fall_ladder_perturbrep_*`, domains 226–230):
+impulse, with repeats, and with the start-delay knob turned up to separate the
+waiting window from the attempt itself
+(`fall_ladder_null_perturb_*`, `fall_ladder_perturbrep_*`,
+`fall_ladder_delayed_*`, domains 226–230):
 
-| 60 N lateral impulse | runs | peak tilt | final tilt / height |
+| 60 N lateral impulse | runs | peak tilt | terminal tilt / height |
 |---|---|---|---|
 | **recovery disabled** | **3** | 0.77 / 0.75 / 0.72 rad | **0.52 rad / 0.139 m** every time |
-| recovery enabled | 3 | 3.14 rad every time | 1.25–1.93 rad / 0.057 m (inverted) |
-| recovery enabled, 1.0 s start delay | 1 | 3.14 rad | 0.52 rad / 0.057 m |
-| recovery enabled, 2.0 s start delay | 1 | 3.14 rad | 0.52 rad / 0.057 m |
+| ladder engaged, no start delay (one run at 50 N) | 3 | 3.14 rad every time | **3.14 rad / 0.057 m** every time |
+| ladder engaged, 1.0 s start delay | 2 | 3.14 rad | **3.14 rad / 0.057 m** every time |
+| ladder engaged, 2.0 s start delay | 1 | 3.14 rad | **3.14 rad / 0.057 m** |
 
-Three runs with the recovery off all end in the *same* propped side-rest; five
-runs with it on all end flat or inverted. On the reachable falls, enabling
-`fall_recovery` makes the outcome worse than not enabling it — and the delayed
-runs localise why. The delays show `waiting@3.79 -> attempting:tuck@4.69`
-(1.0 s) and `-> attempting:tuck@5.56` (2.0 s): the trunk is already at ~0.5 rad
-and *stable* by then, exactly as in the null control, yet it still reaches
-3.14 rad. The difference is that the recovery node publishes **zero effort for the
-whole fallen period** — including the waiting window — so the nominal stance
-drive that props the rest in the null control is never applied. The most likely
-mechanism is therefore not the ladder's waypoints but the loss of that drive:
-engaging recovery means the stance is no longer holding the pose the robot would
-otherwise have settled into.
+Three runs with the recovery off all end in the *same* settled side-rest; six
+runs with it on all end inverted. On the reachable falls, enabling
+`fall_recovery` makes the outcome worse than not enabling it.
+
+The delayed runs say *why*, and the answer is the ladder's engagement, not its
+timing. They give the recovery its longest zero-effort window, and during that
+window the trunk does exactly what the null control does: it settles into the
+same 0.52 rad / 0.139 m rest and holds it to within 0.01 rad / 0.001 m for the
+whole waiting window, at 0.0 Nm under the core's `safe_stop` (every 0.1 s
+sample from 3.85 s to 4.58 s in the repeat). Then the attempt starts and the
+inversion starts with it: `attempting:tuck` at 4.68 s with a 35.5 Nm peak,
+tilt 0.53 rad at 4.69 s, 1.50 rad at 4.79 s, 3.14 rad by 5.30 s — with the
+tuck briefly levering the trunk *up* to 0.18 m on the way over. All three
+delayed runs end `unrecoverable:tuck`, and the repeat (domain 229) reproduces the
+original (domain 226) to within 0.06 s on all three transitions:
+`waiting` 3.79/3.80 s, `attempting:tuck` 4.68/4.69 s, `unrecoverable:tuck`
+11.66/11.60 s.
+
+This supersedes the mechanism written when these trials were first committed
+(`8129f4a`), which blamed the recovery's zero-effort publication for dropping
+the robot. The traces rule that out: the core's `safe_stop` already zeroes
+effort in **both** arms — the null rest itself happens at 0.0 Nm from 3.75 s
+onward — so no stance drive is being lost, and the rest needs none. The calf
+trace rules out a leg sweep too (`rr_calf_rad` moves −2.729 → −2.70 rad across
+the whole flip). What differs with recovery on is only that the ladder
+*re-engages* from a rest the null control keeps forever, and it does so at
+every delay measured: `fall_recovery_start_delay_s` cannot help, because it
+only moves *when* the ladder engages, never *whether* it engages on a pose
+that should be left alone. The "keep the stance drive until the attempt
+starts" policy proposed in that same commit rests on this refuted premise and
+is not motivated by any measurement here.
 
 That is the sharpest safety statement in this document, and it is the reason the
 feature stays off by default on evidence rather than caution: on every reachable
 perturbation measured here, `enable_fall_recovery:=true` ends worse than
-`false`. A cheaper policy than a better primitive is to keep the stance drive
-until the attempt actually starts, and that belongs with whoever owns the
-recovery policy next.
+`false`, and no timing knob measured so far changes that. What could change it
+is a first phase that cannot tip a settled trunk — a change to the primitive,
+not to its schedule — and that belongs with whoever owns the recovery next.
 
 
 The brace held the hips at zero because this project had no measured
@@ -1051,16 +1081,20 @@ Both remaining open items are now measured rather than open:
   a pose with ~1.0 rad of pitch and 0.9 of roll does not recover.
 
 The feature stays **off by default**, and the reason is now measured rather than
-precautionary: on every perturbation this harness can produce, the 60 N lateral
-impulse ends **worse** with the recovery enabled (3 of 3 inverted) than with it
-disabled (3 of 3 resting propped at 0.52 rad / 0.139 m), and start delays do
-not change that. Its value is real but confined: it stands the robot up from a
-settled chest-down pose and holds it (4 of 4, 0.329 m), and it rolls a
-flank-lying trunk most of the way upright without inverting it. What it cannot
-do is recover a fall it did not choose. The open item now has a number attached
-(see *What the closed-loop primitive would actually have to do*): the legs carry
-126.5 N when the ladder succeeds and 24 N when it stalls, and closing that gap
-is the work.
+precautionary: on every perturbation this harness can produce, the lateral
+impulse ends **worse** with the recovery enabled (6 of 6 runs invert — five at
+60 N and one at 50 N, at every start delay measured — to 3.14 rad / 0.057 m)
+than with it disabled (3 of 3 settling at 0.52 rad / 0.139 m and staying
+there). The delayed runs localise why: the rest is identical and passive in
+both arms, and the inversion begins the moment the ladder engages. Its value is
+real but confined: it stands the robot up from a settled chest-down pose and
+holds it (4 of 4, 0.329 m), and on a placed flank it can hold a bounded
+non-inverted rest (0.70–0.76 rad, `failed:stand`) — though a repeat of the
+plain flank run inverted, and at 1.0 authority the flank inverts as well. What
+it cannot do is recover a fall it did not choose. The open item now has a
+number attached (see *What the closed-loop primitive would actually have to
+do*): the legs carry 126.5 N when the ladder succeeds and 24 N when it stalls,
+and closing that gap is the work.
 
 
 
