@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 72 trials, all with probe and
-launch return code 0 (27 unrecoverable, 18 failed, 18 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 75 trials, all with probe and
+launch return code 0 (27 unrecoverable, 20 failed, 19 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -575,15 +575,19 @@ sized against, so it is the one worth having repeats behind it.
 Every placed pose so far has been single-axis, so the roll-vs-pitch dispatch
 (`brace_legs`, and the crouch's "only while roll dominates" rule) had unit tests
 with pure single-axis bodies and no physics behind them. Real falls are not
-single-axis, so four combined poses were run (`fall_ladder_combo_20260928T*`,
-domains 226–229):
+single-axis, so seven combined poses were run (`fall_ladder_combo_*` and
+`fall_ladder_neardiag_*`, domains 226–229), alongside the pure-pitch envelope:
 
-| placed pose | dominant axis | outcome |
+| pitch | roll | outcome |
 |---|---|---|
-| pitch 1.2, roll 0.6 | pitch | **`succeeded:stand` 2.412 s**, 0.01 rad / 0.329 m |
-| pitch 1.4, roll 0.8 | pitch | **`succeeded:stand` 2.216 s**, 0.01 rad / 0.329 m |
-| **pitch 1.2, roll 1.0** | **roll** | **`succeeded:stand` 2.412 s**, 0.01 rad / 0.329 m |
-| pitch 0.9, roll 0.9 (tie) | tie → roll | `failed:roll`, ends 0.00 rad / **0.057 m** (on its back) |
+| 0.9 | 0.0 | **`succeeded:stand` ~1.48 s** (the 3/3 envelope runs) |
+| 1.0 | 0.7 | **`succeeded:stand` 2.228 s**, 0.01 rad / 0.329 m |
+| 1.2 | 0.6 | **`succeeded:stand` 2.412 s**, 0.01 rad / 0.329 m |
+| 1.2 | 1.0 | **`succeeded:stand` 2.412 s**, 0.01 rad / 0.329 m |
+| 1.4 | 0.8 | **`succeeded:stand` 2.216 s**, 0.01 rad / 0.329 m |
+| 0.9 | 0.8 | `failed:roll`, 0.00 rad / **0.057 m** (on its back) |
+| 0.9 | 0.9 (tie) | `failed:roll`, 0.00 rad / **0.057 m** |
+| 1.0 | 0.9 | `failed:roll`, 0.00 rad / **0.057 m** |
 
 Three things follow, and the first two correct what this document said earlier:
 
@@ -596,11 +600,15 @@ Three things follow, and the first two correct what this document said earlier:
    and a trunk that is also pitched forward can be gathered by them. The
    accurate statement is narrower: poses with **little or no pitch** — a pure
    flank — are the ones that do not recover.
-3. **The tie-break gives up on diagonals.** With pitch equal to roll the code
-   takes the roll path (`abs(roll) >= abs(pitch)`), and a 0.9/0.9 diagonal is
-   harder than either pure axis: it ends on its back at 0.057 m. So the
-   envelope is not a function of total tilt — it is a function of the *axis mix*,
-   and a 45° diagonal sits outside it.
+3. **The axis mix matters, and it is not the tie-break.** A first reading blamed
+   the roll-versus-pitch tie-break in `brace_legs`, which sends an equal
+   pitch/roll pose down the roll path. Testing near-diagonals **refutes that**:
+   pitch 1.0 with roll 0.7 has a clear pitch margin and recovers, while pitch 1.0
+   with roll 0.9 also has a clear margin and fails. The discriminator is the
+   *roll magnitude* against the pitch budget: the ladder wants roughly **1.2 rad
+   of pitch**, and below that only a near-pure pitch pose works. Roll is not
+   free — it substitutes for pitch — so the envelope is a function of the axis
+   mix, not of total tilt.
 
 
 The brace held the hips at zero because this project had no measured
@@ -947,8 +955,8 @@ Both remaining open items are now measured rather than open:
   1.6 rad recover **13 of 13** runs (3/3/4/3, all ending at 0.01 rad / 0.329 m,
   success saturating at ~2.3 s), with 1.8 rad inverting. Combined poses recover
   too — pitch 1.2 + roll 1.0 included — so the envelope is a function of the
-  *axis mix*: what fails is a pose with little or no pitch (a pure flank) and the
-  45° diagonal, where the tie-break takes the roll path.
+  *axis mix*: roll substitutes for pitch, the ladder wants ~1.2 rad of pitch, and
+  a pose with ~1.0 rad of pitch and 0.9 of roll does not recover.
 
 The feature therefore stays **off by default**, and the honest summary is: this
 ladder stands the robot up from a settled chest-down pose and holds it, rolls a
