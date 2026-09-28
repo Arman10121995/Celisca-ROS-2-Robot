@@ -732,6 +732,14 @@ perturbation measured here, `enable_fall_recovery:=true` ends worse than
 is a first phase that cannot tip a settled trunk — a change to the primitive,
 not to its schedule — and that belongs with whoever owns the recovery next.
 
+These stay open as *questions*, not as queued work: what in phase 1's
+waypoint/gain design produces the ~35.5 Nm engagement pulse that flips a
+settled trunk (the harm localises to `attempting:tuck`, so the answer is the
+tuck waypoints, not the trigger or the delay), and whether a first phase that
+cannot do that would make the feature shippable at all. The diagonal hazard
+above — the drive ending corner-rests on their backs at 0.5 authority — stays
+open in the same sense: recorded, deliberately not guarded.
+
 
 The brace held the hips at zero because this project had no measured
 ground-contact torque sign for the roll axis. The placed-pose harness can produce

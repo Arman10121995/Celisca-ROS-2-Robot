@@ -285,7 +285,9 @@ stops both arms — there is no stance drive being lost), and the inversion star
 the moment `attempting:tuck` drives — a 35.5 Nm pulse rolls the settled trunk
 over in ~0.4 s, in both a 1.0 s-delay run and its repeat to within 0.06 s on
 every transition. It is the ladder engaging, not its timing, that flips a
-settled fall.
+settled fall. The feature therefore stays **off by default on evidence** —
+what could change that is a first phase that cannot tip a settled trunk, a
+change to the primitive and not to its schedule.
 
 Do not expect it to catch a fall either. Measured on both axes, the debounced
 `fallen` latch is 0.66 s late on lateral impulses *because* those falls are

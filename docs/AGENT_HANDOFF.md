@@ -324,16 +324,32 @@ splay is what holds the trunk there. The change is reverted and
 `test_crouch_holds_the_measured_splay_for_the_whole_phase` pins it, with the
 negative result in its comment. A roll-axis stand-up needs a different primitive
 (trunk up *and* feet under the hips at once), not a release schedule -- that is
-the open item now, alongside trigger latency.
+the open item now (trigger latency is closed above: it is not the lever).
 Rebuild `robot_lab_adapter` after Python edits: its installed
 module is a copy despite `--symlink-install`, and three intermediate runs
 using a stale installed module were discarded. Two more trials were lost by
 editing `run_perturbation_trial.sh` while it was executing (bash reads a script
 incrementally); keep ROS domains <= 230 or CycloneDDS refuses to bind. Fall
-recovery remains off by default; next measure a retraction that starts before
-the fall is confirmed, and ramp the `stand` entry. Keep
-`go2_reverse_command_map:=inverse`, the `go2_perturbation_*` arguments and
-`enable_fall_recovery` opt-in.
+recovery remains off by default **on evidence**; what could change that is a
+first phase that cannot tip a settled trunk -- a change to the primitive, not
+to its schedule. Keep `go2_reverse_command_map:=inverse`, the
+`go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
+
+Open follow-up questions (open, not queued work):
+
+1. What in the tuck path flips a *settled* side-lying trunk? The harm
+   localises to one event -- the ~35.5 Nm engagement pulse at `attempting:tuck`
+   that takes a 0.52 rad rest to 3.14 rad in ~0.4 s -- so the answer is in
+   phase 1's waypoint/gain design, not in the trigger or the delay.
+2. Does the diagonal band's harm at the qualified 0.5 authority need a guard?
+   At 0.5 the ladder's own drive ends a corner-rest diagonal on its back while
+   at 0.2 the same pose rights itself; this is recorded as a hazard and
+   deliberately *not* turned into a guard rule, because a rule fitted to three
+   chaotic samples would be over-fitting.
+3. Would a first phase that cannot tip a settled trunk make the feature
+   shippable? Nothing else measured can: delays do not help, the trigger is
+   not the lever, and the authority axis is bounded on both sides. This is the
+   condition for revisiting `enable_fall_recovery`'s default.
 
 A 1 s zero-effort start delay was tried next. The first delayed actor trial
 reported `succeeded` at 4.948 s only because the body was airborne at 0.472 m
