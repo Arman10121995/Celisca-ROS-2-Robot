@@ -215,9 +215,16 @@ from `succeeded:stand` at 2.324 s holding 0.329 m to `unrecoverable:roll` at
 3.14 rad / 0.057 m -- and rescues neither flank configuration. So 0.5/0.5 is a
 measured operating point next to a cliff, and the two catapults this work had to
 slew away (the 0.56 m airborne stand entry, and the flip the graded release
-prevented) are the same over-drive failure mode. If anything is explored next on
-the authority axis it is *lower*, bounded by the effort limits. Fall recovery
-stays off by default.
+prevented) are the same over-drive failure mode. I then wrote that the axis goes
+*lower* if it goes anywhere, and tested that too
+(`fall_ladder_lowgain_20260928T*`, domains 226-229, 0.3/0.3 and 0.2/0.2): the
+prediction is **refuted** — all four placed poses end identically at 0.52 rad /
+0.139 m with `failed:roll`, because at that authority the drive cannot alter any
+pose. So 0.5/0.5 is a narrow window bounded on both sides, 1.0 over-drives and
+inverts, 0.3/0.2 under-drive into a no-op. One thing worth keeping from the low
+end: there the ladder **cannot invert anything** (all four ended `failed`, none
+`unrecoverable`), so its failure mode is "leave the robot where it fell and say
+so", which is the right way to fail. Fall recovery stays off by default.
 
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials

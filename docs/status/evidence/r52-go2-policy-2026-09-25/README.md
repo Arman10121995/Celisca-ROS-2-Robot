@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 55 trials, all with probe and
-launch return code 0 (27 unrecoverable, 13 failed, 6 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 59 trials, all with probe and
+launch return code 0 (27 unrecoverable, 17 failed, 6 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -778,9 +778,33 @@ configuration. So 0.5/0.5 is not a timid default: it is a measured operating
 point sitting next to a cliff, and it explains the two catapults this work had to
 slew away (the 0.56 m airborne stand entry, and the flip the graded release
 prevented). Both are the same failure mode: over-driving the legs levers or
-launches the trunk. The authority axis is now closed too — lower authority is
-the direction to explore if anything, and it is bounded by the effort limits
-rather than by a preference.
+launches the trunk.
+
+
+#### …and lower is not the answer either (a refuted prediction)
+
+That first section ended by predicting the axis goes *lower* if it goes anywhere.
+It was tested, and the prediction is wrong (`fall_ladder_lowgain_20260928T*`,
+domains 226–229, the same four placed poses at 0.3/0.3 and 0.2/0.2):
+
+| configuration | 0.5 / 0.5 | 0.3 / 0.3 | 0.2 / 0.2 |
+|---|---|---|---|
+| placed pitch 1.4 | `succeeded:stand` 2.324 s, 0.01 rad / 0.329 m | `failed:roll`, 0.52 rad / 0.139 m | `failed:roll`, 0.52 rad / 0.139 m |
+| placed flank 1.2, free splay +0.8 | `failed:roll`, 0.52 rad / 0.139 m | `failed:roll`, 0.52 rad / 0.139 m | `failed:roll`, 0.52 rad / 0.139 m |
+
+All four low-authority trials end *identically* — 0.52 rad / 0.139 m, the same
+phase trace (`tuck → roll → failed:roll`) — including the two that succeed at
+0.5. At 0.3 and 0.2 the drive is simply too weak to alter any pose, so both a
+chest-down and a flank-lying robot converge on the same passive resting pose and
+the ladder reports `failed:roll`, which is the honest verdict for "measured no
+progress".
+
+So the authority window is narrow and bounded on *both* sides: 1.0 over-drives
+and inverts, 0.5 is the only setting that gets the robot up, and 0.3/0.2
+under-drive into a no-op. One thing is worth keeping from the low end, though:
+at that authority the ladder **cannot invert anything** — all four trials ended
+`failed`, none `unrecoverable` — so its failure mode is "leave the robot where it
+fell and say so", which is the right way to fail.
 
 
 One demonstrated get-up (placed chest-down → standing, loaded, and held, in
@@ -796,12 +820,15 @@ all. Both remaining open items are now measured rather than open:
   inside the capture window) — the trunk then flips because the 60 N force is
   still on. 0.42 s of catchable collapse against a 2.3 s get-up is an order of
   magnitude a trigger cannot close.
-- **The operating point is measured.** The recovery's authority (gain/damping
-  0.5/0.5) was never swept until now, and it matters more than the waypoints:
-  at 1.0/1.0 the *working* pitch get-up inverts (3.14 rad / 0.057 m instead of
-  standing at 0.329 m) and neither flank configuration improves. The two
-  catapults this work had to slew away are the same failure mode, so lower
-  authority is the direction to explore and it is bounded by the effort limits.
+- **The operating point is measured, on both sides.** The recovery's authority
+  (gain/damping 0.5/0.5) was never swept until now, and it matters more than the
+  waypoints: at 1.0/1.0 the *working* pitch get-up inverts (3.14 rad / 0.057 m
+  instead of standing at 0.329 m) and neither flank configuration improves. I then
+  predicted the axis goes *lower* and tested it: at 0.3/0.3 and 0.2/0.2 all four
+  placed poses end identically at 0.52 rad / 0.139 m with `failed:roll`, because
+  the drive is too weak to alter any pose at all. So 0.5/0.5 is a narrow window
+  bounded on both sides, and the two catapults this work had to slew away are the
+  same over-drive failure mode.
 
 The feature therefore stays **off by default**, and the honest summary is: this
 ladder stands the robot up from a settled chest-down pose and holds it, rolls a
