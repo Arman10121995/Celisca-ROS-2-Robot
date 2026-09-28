@@ -1230,6 +1230,35 @@ class TestFallRecoveryLadder:
             BodyState(0.6, 0.0, 0.33))
         assert target == pytest.approx(nominal_stance_pose())
 
+    def test_crouch_holds_the_measured_splay_for_the_whole_phase(self):
+        # Slewing the splay out over the crouch was tried, to let the legs gather
+        # under the hips, and it measured *worse*: the trunk drops back out of the
+        # gate mid-phase, the ladder re-tucks and the trials end inverted again
+        # (fall_ladder_gather_20260928T*). The crouch therefore holds it, and the
+        # 0.70-0.76 rad pose that leaves is a stable stop, not a trap.
+        recovery = self._recovery(timeout_s=20.0, roll_brace_hip_rad=0.8)
+        positions = self._positions()
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        # Still past the gate at the tuck exit, so the ladder takes the roll
+        # route; under it at the roll exit, so it arrives in the crouch.
+        recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(), positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        rolled = BodyState(roll_rad=0.6, pitch_rad=0.0, body_height_m=0.14)
+        crouch_at = FALL_RECOVER_TUCK_S + FALL_RECOVER_ROLL_S
+        recovery.update(crouch_at, True, rolled, positions, {})
+        assert recovery.phase == FallRecovery.CROUCH
+        held = self._stance(crouch_phase_pose(0.6, 0.0, 0.8), positions)
+        for offset in (0.01, FALL_RECOVER_CROUCH_S / 2.0,
+                       FALL_RECOVER_CROUCH_S - 0.01):
+            efforts = recovery.update(crouch_at + offset, True, rolled,
+                                      positions, {})
+            assert efforts == pytest.approx(held)
+        assert efforts["FR_hip_joint"] != pytest.approx(0.0)
+        # At the window's end the ladder hands over to the stand phase.
+        recovery.update(crouch_at + FALL_RECOVER_CROUCH_S + 0.01, True,
+                        rolled, positions, {})
+        assert recovery.phase == FallRecovery.STAND
+
     def test_bounds_waypoints_and_gate_are_predeclared_and_consistent(self):
         assert FallRecovery.PHASES == (FallRecovery.TUCK, FallRecovery.ROLL,
                                        FallRecovery.CROUCH, FallRecovery.STAND)

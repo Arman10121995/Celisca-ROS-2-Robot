@@ -162,6 +162,18 @@ also stops the legs gathering under the hips, so the trunk never reaches the til
 at which the splay would taper. Next candidate: a gather step between `roll` and
 `crouch`, or a release keyed on measured load rather than roll angle. Still open:
 trigger latency, and the roll-axis get-up.
+
+Refuted after that: slewing the splay *out* over the crouch so the legs can
+gather under the hips. The same three trials
+(`fall_ladder_gather_20260928T*`, domains 226-228) all end **inverted** again
+(3.09 / 2.41 / 2.58 rad, 0.057 m): the moment the splay comes out the trunk falls
+back out of the gate, so the ladder re-tucks and re-rolls twice and each cycle
+ends the same way. So the 0.70-0.76 rad pose is *stable*, not a trap, and the
+splay is what holds the trunk there. The change is reverted and
+`test_crouch_holds_the_measured_splay_for_the_whole_phase` pins it, with the
+negative result in its comment. A roll-axis stand-up needs a different primitive
+(trunk up *and* feet under the hips at once), not a release schedule -- that is
+the open item now, alongside trigger latency.
 Rebuild `robot_lab_adapter` after Python edits: its installed
 module is a copy despite `--symlink-install`, and three intermediate runs
 using a stale installed module were discarded. Two more trials were lost by

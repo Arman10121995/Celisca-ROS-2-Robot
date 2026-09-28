@@ -1117,6 +1117,11 @@ class FallRecovery:
                                       damping_scale=self._damping_scale)
             return stance.effort_command(positions, velocities)
         if self.phase == self.CROUCH:
+            # The crouch holds the measured splay for the whole phase. Slewing it
+            # out over the crouch was tried and measured worse: the trunk drops
+            # back out of the gate mid-phase, the ladder re-tucks and the trials
+            # end inverted again (fall_ladder_gather_20260928T*). The 0.70-0.76
+            # rad pose this leaves is a *stable* stop, not a trap.
             target = (crouch_phase_pose(body.roll_rad, body.pitch_rad,
                                         self.roll_brace_hip_rad)
                       if body is not None else recovery_pose("crouch"))

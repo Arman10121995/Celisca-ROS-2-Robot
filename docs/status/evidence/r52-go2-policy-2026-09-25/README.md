@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 39 trials, all with probe and
-launch return code 0 (18 unrecoverable, 8 failed, 6 recovered, 7 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 42 trials, all with probe and
+launch return code 0 (21 unrecoverable, 8 failed, 6 recovered, 7 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -623,13 +623,36 @@ it previously had none.
 
 It is not a stand-up, and the trace says why in one line: the robot settles with
 8 N on the left feet and 2.5 N on the right, i.e. it is *balanced on the splay*.
-That is a fixed point — the splay is what rolls the trunk up, and it is also what
-keeps the legs from gathering under the hips, so the trunk can never reach the
-tilt at which the splay would taper. The ladder has no way to express "roll it
-up, then gather the legs with the splay released", so the next candidate is a
-gather step between `roll` and `crouch` (or a release keyed on measured load
-rather than on roll angle). Until that is measured, the honest claim is: the roll
-axis goes from *inverted* to *stable and bounded*, not to *standing*.
+That looked like a fixed point to break — the splay is what rolls the trunk up,
+and it is also what keeps the legs from gathering under the hips.
+
+
+#### Refuted: slewing the splay out to "gather the legs"
+
+The obvious way out is to release the splay during the crouch so the feet can
+plant under the hips, and the crouch now owns the splay so the release is one
+line: slew it out over the crouch's own bounded duration. Measured, it is worse.
+The same three trials (`fall_ladder_gather_20260928T*`, domains 226–228):
+
+| placed roll | hip | min tilt | ladder | ended |
+|---|---|---|---|---|
+| 1.2 rad | +0.8 | 0.62 rad | `crouch` 0.96 → **`tuck` 1.47** → `roll` 1.78 → `crouch` 2.33 | 3.09 rad / 0.057 m |
+| 1.4 rad | +0.8 | 0.64 rad | `crouch` 1.01 → `tuck` 1.54 → `roll` 1.88 → `crouch` 2.49 | 2.41 rad / 0.057 m |
+| 1.4 rad | +1.0 | 0.48 rad | `crouch` 1.01 → `tuck` 1.54 → `roll` 1.86 → `crouch` 2.49 | 2.58 rad / 0.057 m |
+
+All three end **inverted** again, and the phase trace says why: the moment the
+splay starts to come out, the trunk falls back out of the gate (0.64 → over
+0.8 rad), so the ladder drops back down to `tuck` and re-rolls — twice — and
+each cycle ends the same way. So the pose the graded release leaves is not a
+trap to be escaped; it is a **stable** pose, and the splay is what holds the
+trunk there. The change is reverted, the crouch holds the splay for its whole
+phase, and the test now pins that (with the negative result in its comment) so a
+future attempt to "improve" it has to confront this evidence first.
+
+What a roll-axis stand-up still needs is therefore not a release schedule but a
+different primitive: the trunk has to be brought up *and* have the feet planted
+under the hips at the same time, which one waypoint per phase cannot express.
+
 
 This is a measured sign, not a tuned constant, and it stays opt-in until the
 crouch-side behaviour is measured too.
