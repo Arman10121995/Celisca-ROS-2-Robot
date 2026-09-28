@@ -689,6 +689,43 @@ re-tucks on the count. The trial above ended that way, one cycle earlier and
 with a reason attached, instead of two cycles of the same nothing.
 
 
+#### What the closed-loop primitive would actually have to do
+
+The remaining item is a roll primitive keyed on more than trunk attitude, and
+the obvious first instance is a *contact-keyed release*: let go of the splay once
+the measured foot load shows the legs are carrying the trunk. The recorded
+traces answer that before any of it is written — median measured foot load after
+3 s, per pair, braced = FR/RR for a right-flank pose:
+
+| trial | total | feet ≥ 2 N | braced pair | free pair |
+|---|---|---|---|---|
+| pitch get-up (works) | **126.5 N** | 4 | 63.3 N | 63.2 N |
+| pitch repeat 2 | **126.5 N** | 4 | 63.3 N | 63.2 N |
+| flank 1.2, braced splay 0.8 | 23.8 N | 4 | 15.8 N | 8.1 N |
+| flank 1.4, braced splay 0.8 | 23.9 N | 4 | 15.8 N | 8.1 N |
+| flank 1.4, free splay 0.8 | 19.9 N | 2 | 19.9 N | 0.0 N |
+| flank 1.4, both splays 0.8 | 23.9 N | 4 | 15.8 N | 8.1 N |
+
+(As a side check on determinism: the two independent pitch runs agree to 0.1 N on
+the settled load.)
+
+A standing robot carries 126.5 N; the flank fixed point carries **24 N — 19% of
+it**. The legs are not holding the trunk there, the *ground* is, which is exactly
+why releasing the splay drops it, and it means a release rule keyed on "the
+measured load shows the legs carry the trunk" is **provably a no-op** on the case
+it was meant to fix: the condition it keys on is measurably false, permanently.
+
+So the missing primitive is not a smarter *release*, it is **support creation**:
+getting the legs from ~19% to ~100% of the weight while the trunk is still
+rolled over, which needs the trunk coming up and the feet gathering under the
+hips *at the same time* — something one waypoint per phase cannot express. That
+is a precise requirement now, with a number attached, and it is what a
+closed-loop primitive (or a retrained actor) has to deliver. One more constraint
+for whoever builds it: the transient loads in these trials peak at 997 N during
+the get-up's crouch, so any contact-keyed rule needs a dwell or it will fire on
+a slam.
+
+
 #### Where the roll axis actually stops
 
 Two primitives measured (splay the braced pair, splay the free pair), two
@@ -857,7 +894,10 @@ Both remaining open items are now measured rather than open:
 The feature therefore stays **off by default**, and the honest summary is: this
 ladder stands the robot up from a settled chest-down pose and holds it, rolls a
 flank-lying trunk most of the way upright without inverting it, and is not a
-recovery for a fall it did not choose.
+recovery for a fall it did not choose. The open item now has a number attached
+(see *What the closed-loop primitive would actually have to do*): the legs carry
+126.5 N when the ladder succeeds and 24 N when it stalls, and closing that gap
+is the work.
 
 
 

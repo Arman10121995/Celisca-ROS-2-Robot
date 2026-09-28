@@ -190,8 +190,21 @@ and *not* standing. On this plant an open-loop waypoint ladder does not stand
 the robot up from a flank-lying trunk; it rolls the trunk most of the way to
 upright (1.4 -> 0.5-0.7 rad) and stops without inverting it. Closing that gap
 needs a closed-loop primitive (a waypoint keyed on more than trunk attitude, or
-an actor retrained on this plant) -- a different class of work, and the one
-open item left alongside trigger latency.
+an actor retrained on this plant) -- a different class of work.
+
+What that primitive must achieve is now measured rather than guessed, from the
+recorded foot forces. The obvious first instance -- a contact-keyed release, "let
+go of the splay once the measured load shows the legs carry the trunk" -- is a
+**provable no-op** on the case it targets: median measured foot load after 3 s
+is 126.5 N on a standing robot (and the two independent pitch runs agree to
+0.1 N, a useful determinism check) but only **23.8-23.9 N on the flank fixed
+point**, 19% of it, with the free pair at 8.1 N and the braced pair at 15.8 N.
+The legs are not holding the trunk there, the ground is. So the missing piece is
+not a smarter *release*, it is **support creation**: 19% -> ~100% of the weight
+while the trunk is still rolled over, which needs the trunk coming up and the
+feet gathering at the same time. Whoever builds it should also note the
+transient loads peak at 997 N in these trials, so a contact-keyed rule needs a
+dwell or it fires on a slam.
 
 Trigger latency is now measured too, and it is **not** the missing piece.
 Forward sustained pushes (fall_ladder_pitch_20260928T*, domains 226-229) were
