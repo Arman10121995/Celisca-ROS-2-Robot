@@ -1,7 +1,7 @@
 {
   "task": "R5.2 Go2 fall-recovery ladder sweep",
   "root": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25",
-  "trial_count": 42,
+  "trial_count": 48,
   "trials": [
     {
       "trial": "fall_ladder_drop_20260928Tz0.9",
@@ -508,6 +508,182 @@
       "terminal_recovery_state": "failed:roll",
       "verdict": "failed",
       "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_envelope_20260928Troll1.2/probe.json"
+    },
+    {
+      "trial": "fall_ladder_freehip_20260928Tf08b08r14",
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "pulse_s": 0.2,
+      "spawn_z_m": null,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "duration_s": 20.0,
+      "enable_fall_recovery": true,
+      "fall_recovery_timeout_s": 8.0,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "fallen_latched": true,
+      "fallen_latch_s": 0.1,
+      "tilt_at_latch_rad": 1.3752307692307693,
+      "height_at_latch_m": 0.183,
+      "tilt_rate_at_latch_rad_s": 0.9234615384615386,
+      "max_tilt_rad": 1.5864224213738405,
+      "final_tilt_rad": 0.519,
+      "min_height_m": 0.1372499080014032,
+      "final_height_m": 0.13860732876902893,
+      "safe_stop_seen": false,
+      "final_safety_state": "safe_stop",
+      "ladder_transitions": [
+        {
+          "sim_s": 0.004,
+          "state": "idle"
+        },
+        {
+          "sim_s": 0.1,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 0.408,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 0.968,
+          "state": "attempting:crouch"
+        },
+        {
+          "sim_s": 1.516,
+          "state": "attempting:stand"
+        },
+        {
+          "sim_s": 6.8,
+          "state": "failed:stand"
+        }
+      ],
+      "phases_reached": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "reached_stand": true,
+      "terminal_recovery_state": "failed:stand",
+      "verdict": "failed",
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_freehip_20260928Tf08b08r14/probe.json"
+    },
+    {
+      "trial": "fall_ladder_freehip_20260928Tf08r14",
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "pulse_s": 0.2,
+      "spawn_z_m": null,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "duration_s": 20.0,
+      "enable_fall_recovery": true,
+      "fall_recovery_timeout_s": 8.0,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "fallen_latched": true,
+      "fallen_latch_s": 0.1,
+      "tilt_at_latch_rad": 1.3742400000000001,
+      "height_at_latch_m": 0.183,
+      "tilt_rate_at_latch_rad_s": 0.932599999999999,
+      "max_tilt_rad": 1.6060301725999055,
+      "final_tilt_rad": 0.521,
+      "min_height_m": 0.1369202309294815,
+      "final_height_m": 0.13866257756568398,
+      "safe_stop_seen": false,
+      "final_safety_state": "safe_stop",
+      "ladder_transitions": [
+        {
+          "sim_s": 0.004,
+          "state": "idle"
+        },
+        {
+          "sim_s": 0.1,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 0.408,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 0.916,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 1.228,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 1.812,
+          "state": "failed:roll"
+        }
+      ],
+      "phases_reached": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "reached_stand": false,
+      "terminal_recovery_state": "failed:roll",
+      "verdict": "failed",
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_freehip_20260928Tf08r14/probe.json"
+    },
+    {
+      "trial": "fall_ladder_freehip_20260928Tfn08r14",
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "pulse_s": 0.2,
+      "spawn_z_m": null,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "duration_s": 20.0,
+      "enable_fall_recovery": true,
+      "fall_recovery_timeout_s": 8.0,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "fallen_latched": true,
+      "fallen_latch_s": 0.1,
+      "tilt_at_latch_rad": 1.3788799999999999,
+      "height_at_latch_m": 0.184,
+      "tilt_rate_at_latch_rad_s": 0.8909846153846157,
+      "max_tilt_rad": 3.1415925410345653,
+      "final_tilt_rad": 3.142,
+      "min_height_m": 0.056422938757546365,
+      "final_height_m": 0.05699828412235056,
+      "safe_stop_seen": false,
+      "final_safety_state": "safe_stop",
+      "ladder_transitions": [
+        {
+          "sim_s": 0.004,
+          "state": "idle"
+        },
+        {
+          "sim_s": 0.1,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 0.432,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 1.02,
+          "state": "unrecoverable:roll"
+        }
+      ],
+      "phases_reached": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "reached_stand": false,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "verdict": "unrecoverable",
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_freehip_20260928Tfn08r14/probe.json"
     },
     {
       "trial": "fall_ladder_gather_20260928Tr12h08",
@@ -1756,6 +1932,182 @@
       "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_placed_slew_20260928Tpitch1.4/probe.json"
     },
     {
+      "trial": "fall_ladder_progress_20260928Tf08b08r14",
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "pulse_s": 0.2,
+      "spawn_z_m": null,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "duration_s": 20.0,
+      "enable_fall_recovery": true,
+      "fall_recovery_timeout_s": 8.0,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "fallen_latched": true,
+      "fallen_latch_s": 0.1,
+      "tilt_at_latch_rad": 1.3796923076923076,
+      "height_at_latch_m": 0.184,
+      "tilt_rate_at_latch_rad_s": 0.8923076923076922,
+      "max_tilt_rad": 1.588358737239809,
+      "final_tilt_rad": 0.519,
+      "min_height_m": 0.13726042419589107,
+      "final_height_m": 0.13860731427342227,
+      "safe_stop_seen": false,
+      "final_safety_state": "safe_stop",
+      "ladder_transitions": [
+        {
+          "sim_s": 0.004,
+          "state": "idle"
+        },
+        {
+          "sim_s": 0.1,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 0.432,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 0.992,
+          "state": "attempting:crouch"
+        },
+        {
+          "sim_s": 1.52,
+          "state": "attempting:stand"
+        },
+        {
+          "sim_s": 6.808,
+          "state": "failed:stand"
+        }
+      ],
+      "phases_reached": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "reached_stand": true,
+      "terminal_recovery_state": "failed:stand",
+      "verdict": "failed",
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_progress_20260928Tf08b08r14/probe.json"
+    },
+    {
+      "trial": "fall_ladder_progress_20260928Tf08r12",
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "pulse_s": 0.2,
+      "spawn_z_m": null,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "duration_s": 20.0,
+      "enable_fall_recovery": true,
+      "fall_recovery_timeout_s": 8.0,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "fallen_latched": true,
+      "fallen_latch_s": 0.1,
+      "tilt_at_latch_rad": 1.21152,
+      "height_at_latch_m": 0.235,
+      "tilt_rate_at_latch_rad_s": 2.7294000000000005,
+      "max_tilt_rad": 1.865262264547878,
+      "final_tilt_rad": 0.521,
+      "min_height_m": 0.13671808628492174,
+      "final_height_m": 0.13866270482961382,
+      "safe_stop_seen": false,
+      "final_safety_state": "safe_stop",
+      "ladder_transitions": [
+        {
+          "sim_s": 0.004,
+          "state": "idle"
+        },
+        {
+          "sim_s": 0.104,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 0.408,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 0.976,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 1.32,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 1.92,
+          "state": "failed:roll"
+        }
+      ],
+      "phases_reached": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "reached_stand": false,
+      "terminal_recovery_state": "failed:roll",
+      "verdict": "failed",
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_progress_20260928Tf08r12/probe.json"
+    },
+    {
+      "trial": "fall_ladder_progress_20260928Tf08r14",
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "pulse_s": 0.2,
+      "spawn_z_m": null,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "duration_s": 20.0,
+      "enable_fall_recovery": true,
+      "fall_recovery_timeout_s": 8.0,
+      "probe_returncode": 0,
+      "launch_returncode": 0,
+      "fallen_latched": true,
+      "fallen_latch_s": 0.1,
+      "tilt_at_latch_rad": 1.38272,
+      "height_at_latch_m": 0.184,
+      "tilt_rate_at_latch_rad_s": 0.8652000000000004,
+      "max_tilt_rad": 1.5958122207588838,
+      "final_tilt_rad": 0.521,
+      "min_height_m": 0.13652793419398582,
+      "final_height_m": 0.13866273281472521,
+      "safe_stop_seen": false,
+      "final_safety_state": "safe_stop",
+      "ladder_transitions": [
+        {
+          "sim_s": 0.004,
+          "state": "idle"
+        },
+        {
+          "sim_s": 0.104,
+          "state": "attempting:tuck"
+        },
+        {
+          "sim_s": 0.416,
+          "state": "attempting:roll"
+        },
+        {
+          "sim_s": 0.96,
+          "state": "failed:roll"
+        }
+      ],
+      "phases_reached": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "reached_stand": false,
+      "terminal_recovery_state": "failed:roll",
+      "verdict": "failed",
+      "probe_result": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/fall_ladder_progress_20260928Tf08r14/probe.json"
+    },
+    {
       "trial": "fall_ladder_sustained_20260928T40N",
       "force_n": 40.0,
       "perturbation_axis": null,
@@ -2446,6 +2798,12 @@
       0.0,
       0.0,
       0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
       40.0,
       45.0,
       50.0,
@@ -2465,6 +2823,9 @@
       "fall_ladder_envelope_20260928Tpitch1.8": 0.0,
       "fall_ladder_envelope_20260928Troll0.9": 2.3039999999999994,
       "fall_ladder_envelope_20260928Troll1.2": 2.63663076923077,
+      "fall_ladder_freehip_20260928Tf08b08r14": 0.9234615384615386,
+      "fall_ladder_freehip_20260928Tf08r14": 0.932599999999999,
+      "fall_ladder_freehip_20260928Tfn08r14": 0.8909846153846157,
       "fall_ladder_gather_20260928Tr12h08": 2.620800000000001,
       "fall_ladder_gather_20260928Tr14h08": 0.9166000000000007,
       "fall_ladder_gather_20260928Tr14h10": 0.8644000000000007,
@@ -2483,6 +2844,9 @@
       "fall_ladder_placed_hold_20260928Tpitch1.4": -0.8109615384615387,
       "fall_ladder_placed_hold_20260928Troll1.4": 0.8796000000000004,
       "fall_ladder_placed_slew_20260928Tpitch1.4": -0.9158153846153849,
+      "fall_ladder_progress_20260928Tf08b08r14": 0.8923076923076922,
+      "fall_ladder_progress_20260928Tf08r12": 2.7294000000000005,
+      "fall_ladder_progress_20260928Tf08r14": 0.8652000000000004,
       "fall_ladder_sustained_20260928T40N": 5.893846153846167,
       "fall_ladder_sustained_20260928T45N": 6.273269230769243,
       "fall_ladder_20260928T50N": 6.04653846153846,
@@ -2499,6 +2863,7 @@
       "fall_ladder_envelope_20260928Tpitch0.9",
       "fall_ladder_envelope_20260928Tpitch1.2",
       "fall_ladder_envelope_20260928Tpitch1.6",
+      "fall_ladder_freehip_20260928Tf08b08r14",
       "fall_ladder_hipcrouch_20260928Tp08r12",
       "fall_ladder_hipcrouch_20260928Tp08r14",
       "fall_ladder_hipcrouch_20260928Tp10r14",
@@ -2507,7 +2872,8 @@
       "fall_ladder_hipstand_20260928Tr14h10",
       "fall_ladder_placed_20260928Tpitch1.4",
       "fall_ladder_placed_hold_20260928Tpitch1.4",
-      "fall_ladder_placed_slew_20260928Tpitch1.4"
+      "fall_ladder_placed_slew_20260928Tpitch1.4",
+      "fall_ladder_progress_20260928Tf08b08r14"
     ],
     "ended_standing": [
       "fall_ladder_drop_20260928Tz0.9",
@@ -2534,6 +2900,9 @@
       "fall_ladder_envelope_20260928Troll0.6": "no_fall",
       "fall_ladder_envelope_20260928Troll0.9": "failed",
       "fall_ladder_envelope_20260928Troll1.2": "failed",
+      "fall_ladder_freehip_20260928Tf08b08r14": "failed",
+      "fall_ladder_freehip_20260928Tf08r14": "failed",
+      "fall_ladder_freehip_20260928Tfn08r14": "unrecoverable",
       "fall_ladder_gather_20260928Tr12h08": "unrecoverable",
       "fall_ladder_gather_20260928Tr14h08": "unrecoverable",
       "fall_ladder_gather_20260928Tr14h10": "unrecoverable",
@@ -2552,6 +2921,9 @@
       "fall_ladder_placed_hold_20260928Tpitch1.4": "recovered",
       "fall_ladder_placed_hold_20260928Troll1.4": "unrecoverable",
       "fall_ladder_placed_slew_20260928Tpitch1.4": "recovered",
+      "fall_ladder_progress_20260928Tf08b08r14": "failed",
+      "fall_ladder_progress_20260928Tf08r12": "failed",
+      "fall_ladder_progress_20260928Tf08r14": "failed",
       "fall_ladder_sustained_20260928T40N": "unrecoverable",
       "fall_ladder_20260928T45N": "no_fall",
       "fall_ladder_forward_20260928T45Np1.0": "no_fall",

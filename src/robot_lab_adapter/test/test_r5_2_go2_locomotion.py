@@ -918,11 +918,13 @@ class TestFallRecoveryLadder:
                 break
             assert recovery.phase in (FallRecovery.TUCK, FallRecovery.ROLL)
             assert any(abs(efforts[j] - standing[j]) > 1e-6 for j in JOINT_NAMES)
-        # Two bounded roll cycles, then the ladder stops instead of pushing on.
+        # A trunk that does not move is not worth repeating: the attempt stops on
+        # the measured *progress* rule -- which is what the fixed count was
+        # standing in for -- with the pose class still read from the measurement.
         assert recovery.status == FallRecovery.FAILED
-        assert recovery.roll_cycles == FALL_RECOVER_MAX_ROLL_CYCLES
+        assert recovery.roll_cycles == 1
+        assert recovery.last_reason.startswith("roll cycle bought less than")
         assert recovery.terminal_pose == FALL_POSE_COLLAPSED
-        assert recovery.last_reason.startswith("roll cycles exhausted")
 
     def test_roll_phase_braces_the_pair_the_trunk_rests_on(self):
         recovery = self._recovery()
@@ -1229,6 +1231,74 @@ class TestFallRecoveryLadder:
             99.0 + FALL_RECOVER_STAND_S,
             BodyState(0.6, 0.0, 0.33))
         assert target == pytest.approx(nominal_stance_pose())
+
+    def test_a_roll_cycle_is_repeated_only_while_the_trunk_keeps_improving(self):
+        # Measured: the free-pair splay walks a 1.4 rad flank down to 0.49 rad but
+        # needs longer than the old fixed two cycles, and a primitive that was
+        # still measurably working used to be reported as a failure.
+        def body(tilt):
+            return BodyState(roll_rad=tilt, pitch_rad=0.0, body_height_m=0.14)
+
+        recovery = self._recovery(roll_progress_rad=0.15, max_roll_cycles=4)
+        positions = self._positions()
+        recovery.update(0.0, True, body(1.4), positions, {})
+        assert recovery.phase == FallRecovery.TUCK
+        # Times are just past each phase boundary, never exactly on it.
+        roll_1 = FALL_RECOVER_TUCK_S + 0.01
+        recovery.update(roll_1, True, body(1.4), positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        assert recovery.roll_cycles == 1
+        # A cycle that bought real progress buys another one.
+        tuck_2 = roll_1 + FALL_RECOVER_ROLL_S + 0.01
+        recovery.update(tuck_2, True, body(1.0), positions, {})
+        assert recovery.status == FallRecovery.ATTEMPTING
+        assert recovery.phase == FallRecovery.TUCK
+        roll_2 = tuck_2 + FALL_RECOVER_TUCK_S + 0.01
+        recovery.update(roll_2, True, body(1.0), positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        assert recovery.roll_cycles == 2
+        # One that does not ends the attempt at once, and says why.
+        recovery.update(roll_2 + FALL_RECOVER_ROLL_S + 0.01, True,
+                        body(0.95), positions, {})
+        assert recovery.status == FallRecovery.FAILED
+        assert recovery.last_reason.startswith("roll cycle bought less than")
+        # The absolute cap still bounds an attempt that keeps improving.
+        capped = self._recovery(roll_progress_rad=0.05, max_roll_cycles=2)
+        now = 0.0
+        for step in range(8):
+            now += FALL_RECOVER_TUCK_S + 0.01
+            capped.update(now, True, body(1.4 - 0.2 * step), positions, {})
+            now += FALL_RECOVER_ROLL_S + 0.01
+            capped.update(now, True, body(1.4 - 0.2 * step), positions, {})
+            if capped.status != FallRecovery.ATTEMPTING:
+                break
+        assert capped.status == FallRecovery.FAILED
+        assert capped.roll_cycles == 2
+        assert capped.last_reason.startswith("roll cycles exhausted")
+
+    def test_roll_phase_can_splay_the_free_pair_instead(self):
+        # The second, unqualified hypothesis: keep the braced pair straight (it is
+        # the support) and splay the *other* pair for the moment. Opt-in, and the
+        # pair selection is independent of the braced-pair input.
+        both = roll_phase_pose(1.2, 0.0, 0.4, 0.8)
+        assert both["FR_hip_joint"] == pytest.approx(0.4)    # braced pair
+        assert both["RR_hip_joint"] == pytest.approx(0.4)
+        assert both["FL_hip_joint"] == pytest.approx(-0.8)   # free pair, mirrored
+        assert both["RL_hip_joint"] == pytest.approx(-0.8)
+        # Either input alone leaves the other pair at its waypoint's zero.
+        assert roll_phase_pose(1.2, 0.0, 0.0, 0.8)["FR_hip_joint"] == pytest.approx(0.0)
+        assert roll_phase_pose(1.2, 0.0, 0.4)["FL_hip_joint"] == pytest.approx(0.0)
+        # The recovery passes it through and refuses a non-finite value.
+        recovery = self._recovery(roll_free_hip_rad=0.8)
+        positions = self._positions()
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        efforts = recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(),
+                                  positions, {})
+        assert recovery.phase == FallRecovery.ROLL
+        assert efforts == pytest.approx(
+            self._stance(roll_phase_pose(1.2, 0.0, 0.0, 0.8), positions))
+        with pytest.raises(ValueError):
+            FallRecovery(roll_free_hip_rad=float("inf"))
 
     def test_crouch_holds_the_measured_splay_for_the_whole_phase(self):
         # Slewing the splay out over the crouch was tried, to let the legs gather

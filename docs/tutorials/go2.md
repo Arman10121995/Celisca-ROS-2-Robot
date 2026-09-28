@@ -267,8 +267,10 @@ its back (3.1416 rad / 0.057 m). With both in place the same trials end **not**
 inverted: 0.70–0.76 rad / 0.139 m, balanced on the splay in a bounded stop at
 ~6.8 s. That is a safety result, not a stand-up — the crouch holds the splay for
 the whole phase, because releasing it there (so the legs can gather) was measured
-and re-inverts the robot. A "gather the legs" primitive is still missing. Treat
-the flag as a measurement knob, not a setting.
+and re-inverts the robot. A "gather the legs" primitive is still missing, and a
+second input (`fall_recovery_roll_free_hip_rad:=`, splaying the *other* pair
+instead) was measured too: it does not hold the trunk under the gate either.
+Treat the flags as measurement knobs, not settings.
 
 Two things to know before relying on this: it is measured from
 a *placed* pose, because no perturbation on these maps leaves the robot down but

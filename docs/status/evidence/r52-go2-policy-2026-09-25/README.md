@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 42 trials, all with probe and
-launch return code 0 (21 unrecoverable, 8 failed, 6 recovered, 7 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 48 trials, all with probe and
+launch return code 0 (22 unrecoverable, 13 failed, 6 recovered, 7 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -652,6 +652,54 @@ future attempt to "improve" it has to confront this evidence first.
 What a roll-axis stand-up still needs is therefore not a release schedule but a
 different primitive: the trunk has to be brought up *and* have the feet planted
 under the hips at the same time, which one waypoint per phase cannot express.
+
+
+#### The second hypothesis (free-pair splay) and a better stopping rule
+
+`roll_phase_pose()` now takes a second, independent opt-in input,
+`free_hip_rad` (`fall_recovery_roll_free_hip_rad:=`, runner `ROLL_FREE_HIP`): it
+splays the *other* pair and leaves the braced pair straight, which is the classic
+"plant the upper legs for the moment, push with the lower ones" split. Both
+inputs are 0.0 by default.
+
+Measured on the placed 1.4 rad flank (`fall_ladder_freehip_20260928T*`, domains
+226–228), it behaves like its sibling — same sign requirement — and is **not**
+the better primitive:
+
+| braced / free splay | minimum tilt while driving | ended |
+|---|---|---|
+| 0 / **+0.8** | 1.36 rad (trunk dips to 0.50 rad only *after* the attempt ends) | 0.52 rad / 0.139 m, `failed:roll` |
+| 0 / −0.8 | 1.38 rad | 3.1416 rad / 0.057 m, `unrecoverable:roll` |
+| +0.8 / +0.8 | 0.60 rad | 0.76 rad / 0.139 m, `failed:stand` |
+
+The trap in the first row is worth stating plainly: the trunk *does* reach
+0.50 rad, but the trace shows it doing so at ~1.2 s, after the attempt had
+already stopped driving at 0.96 s. Read as a "the primitive got it to 0.49 rad"
+result, it would be wrong.
+
+That trial did produce a change worth keeping. The roll phase used to be
+repeated on a blind count, and the count is not a measurement: it now repeats a
+cycle only while the measured tilt keeps improving by
+`FALL_RECOVER_ROLL_PROGRESS_RAD` (0.15 rad), with
+`FALL_RECOVER_MAX_ROLL_CYCLES` (4) as the absolute cap and the attempt window
+as the outer bound. So a flailing attempt now ends on evidence —
+`"roll cycle bought less than 0.15 rad of tilt"` — instead of on arithmetic, and
+a trunk that merely *climbs back* out of the gate after a successful roll still
+re-tucks on the count. The trial above ended that way, one cycle earlier and
+with a reason attached, instead of two cycles of the same nothing.
+
+
+#### Where the roll axis actually stops
+
+Two primitives measured (splay the braced pair, splay the free pair), two
+schedule ideas measured and refuted (release the splay in the crouch, spend more
+roll cycles), and the pose that survives is stable, bounded and *not* standing.
+On this plant, an open-loop waypoint ladder does not stand the robot up from a
+flank-lying trunk; what it can do is roll the trunk most of the way to upright
+(1.4 → 0.5–0.7 rad) and then stop without inverting it. Closing that last gap
+needs a closed-loop primitive — a waypoint that depends on more than the trunk's
+attitude, or an actor retrained on this plant — which is a different class of
+work from the ladder.
 
 
 This is a measured sign, not a tuned constant, and it stays opt-in until the

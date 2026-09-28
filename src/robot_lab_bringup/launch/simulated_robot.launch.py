@@ -1037,6 +1037,9 @@ def _build_simulation_actions(context):
                     "fall_recovery_roll_brace_hip_rad": _as_float(
                         _launch_value(context,
                                       "fall_recovery_roll_brace_hip_rad"), 0.0),
+                    "fall_recovery_roll_free_hip_rad": _as_float(
+                        _launch_value(context,
+                                      "fall_recovery_roll_free_hip_rad"), 0.0),
                 }],
             ))
 
@@ -1378,6 +1381,11 @@ def generate_launch_description():
                         "braced pair, mirrored per side and clamped to the hip "
                         "limits. 0.0 is the qualified sagittal-only brace; any "
                         "other value is an unqualified experiment."),
+        DeclareLaunchArgument(
+            "fall_recovery_roll_free_hip_rad", default_value="0.0",
+            description="Opt-in lateral hip target [rad] for the roll phase's "
+                        "*other* pair, to separate the support from the moment. "
+                        "0.0 (the default) means no splay on that pair."),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

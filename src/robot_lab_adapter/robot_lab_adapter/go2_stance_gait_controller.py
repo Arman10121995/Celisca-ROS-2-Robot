@@ -74,6 +74,9 @@ class Go2StanceGaitController(Node):
         # Opt-in lateral hip input for the roll phase's braced pair, 0.0 by
         # default: the roll sign this plant needs is not qualified yet.
         self.declare_parameter("fall_recovery_roll_brace_hip_rad", 0.0)
+        # ... and the same for the *other* pair, to separate the support from the
+        # moment. Also 0.0 by default: an unqualified hypothesis.
+        self.declare_parameter("fall_recovery_roll_free_hip_rad", 0.0)
         self.declare_parameter("recovery_policy_path", "")
         rate = float(self.get_parameter("command_rate_hz").value)
         if rate <= 0.0:
@@ -115,6 +118,8 @@ class Go2StanceGaitController(Node):
                     self, "fall_recovery_damping_scale", 0.5),
                 roll_brace_hip_rad=_param_float(
                     self, "fall_recovery_roll_brace_hip_rad", 0.0),
+                roll_free_hip_rad=_param_float(
+                    self, "fall_recovery_roll_free_hip_rad", 0.0),
             )
             if _as_flag(self, "enable_fall_recovery", False)
             else None)

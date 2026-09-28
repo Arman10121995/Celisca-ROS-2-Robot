@@ -163,6 +163,36 @@ at which the splay would taper. Next candidate: a gather step between `roll` and
 `crouch`, or a release keyed on measured load rather than roll angle. Still open:
 trigger latency, and the roll-axis get-up.
 
+Two more increments after that, both kept, both measured:
+
+* `roll_phase_pose()` gained a second opt-in input `free_hip_rad`
+  (`fall_recovery_roll_free_hip_rad:=`, runner `ROLL_FREE_HIP`): splay the
+  *other* pair, leave the braced pair straight ("plant the upper legs for the
+  moment, push with the lower ones"). Measured on the placed 1.4 rad flank
+  (`fall_ladder_freehip_20260928T*`): same sign requirement (negative still
+  inverts), and it does **not** hold the trunk under the gate while driving --
+  the trunk dips to 0.50 rad only *after* the attempt stops at 0.96 s, which is
+  the reading that makes it look like a success. Not the better primitive.
+* The blind roll-cycle count is gone. A cycle is now repeated only while the
+  measured tilt keeps improving by `FALL_RECOVER_ROLL_PROGRESS_RAD` (0.15 rad),
+  with `FALL_RECOVER_MAX_ROLL_CYCLES` (4) as the absolute cap and the attempt
+  window as the outer bound, so a flailing attempt ends on evidence
+  ("roll cycle bought less than 0.15 rad of tilt") rather than arithmetic. A
+  trunk that merely climbs back out of the gate after a successful roll still
+  re-tucks on the count -- that regression was caught by an existing test while
+  this was being built, and is now pinned by
+  `test_a_roll_cycle_is_repeated_only_while_the_trunk_keeps_improving`.
+
+So the roll axis is where it stops: two primitives measured (braced-pair splay,
+free-pair splay), two schedule ideas measured and refuted (release the splay in
+the crouch, spend more roll cycles), and the surviving pose is stable, bounded
+and *not* standing. On this plant an open-loop waypoint ladder does not stand
+the robot up from a flank-lying trunk; it rolls the trunk most of the way to
+upright (1.4 -> 0.5-0.7 rad) and stops without inverting it. Closing that gap
+needs a closed-loop primitive (a waypoint keyed on more than trunk attitude, or
+an actor retrained on this plant) -- a different class of work, and the one
+open item left alongside trigger latency.
+
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
 (`fall_ladder_gather_20260928T*`, domains 226-228) all end **inverted** again

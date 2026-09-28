@@ -36,6 +36,8 @@ SPAWN_ROLL="${SPAWN_ROLL:-}"
 # Optional lateral hip input for the roll phase's braced pair. Left empty (and
 # never passed as an empty launch argument) unless a sign is being measured.
 ROLL_BRACE_HIP="${ROLL_BRACE_HIP:-}"
+# ... and the same for the roll phase's *other* pair (see roll_phase_pose).
+ROLL_FREE_HIP="${ROLL_FREE_HIP:-}"
 SOURCE_REVISION="$(git -C "$ROOT" rev-parse --short HEAD)"
 SOURCE_DIRTY="$(git -C "$ROOT" status --porcelain --untracked-files=no | wc -l)"
 
@@ -76,12 +78,12 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" "$ROLL_FREE_HIP" <<'PY'
 import json
 import sys
 import hashlib
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip, roll_free_hip = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
@@ -98,6 +100,7 @@ Path(out).write_text(json.dumps({
     "spawn_pitch_rad": (float(spawn_pitch) if spawn_pitch else 0.0),
     "spawn_roll_rad": (float(spawn_roll) if spawn_roll else 0.0),
     "roll_brace_hip_rad": (float(roll_brace_hip) if roll_brace_hip else 0.0),
+    "roll_free_hip_rad": (float(roll_free_hip) if roll_free_hip else 0.0),
     "enable_fall_recovery": fall_recovery.strip().lower() in ("true", "1", "yes"),
     "fall_recovery_timeout_s": float(fall_timeout),
     "fall_recovery_start_delay_s": float(fall_delay),
@@ -141,6 +144,9 @@ if [[ -n "$SPAWN_ROLL" ]]; then
 fi
 if [[ -n "$ROLL_BRACE_HIP" ]]; then
     spawn_args+=(fall_recovery_roll_brace_hip_rad:="$ROLL_BRACE_HIP")
+fi
+if [[ -n "$ROLL_FREE_HIP" ]]; then
+    spawn_args+=(fall_recovery_roll_free_hip_rad:="$ROLL_FREE_HIP")
 fi
 ROS_DOMAIN_ID="$DOMAIN" /usr/bin/python3 "$PROBE" "${trace_args[@]}" \
     --duration "$DURATION" --wall-timeout 60 \

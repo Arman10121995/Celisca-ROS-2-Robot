@@ -137,7 +137,15 @@ FALL_RECOVER_CROUCH_S = 0.6
 #: with no foot loaded and the trunk pitching to 0.81 rad, and the ladder then
 #: needed three retries to undo its own stand-up.
 FALL_RECOVER_STAND_S = 0.6
-FALL_RECOVER_MAX_ROLL_CYCLES = 2
+FALL_RECOVER_MAX_ROLL_CYCLES = 4
+#: A roll cycle is only worth repeating if it *measurably* brought the trunk
+#: closer to upright. Measured: the free-pair splay walks a 1.4 rad flank down to
+#: 0.49 rad, but slowly -- the fixed two-cycle budget expired at 1.81 s, just
+#: before the trunk was under the gate, so a primitive that was working got
+#: reported as a failure. The absolute cap above still bounds the attempt; this
+#: is the rule that ends it as soon as a cycle stops making progress, which is
+#: what the fixed count was standing in for.
+FALL_RECOVER_ROLL_PROGRESS_RAD = 0.15
 
 #: Ladder waypoints [rad] per joint kind, inside the measured position limits
 #: (const.xacro). Forward kinematics with L1 = L2 = 0.213 m places the foot
@@ -271,7 +279,8 @@ def brace_legs(roll_rad: float, pitch_rad: float) -> Tuple[str, ...]:
 
 
 def roll_phase_pose(roll_rad: float, pitch_rad: float,
-                    hip_rad: float = 0.0) -> Dict[str, float]:
+                    hip_rad: float = 0.0,
+                    free_hip_rad: float = 0.0) -> Dict[str, float]:
     """Joint targets for the roll phase: brace the loaded pair, retract the rest.
 
     The pair the trunk rests on is driven toward the straight waypoint (the
@@ -279,14 +288,24 @@ def roll_phase_pose(roll_rad: float, pitch_rad: float,
     the tuck waypoint, so the trunk's mass moves over the braced side instead
     of being levered over the feet.
 
-    ``hip_rad`` is an **opt-in, unqualified** lateral input for the braced pair,
+    ``hip_rad`` and ``free_hip_rad`` are **opt-in, unqualified** lateral inputs,
     signed like the spawn pose's splayed stance (right leg positive, left leg
-    mirrored) and clamped to the measured hip limits. It is 0.0 by default
-    because the sign that actually rolls this plant's trunk back over its feet
-    has not been qualified: a lateral ground reaction at a foot *below* the
-    trunk's centre of mass is a pitch moment, not a roll one, so the roll axis
-    needs a measured answer rather than an assumed one. Placed-pose trials are
-    how that gets measured; the sign is not a default.
+    mirrored) and clamped to the measured hip limits. Both are 0.0 by default
+    because they encode two different hypotheses about the roll axis, and only
+    the first has been measured:
+
+    * ``hip_rad`` splays the *braced* pair. Measured: the sign is positive, and
+      +0.8 rad is the magnitude that brings a flank-lying trunk under the
+      0.8 rad gate (negative drives the trunk onto its back).
+    * ``free_hip_rad`` splays the *other* pair instead, leaving the braced pair
+      straight -- the classic "plant the upper legs for the moment, push with
+      the lower ones" split. It exists to be measured on this plant, not because
+      it is known to be right; the splayed-support pose that ``hip_rad`` leaves
+      behind (the robot balanced at 0.70-0.76 rad) is stable but not standing,
+      so a primitive that separates the support from the moment is the next
+      thing to try.
+
+    Placed-pose trials are how both are measured; neither is a default.
     """
     braced = brace_legs(roll_rad, pitch_rad)
     pose: Dict[str, float] = {}
@@ -294,12 +313,12 @@ def roll_phase_pose(roll_rad: float, pitch_rad: float,
         leg = name.split("_")[0]
         table = BRACE_POSE if leg in braced else TUCK_POSE
         if joint_kind(name) == "hip":
-            if leg in braced:
+            splay = hip_rad if leg in braced else free_hip_rad
+            if splay:
                 # The Go2's hip roll axes are opposed, so a splay is mirrored.
-                outward = hip_rad if leg.endswith("R") else -hip_rad
-                pose[name] = clamp_position(name, outward)
+                pose[name] = clamp_position(
+                    name, splay if leg.endswith("R") else -splay)
                 continue
-            table = TUCK_POSE
         pose[name] = clamp_position(name, table[joint_kind(name)])
     return pose
 
@@ -751,7 +770,9 @@ class FallRecovery:
         crouch_s: float = FALL_RECOVER_CROUCH_S,
         stand_s: float = FALL_RECOVER_STAND_S,
         roll_brace_hip_rad: float = 0.0,
+        roll_free_hip_rad: float = 0.0,
         max_roll_cycles: int = FALL_RECOVER_MAX_ROLL_CYCLES,
+        roll_progress_rad: float = FALL_RECOVER_ROLL_PROGRESS_RAD,
     ) -> None:
         if not math.isfinite(timeout_s) or timeout_s <= 0.0:
             raise ValueError("timeout_s must be positive")
@@ -775,8 +796,11 @@ class FallRecovery:
                 raise ValueError(f"{name} must be positive")
         if max_roll_cycles < 1:
             raise ValueError("max_roll_cycles must be at least one")
-        if not math.isfinite(roll_brace_hip_rad):
-            raise ValueError("roll_brace_hip_rad must be finite")
+        if not math.isfinite(roll_progress_rad) or roll_progress_rad < 0.0:
+            raise ValueError("roll_progress_rad must be finite and nonnegative")
+        if (not math.isfinite(roll_brace_hip_rad)
+                or not math.isfinite(roll_free_hip_rad)):
+            raise ValueError("roll hip inputs must be finite")
         self.timeout_s = timeout_s
         self.start_delay_s = start_delay_s
         self.success_tilt_rad = success_tilt_rad
@@ -786,7 +810,9 @@ class FallRecovery:
         self.crouch_s = crouch_s
         self.stand_s = stand_s
         self.roll_brace_hip_rad = roll_brace_hip_rad
+        self.roll_free_hip_rad = roll_free_hip_rad
         self.max_roll_cycles = max_roll_cycles
+        self.roll_progress_rad = roll_progress_rad
         self.status = self.IDLE
         self.started_at: Optional[float] = None
         self.active_started_at: Optional[float] = None
@@ -796,6 +822,8 @@ class FallRecovery:
         self.phase_started_at: Optional[float] = None
         #: Roll (brace-and-push) cycles spent inside this attempt.
         self.roll_cycles = 0
+        #: Measured tilt when the current roll cycle began, for the progress rule.
+        self._roll_entry_tilt: Optional[float] = None
         #: Why the attempt stopped, when it did.
         self.last_reason: Optional[str] = None
         self.attempts = 0
@@ -828,6 +856,7 @@ class FallRecovery:
         self.phase = None
         self.phase_started_at = None
         self.roll_cycles = 0
+        self._roll_entry_tilt = None
         self.last_reason = None
 
     def update(
@@ -957,8 +986,9 @@ class FallRecovery:
         self.phase = phase
         self.phase_started_at = now_s
 
-    def _enter_roll(self, now_s: float) -> None:
+    def _enter_roll(self, now_s: float, body: Optional[BodyState] = None) -> None:
         self.roll_cycles += 1
+        self._roll_entry_tilt = self._measured_tilt(body)
         self._enter_phase(self.ROLL, now_s)
 
     def _end_attempt(self, body: Optional[BodyState], reason: str) -> None:
@@ -998,7 +1028,7 @@ class FallRecovery:
                 # window decide, never to drive a standing pose from here.
                 self._enter_phase(self.TUCK, now_s)
             elif tilt >= self.gate_tilt_rad:
-                self._enter_roll(now_s)
+                self._enter_roll(now_s, body)
             else:
                 self._enter_phase(self.CROUCH, now_s)
             return
@@ -1012,6 +1042,9 @@ class FallRecovery:
             elif tilt >= self.gate_tilt_rad:
                 self._retry_or_end(body, now_s)
             else:
+                # The gate is passed, so no roll cycle is in progress any more: a
+                # later climb-back re-tucks on the count, not the progress rule.
+                self._roll_entry_tilt = None
                 self._enter_phase(self.CROUCH, now_s)
             return
         if self.phase == self.CROUCH:
@@ -1034,13 +1067,33 @@ class FallRecovery:
             self._retry_or_end(body, now_s)
 
     def _retry_or_end(self, body: Optional[BodyState], now_s: float) -> None:
-        """Spend another roll cycle, or stop once the bounded count is used."""
+        """Spend another roll cycle, or stop once the attempt stops progressing.
+
+        The fixed cycle count used to decide this, and it ended attempts that
+        were still measurably working: the free-pair splay takes a 1.4 rad flank
+        down to 0.49 rad, but needs longer than two cycles to get there. A cycle
+        is now only repeated while the measured tilt keeps improving by
+        :data:`FALL_RECOVER_ROLL_PROGRESS_RAD`, and the attempt ends as soon as
+        one does not -- which is the flail guard the count was standing in for.
+        :data:`FALL_RECOVER_MAX_ROLL_CYCLES` remains as the absolute cap.
+        """
+        tilt = self._measured_tilt(body)
         if self.roll_cycles >= self.max_roll_cycles:
             self._end_attempt(
                 body, "roll cycles exhausted above the %.2f rad gate"
                 % self.gate_tilt_rad)
-        else:
-            self._enter_phase(self.TUCK, now_s)
+            return
+        if self._roll_entry_tilt is not None and (
+                tilt is None
+                or tilt > self._roll_entry_tilt - self.roll_progress_rad):
+            # A roll cycle ran and bought less than the progress margin: stop
+            # flailing. A trunk that merely *climbed back* out of the gate after
+            # the roll succeeded has no cycle in progress, so it still re-tucks.
+            self._end_attempt(
+                body, "roll cycle bought less than %.2f rad of tilt"
+                % self.roll_progress_rad)
+            return
+        self._enter_phase(self.TUCK, now_s)
 
     def _stand_target(self, now_s: float,
                       body: Optional[BodyState] = None) -> Dict[str, float]:
@@ -1127,7 +1180,8 @@ class FallRecovery:
                       if body is not None else recovery_pose("crouch"))
         elif self.phase == self.ROLL and body is not None:
             target = roll_phase_pose(body.roll_rad, body.pitch_rad,
-                                     self.roll_brace_hip_rad)
+                                     self.roll_brace_hip_rad,
+                                     self.roll_free_hip_rad)
         else:
             target = recovery_pose("tuck")
         stance = StanceController(target=target, gain_scale=self._gain_scale,
