@@ -259,8 +259,12 @@ also what the runner's `ROLL_BRACE_HIP` sets. Measured on a placed 1.4 rad flank
 pose, the sign is **positive** — negative drives the trunk onto its back at
 3.14 rad / 0.057 m — and +0.8 rad is the magnitude that brings the trunk under
 the gate (to 0.66 rad), at which point the ladder leaves the roll phase for
-`crouch` and then fails there, because the crouch returns the hips to zero.
-Treat it as a measurement knob, not a setting.
+`crouch`. That input is now also kept through `crouch` (and only while roll
+dominates), which walks the roll axis through the whole ladder —
+`tuck → roll → crouch → stand` — and the remaining failure is at the `stand`
+entry, where the hips return to zero while the trunk still carries 0.5–0.7 rad
+of roll and it goes over backwards. Treat the flag as a measurement knob, not a
+setting.
 
 Two things to know before relying on this: it is measured from
 a *placed* pose, because no perturbation on these maps leaves the robot down but

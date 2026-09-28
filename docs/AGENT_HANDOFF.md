@@ -135,7 +135,19 @@ to 0.66 rad, under the 0.8 rad gate, so the ladder leaves the roll phase for the
 first time and reaches `crouch`** — where it then fails, because the crouch
 drives the hips back to zero. Next: carry the measured hip input through the
 crouch phase and re-measure; the default stays the qualified sagittal-only
-brace until then. Still open: trigger latency, and the crouch-side hip input.
+brace until then.
+
+Done next: `crouch_phase_pose()` keeps the splay on the same measured pair
+while roll dominates (a pitch-dominated pose keeps the plain crouch waypoint,
+which is the path that works). Three trials
+(`fall_ladder_hipcrouch_20260928T{p08r14,p08r12,p10r14}`, domains 226-228) now
+walk the **whole** ladder on the roll axis -- `tuck -> roll -> crouch -> stand` --
+with the trunk measured under the gate at the stand entry (min tilt 0.68, 0.68,
+0.51 rad), where before it never left `roll`. All three then tip onto their back
+within 0.4 s of the stand entry, because `stand` puts the hips back to zero
+while the trunk still carries 0.5-0.7 rad of roll. The next increment is a
+*graded* release of the measured splay through `stand`; the sign is settled and
+is not to be re-guessed. Still open: trigger latency, and the stand-side release.
 Rebuild `robot_lab_adapter` after Python edits: its installed
 module is a copy despite `--symlink-install`, and three intermediate runs
 using a stale installed module were discarded. Two more trials were lost by

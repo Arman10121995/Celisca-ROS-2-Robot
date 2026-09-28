@@ -36,6 +36,7 @@ from robot_lab_adapter.go2_locomotion import (
     BRACE_POSE,
     CONTACT_RESIDUAL_THRESHOLD_NM,
     CROUCH_POSE,
+    crouch_phase_pose,
     EFFORT_LIMITS,
     EFFORT_SATURATION_CYCLES,
     FALL_CONFIRM_CYCLES,
@@ -1163,6 +1164,25 @@ class TestFallRecoveryLadder:
             self._stance(roll_phase_pose(1.2, 0.0, 0.4), positions))
         with pytest.raises(ValueError):
             FallRecovery(roll_brace_hip_rad=float("nan"))
+
+    def test_crouch_keeps_the_measured_splay_only_while_roll_dominates(self):
+        # The plain crouch waypoint is the pitch path, which measurably works,
+        # so it must be untouched by the lateral input.
+        plain = crouch_phase_pose(1.4, 0.0)
+        assert plain == pytest.approx(recovery_pose("crouch"))
+        assert crouch_phase_pose(0.0, 1.4, 0.8) == pytest.approx(
+            recovery_pose("crouch"))
+        # Roll-dominated: the braced pair keeps the splay, the other pair does
+        # not, and the knees are still the crouch waypoint.
+        rolled = crouch_phase_pose(1.4, 0.0, 0.8)
+        assert rolled["FR_hip_joint"] == pytest.approx(0.8)
+        assert rolled["RR_hip_joint"] == pytest.approx(0.8)
+        assert rolled["FL_hip_joint"] == pytest.approx(0.0)
+        assert rolled["RL_hip_joint"] == pytest.approx(0.0)
+        assert rolled["FR_calf_joint"] == pytest.approx(CROUCH_POSE["calf"])
+        left = crouch_phase_pose(-1.4, 0.0, 0.8)
+        assert left["FL_hip_joint"] == pytest.approx(-0.8)
+        assert left["FR_hip_joint"] == pytest.approx(0.0)
 
     def test_bounds_waypoints_and_gate_are_predeclared_and_consistent(self):
         assert FallRecovery.PHASES == (FallRecovery.TUCK, FallRecovery.ROLL,

@@ -304,6 +304,30 @@ def roll_phase_pose(roll_rad: float, pitch_rad: float,
     return pose
 
 
+def crouch_phase_pose(roll_rad: float, pitch_rad: float,
+                      hip_rad: float = 0.0) -> Dict[str, float]:
+    """The crouch waypoint, keeping the lateral input while roll dominates.
+
+    Measured: with the measured +0.8 rad splay the ladder got a flank-lying
+    trunk under the gate for the first time and then failed *here*, because the
+    plain crouch waypoint puts the hips back to zero and levers the trunk over
+    again mid-transition. So the crouch keeps the same input on the same
+    measured pair -- and only while roll dominates. A pitch-dominated pose gets
+    the plain crouch waypoint, which is the path that measurably works.
+    """
+    pose = recovery_pose("crouch")
+    if not hip_rad or abs(roll_rad) < abs(pitch_rad):
+        return pose
+    for name in JOINT_NAMES:
+        leg = name.split("_")[0]
+        if joint_kind(name) != "hip":
+            continue
+        if leg in brace_legs(roll_rad, pitch_rad):
+            pose[name] = clamp_position(
+                name, hip_rad if leg.endswith("R") else -hip_rad)
+    return pose
+
+
 # ----------------------------------------------------------------------
 # Stance: closed-loop joint-space PD hold
 # ----------------------------------------------------------------------
@@ -1057,7 +1081,9 @@ class FallRecovery:
                                       damping_scale=self._damping_scale)
             return stance.effort_command(positions, velocities)
         if self.phase == self.CROUCH:
-            target = recovery_pose("crouch")
+            target = (crouch_phase_pose(body.roll_rad, body.pitch_rad,
+                                        self.roll_brace_hip_rad)
+                      if body is not None else recovery_pose("crouch"))
         elif self.phase == self.ROLL and body is not None:
             target = roll_phase_pose(body.roll_rad, body.pitch_rad,
                                      self.roll_brace_hip_rad)

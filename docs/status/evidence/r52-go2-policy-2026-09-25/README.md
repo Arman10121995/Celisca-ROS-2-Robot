@@ -405,7 +405,7 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 33 trials, all with probe and
+writes [`ladder_sweep.json`](ladder_sweep.json). 36 trials, all with probe and
 launch return code 0: the five perturbation families below, plus the
 placed-pose runs in the sections that follow.
 
@@ -579,6 +579,25 @@ Three things follow, and they are the first positive result on the roll axis:
 3. The failure then moves to `crouch`, which drives the hips back to zero and
    levers the trunk over again. So the follow-up is to carry the measured hip
    input through the crouch phase and re-measure, not to re-guess the sign.
+
+That follow-up is measured too. `crouch_phase_pose()` keeps the same input on the
+same measured pair, and **only while roll dominates** — a pitch-dominated pose
+still gets the plain crouch waypoint, which is the path that works. Three trials
+(`fall_ladder_hipcrouch_20260928T*`, domains 226–228):
+
+| placed roll | hip | minimum tilt | ladder reached | then |
+|---|---|---|---|---|
+| 1.2 rad | +0.8 | **0.68 rad** | `crouch` 1.88 s → **`stand` 2.41 s** | tips over 0.03 s later, `failed:stand`, inverted |
+| 1.4 rad | +0.8 | 0.68 rad | `crouch` 1.02 s → `stand` 1.56 s | re-tucks, `unrecoverable:roll`, inverted |
+| 1.4 rad | +1.0 | **0.51 rad** | `crouch` 1.04 s → `stand` 1.57 s | re-tucks, `unrecoverable:tuck`, inverted |
+
+So the roll axis now walks the **whole** ladder — `tuck → roll → crouch → stand` —
+for the first time, with the trunk measured under the gate (0.51–0.68 rad) at the
+stand entry. And the next failure is now precisely located: in all three the
+`stand` phase drives the hips back to zero while the trunk still carries
+0.5–0.7 rad of roll, and the trunk goes over backwards (tilt 0.70 → 1.29 → 1.90 →
+2.66 → 3.04 rad in 0.4 s). The remaining step is a *graded* release of the
+measured splay through `stand`, not a new sign.
 
 This is a measured sign, not a tuned constant, and it stays opt-in until the
 crouch-side behaviour is measured too.
