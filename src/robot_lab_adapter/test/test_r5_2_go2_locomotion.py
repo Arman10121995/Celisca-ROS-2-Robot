@@ -1184,6 +1184,52 @@ class TestFallRecoveryLadder:
         assert left["FL_hip_joint"] == pytest.approx(-0.8)
         assert left["FR_hip_joint"] == pytest.approx(0.0)
 
+    def test_stand_releases_the_splay_with_the_trunks_remaining_roll(self):
+        # Measured: dropping the splay at the stand entry put the trunk on its
+        # back, so the stand target releases it with the measured roll instead.
+        recovery = self._recovery(timeout_s=20.0, roll_brace_hip_rad=0.8)
+        positions = self._positions()
+        stand_at = FALL_RECOVER_TUCK_S + FALL_RECOVER_CROUCH_S
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        recovery.update(FALL_RECOVER_TUCK_S, True,
+                        BodyState(roll_rad=0.6, pitch_rad=0.0, body_height_m=0.14),
+                        positions, {})
+        recovery.update(stand_at, True,
+                        BodyState(roll_rad=0.6, pitch_rad=0.0, body_height_m=0.14),
+                        positions, {})
+        assert recovery.phase == FallRecovery.STAND
+
+        def hips_at(roll, pitch=0.0):
+            recovery.phase_started_at = 99.0   # past the slew: the nominal pose
+            target = recovery._stand_target(
+                99.0 + FALL_RECOVER_STAND_S, BodyState(roll, pitch, 0.33))
+            return {leg: target[f"{leg}_hip_joint"] for leg in LEG_PREFIXES}
+
+        # Full splay while the trunk is still well rolled, on the braced pair.
+        rolled = hips_at(0.6)
+        assert rolled["FR"] == pytest.approx(0.8)
+        assert rolled["RR"] == pytest.approx(0.8)
+        assert rolled["FL"] == pytest.approx(0.0)
+        # Graded: it tapers with the remaining roll rather than switching off.
+        assert hips_at(0.2)["FR"] == pytest.approx(0.8 * 0.2 / 0.35)
+        # Upright, and pitch-dominated, both mean exactly the nominal stance.
+        assert hips_at(0.0)["FR"] == pytest.approx(0.0)
+        assert hips_at(0.0, 0.4)["FR"] == pytest.approx(0.0)
+        # Without the opt-in input nothing changes at all.
+        plain = self._recovery(timeout_s=20.0)
+        plain.update(0.0, True, self._collapsed(), positions, {})
+        plain.update(FALL_RECOVER_TUCK_S, True,
+                     BodyState(roll_rad=0.6, pitch_rad=0.0, body_height_m=0.14),
+                     positions, {})
+        plain.update(stand_at, True,
+                     BodyState(roll_rad=0.6, pitch_rad=0.0, body_height_m=0.14),
+                     positions, {})
+        plain.phase_started_at = 99.0
+        target = plain._stand_target(
+            99.0 + FALL_RECOVER_STAND_S,
+            BodyState(0.6, 0.0, 0.33))
+        assert target == pytest.approx(nominal_stance_pose())
+
     def test_bounds_waypoints_and_gate_are_predeclared_and_consistent(self):
         assert FallRecovery.PHASES == (FallRecovery.TUCK, FallRecovery.ROLL,
                                        FallRecovery.CROUCH, FallRecovery.STAND)

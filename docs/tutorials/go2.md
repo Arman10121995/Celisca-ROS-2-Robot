@@ -261,10 +261,12 @@ pose, the sign is **positive** — negative drives the trunk onto its back at
 the gate (to 0.66 rad), at which point the ladder leaves the roll phase for
 `crouch`. That input is now also kept through `crouch` (and only while roll
 dominates), which walks the roll axis through the whole ladder —
-`tuck → roll → crouch → stand` — and the remaining failure is at the `stand`
-entry, where the hips return to zero while the trunk still carries 0.5–0.7 rad
-of roll and it goes over backwards. Treat the flag as a measurement knob, not a
-setting.
+`tuck → roll → crouch → stand` — and the splay is then *released* there with the
+trunk's remaining roll, because dropping it at the stand entry put the robot on
+its back (3.1416 rad / 0.057 m). With both in place the same trials end **not**
+inverted: 0.70–0.76 rad / 0.139 m, balanced on the splay in a bounded stop at
+~6.8 s. That is a safety result, not a stand-up — a "gather the legs" step is
+still missing. Treat the flag as a measurement knob, not a setting.
 
 Two things to know before relying on this: it is measured from
 a *placed* pose, because no perturbation on these maps leaves the robot down but

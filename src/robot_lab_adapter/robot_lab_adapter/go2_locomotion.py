@@ -1042,8 +1042,9 @@ class FallRecovery:
         else:
             self._enter_phase(self.TUCK, now_s)
 
-    def _stand_target(self, now_s: float) -> Dict[str, float]:
-        """The standing pose, slewed in from the crouch waypoint.
+    def _stand_target(self, now_s: float,
+                      body: Optional[BodyState] = None) -> Dict[str, float]:
+        """The standing pose, slewed in and with the lateral splay released.
 
         Stepping straight to the nominal stance was measured to over-drive the
         legs out of the crouch: the placed 1.4 rad nose-down trial left the
@@ -1052,20 +1053,55 @@ class FallRecovery:
         target over :attr:`stand_s` keeps the drive bounded, and the end of the
         slew *is* the nominal stance, so the standing pose is still reached (and
         still only from this phase).
+
+        The measured lateral splay is *released* here rather than dropped, for
+        the same reason it was kept through the crouch: with the hips already at
+        zero, all three placed-flank trials tipped onto their back within 0.4 s
+        of the stand entry while the trunk still carried 0.5–0.7 rad of roll. The
+        splay scales with how far the trunk still is from :attr:`success_tilt_rad`
+        — full above it, tapering to exactly the nominal stance as the trunk comes
+        upright — and only while roll dominates, so the pitch path is untouched.
         """
         stance = nominal_stance_pose()
         if self.phase_started_at is None:
             return stance
         alpha = (now_s - self.phase_started_at) / self.stand_s
         if alpha >= 1.0:
-            return stance
-        crouch = recovery_pose("crouch")
-        alpha = max(0.0, alpha)
-        return {
-            name: clamp_position(
-                name, crouch[name] + alpha * (stance[name] - crouch[name]))
-            for name in JOINT_NAMES
-        }
+            target = dict(stance)
+        else:
+            crouch = recovery_pose("crouch")
+            alpha = max(0.0, alpha)
+            target = {
+                name: clamp_position(
+                    name, crouch[name] + alpha * (stance[name] - crouch[name]))
+                for name in JOINT_NAMES
+            }
+        self._release_lateral_splay(target, body)
+        return target
+
+    def _release_lateral_splay(self, target: Dict[str, float],
+                               body: Optional[BodyState]) -> None:
+        """Scale the measured splay down with the trunk's remaining roll.
+
+        Full splay at or beyond :attr:`success_tilt_rad` of roll, zero when the
+        trunk is upright, and nothing at all unless roll still dominates -- a
+        missing attitude or a pitch-dominated pose keeps the target as built.
+        """
+        if not self.roll_brace_hip_rad or body is None:
+            return
+        if abs(body.roll_rad) < abs(body.pitch_rad):
+            return
+        scale = min(1.0, abs(body.roll_rad) / self.success_tilt_rad)
+        if scale <= 0.0:
+            return
+        splay = self.roll_brace_hip_rad * scale
+        for name in JOINT_NAMES:
+            leg = name.split("_")[0]
+            if joint_kind(name) != "hip":
+                continue
+            if leg in brace_legs(body.roll_rad, body.pitch_rad):
+                target[name] = clamp_position(
+                    name, splay if leg.endswith("R") else -splay)
 
     def _phase_efforts(
         self,
@@ -1076,7 +1112,7 @@ class FallRecovery:
     ) -> Dict[str, float]:
         """Clamped joint-space PD effort toward this phase's waypoint."""
         if self.phase == self.STAND:
-            target = self._stand_target(now_s)
+            target = self._stand_target(now_s, body)
             stance = StanceController(target=target, gain_scale=self._gain_scale,
                                       damping_scale=self._damping_scale)
             return stance.effort_command(positions, velocities)

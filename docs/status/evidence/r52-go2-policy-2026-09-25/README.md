@@ -405,9 +405,10 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 36 trials, all with probe and
-launch return code 0: the five perturbation families below, plus the
-placed-pose runs in the sections that follow.
+writes [`ladder_sweep.json`](ladder_sweep.json). 39 trials, all with probe and
+launch return code 0 (18 unrecoverable, 8 failed, 6 recovered, 7 no-fall): the five
+perturbation families below, plus the placed-pose runs in the sections that
+follow.
 
 | family | trials | outcome |
 |---|---|---|
@@ -598,6 +599,37 @@ stand entry. And the next failure is now precisely located: in all three the
 0.5–0.7 rad of roll, and the trunk goes over backwards (tilt 0.70 → 1.29 → 1.90 →
 2.66 → 3.04 rad in 0.4 s). The remaining step is a *graded* release of the
 measured splay through `stand`, not a new sign.
+
+#### The graded release: the roll axis stops flipping (and where it stops)
+
+`_stand_target()` now releases the splay with the trunk's *remaining* roll —
+full at or beyond the 0.35 rad success tilt, tapering to exactly the nominal
+stance as the trunk comes upright, and only while roll still dominates. The same
+three trials again (`fall_ladder_hipstand_20260928T*`, domains 226–228, 20 s
+probe, 8 s window):
+
+| placed roll | hip | min tilt | where it ended | verdict |
+|---|---|---|---|---|
+| 1.2 rad | +0.8 | 0.67 rad | **0.76 rad / 0.139 m** | `failed:stand` at 6.86 s |
+| 1.4 rad | +0.8 | 0.65 rad | **0.76 rad / 0.139 m** | `failed:stand` at 6.73 s |
+| 1.4 rad | +1.0 | 0.50 rad | **0.70 rad / 0.139 m** | `failed:stand` at 6.87 s |
+
+Every one of these used to end **inverted** at 3.1416 rad / 0.057 m. They now stop
+*not* inverted, on their feet in a splayed crouch, and they hold it: the trunk
+sits at 0.70–0.76 rad and the ladder stays in the `stand` phase, driving, until
+the bounded attempt window expires at ~6.8 s and the sequence stops. That is the
+bounded behaviour the rest of this work has been asking for, on the axis where
+it previously had none.
+
+It is not a stand-up, and the trace says why in one line: the robot settles with
+8 N on the left feet and 2.5 N on the right, i.e. it is *balanced on the splay*.
+That is a fixed point — the splay is what rolls the trunk up, and it is also what
+keeps the legs from gathering under the hips, so the trunk can never reach the
+tilt at which the splay would taper. The ladder has no way to express "roll it
+up, then gather the legs with the splay released", so the next candidate is a
+gather step between `roll` and `crouch` (or a release keyed on measured load
+rather than on roll angle). Until that is measured, the honest claim is: the roll
+axis goes from *inverted* to *stable and bounded*, not to *standing*.
 
 This is a measured sign, not a tuned constant, and it stays opt-in until the
 crouch-side behaviour is measured too.

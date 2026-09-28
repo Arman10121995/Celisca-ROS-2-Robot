@@ -147,7 +147,21 @@ with the trunk measured under the gate at the stand entry (min tilt 0.68, 0.68,
 within 0.4 s of the stand entry, because `stand` puts the hips back to zero
 while the trunk still carries 0.5-0.7 rad of roll. The next increment is a
 *graded* release of the measured splay through `stand`; the sign is settled and
-is not to be re-guessed. Still open: trigger latency, and the stand-side release.
+is not to be re-guessed.
+
+Done next: `_stand_target()` releases the splay with the trunk's *remaining*
+roll -- full at or beyond the 0.35 rad success tilt, tapering to the nominal
+stance as the trunk comes upright, only while roll dominates. The same three
+trials again (`fall_ladder_hipstand_20260928T*`) now all end **not** inverted at
+0.70-0.76 rad / 0.139 m, holding a splayed crouch in the `stand` phase until the
+bounded attempt window expires at ~6.8 s (`failed:stand`), where every one of
+them used to end at 3.1416 rad / 0.057 m. That is a safety win on an axis that
+had none, and it is *not* a stand-up: the robot settles balanced on the splay
+(8 N left feet, 2.5 N right), a fixed point -- the splay rolls the trunk up and
+also stops the legs gathering under the hips, so the trunk never reaches the tilt
+at which the splay would taper. Next candidate: a gather step between `roll` and
+`crouch`, or a release keyed on measured load rather than roll angle. Still open:
+trigger latency, and the roll-axis get-up.
 Rebuild `robot_lab_adapter` after Python edits: its installed
 module is a copy despite `--symlink-install`, and three intermediate runs
 using a stale installed module were discarded. Two more trials were lost by
