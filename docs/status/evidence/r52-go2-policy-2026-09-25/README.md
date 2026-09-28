@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 59 trials, all with probe and
-launch return code 0 (27 unrecoverable, 17 failed, 6 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 62 trials, all with probe and
+launch return code 0 (27 unrecoverable, 17 failed, 9 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -758,6 +758,30 @@ sagittal-only brace could not right it, and the next section shows which
 lateral input does.
 
 
+#### Qualifying the one positive result: 4 of 4
+
+The get-up above is a single trial, and this work has already seen trials
+diverge run-to-run (the wall-clocked control loop interleaves differently with
+sim time under load). So the one positive claim was repeated rather than
+trusted: the same placed 1.4 rad nose-down pose, the same configuration, three
+more runs on separate ROS domains (`fall_ladder_repeat_20260928Tr1..r3`,
+domains 226–228) against the original (`fall_ladder_placed_slew_*`).
+
+| run | `succeeded:stand` | final tilt / height |
+|---|---|---|
+| original (`placed_slew`) | 2.324 s | 0.01 rad / 0.329 m |
+| repeat 1 | 2.404 s | 0.01 rad / 0.329 m |
+| repeat 2 | 2.236 s | 0.01 rad / 0.329 m |
+| repeat 3 | 2.408 s | 0.01 rad / 0.329 m |
+
+Four out of four, with a 0.17 s spread on the success time and the same terminal
+pose to three decimals, on four different domains. That is the difference
+between "a demonstrated get-up" and one lucky run, and it is the only claim in
+this section that now has repeat evidence behind it. The negatives do not need
+it: they are consistent across 13 perturbation trials and three placed-pose
+families, with the same terminal pose every time.
+
+
 #### The operating point is measured, and 0.5/0.5 is a cliff edge
 
 Every trial so far ran the recovery at the launch default authority,
@@ -807,11 +831,11 @@ at that authority the ladder **cannot invert anything** — all four trials ende
 fell and say so", which is the right way to fail.
 
 
-One demonstrated get-up (placed chest-down → standing, loaded, and held, in
-2.324 s and without a retry, once the stand pose is slewed in), a measured
-capture envelope (**pitch 0.8–1.6 rad recoverable at ~2.3 s; nothing on the roll
-axis above the 0.8 rad gate**), and a harness that can measure the sequence at
-all. Both remaining open items are now measured rather than open:
+One demonstrated get-up (**4 of 4 repeats**, `succeeded:stand` at 2.236–2.408 s,
+ending at 0.01 rad / 0.329 m on four separate ROS domains), a measured capture
+envelope (**pitch 0.8–1.6 rad recoverable at ~2.3 s; nothing on the roll axis
+above the 0.8 rad gate**), and a harness that can measure the sequence at all.
+Both remaining open items are now measured rather than open:
 
 - **Trigger latency is not the missing piece.** On lateral impulses the debounced
   latch is 0.66 s late *and* the fall is ballistic; on a sustained forward push

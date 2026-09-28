@@ -224,7 +224,18 @@ pose. So 0.5/0.5 is a narrow window bounded on both sides, 1.0 over-drives and
 inverts, 0.3/0.2 under-drive into a no-op. One thing worth keeping from the low
 end: there the ladder **cannot invert anything** (all four ended `failed`, none
 `unrecoverable`), so its failure mode is "leave the robot where it fell and say
-so", which is the right way to fail. Fall recovery stays off by default.
+so", which is the right way to fail.
+
+The one positive result has also been *qualified* rather than trusted: the
+placed 1.4 rad nose-down get-up was repeated three times on separate domains
+(`fall_ladder_repeat_20260928Tr1..r3`, domains 226-228) and reproduces **4 of 4**
+-- `succeeded:stand` at 2.324 / 2.404 / 2.236 / 2.408 s, every one ending at
+0.01 rad and 0.329 m. That matters because this work has already seen trials
+diverge run-to-run (the control loop is wall-clocked and interleaves with sim
+time differently under load), and because a single lucky run is not a claim. It
+is the only claim here with repeat evidence; the negatives are consistent across
+13 perturbation trials and three placed-pose families. Fall recovery stays off
+by default.
 
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
