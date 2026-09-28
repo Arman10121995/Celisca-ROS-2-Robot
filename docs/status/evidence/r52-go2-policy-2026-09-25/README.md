@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 68 trials, all with probe and
-launch return code 0 (27 unrecoverable, 17 failed, 15 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 72 trials, all with probe and
+launch return code 0 (27 unrecoverable, 18 failed, 18 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -570,7 +570,38 @@ collapse is **0.9–1.6 rad, reproducible**, and the upper edge is between 1.6 a
 sized against, so it is the one worth having repeats behind it.
 
 
-#### The roll sign, measured (the hip input that the ladder was missing)
+#### Combined poses: the axis dispatch is validated, and the envelope is axis-aware
+
+Every placed pose so far has been single-axis, so the roll-vs-pitch dispatch
+(`brace_legs`, and the crouch's "only while roll dominates" rule) had unit tests
+with pure single-axis bodies and no physics behind them. Real falls are not
+single-axis, so four combined poses were run (`fall_ladder_combo_20260928T*`,
+domains 226–229):
+
+| placed pose | dominant axis | outcome |
+|---|---|---|
+| pitch 1.2, roll 0.6 | pitch | **`succeeded:stand` 2.412 s**, 0.01 rad / 0.329 m |
+| pitch 1.4, roll 0.8 | pitch | **`succeeded:stand` 2.216 s**, 0.01 rad / 0.329 m |
+| **pitch 1.2, roll 1.0** | **roll** | **`succeeded:stand` 2.412 s**, 0.01 rad / 0.329 m |
+| pitch 0.9, roll 0.9 (tie) | tie → roll | `failed:roll`, ends 0.00 rad / **0.057 m** (on its back) |
+
+Three things follow, and the first two correct what this document said earlier:
+
+1. **The dispatch works.** Pitch-dominant combined poses recover at the same
+   ~2.2–2.4 s as pure pitch, so `brace_legs` picking the front/rear pair and the
+   crouch keeping its hips at zero is not just a unit-test artefact.
+2. **"Nothing on the roll axis" was too strong.** A *roll-dominant* pose with a
+   substantial pitch component (1.2 rad of pitch against 1.0 of roll) recovers
+   just as well, because the crouch and stand phases act in the sagittal plane
+   and a trunk that is also pitched forward can be gathered by them. The
+   accurate statement is narrower: poses with **little or no pitch** — a pure
+   flank — are the ones that do not recover.
+3. **The tie-break gives up on diagonals.** With pitch equal to roll the code
+   takes the roll path (`abs(roll) >= abs(pitch)`), and a 0.9/0.9 diagonal is
+   harder than either pure axis: it ends on its back at 0.057 m. So the
+   envelope is not a function of total tilt — it is a function of the *axis mix*,
+   and a 45° diagonal sits outside it.
+
 
 The brace held the hips at zero because this project had no measured
 ground-contact torque sign for the roll axis. The placed-pose harness can produce
@@ -914,7 +945,10 @@ Both remaining open items are now measured rather than open:
   same over-drive failure mode.
 - **The capture envelope is qualified, not sampled once**: pitch 0.9 / 1.2 / 1.4 /
   1.6 rad recover **13 of 13** runs (3/3/4/3, all ending at 0.01 rad / 0.329 m,
-  success saturating at ~2.3 s), with 1.8 rad inverting.
+  success saturating at ~2.3 s), with 1.8 rad inverting. Combined poses recover
+  too — pitch 1.2 + roll 1.0 included — so the envelope is a function of the
+  *axis mix*: what fails is a pose with little or no pitch (a pure flank) and the
+  45° diagonal, where the tie-break takes the roll path.
 
 The feature therefore stays **off by default**, and the honest summary is: this
 ladder stands the robot up from a settled chest-down pose and holds it, rolls a

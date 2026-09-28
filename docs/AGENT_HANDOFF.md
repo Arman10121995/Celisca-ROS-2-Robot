@@ -253,7 +253,17 @@ runs (`fall_ladder_envrep_20260928T*`, domains 226-230) — 3/3/4/3, every one
 ending at 0.01 rad and 0.329 m, with the success time saturating at ~2.3 s above
 1.2 rad — so the reachable window for a pitch collapse is 0.9-1.6 rad and
 reproducible, with the upper edge between 1.6 and 1.8 rad. Fall recovery stays
-off by default.
+off by default. Combined poses were run after that
+(`fall_ladder_combo_20260928T*`, domains 226-229) because every placed pose so
+far had been single-axis, leaving the roll-vs-pitch dispatch tested only on
+pure single-axis bodies: pitch 1.2 + roll 0.6, pitch 1.4 + roll 0.8 and
+**pitch 1.2 + roll 1.0** all `succeeded:stand` (2.216-2.412 s, ending 0.01 rad /
+0.329 m), while the **0.9/0.9 tie** takes the roll path and ends on its back at
+0.057 m. So the dispatch works in physics, and it corrects an earlier over-broad
+claim of mine: "nothing on the roll axis" was too strong -- a roll-dominant pose
+with a real pitch component recovers just as well. The cases that do not recover
+are the ones with **little or no pitch** (a pure flank) and the 45° diagonal, so
+the envelope is a function of the axis mix, not of total tilt.
 
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
