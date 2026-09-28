@@ -90,7 +90,10 @@ sustained lateral 40-50 N over 1.2-1.5 s, forward 45-70 N, drops from 0.9/1.4 m)
 shows the window the ladder can act in is **empty on these maps**: every
 toppling trial latches `fallen` at 0.51-1.16 rad already rolling 2.6-7.2 rad/s
 and ends inverted at 3.1416 rad / 0.057 m, and everything gentler stays
-upright. The trigger, not the sequence, limits a fall trial. To measure the
+upright. The trigger, not the sequence, limits a fall trial -- *later measured
+to be the wrong attribution: where the fall is catchable the latch is already
+on time, and the limit is the 0.42 s catchable collapse against a ~2.3 s
+get-up, not the trigger (see the trigger-latency result below)*. To measure the
 sequence anyway, `mujoco_spawner.py` now takes `spawn_pitch`/`spawn_roll`
 (composing Rz(yaw)*Ry(pitch)*Rx(roll), 0.0 by default, plumbed through both
 launches and recorded in the manifest) so a settled fallen pose can be
