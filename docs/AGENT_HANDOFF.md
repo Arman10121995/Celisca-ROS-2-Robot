@@ -247,8 +247,13 @@ placed 1.4 rad nose-down get-up was repeated three times on separate domains
 diverge run-to-run (the control loop is wall-clocked and interleaves with sim
 time differently under load), and because a single lucky run is not a claim. It
 is the only claim here with repeat evidence; the negatives are consistent across
-13 perturbation trials and three placed-pose families. Fall recovery stays off
-by default.
+13 perturbation trials and three placed-pose families. The *envelope* has been
+qualified the same way: pitch 0.9 / 1.2 / 1.4 / 1.6 rad now recover **13 of 13**
+runs (`fall_ladder_envrep_20260928T*`, domains 226-230) — 3/3/4/3, every one
+ending at 0.01 rad and 0.329 m, with the success time saturating at ~2.3 s above
+1.2 rad — so the reachable window for a pitch collapse is 0.9-1.6 rad and
+reproducible, with the upper edge between 1.6 and 1.8 rad. Fall recovery stays
+off by default.
 
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials

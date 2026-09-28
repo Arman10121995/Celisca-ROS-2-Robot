@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 62 trials, all with probe and
-launch return code 0 (27 unrecoverable, 17 failed, 9 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 68 trials, all with probe and
+launch return code 0 (27 unrecoverable, 17 failed, 15 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -546,6 +546,28 @@ built against:
 
 A future pre-fall retraction therefore has a measurable target: engage below
 ~1.6 rad of pitch, and expect nothing from the roll axis until the brace does.
+
+
+##### The envelope, qualified with repeats
+
+The table above is one run per pose, and the whole ladder was shown to be
+reproducible only after being repeated. So the envelope edges — the numbers any
+future work would be built against — were repeated too
+(`fall_ladder_envrep_20260928T*`, domains 226–230):
+
+| placed pitch | runs | `succeeded:stand` | final tilt / height |
+|---|---|---|---|
+| 0.9 rad | **3** (1.464 / 1.500 / 1.476 s) | 3 of 3 | 0.01 rad / 0.329 m |
+| 1.2 rad | **3** (2.356 / 2.352 / 2.308 s) | 3 of 3 | 0.01 rad / 0.329 m |
+| 1.4 rad | **4** (2.324 / 2.404 / 2.236 / 2.408 s) | 4 of 4 | 0.01 rad / 0.329 m |
+| 1.6 rad | **3** (2.296 / 2.364 / 2.428 s) | 3 of 3 | 0.01 rad / 0.329 m |
+
+Thirteen of thirteen, every one ending at the same pose to three decimals, with
+the success time saturating at ~2.3 s above 1.2 rad and only ~1.5 s at 0.9 rad.
+Together with the single 1.8 rad failure, the reachable window for a pitch
+collapse is **0.9–1.6 rad, reproducible**, and the upper edge is between 1.6 and
+1.8 rad. That is the one number in this document a future recovery feature can be
+sized against, so it is the one worth having repeats behind it.
 
 
 #### The roll sign, measured (the hip input that the ladder was missing)
@@ -890,6 +912,9 @@ Both remaining open items are now measured rather than open:
   the drive is too weak to alter any pose at all. So 0.5/0.5 is a narrow window
   bounded on both sides, and the two catapults this work had to slew away are the
   same over-drive failure mode.
+- **The capture envelope is qualified, not sampled once**: pitch 0.9 / 1.2 / 1.4 /
+  1.6 rad recover **13 of 13** runs (3/3/4/3, all ending at 0.01 rad / 0.329 m,
+  success saturating at ~2.3 s), with 1.8 rad inverting.
 
 The feature therefore stays **off by default**, and the honest summary is: this
 ladder stands the robot up from a settled chest-down pose and holds it, rolls a
