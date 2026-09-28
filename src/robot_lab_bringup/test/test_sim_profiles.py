@@ -154,6 +154,19 @@ def test_bhl_rec_torque_filter_launch_flag_is_opt_in():
     assert '"bhl_enable_torque_filter"' in launch_text
 
 
+def test_bhl_policy_launch_flag_defaults_on_and_gates_the_node():
+    """The walking policy keeps its integrated auto-start default; the flag
+    is the only thing that gates the humanoid-policy-controller node, so a
+    stance-only run can opt out without touching the launch file."""
+    launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
+        encoding="utf-8")
+    assert '"bhl_enable_policy", default_value="true"' in launch_text
+    assert '_as_bool(_launch_value(context, "bhl_enable_policy"), True)' in launch_text
+    # The node stays behind bhl_policy_active alone: no ungated second start.
+    assert 'executable="humanoid-policy-controller"' in launch_text
+    assert launch_text.count("humanoid-policy-controller") == 1
+
+
 def test_go2_reverse_command_map_launch_flag_is_opt_in():
     launch_text = (PACKAGE_DIR / "launch" / "simulated_robot.launch.py").read_text(
         encoding="utf-8")

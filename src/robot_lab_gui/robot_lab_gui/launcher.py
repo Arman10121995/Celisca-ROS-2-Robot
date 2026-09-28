@@ -447,6 +447,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_angular_var = tk.DoubleVar(value=0.08)
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
+        self.bhl_policy_var = tk.BooleanVar(value=True)
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
         self.command_var = tk.StringVar()
@@ -828,6 +829,20 @@ class SimulationLauncherGui(tk.Tk):
         add_tooltip(self.go2_policy_checkbox,
                     "MuJoCo localization only. Forward and turn were measured; "
                     "slow reverse and stairs still fail qualification.")
+
+        self.bhl_policy_checkbox = ttk.Checkbutton(
+            controls,
+            text="BHL walking policy (experimental)",
+            variable=self.bhl_policy_var,
+            command=self._update_validation_and_command,
+        )
+        self.bhl_policy_checkbox.grid(row=22, column=0, sticky="w", pady=(10, 0))
+        add_tooltip(self.bhl_policy_checkbox,
+                    "MuJoCo localization only. Starts the ONNX effort policy "
+                    "the Drive pad walks with: forward walk and stop measured; "
+                    "held turning stalls (policy fixed point) and reverse is "
+                    "unqualified. Uncheck for the passive spawn stance with no "
+                    "policy node.")
 
         ttk.Label(controls, text="Drive").grid(row=24, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
@@ -1687,12 +1702,26 @@ class SimulationLauncherGui(tk.Tk):
                 and self.mode_var.get() == "loc"
                 and self.launch_kind_var.get() == "simulation")
 
+    def _bhl_policy_selectable(self):
+        return (self.robot_var.get() == "berkeley_humanoid_lite_sim"
+                and self.simulator_var.get() == "mujoco"
+                and self.mode_var.get() == "loc"
+                and self.launch_kind_var.get() == "simulation")
+
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
             command = [part for part in command
                        if not part.startswith("go2_policy_path:=")]
             command.append("go2_policy_path:=auto")
+        if command and self._bhl_policy_selectable():
+            # The BHL policy defaults on, so the toggle is always written
+            # explicitly: the preview says which policy path will run.
+            command = [part for part in command
+                       if not part.startswith("bhl_enable_policy:=")]
+            command.append(
+                "bhl_enable_policy:=%s"
+                % ("true" if self.bhl_policy_var.get() else "false"))
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -1766,6 +1795,8 @@ class SimulationLauncherGui(tk.Tk):
         self.save_map_button.state(["!disabled"] if self.mode_var.get() in ("slam", "3d_slam") else ["disabled"])
         self.go2_policy_checkbox.state(
             ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
+        self.bhl_policy_checkbox.state(
+            ["!disabled"] if self._bhl_policy_selectable() else ["disabled"])
 
         # Clear cached compatibility results (robot/mode/map changed)
         self._compat_cache.clear()
@@ -1800,7 +1831,9 @@ class SimulationLauncherGui(tk.Tk):
         ]
         if (self.robot_var.get() == "berkeley_humanoid_lite_sim"
                 and self.simulator_var.get() == "mujoco"):
-            lines.append("Drive: forward/stop in Localization; turning is not yet stable")
+            lines.append(
+                "Walk: ONNX policy in Localization (experimental); "
+                "forward/stop measured, held turning stalls")
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):

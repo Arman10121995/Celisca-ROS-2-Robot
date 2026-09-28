@@ -407,3 +407,16 @@ comparison, hashes, and limitations are retained in
 `contact_fidelity_manifest.json`. The remaining recommendation is target-domain
 retraining; further rate/filter/contact tuning is not supported by these
 bounded results.
+
+## 2026-09-28: explicit GUI policy toggle
+
+The profile's automatic policy start is now controllable from Robot Lab GUI
+without changing any default: a "BHL walking policy (experimental)" checkbox
+(enabled only for `berkeley_humanoid_lite_sim` + MuJoCo + Localization) fills
+`bhl_enable_policy:=true|false` into the launch command, and the new
+`bhl_enable_policy` launch flag (default `true`) gates the
+`humanoid-policy-controller` node. Every launch command recorded in this
+evidence therefore behaves exactly as it did; unchecked, the launch keeps the
+passive spawn-stance hold (`display_hold`) and the Drive pad has no policy to
+drive. The toggle changes no measurement: the walk, turn and stall findings
+above stand as recorded.

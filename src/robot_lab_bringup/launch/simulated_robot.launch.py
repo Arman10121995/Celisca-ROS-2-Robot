@@ -960,10 +960,14 @@ def _build_simulation_actions(context):
         # the GUI Drive pad publishes /key_vel, which twist_mux forwards to
         # the policy; the simulator's passive joint hold must be off so the
         # policy can move the legs. Start the controller before the backend
-        # so it is ready for the first joint/IMU measurements.
+        # so it is ready for the first joint/IMU measurements. The
+        # bhl_enable_policy flag (default true, the integrated GUI-drive
+        # path) lets a stance-only run skip the policy node; the launch then
+        # falls back to the same passive spawn hold as display mode.
         bhl_policy_active = (
             robot_model == "berkeley_humanoid_lite_sim"
             and simulator == "mujoco" and mode_name == "loc"
+            and _as_bool(_launch_value(context, "bhl_enable_policy"), True)
         )
         go2_controller_active = (
             robot_model == "unitree_go2"
@@ -1306,6 +1310,12 @@ def generate_launch_description():
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "bhl_enable_policy", default_value="true",
+            description="Start the BHL ONNX walking-policy controller in "
+                        "MuJoCo localization mode (default true: the "
+                        "integrated GUI-drive path). 'false' keeps the "
+                        "passive spawn-stance hold with no policy node."),
         DeclareLaunchArgument(
             "bhl_enable_yaw_servo", default_value="false",
             description="Opt-in boost-only closed-loop yaw servo for the BHL "

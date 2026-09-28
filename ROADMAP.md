@@ -455,6 +455,18 @@ Dependencies: `R5.1`.
   ramp while a concurrent second launch ran (~167% CPU `mujoco_spawner`, load
   9.3/12); the identical re-run on an idle machine passed the bend at 0.271 rad
   peak tilt, confirming the bend's CPU-contention sensitivity.
+- 2026-09-28 GUI surfacing: the walking policy now has an explicit Robot Lab
+  GUI surface mirroring the Go2 policy checkbox. A "BHL walking policy
+  (experimental)" checkbox (selectable only for `berkeley_humanoid_lite_sim` +
+  MuJoCo + Localization) fills `bhl_enable_policy:=true|false` into the launch
+  command, and the new `bhl_enable_policy` launch flag (default `true`, so the
+  integrated auto-start path and every recorded command above are unchanged)
+  gates the `humanoid-policy-controller` node; unchecked, the launch falls
+  back to the passive spawn-stance hold with no policy node. The checkbox
+  tooltip and the robot info line carry the measured state (forward walk and
+  stop measured, held turning stalls). No new motion evidence: the walk/turn
+  findings above stand as recorded.
+  See [recorded evidence](docs/status/evidence/r53-bhl-gui-drive-2026-09-24/README.md).
 
 ### R5.4 — Integrate real multirotor SITL flight
 

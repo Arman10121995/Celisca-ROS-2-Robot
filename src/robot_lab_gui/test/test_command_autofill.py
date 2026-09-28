@@ -164,6 +164,38 @@ def test_go2_policy_opt_in_autofills_only_its_supported_launch(app):
     assert "go2_policy_path:=auto" in displayed_command(app)
 
 
+def test_bhl_policy_toggle_autofills_only_its_supported_launch(app):
+    """The BHL walking policy is surfaced like the Go2 one: explicit in the
+    command whenever the toggle is selectable, absent otherwise. It defaults
+    to on so the integrated GUI-drive path is unchanged."""
+    select(app, app.robot_combo, "berkeley_humanoid_lite_sim")
+    select(app, app.map_combo, "nav_obstacle")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["loc"].invoke()
+    assert app.bhl_policy_checkbox.instate(["!disabled"])
+    assert app.bhl_policy_var.get() is True
+    assert "bhl_enable_policy:=true" in displayed_command(app)
+    app.bhl_policy_checkbox.invoke()
+    assert "bhl_enable_policy:=false" in displayed_command(app)
+    assert "bhl_enable_policy:=true" not in displayed_command(app)
+    app.bhl_policy_checkbox.invoke()
+    assert "bhl_enable_policy:=true" in displayed_command(app)
+    # A different simulator never carries the flag: the policy node only
+    # exists in the MuJoCo loc launch path.
+    select(app, app.simulator_combo, "gazebo")
+    assert app.bhl_policy_checkbox.instate(["disabled"])
+    assert "bhl_enable_policy" not in displayed_command(app)
+    select(app, app.simulator_combo, "mujoco")
+    # Re-enter loc explicitly: switching to a backend that cannot localize
+    # may have reset the mode, and the toggle must follow the mode either way.
+    app.mode_buttons["loc"].invoke()
+    assert "bhl_enable_policy:=true" in displayed_command(app)
+    # Display mode has no locomotion to gate either.
+    app.mode_buttons["display"].invoke()
+    assert app.bhl_policy_checkbox.instate(["disabled"])
+    assert "bhl_enable_policy" not in displayed_command(app)
+
+
 def test_room_vacuum_choice_changes_launch_file(app):
     app.vacuum_radio.invoke()
     assert displayed_command(app)[3] == "simulated_room_vacuum.launch.py"
