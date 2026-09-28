@@ -20,6 +20,11 @@ FALL_RECOVERY_TIMEOUT_S="${FALL_RECOVERY_TIMEOUT_S:-4.0}"
 FALL_RECOVERY_DELAY_S="${FALL_RECOVERY_DELAY_S:-0.0}"
 RECOVERY_POLICY_PATH="${RECOVERY_POLICY_PATH:-}"
 TRACE_JOINTS="${TRACE_JOINTS:-false}"
+# Seconds between trace points (probe_stance.py --trace-interval). Every trial
+# recorded before the tuck-entry measurement kept the probe default of 0.1 s;
+# the per-joint attribution runs pass 0.02 s to resolve the ~0.4 s inversion.
+# Never edit this script while a trial is running (bash reads it incrementally).
+TRACE_INTERVAL_S="${TRACE_INTERVAL_S:-0.1}"
 # Optional spawn height. Empty keeps the map default. A non-zero height makes
 # the trial a drop test: the robot free-falls onto its feet.
 SPAWN_Z="${SPAWN_Z:-}"
@@ -81,12 +86,12 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" "$ROLL_FREE_HIP" "$RECOVERY_GAIN" "$RECOVERY_DAMPING" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" "$ROLL_FREE_HIP" "$RECOVERY_GAIN" "$RECOVERY_DAMPING" "$TRACE_INTERVAL_S" <<'PY'
 import json
 import sys
 import hashlib
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip, roll_free_hip, recovery_gain, recovery_damping = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip, roll_free_hip, recovery_gain, recovery_damping, trace_interval = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
@@ -112,6 +117,7 @@ Path(out).write_text(json.dumps({
     "fall_recovery_start_delay_s": float(fall_delay),
     "recovery_policy_path": recovery_policy_path,
     "trace_joints": trace_joints.strip().lower() in ("true", "1", "yes"),
+    "trace_interval_s": float(trace_interval),
     "source_sha256": {
         name: hashlib.sha256((Path(root) / name).read_bytes()).hexdigest()
         for name in (
@@ -161,6 +167,7 @@ if [[ -n "$RECOVERY_DAMPING" ]]; then
     spawn_args+=(fall_recovery_damping_scale:="$RECOVERY_DAMPING")
 fi
 ROS_DOMAIN_ID="$DOMAIN" /usr/bin/python3 "$PROBE" "${trace_args[@]}" \
+    --trace-interval "$TRACE_INTERVAL_S" \
     --duration "$DURATION" --wall-timeout 60 \
     --perturbation-start "$START_S" --perturbation-duration "$PULSE_S" \
     --perturbation-force-n "$FORCE_N" --perturbation-axis "$PERTURBATION_AXIS" \

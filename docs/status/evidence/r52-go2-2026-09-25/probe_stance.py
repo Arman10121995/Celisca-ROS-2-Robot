@@ -15,6 +15,18 @@ from std_msgs.msg import Bool, Float64MultiArray, String
 from rclpy.node import Node
 
 
+def attitude(q):
+    """Signed roll and pitch of ``q`` in radians.
+
+    The trace records both so an inversion's *direction* is attributable
+    (which way the trunk rolls over which contact), not just its magnitude.
+    """
+    roll = math.atan2(2 * (q.w * q.x + q.y * q.z),
+                      1 - 2 * (q.x * q.x + q.y * q.y))
+    pitch = math.asin(max(-1, min(1, 2 * (q.w * q.y - q.z * q.x))))
+    return roll, pitch
+
+
 def tilt(q):
     roll = math.atan2(2 * (q.w * q.x + q.y * q.z),
                       1 - 2 * (q.x * q.x + q.y * q.y))
@@ -67,10 +79,13 @@ def main():
                 2 * (q.w * q.z + q.x * q.y),
                 1 - 2 * (q.y * q.y + q.z * q.z)))
             if not state["trace"] or state["sim"] - state["trace"][-1]["sim_s"] >= args.trace_interval:
+                roll_rad, pitch_rad = attitude(q)
                 point = {"sim_s": round(state["sim"], 3),
                                        "xyz": [round(p.x, 3), round(p.y, 3), round(p.z, 3)],
                                        "yaw_rad": round(state["yaw"][-1], 3),
                                        "tilt_rad": round(tilt(q), 3),
+                                       "roll_rad": round(roll_rad, 3),
+                                       "pitch_rad": round(pitch_rad, 3),
                                        "safety_state": state["latest_safety_state"],
                                        "fallen": state["latest_fallen"],
                                        "recovery_state": state["latest_recovery_state"],
