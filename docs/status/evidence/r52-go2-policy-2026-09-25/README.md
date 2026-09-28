@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 75 trials, all with probe and
-launch return code 0 (27 unrecoverable, 20 failed, 19 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 77 trials, all with probe and
+launch return code 0 (27 unrecoverable, 21 failed, 20 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -609,6 +609,32 @@ Three things follow, and the first two correct what this document said earlier:
    of pitch**, and below that only a near-pure pitch pose works. Roll is not
    free — it substitutes for pitch — so the envelope is a function of the axis
    mix, not of total tilt.
+
+##### Is the ladder toppling the diagonals, or are they unstable on their own?
+
+The failing diagonals end *on their back* (0.057 m), which is worse than a pure
+flank's stable side-rest (0.52 rad / 0.139 m), so the drive could be doing the
+damage rather than merely failing to help. Two were re-run at gain 0.2/0.2, which
+this work has already measured to be too weak to alter a pose
+(`fall_ladder_passive_20260928T*`, domains 226-227):
+
+| placed pose | tilt through the first 1.6 s at gain 0.2 | ended |
+|---|---|---|
+| pitch 0.9, roll 0.9 | 0.90 -> 0.74 -> 0.60 -> **0.21 -> 0.11 -> 0.05** | 0.05 rad / 0.280 m, `succeeded:stand` |
+| pitch 1.0, roll 0.9 | 1.00 -> 0.92 -> 0.84 -> 0.83 -> 0.59 -> **0.19 -> 0.01** | 0.00 rad / 0.057 m, `failed:roll` |
+
+The trunk comes upright **on its own** in both, within 0.6-1.2 s: a corner-rest
+diagonal is not a stable pose, it just rolls over by gravity given time. So in
+this band the ladder at its qualified 0.5 authority is not neutral -- its own
+drive is what ends these poses on their backs, while the same poses would have
+risen by themselves. The two low-authority runs also disagree on the final state
+(0.280 m versus 0.057 m), so the band is *chaotic*, not deterministic.
+
+That is a stronger and less comfortable statement than "the ladder cannot help
+here", and it deliberately does **not** become a guard rule: refusing to attempt
+whenever a pose looks like a corner-rest would be a control rule fitted to three
+chaotic samples, which is the over-fitting this document has avoided everywhere
+else. It is recorded as a hazard for whoever owns the recovery policy next.
 
 
 The brace held the hips at zero because this project had no measured

@@ -267,6 +267,16 @@ recovers and 1.0 + 0.9 fails, both with a clear pitch margin. The real rule is
 that roll *substitutes* for pitch: the ladder wants ~1.2 rad of pitch, and below
 that only a near-pure pitch pose works.
 
+Attribution for the diagonal band, since those poses end on their *backs*
+(0.057 m) rather than on a stable side: re-run at gain 0.2/0.2
+(`fall_ladder_passive_20260928T*`, domains 226-227), both come upright **on their
+own** within 0.6-1.2 s (tilt 0.90 -> 0.05 and 1.00 -> 0.01). So a corner-rest
+diagonal is not passively stable, and at the qualified 0.5 authority the ladder's
+own drive is what ends it on its back -- the pose would have risen by itself. The
+two low-authority runs disagree on the final state (0.280 m vs 0.057 m), so the
+band is chaotic. Deliberately *not* turned into a guard rule: that would be a
+control rule fitted to three chaotic samples.
+
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
 (`fall_ladder_gather_20260928T*`, domains 226-228) all end **inverted** again
