@@ -272,6 +272,11 @@ second input (`fall_recovery_roll_free_hip_rad:=`, splaying the *other* pair
 instead) was measured too: it does not hold the trunk under the gate either.
 Treat the flags as measurement knobs, not settings.
 
+Do not expect this to catch a fall either. Measured on both axes, the debounced
+`fallen` latch is 0.66 s late on lateral impulses *because* those falls are
+ballistic, and already on time on a sustained forward push — where the catchable
+collapse lasts 0.42 s against a ~2.3 s get-up.
+
 Two things to know before relying on this: it is measured from
 a *placed* pose, because no perturbation on these maps leaves the robot down but
 not inverted, and the hold after success is conditional on measured standing

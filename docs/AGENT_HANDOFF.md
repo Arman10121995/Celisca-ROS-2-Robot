@@ -193,6 +193,21 @@ needs a closed-loop primitive (a waypoint keyed on more than trunk attitude, or
 an actor retrained on this plant) -- a different class of work, and the one
 open item left alongside trigger latency.
 
+Trigger latency is now measured too, and it is **not** the missing piece.
+Forward sustained pushes (fall_ladder_pitch_20260928T*, domains 226-229) were
+the only untested way to make the robot fall *forward*: 40 N x 2.0 s and 50 N x
+1.5 s never topple (peak tilt 0.16 / 0.09 rad), 70 N x 1.0 s inverts by 3.9 s,
+and 60 N x 1.5 s is the informative one -- the trunk ramps 0.07 -> 1.50 rad of
+*pitch* over 0.42 s (inside the 0.8-1.6 rad capture window) and `fallen` latches
+0.10 s after the 0.70 threshold, at 1.1 rad, i.e. **on time**. 0.1 s later it is
+at 3.11 rad, because the 60 N force is still applied until 4.5 s. So: where the
+latch is late (lateral impulses) the fall is ballistic, and where the fall is
+slow enough to catch (forward) the latch is already on time. 0.42 s of catchable
+collapse against a ~2.3 s get-up is an order of magnitude no trigger closes.
+Both open items are now closed as *measurements*: the trigger is not the lever,
+and the roll axis needs a closed-loop primitive rather than another schedule.
+Fall recovery stays off by default.
+
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials
 (`fall_ladder_gather_20260928T*`, domains 226-228) all end **inverted** again

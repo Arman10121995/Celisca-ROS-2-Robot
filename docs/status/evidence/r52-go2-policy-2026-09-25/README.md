@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 48 trials, all with probe and
-launch return code 0 (22 unrecoverable, 13 failed, 6 recovered, 7 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 52 trials, all with probe and
+launch return code 0 (24 unrecoverable, 13 failed, 6 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -702,8 +702,46 @@ attitude, or an actor retrained on this plant — which is a different class of
 work from the ladder.
 
 
-This is a measured sign, not a tuned constant, and it stays opt-in until the
-crouch-side behaviour is measured too.
+#### Trigger latency, measured on both axes (the last open item)
+
+The remaining open item was a retraction that starts *before* the debounced
+`fallen` latch. It is now measured on both axes, and the two results point in
+opposite directions — which is why neither produces a recoverable fall:
+
+*Lateral impulses* (50–60 N, 0.2 s): the latch is **late** — it fires 0.66 s
+after the 0.2 s pulse, with the trunk already at 1.04 rad and rolling at
+~3.6 rad/s. This is the case a pre-fall trigger would help, and it is also the
+case where the collapse is ballistic, so there is nothing left to help.
+
+*Forward sustained* (60 N for 1.5 s, `fall_ladder_pitch_20260928Tf60p1.5`,
+domain 227) is the interesting one, because the collapse is *gradual* and lands
+inside the pitch capture envelope:
+
+| sim s | tilt | height | ladder |
+|---|---|---|---|
+| 3.33 | 0.07 rad | 0.333 m | `idle` |
+| 3.54 | 0.70 rad | 0.280 m | `idle` |
+| 3.64 | 1.19 rad | 0.219 m | `fallen` latches at 3.632 s → `attempting:tuck` |
+| 3.74 | 1.50 rad | 0.249 m | `attempting:tuck` |
+| 3.85 | **3.11 rad** | 0.229 m | `attempting:tuck` |
+| 4.06 | 3.14 rad | 0.053 m | `attempting:tuck` |
+
+So on this axis the latch is **on time** — 0.10 s after the 0.70 rad threshold,
+at 1.1 rad of *pitch*, squarely inside the 0.8–1.6 rad window the ladder
+recovers from in 2.3 s. A pre-fall trigger would be engaging earlier into a
+collapse that is already being handled. The problem is the next line: 0.1 s
+later the trunk is at 3.11 rad, because the 60 N force is *still being applied*
+(until 4.5 s) and the retraction cannot hold against it. The catchable window is
+the 0.42 s ramp; the get-up needs ~2.3 s.
+
+That is the answer, and it is not the one the handoff expected: **the trigger is
+not the missing piece.** On the axis where the latch is late the fall is
+ballistic; on the axis where the fall is slow enough to be catchable the latch is
+already on time. The mismatch is 0.42 s of catchable collapse against a 2.3 s
+get-up — an order of magnitude, and not something a trigger can close. Two
+companion trials bound the forward axis: 40 N × 2.0 s and 50 N × 1.5 s never
+topple at all (peak tilt 0.16 and 0.09 rad — the robot leans and slides), and
+70 N × 1.0 s tops over faster still (1.40 rad at 3.6 s, inverted by 3.9 s).
 
 
 #### Placed 1.4 rad flank: a measured negative (before the hip input)
@@ -725,13 +763,25 @@ lateral input does.
 One demonstrated get-up (placed chest-down → standing, loaded, and held, in
 2.324 s and without a retry, once the stand pose is slewed in), a measured
 capture envelope (**pitch 0.8–1.6 rad recoverable at ~2.3 s; nothing on the roll
-axis above the 0.8 rad gate**), two measured negatives (a ballistic fall cannot
-be caught after the debounced latch, and a flank-lying trunk cannot be righted by
-the current brace), and a harness that can now measure the sequence at all. The
-feature stays **off by default**: on these maps the only route to a recoverable
-collapse is a retraction that starts before the fall is confirmed, which is
-still unmeasured work — and it would have to engage below ~1.6 rad of *pitch*,
-which no lateral perturbation here ever produces.
+axis above the 0.8 rad gate**), and a harness that can measure the sequence at
+all. Both remaining open items are now measured rather than open:
+
+- **Trigger latency is not the missing piece.** On lateral impulses the debounced
+  latch is 0.66 s late *and* the fall is ballistic; on a sustained forward push
+  the collapse is slow enough to be catchable (a 0.42 s ramp to 1.50 rad) and
+  the latch is already on time (0.10 s after the threshold, at 1.1 rad of pitch,
+  inside the capture window) — the trunk then flips because the 60 N force is
+  still on. 0.42 s of catchable collapse against a 2.3 s get-up is an order of
+  magnitude a trigger cannot close.
+- **The roll axis needs a closed-loop primitive.** Two open-loop splay
+  hypotheses are measured (braced pair, free pair) and two schedule ideas are
+  refuted; what survives is a stable, bounded, non-inverted stop at
+  0.70–0.76 rad / 0.139 m.
+
+The feature therefore stays **off by default**, and the honest summary is: this
+ladder stands the robot up from a settled chest-down pose and holds it, rolls a
+flank-lying trunk most of the way upright without inverting it, and is not a
+recovery for a fall it did not choose.
 
 
 
