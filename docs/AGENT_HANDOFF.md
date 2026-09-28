@@ -206,7 +206,18 @@ slow enough to catch (forward) the latch is already on time. 0.42 s of catchable
 collapse against a ~2.3 s get-up is an order of magnitude no trigger closes.
 Both open items are now closed as *measurements*: the trigger is not the lever,
 and the roll axis needs a closed-loop primitive rather than another schedule.
-Fall recovery stays off by default.
+
+One more axis closed while I was in there: the recovery's *authority*. Every
+trial until now ran the launch default gain/damping 0.5/0.5, never swept.
+`fall_ladder_gain_20260928T*` (domains 226-228, gain/damping 1.0/1.0) shows
+doubling it **destroys the one working get-up** -- the placed pitch ladder goes
+from `succeeded:stand` at 2.324 s holding 0.329 m to `unrecoverable:roll` at
+3.14 rad / 0.057 m -- and rescues neither flank configuration. So 0.5/0.5 is a
+measured operating point next to a cliff, and the two catapults this work had to
+slew away (the 0.56 m airborne stand entry, and the flip the graded release
+prevented) are the same over-drive failure mode. If anything is explored next on
+the authority axis it is *lower*, bounded by the effort limits. Fall recovery
+stays off by default.
 
 Refuted after that: slewing the splay *out* over the crouch so the legs can
 gather under the hips. The same three trials

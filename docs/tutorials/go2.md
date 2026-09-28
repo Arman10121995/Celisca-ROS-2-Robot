@@ -277,6 +277,11 @@ Do not expect this to catch a fall either. Measured on both axes, the debounced
 ballistic, and already on time on a sustained forward push — where the catchable
 collapse lasts 0.42 s against a ~2.3 s get-up.
 
+And do not raise the authority. `fall_recovery_gain_scale` /
+`fall_recovery_damping_scale` default to 0.5, and at 1.0 the working pitch
+get-up inverts instead of standing. That default is a measured operating point,
+not caution.
+
 Two things to know before relying on this: it is measured from
 a *placed* pose, because no perturbation on these maps leaves the robot down but
 not inverted, and the hold after success is conditional on measured standing

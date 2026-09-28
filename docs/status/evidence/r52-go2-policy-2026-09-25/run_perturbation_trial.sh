@@ -38,6 +38,11 @@ SPAWN_ROLL="${SPAWN_ROLL:-}"
 ROLL_BRACE_HIP="${ROLL_BRACE_HIP:-}"
 # ... and the same for the roll phase's *other* pair (see roll_phase_pose).
 ROLL_FREE_HIP="${ROLL_FREE_HIP:-}"
+# Optional recovery authority. Empty keeps the launch defaults (0.5/0.5), which
+# is the configuration every trial so far has measured; the authority axis was
+# never swept.
+RECOVERY_GAIN="${RECOVERY_GAIN:-}"
+RECOVERY_DAMPING="${RECOVERY_DAMPING:-}"
 SOURCE_REVISION="$(git -C "$ROOT" rev-parse --short HEAD)"
 SOURCE_DIRTY="$(git -C "$ROOT" status --porcelain --untracked-files=no | wc -l)"
 
@@ -78,12 +83,12 @@ trap cleanup EXIT INT TERM
 result="$OUT_DIR/probe.json"
 probe_log="$OUT_DIR/probe.log"
 launch_log="$OUT_DIR/launch.log"
-/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" "$ROLL_FREE_HIP" <<'PY'
+/usr/bin/python3 - "$OUT_DIR/manifest.json" "$ROOT" "$DOMAIN" "$DURATION" "$FORCE_N" "$START_S" "$PULSE_S" "$RECOVERY_S" "$FALL_RECOVERY" "$FALL_RECOVERY_TIMEOUT_S" "$FALL_RECOVERY_DELAY_S" "$RECOVERY_POLICY_PATH" "$TRACE_JOINTS" "$SOURCE_REVISION" "$SOURCE_DIRTY" "$SPAWN_Z" "$PERTURBATION_AXIS" "$SPAWN_PITCH" "$SPAWN_ROLL" "$ROLL_BRACE_HIP" "$ROLL_FREE_HIP" "$RECOVERY_GAIN" "$RECOVERY_DAMPING" <<'PY'
 import json
 import sys
 import hashlib
 from pathlib import Path
-out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip, roll_free_hip = sys.argv[1:]
+out, root, domain, duration, force, start, pulse, recovery, fall_recovery, fall_timeout, fall_delay, recovery_policy_path, trace_joints, revision, dirty, spawn_z, perturbation_axis, spawn_pitch, spawn_roll, roll_brace_hip, roll_free_hip, recovery_gain, recovery_damping = sys.argv[1:]
 Path(out).write_text(json.dumps({
     "tool": "run_perturbation_trial.sh",
     "source_root": root,
@@ -101,6 +106,9 @@ Path(out).write_text(json.dumps({
     "spawn_roll_rad": (float(spawn_roll) if spawn_roll else 0.0),
     "roll_brace_hip_rad": (float(roll_brace_hip) if roll_brace_hip else 0.0),
     "roll_free_hip_rad": (float(roll_free_hip) if roll_free_hip else 0.0),
+    "recovery_gain_scale": (float(recovery_gain) if recovery_gain else 0.5),
+    "recovery_damping_scale": (
+        float(recovery_damping) if recovery_damping else 0.5),
     "enable_fall_recovery": fall_recovery.strip().lower() in ("true", "1", "yes"),
     "fall_recovery_timeout_s": float(fall_timeout),
     "fall_recovery_start_delay_s": float(fall_delay),
@@ -147,6 +155,12 @@ if [[ -n "$ROLL_BRACE_HIP" ]]; then
 fi
 if [[ -n "$ROLL_FREE_HIP" ]]; then
     spawn_args+=(fall_recovery_roll_free_hip_rad:="$ROLL_FREE_HIP")
+fi
+if [[ -n "$RECOVERY_GAIN" ]]; then
+    spawn_args+=(fall_recovery_gain_scale:="$RECOVERY_GAIN")
+fi
+if [[ -n "$RECOVERY_DAMPING" ]]; then
+    spawn_args+=(fall_recovery_damping_scale:="$RECOVERY_DAMPING")
 fi
 ROS_DOMAIN_ID="$DOMAIN" /usr/bin/python3 "$PROBE" "${trace_args[@]}" \
     --duration "$DURATION" --wall-timeout 60 \

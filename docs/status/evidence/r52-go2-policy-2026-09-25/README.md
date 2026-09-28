@@ -405,8 +405,8 @@ and `recovery_state` stayed `idle` for all 2,995 messages.
 [`analyze_ladder_sweep.py`](analyze_ladder_sweep.py) reduces every trial
 directory to what the trace measured — whether `fallen` latched, at what tilt
 and tilt *rate*, how far the ladder advanced, and where the robot ended — and
-writes [`ladder_sweep.json`](ladder_sweep.json). 52 trials, all with probe and
-launch return code 0 (24 unrecoverable, 13 failed, 6 recovered, 9 no-fall): the five
+writes [`ladder_sweep.json`](ladder_sweep.json). 55 trials, all with probe and
+launch return code 0 (27 unrecoverable, 13 failed, 6 recovered, 9 no-fall): the five
 perturbation families below, plus the placed-pose runs in the sections that
 follow.
 
@@ -758,7 +758,30 @@ sagittal-only brace could not right it, and the next section shows which
 lateral input does.
 
 
-#### Where this leaves the ladder
+#### The operating point is measured, and 0.5/0.5 is a cliff edge
+
+Every trial so far ran the recovery at the launch default authority,
+`fall_recovery_gain_scale=0.5` / `fall_recovery_damping_scale=0.5`. That was
+never swept, and it turns out to matter more than the waypoints
+(`fall_ladder_gain_20260928T*`, domains 226–228, same placed poses, gain 1.0 /
+damping 1.0):
+
+| configuration | at 0.5 / 0.5 | at 1.0 / 1.0 |
+|---|---|---|
+| placed pitch 1.4 | min tilt 0.48 rad, **`succeeded:stand` at 2.324 s**, 0.01 rad / 0.329 m | min tilt 1.38 rad, `unrecoverable:roll`, 3.14 rad / 0.057 m |
+| placed flank 1.2, free splay +0.8 | min tilt 0.48 rad, 0.52 rad / 0.139 m, `failed:roll` | min tilt 1.20 rad, `unrecoverable`, 3.14 rad / 0.057 m |
+| placed flank 1.4, braced splay +0.8 | min tilt 0.65 rad, 0.76 rad / 0.139 m, `failed:stand` | min tilt 0.62 rad, `unrecoverable`, 3.12 rad / 0.057 m |
+
+Doubling the authority **destroys the one get-up that works** — the pitch ladder
+goes from standing and held to inverted — and it does not rescue either flank
+configuration. So 0.5/0.5 is not a timid default: it is a measured operating
+point sitting next to a cliff, and it explains the two catapults this work had to
+slew away (the 0.56 m airborne stand entry, and the flip the graded release
+prevented). Both are the same failure mode: over-driving the legs levers or
+launches the trunk. The authority axis is now closed too — lower authority is
+the direction to explore if anything, and it is bounded by the effort limits
+rather than by a preference.
+
 
 One demonstrated get-up (placed chest-down → standing, loaded, and held, in
 2.324 s and without a retry, once the stand pose is slewed in), a measured
@@ -773,10 +796,12 @@ all. Both remaining open items are now measured rather than open:
   inside the capture window) — the trunk then flips because the 60 N force is
   still on. 0.42 s of catchable collapse against a 2.3 s get-up is an order of
   magnitude a trigger cannot close.
-- **The roll axis needs a closed-loop primitive.** Two open-loop splay
-  hypotheses are measured (braced pair, free pair) and two schedule ideas are
-  refuted; what survives is a stable, bounded, non-inverted stop at
-  0.70–0.76 rad / 0.139 m.
+- **The operating point is measured.** The recovery's authority (gain/damping
+  0.5/0.5) was never swept until now, and it matters more than the waypoints:
+  at 1.0/1.0 the *working* pitch get-up inverts (3.14 rad / 0.057 m instead of
+  standing at 0.329 m) and neither flank configuration improves. The two
+  catapults this work had to slew away are the same failure mode, so lower
+  authority is the direction to explore and it is bounded by the effort limits.
 
 The feature therefore stays **off by default**, and the honest summary is: this
 ladder stands the robot up from a settled chest-down pose and holds it, rolls a
