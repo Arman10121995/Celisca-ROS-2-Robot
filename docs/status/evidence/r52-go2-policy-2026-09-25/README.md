@@ -1212,3 +1212,61 @@ packages built, and `go2_policy_path:=auto` resolved the installed ONNX graph
 and its external data in the live forward run.
 After direct-contact telemetry was added, the focused Go2 core/policy and
 MuJoCo effort tests passed (88 tests).
+
+### The entry phase, measured and then reverted (2026-09-29)
+
+The ladder above always *entered* at the fold-all `tuck`. For one increment
+`FallRecovery` was changed to key the entry on attitude instead: a
+roll-dominant trunk carrying under 1.0 rad of pitch started at the `roll`
+phase's braced push, the waypoint designed to push a trunk back over the pair
+it rests on. That change is reverted, and the tooling that refuted it is
+[`analyze_entry_phase.py`](analyze_entry_phase.py) →
+[`entry_phase.json`](entry_phase.json).
+
+The analyzer reads the entry from each trial's own `recovery_transitions`
+record, so its grouping spans both eras and never depends on a trial's name.
+Across the 104 recorded ladder trials 86 attempted a recovery: 6 entered at
+`roll`, 80 at `tuck`. Per trial it reports the rest the attempt engaged from
+(signed roll/pitch, per-foot load, and the roll *rate* over the 0.1 s before
+the entry), the entry window's contact pattern, and whether the trunk reached
+inverted tilt inside 1.5 s.
+
+**The dispatch worked as written.** Three settled side rests (roll 0.512,
+0.512, -0.520 rad at a roll rate of 0.0 rad/s) entered at `attempting:roll`
+instead of `attempting:tuck`, and the placed pitch-1.4 control kept its
+tuck-first ladder and still stood up (`succeeded:stand`, 0.329 m), so the one
+working get-up was provably untouched.
+
+**It did not achieve what it was changed for.** On a matched settled-rest
+harness — placed roll 0.9 rad, 1.0 s start delay, no perturbation force,
+identical manifests across all four runs — the attempt begins from the measured
+rest at 0.512 rad / 0.0 rad/s. Two repeats per entry pose:
+
+| entry pose | strike peak (sum) | loaded feet | inverted |
+|---|---|---|---|
+| braced push (`roll`) | 819.1 / 747.6 N | FR+RR (412 / 407) | 2 of 2 |
+| fold (`tuck`) | 541.1 / 465.2 N | FR+RR (339 / 260) | 2 of 2 |
+
+So the entry pose does not decide the outcome. The first phase cannot be fixed
+by choosing a waypoint: every measured single-waypoint stroke on a settled side
+rest is a 0.18–0.82 kN leg drive applied *while the trunk is still resting on
+the legs*, and the trunk is ballistic after it (all four feet at 0.0 N). The
+requirement stays with a closed-loop primitive, now measured from the entry
+side: bound the stroke by the measured contact load, not by the waypoint. The
+tuck entry is restored because it has the smaller stroke and the better
+measured population: of the three traced delayed runs, the one that stopped
+instead of inverting is a fold (1.72 rad, `failed:roll`,
+[`fall_ladder_delayed_trace_20260928Td1.0/`](fall_ladder_delayed_trace_20260928Td1.0/probe.json)),
+while all three settled braced entries inverted.
+
+The rate, not the pose, is what separates a fall from a rest. The 60 N no-delay
+family reads a roll close to a settled rest's (-0.53, -0.85 rad) but at
+1.8–2.0 rad/s, so no entry pose is a rest for it; the settled rests read
+0.0–0.05 rad/s. Two repeats were lost to this host's CycloneDDS range (ROS
+domain 233 and up: a multicast port out of range); the harness kept their logs
+and return codes but no `probe.json`, and the analyzer skips them rather than
+reading an empty result.
+
+The contracts are
+[`test_r5_2_go2_entry_phase.py`](../../../../src/robot_lab_adapter/test/test_r5_2_go2_entry_phase.py)
+(9 tests) and the R5.2 Go2 selection passes (162 passed, 1 skipped).

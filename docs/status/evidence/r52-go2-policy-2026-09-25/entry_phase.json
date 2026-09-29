@@ -1,0 +1,6367 @@
+{
+  "task": "R5.2 Go2 get-up ladder entry-phase analysis",
+  "root": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25",
+  "trial_count": 104,
+  "attempted_count": 86,
+  "trials": [
+    {
+      "trial": "fall_ladder_20260928T45N",
+      "enable_fall_recovery": true,
+      "force_n": 45.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.14852724153793273,
+      "final_height_m": 0.3671796802946276,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.367
+    },
+    {
+      "trial": "fall_ladder_20260928T48N",
+      "enable_fall_recovery": true,
+      "force_n": 48.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.28343616798847,
+      "final_height_m": 0.36639339254203024,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.366
+    },
+    {
+      "trial": "fall_ladder_20260928T50N",
+      "enable_fall_recovery": true,
+      "force_n": 50.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.972,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.956,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.522,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 36.73,
+          "RR": 0.0
+        },
+        "sum_force_n": 36.73,
+        "loaded_feet": [
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415926371935723,
+      "final_height_m": 0.05699829384453307,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_20260928T52N",
+      "enable_fall_recovery": true,
+      "force_n": 52.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.94,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.856,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.708,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 2.16,
+          "RR": 0.0
+        },
+        "sum_force_n": 2.16,
+        "loaded_feet": [
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 302.42,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 302.42,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 302.42,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 302.42,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.14159239818045,
+      "final_height_m": 0.05699828812033417,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_20260928T54N",
+      "enable_fall_recovery": true,
+      "force_n": 54.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 4.084,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 4.044,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.842,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592652608413,
+      "final_height_m": 0.056998266961634826,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_20260928T56N",
+      "enable_fall_recovery": true,
+      "force_n": 56.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.856,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.752,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.687,
+        "foot_force_n": {
+          "FL": 9.01,
+          "FR": 0.0,
+          "RL": 6.77,
+          "RR": 0.0
+        },
+        "sum_force_n": 15.78,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 73.27,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 73.27,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 73.27,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 73.27,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415925721767484,
+      "final_height_m": 0.05699812204379782,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_20260928T58N",
+      "enable_fall_recovery": true,
+      "force_n": 58.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.828,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.732,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.705,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 21.25,
+          "RR": 0.0
+        },
+        "sum_force_n": 21.25,
+        "loaded_feet": [
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 29.93,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 29.93,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 29.93,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 29.93,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.141592641964358,
+      "final_height_m": 0.056998278530718816,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_20260928T60N",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.808,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.76,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.652,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 46.89,
+          "RR": 0.0
+        },
+        "peak_sum_n": 46.89,
+        "loaded_feet": [
+          "RL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 46.89,
+          "RR": 0.0
+        },
+        "peak_sum_n": 46.89,
+        "loaded_feet": [
+          "RL"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.141592645348181,
+      "final_height_m": 0.056998278530779045,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_brace_20260929Tf60",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 3.84,
+      "entry_phase": "roll",
+      "phase_sequence": [
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.828,
+        "roll_rad": -0.532,
+        "pitch_rad": -0.022,
+        "tilt_rad": 0.532,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": 1.75
+      },
+      "settled_entry": false,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 140.01,
+          "FR": 0.0,
+          "RL": 109.75,
+          "RR": 0.0
+        },
+        "peak_sum_n": 249.76,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 140.01,
+          "FR": 0.0,
+          "RL": 109.75,
+          "RR": 0.0
+        },
+        "peak_sum_n": 249.76,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 0.88,
+        "roll_at_window_end_rad": 3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415921863628475,
+      "final_height_m": 0.05699829156987366,
+      "final_roll_rad": 3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_brace_20260929Tf60b",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 3.86,
+      "entry_phase": "roll",
+      "phase_sequence": [
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.836,
+        "roll_rad": -0.853,
+        "pitch_rad": 0.002,
+        "tilt_rad": 0.853,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": -2.0
+      },
+      "settled_entry": false,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 324.21,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 324.21,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 324.21,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 324.21,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 1.024,
+        "roll_at_window_end_rad": 3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.141592648402218,
+      "final_height_m": 0.056998278514412595,
+      "final_roll_rad": 3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_brace_delayed_20260929Td1.0",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 4.628,
+      "entry_phase": "roll",
+      "phase_sequence": [
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 4.6,
+        "roll_rad": -0.52,
+        "pitch_rad": 0.0,
+        "tilt_rad": 0.52,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 3.89,
+          "RL": 4.8,
+          "RR": 0.0
+        },
+        "sum_force_n": 8.69,
+        "loaded_feet": [
+          "FR",
+          "RL"
+        ],
+        "roll_rate_rad_s": 0.0
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 208.11,
+          "FR": 3.89,
+          "RL": 97.8,
+          "RR": 0.0
+        },
+        "peak_sum_n": 309.8,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL"
+        ],
+        "loaded_count": 3
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 208.11,
+          "FR": 3.89,
+          "RL": 97.8,
+          "RR": 0.0
+        },
+        "peak_sum_n": 309.8,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL"
+        ],
+        "loaded_count": 3
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 1.24,
+        "roll_at_window_end_rad": -3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415925894967387,
+      "final_height_m": 0.056998099220048636,
+      "final_roll_rad": 3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_brace_delayed_20260929Td1.0b",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.13263881116677456,
+      "final_height_m": 0.3648926339471101,
+      "final_roll_rad": 0.003,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_brace_placed_20260929Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.088,
+        "roll_rad": 0.0,
+        "pitch_rad": 1.402,
+        "tilt_rad": 1.402,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 53.47,
+          "FR": 54.09,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 107.56,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 85.43,
+          "FR": 84.77,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 170.2,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 0.003,
+        "max_abs_roll_offset_s": 1.412,
+        "roll_at_window_end_rad": -0.003,
+        "inverted_within_window": false
+      },
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.32900403271179374,
+      "final_roll_rad": 0.0,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_brace_placed_20260929Troll0.9d1.0",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.9,
+      "traced": true,
+      "attempt_start_s": 0.928,
+      "entry_phase": "roll",
+      "phase_sequence": [
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.92,
+        "roll_rad": 0.512,
+        "pitch_rad": -0.0,
+        "tilt_rad": 0.512,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 13.64,
+          "RL": 0.0,
+          "RR": 12.98
+        },
+        "sum_force_n": 26.62,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "roll_rate_rad_s": 0.0
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 412.42,
+          "RL": 0.0,
+          "RR": 406.64
+        },
+        "peak_sum_n": 819.06,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 412.42,
+          "RL": 0.0,
+          "RR": 406.64
+        },
+        "peak_sum_n": 819.06,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 1.424,
+        "roll_at_window_end_rad": -3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415926094358992,
+      "final_height_m": 0.0569982255892251,
+      "final_roll_rad": 3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_brace_placed_20260929Troll0.9d1.0b",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.9,
+      "traced": true,
+      "attempt_start_s": 0.908,
+      "entry_phase": "roll",
+      "phase_sequence": [
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.892,
+        "roll_rad": 0.512,
+        "pitch_rad": -0.0,
+        "tilt_rad": 0.512,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 13.57,
+          "RL": 0.0,
+          "RR": 12.88
+        },
+        "sum_force_n": 26.45,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "roll_rate_rad_s": 0.0
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 376.22,
+          "RL": 0.0,
+          "RR": 371.4
+        },
+        "peak_sum_n": 747.62,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 376.22,
+          "RL": 0.0,
+          "RR": 371.4
+        },
+        "peak_sum_n": 747.62,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 1.272,
+        "roll_at_window_end_rad": -3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415926525210836,
+      "final_height_m": 0.05699820763144994,
+      "final_roll_rad": 3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_brace_placed_20260929Troll1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": true,
+      "attempt_start_s": 0.1,
+      "entry_phase": "roll",
+      "phase_sequence": [
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.084,
+        "roll_rad": 1.401,
+        "pitch_rad": -0.0,
+        "tilt_rad": 1.401,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 12.69,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 12.69,
+        "loaded_feet": [
+          "FR"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 284.45
+        },
+        "peak_sum_n": 293.23,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 284.45
+        },
+        "peak_sum_n": 293.23,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 1.593,
+        "max_abs_roll_offset_s": 0.252,
+        "roll_at_window_end_rad": 0.514,
+        "inverted_within_window": false
+      },
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.595429367689946,
+      "final_height_m": 0.13862185751880482,
+      "final_roll_rad": 0.514,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_combo_20260928Tp0.9r0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.9,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.9,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 75.71,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 75.71,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 128.26,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 128.26,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 0.9476801769224942,
+      "final_height_m": 0.056998312751298484,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_combo_20260928Tp1.2r0.6",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.2,
+      "spawn_roll_rad": 0.6,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 101.42,
+          "FR": 84.82,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 186.24,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 101.42,
+          "FR": 84.82,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 186.24,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.310930259446298,
+      "final_height_m": 0.329004033621396,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_combo_20260928Tp1.2r1.0",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.2,
+      "spawn_roll_rad": 1.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 89.86,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 89.86,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 96.36,
+          "FR": 89.86,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 186.22,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.250810599079088,
+      "final_height_m": 0.3290040331181561,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_combo_20260928Tp1.4r0.8",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.8,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 24.65,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 24.65,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 70.69,
+          "FR": 61.44,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 132.13,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.4331229644684236,
+      "final_height_m": 0.32900403290939567,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_delayed_20260928Td1.0",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 4.688,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 4.604,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.518,
+        "foot_force_n": {
+          "FL": 10.74,
+          "FR": 0.0,
+          "RL": 8.74,
+          "RR": 0.0
+        },
+        "sum_force_n": 19.48,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 166.95,
+          "FR": 0.0,
+          "RL": 183.87,
+          "RR": 0.0
+        },
+        "peak_sum_n": 350.82,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 166.95,
+          "FR": 0.0,
+          "RL": 183.87,
+          "RR": 0.0
+        },
+        "peak_sum_n": 350.82,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592652360093,
+      "final_height_m": 0.05699826696161299,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_delayed_20260928Td1.0b",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 4.676,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 4.584,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.517,
+        "foot_force_n": {
+          "FL": 9.8,
+          "FR": 0.0,
+          "RL": 10.81,
+          "RR": 0.0
+        },
+        "sum_force_n": 20.61,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592653563505,
+      "final_height_m": 0.056998266961522284,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_delayed_20260928Td2.0",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 2.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 5.556,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 5.524,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.519,
+        "foot_force_n": {
+          "FL": 7.31,
+          "FR": 0.0,
+          "RL": 3.56,
+          "RR": 0.0
+        },
+        "sum_force_n": 10.87,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592649928531,
+      "final_height_m": 0.05699826696158774,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_delayed_trace_20260928Td1.0",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 4.636,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 4.612,
+        "roll_rad": -0.52,
+        "pitch_rad": -0.0,
+        "tilt_rad": 0.52,
+        "foot_force_n": {
+          "FL": 2.8,
+          "FR": 4.14,
+          "RL": 2.69,
+          "RR": 0.0
+        },
+        "sum_force_n": 9.63,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL"
+        ],
+        "roll_rate_rad_s": 0.0
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 198.24,
+          "FR": 4.14,
+          "RL": 2.83,
+          "RR": 0.0
+        },
+        "peak_sum_n": 205.21,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL"
+        ],
+        "loaded_count": 3
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 198.24,
+          "FR": 4.14,
+          "RL": 2.83,
+          "RR": 0.0
+        },
+        "peak_sum_n": 205.21,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL"
+        ],
+        "loaded_count": 3
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 1.72,
+        "max_abs_roll_offset_s": 0.224,
+        "roll_at_window_end_rad": -0.459,
+        "inverted_within_window": false
+      },
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.721682491730198,
+      "final_height_m": 0.1386710394952801,
+      "final_roll_rad": -0.521,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_delayed_trace_20260928Td1.0b",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 4.744,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 4.728,
+        "roll_rad": -0.519,
+        "pitch_rad": 0.0,
+        "tilt_rad": 0.519,
+        "foot_force_n": {
+          "FL": 6.99,
+          "FR": 4.11,
+          "RL": 9.13,
+          "RR": 0.0
+        },
+        "sum_force_n": 20.23,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL"
+        ],
+        "roll_rate_rad_s": 0.0
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 26.66,
+          "FR": 0.0,
+          "RL": 151.03,
+          "RR": 0.0
+        },
+        "peak_sum_n": 177.69,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 26.66,
+          "FR": 0.0,
+          "RL": 151.03,
+          "RR": 0.0
+        },
+        "peak_sum_n": 177.69,
+        "loaded_feet": [
+          "FL",
+          "RL"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 0.696,
+        "roll_at_window_end_rad": 3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592652790292,
+      "final_height_m": 0.0569982669614446,
+      "final_roll_rad": -3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_drop_20260928Tz0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.040126433496153566,
+      "final_height_m": 0.3646306648087284,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_drop_20260928Tz1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.0707395637671384,
+      "final_height_m": 0.3646288193526488,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Tpitch0.6",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.6,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.5999271522023627,
+      "final_height_m": 0.3645617275133353,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Tpitch0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.116,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.108,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.898,
+        "foot_force_n": {
+          "FL": 7.02,
+          "FR": 7.02,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 14.04,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 104.8,
+          "FR": 105.28,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 210.08,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 104.8,
+          "FR": 105.28,
+          "RL": 85.12,
+          "RR": 85.4
+        },
+        "peak_sum_n": 380.6,
+        "loaded_feet": [
+          "FL",
+          "FR",
+          "RL",
+          "RR"
+        ],
+        "loaded_count": 4
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 0.9,
+      "final_height_m": 0.3290040330545207,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Tpitch1.2",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.2,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 47.15,
+          "FR": 47.12,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 94.27,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 63.7,
+          "FR": 63.8,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 127.5,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.3114007380902155,
+      "final_height_m": 0.32900403268416895,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Tpitch1.6",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.6,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 3.142,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 3.141592653589793,
+      "final_height_m": 0.3290040337593426,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Tpitch1.8",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.8,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 3.142,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592653589793,
+      "final_height_m": 0.056998266961562474,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Troll0.6",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.6,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.5999999999999999,
+      "final_height_m": 0.36461165981455745,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Troll0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.9,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.9,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 73.38,
+          "RL": 0.0,
+          "RR": 120.19
+        },
+        "peak_sum_n": 193.57,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 73.38,
+          "RL": 0.0,
+          "RR": 120.19
+        },
+        "peak_sum_n": 193.57,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.6726753862612946,
+      "final_height_m": 0.1386627510187543,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_envelope_20260928Troll1.2",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.83,
+          "RL": 0.0,
+          "RR": 4.81
+        },
+        "peak_sum_n": 9.64,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.83,
+          "RL": 0.0,
+          "RR": 4.81
+        },
+        "peak_sum_n": 9.64,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.762677754577418,
+      "final_height_m": 0.13867013910788226,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_envrep_20260928Tp0.9a",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.9,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 89.69,
+          "FR": 90.34,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 180.03,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 167.68,
+          "FR": 167.55,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 335.23,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 0.9,
+      "final_height_m": 0.32900403300736564,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envrep_20260928Tp0.9b",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.9,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 168.79,
+          "FR": 169.95,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 338.74,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 168.79,
+          "FR": 169.95,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 338.74,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 0.9,
+      "final_height_m": 0.3290040325830177,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envrep_20260928Tp1.2a",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.2,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 47.15,
+          "FR": 47.12,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 94.27,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 55.14,
+          "FR": 55.47,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 110.61,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.3151529562541187,
+      "final_height_m": 0.32900403306371423,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envrep_20260928Tp1.2b",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.2,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 17.0,
+          "FR": 17.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 34.0,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 65.12,
+          "FR": 65.18,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 130.3,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.3220872873660028,
+      "final_height_m": 0.3290040323445375,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envrep_20260928Tp1.6a",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.6,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.108,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.104,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 3.142,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 3.141592653589793,
+      "final_height_m": 0.3290040337074485,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_envrep_20260928Tp1.6b",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.6,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 3.142,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 77.18,
+          "FR": 77.16,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 154.34,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 77.18,
+          "FR": 77.16,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 154.34,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 3.141592653589793,
+      "final_height_m": 0.32900403281685864,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_forward_20260928T45Np1.0",
+      "enable_fall_recovery": true,
+      "force_n": 45.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.17086348465105067,
+      "final_height_m": 0.3647629669756639,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_forward_20260928T60Np0.3",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.744,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 3.736,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.866,
+        "foot_force_n": {
+          "FL": 5.3,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 5.3,
+        "loaded_feet": [
+          "FL"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 110.22,
+          "FR": 110.43,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 220.65,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 110.22,
+          "FR": 110.43,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 220.65,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.141592624030323,
+      "final_height_m": 0.05699827853062432,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_forward_20260928T70Np0.5",
+      "enable_fall_recovery": true,
+      "force_n": 70.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.596,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.536,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.933,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592652936189,
+      "final_height_m": 0.05699826696155296,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_freehip_20260928Tf08b08r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 38.09,
+          "RL": 0.0,
+          "RR": 172.74
+        },
+        "peak_sum_n": 210.83,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 38.09,
+          "RL": 0.0,
+          "RR": 172.74
+        },
+        "peak_sum_n": 210.83,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:stand",
+      "max_tilt_rad": 1.5864224213738405,
+      "final_height_m": 0.13860732876902893,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_freehip_20260928Tf08r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 1.68,
+          "RL": 0.0,
+          "RR": 3.67
+        },
+        "peak_sum_n": 5.35,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.6060301725999055,
+      "final_height_m": 0.13866257756568398,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_freehip_20260928Tfn08r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 27.47,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 37.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 27.47,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 37.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415925410345653,
+      "final_height_m": 0.05699828412235056,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_gain_20260928Tflank12f",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 89.24,
+          "RL": 0.0,
+          "RR": 100.88
+        },
+        "peak_sum_n": 190.12,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 89.24,
+          "RL": 0.0,
+          "RR": 100.88
+        },
+        "peak_sum_n": 190.12,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.1415925890065597,
+      "final_height_m": 0.05699827926389409,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_gain_20260928Tflank14b",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.1415926524607385,
+      "final_height_m": 0.056998266961577046,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_gain_20260928Tpitch14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 165.91
+        },
+        "peak_sum_n": 165.91,
+        "loaded_feet": [
+          "RR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 185.8
+        },
+        "peak_sum_n": 185.8,
+        "loaded_feet": [
+          "RR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.141592415114198,
+      "final_height_m": 0.05699811441302617,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_gather_20260928Tr12h08",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "failed:crouch"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:crouch",
+      "max_tilt_rad": 3.141592651047191,
+      "final_height_m": 0.05699829350095437,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_gather_20260928Tr14h08",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "failed:crouch"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.45,
+          "RL": 0.0,
+          "RR": 1.43
+        },
+        "peak_sum_n": 1.88,
+        "loaded_feet": [
+          "RR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:crouch",
+      "max_tilt_rad": 3.1415924632768757,
+      "final_height_m": 0.056998287533979716,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_gather_20260928Tr14h10",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "failed:crouch"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 24.33,
+          "RL": 0.0,
+          "RR": 10.58
+        },
+        "peak_sum_n": 34.91,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 24.33,
+          "RL": 0.0,
+          "RR": 10.58
+        },
+        "peak_sum_n": 34.91,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:crouch",
+      "max_tilt_rad": 3.1415922678923858,
+      "final_height_m": 0.05699828753400203,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_hip_20260928Tn04",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 42.85,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 53.11,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 42.85,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 53.11,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415926216697705,
+      "final_height_m": 0.05699829833138777,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_hip_20260928Tn08",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 10.77,
+          "RL": 0.0,
+          "RR": 68.74
+        },
+        "peak_sum_n": 79.51,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 10.77,
+          "RL": 0.0,
+          "RR": 68.74
+        },
+        "peak_sum_n": 79.51,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.1415923712262526,
+      "final_height_m": 0.05699829059836892,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_hip_20260928Tp04",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 21.37,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 31.63,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 21.37,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 31.63,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.5896018454267822,
+      "final_height_m": 0.13866264685775173,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_hip_20260928Tp08",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "failed:crouch"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:crouch",
+      "max_tilt_rad": 1.5845744971126448,
+      "final_height_m": 0.1385784217438898,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_hipcrouch_20260928Tp08r12",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:stand",
+      "max_tilt_rad": 3.141592649723597,
+      "final_height_m": 0.05699827516296758,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_hipcrouch_20260928Tp08r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "attempting:roll",
+        "unrecoverable:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:roll",
+      "max_tilt_rad": 3.141588568255267,
+      "final_height_m": 0.05699811592705388,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_hipcrouch_20260928Tp10r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 58.34,
+          "RL": 0.0,
+          "RR": 172.74
+        },
+        "peak_sum_n": 231.08,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 58.34,
+          "RL": 0.0,
+          "RR": 172.74
+        },
+        "peak_sum_n": 231.08,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592653160449,
+      "final_height_m": 0.05699826696155353,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_hipstand_20260928Tr12h08",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:stand",
+      "max_tilt_rad": 1.791503191006827,
+      "final_height_m": 0.13860732607652784,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_hipstand_20260928Tr14h08",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:stand",
+      "max_tilt_rad": 1.5864054724335643,
+      "final_height_m": 0.13860728618950383,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_hipstand_20260928Tr14h10",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:stand",
+      "max_tilt_rad": 1.5960228298110566,
+      "final_height_m": 0.13860697258213583,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_lowgain_20260928Tg0.2_flank12f",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 48.58,
+          "RL": 0.0,
+          "RR": 58.69
+        },
+        "peak_sum_n": 107.27,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 324.42,
+          "RL": 0.0,
+          "RR": 58.69
+        },
+        "peak_sum_n": 383.11,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.5925034708615675,
+      "final_height_m": 0.13866259827197644,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_lowgain_20260928Tg0.2_pitch14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 25.68
+        },
+        "peak_sum_n": 34.46,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 25.68
+        },
+        "peak_sum_n": 34.46,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.6474347803914553,
+      "final_height_m": 0.13868068604977646,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_lowgain_20260928Tg0.3_flank12f",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 271.24
+        },
+        "peak_sum_n": 276.11,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.6239956158615596,
+      "final_height_m": 0.13866255181762766,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_lowgain_20260928Tg0.3_pitch14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 3.76,
+          "RL": 0.0,
+          "RR": 61.58
+        },
+        "peak_sum_n": 65.34,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 3.76,
+          "RL": 0.0,
+          "RR": 273.11
+        },
+        "peak_sum_n": 276.87,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.64809706537027,
+      "final_height_m": 0.13866277961814527,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_neardiag_20260928Tp0.9r0.8",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.8,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.9,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 56.01,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 56.01,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 139.16,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 139.16,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 0.917601465200472,
+      "final_height_m": 0.05699826575118639,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_neardiag_20260928Tp1.0r0.7",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.0,
+      "spawn_roll_rad": 0.7,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.0,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 97.56,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 97.56,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 229.9,
+          "FR": 107.41,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 337.31,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.1054414062045859,
+      "final_height_m": 0.32900403294349034,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_neardiag_20260928Tp1.0r0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.0,
+      "spawn_roll_rad": 0.9,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.0,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 105.85,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 105.85,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 110.74,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 110.74,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.0717283786733616,
+      "final_height_m": 0.05699831275163174,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_null_20260928Tdiag0.9",
+      "enable_fall_recovery": false,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.9,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 0.8999999999999999,
+      "final_height_m": 0.05699826197629022,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_null_20260928Tflank1.4",
+      "enable_fall_recovery": false,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 1.4066017619587647,
+      "final_height_m": 0.1386133816494187,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_null_20260928Tpitch1.4",
+      "enable_fall_recovery": false,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.05699811354942648,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_null_perturb_20260928Tf50",
+      "enable_fall_recovery": false,
+      "force_n": 50.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 0.7372665719360719,
+      "final_height_m": 0.1385943715536629,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_null_perturb_20260928Tf60",
+      "enable_fall_recovery": false,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 0.7700419225172132,
+      "final_height_m": 0.13859580690491138,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_null_perturb_20260928Tf60b",
+      "enable_fall_recovery": false,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 0.7523665547490306,
+      "final_height_m": 0.13859426481156648,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_null_perturb_20260928Tf60c",
+      "enable_fall_recovery": false,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 0.7235917775280291,
+      "final_height_m": 0.13857298153341754,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_null_trace_20260928Tf60",
+      "enable_fall_recovery": false,
+      "force_n": 60.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "disabled",
+      "max_tilt_rad": 0.714353120999632,
+      "final_height_m": 0.13857222041677464,
+      "final_roll_rad": -0.518,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_passive_20260928Tflank1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.95,
+          "RL": 0.0,
+          "RR": 10.58
+        },
+        "peak_sum_n": 19.53,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.95,
+          "RL": 0.0,
+          "RR": 10.58
+        },
+        "peak_sum_n": 19.53,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.6412361810814966,
+      "final_height_m": 0.13866902107466664,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_passive_20260928Tp0.9r0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.9,
+      "spawn_roll_rad": 0.9,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.9,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 88.35,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 88.35,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 151.15,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 151.15,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 0.8999999999999999,
+      "final_height_m": 0.28047712971904737,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.281
+    },
+    {
+      "trial": "fall_ladder_passive_20260928Tp1.0r0.9",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.0,
+      "spawn_roll_rad": 0.9,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.0,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 90.74,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 90.74,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 130.94,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 130.94,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.0061399892487064,
+      "final_height_m": 0.056998312751592575,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_passive_20260928Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 22.99,
+          "FR": 22.89,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 45.88,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 70.27,
+          "FR": 70.2,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 140.47,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.27995046180819666,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.28
+    },
+    {
+      "trial": "fall_ladder_perturbrep_20260928Tf60b",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 3.936,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.852,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.747,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 277.74,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 277.74,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 277.74,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 277.74,
+        "loaded_feet": [
+          "FL"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592652049101,
+      "final_height_m": 0.056998266961759525,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_pitch_20260928Tf40p2.0",
+      "enable_fall_recovery": true,
+      "force_n": 40.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.16173568284576806,
+      "final_height_m": 0.36476282486723643,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_pitch_20260928Tf50p1.5",
+      "enable_fall_recovery": true,
+      "force_n": 50.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": null,
+      "entry_phase": null,
+      "phase_sequence": [],
+      "rest": null,
+      "settled_entry": null,
+      "entry_strike": null,
+      "entry_fold": null,
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "idle",
+      "max_tilt_rad": 0.08749224241820873,
+      "final_height_m": 0.36483951955518723,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.365
+    },
+    {
+      "trial": "fall_ladder_pitch_20260928Tf60p1.5",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 3.632,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.536,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.703,
+        "foot_force_n": {
+          "FL": 44.96,
+          "FR": 40.37,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 85.33,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 61.08,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 61.08,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 61.08,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 61.08,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.1415926528298237,
+      "final_height_m": 0.05699826696159329,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_pitch_20260928Tf70p1.0",
+      "enable_fall_recovery": true,
+      "force_n": 70.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 3.576,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.54,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.058,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592643348722,
+      "final_height_m": 0.056998266961637706,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_placed_20260928Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 76.51,
+          "FR": 71.59,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 148.1,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.056998202156944504,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_placed_20260928Troll1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 107.59,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 107.59,
+        "loaded_feet": [
+          "FR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 107.59,
+          "RL": 0.0,
+          "RR": 9.66
+        },
+        "peak_sum_n": 117.25,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.9268274164443555,
+      "final_height_m": 0.13866280678726856,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_placed_hold_20260928Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 36.68,
+          "FR": 36.63,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 73.31,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 67.25,
+          "FR": 67.16,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 134.41,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.32900406460560644,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_placed_hold_20260928Troll1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 8.78,
+          "RL": 0.0,
+          "RR": 10.26
+        },
+        "peak_sum_n": 19.04,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 3.14159263091941,
+      "final_height_m": 0.05699826696155659,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_placed_slew_20260928Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 60.84,
+          "FR": 60.16,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 121.0,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.32900403267525746,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_placed_trace_20260928Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": true,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.092,
+        "roll_rad": 0.0,
+        "pitch_rad": 1.402,
+        "tilt_rad": 1.402,
+        "foot_force_n": {
+          "FL": 0.17,
+          "FR": 0.17,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.34,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 53.81,
+          "FR": 54.05,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 107.86,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 86.27,
+          "FR": 86.08,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 172.35,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 0.001,
+        "max_abs_roll_offset_s": 0.636,
+        "roll_at_window_end_rad": 0.001,
+        "inverted_within_window": false
+      },
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.3290040327703137,
+      "final_roll_rad": 0.0,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_progress_20260928Tf08b08r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:crouch",
+        "attempting:stand",
+        "failed:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 16.78
+        },
+        "peak_sum_n": 16.78,
+        "loaded_feet": [
+          "RR"
+        ],
+        "loaded_count": 1
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 16.78
+        },
+        "peak_sum_n": 16.78,
+        "loaded_feet": [
+          "RR"
+        ],
+        "loaded_count": 1
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:stand",
+      "max_tilt_rad": 1.588358737239809,
+      "final_height_m": 0.13860731427342227,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_progress_20260928Tf08r12",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.2,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.2,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 4.87,
+          "RL": 0.0,
+          "RR": 4.86
+        },
+        "peak_sum_n": 9.73,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.865262264547878,
+      "final_height_m": 0.13866270482961382,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_progress_20260928Tf08r14",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 1.4,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "failed:roll"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 32.06,
+          "RL": 0.0,
+          "RR": 10.58
+        },
+        "peak_sum_n": 42.64,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 32.06,
+          "RL": 0.0,
+          "RR": 10.58
+        },
+        "peak_sum_n": 42.64,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "failed:roll",
+      "max_tilt_rad": 1.5958122207588838,
+      "final_height_m": 0.13866273281472521,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.139
+    },
+    {
+      "trial": "fall_ladder_repeat_20260928Tr1",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 30.49,
+          "FR": 30.48,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 60.97,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 67.25,
+          "FR": 67.44,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 134.69,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.329004032900341,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_repeat_20260928Tr2",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.104,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.008,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 70.62,
+          "FR": 71.44,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 142.06,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 70.62,
+          "FR": 71.44,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 142.06,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.32900403385487537,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_repeat_20260928Tr3",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "traced": false,
+      "attempt_start_s": 0.1,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "attempting:roll",
+        "attempting:tuck",
+        "attempting:crouch",
+        "attempting:stand",
+        "succeeded:stand"
+      ],
+      "rest": {
+        "sim_s": 0.004,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 1.4,
+        "foot_force_n": {
+          "FL": null,
+          "FR": null,
+          "RL": null,
+          "RR": null
+        },
+        "sum_force_n": null,
+        "loaded_feet": null,
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 45.48,
+          "FR": 45.39,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 90.87,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 66.22,
+          "FR": 66.2,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 132.42,
+        "loaded_feet": [
+          "FL",
+          "FR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "succeeded:stand",
+      "max_tilt_rad": 1.401907809024547,
+      "final_height_m": 0.3290040327770642,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.329
+    },
+    {
+      "trial": "fall_ladder_sustained_20260928T40N",
+      "enable_fall_recovery": true,
+      "force_n": 40.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.764,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.74,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.559,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.1415926530450347,
+      "final_height_m": 0.056998266961611574,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_sustained_20260928T45N",
+      "enable_fall_recovery": true,
+      "force_n": 45.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.72,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.636,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.775,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.141592653021816,
+      "final_height_m": 0.05699826696169783,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_sustained_20260928T50N",
+      "enable_fall_recovery": true,
+      "force_n": 50.0,
+      "start_delay_s": 0.0,
+      "spawn_pitch_rad": null,
+      "spawn_roll_rad": null,
+      "traced": false,
+      "attempt_start_s": 3.676,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 3.644,
+        "roll_rad": null,
+        "pitch_rad": null,
+        "tilt_rad": 0.625,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "sum_force_n": 0.0,
+        "loaded_feet": [],
+        "roll_rate_rad_s": null
+      },
+      "settled_entry": null,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "peak_sum_n": 0.0,
+        "loaded_feet": [],
+        "loaded_count": 0
+      },
+      "roll_extreme_after_entry": null,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.1415926521219264,
+      "final_height_m": 0.056998266961584505,
+      "final_roll_rad": null,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_tuck_placed_20260929Troll0.9d1.0",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.9,
+      "traced": true,
+      "attempt_start_s": 0.784,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 0.764,
+        "roll_rad": 0.512,
+        "pitch_rad": -0.0,
+        "tilt_rad": 0.512,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 12.14,
+          "RL": 0.0,
+          "RR": 11.33
+        },
+        "sum_force_n": 23.47,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "roll_rate_rad_s": 0.05
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 201.57,
+          "RL": 0.0,
+          "RR": 339.5
+        },
+        "peak_sum_n": 541.07,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 201.57,
+          "RL": 0.0,
+          "RR": 339.5
+        },
+        "peak_sum_n": 541.07,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 0.644,
+        "roll_at_window_end_rad": 3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.1415926531420024,
+      "final_height_m": 0.056998266961548,
+      "final_roll_rad": -3.142,
+      "final_xyz_z_m": 0.057
+    },
+    {
+      "trial": "fall_ladder_tuck_placed_20260929Troll0.9d1.0b",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "start_delay_s": 1.0,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.9,
+      "traced": true,
+      "attempt_start_s": 0.804,
+      "entry_phase": "tuck",
+      "phase_sequence": [
+        "attempting:tuck",
+        "unrecoverable:tuck"
+      ],
+      "rest": {
+        "sim_s": 0.796,
+        "roll_rad": 0.512,
+        "pitch_rad": -0.0,
+        "tilt_rad": 0.512,
+        "foot_force_n": {
+          "FL": 0.0,
+          "FR": 12.69,
+          "RL": 0.0,
+          "RR": 11.93
+        },
+        "sum_force_n": 24.62,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "roll_rate_rad_s": 0.04
+      },
+      "settled_entry": true,
+      "entry_strike": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 205.2,
+          "RL": 0.0,
+          "RR": 260.03
+        },
+        "peak_sum_n": 465.23,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "entry_fold": {
+        "peak_force_n": {
+          "FL": 0.0,
+          "FR": 205.2,
+          "RL": 0.0,
+          "RR": 260.03
+        },
+        "peak_sum_n": 465.23,
+        "loaded_feet": [
+          "FR",
+          "RR"
+        ],
+        "loaded_count": 2
+      },
+      "roll_extreme_after_entry": {
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 0.672,
+        "roll_at_window_end_rad": 3.142,
+        "inverted_within_window": true
+      },
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "max_tilt_rad": 3.14159265323875,
+      "final_height_m": 0.05699826696155226,
+      "final_roll_rad": -3.142,
+      "final_xyz_z_m": 0.057
+    }
+  ],
+  "interpretation": {
+    "entry_phase_counts": {
+      "roll": 6,
+      "tuck": 80
+    },
+    "entries_from_a_settled_rest": {
+      "fall_ladder_brace_delayed_20260929Td1.0": {
+        "entry_phase": "roll",
+        "rest_roll_rad": -0.52,
+        "rest_roll_rate_rad_s": 0.0,
+        "rest_sum_force_n": 8.69,
+        "entry_strike_peak_n": {
+          "FL": 208.11,
+          "FR": 3.89,
+          "RL": 97.8,
+          "RR": 0.0
+        },
+        "entry_strike_peak_sum_n": 309.8,
+        "entry_fold_peak_sum_n": 309.8,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:roll",
+        "final_height_m": 0.056998099220048636
+      },
+      "fall_ladder_brace_placed_20260929Troll0.9d1.0": {
+        "entry_phase": "roll",
+        "rest_roll_rad": 0.512,
+        "rest_roll_rate_rad_s": 0.0,
+        "rest_sum_force_n": 26.62,
+        "entry_strike_peak_n": {
+          "FL": 0.0,
+          "FR": 412.42,
+          "RL": 0.0,
+          "RR": 406.64
+        },
+        "entry_strike_peak_sum_n": 819.06,
+        "entry_fold_peak_sum_n": 819.06,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:roll",
+        "final_height_m": 0.0569982255892251
+      },
+      "fall_ladder_brace_placed_20260929Troll0.9d1.0b": {
+        "entry_phase": "roll",
+        "rest_roll_rad": 0.512,
+        "rest_roll_rate_rad_s": 0.0,
+        "rest_sum_force_n": 26.45,
+        "entry_strike_peak_n": {
+          "FL": 0.0,
+          "FR": 376.22,
+          "RL": 0.0,
+          "RR": 371.4
+        },
+        "entry_strike_peak_sum_n": 747.62,
+        "entry_fold_peak_sum_n": 747.62,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:roll",
+        "final_height_m": 0.05699820763144994
+      },
+      "fall_ladder_delayed_trace_20260928Td1.0": {
+        "entry_phase": "tuck",
+        "rest_roll_rad": -0.52,
+        "rest_roll_rate_rad_s": 0.0,
+        "rest_sum_force_n": 9.63,
+        "entry_strike_peak_n": {
+          "FL": 198.24,
+          "FR": 4.14,
+          "RL": 2.83,
+          "RR": 0.0
+        },
+        "entry_strike_peak_sum_n": 205.21,
+        "entry_fold_peak_sum_n": 205.21,
+        "roll_extreme_rad": 1.72,
+        "inverted_within_1_5_s": false,
+        "terminal": "failed:roll",
+        "final_height_m": 0.1386710394952801
+      },
+      "fall_ladder_delayed_trace_20260928Td1.0b": {
+        "entry_phase": "tuck",
+        "rest_roll_rad": -0.519,
+        "rest_roll_rate_rad_s": 0.0,
+        "rest_sum_force_n": 20.23,
+        "entry_strike_peak_n": {
+          "FL": 26.66,
+          "FR": 0.0,
+          "RL": 151.03,
+          "RR": 0.0
+        },
+        "entry_strike_peak_sum_n": 177.69,
+        "entry_fold_peak_sum_n": 177.69,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:tuck",
+        "final_height_m": 0.0569982669614446
+      },
+      "fall_ladder_tuck_placed_20260929Troll0.9d1.0": {
+        "entry_phase": "tuck",
+        "rest_roll_rad": 0.512,
+        "rest_roll_rate_rad_s": 0.05,
+        "rest_sum_force_n": 23.47,
+        "entry_strike_peak_n": {
+          "FL": 0.0,
+          "FR": 201.57,
+          "RL": 0.0,
+          "RR": 339.5
+        },
+        "entry_strike_peak_sum_n": 541.07,
+        "entry_fold_peak_sum_n": 541.07,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:tuck",
+        "final_height_m": 0.056998266961548
+      },
+      "fall_ladder_tuck_placed_20260929Troll0.9d1.0b": {
+        "entry_phase": "tuck",
+        "rest_roll_rad": 0.512,
+        "rest_roll_rate_rad_s": 0.04,
+        "rest_sum_force_n": 24.62,
+        "entry_strike_peak_n": {
+          "FL": 0.0,
+          "FR": 205.2,
+          "RL": 0.0,
+          "RR": 260.03
+        },
+        "entry_strike_peak_sum_n": 465.23,
+        "entry_fold_peak_sum_n": 465.23,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:tuck",
+        "final_height_m": 0.05699826696155226
+      }
+    },
+    "entries_already_moving": {
+      "fall_ladder_brace_20260929Tf60": {
+        "entry_phase": "roll",
+        "rest_roll_rad": -0.532,
+        "rest_roll_rate_rad_s": 1.75,
+        "rest_sum_force_n": 0.0,
+        "entry_strike_peak_n": {
+          "FL": 140.01,
+          "FR": 0.0,
+          "RL": 109.75,
+          "RR": 0.0
+        },
+        "entry_strike_peak_sum_n": 249.76,
+        "entry_fold_peak_sum_n": 249.76,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:roll",
+        "final_height_m": 0.05699829156987366
+      },
+      "fall_ladder_brace_20260929Tf60b": {
+        "entry_phase": "roll",
+        "rest_roll_rad": -0.853,
+        "rest_roll_rate_rad_s": -2.0,
+        "rest_sum_force_n": 0.0,
+        "entry_strike_peak_n": {
+          "FL": 324.21,
+          "FR": 0.0,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "entry_strike_peak_sum_n": 324.21,
+        "entry_fold_peak_sum_n": 324.21,
+        "roll_extreme_rad": 3.142,
+        "inverted_within_1_5_s": true,
+        "terminal": "unrecoverable:roll",
+        "final_height_m": 0.056998278514412595
+      }
+    },
+    "moving_threshold_rad_s": 0.5,
+    "grain": "The entry phase is read from the recovery_transitions record and the rest's roll rate from the traced roll ~0.1 s before that transition: pose alone cannot tell a trunk resting on its side from one already rolling past it.",
+    "limitations": [
+      "Commanded efforts are PD outputs, not measured joint torques; per-link contact wrenches would be needed to apportion an entry's push between the joints of a leg.",
+      "The trunk-ground contact force is not published, so whether the trunk itself was resting on the ground during an entry is inferred from its roll rate, not measured.",
+      "Trials recorded before the traced era sample at 0.1 s, so their rates are coarser and their contact fields are null.",
+      "A trial where the perturbation never latched the fall detector has no entry at all; it is reported with an attempt_start_s of null, not as a successful entry."
+    ]
+  }
+}

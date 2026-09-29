@@ -1,0 +1,33 @@
+{
+  "tool": "run_perturbation_trial.sh",
+  "source_root": "/home/molar1/bumperbot_ws",
+  "source_revision": "6abef08",
+  "tracked_modified_files_at_launch": 0,
+  "ros_domain_id": 232,
+  "duration_s": 20.0,
+  "force_n": 0.0,
+  "perturbation_axis": 1,
+  "start_s": 3.0,
+  "pulse_s": 0.2,
+  "recovery_window_s": 2.0,
+  "spawn_z_m": null,
+  "spawn_pitch_rad": 0.0,
+  "spawn_roll_rad": 0.9,
+  "roll_brace_hip_rad": 0.0,
+  "roll_free_hip_rad": 0.0,
+  "recovery_gain_scale": 0.5,
+  "recovery_damping_scale": 0.5,
+  "enable_fall_recovery": true,
+  "fall_recovery_timeout_s": 8.0,
+  "fall_recovery_start_delay_s": 1.0,
+  "recovery_policy_path": "",
+  "trace_joints": true,
+  "trace_interval_s": 0.02,
+  "source_sha256": {
+    "src/robot_lab_adapter/robot_lab_adapter/go2_locomotion.py": "96afafa95d22ebbc7ccbec0d94916588941962b8ec8be13c077d674b8bc73197",
+    "src/robot_lab_adapter/robot_lab_adapter/go2_stance_gait_controller.py": "5485d7183108e35fed41962cad235c57df5c1da4ebf71b5c632e4141438c307a",
+    "src/robot_lab_adapter/robot_lab_adapter/go2_recovery_policy.py": "8dc65f4f673b9deba4fd3f32f9d76f0c59f8d298d00b356b7a224376337f6bb3",
+    "src/robot_lab_adapter/policies/go2_recovery_nju/policy.onnx": "11a40a6c8d4dde82aeb1d17c3ec29b4ddbe97a0a69a120700a83e02b1d781a51",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "ef167782ddbc1c2a0577b097b0048dac74b06ce25ee5dde1716724f714fb79a6"
+  }
+}

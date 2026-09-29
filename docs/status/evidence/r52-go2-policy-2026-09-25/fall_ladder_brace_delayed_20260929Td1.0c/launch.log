@@ -1,0 +1,336 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-09-29-11-11-06-343395-molar1-727512
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm localization=amcl -> global_localization stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[INFO] [go2-stance-gait-controller-1]: process started with pid [727549]
+[INFO] [robot_state_publisher-2]: process started with pid [727551]
+[INFO] [mujoco_spawner-3]: process started with pid [727553]
+[INFO] [joy_teleop-4]: process started with pid [727555]
+[INFO] [joy_node-5]: process started with pid [727557]
+[INFO] [twist_mux-6]: process started with pid [727559]
+[INFO] [twist_marker-7]: process started with pid [727562]
+[INFO] [joystick_relay.py-8]: process started with pid [727569]
+[INFO] [twist_relay-9]: process started with pid [727572]
+[INFO] [simulator_ready_gate-10]: process started with pid [727574]
+[robot_state_publisher-2] 1790673067.274118 [233] robot_stat: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[robot_state_publisher-2] [ERROR] [1790673067.274228901] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[robot_state_publisher-2] 
+[robot_state_publisher-2] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[robot_state_publisher-2] This error state is being overwritten:
+[robot_state_publisher-2] 
+[robot_state_publisher-2]   'error not set, at ./src/rcl/node.c:263'
+[robot_state_publisher-2] 
+[robot_state_publisher-2] with this new error message:
+[robot_state_publisher-2] 
+[robot_state_publisher-2]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[robot_state_publisher-2] 
+[robot_state_publisher-2] rcutils_reset_error() should be called after error handling to avoid this.
+[robot_state_publisher-2] <<<
+[robot_state_publisher-2] [ERROR] [1790673067.274377570] [rcl]: Failed to fini publisher for node: 1
+[robot_state_publisher-2] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[robot_state_publisher-2]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[twist_mux-6] 1790673067.280971 [233]  twist_mux: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[twist_mux-6] [ERROR] [1790673067.281086682] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[twist_mux-6] 
+[twist_mux-6] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[twist_mux-6] This error state is being overwritten:
+[twist_mux-6] 
+[twist_mux-6]   'error not set, at ./src/rcl/node.c:263'
+[twist_mux-6] 
+[twist_mux-6] with this new error message:
+[twist_mux-6] 
+[twist_mux-6]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[twist_mux-6] 
+[twist_mux-6] rcutils_reset_error() should be called after error handling to avoid this.
+[twist_mux-6] <<<
+[twist_mux-6] [ERROR] [1790673067.281240919] [rcl]: Failed to fini publisher for node: 1
+[twist_mux-6] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[twist_mux-6]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[twist_marker-7] 1790673067.291112 [233] twist_mark: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[twist_marker-7] [ERROR] [1790673067.291239627] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[twist_marker-7] 
+[twist_marker-7] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[twist_marker-7] This error state is being overwritten:
+[twist_marker-7] 
+[twist_marker-7]   'error not set, at ./src/rcl/node.c:263'
+[twist_marker-7] 
+[twist_marker-7] with this new error message:
+[twist_marker-7] 
+[twist_marker-7]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[twist_marker-7] 
+[twist_marker-7] rcutils_reset_error() should be called after error handling to avoid this.
+[twist_marker-7] <<<
+[twist_marker-7] [ERROR] [1790673067.291412520] [rcl]: Failed to fini publisher for node: 1
+[twist_marker-7] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[twist_marker-7]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[joy_node-5] 1790673067.294630 [233]   joy_node: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[joy_node-5] [ERROR] [1790673067.294761476] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[joy_node-5] 
+[joy_node-5] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[joy_node-5] This error state is being overwritten:
+[joy_node-5] 
+[joy_node-5]   'error not set, at ./src/rcl/node.c:263'
+[joy_node-5] 
+[joy_node-5] with this new error message:
+[joy_node-5] 
+[joy_node-5]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[joy_node-5] 
+[joy_node-5] rcutils_reset_error() should be called after error handling to avoid this.
+[joy_node-5] <<<
+[joy_node-5] [ERROR] [1790673067.294925824] [rcl]: Failed to fini publisher for node: 1
+[joy_node-5] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[joy_node-5]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[twist_relay-9] 1790673067.338826 [233] twist_rela: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[twist_relay-9] [ERROR] [1790673067.338953314] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[twist_relay-9] 
+[twist_relay-9] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[twist_relay-9] This error state is being overwritten:
+[twist_relay-9] 
+[twist_relay-9]   'error not set, at ./src/rcl/node.c:263'
+[twist_relay-9] 
+[twist_relay-9] with this new error message:
+[twist_relay-9] 
+[twist_relay-9]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[twist_relay-9] 
+[twist_relay-9] rcutils_reset_error() should be called after error handling to avoid this.
+[twist_relay-9] <<<
+[twist_relay-9] [ERROR] [1790673067.339135294] [rcl]: Failed to fini publisher for node: 1
+[twist_relay-9] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[twist_relay-9]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[go2-stance-gait-controller-1] 1790673067.892044 [233] go2-stance: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[go2-stance-gait-controller-1] [ERROR] [1790673067.893188576] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[go2-stance-gait-controller-1] 
+[go2-stance-gait-controller-1] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[go2-stance-gait-controller-1] This error state is being overwritten:
+[go2-stance-gait-controller-1] 
+[go2-stance-gait-controller-1]   'error not set, at ./src/rcl/node.c:263'
+[go2-stance-gait-controller-1] 
+[go2-stance-gait-controller-1] with this new error message:
+[go2-stance-gait-controller-1] 
+[go2-stance-gait-controller-1]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[go2-stance-gait-controller-1] 
+[go2-stance-gait-controller-1] rcutils_reset_error() should be called after error handling to avoid this.
+[go2-stance-gait-controller-1] <<<
+[go2-stance-gait-controller-1] [ERROR] [1790673067.894911965] [rcl]: Failed to fini publisher for node: 1
+[go2-stance-gait-controller-1] Traceback (most recent call last):
+[go2-stance-gait-controller-1]   File "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/robot_lab_adapter/go2-stance-gait-controller", line 33, in <module>
+[go2-stance-gait-controller-1]     sys.exit(load_entry_point('robot_lab_adapter==0.1.0', 'console_scripts', 'go2-stance-gait-controller')())
+[go2-stance-gait-controller-1]   File "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/go2_stance_gait_controller.py", line 304, in main
+[go2-stance-gait-controller-1]     node = Go2StanceGaitController()
+[go2-stance-gait-controller-1]   File "/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/go2_stance_gait_controller.py", line 50, in __init__
+[go2-stance-gait-controller-1]     super().__init__("go2_stance_gait_controller")
+[go2-stance-gait-controller-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+[go2-stance-gait-controller-1]     self.__node = _rclpy.Node(
+[go2-stance-gait-controller-1] rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[joy_teleop-4] 1790673067.986263 [233] joy_teleop: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[joy_teleop-4] [ERROR] [1790673067.986392121] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[joy_teleop-4] 
+[joy_teleop-4] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[joy_teleop-4] This error state is being overwritten:
+[joy_teleop-4] 
+[joy_teleop-4]   'error not set, at ./src/rcl/node.c:263'
+[joy_teleop-4] 
+[joy_teleop-4] with this new error message:
+[joy_teleop-4] 
+[joy_teleop-4]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[joy_teleop-4] 
+[joy_teleop-4] rcutils_reset_error() should be called after error handling to avoid this.
+[joy_teleop-4] <<<
+[joy_teleop-4] [ERROR] [1790673067.986510391] [rcl]: Failed to fini publisher for node: 1
+[joystick_relay.py-8] 1790673068.047305 [233] joystick_r: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[joystick_relay.py-8] [ERROR] [1790673068.047435872] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[joystick_relay.py-8] 
+[joystick_relay.py-8] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[joystick_relay.py-8] This error state is being overwritten:
+[joystick_relay.py-8] 
+[joystick_relay.py-8]   'error not set, at ./src/rcl/node.c:263'
+[joystick_relay.py-8] 
+[joystick_relay.py-8] with this new error message:
+[joystick_relay.py-8] 
+[joystick_relay.py-8]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[joystick_relay.py-8] 
+[joystick_relay.py-8] rcutils_reset_error() should be called after error handling to avoid this.
+[joystick_relay.py-8] <<<
+[joystick_relay.py-8] [ERROR] [1790673068.047564094] [rcl]: Failed to fini publisher for node: 1
+[joy_teleop-4] Traceback (most recent call last):
+[joy_teleop-4]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-4]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-4]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 432, in main
+[joy_teleop-4]     node = JoyTeleop()
+[joy_teleop-4]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 372, in __init__
+[joy_teleop-4]     super().__init__('joy_teleop', allow_undeclared_parameters=True,
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+[joy_teleop-4]     self.__node = _rclpy.Node(
+[joy_teleop-4] rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[ERROR] [go2-stance-gait-controller-1]: process has died [pid 727549, exit code 1, cmd '/home/molar1/bumperbot_ws/install/robot_lab_adapter/lib/robot_lab_adapter/go2-stance-gait-controller --ros-args --params-file /workspace/molar/.tmp/launch_params_qnn3jqj1'].
+[INFO] [simulator_ready_gate-10]: process has finished cleanly [pid 727574]
+[joystick_relay.py-8] Traceback (most recent call last):
+[joystick_relay.py-8]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 302, in <module>
+[joystick_relay.py-8]     main()
+[joystick_relay.py-8]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 290, in main
+[joystick_relay.py-8]     node = JoystickRelay()
+[joystick_relay.py-8]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 220, in __init__
+[joystick_relay.py-8]     super().__init__('joystick_relay')
+[joystick_relay.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+[joystick_relay.py-8]     self.__node = _rclpy.Node(
+[joystick_relay.py-8] rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[INFO] [amcl-12]: process started with pid [727668]
+[INFO] [map_server-11]: process started with pid [727666]
+[INFO] [lifecycle_manager-13]: process started with pid [727670]
+[INFO] [ekf_node-14]: process started with pid [727672]
+[INFO] [imu_republisher.py-15]: process started with pid [727674]
+[INFO] [wheel_imu_fusion-16]: process started with pid [727678]
+[lifecycle_manager-13] 1790673068.155236 [233] lifecycle_: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[lifecycle_manager-13] [ERROR] [1790673068.155371214] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[lifecycle_manager-13] 
+[lifecycle_manager-13] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[lifecycle_manager-13] This error state is being overwritten:
+[lifecycle_manager-13] 
+[lifecycle_manager-13]   'error not set, at ./src/rcl/node.c:263'
+[lifecycle_manager-13] 
+[lifecycle_manager-13] with this new error message:
+[lifecycle_manager-13] 
+[lifecycle_manager-13]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[lifecycle_manager-13] 
+[lifecycle_manager-13] rcutils_reset_error() should be called after error handling to avoid this.
+[lifecycle_manager-13] <<<
+[lifecycle_manager-13] [ERROR] [1790673068.155520811] [rcl]: Failed to fini publisher for node: 1
+[lifecycle_manager-13] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[lifecycle_manager-13]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[ERROR] [joy_teleop-4]: process has died [pid 727555, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_6_6ak5ad'].
+[ekf_node-14] 1790673068.174197 [233]   ekf_node: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[ekf_node-14] [ERROR] [1790673068.174331949] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[ekf_node-14] 
+[ekf_node-14] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[ekf_node-14] This error state is being overwritten:
+[ekf_node-14] 
+[ekf_node-14]   'error not set, at ./src/rcl/node.c:263'
+[ekf_node-14] 
+[ekf_node-14] with this new error message:
+[ekf_node-14] 
+[ekf_node-14]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[ekf_node-14] 
+[ekf_node-14] rcutils_reset_error() should be called after error handling to avoid this.
+[ekf_node-14] <<<
+[ekf_node-14] [ERROR] [1790673068.174513769] [rcl]: Failed to fini publisher for node: 1
+[ekf_node-14] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[ekf_node-14]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[amcl-12] 1790673068.179185 [233]       amcl: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[amcl-12] [31m[ERROR] [1790673068.180727211] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error[0m
+[amcl-12] 
+[amcl-12] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[amcl-12] This error state is being overwritten:
+[amcl-12] 
+[amcl-12]   'error not set, at ./src/rcl/node.c:263'
+[amcl-12] 
+[amcl-12] with this new error message:
+[amcl-12] 
+[amcl-12]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[amcl-12] 
+[amcl-12] rcutils_reset_error() should be called after error handling to avoid this.
+[amcl-12] <<<
+[amcl-12] [31m[ERROR] [1790673068.180985158] [rcl]: Failed to fini publisher for node: 1[0m
+[amcl-12] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[amcl-12]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[map_server-11] 1790673068.180648 [233] map_server: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[map_server-11] [ERROR] [1790673068.180810409] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[map_server-11] 
+[map_server-11] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[map_server-11] This error state is being overwritten:
+[map_server-11] 
+[map_server-11]   'error not set, at ./src/rcl/node.c:263'
+[map_server-11] 
+[map_server-11] with this new error message:
+[map_server-11] 
+[map_server-11]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[map_server-11] 
+[map_server-11] rcutils_reset_error() should be called after error handling to avoid this.
+[map_server-11] <<<
+[map_server-11] [ERROR] [1790673068.180958214] [rcl]: Failed to fini publisher for node: 1
+[map_server-11] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[map_server-11]   what():  failed to initialize rcl node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[ERROR] [joystick_relay.py-8]: process has died [pid 727569, exit code 1, cmd '/opt/ros/humble/lib/twist_mux/joystick_relay.py --ros-args --params-file /workspace/molar/.tmp/launch_params_fw6uy18p --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_joy.yaml -r joy_vel_in:=input_joy/cmd_vel -r joy_vel_out:=joy_vel'].
+[mujoco_spawner-3] 1790673068.244626 [233] mujoco_spa: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[mujoco_spawner-3] [ERROR] [1790673068.244765909] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[mujoco_spawner-3] 
+[mujoco_spawner-3] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[mujoco_spawner-3] This error state is being overwritten:
+[mujoco_spawner-3] 
+[mujoco_spawner-3]   'error not set, at ./src/rcl/node.c:263'
+[mujoco_spawner-3] 
+[mujoco_spawner-3] with this new error message:
+[mujoco_spawner-3] 
+[mujoco_spawner-3]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[mujoco_spawner-3] 
+[mujoco_spawner-3] rcutils_reset_error() should be called after error handling to avoid this.
+[mujoco_spawner-3] <<<
+[mujoco_spawner-3] [ERROR] [1790673068.244898195] [rcl]: Failed to fini publisher for node: 1
+[mujoco_spawner-3] Traceback (most recent call last):
+[mujoco_spawner-3]   File "/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner", line 33, in <module>
+[mujoco_spawner-3]     sys.exit(load_entry_point('robot_lab_mujoco==0.1.0', 'console_scripts', 'mujoco_spawner')())
+[mujoco_spawner-3]   File "/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py", line 2039, in main
+[mujoco_spawner-3]     node = MuJoCoSpawner()
+[mujoco_spawner-3]   File "/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py", line 1005, in __init__
+[mujoco_spawner-3]     super().__init__("mujoco_spawner")
+[mujoco_spawner-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+[mujoco_spawner-3]     self.__node = _rclpy.Node(
+[mujoco_spawner-3] rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[ERROR] [robot_state_publisher-2]: process has died [pid 727551, exit code -6, cmd '/opt/ros/humble/lib/robot_state_publisher/robot_state_publisher --ros-args --params-file /workspace/molar/.tmp/launch_params_mxffocir'].
+[ERROR] [mujoco_spawner-3]: process has died [pid 727553, exit code 1, cmd '/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner --ros-args -r __node:=mujoco_spawner --params-file /workspace/molar/.tmp/launch_params_lyqju1hy'].
+[wheel_imu_fusion-16] 1790673068.596287 [233] wheel_imu_: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[wheel_imu_fusion-16] [ERROR] [1790673068.597318231] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[wheel_imu_fusion-16] 
+[wheel_imu_fusion-16] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[wheel_imu_fusion-16] This error state is being overwritten:
+[wheel_imu_fusion-16] 
+[wheel_imu_fusion-16]   'error not set, at ./src/rcl/node.c:263'
+[wheel_imu_fusion-16] 
+[wheel_imu_fusion-16] with this new error message:
+[wheel_imu_fusion-16] 
+[wheel_imu_fusion-16]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[wheel_imu_fusion-16] 
+[wheel_imu_fusion-16] rcutils_reset_error() should be called after error handling to avoid this.
+[wheel_imu_fusion-16] <<<
+[wheel_imu_fusion-16] [ERROR] [1790673068.597482196] [rcl]: Failed to fini publisher for node: 1
+[imu_republisher.py-15] 1790673068.643789 [233]    python3: Failed to create unicast sockets for domain 233 participant index 0: resulting port numbers (65660, 65661) are out of range
+[imu_republisher.py-15] [ERROR] [1790673068.644558135] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[imu_republisher.py-15] 
+[imu_republisher.py-15] >>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+[imu_republisher.py-15] This error state is being overwritten:
+[imu_republisher.py-15] 
+[imu_republisher.py-15]   'error not set, at ./src/rcl/node.c:263'
+[imu_republisher.py-15] 
+[imu_republisher.py-15] with this new error message:
+[imu_republisher.py-15] 
+[imu_republisher.py-15]   'rcl node's rmw handle is invalid, at ./src/rcl/node.c:415'
+[imu_republisher.py-15] 
+[imu_republisher.py-15] rcutils_reset_error() should be called after error handling to avoid this.
+[imu_republisher.py-15] <<<
+[imu_republisher.py-15] [ERROR] [1790673068.644686772] [rcl]: Failed to fini publisher for node: 1
+[wheel_imu_fusion-16] Traceback (most recent call last):
+[wheel_imu_fusion-16]   File "/home/molar1/bumperbot_ws/install/robot_lab_algorithms/lib/robot_lab_algorithms/wheel_imu_fusion", line 33, in <module>
+[wheel_imu_fusion-16]     sys.exit(load_entry_point('robot_lab_algorithms==0.1.0', 'console_scripts', 'wheel_imu_fusion')())
+[wheel_imu_fusion-16]   File "/home/molar1/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/sensor_fusion.py", line 233, in wheel_imu_fusion_main
+[wheel_imu_fusion-16]     return _run(WheelImuFusionNode, 'wheel_imu_fusion', args=args)
+[wheel_imu_fusion-16]   File "/home/molar1/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/_runtime.py", line 63, in run
+[wheel_imu_fusion-16]     node = node_factory()
+[wheel_imu_fusion-16]   File "/home/molar1/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/sensor_fusion.py", line 104, in __init__
+[wheel_imu_fusion-16]     super().__init__(node_name)
+[wheel_imu_fusion-16]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+[wheel_imu_fusion-16]     self.__node = _rclpy.Node(
+[wheel_imu_fusion-16] rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[imu_republisher.py-15] Traceback (most recent call last):
+[imu_republisher.py-15]   File "/home/molar1/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py", line 54, in <module>
+[imu_republisher.py-15]     main()
+[imu_republisher.py-15]   File "/home/molar1/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py", line 40, in main
+[imu_republisher.py-15]     node = Node('imu_republisher_node')
+[imu_republisher.py-15]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 175, in __init__
+[imu_republisher.py-15]     self.__node = _rclpy.Node(
+[imu_republisher.py-15] rclpy._rclpy_pybind11.RCLError: error creating node: rcl node's rmw handle is invalid, at ./src/rcl/node.c:415
+[ERROR] [wheel_imu_fusion-16]: process has died [pid 727678, exit code 1, cmd '/home/molar1/bumperbot_ws/install/robot_lab_algorithms/lib/robot_lab_algorithms/wheel_imu_fusion --ros-args -r __node:=sensor_fusion_wheel_imu_fusion --params-file /workspace/molar/.tmp/launch_params_90tflwlb'].
+[ERROR] [imu_republisher.py-15]: process has died [pid 727674, exit code 1, cmd '/home/molar1/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py --ros-args --params-file /workspace/molar/.tmp/launch_params_709iy1b7'].
+[ERROR] [twist_mux-6]: process has died [pid 727559, exit code -6, cmd '/opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /workspace/molar/.tmp/launch_params_ch8bphag --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_locks.yaml --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_topics.yaml -r /cmd_vel_out:=robot_lab_controller/cmd_vel_unstamped'].
+[ERROR] [joy_node-5]: process has died [pid 727557, exit code -6, cmd '/opt/ros/humble/lib/joy/joy_node --ros-args -r __node:=joystick --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_config.yaml --params-file /workspace/molar/.tmp/launch_params_gtamyca7'].
+[ERROR] [twist_marker-7]: process has died [pid 727562, exit code -6, cmd '/opt/ros/humble/lib/twist_mux/twist_marker --ros-args --params-file /workspace/molar/.tmp/launch_params_qrt6yodv -r /twist:=robot_lab_controller/cmd_vel_unstamped'].
+[ERROR] [twist_relay-9]: process has died [pid 727572, exit code -6, cmd '/home/molar1/bumperbot_ws/install/robot_lab_controller/lib/robot_lab_controller/twist_relay --ros-args -r __node:=twist_relay --params-file /workspace/molar/.tmp/launch_params_c6o5_chg'].
