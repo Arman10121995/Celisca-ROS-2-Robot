@@ -123,10 +123,7 @@ FALL_RECOVER_SUCCESS_DWELL_S = 0.5
 #: the trunk rests on (roll), put the feet under the hips (crouch), then stand
 #: -- and commands the standing pose only from the ``stand`` phase, which is
 #: entered only when *measured* tilt is below
-#: :data:`FALL_RECOVER_GATE_TILT_RAD`. The entry phase is read from measured
-#: attitude as well: a trunk already resting on its side enters at the braced
-#: push instead of the fold that levers it over (see
-#: :func:`recovery_entry_phase`). This is a bounded, measured-feedback
+#: :data:`FALL_RECOVER_GATE_TILT_RAD`. This is a bounded, measured-feedback
 #: sequence, not a trained get-up policy: the gate, the phase bounds and the
 #: bounded roll count are invariants a test can check, whether the roll
 #: primitive rights this plant is a measurement question.
@@ -150,25 +147,6 @@ FALL_RECOVER_MAX_ROLL_CYCLES = 4
 #: what the fixed count was standing in for.
 FALL_RECOVER_ROLL_PROGRESS_RAD = 0.15
 
-#: A trunk resting on its side is roll-dominant and carries almost no pitch, and
-#: the ladder's entry for it must *not* be the fold-all tuck: measured, the one
-#: phase that flipped the recorded 60 N trials was the down-side pair folding
-#: out from under the trunk (a single 198 N foot strike, the other three feet at
-#: 0.0 N), and every recorded attempt ended inverted at 0.057 m. Above this much
-#: measured pitch the tuck-first entry is the one that works -- all placed
-#: nose-down poses from 0.9 to 1.6 rad got up through it, and so did the
-#: roll-dominant placements 1.2+1.0 and 1.4+0.8 -- while the roll-dominant
-#: placements below it (0.9+0.8, 0.9+0.9, 1.0+0.9) never got up at all, and the
-#: settled rest after a 60 N lateral measures roll 0.518 / pitch 0.000. So a
-#: roll-dominant trunk under this pitch enters at the *braced push* the roll
-#: phase drives, and a pitch-dominant trunk (or any trunk past
-#: :data:`FALL_INVERTED_TILT_RAD`, which has nothing to brace against) enters at
-#: the tuck exactly as before -- which is what leaves every measured recovering
-#: pose on the phase path that recovered. The value is the boundary of the
-#: measured placements, not a fit to the ambiguous ones: the 0.9/0.8 and
-#: 1.0/0.9 corner diagonals stay on the tuck path, unanswered, by this rule.
-FALL_RECOVER_ROLL_ENTRY_PITCH_RAD = 1.0
-
 #: Ladder waypoints [rad] per joint kind, inside the measured position limits
 #: (const.xacro). Forward kinematics with L1 = L2 = 0.213 m places the foot
 #: this far below its hip in each pose:
@@ -190,10 +168,7 @@ RECOVERY_WAYPOINTS: Dict[str, Dict[str, float]] = {
     "stand": NOMINAL_STANCE,
 }
 
-#: Ladder phase names, in the order :class:`FallRecovery` enters them. An
-#: attempt can *start* at ``roll`` instead of ``tuck`` (the entry is read from
-#: measured attitude -- see :func:`recovery_entry_phase`); the order of the
-#: phases after the entry is fixed.
+#: Ladder phase names, in the order :class:`FallRecovery` enters them.
 RECOVERY_PHASE_TUCK = "tuck"
 RECOVERY_PHASE_ROLL = "roll"
 RECOVERY_PHASE_CROUCH = "crouch"
@@ -301,37 +276,6 @@ def brace_legs(roll_rad: float, pitch_rad: float) -> Tuple[str, ...]:
     if abs(roll_rad) >= abs(pitch_rad):
         return ("FR", "RR") if roll_rad > 0.0 else ("FL", "RL")
     return ("RL", "RR") if pitch_rad > 0.0 else ("FL", "FR")
-
-
-def recovery_entry_phase(body: Optional["BodyState"]) -> str:
-    """The ladder's first phase, from *measured* attitude.
-
-    The tuck-first entry is the *pitch* path: every placed nose-down pose from
-    0.9 to 1.6 rad recovered through it, and so did the roll-dominant
-    placements carrying at least :data:`FALL_RECOVER_ROLL_ENTRY_PITCH_RAD` of
-    pitch. A trunk that is roll-dominant with less pitch is lying on its side,
-    where folding the pair it rests on is the phase that levers it over, so
-    that trunk enters at the braced push the roll phase drives instead.
-
-    A missing or non-finite attitude keeps the tuck (a measurement that is not
-    there is never evidence), and so does any trunk measured past
-    :data:`FALL_INVERTED_TILT_RAD`: an inverted trunk has nothing to brace
-    against, which is the same reason its roll phase is never entered.
-    """
-    if body is None:
-        return RECOVERY_PHASE_TUCK
-    roll_rad = body.roll_rad
-    pitch_rad = body.pitch_rad
-    tilt_rad = body.max_tilt_rad
-    if not (math.isfinite(roll_rad) and math.isfinite(pitch_rad)
-            and math.isfinite(tilt_rad)):
-        return RECOVERY_PHASE_TUCK
-    if tilt_rad >= FALL_INVERTED_TILT_RAD:
-        return RECOVERY_PHASE_TUCK
-    if abs(roll_rad) >= abs(pitch_rad) and \
-            abs(pitch_rad) < FALL_RECOVER_ROLL_ENTRY_PITCH_RAD:
-        return RECOVERY_PHASE_ROLL
-    return RECOVERY_PHASE_TUCK
 
 
 def roll_phase_pose(roll_rad: float, pitch_rad: float,
@@ -763,11 +707,7 @@ class FallRecovery:
 
     ``tuck`` (fold the legs in) -> ``roll`` (brace the legs the trunk rests
     on, retract the others) -> ``crouch`` (feet under the hips) -> ``stand``
-    (the nominal stance pose) -- or, for a trunk *measured* to be lying on its
-    side, the attempt starts at ``roll`` (the braced push) -> ``crouch`` ->
-    ``stand``, because folding the legs out from under a trunk that rests on
-    them is the phase that measured to lever it over
-    (:func:`recovery_entry_phase`).
+    (the nominal stance pose).
 
     The ladder replaces the single-phase version of this class, which drove
     the nominal stance pose straight from a fallen trunk and *rolled the trunk
@@ -781,8 +721,6 @@ class FallRecovery:
     - every phase is bounded, the roll count is bounded, and the attempt
       window ends the attempt anyway — a trunk that stays past the gate is
       never levered further over, and the ladder never restarts by itself.
-      The phase an attempt *starts* in is read from measured attitude too, and
-      a braced entry counts against the same roll bound.
 
     Success is reported only from measured evidence: tilt below
     ``success_tilt_rad``, body height at or above the standing threshold, at
@@ -955,14 +893,14 @@ class FallRecovery:
             self.started_at = now_s
             if self.status == self.ATTEMPTING:
                 self.active_started_at = now_s
-                self._enter_entry_phase(now_s, body)
+                self._enter_phase(self.TUCK, now_s)
             self.attempts += 1
         if self.status == self.WAITING:
             if self.started_at is not None and now_s - self.started_at < self.start_delay_s:
                 return {joint: 0.0 for joint in JOINT_NAMES}
             self.status = self.ATTEMPTING
             self.active_started_at = now_s
-            self._enter_entry_phase(now_s, body)
+            self._enter_phase(self.TUCK, now_s)
         if self.active_started_at is not None and now_s - self.active_started_at > self.timeout_s:
             self._end_attempt(body, "get-up window expired")
             return {joint: 0.0 for joint in JOINT_NAMES}
@@ -1041,20 +979,6 @@ class FallRecovery:
             return None
         tilt = body.max_tilt_rad
         return tilt if math.isfinite(tilt) else None
-
-    def _enter_entry_phase(self, now_s: float,
-                           body: Optional[BodyState]) -> None:
-        """Enter the measured entry phase: the braced push, or the tuck fold.
-
-        The roll phase counts a cycle, so an entry that starts there is bounded
-        by the same roll rules as any other: a braced entry that buys less than
-        :data:`FALL_RECOVER_ROLL_PROGRESS_RAD` of tilt ends the attempt instead
-        of falling back to folding the pair the trunk rests on.
-        """
-        if recovery_entry_phase(body) == self.ROLL:
-            self._enter_roll(now_s, body)
-            return
-        self._enter_phase(self.TUCK, now_s)
 
     def _enter_phase(self, phase: str, now_s: float) -> None:
         if phase not in self.PHASES:

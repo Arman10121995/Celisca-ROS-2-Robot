@@ -48,7 +48,6 @@ from robot_lab_adapter.go2_locomotion import (
     FALL_RECOVER_CROUCH_S,
     FALL_RECOVER_GATE_TILT_RAD,
     FALL_RECOVER_MAX_ROLL_CYCLES,
-    FALL_RECOVER_ROLL_ENTRY_PITCH_RAD,
     FALL_RECOVER_ROLL_S,
     FALL_RECOVER_STAND_S,
     FALL_RECOVER_SUCCESS_DWELL_S,
@@ -60,8 +59,6 @@ from robot_lab_adapter.go2_locomotion import (
     PD_GAINS,
     POSITION_LIMITS,
     RECOVERY_PHASES,
-    RECOVERY_PHASE_ROLL,
-    RECOVERY_PHASE_TUCK,
     SWING_CALF_OFFSET_RAD,
     SWING_THIGH_OFFSET_RAD,
     TILT_FALL_RAD,
@@ -88,7 +85,6 @@ from robot_lab_adapter.go2_locomotion import (
     leg_phase,
     nominal_stance_pose,
     rate_limit_base_velocity,
-    recovery_entry_phase,
     recovery_pose,
     roll_phase_pose,
     trot_joint_targets,
@@ -895,19 +891,8 @@ class TestFallRecoveryLadder:
         return FallRecovery(gain_scale=self.GAIN_SCALE,
                             damping_scale=self.GAIN_SCALE, **kwargs)
 
-    def _collapsed(self, tilt=1.2, height=0.14, axis="pitch"):
-        """A collapsed fallen trunk, nose-down -- the ladder's tuck-first path.
-
-        The entry phase is read from measured attitude
-        (:func:`recovery_entry_phase`): only a pitch-dominant trunk enters at
-        the tuck, so the ladder-mechanics tests pose this fixture nose-down.
-        The roll-axis cases ask for ``axis="roll"`` explicitly, which is the
-        trunk the ladder enters at the braced push.
-        """
-        if axis == "roll":
-            return BodyState(roll_rad=tilt, pitch_rad=0.0,
-                             body_height_m=height)
-        return BodyState(roll_rad=0.0, pitch_rad=tilt, body_height_m=height)
+    def _collapsed(self, tilt=1.2, height=0.14):
+        return BodyState(roll_rad=tilt, pitch_rad=0.0, body_height_m=height)
 
     def test_first_cycle_retracts_the_legs_instead_of_driving_stance(self):
         recovery = self._recovery()
@@ -921,103 +906,6 @@ class TestFallRecoveryLadder:
             self._stance(recovery_pose("tuck"), positions))
         standing = self._stance(nominal_stance_pose(), positions)
         assert any(abs(efforts[j] - standing[j]) > 1e-6 for j in JOINT_NAMES)
-
-    def test_roll_dominant_side_rest_enters_at_the_braced_push(self):
-        # Measured: the settled side rest (roll 0.518 / pitch 0.000) is the very
-        # pose whose down-side pair folded out from under it in the recorded
-        # 60 N trials -- one 198 N strike through a single foot, the other three
-        # feet at 0.0 N, then inverted at 0.057 m. Its entry is the braced push.
-        recovery = self._recovery()
-        positions = self._positions()
-        rest = BodyState(roll_rad=0.518, pitch_rad=0.0, body_height_m=0.139)
-        efforts = recovery.update(0.0, True, rest, positions, {})
-        assert recovery.phase == FallRecovery.ROLL
-        assert recovery.state_label == "attempting:roll"
-        assert recovery.roll_cycles == 1
-        assert efforts == pytest.approx(
-            self._stance(roll_phase_pose(0.518, 0.0), positions))
-        # The pair the trunk rests on is driven *out* of the tuck fold -- thigh
-        # back toward zero, calf opened toward the measured limit -- and the
-        # free pair, already at its tuck waypoint, is left alone.
-        assert brace_legs(0.518, 0.0) == ("FR", "RR")
-        pushed = recovery.update(0.05, True, rest, recovery_pose("tuck"), {})
-        for leg in ("FR", "RR"):
-            assert pushed[f"{leg}_thigh_joint"] < 0.0
-            assert pushed[f"{leg}_calf_joint"] > 0.0
-        for leg in ("FL", "RL"):
-            assert pushed[f"{leg}_thigh_joint"] == pytest.approx(0.0)
-            assert pushed[f"{leg}_calf_joint"] == pytest.approx(0.0)
-
-    def test_a_settled_side_rest_is_never_folded_by_the_ladder(self):
-        # A rest that stays put (the null control's 0.52 rad / 0.139 m) is
-        # already under the gate, so the ladder climbs the rest of the way --
-        # roll -> crouch -> stand -- and ends on the bounded window. What it
-        # must never do is fold the legs the trunk is lying on, which is the
-        # measurement this dispatch exists for.
-        recovery = self._recovery()
-        positions = self._positions()
-        rest = BodyState(roll_rad=0.518, pitch_rad=0.0, body_height_m=0.139)
-        recovery.update(0.0, True, rest, positions, {})
-        assert recovery.phase == FallRecovery.ROLL
-        roll_end = FALL_RECOVER_ROLL_S + 0.01
-        recovery.update(roll_end, True, rest, positions, {})
-        assert recovery.phase == FallRecovery.CROUCH
-        recovery.update(roll_end + FALL_RECOVER_CROUCH_S + 0.01, True, rest,
-                        positions, {})
-        assert recovery.phase == FallRecovery.STAND
-        efforts = recovery.update(4.1, True, rest, positions, {})
-        assert recovery.status == FallRecovery.FAILED
-        assert recovery.last_reason.startswith("get-up window expired")
-        assert recovery.terminal_pose == FALL_POSE_COLLAPSED
-        assert recovery.state_label == "failed:stand"
-        assert recovery.roll_cycles == 1
-        assert all(e == 0.0 for e in efforts.values())
-
-
-    def test_every_measured_recovering_pose_still_enters_at_the_tuck(self):
-        # The dispatch must not disturb a pose that measurably got up: every
-        # placed nose-down pose from 0.9 to 1.6 rad recovered through the
-        # tuck-first ladder, and so did the roll-dominant 1.0+0.7, 1.2+1.0 and
-        # 1.4+0.8. The 0.9+0.8 and 1.0+0.9 corner diagonals -- which never got
-        # up -- stay on that path too: this rule does not claim to fix them.
-        positions = self._positions()
-        for body in (
-                BodyState(roll_rad=0.0, pitch_rad=0.9, body_height_m=0.2),
-                BodyState(roll_rad=0.0, pitch_rad=1.4, body_height_m=0.234),
-                BodyState(roll_rad=0.0, pitch_rad=1.6, body_height_m=0.2),
-                BodyState(roll_rad=0.7, pitch_rad=1.0, body_height_m=0.2),
-                BodyState(roll_rad=1.0, pitch_rad=1.2, body_height_m=0.2),
-                BodyState(roll_rad=0.8, pitch_rad=1.4, body_height_m=0.2),
-                BodyState(roll_rad=0.8, pitch_rad=0.9, body_height_m=0.2),
-                BodyState(roll_rad=0.9, pitch_rad=1.0, body_height_m=0.2)):
-            recovery = self._recovery()
-            recovery.update(0.0, True, body, positions, {})
-            assert recovery.phase == FallRecovery.TUCK
-            assert recovery.roll_cycles == 0
-
-    def test_entry_phase_is_read_from_measurement_or_not_guessed(self):
-        # No measurement, a non-finite one, and any trunk past the inverted tilt
-        # (which has nothing to brace against): the tuck, exactly as before.
-        assert recovery_entry_phase(None) == RECOVERY_PHASE_TUCK
-        assert recovery_entry_phase(
-            BodyState(roll_rad=float("nan"), pitch_rad=0.0)) == RECOVERY_PHASE_TUCK
-        assert recovery_entry_phase(
-            BodyState(roll_rad=0.0, pitch_rad=float("inf"))) == RECOVERY_PHASE_TUCK
-        assert recovery_entry_phase(
-            BodyState(roll_rad=FALL_INVERTED_TILT_RAD + 0.1, pitch_rad=0.0,
-                      body_height_m=0.057)) == RECOVERY_PHASE_TUCK
-        # Roll-dominant either side, and the 0.9+0.9 tie (which brace_legs reads
-        # as roll) enter at the braced push; with the pitch margin met, not.
-        assert recovery_entry_phase(
-            BodyState(roll_rad=0.9, pitch_rad=0.0)) == RECOVERY_PHASE_ROLL
-        assert recovery_entry_phase(
-            BodyState(roll_rad=-0.9, pitch_rad=0.0)) == RECOVERY_PHASE_ROLL
-        assert recovery_entry_phase(
-            BodyState(roll_rad=0.9, pitch_rad=0.9)) == RECOVERY_PHASE_ROLL
-        assert recovery_entry_phase(
-            BodyState(roll_rad=0.8, pitch_rad=1.0)) == RECOVERY_PHASE_TUCK
-        # The threshold sits inside the ladder's own envelope.
-        assert 0.0 < FALL_RECOVER_ROLL_ENTRY_PITCH_RAD < FALL_INVERTED_TILT_RAD
 
     def test_standing_pose_is_withheld_while_the_trunk_stays_past_the_gate(self):
         recovery = self._recovery()
@@ -1041,10 +929,7 @@ class TestFallRecoveryLadder:
     def test_roll_phase_braces_the_pair_the_trunk_rests_on(self):
         recovery = self._recovery()
         positions = self._positions()
-        # A roll-dominant trunk is the case the ladder enters at the braced
-        # push (recovery_entry_phase), so the roll phase is already running from
-        # the first cycle.
-        collapsed = self._collapsed(axis="roll")
+        collapsed = self._collapsed()
         recovery.update(0.0, True, collapsed, positions, {})
         rolled = recovery.update(FALL_RECOVER_TUCK_S, True, collapsed, positions, {})
         assert recovery.phase == FallRecovery.ROLL
@@ -1273,10 +1158,8 @@ class TestFallRecoveryLadder:
             clamp_position("FR_hip_joint", 9.0))
         # The recovery passes it through, and refuses a non-finite value.
         recovery = self._recovery(roll_brace_hip_rad=0.4)
-        recovery.update(0.0, True, self._collapsed(axis="roll"),
-                        positions := self._positions(), {})
-        efforts = recovery.update(FALL_RECOVER_TUCK_S, True,
-                                  self._collapsed(axis="roll"),
+        recovery.update(0.0, True, self._collapsed(), positions := self._positions(), {})
+        efforts = recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(),
                                   positions, {})
         assert recovery.phase == FallRecovery.ROLL
         assert efforts == pytest.approx(
@@ -1354,10 +1237,7 @@ class TestFallRecoveryLadder:
         # needs longer than the old fixed two cycles, and a primitive that was
         # still measurably working used to be reported as a failure.
         def body(tilt):
-            # The progress rule reads tilt only, and the axis under test here
-            # is the cycle bookkeeping: pose the fixture nose-down so the entry
-            # is the tuck and the roll cycle is the first one.
-            return BodyState(roll_rad=0.0, pitch_rad=tilt, body_height_m=0.14)
+            return BodyState(roll_rad=tilt, pitch_rad=0.0, body_height_m=0.14)
 
         recovery = self._recovery(roll_progress_rad=0.15, max_roll_cycles=4)
         positions = self._positions()
@@ -1411,9 +1291,8 @@ class TestFallRecoveryLadder:
         # The recovery passes it through and refuses a non-finite value.
         recovery = self._recovery(roll_free_hip_rad=0.8)
         positions = self._positions()
-        recovery.update(0.0, True, self._collapsed(axis="roll"), positions, {})
-        efforts = recovery.update(FALL_RECOVER_TUCK_S, True,
-                                  self._collapsed(axis="roll"),
+        recovery.update(0.0, True, self._collapsed(), positions, {})
+        efforts = recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(),
                                   positions, {})
         assert recovery.phase == FallRecovery.ROLL
         assert efforts == pytest.approx(
