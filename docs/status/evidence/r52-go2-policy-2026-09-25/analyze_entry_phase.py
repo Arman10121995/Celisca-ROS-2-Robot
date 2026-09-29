@@ -28,8 +28,10 @@ Per trial (``manifest.json`` + ``probe.json``) it reports:
 - the outcome: whether the trunk's roll reached the inverted tilt inside 1.5 s
   of the entry, and the terminal state.
 
-Two recording facts bound the claims: the trunk-ground contact force is not
-published, so the trunk's own support during an entry is unmeasured; and
+Two recording facts bound the claims. Trials recorded before 2026-09-29 have no
+``trunk_force_n`` in their trace, because the trunk's own ground contact was not
+published then; for those the trunk's support is unmeasured, and only the newer
+traced runs (e.g. ``trunk_contact_20260929Troll0.9``) carry it. And
 ``trace_joints`` is off for the runs that predate the traced era, which limits
 those runs to the 0.1 s trace (no per-foot force series) -- their entries are
 still classified, with the contact fields reported as null.
@@ -256,9 +258,10 @@ def main() -> None:
                 "Commanded efforts are PD outputs, not measured joint "
                 "torques; per-link contact wrenches would be needed to "
                 "apportion an entry's push between the joints of a leg.",
-                "The trunk-ground contact force is not published, so whether "
-                "the trunk itself was resting on the ground during an entry "
-                "is inferred from its roll rate, not measured.",
+                "The trunk's own ground contact is published as "
+                "/go2/trunk_contact_forces only from 2026-09-29; for every "
+                "earlier trial the trunk's support during an entry is "
+                "inferred from its roll rate, not measured.",
                 "Trials recorded before the traced era sample at 0.1 s, so "
                 "their rates are coarser and their contact fields are null.",
                 "A trial where the perturbation never latched the fall "

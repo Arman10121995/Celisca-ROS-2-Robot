@@ -1267,6 +1267,49 @@ domain 233 and up: a multicast port out of range); the harness kept their logs
 and return codes but no `probe.json`, and the analyzer skips them rather than
 reading an empty result.
 
+#### The trunk's own ground load is now published and measured
+
+Every limit above was inferred, because the trunk's contact force was not
+published: the analyzer had to state that "whether the trunk itself was resting
+on the ground during an entry is inferred from its roll rate, not measured."
+`/go2/trunk_contact_forces` now carries it, measured by the same rule as the
+foot forces (normal force against static world geoms only, so robot
+self-contact never counts as support), and `probe_stance.py` records it per
+trace point. The geom is `trunk_contact_0` — MuJoCo's URDF importer names
+collision geoms `<link>_contact_<index>` and the *expanded xacro's* root link
+is `trunk`, while the checked-in `go2_description.urdf` still says `base`. A
+wrong name here is silent rather than fatal (the telemetry simply never
+publishes), which is why a contract now pins the name against the xacro.
+
+The first live trial on it
+([`trunk_contact_20260929Troll0.9/`](trunk_contact_20260929Troll0.9/probe.json),
+placed roll 0.9, 1.0 s start delay, 8 s, ROS domain 142, 2,001 trunk messages,
+all 336 trace points populated) measures, on the *same* settled rest the entry
+analysis above uses:
+
+| moment | roll | trunk | feet (sum) |
+|---|---|---|---|
+| settled on its side, before the entry | 0.512 rad | **0.0 N** | 25.9 N |
+| the entry's first trunk contact | -3.127 rad | **715.7 N** (peak) | 0.0 N |
+| settled inverted, after the entry | 3.142 rad | 126.5 N | **0.0 N** |
+
+This is the measurement the whole entry discussion was missing, and it is
+sharper than the roll-rate inference it replaces. On a settled flank the trunk
+carries **nothing** — at 0.512 rad the robot is resting on its *side*, on hip
+and thigh geoms, so a primitive keyed on trunk load would see a true zero and
+correctly do nothing. The trunk only loads once the entry has already rolled
+the robot past 3.0 rad, and then it takes **126.5 N with all four feet at
+0.0 N** — the entire weight on the trunk, with the legs contributing nothing.
+That is the mechanism behind "the trunk is ballistic after the stroke", now
+measured rather than argued, and it confirms the 997 N crouch transient as a
+real hazard a contact-keyed rule must not fire on.
+
+So the missing primitive is still *support creation*, and the number to beat is
+now unambiguous: get the legs from ~0 N to carrying the trunk's 126.5 N **while
+the trunk is still rolled over**, rather than after it. The contact signal a
+closed-loop rule needs exists and is published; what is still missing is a way
+to raise leg load without levering the trunk over.
+
 The contracts are
 [`test_r5_2_go2_entry_phase.py`](../../../../src/robot_lab_adapter/test/test_r5_2_go2_entry_phase.py)
 (9 tests) and the R5.2 Go2 selection passes (162 passed, 1 skipped).

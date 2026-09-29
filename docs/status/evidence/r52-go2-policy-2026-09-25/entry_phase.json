@@ -6359,7 +6359,7 @@
     "grain": "The entry phase is read from the recovery_transitions record and the rest's roll rate from the traced roll ~0.1 s before that transition: pose alone cannot tell a trunk resting on its side from one already rolling past it.",
     "limitations": [
       "Commanded efforts are PD outputs, not measured joint torques; per-link contact wrenches would be needed to apportion an entry's push between the joints of a leg.",
-      "The trunk-ground contact force is not published, so whether the trunk itself was resting on the ground during an entry is inferred from its roll rate, not measured.",
+      "The trunk's own ground contact is published as /go2/trunk_contact_forces only from 2026-09-29; for every earlier trial the trunk's support during an entry is inferred from its roll rate, not measured.",
       "Trials recorded before the traced era sample at 0.1 s, so their rates are coarser and their contact fields are null.",
       "A trial where the perturbation never latched the fall detector has no entry at all; it is reported with an attempt_start_s of null, not as a successful entry."
     ]

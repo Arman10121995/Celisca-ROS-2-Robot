@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import statistics
 import sys
 from pathlib import Path
 
@@ -203,6 +204,43 @@ def test_the_real_delayed_entry_is_the_same_strike_for_either_pose():
     assert fold["roll_extreme_after_entry"]["inverted_within_window"] is False
     assert fold["roll_extreme_after_entry"]["max_abs_roll_rad"] == pytest.approx(
         1.72, abs=0.05)
+
+
+def test_the_trunk_carries_the_robot_only_after_the_entry_has_rolled_it_over():
+    """The measurement the entry analysis was missing, now that it is published.
+
+    On a settled flank the trunk carries 0 N -- the robot is on its *side*, on
+    hip and thigh, so a contact-keyed rule sees a true zero. The trunk only
+    loads once the entry has already passed 3.0 rad, and then it takes the whole
+    126.5 N with every foot at 0.0 N. That is "ballistic after the stroke",
+    measured instead of inferred.
+    """
+    trial = analyzer.summarize_trial(
+        EVIDENCE / "trunk_contact_20260929Troll0.9")
+    trace = json.loads(
+        (EVIDENCE / "trunk_contact_20260929Troll0.9/probe.json").read_text()
+    )["trace"]
+    assert all("trunk_force_n" in point for point in trace)
+
+    def feet_sum(point: dict) -> float:
+        return sum((point.get("foot_force_n") or {}).values())
+
+    # The settled rest the entry analysis above is measured from: no trunk load.
+    rest = [point for point in trace
+            if point["sim_s"] < trial["attempt_start_s"]]
+    assert max(point["trunk_force_n"] for point in rest) == 0.0
+    assert trial["entry_phase"] == "tuck"
+    assert trial["settled_entry"] is True
+    assert trial["rest"]["roll_rad"] == pytest.approx(0.512, abs=0.005)
+
+    # Once inverted the trunk holds the weight and the feet hold none. The
+    # settled load is a median over the tail, not the last sample: the trace
+    # ends mid-transient, where the trunk briefly unloads.
+    late = [point["trunk_force_n"] for point in trace if point["sim_s"] > 4.0]
+    assert statistics.median(late) == pytest.approx(126.5, abs=1.0)
+    assert feet_sum(trace[-1]) == 0.0
+    # And the entry's first trunk contact is a slam, not a ramp.
+    assert max(point["trunk_force_n"] for point in trace) > 700.0
 
 
 def test_the_working_pitch_control_keeps_its_tuck_first_ladder():

@@ -89,6 +89,82 @@ def test_foot_contact_telemetry_measures_world_normal_force():
     assert 8.0 < force < 12.0
 
 
+def test_trunk_contact_telemetry_measures_the_body_resting_on_the_ground():
+    """The trunk's own ground load, by the same rule as the feet's.
+
+    This is the quantity a get-up entry has to be bounded by: on a settled rest
+    the feet read 0 N while the floor carries the trunk, so foot forces alone
+    cannot say who is supporting the robot.
+    """
+    mujoco = pytest.importorskip('mujoco')
+    from robot_lab_mujoco.mujoco_spawner import _world_normal_contact_force
+
+    xml = '''<mujoco><worldbody>
+      <geom name="floor" type="plane" size="2 2 .1"/>
+      <body pos="0 0 .1"><freejoint/>
+        <geom name="trunk_contact_0" type="box" size=".1 .1 .1" mass="10"/>
+      </body>
+    </worldbody></mujoco>'''
+    model = mujoco.MjModel.from_xml_string(xml)
+    data = mujoco.MjData(model)
+    for _ in range(400):
+        mujoco.mj_step(model, data)
+    trunk = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, 'trunk_contact_0')
+    # 10 kg resting on the floor: ~98 N, the weight the legs are not carrying.
+    force = _world_normal_contact_force(model, data, [trunk])
+    assert 90.0 < force < 110.0
+
+
+def test_trunk_contact_telemetry_is_zero_in_free_fall():
+    """A geom that never touches the world reports 0 N, not a stale value."""
+    mujoco = pytest.importorskip('mujoco')
+    from robot_lab_mujoco.mujoco_spawner import _world_normal_contact_force
+
+    xml = '''<mujoco><worldbody>
+      <geom name="floor" type="plane" size="2 2 .1"/>
+      <body pos="0 0 3"><freejoint/>
+        <geom name="trunk_contact_0" type="box" size=".1 .1 .1" mass="10"/>
+      </body>
+    </worldbody></mujoco>'''
+    model = mujoco.MjModel.from_xml_string(xml)
+    data = mujoco.MjData(model)
+    for _ in range(50):
+        mujoco.mj_step(model, data)
+    trunk = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, 'trunk_contact_0')
+    assert _world_normal_contact_force(model, data, [trunk]) == 0.0
+    # An unresolved geom id contributes nothing rather than raising.
+    assert _world_normal_contact_force(model, data, [-1]) == 0.0
+
+
+def test_trunk_contact_uses_the_link_name_the_go2_xacro_actually_has():
+    """Pin the trunk geom name against the description the launch expands.
+
+    MuJoCo's URDF importer names collision geoms ``<link>_contact_<index>``, so
+    the name the spawner must look up is the *link* name plus ``_contact_0``.
+    The xacro -- what ``simulated_robot.launch.py`` actually expands -- names
+    the root link ``trunk``; the checked-in ``go2_description.urdf`` still says
+    ``base``, so reading the urdf would pin the wrong string. Looking up a name
+    that is not there is not a crash: the telemetry simply never publishes, so
+    this asserts against the xacro to keep that from being silent again.
+    """
+    import xml.etree.ElementTree as ET
+    from pathlib import Path
+    from robot_lab_mujoco import mujoco_spawner
+
+    root_dir = Path(mujoco_spawner.__file__).resolve().parents[3]
+    xacro = (root_dir / 'robot_lab_robots/unitree/go2_description/xacro/'
+             'robot.xacro')
+    if not xacro.exists():
+        pytest.skip('go2_description is not in this source tree')
+    trunk = [link for link in ET.fromstring(xacro.read_text()).findall('link')
+             if link.get('name') == 'trunk']
+    assert trunk, 'the Go2 root link must be named trunk in the expanded xacro'
+    assert trunk[0].findall('collision'), 'the trunk link must have a collision geom'
+    # And the spawner must look up exactly that name.
+    source = Path(mujoco_spawner.__file__).read_text()
+    assert '"trunk_contact_0"' in source
+
+
 def test_optional_perturbation_force_is_bounded_and_cleared():
     mujoco = pytest.importorskip("mujoco")
     from types import SimpleNamespace

@@ -929,6 +929,28 @@ def _physics_substeps(period, timestep):
     return max(1, int(round(float(period) / max(float(timestep), 1e-9))))
 
 
+def _world_normal_contact_force(model, data, geom_ids):
+    """Total normal contact force [N] for named geoms against the world.
+
+    The same measurement as :func:`_foot_world_contact_forces`, generalised to
+    any set of geoms, so the trunk's own ground contact is measurable by the
+    same rule as the feet's. Only contacts against a static world geom
+    (``geom_bodyid == 0``) count: robot self-contacts are not support.
+    """
+    index_of = {geom_id for geom_id in geom_ids if geom_id >= 0}
+    contact_force = np.zeros(6)
+    total = 0.0
+    for contact_index in range(data.ncon):
+        contact = data.contact[contact_index]
+        for own_id, other_id in ((int(contact.geom1), int(contact.geom2)),
+                                 (int(contact.geom2), int(contact.geom1))):
+            if own_id in index_of and model.geom_bodyid[other_id] == 0:
+                mujoco.mj_contactForce(model, data, contact_index, contact_force)
+                total += max(0.0, float(contact_force[0]))
+                break
+    return total
+
+
 def _foot_world_contact_forces(model, data, foot_geom_ids):
     """Normal contact force [N] for named feet against static world geoms."""
     forces = [0.0] * len(foot_geom_ids)
@@ -1089,7 +1111,9 @@ class MuJoCoSpawner(Node):
         self._effort_command = None
         self._effort_actuators = []
         self._go2_foot_ids = []
+        self._go2_trunk_ids = []
         self._go2_contact_pub = None
+        self._go2_trunk_pub = None
         self._effort_subscription = None
         # A reset service and the physics/rendering thread share MjData.
         self._physics_lock = threading.RLock()
@@ -1359,6 +1383,20 @@ class MuJoCoSpawner(Node):
             else:
                 self._go2_contact_pub = self.create_publisher(
                     Float64MultiArray, "/go2/foot_contact_forces", 10)
+            # The trunk's own ground contact is what says the *ground* is
+            # carrying a fallen robot rather than its legs, and the get-up
+            # ladder cannot be closed on foot forces alone: on a settled rest
+            # the feet read 0 N while the trunk rests on the floor. Published
+            # separately so a consumer never has to infer it.
+            self._go2_trunk_ids = [mujoco.mj_name2id(
+                self._model, mujoco.mjtObj.mjOBJ_GEOM, "trunk_contact_0")]
+            if min(self._go2_trunk_ids) < 0:
+                self.get_logger().warning(
+                    "Go2 trunk-contact telemetry unavailable: trunk_contact_0 is missing")
+                self._go2_trunk_ids = []
+            else:
+                self._go2_trunk_pub = self.create_publisher(
+                    Float64MultiArray, "/go2/trunk_contact_forces", 10)
         if self._effort_command is not None:
             self._effort_actuators = [mujoco.mj_name2id(
                 self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, name + "_effort")
@@ -1649,6 +1687,11 @@ class MuJoCoSpawner(Node):
                                 forces.data = _foot_world_contact_forces(
                                     self._model, self._data, self._go2_foot_ids)
                                 self._go2_contact_pub.publish(forces)
+                            if self._go2_trunk_pub is not None:
+                                trunk = Float64MultiArray()
+                                trunk.data = [_world_normal_contact_force(
+                                    self._model, self._data, self._go2_trunk_ids)]
+                                self._go2_trunk_pub.publish(trunk)
                             self._pub_odom()
                             self._pub_imu()
                         self._pub_clock()

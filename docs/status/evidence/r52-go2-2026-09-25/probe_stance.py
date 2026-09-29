@@ -57,6 +57,8 @@ def main():
              "effort_messages": 0, "max_command_nm": 0.0,
              "contact_messages": 0, "latest_forces": None,
              "peak_foot_force_n": {leg: 0.0 for leg in ("FL", "FR", "RL", "RR")},
+             "trunk_contact_messages": 0, "latest_trunk_force_n": None,
+             "peak_trunk_force_n": 0.0,
              "joint_names": [], "latest_q": {}, "latest_v": {},
              "latest_efforts": {}, "latest_tau": 0.0,
              "trace": [], "yaw": [], "safety_states": [],
@@ -96,6 +98,9 @@ def main():
                     point["foot_force_n"] = {
                         leg: round(force, 2)
                         for leg, force in state["latest_forces"].items()}
+                if state["latest_trunk_force_n"] is not None:
+                    point["trunk_force_n"] = round(
+                        state["latest_trunk_force_n"], 2)
                 if args.trace_joints:
                     point["q"] = {k: round(v, 3) for k, v in state["latest_q"].items()}
                     point["v"] = {k: round(v, 3) for k, v in state["latest_v"].items()}
@@ -135,6 +140,20 @@ def main():
             state["peak_foot_force_n"][leg] = max(
                 state["peak_foot_force_n"][leg], force)
 
+    def trunk_contacts(msg):
+        """The trunk's own ground load, the quantity foot forces cannot give.
+
+        Recorded so a get-up trial can say whether the floor or the legs were
+        carrying the robot; a missing topic leaves these fields absent rather
+        than reporting a zero the run never measured.
+        """
+        if len(msg.data) < 1:
+            return
+        state["trunk_contact_messages"] += 1
+        force = float(msg.data[0])
+        state["latest_trunk_force_n"] = force
+        state["peak_trunk_force_n"] = max(state["peak_trunk_force_n"], force)
+
     def fallen(msg):
         state["fallen_messages"] += 1
         if state["sim"] is not None and msg.data != state["latest_fallen"]:
@@ -156,6 +175,8 @@ def main():
                              "/go2_group_effort_controller/commands", efforts, 10)
     node.create_subscription(Float64MultiArray,
                              "/go2/foot_contact_forces", contacts, 10)
+    node.create_subscription(Float64MultiArray,
+                             "/go2/trunk_contact_forces", trunk_contacts, 10)
     node.create_subscription(String, "/go2/safety_state", safety, 10)
     node.create_subscription(Bool, "/go2/fallen", fallen, 10)
     node.create_subscription(String, "/go2/recovery_state", recovery_status, 10)
@@ -184,6 +205,8 @@ def main():
               "effort_messages": state["effort_messages"],
               "contact_messages": state["contact_messages"],
               "peak_foot_force_n": state["peak_foot_force_n"],
+              "trunk_contact_messages": state["trunk_contact_messages"],
+              "peak_trunk_force_n": round(state["peak_trunk_force_n"], 2),
               "max_command_nm": state["max_command_nm"],
               "safety_messages": state["safety_messages"],
               "safety_transitions": state["safety_transitions"],
