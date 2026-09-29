@@ -16,9 +16,11 @@ Two recording facts bound what this script can claim:
   (``probe_stance.py`` records ``latest_tau`` per sample), so a sampled
   engagement value is not a peak; the run-wide ``max_command_nm`` is a peak but
   carries no timestamp;
-- ``trace_joints`` is off for every ladder trial, so only the RR calf angle is
-  traced and ``tuck_calf_error_rad`` is the only per-joint waypoint error the
-  records support.
+- ``trace_joints`` is off for every ladder trial that predates the traced runs
+  (``fall_ladder_*trace*``, read by ``analyze_tuck_forces.py``), so in this
+  script's per-joint fields only the RR calf angle is traced and
+  ``tuck_calf_error_rad`` is the only per-joint waypoint error these records
+  support.
 
 The tuck calf target is duplicated from ``go2_locomotion.TUCK_POSE`` on purpose:
 this script must run with no ROS and no installed adapter, and the test suite
@@ -160,8 +162,9 @@ def main() -> None:
                 "Sampled efforts are instantaneous command samples every "
                 "~0.1 s, not peaks; clamp episodes between samples are invisible.",
                 "Only the RR calf angle is traced (trace_joints is off for "
-                "every ladder trial), so no other joint's waypoint error or "
-                "effort can be attributed from these records.",
+                "every ladder trial that predates the fall_ladder_*trace* "
+                "runs), so no other joint's waypoint error or effort can be "
+                "attributed from these records.",
                 "Rest pose differs between runs of the same configuration; "
                 "compare rest fields, not trial names.",
             ],

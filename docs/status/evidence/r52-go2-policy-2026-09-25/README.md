@@ -751,9 +751,42 @@ the mechanism can be:
   0.266 m pitched rest rights, a 0.139 m settled side-rest flips.
 - The traced RR calf cannot explain the spike either: it is 1.2 rad off the
   tuck target in `d1.0b` (its own command clamps) but already at target in
-  `d1.0` and `d2.0`, and all three invert identically. `trace_joints` is off
-  for every ladder trial, so the other legs' angles and all per-joint efforts
-  are unrecorded.
+  `d1.0` and `d2.0`, and all three invert identically. `trace_joints` was off
+  for every ladder trial recorded before the traced runs below; those four
+  runs record every leg's angles and efforts at 0.02 s.
+
+The tracing is the measurement the phase-1 question was waiting for. Four 20 s
+runs repeat the ladder with per-joint tracing on (`TRACE_JOINTS=true
+TRACE_INTERVAL_S=0.02`, domains 226–229; every joint's commanded effort,
+position and velocity, all four foot forces and the signed trunk roll at
+~50 Hz) and are read by [`analyze_tuck_forces.py`](analyze_tuck_forces.py) →
+[`tuck_forces.json`](tuck_forces.json):
+
+| run | config | engagement | strike | after the strike | ended |
+| --- | --- | --- | --- | --- | --- |
+| `delayed_trace` `d1.0` | 60 N, delay 1.0 | `attempting:tuck` 4.636 s | FL 198.2 N at +28 ms | free roll 0.384 s / 0.77 rad, ends on a 16 N graze | peak 1.72 rad, `failed:roll`, settled back on the side rest |
+| `delayed_trace` `d1.0b` | repeat | 4.744 s | RL 151.0 N at +32 ms | free roll to −π, then 15.2 s with no touch at all | `unrecoverable:tuck`, 0.057 m |
+| `null_trace` `f60` | recovery off | none | none | roll −0.518 constant, foot medians ≤ 9.2 N, peak effort 0.0 Nm | rest held to 20 s |
+| `placed_trace` `pitch1.4` | placed 1.4 rad pitch | 0.1 s | front pair together, 30 → 70 N ramp | no unloading, no free roll | pitch 1.40 → 1.16 rad, roll 0.000, `succeeded:stand` at 0.329 m |
+
+The tipping reaction is a single down-side foot strike, and the records hold
+no other: on the strike sample one foot reads 151–198 N while the other three
+read 0.0 N, 28–32 ms after `attempting:tuck`, and from that sample on every
+foot force stays 0.0 N while the trunk rolls — in the repeat run all the way
+to π, without one further touch for the rest of the trial. The strike cannot
+be assigned to one joint of the striking leg, because all three publish
+clamp-level commands on the engagement sample (the FL leg: +23.7 / −23.7 /
+−35.55 Nm) and are damping-limited by the strike itself (the calf's −33 rad/s
+fold turns its command positive), so a per-foot force is the finest
+attribution this harness publishes; splitting it further needs per-link
+contact wrenches, a new probe. What the strike also is not is a push: on the
+placed pitch rest the same command loads the front pair *together* (30 → 70 N
+by +0.15 s, no unloading, no free roll) while pitch decreases
+monotonically, and the settled side-rest converts the same sweep into one
+unilateral impulse. The measured answer to *which* ground reaction tips it is
+therefore at foot granularity: the down-side foot's strike, after which no
+contact participates — the flip completes on momentum, with the trunk's own
+ground contact unpublished.
 
 That is the sharpest safety statement in this document, and it is the reason the
 feature stays off by default on evidence rather than caution: on every reachable
@@ -762,14 +795,11 @@ perturbation measured here, `enable_fall_recovery:=true` ends worse than
 is a first phase that cannot tip a settled trunk — a change to the primitive,
 not to its schedule — and that belongs with whoever owns the recovery next.
 
-These stay open as *questions*, not as queued work. The first is narrower than
-when the delayed runs were committed: what in phase 1 flips a *settled*
-side-lying trunk is pinned to the ungated `TUCK_POSE` PD engaging on that rest
-(spike size and leg sweep are both out, per the three points above), so what
-remains is *which* joint's ground reaction tips it — and the probes cannot
-answer that: only the RR calf is traced, at ~0.1 s, and `trace_joints` is off
-for every ladder trial. Answering it needs per-joint effort tracing, a new
-measurement deliberately not run here. Whether a first phase that cannot do
+These stay open as *questions*, not as queued work — except the first, which
+the tracing above has now measured: what in phase 1 flips a *settled*
+side-lying trunk is the ungated `TUCK_POSE` PD engaging on that rest and
+converting into a single down-side foot strike that unloads the whole foot set
+and leaves the trunk rolling on momentum. Whether a first phase that cannot do
 that would make the feature shippable at all stays open in the same sense. So
 does the diagonal hazard above — the drive ending corner-rests on their backs
 at 0.5 authority: recorded, deliberately not guarded.

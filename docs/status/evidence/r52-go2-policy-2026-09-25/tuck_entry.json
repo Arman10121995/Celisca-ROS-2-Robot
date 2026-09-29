@@ -1,9 +1,9 @@
 {
   "task": "R5.2 Go2 fall-recovery ladder engagement analysis",
   "root": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25",
-  "trial_count": 90,
-  "attempted_count": 74,
-  "inverted_count": 31,
+  "trial_count": 94,
+  "attempted_count": 77,
+  "inverted_count": 32,
   "trials": [
     {
       "trial": "fall_ladder_20260928T45N",
@@ -453,6 +453,68 @@
       },
       "tuck_calf_error_rad": -0.063,
       "tilt_at_engage_plus_0_4_s": 3.038,
+      "final_tilt_rad": 3.142,
+      "final_height_m": 0.057,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "inverted": true
+    },
+    {
+      "trial": "fall_ladder_delayed_trace_20260928Td1.0",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "perturbation_axis": 1,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "attempt_start_s": 4.636,
+      "rest": {
+        "sim_s": 4.612,
+        "tilt_rad": 0.52,
+        "height_m": 0.139,
+        "rr_calf_rad": -1.692,
+        "sampled_effort_nm": 0.0
+      },
+      "waiting_sample_count": 33,
+      "waiting_max_sampled_effort_nm": 0.0,
+      "engage": {
+        "sim_s": 4.64,
+        "tilt_rad": 0.52,
+        "height_m": 0.139,
+        "rr_calf_rad": -1.687,
+        "sampled_effort_nm": 35.55
+      },
+      "tuck_calf_error_rad": -1.008,
+      "tilt_at_engage_plus_0_4_s": 1.514,
+      "final_tilt_rad": 0.521,
+      "final_height_m": 0.139,
+      "terminal_recovery_state": "failed:roll",
+      "inverted": false
+    },
+    {
+      "trial": "fall_ladder_delayed_trace_20260928Td1.0b",
+      "enable_fall_recovery": true,
+      "force_n": 60.0,
+      "perturbation_axis": 1,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "attempt_start_s": 4.744,
+      "rest": {
+        "sim_s": 4.728,
+        "tilt_rad": 0.519,
+        "height_m": 0.139,
+        "rr_calf_rad": -2.191,
+        "sampled_effort_nm": 0.0
+      },
+      "waiting_sample_count": 36,
+      "waiting_max_sampled_effort_nm": 0.0,
+      "engage": {
+        "sim_s": 4.752,
+        "tilt_rad": 0.533,
+        "height_m": 0.139,
+        "rr_calf_rad": -2.215,
+        "sampled_effort_nm": 35.55
+      },
+      "tuck_calf_error_rad": -0.509,
+      "tilt_at_engage_plus_0_4_s": 3.059,
       "final_tilt_rad": 3.142,
       "final_height_m": 0.057,
       "terminal_recovery_state": "unrecoverable:tuck",
@@ -1999,6 +2061,31 @@
       "inverted": false
     },
     {
+      "trial": "fall_ladder_null_trace_20260928Tf60",
+      "enable_fall_recovery": false,
+      "force_n": 60.0,
+      "perturbation_axis": 1,
+      "spawn_pitch_rad": 0.0,
+      "spawn_roll_rad": 0.0,
+      "attempt_start_s": null,
+      "rest": {
+        "sim_s": 19.992,
+        "tilt_rad": 0.518,
+        "height_m": 0.139,
+        "rr_calf_rad": -2.608,
+        "sampled_effort_nm": 0.0
+      },
+      "waiting_sample_count": 0,
+      "waiting_max_sampled_effort_nm": null,
+      "engage": null,
+      "tuck_calf_error_rad": -0.092,
+      "tilt_at_engage_plus_0_4_s": null,
+      "final_tilt_rad": 0.518,
+      "final_height_m": 0.139,
+      "terminal_recovery_state": "disabled",
+      "inverted": false
+    },
+    {
       "trial": "fall_ladder_passive_20260928Tflank1.4",
       "enable_fall_recovery": true,
       "force_n": 0.0,
@@ -2421,6 +2508,37 @@
       "inverted": false
     },
     {
+      "trial": "fall_ladder_placed_trace_20260928Tpitch1.4",
+      "enable_fall_recovery": true,
+      "force_n": 0.0,
+      "perturbation_axis": 1,
+      "spawn_pitch_rad": 1.4,
+      "spawn_roll_rad": 0.0,
+      "attempt_start_s": 0.1,
+      "rest": {
+        "sim_s": 0.092,
+        "tilt_rad": 1.402,
+        "height_m": 0.234,
+        "rr_calf_rad": -1.803,
+        "sampled_effort_nm": 0.0
+      },
+      "waiting_sample_count": 0,
+      "waiting_max_sampled_effort_nm": null,
+      "engage": {
+        "sim_s": 0.112,
+        "tilt_rad": 1.397,
+        "height_m": 0.234,
+        "rr_calf_rad": -1.905,
+        "sampled_effort_nm": 35.55
+      },
+      "tuck_calf_error_rad": -0.897,
+      "tilt_at_engage_plus_0_4_s": 1.227,
+      "final_tilt_rad": 0.008,
+      "final_height_m": 0.329,
+      "terminal_recovery_state": "succeeded:stand",
+      "inverted": false
+    },
+    {
       "trial": "fall_ladder_progress_20260928Tf08b08r14",
       "enable_fall_recovery": true,
       "force_n": 0.0,
@@ -2715,6 +2833,8 @@
       "fall_ladder_delayed_20260928Td1.0": 35.55,
       "fall_ladder_delayed_20260928Td1.0b": 35.55,
       "fall_ladder_delayed_20260928Td2.0": 6.9,
+      "fall_ladder_delayed_trace_20260928Td1.0": 35.55,
+      "fall_ladder_delayed_trace_20260928Td1.0b": 35.55,
       "fall_ladder_envelope_20260928Tpitch0.9": 7.94,
       "fall_ladder_envelope_20260928Tpitch1.2": 35.55,
       "fall_ladder_envelope_20260928Tpitch1.6": 35.55,
@@ -2767,6 +2887,7 @@
       "fall_ladder_placed_hold_20260928Tpitch1.4": 35.55,
       "fall_ladder_placed_hold_20260928Troll1.4": 35.55,
       "fall_ladder_placed_slew_20260928Tpitch1.4": 35.55,
+      "fall_ladder_placed_trace_20260928Tpitch1.4": 35.55,
       "fall_ladder_progress_20260928Tf08b08r14": 35.55,
       "fall_ladder_progress_20260928Tf08r12": 0.0,
       "fall_ladder_progress_20260928Tf08r14": 0.0,
@@ -2818,6 +2939,20 @@
         "terminal": "unrecoverable:tuck"
       },
       "fall_ladder_delayed_20260928Td2.0": {
+        "rest_tilt_rad": 0.519,
+        "rest_height_m": 0.139,
+        "final_tilt_rad": 3.142,
+        "final_height_m": 0.057,
+        "terminal": "unrecoverable:tuck"
+      },
+      "fall_ladder_delayed_trace_20260928Td1.0": {
+        "rest_tilt_rad": 0.52,
+        "rest_height_m": 0.139,
+        "final_tilt_rad": 0.521,
+        "final_height_m": 0.139,
+        "terminal": "failed:roll"
+      },
+      "fall_ladder_delayed_trace_20260928Td1.0b": {
         "rest_tilt_rad": 0.519,
         "rest_height_m": 0.139,
         "final_tilt_rad": 3.142,
@@ -2908,6 +3043,13 @@
         "final_height_m": 0.139,
         "terminal": "disabled"
       },
+      "fall_ladder_null_trace_20260928Tf60": {
+        "rest_tilt_rad": 0.518,
+        "rest_height_m": 0.139,
+        "final_tilt_rad": 0.518,
+        "final_height_m": 0.139,
+        "terminal": "disabled"
+      },
       "fall_ladder_pitch_20260928Tf40p2.0": {
         "rest_tilt_rad": 0.022,
         "rest_height_m": 0.365,
@@ -2932,7 +3074,7 @@
     },
     "limitations": [
       "Sampled efforts are instantaneous command samples every ~0.1 s, not peaks; clamp episodes between samples are invisible.",
-      "Only the RR calf angle is traced (trace_joints is off for every ladder trial), so no other joint's waypoint error or effort can be attributed from these records.",
+      "Only the RR calf angle is traced (trace_joints is off for every ladder trial that predates the fall_ladder_*trace* runs), so no other joint's waypoint error or effort can be attributed from these records.",
       "Rest pose differs between runs of the same configuration; compare rest fields, not trial names."
     ]
   }

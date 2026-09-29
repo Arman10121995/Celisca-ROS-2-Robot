@@ -1,0 +1,335 @@
+{
+  "task": "R5.2 Go2 tuck-entry contact attribution analysis",
+  "root": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25",
+  "trial_count": 4,
+  "trials": [
+    {
+      "trial": "fall_ladder_delayed_trace_20260928Td1.0",
+      "ros_domain_id": 226,
+      "enable_fall_recovery": true,
+      "trace_joints": true,
+      "trace_interval_s": 0.02,
+      "attempt_start_s": 4.636,
+      "terminal_recovery_state": "failed:roll",
+      "final_roll_rad": -0.521,
+      "final_height_m": 0.139,
+      "trace_points": 826,
+      "rest": {
+        "roll_rad": -0.52,
+        "height_m": 0.139,
+        "foot_force_median_n": {
+          "FL": 2.44,
+          "FR": 4.14,
+          "RL": 2.2,
+          "RR": 0.0
+        },
+        "max_effort_nm": 0.0
+      },
+      "strike": {
+        "foot": "FL",
+        "peak_force_n": 198.24,
+        "second_foot_force_n": 0.0,
+        "secondary_contact_peak_n": 0.0,
+        "offset_after_engage_s": 0.028,
+        "roll_rate_before_rad_s": 0.0,
+        "roll_rate_at_strike_rad_s": -8.54,
+        "roll_rad_at_strike": -0.725,
+        "height_m_at_strike": 0.148
+      },
+      "post_strike_contact_free": {
+        "last_contact_offset_s": 0.028,
+        "span_s": 0.384,
+        "roll_delta_rad": -0.768
+      },
+      "roll_extreme": {
+        "max_abs_roll_rad": 1.72,
+        "offset_after_engage_s": 0.224
+      },
+      "engage_effort_nm": {
+        "FL_hip_joint": 23.7,
+        "FL_thigh_joint": -23.7,
+        "FL_calf_joint": -35.55,
+        "FR_hip_joint": 11.58,
+        "FR_thigh_joint": 23.7,
+        "FR_calf_joint": -35.55,
+        "RL_hip_joint": 23.7,
+        "RL_thigh_joint": -2.8,
+        "RL_calf_joint": -35.55,
+        "RR_hip_joint": 23.7,
+        "RR_thigh_joint": -23.7,
+        "RR_calf_joint": -35.55
+      },
+      "striking_leg_effort_at_engage_nm": {
+        "hip": 23.7,
+        "thigh": -23.7,
+        "calf": -35.55
+      },
+      "peak_joint_velocity_rad_s": {
+        "FL_hip_joint": 11.48,
+        "FL_thigh_joint": 7.46,
+        "FL_calf_joint": 16.79,
+        "FR_hip_joint": 4.08,
+        "FR_thigh_joint": 2.06,
+        "FR_calf_joint": 21.93,
+        "RL_hip_joint": 14.31,
+        "RL_thigh_joint": 2.57,
+        "RL_calf_joint": 44.7,
+        "RR_hip_joint": 16.98,
+        "RR_thigh_joint": 32.81,
+        "RR_calf_joint": 18.45
+      },
+      "tuck_window_peak_foot_force_n": {
+        "FL": 198.24,
+        "FR": 4.14,
+        "RL": 2.83,
+        "RR": 0.0
+      }
+    },
+    {
+      "trial": "fall_ladder_delayed_trace_20260928Td1.0b",
+      "ros_domain_id": 227,
+      "enable_fall_recovery": true,
+      "trace_joints": true,
+      "trace_interval_s": 0.02,
+      "attempt_start_s": 4.744,
+      "terminal_recovery_state": "unrecoverable:tuck",
+      "final_roll_rad": -3.142,
+      "final_height_m": 0.057,
+      "trace_points": 827,
+      "rest": {
+        "roll_rad": -0.519,
+        "height_m": 0.139,
+        "foot_force_median_n": {
+          "FL": 6.51,
+          "FR": 4.11,
+          "RL": 8.96,
+          "RR": 0.0
+        },
+        "max_effort_nm": 0.0
+      },
+      "strike": {
+        "foot": "RL",
+        "peak_force_n": 151.03,
+        "second_foot_force_n": 0.0,
+        "secondary_contact_peak_n": 30.67,
+        "offset_after_engage_s": 0.032,
+        "roll_rate_before_rad_s": -0.58,
+        "roll_rate_at_strike_rad_s": -6.46,
+        "roll_rad_at_strike": -0.688,
+        "height_m_at_strike": 0.146
+      },
+      "post_strike_contact_free": {
+        "last_contact_offset_s": 0.056,
+        "span_s": 15.18,
+        "roll_delta_rad": -2.163
+      },
+      "roll_extreme": {
+        "max_abs_roll_rad": 3.142,
+        "offset_after_engage_s": 0.696
+      },
+      "engage_effort_nm": {
+        "FL_hip_joint": 23.7,
+        "FL_thigh_joint": 6.72,
+        "FL_calf_joint": -35.55,
+        "FR_hip_joint": 2.97,
+        "FR_thigh_joint": 15.35,
+        "FR_calf_joint": -35.55,
+        "RL_hip_joint": 23.7,
+        "RL_thigh_joint": 23.7,
+        "RL_calf_joint": -35.55,
+        "RR_hip_joint": -23.7,
+        "RR_thigh_joint": -23.7,
+        "RR_calf_joint": -35.55
+      },
+      "striking_leg_effort_at_engage_nm": {
+        "hip": 23.7,
+        "thigh": 23.7,
+        "calf": -35.55
+      },
+      "peak_joint_velocity_rad_s": {
+        "FL_hip_joint": 12.55,
+        "FL_thigh_joint": 8.75,
+        "FL_calf_joint": 32.47,
+        "FR_hip_joint": 7.11,
+        "FR_thigh_joint": 10.04,
+        "FR_calf_joint": 33.12,
+        "RL_hip_joint": 11.58,
+        "RL_thigh_joint": 7.72,
+        "RL_calf_joint": 32.99,
+        "RR_hip_joint": 15.52,
+        "RR_thigh_joint": 29.64,
+        "RR_calf_joint": 6.93
+      },
+      "tuck_window_peak_foot_force_n": {
+        "FL": 26.66,
+        "FR": 0.0,
+        "RL": 151.03,
+        "RR": 0.0
+      }
+    },
+    {
+      "trial": "fall_ladder_null_trace_20260928Tf60",
+      "ros_domain_id": 228,
+      "enable_fall_recovery": false,
+      "trace_joints": true,
+      "trace_interval_s": 0.02,
+      "attempt_start_s": null,
+      "terminal_recovery_state": "disabled",
+      "final_roll_rad": -0.518,
+      "final_height_m": 0.139,
+      "trace_points": 828,
+      "settled": {
+        "roll_rad_min": -0.518,
+        "roll_rad_max": -0.518,
+        "foot_force_median_n": {
+          "FL": 9.17,
+          "FR": 1.28,
+          "RL": 9.07,
+          "RR": 1.4
+        },
+        "foot_force_max_n": {
+          "FL": 9.18,
+          "FR": 1.28,
+          "RL": 9.09,
+          "RR": 1.41
+        },
+        "max_effort_nm": 0.0
+      }
+    },
+    {
+      "trial": "fall_ladder_placed_trace_20260928Tpitch1.4",
+      "ros_domain_id": 229,
+      "enable_fall_recovery": true,
+      "trace_joints": true,
+      "trace_interval_s": 0.02,
+      "attempt_start_s": 0.1,
+      "terminal_recovery_state": "succeeded:stand",
+      "final_roll_rad": 0.0,
+      "final_height_m": 0.329,
+      "trace_points": 829,
+      "rest": {
+        "roll_rad": 0.0,
+        "height_m": 0.234,
+        "foot_force_median_n": {
+          "FL": 0.17,
+          "FR": 0.17,
+          "RL": 0.0,
+          "RR": 0.0
+        },
+        "max_effort_nm": 0.0
+      },
+      "strike": {
+        "foot": "FR",
+        "peak_force_n": 54.05,
+        "second_foot_force_n": 53.81,
+        "secondary_contact_peak_n": 70.65,
+        "offset_after_engage_s": 0.14,
+        "roll_rate_before_rad_s": -0.0,
+        "roll_rate_at_strike_rad_s": 0.0,
+        "roll_rad_at_strike": 0.0,
+        "height_m_at_strike": 0.23
+      },
+      "post_strike_contact_free": {
+        "last_contact_offset_s": 0.304,
+        "span_s": 0.04,
+        "roll_delta_rad": -0.0
+      },
+      "roll_extreme": {
+        "max_abs_roll_rad": 0.001,
+        "offset_after_engage_s": 0.636
+      },
+      "engage_effort_nm": {
+        "FL_hip_joint": 2.95,
+        "FL_thigh_joint": 23.7,
+        "FL_calf_joint": -35.55,
+        "FR_hip_joint": -2.96,
+        "FR_thigh_joint": 23.7,
+        "FR_calf_joint": -35.55,
+        "RL_hip_joint": 4.98,
+        "RL_thigh_joint": 23.7,
+        "RL_calf_joint": -35.55,
+        "RR_hip_joint": -5.01,
+        "RR_thigh_joint": 23.7,
+        "RR_calf_joint": -35.55
+      },
+      "striking_leg_effort_at_engage_nm": {
+        "hip": -2.96,
+        "thigh": 23.7,
+        "calf": -35.55
+      },
+      "peak_joint_velocity_rad_s": {
+        "FL_hip_joint": 2.3,
+        "FL_thigh_joint": 10.86,
+        "FL_calf_joint": 21.24,
+        "FR_hip_joint": 2.3,
+        "FR_thigh_joint": 10.87,
+        "FR_calf_joint": 21.24,
+        "RL_hip_joint": 2.29,
+        "RL_thigh_joint": 8.16,
+        "RL_calf_joint": 21.48,
+        "RR_hip_joint": 2.3,
+        "RR_thigh_joint": 8.16,
+        "RR_calf_joint": 21.48
+      },
+      "tuck_window_peak_foot_force_n": {
+        "FL": 53.81,
+        "FR": 54.05,
+        "RL": 0.0,
+        "RR": 0.0
+      }
+    }
+  ],
+  "interpretation": {
+    "tipping_trials": {
+      "fall_ladder_delayed_trace_20260928Td1.0": {
+        "strike_foot": "FL",
+        "strike_peak_force_n": 198.24,
+        "strike_offset_after_engage_s": 0.028,
+        "roll_rate_before_rad_s": 0.0,
+        "roll_rate_at_strike_rad_s": -8.54,
+        "contact_free_roll_span_s": 0.384,
+        "contact_free_roll_delta_rad": -0.768,
+        "max_abs_roll_rad": 1.72,
+        "max_abs_roll_offset_s": 0.224,
+        "terminal": "failed:roll"
+      },
+      "fall_ladder_delayed_trace_20260928Td1.0b": {
+        "strike_foot": "RL",
+        "strike_peak_force_n": 151.03,
+        "strike_offset_after_engage_s": 0.032,
+        "roll_rate_before_rad_s": -0.58,
+        "roll_rate_at_strike_rad_s": -6.46,
+        "contact_free_roll_span_s": 15.18,
+        "contact_free_roll_delta_rad": -2.163,
+        "max_abs_roll_rad": 3.142,
+        "max_abs_roll_offset_s": 0.696,
+        "terminal": "unrecoverable:tuck"
+      }
+    },
+    "null_controls": {
+      "fall_ladder_null_trace_20260928Tf60": {
+        "roll_rad_min": -0.518,
+        "roll_rad_max": -0.518,
+        "foot_force_median_n": {
+          "FL": 9.17,
+          "FR": 1.28,
+          "RL": 9.07,
+          "RR": 1.4
+        },
+        "foot_force_max_n": {
+          "FL": 9.18,
+          "FR": 1.28,
+          "RL": 9.09,
+          "RR": 1.41
+        },
+        "max_effort_nm": 0.0
+      }
+    },
+    "grain": "Contact telemetry is per foot, not per joint: the tipping reaction is a single down-side foot strike while every joint is clamp- or damping-limited, so the strike cannot be apportioned between the striking leg's hip/thigh/calf from the command topic.",
+    "limitations": [
+      "Commanded efforts are PD outputs at ~0.02 s sampling, not measured joint torques; per-link contact wrenches would be needed to split the strike between joints.",
+      "The trunk-ground contact force is not published, so the trunk's own support during the flip is unmeasured.",
+      "Run-to-run variation is real: the two tipping trials end differently (one inverted, one stopped mid-roll), so the shared claim is the strike pattern, not the outcome."
+    ]
+  }
+}

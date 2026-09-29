@@ -290,6 +290,15 @@ settled fall. The feature therefore stays **off by default on evidence** —
 what could change that is a first phase that cannot tip a settled trunk, a
 change to the primitive and not to its schedule.
 
+The 50 Hz per-joint traces say where the flip comes from: 28–32 ms after
+`attempting:tuck`, one down-side foot strikes (198 N and 151 N in the two
+traced runs) while the other three feet read 0.0 N, and the whole foot set then
+unloads while the trunk rolls on momentum — to π with no further ground touch
+in one run. That strike cannot be split between the striking leg's hip, thigh
+and calf from the command topic, because all three clamp together on the
+engagement sample; [`analyze_tuck_forces.py`](../status/evidence/r52-go2-policy-2026-09-25/analyze_tuck_forces.py)
+→ `tuck_forces.json` holds the numbers.
+
 Do not expect it to catch a fall either. Measured on both axes, the debounced
 `fallen` latch is 0.66 s late on lateral impulses *because* those falls are
 ballistic, and already on time on a sustained forward push — where the catchable

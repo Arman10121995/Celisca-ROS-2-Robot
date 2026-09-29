@@ -342,16 +342,24 @@ first phase that cannot tip a settled trunk -- a change to the primitive, not
 to its schedule. Keep `go2_reverse_command_map:=inverse`, the
 `go2_perturbation_*` arguments and `enable_fall_recovery` opt-in.
 
-Open follow-up questions (open, not queued work):
+Open follow-up questions (item 1 now measured; the rest open, not queued work):
 
-1. What in the tuck path flips a *settled* side-lying trunk? Narrowed by
-   `analyze_tuck_entry.py`: the event is the ungated `TUCK_POSE` PD (hip 0 /
-   thigh 1.35 / calf -2.70, authority 0.5) engaging on the rest -- spike size
-   and leg sweep are out (engagement samples span 0.0-35.55 Nm across
-   attempts; the same command righted a 0.266 m pitched rest while clamping
-   the same joint) -- so what remains is *which* joint's ground reaction tips
-   it. Only the RR calf is traced, so answering that needs per-joint effort
-   tracing: a new measurement, not run.
+1. What in the tuck path flips a *settled* side-lying trunk? **Measured**: the
+   ungated `TUCK_POSE` PD engaging on the rest converts into a single
+   unilateral down-side foot strike -- FL 198.2 N at +28 ms and RL 151.0 N at
+   +32 ms after `attempting:tuck`, with the other three feet at 0.0 N -- after
+   which every foot force reads 0.0 N for the rest of the roll (the repeat run
+   reaches pi with 15.2 s of no touch at all). The striking leg's hip/thigh/
+   calf all clamp on the engagement sample and are damping-limited by the
+   strike itself, so the strike cannot be attributed to one joint from the
+   command topic; per-foot force is the finest attribution the probe publishes
+   (`fall_ladder_delayed_trace_20260928Td1.0{,b}`, `..._null_trace_...Tf60`,
+   `..._placed_trace_...Tpitch1.4`, domains 226-229, `TRACE_JOINTS=true
+   TRACE_INTERVAL_S=0.02`, `analyze_tuck_forces.py` -> `tuck_forces.json`).
+   The recovery-off null holds the rest (roll -0.518 constant, foot medians
+   <= 9.2 N, zero effort) and the placed 1.4 rad pitch control loads the front
+   pair *together* (30 -> 70 N, no unloading) and stands, so the settled
+   side-rest is the discriminator -- now at contact granularity.
 2. Does the diagonal band's harm at the qualified 0.5 authority need a guard?
    At 0.5 the ladder's own drive ends a corner-rest diagonal on its back while
    at 0.2 the same pose rights itself; this is recorded as a hazard and
@@ -410,9 +418,25 @@ contract message count collapses as invalid, not as a good result.
 stall remains a policy fixed point and further rate/filter/contact tuning is
 retired.
 
-The current fast check is 580 passed/1 skipped after adding the Go2 core,
-velocity and recovery adapter tests plus the fall-pose classification,
-`unrecoverable` terminal-state and actor gain/slew parity tests to the CI fast
-tier; the latest map suite is 35
+The tuck-entry contact question is now answered at the resolution the harness
+publishes. Four traced ladder runs (`TRACE_JOINTS=true TRACE_INTERVAL_S=0.02`,
+domains 226-229) record every joint's commanded effort/position/velocity, all
+four foot forces and the signed trunk roll at ~50 Hz (`probe_stance.py` now
+emits signed `roll_rad`/`pitch_rad`); `analyze_tuck_forces.py` ->
+`tuck_forces.json` reads them. The 60 N delayed tucks convert into a single
+unilateral down-side foot strike (FL 198.2 N at +28 ms; RL 151.0 N at +32 ms;
+other feet 0.0 N), the whole foot set then reads 0.0 N for the rest of the
+roll (the `b` run contact-free to pi, 15.2 s), and the striking leg's three
+joints clamp together -- so the strike pins to one foot, not to one joint.
+The recovery-off null holds the same rest (roll -0.518, foot medians
+<= 9.2 N, zero effort) and the placed 1.4 rad pitch control loads both front
+feet together (30 -> 70 N, no unloading) and stands. The traced trials ran
+with `tracked_modified_files_at_launch: 0`; `test_r5_2_go2_tuck_forces.py`
+pins the pattern in the fast tier.
+
+The current fast check is 619 passed after adding the Go2 core, velocity and
+recovery adapter tests, the fall-pose classification, `unrecoverable`
+terminal-state and actor gain/slew parity tests, and the tuck-entry and
+tuck-force attribution tests to the CI fast tier; the latest map suite is 35
 passed. These are scoped checks, not a platform-wide qualification. Start with
 [`docs/WORKFLOW.md`](WORKFLOW.md) and the [Go2 tutorial](tutorials/go2.md).
