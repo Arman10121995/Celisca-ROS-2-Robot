@@ -358,6 +358,12 @@ Dependencies: `R5.1`.
   10.8 rad/s. The roll-over still happens during the attempt (the trunk crosses
   2.4 rad about 0.6 s in), so the 60 N get-up stays a negative — now for a
   measured reason, with the diagnosis separated from the tuning.
+  The get-up entry was then measured from the entry side: a pose-keyed entry
+  was implemented, measured and reverted (both entry poses invert a matched
+  settled rest), the trunk's own ground load is now published, and a
+  settled-rest support partition measures the two published contact topics as
+  5.8-5.9% of a flank rest (7.3-7.4 N of the 126.5 N robot), with 119.1-119.2 N
+  carried by the two down-side hip geoms that publish nothing.
   Repeatability, terrain traversal, fall
   handling and navigation remain unqualified.
 - **Evidence:** [2026-09-25 live record](docs/status/evidence/r52-go2-2026-09-25/README.md)
@@ -376,7 +382,12 @@ Dependencies: `R5.1`.
   (0.057 m final height in the valid 16 s attempt). Recovery success now also
   requires measured standing height, not only upright tilt. The named `terrain_stairs` task
   still fails at the first ledge (0.115 m displacement, 0.527 rad peak tilt,
-  35.55 N.m max effort), so do not claim terrain traversal. Next implement a
+  35.55 N.m max effort), so do not claim terrain traversal. On the recovery side, the get-up entry was
+  measured from the entry side (a pose-keyed entry was refuted and the trunk's
+  own ground load is now published), and the settled-rest support partition
+  shows the two contact topics carry only 5.8-5.9% of a flank rest, so the next
+  entry change must either measure the hip load it is trying to move or stay
+  open-loop. Next implement a
   target-domain adaptation/retraining or a different whole-body get-up
   strategy; both the nominal-pose and ported learned actor failed the named
   60 N collapse. The delayed actor also failed after its midair false success

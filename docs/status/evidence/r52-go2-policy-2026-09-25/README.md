@@ -1310,6 +1310,59 @@ the trunk is still rolled over**, rather than after it. The contact signal a
 closed-loop rule needs exists and is published; what is still missing is a way
 to raise leg load without levering the trunk over.
 
+#### What the two topics cover: a settled flank is not a support reading
+
+`/go2/foot_contact_forces` and `/go2/trunk_contact_forces` are read as "how the
+ground is holding the robot", but the trunk trial already showed that sum is
+not a support reading on the flank: after its landing transient, the settled
+side rest read 23–85 N of the 126.5 N robot, with the trunk at 0.0 N. What carried the rest was unmeasured,
+and planning the entry's load bound against geoms the topics cannot see would
+be planning against nothing. So
+[`probe_support_attribution.py`](probe_support_attribution.py) partitions the
+settled normal force over *every* colliding robot geom. It does not replay a
+recorded pose — pinning the root would remove the very reaction being measured
+— it drops the plant from 0.4 m at the rolls the ladder produced, settles for
+4 s under the spawner's own joint-hold springs, and reports the equilibrium it
+lands in. Every reported rest is checked: `qvel` is 0.000 at all seven, so
+each row below is a static equilibrium, not a snapshot of motion.
+
+Run output: [`support_attribution.log`](support_attribution.log); record:
+[`support_attribution.json`](support_attribution.json).
+
+| drop roll | contact | published | hidden | cover | resting on |
+|---:|---:|---:|---:|---:|---|
+| −0.50 rad | 126.5 N | **7.4 N** | 119.2 N | **5.8 %** | FL+RL hips (59.5 / 59.7 N) |
+| 0.00 rad | 126.5 N | 126.5 N | 0.0 N | 100 % | the four feet (27.1 / 27.1 / 36.1 / 36.1 N) |
+| 0.50 rad | 126.5 N | **7.3 N** | 119.2 N | **5.8 %** | FR+RR hips (59.2 / 60.0 N) |
+| 0.90 rad | 126.5 N | **7.3 N** | 119.2 N | **5.8 %** | FR+RR hips (59.2 / 60.0 N) |
+| 1.40 rad | 126.5 N | **7.4 N** | 119.1 N | **5.9 %** | FR+RR hips (59.2 / 60.0 N) |
+| 2.40 rad | 126.5 N | 126.5 N | 0.0 N | 100 % | the trunk (126.5 N) |
+| 3.14 rad | 126.5 N | 126.5 N | 0.0 N | 100 % | the trunk (126.5 N) |
+
+The result is sharper than "on hip and thigh": the settled flank rests on
+exactly **two geoms — the down-side hips** — at ~59.6 N each, and everything
+else in contact is a rounding error (the two down-side feet at 3.7 N each; the
+trunk at 0.0 N). The two topics publish 5 of the model's 18 colliding geoms;
+the 13 they miss include both hips, thighs and calves of every leg and the imu
+link, and on the flank those hidden geoms carry **94.2 % of the robot**. The
+upright and inverted rests are the two cases the topics measure completely —
+but those are the attitudes *after* the robot has rolled, not the one the entry
+has to fix. The synthetic drop and the live trial differ in detail (the live
+robot rocked through 23–85 N of feet while its trunk stayed at 0.0 N; the drop
+settles flatter, at 7.4 N), and in neither does the feet+trunk sum ever hold the
+whole robot.
+
+So the requirement from the previous subsection gains a corollary, measured:
+the support that has to move is the **hip load the topics do not publish**
+(119.2 N on the flank), and a contact-keyed rule watching only feet and trunk
+sees 7.4 N of it. The next entry primitive either measures the support it is
+trying to move — which means publishing more than feet and trunk — or the
+stroke stays open-loop. The number to beat is unchanged; where the primitive
+must measure it is now known.
+
 The contracts are
 [`test_r5_2_go2_entry_phase.py`](../../../../src/robot_lab_adapter/test/test_r5_2_go2_entry_phase.py)
-(9 tests) and the R5.2 Go2 selection passes (162 passed, 1 skipped).
+(10 tests) and
+[`test_r5_2_go2_support_attribution.py`](../../../../src/robot_lab_adapter/test/test_r5_2_go2_support_attribution.py)
+(5 tests); both are in the CI fast tier, and the R5.2 Go2 selection passes
+(168 passed, 0 skipped).

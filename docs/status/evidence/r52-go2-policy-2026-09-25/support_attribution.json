@@ -1,0 +1,221 @@
+{
+  "task": "R5.2 Go2 settled-rest support attribution",
+  "settle_seconds": 4.0,
+  "drop_height_m": 0.4,
+  "published_geoms": [
+    "FL_foot_contact_0",
+    "FR_foot_contact_0",
+    "RL_foot_contact_0",
+    "RR_foot_contact_0",
+    "trunk_contact_0"
+  ],
+  "colliding_geoms_by_body": {
+    "FL_calf": [
+      "FL_calf_contact_0",
+      "FL_foot_contact_0"
+    ],
+    "FL_hip": [
+      "FL_hip_contact_0"
+    ],
+    "FL_thigh": [
+      "FL_thigh_contact_0"
+    ],
+    "FR_calf": [
+      "FR_calf_contact_0",
+      "FR_foot_contact_0"
+    ],
+    "FR_hip": [
+      "FR_hip_contact_0"
+    ],
+    "FR_thigh": [
+      "FR_thigh_contact_0"
+    ],
+    "RL_calf": [
+      "RL_calf_contact_0",
+      "RL_foot_contact_0"
+    ],
+    "RL_hip": [
+      "RL_hip_contact_0"
+    ],
+    "RL_thigh": [
+      "RL_thigh_contact_0"
+    ],
+    "RR_calf": [
+      "RR_calf_contact_0",
+      "RR_foot_contact_0"
+    ],
+    "RR_hip": [
+      "RR_hip_contact_0"
+    ],
+    "RR_thigh": [
+      "RR_thigh_contact_0"
+    ],
+    "go2_base": [
+      "imu_link_contact_0",
+      "trunk_contact_0"
+    ]
+  },
+  "measured": {
+    "robot_weight_n": 126.53,
+    "rests": [
+      {
+        "roll_rad": -0.5,
+        "contact_n": 126.53,
+        "published_n": 7.35,
+        "hidden_n": 119.18,
+        "coverage_percent": 5.8,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "RL_hip": 59.73,
+          "FL_hip": 59.45,
+          "FL_calf": 3.7,
+          "RL_calf": 3.66
+        },
+        "per_geom_n": {
+          "RL_hip_contact_0": 59.73,
+          "FL_hip_contact_0": 59.45,
+          "FL_foot_contact_0": 3.7,
+          "RL_foot_contact_0": 3.66
+        },
+        "hidden_geoms_n": {
+          "FL_hip_contact_0": 59.45,
+          "RL_hip_contact_0": 59.73
+        }
+      },
+      {
+        "roll_rad": 0.0,
+        "contact_n": 126.53,
+        "published_n": 126.53,
+        "hidden_n": 0.0,
+        "coverage_percent": 100.0,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "RR_calf": 36.14,
+          "RL_calf": 36.12,
+          "FR_calf": 27.14,
+          "FL_calf": 27.12
+        },
+        "per_geom_n": {
+          "RR_foot_contact_0": 36.14,
+          "RL_foot_contact_0": 36.12,
+          "FR_foot_contact_0": 27.14,
+          "FL_foot_contact_0": 27.12
+        },
+        "hidden_geoms_n": {}
+      },
+      {
+        "roll_rad": 0.5,
+        "contact_n": 126.53,
+        "published_n": 7.35,
+        "hidden_n": 119.18,
+        "coverage_percent": 5.8,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "RR_hip": 60.02,
+          "FR_hip": 59.16,
+          "FR_calf": 3.7,
+          "RR_calf": 3.65
+        },
+        "per_geom_n": {
+          "RR_hip_contact_0": 60.02,
+          "FR_hip_contact_0": 59.16,
+          "FR_foot_contact_0": 3.7,
+          "RR_foot_contact_0": 3.65
+        },
+        "hidden_geoms_n": {
+          "FR_hip_contact_0": 59.16,
+          "RR_hip_contact_0": 60.02
+        }
+      },
+      {
+        "roll_rad": 0.9,
+        "contact_n": 126.53,
+        "published_n": 7.34,
+        "hidden_n": 119.19,
+        "coverage_percent": 5.8,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "RR_hip": 60.08,
+          "FR_hip": 59.11,
+          "FR_calf": 3.69,
+          "RR_calf": 3.65
+        },
+        "per_geom_n": {
+          "RR_hip_contact_0": 60.08,
+          "FR_hip_contact_0": 59.11,
+          "FR_foot_contact_0": 3.69,
+          "RR_foot_contact_0": 3.65
+        },
+        "hidden_geoms_n": {
+          "FR_hip_contact_0": 59.11,
+          "RR_hip_contact_0": 60.08
+        }
+      },
+      {
+        "roll_rad": 1.4,
+        "contact_n": 126.53,
+        "published_n": 7.41,
+        "hidden_n": 119.12,
+        "coverage_percent": 5.9,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "RR_hip": 60.05,
+          "FR_hip": 59.07,
+          "FR_calf": 3.72,
+          "RR_calf": 3.68
+        },
+        "per_geom_n": {
+          "RR_hip_contact_0": 60.05,
+          "FR_hip_contact_0": 59.07,
+          "FR_foot_contact_0": 3.72,
+          "RR_foot_contact_0": 3.68
+        },
+        "hidden_geoms_n": {
+          "FR_hip_contact_0": 59.07,
+          "RR_hip_contact_0": 60.05
+        }
+      },
+      {
+        "roll_rad": 2.4,
+        "contact_n": 126.53,
+        "published_n": 126.53,
+        "hidden_n": 0.0,
+        "coverage_percent": 100.0,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "go2_base": 126.53
+        },
+        "per_geom_n": {
+          "trunk_contact_0": 126.53
+        },
+        "hidden_geoms_n": {}
+      },
+      {
+        "roll_rad": 3.14159265,
+        "contact_n": 126.53,
+        "published_n": 126.53,
+        "hidden_n": 0.0,
+        "coverage_percent": 100.0,
+        "max_abs_qvel": 0.0,
+        "per_body_n": {
+          "go2_base": 126.53
+        },
+        "per_geom_n": {
+          "trunk_contact_0": 126.53
+        },
+        "hidden_geoms_n": {}
+      }
+    ],
+    "worst_roll_rad": -0.5,
+    "worst_coverage_percent": 5.8
+  },
+  "interpretation": {
+    "grain": "Each rest is a drop from 0.4 m at the named roll, settled for 4 s under the spawner's own joint-hold springs, then partitioned by normal force against static world geoms over every colliding robot geom. published is the sum the two contact topics carry; hidden is what they miss.",
+    "limitations": [
+      "These are simulated equilibria from a dropped free base, not replays of the recorded trials: pinning the root would remove the very reaction being measured, and releasing it finds a different equilibrium.",
+      "The joint-hold springs are the spawner's stance assist, so the legs hold a stance instead of collapsing; a different assist would settle differently.",
+      "Support is the normal component against the world only, as in the published topics; tangential friction and robot self-contact are excluded, so the sum is a support partition, not a full force balance.",
+      "max_abs_qvel is the settle check: a large value would mean the reported rest is still moving and its partition is not an equilibrium."
+    ]
+  }
+}

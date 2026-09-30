@@ -49,6 +49,8 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_reverse_sweep.py"
   "$ADP_TEST/test_r5_2_go2_tuck_entry.py"
   "$ADP_TEST/test_r5_2_go2_tuck_forces.py"
+  "$ADP_TEST/test_r5_2_go2_entry_phase.py"
+  "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_drive_kinematics.py"
   "$GUI_TEST/test_drive_control.py"

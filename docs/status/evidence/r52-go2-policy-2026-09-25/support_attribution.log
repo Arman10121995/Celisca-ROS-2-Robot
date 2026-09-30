@@ -1,0 +1,31 @@
+colliding robot geoms by body (published ones in brackets):
+  FL_calf      FL_calf_contact_0, [FL_foot_contact_0]
+  FL_hip       FL_hip_contact_0
+  FL_thigh     FL_thigh_contact_0
+  FR_calf      FR_calf_contact_0, [FR_foot_contact_0]
+  FR_hip       FR_hip_contact_0
+  FR_thigh     FR_thigh_contact_0
+  RL_calf      RL_calf_contact_0, [RL_foot_contact_0]
+  RL_hip       RL_hip_contact_0
+  RL_thigh     RL_thigh_contact_0
+  RR_calf      RR_calf_contact_0, [RR_foot_contact_0]
+  RR_hip       RR_hip_contact_0
+  RR_thigh     RR_thigh_contact_0
+  go2_base     [trunk_contact_0], imu_link_contact_0
+
+13 colliding geoms publish no force; the two topics cover 5 of 18
+
+robot weight: 126.5 N
+
+  roll   contact  published   hidden   cover   qvel  resting on
+---------------------------------------------------------------
+ -0.50    126.5N       7.4N   119.2N    5.8%  0.000  RL_hip 60N, FL_hip 59N, FL_calf 4N  [hidden: FL_hip_contact_0 59N, RL_hip_contact_0 60N]
+  0.00    126.5N     126.5N     0.0N  100.0%  0.000  RR_calf 36N, RL_calf 36N, FR_calf 27N
+  0.50    126.5N       7.3N   119.2N    5.8%  0.000  RR_hip 60N, FR_hip 59N, FR_calf 4N  [hidden: FR_hip_contact_0 59N, RR_hip_contact_0 60N]
+  0.90    126.5N       7.3N   119.2N    5.8%  0.000  RR_hip 60N, FR_hip 59N, FR_calf 4N  [hidden: FR_hip_contact_0 59N, RR_hip_contact_0 60N]
+  1.40    126.5N       7.4N   119.1N    5.9%  0.000  RR_hip 60N, FR_hip 59N, FR_calf 4N  [hidden: FR_hip_contact_0 59N, RR_hip_contact_0 60N]
+  2.40    126.5N     126.5N     0.0N  100.0%  0.000  go2_base 127N
+  3.14    126.5N     126.5N     0.0N  100.0%  0.000  go2_base 127N
+
+worst topic coverage: 5.8% of settled support at roll -0.50 rad
+support attribution written to /workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r52-go2-policy-2026-09-25/support_attribution.json
