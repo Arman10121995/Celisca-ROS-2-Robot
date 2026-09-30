@@ -1,0 +1,28 @@
+[INFO] [nav2_goal_relay.py-22]: process started with pid [86275]
+[controller_server-17] [INFO] [1790763967.199325687] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[nav2_goal_relay.py-22] [INFO] [1790763967.965707126] [nav2_goal_relay]: relaying /robot_lab/goal_pose to 'navigate_to_pose' with the stack clock: client stamps (e.g. the nav2 RViz panel's system-time stamp) are discarded
+[planner_server-18] [INFO] [1790763985.520656623] [planner_server]: Configured plugin GridBased of type SmacPlannerHybrid with maximum iterations 1000000, max on approach iterations 1000, and allowing unknown traversal. Tolerance 0.12.Using motion model: Reeds-Shepp.
+[nav2_goal_relay.py-22] [INFO] [1790763990.692418731] [nav2_goal_relay]: sending goal x=0.500 y=-0.500 frame=map at 19.716 s
+[bt_navigator-20] [INFO] [1790763990.693956185] [bt_navigator]: Begin navigating from current location (-0.50, -0.50) to (0.50, -0.50)
+[nav2_goal_relay.py-22] [INFO] [1790763990.695312005] [nav2_goal_relay]: goal accepted
+[nav2_goal_relay.py-22] [INFO] [1790763994.306250197] [nav2_goal_relay]: goal finished: succeeded
+[INFO] [nav2_goal_relay.py-22]: sending signal 'SIGINT' to process[nav2_goal_relay.py-22]
+[nav2_goal_relay.py-22] Traceback (most recent call last):
+[nav2_goal_relay.py-22]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_navigation/lib/robot_lab_navigation/nav2_goal_relay.py", line 119, in <module>
+[nav2_goal_relay.py-22]     main()
+[nav2_goal_relay.py-22]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_navigation/lib/robot_lab_navigation/nav2_goal_relay.py", line 109, in main
+[nav2_goal_relay.py-22]     rclpy.spin(node)
+[nav2_goal_relay.py-22]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[nav2_goal_relay.py-22]     executor.spin_once()
+[nav2_goal_relay.py-22]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[nav2_goal_relay.py-22]     self._spin_once_impl(timeout_sec)
+[nav2_goal_relay.py-22]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 809, in _spin_once_impl
+[nav2_goal_relay.py-22]     raise handler.exception()
+[nav2_goal_relay.py-22]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 309, in _execute_coroutine_step
+[nav2_goal_relay.py-22]     result = coro.send(None)
+[nav2_goal_relay.py-22]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 478, in handler
+[nav2_goal_relay.py-22]     arg = take_from_wait_list(entity)
+[nav2_goal_relay.py-22]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 400, in _take_subscription
+[nav2_goal_relay.py-22]     msg_info = sub.handle.take_message(sub.msg_type, sub.raw)
+[nav2_goal_relay.py-22] RuntimeError: Unable to convert call argument to Python object (compile in debug mode for details)
+[ERROR] [nav2_goal_relay.py-22]: process has died [pid 86275, exit code 1, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_navigation/lib/robot_lab_navigation/nav2_goal_relay.py --ros-args -r __node:=nav2_goal_relay --params-file /workspace/molar/.tmp/launch_params_dyf1he41'].

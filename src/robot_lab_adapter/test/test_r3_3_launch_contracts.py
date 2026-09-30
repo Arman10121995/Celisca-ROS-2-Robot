@@ -78,6 +78,20 @@ class R33LaunchContractTests(unittest.TestCase):
                          "dwb_core::DWBLocalPlanner")
         self.assertIn("FollowPath.critics", controller_dwb[0])
 
+        # Direct CLI launches of the three cars resolve auto to a
+        # curvature-aware pair. Explicit incompatible choices are rejected.
+        car_global, car_local = module._compatible_planners(
+            "ackermann", "auto", "auto")
+        self.assertEqual(car_global, "nav2_smac_planner/SmacPlannerHybrid")
+        self.assertEqual(car_local,
+                         "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController")
+        with self.assertRaisesRegex(ValueError, "curvature-aware"):
+            module._compatible_planners("ackermann", "nav2_smac_planner/SmacPlanner2D",
+                                        "dwb_core::DWBLocalPlanner")
+        self.assertEqual(module._compatible_planners("diff", "nav2_smac_planner/SmacPlanner2D",
+                                                     "dwb_core::DWBLocalPlanner"),
+                         ("nav2_smac_planner/SmacPlanner2D", "dwb_core::DWBLocalPlanner"))
+
     def test_select_components_launch_constructs(self):
         """Regression: string + LaunchConfiguration concatenation raised TypeError."""
         module = load_launch_module("select_components")
@@ -90,6 +104,31 @@ class R33LaunchContractTests(unittest.TestCase):
                           "launch" / "simulated_robot.launch.py")
         text = bringup_launch.read_text()
         self.assertEqual(text.count('"navigation.launch.py"'), 1)
+
+    def test_rviz_goals_go_through_the_relay(self):
+        """RViz goals are restamped, not sent straight to the navigator.
+
+        nav2's RViz panel stamps goals with the system clock
+        (``Nav2Panel::onNewGoal``: ``rclcpp::Clock().now()``), which a
+        simulated planner rejects with "extrapolation into the future" before
+        planning.  The navigation launch must start the relay, and the nav
+        RViz config must offer the plain SetGoal tool on /goal_pose instead
+        of the panel's GoalTool.
+        """
+        nav_launch = (_SRC_ADAPTER_DIR.parent / "robot_lab_navigation" /
+                      "launch" / "navigation.launch.py")
+        text = nav_launch.read_text()
+        self.assertIn("nav2_goal_relay", text)
+        self.assertIn('executable="nav2_goal_relay.py"', text)
+
+        rviz = (_SRC_ADAPTER_DIR.parent / "robot_lab_localization" / "rviz" /
+                "nav2_default_view.rviz")
+        rviz_text = rviz.read_text()
+        self.assertIn("Class: rviz_default_plugins/SetGoal", rviz_text)
+        self.assertIn("Value: /robot_lab/goal_pose", rviz_text)
+        self.assertNotIn("Value: /goal_pose\n", rviz_text)
+        self.assertNotIn("Class: nav2_rviz_plugins/GoalTool", rviz_text)
+        self.assertNotIn("Class: nav2_rviz_plugins/Navigation 2", rviz_text)
 
 
 if __name__ == "__main__":

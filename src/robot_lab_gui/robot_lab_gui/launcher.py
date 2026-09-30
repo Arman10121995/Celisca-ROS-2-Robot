@@ -13,7 +13,7 @@ from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
 from ament_index_python.packages import get_package_share_directory
 from .process_control import stop_group
-from .drive_control import LinuxJoystick, RampDrive
+from .drive_control import LinuxJoystick, RampDrive, limits_from_drive
 
 try:
     from robot_lab_utils.mode_capability import (
@@ -428,7 +428,9 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_repeat_job = None
         self.drive_model = RampDrive()
         self.drive_buttons = set()
+        self.drive_button_widgets = {}
         self.drive_keys = set()
+        self.drive_stop_latched = False
         self.drive_joystick = LinuxJoystick()
         self.current_drive = (0.0, 0.0)
         self._launch_running = False
@@ -445,6 +447,14 @@ class SimulationLauncherGui(tk.Tk):
         self.launch_kind_var = tk.StringVar(value="simulation")
         self.drive_linear_var = tk.DoubleVar(value=0.025)
         self.drive_angular_var = tk.DoubleVar(value=0.08)
+        self.drive_decel_linear_var = tk.DoubleVar(value=0.025)
+        self.drive_decel_angular_var = tk.DoubleVar(value=0.08)
+        self.drive_max_linear_var = tk.DoubleVar(value=1.0)
+        self.drive_max_angular_var = tk.DoubleVar(value=2.0)
+        self.drive_min_linear_var = tk.DoubleVar(value=-1.0)
+        self.drive_min_angular_var = tk.DoubleVar(value=-2.0)
+        self.drive_override_var = tk.BooleanVar(value=False)
+        self.drive_limits_var = tk.StringVar(value="")
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
         self.bhl_policy_var = tk.BooleanVar(value=True)
@@ -873,27 +883,57 @@ class SimulationLauncherGui(tk.Tk):
         speed_frame.grid(row=26, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
-        ttk.Label(speed_frame, text="Δ linear / 0.1 s").grid(row=0, column=0, sticky="w", padx=(0, 4))
+        ttk.Checkbutton(speed_frame, text="Override robot drive limits",
+                        variable=self.drive_override_var,
+                        command=self._update_drive_limits_label).grid(row=0, column=0,
+                                                               columnspan=4, sticky="w")
+        ttk.Label(speed_frame, textvariable=self.drive_limits_var).grid(
+            row=1, column=0, columnspan=4, sticky="w")
+        ttk.Label(speed_frame, text="Δ linear / 0.1 s").grid(row=2, column=0, sticky="w", padx=(0, 4))
         ttk.Spinbox(
             speed_frame,
-            from_=0.005,
-            to=0.1,
+            from_=0.001,
+            to=1.0,
             increment=0.005,
             textvariable=self.drive_linear_var,
             width=6,
-        ).grid(row=0, column=1, sticky="ew", padx=(0, 8))
-        ttk.Label(speed_frame, text="Δ angular / 0.1 s").grid(row=0, column=2, sticky="w", padx=(0, 4))
+        ).grid(row=2, column=1, sticky="ew", padx=(0, 8))
+        ttk.Label(speed_frame, text="Δ angular / 0.1 s").grid(row=2, column=2, sticky="w", padx=(0, 4))
         ttk.Spinbox(
             speed_frame,
-            from_=0.01,
-            to=0.2,
+            from_=0.001,
+            to=2.0,
             increment=0.01,
             textvariable=self.drive_angular_var,
             width=6,
-        ).grid(row=0, column=3, sticky="ew")
+        ).grid(row=2, column=3, sticky="ew")
+        ttk.Label(speed_frame, text="Δ linear brake").grid(row=3, column=0, sticky="w")
+        ttk.Spinbox(speed_frame, from_=0.001, to=1.0, increment=0.005,
+                    textvariable=self.drive_decel_linear_var, width=6).grid(
+                        row=3, column=1, sticky="ew")
+        ttk.Label(speed_frame, text="Δ angular brake").grid(row=3, column=2, sticky="w")
+        ttk.Spinbox(speed_frame, from_=0.001, to=2.0, increment=0.01,
+                    textvariable=self.drive_decel_angular_var, width=6).grid(
+                        row=3, column=3, sticky="ew")
+        ttk.Label(speed_frame, text="Max linear m/s").grid(row=4, column=0, sticky="w")
+        ttk.Spinbox(speed_frame, from_=0.01, to=5.0, increment=0.05,
+                    textvariable=self.drive_max_linear_var, width=6).grid(
+                        row=4, column=1, sticky="ew")
+        ttk.Label(speed_frame, text="Max angular rad/s").grid(row=4, column=2, sticky="w")
+        ttk.Spinbox(speed_frame, from_=0.01, to=10.0, increment=0.1,
+                    textvariable=self.drive_max_angular_var, width=6).grid(
+                        row=4, column=3, sticky="ew")
+        ttk.Label(speed_frame, text="Min linear m/s").grid(row=5, column=0, sticky="w")
+        ttk.Spinbox(speed_frame, from_=-5.0, to=0.0, increment=0.05,
+                    textvariable=self.drive_min_linear_var, width=6).grid(
+                        row=5, column=1, sticky="ew")
+        ttk.Label(speed_frame, text="Min angular rad/s").grid(row=5, column=2, sticky="w")
+        ttk.Spinbox(speed_frame, from_=-10.0, to=0.0, increment=0.1,
+                    textvariable=self.drive_min_angular_var, width=6).grid(
+                        row=5, column=3, sticky="ew")
 
         input_frame = ttk.Frame(speed_frame)
-        input_frame.grid(row=1, column=0, columnspan=4, sticky="ew", pady=(6, 0))
+        input_frame.grid(row=6, column=0, columnspan=4, sticky="ew", pady=(6, 0))
         ttk.Checkbutton(
             input_frame, text="Enable WASD + joystick",
             variable=self.drive_input_enabled,
@@ -1820,6 +1860,7 @@ class SimulationLauncherGui(tk.Tk):
         self._update_validation_and_command()
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
+        self._update_drive_limits_label()
 
     def _robot_info_text(self, supported_modes, supports_vacuum):
         config = self._robot_config()
@@ -2227,9 +2268,9 @@ class SimulationLauncherGui(tk.Tk):
         self.console.configure(state="disabled")
 
     def _bind_drive_button(self, button, linear_scale, angular_scale):
-        button.bind("<ButtonPress-1>", lambda _event: self._start_drive(linear_scale, angular_scale))
-        button.bind("<ButtonRelease-1>", lambda _event: self._release_drive(linear_scale, angular_scale))
-        button.bind("<Leave>", lambda _event: self._release_drive(linear_scale, angular_scale))
+        direction = (linear_scale, angular_scale)
+        self.drive_button_widgets[direction] = button
+        button.configure(command=lambda: self._start_drive(*direction))
 
     def _toggle_drive_input(self):
         if not self.drive_input_enabled.get():
@@ -2247,6 +2288,9 @@ class SimulationLauncherGui(tk.Tk):
                                      ttk.Spinbox, ttk.Combobox)):
             return
         key = event.keysym.lower()
+        if key in ("space", "spacebar"):
+            self._stop_drive(keep_input_enabled=True)
+            return
         if key in ("w", "a", "s", "d"):
             self.drive_keys.add(key)
             self._schedule_drive()
@@ -2290,25 +2334,69 @@ class SimulationLauncherGui(tk.Tk):
         subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=subprocess_env())
 
     def _start_drive(self, linear_scale, angular_scale):
-        self.drive_buttons.add((linear_scale, angular_scale))
+        self.drive_stop_latched = False
+        direction = (linear_scale, angular_scale)
+        if direction in self.drive_buttons:
+            self.drive_buttons.remove(direction)
+        else:
+            self.drive_buttons.add(direction)
+        button = self.drive_button_widgets.get(direction)
+        if button is not None:
+            button.state(["pressed"] if direction in self.drive_buttons else ["!pressed"])
         self._schedule_drive()
 
+    def _resolved_drive_limits(self):
+        robot = self.robot_var.get()
+        profile = self.robot_profiles.get(robot, {}).get("drive", {})
+        max_linear, max_angular, linear_step, angular_step = limits_from_drive(profile)
+        min_linear, min_angular = -max_linear, -max_angular
+        linear_brake, angular_brake = linear_step, angular_step
+        if self.drive_override_var.get():
+            try:
+                max_linear = min(max_linear, max(0.0, float(self.drive_max_linear_var.get())))
+                max_angular = min(max_angular, max(0.0, float(self.drive_max_angular_var.get())))
+                min_linear = max(min_linear, min(0.0, float(self.drive_min_linear_var.get())))
+                min_angular = max(min_angular, min(0.0, float(self.drive_min_angular_var.get())))
+                linear_step = max(0.0, float(self.drive_linear_var.get()))
+                angular_step = max(0.0, float(self.drive_angular_var.get()))
+                linear_brake = max(0.0, float(self.drive_decel_linear_var.get()))
+                angular_brake = max(0.0, float(self.drive_decel_angular_var.get()))
+            except (ValueError, tk.TclError):
+                pass
+        if robot == "berkeley_humanoid_lite_sim" and self.simulator_var.get() == "mujoco":
+            max_angular = min_angular = 0.0
+        return (min_linear, max_linear, min_angular, max_angular,
+                linear_step, angular_step, linear_brake, angular_brake)
+
+    def _update_drive_limits_label(self):
+        (min_linear, max_linear, min_angular, max_angular,
+         linear_step, angular_step, linear_brake, angular_brake) = self._resolved_drive_limits()
+        robot = self.robot_var.get()
+        source = "override" if self.drive_override_var.get() else "robot profile"
+        self.drive_limits_var.set(
+            f"{robot} ({source}): linear [{min_linear:.2f}, {max_linear:.2f}] m/s; "
+            f"angular [{min_angular:.2f}, {max_angular:.2f}] rad/s\n"
+            f"Δ accel/brake per 0.1 s: {linear_step:.3f}/{linear_brake:.3f} m/s, "
+            f"{angular_step:.3f}/{angular_brake:.3f} rad/s")
+
     def _release_drive(self, linear_scale, angular_scale):
-        self.drive_buttons.discard((linear_scale, angular_scale))
+        direction = (linear_scale, angular_scale)
+        self.drive_buttons.discard(direction)
+        button = self.drive_button_widgets.get(direction)
+        if button is not None:
+            button.state(["!pressed"])
 
     def _repeat_drive(self):
         self.drive_repeat_job = None
-        robot = self.robot_var.get()
-        drive_profile = self.robot_profiles.get(robot, {}).get("drive", {})
-        self.drive_model.max_linear = float(
-            drive_profile.get("max_speed", 0.8 if robot == "labbot" else 1.0))
-        # This policy's forward walk/stop passed, but turning fell in live
-        # MuJoCo trials; do not command its unqualified axis from the pad.
-        self.drive_model.max_angular = (
-            0.0 if robot == "berkeley_humanoid_lite_sim"
-            and self.simulator_var.get() == "mujoco" else 2.0)
+        (min_linear, max_linear, min_angular, max_angular,
+         linear_step, angular_step, linear_brake, angular_brake) = self._resolved_drive_limits()
+        self.drive_model.max_linear = max_linear
+        self.drive_model.min_linear = min_linear
+        self.drive_model.min_angular = min_angular
+        self.drive_model.max_angular = max_angular
         if self.drive_model.max_angular == 0.0:
             self.drive_model.angular = 0.0
+            self.drive_model.min_angular = 0.0
         linear_input = sum(value[0] for value in self.drive_buttons)
         angular_input = sum(value[1] for value in self.drive_buttons)
         if self.drive_input_enabled.get():
@@ -2319,30 +2407,38 @@ class SimulationLauncherGui(tk.Tk):
             angular_input += joy_angular
             if self.drive_joystick.path:
                 self.drive_status_var.set(f"WASD + {self.drive_joystick.path}")
-        try:
-            linear_step = float(self.drive_linear_var.get())
-            angular_step = float(self.drive_angular_var.get())
-        except (ValueError, tk.TclError):
-            linear_step, angular_step = 0.025, 0.08
+        if self.drive_stop_latched:
+            if not self.drive_buttons and not self.drive_keys and \
+                    abs(linear_input) < 1e-9 and abs(angular_input) < 1e-9:
+                self.drive_stop_latched = False
+            linear_input = angular_input = 0.0
+        self._update_drive_limits_label()
         linear, angular = self.drive_model.step(
-            linear_input, angular_input, linear_step, angular_step)
+            linear_input, angular_input, linear_step, angular_step,
+            linear_brake, angular_brake)
         self.current_drive = (linear, angular)
         self._publish_drive(linear, angular)
         if (self.drive_buttons or self.drive_keys or self.drive_input_enabled.get()
                 or abs(linear) > 1e-9 or abs(angular) > 1e-9):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
-    def _stop_drive(self):
+    def _stop_drive(self, keep_input_enabled=False):
         if self.drive_repeat_job is not None:
             self.after_cancel(self.drive_repeat_job)
             self.drive_repeat_job = None
-        self.drive_input_enabled.set(False)
-        self.drive_joystick.close()
-        self.drive_status_var.set("Keyboard/joystick off")
+        if not keep_input_enabled:
+            self.drive_input_enabled.set(False)
+            self.drive_joystick.close()
+            self.drive_status_var.set("Keyboard/joystick off")
         self.drive_buttons.clear()
+        self.drive_stop_latched = keep_input_enabled
+        for button in self.drive_button_widgets.values():
+            button.state(["!pressed"])
         self.drive_keys.clear()
         self.current_drive = self.drive_model.stop()
         self._publish_drive(0.0, 0.0)
+        if keep_input_enabled:
+            self._schedule_drive()
 
     def _default_map_save_dir(self):
         workspace_maps = Path.cwd() / "src" / "maps" / "maps" / self.map_var.get() / "maps"

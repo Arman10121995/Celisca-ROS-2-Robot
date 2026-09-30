@@ -1,0 +1,8 @@
+[INFO] [nav2_goal_relay.py-21]: process started with pid [77066]
+[nav2_goal_relay.py-21] [INFO] [1790762867.373789254] [nav2_goal_relay]: relaying /robot_lab/goal_pose to 'navigate_to_pose' with the stack clock: client stamps (e.g. the nav2 RViz panel's system-time stamp) are discarded
+[nav2_goal_relay.py-21] [INFO] [1790762877.881686442] [nav2_goal_relay]: sending goal x=1.000 y=1.100 frame=map at 5.413 s
+[nav2_goal_relay.py-21] [INFO] [1790762877.886336767] [nav2_goal_relay]: goal accepted
+[bt_navigator-19] [INFO] [1790762877.888393231] [bt_navigator]: Begin navigating from current location (-0.00, 1.10) to (1.00, 1.10)
+[nav2_goal_relay.py-21] [INFO] [1790762881.611231968] [nav2_goal_relay]: goal finished: succeeded
+[INFO] [nav2_goal_relay.py-21]: sending signal 'SIGINT' to process[nav2_goal_relay.py-21]
+[INFO] [nav2_goal_relay.py-21]: process has finished cleanly [pid 77066]

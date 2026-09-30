@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Send one Nav2 goal to a running navigation launch and report the outcome.
 
-The same request as an RViz "2D Goal Pose": a NavigateToPose goal in the
-``map`` frame.  The goal is picked from the published ``/map`` itself, a
+The same request as an RViz "2D Goal Pose": a map-frame PoseStamped sent to
+``/robot_lab/goal_pose`` with ``--via-topic``, or a direct NavigateToPose
+action otherwise.  The goal is picked from the published ``/map`` itself, a
 free cell about ``--distance`` metres from the robot with ``--clearance``
 metres of free space around it, so the check works on every map.
 
@@ -103,7 +104,7 @@ def main(argv=None):
     parser.add_argument("--base", default="base_footprint")
     parser.add_argument("--timeout", type=float, default=600.0)
     parser.add_argument("--via-topic", action="store_true",
-                        help="publish the goal on /goal_pose as RViz's 2D Goal Pose does")
+                        help="publish the goal on /robot_lab/goal_pose as RViz's 2D Goal Pose does")
     args = parser.parse_args(argv)
 
     rclpy.init()
@@ -140,19 +141,24 @@ def main(argv=None):
         statuses = []
         node.create_subscription(GoalStatusArray, "/navigate_to_pose/_action/status",
                                  lambda m: statuses.append(m), 10)
-        publisher = node.create_publisher(PoseStamped, "/goal_pose", 10)
+        publisher = node.create_publisher(PoseStamped, "/robot_lab/goal_pose", 10)
         node.spin_until(lambda: publisher.get_subscription_count() > 0, 30.0)
         goal.pose.header.stamp = node.get_clock().now().to_msg()
         publisher.publish(goal.pose)
 
+        terminal = None
         def finished():
+            nonlocal terminal
             for message in statuses[-1:]:
                 for status in message.status_list:
-                    if status.status in STATUS and status.status != GoalStatus.STATUS_UNKNOWN:
+                    if status.status in (GoalStatus.STATUS_SUCCEEDED,
+                                         GoalStatus.STATUS_ABORTED,
+                                         GoalStatus.STATUS_CANCELED):
+                        terminal = status.status
                         return True
             return False
         node.spin_until(finished, args.timeout)
-        last = statuses[-1].status_list[-1].status if statuses and statuses[-1].status_list else None
+        last = terminal
         result["outcome"] = STATUS.get(last, "no goal accepted" if last is None else str(last))
         result["wall_s"] = round(time.monotonic() - sent, 1)
         final = node.pose(args.base)

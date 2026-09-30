@@ -1,0 +1,10 @@
+[INFO] [nav2_goal_relay.py-22]: process started with pid [87492]
+[controller_server-17] [INFO] [1790764064.204135410] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[nav2_goal_relay.py-22] [INFO] [1790764065.058272330] [nav2_goal_relay]: relaying /robot_lab/goal_pose to 'navigate_to_pose' with the stack clock: client stamps (e.g. the nav2 RViz panel's system-time stamp) are discarded
+[planner_server-18] [INFO] [1790764082.926091996] [planner_server]: Configured plugin GridBased of type SmacPlannerHybrid with maximum iterations 1000000, max on approach iterations 1000, and allowing unknown traversal. Tolerance 0.12.Using motion model: Reeds-Shepp.
+[nav2_goal_relay.py-22] [INFO] [1790764088.254608913] [nav2_goal_relay]: sending goal x=0.500 y=-0.500 frame=map at 18.456 s
+[bt_navigator-20] [INFO] [1790764088.260528939] [bt_navigator]: Begin navigating from current location (-0.50, -0.50) to (0.50, -0.50)
+[nav2_goal_relay.py-22] [INFO] [1790764088.261528400] [nav2_goal_relay]: goal accepted
+[nav2_goal_relay.py-22] [INFO] [1790764093.383983011] [nav2_goal_relay]: goal finished: succeeded
+[INFO] [nav2_goal_relay.py-22]: sending signal 'SIGINT' to process[nav2_goal_relay.py-22]
+[INFO] [nav2_goal_relay.py-22]: process has finished cleanly [pid 87492]

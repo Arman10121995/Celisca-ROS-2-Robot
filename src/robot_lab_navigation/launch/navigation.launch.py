@@ -139,6 +139,36 @@ CAR_PARAMS = {
     },
 }
 
+# A car cannot execute a grid/DWB plan by rotating in place. Resolve an
+# explicit ``auto`` to a motion-model-specific default, and reject an
+# incompatible explicit selection instead of silently running another one.
+CAR_GLOBAL_PLUGINS = {
+    "nav2_smac_planner/SmacPlannerHybrid",
+    "nav2_smac_planner/SmacPlannerLattice",
+}
+CAR_LOCAL_PLUGINS = {
+    "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController",
+    "nav2_mppi_controller::MPPIController",
+}
+
+
+def _compatible_planners(motion_model, global_plugin, local_plugin):
+    if global_plugin == "auto":
+        global_plugin = ("nav2_smac_planner/SmacPlannerHybrid"
+                         if motion_model == "ackermann" else
+                         "nav2_smac_planner/SmacPlanner2D")
+    if local_plugin == "auto":
+        local_plugin = (
+            "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController")
+    if motion_model == "ackermann":
+        if global_plugin not in CAR_GLOBAL_PLUGINS:
+            raise ValueError(
+                f"car navigation requires a curvature-aware global planner, got {global_plugin}")
+        if local_plugin not in CAR_LOCAL_PLUGINS:
+            raise ValueError(
+                f"car navigation requires a curvature-aware controller, got {local_plugin}")
+    return global_plugin, local_plugin
+
 _PLANNER_SERVERS = {"planner_server"}
 _CONTROLLER_SERVERS = {"controller_server"}
 
@@ -192,6 +222,12 @@ def _setup(context, *args, **kwargs):
     global_planner_plugin = LaunchConfiguration("global_planner_plugin").perform(context)
     local_planner_plugin = LaunchConfiguration("local_planner_plugin").perform(context)
     motion_model = LaunchConfiguration("motion_model").perform(context).strip().lower()
+    requested_plugins = (global_planner_plugin, local_planner_plugin)
+    global_planner_plugin, local_planner_plugin = _compatible_planners(
+        motion_model, global_planner_plugin, local_planner_plugin)
+    if (global_planner_plugin, local_planner_plugin) != requested_plugins:
+        print("[robot_lab] navigation auto plugins: "
+              f"global={global_planner_plugin}, local={local_planner_plugin}")
 
     overlay = os.path.join(pkg, "config", "robots", f"{robot_model}.yaml")
     overlay_params = [overlay] if os.path.exists(overlay) else []
@@ -243,7 +279,21 @@ def _setup(context, *args, **kwargs):
         ],
     )
 
-    return controllers + [lifecycle]
+    # RViz's Nav2 panel stamps the goals it sends with the system clock
+    # (nav2_rviz_plugins Humble, Nav2Panel::onNewGoal: rclcpp::Clock().now()),
+    # so in a /clock run planner_server rejects them with "extrapolation into
+    # the future" before planning a path.  The relay takes the standard
+    # "2D Goal Pose" tool's /robot_lab/goal_pose and forwards it to the navigator
+    # restamped with the run's clock (robot_lab_utils.nav_goals.restamped).
+    goal_relay = Node(
+        package="robot_lab_navigation",
+        executable="nav2_goal_relay.py",
+        name="nav2_goal_relay",
+        output="screen",
+        parameters=[{"use_sim_time": use_sim_time}],
+    )
+
+    return controllers + [goal_relay, lifecycle]
 
 
 def generate_launch_description():
@@ -256,7 +306,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "global_planner_plugin",
-            default_value="nav2_smac_planner/SmacPlanner2D",
+            default_value="auto",
             description=(
                 "Global planner plugin class for planner_server (resolved from the "
                 "registry planner selection by the experiment resolver)"
@@ -264,7 +314,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "local_planner_plugin",
-            default_value="nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController",
+            default_value="auto",
             description=(
                 "Local planner plugin class for controller_server (resolved from the "
                 "registry planner selection by the experiment resolver)"

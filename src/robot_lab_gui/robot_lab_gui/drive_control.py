@@ -13,26 +13,57 @@ def _approach(current, target, increment):
     return max(target, current - increment)
 
 
+def limits_from_drive(profile):
+    """Return (linear speed, angular speed, linear/angle delta per 100 ms).
+
+    Car yaw limits follow the steering joint's geometric limit.  URDF joint
+    velocity limits alone do not bound chassis speed, so the robot drive
+    profile remains the source for body speed and acceleration.
+    """
+    speed = max(0.0, float(profile.get("max_speed", 0.5)))
+    acceleration = max(0.0, float(profile.get("max_accel", 1.0)))
+    if profile.get("type") == "ackermann":
+        wheelbase = max(1e-6, float(profile.get("wheelbase", 0.32)))
+        curvature = math.tan(float(profile.get("max_steer", 0.58))) / wheelbase
+        angular_speed = speed * curvature
+        angular_acceleration = acceleration * curvature
+    else:
+        angular_speed = max(0.0, float(profile.get("max_angular_speed", 1.0)))
+        angular_acceleration = max(0.0, float(profile.get("max_angular_accel", 2.0)))
+    return speed, angular_speed, acceleration * 0.1, angular_acceleration * 0.1
+
+
 @dataclass
 class RampDrive:
     """Increment command speed on each 100 ms tick, then ease to zero."""
 
     max_linear: float = 1.0
     max_angular: float = 2.0
+    min_linear: float = -1.0
+    min_angular: float = -2.0
     linear: float = 0.0
     angular: float = 0.0
 
-    def step(self, linear_input, angular_input, linear_increment, angular_increment):
+    def step(self, linear_input, angular_input, linear_increment, angular_increment,
+             linear_decrement=None, angular_decrement=None):
         linear_input = linear_input if math.isfinite(linear_input) else 0.0
         angular_input = angular_input if math.isfinite(angular_input) else 0.0
         linear_increment = linear_increment if math.isfinite(linear_increment) else 0.0
         angular_increment = angular_increment if math.isfinite(angular_increment) else 0.0
-        linear_target = max(-1.0, min(1.0, linear_input)) * self.max_linear
-        angular_target = max(-1.0, min(1.0, angular_input)) * self.max_angular
+        linear_input = max(-1.0, min(1.0, linear_input))
+        angular_input = max(-1.0, min(1.0, angular_input))
+        linear_target = linear_input * (self.max_linear if linear_input >= 0 else -self.min_linear)
+        angular_target = angular_input * (self.max_angular if angular_input >= 0 else -self.min_angular)
+        linear_decrement = linear_increment if linear_decrement is None else linear_decrement
+        angular_decrement = angular_increment if angular_decrement is None else angular_decrement
+        linear_step = (linear_decrement if self.linear * linear_target < 0
+                       or abs(linear_target) < abs(self.linear) else linear_increment)
+        angular_step = (angular_decrement if self.angular * angular_target < 0
+                        or abs(angular_target) < abs(self.angular) else angular_increment)
         self.linear = _approach(self.linear, linear_target,
-                                max(0.0, min(0.1, linear_increment)))
+                                max(0.0, linear_step) if math.isfinite(linear_step) else 0.0)
         self.angular = _approach(self.angular, angular_target,
-                                 max(0.0, min(0.2, angular_increment)))
+                                 max(0.0, angular_step) if math.isfinite(angular_step) else 0.0)
         return self.linear, self.angular
 
     def stop(self):

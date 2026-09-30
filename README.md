@@ -89,6 +89,12 @@ command and a GUI launch are the same command.
 Display mode also accepts `robot_model:=none` (show a world on its own) and
 `map_name:=none` (show a robot with no world) in every backend.
 
+In navigation mode, use RViz's **2D Goal Pose** toolbar tool. The supplied
+RViz view sends it to `/robot_lab/goal_pose`; the navigation relay timestamps
+it with the simulator clock before submitting it to Nav2. Car profiles use
+curvature-aware planning and path following; an explicitly selected planner
+that requires turning in place is rejected for those profiles.
+
 ## Package map
 
 Paths below are relative to `src/`; only the registry and benchmark packages live inside its `robot_lab/` subdirectory.

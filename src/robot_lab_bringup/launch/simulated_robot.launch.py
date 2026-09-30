@@ -1286,11 +1286,14 @@ def _build_simulation_actions(context):
     )
     rviz_config = _resolve_rviz_config(mode_config, _launch_value(context, "rviz_config"))
     if rviz_enabled and rviz_config:
-        # Same fixed-frame rule as display mode: a robot whose description has
-        # no 'base_footprint' link must be shown on its own root link, or RViz
-        # cannot resolve the frame and draws neither model nor joint states.
+        # Navigation goals are authored in the map frame.  Overriding this
+        # RViz config with the robot's base frame makes the occupancy grid
+        # move under the cursor and goal poses relative to a moving robot.
+        # Other modes keep their root-link fallback for models without a
+        # base_footprint frame.
         nav_rviz_arguments = ["-d", rviz_config]
-        nav_rviz_frame = "" if robot_free else _rviz_fixed_frame(model_path)
+        nav_rviz_frame = ("map" if mode_name == "nav" else
+                          "" if robot_free else _rviz_fixed_frame(model_path))
         if nav_rviz_frame:
             nav_rviz_arguments += ["-f", nav_rviz_frame]
         actions.append(

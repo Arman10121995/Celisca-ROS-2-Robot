@@ -4,7 +4,7 @@
   <option gravity="0 0 -9.81" />
   <compiler angle="radian" />
   <asset>
-    <mesh name="celisca_floor_1_furniture" file="/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture.stl" scale="0.6325 0.6325 0.6325" />
+    <mesh name="celisca_floor_1_furniture" file="/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture.stl" scale="0.664125 0.664125 0.664125" />
   </asset>
   <worldbody>
     <geom type="plane" size="22 13.75 0.1" contype="0" conaffinity="0" rgba="0.35 0.37 0.4 1" />

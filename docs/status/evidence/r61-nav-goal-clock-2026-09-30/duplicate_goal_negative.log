@@ -1,0 +1,10 @@
+[INFO] [nav2_goal_relay.py-21]: process started with pid [75508]
+[nav2_goal_relay.py-21] [INFO] [1790762719.438136886] [nav2_goal_relay]: relaying /goal_pose to 'navigate_to_pose' with the stack clock: client stamps (e.g. the nav2 RViz panel's system-time stamp) are discarded
+[bt_navigator-19] [INFO] [1790762729.608479443] [bt_navigator]: Begin navigating from current location (-0.00, 1.10) to (1.00, 1.10)
+[nav2_goal_relay.py-21] [INFO] [1790762729.611210836] [nav2_goal_relay]: sending goal x=1.000 y=1.100 frame=map at 5.540 s
+[nav2_goal_relay.py-21] [INFO] [1790762729.614812449] [nav2_goal_relay]: goal accepted
+[bt_navigator-19] [INFO] [1790762729.618916418] [bt_navigator]: Received goal preemption request
+[bt_navigator-19] [INFO] [1790762729.620651386] [bt_navigator]: Begin navigating from current location (-0.00, 1.10) to (1.00, 1.10)
+[INFO] [nav2_goal_relay.py-21]: sending signal 'SIGINT' to process[nav2_goal_relay.py-21]
+[controller_server-16] [INFO] [1790762730.132623903] [controller_server]: Goal was canceled. Stopping the robot.
+[INFO] [nav2_goal_relay.py-21]: process has finished cleanly [pid 75508]

@@ -86,13 +86,14 @@ def test_command_is_filled_and_run_is_visible_on_open(app):
 
 
 def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
+    app.drive_override_var.set(True)
     with patch.object(app, "_publish_drive") as publish, \
             patch.object(app.drive_joystick, "poll", return_value=(0.0, 0.0)):
         app._start_drive(1.0, 0.0)
         assert app.current_drive == (0.025, 0.0)
         app._repeat_drive()
         assert app.current_drive == (0.05, 0.0)
-        app._release_drive(1.0, 0.0)
+        app._start_drive(1.0, 0.0)  # second click releases the latched button
         app._repeat_drive()
         assert app.current_drive == (0.025, 0.0)
         app._repeat_drive()
@@ -115,6 +116,28 @@ def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
         assert publish.call_args.args == (0.0, 0.0)
     app.drive_input_enabled.set(False)
     app._toggle_drive_input()
+
+
+def test_space_stops_without_disabling_keyboard(app):
+    app.drive_input_enabled.set(True)
+    with patch.object(app, "_publish_drive") as publish, \
+            patch.object(app.drive_joystick, "poll", return_value=(0.0, 0.0)):
+        app._drive_key_press(Mock(keysym="w", widget=app))
+        assert app.current_drive[0] > 0
+        app._drive_key_press(Mock(keysym="space", widget=app))
+        assert app.current_drive == (0.0, 0.0)
+        assert app.drive_input_enabled.get()
+        assert publish.call_args.args == (0.0, 0.0)
+
+
+def test_drive_button_stays_visually_pressed_until_second_click(app):
+    button = app.drive_button_widgets[(1.0, 0.0)]
+    with patch.object(app, "_publish_drive"):
+        for _ in range(2):
+            button.event_generate("<ButtonPress-1>", x=4, y=4)
+            button.event_generate("<ButtonRelease-1>", x=4, y=4)
+            app.update()
+            assert button.instate(["pressed"]) == ((1.0, 0.0) in app.drive_buttons)
 
 
 @pytest.mark.parametrize("label,value", [("GUI", "true"), ("Headless", "false"), ("Auto", "auto")])

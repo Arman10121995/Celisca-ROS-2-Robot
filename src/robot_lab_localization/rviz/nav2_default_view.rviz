@@ -21,8 +21,6 @@ Panels:
       - /Current View1
     Name: Views
     Splitter Ratio: 0.5
-  - Class: nav2_rviz_plugins/Navigation 2
-    Name: Navigation 2
 Visualization Manager:
   Class: ""
   Displays:
@@ -752,7 +750,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /goal_pose
+        Value: /robot_lab/goal_pose
       Value: true
     - Alpha: 1
       Axes Length: 1
@@ -881,7 +879,16 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /clicked_point
-    - Class: nav2_rviz_plugins/GoalTool
+    - Class: rviz_default_plugins/SetGoal
+      # Goals are forwarded through nav2_goal_relay, which replaces the
+      # client stamp with the run's clock. Use this 2D Goal Pose toolbar tool
+      # for simulated navigation goals.
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_lab/goal_pose
   Transformation:
     Current:
       Class: rviz_default_plugins/TF

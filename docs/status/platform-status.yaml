@@ -1,8 +1,8 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-29"
-current_revision: "d06a411"
+updated: "2026-09-30"
+current_revision: "a6ded59"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -19,9 +19,9 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
-  fast_suite: "466 passed, 1 skipped at d06a411 via scripts/test_fast.sh"
-  map_suite: "35 passed at d06a411 after generated-world contact correction"
-  registry_cross_references: "pass at d06a411"
+  fast_suite: "638 passed, 1 skipped on the 2026-09-30 working tree based on a6ded59 via scripts/test_fast.sh"
+  map_suite: "35 passed on the 2026-09-30 working tree; MJCF regeneration check passed"
+  registry_cross_references: "pass on the 2026-09-30 working tree"
   limitation: "Scoped source/static checks, not a clean build, universal mission matrix, GUI task qualification or hardware test."
 
 baseline:
@@ -730,6 +730,8 @@ tasks:
           - "src/robot_lab_maps/CMakeLists.txt"
           - "src/robot_lab_maps/package.xml"
           - "scripts/sim_drive_check.py"
+          - "scripts/sim_nav_check.py"
+          - "scripts/sim_nav_check.sh"
         acceptance_ref: "ROADMAP.md"
         evidence:
           - "docs/status/evidence/r61-arena-clearance-2026-09-15/: before/after reports show all four nonempty navigation-arena reference routes crossed geometry; repaired routes now pass full swept-footprint geometry/map checks for a 0.14 m radius. World/map assets preserved; metadata synchronized with the registry."
@@ -738,6 +740,7 @@ tasks:
           - "docs/status/evidence/r61-celisca-drive-2026-09-24/: Celisca/furniture world scales and 2D-map coordinates aligned, six map spawns moved into a clear corridor, map-only furniture displayed in PyBullet; GUI /key_vel drives Bumperbot/Labbot in localization, SLAM and 3D SLAM across live PyBullet/MuJoCo/Gazebo/Isaac probes; resized Celisca RViz-style navigation goals succeeded in all four backends (including floor-2 furniture in PyBullet). Final combined source suite 320 passed, 2 skipped."
           - "docs/status/evidence/r61-celisca-teleop-2026-09-24/: all six Celisca world meshes, 2D map coordinates, MuJoCo planes, and spawn/initial poses enlarged together by 10% after the user found them slightly small. PyBullet Bumperbot furnished-floor-1 goal succeeded (0.75 m requested; 0.254 m map-frame error); a longer MuJoCo goal timed out after only 0.22 m in 120 wall seconds and remains unqualified. GUI Drive has 10 Hz bounded increment ramps, WASD enable, Linux joystick input, and immediate stop; source/Tk tests pass."
           - "2026-09-25 R5.3 contact extension: generated fallback planes for SDF box-ground worlds are now visual-only (contype/conaffinity 0), preventing duplicate MuJoCo ground contacts; 21 worlds regenerated, MJCF tests 8 pass, full maps tests 35 pass, and --check passes. BHL passive contacts return from 22 to native 11, but policy A/B remains stalled, so this is a plant-parity fix rather than a walking remedy."
+          - "docs/status/evidence/r61-nav-goal-clock-2026-09-30/: on the working tree based on a6ded59, a dedicated RViz goal topic and sim-clock relay remove the wall-time TF extrapolation and direct-goal preemption. Live Gazebo Celisca floor-1 goals succeeded for Bumperbot (3.7 s, 0.257 m final estimate error) and Labbot (3.5 s, 0.239 m). Straight 1 m goals on nav_empty also succeeded for ackermann_car, rear_steer_car and anti_ackermann_car with Reeds-Shepp hybrid planning and pure pursuit; turning/reverse missions remain unqualified. The six Celisca static meshes and 2D map coordinates were enlarged together by 5%; generated MJCF --check passed, maps suite 35 passed. GUI drive controls gained click latching, Space stop, and robot-profile limits with optional overrides; Tk GUI tests 32 passed. Fast suite 638 passed, 1 skipped. This is a narrow positive, not the full robot/map/backend matrix."
         next_action: "Qualify the remaining Celisca furniture/actor map and robot combinations across all backends, including dynamic actor behavior and geometric map-to-collision alignment beyond the tested corridors. Investigate the slow furnished-map MuJoCo run (0.22 m in 120 wall seconds) before claiming its new 1.1-scale navigation. Continue collision/spawn/reset qualification on every registered environment. Humanoid/quadruped/drone locomotion and mode enablement remain separate R5 work, gated by real controller and mission evidence."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
@@ -1092,6 +1095,7 @@ handoff:
   audit: "docs/status/audit-2026-09-07.md"
   no_runtime_repairs_completed_by_this_revision: false
   session_notes:
+    - "2026-09-30 R6.1 partial continuation: RViz Nav2 goal path corrected for sim time on a dedicated topic, navigation RViz fixed frame set to map, two short Gazebo Celisca goals passed (Bumperbot and Labbot). GUI drive and Celisca scale changes recorded under R6.1 evidence. PX4 X500 and humanoid/legged policy candidates were audited in docs/status/policy-px4-candidates-2026-09-30.md, with no new locomotion claims. GitHub CI still fails before tests because the repository's LFS budget is exhausted; the external quota must be restored or assets hosted differently."
     - "2026-09-25 R5.1: final bounded-drive MuJoCo probes passed forward/turn/reverse/stop/watchdog for Bumperbot and Labbot; final clear/obstacle Nav2 reruns succeeded 4/4. PyBullet Bumperbot bounded-drive probe passed. GUI WASD/joystick/drive increments and synchronized 1.1-scale Celisca maps are recorded under R6.1; GitHub CI 35989437894 and scheduled full suite 35992128283 passed. Next R5.2 Go2 live locomotion."
     - "2026-09-24 R6.1: GUI /key_vel now reaches the non-Gazebo spawners through twist_mux with raw /cmd_vel fallback; live drive measured in PyBullet loc/3D SLAM, MuJoCo SLAM, Gazebo loc, Isaac loc. Celisca plain/furniture world footprints reduced and map metadata, MuJoCo MJCF and spawn poses synchronized. The initial resized floor-2 furniture/Labbot goal aborted (start in lethal space at y=0); after moving all six Celisca spawns to y=1, floor-2 furniture succeeded. One resized Celisca /goal_pose goal succeeded per backend. Evidence: docs/status/evidence/r61-celisca-drive-2026-09-24/. Full robot/map matrix and walking humanoid remain unqualified."
     - "2026-09-23/24 (claude, continuing codex R6.1 at the user's request): display hold is physical (MuJoCo joint springs, PyBullet position motors, free base) so /joint_states follow the simulation; Gazebo opens for robot-only display with joint states from its JointStatePublisher system and a lifted spawn; Collada node transforms applied (Unitree legs were rotated 90 degrees in MuJoCo/PyBullet); PyBullet joint damping capped at its explicit-integration bound (BHL was thrown at 110 m/s); Labbot has front and rear casters; odometry uses the URDF root link and a fallback scan frame is published, so non-wheeled robots localize; GUI/launch mode gating from robot_lab_utils/mode_capability.py (legged/humanoid: loc in PyBullet/MuJoCo only; slam/nav need a velocity base); resolver maps bringup profiles <-> registry ids (robot_model:=go2 failed to launch); every run's processes reaped by ROBOT_LAB_RUN_ID; CI green for the first time (runner libunwind conflict, invalid rosdep keys)."
