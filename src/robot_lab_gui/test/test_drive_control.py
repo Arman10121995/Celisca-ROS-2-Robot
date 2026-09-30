@@ -46,10 +46,11 @@ def test_robot_profile_sets_speed_acceleration_and_car_yaw():
 def test_joystick_axis_deadzone_direction_and_disconnect():
     reader = LinuxJoystick()
     event = struct.Struct("IhBB")
-    samples = [event.pack(0, 10000, 2, 0), event.pack(0, -20000, 2, 1)]
+    samples = [event.pack(0, 0, 0x82, 0), event.pack(0, 0, 0x82, 1),
+               event.pack(0, 10000, 2, 0), event.pack(0, -20000, 2, 1)]
     with patch("glob.glob", return_value=["/dev/input/js0"]), \
             patch("os.open", return_value=9), \
-            patch("os.read", side_effect=lambda *_: samples.pop() if samples else (_ for _ in ()).throw(BlockingIOError)), \
+            patch("os.read", side_effect=lambda *_: samples.pop(0) if samples else (_ for _ in ()).throw(BlockingIOError)), \
             patch("os.close") as close:
         linear, angular = reader.poll()
         assert 0.6 < linear < 0.62
@@ -60,13 +61,15 @@ def test_joystick_axis_deadzone_direction_and_disconnect():
         assert reader.path == ""
         close.assert_called_once_with(9)
     assert reader.axes == {0: 0.0, 1: 0.0}
+    assert reader.centres == {}
 
 
 def _poll_raw(raw_values):
-    """One poll() over *raw_values* of (value, axis) with a non-blocking fd."""
+    """One poll() over (value, axis[, is_initial]) joystick events."""
     reader = LinuxJoystick()
-    samples = [LinuxJoystick._EVENT.pack(0, value, 2, axis)
-               for value, axis in raw_values]
+    samples = [LinuxJoystick._EVENT.pack(0, sample[0],
+               0x82 if len(sample) > 2 and sample[2] else 2, sample[1])
+               for sample in raw_values]
     with patch("glob.glob", return_value=["/dev/input/js0"]), \
             patch("os.open", return_value=9), \
             patch("os.read", side_effect=lambda *_: samples.pop(0) if samples
@@ -85,7 +88,8 @@ def test_untouched_joystick_never_commands_a_velocity():
     drove off in a circle the moment the checkbox was ticked, with nobody
     touching the stick.  Both axis conventions must read as exactly zero.
     """
-    for label, rest in [("signed axis", 0), ("clamped unsigned axis", 32767)]:
+    for label, rest in [("signed axis", 0), ("endpoint-centred axis", 32767),
+                        ("negative endpoint-centred axis", -32768)]:
         assert _poll_raw([(rest, 0), (rest, 1)]) == (0.0, 0.0), label
     # A small resting offset (worn pot, gyro drift) is inside the deadband.
     assert _poll_raw([(900, 0), (900, 1)]) == (0.0, 0.0)
@@ -94,21 +98,36 @@ def test_untouched_joystick_never_commands_a_velocity():
 def test_joystick_still_drives_when_pushed_on_either_axis_convention():
     """The rest-position fix must not flatten real stick input."""
     # Signed axis: fully forward, then fully left.
-    linear, angular = _poll_raw([(0, 0), (-32767, 1)])
+    linear, angular = _poll_raw([(0, 0, True), (0, 1, True), (-32767, 1)])
     assert linear == pytest.approx(1.0, abs=1e-3)
     assert angular == 0.0
-    linear, angular = _poll_raw([(-32767, 0), (0, 1)])
+    linear, angular = _poll_raw([(0, 0, True), (0, 1, True), (-32767, 0)])
     assert linear == 0.0
     assert angular == pytest.approx(1.0, abs=1e-3)
 
     # Clamped axis resting at 32767: pushing it down the only way it can
     # travel must still command motion, not read as "more of the same".
-    linear, angular = _poll_raw([(32767, 0), (32767 - 16000, 1)])
-    assert linear == pytest.approx(16000 / 32767.0, abs=1e-3)
+    linear, angular = _poll_raw([(32767, 0, True), (32767, 1, True),
+                                 (32767 - 16000, 1)])
+    assert linear == pytest.approx(16000 / 65535.0, abs=1e-3)
     assert angular == 0.0
-    linear, angular = _poll_raw([(32767 - 16000, 0), (32767, 1)])
+    linear, angular = _poll_raw([(32767, 0, True), (32767, 1, True),
+                                 (32767 - 16000, 0)])
     assert linear == 0.0
-    assert angular == pytest.approx(16000 / 32767.0, abs=1e-3)
+    assert angular == pytest.approx(16000 / 65535.0, abs=1e-3)
+
+    # A signed axis past half travel must stay a positive command.  The
+    # previous per-event heuristic flipped it negative at 16384.
+    linear, angular = _poll_raw([(0, 0, True), (0, 1, True), (20000, 0)])
+    assert linear == 0.0
+    assert angular == pytest.approx(-20000 / 32767.0, abs=1e-3)
+
+
+def test_joystick_missing_initial_event_arms_on_first_sample():
+    assert _poll_raw([(20000, 0), (32767, 1)]) == (0.0, 0.0)
+    linear, angular = _poll_raw([(20000, 0), (32767, 1), (0, 0), (16000, 1)])
+    assert linear > 0.0
+    assert angular > 0.0
 
 
 

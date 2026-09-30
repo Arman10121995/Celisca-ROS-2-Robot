@@ -13,15 +13,6 @@ def _approach(current, target, increment):
     return max(target, current - increment)
 
 
-#: Linux joystick axes arrive in a signed 16-bit field (-32768..32767), but
-#: the value an axis rests at is not guaranteed to be 0.  A driver that
-#: publishes its axes in the unsigned 0..65535 convention has those readings
-#: clamped into that signed field, which pins an untouched stick at 32767 -
-#: the largest representable value.  Any reading this far into the range
-#: therefore identifies such an axis rather than a signed one being pushed
-#: hard over.  See LinuxJoystick._normalise.
-_UNSIGNED_THRESHOLD = 16384.0
-_UNSIGNED_CENTRE = 32767.0
 _SIGNED_HALF_RANGE = 32767.0
 
 
@@ -98,6 +89,7 @@ class LinuxJoystick:
         self.fd = None
         self.path = ""
         self.axes = {0: 0.0, 1: 0.0}
+        self.centres = {}
 
     def poll(self):
         if self.fd is None:
@@ -118,7 +110,7 @@ class LinuxJoystick:
                     return 0.0, 0.0
                 _time, value, kind, number = self._EVENT.unpack(data)
                 if kind & 0x02 and number in self.axes:
-                    self._normalise(number, value)
+                    self._normalise(number, value, initial=bool(kind & 0x80))
         except BlockingIOError:
             pass
         except OSError:
@@ -130,29 +122,24 @@ class LinuxJoystick:
         return tuple(0.0 if abs(value) < 0.15 else max(-1.0, min(1.0, value))
                      for value in (linear, angular))
 
-    def _normalise(self, number, value):
-        """Map a raw axis report to -1..1, with "at rest" as exactly 0.
+    def _normalise(self, number, value, initial=False):
+        """Calibrate each axis from its first report, then measure displacement.
 
-        A stick left alone is *not* guaranteed to report 0.  Drivers that
-        publish their axes in the unsigned 0..65535 convention have those
-        readings clamped into the signed 16-bit js_event field, so an
-        untouched stick sits at 32767.  Dividing that by 32767 gives a
-        full-scale command, so merely *enabling* the joystick teleops the
-        robot at full speed into a circle - the stick was never touched.
-
-        The two conventions are told apart by where the reading sits.  A
-        signed axis at rest is near 0 and reaches either extreme as it is
-        pushed; a clamped one cannot exceed 32767 and rests at it.  Deciding
-        per report rather than calibrating over time also covers drivers that
-        emit each axis exactly once and then stay silent.
+        The Linux joystick API reports an initialization event on opening a
+        device.  Its rest value may be 0 or an endpoint.  Guessing the axis
+        convention from each sample misreads a signed stick pushed past half
+        travel as a new centre, so only the initial reading sets the centre.
+        If a driver omits initialization, its first event is still treated as
+        the centre: enabling a controller must never move the robot by itself.
         """
         raw = float(value)
-        if raw > _UNSIGNED_THRESHOLD:
-            # Clamped axis: 32767 is where an untouched stick sits.
-            scaled = (raw - _UNSIGNED_CENTRE) / _SIGNED_HALF_RANGE
-        else:
-            # Signed axis: 0 is already the rest position.
-            scaled = raw / _SIGNED_HALF_RANGE
+        if initial or number not in self.centres:
+            self.centres[number] = raw
+            self.axes[number] = 0.0
+            return 0.0
+        centre = self.centres[number]
+        travel = (32767.0 - centre) if raw >= centre else (centre + 32768.0)
+        scaled = (raw - centre) / max(travel, 1.0)
         self.axes[number] = max(-1.0, min(1.0, scaled))
         return self.axes[number]
 
@@ -165,3 +152,4 @@ class LinuxJoystick:
         self.fd = None
         self.path = ""
         self.axes = {0: 0.0, 1: 0.0}
+        self.centres = {}
