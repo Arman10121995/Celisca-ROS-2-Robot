@@ -172,6 +172,132 @@ def test_bad_configuration_is_refused():
     with pytest.raises(ValueError):
         _car(steering_geometry="reverse")
     with pytest.raises(ValueError):
-        drive_from_config({"type": "omni"})
+        drive_from_config({"type": "omnidirectional"})   # not a real alias
     assert parse_drive_config("") == {}
     assert parse_drive_config('{"type": "ackermann"}') == {"type": "ackermann"}
+
+
+# --------------------------------------------------------------------------
+# Four-wheel steering and mecanum bases
+# --------------------------------------------------------------------------
+
+FOUR_WHEEL = {
+    "wheel_radius": 0.05, "wheel_separation": 0.32, "wheelbase": 0.32,
+    "max_steer": 0.785, "max_steer_rate": 2.5, "max_speed": 2.0,
+    "max_accel": 1.5,
+    "front_left_steer_joint": "fl_s", "front_right_steer_joint": "fr_s",
+    "rear_left_steer_joint": "rl_s", "rear_right_steer_joint": "rr_s",
+    "front_left_wheel_joint": "fl_w", "front_right_wheel_joint": "fr_w",
+    "rear_left_wheel_joint": "rl_w", "rear_right_wheel_joint": "rr_w",
+}
+
+
+def _4ws(mode=None, **overrides):
+    config = dict(FOUR_WHEEL, type="four_wheel_steer")
+    if mode:
+        config["steering_mode"] = mode
+    config.update(overrides)
+    return drive_from_config(config)
+
+
+def _mecanum(**overrides):
+    return drive_from_config(dict(FOUR_WHEEL, type="mecanum", **overrides))
+
+
+@pytest.mark.parametrize("mode", ["ackermann", "in_phase", "crab", "pivot"])
+def test_every_four_wheel_steering_mode_turns_on_the_spot(mode):
+    """The point of four-wheel steering over a car: wz with no vx must work.
+
+    A car cannot do this at all (test_no_turning_on_the_spot), so each mode
+    has to realise a pure yaw some other way.
+    """
+    targets = _4ws(mode).targets(0.0, 1.0)
+    assert targets.twist[0] == 0.0, "a zero-turn must not translate"
+    assert any(abs(rate) > 1e-6 for rate in targets.velocity.values())
+    if mode == "pivot":
+        # Straight wheels, the two diagonals opposed.
+        assert set(round(a, 9) for a in targets.position.values()) == {0.0}
+    else:
+        # Each wheel is aimed tangentially to its own circle about the centre.
+        assert len(set(round(a, 6) for a in targets.position.values())) > 1
+
+
+def test_four_wheel_steering_zero_turns_do_not_translate():
+    for mode in ("ackermann", "in_phase", "crab", "pivot"):
+        drive = _4ws(mode)
+        targets = drive.targets(0.0, 1.0)
+        rates = [targets.velocity.get(j, 0.0) for j in drive.wheel_joints]
+        vx, wz = drive.body_twist(rates)
+        assert vx == pytest.approx(0.0, abs=1e-9), mode
+        assert abs(wz) > 1e-6, mode
+
+
+def test_four_wheel_steering_axle_phases_differ_between_the_two_patterns():
+    """ackermann steers the axles oppositely; in_phase steers them alike."""
+    ackermann = _4ws("ackermann").targets(1.0, 0.5).position
+    in_phase = _4ws("in_phase").targets(1.0, 0.5).position
+    assert ackermann["fl_s"] == pytest.approx(-ackermann["rl_s"])
+    assert in_phase["fl_s"] == pytest.approx(in_phase["rl_s"])
+    assert in_phase["fl_s"] == pytest.approx(in_phase["fr_s"])
+
+
+def test_four_wheel_steering_crab_holds_all_four_wheels_parallel():
+    targets = _4ws("crab").targets(1.0, 0.5)
+    angles = set(round(a, 9) for a in targets.position.values())
+    assert len(angles) == 1, "crab steering points every wheel the same way"
+
+
+def test_four_wheel_steering_rejects_an_unknown_pattern():
+    with pytest.raises(ValueError):
+        _4ws("diagonal")
+
+
+def test_mecanum_forward_and_strafe_use_different_wheel_patterns():
+    """The whole point of rollers: lateral motion independent of forward.
+
+    Solving each wheel independently from the twist - the obvious wrong
+    implementation - produces the *same* pattern for both, and the base can
+    then only ever drive in a straight line.
+    """
+    drive = _mecanum()
+    forward = drive.targets(1.0, 0.0).velocity
+    strafe = drive.targets(0.0, 0.0, vy=1.0).velocity
+    assert forward != strafe
+    # Forward is symmetric; strafe is antisymmetric across the base.
+    assert forward["fl_w"] == pytest.approx(forward["fr_w"])
+    assert strafe["fl_w"] == pytest.approx(-strafe["fr_w"])
+    # Strafe right is the mirror of strafe left.
+    left = drive.targets(0.0, 0.0, vy=-1.0).velocity
+    assert all(left[j] == pytest.approx(-strafe[j]) for j in strafe)
+
+
+def test_mecanum_pivots_without_translating():
+    drive = _mecanum()
+    targets = drive.targets(0.0, 1.0)
+    assert sum(targets.velocity.values()) == pytest.approx(0.0, abs=1e-9)
+    assert any(abs(rate) > 1e-6 for rate in targets.velocity.values())
+
+
+def test_mecanum_strafe_realises_the_commanded_lateral_speed():
+    """body_twist cannot recover vy from spin rates, so it is passed back in."""
+    drive = _mecanum()
+    rates = [drive.targets(0.0, 0.0, vy=0.5).velocity[j]
+             for j in drive.wheel_joints]
+    vx, vy, wz = drive.body_twist(rates, vy=0.5)
+    assert vx == pytest.approx(0.0, abs=1e-9)
+    assert vy == pytest.approx(0.5)
+    assert wz == pytest.approx(0.0, abs=1e-9)
+
+
+def test_mecanum_and_four_wheel_steering_come_from_the_drive_block():
+    assert _4ws().kind == "four_wheel_steer"
+    assert _mecanum().kind == "mecanum"
+    # The documented aliases resolve to the same models.
+    assert drive_from_config(dict(FOUR_WHEEL, type="4ws")).kind == "four_wheel_steer"
+    assert drive_from_config(dict(FOUR_WHEEL, type="roller")).kind == "mecanum"
+    for drive in (_4ws(), _mecanum()):
+        assert len(drive.wheel_joints) == 4
+    # Only the four-wheel-steered base has steering joints; mecanum rollers
+    # are fixed to the hub, so the distinction has to survive the factory.
+    assert len(_4ws().steer_joints) == 4
+    assert tuple(_mecanum().steer_joints) == ()

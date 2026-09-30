@@ -47,6 +47,8 @@ FEATURE_LABELS = {
     "velocity_base": "a base that drives on /cmd_vel (no walking gait yet)",
     "stands": "a stable stance without a controller (the PyBullet and "
               "MuJoCo bridges hold its joints; Isaac's hold does not)",
+    "car_steering": "a car-like base that cannot turn on the spot",
+    "holonomic_base": "a base that translates sideways as well as forward",
 }
 
 

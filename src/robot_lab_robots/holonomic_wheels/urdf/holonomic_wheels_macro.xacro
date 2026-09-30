@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<!--
+  Four-wheel-steered and mecanum bases, primitive geometry only.
+
+  Both sit on four driven wheels and share the chassis, sensors and
+  ros2_control plumbing; they differ only in the running gear, so they are
+  defined together to keep the two descriptions honest about it.
+
+  four_wheel_steer   every wheel steers (four knuckles), so the base can crab
+                     and turn on the spot.  The steering pattern - ackermann,
+                     in_phase, crab, pivot - is a drive-kinematics choice
+                     (robot_lab_utils/drive_kinematics.py), not a different
+                     description: the same eight joints serve all four.
+  mecanum            four fixed wheels on 45-degree rollers.  The rollers are
+                     visual only and need no joint; the lateral freedom comes
+                     from their geometry, which the drive model inverts.
+
+  base_footprint is the geometric centre on the ground.  For the two
+  curvature-following 4WS patterns that is the point with no sideways velocity,
+  exactly as for a car, so /cmd_vel and odometry keep their usual meaning
+  across every wheeled robot here.
+
+  Dimensions: wheelbase 0.32 m, track 0.32 m, wheel radius 0.05 m, body
+  0.46 x 0.30 x 0.08 m.  The 4WS steering limit is +/-0.785 rad (45 deg), which
+  at a 0.16 m half-wheelbase gives a 0.16 m minimum turning radius - far tighter
+  than a car, which is the reason to run this base at all.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="holonomic_wheel" params="name radius:=0.05 width:=0.04 mass:=0.3">
+    <link name="${name}_link">
+      <inertial>
+        <mass value="${mass}"/>
+        <inertia ixx="2.28e-4" ixy="0" ixz="0" iyy="3.75e-4" iyz="0" izz="2.28e-4"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="${radius}" length="${width}"/>
+        </geometry>
+        <material name="holonomic_tyre"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="${radius}" length="${width}"/>
+        </geometry>
+      </collision>
+    </link>
+    <gazebo reference="${name}_link">
+      <mu1>1.2</mu1>
+      <mu2>1.2</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- One steered wheel: a knuckle link carries the wheel, so the wheel can
+       spin about its own axis while the knuckle aims it. -->
+  <xacro:macro name="steerable_wheel" params="corner">
+    <link name="${corner}_steer_link">
+      <inertial>
+        <mass value="0.08"/>
+        <inertia ixx="1.2e-5" ixy="0" ixz="0" iyy="1.2e-5" iyz="0" izz="1.2e-5"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 -0.012" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.018" length="0.024"/>
+        </geometry>
+        <material name="holonomic_knuckle"/>
+      </visual>
+    </link>
+    <joint name="${corner}_steer_joint" type="revolute">
+      <parent link="base_link"/>
+      <child link="${corner}_steer_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-0.785" upper="0.785" effort="10.0" velocity="3.0"/>
+      <dynamics damping="0.05" friction="0.0"/>
+    </joint>
+    <xacro:holonomic_wheel name="${corner}_wheel"/>
+    <joint name="${corner}_wheel_joint" type="continuous">
+      <parent link="${corner}_steer_link"/>
+      <child link="${corner}_wheel_link"/>
+      <origin xyz="0 0 -0.038" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.005" friction="0.0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Chassis shared by both bases. -->
+  <xacro:macro name="holonomic_chassis" params="robot_name">
+    <link name="base_footprint"/>
+    <link name="base_link">
+      <inertial>
+        <origin xyz="0 0 0.04" rpy="0 0 0"/>
+        <mass value="3.4"/>
+        <inertia ixx="1.5e-2" ixy="0" ixz="0" iyy="6.2e-2" iyz="0" izz="6.4e-2"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0.04" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.46 0.30 0.08"/>
+        </geometry>
+        <material name="holonomic_body"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.04" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.46 0.30 0.08"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="base_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="holonomic_sensors">
+    <link name="imu_link">
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+    </link>
+    <joint name="imu_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="imu_link"/>
+      <origin xyz="0 0 0.08" rpy="0 0 0"/>
+    </joint>
+    <link name="laser_link">
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+    </link>
+    <joint name="laser_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="laser_link"/>
+      <origin xyz="0.1 0 0.09" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="holonomic_control" params="steer:=false">
+    <ros2_control name="GazeboSimSystem" type="system">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimROS2ControlPlugin</plugin>
+      </hardware>
+      <xacro:if value="${steer}">
+        <xacro:macro name="holonomic_steer_interface" params="joint">
+          <joint name="${joint}">
+            <command_interface name="position">
+              <param name="min">-0.785</param>
+              <param name="max">0.785</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+          </joint>
+        </xacro:macro>
+        <xacro:holonomic_steer_interface joint="front_left_steer_joint"/>
+        <xacro:holonomic_steer_interface joint="front_right_steer_joint"/>
+        <xacro:holonomic_steer_interface joint="rear_left_steer_joint"/>
+        <xacro:holonomic_steer_interface joint="rear_right_steer_joint"/>
+      </xacro:if>
+      <xacro:macro name="holonomic_wheel_interface" params="joint">
+        <joint name="${joint}">
+          <command_interface name="velocity">
+            <param name="min">-40</param>
+            <param name="max">40</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </xacro:macro>
+      <xacro:holonomic_wheel_interface joint="front_left_wheel_joint"/>
+      <xacro:holonomic_wheel_interface joint="front_right_wheel_joint"/>
+      <xacro:holonomic_wheel_interface joint="rear_left_wheel_joint"/>
+      <xacro:holonomic_wheel_interface joint="rear_right_wheel_joint"/>
+    </ros2_control>
+  </xacro:macro>
+
+  <xacro:macro name="holonomic_gazebo" params="robot_name">
+    <gazebo>
+      <xacro:if value="$(arg is_ignition)">
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <parameters>$(find robot_lab_robots)/holonomic_wheels/config/${robot_name}_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu"/>
+        <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <parameters>$(find robot_lab_robots)/holonomic_wheels/config/${robot_name}_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+      </xacro:unless>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+      <sensor name="imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <gz_frame_id>imu_link</gz_frame_id>
+        <topic>imu</topic>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="laser_link">
+      <sensor name="lidar" type="gpu_lidar">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <topic>scan</topic>
+        <update_rate>5</update_rate>
+        <gz_frame_id>laser_link</gz_frame_id>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1.00000</resolution>
+              <min_angle>0.000000</min_angle>
+              <max_angle>6.280000</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120000</min>
+            <max>12.0</max>
+            <resolution>0.02</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- ================= four-wheel steering ================= -->
+  <xacro:macro name="four_wheel_steer_car" params="robot_name">
+    <xacro:holonomic_chassis robot_name="${robot_name}"/>
+    <xacro:holonomic_sensors/>
+    <xacro:steerable_wheel corner="front_left"/>
+    <xacro:steerable_wheel corner="front_right"/>
+    <xacro:steerable_wheel corner="rear_left"/>
+    <xacro:steerable_wheel corner="rear_right"/>
+    <xacro:holonomic_control steer="true"/>
+    <xacro:holonomic_gazebo robot_name="${robot_name}"/>
+  </xacro:macro>
+
+  <!-- ================= mecanum ================= -->
+  <xacro:macro name="mecanum_car" params="robot_name">
+    <xacro:holonomic_chassis robot_name="${robot_name}"/>
+    <xacro:holonomic_sensors/>
+    <!-- Fixed wheels: four drive joints and no steering joints at all. -->
+    <xacro:holonomic_wheel name="front_left_wheel"/>
+    <joint name="front_left_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="front_left_wheel_link"/>
+      <origin xyz="0.16 0.16 -0.012" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.005" friction="0.0"/>
+    </joint>
+    <xacro:holonomic_wheel name="front_right_wheel"/>
+    <joint name="front_right_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="front_right_wheel_link"/>
+      <origin xyz="0.16 -0.16 -0.012" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.005" friction="0.0"/>
+    </joint>
+    <xacro:holonomic_wheel name="rear_left_wheel"/>
+    <joint name="rear_left_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="rear_left_wheel_link"/>
+      <origin xyz="-0.16 0.16 -0.012" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.005" friction="0.0"/>
+    </joint>
+    <xacro:holonomic_wheel name="rear_right_wheel"/>
+    <joint name="rear_right_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="rear_right_wheel_link"/>
+      <origin xyz="-0.16 -0.16 -0.012" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.005" friction="0.0"/>
+    </joint>
+    <xacro:holonomic_control steer="false"/>
+    <xacro:holonomic_gazebo robot_name="${robot_name}"/>
+  </xacro:macro>
+
+  <material name="holonomic_body">
+    <color rgba="0.15 0.35 0.75 1"/>
+  </material>
+  <material name="holonomic_tyre">
+    <color rgba="0.12 0.12 0.12 1"/>
+  </material>
+  <material name="holonomic_knuckle">
+    <color rgba="0.6 0.6 0.65 1"/>
+  </material>
+
+</robot>

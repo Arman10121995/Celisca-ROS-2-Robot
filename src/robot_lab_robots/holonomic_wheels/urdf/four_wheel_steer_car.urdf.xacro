@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- Four-wheel-steered base; see holonomic_wheels_macro.xacro. -->
+<robot name="four_wheel_steer_car" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="is_ignition" default="true"/>
+  <xacro:arg name="is_sim" default="true"/>
+  <xacro:include filename="$(find robot_lab_robots)/description_common/urdf/oakd_camera.xacro"/>
+  <xacro:include filename="$(find robot_lab_robots)/holonomic_wheels/urdf/holonomic_wheels_macro.xacro"/>
+  <xacro:four_wheel_steer_car robot_name="four_wheel_steer_car"/>
+</robot>

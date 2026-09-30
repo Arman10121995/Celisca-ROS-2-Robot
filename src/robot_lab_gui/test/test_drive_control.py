@@ -60,3 +60,78 @@ def test_joystick_axis_deadzone_direction_and_disconnect():
         assert reader.path == ""
         close.assert_called_once_with(9)
     assert reader.axes == {0: 0.0, 1: 0.0}
+
+
+def _poll_raw(raw_values):
+    """One poll() over *raw_values* of (value, axis) with a non-blocking fd."""
+    reader = LinuxJoystick()
+    samples = [LinuxJoystick._EVENT.pack(0, value, 2, axis)
+               for value, axis in raw_values]
+    with patch("glob.glob", return_value=["/dev/input/js0"]), \
+            patch("os.open", return_value=9), \
+            patch("os.read", side_effect=lambda *_: samples.pop(0) if samples
+                  else (_ for _ in ()).throw(BlockingIOError)), \
+            patch("os.close"):
+        return reader.poll()
+
+
+def test_untouched_joystick_never_commands_a_velocity():
+    """Enabling the joystick must not move the robot until it is pushed.
+
+    A driver that publishes its axes in the unsigned 0..65535 convention has
+    those readings clamped into the signed 16-bit js_event field, so an
+    untouched stick reports 32767.  The old decoder divided the raw value by
+    32767, turning that rest position into a full-scale command: the robot
+    drove off in a circle the moment the checkbox was ticked, with nobody
+    touching the stick.  Both axis conventions must read as exactly zero.
+    """
+    for label, rest in [("signed axis", 0), ("clamped unsigned axis", 32767)]:
+        assert _poll_raw([(rest, 0), (rest, 1)]) == (0.0, 0.0), label
+    # A small resting offset (worn pot, gyro drift) is inside the deadband.
+    assert _poll_raw([(900, 0), (900, 1)]) == (0.0, 0.0)
+
+
+def test_joystick_still_drives_when_pushed_on_either_axis_convention():
+    """The rest-position fix must not flatten real stick input."""
+    # Signed axis: fully forward, then fully left.
+    linear, angular = _poll_raw([(0, 0), (-32767, 1)])
+    assert linear == pytest.approx(1.0, abs=1e-3)
+    assert angular == 0.0
+    linear, angular = _poll_raw([(-32767, 0), (0, 1)])
+    assert linear == 0.0
+    assert angular == pytest.approx(1.0, abs=1e-3)
+
+    # Clamped axis resting at 32767: pushing it down the only way it can
+    # travel must still command motion, not read as "more of the same".
+    linear, angular = _poll_raw([(32767, 0), (32767 - 16000, 1)])
+    assert linear == pytest.approx(16000 / 32767.0, abs=1e-3)
+    assert angular == 0.0
+    linear, angular = _poll_raw([(32767 - 16000, 0), (32767, 1)])
+    assert linear == 0.0
+    assert angular == pytest.approx(16000 / 32767.0, abs=1e-3)
+
+
+
+def test_four_wheel_and_mecanum_bases_get_their_own_yaw_limits():
+    """A 4WS base derives yaw from its steering geometry like a car does.
+
+    A mecanum base pivots on the spot, so its yaw limit is its own declared
+    value - deriving one from a turning radius would wrongly throttle it.
+    """
+    four_wheel = limits_from_drive({"type": "four_wheel_steer", "max_speed": 1.0,
+                                    "max_accel": 1.5, "max_steer": 0.785,
+                                    "wheelbase": 0.32})
+    car = limits_from_drive({"type": "ackermann", "max_speed": 1.0,
+                             "max_accel": 1.5, "max_steer": 0.785,
+                             "wheelbase": 0.32})
+    assert four_wheel[1] == pytest.approx(car[1])
+    assert four_wheel[1] > 1.0, "a 4WS base turns far tighter than a car"
+
+    mecanum = limits_from_drive({"type": "mecanum", "max_speed": 1.0,
+                                 "max_accel": 1.5, "max_angular_speed": 2.5,
+                                 "max_angular_accel": 5.0})
+    assert mecanum[1] == pytest.approx(2.5)
+    assert mecanum[3] == pytest.approx(0.5)
+
+    # A mecanum base with no declared yaw limit falls back rather than failing.
+    assert limits_from_drive({"type": "mecanum", "max_speed": 1.0})[1] == 1.0

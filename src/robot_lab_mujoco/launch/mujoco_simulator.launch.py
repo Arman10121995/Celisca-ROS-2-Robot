@@ -127,6 +127,11 @@ def _build_mujoco_actions(context):
     }
     for drive_key in ("left_wheel_joint", "right_wheel_joint", "wheel_radius", "wheel_separation"):
         spawner_params[drive_key] = LaunchConfiguration(drive_key)
+    # How many ticks a single loop iteration may replay to catch up with the
+    # wall clock, so a heavy sensor tick cannot make the run play back slower
+    # than real time.  0 disables catch-up.
+    spawner_params["max_catch_up_ticks"] = LaunchConfiguration(
+        "max_catch_up_ticks")
     # The whole drive block as JSON (a car's steering joints and limits).
     spawner_params["drive_config"] = ParameterValue(
         LaunchConfiguration("drive_config"), value_type=str)
@@ -164,6 +169,12 @@ def generate_launch_description():
         DeclareLaunchArgument("model", default_value=""),
         DeclareLaunchArgument("effort_controller_config", default_value=""),
         DeclareLaunchArgument("physics_timestep", default_value="0.0"),
+        DeclareLaunchArgument(
+            "max_catch_up_ticks", default_value="8",
+            description="Extra physics ticks a loop iteration may replay when "
+                        "it overran its wall-clock budget. Keeps simulated "
+                        "time at real time instead of slow motion; 0 "
+                        "disables catch-up."),
         DeclareLaunchArgument("effort_joint_armature", default_value="0.0"),
         DeclareLaunchArgument("perturbation_force_n", default_value="0.0"),
         DeclareLaunchArgument("perturbation_start_s", default_value="0.0"),

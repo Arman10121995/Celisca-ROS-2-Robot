@@ -1050,6 +1050,10 @@ class MuJoCoSpawner(Node):
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
         self.declare_parameter("physics_timestep", 0.0)
+        # Ticks of catch-up a single loop iteration may run when it overran
+        # its budget, so simulated time tracks the wall clock instead of
+        # playing back slower than real time.  0 disables it.
+        self.declare_parameter("max_catch_up_ticks", 8)
         self.declare_parameter("effort_joint_armature", 0.0)
         # Optional diagnostic external-force pulse in the floating body frame.
         # The bringup path sets these only for an explicit Go2 perturbation run.
@@ -1133,6 +1137,14 @@ class MuJoCoSpawner(Node):
         self._running = True
         self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
         self._substeps = 1  # model timesteps per physics tick
+        # Upper bound on the extra ticks one loop iteration may run to catch
+        # up with the wall clock.  0 disables catch-up and restores the old
+        # behaviour of advancing exactly one tick per iteration.
+        self._max_catch_up_ticks = max(
+            0, int(self.get_parameter("max_catch_up_ticks").value))
+        # Unspent wall time carried between ticks so catch-up does not leak a
+        # sub-tick remainder on every overrun.  See _catch_up.
+        self._time_debt = 0.0
         perturbation_axis = int(self.get_parameter("perturbation_axis").value)
         if perturbation_axis not in (0, 1, 2):
             raise ValueError("perturbation_axis must be 0, 1 or 2")
@@ -1716,6 +1728,50 @@ class MuJoCoSpawner(Node):
             dt = time.monotonic() - now
             if dt < self._dt:
                 time.sleep(self._dt - dt)
+            else:
+                # A tick that overran its budget must not turn into slow
+                # motion.  Everything above - physics, the sensor publishes,
+                # the viewer sync - shares one fixed per-tick budget, and a
+                # scan or camera render easily pushes a tick past it; the loop
+                # then simply started fewer ticks per second, so simulated
+                # time fell behind the wall clock and the whole run played at
+                # a fraction of real speed (measured RTF 0.52 at 8 ms of work
+                # per tick, which reads as "running at half speed").
+                #
+                # Catch up instead: run the ticks the elapsed time actually
+                # paid for, so simulated time tracks real time.  The extra
+                # steps run under the same physics lock and reuse the command
+                # already sampled for this tick, which keeps the drive ramp
+                # and the watchdog on their original cadence.
+                self._catch_up(now)
+
+    def _catch_up(self, tick_start):
+        """Run the whole ticks that elapsed wall time is owed, bounded.
+
+        Whole ticks only, and the number per pass is capped: without a cap a
+        single stall (a blocking render, a debugger, a suspended process)
+        would queue a burst of physics that takes longer to run than the stall
+        did, and the run would fall further behind instead of recovering.
+        Beyond the cap the deficit is dropped, so the simulator stays
+        responsive and simply resumes at real time.
+
+        The sub-tick remainder is carried in ``_time_debt`` rather than
+        discarded.  Dropping it would leak a fraction of a tick on every
+        overrun, and since the loop can only ever run *whole* ticks those
+        fractions would add up into a permanent slow drift rather than
+        settling - the run would creep slower than real time even with
+        catch-up enabled.
+        """
+        elapsed = time.monotonic() - tick_start
+        self._time_debt += elapsed
+        owed = int(self._time_debt / self._dt) - 1   # this tick already ran
+        self._time_debt -= (owed + 1) * self._dt
+        owed = max(0, min(owed, self._max_catch_up_ticks))
+        for _ in range(owed):
+            with self._physics_lock:
+                self._step_physics()
+                if self._viewer is not None and self._viewer.is_running():
+                    self._viewer.sync()
 
     def _step_physics(self):
         """Apply the current command and advance one tick under the physics lock."""
@@ -1799,6 +1855,10 @@ class MuJoCoSpawner(Node):
             if self._effort_command is not None:
                 self._effort_command.clear()
         self._sim_step = 0
+        # Simulated time restarts at zero here, so any wall-clock the loop had
+        # banked belongs to the discarded timeline and must not be repaid as
+        # catch-up physics.
+        self._time_debt = 0.0
         if hasattr(self._data, "xfrc_applied"):
             self._data.xfrc_applied[:, :] = 0.0
         mujoco.mj_forward(self._model, self._data)
