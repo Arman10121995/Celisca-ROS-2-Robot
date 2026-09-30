@@ -27,5 +27,6 @@ paths left as LFS pointer files:
 
 The first no-LFS fast run, before replacing the map pointers, failed 18
 map-content checks and passed 621 others. That negative result is why the
-PGM conversion is part of this CI fix. A new GitHub-hosted run is still
-needed to verify checkout and dependency installation on its runner.
+PGM conversion is part of this CI fix. GitHub run `36707785463` on commit
+`25c73c9` then succeeded: checkout, ROS and Python setup, rosdep,
+workspace build, all three test tiers, and registry validation all passed.

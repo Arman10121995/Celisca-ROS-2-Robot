@@ -125,6 +125,10 @@ CAR_PARAMS = {
         "GridBased.allow_reverse_expansion": True,
     },
     "controller_server": {
+        # A car slows near a goal and cannot satisfy the differential-drive
+        # default of 0.5 m every 10 s while making a bounded-radius turn.
+        "progress_checker.required_movement_radius": 0.1,
+        "progress_checker.movement_time_allowance": 20.0,
         "FollowPath.use_rotate_to_heading": False,
         "FollowPath.allow_reversing": True,
         "FollowPath.lookahead_dist": 0.8,
@@ -242,9 +246,11 @@ def _setup(context, *args, **kwargs):
         if exec_name == "bt_navigator":
             # Resolve the default behavior tree from the installed package
             # share (portable) instead of an absolute source path.
+            tree_name = ("car_navigation_w_replanning_and_recovery.xml"
+                         if motion_model == "ackermann" else
+                         "simple_navigation_w_replanning_and_recovery.xml")
             bt_xml = os.path.join(
-                pkg, "behavior_tree",
-                "simple_navigation_w_replanning_and_recovery.xml")
+                pkg, "behavior_tree", tree_name)
             if os.path.isfile(bt_xml):
                 parameters.append({"default_nav_to_pose_bt_xml": bt_xml})
         return Node(

@@ -1,0 +1,18 @@
+<root main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <RecoveryNode number_of_retries="1" name="NavigateRecovery">
+            <PipelineSequence name="NavigateWithReplanning">
+                <RateController hz="1.0">
+                    <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+                </RateController>
+                <FollowPath path="{path}" controller_id="FollowPath"/>
+            </PipelineSequence>
+            <!-- A car cannot execute the default Spin recovery. Back up to
+                 make room for a new curvature-constrained approach. -->
+            <Sequence>
+                <BackUp backup_dist="0.30" backup_speed="0.15"/>
+                <Wait wait_duration="1.0"/>
+            </Sequence>
+        </RecoveryNode>
+    </BehaviorTree>
+</root>

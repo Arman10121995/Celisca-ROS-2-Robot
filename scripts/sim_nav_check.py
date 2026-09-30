@@ -231,7 +231,11 @@ def main(argv=None):
         result["wall_s"] = round(time.monotonic() - sent, 1)
         final = node.pose(args.base)
         if final:
+            result["final_pose_estimate_xy"] = [round(v, 3) for v in final]
             result["final_error_estimate_m"] = round(math.hypot(final[0] - goal_xy[0], final[1] - goal_xy[1]), 3)
+        if node.truth is not None:
+            p = node.truth.pose.pose.position
+            result["final_truth_xy"] = [round(p.x, 3), round(p.y, 3)]
         result.update(node.motion_report())
         print(json.dumps(result))
         return 0 if result["outcome"] == "succeeded" else 1
@@ -249,6 +253,7 @@ def main(argv=None):
     result["wall_s"] = round(time.monotonic() - sent, 1)
     final = node.pose(args.base)
     if final:
+        result["final_pose_estimate_xy"] = [round(v, 3) for v in final]
         result["final_error_estimate_m"] = round(math.hypot(final[0] - goal_xy[0], final[1] - goal_xy[1]), 3)
     if node.truth is not None:
         p = node.truth.pose.pose.position
