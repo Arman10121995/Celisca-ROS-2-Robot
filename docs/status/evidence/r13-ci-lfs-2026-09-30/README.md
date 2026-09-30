@@ -30,3 +30,6 @@ map-content checks and passed 621 others. That negative result is why the
 PGM conversion is part of this CI fix. GitHub run `36707785463` on commit
 `25c73c9` then succeeded: checkout, ROS and Python setup, rosdep,
 workspace build, all three test tiers, and registry validation all passed.
+The next push, `3e38374`, also passed normal CI (`36709729145`) and a
+manual dispatch of the scheduled full suite (`36709766552`), including
+the entry-point and portable-path audit.

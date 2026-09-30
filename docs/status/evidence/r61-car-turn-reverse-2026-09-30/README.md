@@ -64,3 +64,20 @@ showed `Failed to make progress`, followed by Spin failure; the final
 run's log showed backup completion before Nav2 reported success. The
 Ackermann Gazebo turn was also rerun with the car-specific tree and
 succeeded in 5.1 wall seconds (0.277 m final localized error).
+
+Isaac Sim's Ackermann turn and reverse goals in `nav_empty` also
+succeeded, in 42.6 and 29.8 wall seconds. Ground-truth odometry recorded
+1.243 m forward with 1.055 rad heading travel for the turn and 0.717 m
+backward for the reverse route. The turn's last localized error was
+0.221 m, but its simulator-truth endpoint was about 0.33 m from the
+goal. This localization discrepancy still needs investigation.
+
+For a second environment, a car goal from (-7, -7) to (-3, -4)
+in `nav_obstacle` has a direct line through obstacle 04 (centre
+-5.5, -5.5; footprint 2.4 x 1.6 m). The route succeeded in Gazebo
+for Ackermann (16.1 wall seconds, 5.703 m forward), rear-steer
+(15.9 s, 5.670 m), and anti-Ackermann (15.9 s, 5.638 m), and in PyBullet
+for Ackermann (32.9 s, 5.715 m). Final localized errors were
+0.264-0.279 m. These are one-shot route checks, not a broad
+obstacle-avoidance success rate. The corresponding JSON records are
+stored here.
