@@ -410,6 +410,8 @@ class SimulationLauncherGui(tk.Tk):
         self.slot_combos = {}
         self.slot_labels = {}
         self._mode_step_categories = {}
+        self._last_algorithm_robot = None
+        self._last_algorithm_mode = None
         self._pending_manifest_algos = {}
         self._compat_cache = {}
         self._cleared_selections = []
@@ -1383,6 +1385,8 @@ class SimulationLauncherGui(tk.Tk):
         current robot/map/simulator, applies defaults from sim_modes.yaml,
         and attaches tooltips describing each algorithm.
         """
+        defaults_changed = (self.robot_var.get() != self._last_algorithm_robot
+                            or self.mode_var.get() != self._last_algorithm_mode)
         for step_id, combo in self.slot_combos.items():
             category_name = self._mode_step_categories.get(step_id)
             if category_name is None:
@@ -1399,8 +1403,14 @@ class SimulationLauncherGui(tk.Tk):
                 robot_default = self._robot_default_algorithm(category_name)
                 mode_default = _mode_default_algorithms(
                     self.mode_var.get(), self.mode_profiles).get(category_name)
-                if robot_default in algorithms and current == mode_default:
-                    var.set(robot_default)
+                if defaults_changed:
+                    # Apply robot-specific defaults on robot/mode changes.
+                    # A deliberate slot change made afterward is preserved
+                    # even when it matches the mode's original default.
+                    preferred = next(
+                        (choice for choice in (robot_default, mode_default)
+                         if choice in algorithms), NONE_LABEL)
+                    var.set(preferred)
                 elif current and not is_none_selection(current) \
                         and current not in algorithms:
                     if robot_default in algorithms:
@@ -1429,6 +1439,8 @@ class SimulationLauncherGui(tk.Tk):
                           SIMULATOR_LABELS.get(self.simulator_var.get(),
                                                self.simulator_var.get())))
             add_tooltip(combo, tip)
+        self._last_algorithm_robot = self.robot_var.get()
+        self._last_algorithm_mode = self.mode_var.get()
 
     def _slot_compatible_algorithms(self, slot):
         """Return algorithm IDs for *slot* compatible with the current robot.

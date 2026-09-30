@@ -173,6 +173,45 @@ def test_command_tracks_robot_map_mode_backend_and_planner(app):
     assert "global_planning:=navfn_planner" in command
 
 
+@pytest.mark.parametrize(
+    "robot,planner,controller",
+    [
+        ("four_wheel_steer_car", "hybrid_a_star_planner", "pure_pursuit"),
+        ("mecanum_car", "a_star_planner", "dwb_local_planner"),
+    ],
+)
+def test_new_wheel_robots_autoselect_algorithms_and_fill_command(
+        app, robot, planner, controller):
+    select(app, app.map_combo, "celisca_floor_1")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["nav"].invoke()
+    # A user-selected algorithm on the previous robot must not become the
+    # default for a newly selected robot merely because it also accepts it.
+    select(app, app.slot_combos["global_planner"], "navfn_planner")
+    select(app, app.robot_combo, robot)
+    assert app.slot_vars["global_planner"].get() == planner
+    assert app.slot_vars["local_planner"].get() == controller
+    command = displayed_command(app)
+    assert f"robot_model:={robot}" in command
+    assert "mode:=nav" in command
+    assert "simulator:=mujoco" in command
+    assert f"global_planning:={planner}" in command
+    assert f"local_planning:={controller}" in command
+    assert app.start_button.instate(["!disabled"])
+
+    # An explicit change for the current robot remains selected when only
+    # the map or simulator changes.
+    select(app, app.slot_combos["global_planner"], "navfn_planner")
+    select(app, app.map_combo, "celisca_floor_2")
+    assert app.slot_vars["global_planner"].get() == "navfn_planner"
+    assert "global_planning:=navfn_planner" in displayed_command(app)
+    if robot == "four_wheel_steer_car":
+        # A* is the mode default but a valid manual choice for this robot.
+        select(app, app.slot_combos["global_planner"], "a_star_planner")
+        assert app.slot_vars["global_planner"].get() == "a_star_planner"
+        assert "global_planning:=a_star_planner" in displayed_command(app)
+
+
 def test_go2_policy_opt_in_autofills_only_its_supported_launch(app):
     select(app, app.robot_combo, "unitree_go2")
     select(app, app.simulator_combo, "mujoco")

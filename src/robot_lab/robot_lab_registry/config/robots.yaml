@@ -1629,3 +1629,92 @@
     - anti_ackermann
   created: "2026-09-24"
   updated: "2026-09-24"
+
+# These profiles are launchable but still being qualified across backends.
+# Four-wheel steering has measured forward/yaw motion in MuJoCo; mecanum
+# lateral travel is not yet supported by its solid collision wheels.
+- id: four_wheel_steer_car
+  version: "1.0.0"
+  name: "Four-Wheel-Steering Car"
+  ros_package: robot_lab_robots
+  description: "Four driven and four steered wheels; selectable front, rear, crab and pivot steering"
+  status: available
+  robot_class: mobile
+  maturity: prototype
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators: [gazebo, pybullet, mujoco, isaac]
+  locomotion:
+    type: four_wheel_steer
+    dof: 8
+    max_velocity: 1.0
+    max_acceleration: 1.5
+  sensors:
+    - {type: camera, name: oakd_rgbd, frame: oakd_rgb_camera_optical_frame, topic: /oakd/rgb/image_raw, message_type: sensor_msgs/Image}
+    - {type: lidar, name: base_laser, frame: laser_link, topic: /scan, message_type: sensor_msgs/LaserScan}
+    - {type: imu, name: imu, frame: imu_link, topic: /imu, message_type: sensor_msgs/Imu}
+    - {type: odometry, name: odometry, frame: odom, topic: /odom, message_type: nav_msgs/Odometry}
+  actuators:
+    - {type: steering, name: front_left_steer, joint: front_left_steer_joint}
+    - {type: steering, name: front_right_steer, joint: front_right_steer_joint}
+    - {type: steering, name: rear_left_steer, joint: rear_left_steer_joint}
+    - {type: steering, name: rear_right_steer, joint: rear_right_steer_joint}
+    - {type: wheel, name: front_left_wheel, joint: front_left_wheel_joint}
+    - {type: wheel, name: front_right_wheel, joint: front_right_wheel_joint}
+    - {type: wheel, name: rear_left_wheel, joint: rear_left_wheel_joint}
+    - {type: wheel, name: rear_right_wheel, joint: rear_right_wheel_joint}
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [nav_msgs/Odometry, sensor_msgs/JointState]
+  frames: [base_footprint, base_link, laser_link, odom, map]
+  capabilities: [navigation, rgbd_camera, mapping, localization, state_estimation, sensor_fusion, control, costmap, car_steering]
+  dependencies: [robot_lab_robots, robot_lab_controller]
+  assets:
+    urdf: robot_lab_robots/holonomic_wheels/urdf/four_wheel_steer_car.urdf.xacro
+    xacro: robot_lab_robots/holonomic_wheels/urdf/holonomic_wheels_macro.xacro
+    meshes: []
+  tags: [first-party, four_wheel_steer, experimental]
+  created: "2026-09-30"
+  updated: "2026-09-30"
+
+- id: mecanum_car
+  version: "1.0.0"
+  name: "Mecanum Car"
+  ros_package: robot_lab_robots
+  description: "Four-wheel mecanum prototype; forward and yaw motion are supported, lateral travel awaits roller collision geometry"
+  status: available
+  robot_class: mobile
+  maturity: prototype
+  source:
+    repository: "internal"
+    license: "Apache-2.0"
+    maintainer: "Robot Lab Team"
+  supported_simulators: [gazebo, pybullet, mujoco, isaac]
+  locomotion:
+    type: mecanum
+    dof: 4
+    max_velocity: 1.0
+    max_acceleration: 1.5
+  sensors:
+    - {type: camera, name: oakd_rgbd, frame: oakd_rgb_camera_optical_frame, topic: /oakd/rgb/image_raw, message_type: sensor_msgs/Image}
+    - {type: lidar, name: base_laser, frame: laser_link, topic: /scan, message_type: sensor_msgs/LaserScan}
+    - {type: imu, name: imu, frame: imu_link, topic: /imu, message_type: sensor_msgs/Imu}
+    - {type: odometry, name: odometry, frame: odom, topic: /odom, message_type: nav_msgs/Odometry}
+  actuators:
+    - {type: wheel, name: front_left_wheel, joint: front_left_wheel_joint}
+    - {type: wheel, name: front_right_wheel, joint: front_right_wheel_joint}
+    - {type: wheel, name: rear_left_wheel, joint: rear_left_wheel_joint}
+    - {type: wheel, name: rear_right_wheel, joint: rear_right_wheel_joint}
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [nav_msgs/Odometry, sensor_msgs/JointState]
+  frames: [base_footprint, base_link, laser_link, odom, map]
+  capabilities: [navigation, rgbd_camera, mapping, localization, state_estimation, sensor_fusion, control, costmap]
+  dependencies: [robot_lab_robots, robot_lab_controller]
+  assets:
+    urdf: robot_lab_robots/holonomic_wheels/urdf/mecanum_car.urdf.xacro
+    xacro: robot_lab_robots/holonomic_wheels/urdf/holonomic_wheels_macro.xacro
+    meshes: []
+  tags: [first-party, mecanum, experimental]
+  created: "2026-09-30"
+  updated: "2026-09-30"
