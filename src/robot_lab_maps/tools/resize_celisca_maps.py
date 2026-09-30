@@ -46,18 +46,20 @@ FLOORS = (
     "celisca_f2_actor",
 )
 
-BASE_WORLD_SCALE = 1.155
+# The furniture STL uses a different raw unit scale from the plain floor STL.
+# Applying the floor scale to it makes the 3D building roughly 1.8 times the
+# occupancy map, leaving the robot inside geometry that AMCL calls free.
+BASE_WORLD_SCALE = {floor: (0.664125 if floor.endswith("_furniture") else 1.155)
+                    for floor in FLOORS}
 BASE_RESOLUTION = 0.01925000004
 BASE_ORIGIN = (-19.173, -8.3930000385)
+BASE_MODEL_POSE = {"celisca_floor_2_furniture": (0.99, -2.97, 0.0, 0.0, 0.0, 0.0)}
 #: Spawn keys that are footprint coordinates and scale with the building.
 #: ``z`` is deliberately absent: it is a drop height above the floor, and
 #: scaling it would launch the robot into the ceiling.
 SCALED_SPAWN_KEYS = ("x", "y")
 
-#: The unscaled spawn/initial_pose every Celisca map starts from.  Substitution
-#: matches these exact literals, which is what makes the tool idempotent: a
-#: second run finds nothing left to match and changes nothing, instead of
-#: scaling an already-scaled value again.
+#: The unscaled spawn/initial_pose every Celisca map starts from.
 BASE_SPAWN = {"x": "0.0", "y": "1.1"}
 
 
@@ -82,9 +84,9 @@ def _sub(path, pattern, replacement, check, flags=re.M):
 
 def scale_worlds(factor, check):
     """Rewrite the mesh <scale> in every Celisca .world."""
-    target = BASE_WORLD_SCALE * factor
     changed = []
     for floor in FLOORS:
+        target = BASE_WORLD_SCALE[floor] * factor
         world_dir = os.path.join(MAPS_DIR, floor, "worlds")
         if not os.path.isdir(world_dir):
             continue
@@ -92,9 +94,21 @@ def scale_worlds(factor, check):
             if not name.endswith(".world"):
                 continue
             path = os.path.join(world_dir, name)
-            if _sub(path, r"<scale>[^<]*</scale>",
-                    "<scale>%s %s %s</scale>" % (_fmt(target), _fmt(target),
-                                                 _fmt(target)), check):
+            scale_changed = _sub(path, r"<scale>[^<]*</scale>",
+                                 "<scale>%s %s %s</scale>" %
+                                 (_fmt(target), _fmt(target), _fmt(target)), check)
+            pose_changed = False
+            if floor in BASE_MODEL_POSE:
+                pose = BASE_MODEL_POSE[floor]
+                scaled = (_fmt(pose[0] * factor), _fmt(pose[1] * factor),
+                          *(_fmt(value) for value in pose[2:]))
+                pose_changed = _sub(
+                    path,
+                    r'(<model name="%s">\s*<static>true</static>\s*<pose>)[^<]*(</pose>)'
+                    % re.escape(floor),
+                    lambda match: match.group(1) + " ".join(scaled) + match.group(2),
+                    check)
+            if scale_changed or pose_changed:
                 changed.append(os.path.relpath(path, _SRC_ROOT))
     return changed
 
@@ -108,10 +122,11 @@ def scale_maps(factor, check):
         path = os.path.join(MAPS_DIR, floor, "maps", "map.yaml")
         if not os.path.isfile(path):
             continue
-        if _sub(path, r"^resolution: .*$", "resolution: %s" % _fmt(resolution),
-                check):
-            _sub(path, r"^origin: .*$",
-                 "origin: [%s, %s, 0]" % (_fmt(ox), _fmt(oy)), check)
+        changed_resolution = _sub(
+            path, r"^resolution: .*$", "resolution: %s" % _fmt(resolution), check)
+        changed_origin = _sub(path, r"^origin: .*$",
+                              "origin: [%s, %s, 0]" % (_fmt(ox), _fmt(oy)), check)
+        if changed_resolution or changed_origin:
             changed.append(os.path.relpath(path, _SRC_ROOT))
     return changed
 
@@ -138,11 +153,8 @@ def scale_spawns(factor, check):
             continue
         updated = part
         for key in SCALED_SPAWN_KEYS:
-            base = BASE_SPAWN[key]
-            # Match only the recorded base literal, so a second run finds
-            # nothing to change instead of scaling an already-scaled value.
             updated = re.sub(
-                r'(?m)^(\s+%s:\s*)"%s"(\s*)$' % (re.escape(key), re.escape(base)),
+                r'(?m)^(\s+%s:\s*)"[^"]*"(\s*)$' % re.escape(key),
                 lambda m, k=key: '%s"%s"%s' % (
                     m.group(1), _fmt(float(BASE_SPAWN[k]) * factor), m.group(2)),
                 updated)
@@ -168,8 +180,9 @@ def main(argv=None):
     if args.factor <= 0 or not math.isfinite(args.factor):
         parser.error("--factor must be a positive finite number")
 
-    print("Celisca scale factor %g -> world scale %s, resolution %s, origin [%s, %s]"
-          % (args.factor, _fmt(BASE_WORLD_SCALE * args.factor),
+    print("Celisca scale factor %g -> floor scale %s, furniture scale %s, resolution %s, origin [%s, %s]"
+          % (args.factor, _fmt(BASE_WORLD_SCALE["celisca_floor_1"] * args.factor),
+             _fmt(BASE_WORLD_SCALE["celisca_floor_1_furniture"] * args.factor),
              _fmt(BASE_RESOLUTION * args.factor),
              _fmt(BASE_ORIGIN[0] * args.factor), _fmt(BASE_ORIGIN[1] * args.factor)))
     changed = (scale_worlds(args.factor, args.check)

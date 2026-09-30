@@ -9,6 +9,7 @@ configured (x, y) sits in a wall in one backend and in the open in another.
 import os
 import struct
 import sys
+import xml.etree.ElementTree as ET
 
 MAPS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "maps")
 
@@ -200,8 +201,16 @@ def alignment_report():
         mesh_h = (hi[1] - lo[1]) * applied
         map_w = info["x_range"][1] - info["x_range"][0]
         map_h = info["y_range"][1] - info["y_range"][0]
-        centre_mx = ((lo[0] + hi[0]) / 2.0) * applied
-        centre_my = ((lo[1] + hi[1]) / 2.0) * applied
+        world = os.path.join(MAPS, floor, "worlds", floor + ".world")
+        model_pose = (0.0, 0.0)
+        if os.path.isfile(world):
+            for model in ET.parse(world).getroot().iter("model"):
+                if model.find(".//mesh/uri") is not None:
+                    values = (model.findtext("pose") or "0 0 0 0 0 0").split()
+                    model_pose = float(values[0]), float(values[1])
+                    break
+        centre_mx = ((lo[0] + hi[0]) / 2.0) * applied + model_pose[0]
+        centre_my = ((lo[1] + hi[1]) / 2.0) * applied + model_pose[1]
         centre_px = (info["x_range"][0] + info["x_range"][1]) / 2.0
         centre_py = (info["y_range"][0] + info["y_range"][1]) / 2.0
         offset = ((centre_mx - centre_px) ** 2 + (centre_my - centre_py) ** 2) ** 0.5
@@ -223,4 +232,3 @@ if __name__ == "__main__":
         print("\n".join(lines))
     else:
         main(sys.argv)
-

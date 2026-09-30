@@ -46,7 +46,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture.stl</uri>
-              <scale>1.3860000000 1.3860000000 1.3860000000</scale>
+              <scale>0.7969500000 0.7969500000 0.7969500000</scale>
             </mesh>
           </geometry>
           <material>
@@ -61,7 +61,7 @@
           <geometry>
             <mesh>
               <uri>package://robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture.stl</uri>
-              <scale>1.3860000000 1.3860000000 1.3860000000</scale>
+              <scale>0.7969500000 0.7969500000 0.7969500000</scale>
             </mesh>
           </geometry>
           <material>
@@ -74,8 +74,8 @@
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>package://robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture.stl</uri>
-              <scale>1.3860000000 1.3860000000 1.3860000000</scale>
+              <uri>package://robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture_collision.stl</uri>
+              <scale>0.7969500000 0.7969500000 0.7969500000</scale>
             </mesh>
           </geometry>
         </collision>
