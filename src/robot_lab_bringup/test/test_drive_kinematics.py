@@ -232,6 +232,29 @@ def test_four_wheel_steering_zero_turns_do_not_translate():
         assert abs(wz) > 1e-6, mode
 
 
+def test_four_wheel_pivot_is_stationary_without_a_command():
+    drive = _4ws("pivot")
+    still = drive.targets(0.0, 0.0)
+    assert all(rate == 0.0 for rate in still.velocity.values())
+    forward = drive.targets(0.4, 0.0)
+    assert all(rate > 0.0 for rate in forward.velocity.values())
+    reverse = drive.targets(-0.4, 0.0)
+    assert all(rate < 0.0 for rate in reverse.velocity.values())
+    assert drive.targets(0.0, -1.0).velocity["fl_w"] > 0.0
+
+
+def test_four_wheel_pure_yaw_respects_steer_limits_and_turn_direction():
+    drive = _4ws("ackermann")
+    for yaw in (-1.0, 1.0):
+        targets = drive.targets(0.0, yaw)
+        assert all(abs(angle) <= drive.max_steer
+                   for angle in targets.position.values())
+        rates = [targets.velocity[joint] for joint in drive.wheel_joints]
+        vx, wz = drive.body_twist(rates)
+        assert vx == pytest.approx(0.0, abs=1e-9)
+        assert wz * yaw > 0.0
+
+
 def test_four_wheel_steering_axle_phases_differ_between_the_two_patterns():
     """ackermann steers the axles oppositely; in_phase steers them alike."""
     ackermann = _4ws("ackermann").targets(1.0, 0.5).position
@@ -276,17 +299,27 @@ def test_mecanum_pivots_without_translating():
     targets = drive.targets(0.0, 1.0)
     assert sum(targets.velocity.values()) == pytest.approx(0.0, abs=1e-9)
     assert any(abs(rate) > 1e-6 for rate in targets.velocity.values())
+    assert targets.velocity["fl_w"] == pytest.approx(targets.velocity["rl_w"])
+    assert targets.velocity["fr_w"] == pytest.approx(targets.velocity["rr_w"])
+    assert targets.velocity["fl_w"] == pytest.approx(-targets.velocity["fr_w"])
+    assert drive.body_twist([targets.velocity[j] for j in drive.wheel_joints]) \
+        == pytest.approx((0.0, 0.0, 1.0))
 
 
 def test_mecanum_strafe_realises_the_commanded_lateral_speed():
-    """body_twist cannot recover vy from spin rates, so it is passed back in."""
+    """Four independent roller-wheel rates reconstruct lateral travel."""
     drive = _mecanum()
     rates = [drive.targets(0.0, 0.0, vy=0.5).velocity[j]
              for j in drive.wheel_joints]
-    vx, vy, wz = drive.body_twist(rates, vy=0.5)
+    vx, vy, wz = drive.body_twist(rates)
     assert vx == pytest.approx(0.0, abs=1e-9)
     assert vy == pytest.approx(0.5)
     assert wz == pytest.approx(0.0, abs=1e-9)
+
+
+def test_mecanum_rejects_unmodelled_roller_angle():
+    with pytest.raises(ValueError, match="45-degree"):
+        _mecanum(roller_angle=0.5)
 
 
 def test_mecanum_and_four_wheel_steering_come_from_the_drive_block():

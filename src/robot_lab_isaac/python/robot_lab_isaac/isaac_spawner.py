@@ -325,7 +325,9 @@ class IsaacSpawner(Node):
             twist = Twist()
             if self._drive.kind == "diff":
                 self._drive.reset()
-        targets = self._drive.targets(twist.linear.x, twist.angular.z, dt=dt)
+        targets = self._drive.targets(
+            twist.linear.x, twist.angular.z, dt=dt,
+            **({"vy": twist.linear.y} if self._drive.kind == "mecanum" else {}))
         try:
             proc.stdin.write(json.dumps({"joint_targets": {
                 "velocity": targets.velocity,

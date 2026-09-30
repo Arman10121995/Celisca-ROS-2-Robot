@@ -1,0 +1,48 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.369,
+    "vy": 0.0,
+    "wz": -0.0,
+    "distance": 1.097
+   }
+  },
+  {
+   "phase": "strafe",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.3,
+   "measured": {
+    "vx": 0.0,
+    "vy": 0.0,
+    "wz": 0.0,
+    "distance": 0.0
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.0,
+    "vy": 0.0,
+    "wz": -0.0,
+    "distance": 0.0
+   }
+  }
+ ]
+}

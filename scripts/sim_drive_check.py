@@ -52,9 +52,9 @@ class DriveCheck(Node):
             rclpy.spin_once(self, timeout_sec=0.2)
         return bool(self.samples)
 
-    def run_phase(self, vx, wz, duration, settle=1.0):
+    def run_phase(self, vx, wz, duration, settle=1.0, vy=0.0):
         twist = Twist()
-        twist.linear.x, twist.angular.z = vx, wz
+        twist.linear.x, twist.linear.y, twist.angular.z = vx, vy, wz
         start = time.monotonic()
         while time.monotonic() - start < duration:
             self.pub.publish(twist)
@@ -75,7 +75,9 @@ class DriveCheck(Node):
         # Forward speed: displacement projected on the mean heading.
         heading = a0 + yaw_change / 2.0
         forward = ((x1 - x0) * math.cos(heading) + (y1 - y0) * math.sin(heading)) / dt
-        return {"vx": round(forward, 3), "wz": round(yaw_change / dt, 3),
+        lateral = (-(x1 - x0) * math.sin(heading) + (y1 - y0) * math.cos(heading)) / dt
+        return {"vx": round(forward, 3), "vy": round(lateral, 3),
+                "wz": round(yaw_change / dt, 3),
                 "distance": round(math.hypot(x1 - x0, y1 - y0), 3)}
 
 
@@ -86,6 +88,8 @@ def main():
                         help="Use /key_vel to exercise the GUI's drive path")
     parser.add_argument("--quick", action="store_true",
                         help="Run the straight and stop phases only")
+    parser.add_argument("--strafe", action="store_true",
+                        help="Also command 0.3 m/s lateral velocity")
     parser.add_argument("--timeout", type=float, default=240.0)
     parser.add_argument("--warmup", type=float, default=3.0)
     args = parser.parse_args()
@@ -96,10 +100,15 @@ def main():
         result["error"] = "no odometry on %s" % args.odom
     else:
         node.run_phase(0.0, 0.0, args.warmup)
-        phases = (PHASES[0], PHASES[-1]) if args.quick else PHASES
-        for name, vx, wz, duration in phases:
-            measured = node.run_phase(vx, wz, duration)
+        phases = list((PHASES[0], PHASES[-1]) if args.quick else PHASES)
+        if args.strafe:
+            phases.insert(-1, ("strafe", 0.0, 0.0, 5.0, 0.3))
+        for phase in phases:
+            name, vx, wz, duration = phase[:4]
+            vy = phase[4] if len(phase) > 4 else 0.0
+            measured = node.run_phase(vx, wz, duration, vy=vy)
             result["phases"].append({"phase": name, "command": [vx, wz],
+                                     "lateral_command": vy,
                                      "measured": measured})
     print(json.dumps(result, indent=1))
     node.destroy_node()

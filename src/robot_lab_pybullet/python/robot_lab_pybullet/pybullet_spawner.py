@@ -894,7 +894,9 @@ class PyBulletSpawner(Node):
                 t = Twist()
                 if self._drive.kind == "diff":
                     self._drive.reset()
-            targets = self._drive.targets(t.linear.x, t.angular.z, dt=self._dt)
+            targets = self._drive.targets(
+                t.linear.x, t.angular.z, dt=self._dt,
+                **({"vy": t.linear.y} if self._drive.kind == "mecanum" else {}))
             vl = targets.velocity.get(self._drive.left, 0.0)
             vr = targets.velocity.get(self._drive.right, 0.0)
             clamp = 50.0

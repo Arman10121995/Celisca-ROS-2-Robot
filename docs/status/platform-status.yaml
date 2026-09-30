@@ -686,7 +686,7 @@ tasks:
       R5.5:
         title: "Integrate four-wheel Ackermann and reverse Ackermann workflows"
         state: "active"
-        owner: "claude"
+        owner: "codex"
         depends_on:
           - "R5.1"
           - "R3.3"
@@ -699,8 +699,26 @@ tasks:
           - "src/robot_lab/robot_lab_registry/"
           - "src/robot_lab_gui/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "User requirement added 2026-09-15: a four-wheel robot with Ackermann and reverse Ackermann behavior. Clarify rear-wheel steering versus anti-Ackermann geometry; neither is equivalent to driving backwards. Implement articulated steering, correct wheel speeds and odometry, steering/rate/traction limits, reverse travel, watchdogs, parking/slalom/obstacle missions and GUI/CLI selection. Pin any imported model/controller and verify on MuJoCo first."
+        evidence:
+          - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: all three car profiles passed Gazebo turn/reverse goals and a nav_obstacle route; Ackermann has narrower PyBullet/MuJoCo/Isaac turn/reverse evidence. Robustness and full map/mode matrix remain open."
+        next_action: "Qualify longer obstacle/slalom/parking missions, stop/watchdog and final heading on all four backends, with measured simulator truth; distinguish rear-wheel steering from anti-Ackermann geometry in GUI/tutorials."
+      R5.6:
+        title: "Qualify four-wheel steering patterns and physical mecanum travel"
+        state: "partial"
+        owner: "codex"
+        depends_on:
+          - "R5.1"
+          - "R3.3"
+        scope_paths:
+          - "src/robot_lab_robots/holonomic_wheels/"
+          - "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py"
+          - "src/robot_lab_controller/"
+          - "src/robot_lab_gui/"
+          - "src/robot_lab_bringup/"
+        acceptance_ref: "ROADMAP.md"
+        evidence:
+          - "docs/status/evidence/r55-holonomic-audit-2026-09-30/: four-wheel-steering default pattern passed a real MuJoCo straight/arc/reverse/pivot/stop drive probe after fixing four coincident hubs and pure-yaw rates. Gazebo controller launch failed; alternative patterns remain source-only. Mecanum yaw improved but a 0.3 m/s lateral command yielded 0.000 m/s truth motion with solid collision cylinders; physical holonomic support remains unqualified."
+        next_action: "Build and validate a Gazebo controller path for both profiles, implement physical mecanum roller/contact geometry and GUI lateral/steering-pattern controls, then qualify every requested mode with mapped missions in each compatible backend."
   R6:
     title: "Environment qualification"
     state: "partial"
@@ -745,7 +763,8 @@ tasks:
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: all three Gazebo car profiles completed one turning and one reverse Nav2 goal in nav_empty through the RViz-equivalent goal relay (6/6 succeeded). Wheel-controller odometry recorded 1.255-1.278 m forward and 1.313-1.321 rad heading travel on turns, and 0.768-0.785 m reverse travel on backward goals. Final localized errors were 0.198-0.280 m. Wheel odometry is not independent simulator truth; other maps, backends, final heading and obstacle handling remain unqualified."
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: PyBullet Ackermann turn/reverse goals and MuJoCo Ackermann straight/reverse goals succeeded. MuJoCo's turn aborted with the shared tree's impossible Spin recovery; car-specific backup/replan tree and slower progress check achieved a Nav2 success after one backup in 112.7 wall seconds. MuJoCo turn robustness, furnished maps, Isaac, final heading, and obstacle handling remain unqualified."
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: Isaac Ackermann turn/reverse nav_empty goals succeeded with simulator-truth motion, although the turn ended about 0.33 m from the goal in truth versus 0.221 m in localization estimate. A five-metre nav_obstacle route whose direct line crosses a box succeeded for all three car profiles in Gazebo and Ackermann in PyBullet; other robot/backend/map obstacle routes and a measured success rate remain unqualified."
-        next_action: "Qualify the remaining Celisca furniture/actor map and robot combinations across all backends, including dynamic actor behavior and geometric map-to-collision alignment beyond the tested corridors. Investigate the slow furnished-map MuJoCo run (0.22 m in 120 wall seconds) and the MuJoCo car turn that required a 112.7 s recovery before claiming robust navigation. Continue collision/spawn/reset qualification on every registered environment. Humanoid/quadruped/drone locomotion and mode enablement remain separate R5 work, gated by real controller and mission evidence."
+          - "docs/status/evidence/r61-furniture-collision-2026-09-30/: corrected the 20% Celisca resize for differently scaled furniture STLs and floor-2 model pose; 2D/3D footprint ratios are about 1.02 x 1.05-1.07. Above-floor collision proxies remove ODE mesh-floor contact overflow. Short floor-2 furniture /goal_pose missions now succeed for Bumperbot in Gazebo/PyBullet/MuJoCo/Isaac and Labbot in Gazebo; floor-1 furniture Bumperbot Gazebo also succeeds. Furniture obstacles remain absent from the static 2D PGM, and longer avoidance routes are unqualified."
+        next_action: "Qualify furniture obstacle avoidance with a 2D map that represents obstacles or measured local-costmap detection, longer routes, actor dynamics and the remaining robot/backend cells. Measure MuJoCo real-time factor on plain and furnished Celisca, not only wall time for a short goal. Continue collision/spawn/reset checks on every registered environment; humanoid/quadruped/drone locomotion and mode enablement remain separate R5 work."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
         state: "queued"
@@ -1099,6 +1118,7 @@ handoff:
   audit: "docs/status/audit-2026-09-07.md"
   no_runtime_repairs_completed_by_this_revision: false
   session_notes:
+    - "2026-09-30 R6.1/R5.6 continuation: furniture scale/pose and collision-floor overlap fixed; six short furnished-map Nav2 checks passed including all four Bumperbot floor-2 backends and Gazebo Labbot. Four-wheel-steering MuJoCo drive now turns and pivots after URDF/kinematic fixes, but Gazebo controller dispatch fails. Mecanum still has no physical lateral travel and is not marked holonomic; source wheel/bridge equations corrected. Joystick axis initialization is now calibrated instead of guessed per sample. CI at preceding dc55512 remains green; current edits require a new run. See r61-furniture-collision and r55-holonomic-audit evidence."
     - "2026-09-30 R6.1 partial continuation: RViz Nav2 goal path corrected for sim time on a dedicated topic, navigation RViz fixed frame set to map, two short Gazebo Celisca goals passed (Bumperbot and Labbot). GUI drive and Celisca scale changes recorded under R6.1 evidence. PX4 X500 and humanoid/legged policy candidates were audited in docs/status/policy-px4-candidates-2026-09-30.md, with no new locomotion claims. GitHub CI still fails before tests because the repository's LFS budget is exhausted; the external quota must be restored or assets hosted differently."
     - "2026-09-25 R5.1: final bounded-drive MuJoCo probes passed forward/turn/reverse/stop/watchdog for Bumperbot and Labbot; final clear/obstacle Nav2 reruns succeeded 4/4. PyBullet Bumperbot bounded-drive probe passed. GUI WASD/joystick/drive increments and synchronized 1.1-scale Celisca maps are recorded under R6.1; GitHub CI 35989437894 and scheduled full suite 35992128283 passed. Next R5.2 Go2 live locomotion."
     - "2026-09-24 R6.1: GUI /key_vel now reaches the non-Gazebo spawners through twist_mux with raw /cmd_vel fallback; live drive measured in PyBullet loc/3D SLAM, MuJoCo SLAM, Gazebo loc, Isaac loc. Celisca plain/furniture world footprints reduced and map metadata, MuJoCo MJCF and spawn poses synchronized. The initial resized floor-2 furniture/Labbot goal aborted (start in lethal space at y=0); after moving all six Celisca spawns to y=1, floor-2 furniture succeeded. One resized Celisca /goal_pose goal succeeded per backend. Evidence: docs/status/evidence/r61-celisca-drive-2026-09-24/. Full robot/map matrix and walking humanoid remain unqualified."

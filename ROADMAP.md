@@ -506,6 +506,26 @@ Dependencies: `R5.1`, `R3.3`.
   controller-limit checks. Steering variants must change the actual model/control
   behavior; changing a catalog label is insufficient.
 
+### R5.6 — Qualify four-wheel steering and physical mecanum motion
+
+Dependencies: `R5.1`, `R3.3`.
+
+- Files: `src/robot_lab_robots/holonomic_wheels/`,
+  `src/robot_lab_utils/robot_lab_utils/drive_kinematics.py`,
+  `src/robot_lab_controller/`, `src/robot_lab_bringup/`, `src/robot_lab_gui/`.
+- Implement: Give the four-wheel-steered base selectable opposite-phase,
+  in-phase/crab and pivot steering patterns with actual joint targets and
+  odometry. Wire dedicated Gazebo controllers as well as the other bridges.
+  Replace the mecanum model's solid collision cylinders with a contact model
+  that physically permits lateral roller slip, and expose lateral input in
+  the GUI. Do not infer physical strafing from inverse-kinematics unit tests.
+- Acceptance: In each advertised simulator, measure forward/reverse, both
+  turn directions, zero-turn, stop/watchdog and lateral displacement (mecanum)
+  against simulator truth. Then prove localization, 2D/3D mapping and Nav2 on
+  at least one mapped obstacle route per pattern, recording failures too.
+  [The 2026-09-30 audit](docs/status/evidence/r55-holonomic-audit-2026-09-30/README.md)
+  shows MuJoCo drive progress and the remaining Gazebo and strafing blockers.
+
 ## R6 — Environment qualification
 
 ### R6.1 — Qualify geometry map alignment and resets

@@ -12,6 +12,7 @@ not spawn subprocesses or touch a shared ROS graph.
 from pathlib import Path
 import shutil
 import subprocess
+import xml.etree.ElementTree as ET
 
 import pytest
 import yaml
@@ -44,3 +45,27 @@ def test_robot_profile_can_be_expanded(robot_name, robot_config):
     )
     assert result.returncode == 0, (
         f"{robot_name}: xacro expansion failed:\n{result.stderr}")
+
+
+@pytest.mark.integration
+def test_four_wheel_steering_hubs_occupy_four_distinct_corners():
+    """Four coincident wheels can drive straight but cannot steer the base."""
+    xacro_bin = shutil.which("xacro")
+    if xacro_bin is None:
+        pytest.skip("xacro executable not available")
+    model = _SRC_DIR / "robot_lab_robots" / ROBOTS["four_wheel_steer_car"]["xacro"]
+    result = subprocess.run(
+        ["bash", "-c",
+         f"source /opt/ros/humble/setup.bash && {xacro_bin} {model}"],
+        capture_output=True, text=True, timeout=120, check=True)
+    root = ET.fromstring(result.stdout)
+    expected = {"front_left": (0.16, 0.16),
+                "front_right": (0.16, -0.16),
+                "rear_left": (-0.16, 0.16),
+                "rear_right": (-0.16, -0.16)}
+    for corner, xy in expected.items():
+        joint = root.find(f"./joint[@name='{corner}_steer_joint']")
+        assert joint is not None
+        assert tuple(float(v) for v in joint.find("origin").get("xyz").split()[:2]) == xy
+        wheel = root.find(f"./joint[@name='{corner}_wheel_joint']")
+        assert float(wheel.find("origin").get("xyz").split()[2]) == -0.012

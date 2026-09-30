@@ -414,26 +414,35 @@ class FourWheelSteerDrive:
         # it, because the wheels are steered rather than fixed: aim each one
         # along the tangent of its own circle about the centre and the base
         # spins without translating.  Only the pivot pattern needs a special
-        # case (straight wheels, the two diagonals opposed).
+        # case (straight wheels, opposite sides counter-rotate).
         if self.steering_mode == "pivot":
-            spin = (speed if abs(speed) > 1e-3 else self.max_speed) * 0.5
             for wheel, y in ((self.fl, half), (self.rl, half),
                              (self.fr, -half), (self.rr, -half)):
                 if wheel:
-                    velocity[wheel] = -spin * math.copysign(1.0, y) / self.radius
-            return DriveTargets(velocity, position, (0.0, wz))
+                    velocity[wheel] = (speed - wz * y) / self.radius
+            return DriveTargets(velocity, position, (speed, wz))
 
         if abs(speed) <= 1e-3 and abs(wz) > 1e-6:
-            # Wheel at (x, y) must point along atan2(-x, y) for its rolling
-            # direction to be tangent to its circle about the base centre.
+            # Aim each wheel along its contact point's tangential velocity.
+            # A wheel can point along the opposite tangent and spin backward;
+            # use that equivalent within the +/-45 degree steering range.
             for wheel, joint, x, y in ((self.fl, self.fl_steer, half_base, half),
                                        (self.fr, self.fr_steer, half_base, -half),
                                        (self.rl, self.rl_steer, -half_base, half),
                                        (self.rr, self.rr_steer, -half_base, -half)):
                 if not wheel:
                     continue
-                position[joint] = math.atan2(-x, y)
-                velocity[wheel] = -wz * y / self.radius
+                vx_w, vy_w = -wz * y, wz * x
+                angle = math.atan2(vy_w, vx_w)
+                rate = math.hypot(vx_w, vy_w) / self.radius
+                if angle > math.pi / 2.0:
+                    angle -= math.pi
+                    rate = -rate
+                elif angle < -math.pi / 2.0:
+                    angle += math.pi
+                    rate = -rate
+                position[joint] = max(-self.max_steer, min(self.max_steer, angle))
+                velocity[wheel] = rate
             return DriveTargets(velocity, position, (0.0, wz))
 
         # Rolling: each wheel's spin is the body twist of its own contact
@@ -468,18 +477,19 @@ class FourWheelSteerDrive:
 
 
 class MecanumDrive:
-    """Mecanum (roller) wheels: full lateral motion from four fixed wheels.
+    """Ideal 45-degree mecanum kinematics for a future physical roller plant.
 
     Each wheel's rollers sit at 45 degrees to the chassis, alternating between
-    a right-handed and a left-handed pattern diagonally.  The rollers let a
-    wheel slide sideways as well as roll, so four spins combine into an
-    independent (vx, vy, wz): the base can strafe and turn on the spot, which
-    neither a differential drive nor a car can do.
+    a right-handed and a left-handed pattern diagonally. Physical rollers let
+    a contact patch slide sideways, so four spins span (vx, vy, wz). The
+    current URDF instead has solid collision cylinders: live MuJoCo measured
+    zero sideways travel for a nonzero lateral command. This solver alone
+    does not qualify physical strafing.
 
-    A Twist has no lateral component, so ``targets`` takes ``vy`` explicitly.
-    The bridges pass 0.0; a holonomic caller may pass a real one.  What
-    /cmd_vel does buy is the zero-turn: a pure ``wz`` with no forward speed is
-    realised by driving the two diagonals in opposite directions.
+    ``geometry_msgs/Twist.linear.y`` carries the lateral command. The three
+    non-Gazebo bridges pass it to ``targets``; the GUI currently exposes only
+    forward and yaw inputs. A pure ``wz`` with no forward speed is realised
+    by driving opposite wheel pairs in opposite directions.
 
     The roller order is the standard "X" layout: front-left and rear-right
     share one diagonal sense, front-right and rear-left the other.
@@ -495,6 +505,8 @@ class MecanumDrive:
         self.track = _float(config, "wheel_separation", 0.32)     # left-right
         self.wheelbase = _float(config, "wheelbase", 0.32)       # front-rear
         self.roller_angle = _float(config, "roller_angle", math.pi / 4.0)
+        if abs(self.roller_angle - math.pi / 4.0) > 1e-6:
+            raise ValueError("mecanum drive currently models 45-degree rollers only")
         self.max_speed = abs(_float(config, "max_speed", 1.0))
         self.max_accel = abs(_float(config, "max_accel", 1.5))
         # Unlike the other limits these are genuinely optional: a mecanum base
@@ -552,25 +564,20 @@ class MecanumDrive:
                 wz = self._approach(self._wz, wz, step)
         self._vx, self._vy, self._wz = vx, vy, wz
 
-        # A roller angle other than 45 degrees changes how much of the
-        # commanded speed each wheel can deliver, so the gains scale by it.
-        gain = 1.0 / max(abs(math.sin(self.roller_angle)),
-                         abs(math.cos(self.roller_angle)))
         half = self.track / 2.0
         half_base = self.wheelbase / 2.0
-        forward, lateral = vx * gain, vy * gain
         velocity = {}
         for wheel, x, y, sgn_v, sgn_w in (
-                (self.fl, half_base, half, -1.0, -1.0),
+                (self.fl, half_base, half, -1.0, +1.0),
                 (self.fr, half_base, -half, +1.0, -1.0),
                 (self.rl, -half_base, half, +1.0, +1.0),
-                (self.rr, -half_base, -half, -1.0, +1.0)):
+                (self.rr, -half_base, -half, -1.0, -1.0)):
             if not wheel:
                 continue
             # Yaw lever arm: the signed distance from the centre to this
             # wheel measured perpendicular to the forward axis.
             lever = sgn_w * (abs(x) + abs(y))
-            velocity[wheel] = (sgn_v * lateral + forward
+            velocity[wheel] = (sgn_v * vy + vx
                                - wz * lever) / self.radius
         return DriveTargets(velocity, {}, (vx, wz))
 
@@ -578,20 +585,17 @@ class MecanumDrive:
     def _approach(current, target, step):
         return current + max(-step, min(step, target - current))
 
-    def body_twist(self, wheel_rates, vy=0.0):
-        """(vx, vy, wz) from the measured spin rates of the four wheels.
-
-        *vy* is not recoverable from spin rates alone - the forward/lateral
-        split is not observable that way - so a caller that needs it must
-        supply it or take it from the base's own odometry.
-        """
+    def body_twist(self, wheel_rates, vy=None):
+        """Ideal (vx, vy, wz) from four wheel rates; optionally override vy."""
         rates = list(wheel_rates or [])
         if len(rates) != 4:
             return (0.0, 0.0, 0.0)
         fl, fr, rl, rr = (rate * self.radius for rate in rates)
         vx = (fl + fr + rl + rr) / 4.0
-        wz = (fr + rr - fl - rl) / (2.0 * self.track)
-        return (vx, vy, wz)
+        lateral = (-fl + fr + rl - rr) / 4.0
+        lever = (self.track + self.wheelbase) / 2.0
+        wz = (-fl + fr - rl + rr) / (4.0 * lever)
+        return (vx, lateral if vy is None else vy, wz)
 
 
 

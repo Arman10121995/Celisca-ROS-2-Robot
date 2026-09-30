@@ -1,0 +1,90 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.369,
+    "wz": -0.0,
+    "distance": 1.097
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "measured": {
+    "vx": 0.362,
+    "wz": 0.197,
+    "distance": 1.436
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "measured": {
+    "vx": 0.36,
+    "wz": -0.216,
+    "distance": 1.435
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "measured": {
+    "vx": -0.276,
+    "wz": 0.121,
+    "distance": 0.825
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "measured": {
+    "vx": 0.226,
+    "wz": 0.786,
+    "distance": 0.676
+   }
+  },
+  {
+   "phase": "spin_in_place",
+   "command": [
+    0.0,
+    1.0
+   ],
+   "measured": {
+    "vx": 0.004,
+    "wz": 0.502,
+    "distance": 0.008
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.0,
+    "wz": -0.0,
+    "distance": 0.0
+   }
+  }
+ ]
+}

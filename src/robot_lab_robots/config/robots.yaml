@@ -169,10 +169,10 @@ robots:
       max_accel: 1.5
     supports_room_vacuum: false
 
-  # Mecanum base: four fixed wheels on 45-degree rollers, so the four spins
-  # span an independent (vx, vy, wz) - it strafes and pivots.  A Twist has no
-  # lateral component, so the bridges command vy=0 and what /cmd_vel buys is
-  # the zero-turn; the drive model accepts a real vy for a holonomic caller.
+  # Mecanum kinematics and four-wheel command joints are wired, but the
+  # current solid-cylinder collision wheels do not strafe: MuJoCo measured
+  # 0 m/s lateral travel for a 0.3 m/s command. The GUI exposes forward/yaw
+  # only; Twist.linear.y reaches the non-Gazebo drive model experimentally.
   # Unlike the car-like bases this turns on the spot, so it keeps the default
   # DWB local planner.
   mecanum_car:
@@ -180,7 +180,7 @@ robots:
     xacro: holonomic_wheels/urdf/mecanum_car.urdf.xacro
     name: mecanum_car
     supported_modes: [display, loc, slam, 3d_slam, nav]
-    features: [ros2_control, lidar_2d, rgbd_camera, velocity_base, holonomic_base]
+    features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
     drive:
       type: mecanum
       front_left_wheel_joint: front_left_wheel_joint

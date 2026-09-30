@@ -59,7 +59,7 @@
 
   <!-- One steered wheel: a knuckle link carries the wheel, so the wheel can
        spin about its own axis while the knuckle aims it. -->
-  <xacro:macro name="steerable_wheel" params="corner">
+  <xacro:macro name="steerable_wheel" params="corner x y">
     <link name="${corner}_steer_link">
       <inertial>
         <mass value="0.08"/>
@@ -76,7 +76,7 @@
     <joint name="${corner}_steer_joint" type="revolute">
       <parent link="base_link"/>
       <child link="${corner}_steer_link"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit lower="-0.785" upper="0.785" effort="10.0" velocity="3.0"/>
       <dynamics damping="0.05" friction="0.0"/>
@@ -85,7 +85,7 @@
     <joint name="${corner}_wheel_joint" type="continuous">
       <parent link="${corner}_steer_link"/>
       <child link="${corner}_wheel_link"/>
-      <origin xyz="0 0 -0.038" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.012" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
       <dynamics damping="0.005" friction="0.0"/>
     </joint>
@@ -250,10 +250,10 @@
   <xacro:macro name="four_wheel_steer_car" params="robot_name">
     <xacro:holonomic_chassis robot_name="${robot_name}"/>
     <xacro:holonomic_sensors/>
-    <xacro:steerable_wheel corner="front_left"/>
-    <xacro:steerable_wheel corner="front_right"/>
-    <xacro:steerable_wheel corner="rear_left"/>
-    <xacro:steerable_wheel corner="rear_right"/>
+    <xacro:steerable_wheel corner="front_left" x="0.16" y="0.16"/>
+    <xacro:steerable_wheel corner="front_right" x="0.16" y="-0.16"/>
+    <xacro:steerable_wheel corner="rear_left" x="-0.16" y="0.16"/>
+    <xacro:steerable_wheel corner="rear_right" x="-0.16" y="-0.16"/>
     <xacro:holonomic_control steer="true"/>
     <xacro:holonomic_gazebo robot_name="${robot_name}"/>
   </xacro:macro>

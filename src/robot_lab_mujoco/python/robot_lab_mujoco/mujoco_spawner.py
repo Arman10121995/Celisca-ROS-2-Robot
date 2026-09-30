@@ -1784,7 +1784,8 @@ class MuJoCoSpawner(Node):
                 self._drive.reset()
         if self._model.nu > 0 and not getattr(self, "_robot_free", False):
             targets = self._drive.targets(
-                command.linear.x, command.angular.z, dt=self._dt)
+                command.linear.x, command.angular.z, dt=self._dt,
+                **({"vy": command.linear.y} if self._drive.kind == "mecanum" else {}))
             for joint, rate in targets.velocity.items():
                 self._set_actuator(joint, "_velocity", max(-50.0, min(50.0, rate)))
             for joint, angle in targets.position.items():
