@@ -11,9 +11,13 @@ jobs:
     steps:
       - name: Check out workspace
         uses: actions/checkout@v4
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
         with:
           submodules: false
-          lfs: true
+          # All occupancy maps used by the test tiers are normal Git objects.
+          # Mesh-heavy simulator missions require a separate asset-qualified run.
+          lfs: false
 
       - name: Install ROS 2 Humble
         uses: ros-tooling/setup-ros@v0.7

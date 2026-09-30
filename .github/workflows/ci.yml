@@ -15,9 +15,14 @@ jobs:
     steps:
       - name: Check out workspace
         uses: actions/checkout@v4
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
         with:
           submodules: false
-          lfs: true
+          # Occupancy maps are regular Git objects; mesh assets are not used
+          # by these source, launch-contract, or box-physics checks. Avoid
+          # blocking every CI run on the separate Git LFS transfer quota.
+          lfs: false
 
       - name: Install ROS 2 Humble
         uses: ros-tooling/setup-ros@v0.7
