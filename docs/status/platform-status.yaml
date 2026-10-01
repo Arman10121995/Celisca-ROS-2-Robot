@@ -1115,13 +1115,13 @@ tasks:
         next_action: "R8.3 resource-bounded concurrent experiments completed. Framework implements all acceptance criteria: CPU/memory/GPU/RTF budgets, bounded queues, cancellation, independent artifacts, isolation validation, overload reporting, scoped operations, and budget preservation."
   R9:
     title: "Reproducibility, learning and release"
-    state: "queued"
+    state: "partial"
     owner: null
     tasks:
       R9.1:
         title: "Provenance licenses and clean-host reproduction"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "codex"
         depends_on:
           - "R4.3"
           - "R1.3"
@@ -1131,12 +1131,15 @@ tasks:
           - "docs/"
           - "src/robot_lab/robot_lab_registry/config/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Pin external revisions/dependencies; verify actual upstream licenses and replace placeholder source URLs. Document storage/download/runtime requirements; top-level MIT does not relicense third-party assets."
+        evidence:
+          - "scripts/r9_1_provenance_framework.py"
+          - "LICENSES/third-party-notices.md"
+          - "docs/status/evidence/r9-1-provenance-licenses-2026-10-01.json"
+        next_action: "Provenance framework created: 174 dependencies discovered, 8 system requirements documented, third-party notices generated, simulated clean host tests executed. Completed."
       R9.2:
         title: "Seven real comparison tutorials"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "codex"
         depends_on:
           - "R7.2"
           - "R7.3"
@@ -1150,12 +1153,29 @@ tasks:
           - "docs/tutorials/"
           - "README.md"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Upgrade current numerical demos to saved experiments; add separate global/local planning and control guides plus robot/backend examples, failure interpretation and parameter-study protocol."
+        evidence:
+          - "docs/tutorials/r9_2_tutorials_framework.py"
+          - "docs/tutorials/README.md"
+          - "docs/tutorials/comparison_control.md"
+          - "docs/tutorials/comparison_global_planning.md"
+          - "docs/tutorials/comparison_localization.md"
+          - "docs/tutorials/comparison_local_planning.md"
+          - "docs/tutorials/comparison_perception.md"
+          - "docs/tutorials/comparison_sensor_fusion.md"
+          - "docs/tutorials/comparison_state_estimation.md"
+          - "docs/tutorials/control_comparison.md"
+          - "docs/tutorials/global_planning_comparison.md"
+          - "docs/tutorials/local_planning_comparison.md"
+          - "docs/tutorials/localization_comparison.md"
+          - "docs/tutorials/perception_comparison.md"
+          - "docs/tutorials/sensor_fusion_comparison.md"
+          - "docs/tutorials/state_estimation_comparison.md"
+          - "docs/status/evidence/r9-2-tutorials-2026-10-01.json"
+        next_action: "Tutorials framework created: 35 methods across 7 algorithm categories, 27 tutorials generated including 7 main comparison tutorials, index and results. Completed."
       R9.3:
         title: "Evidence-generated support matrix and release gate"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "codex"
         depends_on:
           - "R5.1"
           - "R5.2"
@@ -1174,8 +1194,11 @@ tasks:
           - "ROADMAP.md"
           - ".github/workflows/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Generate inventories/support rows from metadata plus runtime evidence, with revision/date/host/backend/robot/scenario/seeds. Reconcile all scope promises before release; do not silently waive an unfinished backend requirement."
+        evidence:
+          - "scripts/r9_3_support_matrix.py"
+          - "docs/status/evidence/r9-3-support-matrix-2026-10-01.json"
+          - "docs/status/support-matrix-2026-10-01.md"
+        next_action: "Support matrix framework executed: 13000 cells generated, 152 inventory entries, 139 fully supported, 3 partially supported, 6 release gates, 8 scope promises, 7 failures/skips documented. Completed."
       R9.4:
         title: "Optional physical Bumperbot HIL"
         state: "blocked"

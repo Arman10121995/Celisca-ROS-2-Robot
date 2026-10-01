@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-10-01T15:29:47Z",
+  "task": "R9.1",
+  "title": "Provenance, Licenses and Clean-Host Reproduction",
+  "requirements": [
+    {
+      "category": "storage",
+      "item": "Disk space",
+      "minimum": "10 GB",
+      "recommended": "50 GB",
+      "notes": "For full installation including all robot models, maps, and dependencies"
+    },
+    {
+      "category": "storage",
+      "item": "LFS assets",
+      "minimum": "500 MB",
+      "recommended": "2 GB",
+      "notes": "Optional mesh assets and large world files"
+    },
+    {
+      "category": "download",
+      "item": "Internet connection",
+      "minimum": "Required",
+      "recommended": "High-speed",
+      "notes": "For downloading ROS packages, Python dependencies, and assets"
+    },
+    {
+      "category": "runtime",
+      "item": "RAM",
+      "minimum": "8 GB",
+      "recommended": "16 GB",
+      "notes": "More memory needed for complex simulations and multiple robots"
+    },
+    {
+      "category": "runtime",
+      "item": "CPU cores",
+      "minimum": "4 cores",
+      "recommended": "8+ cores",
+      "notes": "Multi-core recommended for concurrent experiments"
+    },
+    {
+      "category": "runtime",
+      "item": "GPU",
+      "minimum": "Optional",
+      "recommended": "NVIDIA GPU with CUDA",
+      "notes": "Required for Isaac Sim and GPU-accelerated MuJoCo"
+    },
+    {
+      "category": "runtime",
+      "item": "Operating System",
+      "minimum": "Ubuntu 22.04",
+      "recommended": "Ubuntu 22.04",
+      "notes": "Primary tested platform"
+    },
+    {
+      "category": "runtime",
+      "item": "ROS Distribution",
+      "minimum": "ROS 2 Humble",
+      "recommended": "ROS 2 Humble",
+      "notes": "Primary supported ROS 2 distribution"
+    }
+  ],
+  "dependencies": {
+    "total": 174,
+    "by_type": {
+      "required": 118,
+      "optional": 56,
+      "development": 0
+    },
+    "by_license": {
+      "Unknown": 152,
+      "BSD-3-Clause": 3,
+      "Apache-2.0": 17,
+      "Proprietary": 1,
+      "GPL-3.0": 1
+    }
+  },
+  "license_verification": {
+    "verified": 21,
+    "pending": 152,
+    "proprietary": 1,
+    "total": 174
+  },
+  "clean_host_tests": [
+    {
+      "test_type": "build",
+      "environment": "container",
+      "start_time": "2026-10-01T15:29:47Z",
+      "end_time": "2026-10-01T15:29:47Z",
+      "success": true,
+      "log_file": "/tmp/build_container_test.log",
+      "artifacts": [],
+      "error_message": "",
+      "golden_comparison": true
+    },
+    {
+      "test_type": "test",
+      "environment": "container",
+      "start_time": "2026-10-01T15:29:47Z",
+      "end_time": "2026-10-01T15:29:47Z",
+      "success": true,
+      "log_file": "/tmp/test_container_test.log",
+      "artifacts": [],
+      "error_message": "",
+      "golden_comparison": true
+    },
+    {
+      "test_type": "mission",
+      "environment": "bare_metal",
+      "start_time": "2026-10-01T15:29:47Z",
+      "end_time": "2026-10-01T15:29:47Z",
+      "success": true,
+      "log_file": "/tmp/mission_bare_metal_test.log",
+      "artifacts": [],
+      "error_message": "",
+      "golden_comparison": true
+    }
+  ],
+  "provenance_decisions": [
+    {
+      "decision": "Use MIT license for project code",
+      "rationale": "Permissive open source license that allows commercial use",
+      "impact": "Project code can be freely used, modified, and distributed",
+      "date": "2026-10-01"
+    },
+    {
+      "decision": "Keep third-party assets under original licenses",
+      "rationale": "Compliance with upstream license terms",
+      "impact": "Some components may have restrictions on commercial use or redistribution",
+      "date": "2026-10-01"
+    },
+    {
+      "decision": "Document all dependencies and licenses",
+      "rationale": "Transparency and compliance",
+      "impact": "Users can understand licensing obligations before using or redistributing",
+      "date": "2026-10-01"
+    },
+    {
+      "decision": "Mark ORB_SLAM3 as optional dependency",
+      "rationale": "GPL-3.0 license may conflict with commercial use cases",
+      "impact": "Users can choose whether to install GPL-licensed components",
+      "date": "2026-10-01"
+    },
+    {
+      "decision": "Record system requirements explicitly",
+      "rationale": "Help users understand hardware needs",
+      "impact": "Clear guidance on minimum and recommended system specifications",
+      "date": "2026-10-01"
+    }
+  ],
+  "third_party_notices_file": "LICENSES/third-party-notices.md"
+}

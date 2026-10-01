@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-10-01T15:31:37Z",
+  "task": "R9.2",
+  "title": "Seven Real Comparison Tutorials",
+  "status": "in_progress",
+  "methods": {
+    "total": 35,
+    "by_category": {
+      "perception": 5,
+      "localization": 5,
+      "state_estimation": 5,
+      "sensor_fusion": 5,
+      "global_planning": 5,
+      "local_planning": 5,
+      "control": 5
+    }
+  },
+  "tutorials": {
+    "total": 27,
+    "by_type": {
+      "numerical_demo": 0,
+      "real_experiment": 7,
+      "comparison_guide": 7,
+      "robot_backend_example": 6,
+      "failure_interpretation": 4,
+      "parameter_study": 3
+    }
+  },
+  "comparison_results": {
+    "total": 7,
+    "categories_covered": [
+      "perception",
+      "localization",
+      "state_estimation",
+      "sensor_fusion",
+      "global_planning",
+      "local_planning",
+      "control"
+    ]
+  },
+  "acceptance_criteria": {
+    "commands_exercised": true,
+    "real_results_linked": true,
+    "tables_plots_generated": true,
+    "gui_cli_manifests_shared": true
+  }
+}

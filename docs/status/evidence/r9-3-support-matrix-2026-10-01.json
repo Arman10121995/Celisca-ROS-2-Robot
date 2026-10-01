@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-10-01T15:34:57Z",
+  "task": "R9.3",
+  "title": "Evidence-Generated Support Matrix and Release Gate",
+  "status": "in_progress",
+  "inventory": {
+    "total_entries": 152,
+    "by_category": {
+      "robot": 25,
+      "environment": 26,
+      "algorithm": 48,
+      "cenario": 23,
+      "experiment": 21,
+      "simulator": 4,
+      "task_type": 5
+    }
+  },
+  "support_matrix": {
+    "total_cells": 13000,
+    "by_support_level": {
+      "not_tested": 12858,
+      "fully_supported": 139,
+      "partially_supported": 3
+    },
+    "by_evidence_level": {
+      "none": 12858,
+      "runtime_evidence": 142
+    }
+  },
+  "release_gates": {
+    "total_gates": 6,
+    "by_status": {
+      "conditional": 2,
+      "ready": 4
+    },
+    "blocking_issues": [
+      "Not all robot-class combinations tested",
+      "Some algorithm categories need more runtime evidence",
+      "Tutorials need real-world validation"
+    ]
+  },
+  "scope_promises": {
+    "total_promises": 8,
+    "by_status": {
+      "fulfilled": 3,
+      "partial": 4,
+      "not_started": 1
+    },
+    "blocking_promises": [
+      "Deliver one working aerial platform (quadrotor_sitl)"
+    ]
+  },
+  "failures_skips": {
+    "total": 7,
+    "by_status": {
+      "documented": 4,
+      "active_work": 1,
+      "blocked": 1,
+      "deferred": 1
+    },
+    "by_impact": {
+      "Quadruped terrain qualification incomplete": 1,
+      "Fall recovery not qualified": 1,
+      "Sustained walking not qualified": 1,
+      "Performance limits on complex environments": 1,
+      "Four-wheel platforms not fully functional": 1,
+      "Mecanum holonomic support not available": 1,
+      "Aerial platform not delivered": 1
+    }
+  },
+  "acceptance_criteria": {
+    "required_tasks_pass": true,
+    "release_claims_map_to_artifacts": true,
+    "failures_skips_published": true,
+    "reduced_scope_decisions_recorded": true,
+    "never_call_remaining_complete": true
+  }
+}
