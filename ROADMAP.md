@@ -571,6 +571,27 @@ Dependencies: `R5.1`, `R3.3`.
   repeated watchdog checks, final-heading control, and longer slalom/parking
   qualification remain open. See
   [watchdog evidence](docs/status/evidence/r55-car-watchdog-2026-10-01/README.md).
+- 2026-10-01 root cause and repair: the weak MuJoCo arc response was a **geometry
+  defect, not tuning**. The chassis collision box (0.22 m wide) overlapped the swept
+  volume of the steered tires (innermost reach 0.090 m at the 0.8 rad joint limit),
+  and MuJoCo resolved the sweep with a ~113 N chassis/tire contact whose lever arm
+  saturated the 10 N*m steering servo: 0.229 rad measured of 0.452 commanded, front
+  wheels stalled at their 5 N*m limit. An offline probe (no ROS) reproduced it and
+  showed the same command reaching 0.4516 rad with zero actuator load once the
+  overlap is gone. The chassis *collision* is now a wheel well (0.16 m) under an
+  unchanged 0.22 m visual shell. After the fix, MuJoCo ground truth measures left-arc
+  tracking at 0.374/0.486 (ackermann), 0.366/0.499 (rear-steer) and 0.369/0.473
+  (anti-Ackermann) for a commanded 0.4 m/s / 0.5 rad/s, i.e. 95-100 % yaw tracking
+  against 21 % before, with the three profiles' steering joints distinct
+  (+0.445/+0.322, -0.459/-0.334, +0.326/+0.448) and a 0.115-0.122 m bounded coast
+  after publisher loss. `sim_drive_check.py` now measures speeds from odometry header
+  stamps (sim time): arrival-time velocities under-reported by this host's
+  real-time factor (0.281 m/s for a true 0.400 m/s). The clearance is pinned by an
+  expanded-URDF test. See [car wheel-well evidence](docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md).
+- Remaining R5.5 items: slalom/parking/obstacle missions with curvature and swept-
+  footprint checks, publisher-loss and final-heading repeats on Gazebo and Isaac
+  (Gazebo evidence still uses controller odometry), and the rear-steer versus
+  anti-Ackermann wording in the GUI/tutorials.
 - Follow-up steering-joint traces on PyBullet measured zero angle when straight,
   mirrored Ackermann angles in each turn direction, opposite-phase rear
   steering, and swapped inner/outer anti-Ackermann angles. This confirms the
@@ -595,6 +616,27 @@ Dependencies: `R5.1`, `R3.3`.
   turn directions, zero-turn, stop/watchdog and lateral displacement (mecanum)
   against simulator truth. Then prove localization, 2D/3D mapping and Nav2 on
   at least one mapped obstacle route per pattern, recording failures too.
+- 2026-10-01 three defects repaired and measured (MuJoCo truth):
+  the display hold was pinning **all 60 passive mecanum rollers** (a mecanum is not a
+  differential drive, so `has_drive` was false and the "keep legged robots upright"
+  hold caught the roller bodies), which turned the roller wheel into a solid tire --
+  0.014 m/s of a commanded 0.30 m/s strafe through the bridge versus 0.280 m/s in a
+  plain MuJoCo loop; the PyBullet bridge raised `AttributeError` on any
+  non-differential drive (`_drive.left`) before publishing; and the holonomic chassis
+  had the same wheel-well overlap as the cars. Fixes: `urdf_joints.driven_assembly_joints`
+  keeps a driven assembly's passive parts out of both bridges' hold lists (60 rollers
+  pinned for the shipped mecanum by test), the diff-only lookup moved into the diff
+  branch, and the chassis collision became a 0.20 m wheel well. After the fixes the
+  mecanum measures 0.397 m/s straight, +/-0.490 rad/s arcs, 0.983 rad/s spin with no
+  translation and **0.283 m/s of a commanded 0.30 m/s strafe (1.03 m lateral, no yaw
+  leak)** -- the first measured physical lateral motion for this base. A new
+  `steering_mode:=` launch argument and a GUI pattern selector qualify all four 4WS
+  patterns on MuJoCo: opposite-phase 0.464 rad/s on a 0.5 command with the axles in
+  opposite phase, in_phase and crab translating with ~0.076 m/s lateral and ~0.09 rad/s
+  yaw, and pivot holding the wheels straight but reaching only 0.216 of 1.0 rad/s
+  (skid-limited, recorded as a measured limit). The GUI Drive pad gains mecanum-gated
+  Strafe L/R latched buttons that publish `Twist.linear.y`. See
+  [holonomic evidence](docs/status/evidence/r56-holonomic-measure-2026-10-01/README.md).
   [The 2026-09-30 audit](docs/status/evidence/r55-holonomic-audit-2026-09-30/README.md)
   shows MuJoCo drive progress and the remaining Gazebo and strafing blockers.
 

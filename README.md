@@ -45,12 +45,22 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-The current fast development check on the 2026-09-30 working tree is **668 passed, 1 skipped**,
-with registry cross-reference validation passing. The latest R5.3 contact-fidelity
-check also reports **35 passed** for `robot_lab_maps`. These are scoped source
-and static checks. Another **34 Tk command/Drive tests** passed, and the scoped
-MuJoCo BHL/Go2 Celisca drive repeats are recorded separately. These checks do not
-prove all simulator missions, GUI sessions,
+The fast development check on the 2026-10-01 working tree is **670 passed,
+1 skipped, 3 failed**, with registry cross-reference validation passing. The
+three failures are in `test_p6_benchmarking.py` (`third-party-notices.md`
+missing the Unitree entry, a stray external-asset check, and a tutorial missing
+its `Run` section); they come from the concurrent R6/R8 documentation work in
+this working tree and are **not** in the R5.5/R5.6/R5.4 scope changed below.
+These are scoped source and static checks. The Tk command/Drive suite passes
+(including the new mecanum strafe and 4WS pattern selector tests). Simulator
+evidence from this round is recorded per task under
+[status/evidence](docs/status/): the car steering repair and measured arcs
+([r55](docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md)), the
+mecanum's first measured physical lateral travel and the four 4WS patterns
+([r56](docs/status/evidence/r56-holonomic-measure-2026-10-01/README.md)), and a
+PX4 SITL FCU that builds and answers MAVLink but does not yet arm
+([r54](docs/status/evidence/r54-px4-sitl-2026-10-01/README.md)). These checks do
+not prove all simulator missions, GUI sessions,
 optional-engine qualification or hardware operation. See the
 [workflow](docs/WORKFLOW.md) for the evidence boundary and commands.
 
