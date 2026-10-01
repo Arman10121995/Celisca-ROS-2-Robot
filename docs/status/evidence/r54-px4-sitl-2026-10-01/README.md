@@ -116,6 +116,23 @@ loading the model). The FCU side is healthy; the Gazebo side is not.
 what makes the estimator converge at all on this host, and they are what a
 Harmonic-matched PX4 would need if its own spawn is still unreliable.
 
+## Attempt 4: a Harmonic-matched PX4 (v1.16.2) still does not lift
+
+The version-skew hypothesis was tested directly: PX4 **v1.16.2** (the newest
+line whose Gazebo models are SDF 1.9) was checked out with its submodule,
+built, and flown
+(`flight_attempt4_px4_v1_16_2.json`). The model loads on gz-sim 8.15 with no
+SDF-version complaints, the estimator converges, the FCU arms in OFFBOARD
+(`base_mode 145`) - and altitude still stays within +/-0.07 m of the ground
+through the takeoff ramp, all three waypoints and the land command.
+
+So the skew is not the whole cause either: the FCU is healthy, the model
+matches the installed Gazebo, the topics match, and the rotors still produce
+no thrust on this host. What is left is inside the Gazebo-side rotor actuation
+for this model (the MulticopterMotorModel system plugin under gz-sim 8), which
+this session could not repair without the missing dev-time debugging budget or
+a newer Gazebo. No flight is claimed, and R5.4 stays `blocked`.
+
 ## What is still blocked (and how to unblock)
 
 * **Takeoff is not achieved.** No altitude was measured above the ground, so
