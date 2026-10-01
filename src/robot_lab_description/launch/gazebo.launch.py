@@ -385,6 +385,14 @@ def generate_launch_description():
                 }.items()
             )
         ]
+        gz_world_name = get_sdf_world_name(w, LaunchConfiguration("world_name").perform(context))
+        actions.append(Node(
+            package="robot_lab_description",
+            executable="gazebo_reset_bridge.py",
+            name="gazebo_reset_bridge",
+            parameters=[{"world_name": gz_world_name}],
+            output="screen",
+        ))
         return actions
 
     gazebo = OpaqueFunction(function=make_gazebo)

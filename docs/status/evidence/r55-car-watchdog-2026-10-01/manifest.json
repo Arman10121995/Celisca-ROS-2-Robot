@@ -1,0 +1,149 @@
+{
+  "task": "R5.5 PyBullet car publisher-loss screen",
+  "source_revision": "461afbd",
+  "tracked_modified_files_at_launch": 1,
+  "backends": ["PyBullet", "MuJoCo", "Gazebo Fortress"],
+  "map_name": "nav_empty",
+  "odom_topic": "/odom/ground_truth",
+  "command_topic": "/cmd_vel",
+  "ros_domains": [201, 202, 203, 224, 226, 227, 228, 229, 230, 231, 232],
+  "command_loss_window_s": 3.0,
+  "profiles": [
+    {
+      "profile": "ackermann_car",
+      "backend": "PyBullet",
+      "result": "ackermann/r55-ackermann-pybullet-commandloss-20261001.json",
+      "coast_distance_m": 0.101,
+      "coast_yaw_change_rad": 0.229,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": 0.0
+    },
+    {
+      "profile": "rear_steer_car",
+      "backend": "PyBullet",
+      "result": "rear_steer/r55-rearsteer-pybullet-commandloss-20261001.json",
+      "coast_distance_m": 0.109,
+      "coast_yaw_change_rad": 0.259,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": -0.0
+    },
+    {
+      "profile": "anti_ackermann_car",
+      "backend": "PyBullet",
+      "result": "anti_ackermann/r55-antiackermann-pybullet-commandloss-20261001.json",
+      "coast_distance_m": 0.111,
+      "coast_yaw_change_rad": 0.239,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": 0.0
+    },
+    {
+      "profile": "ackermann_car",
+      "backend": "MuJoCo",
+      "result": "mujoco_ackermann/r55-ackermann-mujoco-commandloss-20261001.json",
+      "coast_distance_m": 0.017,
+      "coast_yaw_change_rad": 0.013,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": -0.0,
+      "left_arc_vx_mps": 0.067,
+      "left_arc_wz_rps": 0.108,
+      "right_arc_vx_mps": 0.066,
+      "right_arc_wz_rps": -0.038,
+      "tight_left_vx_mps": 0.031,
+      "tight_left_wz_rps": 0.023
+    },
+    {
+      "profile": "ackermann_car",
+      "backend": "Gazebo Fortress",
+      "odom_topic": "/robot_lab_controller/odom",
+      "result": "gazebo/ackermann/r55-ackermann-gazebo-commandloss-20261001.json",
+      "coast_distance_m": 0.155,
+      "coast_yaw_change_rad": 0.319,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": 0.0
+    },
+    {
+      "profile": "rear_steer_car",
+      "backend": "Gazebo Fortress",
+      "odom_topic": "/robot_lab_controller/odom",
+      "result": "gazebo/rear_steer/r55-rearsteer-gazebo-commandloss-20261001.json",
+      "coast_distance_m": 0.155,
+      "coast_yaw_change_rad": 0.319,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": 0.0
+    },
+    {
+      "profile": "anti_ackermann_car",
+      "backend": "Gazebo Fortress",
+      "odom_topic": "/robot_lab_controller/odom",
+      "result": "gazebo/anti_ackermann/r55-antiackermann-gazebo-commandloss-20261001.json",
+      "coast_distance_m": 0.155,
+      "coast_yaw_change_rad": 0.319,
+      "tail_vx_mps": -0.0,
+      "tail_wz_rps": 0.0
+    }
+  ],
+  "source_sha256": {
+    "scripts/sim_drive_check.sh": "8d069ec2233aa90683c65c5260001f487799cfdee31fac51c03cfca253d3491b",
+    "src/robot_lab_controller/robot_lab_controller/ackermann_controller.py": "1912652266bd2a21e1dcd5260c6ae945fa5cc7e150c3ce9365d047fe0013896a",
+    "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py": "dd042a335697649ef12e42ab620db29c76488cb905d9d7857e401cde6c881600",
+    "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py": "822f868971246f7e122c97652d5165b2761f2b7604f9befcc184213ec6efbe95",
+    "src/robot_lab_robots/ackermann_car/urdf/ackermann_car.urdf.xacro": "b742eec9f1dab399adfee1068f0e186aca01a40640baf7d9ccec86cef399caf9",
+    "src/robot_lab_robots/ackermann_car/urdf/rear_steer_car.urdf.xacro": "ef8a8b96cafa06d363a6b6ba84268970f088df69a5df413613c1c354a86590ac",
+    "src/robot_lab_robots/config/robots.yaml": "31ff7b15813d5df40a1d156aaa29bfb55f2cc9fb82170e22c15d9fbff5cac969",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "6b54ba8cd8bfc1c0a979bca5aea94caaeec20700f9abf9bb20eda875c5ba6f24",
+    "src/robot_lab_description/launch/gazebo.launch.py": "dbf397ac1eb5f4fda7fcd4f73154549447db9c4d0bee77261f5d1cce0e8ca6d0"
+  },
+  "probe_sha256": {
+    "watchdog_only": "023ce5306229124bc3eea4a8ad06dbf5640f7a05af7d0d275d50a26a8da6a219",
+    "steering_angles": "7c68a1987e491acbbf60ece530c723a2678e2ad5b9e2fa6436c93f86da19c901"
+  },
+  "steering_measurements": [
+    {
+      "profile": "ackermann_car",
+      "result": "steering_angles/ackermann/r55-ackermann-pybullet-joints-20261001.json",
+      "left_arc_rad": {"front_left": 0.4511, "front_right": 0.328},
+      "right_arc_rad": {"front_left": -0.3282, "front_right": -0.4514}
+    },
+    {
+      "profile": "rear_steer_car",
+      "result": "steering_angles/rear_steer/r55-rearsteer-pybullet-joints-20261001.json",
+      "left_arc_rad": {"rear_left": -0.4515, "rear_right": -0.328},
+      "right_arc_rad": {"rear_left": 0.3281, "rear_right": 0.4516}
+    },
+    {
+      "profile": "anti_ackermann_car",
+      "result": "steering_angles/anti_ackermann/r55-antiackermann-pybullet-joints-20261001.json",
+      "left_arc_rad": {"front_left": 0.3281, "front_right": 0.4515},
+      "right_arc_rad": {"front_left": -0.4515, "front_right": -0.3281}
+    },
+    {
+      "profile": "ackermann_car",
+      "result": "steering_angles/ackermann/r55-ackermann-pybullet-repeat-20261001.json",
+      "left_arc_rad": {"front_left": 0.4515, "front_right": 0.3281},
+      "right_arc_rad": {"front_left": -0.3279, "front_right": -0.4514},
+      "coast_distance_m": 0.094,
+      "coast_yaw_change_rad": 0.214
+    },
+    {
+      "profile": "ackermann_car",
+      "backend": "Gazebo Fortress",
+      "result": "gazebo/ackermann/r55-ackermann-gazebo-commandloss-20261001.json",
+      "left_arc_rad": {"front_left": 0.4515, "front_right": 0.3281},
+      "right_arc_rad": {"front_left": -0.3281, "front_right": -0.4515}
+    },
+    {
+      "profile": "rear_steer_car",
+      "backend": "Gazebo Fortress",
+      "result": "gazebo/rear_steer/r55-rearsteer-gazebo-commandloss-20261001.json",
+      "left_arc_rad": {"rear_left": -0.4515, "rear_right": -0.3281},
+      "right_arc_rad": {"rear_left": 0.3281, "rear_right": 0.4515}
+    },
+    {
+      "profile": "anti_ackermann_car",
+      "backend": "Gazebo Fortress",
+      "result": "gazebo/anti_ackermann/r55-antiackermann-gazebo-commandloss-20261001.json",
+      "left_arc_rad": {"front_left": 0.3281, "front_right": 0.4515},
+      "right_arc_rad": {"front_left": -0.4515, "front_right": -0.3281}
+    }
+  ]
+}

@@ -141,6 +141,224 @@ class PointcloudSegmenter:
         return ground, objects
 
 
+class EuclideanClusterer:
+    """Euclidean distance-based clustering for 3D point clouds."""
+
+    def __init__(self, node_name='euclidean_clusterer', tolerance=0.1, min_points=5):
+        self.node_name = node_name
+        self.tolerance = tolerance
+        self.min_points = min_points
+
+    def cluster(self, points_xyz):
+        """Cluster 3D points using Euclidean distance threshold.
+        
+        Returns list of clusters, each a list of (x, y, z) points.
+        """
+        if not points_xyz:
+            return []
+        
+        clusters = []
+        visited = set()
+        
+        for i, point in enumerate(points_xyz):
+            if i in visited:
+                continue
+            
+            # Start new cluster with this point
+            cluster = [point]
+            queue = [i]
+            visited.add(i)
+            
+            while queue:
+                current_idx = queue.pop(0)
+                current_point = points_xyz[current_idx]
+                
+                # Find neighbors within tolerance
+                for j, other_point in enumerate(points_xyz):
+                    if j in visited:
+                        continue
+                    
+                    distance = math.sqrt(
+                        (current_point[0] - other_point[0])**2 + 
+                        (current_point[1] - other_point[1])**2 + 
+                        (current_point[2] - other_point[2])**2
+                    )
+                    
+                    if distance <= self.tolerance:
+                        cluster.append(other_point)
+                        queue.append(j)
+                        visited.add(j)
+            
+            # Only keep clusters with enough points
+            if len(cluster) >= self.min_points:
+                clusters.append(cluster)
+        
+        return clusters
+
+
+class DBSCANClusterer:
+    """DBSCAN (Density-Based Spatial Clustering of Applications with Noise) clustering."""
+
+    def __init__(self, node_name='dbscan_clusterer', eps=0.1, min_samples=5):
+        self.node_name = node_name
+        self.eps = eps
+        self.min_samples = min_samples
+
+    def cluster(self, points_xyz):
+        """Cluster 3D points using DBSCAN algorithm.
+        
+        Returns tuple of (clusters, noise) where clusters is a list of point clusters
+        and noise is a list of points not belonging to any cluster.
+        """
+        if not points_xyz:
+            return [], []
+        
+        # Find neighbors for each point
+        neighbors = []
+        for i, point in enumerate(points_xyz):
+            point_neighbors = []
+            for j, other_point in enumerate(points_xyz):
+                if i == j:
+                    continue
+                distance = math.sqrt(
+                    (point[0] - other_point[0])**2 + 
+                    (point[1] - other_point[1])**2 + 
+                    (point[2] - other_point[2])**2
+                )
+                if distance <= self.eps:
+                    point_neighbors.append(j)
+            neighbors.append(point_neighbors)
+        
+        # DBSCAN algorithm
+        cluster_id = 0
+        clusters = []
+        noise = []
+        labels = [-1] * len(points_xyz)  # -1 means unclassified
+        
+        for i in range(len(points_xyz)):
+            if labels[i] != -1:  # Already classified
+                continue
+            
+            # Check if this is a core point
+            if len(neighbors[i]) >= self.min_samples:
+                # Start a new cluster
+                cluster = []
+                queue = [i]
+                labels[i] = cluster_id
+                
+                while queue:
+                    current_idx = queue.pop(0)
+                    cluster.append(points_xyz[current_idx])
+                    
+                    # Expand to all density-reachable points
+                    for neighbor_idx in neighbors[current_idx]:
+                        if labels[neighbor_idx] == -1:  # Unclassified
+                            labels[neighbor_idx] = cluster_id
+                            queue.append(neighbor_idx)
+                        elif labels[neighbor_idx] == -2:  # Noise point that becomes border point
+                            labels[neighbor_idx] = cluster_id
+                            queue.append(neighbor_idx)
+                
+                clusters.append(cluster)
+                cluster_id += 1
+            else:
+                # This is a noise point (for now)
+                labels[i] = -2  # Mark as potential noise
+        
+        # Collect noise points
+        for i, label in enumerate(labels):
+            if label == -2:  # Noise
+                noise.append(points_xyz[i])
+        
+        return clusters, noise
+
+
+class RANSACGroundRemoval:
+    """RANSAC-based ground removal and obstacle segmentation from point clouds."""
+
+    def __init__(self, node_name='ransac_ground_removal', max_iterations=100, 
+                 distance_threshold=0.05, normal_threshold=0.85):
+        self.node_name = node_name
+        self.max_iterations = max_iterations
+        self.distance_threshold = distance_threshold
+        self.normal_threshold = normal_threshold
+
+    def segment(self, points_xyz):
+        """Segment 3D points into ground and obstacles using RANSAC plane fitting.
+        
+        Returns tuple of (ground_points, obstacle_points).
+        """
+        if not points_xyz or len(points_xyz) < 3:
+            return [], points_xyz
+        
+        best_inliers = []
+        best_plane = None
+        
+        # RANSAC plane fitting
+        for _ in range(self.max_iterations):
+            # Randomly select 3 points to define a plane
+            import random
+            rng = random.Random()
+            indices = rng.sample(range(len(points_xyz)), min(3, len(points_xyz)))
+            
+            if len(indices) < 3:
+                continue
+                
+            p1, p2, p3 = [points_xyz[i] for i in indices]
+            
+            # Calculate plane normal using cross product
+            v1 = (p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2])
+            v2 = (p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2])
+            
+            # Cross product
+            normal_x = v1[1] * v2[2] - v1[2] * v2[1]
+            normal_y = v1[2] * v2[0] - v1[0] * v2[2] 
+            normal_z = v1[0] * v2[1] - v1[1] * v2[0]
+            
+            normal_length = math.sqrt(normal_x**2 + normal_y**2 + normal_z**2)
+            if normal_length < 1e-10:
+                continue  # Degenerate plane
+            
+            # Normalize normal
+            normal = (normal_x / normal_length, normal_y / normal_length, normal_z / normal_length)
+            
+            # Plane equation: normal · (p - p1) = 0 => normal · p = normal · p1
+            plane_d = normal[0] * p1[0] + normal[1] * p1[1] + normal[2] * p1[2]
+            
+            # Count inliers
+            inliers = []
+            for j, point in enumerate(points_xyz):
+                distance = abs(normal[0] * point[0] + normal[1] * point[1] + normal[2] * point[2] - plane_d)
+                if distance <= self.distance_threshold:
+                    inliers.append(j)
+            
+            # Check if this is the best plane so far
+            if len(inliers) > len(best_inliers):
+                best_inliers = inliers
+                best_plane = (normal, plane_d)
+        
+        if best_plane is None:
+            # No plane found, return all as obstacles
+            return [], points_xyz
+        
+        # Check if the best plane is likely ground (normal should be close to (0,0,1))
+        normal, plane_d = best_plane
+        if abs(normal[2]) < self.normal_threshold:  # Not a horizontal plane
+            return [], points_xyz
+        
+        # Separate ground and obstacles
+        ground_points = []
+        obstacle_points = []
+        
+        for i, point in enumerate(points_xyz):
+            if i in best_inliers:
+                ground_points.append(point)
+            else:
+                obstacle_points.append(point)
+        
+        return ground_points, obstacle_points
+
+
 def _spin(node, spin_count=0):
     if rclpy is None:
         print(f'{node.get_name()}: rclpy unavailable, running in dry mode')
@@ -292,6 +510,117 @@ class PointcloudSegmenterNode(Node):
             point_cloud2.create_cloud_xyz32(msg.header, self.objects))
 
 
+class EuclideanClustererNode(Node):
+    """PointCloud2 -> Euclidean clustered obstacles on /perception/euclidean_clusters."""
+
+    def __init__(self, node_name='euclidean_clusterer'):
+        super().__init__(node_name)
+        self.declare_parameter('points_topic', '/oakd/points')
+        self.declare_parameter('tolerance', 0.1)
+        self.declare_parameter('min_points', 5)
+        self.declare_parameter('markers_topic', '/perception/euclidean_clusters')
+        self.clusterer = EuclideanClusterer(
+            tolerance=float(self.get_parameter('tolerance').value),
+            min_points=int(self.get_parameter('min_points').value))
+        self._pub = self.create_publisher(
+            MarkerArray, self.get_parameter('markers_topic').value, 10)
+        self.create_subscription(
+            PointCloud2, self.get_parameter('points_topic').value,
+            self._on_points, qos_profile_sensor_data)
+        self.clusters = []
+        self.get_logger().info('euclidean_clusterer ready')
+
+    def _on_points(self, msg):
+        try:
+            from sensor_msgs_py import point_cloud2
+        except ImportError:  # pragma: no cover - Humble ships this package
+            self.get_logger().warn('sensor_msgs_py unavailable; idling')
+            return
+        points = [(float(p[0]), float(p[1]), float(p[2]))
+                  for p in point_cloud2.read_points(
+                      msg, field_names=('x', 'y', 'z'), skip_nans=True)]
+        self.clusters = self.clusterer.cluster(points)
+        self._pub.publish(_marker_array_from_clusters(
+            self.clusters, msg.header.frame_id, msg.header.stamp, 'euclidean'))
+
+
+class DBSCANClustererNode(Node):
+    """PointCloud2 -> DBSCAN clustered obstacles on /perception/dbscan_clusters."""
+
+    def __init__(self, node_name='dbscan_clusterer'):
+        super().__init__(node_name)
+        self.declare_parameter('points_topic', '/oakd/points')
+        self.declare_parameter('eps', 0.1)
+        self.declare_parameter('min_samples', 5)
+        self.declare_parameter('markers_topic', '/perception/dbscan_clusters')
+        self.clusterer = DBSCANClusterer(
+            eps=float(self.get_parameter('eps').value),
+            min_samples=int(self.get_parameter('min_samples').value))
+        self._pub = self.create_publisher(
+            MarkerArray, self.get_parameter('markers_topic').value, 10)
+        self.create_subscription(
+            PointCloud2, self.get_parameter('points_topic').value,
+            self._on_points, qos_profile_sensor_data)
+        self.clusters = []
+        self.get_logger().info('dbscan_clusterer ready')
+
+    def _on_points(self, msg):
+        try:
+            from sensor_msgs_py import point_cloud2
+        except ImportError:  # pragma: no cover - Humble ships this package
+            self.get_logger().warn('sensor_msgs_py unavailable; idling')
+            return
+        points = [(float(p[0]), float(p[1]), float(p[2]))
+                  for p in point_cloud2.read_points(
+                      msg, field_names=('x', 'y', 'z'), skip_nans=True)]
+        clusters, _ = self.clusterer.cluster(points)
+        self.clusters = clusters
+        self._pub.publish(_marker_array_from_clusters(
+            self.clusters, msg.header.frame_id, msg.header.stamp, 'dbscan'))
+
+
+class RANSACGroundRemovalNode(Node):
+    """PointCloud2 -> RANSAC ground/obstacle segmentation on /perception/ransac_ground and /perception/ransac_obstacles."""
+
+    def __init__(self, node_name='ransac_ground_removal'):
+        super().__init__(node_name)
+        self.declare_parameter('points_topic', '/oakd/points')
+        self.declare_parameter('max_iterations', 100)
+        self.declare_parameter('distance_threshold', 0.05)
+        self.declare_parameter('normal_threshold', 0.85)
+        self.declare_parameter('ground_topic', '/perception/ransac_ground')
+        self.declare_parameter('obstacles_topic', '/perception/ransac_obstacles')
+        self.segmenter = RANSACGroundRemoval(
+            max_iterations=int(self.get_parameter('max_iterations').value),
+            distance_threshold=float(self.get_parameter('distance_threshold').value),
+            normal_threshold=float(self.get_parameter('normal_threshold').value))
+        self._ground_pub = self.create_publisher(
+            PointCloud2, self.get_parameter('ground_topic').value, 10)
+        self._object_pub = self.create_publisher(
+            PointCloud2, self.get_parameter('obstacles_topic').value, 10)
+        self.create_subscription(
+            PointCloud2, self.get_parameter('points_topic').value,
+            self._on_points, qos_profile_sensor_data)
+        self.ground = []
+        self.objects = []
+        self.get_logger().info('ransac_ground_removal ready')
+
+    def _on_points(self, msg):
+        try:
+            from sensor_msgs_py import point_cloud2
+        except ImportError:  # pragma: no cover - Humble ships this package
+            self.get_logger().warn('sensor_msgs_py unavailable; idling')
+            return
+        points = [(float(p[0]), float(p[1]), float(p[2]))
+                  for p in point_cloud2.read_points(
+                      msg, field_names=('x', 'y', 'z'), skip_nans=True)]
+        self.ground, self.objects = self.segmenter.segment(points)
+        self._ground_pub.publish(
+            point_cloud2.create_cloud_xyz32(msg.header, self.ground))
+        self._object_pub.publish(
+            point_cloud2.create_cloud_xyz32(msg.header, self.objects))
+
+
 from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
 
 
@@ -305,6 +634,18 @@ def scan_clusterer_main(args=None):
 
 def pointcloud_segmenter_main(args=None):
     return _run(PointcloudSegmenterNode, 'pointcloud_segmenter', args=args)
+
+
+def euclidean_clusterer_main(args=None):
+    return _run(EuclideanClustererNode, 'euclidean_clusterer', args=args)
+
+
+def dbscan_clusterer_main(args=None):
+    return _run(DBSCANClustererNode, 'dbscan_clusterer', args=args)
+
+
+def ransac_ground_removal_main(args=None):
+    return _run(RANSACGroundRemovalNode, 'ransac_ground_removal', args=args)
 
 
 if __name__ == '__main__':

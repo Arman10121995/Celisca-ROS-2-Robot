@@ -1,0 +1,356 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-16-21-09-728103-molar1-544356
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm perception=costmap_2d_observation -> navigation_costmap stack
+[robot_lab] algorithm localization=slam_toolbox -> slam stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[INFO] [robot_state_publisher-1]: process started with pid [544424]
+[INFO] [ign gazebo-2]: process started with pid [544426]
+[INFO] [parameter_bridge-3]: process started with pid [544428]
+[INFO] [gz_pointcloud_to_optical.py-4]: process started with pid [544431]
+[INFO] [ackermann_controller.py-5]: process started with pid [544433]
+[INFO] [joy_teleop-6]: process started with pid [544435]
+[INFO] [joy_node-7]: process started with pid [544437]
+[INFO] [twist_mux-8]: process started with pid [544439]
+[INFO] [twist_marker-9]: process started with pid [544441]
+[INFO] [joystick_relay.py-10]: process started with pid [544443]
+[INFO] [twist_relay-11]: process started with pid [544447]
+[INFO] [ekf_node-12]: process started with pid [544459]
+[INFO] [imu_republisher.py-13]: process started with pid [544466]
+[INFO] [map_saver_server-14]: process started with pid [544468]
+[INFO] [sync_slam_toolbox_node-15]: process started with pid [544495]
+[INFO] [lifecycle_manager-16]: process started with pid [544526]
+[INFO] [wheel_imu_fusion-17]: process started with pid [544540]
+[robot_state_publisher-1] [INFO] [1790864471.536636451] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790864471.537612872] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790864471.537698121] [robot_state_publisher]: got segment front_left_knuckle_link
+[robot_state_publisher-1] [INFO] [1790864471.537714761] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790864471.537724297] [robot_state_publisher]: got segment front_right_knuckle_link
+[robot_state_publisher-1] [INFO] [1790864471.537732297] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790864471.537740265] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790864471.537747817] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790864471.537755689] [robot_state_publisher]: got segment laser_mast_link
+[robot_state_publisher-1] [INFO] [1790864471.537763113] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790864471.537770697] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790864471.537778089] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790864471.537785705] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790864471.537792745] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790864471.537800425] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790864471.537807593] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790864471.537815209] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790864471.537830058] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790864471.537839658] [robot_state_publisher]: got segment rear_right_wheel_link
+[twist_mux-8] [INFO] [1790864471.514382610] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-8] [INFO] [1790864471.518116485] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-8] [INFO] [1790864471.518443463] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-8] [INFO] [1790864471.518591368] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[map_saver_server-14] [INFO] [1790864471.553712090] [map_saver_server]: 
+[map_saver_server-14] 	map_saver_server lifecycle node launched. 
+[map_saver_server-14] 	Waiting on external lifecycle transitions to activate
+[map_saver_server-14] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_saver_server-14] [INFO] [1790864471.553896859] [map_saver_server]: Creating
+[sync_slam_toolbox_node-15] [INFO] [1790864471.597374521] [slam_toolbox]: Node using stack size 40000000
+[lifecycle_manager-16] [INFO] [1790864471.634959288] [lifecycle_manager_slam]: Creating
+[lifecycle_manager-16] [INFO] [1790864471.639622288] [lifecycle_manager_slam]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-16] [INFO] [1790864471.645329645] [lifecycle_manager_slam]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-16] [INFO] [1790864471.645445005] [lifecycle_manager_slam]: [34m[1mConfiguring map_saver_server[0m[0m
+[map_saver_server-14] [INFO] [1790864471.645798799] [map_saver_server]: Configuring
+[lifecycle_manager-16] [INFO] [1790864471.652151791] [lifecycle_manager_slam]: [34m[1mActivating map_saver_server[0m[0m
+[map_saver_server-14] [INFO] [1790864471.653616055] [map_saver_server]: Activating
+[map_saver_server-14] [INFO] [1790864471.653696343] [map_saver_server]: Creating bond (map_saver_server) to lifecycle manager.
+[lifecycle_manager-16] [INFO] [1790864471.762271712] [lifecycle_manager_slam]: Server map_saver_server connected with bond.
+[lifecycle_manager-16] [INFO] [1790864471.762351776] [lifecycle_manager_slam]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-16] [INFO] [1790864471.762370944] [lifecycle_manager_slam]: [34m[1mCreating bond timer...[0m[0m
+[sync_slam_toolbox_node-15] [INFO] [1790864471.799182876] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[sync_slam_toolbox_node-15] [INFO] [1790864471.805362555] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mIgnition Gazebo Server v[0m[1;32m6.18.0[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world[0m[1;32m].[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32m3[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mNo systems loaded from SDF, loading defaults[0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [ServerConfig.cc:1043] [0m[1;36mLoaded ([0m[1;36m3[0m[1;36m) plugins from file [0m[1;36m[[0m[1;36m/home/molar1/.ignition/gazebo/6/server.config[0m[1;36m][0m
+[ign gazebo-2] [1;36m[Dbg] [Physics.cc:804] [0m[1;36mLoaded [[0m[1;36mignition::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/usr/lib/aarch64-linux-gnu/ign-physics-5/engine-plugins/libignition-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mCreate service on [[0m[1;32m/world/nav_empty/create[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mRemove service on [[0m[1;32m/world/nav_empty/remove[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/nav_empty/set_pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/nav_empty/set_pose_vector[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLight configuration service on [[0m[1;32m/world/nav_empty/light_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPhysics service on [[0m[1;32m/world/nav_empty/set_physics[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mSphericalCoordinates service on [[0m[1;32m/world/nav_empty/set_spherical_coordinates[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mEnable collision service on [[0m[1;32m/world/nav_empty/enable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mDisable collision service on [[0m[1;32m/world/nav_empty/disable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/nav_empty/visual_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/nav_empty/wheel_slip[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/nav_empty[0m[1;32m/control], [[0m[1;32m/world/nav_empty[0m[1;32m/control/state] and [[0m[1;32m/world/nav_empty[0m[1;32m/playback/control][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mnav_empty[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[ackermann_controller.py-5] [INFO] [1790864472.356717102] [ackermann_controller]: Ackermann drive: front steering (ackermann), minimum turning radius 0.49 m, steering ['front_left_steer_joint', 'front_right_steer_joint'], wheels ['rear_left_wheel_joint', 'rear_right_wheel_joint', 'front_left_wheel_joint', 'front_right_wheel_joint']
+[wheel_imu_fusion-17] [INFO] [1790864472.440950426] [sensor_fusion_wheel_imu_fusion]: wheel_imu_fusion ready
+[parameter_bridge-3] [INFO] [1790864472.603231250] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790864472.608347628] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> /imu/out (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790864472.614819373] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790864472.618759425] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera/image (gz.msgs.Image) -> /oakd/rgb/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790864472.623757083] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera/camera_info (gz.msgs.CameraInfo) -> /oakd/rgb/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790864472.628351090] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera/depth_image (gz.msgs.Image) -> /oakd/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-3] [INFO] [1790864472.632269350] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera/points (gz.msgs.PointCloudPacked) -> /oakd/points_gz (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[INFO] [create-18]: process started with pid [544719]
+[create-18] [INFO] [1790864473.042416297] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-18] [INFO] [1790864473.248918784] [ros_gz_sim]: Requested creation of entity.
+[create-18] [INFO] [1790864473.249029248] [ros_gz_sim]: OK creation of entity.
+[INFO] [create-18]: process has finished cleanly [pid 544719]
+[INFO] [spawner-19]: process started with pid [544748]
+[spawner-19] [INFO] [1790864473.981909924] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ign gazebo-2] [INFO] [1790864474.028706481] [GazeboSimROS2ControlPlugin]: robot_param_node is robot_state_publisher
+[ign gazebo-2] [INFO] [1790864474.028771985] [GazeboSimROS2ControlPlugin]: robot_param_node is robot_description
+[ign gazebo-2] [INFO] [1790864474.062079897] [gz_ros2_control]: connected to service!! robot_state_publisher asking for robot_description
+[ign gazebo-2] [INFO] [1790864474.063363040] [gz_ros2_control]: Received URDF from param server
+[ign gazebo-2] [INFO] [1790864474.064990632] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_joint'] (Entity='83') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065070569] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_imu_joint'] (Entity='84') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065088105] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_left_camera_joint'] (Entity='85') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065099945] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_left_camera_optical_joint'] (Entity='86') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065110473] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_rgb_camera_joint'] (Entity='87') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065120841] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_rgb_camera_optical_joint'] (Entity='88') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065130409] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_right_camera_joint'] (Entity='89') is skipped.
+[ign gazebo-2] [INFO] [1790864474.065140425] [gz_ros2_control]: [gz_ros2_control] Fixed joint ['oakd_right_camera_optical_joint'] (Entity='90') is skipped.
+[ign gazebo-2] [INFO] [1790864474.075220636] [gz_ros2_control]: The position_proportional_gain has been set to: 0.1
+[ign gazebo-2] [INFO] [1790864474.075347389] [gz_ros2_control]: Loading joint: front_left_steer_joint
+[ign gazebo-2] [INFO] [1790864474.075558078] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790864474.075634142] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.075653374] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.075664798] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790864474.075673982] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.075715166] [gz_ros2_control]: Loading joint: front_right_steer_joint
+[ign gazebo-2] [INFO] [1790864474.075731135] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790864474.075741247] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.075751007] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.075759679] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790864474.075767999] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.075787743] [gz_ros2_control]: Loading joint: rear_left_wheel_joint
+[ign gazebo-2] [INFO] [1790864474.075799519] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790864474.075808031] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.075816735] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.075825183] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790864474.075833567] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.075851519] [gz_ros2_control]: Loading joint: rear_right_wheel_joint
+[ign gazebo-2] [INFO] [1790864474.075863135] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790864474.075871295] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.075879391] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.075889567] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790864474.075898271] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.075926304] [gz_ros2_control]: Loading joint: front_left_wheel_joint
+[ign gazebo-2] [INFO] [1790864474.075943232] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790864474.076033600] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.076050528] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.076061696] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790864474.076070688] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.076094880] [gz_ros2_control]: Loading joint: front_right_wheel_joint
+[ign gazebo-2] [INFO] [1790864474.076107712] [gz_ros2_control]: 	State:
+[ign gazebo-2] [INFO] [1790864474.076116160] [gz_ros2_control]: 		 position
+[ign gazebo-2] [INFO] [1790864474.076124033] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.076131841] [gz_ros2_control]: 	Command:
+[ign gazebo-2] [INFO] [1790864474.076139969] [gz_ros2_control]: 		 velocity
+[ign gazebo-2] [INFO] [1790864474.076265345] [gz_ros2_control]: Loading sensor: imu
+[ign gazebo-2] [INFO] [1790864474.076284161] [gz_ros2_control]: 	State:
+[ign gazebo-2] [WARN] [1790864474.076295073] [gz_ros2_control]: IMU sensor 'imu' not found in hardware_info, skipping.
+[ign gazebo-2] [INFO] [1790864474.076362306] [resource_manager]: Initialize hardware 'ackermann_car_system' 
+[ign gazebo-2] [WARN] [1790864474.076405090] [gz_ros2_control]: The ign_ros2_control plugin got renamed to gz_ros2_control.
+[ign gazebo-2] Update the <ros2_control> tag and gazebo plugin to
+[ign gazebo-2] <hardware>
+[ign gazebo-2]   <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+[ign gazebo-2] </hardware>
+[ign gazebo-2] <gazebo>
+[ign gazebo-2]   <plugin filename="gz_ros2_control-system"name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+[ign gazebo-2]     ...
+[ign gazebo-2]   </plugin>
+[ign gazebo-2] </gazebo>
+[ign gazebo-2] [INFO] [1790864474.076558723] [resource_manager]: Successful initialization of hardware 'ackermann_car_system'
+[ign gazebo-2] [INFO] [1790864474.076636867] [resource_manager]: 'configure' hardware 'ackermann_car_system' 
+[ign gazebo-2] [INFO] [1790864474.076645859] [gz_ros2_control]: System Successfully configured!
+[ign gazebo-2] [INFO] [1790864474.076666435] [resource_manager]: Successful 'configure' of hardware 'ackermann_car_system'
+[ign gazebo-2] [INFO] [1790864474.076677123] [resource_manager]: 'activate' hardware 'ackermann_car_system' 
+[ign gazebo-2] [INFO] [1790864474.076689187] [resource_manager]: Successful 'activate' of hardware 'ackermann_car_system'
+[ign gazebo-2] [INFO] [1790864474.076698915] [gz_ros2_control]: Loading controller_manager
+[ign gazebo-2] [WARN] [1790864474.165075235] [gz_ros2_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.002 s).
+[ign gazebo-2] [INFO] [1790864474.236165322] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-19] [INFO] [1790864474.259480320] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[ign gazebo-2] [INFO] [1790864474.261965837] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[ign gazebo-2] [INFO] [1790864474.262312686] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[INFO] [spawner-20]: process started with pid [544832]
+[ign gazebo-2] libEGL warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+[ign gazebo-2] libEGL warning: MESA-LOADER: failed to open nvidia-drm: /usr/lib/dri/nvidia-drm_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/aarch64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+[ign gazebo-2] 
+[ign gazebo-2] libEGL warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+[ign gazebo-2] libEGL warning: egl: failed to create dri2 screen
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m2[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mign_ros2_control::IgnitionROS2ControlPlugin[0m[1;36m] for entity [[0m[1;36m42[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::Imu[0m[1;36m] for entity [[0m[1;36m42[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:506] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:431] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::Sensors[0m[1;36m] for entity [[0m[1;36m42[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:411] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:258] [0m[1;36mWaiting for init[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [UserCommands.cc:1303] [0m[1;36mCreated entity [[0m[1;36m42[0m[1;36m] named [[0m[1;36mackermann_car[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationFeatures.cc:71] [0m[1;36mSimulation timestep set to: [0m[1;36m0.002[0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/nav_empty/scene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/nav_empty/scene/deletion[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/nav_empty/state[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:610] [0m[1;36mInitialization needed[0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:270] [0m[1;36mInitializing render context[0m[1;36m[0m
+[ign gazebo-2] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-2] [1;36m[Dbg] [ImuSensor.cc:148] [0m[1;36mIMU data for [[0m[1;36mackermann_car::base_footprint::imu[0m[1;36m] advertised on [[0m[1;36mimu[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RenderUtil.cc:2591] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[spawner-19] [INFO] [1790864474.864288148] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[ign gazebo-2] [INFO] [1790864475.071604972] [controller_manager]: Loading controller 'car_steering_controller'
+[sync_slam_toolbox_node-15] [WARN] [1790864475.090911789] [slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[sync_slam_toolbox_node-15] [WARN] [1790864475.091143311] [slam_toolbox]: maximum laser range setting (20.0 m) exceeds the capabilities of the used Lidar (12.0 m)
+[sync_slam_toolbox_node-15] Registering sensor: [Custom Described Lidar]
+[spawner-20] [INFO] [1790864475.172179304] [spawner_car_steering_controller]: [94mLoaded [1mcar_steering_controller[0m
+[INFO] [spawner-19]: process has finished cleanly [pid 544748]
+[ign gazebo-2] [INFO] [1790864475.176565374] [controller_manager]: Configuring controller 'car_steering_controller'
+[ign gazebo-2] [INFO] [1790864475.177800452] [car_steering_controller]: configure successful
+[ign gazebo-2] [INFO] [1790864475.196367938] [car_steering_controller]: activate successful
+[spawner-20] [INFO] [1790864475.207948412] [spawner_car_steering_controller]: [92mConfigured and activated [1mcar_steering_controller[0m
+[ign gazebo-2] [INFO] [1790864475.210034503] [controller_manager]: Loading controller 'car_wheel_controller'
+[spawner-20] [INFO] [1790864475.243527280] [spawner_car_steering_controller]: [94mLoaded [1mcar_wheel_controller[0m
+[ign gazebo-2] [INFO] [1790864475.244034930] [controller_manager]: Configuring controller 'car_wheel_controller'
+[ign gazebo-2] [INFO] [1790864475.245747067] [car_wheel_controller]: configure successful
+[ign gazebo-2] [INFO] [1790864475.262237070] [car_wheel_controller]: activate successful
+[spawner-20] [INFO] [1790864475.285987206] [spawner_car_steering_controller]: [92mConfigured and activated [1mcar_wheel_controller[0m
+[INFO] [spawner-20]: process has finished cleanly [pid 544832]
+[ign gazebo-2] [1;36m[Dbg] [Sensors.cc:284] [0m[1;36mRendering Thread initialized[Dbg] [Sensors.cc:610] [0m[1;36mInitialization needed[0m[1;36mRendering Thread initialized[Dbg] [Sensors.cc:610] [0m[1;36m[0m
+[ign gazebo-2] [1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RgbdCameraSensor.cc:219] [0m[1;36mRGB images for [[0m[1;36mackermann_car::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera[0m[1;36m/image][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RgbdCameraSensor.cc:233] [0m[1;36mDepth images for [[0m[1;36mackermann_car::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera[0m[1;36m/depth_image][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [RgbdCameraSensor.cc:247] [0m[1;36mPoints for [[0m[1;36mackermann_car::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera[0m[1;36m/points][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [CameraSensor.cc:705] [0m[1;36mCamera info for [[0m[1;36mackermann_car::oakd_rgb_camera_frame::rgbd_camera[0m[1;36m] advertised on [[0m[1;36mworld/nav_empty/model/ackermann_car/link/oakd_rgb_camera_frame/sensor/rgbd_camera/camera_info[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [Lidar.cc:138] [0m[1;36mLaser scans for [[0m[1;36mackermann_car::base_footprint::lidar[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[ign gazebo-2] [1;36m[Dbg] [GpuLidarSensor.cc:163] [0m[1;36mLidar points for [[0m[1;36mackermann_car::base_footprint::lidar[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[ERROR] [wheel_imu_fusion-17]: process[wheel_imu_fusion-17] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [lifecycle_manager-16]: process[lifecycle_manager-16] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [sync_slam_toolbox_node-15]: process[sync_slam_toolbox_node-15] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [map_saver_server-14]: process[map_saver_server-14] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [imu_republisher.py-13]: process[imu_republisher.py-13] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [ekf_node-12]: process[ekf_node-12] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [twist_relay-11]: process[twist_relay-11] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [joystick_relay.py-10]: process[joystick_relay.py-10] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [twist_marker-9]: process[twist_marker-9] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [twist_mux-8]: process[twist_mux-8] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [joy_node-7]: process[joy_node-7] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [joy_teleop-6]: process[joy_teleop-6] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [ackermann_controller.py-5]: process[ackermann_controller.py-5] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [gz_pointcloud_to_optical.py-4]: process[gz_pointcloud_to_optical.py-4] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [parameter_bridge-3]: process[parameter_bridge-3] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [ign gazebo-2]: process[ign gazebo-2] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [robot_state_publisher-1]: process[robot_state_publisher-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [wheel_imu_fusion-17]: sending signal 'SIGTERM' to process[wheel_imu_fusion-17]
+[INFO] [lifecycle_manager-16]: sending signal 'SIGTERM' to process[lifecycle_manager-16]
+[INFO] [sync_slam_toolbox_node-15]: sending signal 'SIGTERM' to process[sync_slam_toolbox_node-15]
+[INFO] [map_saver_server-14]: sending signal 'SIGTERM' to process[map_saver_server-14]
+[INFO] [imu_republisher.py-13]: sending signal 'SIGTERM' to process[imu_republisher.py-13]
+[INFO] [ekf_node-12]: sending signal 'SIGTERM' to process[ekf_node-12]
+[INFO] [sync_slam_toolbox_node-15]: process has finished cleanly [pid 544495]
+[INFO] [twist_relay-11]: sending signal 'SIGTERM' to process[twist_relay-11]
+[INFO] [joystick_relay.py-10]: sending signal 'SIGTERM' to process[joystick_relay.py-10]
+[INFO] [twist_marker-9]: sending signal 'SIGTERM' to process[twist_marker-9]
+[INFO] [twist_mux-8]: sending signal 'SIGTERM' to process[twist_mux-8]
+[INFO] [joy_node-7]: sending signal 'SIGTERM' to process[joy_node-7]
+[INFO] [joy_teleop-6]: sending signal 'SIGTERM' to process[joy_teleop-6]
+[INFO] [ackermann_controller.py-5]: sending signal 'SIGTERM' to process[ackermann_controller.py-5]
+[INFO] [gz_pointcloud_to_optical.py-4]: sending signal 'SIGTERM' to process[gz_pointcloud_to_optical.py-4]
+[INFO] [parameter_bridge-3]: sending signal 'SIGTERM' to process[parameter_bridge-3]
+[INFO] [ign gazebo-2]: sending signal 'SIGTERM' to process[ign gazebo-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGTERM' to process[robot_state_publisher-1]
+[lifecycle_manager-16] [INFO] [1790864507.462974646] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-16] [INFO] [1790864507.463122551] [lifecycle_manager_slam]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_slam)
+[lifecycle_manager-16] [INFO] [1790864507.463185207] [lifecycle_manager_slam]: [34m[1mTerminating bond timer...[0m[0m
+[ERROR] [ign gazebo-2]: process has died [pid 544426, exit code -15, cmd 'ruby /usr/bin/ign gazebo /home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world -v 4 -s -r --force-version 6'].
+[sync_slam_toolbox_node-15] [INFO] [1790864507.473164006] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_saver_server-14] [INFO] [1790864507.480033607] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_saver_server-14] [INFO] [1790864507.480227208] [map_saver_server]: Running Nav2 LifecycleNode rcl preshutdown (map_saver_server)
+[map_saver_server-14] [INFO] [1790864507.480334440] [map_saver_server]: Deactivating
+[map_saver_server-14] [INFO] [1790864507.480358600] [map_saver_server]: Destroying bond (map_saver_server) to lifecycle manager.
+[map_saver_server-14] [INFO] [1790864507.490603673] [map_saver_server]: Cleaning up
+[map_saver_server-14] [INFO] [1790864507.490698585] [map_saver_server]: Destroying bond (map_saver_server) to lifecycle manager.
+[ekf_node-12] [INFO] [1790864507.491984703] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_relay-11] [INFO] [1790864507.496830038] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_marker-9] [INFO] [1790864507.504888348] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [parameter_bridge-3]: process has finished cleanly [pid 544428]
+[twist_mux-8] [INFO] [1790864507.516198674] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-7] [INFO] [1790864507.525359741] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1790864507.546273824] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1790864507.554019141] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [launch]: process[ign gazebo-2] was required: shutting down launched system
+[joy_teleop-6] Traceback (most recent call last):
+[joy_teleop-6]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-6]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-6]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 435, in main
+[joy_teleop-6]     rclpy.spin(node)
+[joy_teleop-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[joy_teleop-6]     executor.spin_once()
+[joy_teleop-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[joy_teleop-6]     self._spin_once_impl(timeout_sec)
+[joy_teleop-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+[joy_teleop-6]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[joy_teleop-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+[joy_teleop-6]     return next(self._cb_iter)
+[joy_teleop-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 685, in _wait_for_ready_callbacks
+[joy_teleop-6]     raise ExternalShutdownException()
+[joy_teleop-6] rclpy.executors.ExternalShutdownException
+[map_saver_server-14] [INFO] [1790864507.660371355] [map_saver_server]: Destroying
+[lifecycle_manager-16] [INFO] [1790864507.661817570] [lifecycle_manager_slam]: Destroying lifecycle_manager_slam
+[INFO] [twist_marker-9]: process has finished cleanly [pid 544441]
+[INFO] [twist_relay-11]: process has finished cleanly [pid 544447]
+[INFO] [twist_mux-8]: process has finished cleanly [pid 544439]
+[INFO] [joy_node-7]: process has finished cleanly [pid 544437]
+[INFO] [wheel_imu_fusion-17]: process has finished cleanly [pid 544540]
+[imu_republisher.py-13] Traceback (most recent call last):
+[imu_republisher.py-13]   File "/home/molar1/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py", line 54, in <module>
+[imu_republisher.py-13]     main()
+[imu_republisher.py-13]   File "/home/molar1/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py", line 45, in main
+[imu_republisher.py-13]     rclpy.spin(node)
+[imu_republisher.py-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[imu_republisher.py-13]     executor.spin_once()
+[imu_republisher.py-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[imu_republisher.py-13]     self._spin_once_impl(timeout_sec)
+[imu_republisher.py-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+[imu_republisher.py-13]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[imu_republisher.py-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+[imu_republisher.py-13]     return next(self._cb_iter)
+[imu_republisher.py-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 685, in _wait_for_ready_callbacks
+[imu_republisher.py-13]     raise ExternalShutdownException()
+[imu_republisher.py-13] rclpy.executors.ExternalShutdownException
+[INFO] [gz_pointcloud_to_optical.py-4]: process has finished cleanly [pid 544431]
+[INFO] [lifecycle_manager-16]: process has finished cleanly [pid 544526]
+[INFO] [map_saver_server-14]: process has finished cleanly [pid 544468]
+[INFO] [joystick_relay.py-10]: process has finished cleanly [pid 544443]
+[ERROR] [imu_republisher.py-13]: process has died [pid 544466, exit code 1, cmd '/home/molar1/bumperbot_ws/install/robot_lab_localization/lib/robot_lab_localization/imu_republisher.py --ros-args --params-file /workspace/molar/.tmp/launch_params_3z_6sut0'].
+[ERROR] [joy_teleop-6]: process has died [pid 544435, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_du6yy5qz'].
+[INFO] [ackermann_controller.py-5]: process has finished cleanly [pid 544433]
+[INFO] [ekf_node-12]: process has finished cleanly [pid 544459]
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 544424]

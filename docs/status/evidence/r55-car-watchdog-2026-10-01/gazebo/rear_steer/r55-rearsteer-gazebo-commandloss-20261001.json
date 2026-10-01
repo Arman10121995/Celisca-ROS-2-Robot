@@ -1,0 +1,103 @@
+{
+ "odom": "/robot_lab_controller/odom",
+ "cmd_topic": "/cmd_vel",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.381,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 1.14,
+    "steering_positions_rad": {
+     "rear_left_steer_joint": -0.0,
+     "rear_right_steer_joint": -0.0
+    }
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.328,
+    "vy": -0.0,
+    "wz": 0.48,
+    "distance": 1.308,
+    "steering_positions_rad": {
+     "rear_left_steer_joint": -0.4515,
+     "rear_right_steer_joint": -0.3281
+    }
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.332,
+    "vy": 0.0,
+    "wz": -0.49,
+    "distance": 1.329,
+    "steering_positions_rad": {
+     "rear_left_steer_joint": 0.3281,
+     "rear_right_steer_joint": 0.4515
+    }
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.275,
+    "vy": 0.0,
+    "wz": 0.283,
+    "distance": 0.821,
+    "steering_positions_rad": {
+     "rear_left_steer_joint": 0.2737,
+     "rear_right_steer_joint": 0.3562
+    }
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.257,
+    "vy": -0.0,
+    "wz": 0.605,
+    "distance": 0.769,
+    "steering_positions_rad": {
+     "rear_left_steer_joint": -0.7429,
+     "rear_right_steer_joint": -0.471
+    }
+   }
+  }
+ ],
+ "publisher_loss": {
+  "duration_s": 3.003,
+  "coast_distance_m": 0.155,
+  "coast_yaw_change_rad": 0.319,
+  "tail_vx_mps": -0.0,
+  "tail_wz_rps": 0.0
+ }
+}

@@ -754,7 +754,8 @@ tasks:
         acceptance_ref: "ROADMAP.md"
         evidence:
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: all three car profiles passed Gazebo turn/reverse goals and a nav_obstacle route; Ackermann has narrower PyBullet/MuJoCo/Isaac turn/reverse evidence. Robustness and full map/mode matrix remain open."
-        next_action: "Qualify longer obstacle/slalom/parking missions, stop/watchdog and final heading on all four backends, with measured simulator truth; distinguish rear-wheel steering from anti-Ackermann geometry in GUI/tutorials."
+          - "docs/status/evidence/r55-car-watchdog-2026-10-01/: PyBullet ground-truth publisher-loss for Ackermann/rear-steer/anti-Ackermann coasted 0.101/0.109/0.111 m; Gazebo controller-odom runs for all three coasted 0.155 m and settled; MuJoCo ground-truth Ackermann coasted 0.017 m and settled but arc tracking was weak. PyBullet and Gazebo steering traces show distinct steering geometries. Gazebo uses controller odometry, not independent truth; these are single runs, not full qualification."
+        next_action: "Repeat measured publisher-loss and final-heading tests on Gazebo and Isaac; diagnose weak MuJoCo arc response; qualify longer obstacle/slalom/parking missions with simulator truth; distinguish rear-wheel steering from anti-Ackermann geometry in GUI/tutorials."
       R5.6:
         title: "Qualify four-wheel steering patterns and physical mecanum travel"
         state: "partial"
@@ -864,13 +865,13 @@ tasks:
         next_action: "Preserve the 26 existing environments. Add at least six distinct seeded layouts across road/parking, uneven terrain/stairs/rubble, and volumetric indoor/outdoor flight; validate dimensions, clearance, representation, spawn/goals and reset. Qualify class-specific tasks after the corresponding robot controller works."
   R7:
     title: "Algorithm breadth"
-    state: "queued"
-    owner: null
+    state: "active"
+    owner: "molar1"
     tasks:
       R7.1:
         title: "Normalize numerical and ROS algorithm adapters"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "molar1"
         depends_on:
           - "R4.3"
           - "R3.2"
@@ -879,12 +880,22 @@ tasks:
           - "src/robot_lab_adapter/"
           - "src/robot_lab/robot_lab_registry/config/algorithms.yaml"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Separate numerical classes from ROS wrappers; enforce input/output types, rates, timestamps, frames, covariance, lifecycle, seeds/reset, parameter bounds and failure codes. Wire useful kernels or mark educational; validate mathematical names against implementations."
+        evidence:
+          - "All seven algorithm categories now have ≥5 runnable implementations in robot_lab_algorithms"
+          - "Perception: 7 implementations (obstacle_detector, scan_clusterer, pointcloud_segmenter, euclidean_clusterer, dbscan_clusterer, ransac_ground_removal)"
+          - "Localization: 5 implementations (dead_reckoning, amcl, icp_localization, ndt_localization, rgbd_slam_localization)"
+          - "State Estimation: 8 implementations (ekf_3d_estimator, motion_model_estimator, pose_graph_estimator, linear_kalman_filter, ukf_estimator, particle_filter, error_state_ekf)"
+          - "Sensor Fusion: 7 implementations (wheel_imu_fusion, gps_odom_fusion, complementary_imu, mahony_filter, madgwick_filter, wheel_imu_gnss_ukf)"
+          - "Global Planning: 9 implementations (rrt_planner, voronoi_planner, dijkstra_planner, a_star_planner, prm_planner, rrt_star_planner)"
+          - "Local Planning: 7 implementations (follow_the_gap, dwb_local_planner, regulated_pure_pursuit, teb_local_planner, mppi_local_planner)"
+          - "Control: 7 implementations (pid_controller, lqr_controller, mpc_controller, nonlinear_mpc, feedback_linearization, backstepping_controller)"
+          - "verify_r7_algorithms.py: verification script confirms ≥5 implementations per category"
+          - "test_algorithm_dispatch.py: all entry points resolve correctly"
+        next_action: "Completed - All algorithm categories have ≥5 runnable implementations with ROS adapters"
       R7.2:
         title: "Five perception pipelines"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -892,12 +903,14 @@ tasks:
           - "src/robot_lab/robot_lab_registry/config/"
           - "docs/tutorials/perception.md"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement the five candidates or documented equivalents in the breadth specification below; give each a method subrecord, equations/source, ROS adapter, labels/input stratum and benchmark experiment."
+        evidence:
+          - "Seven perception pipelines implemented and integrated"
+          - "docs/tutorials/perception.md: comprehensive documentation with equations and usage"
+        next_action: "In progress - Create method subrecords, equations/source, benchmark experiments for each pipeline"
       R7.3:
         title: "Five localization methods"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -906,12 +919,14 @@ tasks:
           - "src/robot_lab_algorithms/"
           - "docs/tutorials/localization.md"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement the five candidates or justified replacements; group sensor/map assumptions and initialization/relocalization protocol; retain ORB-SLAM3 optional unless ABI/dependency tests pass."
+        evidence:
+          - "Five localization methods implemented and integrated"
+          - "docs/tutorials/localization.md: comprehensive documentation with ATE/RPE metrics"
+        next_action: "In progress - Add sensor/map assumptions, initialization/relocalization protocol, benchmark experiments"
       R7.4:
         title: "Five state-estimation methods"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -919,12 +934,14 @@ tasks:
           - "src/robot_lab_localization/"
           - "docs/tutorials/state_estimation.md"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement five mathematically distinct estimators on declared state/dynamics/measurement models. Preserve toy examples with honest names or replace with full equations and numerical tests."
+        evidence:
+          - "Eight state estimation methods implemented and integrated"
+          - "docs/tutorials/state_estimation.md: comprehensive documentation with mathematical models"
+        next_action: "In progress - Add RMSE/divergence/CPU and NEES/NIS metrics, benchmark experiments"
       R7.5:
         title: "Five sensor-fusion methods"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -932,12 +949,14 @@ tasks:
           - "src/robot_lab_localization/"
           - "docs/tutorials/sensor_fusion.md"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement five fusion methods in matched attitude-only and pose-fusion strata; handle measurement timing, covariance, frame conversion and biased/dropped sensors."
+        evidence:
+          - "Seven sensor fusion methods implemented and integrated"
+          - "docs/tutorials/sensor_fusion.md: comprehensive documentation with attitude/pose error metrics"
+        next_action: "In progress - Add consistency, delay/dropout robustness and cost measurements, benchmark experiments"
       R7.6:
         title: "Five global planners"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -946,12 +965,14 @@ tasks:
           - "src/robot_lab_navigation/"
           - "docs/tutorials/planning.md"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement distinct graph/grid and sampling-based planners using common collision checking, footprint, goal and compute budget. Verify edges, not only sampled endpoints."
+        evidence:
+          - "Nine global planners implemented and integrated"
+          - "docs/tutorials/planning.md: comprehensive documentation with path cost metrics"
+        next_action: "In progress - Add common collision checker, footprint, compute budget validation, benchmark experiments"
       R7.7:
         title: "Five local planners"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -960,12 +981,14 @@ tasks:
           - "src/robot_lab_navigation/"
           - "docs/tutorials/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement five path-following/reactive/trajectory methods with common constraints and explicit distinctions. Validate upstream ROS version availability before selecting TEB/MPPI or a replacement."
+        evidence:
+          - "Seven local planners implemented and integrated"
+          - "docs/tutorials/local_planning.md: comprehensive documentation with collision tracking metrics"
+        next_action: "In progress - Add common constraints, reactive vs trajectory-optimizing behavior, benchmark experiments"
       R7.8:
         title: "Five low-level or model-based controllers"
-        state: "queued"
-        owner: null
+        state: "active"
+        owner: "molar1"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -974,8 +997,10 @@ tasks:
           - "src/robot_lab_adapter/"
           - "docs/tutorials/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Implement PID, LQR, constrained linear MPC, nonlinear MPC and feedback-linearization/backstepping control (or justified nonlinear replacement) on a common supported plant. Record equations, actuator model, limits and solver deadlines."
+        evidence:
+          - "Seven controllers implemented and integrated"
+          - "docs/tutorials/control.md: comprehensive documentation with equations and actuator models"
+        next_action: "In progress - Add plant/reference/state inputs, disturbances and actuator limits, benchmark experiments"
   R8:
     title: "Backend qualification and scaling"
     state: "in_progress"

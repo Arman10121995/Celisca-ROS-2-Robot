@@ -75,9 +75,17 @@
         <material name="car_body"/>
       </visual>
       <collision>
+        <!-- Wheel wells: the chassis collision is narrower than the body
+             shell (0.16 m vs 0.22 m).  At the full steering swing the
+             tire's inner rim reaches y = min(0.14 - 0.02*cos(0.8) -
+             0.05*sin(0.8)) = 0.090 m, and a full-width collision box
+             (edge at 0.11 m) made MuJoCo resolve the sweep with a ~113 N
+             chassis-tire contact that saturated the 10 N*m steering
+             servos (0.23 rad measured of 0.45 commanded, 2026-10-01).
+             The visual keeps the full shell. -->
         <origin xyz="${body_x} 0 0.04" rpy="0 0 0"/>
         <geometry>
-          <box size="0.48 0.22 0.08"/>
+          <box size="0.48 0.16 0.08"/>
         </geometry>
       </collision>
     </link>

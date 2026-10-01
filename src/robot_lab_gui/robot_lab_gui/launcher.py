@@ -429,8 +429,12 @@ class SimulationLauncherGui(tk.Tk):
         self.cmd_vel_pub = None
         self.drive_repeat_job = None
         self.drive_model = RampDrive()
+        self.drive_strafe_model = RampDrive()
         self.drive_buttons = set()
         self.drive_button_widgets = {}
+        self.drive_strafe_buttons = set()
+        self.drive_strafe_widgets = {}
+        self.current_lateral = 0.0
         self.drive_keys = set()
         self.drive_stop_latched = False
         self.drive_joystick = LinuxJoystick()
@@ -460,6 +464,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
         self.bhl_policy_var = tk.BooleanVar(value=True)
+        self.steering_mode_var = tk.StringVar(value="")
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
         self.command_var = tk.StringVar()
@@ -856,15 +861,40 @@ class SimulationLauncherGui(tk.Tk):
                     "unqualified. Uncheck for the passive spawn stance with no "
                     "policy node.")
 
-        ttk.Label(controls, text="Drive").grid(row=24, column=0, sticky="w", pady=(12, 0))
+        steering_frame = ttk.Frame(controls)
+        steering_frame.grid(row=24, column=0, sticky="ew", pady=(8, 0))
+        ttk.Label(steering_frame, text="4WS pattern").pack(side="left")
+        self.steering_mode_combo = ttk.Combobox(
+            steering_frame, textvariable=self.steering_mode_var,
+            values=("", "ackermann", "in_phase", "crab", "pivot"),
+            state="disabled", width=11)
+        self.steering_mode_combo.pack(side="left", padx=(6, 0))
+        self.steering_mode_combo.bind(
+            "<<ComboboxSelected>>",
+            lambda _event: self._update_validation_and_command())
+        add_tooltip(self.steering_mode_combo,
+                    "Four-wheel-steer pattern for four_wheel_steer_car, passed "
+                    "as steering_mode:= to the launch.  Empty keeps the "
+                    "profile default (ackermann = opposite-phase).  Patterns "
+                    "are measured per backend under R5.6; see the ledger.")
+
+        ttk.Label(controls, text="Drive").grid(row=25, column=0, sticky="w", pady=(12, 0))
         drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=25, column=0, sticky="ew", pady=(2, 8))
+        drive_frame.grid(row=26, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
         forward_button = ttk.Button(drive_frame, text="Forward")
         forward_button.grid(row=0, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(forward_button, 1.0, 0.0)
+
+        self.strafe_left_button = ttk.Button(drive_frame, text="Strafe L")
+        self.strafe_left_button.grid(row=0, column=0, sticky="ew", padx=2, pady=2)
+        self._bind_strafe_button(self.strafe_left_button, 1.0)
+
+        self.strafe_right_button = ttk.Button(drive_frame, text="Strafe R")
+        self.strafe_right_button.grid(row=0, column=2, sticky="ew", padx=2, pady=2)
+        self._bind_strafe_button(self.strafe_right_button, -1.0)
 
         left_button = ttk.Button(drive_frame, text="Left")
         left_button.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
@@ -882,7 +912,7 @@ class SimulationLauncherGui(tk.Tk):
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
         speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=26, column=0, sticky="ew", pady=(0, 10))
+        speed_frame.grid(row=27, column=0, sticky="ew", pady=(0, 10))
         speed_frame.columnconfigure(1, weight=1)
         speed_frame.columnconfigure(3, weight=1)
         ttk.Checkbutton(speed_frame, text="Override robot drive limits",
@@ -944,7 +974,7 @@ class SimulationLauncherGui(tk.Tk):
         ttk.Label(input_frame, textvariable=self.drive_status_var).pack(side="left", padx=8)
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=27, column=0, sticky="ew", pady=(0, 4))
+        self.save_map_button.grid(row=28, column=0, sticky="ew", pady=(0, 4))
 
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
@@ -1760,6 +1790,20 @@ class SimulationLauncherGui(tk.Tk):
                 and self.mode_var.get() == "loc"
                 and self.launch_kind_var.get() == "simulation")
 
+    def _drive_type(self):
+        profile = self.robot_profiles.get(self.robot_var.get(), {})
+        return str(profile.get("drive", {}).get("type", "diff"))
+
+    def _four_wheel_steer_selectable(self):
+        """The steering-pattern override is only meaningful for this drive."""
+        return (self._drive_type() in ("four_wheel_steer", "4ws",
+                                       "four_wheel_steering", "swerve")
+                and self.launch_kind_var.get() == "simulation")
+
+    def _mecanum_selectable(self):
+        return (self._drive_type() in ("mecanum", "roller", "omni")
+                and self.launch_kind_var.get() == "simulation")
+
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
@@ -1774,6 +1818,11 @@ class SimulationLauncherGui(tk.Tk):
             command.append(
                 "bhl_enable_policy:=%s"
                 % ("true" if self.bhl_policy_var.get() else "false"))
+        if command and self._four_wheel_steer_selectable() \
+                and self.steering_mode_var.get():
+            command = [part for part in command
+                       if not part.startswith("steering_mode:=")]
+            command.append("steering_mode:=%s" % self.steering_mode_var.get())
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -1849,6 +1898,13 @@ class SimulationLauncherGui(tk.Tk):
             ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
         self.bhl_policy_checkbox.state(
             ["!disabled"] if self._bhl_policy_selectable() else ["disabled"])
+        self.steering_mode_combo.configure(
+            state="readonly" if self._four_wheel_steer_selectable() else "disabled")
+        for button in self.drive_strafe_widgets.values():
+            button.state(
+                ["!disabled"] if self._mecanum_selectable() else ["disabled"])
+        if not self._mecanum_selectable():
+            self.drive_strafe_buttons.clear()
 
         # Clear cached compatibility results (robot/mode/map changed)
         self._compat_cache.clear()
@@ -2284,6 +2340,22 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_button_widgets[direction] = button
         button.configure(command=lambda: self._start_drive(*direction))
 
+    def _bind_strafe_button(self, button, sign):
+        """Latch a lateral command (mecanum); only enabled for that drive."""
+        self.drive_strafe_widgets[sign] = button
+        button.configure(command=lambda: self._start_strafe(sign))
+
+    def _start_strafe(self, sign):
+        if sign in self.drive_strafe_buttons:
+            self.drive_strafe_buttons.remove(sign)
+        else:
+            self.drive_strafe_buttons.add(sign)
+        button = self.drive_strafe_widgets.get(sign)
+        if button is not None:
+            button.state(["pressed"] if sign in self.drive_strafe_buttons
+                         else ["!pressed"])
+        self._schedule_drive()
+
     def _toggle_drive_input(self):
         if not self.drive_input_enabled.get():
             self.drive_keys.clear()
@@ -2325,10 +2397,11 @@ class SimulationLauncherGui(tk.Tk):
             self.cmd_vel_pub = self.ros_node.create_publisher(Twist, "/key_vel", 10)
         return True
 
-    def _publish_drive(self, linear, angular):
+    def _publish_drive(self, linear, angular, lateral=0.0):
         if self._ensure_ros_publisher():
             msg = Twist()
             msg.linear.x = float(linear)
+            msg.linear.y = float(lateral)
             msg.angular.z = float(angular)
             self.cmd_vel_pub.publish(msg)
             rclpy.spin_once(self.ros_node, timeout_sec=0.0)
@@ -2341,7 +2414,8 @@ class SimulationLauncherGui(tk.Tk):
             "--once",
             "/key_vel",
             "geometry_msgs/msg/Twist",
-            f"{{linear: {{x: {float(linear):.3f}}}, angular: {{z: {float(angular):.3f}}}}}",
+            f"{{linear: {{x: {float(linear):.3f}, y: {float(lateral):.3f}}}, "
+            f"angular: {{z: {float(angular):.3f}}}}}",
         ]
         subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=subprocess_env())
 
@@ -2400,18 +2474,25 @@ class SimulationLauncherGui(tk.Tk):
 
     def _repeat_drive(self):
         self.drive_repeat_job = None
-        was_moving = any(abs(value) > 1e-9 for value in self.current_drive)
+        was_moving = (any(abs(value) > 1e-9 for value in self.current_drive)
+                      or abs(self.current_lateral) > 1e-9)
         (min_linear, max_linear, min_angular, max_angular,
          linear_step, angular_step, linear_brake, angular_brake) = self._resolved_drive_limits()
         self.drive_model.max_linear = max_linear
         self.drive_model.min_linear = min_linear
         self.drive_model.min_angular = min_angular
         self.drive_model.max_angular = max_angular
+        self.drive_strafe_model.max_linear = max_linear
+        self.drive_strafe_model.min_linear = min_linear
         if self.drive_model.max_angular == 0.0:
             self.drive_model.angular = 0.0
             self.drive_model.min_angular = 0.0
         linear_input = sum(value[0] for value in self.drive_buttons)
         angular_input = sum(value[1] for value in self.drive_buttons)
+        # Lateral input exists only for a mecanum drive; the buttons are
+        # disabled otherwise, so this also covers a stale latch.
+        strafe_input = (sum(self.drive_strafe_buttons)
+                        if self._mecanum_selectable() else 0.0)
         if self.drive_input_enabled.get():
             linear_input += int("w" in self.drive_keys) - int("s" in self.drive_keys)
             angular_input += int("a" in self.drive_keys) - int("d" in self.drive_keys)
@@ -2421,24 +2502,33 @@ class SimulationLauncherGui(tk.Tk):
             if self.drive_joystick.path:
                 self.drive_status_var.set(f"WASD + {self.drive_joystick.path}")
         if self.drive_stop_latched:
-            if not self.drive_buttons and not self.drive_keys and \
+            if not self.drive_buttons and not self.drive_strafe_buttons \
+                    and not self.drive_keys and \
                     abs(linear_input) < 1e-9 and abs(angular_input) < 1e-9:
                 self.drive_stop_latched = False
-            linear_input = angular_input = 0.0
+            linear_input = angular_input = strafe_input = 0.0
         self._update_drive_limits_label()
         linear, angular = self.drive_model.step(
             linear_input, angular_input, linear_step, angular_step,
             linear_brake, angular_brake)
+        lateral, _ = self.drive_strafe_model.step(
+            strafe_input, 0.0, linear_step, angular_step,
+            linear_brake, angular_brake)
         self.current_drive = (linear, angular)
+        self.current_lateral = lateral
         # Arming WASD/joystick only starts polling. It must not put even a
         # zero Twist on /key_vel until a real input is made. Once moving,
         # keep publishing through the deceleration and its final zero.
-        if (self.drive_buttons or self.drive_keys or
+        if (self.drive_buttons or self.drive_strafe_buttons or self.drive_keys or
                 abs(linear_input) > 1e-9 or abs(angular_input) > 1e-9 or
-                was_moving or abs(linear) > 1e-9 or abs(angular) > 1e-9):
-            self._publish_drive(linear, angular)
-        if (self.drive_buttons or self.drive_keys or self.drive_input_enabled.get()
-                or abs(linear) > 1e-9 or abs(angular) > 1e-9):
+                abs(strafe_input) > 1e-9 or was_moving or
+                abs(linear) > 1e-9 or abs(angular) > 1e-9 or
+                abs(lateral) > 1e-9):
+            self._publish_drive(linear, angular, lateral)
+        if (self.drive_buttons or self.drive_strafe_buttons or self.drive_keys
+                or self.drive_input_enabled.get()
+                or abs(linear) > 1e-9 or abs(angular) > 1e-9
+                or abs(lateral) > 1e-9):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self, keep_input_enabled=False):
@@ -2450,12 +2540,16 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_joystick.close()
             self.drive_status_var.set("Keyboard/joystick off")
         self.drive_buttons.clear()
+        self.drive_strafe_buttons.clear()
         self.drive_stop_latched = keep_input_enabled
         for button in self.drive_button_widgets.values():
             button.state(["!pressed"])
+        for button in self.drive_strafe_widgets.values():
+            button.state(["!pressed"])
         self.drive_keys.clear()
         self.current_drive = self.drive_model.stop()
-        self._publish_drive(0.0, 0.0)
+        self.current_lateral = self.drive_strafe_model.stop()[0]
+        self._publish_drive(0.0, 0.0, 0.0)
         if keep_input_enabled:
             self._schedule_drive()
 

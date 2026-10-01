@@ -164,11 +164,27 @@ class R33ResolverTests(unittest.TestCase):
                 self.assertNotIn(key, args)
 
     def test_reset_policy_recorded(self):
-        """The reset selector lands in the manifest with the owned service."""
-        ok, manifest = self.resolve(reset=False)
-        self.assertTrue(ok)
-        self.assertFalse(manifest["reset"]["enabled"])
-        self.assertEqual(manifest["reset"]["service"], "/robot_lab/reset")
+        """Reset endpoints and service types are selected by backend, not map metadata."""
+        cases = ("gazebo", "pybullet", "mujoco", "isaac")
+        for simulator in cases:
+            with self.subTest(simulator=simulator):
+                ok, manifest = self.resolve(
+                    robot_id="bumperbot", environment_id="small_office",
+                    simulator=simulator, reset=False)
+                self.assertTrue(ok, manifest)
+                reset = manifest["reset"]
+                self.assertFalse(reset["enabled"])
+                self.assertEqual(reset["service"], "/robot_lab/reset")
+                self.assertEqual(reset["service_type"], "std_srvs/srv/Trigger")
+        ok, gazebo = self.resolve(
+            robot_id="bumperbot", environment_id="small_office", simulator="gazebo")
+        self.assertTrue(ok, gazebo)
+        self.assertEqual(gazebo["reset"]["backend_service"],
+                         "/world/simple_office/control")
+        self.assertEqual(gazebo["reset"]["backend_service_type"],
+                         "ros_gz_interfaces/srv/ControlWorld")
+        self.assertEqual(gazebo["reset"]["backend_request"],
+                         {"world_control": {"reset": {"all": True}}})
 
     # ------------------------------------------------------------------
     # Legacy aliases

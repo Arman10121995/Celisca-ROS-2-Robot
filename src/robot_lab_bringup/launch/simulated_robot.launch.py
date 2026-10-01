@@ -668,6 +668,13 @@ def _build_simulation_actions(context):
     # and the whole drive block (a car's steering too) as JSON; see
     # robot_lab_utils.drive_kinematics.
     drive_config = robot_config.get("drive", {}) or {}
+    # Optional per-launch steering-pattern override for the four-wheel-
+    # steered base (R5.6): ackermann (opposite-phase), in_phase, crab or
+    # pivot.  Empty keeps the profile default from robots.yaml.
+    steering_mode = _launch_value(context, "steering_mode")
+    if steering_mode and str(drive_config.get("type", "")) == "four_wheel_steer":
+        drive_config = dict(drive_config)
+        drive_config["steering_mode"] = str(steering_mode)
     drive_args = {key: str(value) for key, value in drive_config.items()
                   if key in _DIFF_DRIVE_KEYS}
     drive_args["drive_config"] = json.dumps(drive_config, sort_keys=True)
@@ -1403,6 +1410,11 @@ def generate_launch_description():
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "
                                           "MuJoCo, Isaac; Gazebo in display); false enables free physics."),
+        DeclareLaunchArgument(
+            "steering_mode",
+            default_value="",
+            description="Four-wheel-steer pattern override (R5.6): ackermann, "
+                        "in_phase, crab or pivot.  Empty keeps robots.yaml."),
         DeclareLaunchArgument(
             "mode",
             default_value="nav",

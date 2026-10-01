@@ -12,6 +12,7 @@ install(
 
 install(PROGRAMS
   scripts/gz_pointcloud_to_optical.py
+  scripts/gazebo_reset_bridge.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

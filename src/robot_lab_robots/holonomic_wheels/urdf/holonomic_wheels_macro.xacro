@@ -109,9 +109,15 @@
         <material name="holonomic_body"/>
       </visual>
       <collision>
+        <!-- Wheel wells: the chassis collision is narrower than the body
+             shell (0.20 m vs 0.30 m) so the steered wheels' swept volume
+             clears it.  At the 0.785 rad steering limit a 0.05 m wheel at
+             y=0.16 reaches min y = 0.16 - 0.02*cos(0.785) -
+             0.05*sin(0.785) = 0.110 m; a full-width box (edge 0.15 m)
+             overlapped even the rest pose.  The visual keeps the shell. -->
         <origin xyz="0 0 0.04" rpy="0 0 0"/>
         <geometry>
-          <box size="0.46 0.30 0.08"/>
+          <box size="0.46 0.20 0.08"/>
         </geometry>
       </collision>
     </link>

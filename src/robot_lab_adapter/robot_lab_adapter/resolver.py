@@ -181,6 +181,37 @@ def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
     return args
 
 
+def _reset_contract(simulator: str, world_name: Optional[str]) -> Dict[str, Any]:
+    """Return the common reset API and its backend-specific implementation."""
+    if simulator == 'gazebo':
+        if not world_name:
+            raise ValueError('Gazebo reset requires a resolved world name')
+        return {
+            'service': '/robot_lab/reset',
+            'service_type': 'std_srvs/srv/Trigger',
+            'request': {},
+            'backend_service': f'/world/{world_name}/control',
+            'backend_service_type': 'ros_gz_interfaces/srv/ControlWorld',
+            'backend_request': {'world_control': {'reset': {'all': True}}},
+        }
+    if simulator in ('pybullet', 'mujoco', 'isaac'):
+        return {
+            'service': '/robot_lab/reset',
+            'service_type': 'std_srvs/srv/Trigger',
+            'request': {},
+            'backend_service': '/robot_lab/reset',
+            'backend_service_type': 'std_srvs/srv/Trigger',
+            'backend_request': {},
+        }
+    if simulator == 'real':
+        return {
+            'service': None, 'service_type': None, 'request': None,
+            'backend_service': None, 'backend_service_type': None,
+            'backend_request': None,
+        }
+    raise ValueError(f'No reset contract for simulator {simulator!r}')
+
+
 def _spawn_arguments(environment: Dict[str, Any],
                      spawn: Optional[Dict[str, float]]) -> Dict[str, str]:
     """Pass only explicit overrides; bringup owns map and robot spawn defaults.
@@ -350,8 +381,8 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
         'algorithm_ids': algorithm_ids,
         'plugins': plugins,
         'reset': {
-            'enabled': request.reset,
-            'service': environment.get('reset_service') or '/robot_lab/reset',
+            'enabled': request.reset and simulator != 'real',
+            **_reset_contract(simulator or '', launch_args.get('world_name')),
         },
         'parameters': dict(request.parameters),
         'seed': request.seed,

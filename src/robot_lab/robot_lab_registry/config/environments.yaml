@@ -521,7 +521,7 @@
   created: '2026-08-31'
   updated: '2026-09-05'
   seed: 6
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:
@@ -592,7 +592,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 7
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: east_ramp
     pose:
@@ -663,7 +663,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 8
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: east
     pose:
@@ -744,7 +744,7 @@
   created: '2026-08-31'
   updated: '2026-09-05'
   seed: 9
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:
@@ -814,7 +814,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 10
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:
@@ -1085,7 +1085,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 1
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: center
     pose:
@@ -1152,7 +1152,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 2
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:
@@ -1228,7 +1228,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 3
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: exit_east
     pose:
@@ -1317,7 +1317,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 4
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: exit
     pose:
@@ -1390,7 +1390,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 5
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:
@@ -1465,7 +1465,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 11
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:
@@ -1540,7 +1540,7 @@
   created: '2026-09-05'
   updated: '2026-09-05'
   seed: 12
-  reset_service: /gazebo/reset_world
+  reset_service: /robot_lab/reset
   goals:
   - id: far_corner
     pose:

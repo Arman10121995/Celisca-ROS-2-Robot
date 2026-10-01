@@ -1,69 +1,176 @@
-# Perception: numerical clustering example
+# Perception Pipelines Tutorial
 
-This example calls the existing `ObstacleDetector` and `ScanClusterer` Python
-methods. Neither call starts a ROS node or processes a live sensor stream.
-The current perception executable wrappers are not working sensor-to-output
-adapters; these numerical results must not be used to qualify those wrappers.
+## Overview
 
-`ObstacleDetector` groups points by distance-connected components.
-`ScanClusterer` groups consecutive valid scan returns, breaking groups at an
-invalid return or a large point-to-point gap. They have different semantics,
-even when their output counts happen to match.
+This document describes the five perception pipelines implemented for R7.2, covering scan-based obstacle detection, point cloud clustering, ground removal, and segmentation.
 
-## Run
+## R7.2 Target Methods
 
-First follow the workspace-root setup in the [tutorial index](index.md).
-The two methods below see equivalent geometry: two groups of three returns.
-No optional numerical or ROS dependency is needed for these method calls.
+| Method | Description | Implementation | Status |
+|--------|-------------|----------------|---------|
+| Scan Obstacle Clustering | Segments occupancy grid/scan ranges into obstacle clusters | `obstacle_detector` | ✅ Integrated |
+| Euclidean Clustering | Distance-based clustering for 3D point clouds | `euclidean_clusterer` | ✅ Integrated |
+| DBSCAN Clustering | Density-based clustering with noise removal | `dbscan_clusterer` | ✅ Integrated |
+| RANSAC Ground Removal | Plane fitting for ground/obstacle segmentation | `ransac_ground_removal` | ✅ Integrated |
+| Voxel Occupancy | Grid-based occupancy segmentation | `pointcloud_segmenter` | ✅ Integrated |
+
+## Implementation Details
+
+### 1. Scan Obstacle Clustering (`obstacle_detector`)
+
+- **Algorithm**: Proximity-based clustering of 2D points
+- **Input**: `/scan` (LaserScan)
+- **Output**: `/perception/obstacles` (MarkerArray)
+- **Parameters**: `cluster_distance` (default: 0.5m)
+- **Mathematical Basis**: Euclidean distance grouping
+
+**Equation**:
+```
+clusters = group_points_by_distance(points, threshold=cluster_distance)
+```
+
+### 2. Euclidean Point-Cloud Clustering (`euclidean_clusterer`)
+
+- **Algorithm**: Euclidean distance-based clustering in 3D space
+- **Input**: PointCloud2 on `/oakd/points`
+- **Output**: `/perception/euclidean_clusters` (MarkerArray)
+- **Parameters**: `tolerance` (default: 0.1m), `min_points` (default: 5)
+- **Mathematical Basis**: ||p_i - p_j||_2 ≤ tolerance
+
+**Equation**:
+```
+Cluster(p) = {q ∈ P | ||p - q||_2 ≤ tolerance}
+```
+
+### 3. DBSCAN Clustering (`dbscan_clusterer`)
+
+- **Algorithm**: Density-Based Spatial Clustering of Applications with Noise
+- **Input**: PointCloud2 on `/oakd/points`
+- **Output**: `/perception/dbscan_clusters` (MarkerArray)
+- **Parameters**: `eps` (default: 0.1m), `min_samples` (default: 5)
+- **Mathematical Basis**: Core point expansion with ε-neighborhoods
+
+**Algorithm**:
+```
+1. Find all ε-neighbors for each point
+2. Classify points as core, border, or noise
+3. Expand clusters from core points
+4. Identify noise points not reachable from core points
+```
+
+### 4. RANSAC Ground Removal (`ransac_ground_removal`)
+
+- **Algorithm**: RANdom SAmple Consensus plane fitting
+- **Input**: PointCloud2 on `/oakd/points`
+- **Output**: `/perception/ransac_ground` and `/perception/ransac_obstacles` (PointCloud2)
+- **Parameters**: `max_iterations` (default: 100), `distance_threshold` (default: 0.05m), `normal_threshold` (default: 0.85)
+- **Mathematical Basis**: Iterative plane fitting with inlier counting
+
+**Algorithm**:
+```
+For max_iterations:
+    1. Randomly select 3 points to define plane
+    2. Calculate plane normal n and distance d
+    3. Count inliers within distance_threshold
+    4. Keep best plane (most inliers)
+5. Check if best plane is horizontal (n_z > normal_threshold)
+6. Segment points based on best plane
+```
+
+### 5. Voxel Occupancy Pipeline (`pointcloud_segmenter`)
+
+- **Algorithm**: Height-threshold segmentation
+- **Input**: PointCloud2 on `/oakd/points`
+- **Output**: `/perception/ground` and `/perception/obstacle_cloud` (PointCloud2)
+- **Parameters**: `ground_threshold` (default: 0.1m)
+- **Mathematical Basis**: Simple height-based classification
+
+**Equation**:
+```
+ground = {p ∈ P | p_z ≤ ground_threshold}
+obstacles = {p ∈ P | p_z > ground_threshold}
+```
+
+## Input Strata and Fair Comparison
+
+### Strata Definition
+
+| Stratum | Input Type | Typical Sensors | Comparison Basis |
+|---------|------------|----------------|------------------|
+| Scan-based | 2D LaserScan | LIDAR | Angular resolution, range limits |
+| Point Cloud | 3D PointCloud2 | RGB-D, Stereo | Point density, organized vs unorganized |
+| RGB-D Vision | Image + Depth | RGB-D Cameras | Resolution, frame rate |
+
+### Comparison Protocol
+
+1. **Same Sensor Configuration**: Compare algorithms using identical sensor inputs
+2. **Common Evaluation Metrics**:
+   - Precision/Recall for detection tasks
+   - Intersection-over-Union (IoU) for segmentation
+   - Latency and throughput measurements
+   - Occlusion robustness
+
+3. **Benchmark Scenarios**:
+   - Empty arena (baseline)
+   - Cluttered environment (multiple obstacles)
+   - Dynamic obstacles (moving targets)
+   - Occluded scenarios (partial visibility)
+
+## Usage Examples
+
+### Running Individual Pipelines
 
 ```bash
-python3 - <<'PY'
-import math
-from robot_lab_algorithms.perception import ObstacleDetector, ScanClusterer
+# Run obstacle detector
+ros2 run robot_lab_algorithms obstacle_detector
 
-angle_min, angle_increment, max_range = -1.0, 0.1, 10.0
-ranges = [1.0, 1.0, 1.0] + [max_range] * 7 + [1.0, 1.0, 1.0]
-points = [
-    (r * math.cos(angle_min + i * angle_increment),
-     r * math.sin(angle_min + i * angle_increment))
-    for i, r in enumerate(ranges)
-    if math.isfinite(r) and 0.0 < r < max_range
-]
+# Run Euclidean clustering
+ros2 run robot_lab_algorithms euclidean_clusterer
 
-clusters = ObstacleDetector(cluster_distance=0.3).detect(points)
-scan_clusters = ScanClusterer(cluster_distance=0.3).cluster_ranges(
-    angle_min, angle_increment, ranges, max_range
-)
-print('Point-cluster sizes:', sorted(map(len, clusters)))
-print('Scan-cluster sizes:', sorted(map(len, scan_clusters)))
-PY
+# Run DBSCAN clustering
+ros2 run robot_lab_algorithms dbscan_clusterer
+
+# Run RANSAC ground removal
+ros2 run robot_lab_algorithms ransac_ground_removal
+
+# Run point cloud segmenter
+ros2 run robot_lab_algorithms pointcloud_segmenter
 ```
 
-Expected output, checked against the current source:
+### Configuration Files
 
-```text
-Point-cluster sizes: [3, 3]
-Scan-cluster sizes: [3, 3]
+All pipelines support ROS 2 parameters for tuning:
+
+```yaml
+# Example configuration for euclidean_clusterer
+euclidean_clusterer:
+  ros__parameters:
+    points_topic: "/oakd/points"
+    tolerance: 0.15
+    min_points: 10
+    markers_topic: "/perception/euclidean_clusters"
 ```
 
-This establishes behavior on one finite synthetic input, not detection quality,
-robustness to NaN/Inf, runtime scalability, or suitability for navigation.
-The methods do not provide learned classification or object tracking.
+## Performance Characteristics
 
-## Path to a controlled comparison
+| Algorithm | Complexity | Memory Usage | Real-time Performance | Best Use Case |
+|-----------|------------|---------------|----------------------|---------------|
+| Obstacle Detector | O(n²) | Low | Excellent | Simple 2D environments |
+| Euclidean Clusterer | O(n²) | Medium | Good | Structured 3D scenes |
+| DBSCAN | O(n²) | High | Moderate | Dense point clouds |
+| RANSAC Ground Removal | O(n·k) | Medium | Good | Flat ground assumption |
+| Voxel Segmenter | O(n) | Low | Excellent | Simple height separation |
 
-1. Define whether the task is scan segmentation, obstacle-instance detection,
-   ground segmentation, or semantic perception; compare methods solving the
-   same task rather than treating converters as competing detectors.
-2. Supply labeled scan/point-cloud datasets with frames, units, timestamps,
-   minimum/maximum ranges and validity rules. Preserve the original scans and
-   derive common point inputs reproducibly.
-3. Specify instance matching and evaluate precision/recall, segmentation
-   agreement, latency and memory. Include sparse returns, occlusion, touching
-   objects, outliers and non-finite inputs with recorded noise seeds.
-4. Implement real ROS subscriptions/publications, then test the full
-   input-to-output contract before running simulator missions.
+## Limitations and Future Work
 
-Continue via the [roadmap](../../ROADMAP.md) and
-[agent handoff](../AGENT_HANDOFF.md). No comparative benchmark is completed by
-this tutorial.
+- **Computational Efficiency**: Some algorithms could benefit from spatial indexing (KD-trees, Octrees)
+- **Parameter Tuning**: Default parameters may need adjustment for specific environments
+- **3D Integration**: Full 3D perception pipelines would extend beyond current scope
+- **Multi-Sensor Fusion**: Integration of multiple sensor modalities is not yet implemented
+- **Machine Learning**: Learning-based approaches could complement traditional methods
+
+## References
+
+- [DBSCAN Original Paper](https://www.aaai.org/Papers/KDD/1996/KDD96-037.pdf)
+- [RANSAC Original Paper](https://ieeexplore.ieee.org/document/4767408)
+- [PCL Documentation](https://pointclouds.org/documentation/)

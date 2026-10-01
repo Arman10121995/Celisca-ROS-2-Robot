@@ -35,6 +35,12 @@ algorithms:
       node: {package: robot_lab_algorithms, executable: scan_clusterer}
     pointcloud_segmenter:
       node: {package: robot_lab_algorithms, executable: pointcloud_segmenter}
+    euclidean_clusterer:
+      node: {package: robot_lab_algorithms, executable: euclidean_clusterer}
+    dbscan_clusterer:
+      node: {package: robot_lab_algorithms, executable: dbscan_clusterer}
+    ransac_ground_removal:
+      node: {package: robot_lab_algorithms, executable: ransac_ground_removal}
     depth_image_to_pointcloud:
       unavailable: "cataloged only - depth_image_proc adapter not integrated"
     camera_calibration:
@@ -44,7 +50,15 @@ algorithms:
 
   localization:
     amcl:
-      stack: global_localization
+      node: {package: robot_lab_algorithms, executable: amcl}
+    icp_localization:
+      node: {package: robot_lab_algorithms, executable: icp_localization}
+    ndt_localization:
+      node: {package: robot_lab_algorithms, executable: ndt_localization}
+    rgbd_slam_localization:
+      node: {package: robot_lab_algorithms, executable: rgbd_slam_localization}
+    dead_reckoning:
+      node: {package: robot_lab_algorithms, executable: dead_reckoning}
     slam_toolbox:
       stack: slam
     rtabmap_localization:
@@ -69,6 +83,14 @@ algorithms:
       node: {package: robot_lab_algorithms, executable: motion_model_estimator}
     pose_graph_estimator:
       node: {package: robot_lab_algorithms, executable: pose_graph_estimator}
+    linear_kalman_filter:
+      node: {package: robot_lab_algorithms, executable: linear_kalman_filter}
+    ukf_estimator:
+      node: {package: robot_lab_algorithms, executable: ukf_estimator}
+    particle_filter:
+      node: {package: robot_lab_algorithms, executable: particle_filter}
+    error_state_ekf:
+      node: {package: robot_lab_algorithms, executable: error_state_ekf}
 
   sensor_fusion:
     imu_republisher:
@@ -81,6 +103,12 @@ algorithms:
       node: {package: robot_lab_algorithms, executable: gps_odom_fusion}
     complementary_imu:
       node: {package: robot_lab_algorithms, executable: complementary_imu}
+    mahony_filter:
+      node: {package: robot_lab_algorithms, executable: mahony_filter}
+    madgwick_filter:
+      node: {package: robot_lab_algorithms, executable: madgwick_filter}
+    wheel_imu_gnss_ukf:
+      node: {package: robot_lab_algorithms, executable: wheel_imu_gnss_ukf}
 
   global_planning:
     a_star_planner:
@@ -97,6 +125,14 @@ algorithms:
       node: {package: robot_lab_algorithms, executable: rrt_planner}
     voronoi_planner:
       node: {package: robot_lab_algorithms, executable: voronoi_planner}
+    dijkstra_planner:
+      node: {package: robot_lab_algorithms, executable: dijkstra_planner}
+    a_star_planner:
+      node: {package: robot_lab_algorithms, executable: a_star_planner}
+    prm_planner:
+      node: {package: robot_lab_algorithms, executable: prm_planner}
+    rrt_star_planner:
+      node: {package: robot_lab_algorithms, executable: rrt_star_planner}
 
   local_planning:
     dwb_local_planner:
@@ -113,6 +149,14 @@ algorithms:
       node: {package: robot_lab_motion, executable: pd_motion_planner.py}
     follow_the_gap:
       node: {package: robot_lab_algorithms, executable: follow_the_gap}
+    dwb_local_planner:
+      node: {package: robot_lab_algorithms, executable: dwb_local_planner}
+    regulated_pure_pursuit:
+      node: {package: robot_lab_algorithms, executable: regulated_pure_pursuit}
+    teb_local_planner:
+      node: {package: robot_lab_algorithms, executable: teb_local_planner}
+    mppi_local_planner:
+      node: {package: robot_lab_algorithms, executable: mppi_local_planner}
 
   control:
     simple_controller:
@@ -125,6 +169,18 @@ algorithms:
       node: {package: robot_lab_controller, executable: twist_relay}
     pid_controller:
       node: {package: robot_lab_motion, executable: pure_pursuit.py}
+    pid_controller_algorithm:
+      node: {package: robot_lab_algorithms, executable: pid_controller}
+    lqr_controller:
+      node: {package: robot_lab_algorithms, executable: lqr_controller}
+    mpc_controller:
+      node: {package: robot_lab_algorithms, executable: mpc_controller}
+    nonlinear_mpc:
+      node: {package: robot_lab_algorithms, executable: nonlinear_mpc}
+    feedback_linearization:
+      node: {package: robot_lab_algorithms, executable: feedback_linearization}
+    backstepping_controller:
+      node: {package: robot_lab_algorithms, executable: backstepping_controller}
     joint_effort_commander:
       node: {package: robot_lab_adapter, executable: joint-effort-commander}
     humanoid_standing_controller:

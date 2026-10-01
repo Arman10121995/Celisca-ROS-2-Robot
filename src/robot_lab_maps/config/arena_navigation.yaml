@@ -1,7 +1,7 @@
 arenas:
   nav_empty:
     seed: 1
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: center
       pose:
@@ -19,7 +19,7 @@ arenas:
         yaw: 0.0
   nav_obstacle:
     seed: 2
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:
@@ -46,7 +46,7 @@ arenas:
         yaw: 0.0
   nav_maze:
     seed: 3
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: exit_east
       pose:
@@ -85,7 +85,7 @@ arenas:
         yaw: 0.0
   nav_narrow_passage:
     seed: 4
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: exit
       pose:
@@ -109,7 +109,7 @@ arenas:
         yaw: 0.0
   nav_warehouse:
     seed: 5
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:
@@ -136,7 +136,7 @@ arenas:
         yaw: 0.0
   outdoor_terrain:
     seed: 6
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:
@@ -160,7 +160,7 @@ arenas:
         yaw: 0.0
   terrain_stairs:
     seed: 7
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: east_ramp
       pose:
@@ -184,7 +184,7 @@ arenas:
         yaw: 0.0
   terrain_stepping_stones:
     seed: 8
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: east
       pose:
@@ -220,7 +220,7 @@ arenas:
         yaw: 0.0
   aerial_course:
     seed: 9
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:
@@ -244,7 +244,7 @@ arenas:
         yaw: 0.0
   aerial_indoor:
     seed: 10
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:
@@ -277,7 +277,7 @@ arenas:
         yaw: 0.0
   nav_dynamic:
     seed: 11
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:
@@ -304,7 +304,7 @@ arenas:
         yaw: 0.0
   nav_sensor_degraded:
     seed: 12
-    reset_service: /gazebo/reset_world
+    reset_service: /robot_lab/reset
     goals:
     - id: far_corner
       pose:

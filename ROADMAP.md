@@ -562,6 +562,21 @@ Dependencies: `R5.1`, `R3.3`.
   parking and obstacle navigation with feasible curvature, swept footprint and
   controller-limit checks. Steering variants must change the actual model/control
   behavior; changing a catalog label is insufficient.
+- 2026-10-01 publisher-loss screen: PyBullet runs for `ackermann_car`,
+  `rear_steer_car`, and `anti_ackermann_car` coasted 0.101/0.109/0.111 m after
+  publisher loss and settled to zero vx/wz. Gazebo runs for all three profiles
+  also settled after 0.155 m coast, measured through controller odometry rather
+  than simulator truth. A MuJoCo Ackermann run coasted 0.017 m and settled,
+  though measured arc response was weak. These are single-run backend screens;
+  repeated watchdog checks, final-heading control, and longer slalom/parking
+  qualification remain open. See
+  [watchdog evidence](docs/status/evidence/r55-car-watchdog-2026-10-01/README.md).
+- Follow-up steering-joint traces on PyBullet measured zero angle when straight,
+  mirrored Ackermann angles in each turn direction, opposite-phase rear
+  steering, and swapped inner/outer anti-Ackermann angles. This confirms the
+  profiles actuate distinct steering geometries on this backend; repeated and
+  cross-backend angle/heading checks remain open. Gazebo steering angles match
+  these geometries, but are likewise single-run.
 
 ### R5.6 — Qualify four-wheel steering and physical mecanum motion
 

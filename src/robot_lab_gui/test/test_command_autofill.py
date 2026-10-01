@@ -113,7 +113,7 @@ def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
         assert app.current_drive == (0.025, 0.0)
         app._stop_drive()
         assert app.current_drive == (0.0, 0.0)
-        assert publish.call_args.args == (0.0, 0.0)
+        assert publish.call_args.args == (0.0, 0.0, 0.0)
     app.drive_input_enabled.set(False)
     app._toggle_drive_input()
 
@@ -127,7 +127,7 @@ def test_space_stops_without_disabling_keyboard(app):
         app._drive_key_press(Mock(keysym="space", widget=app))
         assert app.current_drive == (0.0, 0.0)
         assert app.drive_input_enabled.get()
-        assert publish.call_args.args == (0.0, 0.0)
+        assert publish.call_args.args == (0.0, 0.0, 0.0)
 
 
 def test_arming_keyboard_joystick_does_not_publish_until_driven(app):
@@ -146,7 +146,7 @@ def test_arming_keyboard_joystick_does_not_publish_until_driven(app):
             app._repeat_drive()
             if app.current_drive == (0.0, 0.0):
                 break
-        assert publish.call_args.args == (0.0, 0.0)
+        assert publish.call_args.args == (0.0, 0.0, 0.0)
         publish.reset_mock()
         app._repeat_drive()
         publish.assert_not_called()
@@ -479,4 +479,54 @@ def test_all_declared_occupancy_maps_pass_gui_validation(app):
         if profile.get('map', {}).get('has_2d_map'):
             assert app._map_has_2d_map(name), name
             checked.append(name)
+
+
+def test_mecanum_strafe_publishes_lateral_motion_only_for_mecanum(app):
+    """R5.6: the Drive pad gains lateral input only on a mecanum base."""
+    app.robot_var.set("mecanum_car")
+    app._update_from_selection()
+    assert app._mecanum_selectable()
+    with patch.object(app, "_publish_drive") as publish, \
+            patch.object(app.drive_joystick, "poll", return_value=(0.0, 0.0)):
+        app._start_strafe(1.0)
+        app._repeat_drive()
+        assert app.current_drive == (0.0, 0.0)
+        assert app.current_lateral > 0.0
+        assert publish.call_args.args[2] == app.current_lateral
+        app._start_strafe(1.0)          # second click releases the latch
+        for _ in range(40):
+            app._repeat_drive()
+            if app.current_lateral == 0.0:
+                break
+        assert app.current_lateral == 0.0
+        assert publish.call_args.args == (0.0, 0.0, 0.0)
+
+    # A differential base never sends lateral motion and its strafe latches
+    # are cleared when the robot changes.
+    app.robot_var.set("bumperbot")
+    app._update_from_selection()
+    assert not app._mecanum_selectable()
+    assert not app.drive_strafe_buttons
+    assert app.strafe_left_button.instate(["disabled"])
+
+
+def test_four_wheel_steer_pattern_is_appended_to_the_command(app):
+    """R5.6: the pattern selector is gated to the four-wheel-steer base."""
+    app.robot_var.set("four_wheel_steer_car")
+    app._update_from_selection()
+    assert app._four_wheel_steer_selectable()
+    app.steering_mode_var.set("crab")
+    app._update_validation_and_command()
+    assert "steering_mode:=crab" in app.command_var.get()
+    app.steering_mode_var.set("")
+    app._update_validation_and_command()
+    assert "steering_mode:=" not in app.command_var.get()
+
+    app.robot_var.set("bumperbot")
+    app._update_from_selection()
+    assert not app._four_wheel_steer_selectable()
+    app.steering_mode_var.set("pivot")
+    app._update_validation_and_command()
+    assert "steering_mode:=" not in app.command_var.get()
+
     assert len(checked) >= 20

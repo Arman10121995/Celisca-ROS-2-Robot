@@ -48,7 +48,62 @@ def test_robot_profile_can_be_expanded(robot_name, robot_config):
 
 
 @pytest.mark.integration
-def test_four_wheel_steering_hubs_occupy_four_distinct_corners():
+def test_steered_wheel_sweep_clears_the_chassis_collision_box():
+    """A full-width chassis box collided with the tires at steer angles.
+
+    MuJoCo resolved the overlap between the sweep of a 0.05 m tire and the
+    body edge at the steering limit with a ~113 N contact that saturated the
+    10 N*m steering servos (0.23 rad measured of 0.45 commanded, 2026-10-01);
+    PyBullet masked the defect because its steering motor is effectively
+    kinematic.  The chassis *collision* is now a narrower wheel-well box and
+    the visual shell stays full width, so this pins the clearance computed
+    from the expanded URDF numbers themselves.
+    """
+    xacro_bin = shutil.which("xacro")
+    if xacro_bin is None:
+        pytest.skip("xacro executable not available")
+    for robot in ("ackermann_car", "four_wheel_steer_car"):
+        model = _SRC_DIR / "robot_lab_robots" / ROBOTS[robot]["xacro"]
+        result = subprocess.run(
+            ["bash", "-c",
+             f"source /opt/ros/humble/setup.bash && {xacro_bin} {model}"],
+            capture_output=True, text=True, timeout=120, check=True)
+        root = ET.fromstring(result.stdout)
+        chassis = root.find("./link[@name='base_link']/collision/geometry/box")
+        assert chassis is not None, f"{robot}: base_link has no box collision"
+        half_y = float(chassis.get("size").split()[1]) / 2.0
+        steered = 0
+        for joint in root.findall("./joint"):
+            if not (joint.get("name") or "").endswith("_steer_joint"):
+                continue
+            limit = joint.find("limit")
+            bound = max(abs(float(limit.get("lower"))),
+                        abs(float(limit.get("upper"))))
+            knuckle = joint.find("child").get("link")
+            y_center = abs(float(joint.find("origin").get("xyz").split()[1]))
+            wheel_joint = [j for j in root.findall("./joint")
+                           if j.find("parent") is not None
+                           and j.find("parent").get("link") == knuckle
+                           and "wheel_link" in j.find("child").get("link")]
+            assert wheel_joint, f"{robot}: no wheel under {knuckle}"
+            offset = float(wheel_joint[0].find("origin").get("xyz").split()[1])
+            y_center += abs(offset)
+            wheel = wheel_joint[0].find("child").get("link")
+            cylinder = root.find(
+                f"./link[@name='{wheel}']/collision/geometry/cylinder")
+            radius = float(cylinder.get("radius"))
+            width = float(cylinder.get("length"))
+            # The wheel plane turns with the knuckle: its inner face pulls in
+            # by (width/2)*cos(theta) plus the rim swing radius*sin(theta).
+            import math
+            sweep_min = (y_center - (width / 2.0) * math.cos(bound)
+                         - radius * math.sin(bound))
+            steered += 1
+            assert half_y + 0.005 <= sweep_min, (
+                f"{robot}: chassis collision half-width {half_y:.3f} m does "
+                f"not clear {wheel}'s swept inner edge {sweep_min:.3f} m at "
+                f"{bound:.3f} rad")
+        assert steered >= 2, f"{robot}: expected steered wheels"
     """Four coincident wheels can drive straight but cannot steer the base."""
     xacro_bin = shutil.which("xacro")
     if xacro_bin is None:

@@ -1,0 +1,40 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-16-09-41-596578-molar1-537625
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [537682]
+[INFO] [mujoco_spawner-2]: process started with pid [537684]
+[robot_state_publisher-1] [INFO] [1790863782.404346096] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790863782.404499728] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790863782.404519088] [robot_state_publisher]: got segment front_left_knuckle_link
+[robot_state_publisher-1] [INFO] [1790863782.404530224] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790863782.404538736] [robot_state_publisher]: got segment front_right_knuckle_link
+[robot_state_publisher-1] [INFO] [1790863782.404546224] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790863782.404553808] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790863782.404561264] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790863782.404568944] [robot_state_publisher]: got segment laser_mast_link
+[robot_state_publisher-1] [INFO] [1790863782.404576496] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790863782.404584016] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790863782.404591664] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790863782.404599248] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790863782.404606544] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790863782.404614064] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790863782.404621488] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790863782.404628752] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790863782.404635792] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790863782.404643088] [robot_state_publisher]: got segment rear_right_wheel_link
+[mujoco_spawner-2] [INFO] [1790863783.232018679] [mujoco_spawner]: Drive: ackermann, wheels ['rear_left_wheel_joint', 'rear_right_wheel_joint', 'front_left_wheel_joint', 'front_right_wheel_joint'], steering ['front_left_steer_joint', 'front_right_steer_joint']
+[mujoco_spawner-2] [INFO] [1790863783.977615434] [mujoco_spawner]: MuJoCo: 7 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-2] [INFO] [1790863783.982310542] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790863783.991903960] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[mujoco_spawner-2] [INFO] [1790863783.992805177] [mujoco_spawner]: Joints: ['rear_left_wheel_joint', 'rear_right_wheel_joint', 'front_left_steer_joint', 'front_left_wheel_joint', 'front_right_steer_joint', 'front_right_wheel_joint']   lw=rear_left_wheel_joint rw=rear_right_wheel_joint
+[mujoco_spawner-2] [INFO] [1790863783.994007226] [mujoco_spawner]: MuJoCo model loaded: 8 bodies, 7 joints
+[mujoco_spawner-2] [INFO] [1790863783.994652890] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790863783.995255515] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790863784.031440286] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[ERROR] [mujoco_spawner-2]: process[mujoco_spawner-2] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [robot_state_publisher-1]: process[robot_state_publisher-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [mujoco_spawner-2]: sending signal 'SIGTERM' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGTERM' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790863816.450485304] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 537682]
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 537684]

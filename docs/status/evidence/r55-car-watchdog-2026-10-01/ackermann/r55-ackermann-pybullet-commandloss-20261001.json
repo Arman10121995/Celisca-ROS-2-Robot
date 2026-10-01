@@ -1,0 +1,83 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.201,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 0.577
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.191,
+    "vy": -0.001,
+    "wz": 0.245,
+    "distance": 0.753
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.197,
+    "vy": 0.001,
+    "wz": -0.252,
+    "distance": 0.784
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.146,
+    "vy": 0.001,
+    "wz": 0.146,
+    "distance": 0.428
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.146,
+    "vy": -0.001,
+    "wz": 0.304,
+    "distance": 0.426
+   }
+  }
+ ],
+ "publisher_loss": {
+  "duration_s": 3.011,
+  "coast_distance_m": 0.101,
+  "coast_yaw_change_rad": 0.229,
+  "tail_vx_mps": -0.0,
+  "tail_wz_rps": 0.0
+ }
+}

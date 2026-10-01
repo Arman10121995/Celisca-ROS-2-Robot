@@ -1,0 +1,60 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-16-14-17-203262-molar1-540165
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [540235]
+[INFO] [pybullet_spawner-2]: process started with pid [540237]
+[robot_state_publisher-1] [INFO] [1790864058.010018194] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790864058.010185170] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790864058.010208786] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790864058.010223122] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790864058.010234482] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790864058.010245330] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790864058.010255282] [robot_state_publisher]: got segment laser_mast_link
+[robot_state_publisher-1] [INFO] [1790864058.010265234] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790864058.010275378] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790864058.010285202] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790864058.010295250] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790864058.010305010] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790864058.010314866] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790864058.010324530] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790864058.010333938] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790864058.010343538] [robot_state_publisher]: got segment rear_left_knuckle_link
+[robot_state_publisher-1] [INFO] [1790864058.010353330] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790864058.010363282] [robot_state_publisher]: got segment rear_right_knuckle_link
+[robot_state_publisher-1] [INFO] [1790864058.010372658] [robot_state_publisher]: got segment rear_right_wheel_link
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-2] [INFO] [1790864058.586540406] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1790864058.591331956] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1790864058.603981486] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1790864058.606131373] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1790864058.607995596] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-2] [INFO] [1790864059.330379215] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpj6jc9mlc.urdf
+[pybullet_spawner-2] [INFO] [1790864059.331904559] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1790864059.332500206] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1790864059.341206187] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1790864059.341830794] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1790864059.354697061] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] base_footprintb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790864059.361880705] [pybullet_spawner]: Loaded robot id=10 (18 joints)
+[pybullet_spawner-2] [INFO] [1790864059.363116897] [pybullet_spawner]: Joint damping capped for stability on 2 joint(s): rear_left_steer_joint, rear_right_steer_joint
+[pybullet_spawner-2] [INFO] [1790864059.363723425] [pybullet_spawner]: Friction from the description's <gazebo> blocks: front_left_wheel_link=1, front_right_wheel_link=1, rear_left_wheel_link=1, rear_right_wheel_link=1
+[pybullet_spawner-2] [INFO] [1790864059.366603103] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+[pybullet_spawner-2] laser_mast_linkb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] base_footprintb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790864059.384805239] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-2] [INFO] [1790864059.385796119] [pybullet_spawner]: Drive: ackermann, wheels ['front_left_wheel_joint', 'front_right_wheel_joint', 'rear_left_wheel_joint', 'rear_right_wheel_joint'], steering ['rear_left_steer_joint', 'rear_right_steer_joint']
+[pybullet_spawner-2] [INFO] [1790864059.386480439] [pybullet_spawner]: Joints: ['front_left_wheel_joint', 'front_right_wheel_joint', 'rear_left_steer_joint', 'rear_left_wheel_joint', 'rear_right_steer_joint', 'rear_right_wheel_joint']  lw=front_left_wheel_joint rw=front_right_wheel_joint
+[pybullet_spawner-2] [INFO] [1790864059.469203314] [pybullet_spawner]: PyBullet spawner running
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[ERROR] [pybullet_spawner-2]: process[pybullet_spawner-2] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [robot_state_publisher-1]: process[robot_state_publisher-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [pybullet_spawner-2]: sending signal 'SIGTERM' to process[pybullet_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGTERM' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790864091.934668554] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 540235]
+[INFO] [pybullet_spawner-2]: process has finished cleanly [pid 540237]
+[pybullet_spawner-2] laser_mast_link
