@@ -130,6 +130,30 @@ def test_space_stops_without_disabling_keyboard(app):
         assert publish.call_args.args == (0.0, 0.0)
 
 
+def test_arming_keyboard_joystick_does_not_publish_until_driven(app):
+    with patch.object(app, "_publish_drive") as publish, \
+            patch.object(app.drive_joystick, "poll", return_value=(0.0, 0.0)):
+        app.drive_input_enabled.set(True)
+        app._toggle_drive_input()
+        app._repeat_drive()
+        publish.assert_not_called()
+
+        app._drive_key_press(Mock(keysym="w", widget=app))
+        app._repeat_drive()
+        assert app.current_drive[0] > 0.0
+        app._drive_key_release(Mock(keysym="w"))
+        for _ in range(50):
+            app._repeat_drive()
+            if app.current_drive == (0.0, 0.0):
+                break
+        assert publish.call_args.args == (0.0, 0.0)
+        publish.reset_mock()
+        app._repeat_drive()
+        publish.assert_not_called()
+        app.drive_input_enabled.set(False)
+        app._toggle_drive_input()
+
+
 def test_drive_button_stays_visually_pressed_until_second_click(app):
     button = app.drive_button_widgets[(1.0, 0.0)]
     with patch.object(app, "_publish_drive"):
@@ -256,6 +280,19 @@ def test_bhl_policy_toggle_autofills_only_its_supported_launch(app):
     app.mode_buttons["display"].invoke()
     assert app.bhl_policy_checkbox.instate(["disabled"])
     assert "bhl_enable_policy" not in displayed_command(app)
+
+
+@pytest.mark.parametrize("robot", ["berkeley_humanoid_lite_sim", "unitree_go2"])
+def test_celisca_legged_command_keeps_map_and_robot_spawn_defaults(app, robot):
+    """A GUI launch must not replace the calibrated spawn with registry zeroes."""
+    select(app, app.robot_combo, robot)
+    select(app, app.map_combo, "celisca_floor_1")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["loc"].invoke()
+    command = displayed_command(app)
+    assert "map_name:=celisca_floor_1" in command
+    assert not any(token.startswith(f"spawn_{axis}:=")
+                   for token in command for axis in ("x", "y", "z", "yaw"))
 
 
 def test_room_vacuum_choice_changes_launch_file(app):

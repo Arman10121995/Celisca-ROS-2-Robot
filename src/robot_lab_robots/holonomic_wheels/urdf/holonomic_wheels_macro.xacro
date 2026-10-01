@@ -26,6 +26,7 @@
   than a car, which is the reason to run this base at all.
 -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find robot_lab_robots)/holonomic_wheels/urdf/mecanum_rollers.xacro"/>
 
   <xacro:macro name="holonomic_wheel" params="name radius:=0.05 width:=0.04 mass:=0.3">
     <link name="${name}_link">
@@ -149,7 +150,12 @@
   <xacro:macro name="holonomic_control" params="steer:=false">
     <ros2_control name="GazeboSimSystem" type="system">
       <hardware>
-        <plugin>gz_ros2_control/GazeboSimROS2ControlPlugin</plugin>
+        <xacro:if value="$(arg is_ignition)">
+          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="$(arg is_ignition)">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:unless>
       </hardware>
       <xacro:if value="${steer}">
         <xacro:macro name="holonomic_steer_interface" params="joint">
@@ -262,39 +268,10 @@
   <xacro:macro name="mecanum_car" params="robot_name">
     <xacro:holonomic_chassis robot_name="${robot_name}"/>
     <xacro:holonomic_sensors/>
-    <!-- Fixed wheels: four drive joints and no steering joints at all. -->
-    <xacro:holonomic_wheel name="front_left_wheel"/>
-    <joint name="front_left_wheel_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="front_left_wheel_link"/>
-      <origin xyz="0.16 0.16 -0.012" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <dynamics damping="0.005" friction="0.0"/>
-    </joint>
-    <xacro:holonomic_wheel name="front_right_wheel"/>
-    <joint name="front_right_wheel_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="front_right_wheel_link"/>
-      <origin xyz="0.16 -0.16 -0.012" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <dynamics damping="0.005" friction="0.0"/>
-    </joint>
-    <xacro:holonomic_wheel name="rear_left_wheel"/>
-    <joint name="rear_left_wheel_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="rear_left_wheel_link"/>
-      <origin xyz="-0.16 0.16 -0.012" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <dynamics damping="0.005" friction="0.0"/>
-    </joint>
-    <xacro:holonomic_wheel name="rear_right_wheel"/>
-    <joint name="rear_right_wheel_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="rear_right_wheel_link"/>
-      <origin xyz="-0.16 -0.16 -0.012" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <dynamics damping="0.005" friction="0.0"/>
-    </joint>
+    <xacro:physical_mecanum_wheel corner="front_left" x="0.16" y="0.16" side="-1"/>
+    <xacro:physical_mecanum_wheel corner="front_right" x="0.16" y="-0.16" side="1"/>
+    <xacro:physical_mecanum_wheel corner="rear_left" x="-0.16" y="0.16" side="1"/>
+    <xacro:physical_mecanum_wheel corner="rear_right" x="-0.16" y="-0.16" side="-1"/>
     <xacro:holonomic_control steer="false"/>
     <xacro:holonomic_gazebo robot_name="${robot_name}"/>
   </xacro:macro>

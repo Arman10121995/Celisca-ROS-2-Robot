@@ -4,16 +4,24 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status reconciled on **2026-09-25**, against source revision `d06a411`. The
+Status reconciled on **2026-09-30**, against `e3d63b3` plus the documented working-tree patches. The
 2026-09-07 audit remains the historical baseline for its recorded checks; later
 runtime evidence is tracked in the [current status ledger](docs/status/platform-status.yaml)
 and the R5.2/R5.3 evidence directories.
+
+The 2026-09-30 MuJoCo localization regression is repaired in the current
+working tree: BHL and Go2 effort loops preserve feedback cadence, and GUI
+commands preserve the configured map/robot spawn. Sequential Celisca floor-1
+repeats walked upright. Go2 requires the GUI's flat-ground policy checkbox;
+BHL's walking policy defaults on. See the
+[before/after traces and instructions](docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md).
 
 ## Start here
 
 - [Audit and evidence](docs/status/audit-2026-09-07.md): what was inspected/tested, confirmed defects and verification limits.
 - [Implementation roadmap](ROADMAP.md): ordered work, dependencies and acceptance criteria toward the full platform.
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
+- [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
 - [Machine-readable status](docs/status/platform-status.yaml) and [support matrix](docs/status/support-matrix.md): current state, not historical completion claims.
 - [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
@@ -37,10 +45,12 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-The current fast development check at `d06a411` is **466 passed, 1 skipped**,
+The current fast development check on the 2026-09-30 working tree is **668 passed, 1 skipped**,
 with registry cross-reference validation passing. The latest R5.3 contact-fidelity
 check also reports **35 passed** for `robot_lab_maps`. These are scoped source
-and static checks: they do not prove all simulator missions, GUI sessions,
+and static checks. Another **34 Tk command/Drive tests** passed, and the scoped
+MuJoCo BHL/Go2 Celisca drive repeats are recorded separately. These checks do not
+prove all simulator missions, GUI sessions,
 optional-engine qualification or hardware operation. See the
 [workflow](docs/WORKFLOW.md) for the evidence boundary and commands.
 

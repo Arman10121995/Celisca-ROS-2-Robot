@@ -2,12 +2,57 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-09-30"
-current_revision: "a6ded59"
+current_revision: "e3d63b3"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
 audit_revision: "dff388f"
 documentation_only_revision: false
+priority_patches:
+  P1:
+    title: "Restore BHL and Go2 MuJoCo localization startup and walking"
+    state: done
+    owner: codex
+    result: "Spawn defaults preserved; effort catch-up disabled; scoped Celisca walk repeats pass. Turning, terrain and universal backend qualification remain in R5.2/R5.3."
+    evidence: "docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md"
+  P2:
+    title: "Keep GUI keyboard/joystick neutral until operator input"
+    state: partial
+    owner: codex
+    result: "GUI no longer publishes when merely armed; 34 command/Drive tests pass. Physical joystick validation remains."
+  P3:
+    title: "Celisca scale, spawn and furnished-map navigation"
+    state: partial
+    owner: codex
+    result: "20% scale and collision proxies corrected; six short furnished-map Nav2 goals pass. Both bases across remaining cells and obstacle routes remain."
+    evidence: "docs/status/evidence/r61-furniture-collision-2026-09-30/README.md"
+  P4:
+    title: "MuJoCo performance with correct control timing"
+    state: partial
+    owner: codex
+    result: "Wheel drives retain catch-up; effort controllers preserve feedback cadence. Heavy-map real-time factor and sensor/collision optimization remain."
+  P5:
+    title: "Four-wheel steering across crab, opposite-phase and pivot modes"
+    state: active
+    owner: codex
+    result: "MuJoCo default motion measured; Gazebo joint-controller bridge and hardware-plugin correction pass a forward/stop wheel-odometry check. Independent body truth, steering mode selector and full mapping/navigation matrix remain."
+  P6:
+    title: "Physical mecanum lateral drive and mapping/navigation"
+    state: active
+    owner: codex
+    result: "Kinematics exist; solid wheels cannot physically strafe. Implement roller collisions and validate lateral motion before promoting holonomic support."
+  P7:
+    title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
+    state: partial
+    owner: codex
+    result: "Primary upstream candidates audited; BHL/Go2 bounded MuJoCo walks exist. Other models need policy contracts, actuation and live tests; unsupported modes stay gated."
+    evidence: "docs/status/policy-px4-candidates-2026-09-30.md"
+  P8:
+    title: "PX4 X500 drone integration"
+    state: queued
+    owner: unassigned
+    result: "Deferred from the current run by the user; upstream candidate documented."
+patch_execution_guide: "docs/PATCH_EXECUTION_GUIDE.md"
 supported_baseline:
   os: "Ubuntu 22.04"
   ros: "Humble"
@@ -19,7 +64,8 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
-  fast_suite: "638 passed, 1 skipped on the 2026-09-30 working tree based on a6ded59 via scripts/test_fast.sh"
+  mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
+  fast_suite: "668 passed, 1 skipped on the 2026-09-30 working tree based on e3d63b3 via scripts/test_fast.sh; GUI command/Drive suite 34 passed; Health status/patch-guide Tk smoke passed"
   map_suite: "35 passed on the 2026-09-30 working tree; MJCF regeneration check passed"
   registry_cross_references: "pass on the 2026-09-30 working tree"
   limitation: "Scoped source/static checks, not a clean build, universal mission matrix, GUI task qualification or hardware test."

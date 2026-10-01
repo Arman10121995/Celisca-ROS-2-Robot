@@ -1,0 +1,34 @@
+{
+ "odom": "/robot_lab_controller/odom",
+ "cmd_topic": "/cmd_vel",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.4,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 1.196
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.0,
+    "vy": 0.0,
+    "wz": 0.0,
+    "distance": 0.0
+   }
+  }
+ ]
+}

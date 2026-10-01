@@ -183,15 +183,16 @@ def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
 
 def _spawn_arguments(environment: Dict[str, Any],
                      spawn: Optional[Dict[str, float]]) -> Dict[str, str]:
-    """Concrete spawn pose: request override, else the environment default zone."""
-    pose: Dict[str, float] = {}
-    if spawn:
-        pose = {k: float(v) for k, v in spawn.items() if k in ('x', 'y', 'z', 'yaw')}
-    else:
-        zones = environment.get('spawn_zones') or []
-        if zones:
-            zone_pose = (zones[0].get('pose') or {})
-            pose = {k: float(zone_pose.get(k, 0.0)) for k in ('x', 'y', 'z', 'yaw')}
+    """Pass only explicit overrides; bringup owns map and robot spawn defaults.
+
+    Registry spawn zones describe an environment, but they cannot encode a
+    robot-specific root height. Passing their pose as launch arguments also
+    overrides sim_maps.yaml's corrected initial pose. In particular, the old
+    Celisca registry pose (0, 0, 0) put BHL inside the map and replaced its
+    -0.038 m sole-height calibration. Let the bringup merge those defaults.
+    """
+    pose = {k: float(v) for k, v in (spawn or {}).items()
+            if k in ('x', 'y', 'z', 'yaw')}
     return {f'spawn_{k}': f'{v:.3f}' for k, v in sorted(pose.items())}
 
 

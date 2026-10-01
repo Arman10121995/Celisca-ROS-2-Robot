@@ -130,8 +130,12 @@ def _build_mujoco_actions(context):
     # How many ticks a single loop iteration may replay to catch up with the
     # wall clock, so a heavy sensor tick cannot make the run play back slower
     # than real time.  0 disables catch-up.
-    spawner_params["max_catch_up_ticks"] = LaunchConfiguration(
-        "max_catch_up_ticks")
+    # Effort-driven legged/humanoid controllers close their loop on each new
+    # joint/IMU sample. Replaying multiple physics ticks with one old torque
+    # command turns a transient overrun into an open-loop fall. Keep catch-up
+    # for wheel velocity drives, whose commands are safe to hold between ticks.
+    spawner_params["max_catch_up_ticks"] = (
+        0 if high_rate_effort else LaunchConfiguration("max_catch_up_ticks"))
     # The whole drive block as JSON (a car's steering joints and limits).
     spawner_params["drive_config"] = ParameterValue(
         LaunchConfiguration("drive_config"), value_type=str)

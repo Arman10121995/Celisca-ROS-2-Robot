@@ -40,3 +40,32 @@ JSON files in this directory are the direct probe results. Source drive tests
 and the expanded URDF check pass. Remaining: physical roller-wheel/contact
 model, GUI lateral input and steering-pattern selector, dedicated Gazebo
 controller path, and per-backend mapping/navigation missions.
+
+## Gazebo controller repair later on 2026-09-30
+
+The new `holonomic_controller.py` starts the joint-group controllers for 4WS
+and mecanum, forwards stamped velocity commands, and derives odometry from
+measured wheel/steer joints. A first launch failed because the symlink-installed
+script lacked executable permission. After that correction, the hardware
+loader exposed a second defect: the description used the system plugin class
+as its ros2_control hardware class. The macro now selects
+`ign_ros2_control/IgnitionSystem` or `gz_ros2_control/GazeboSimSystem` to match
+the selected Gazebo path.
+
+`4ws-gazebo-controller.json` records the resulting quick forward/stop check:
+0.4 m/s wheel odometry, 1.196 m integrated travel, then zero velocity. All
+required joint groups activated. Command:
+
+```bash
+ROS_DOMAIN_ID=97 MODE=loc ODOM=/robot_lab_controller/odom \
+  CHECK_ARGS='--quick' TIMEOUT=100 bash scripts/sim_drive_check.sh \
+  gazebo four_wheel_steer_car nav_empty /tmp/robotlab-4ws-gz-ready.json
+```
+
+This verifies controller activation, feedback and the forward/stop command
+path. The measurements are wheel odometry; independent Gazebo body truth,
+steering patterns and mapping/navigation missions remain to be measured.
+The log records Gazebo requiring SIGTERM after its five-second SIGINT grace
+period and a joy_teleop shutdown exception; no simulator/controller remains.
+Mecanum's physical lateral-motion limitation is unchanged by the shared
+hardware/controller repair.

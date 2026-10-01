@@ -137,8 +137,8 @@ class R33ResolverTests(unittest.TestCase):
         self.assertEqual(manifest["environment_id"], "small_office")
         self.assertEqual(manifest["simulator"], "gazebo")
 
-    def test_spawn_override_and_environment_default(self):
-        """Explicit spawn overrides the environment's default spawn zone."""
+    def test_spawn_override_and_bringup_defaults(self):
+        """Only explicit coordinates override bringup's map and robot pose."""
         ok, manifest = self.resolve(robot_id="bumperbot",
                                     environment_id="small_office",
                                     spawn={"x": 1.5, "y": 2.0, "z": 0.0, "yaw": 0.5})
@@ -149,7 +149,19 @@ class R33ResolverTests(unittest.TestCase):
 
         ok2, manifest2 = self.resolve(robot_id="bumperbot",
                                       environment_id="small_office")
-        self.assertIn("spawn_x", manifest2["launch"]["arguments"])
+        self.assertNotIn("spawn_x", manifest2["launch"]["arguments"])
+        self.assertNotIn("spawn_z", manifest2["launch"]["arguments"])
+
+    def test_celisca_legged_defaults_do_not_override_bringup(self):
+        for robot_id in ("berkeley_humanoid_lite_sim", "unitree_go2"):
+            ok, manifest = self.resolve(robot_id=robot_id,
+                                        environment_id="celisca_floor_1",
+                                        simulator="mujoco", mode="loc")
+            self.assertTrue(ok, manifest)
+            args = manifest["launch"]["arguments"]
+            self.assertEqual(args["map_name"], "celisca_floor_1")
+            for key in ("spawn_x", "spawn_y", "spawn_z", "spawn_yaw"):
+                self.assertNotIn(key, args)
 
     def test_reset_policy_recorded(self):
         """The reset selector lands in the manifest with the owned service."""

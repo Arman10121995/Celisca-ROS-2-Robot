@@ -45,6 +45,16 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+The user's 2026-09-30 instruction prioritizes the stabilization patches in
+[`PATCH_EXECUTION_GUIDE.md`](PATCH_EXECUTION_GUIDE.md) before further expansion.
+`priority_patches` in the status ledger records their current state. Follow
+that queue when continuing the current session. BHL/Go2's MuJoCo startup
+regression is repaired and recorded under
+`status/evidence/r52-r53-mujoco-regression-2026-09-30/`: preserve map/robot
+spawn defaults and keep catch-up disabled for effort-controlled robots.
+The full walking/turning/terrain milestones remain partial. Drone work is
+excluded from this run by the user.
+
 After baseline revision `0be23d2` (2026-09-25), `R5.2` is the active next task.
 Continue from the Go2 evidence under
 `docs/status/evidence/r52-go2-policy-2026-09-25/`: the feed-forward and

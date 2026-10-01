@@ -475,6 +475,48 @@ class FourWheelSteerDrive:
         wz = self.radius * (fr + rr - fl - rl) / (2.0 * self.track)
         return (vx, wz)
 
+    def measured_twist(self, wheel_rates, steer_angles):
+        """Estimate body (vx, vy, wz) from all four measured wheel joints.
+
+        A wheel measures motion along its steered rolling direction. Solving
+        those four contact equations avoids treating an angled wheel as if it
+        pointed straight ahead, especially during a zero-turn. Crab steering
+        has one unobservable lateral direction; a small ridge keeps that case
+        bounded instead of inventing an enormous odometry velocity.
+        """
+        rates = list(wheel_rates or [])
+        if len(rates) != 4:
+            return (0.0, 0.0, 0.0)
+        half_base, half_track = self.wheelbase / 2.0, self.track / 2.0
+        contacts = ((self.fl_steer, half_base, half_track),
+                    (self.fr_steer, half_base, -half_track),
+                    (self.rl_steer, -half_base, half_track),
+                    (self.rr_steer, -half_base, -half_track))
+        normal = [[0.0] * 4 for _ in range(3)]
+        for rate, (joint, x, y) in zip(rates, contacts):
+            angle = float(steer_angles.get(joint, 0.0))
+            c, s = math.cos(angle), math.sin(angle)
+            row = (c, s, -y * c + x * s)
+            for i in range(3):
+                normal[i][3] += row[i] * self.radius * rate
+                for j in range(3):
+                    normal[i][j] += row[i] * row[j]
+        for i in range(3):
+            normal[i][i] += 1e-6
+        for pivot in range(3):
+            best = max(range(pivot, 3), key=lambda i: abs(normal[i][pivot]))
+            normal[pivot], normal[best] = normal[best], normal[pivot]
+            factor = normal[pivot][pivot]
+            for j in range(pivot, 4):
+                normal[pivot][j] /= factor
+            for row in range(3):
+                if row == pivot:
+                    continue
+                scale = normal[row][pivot]
+                for j in range(pivot, 4):
+                    normal[row][j] -= scale * normal[pivot][j]
+        return tuple(normal[i][3] for i in range(3))
+
 
 class MecanumDrive:
     """Ideal 45-degree mecanum kinematics for a future physical roller plant.

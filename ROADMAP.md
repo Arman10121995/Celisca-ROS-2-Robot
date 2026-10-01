@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-25. Continuation baseline: `0be23d2`. Runtime audit
+Updated: 2026-09-30. Continuation baseline: `e3d63b3`. Runtime audit
 baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
 R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
 tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
@@ -12,6 +12,25 @@ This is an implementation specification, not a list of promised features.
 ownership, dependencies and the next task. This file owns scope and acceptance
 criteria. Update both together. Start each session with
 [AGENT_HANDOFF](docs/AGENT_HANDOFF.md).
+
+## Stabilization patches before further expansion
+
+The user requested these fixes before continuing the larger milestones. The
+[patch execution guide](docs/PATCH_EXECUTION_GUIDE.md) gives the exact starting
+points, commands and acceptance checks for a continuing agent. The ledger's
+`priority_patches` records current state; partial work is not a completed robot
+workflow.
+
+| Patch | Current evidence | Required next result |
+|---|---|---|
+| P1 BHL/Go2 localization regression | Repaired, bounded Celisca walks measured | Preserve the tested feedback cadence |
+| P2 GUI neutral input | Source/Tk checks pass | Physical joystick arming, release and disconnect trial |
+| P3 Celisca geometry/navigation | 20% resize corrected; six short furnished goals pass | Both differential bases in remaining cells and obstacle routes |
+| P4 MuJoCo speed | Safe wheel catch-up; effort catch-up disabled | Measured real-time factor with stable control |
+| P5 four-wheel steering | MuJoCo default drive measured; Gazebo repair active | Select and measure crab/opposite-phase/pivot, then map/navigate |
+| P6 mecanum | Wheel commands wired; no physical lateral motion | Roller contact model, lateral drive/stop, then map/navigate |
+| P7 legged/humanoid policies | Primary candidates audited; limited BHL/Go2 walks | Model-specific contracts and bounded live qualification |
+| P8 PX4 drone | Candidate identified | Deferred from this run by the user |
 
 ## Goal and completion boundary
 
@@ -311,6 +330,12 @@ Dependencies: `R4.3`.
 
 Dependencies: `R5.1`.
 
+- 2026-09-30 regression patch: MuJoCo effort controllers now skip blind
+  catch-up physics steps, and GUI/CLI defaults preserve the map/robot spawn.
+  A Celisca floor-1 policy repeat stayed nominal for 9 simulated seconds,
+  moved 2.780 m in x, and peaked at 0.099 rad tilt. Terrain and get-up remain
+  open. See [regression evidence](docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md).
+
 - Files: `src/robot_lab_robots/unitree/go2_description/`, `src/robot_lab_adapter/`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Wire simulation wrapper, sensors and controller into actual launch. Implement closed-loop stance then bounded gait/base-velocity interface with contact/state estimation and effort/joint limits; raw effort publishing is not gait control.
 - Acceptance: Measured stable stance, commanded displacement, turn and stop on flat ground; tilt/effort/fall handling works; then complete a named terrain task with tracking/contact/effort evidence.
@@ -403,6 +428,15 @@ Dependencies: `R5.1`.
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 
 Dependencies: `R5.1`.
+
+- 2026-09-30 regression patch: the recent MuJoCo catch-up loop reused stale
+  effort across several physics ticks and toppled BHL during its startup bend.
+  Catch-up is now disabled for effort controllers. The corrected Celisca
+  floor-1 repeat walked 1.242 m with 0.195 rad peak tilt and stopped upright.
+  The GUI resolver also stops overriding calibrated map/robot spawn defaults
+  with registry zeroes. Held-turn and low-command stalls remain open; heavy-map
+  speed must be improved without skipping feedback. See
+  [regression evidence](docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md).
 
 - Files: `src/robot_lab_robots/berkeley_humanoid_lite/`, `src/robot_lab_adapter/robot_lab_adapter/humanoid_standing_controller.py`, `src/robot_lab_robots/config/robots.yaml`.
 - Implement: Resume historical P3.4 after ownership check. Verify joints/inertias/limits; wire simulation wrapper; implement closed-loop balance before stepping/walking. A fixed pose is not proof of balance.

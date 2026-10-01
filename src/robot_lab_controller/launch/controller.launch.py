@@ -40,6 +40,36 @@ def noisy_controller(context, *args, **kwargs):
     ]
 
 
+def holonomic_controller_nodes(context, *args, **kwargs):
+    """Start the joint groups actually declared by each four-wheel model."""
+    drive_type = LaunchConfiguration("drive_type").perform(context)
+    if drive_type not in ("four_wheel_steer", "mecanum"):
+        return []
+    names = (["four_wheel_steer_controller", "four_wheel_wheel_controller"]
+             if drive_type == "four_wheel_steer"
+             else ["mecanum_wheel_controller"])
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    return [
+        TimerAction(
+            period=3.0,
+            actions=[Node(
+                package="controller_manager", executable="spawner",
+                arguments=names + ["--controller-manager", "/controller_manager"],
+                parameters=[{"use_sim_time": use_sim_time}],
+            )],
+        ),
+        Node(
+            package="robot_lab_controller",
+            executable="holonomic_controller.py",
+            parameters=[{
+                "drive_config": ParameterValue(
+                    LaunchConfiguration("drive_config"), value_type=str),
+                "use_sim_time": use_sim_time,
+            }],
+        ),
+    ]
+
+
 
 def generate_launch_description():
     
@@ -111,7 +141,9 @@ def generate_launch_description():
         description="The robot's drive block as JSON (robots.yaml)",
     )
     is_car = PythonExpression(["'", LaunchConfiguration("drive_type"), "' == 'ackermann'"])
-    is_diff = PythonExpression(["'", LaunchConfiguration("drive_type"), "' != 'ackermann'"])
+    is_diff = PythonExpression([
+        "'", LaunchConfiguration("drive_type"),
+        "' not in ('ackermann', 'four_wheel_steer', 'mecanum')"])
 
     # A car: steering positions and wheel rates from its own node, which
     # also publishes the fixed-axle odometry on /robot_lab_controller/odom.
@@ -217,6 +249,7 @@ def generate_launch_description():
             drive_config_arg,
             joint_state_broadcaster_spawner,
             car_controllers,
+            OpaqueFunction(function=holonomic_controller_nodes),
             wheel_controller_spawner,
             simple_controller,
             noisy_controller_launch,

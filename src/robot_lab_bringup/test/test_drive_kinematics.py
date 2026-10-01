@@ -232,6 +232,17 @@ def test_four_wheel_steering_zero_turns_do_not_translate():
         assert abs(wz) > 1e-6, mode
 
 
+@pytest.mark.parametrize("mode", ["ackermann", "in_phase", "crab", "pivot"])
+def test_four_wheel_odometry_uses_measured_steering_angles(mode):
+    drive = _4ws(mode)
+    for speed, yaw in ((0.0, 1.0), (0.4, 0.3), (0.4, 0.0)):
+        targets = drive.targets(speed, yaw)
+        twist = drive.measured_twist(
+            [targets.velocity[j] for j in drive.wheel_joints], targets.position)
+        assert twist[0] == pytest.approx(speed, abs=0.01)
+        assert twist[2] == pytest.approx(yaw, abs=0.01)
+
+
 def test_four_wheel_pivot_is_stationary_without_a_command():
     drive = _4ws("pivot")
     still = drive.targets(0.0, 0.0)

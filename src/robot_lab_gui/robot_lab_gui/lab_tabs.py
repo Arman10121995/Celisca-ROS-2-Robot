@@ -50,6 +50,37 @@ BENCHMARK_SRC = WORKSPACE_ROOT / "src" / "robot_lab" / "robot_lab_benchmark"
 STATUS_YAML = WORKSPACE_ROOT / "docs" / "status" / "platform-status.yaml"
 
 
+def format_platform_status(data):
+    """Display current patch and nested task states without historical logs."""
+    lines = [f"Platform Status — updated {data.get('updated', 'unknown')}",
+             f"Overall: {data.get('overall_state', 'unknown')}",
+             data.get('assessment', '')]
+    patches = data.get('priority_patches', {})
+    if patches:
+        lines.extend(["", "Stabilization patches"])
+        for patch_id, patch in patches.items():
+            lines.append(f"{patch_id}: {patch.get('state', '?')} — {patch.get('title', '')}")
+            if patch.get('result'):
+                lines.append(f"  {patch['result']}")
+            if patch.get('evidence'):
+                lines.append(f"  Evidence: {patch['evidence']}")
+    lines.extend(["", "Roadmap tasks"])
+
+    def append_tasks(tasks, depth=0):
+        for task_id, task in tasks.items():
+            if not isinstance(task, dict):
+                continue
+            lines.append(f"{'  ' * depth}{task_id}: {task.get('state', '?')} — "
+                         f"{task.get('title', '')}")
+            append_tasks(task.get('tasks', {}), depth + 1)
+
+    append_tasks(data.get('tasks', {}))
+    lines.extend(["", "Current verification"])
+    for name, result in data.get('current_verification', {}).items():
+        lines.append(f"{name}: {result}")
+    return "\n".join(lines) + "\n"
+
+
 class LabTab(ttk.Frame):
     """Base class for control-center tabs."""
 
@@ -671,6 +702,9 @@ class HealthTab(LabTab):
             frame, text="Stop Diagnostics",
             command=lambda: self.app.stop_bg_process("health"),
         ).grid(row=1, column=2, sticky="ew", padx=(4, 0), pady=2)
+        ttk.Button(
+            frame, text="Patch Execution Guide", command=self._show_patch_guide,
+        ).grid(row=2, column=0, columnspan=3, sticky="ew", pady=(6, 2))
 
         self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)
         self.summary.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
@@ -686,16 +720,16 @@ class HealthTab(LabTab):
         except Exception as exc:  # noqa: BLE001
             self.app.log(f"[health] failed to parse status yaml: {exc}\n")
             return
-        lines = ["=== Platform Status Summary ==="]
-        for key in ("goal", "tests", "supported_baseline"):
-            if key in data:
-                lines.append(f"{key}: {json.dumps(data[key], default=str)}")
-        for task_id, task in data.get("tasks", {}).items():
-            state = task.get("state", "?") if isinstance(task, dict) else task
-            title = task.get("title", "") if isinstance(task, dict) else ""
-            lines.append(f"  {task_id}: {state} {title}".rstrip())
-        text = "\n".join(lines) + "\n"
-        self.app.log("\n" + text)
+        self._set_summary(format_platform_status(data))
+
+    def _show_patch_guide(self):
+        path = WORKSPACE_ROOT / "docs" / "PATCH_EXECUTION_GUIDE.md"
+        try:
+            self._set_summary(path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            self.app.log(f"[health] failed to read patch guide: {exc}\n")
+
+    def _set_summary(self, text):
         self.summary.configure(state="normal")
         self.summary.delete("1.0", "end")
         self.summary.insert("1.0", text)

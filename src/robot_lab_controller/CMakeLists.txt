@@ -46,6 +46,7 @@ install(
 
 install(PROGRAMS
   ${PROJECT_NAME}/ackermann_controller.py
+  ${PROJECT_NAME}/holonomic_controller.py
   ${PROJECT_NAME}/cleaning_controller.py
   ${PROJECT_NAME}/mapping_controller.py
   ${PROJECT_NAME}/manual_teleop.py

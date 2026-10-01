@@ -2400,6 +2400,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _repeat_drive(self):
         self.drive_repeat_job = None
+        was_moving = any(abs(value) > 1e-9 for value in self.current_drive)
         (min_linear, max_linear, min_angular, max_angular,
          linear_step, angular_step, linear_brake, angular_brake) = self._resolved_drive_limits()
         self.drive_model.max_linear = max_linear
@@ -2429,7 +2430,13 @@ class SimulationLauncherGui(tk.Tk):
             linear_input, angular_input, linear_step, angular_step,
             linear_brake, angular_brake)
         self.current_drive = (linear, angular)
-        self._publish_drive(linear, angular)
+        # Arming WASD/joystick only starts polling. It must not put even a
+        # zero Twist on /key_vel until a real input is made. Once moving,
+        # keep publishing through the deceleration and its final zero.
+        if (self.drive_buttons or self.drive_keys or
+                abs(linear_input) > 1e-9 or abs(angular_input) > 1e-9 or
+                was_moving or abs(linear) > 1e-9 or abs(angular) > 1e-9):
+            self._publish_drive(linear, angular)
         if (self.drive_buttons or self.drive_keys or self.drive_input_enabled.get()
                 or abs(linear) > 1e-9 or abs(angular) > 1e-9):
             self.drive_repeat_job = self.after(100, self._repeat_drive)

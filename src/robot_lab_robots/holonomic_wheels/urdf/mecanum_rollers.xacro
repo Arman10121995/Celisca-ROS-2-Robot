@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Adapted from DaiGuard/fuji_mecanum @ 646431a5 (MIT, see ../third_party).
+       Fifteen passive barrel rollers per hub; scale 205 mm -> 100 mm. -->
+  <xacro:property name="mecanum_scale" value="${0.1 / 0.205}"/>
+  <xacro:macro name="mecanum_roller_loop" params="name side count:=15 index:=15">
+    <xacro:if value="${index > 0}">
+      <xacro:property name="theta" value="${2*pi*(index-1)/count}"/>
+      <link name="${name}_roller${index}_link">
+        <visual>
+          <geometry><mesh filename="package://robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/roller.stl" scale="${mecanum_scale} ${mecanum_scale} ${mecanum_scale}"/></geometry>
+          <material name="holonomic_tyre"/>
+        </visual>
+        <collision>
+          <geometry><mesh filename="package://robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/roller.stl" scale="${mecanum_scale} ${mecanum_scale} ${mecanum_scale}"/></geometry>
+        </collision>
+        <inertial>
+          <mass value="${0.3 * mecanum_scale**3}"/>
+          <inertia ixx="${0.00024 * mecanum_scale**5}" iyy="${0.00076 * mecanum_scale**5}" izz="${0.00076 * mecanum_scale**5}" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+      </link>
+      <joint name="${name}_roller${index}_joint" type="continuous">
+        <parent link="${name}_link"/>
+        <child link="${name}_roller${index}_link"/>
+        <origin xyz="0 ${0.0895*cos(theta)*mecanum_scale} ${0.0895*sin(theta)*mecanum_scale}" rpy="${atan(-tan(theta)*sqrt(2.0))} ${asin(side*cos(theta)/sqrt(2.0))} ${atan(side*sin(theta))}"/>
+        <axis xyz="1 0 0"/>
+        <dynamics damping="0.00001" friction="0.000001"/>
+      </joint>
+      <gazebo reference="${name}_roller${index}_link">
+        <mu1>0.8</mu1><mu2>0.8</mu2>
+      </gazebo>
+      <xacro:mecanum_roller_loop name="${name}" side="${side}" count="${count}" index="${index-1}"/>
+    </xacro:if>
+  </xacro:macro>
+  <xacro:macro name="physical_mecanum_wheel" params="corner x y side">
+    <link name="${corner}_wheel_link">
+      <visual>
+        <geometry><mesh filename="package://robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/wheel.stl" scale="${mecanum_scale} ${mecanum_scale} ${mecanum_scale}"/></geometry>
+        <material name="holonomic_knuckle"/>
+      </visual>
+      <collision>
+        <geometry><mesh filename="package://robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/wheel.stl" scale="${mecanum_scale} ${mecanum_scale} ${mecanum_scale}"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="${2 * mecanum_scale**3}"/>
+        <inertia ixx="${0.042025 * mecanum_scale**5}" iyy="${0.024279 * mecanum_scale**5}" izz="${0.024279 * mecanum_scale**5}" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+    <joint name="${corner}_wheel_joint" type="continuous">
+      <parent link="base_link"/><child link="${corner}_wheel_link"/>
+      <origin xyz="${x} ${y} -0.012" rpy="0 0 ${pi/2}"/>
+      <axis xyz="1 0 0"/>
+      <dynamics damping="0.005" friction="0"/>
+    </joint>
+    <xacro:mecanum_roller_loop name="${corner}_wheel" side="${side}"/>
+  </xacro:macro>
+</robot>
