@@ -1,0 +1,26 @@
+wheels: ['front_left_wheel_joint', 'front_right_wheel_joint', 'rear_left_wheel_joint', 'rear_right_wheel_joint'] roller dofs: 60
+
+=== settle  cmd vx=0.00 vy=0.00 wz=0.00 ===
+  body vx=-0.000 vy=0.000 wz=0.000  (world frame vx=-0.000 vy=0.000)
+  wheel qvel: ft=-0.01 ht=+0.01 ft=-0.00 ht=-0.01
+  roller spins: max=0.09 mean=0.01 rad/s
+
+=== lateral +y  cmd vx=0.00 vy=0.30 wz=0.00 ===
+  body vx=-0.000 vy=0.280 wz=-0.001  (world frame vx=-0.000 vy=0.280)
+  wheel qvel: ft=-5.81 ht=+5.82 ft=+5.86 ht=-5.76
+  roller spins: max=70.25 mean=38.36 rad/s
+
+=== lateral -y  cmd vx=0.00 vy=-0.30 wz=0.00 ===
+  body vx=0.001 vy=-0.283 wz=-0.006  (world frame vx=0.001 vy=-0.283)
+  wheel qvel: ft=+5.78 ht=-5.82 ft=-5.76 ht=+5.82
+  roller spins: max=72.15 mean=38.80 rad/s
+
+=== forward  cmd vx=0.40 vy=0.00 wz=0.00 ===
+  body vx=0.397 vy=-0.002 wz=0.001  (world frame vx=0.397 vy=-0.002)
+  wheel qvel: ft=+7.95 ht=+7.94 ft=+7.94 ht=+7.95
+  roller spins: max=0.15 mean=0.03 rad/s
+
+=== yaw  cmd vx=0.00 vy=0.00 wz=1.00 ===
+  body vx=0.001 vy=-0.003 wz=0.983  (world frame vx=0.001 vy=-0.003)
+  wheel qvel: ft=-6.36 ht=+6.34 ft=-6.25 ht=+6.32
+  roller spins: max=40.66 mean=22.12 rad/s

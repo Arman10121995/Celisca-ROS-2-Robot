@@ -916,11 +916,7 @@ class PyBulletSpawner(Node):
             targets = self._drive.targets(
                 t.linear.x, t.angular.z, dt=self._dt,
                 **({"vy": t.linear.y} if self._drive.kind == "mecanum" else {}))
-            vl = targets.velocity.get(self._drive.left, 0.0)
-            vr = targets.velocity.get(self._drive.right, 0.0)
             clamp = 50.0
-            vl = max(-clamp, min(clamp, vl))
-            vr = max(-clamp, min(clamp, vr))
             if getattr(self, "_hold_joints", False):
                 # Display hold: every non-drive joint servos to its spawn
                 # angle through the physics engine's position motor, within
@@ -940,14 +936,18 @@ class PyBulletSpawner(Node):
                     except Exception:
                         pass
             if self._drive.kind == "diff":
+                # Only a differential drive has the two legacy wheel joints;
+                # the car/4WS/mecanum models name their own joints below.
+                vl = targets.velocity.get(self._drive.left, 0.0)
+                vr = targets.velocity.get(self._drive.right, 0.0)
                 if self._lw >= 0:
                     p.setJointMotorControl2(
                         self._robot_id, self._lw, p.VELOCITY_CONTROL,
-                        targetVelocity=vl, force=5.0)
+                        targetVelocity=max(-clamp, min(clamp, vl)), force=5.0)
                 if self._rw >= 0:
                     p.setJointMotorControl2(
                         self._robot_id, self._rw, p.VELOCITY_CONTROL,
-                        targetVelocity=vr, force=5.0)
+                        targetVelocity=max(-clamp, min(clamp, vr)), force=5.0)
             else:
                 for joint, rate in targets.velocity.items():
                     idx = self._joint_idx.get(joint, -1)

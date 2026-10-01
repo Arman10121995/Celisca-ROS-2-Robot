@@ -1,0 +1,146 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.398,
+    "vy": 0.0,
+    "wz": -0.0,
+    "distance": 1.09,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.0,
+     "front_right_steer_joint": -0.0,
+     "rear_left_steer_joint": -0.0,
+     "rear_right_steer_joint": 0.0
+    }
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.35,
+    "vy": -0.005,
+    "wz": 0.464,
+    "distance": 1.281,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.1915,
+     "front_right_steer_joint": 0.1923,
+     "rear_left_steer_joint": -0.202,
+     "rear_right_steer_joint": -0.2019
+    }
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.35,
+    "vy": 0.002,
+    "wz": -0.464,
+    "distance": 1.29,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.1966,
+     "front_right_steer_joint": -0.1941,
+     "rear_left_steer_joint": 0.1999,
+     "rear_right_steer_joint": 0.2008
+    }
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.29,
+    "vy": 0.002,
+    "wz": 0.281,
+    "distance": 0.806,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.1637,
+     "front_right_steer_joint": -0.1644,
+     "rear_left_steer_joint": 0.1549,
+     "rear_right_steer_joint": 0.1537
+    }
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.218,
+    "vy": 0.0,
+    "wz": 0.889,
+    "distance": 0.593,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.6736,
+     "front_right_steer_joint": 0.674,
+     "rear_left_steer_joint": -0.6816,
+     "rear_right_steer_joint": -0.6795
+    }
+   }
+  },
+  {
+   "phase": "spin_in_place",
+   "command": [
+    0.0,
+    1.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.0,
+    "vy": -0.0,
+    "wz": 0.972,
+    "distance": 0.0,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.7858,
+     "front_right_steer_joint": 0.7775,
+     "rear_left_steer_joint": 0.7774,
+     "rear_right_steer_joint": -0.7858
+    }
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.0,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 0.0,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.6747,
+     "front_right_steer_joint": 0.6747,
+     "rear_left_steer_joint": -0.6747,
+     "rear_right_steer_joint": -0.6747
+    }
+   }
+  }
+ ]
+}

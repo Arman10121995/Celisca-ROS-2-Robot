@@ -1,0 +1,86 @@
+wheel geoms: {19: 'rear_left_wheel_link_contact_0', 21: 'rear_right_wheel_link_contact_0', 24: 'front_left_wheel_link_contact_0', 27: 'front_right_wheel_link_contact_0'}
+  friction rear_left_wheel_link_contact_0 [1.e+00 5.e-03 1.e-04]
+  friction rear_right_wheel_link_contact_0 [1.e+00 5.e-03 1.e-04]
+  friction front_left_wheel_link_contact_0 [1.e+00 5.e-03 1.e-04]
+  friction front_right_wheel_link_contact_0 [1.e+00 5.e-03 1.e-04]
+
+=== straight cmd=(0.40, 0.00) ===
+body vx=0.400 wz=0.000  contacts=16 wheel_normal=98.3 N
+  front_left_steer_joint       qpos= 0.0000 qvel= -0.000 qfrc_actuator= -0.000
+  front_right_steer_joint      qpos= 0.0000 qvel= -0.000 qfrc_actuator= -0.000
+  rear_left_wheel_joint        qpos=38.8575 qvel=  8.001 qfrc_actuator= -0.000
+  rear_right_wheel_joint       qpos=38.8554 qvel=  8.000 qfrc_actuator=  0.000
+  front_left_wheel_joint       qpos=38.8743 qvel=  8.001 qfrc_actuator= -0.001
+  front_right_wheel_joint      qpos=38.8717 qvel=  8.000 qfrc_actuator= -0.000
+
+=== stationary steer (targets 0.452 / 0.328) ===
+  front_left_steer_joint       qpos= 0.2308 qfrc_actuator= 10.000
+  front_right_steer_joint      qpos= 0.2242 qfrc_actuator=  5.194
+  contacts=21 wheel_normal=442.4 N
+
+--- constraint/passive audit ---
+  front_left_steer_joint: qfrc_actuator=10.000 qfrc_constraint=-10.000 qfrc_passive=0.000 qfrc_applied=0.000 dof_damping=0.1000 dof_frictionloss=0.0000
+  front_right_steer_joint: qfrc_actuator=5.194 qfrc_constraint=-5.194 qfrc_passive=-0.000 qfrc_applied=0.000 dof_damping=0.1000 dof_frictionloss=0.0000
+
+--- all contacts after static steer (geom idx, names, pos, dist, force) ---
+  [0] g19(rear_left_wheel_link_contact_0) | g1(None) pos=[ 1.9434  0.1204 -0.    ] dist=-0.00008 f=[ 5.785e+00  5.000e-03 -5.000e-03]
+  [1] g19(rear_left_wheel_link_contact_0) | g1(None) pos=[ 1.9433  0.1204 -0.    ] dist=-0.00008 f=[ 5.785e+00  5.000e-03 -5.000e-03]
+  [2] g19(rear_left_wheel_link_contact_0) | g1(None) pos=[ 1.9434  0.14   -0.    ] dist=-0.00008 f=[ 5.787e+00  5.000e-03 -4.000e-03]
+  [3] g19(rear_left_wheel_link_contact_0) | g1(None) pos=[ 1.9434  0.1604 -0.    ] dist=-0.00008 f=[ 5.788e+00  5.000e-03 -4.000e-03]
+  [4] g21(rear_right_wheel_link_contact_0) | g1(None) pos=[ 1.9429 -0.1596 -0.    ] dist=-0.00008 f=[ 6.151e+00  5.000e-03 -2.000e-03]
+  [5] g21(rear_right_wheel_link_contact_0) | g1(None) pos=[ 1.9428 -0.1596 -0.    ] dist=-0.00008 f=[ 6.151e+00  5.000e-03 -2.000e-03]
+  [6] g21(rear_right_wheel_link_contact_0) | g1(None) pos=[ 1.943  -0.1596 -0.    ] dist=-0.00008 f=[ 6.151e+00  5.000e-03 -2.000e-03]
+  [7] g21(rear_right_wheel_link_contact_0) | g1(None) pos=[ 1.943  -0.1196 -0.    ] dist=-0.00008 f=[ 6.154e+00  5.000e-03 -1.000e-03]
+  [8] g24(front_left_wheel_link_contact_0) | g1(None) pos=[ 2.2634  0.1394 -0.    ] dist=-0.00007 f=[ 5.468 -0.009 -0.009]
+  [9] g24(front_left_wheel_link_contact_0) | g1(None) pos=[ 2.2587  0.1592 -0.    ] dist=-0.00007 f=[ 5.47  -0.009 -0.008]
+  [10] g24(front_left_wheel_link_contact_0) | g1(None) pos=[ 2.268   0.1203 -0.    ] dist=-0.00007 f=[ 5.466 -0.009 -0.01 ]
+  [11] g24(front_left_wheel_link_contact_0) | g1(None) pos=[ 2.2589  0.1593 -0.    ] dist=-0.00007 f=[ 5.47  -0.009 -0.008]
+  [12] g24(front_left_wheel_link_contact_0) | g1(None) pos=[ 2.2679  0.1203 -0.    ] dist=-0.00007 f=[ 5.466 -0.009 -0.01 ]
+  [13] g27(front_right_wheel_link_contact_0) | g1(None) pos=[ 2.2585 -0.1207 -0.    ] dist=-0.00008 f=[ 5.819e+00 -2.000e-03  1.600e-02]
+  [14] g27(front_right_wheel_link_contact_0) | g1(None) pos=[ 2.2675 -0.1597 -0.    ] dist=-0.00008 f=[ 5.815e+00 -2.000e-03  1.500e-02]
+  [15] g27(front_right_wheel_link_contact_0) | g1(None) pos=[ 2.2586 -0.1207 -0.    ] dist=-0.00008 f=[ 5.819e+00 -2.000e-03  1.600e-02]
+  [16] g27(front_right_wheel_link_contact_0) | g1(None) pos=[ 2.2673 -0.1597 -0.    ] dist=-0.00008 f=[ 5.815e+00 -2.000e-03  1.500e-02]
+  [17] g24(front_left_wheel_link_contact_0) | g11(None) pos=[2.2193 0.1094 0.0499] dist=-0.00091 f=[ 1.13384e+02  4.10000e-02 -0.00000e+00]
+  [18] g24(front_left_wheel_link_contact_0) | g11(None) pos=[2.2193 0.1094 0.0504] dist=-0.00091 f=[ 1.13384e+02  4.10000e-02 -0.00000e+00]
+  [19] g27(front_right_wheel_link_contact_0) | g11(None) pos=[ 2.3073 -0.11    0.05  ] dist=-0.00062 f=[ 5.8627e+01  7.0000e-03 -0.0000e+00]
+  [20] g27(front_right_wheel_link_contact_0) | g11(None) pos=[ 2.3073 -0.11    0.0504] dist=-0.00062 f=[ 5.8627e+01  7.0000e-03 -0.0000e+00]
+geom.bodyid for the two box-pad candidates: 0 0
+  g0 name=None type=0 group=0 contype=0 conaff=0
+  g1 name=None type=6 group=0 contype=1 conaff=1
+  g2 name=None type=6 group=0 contype=1 conaff=1
+  g3 name=None type=6 group=0 contype=1 conaff=1
+  g4 name=None type=6 group=0 contype=1 conaff=1
+  g5 name=None type=6 group=0 contype=1 conaff=1
+  g6 name=None type=6 group=0 contype=1 conaff=1
+  g7 name=None type=6 group=0 contype=1 conaff=1
+  g8 name=None type=6 group=0 contype=1 conaff=1
+  g9 name=None type=6 group=0 contype=1 conaff=1
+  g10 name=None type=6 group=1 contype=0 conaff=0
+  g11 name=None type=6 group=3 contype=1 conaff=1
+  g12 name=None type=6 group=1 contype=0 conaff=0
+  g13 name=None type=5 group=1 contype=0 conaff=0
+  g14 name=None type=5 group=3 contype=1 conaff=1
+  g15 name=None type=5 group=1 contype=0 conaff=0
+  g16 name=None type=6 group=1 contype=0 conaff=0
+  g17 name=None type=6 group=3 contype=1 conaff=1
+  g18 name=None type=5 group=1 contype=0 conaff=0
+  g19 name=rear_left_wheel_link_contact_0 type=5 group=3 contype=1 conaff=1
+  g20 name=None type=5 group=1 contype=0 conaff=0
+  g21 name=rear_right_wheel_link_contact_0 type=5 group=3 contype=1 conaff=1
+  g22 name=None type=5 group=1 contype=0 conaff=0
+  g23 name=None type=5 group=1 contype=0 conaff=0
+  g24 name=front_left_wheel_link_contact_0 type=5 group=3 contype=1 conaff=1
+  g25 name=None type=5 group=1 contype=0 conaff=0
+  g26 name=None type=5 group=1 contype=0 conaff=0
+  g27 name=front_right_wheel_link_contact_0 type=5 group=3 contype=1 conaff=1
+
+=== left_arc cmd=(0.40, 0.50) ===
+body vx=0.067 wz=0.070  contacts=17 wheel_normal=511.7 N
+  front_left_steer_joint       qpos= 0.2287 qvel= -0.022 qfrc_actuator= 10.000
+  front_right_steer_joint      qpos= 0.2165 qvel=  0.011 qfrc_actuator=  5.575
+  rear_left_wheel_joint        qpos=73.3119 qvel=  6.475 qfrc_actuator=  0.196
+  rear_right_wheel_joint       qpos=87.7290 qvel=  6.970 qfrc_actuator=  2.027
+  front_left_wheel_joint       qpos=42.9384 qvel=  0.775 qfrc_actuator=  5.000
+  front_right_wheel_joint      qpos=49.3376 qvel=  1.467 qfrc_actuator=  5.000
+
+model timestep 0.002 solver 2

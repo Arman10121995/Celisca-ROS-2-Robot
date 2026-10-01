@@ -1,0 +1,38 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-16-52-49-737682-molar1-575220
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [575275]
+[INFO] [mujoco_spawner-2]: process started with pid [575277]
+[robot_state_publisher-1] [INFO] [1790866370.595499433] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790866370.595702537] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790866370.595724134] [robot_state_publisher]: got segment front_left_knuckle_link
+[robot_state_publisher-1] [INFO] [1790866370.595734628] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790866370.595742595] [robot_state_publisher]: got segment front_right_knuckle_link
+[robot_state_publisher-1] [INFO] [1790866370.595750305] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790866370.595757824] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790866370.595765503] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790866370.595772990] [robot_state_publisher]: got segment laser_mast_link
+[robot_state_publisher-1] [INFO] [1790866370.595780445] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-1] [INFO] [1790866370.595787675] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-1] [INFO] [1790866370.595795034] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790866370.595802425] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-1] [INFO] [1790866370.595809624] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-1] [INFO] [1790866370.595816727] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790866370.595823894] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-1] [INFO] [1790866370.595831541] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-1] [INFO] [1790866370.595838931] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790866370.595846354] [robot_state_publisher]: got segment rear_right_wheel_link
+[mujoco_spawner-2] [INFO] [1790866371.530602261] [mujoco_spawner]: Drive: ackermann, wheels ['rear_left_wheel_joint', 'rear_right_wheel_joint', 'front_left_wheel_joint', 'front_right_wheel_joint'], steering ['front_left_steer_joint', 'front_right_steer_joint']
+[mujoco_spawner-2] [INFO] [1790866372.248837014] [mujoco_spawner]: MuJoCo: 7 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-2] [INFO] [1790866372.254357103] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790866372.266695446] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[mujoco_spawner-2] [INFO] [1790866372.267566316] [mujoco_spawner]: Joints: ['rear_left_wheel_joint', 'rear_right_wheel_joint', 'front_left_steer_joint', 'front_left_wheel_joint', 'front_right_steer_joint', 'front_right_wheel_joint']   lw=rear_left_wheel_joint rw=rear_right_wheel_joint
+[mujoco_spawner-2] [INFO] [1790866372.268804809] [mujoco_spawner]: MuJoCo model loaded: 8 bodies, 7 joints
+[mujoco_spawner-2] [INFO] [1790866372.269365809] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790866372.269867234] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790866372.304568354] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790866399.741118419] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 575275]
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 575277]

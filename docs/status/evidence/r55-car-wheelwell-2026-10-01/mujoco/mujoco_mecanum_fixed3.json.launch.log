@@ -1,0 +1,87 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-17-31-55-014054-molar1-611984
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [612239]
+[INFO] [mujoco_spawner-2]: process started with pid [612241]
+[robot_state_publisher-1] [INFO] [1790868716.190195778] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790868716.191439241] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790868716.191953003] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790868716.192337549] [robot_state_publisher]: got segment front_left_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790868716.192664687] [robot_state_publisher]: got segment front_left_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790868716.192982097] [robot_state_publisher]: got segment front_left_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790868716.193002001] [robot_state_publisher]: got segment front_left_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790868716.193012977] [robot_state_publisher]: got segment front_left_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790868716.193023121] [robot_state_publisher]: got segment front_left_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790868716.193031185] [robot_state_publisher]: got segment front_left_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790868716.193038993] [robot_state_publisher]: got segment front_left_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790868716.193046513] [robot_state_publisher]: got segment front_left_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790868716.193054257] [robot_state_publisher]: got segment front_left_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790868716.193061681] [robot_state_publisher]: got segment front_left_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790868716.193068689] [robot_state_publisher]: got segment front_left_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790868716.193076049] [robot_state_publisher]: got segment front_left_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790868716.193083985] [robot_state_publisher]: got segment front_left_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790868716.193091281] [robot_state_publisher]: got segment front_left_wheel_roller9_link
+[robot_state_publisher-1] [INFO] [1790868716.193098449] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790868716.193105777] [robot_state_publisher]: got segment front_right_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790868716.193113170] [robot_state_publisher]: got segment front_right_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790868716.193120146] [robot_state_publisher]: got segment front_right_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790868716.193127282] [robot_state_publisher]: got segment front_right_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790868716.193134834] [robot_state_publisher]: got segment front_right_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790868716.193143666] [robot_state_publisher]: got segment front_right_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790868716.193151506] [robot_state_publisher]: got segment front_right_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790868716.193158578] [robot_state_publisher]: got segment front_right_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790868716.193166066] [robot_state_publisher]: got segment front_right_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790868716.193173362] [robot_state_publisher]: got segment front_right_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790868716.193180530] [robot_state_publisher]: got segment front_right_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790868716.193187474] [robot_state_publisher]: got segment front_right_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790868716.193194578] [robot_state_publisher]: got segment front_right_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790868716.193202930] [robot_state_publisher]: got segment front_right_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790868716.193211442] [robot_state_publisher]: got segment front_right_wheel_roller9_link
+[robot_state_publisher-1] [INFO] [1790868716.193218834] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790868716.193226418] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790868716.193233938] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790868716.193242130] [robot_state_publisher]: got segment rear_left_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790868716.193249810] [robot_state_publisher]: got segment rear_left_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790868716.193257266] [robot_state_publisher]: got segment rear_left_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790868716.193265426] [robot_state_publisher]: got segment rear_left_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790868716.193272850] [robot_state_publisher]: got segment rear_left_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790868716.193280370] [robot_state_publisher]: got segment rear_left_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790868716.193347187] [robot_state_publisher]: got segment rear_left_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790868716.193361203] [robot_state_publisher]: got segment rear_left_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790868716.193369555] [robot_state_publisher]: got segment rear_left_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790868716.193376947] [robot_state_publisher]: got segment rear_left_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790868716.193384275] [robot_state_publisher]: got segment rear_left_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790868716.193392563] [robot_state_publisher]: got segment rear_left_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790868716.193399667] [robot_state_publisher]: got segment rear_left_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790868716.193407027] [robot_state_publisher]: got segment rear_left_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790868716.193414355] [robot_state_publisher]: got segment rear_left_wheel_roller9_link
+[robot_state_publisher-1] [INFO] [1790868716.193421907] [robot_state_publisher]: got segment rear_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790868716.193429267] [robot_state_publisher]: got segment rear_right_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790868716.193436819] [robot_state_publisher]: got segment rear_right_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790868716.193444051] [robot_state_publisher]: got segment rear_right_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790868716.193452051] [robot_state_publisher]: got segment rear_right_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790868716.193459347] [robot_state_publisher]: got segment rear_right_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790868716.193466675] [robot_state_publisher]: got segment rear_right_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790868716.193473843] [robot_state_publisher]: got segment rear_right_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790868716.193480947] [robot_state_publisher]: got segment rear_right_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790868716.193488051] [robot_state_publisher]: got segment rear_right_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790868716.193495123] [robot_state_publisher]: got segment rear_right_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790868716.193502100] [robot_state_publisher]: got segment rear_right_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790868716.193509908] [robot_state_publisher]: got segment rear_right_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790868716.193520852] [robot_state_publisher]: got segment rear_right_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790868716.193528692] [robot_state_publisher]: got segment rear_right_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790868716.193535828] [robot_state_publisher]: got segment rear_right_wheel_roller9_link
+[mujoco_spawner-2] [INFO] [1790868717.208379720] [mujoco_spawner]: Drive: mecanum, wheels ['front_left_wheel_joint', 'front_right_wheel_joint', 'rear_left_wheel_joint', 'rear_right_wheel_joint'], steering []
+[mujoco_spawner-2] [INFO] [1790868718.291609356] [mujoco_spawner]: MuJoCo: 65 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-2] [INFO] [1790868718.352991047] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-2] [INFO] [1790868718.423080911] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-2] [INFO] [1790868718.425474908] [mujoco_spawner]: Joints: ['front_left_wheel_joint', 'front_left_wheel_roller15_joint', 'front_left_wheel_roller14_joint', 'front_left_wheel_roller13_joint', 'front_left_wheel_roller12_joint', 'front_left_wheel_roller11_joint', 'front_left_wheel_roller10_joint', 'front_left_wheel_roller9_joint', 'front_left_wheel_roller8_joint', 'front_left_wheel_roller7_joint', 'front_left_wheel_roller6_joint', 'front_left_wheel_roller5_joint', 'front_left_wheel_roller4_joint', 'front_left_wheel_roller3_joint', 'front_left_wheel_roller2_joint', 'front_left_wheel_roller1_joint', 'front_right_wheel_joint', 'front_right_wheel_roller15_joint', 'front_right_wheel_roller14_joint', 'front_right_wheel_roller13_joint', 'front_right_wheel_roller12_joint', 'front_right_wheel_roller11_joint', 'front_right_wheel_roller10_joint', 'front_right_wheel_roller9_joint', 'front_right_wheel_roller8_joint', 'front_right_wheel_roller7_joint', 'front_right_wheel_roller6_joint', 'front_right_wheel_roller5_joint', 'front_right_wheel_roller4_joint', 'front_right_wheel_roller3_joint', 'front_right_wheel_roller2_joint', 'front_right_wheel_roller1_joint', 'rear_left_wheel_joint', 'rear_left_wheel_roller15_joint', 'rear_left_wheel_roller14_joint', 'rear_left_wheel_roller13_joint', 'rear_left_wheel_roller12_joint', 'rear_left_wheel_roller11_joint', 'rear_left_wheel_roller10_joint', 'rear_left_wheel_roller9_joint', 'rear_left_wheel_roller8_joint', 'rear_left_wheel_roller7_joint', 'rear_left_wheel_roller6_joint', 'rear_left_wheel_roller5_joint', 'rear_left_wheel_roller4_joint', 'rear_left_wheel_roller3_joint', 'rear_left_wheel_roller2_joint', 'rear_left_wheel_roller1_joint', 'rear_right_wheel_joint', 'rear_right_wheel_roller15_joint', 'rear_right_wheel_roller14_joint', 'rear_right_wheel_roller13_joint', 'rear_right_wheel_roller12_joint', 'rear_right_wheel_roller11_joint', 'rear_right_wheel_roller10_joint', 'rear_right_wheel_roller9_joint', 'rear_right_wheel_roller8_joint', 'rear_right_wheel_roller7_joint', 'rear_right_wheel_roller6_joint', 'rear_right_wheel_roller5_joint', 'rear_right_wheel_roller4_joint', 'rear_right_wheel_roller3_joint', 'rear_right_wheel_roller2_joint', 'rear_right_wheel_roller1_joint']   lw= rw=
+[mujoco_spawner-2] [INFO] [1790868718.436144563] [mujoco_spawner]: MuJoCo model loaded: 66 bodies, 65 joints
+[mujoco_spawner-2] [INFO] [1790868718.436777974] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-2] [INFO] [1790868718.437250840] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-2] [INFO] [1790868718.442338002] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [mujoco_spawner-2]: sending signal 'SIGINT' to process[mujoco_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790868752.987764750] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 612239]
+[INFO] [mujoco_spawner-2]: process has finished cleanly [pid 612241]
