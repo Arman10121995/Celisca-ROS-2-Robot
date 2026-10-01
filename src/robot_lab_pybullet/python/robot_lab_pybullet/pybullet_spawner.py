@@ -41,6 +41,7 @@ from robot_lab_utils import camera_model
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.sim_frames import rotate, urdf_link_frames, world_to_body, wxyz_from_xyzw
 from robot_lab_utils.urdf_contact import gazebo_link_friction
+from robot_lab_utils.urdf_joints import driven_assembly_joints
 from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 
 # Display-hold motor force for joints whose URDF declares no effort limit.
@@ -352,6 +353,7 @@ class PyBulletSpawner(Node):
         self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
         # Display-hold state (set in _spawn once joints are known).
         self._hold_joints = False
+        self._driven_assembly_joints = set()
         self._hold_pose = {}
         self._hold_base = None
 
@@ -823,38 +825,22 @@ class PyBulletSpawner(Node):
         has_drive = (self._lw >= 0 or self._rw >= 0
                      or any(j in self._joint_idx for j in self._drive.wheel_joints))
         self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
+        # Passive parts of a driven assembly (a mecanum's rollers) are driven
+        # hardware: a hold motor would pin them and turn the roller wheel into
+        # a solid tire, blocking the strafe the drive model commands (measured
+        # numbers in robot_lab_utils.urdf_joints).
+        self._driven_assembly_joints = driven_assembly_joints(
+            urdf, self._drive.wheel_joints)
         if self._hold_joints:
             self._hold_pose = {}
-            driven_bodies = {
-                int(p.getJointInfo(self._robot_id, self._joint_idx[joint])[15])
-                for joint in self._drive.wheel_joints
-                if joint in self._joint_idx
-            }
             for jn in self._joint_names:
                 index = self._joint_idx[jn]
                 # A passive part of a driven wheel (a mecanum's rollers) is
-                # driven hardware: holding it pins the rollers and turns the
+                # driven hardware: a hold motor pins the rollers and turns the
                 # roller wheel into a solid tire, which is what blocked the
-                # mecanum's lateral motion (see the MuJoCo bridge for the
-                # measured numbers).
-                try:
-                    body = int(p.getJointInfo(self._robot_id, index)[15])
-                    parent = int(p.getJointInfo(self._robot_id, index)[13])
-                except (IndexError, TypeError, ValueError):
-                    body, parent = -1, -1
-                while parent > 0 and driven_bodies:
-                    if body in driven_bodies:
-                        continue
-                    body, parent = parent, int(
-                        p.getJointInfo(self._robot_id, index)[13]
-                        if parent == int(p.getJointInfo(
-                            self._robot_id, index)[15])
-                        else p.getJointInfo(self._robot_id, index)[13])
-                    if parent < 0:
-                        break
-                if any(_body_in(p, int(p.getJointInfo(self._robot_id, index)[15]),
-                                driven_bodies)
-                       for _ in (0,)) if driven_bodies else False:
+                # mecanum's lateral motion (measured numbers in the MuJoCo
+                # bridge's _is_driven_assembly_joint docstring).
+                if jn in self._driven_assembly_joints:
                     continue
             self._hold_pose = {}
             for jn in self._joint_names:

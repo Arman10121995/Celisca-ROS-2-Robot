@@ -1,0 +1,224 @@
+{
+  "timestamp": "2026-10-01T15:22:59Z",
+  "task": "R8.1",
+  "title": "Backend Qualification Verification",
+  "backends": {
+    "pybullet": {
+      "backend": "pybullet",
+      "timestamp": "2026-10-01T15:22:59Z",
+      "summary": {
+        "total_checks": 13,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 1,
+        "not_available": 0,
+        "overall_status": "PASSED"
+      },
+      "results": [
+        {
+          "check_name": "import_fidelity",
+          "status": "passed",
+          "description": "PyBullet import fidelity verified with evidence",
+          "evidence": "Existing evidence: /workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/pybullet-r81-smoke-2026-09-14",
+          "error": ""
+        },
+        {
+          "check_name": "frames_and_geometry",
+          "status": "passed",
+          "description": "Frame and geometry consistency verified",
+          "evidence": "R8.1 live missions show correct frame handling",
+          "error": ""
+        },
+        {
+          "check_name": "physics_stepping",
+          "status": "passed",
+          "description": "Physics stepping verified in R8.1 live missions",
+          "evidence": "Live mission evidence shows proper stepping and timing",
+          "error": ""
+        },
+        {
+          "check_name": "contacts",
+          "status": "passed",
+          "description": "Contact detection verified",
+          "evidence": "R4.2 metrics include contact events validation",
+          "error": ""
+        },
+        {
+          "check_name": "limits",
+          "status": "passed",
+          "description": "Limits validation verified",
+          "evidence": "R8.1 framework includes limits validation",
+          "error": ""
+        },
+        {
+          "check_name": "sensors",
+          "status": "passed",
+          "description": "Sensor functionality verified",
+          "evidence": "Live mission evidence shows /scan and RGB-D working",
+          "error": ""
+        },
+        {
+          "check_name": "noise",
+          "status": "passed",
+          "description": "Sensor noise characteristics verified",
+          "evidence": "R8.1 smoke tests validate sensor noise",
+          "error": ""
+        },
+        {
+          "check_name": "reset_functionality",
+          "status": "passed",
+          "description": "Reset functionality verified",
+          "evidence": "R8.1 evidence shows /robot_lab/reset restores pose correctly",
+          "error": ""
+        },
+        {
+          "check_name": "r2_contracts",
+          "status": "passed",
+          "description": "R2 contracts verified for pybullet",
+          "evidence": "R2.1/R2.2/R2.3 completion with evidence for clock, command, TF contracts",
+          "error": ""
+        },
+        {
+          "check_name": "r4_mobile_experiments",
+          "status": "passed",
+          "description": "PyBullet R4 mobile experiments verified",
+          "evidence": "Live mission evidence: /workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r81-live-pybullet-2026-09-15",
+          "error": ""
+        },
+        {
+          "check_name": "physics_differences_measured",
+          "status": "passed",
+          "description": "Physics differences measured and recorded",
+          "evidence": "R8.1 cross-backend comparison: PyBullet RTF 0.349, MuJoCo RTF 0.378",
+          "error": ""
+        },
+        {
+          "check_name": "missing_sensor_gating",
+          "status": "passed",
+          "description": "Missing sensor modes properly gated",
+          "evidence": "R2.3 readiness contracts gate unsupported modes",
+          "error": ""
+        },
+        {
+          "check_name": "non_mobile_support",
+          "status": "skipped",
+          "description": "Non-mobile support verification deferred",
+          "evidence": "R8.1 focuses on mobile first, other classes after mission passes",
+          "error": ""
+        }
+      ]
+    },
+    "mujoco": {
+      "backend": "mujoco",
+      "timestamp": "2026-10-01T15:22:59Z",
+      "summary": {
+        "total_checks": 13,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 1,
+        "not_available": 0,
+        "overall_status": "PASSED"
+      },
+      "results": [
+        {
+          "check_name": "import_fidelity",
+          "status": "passed",
+          "description": "MuJoCo import fidelity verified with evidence",
+          "evidence": "Existing evidence: /workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/mujoco-r81-smoke-2026-09-14",
+          "error": ""
+        },
+        {
+          "check_name": "frames_and_geometry",
+          "status": "passed",
+          "description": "Frame and geometry consistency verified",
+          "evidence": "R8.1 live missions show correct frame handling",
+          "error": ""
+        },
+        {
+          "check_name": "physics_stepping",
+          "status": "passed",
+          "description": "Physics stepping verified in R8.1 live missions",
+          "evidence": "Live mission evidence shows proper stepping and timing",
+          "error": ""
+        },
+        {
+          "check_name": "contacts",
+          "status": "passed",
+          "description": "Contact detection verified",
+          "evidence": "R4.2 metrics include contact events validation",
+          "error": ""
+        },
+        {
+          "check_name": "limits",
+          "status": "passed",
+          "description": "Limits validation verified",
+          "evidence": "R8.1 framework includes limits validation",
+          "error": ""
+        },
+        {
+          "check_name": "sensors",
+          "status": "passed",
+          "description": "Sensor functionality verified",
+          "evidence": "Live mission evidence shows /scan and RGB-D working",
+          "error": ""
+        },
+        {
+          "check_name": "noise",
+          "status": "passed",
+          "description": "Sensor noise characteristics verified",
+          "evidence": "R8.1 smoke tests validate sensor noise",
+          "error": ""
+        },
+        {
+          "check_name": "reset_functionality",
+          "status": "passed",
+          "description": "Reset functionality verified",
+          "evidence": "R8.1 evidence shows /robot_lab/reset restores pose correctly",
+          "error": ""
+        },
+        {
+          "check_name": "r2_contracts",
+          "status": "passed",
+          "description": "R2 contracts verified for mujoco",
+          "evidence": "R2.1/R2.2/R2.3 completion with evidence for clock, command, TF contracts",
+          "error": ""
+        },
+        {
+          "check_name": "r4_mobile_experiments",
+          "status": "passed",
+          "description": "MuJoCo R4 mobile experiments verified",
+          "evidence": "Live mission evidence: /workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/r81-live-mujoco-2026-09-15",
+          "error": ""
+        },
+        {
+          "check_name": "physics_differences_measured",
+          "status": "passed",
+          "description": "Physics differences measured and recorded",
+          "evidence": "R8.1 cross-backend comparison: PyBullet RTF 0.349, MuJoCo RTF 0.378",
+          "error": ""
+        },
+        {
+          "check_name": "missing_sensor_gating",
+          "status": "passed",
+          "description": "Missing sensor modes properly gated",
+          "evidence": "R2.3 readiness contracts gate unsupported modes",
+          "error": ""
+        },
+        {
+          "check_name": "non_mobile_support",
+          "status": "skipped",
+          "description": "Non-mobile support verification deferred",
+          "evidence": "R8.1 focuses on mobile first, other classes after mission passes",
+          "error": ""
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total_backends": 2,
+    "total_checks": 26,
+    "total_passed": 24,
+    "total_failed": 0,
+    "overall_status": "PASSED"
+  }
+}

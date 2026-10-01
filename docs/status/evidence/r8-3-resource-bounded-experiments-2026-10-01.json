@@ -1,0 +1,138 @@
+{
+  "timestamp": "2026-10-01T17:25:10.976073",
+  "task": "R8.3",
+  "title": "Resource-Bounded Concurrent Experiments",
+  "total_experiments": 4,
+  "completed": 4,
+  "failed": 0,
+  "cancelled": 0,
+  "running": 0,
+  "isolation_validation": {
+    "isolated_clocks": true,
+    "isolated_seeds": true,
+    "isolated_results": true,
+    "findings": []
+  },
+  "queue_status": {
+    "queued": 0,
+    "running": 0,
+    "completed": 4,
+    "failed": 0,
+    "max_size": 5,
+    "max_concurrent": 2
+  },
+  "results": {
+    "r83_exp1": {
+      "experiment_id": "r83_exp1",
+      "status": "completed",
+      "start_time": 1790868304.9557962,
+      "end_time": 1790868305.9568546,
+      "sim_time": 0.22476204543217257,
+      "wall_time": 1.0010583400726318,
+      "cpu_usage": 10.1,
+      "memory_usage_mb": 29.74609375,
+      "gpu_usage": 0.0,
+      "rtf": 0.2245244222388327,
+      "success": true,
+      "metrics": {
+        "trajectory_distance": 1.3692056548288394,
+        "completion_time": 0.22476204543217257,
+        "collision_count": 0,
+        "success_rate": 1.0
+      },
+      "artifacts": [
+        "/tmp/experiment_r83_exp1/metrics.json",
+        "/tmp/experiment_r83_exp1/trace.csv",
+        "/tmp/experiment_r83_exp1/bag.db3"
+      ],
+      "isolated_clocks": true,
+      "isolated_seeds": true,
+      "isolated_results": true,
+      "error_message": ""
+    },
+    "r83_exp2": {
+      "experiment_id": "r83_exp2",
+      "status": "completed",
+      "start_time": 1790868306.4685762,
+      "end_time": 1790868307.4703155,
+      "sim_time": 0.11884183395985154,
+      "wall_time": 1.001739263534546,
+      "cpu_usage": 14.2,
+      "memory_usage_mb": 32.375,
+      "gpu_usage": 0.0,
+      "rtf": 0.11863549556850646,
+      "success": true,
+      "metrics": {
+        "trajectory_distance": 1.376697591293926,
+        "completion_time": 0.11884183395985154,
+        "collision_count": 0,
+        "success_rate": 1.0
+      },
+      "artifacts": [
+        "/tmp/experiment_r83_exp2/metrics.json",
+        "/tmp/experiment_r83_exp2/trace.csv",
+        "/tmp/experiment_r83_exp2/bag.db3"
+      ],
+      "isolated_clocks": true,
+      "isolated_seeds": true,
+      "isolated_results": true,
+      "error_message": ""
+    },
+    "r83_exp3": {
+      "experiment_id": "r83_exp3",
+      "status": "completed",
+      "start_time": 1790868307.971672,
+      "end_time": 1790868308.9724784,
+      "sim_time": 0.10847270462653182,
+      "wall_time": 1.0008063316345215,
+      "cpu_usage": 9.6,
+      "memory_usage_mb": 32.375,
+      "gpu_usage": 0.0,
+      "rtf": 0.10838531012226281,
+      "success": true,
+      "metrics": {
+        "trajectory_distance": 1.3008855415990492,
+        "completion_time": 0.10847270462653182,
+        "collision_count": 0,
+        "success_rate": 1.0
+      },
+      "artifacts": [
+        "/tmp/experiment_r83_exp3/metrics.json",
+        "/tmp/experiment_r83_exp3/trace.csv",
+        "/tmp/experiment_r83_exp3/bag.db3"
+      ],
+      "isolated_clocks": true,
+      "isolated_seeds": true,
+      "isolated_results": true,
+      "error_message": ""
+    },
+    "r83_exp4": {
+      "experiment_id": "r83_exp4",
+      "status": "completed",
+      "start_time": 1790868309.4739692,
+      "end_time": 1790868310.475681,
+      "sim_time": 0.18483206816688832,
+      "wall_time": 1.0017118453979492,
+      "cpu_usage": 12.1,
+      "memory_usage_mb": 32.375,
+      "gpu_usage": 0.0,
+      "rtf": 0.1845162049505966,
+      "success": true,
+      "metrics": {
+        "trajectory_distance": 1.350622666099195,
+        "completion_time": 0.18483206816688832,
+        "collision_count": 0,
+        "success_rate": 1.0
+      },
+      "artifacts": [
+        "/tmp/experiment_r83_exp4/metrics.json",
+        "/tmp/experiment_r83_exp4/trace.csv",
+        "/tmp/experiment_r83_exp4/bag.db3"
+      ],
+      "isolated_clocks": true,
+      "isolated_seeds": true,
+      "isolated_results": true,
+      "error_message": ""
+    }
+  }
+}
