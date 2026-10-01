@@ -1,0 +1,430 @@
+{
+  "timestamp": "2026-10-01T17:16:34.418492",
+  "task": "R6.2",
+  "title": "Dynamic Cases and Sensor Disturbance",
+  "scenarios_created": 3,
+  "reproducibility_test": {
+    "dynamic_navigation": true,
+    "sensor_degradation": true,
+    "moving_obstacle_interaction": false
+  },
+  "all_reproducible": false,
+  "scenario_details": {
+    "dynamic_navigation": {
+      "scenario_id": "dynamic_navigation",
+      "environment_id": "nav_obstacle",
+      "sensor_disturbances": [
+        {
+          "sensor_type": "lidar",
+          "disturbance_type": "noise",
+          "noise_std": 0.05,
+          "bias_value": 0.0,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1101,
+          "affected_axes": [
+            "range"
+          ],
+          "enabled": true
+        },
+        {
+          "sensor_type": "odometry",
+          "disturbance_type": "drift",
+          "noise_std": 0.0,
+          "bias_value": 0.0,
+          "drift_rate": 0.01,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1102,
+          "affected_axes": [
+            "x",
+            "y",
+            "yaw"
+          ],
+          "enabled": true
+        },
+        {
+          "sensor_type": "camera",
+          "disturbance_type": "occlusion",
+          "noise_std": 0.0,
+          "bias_value": 0.0,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.1,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1103,
+          "affected_axes": [],
+          "enabled": true
+        }
+      ],
+      "dynamic_obstacles": [
+        {
+          "obstacle_id": "moving_box_1",
+          "obstacle_type": "box",
+          "initial_pose": {
+            "x": 2.0,
+            "y": 0.0,
+            "z": 0.5,
+            "yaw": 0.0
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "linear",
+          "trajectory_params": {
+            "direction": "y",
+            "speed": 0.2,
+            "distance": 4.0
+          },
+          "size": {
+            "x": 0.5,
+            "y": 0.5,
+            "z": 1.0
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1104
+        },
+        {
+          "obstacle_id": "circular_obstacle_1",
+          "obstacle_type": "sphere",
+          "initial_pose": {
+            "x": -2.0,
+            "y": 0.0,
+            "z": 0.5,
+            "yaw": 0.0
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "circular",
+          "trajectory_params": {
+            "radius": 2.0,
+            "speed": 0.3
+          },
+          "size": {
+            "x": 0.3,
+            "y": 0.3,
+            "z": 0.6
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1105
+        }
+      ],
+      "duration": 60.0,
+      "update_rate": 10.0,
+      "recovery_time_threshold": 5.0,
+      "failure_threshold": 0.1,
+      "seed": 1100,
+      "description": "Navigation with moving obstacles and sensor disturbances",
+      "tags": [
+        "navigation",
+        "dynamic",
+        "sensor_disturbance"
+      ]
+    },
+    "sensor_degradation": {
+      "scenario_id": "sensor_degradation",
+      "environment_id": "small_office",
+      "sensor_disturbances": [
+        {
+          "sensor_type": "lidar",
+          "disturbance_type": "noise",
+          "noise_std": 0.02,
+          "bias_value": 0.0,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1201,
+          "affected_axes": [
+            "range"
+          ],
+          "enabled": true
+        },
+        {
+          "sensor_type": "lidar",
+          "disturbance_type": "dropout",
+          "noise_std": 0.0,
+          "bias_value": 0.0,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.05,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1202,
+          "affected_axes": [],
+          "enabled": true
+        },
+        {
+          "sensor_type": "odometry",
+          "disturbance_type": "bias",
+          "noise_std": 0.0,
+          "bias_value": 0.1,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1203,
+          "affected_axes": [
+            "x",
+            "y"
+          ],
+          "enabled": true
+        },
+        {
+          "sensor_type": "odometry",
+          "disturbance_type": "drift",
+          "noise_std": 0.0,
+          "bias_value": 0.0,
+          "drift_rate": 0.005,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1204,
+          "affected_axes": [
+            "yaw"
+          ],
+          "enabled": true
+        },
+        {
+          "sensor_type": "camera",
+          "disturbance_type": "occlusion",
+          "noise_std": 0.0,
+          "bias_value": 0.0,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.2,
+          "outlier_probability": 0.0,
+          "outlier_scale": 1.0,
+          "seed": 1205,
+          "affected_axes": [],
+          "enabled": true
+        },
+        {
+          "sensor_type": "camera",
+          "disturbance_type": "outlier",
+          "noise_std": 0.0,
+          "bias_value": 0.0,
+          "drift_rate": 0.0,
+          "delay_ms": 0.0,
+          "dropout_probability": 0.0,
+          "occlusion_fraction": 0.0,
+          "outlier_probability": 0.01,
+          "outlier_scale": 10.0,
+          "seed": 1206,
+          "affected_axes": [
+            "intensity"
+          ],
+          "enabled": true
+        }
+      ],
+      "dynamic_obstacles": [],
+      "duration": 60.0,
+      "update_rate": 10.0,
+      "recovery_time_threshold": 5.0,
+      "failure_threshold": 0.1,
+      "seed": 1200,
+      "description": "Sensor degradation with various disturbance types",
+      "tags": [
+        "sensor",
+        "degradation",
+        "validation"
+      ]
+    },
+    "moving_obstacle_interaction": {
+      "scenario_id": "moving_obstacle_interaction",
+      "environment_id": "nav_maze",
+      "sensor_disturbances": [],
+      "dynamic_obstacles": [
+        {
+          "obstacle_id": "moving_obstacle_0",
+          "obstacle_type": "box",
+          "initial_pose": {
+            "x": -4.0,
+            "y": -1.0,
+            "z": 0.5,
+            "yaw": 0.0
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "linear",
+          "trajectory_params": {
+            "speed": 0.1,
+            "direction": "y"
+          },
+          "size": {
+            "x": 0.3,
+            "y": 0.3,
+            "z": 0.6
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1301
+        },
+        {
+          "obstacle_id": "moving_obstacle_1",
+          "obstacle_type": "sphere",
+          "initial_pose": {
+            "x": -2.0,
+            "y": 0.0,
+            "z": 0.5,
+            "yaw": 0.5
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "sinusoidal",
+          "trajectory_params": {
+            "speed": 0.15000000000000002,
+            "direction": "x"
+          },
+          "size": {
+            "x": 0.4,
+            "y": 0.4,
+            "z": 0.7
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1302
+        },
+        {
+          "obstacle_id": "moving_obstacle_2",
+          "obstacle_type": "box",
+          "initial_pose": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.5,
+            "yaw": 1.0
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "linear",
+          "trajectory_params": {
+            "speed": 0.2,
+            "direction": "y"
+          },
+          "size": {
+            "x": 0.5,
+            "y": 0.5,
+            "z": 0.8
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1303
+        },
+        {
+          "obstacle_id": "moving_obstacle_3",
+          "obstacle_type": "sphere",
+          "initial_pose": {
+            "x": 2.0,
+            "y": -1.0,
+            "z": 0.5,
+            "yaw": 1.5
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "sinusoidal",
+          "trajectory_params": {
+            "speed": 0.25,
+            "direction": "x"
+          },
+          "size": {
+            "x": 0.6000000000000001,
+            "y": 0.6000000000000001,
+            "z": 0.9
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1304
+        },
+        {
+          "obstacle_id": "moving_obstacle_4",
+          "obstacle_type": "box",
+          "initial_pose": {
+            "x": 4.0,
+            "y": 0.0,
+            "z": 0.5,
+            "yaw": 2.0
+          },
+          "initial_velocity": {
+            "linear": 0.0,
+            "angular": 0.0
+          },
+          "trajectory_type": "linear",
+          "trajectory_params": {
+            "speed": 0.30000000000000004,
+            "direction": "y"
+          },
+          "size": {
+            "x": 0.7,
+            "y": 0.7,
+            "z": 1.0
+          },
+          "collision_enabled": true,
+          "mass": 1.0,
+          "visible_to_lidar": true,
+          "visible_to_camera": true,
+          "reflectivity": 1.0,
+          "seed": 1305
+        }
+      ],
+      "duration": 60.0,
+      "update_rate": 10.0,
+      "recovery_time_threshold": 5.0,
+      "failure_threshold": 0.1,
+      "seed": 1300,
+      "description": "Interaction with multiple moving obstacles",
+      "tags": [
+        "obstacles",
+        "interaction",
+        "collision"
+      ]
+    }
+  }
+}

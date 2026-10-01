@@ -1,0 +1,40 @@
+aerial_indoor_3d:
+  dimensionality: 3
+  environment_id: aerial_indoor
+  frame_id: world
+  geofence_count: 1
+  has_height_map: false
+  has_voxel_grid: true
+  map_id: aerial_indoor_3d
+  resolution: 0.1
+  traversable_surfaces: 0
+aerial_outdoor_3d:
+  dimensionality: 3
+  environment_id: aerial_outdoor
+  frame_id: world
+  geofence_count: 1
+  has_height_map: false
+  has_voxel_grid: true
+  map_id: aerial_outdoor_3d
+  resolution: 0.1
+  traversable_surfaces: 0
+terrain_rubble_3d:
+  dimensionality: 2.5
+  environment_id: terrain_rubble
+  frame_id: map
+  geofence_count: 0
+  has_height_map: true
+  has_voxel_grid: false
+  map_id: terrain_rubble_3d
+  resolution: 0.1
+  traversable_surfaces: 1
+terrain_stairs_3d:
+  dimensionality: 2.5
+  environment_id: terrain_stairs
+  frame_id: map
+  geofence_count: 0
+  has_height_map: true
+  has_voxel_grid: false
+  map_id: terrain_stairs_3d
+  resolution: 0.1
+  traversable_surfaces: 2

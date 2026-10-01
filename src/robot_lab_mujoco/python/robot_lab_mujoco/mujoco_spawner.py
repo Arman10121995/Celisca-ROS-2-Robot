@@ -1099,6 +1099,7 @@ class MuJoCoSpawner(Node):
         self._free_joint_qpos_adr = -1
         self._joint_name2id = {}   # mujoco joint name -> qpos index
         self._joint_name2dofadr = {}  # mujoco joint name -> dof (qvel) index
+        self._joint_body = {}      # mujoco joint name -> body index
         self._joint_names = []
         self._lw_name = ""
         self._rw_name = ""
@@ -1455,7 +1456,9 @@ class MuJoCoSpawner(Node):
         # robot, 'false' leaves all joints free.
         hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
         has_drive = (getattr(self, "_lw_qpos_adr", -1) >= 0
-                     or getattr(self, "_rw_qpos_adr", -1) >= 0)
+                     or getattr(self, "_rw_qpos_adr", -1) >= 0
+                     or any(joint in self._joint_name2id
+                            for joint in self._drive.wheel_joints))
         self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
         if self._hold_joints:
             held = _add_joint_hold_springs(
@@ -1463,7 +1466,8 @@ class MuJoCoSpawner(Node):
                 [name for name in self._joint_names
                  if name not in (self._lw_name, self._rw_name)
                  and name not in self._drive.wheel_joints
-                 and name not in self._drive.steer_joints])
+                 and name not in self._drive.steer_joints
+                 and not self._is_driven_assembly_joint(name)])
             self.get_logger().info(
                 "Display hold active (hold_position=%s): %d joint(s) held at "
                 "their spawn pose by spring-dampers" % (hold_mode, held))
@@ -1631,6 +1635,32 @@ class MuJoCoSpawner(Node):
             return xml_text
         return ET.tostring(root, encoding="unicode")
 
+    def _is_driven_assembly_joint(self, joint_name):
+        """True for a passive part of a driven wheel (a mecanum roller).
+
+        The display hold puts a spring-damper on every joint it holds, so a
+        held roller cannot spin: the roller wheel becomes a solid tire and
+        resists the lateral motion the drive model commands.  That is how
+        the mecanum measured 0.014 m/s of a commanded 0.30 m/s strafe
+        through the bridge while the same model reached 0.28 m/s offline
+        (2026-10-01).  Wheels, steering joints and their passive parts are
+        driven hardware and must never be held.
+        """
+        if not self._drive.wheel_joints:
+            return False
+        model = self._model
+        wheel_bodies = {self._joint_body[name]
+                        for name in self._drive.wheel_joints
+                        if name in self._joint_body}
+        if not wheel_bodies:
+            return False
+        body = self._joint_body.get(joint_name)
+        while body is not None and int(body) > 0:
+            if int(body) in wheel_bodies:
+                return True
+            body = int(model.body_parentid[int(body)])
+        return False
+
     def _find_body_and_joints(self):
         m = self._model
         self._free_joint_qpos_adr = -1
@@ -1663,6 +1693,7 @@ class MuJoCoSpawner(Node):
                 jname = "joint_%d" % i
             jadr = m.jnt_qposadr[i]
             self._joint_name2id[jname] = jadr
+            self._joint_body[jname] = int(m.jnt_bodyid[i])
             # qvel is indexed by DOF address, not qpos address — they differ
             # once a free joint (7 qpos / 6 dof) precedes the hinge joints.
             self._joint_name2dofadr[jname] = m.jnt_dofadr[i]

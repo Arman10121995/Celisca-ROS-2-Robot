@@ -1,0 +1,134 @@
+description: Interaction with multiple moving obstacles
+duration: 60.0
+dynamic_obstacles:
+- collision_enabled: true
+  initial_pose:
+    x: -4.0
+    y: -1.0
+    yaw: 0.0
+    z: 0.5
+  initial_velocity:
+    angular: 0.0
+    linear: 0.0
+  mass: 1.0
+  obstacle_id: moving_obstacle_0
+  obstacle_type: box
+  reflectivity: 1.0
+  seed: 1301
+  size:
+    x: 0.3
+    y: 0.3
+    z: 0.6
+  trajectory_params:
+    direction: y
+    speed: 0.1
+  trajectory_type: linear
+  visible_to_camera: true
+  visible_to_lidar: true
+- collision_enabled: true
+  initial_pose:
+    x: -2.0
+    y: 0.0
+    yaw: 0.5
+    z: 0.5
+  initial_velocity:
+    angular: 0.0
+    linear: 0.0
+  mass: 1.0
+  obstacle_id: moving_obstacle_1
+  obstacle_type: sphere
+  reflectivity: 1.0
+  seed: 1302
+  size:
+    x: 0.4
+    y: 0.4
+    z: 0.7
+  trajectory_params:
+    direction: x
+    speed: 0.15000000000000002
+  trajectory_type: sinusoidal
+  visible_to_camera: true
+  visible_to_lidar: true
+- collision_enabled: true
+  initial_pose:
+    x: 0.0
+    y: 1.0
+    yaw: 1.0
+    z: 0.5
+  initial_velocity:
+    angular: 0.0
+    linear: 0.0
+  mass: 1.0
+  obstacle_id: moving_obstacle_2
+  obstacle_type: box
+  reflectivity: 1.0
+  seed: 1303
+  size:
+    x: 0.5
+    y: 0.5
+    z: 0.8
+  trajectory_params:
+    direction: y
+    speed: 0.2
+  trajectory_type: linear
+  visible_to_camera: true
+  visible_to_lidar: true
+- collision_enabled: true
+  initial_pose:
+    x: 2.0
+    y: -1.0
+    yaw: 1.5
+    z: 0.5
+  initial_velocity:
+    angular: 0.0
+    linear: 0.0
+  mass: 1.0
+  obstacle_id: moving_obstacle_3
+  obstacle_type: sphere
+  reflectivity: 1.0
+  seed: 1304
+  size:
+    x: 0.6000000000000001
+    y: 0.6000000000000001
+    z: 0.9
+  trajectory_params:
+    direction: x
+    speed: 0.25
+  trajectory_type: sinusoidal
+  visible_to_camera: true
+  visible_to_lidar: true
+- collision_enabled: true
+  initial_pose:
+    x: 4.0
+    y: 0.0
+    yaw: 2.0
+    z: 0.5
+  initial_velocity:
+    angular: 0.0
+    linear: 0.0
+  mass: 1.0
+  obstacle_id: moving_obstacle_4
+  obstacle_type: box
+  reflectivity: 1.0
+  seed: 1305
+  size:
+    x: 0.7
+    y: 0.7
+    z: 1.0
+  trajectory_params:
+    direction: y
+    speed: 0.30000000000000004
+  trajectory_type: linear
+  visible_to_camera: true
+  visible_to_lidar: true
+environment_id: nav_maze
+failure_threshold: 0.1
+recovery_time_threshold: 5.0
+scenario_id: moving_obstacle_interaction
+seed: 1300
+sensor_disturbances: []
+tags:
+- obstacles
+- interaction
+- collision
+update_rate: 10.0

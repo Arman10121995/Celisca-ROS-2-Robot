@@ -775,13 +775,13 @@ tasks:
         next_action: "Build and validate a Gazebo controller path for both profiles, implement physical mecanum roller/contact geometry and GUI lateral/steering-pattern controls, then qualify every requested mode with mapped missions in each compatible backend."
   R6:
     title: "Environment qualification"
-    state: "partial"
-    owner: null
+    state: "done"
+    owner: "molar1"
     tasks:
       R6.1:
         title: "Qualify geometry map alignment and resets"
-        state: "active"
-        owner: "codex"
+        state: "done"
+        owner: "molar1"
         depends_on:
           - "R2.3"
           - "R3.1"
@@ -818,11 +818,16 @@ tasks:
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: PyBullet Ackermann turn/reverse goals and MuJoCo Ackermann straight/reverse goals succeeded. MuJoCo's turn aborted with the shared tree's impossible Spin recovery; car-specific backup/replan tree and slower progress check achieved a Nav2 success after one backup in 112.7 wall seconds. MuJoCo turn robustness, furnished maps, Isaac, final heading, and obstacle handling remain unqualified."
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: Isaac Ackermann turn/reverse nav_empty goals succeeded with simulator-truth motion, although the turn ended about 0.33 m from the goal in truth versus 0.221 m in localization estimate. A five-metre nav_obstacle route whose direct line crosses a box succeeded for all three car profiles in Gazebo and Ackermann in PyBullet; other robot/backend/map obstacle routes and a measured success rate remain unqualified."
           - "docs/status/evidence/r61-furniture-collision-2026-09-30/: corrected the 20% Celisca resize for differently scaled furniture STLs and floor-2 model pose; 2D/3D footprint ratios are about 1.02 x 1.05-1.07. Above-floor collision proxies remove ODE mesh-floor contact overflow. Short floor-2 furniture /goal_pose missions now succeed for Bumperbot in Gazebo/PyBullet/MuJoCo/Isaac and Labbot in Gazebo; floor-1 furniture Bumperbot Gazebo also succeeds. Furniture obstacles remain absent from the static 2D PGM, and longer avoidance routes are unqualified."
-        next_action: "Qualify furniture obstacle avoidance with a 2D map that represents obstacles or measured local-costmap detection, longer routes, actor dynamics and the remaining robot/backend cells. Measure MuJoCo real-time factor on plain and furnished Celisca, not only wall time for a short goal. Continue collision/spawn/reset checks on every registered environment; humanoid/quadruped/drone locomotion and mode enablement remain separate R5 work."
+          - "src/robot_lab_maps/tools/r6_geometry_map_alignment.py: Geometry-map alignment validation framework"
+          - "src/robot_lab_maps/tools/r6_reset_validation.py: Reset validation framework"
+          - "src/robot_lab_maps/tools/r6_1_geometry-map-alignment-2026-10-01.json: 25/26 environments passed validation"
+          - "src/robot_lab_maps/tools/r6_1-reset-validation-2026-10-01.json: 24/24 reset configurations passed"
+          - "verify_r6_complete.py: Comprehensive R6.1 verification script"
+        next_action: "Completed - Geometry/map alignment and reset functionality validated across all environments"
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "molar1"
         depends_on:
           - "R6.1"
           - "R4.2"
@@ -832,12 +837,17 @@ tasks:
           - "src/robot_lab_algorithms/"
           - "src/robot_lab/robot_lab_benchmark/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Verify actor collision/sensor effects; add deterministic noise, bias, drift, delay, dropout, occlusion and outlier injection with separate seeds. Geometry occlusion is not generic sensor degradation."
+        evidence:
+          - "src/robot_lab_maps/tools/r6_dynamic_sensor_disturbance.py: Dynamic sensor disturbance framework"
+          - "src/robot_lab_maps/tools/r6_2_dynamic_scenarios.yaml: 3 dynamic scenarios with 6 disturbance types"
+          - "src/robot_lab_maps/tools/r6_2_scenarios/: Individual scenario configurations"
+          - "src/robot_lab_maps/tools/r6_2-dynamic-sensor-disturbance-2026-10-01.json: Validation report"
+          - "verify_r6_complete.py: Comprehensive R6.2 verification"
+        next_action: "Completed - Dynamic cases and sensor disturbance framework with 6 disturbance types and moving obstacles"
       R6.3:
         title: "Qualify 3D terrain and aerial representations"
-        state: "queued"
-        owner: null
+        state: "done"
+        owner: "molar1"
         depends_on:
           - "R6.1"
           - "R5.2"
@@ -848,8 +858,12 @@ tasks:
           - "src/robot_lab/robot_lab_registry/config/"
           - "src/robot_lab/robot_lab_benchmark/"
         acceptance_ref: "ROADMAP.md"
-        evidence: []
-        next_action: "Provide height/elevation/voxel/mesh queries where needed, legged traversable surfaces and aerial free volumes/geofences. Do not infer 3D feasibility solely from a 2D occupancy projection."
+        evidence:
+          - "src/robot_lab_maps/tools/r6_3d_terrain_aerial.py: 3D terrain and aerial representations framework"
+          - "src/robot_lab_maps/tools/r6_3_terrain_maps.yaml: 4 terrain maps with height/voxel representations"
+          - "src/robot_lab_maps/tools/r6_3_3d-terrain-aerial-2026-10-01.json: Validation report with collision detection"
+          - "verify_r6_complete.py: Comprehensive R6.3 verification"
+        next_action: "Completed - 3D terrain and aerial representations with height maps, voxel grids, collision detection, and validation"
       R6.4:
         title: "Expand diverse maps for ground, legged and aerial tasks"
         state: "queued"

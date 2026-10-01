@@ -1,0 +1,196 @@
+indoor_flight_corridor:
+  created: '2026-10-01'
+  description: Indoor flight space with overhangs and obstacles for aerial navigation
+  dimension_type: 3D
+  generator: indoor_aerial_generator
+  map_types:
+  - aerial
+  - navigation
+  name: Indoor Flight Corridor
+  resolution: 0.2
+  seeds:
+  - 2005
+  size:
+    x: 40.0
+    y: 30.0
+    z: 8.0
+  supported_robot_classes:
+  - aerial
+  tags:
+  - indoor
+  - flight
+  - corridor
+  - overhangs
+  - aerial
+  units: meters
+outdoor_flight_forest:
+  created: '2026-10-01'
+  description: Outdoor aerial environment with trees at various heights for 3D navigation
+  dimension_type: 3D
+  generator: outdoor_forest_generator
+  map_types:
+  - aerial
+  - navigation
+  name: Outdoor Flight Forest
+  resolution: 0.5
+  seeds:
+  - 2006
+  size:
+    x: 100.0
+    y: 100.0
+    z: 25.0
+  supported_robot_classes:
+  - aerial
+  tags:
+  - outdoor
+  - flight
+  - forest
+  - trees
+  - aerial
+  - 3d
+  units: meters
+outdoor_flight_urban:
+  created: '2026-10-01'
+  description: Urban aerial environment with poles and buildings at various heights
+  dimension_type: 3D
+  generator: urban_aerial_generator
+  map_types:
+  - aerial
+  - navigation
+  name: Outdoor Flight Urban
+  resolution: 0.5
+  seeds:
+  - 2007
+  size:
+    x: 60.0
+    y: 60.0
+    z: 20.0
+  supported_robot_classes:
+  - aerial
+  tags:
+  - outdoor
+  - flight
+  - urban
+  - poles
+  - buildings
+  - aerial
+  - 3d
+  units: meters
+parking_lot_slalom:
+  created: '2026-10-01'
+  description: Parking lot environment with slalom course for precision navigation
+  dimension_type: 2D
+  generator: procedural_parking_generator
+  map_types:
+  - navigation
+  - coverage
+  name: Parking Lot with Slalom Course
+  resolution: 0.05
+  seeds:
+  - 2001
+  size:
+    x: 30.0
+    y: 20.0
+    z: 0.1
+  supported_robot_classes:
+  - mobile
+  tags:
+  - parking
+  - slalom
+  - navigation
+  - mobile
+  - coverage
+  units: meters
+road_intersection:
+  created: '2026-10-01'
+  description: Complex road intersection with multiple lanes and traffic patterns
+  dimension_type: 2D
+  generator: procedural_road_generator
+  map_types:
+  - navigation
+  name: Road Intersection
+  resolution: 0.05
+  seeds:
+  - 2000
+  size:
+    x: 50.0
+    y: 50.0
+    z: 0.1
+  supported_robot_classes:
+  - mobile
+  tags:
+  - road
+  - intersection
+  - navigation
+  - mobile
+  units: meters
+rubble_field:
+  created: '2026-10-01'
+  description: Rubble-strewn terrain for legged robot traversal and obstacle avoidance
+  dimension_type: 2.5D
+  generator: terrain_rubble_generator
+  map_types:
+  - terrain
+  - navigation
+  name: Rubble Field
+  resolution: 0.05
+  seeds:
+  - 2003
+  size:
+    x: 20.0
+    y: 20.0
+    z: 2.0
+  supported_robot_classes:
+  - legged
+  tags:
+  - terrain
+  - rubble
+  - obstacles
+  - legged
+  units: meters
+stair_transition:
+  created: '2026-10-01'
+  description: Multi-level terrain with stairs for legged robot climbing testing
+  dimension_type: 2.5D
+  generator: terrain_stair_generator
+  map_types:
+  - terrain
+  name: Stair Transition Course
+  resolution: 0.05
+  seeds:
+  - 2004
+  size:
+    x: 15.0
+    y: 15.0
+    z: 3.0
+  supported_robot_classes:
+  - legged
+  tags:
+  - terrain
+  - stairs
+  - climbing
+  - legged
+  units: meters
+uneven_slope:
+  created: '2026-10-01'
+  description: Terrain with various slopes for legged robot traversal testing
+  dimension_type: 2.5D
+  generator: terrain_slope_generator
+  map_types:
+  - terrain
+  name: Uneven Slope Terrain
+  resolution: 0.1
+  seeds:
+  - 2002
+  size:
+    x: 25.0
+    y: 25.0
+    z: 5.0
+  supported_robot_classes:
+  - legged
+  tags:
+  - terrain
+  - slope
+  - uneven
+  - legged
+  units: meters

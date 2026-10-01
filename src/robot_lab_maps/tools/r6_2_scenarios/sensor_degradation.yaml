@@ -1,0 +1,97 @@
+description: Sensor degradation with various disturbance types
+duration: 60.0
+dynamic_obstacles: []
+environment_id: small_office
+failure_threshold: 0.1
+recovery_time_threshold: 5.0
+scenario_id: sensor_degradation
+seed: 1200
+sensor_disturbances:
+- affected_axes:
+  - range
+  bias_value: 0.0
+  delay_ms: 0.0
+  disturbance_type: noise
+  drift_rate: 0.0
+  dropout_probability: 0.0
+  enabled: true
+  noise_std: 0.02
+  occlusion_fraction: 0.0
+  outlier_probability: 0.0
+  outlier_scale: 1.0
+  seed: 1201
+  sensor_type: lidar
+- affected_axes: []
+  bias_value: 0.0
+  delay_ms: 0.0
+  disturbance_type: dropout
+  drift_rate: 0.0
+  dropout_probability: 0.05
+  enabled: true
+  noise_std: 0.0
+  occlusion_fraction: 0.0
+  outlier_probability: 0.0
+  outlier_scale: 1.0
+  seed: 1202
+  sensor_type: lidar
+- affected_axes:
+  - x
+  - y
+  bias_value: 0.1
+  delay_ms: 0.0
+  disturbance_type: bias
+  drift_rate: 0.0
+  dropout_probability: 0.0
+  enabled: true
+  noise_std: 0.0
+  occlusion_fraction: 0.0
+  outlier_probability: 0.0
+  outlier_scale: 1.0
+  seed: 1203
+  sensor_type: odometry
+- affected_axes:
+  - yaw
+  bias_value: 0.0
+  delay_ms: 0.0
+  disturbance_type: drift
+  drift_rate: 0.005
+  dropout_probability: 0.0
+  enabled: true
+  noise_std: 0.0
+  occlusion_fraction: 0.0
+  outlier_probability: 0.0
+  outlier_scale: 1.0
+  seed: 1204
+  sensor_type: odometry
+- affected_axes: []
+  bias_value: 0.0
+  delay_ms: 0.0
+  disturbance_type: occlusion
+  drift_rate: 0.0
+  dropout_probability: 0.0
+  enabled: true
+  noise_std: 0.0
+  occlusion_fraction: 0.2
+  outlier_probability: 0.0
+  outlier_scale: 1.0
+  seed: 1205
+  sensor_type: camera
+- affected_axes:
+  - intensity
+  bias_value: 0.0
+  delay_ms: 0.0
+  disturbance_type: outlier
+  drift_rate: 0.0
+  dropout_probability: 0.0
+  enabled: true
+  noise_std: 0.0
+  occlusion_fraction: 0.0
+  outlier_probability: 0.01
+  outlier_scale: 10.0
+  seed: 1206
+  sensor_type: camera
+tags:
+- sensor
+- degradation
+- validation
+update_rate: 10.0

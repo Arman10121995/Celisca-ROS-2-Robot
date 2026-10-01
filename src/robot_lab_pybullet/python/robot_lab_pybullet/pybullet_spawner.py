@@ -820,9 +820,42 @@ class PyBulletSpawner(Node):
         # has no drive joints configured (the map-free display case);
         # 'true' always holds; 'false' keeps full physics.
         hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
-        has_drive = self._lw >= 0 or self._rw >= 0
+        has_drive = (self._lw >= 0 or self._rw >= 0
+                     or any(j in self._joint_idx for j in self._drive.wheel_joints))
         self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
         if self._hold_joints:
+            self._hold_pose = {}
+            driven_bodies = {
+                int(p.getJointInfo(self._robot_id, self._joint_idx[joint])[15])
+                for joint in self._drive.wheel_joints
+                if joint in self._joint_idx
+            }
+            for jn in self._joint_names:
+                index = self._joint_idx[jn]
+                # A passive part of a driven wheel (a mecanum's rollers) is
+                # driven hardware: holding it pins the rollers and turns the
+                # roller wheel into a solid tire, which is what blocked the
+                # mecanum's lateral motion (see the MuJoCo bridge for the
+                # measured numbers).
+                try:
+                    body = int(p.getJointInfo(self._robot_id, index)[15])
+                    parent = int(p.getJointInfo(self._robot_id, index)[13])
+                except (IndexError, TypeError, ValueError):
+                    body, parent = -1, -1
+                while parent > 0 and driven_bodies:
+                    if body in driven_bodies:
+                        continue
+                    body, parent = parent, int(
+                        p.getJointInfo(self._robot_id, index)[13]
+                        if parent == int(p.getJointInfo(
+                            self._robot_id, index)[15])
+                        else p.getJointInfo(self._robot_id, index)[13])
+                    if parent < 0:
+                        break
+                if any(_body_in(p, int(p.getJointInfo(self._robot_id, index)[15]),
+                                driven_bodies)
+                       for _ in (0,)) if driven_bodies else False:
+                    continue
             self._hold_pose = {}
             for jn in self._joint_names:
                 index = self._joint_idx[jn]

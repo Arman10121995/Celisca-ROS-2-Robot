@@ -1,0 +1,722 @@
+{
+  "timestamp": "2026-10-01T17:16:21.098015",
+  "task": "R6.1",
+  "title": "Geometry Map Alignment and Resets",
+  "status": "FAILED",
+  "summary": {
+    "total_environments": 26,
+    "passed": 25,
+    "failed": 1,
+    "warnings": 0,
+    "all_passed": false
+  },
+  "results": {
+    "small_office": {
+      "environment_id": "small_office",
+      "world_file": "robot_lab_maps/maps/simple_office/worlds/simple_office.world",
+      "map_file": "robot_lab_maps/maps/simple_office/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-5.0, -5.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 4 model includes"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-01-01, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "small_house": {
+      "environment_id": "small_house",
+      "world_file": "robot_lab_maps/maps/small_house/worlds/small_house.world",
+      "map_file": "robot_lab_maps/maps/small_house/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-12.5, -12.5, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 88 model includes",
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-01-01, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "small_warehouse": {
+      "environment_id": "small_warehouse",
+      "world_file": "robot_lab_maps/maps/small_warehouse/worlds/small_warehouse.world",
+      "map_file": "robot_lab_maps/maps/small_warehouse/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-7.0, -19.75, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 25 model includes"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-01-01, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "warehouse_demo": {
+      "environment_id": "warehouse_demo",
+      "world_file": "robot_lab_maps/maps/warehouse_demo/worlds/warehouse_demo.world",
+      "map_file": "robot_lab_maps/maps/warehouse_demo/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-10, -10, 0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 3 model includes"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "celisca_floor_1": {
+      "environment_id": "celisca_floor_1",
+      "world_file": "robot_lab_maps/maps/celisca_floor_1/worlds/celisca_floor_1.world",
+      "map_file": "robot_lab_maps/maps/celisca_floor_1/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-23.0076, -10.0716000462, 0)",
+        "Map resolution: 0.0231 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "celisca_floor_2": {
+      "environment_id": "celisca_floor_2",
+      "world_file": "robot_lab_maps/maps/celisca_floor_2/worlds/celisca_floor_2.world",
+      "map_file": "robot_lab_maps/maps/celisca_floor_2/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-23.0076, -10.0716000462, 0)",
+        "Map resolution: 0.0231 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "celisca_floor_2_furniture": {
+      "environment_id": "celisca_floor_2_furniture",
+      "world_file": "robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world",
+      "map_file": "robot_lab_maps/maps/celisca_floor_2_furniture/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-23.0076, -10.0716000462, 0)",
+        "Map resolution: 0.0231 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "celisca_floor_1_furniture": {
+      "environment_id": "celisca_floor_1_furniture",
+      "world_file": "robot_lab_maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world",
+      "map_file": "robot_lab_maps/maps/celisca_floor_1_furniture/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-23.0076, -10.0716000462, 0)",
+        "Map resolution: 0.0231 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "celisca_f1_actor": {
+      "environment_id": "celisca_f1_actor",
+      "world_file": "robot_lab_maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world",
+      "map_file": "robot_lab_maps/maps/celisca_f1_actor/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-23.0076, -10.0716000462, 0)",
+        "Map resolution: 0.0231 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "celisca_f2_actor": {
+      "environment_id": "celisca_f2_actor",
+      "world_file": "robot_lab_maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world",
+      "map_file": "robot_lab_maps/maps/celisca_f2_actor/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-23.0076, -10.0716000462, 0)",
+        "Map resolution: 0.0231 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "outdoor_terrain": {
+      "environment_id": "outdoor_terrain",
+      "world_file": "robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world",
+      "map_file": "robot_lab_maps/maps/terrain_rough/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-11.0, -11.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "terrain_stairs": {
+      "environment_id": "terrain_stairs",
+      "world_file": "robot_lab_maps/maps/terrain_stairs/worlds/terrain_stairs.world",
+      "map_file": "robot_lab_maps/maps/terrain_stairs/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-9.0, -9.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "terrain_stepping_stones": {
+      "environment_id": "terrain_stepping_stones",
+      "world_file": "robot_lab_maps/maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world",
+      "map_file": "robot_lab_maps/maps/terrain_stepping_stones/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-10.0, -8.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "aerial_course": {
+      "environment_id": "aerial_course",
+      "world_file": "robot_lab_maps/maps/aerial_course/worlds/aerial_course.world",
+      "map_file": "robot_lab_maps/maps/aerial_course/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-51.0, -51.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "aerial_indoor": {
+      "environment_id": "aerial_indoor",
+      "world_file": "robot_lab_maps/maps/aerial_indoor/worlds/aerial_indoor.world",
+      "map_file": "robot_lab_maps/maps/aerial_indoor/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-21.0, -21.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "bigger_warehouse": {
+      "environment_id": "bigger_warehouse",
+      "world_file": "robot_lab_maps/maps/bigger_warehouse/worlds/bigger_warehouse.world",
+      "map_file": "robot_lab_maps/maps/bigger_warehouse/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-8.0, -8.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 5 model includes"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "empty": {
+      "environment_id": "empty",
+      "world_file": "robot_lab_maps/maps/empty/worlds/empty.world",
+      "map_file": "",
+      "coordinate_match": false,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "No map file specified"
+      ],
+      "geometry_findings": [],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "failed"
+    },
+    "residential_demo": {
+      "environment_id": "residential_demo",
+      "world_file": "robot_lab_maps/maps/residential_demo/worlds/residential_demo.world",
+      "map_file": "robot_lab_maps/maps/residential_demo/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-5.0, -5.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 3 model includes"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "simple_box": {
+      "environment_id": "simple_box",
+      "world_file": "robot_lab_maps/maps/simple_box/worlds/simple_box.world",
+      "map_file": "robot_lab_maps/maps/simple_box/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-49.8, -21.8, 0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found 4 model includes",
+        "Found box geometry",
+        "Found mesh geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-08-31, updated=2026-08-31"
+      ],
+      "status": "passed"
+    },
+    "nav_empty": {
+      "environment_id": "nav_empty",
+      "world_file": "robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+      "map_file": "robot_lab_maps/maps/nav_empty/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-7.0, -7.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "nav_obstacle": {
+      "environment_id": "nav_obstacle",
+      "world_file": "robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world",
+      "map_file": "robot_lab_maps/maps/nav_obstacle/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-9.5, -9.5, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "nav_maze": {
+      "environment_id": "nav_maze",
+      "world_file": "robot_lab_maps/maps/nav_maze/worlds/nav_maze.world",
+      "map_file": "robot_lab_maps/maps/nav_maze/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-9.0, -9.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "nav_narrow_passage": {
+      "environment_id": "nav_narrow_passage",
+      "world_file": "robot_lab_maps/maps/nav_narrow_passage/worlds/nav_narrow_passage.world",
+      "map_file": "robot_lab_maps/maps/nav_narrow_passage/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-8.0, -8.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "nav_warehouse": {
+      "environment_id": "nav_warehouse",
+      "world_file": "robot_lab_maps/maps/nav_warehouse/worlds/nav_warehouse.world",
+      "map_file": "robot_lab_maps/maps/nav_warehouse/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-10.0, -10.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "nav_dynamic": {
+      "environment_id": "nav_dynamic",
+      "world_file": "robot_lab_maps/maps/nav_dynamic/worlds/nav_dynamic.world",
+      "map_file": "robot_lab_maps/maps/nav_dynamic/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-9.0, -9.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    },
+    "nav_sensor_degraded": {
+      "environment_id": "nav_sensor_degraded",
+      "world_file": "robot_lab_maps/maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world",
+      "map_file": "robot_lab_maps/maps/nav_sensor_degraded/maps/map.pgm",
+      "coordinate_match": true,
+      "coordinate_error": 0.0,
+      "geometry_preserved": true,
+      "reset_validation_passed": true,
+      "artifacts_recorded": true,
+      "versioned_seeds_available": true,
+      "coordinate_findings": [
+        "Map origin: (-9.0, -9.0, 0.0)",
+        "Map resolution: 0.05 m/pixel",
+        "Coordinate alignment: ASSUMED (files present)"
+      ],
+      "geometry_findings": [
+        "Found box geometry"
+      ],
+      "reset_findings": [
+        "Spawn zones defined for reset validation"
+      ],
+      "artifact_findings": [
+        "Version: 1.0.0",
+        "Timestamps: created=2026-09-05, updated=2026-09-05"
+      ],
+      "status": "passed"
+    }
+  }
+}

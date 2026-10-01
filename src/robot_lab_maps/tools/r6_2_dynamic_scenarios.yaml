@@ -1,0 +1,340 @@
+dynamic_navigation:
+  description: Navigation with moving obstacles and sensor disturbances
+  duration: 60.0
+  dynamic_obstacles:
+  - collision_enabled: true
+    initial_pose:
+      x: 2.0
+      y: 0.0
+      yaw: 0.0
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: moving_box_1
+    obstacle_type: box
+    reflectivity: 1.0
+    seed: 1104
+    size:
+      x: 0.5
+      y: 0.5
+      z: 1.0
+    trajectory_params:
+      direction: y
+      distance: 4.0
+      speed: 0.2
+    trajectory_type: linear
+    visible_to_camera: true
+    visible_to_lidar: true
+  - collision_enabled: true
+    initial_pose:
+      x: -2.0
+      y: 0.0
+      yaw: 0.0
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: circular_obstacle_1
+    obstacle_type: sphere
+    reflectivity: 1.0
+    seed: 1105
+    size:
+      x: 0.3
+      y: 0.3
+      z: 0.6
+    trajectory_params:
+      radius: 2.0
+      speed: 0.3
+    trajectory_type: circular
+    visible_to_camera: true
+    visible_to_lidar: true
+  environment_id: nav_obstacle
+  failure_threshold: 0.1
+  recovery_time_threshold: 5.0
+  scenario_id: dynamic_navigation
+  seed: 1100
+  sensor_disturbances:
+  - affected_axes:
+    - range
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: noise
+    drift_rate: 0.0
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.05
+    occlusion_fraction: 0.0
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1101
+    sensor_type: lidar
+  - affected_axes:
+    - x
+    - y
+    - yaw
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: drift
+    drift_rate: 0.01
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.0
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1102
+    sensor_type: odometry
+  - affected_axes: []
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: occlusion
+    drift_rate: 0.0
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.1
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1103
+    sensor_type: camera
+  tags:
+  - navigation
+  - dynamic
+  - sensor_disturbance
+  update_rate: 10.0
+moving_obstacle_interaction:
+  description: Interaction with multiple moving obstacles
+  duration: 60.0
+  dynamic_obstacles:
+  - collision_enabled: true
+    initial_pose:
+      x: -4.0
+      y: -1.0
+      yaw: 0.0
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: moving_obstacle_0
+    obstacle_type: box
+    reflectivity: 1.0
+    seed: 1301
+    size:
+      x: 0.3
+      y: 0.3
+      z: 0.6
+    trajectory_params:
+      direction: y
+      speed: 0.1
+    trajectory_type: linear
+    visible_to_camera: true
+    visible_to_lidar: true
+  - collision_enabled: true
+    initial_pose:
+      x: -2.0
+      y: 0.0
+      yaw: 0.5
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: moving_obstacle_1
+    obstacle_type: sphere
+    reflectivity: 1.0
+    seed: 1302
+    size:
+      x: 0.4
+      y: 0.4
+      z: 0.7
+    trajectory_params:
+      direction: x
+      speed: 0.15000000000000002
+    trajectory_type: sinusoidal
+    visible_to_camera: true
+    visible_to_lidar: true
+  - collision_enabled: true
+    initial_pose:
+      x: 0.0
+      y: 1.0
+      yaw: 1.0
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: moving_obstacle_2
+    obstacle_type: box
+    reflectivity: 1.0
+    seed: 1303
+    size:
+      x: 0.5
+      y: 0.5
+      z: 0.8
+    trajectory_params:
+      direction: y
+      speed: 0.2
+    trajectory_type: linear
+    visible_to_camera: true
+    visible_to_lidar: true
+  - collision_enabled: true
+    initial_pose:
+      x: 2.0
+      y: -1.0
+      yaw: 1.5
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: moving_obstacle_3
+    obstacle_type: sphere
+    reflectivity: 1.0
+    seed: 1304
+    size:
+      x: 0.6000000000000001
+      y: 0.6000000000000001
+      z: 0.9
+    trajectory_params:
+      direction: x
+      speed: 0.25
+    trajectory_type: sinusoidal
+    visible_to_camera: true
+    visible_to_lidar: true
+  - collision_enabled: true
+    initial_pose:
+      x: 4.0
+      y: 0.0
+      yaw: 2.0
+      z: 0.5
+    initial_velocity:
+      angular: 0.0
+      linear: 0.0
+    mass: 1.0
+    obstacle_id: moving_obstacle_4
+    obstacle_type: box
+    reflectivity: 1.0
+    seed: 1305
+    size:
+      x: 0.7
+      y: 0.7
+      z: 1.0
+    trajectory_params:
+      direction: y
+      speed: 0.30000000000000004
+    trajectory_type: linear
+    visible_to_camera: true
+    visible_to_lidar: true
+  environment_id: nav_maze
+  failure_threshold: 0.1
+  recovery_time_threshold: 5.0
+  scenario_id: moving_obstacle_interaction
+  seed: 1300
+  sensor_disturbances: []
+  tags:
+  - obstacles
+  - interaction
+  - collision
+  update_rate: 10.0
+sensor_degradation:
+  description: Sensor degradation with various disturbance types
+  duration: 60.0
+  dynamic_obstacles: []
+  environment_id: small_office
+  failure_threshold: 0.1
+  recovery_time_threshold: 5.0
+  scenario_id: sensor_degradation
+  seed: 1200
+  sensor_disturbances:
+  - affected_axes:
+    - range
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: noise
+    drift_rate: 0.0
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.02
+    occlusion_fraction: 0.0
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1201
+    sensor_type: lidar
+  - affected_axes: []
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: dropout
+    drift_rate: 0.0
+    dropout_probability: 0.05
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.0
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1202
+    sensor_type: lidar
+  - affected_axes:
+    - x
+    - y
+    bias_value: 0.1
+    delay_ms: 0.0
+    disturbance_type: bias
+    drift_rate: 0.0
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.0
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1203
+    sensor_type: odometry
+  - affected_axes:
+    - yaw
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: drift
+    drift_rate: 0.005
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.0
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1204
+    sensor_type: odometry
+  - affected_axes: []
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: occlusion
+    drift_rate: 0.0
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.2
+    outlier_probability: 0.0
+    outlier_scale: 1.0
+    seed: 1205
+    sensor_type: camera
+  - affected_axes:
+    - intensity
+    bias_value: 0.0
+    delay_ms: 0.0
+    disturbance_type: outlier
+    drift_rate: 0.0
+    dropout_probability: 0.0
+    enabled: true
+    noise_std: 0.0
+    occlusion_fraction: 0.0
+    outlier_probability: 0.01
+    outlier_scale: 10.0
+    seed: 1206
+    sensor_type: camera
+  tags:
+  - sensor
+  - degradation
+  - validation
+  update_rate: 10.0
