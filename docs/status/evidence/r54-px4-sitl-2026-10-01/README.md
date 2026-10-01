@@ -19,6 +19,46 @@ real **PX4-Autopilot SITL** FCU and drives it over MAVLink, which removes the
 * The FCU runs with the Gazebo bridge attached and answers MAVLink on
   `udp 127.0.0.1:14580` (`px4_boot_excerpt.log`).
 
+## The three faults between "PX4 runs" and "PX4 flies"
+
+1. **The vehicle was never in the Gazebo world.** PX4's gz_bridge logs
+   `Spawning Gazebo model` and `world: default, model: x500_0`, but
+   `gz model --list` showed only `ground_plane`. PX4 therefore had no IMU/GPS
+   and the estimator never converged: `Preflight Fail: height estimate not
+   stable`, plus `No connection to the GCS`. Cause: this host runs **gz-sim
+   8.15.0 (SDF 1.10)** while PX4 main's Gazebo models are **SDF 1.11**, and the
+   entity insert is dropped without an error.
+2. **`gz sdf -p` is not a workaround.** It cannot resolve
+   `<include><uri>model://x500_base</uri></include>` ("Tried to use callback in
+   sdf::findFile(), but the callback is empty"), so the "resolved" model keeps
+   the plugins and has **no links** - a vehicle with no body, no rotors, no
+   sensors. Spawning that produced an entity the estimator could not use.
+   `scripts/px4_sitl_model.py` now resolves the include graph itself
+   (9 links, 8 joints, 4 rotor plugins, 4 sensors, no `<include>` left) and
+   posts one entity to the world's `create` service. With the vehicle present
+   the estimator converges: **GPS fix type 3, 10 satellites, 0.7 m eph**.
+3. **The rotor command never reached the model.** PX4 publishes
+   `/x500_0/command/motor_speed`; an entity inserted through the create service
+   subscribes on `/model/x500_0/command/motor_speed`. The vehicle is armed and
+   in OFFBOARD but never lifts off. Neither a `gz topic` republish pipe nor
+   rewriting the plugins' `commandSubTopic` to the absolute FCU topic fixed it
+   in this session; the vehicle *does* carry `rotor_0..rotor_3`.
+
+## What is now measured (`flight_attempt3_armed.json`)
+
+* **The FCU arms.** Keeping the setpoint stream alive *while* the arm request is
+  evaluated is what makes it work: PX4 leaves OFFBOARD about half a second after
+  the last setpoint, and the arm check then runs in a manual mode and is
+  refused. Streaming the hold through the arm request gives
+  **`fcu_base_mode = 145` (ARMED | STABILIZE | CUSTOM)**, **OFFBOARD accepted**
+  (`custom_mode = 393216` = nav_state 6 << 16), and `COMMAND_ACK` result 0 for
+  `MAV_CMD_COMPONENT_ARM_DISARM`. The same script armed nowhere when it stopped
+  streaming to wait for the ACK.
+* **Takeoff is still not achieved.** Altitude stays at ~0.0–0.05 m through the
+  ramp, the three waypoints and the land command, because of fault 3 above.
+  Nothing about hover, waypoint tracking, landing or the command-loss failsafe
+  is claimed.
+
 ## Measured interface state (`flight_attempt2_with_arm_params.json`)
 
 `px4_offboard_flight.py` is a minimal offboard client (pymavlink 2.4.50, no

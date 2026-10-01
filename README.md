@@ -58,8 +58,9 @@ evidence from this round is recorded per task under
 ([r55](docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md)), the
 mecanum's first measured physical lateral travel and the four 4WS patterns
 ([r56](docs/status/evidence/r56-holonomic-measure-2026-10-01/README.md)), and a
-PX4 SITL FCU that builds and answers MAVLink but does not yet arm
-([r54](docs/status/evidence/r54-px4-sitl-2026-10-01/README.md)). These checks do
+PX4 SITL FCU that builds, converges its estimator and arms in OFFBOARD but
+whose rotor commands do not yet reach the Gazebo vehicle, so no flight is
+claimed ([r54](docs/status/evidence/r54-px4-sitl-2026-10-01/README.md)). These checks do
 not prove all simulator missions, GUI sessions,
 optional-engine qualification or hardware operation. See the
 [workflow](docs/WORKFLOW.md) for the evidence boundary and commands.

@@ -53,6 +53,8 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_drive_kinematics.py"
+  "$BRG_TEST/test_driven_assembly_hold.py"
+  "$BRG_TEST/test_px4_sitl_model.py"
   "$BRG_TEST/test_mujoco_realtime_factor.py"
   "$BRG_TEST/test_nav_goals.py"
   "$GUI_TEST/test_drive_control.py"

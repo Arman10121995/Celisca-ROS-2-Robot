@@ -73,6 +73,50 @@ with no translation. **`pivot` zero-turn reaches only 0.216 rad/s of a commanded
 friction the skid-limited rate is well under the kinematic target. That is a
 measured limitation of the pattern on this backend, not a pass.
 
+## Second backend: PyBullet (the bridge that used to crash)
+
+With the diff-only lookup moved out of the common path, PyBullet runs these
+bases at all (before the fix the physics thread died on `MecanumDrive.left`,
+`pybullet/mecanum_crash_before_fix.log`). Ground-truth odometry, ROS domains
+230–232:
+
+**Mecanum** — `pybullet/mecanum_after_fix.json`
+
+| phase | command | vx | vy | wz |
+|---|---|---|---|---|
+| straight | 0.4, 0 | +0.408 | 0.000 | 0.000 |
+| left / right arc | 0.4, ±0.5 | +0.367 / +0.366 | −0.002 / +0.002 | **+0.507 / −0.506** |
+| reverse left | −0.3, +0.3 | −0.299 | +0.001 | +0.305 |
+| tight left | 0.3, +1.5 | +0.138 | −0.003 | +1.515 |
+| spin in place | 0, +1.0 | +0.000 | 0.000 | **+1.017** |
+| **strafe** | vy = +0.3 | −0.000 | **+0.301** | 0.000 |
+
+1.07 m of lateral travel at 100 % of the commanded 0.30 m/s. The mecanum now
+has **two** backends with measured physical lateral motion: MuJoCo 0.283 m/s
+(94 %) and PyBullet 0.301 m/s (100 %).
+
+**Four-wheel steering** — `pybullet/4ws_crab.json`, `pybullet/4ws_pivot.json`
+
+| pattern | left arc 0.4/+0.5 | spin 0/+1.0 | steering joints (left arc) |
+|---|---|---|---|
+| crab | 0.383 / 0.218, vy +0.073 | **+1.011** | all four +0.197…+0.198 (parallel) |
+| pivot | 0.411 / 0.028 | **+0.072** | all four ≈ 0.000 |
+
+Crab reproduces the MuJoCo signature (four parallel steered wheels, lateral
+velocity, near-full spin when the steering can be arranged). **Pivot's zero-turn
+is weak on both backends** — 0.216 rad/s of 1.0 on MuJoCo and 0.072 rad/s on
+PyBullet — with the wheels held straight and the base not translating: a pivot
+turn is pure lateral scrub, and the skid-limited rate is far below the
+kinematic target on both plants. Recorded as a measured limitation of the
+pattern, not a pass.
+
+Still not reachable through `/cmd_vel`: a *pure lateral* crab translation. The
+four-wheel-steer drive model has no lateral term (a Twist carries `linear.y`
+but only the mecanum model consumes it), so crab's sideways motion is currently
+only observable as the lateral component of a curved command. Closing that means
+adding a `vy` term to `FourWheelSteerDrive.targets` and forwarding it in the
+bridges — not done here.
+
 ## GUI and command surface
 
 * `steering_mode:=` is appended by the launcher for the four-wheel-steer base

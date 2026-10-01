@@ -540,6 +540,24 @@ Dependencies: `R5.1`.
 
 Dependencies: `R5.1`.
 
+- 2026-10-01 progress (still `blocked`): a real PX4 SITL FCU now builds and runs
+  on this host with no root (`PX4-Autopilot @ 9be7c6f391fb`, `make px4_sitl
+  gz_x500`; pip `kconfiglib` + `PYTHONPATH=Tools/kconfig`). Three faults were
+  isolated. (1) The vehicle never entered the Gazebo world - this host is
+  gz-sim 8.15 (SDF 1.10) and PX4 main's models are SDF 1.11 - so the estimator
+  never converged and arming was refused; `scripts/px4_sitl_model.py` resolves the
+  include graph itself (`gz sdf -p` cannot, and yields a model with plugins but no
+  links) and inserts the vehicle, after which the FCU reports GPS fix type 3 with
+  10 satellites. (2) Arming is refused unless the setpoint stream is kept alive
+  while the arm request is evaluated - PX4 leaves OFFBOARD after ~0.5 s without
+  setpoints - and with that the FCU **arms**: base_mode 145 (ARMED|STABILIZE|
+  CUSTOM), OFFBOARD accepted (custom_mode 393216), COMMAND_ACK result 0.
+  (3) Still open: the FCU publishes rotor commands on `/x500_0/command/motor_speed`
+  while the inserted entity subscribes on `/model/x500_0/command/motor_speed`, so
+  the armed vehicle produces no thrust; takeoff, hover, 3D waypoints, landing and
+  the command-loss failsafe are **not measured** and the stub offboard controller
+  and fixed-rotor URDF are untouched.
+
 - Files: `src/robot_lab_robots/quadrotor_sitl/`, `src/robot_lab_adapter/robot_lab_adapter/mavros_offboard_controller.py`, `src/robot_lab_bringup/`.
 - Implement: Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion.
 - Acceptance: Simulated takeoff, hover, 3D waypoints, landing and command-loss failsafe pass; actual altitude/FCU state measured; no 2D follower or differential-drive controller substitutes for flight; no real FCU connection.
@@ -616,6 +634,19 @@ Dependencies: `R5.1`, `R3.3`.
   turn directions, zero-turn, stop/watchdog and lateral displacement (mecanum)
   against simulator truth. Then prove localization, 2D/3D mapping and Nav2 on
   at least one mapped obstacle route per pattern, recording failures too.
+- 2026-10-01 second backend and cross-backend pattern limits: after the PyBullet
+  bridge fix the mecanum measures there **0.301 m/s of a commanded 0.30 m/s strafe**
+  (1.07 m lateral, 100 %), ±0.507 rad/s arcs and 1.017 rad/s spin with no
+  translation - so the base now has two backends with measured physical lateral
+  motion (MuJoCo 0.283, PyBullet 0.301). Crab reproduces its signature on
+  PyBullet (four parallel steered wheels at +0.197 rad, lateral 0.073 m/s, spin
+  1.011 rad/s), and the `pivot` zero-turn weakness reproduces across backends
+  (0.216 rad/s of 1.0 on MuJoCo, 0.072 rad/s on PyBullet): a pivot turn is pure
+  lateral scrub and is skid-limited on both plants, recorded as a measured limit
+  of the pattern. Not yet reachable: a *pure lateral* crab command, because the
+  four-wheel-steer drive model has no `vy` term (only the mecanum consumes
+  `Twist.linear.y`); closing that needs a `vy` term in
+  `FourWheelSteerDrive.targets` plus forwarding it in the bridges.
 - 2026-10-01 three defects repaired and measured (MuJoCo truth):
   the display hold was pinning **all 60 passive mecanum rollers** (a mecanum is not a
   differential drive, so `has_drive` was false and the "keep legged robots upright"

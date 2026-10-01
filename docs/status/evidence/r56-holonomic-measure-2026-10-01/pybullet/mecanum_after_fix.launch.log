@@ -1,0 +1,99 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-19-19-35-471794-molar1-700245
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [700323]
+[INFO] [pybullet_spawner-2]: process started with pid [700325]
+[robot_state_publisher-1] [INFO] [1790875176.636026245] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-1] [INFO] [1790875176.636236029] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1790875176.636258332] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790875176.636269595] [robot_state_publisher]: got segment front_left_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790875176.636278811] [robot_state_publisher]: got segment front_left_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790875176.636286939] [robot_state_publisher]: got segment front_left_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790875176.636294874] [robot_state_publisher]: got segment front_left_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790875176.636302458] [robot_state_publisher]: got segment front_left_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790875176.636310522] [robot_state_publisher]: got segment front_left_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790875176.636318137] [robot_state_publisher]: got segment front_left_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790875176.636325881] [robot_state_publisher]: got segment front_left_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790875176.636333369] [robot_state_publisher]: got segment front_left_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790875176.636340984] [robot_state_publisher]: got segment front_left_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790875176.636348760] [robot_state_publisher]: got segment front_left_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790875176.636356504] [robot_state_publisher]: got segment front_left_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790875176.636364151] [robot_state_publisher]: got segment front_left_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790875176.636372119] [robot_state_publisher]: got segment front_left_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790875176.636380023] [robot_state_publisher]: got segment front_left_wheel_roller9_link
+[robot_state_publisher-1] [INFO] [1790875176.636387543] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790875176.636395126] [robot_state_publisher]: got segment front_right_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790875176.636402966] [robot_state_publisher]: got segment front_right_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790875176.636410486] [robot_state_publisher]: got segment front_right_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790875176.636418037] [robot_state_publisher]: got segment front_right_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790875176.636425685] [robot_state_publisher]: got segment front_right_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790875176.636433397] [robot_state_publisher]: got segment front_right_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790875176.636440916] [robot_state_publisher]: got segment front_right_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790875176.636448500] [robot_state_publisher]: got segment front_right_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790875176.636455828] [robot_state_publisher]: got segment front_right_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790875176.636463284] [robot_state_publisher]: got segment front_right_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790875176.636470803] [robot_state_publisher]: got segment front_right_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790875176.636478195] [robot_state_publisher]: got segment front_right_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790875176.636485619] [robot_state_publisher]: got segment front_right_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790875176.636493298] [robot_state_publisher]: got segment front_right_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790875176.636501618] [robot_state_publisher]: got segment front_right_wheel_roller9_link
+[robot_state_publisher-1] [INFO] [1790875176.636509490] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-1] [INFO] [1790875176.636517425] [robot_state_publisher]: got segment laser_link
+[robot_state_publisher-1] [INFO] [1790875176.636525041] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-1] [INFO] [1790875176.636532849] [robot_state_publisher]: got segment rear_left_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790875176.636540625] [robot_state_publisher]: got segment rear_left_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790875176.636548240] [robot_state_publisher]: got segment rear_left_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790875176.636556304] [robot_state_publisher]: got segment rear_left_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790875176.636563856] [robot_state_publisher]: got segment rear_left_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790875176.636571535] [robot_state_publisher]: got segment rear_left_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790875176.636651372] [robot_state_publisher]: got segment rear_left_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790875176.636665004] [robot_state_publisher]: got segment rear_left_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790875176.636673419] [robot_state_publisher]: got segment rear_left_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790875176.636681419] [robot_state_publisher]: got segment rear_left_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790875176.636689099] [robot_state_publisher]: got segment rear_left_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790875176.636697130] [robot_state_publisher]: got segment rear_left_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790875176.636704682] [robot_state_publisher]: got segment rear_left_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790875176.636712234] [robot_state_publisher]: got segment rear_left_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790875176.636720009] [robot_state_publisher]: got segment rear_left_wheel_roller9_link
+[robot_state_publisher-1] [INFO] [1790875176.636727657] [robot_state_publisher]: got segment rear_right_wheel_link
+[robot_state_publisher-1] [INFO] [1790875176.636735209] [robot_state_publisher]: got segment rear_right_wheel_roller10_link
+[robot_state_publisher-1] [INFO] [1790875176.636742569] [robot_state_publisher]: got segment rear_right_wheel_roller11_link
+[robot_state_publisher-1] [INFO] [1790875176.636749928] [robot_state_publisher]: got segment rear_right_wheel_roller12_link
+[robot_state_publisher-1] [INFO] [1790875176.636759880] [robot_state_publisher]: got segment rear_right_wheel_roller13_link
+[robot_state_publisher-1] [INFO] [1790875176.636768040] [robot_state_publisher]: got segment rear_right_wheel_roller14_link
+[robot_state_publisher-1] [INFO] [1790875176.636775559] [robot_state_publisher]: got segment rear_right_wheel_roller15_link
+[robot_state_publisher-1] [INFO] [1790875176.636783047] [robot_state_publisher]: got segment rear_right_wheel_roller1_link
+[robot_state_publisher-1] [INFO] [1790875176.636790727] [robot_state_publisher]: got segment rear_right_wheel_roller2_link
+[robot_state_publisher-1] [INFO] [1790875176.636798566] [robot_state_publisher]: got segment rear_right_wheel_roller3_link
+[robot_state_publisher-1] [INFO] [1790875176.636805990] [robot_state_publisher]: got segment rear_right_wheel_roller4_link
+[robot_state_publisher-1] [INFO] [1790875176.636813574] [robot_state_publisher]: got segment rear_right_wheel_roller5_link
+[robot_state_publisher-1] [INFO] [1790875176.636823333] [robot_state_publisher]: got segment rear_right_wheel_roller6_link
+[robot_state_publisher-1] [INFO] [1790875176.636834693] [robot_state_publisher]: got segment rear_right_wheel_roller7_link
+[robot_state_publisher-1] [INFO] [1790875176.636843141] [robot_state_publisher]: got segment rear_right_wheel_roller8_link
+[robot_state_publisher-1] [INFO] [1790875176.636850948] [robot_state_publisher]: got segment rear_right_wheel_roller9_link
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-2] [INFO] [1790875177.192051585] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1790875177.196744648] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1790875177.208728530] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1790875177.210714404] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1790875177.212746644] [pybullet_spawner]: Created /robot_lab/reset service
+[pybullet_spawner-2] [INFO] [1790875178.054017756] [pybullet_spawner]: URDF written to /workspace/molar/.tmp/tmpu0151kp1.urdf
+[pybullet_spawner-2] [INFO] [1790875178.054675970] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[pybullet_spawner-2] [INFO] [1790875178.055190606] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-2] [INFO] [1790875178.064570142] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1790875178.065197989] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] [INFO] [1790875178.076977623] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] [INFO] [1790875178.754164936] [pybullet_spawner]: Loaded robot id=10 (67 joints)
+[pybullet_spawner-2] [INFO] [1790875178.757305293] [pybullet_spawner]: Friction from the description's <gazebo> blocks: front_left_wheel_roller10_link=0.8, front_left_wheel_roller11_link=0.8, front_left_wheel_roller12_link=0.8, front_left_wheel_roller13_link=0.8, front_left_wheel_roller14_link=0.8, front_left_wheel_roller15_link=0.8, front_left_wheel_roller1_link=0.8, front_left_wheel_roller2_link=0.8, front_left_wheel_roller3_link=0.8, front_left_wheel_roller4_link=0.8, front_left_wheel_roller5_link=0.8, front_left_wheel_roller6_link=0.8, front_left_wheel_roller7_link=0.8, front_left_wheel_roller8_link=0.8, front_left_wheel_roller9_link=0.8, front_right_wheel_roller10_link=0.8, front_right_wheel_roller11_link=0.8, front_right_wheel_roller12_link=0.8, front_right_wheel_roller13_link=0.8, front_right_wheel_roller14_link=0.8, front_right_wheel_roller15_link=0.8, front_right_wheel_roller1_link=0.8, front_right_wheel_roller2_link=0.8, front_right_wheel_roller3_link=0.8, front_right_wheel_roller4_link=0.8, front_right_wheel_roller5_link=0.8, front_right_wheel_roller6_link=0.8, front_right_wheel_roller7_link=0.8, front_right_wheel_roller8_link=0.8, front_right_wheel_roller9_link=0.8, rear_left_wheel_roller10_link=0.8, rear_left_wheel_roller11_link=0.8, rear_left_wheel_roller12_link=0.8, rear_left_wheel_roller13_link=0.8, rear_left_wheel_roller14_link=0.8, rear_left_wheel_roller15_link=0.8, rear_left_wheel_roller1_link=0.8, rear_left_wheel_roller2_link=0.8, rear_left_wheel_roller3_link=0.8, rear_left_wheel_roller4_link=0.8, rear_left_wheel_roller5_link=0.8, rear_left_wheel_roller6_link=0.8, rear_left_wheel_roller7_link=0.8, rear_left_wheel_roller8_link=0.8, rear_left_wheel_roller9_link=0.8, rear_right_wheel_roller10_link=0.8, rear_right_wheel_roller11_link=0.8, rear_right_wheel_roller12_link=0.8, rear_right_wheel_roller13_link=0.8, rear_right_wheel_roller14_link=0.8, rear_right_wheel_roller15_link=0.8, rear_right_wheel_roller1_link=0.8, rear_right_wheel_roller2_link=0.8, rear_right_wheel_roller3_link=0.8, rear_right_wheel_roller4_link=0.8, rear_right_wheel_roller5_link=0.8, rear_right_wheel_roller6_link=0.8, rear_right_wheel_roller7_link=0.8, rear_right_wheel_roller8_link=0.8, rear_right_wheel_roller9_link=0.8
+[pybullet_spawner-2] [INFO] [1790875178.757914101] [pybullet_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[pybullet_spawner-2] [INFO] [1790875178.758575995] [pybullet_spawner]: Drive: mecanum, wheels ['front_left_wheel_joint', 'front_right_wheel_joint', 'rear_left_wheel_joint', 'rear_right_wheel_joint'], steering []
+[pybullet_spawner-2] [INFO] [1790875178.788197969] [pybullet_spawner]: Joints: ['front_left_wheel_joint', 'front_left_wheel_roller15_joint', 'front_left_wheel_roller14_joint', 'front_left_wheel_roller13_joint', 'front_left_wheel_roller12_joint', 'front_left_wheel_roller11_joint', 'front_left_wheel_roller10_joint', 'front_left_wheel_roller9_joint', 'front_left_wheel_roller8_joint', 'front_left_wheel_roller7_joint', 'front_left_wheel_roller6_joint', 'front_left_wheel_roller5_joint', 'front_left_wheel_roller4_joint', 'front_left_wheel_roller3_joint', 'front_left_wheel_roller2_joint', 'front_left_wheel_roller1_joint', 'front_right_wheel_joint', 'front_right_wheel_roller15_joint', 'front_right_wheel_roller14_joint', 'front_right_wheel_roller13_joint', 'front_right_wheel_roller12_joint', 'front_right_wheel_roller11_joint', 'front_right_wheel_roller10_joint', 'front_right_wheel_roller9_joint', 'front_right_wheel_roller8_joint', 'front_right_wheel_roller7_joint', 'front_right_wheel_roller6_joint', 'front_right_wheel_roller5_joint', 'front_right_wheel_roller4_joint', 'front_right_wheel_roller3_joint', 'front_right_wheel_roller2_joint', 'front_right_wheel_roller1_joint', 'rear_left_wheel_joint', 'rear_left_wheel_roller15_joint', 'rear_left_wheel_roller14_joint', 'rear_left_wheel_roller13_joint', 'rear_left_wheel_roller12_joint', 'rear_left_wheel_roller11_joint', 'rear_left_wheel_roller10_joint', 'rear_left_wheel_roller9_joint', 'rear_left_wheel_roller8_joint', 'rear_left_wheel_roller7_joint', 'rear_left_wheel_roller6_joint', 'rear_left_wheel_roller5_joint', 'rear_left_wheel_roller4_joint', 'rear_left_wheel_roller3_joint', 'rear_left_wheel_roller2_joint', 'rear_left_wheel_roller1_joint', 'rear_right_wheel_joint', 'rear_right_wheel_roller15_joint', 'rear_right_wheel_roller14_joint', 'rear_right_wheel_roller13_joint', 'rear_right_wheel_roller12_joint', 'rear_right_wheel_roller11_joint', 'rear_right_wheel_roller10_joint', 'rear_right_wheel_roller9_joint', 'rear_right_wheel_roller8_joint', 'rear_right_wheel_roller7_joint', 'rear_right_wheel_roller6_joint', 'rear_right_wheel_roller5_joint', 'rear_right_wheel_roller4_joint', 'rear_right_wheel_roller3_joint', 'rear_right_wheel_roller2_joint', 'rear_right_wheel_roller1_joint']  lw=wheel_left_joint rw=wheel_right_joint
+[pybullet_spawner-2] [INFO] [1790875178.791431570] [pybullet_spawner]: PyBullet spawner running
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [pybullet_spawner-2]: sending signal 'SIGINT' to process[pybullet_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1790875213.308792888] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 700323]
+[INFO] [pybullet_spawner-2]: process has finished cleanly [pid 700325]
+[pybullet_spawner-2] base_footprint

@@ -95,6 +95,24 @@ this host, so a bridge edit needs `colcon build --packages-select … --symlink-
 before a live run (this was verified by the "60 joint(s) held" log line of a
 stale run).
 
+## Gazebo repeat attempt (2026-10-01, later) — still open
+
+The Gazebo cells were repeated for all three profiles (`MODE=loc`,
+`ODOM=/robot_lab_controller/odom`, ROS domains 220–222) and **did not produce
+controller odometry**: every run ended `{"error": "no odometry on
+/robot_lab_controller/odom"}`.
+
+One packaging fault was found and fixed on the way: the launch aborted with
+`executable 'gazebo_reset_bridge.py' not found on the libexec directory
+'install/robot_lab_description'`, i.e. a stale install of that package.
+`colcon build --packages-select robot_lab_description --symlink-install`
+restored the executable and the launch then ran to completion - but the car's
+Gazebo controller still publishes no odometry in this configuration, so the
+Gazebo publisher-loss/heading repeat remains **unmeasured**, and no Gazebo
+number from this round may be compared with the MuJoCo/PyBullet rows above.
+Also unverified here: whether Gazebo reproduces the wheel-well repair (the
+measurement path itself is missing).
+
 ## Still open (not claimed by this record)
 
 * Slalom, parking and obstacle missions with a feasibility/curvature check are
