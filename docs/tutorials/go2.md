@@ -193,10 +193,19 @@ stance drive levers the trunk over its feet and ends inverted at 0.057 m.
 | `crouch` | 0.00 / 1.10 / -2.20 | feet under the hips at a low standing height |
 | `stand` | nominal stance | the standing pose, and only then |
 
-Every transition reads measured attitude, each phase is time-bounded (0.4 / 0.7
-/ 0.6 s), the roll count is bounded (2), and the standing pose is commanded only
-from `stand`, which is entered only once measured tilt is under the 0.8 rad
-gate. `/go2/recovery_state` publishes the phase with the status
+Every phase is time-bounded (0.4 / 0.7 / 0.6 s), the roll count is bounded, and
+the standing pose is commanded only from `stand`, which is entered only once
+measured tilt is under the 0.8 rad gate. For a roll phase entered while the
+braced hips carry the trunk, the controller also requires a measured support
+transfer: feet must carry 75-125% of the model's 126.53 N weight, braced-hip load
+must be at most 25%, trunk-ground load at most 10%, and all conditions must
+persist for 0.25 s. Impact loads outside those ranges do not satisfy the dwell.
+MuJoCo publishes the fixed-order
+18-geom vector on `/go2/support_contact_forces`; its shared order is defined in
+`robot_lab_utils/go2_support.py`. During a configured start delay, the controller
+holds measured joint positions only when every sample is finite and within
+limits; incomplete or invalid samples produce zero effort.
+`/go2/recovery_state` publishes the phase with the status
 (`attempting:tuck`, `attempting:roll`, ...) so a trial trace shows where the
 attempt is. Success still requires measured tilt below 0.35 rad, 0.25 m
 ground-truth body height, three loaded feet and a 0.5 s dwell; an unmeasured
@@ -312,11 +321,19 @@ caution.
 
 Two things to know before relying on this: the get-up itself is measured from
 a *placed* pose — with the ladder engaged every reachable perturbation ends
-inverted, and only a start delay lets it engage from the settled 60 N rest
-(where it flips that too, as above) — and the hold after success is conditional
-on measured standing
-evidence — lose it and the drive stops. Do not enable this expecting a perturbed
-robot to stand up.
+inverted. A configured start delay now holds measured joint positions when all
+samples are complete and within limits, but this does not produce a successful
+support transfer: the placed-roll trial below remained hip-supported and the
+bounded roll phase failed. The hold after success is conditional on measured
+standing evidence — lose it and the drive stops. Do not enable this expecting a
+perturbed robot to stand up.
+
+On a placed 0.9 rad roll with a 1 s wait, `/go2/support_contact_forces` arrived
+2,503 times. After settling, the braced hips carried about 125 N while the feet
+carried at most 6.2 N. The roll stroke produced transient impacts but no
+sustained transfer, so it ended `failed:roll` at 1.808 s (1.648 rad peak tilt,
+0.139 m final height). The dwell rejected the impacts instead of advancing on
+them. See the [raw trial and manifest](../status/evidence/r52-go2-support-transfer-2026-10-01/README.md).
 
 
 An opt-in learned actor from the MIT-licensed NJU-RLC Go2 recovery checkpoint
@@ -336,8 +353,9 @@ the controller alive, then timed out with the robot inverted at 0.057 m.
 This is an experimental comparison, not a qualified recovery behavior. Its
 model provenance, MIT license and observation contract are in
 `src/robot_lab_adapter/policies/go2_recovery_nju/SOURCE.md`.
-An optional `fall_recovery_start_delay_s:=1.0` waits with zero effort before
-starting the active timeout. It did not solve the 60 N fall. An initial delayed
+An optional `fall_recovery_start_delay_s:=1.0` holds the measured joint pose
+before starting the active timeout when all joint samples are valid. It did not
+solve the 60 N fall. An initial delayed
 trial falsely reported success while the body was airborne with only one foot
 loaded, then collapsed. The supported-standing dwell check above corrected
 that result; the rebuilt delayed repeat reported `failed` and ended inverted.

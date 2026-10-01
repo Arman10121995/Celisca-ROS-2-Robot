@@ -115,6 +115,32 @@ def test_trunk_contact_telemetry_measures_the_body_resting_on_the_ground():
     assert 90.0 < force < 110.0
 
 
+def test_world_contact_telemetry_reports_support_per_geom():
+    mujoco = pytest.importorskip('mujoco')
+    from robot_lab_mujoco.mujoco_spawner import _world_contact_forces
+
+    xml = '''<mujoco><worldbody>
+      <geom name="floor" type="plane" size="2 2 .1"/>
+      <body pos="-.2 0 .1"><freejoint/>
+        <geom name="FL_hip_contact_0" type="sphere" size=".1" mass="5"/>
+      </body>
+      <body pos=".2 0 .1"><freejoint/>
+        <geom name="FR_hip_contact_0" type="sphere" size=".1" mass="5"/>
+      </body>
+    </worldbody></mujoco></xml>'''
+    model = mujoco.MjModel.from_xml_string(xml)
+    data = mujoco.MjData(model)
+    for _ in range(400):
+        mujoco.mj_step(model, data)
+    hips = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, name)
+            for name in ('FL_hip_contact_0', 'FR_hip_contact_0')]
+
+    forces = _world_contact_forces(model, data, hips)
+    assert len(forces) == 2
+    assert all(45.0 < force < 55.0 for force in forces)
+    assert sum(forces) == pytest.approx(10.0 * 9.81, abs=0.5)
+
+
 def test_trunk_contact_telemetry_is_zero_in_free_fall():
     """A geom that never touches the world reports 0 N, not a stale value."""
     mujoco = pytest.importorskip('mujoco')

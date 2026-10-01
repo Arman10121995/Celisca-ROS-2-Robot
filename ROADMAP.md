@@ -356,7 +356,16 @@ Dependencies: `R5.1`.
   exceeds the envelope, collapses to 0.139 m and correctly latches `safe_stop`.
   The 5 N and 20 N pulses are recorded negative controls with no response above
   stance noise. Bounded disturbance rejection is therefore measured at one
-  point only. Fall detection is implemented (latched, debounced, distinct from
+  point only. A correctly aligned `terrain_stairs` repeat with the
+  flat-ground-qualified +0.25 m/s command also failed at the first ledge: only
+  0.039 m X displacement, 0.548 rad peak tilt and 35.55 N m effort. Two
+  matched +0.25 m/s repeats advanced 0.122/0.149 m with 0.137/0.080 rad peak
+  tilt; a matched +0.5 m/s run advanced 0.132 m while reaching 0.320 rad peak
+  tilt and saturating effort. All four stopped short of the first 4.4 m stair.
+  Terrain traversal is still unqualified; repeat setup is pinned by the
+  course-specific runner.
+  Fall detection is
+  implemented (latched, debounced, distinct from
   SAFE_STOP). The original 60 N run collapsed to 0.139 m, but its detector
   never confirmed that a re-stand attempt began. After correcting the brief-trip
   fall trigger and publishing the fall/recovery states, a clean repeat confirms
@@ -411,10 +420,24 @@ Dependencies: `R5.1`.
   measured from the entry side (a pose-keyed entry was refuted and the trunk's
   own ground load is now published), and the settled-rest support partition
   shows the two contact topics carry only 5.8-5.9% of a flank rest, so the next
-  entry change must either measure the hip load it is trying to move or stay
-  open-loop. Next implement a
-  target-domain adaptation/retraining or a different whole-body get-up
-  strategy; both the nominal-pose and ported learned actor failed the named
+  entry change now uses measured hip and foot loads. The 2026-10-01 support-
+  transfer increment publishes all 18 collision-geom forces, holds valid joint
+  measurements during an explicit wait, and requires a bounded 0.25 s support
+  dwell before advancing a hip-supported roll stroke (feet 75-125% body weight,
+  braced hips at most 25%, trunk at most 10%). A live placed-roll trial delivered
+  2,503 vectors but retained about 125 N on the hips and no more than 6.2 N on
+  the feet; it ended `failed:roll` at 0.139 m. The final trunk-aware repeat
+  ended at 1.642 rad peak tilt and 0.139 m, also `failed:roll`. These are
+  negative results, not a recovery pass. See the
+  [support-transfer evidence](docs/status/evidence/r52-go2-support-transfer-2026-10-01/README.md).
+  Three matched `+0.4 rad` braced-hip trials tested the original load scale, a
+  foot-gap scale, and a stroke ramp. All ended `failed:roll` at about 0.139 m;
+  the ramp still produced only transient foot loads, so scalar hip-splay tuning
+  is not the next experiment. The correctly aligned low-speed stairs repeat
+  also fails at the first ledge; see the [2026-10-01 terrain record](docs/status/evidence/r52-go2-terrain-2026-10-01/README.md).
+  Next implement target-domain locomotion/recovery adaptation or a different
+  whole-body get-up strategy; both the nominal-pose and ported learned actor failed
+  the named
   60 N collapse. The delayed actor also failed after its midair false success
   was corrected, and the gain-corrected actor still rolls the robot onto its
   back during the attempt, so the next change must address the actor's action

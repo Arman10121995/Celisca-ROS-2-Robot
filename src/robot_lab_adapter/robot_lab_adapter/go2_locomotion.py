@@ -20,10 +20,11 @@ Honest scope (R5.2 acceptance bar):
   ground-truth odometry for the experimental recovery success check. Falls and excessive tilt
   force a SAFE_STOP (damped zero effort), never silent continuation.
 - The opt-in get-up attempt is a bounded ladder of predeclared joint-space
-  waypoints (tuck -> roll -> crouch -> stand) whose transitions read measured
-  attitude only: the standing pose is commanded only once measured tilt is
-  back under the stand-up gate, and the roll count is bounded. It is a
-  measured-feedback sequence, not a trained get-up policy.
+    waypoints (tuck -> roll -> crouch -> stand) whose transitions read measured
+    attitude; a roll entered from hip-supported contact additionally requires a
+    bounded, dwelled transfer of load to the feet. The standing pose is commanded
+    only once measured tilt is back under the stand-up gate, and the roll count is
+    bounded. It is a measured-feedback sequence, not a trained get-up policy.
 - All 12 joints are effort-commandable with per-joint limits taken from
   the Go2 description (const.xacro): hip/thigh 23.7 N·m, calf 35.55 N·m.
   **Raw effort publishing is not gait control**: every effort command is
@@ -35,6 +36,8 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Tuple
+
+from robot_lab_utils.go2_support import GO2_SUPPORT_GEOM_NAMES
 
 # ----------------------------------------------------------------------
 # Robot constants (from go2_description/xacro/const.xacro and
@@ -113,6 +116,13 @@ FALL_RECOVER_MIN_HEIGHT_M = 0.25
 FALL_RECOVER_MIN_LOADED_FEET = 3
 FALL_RECOVER_CONTACT_N = 2.0
 FALL_RECOVER_SUCCESS_DWELL_S = 0.5
+GO2_SUPPORT_WEIGHT_N = 126.53
+FALL_RECOVER_SUPPORT_MIN_FOOT_N = 0.75 * GO2_SUPPORT_WEIGHT_N
+FALL_RECOVER_SUPPORT_MAX_FOOT_N = 1.25 * GO2_SUPPORT_WEIGHT_N
+FALL_RECOVER_SUPPORT_MAX_HIP_N = 0.25 * GO2_SUPPORT_WEIGHT_N
+FALL_RECOVER_SUPPORT_MAX_TRUNK_N = 0.1 * GO2_SUPPORT_WEIGHT_N
+FALL_RECOVER_SUPPORT_MAX_TOTAL_N = 1.4 * GO2_SUPPORT_WEIGHT_N
+FALL_RECOVER_SUPPORT_DWELL_S = 0.25
 
 #: Sequenced get-up ladder (R5.2 recovery attempt). Recorded 60 N trials drove
 #: straight to the nominal stance pose from a down trunk at 0.14 m body height
@@ -817,6 +827,7 @@ class FallRecovery:
         self.started_at: Optional[float] = None
         self.active_started_at: Optional[float] = None
         self.success_candidate_at: Optional[float] = None
+        self._waiting_stance: Optional[StanceController] = None
         #: Ladder phase, or None while no attempt is running.
         self.phase: Optional[str] = None
         self.phase_started_at: Optional[float] = None
@@ -824,6 +835,8 @@ class FallRecovery:
         self.roll_cycles = 0
         #: Measured tilt when the current roll cycle began, for the progress rule.
         self._roll_entry_tilt: Optional[float] = None
+        self._support_transfer_required = False
+        self._support_transfer_since: Optional[float] = None
         #: Why the attempt stopped, when it did.
         self.last_reason: Optional[str] = None
         self.attempts = 0
@@ -852,11 +865,14 @@ class FallRecovery:
         self.started_at = None
         self.active_started_at = None
         self.success_candidate_at = None
+        self._waiting_stance = None
         self.terminal_pose = None
         self.phase = None
         self.phase_started_at = None
         self.roll_cycles = 0
         self._roll_entry_tilt = None
+        self._support_transfer_required = False
+        self._support_transfer_since = None
         self.last_reason = None
 
     def update(
@@ -867,6 +883,7 @@ class FallRecovery:
         positions: Dict[str, float],
         velocities: Dict[str, float],
         measured_contact_forces: Optional[Dict[str, float]] = None,
+        measured_support_forces: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         """Return the re-stand effort for this cycle (``{}`` means zero drive).
 
@@ -894,12 +911,15 @@ class FallRecovery:
             if self.status == self.ATTEMPTING:
                 self.active_started_at = now_s
                 self._enter_phase(self.TUCK, now_s)
+            else:
+                self._waiting_stance = self._capture_waiting_stance(positions)
             self.attempts += 1
         if self.status == self.WAITING:
             if self.started_at is not None and now_s - self.started_at < self.start_delay_s:
-                return {joint: 0.0 for joint in JOINT_NAMES}
+                return self._waiting_efforts(positions, velocities)
             self.status = self.ATTEMPTING
             self.active_started_at = now_s
+            self._waiting_stance = None
             self._enter_phase(self.TUCK, now_s)
         if self.active_started_at is not None and now_s - self.active_started_at > self.timeout_s:
             self._end_attempt(body, "get-up window expired")
@@ -916,14 +936,39 @@ class FallRecovery:
         # The ladder is advanced only after the standing check: measured
         # evidence that the trunk is already up wins over phase timing, so a
         # robot that came up is never re-retracted by a stale phase.
-        self._advance_ladder(now_s, body)
+        self._advance_ladder(now_s, body, measured_support_forces)
         if self.status in self.TERMINAL_STATES:
             return {joint: 0.0 for joint in JOINT_NAMES}
-        efforts = self._phase_efforts(positions, velocities, body, now_s)
+        efforts = self._phase_efforts(
+            positions, velocities, body, now_s, measured_support_forces)
         for joint in JOINT_NAMES:
             if joint not in positions:
                 efforts[joint] = 0.0
         return efforts
+
+    def _capture_waiting_stance(
+        self, positions: Dict[str, float]
+    ) -> Optional[StanceController]:
+        if not all(
+            name in positions
+            and math.isfinite(positions[name])
+            and POSITION_LIMITS[joint_kind(name)][0]
+            <= positions[name] <= POSITION_LIMITS[joint_kind(name)][1]
+            for name in JOINT_NAMES
+        ):
+            return None
+        return StanceController(
+            target={name: positions[name] for name in JOINT_NAMES},
+            gain_scale=self._gain_scale,
+            damping_scale=self._damping_scale,
+        )
+
+    def _waiting_efforts(
+        self, positions: Dict[str, float], velocities: Dict[str, float]
+    ) -> Dict[str, float]:
+        if self._waiting_stance is None:
+            return {joint: 0.0 for joint in JOINT_NAMES}
+        return self._waiting_stance.effort_command(positions, velocities)
 
     def _standing_evidence(
         self,
@@ -986,9 +1031,17 @@ class FallRecovery:
         self.phase = phase
         self.phase_started_at = now_s
 
-    def _enter_roll(self, now_s: float, body: Optional[BodyState] = None) -> None:
+    def _enter_roll(
+        self,
+        now_s: float,
+        body: Optional[BodyState] = None,
+        measured_support_forces: Optional[Dict[str, float]] = None,
+    ) -> None:
         self.roll_cycles += 1
         self._roll_entry_tilt = self._measured_tilt(body)
+        self._support_transfer_required = self._roll_starts_hip_supported(
+            body, measured_support_forces)
+        self._support_transfer_since = None
         self._enter_phase(self.ROLL, now_s)
 
     def _end_attempt(self, body: Optional[BodyState], reason: str) -> None:
@@ -1004,14 +1057,21 @@ class FallRecovery:
                        else self.FAILED)
         self.last_reason = reason
 
-    def _advance_ladder(self, now_s: float, body: Optional[BodyState]) -> None:
-        """Advance the bounded ladder, or end the attempt, on measured tilt.
+    def _advance_ladder(
+        self,
+        now_s: float,
+        body: Optional[BodyState],
+        measured_support_forces: Optional[Dict[str, float]] = None,
+    ) -> None:
+        """Advance the bounded ladder on measured attitude and support transfer.
 
         Without a measured attitude the phase is held (and the attempt window
         still bounds it): the ladder never guesses a transition. ``stand`` is
         entered only once the trunk is measured under ``gate_tilt_rad``, and a
         trunk that climbs back out of the gate goes back down the ladder
-        instead of being levered further over.
+        instead of being levered further over. A roll phase that begins from a
+        hip-supported flank must also establish a bounded, dwelled foot-load
+        transfer before it can advance.
         """
         if self.phase_started_at is None:
             return
@@ -1028,14 +1088,30 @@ class FallRecovery:
                 # window decide, never to drive a standing pose from here.
                 self._enter_phase(self.TUCK, now_s)
             elif tilt >= self.gate_tilt_rad:
-                self._enter_roll(now_s, body)
+                self._enter_roll(now_s, body, measured_support_forces)
             else:
                 self._enter_phase(self.CROUCH, now_s)
             return
         if self.phase == self.ROLL:
+            if self._support_transfer_required:
+                if self._has_support_transfer(body, measured_support_forces):
+                    if self._support_transfer_since is None:
+                        self._support_transfer_since = now_s
+                    elif now_s - self._support_transfer_since >= \
+                            FALL_RECOVER_SUPPORT_DWELL_S:
+                        self._support_transfer_required = False
+                        self._support_transfer_since = None
+                        self._roll_entry_tilt = None
+                        self._enter_phase(self.CROUCH, now_s)
+                        return
+                else:
+                    self._support_transfer_since = None
             if elapsed < self.roll_s:
                 return
-            if tilt >= FALL_INVERTED_TILT_RAD:
+            if self._support_transfer_required:
+                self._end_attempt(
+                    body, "roll stroke ended without settled foot support transfer")
+            elif tilt >= FALL_INVERTED_TILT_RAD:
                 self._end_attempt(
                     body, "trunk rolled past %.1f rad during the roll phase"
                     % FALL_INVERTED_TILT_RAD)
@@ -1156,12 +1232,45 @@ class FallRecovery:
                 target[name] = clamp_position(
                     name, splay if leg.endswith("R") else -splay)
 
+    def _support_creation_hip_rad(
+        self,
+        body: Optional[BodyState],
+        measured_support_forces: Optional[Dict[str, float]],
+        now_s: float,
+    ) -> float:
+        """Ramp braced-hip splay in, holding it through transient contacts.
+
+        The roll transfer gate owns release: it advances only after valid foot
+        support persists for its dwell. Tapering on a single force sample would
+        retract the support-creation target on the same contact slam the gate
+        rejects.
+        """
+        if self.roll_brace_hip_rad == 0.0 or body is None:
+            return 0.0
+        if abs(body.roll_rad) < abs(body.pitch_rad):
+            return 0.0
+        if measured_support_forces is None:
+            return 0.0
+        braced = brace_legs(body.roll_rad, body.pitch_rad)
+        support_names = [f"{leg}_hip_contact_0" for leg in braced]
+        support_names.extend(f"{leg}_foot_contact_0" for leg in LEG_PREFIXES)
+        loads = [measured_support_forces.get(name, float("nan"))
+                 for name in support_names]
+        if not all(math.isfinite(load) and load >= 0.0 for load in loads):
+            return 0.0
+        if self.phase_started_at is None or not math.isfinite(now_s):
+            return 0.0
+        elapsed = max(0.0, now_s - self.phase_started_at)
+        scale = min(1.0, elapsed / self.roll_s)
+        return self.roll_brace_hip_rad * scale
+
     def _phase_efforts(
         self,
         positions: Dict[str, float],
         velocities: Dict[str, float],
         body: Optional[BodyState],
         now_s: float,
+        measured_support_forces: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         """Clamped joint-space PD effort toward this phase's waypoint."""
         if self.phase == self.STAND:
@@ -1179,14 +1288,62 @@ class FallRecovery:
                                         self.roll_brace_hip_rad)
                       if body is not None else recovery_pose("crouch"))
         elif self.phase == self.ROLL and body is not None:
-            target = roll_phase_pose(body.roll_rad, body.pitch_rad,
-                                     self.roll_brace_hip_rad,
-                                     self.roll_free_hip_rad)
+            support_splay = self._support_creation_hip_rad(
+                body, measured_support_forces, now_s)
+            target = roll_phase_pose(
+                body.roll_rad, body.pitch_rad,
+                support_splay,
+                self.roll_free_hip_rad)
         else:
             target = recovery_pose("tuck")
         stance = StanceController(target=target, gain_scale=self._gain_scale,
                                   damping_scale=self._damping_scale)
         return stance.effort_command(positions, velocities)
+
+    @staticmethod
+    def _roll_starts_hip_supported(
+        body: Optional[BodyState],
+        measured_support_forces: Optional[Dict[str, float]],
+    ) -> bool:
+        if body is None or abs(body.roll_rad) < abs(body.pitch_rad):
+            return False
+        if measured_support_forces is None:
+            return False
+        braced = brace_legs(body.roll_rad, body.pitch_rad)
+        hip_load = sum(measured_support_forces.get(
+            f"{leg}_hip_contact_0", 0.0) for leg in braced)
+        foot_load = sum(measured_support_forces.get(
+            f"{leg}_foot_contact_0", 0.0) for leg in LEG_PREFIXES)
+        return hip_load >= 0.5 * GO2_SUPPORT_WEIGHT_N \
+            and foot_load < 0.25 * GO2_SUPPORT_WEIGHT_N
+
+    @staticmethod
+    def _has_support_transfer(
+        body: Optional[BodyState],
+        measured_support_forces: Optional[Dict[str, float]],
+    ) -> bool:
+        if body is None or measured_support_forces is None:
+            return False
+        braced = brace_legs(body.roll_rad, body.pitch_rad)
+        names = [f"{leg}_hip_contact_0" for leg in braced]
+        names.extend(f"{leg}_foot_contact_0" for leg in LEG_PREFIXES)
+        names.append("trunk_contact_0")
+        forces = [measured_support_forces.get(name, float("nan")) for name in names]
+        if not all(math.isfinite(force) and force >= 0.0 for force in forces):
+            return False
+        hip_end = len(braced)
+        foot_end = hip_end + len(LEG_PREFIXES)
+        hip_load = sum(forces[:hip_end])
+        foot_load = sum(forces[hip_end:foot_end])
+        trunk_load = forces[foot_end]
+        return (
+            FALL_RECOVER_SUPPORT_MIN_FOOT_N <= foot_load
+            <= FALL_RECOVER_SUPPORT_MAX_FOOT_N
+            and hip_load <= FALL_RECOVER_SUPPORT_MAX_HIP_N
+            and trunk_load <= FALL_RECOVER_SUPPORT_MAX_TRUNK_N
+            and hip_load + foot_load + trunk_load
+            <= FALL_RECOVER_SUPPORT_MAX_TOTAL_N
+        )
 
 
 # ----------------------------------------------------------------------

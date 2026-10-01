@@ -1,0 +1,35 @@
+{
+  "tool": "run_terrain_trial.sh",
+  "source_root": "/home/molar1/bumperbot_ws",
+  "source_revision": "af77f2f",
+  "tracked_modified_files_at_launch": 11,
+  "ros_domain_id": 223,
+  "backend": "MuJoCo",
+  "map_name": "terrain_stairs",
+  "policy_path": "auto",
+  "reverse_command_map": "inverse",
+  "spawn": {
+    "x_m": -7.5,
+    "y_m": -4.0,
+    "yaw_rad": 0.0
+  },
+  "probe": {
+    "duration_s": 10.0,
+    "trace_interval_s": 0.05,
+    "trace_joints": true
+  },
+  "command": {
+    "vx_mps": 0.5,
+    "wz_radps": 0.0,
+    "start_s": 1.0,
+    "end_s": 8.0
+  },
+  "source_sha256": {
+    "src/robot_lab_adapter/robot_lab_adapter/go2_locomotion.py": "158bf60fc17ecb55dde46d57435fc80981e377f8e6661fc30c22604988b488ab",
+    "src/robot_lab_adapter/robot_lab_adapter/go2_velocity_policy.py": "d12675823a9a2cba166f22c3937c49139a2e625a0ed05ba7c3c9ef901e121034",
+    "src/robot_lab_adapter/policies/go2_velocity_flat/policy.onnx": "fbb8b61b12f2cd44dfc889f33566a8be2438124efee88b60c700b9605a94187a",
+    "src/robot_lab_adapter/policies/go2_velocity_flat/policy.onnx.data": "40474dd235917877d657085f3f0a2d485d10e947e3599cad5328337e32222a74",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "6b54ba8cd8bfc1c0a979bca5aea94caaeec20700f9abf9bb20eda875c5ba6f24",
+    "src/robot_lab_maps/mjcf/terrain_stairs.xml": "9f4f5482f5e9f96ffe60821aff90be68258aa38d8e060063e6c84103360889ab"
+  }
+}

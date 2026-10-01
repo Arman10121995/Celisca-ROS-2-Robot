@@ -56,6 +56,7 @@ from robot_lab_utils.sim_frames import (
     urdf_link_frames,
     compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
     yaw_of)
+from robot_lab_utils.go2_support import GO2_SUPPORT_GEOM_NAMES
 
 _CAMERA_NAME = "robot_lab_rgbd"
 
@@ -937,34 +938,29 @@ def _world_normal_contact_force(model, data, geom_ids):
     same rule as the feet's. Only contacts against a static world geom
     (``geom_bodyid == 0``) count: robot self-contacts are not support.
     """
+    return sum(_world_contact_forces(model, data, geom_ids))
+
+
+def _world_contact_forces(model, data, geom_ids):
+    """Normal contact force [N] per named geom against static world geoms."""
     index_of = {geom_id for geom_id in geom_ids if geom_id >= 0}
+    geom_index = {geom_id: index for index, geom_id in enumerate(geom_ids)}
+    forces = [0.0] * len(geom_ids)
     contact_force = np.zeros(6)
-    total = 0.0
     for contact_index in range(data.ncon):
         contact = data.contact[contact_index]
         for own_id, other_id in ((int(contact.geom1), int(contact.geom2)),
                                  (int(contact.geom2), int(contact.geom1))):
             if own_id in index_of and model.geom_bodyid[other_id] == 0:
                 mujoco.mj_contactForce(model, data, contact_index, contact_force)
-                total += max(0.0, float(contact_force[0]))
+                forces[geom_index[own_id]] += max(0.0, float(contact_force[0]))
                 break
-    return total
+    return forces
 
 
 def _foot_world_contact_forces(model, data, foot_geom_ids):
     """Normal contact force [N] for named feet against static world geoms."""
-    forces = [0.0] * len(foot_geom_ids)
-    foot_index = {geom_id: index for index, geom_id in enumerate(foot_geom_ids)}
-    contact_force = np.zeros(6)
-    for contact_index in range(data.ncon):
-        contact = data.contact[contact_index]
-        for foot_id, other_id in ((int(contact.geom1), int(contact.geom2)),
-                                  (int(contact.geom2), int(contact.geom1))):
-            if foot_id not in foot_index or model.geom_bodyid[other_id] != 0:
-                continue
-            mujoco.mj_contactForce(model, data, contact_index, contact_force)
-            forces[foot_index[foot_id]] += max(0.0, float(contact_force[0]))
-    return forces
+    return _world_contact_forces(model, data, foot_geom_ids)
 
 
 def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
@@ -1116,8 +1112,10 @@ class MuJoCoSpawner(Node):
         self._effort_actuators = []
         self._go2_foot_ids = []
         self._go2_trunk_ids = []
+        self._go2_support_ids = []
         self._go2_contact_pub = None
         self._go2_trunk_pub = None
+        self._go2_support_pub = None
         self._effort_subscription = None
         # A reset service and the physics/rendering thread share MjData.
         self._physics_lock = threading.RLock()
@@ -1409,6 +1407,19 @@ class MuJoCoSpawner(Node):
             else:
                 self._go2_trunk_pub = self.create_publisher(
                     Float64MultiArray, "/go2/trunk_contact_forces", 10)
+            self._go2_support_ids = [mujoco.mj_name2id(
+                self._model, mujoco.mjtObj.mjOBJ_GEOM, name)
+                for name in GO2_SUPPORT_GEOM_NAMES]
+            if min(self._go2_support_ids) < 0:
+                missing = [name for name, geom_id in zip(
+                    GO2_SUPPORT_GEOM_NAMES, self._go2_support_ids) if geom_id < 0]
+                self.get_logger().warning(
+                    "Go2 support-contact telemetry unavailable; missing geoms: "
+                    + ", ".join(missing))
+                self._go2_support_ids = []
+            else:
+                self._go2_support_pub = self.create_publisher(
+                    Float64MultiArray, "/go2/support_contact_forces", 10)
         if self._effort_command is not None:
             self._effort_actuators = [mujoco.mj_name2id(
                 self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, name + "_effort")
@@ -1704,6 +1715,11 @@ class MuJoCoSpawner(Node):
                                 trunk.data = [_world_normal_contact_force(
                                     self._model, self._data, self._go2_trunk_ids)]
                                 self._go2_trunk_pub.publish(trunk)
+                            if self._go2_support_pub is not None:
+                                support = Float64MultiArray()
+                                support.data = _world_contact_forces(
+                                    self._model, self._data, self._go2_support_ids)
+                                self._go2_support_pub.publish(support)
                             self._pub_odom()
                             self._pub_imu()
                         self._pub_clock()

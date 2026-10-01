@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark"
+export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_utils"
 export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
 
 echo "=== Module compilation check ==="

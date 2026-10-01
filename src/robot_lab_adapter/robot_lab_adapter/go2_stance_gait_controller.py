@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import time
 
 import rclpy
@@ -15,7 +16,8 @@ from std_msgs.msg import Bool, Float64MultiArray, String
 from std_srvs.srv import Trigger
 
 from robot_lab_adapter.go2_locomotion import (
-    BaseVelocity, BodyState, FallRecovery, Go2LocomotionCore, JOINT_NAMES,
+    BaseVelocity, BodyState, FallRecovery, GO2_SUPPORT_GEOM_NAMES,
+    Go2LocomotionCore, JOINT_NAMES,
 )
 from robot_lab_adapter.go2_velocity_policy import Go2VelocityPolicy
 from robot_lab_adapter.go2_recovery_policy import Go2RecoveryPolicy, RECOVERY_POLICY_DT_S
@@ -97,6 +99,8 @@ class Go2StanceGaitController(Node):
         self._efforts = {}
         self._foot_forces = None
         self._foot_forces_at = float("-inf")
+        self._support_forces = None
+        self._support_forces_at = float("-inf")
         self._body = None
         self._body_height = None
         self._body_height_at = float("-inf")
@@ -141,6 +145,9 @@ class Go2StanceGaitController(Node):
         self.create_subscription(
             Float64MultiArray, "/go2/foot_contact_forces",
             self._on_foot_contacts, sensor_qos)
+        self.create_subscription(
+            Float64MultiArray, "/go2/support_contact_forces",
+            self._on_support_contacts, sensor_qos)
         self.create_subscription(
             Twist, self.get_parameter("cmd_vel_topic").value,
             self._on_twist, 10)
@@ -189,6 +196,15 @@ class Go2StanceGaitController(Node):
             self._foot_forces = dict(zip(("FL", "FR", "RL", "RR"), msg.data))
             self._foot_forces_at = time.monotonic()
 
+    def _on_support_contacts(self, msg):
+        if len(msg.data) != len(GO2_SUPPORT_GEOM_NAMES):
+            return
+        forces = tuple(float(force) for force in msg.data)
+        if not all(math.isfinite(force) and force >= 0.0 for force in forces):
+            return
+        self._support_forces = dict(zip(GO2_SUPPORT_GEOM_NAMES, forces))
+        self._support_forces_at = time.monotonic()
+
     def _reset_safety(self, _request, response):
         self._core.safety.reset()
         self._cmd = BaseVelocity()
@@ -201,6 +217,8 @@ class Go2StanceGaitController(Node):
         if self._recovery_policy is not None:
             self._recovery_policy.reset()
             self._last_recovery_policy_at = float("-inf")
+        self._support_forces = None
+        self._support_forces_at = float("-inf")
         response.success = True
         response.message = "Go2 safety latch reset; command is zero"
         return response
@@ -224,9 +242,13 @@ class Go2StanceGaitController(Node):
             now = time.monotonic()
             forces = (self._foot_forces if now - self._foot_forces_at < 0.1
                       else None)
+            support_forces = (
+                self._support_forces if now - self._support_forces_at < 0.1
+                else None)
             recovered = self._recovery.update(
                 now, self._core.safety.fallen, self._body,
-                self._positions, self._velocities, forces)
+                self._positions, self._velocities, forces,
+                measured_support_forces=support_forces)
             efforts = {name: recovered.get(name, 0.0) for name in JOINT_NAMES}
             if (self._recovery_policy is not None
                     and self._recovery.status == FallRecovery.ATTEMPTING):

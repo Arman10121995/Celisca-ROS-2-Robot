@@ -1,0 +1,212 @@
+[INFO] [launch]: All log files can be found below /home/molar1/.ros/log/2026-10-01-10-58-30-747189-molar1-405871
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] algorithm localization=amcl -> global_localization stack
+[robot_lab] algorithm state_estimation=ekf_localization_node -> local_localization stack
+[robot_lab] algorithm sensor_fusion=wheel_imu_fusion -> node robot_lab_algorithms/wheel_imu_fusion
+[INFO] [go2-stance-gait-controller-1]: process started with pid [405903]
+[INFO] [robot_state_publisher-2]: process started with pid [405905]
+[INFO] [mujoco_spawner-3]: process started with pid [405907]
+[INFO] [joy_teleop-4]: process started with pid [405909]
+[INFO] [joy_node-5]: process started with pid [405911]
+[INFO] [twist_mux-6]: process started with pid [405913]
+[INFO] [twist_marker-7]: process started with pid [405915]
+[INFO] [joystick_relay.py-8]: process started with pid [405917]
+[INFO] [twist_relay-9]: process started with pid [405919]
+[INFO] [simulator_ready_gate-10]: process started with pid [405921]
+[twist_mux-6] [INFO] [1790845111.757552735] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-6] [INFO] [1790845111.758420644] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-6] [INFO] [1790845111.758581311] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[twist_mux-6] [INFO] [1790845111.758706747] [twist_mux]: Topic handler 'locks.safety_stop' subscribed to topic 'safety_stop': timeout = None , priority = 255.
+[robot_state_publisher-2] [INFO] [1790845111.767217777] [robot_state_publisher]: got segment FL_calf
+[robot_state_publisher-2] [INFO] [1790845111.767457449] [robot_state_publisher]: got segment FL_calf_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767485448] [robot_state_publisher]: got segment FL_foot
+[robot_state_publisher-2] [INFO] [1790845111.767581125] [robot_state_publisher]: got segment FL_hip
+[robot_state_publisher-2] [INFO] [1790845111.767604997] [robot_state_publisher]: got segment FL_hip_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767617252] [robot_state_publisher]: got segment FL_thigh
+[robot_state_publisher-2] [INFO] [1790845111.767626212] [robot_state_publisher]: got segment FL_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767634340] [robot_state_publisher]: got segment FR_calf
+[robot_state_publisher-2] [INFO] [1790845111.767641348] [robot_state_publisher]: got segment FR_calf_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767648803] [robot_state_publisher]: got segment FR_foot
+[robot_state_publisher-2] [INFO] [1790845111.767656163] [robot_state_publisher]: got segment FR_hip
+[robot_state_publisher-2] [INFO] [1790845111.767663555] [robot_state_publisher]: got segment FR_hip_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767671011] [robot_state_publisher]: got segment FR_thigh
+[robot_state_publisher-2] [INFO] [1790845111.767679010] [robot_state_publisher]: got segment FR_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767686370] [robot_state_publisher]: got segment RL_calf
+[robot_state_publisher-2] [INFO] [1790845111.767693762] [robot_state_publisher]: got segment RL_calf_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767701154] [robot_state_publisher]: got segment RL_foot
+[robot_state_publisher-2] [INFO] [1790845111.767708161] [robot_state_publisher]: got segment RL_hip
+[robot_state_publisher-2] [INFO] [1790845111.767715201] [robot_state_publisher]: got segment RL_hip_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767722337] [robot_state_publisher]: got segment RL_thigh
+[robot_state_publisher-2] [INFO] [1790845111.767729185] [robot_state_publisher]: got segment RL_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767736449] [robot_state_publisher]: got segment RR_calf
+[robot_state_publisher-2] [INFO] [1790845111.767743360] [robot_state_publisher]: got segment RR_calf_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767750560] [robot_state_publisher]: got segment RR_foot
+[robot_state_publisher-2] [INFO] [1790845111.767757568] [robot_state_publisher]: got segment RR_hip
+[robot_state_publisher-2] [INFO] [1790845111.767764416] [robot_state_publisher]: got segment RR_hip_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767771551] [robot_state_publisher]: got segment RR_thigh
+[robot_state_publisher-2] [INFO] [1790845111.767778655] [robot_state_publisher]: got segment RR_thigh_rotor
+[robot_state_publisher-2] [INFO] [1790845111.767785535] [robot_state_publisher]: got segment base
+[robot_state_publisher-2] [INFO] [1790845111.767792511] [robot_state_publisher]: got segment front_camera
+[robot_state_publisher-2] [INFO] [1790845111.767799551] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1790845111.767806878] [robot_state_publisher]: got segment trunk
+[go2-stance-gait-controller-1] [0;93m2026-10-01 10:58:32.442747216 [W:onnxruntime:Default, device_discovery.cc:164 DiscoverDevicesForPlatform] GPU device discovery failed: device_discovery.cc:89 ReadFileContents Failed to open file: "/sys/class/drm/card1/device/vendor"[m
+[go2-stance-gait-controller-1] [INFO] [1790845112.519703978] [go2_stance_gait_controller]: Go2 closed-loop stance: 12 effort joints at 250.0 Hz; controller ONNX velocity policy
+[mujoco_spawner-3] [INFO] [1790845113.836903662] [mujoco_spawner]: MuJoCo: 18 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-3] [INFO] [1790845113.886582141] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-3] [WARN] [1790845113.903753444] [mujoco_spawner]: MuJoCo effort plant: no MJCF beside /home/molar1/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/go2_description/xacro/go2_sim.xacro names every effort joint; keeping the URDF <dynamics> (damping=5.0 is a Gazebo stabiliser the robot does not have).
+[mujoco_spawner-3] [INFO] [1790845113.961170817] [mujoco_spawner]: MuJoCo physics timestep: 0.0010 s
+[mujoco_spawner-3] [INFO] [1790845113.964541975] [mujoco_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[mujoco_spawner-3] [INFO] [1790845113.966319776] [mujoco_spawner]: Joints: ['FR_hip_joint', 'FR_thigh_joint', 'FR_calf_joint', 'FL_hip_joint', 'FL_thigh_joint', 'FL_calf_joint', 'RR_hip_joint', 'RR_thigh_joint', 'RR_calf_joint', 'RL_hip_joint', 'RL_thigh_joint', 'RL_calf_joint']   lw= rw=
+[mujoco_spawner-3] [INFO] [1790845113.971817108] [mujoco_spawner]: MuJoCo effort joint armature: 0.0100 kg m^2
+[mujoco_spawner-3] [INFO] [1790845113.973963729] [mujoco_spawner]: Joint effort input: /go2_group_effort_controller/commands (12 joints, URDF limits)
+[mujoco_spawner-3] [INFO] [1790845113.976751994] [mujoco_spawner]: Spawn ground clearance: raised root by 0.1939 m
+[mujoco_spawner-3] [INFO] [1790845113.978208044] [mujoco_spawner]: MuJoCo model loaded: 14 bodies, 13 joints
+[mujoco_spawner-3] [INFO] [1790845113.979250860] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:1 -> mode=DIRECT
+[mujoco_spawner-3] [INFO] [1790845113.980246700] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-3] [INFO] [1790845113.986017720] [mujoco_spawner]: MuJoCo spawner running.
+[go2-stance-gait-controller-1] [WARN] [1790845113.987993786] [go2_stance_gait_controller]: Go2 safety safe_stop: tilt 0.90 rad exceeds fall threshold
+[go2-stance-gait-controller-1] [INFO] [1790845113.988826144] [go2_stance_gait_controller]: Go2 recovery idle
+[go2-stance-gait-controller-1] [INFO] [1790845114.123825220] [go2_stance_gait_controller]: Go2 recovery waiting
+[INFO] [simulator_ready_gate-10]: process has finished cleanly [pid 405921]
+[INFO] [amcl-12]: process started with pid [406166]
+[INFO] [map_server-11]: process started with pid [406164]
+[INFO] [lifecycle_manager-13]: process started with pid [406168]
+[INFO] [ekf_node-14]: process started with pid [406170]
+[INFO] [imu_republisher.py-15]: process started with pid [406172]
+[INFO] [wheel_imu_fusion-16]: process started with pid [406174]
+[lifecycle_manager-13] [INFO] [1790845114.388325975] [lifecycle_manager_localization]: Creating
+[lifecycle_manager-13] [INFO] [1790845114.394678416] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[amcl-12] [0m[INFO] [1790845114.402149127] [amcl]: 
+[amcl-12] 	amcl lifecycle node launched. 
+[amcl-12] 	Waiting on external lifecycle transitions to activate
+[amcl-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.[0m
+[amcl-12] [0m[INFO] [1790845114.403516124] [amcl]: Creating[0m
+[map_server-11] [INFO] [1790845114.420708546] [map_server]: 
+[map_server-11] 	map_server lifecycle node launched. 
+[map_server-11] 	Waiting on external lifecycle transitions to activate
+[map_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-11] [INFO] [1790845114.422166997] [map_server]: Creating
+[lifecycle_manager-13] [INFO] [1790845114.541542625] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-13] [INFO] [1790845114.541740379] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-11] [INFO] [1790845114.542086864] [map_server]: Configuring
+[map_server-11] [INFO] [1790845114.542201324] [map_io]: Loading yaml file: /home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.yaml
+[map_server-11] [INFO] [1790845114.542618303] [map_io]: resolution: 0.05
+[map_server-11] [INFO] [1790845114.542637215] [map_io]: origin[0]: -7
+[map_server-11] [INFO] [1790845114.542642782] [map_io]: origin[1]: -7
+[map_server-11] [INFO] [1790845114.542647262] [map_io]: origin[2]: 0
+[map_server-11] [INFO] [1790845114.542652254] [map_io]: free_thresh: 0.196
+[map_server-11] [INFO] [1790845114.542656926] [map_io]: occupied_thresh: 0.65
+[map_server-11] [INFO] [1790845114.542663838] [map_io]: mode: trinary
+[map_server-11] [INFO] [1790845114.542670942] [map_io]: negate: 0
+[map_server-11] [INFO] [1790845114.542937237] [map_io]: Loading image_file: /home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.pgm
+[map_server-11] [INFO] [1790845114.553465356] [map_io]: Read map /home/molar1/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/maps/map.pgm: 280 X 280 map @ 0.05 m/cell
+[lifecycle_manager-13] [INFO] [1790845114.562045856] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-12] [0m[INFO] [1790845114.562418676] [amcl]: Configuring[0m
+[amcl-12] [0m[INFO] [1790845114.562595439] [amcl]: initTransforms[0m
+[amcl-12] [0m[INFO] [1790845114.574255746] [amcl]: initPubSub[0m
+[amcl-12] [0m[INFO] [1790845114.581684570] [amcl]: Subscribed to map topic.[0m
+[lifecycle_manager-13] [INFO] [1790845114.588271980] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[map_server-11] [INFO] [1790845114.588560003] [map_server]: Activating
+[amcl-12] [0m[INFO] [1790845114.589270509] [amcl]: Received a 280 X 280 map @ 0.050 m/pix[0m
+[map_server-11] [INFO] [1790845114.589198127] [map_server]: Creating bond (map_server) to lifecycle manager.
+[amcl-12] [0m[INFO] [1790845114.700972329] [amcl]: Activating[0m
+[amcl-12] [0m[INFO] [1790845114.701084933] [amcl]: initialPoseReceived[0m
+[amcl-12] [0m[INFO] [1790845114.701326654] [amcl]: Setting pose (0.532000): -0.500 -0.500 0.000[0m
+[amcl-12] [0m[INFO] [1790845114.701931883] [amcl]: Creating bond (amcl) to lifecycle manager.[0m
+[lifecycle_manager-13] [INFO] [1790845114.700528215] [lifecycle_manager_localization]: Server map_server connected with bond.
+[lifecycle_manager-13] [INFO] [1790845114.700622452] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[lifecycle_manager-13] [INFO] [1790845114.807113042] [lifecycle_manager_localization]: Server amcl connected with bond.
+[lifecycle_manager-13] [INFO] [1790845114.807196784] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-13] [INFO] [1790845114.807222799] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[amcl-12] [0m[INFO] [1790845114.847204685] [amcl]: createLaserObject[0m
+[wheel_imu_fusion-16] [INFO] [1790845115.074149046] [sensor_fusion_wheel_imu_fusion]: wheel_imu_fusion ready
+[go2-stance-gait-controller-1] [INFO] [1790845115.123896323] [go2_stance_gait_controller]: Go2 recovery attempting:tuck
+[go2-stance-gait-controller-1] [INFO] [1790845115.535019311] [go2_stance_gait_controller]: Go2 recovery attempting:roll
+[go2-stance-gait-controller-1] [INFO] [1790845116.249862244] [go2_stance_gait_controller]: Go2 recovery failed:roll
+[ekf_node-14] [INFO] [1790845126.790549010] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-12] [0m[INFO] [1790845126.790565937] [rclcpp]: signal_handler(SIGINT/SIGTERM)[0m
+[amcl-12] [0m[INFO] [1790845126.790760203] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)[0m
+[map_server-11] [INFO] [1790845126.790654862] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-11] [INFO] [1790845126.790857064] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[twist_relay-9] [INFO] [1790845126.790709805] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-12] [0m[INFO] [1790845126.790912358] [amcl]: Deactivating[0m
+[map_server-11] [INFO] [1790845126.790976548] [map_server]: Deactivating
+[map_server-11] [INFO] [1790845126.791012163] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[twist_marker-7] [INFO] [1790845126.790743276] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1790845126.790960581] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joy_node-5] [INFO] [1790845126.790960581] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-13] [INFO] [1790845126.791151999] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-13] [INFO] [1790845126.791243644] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[lifecycle_manager-13] [INFO] [1790845126.791300282] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[twist_mux-6] [INFO] [1790845126.791254876] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-12] [0m[INFO] [1790845126.793080163] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[map_server-11] [INFO] [1790845126.811462148] [map_server]: Cleaning up
+[map_server-11] [INFO] [1790845126.811616863] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[amcl-12] [0m[INFO] [1790845126.814802460] [amcl]: Cleaning up[0m
+[amcl-12] [0m[INFO] [1790845126.825343122] [amcl]: Destroying bond (amcl) to lifecycle manager.[0m
+[joy_teleop-4] Traceback (most recent call last):
+[joy_teleop-4]   File "/opt/ros/humble/lib/joy_teleop/joy_teleop", line 33, in <module>
+[joy_teleop-4]     sys.exit(load_entry_point('joy-teleop==1.6.0', 'console_scripts', 'joy_teleop')())
+[joy_teleop-4]   File "/opt/ros/humble/lib/python3.10/site-packages/joy_teleop/joy_teleop.py", line 435, in main
+[joy_teleop-4]     rclpy.spin(node)
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[joy_teleop-4]     executor.spin_once()
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[joy_teleop-4]     self._spin_once_impl(timeout_sec)
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+[joy_teleop-4]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+[joy_teleop-4]     return next(self._cb_iter)
+[joy_teleop-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 685, in _wait_for_ready_callbacks
+[joy_teleop-4]     raise ExternalShutdownException()
+[joy_teleop-4] rclpy.executors.ExternalShutdownException
+[map_server-11] [INFO] [1790845126.894486658] [map_server]: Destroying
+[amcl-12] [0m[INFO] [1790845126.906402797] [amcl]: Destroying[0m
+[lifecycle_manager-13] [INFO] [1790845126.907296913] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization
+[joystick_relay.py-8] Traceback (most recent call last):
+[joystick_relay.py-8]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 302, in <module>
+[joystick_relay.py-8]     main()
+[joystick_relay.py-8]   File "/opt/ros/humble/lib/twist_mux/joystick_relay.py", line 293, in main
+[joystick_relay.py-8]     rclpy.spin(node)
+[joystick_relay.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[joystick_relay.py-8]     executor.spin_once()
+[joystick_relay.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[joystick_relay.py-8]     self._spin_once_impl(timeout_sec)
+[joystick_relay.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+[joystick_relay.py-8]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[joystick_relay.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+[joystick_relay.py-8]     return next(self._cb_iter)
+[joystick_relay.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 657, in _wait_for_ready_callbacks
+[joystick_relay.py-8]     wait_set = _rclpy.WaitSet(
+[joystick_relay.py-8] rclpy._rclpy_pybind11.RCLError: failed to initialize wait set: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/wait.c:130
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 405905]
+[INFO] [joy_node-5]: process has finished cleanly [pid 405911]
+[INFO] [ekf_node-14]: process has finished cleanly [pid 406170]
+[INFO] [twist_mux-6]: process has finished cleanly [pid 405913]
+[INFO] [twist_relay-9]: process has finished cleanly [pid 405919]
+[INFO] [twist_marker-7]: process has finished cleanly [pid 405915]
+[mujoco_spawner-3] Traceback (most recent call last):
+[mujoco_spawner-3]   File "/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner", line 33, in <module>
+[mujoco_spawner-3]     sys.exit(load_entry_point('robot_lab_mujoco==0.1.0', 'console_scripts', 'mujoco_spawner')())
+[mujoco_spawner-3]   File "/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py", line 2161, in main
+[mujoco_spawner-3]     rclpy.spin(node)
+[mujoco_spawner-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[mujoco_spawner-3]     executor.spin_once()
+[mujoco_spawner-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 812, in spin_once
+[mujoco_spawner-3]     self._spin_once_impl(timeout_sec)
+[mujoco_spawner-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 801, in _spin_once_impl
+[mujoco_spawner-3]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[mujoco_spawner-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 784, in wait_for_ready_callbacks
+[INFO] [imu_republisher.py-15]: process has finished cleanly [pid 406172]
+[mujoco_spawner-3]     return next(self._cb_iter)
+[mujoco_spawner-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 657, in _wait_for_ready_callbacks
+[mujoco_spawner-3]     wait_set = _rclpy.WaitSet(
+[mujoco_spawner-3] rclpy._rclpy_pybind11.RCLError: failed to initialize wait set: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/wait.c:130
+[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 406168]
+[INFO] [wheel_imu_fusion-16]: process has finished cleanly [pid 406174]
+[INFO] [map_server-11]: process has finished cleanly [pid 406164]
+[INFO] [amcl-12]: process has finished cleanly [pid 406166]
+[INFO] [go2-stance-gait-controller-1]: process has finished cleanly [pid 405903]
+[ERROR] [joy_teleop-4]: process has died [pid 405909, exit code 1, cmd '/opt/ros/humble/lib/joy_teleop/joy_teleop --ros-args --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/joy_teleop.yaml --params-file /workspace/molar/.tmp/launch_params_pdd_xh_a'].
+[ERROR] [mujoco_spawner-3]: process has died [pid 405907, exit code 1, cmd '/home/molar1/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner --ros-args -r __node:=mujoco_spawner --params-file /workspace/molar/.tmp/launch_params_jxbdpm28'].
+[ERROR] [joystick_relay.py-8]: process has died [pid 405917, exit code 1, cmd '/opt/ros/humble/lib/twist_mux/joystick_relay.py --ros-args --params-file /workspace/molar/.tmp/launch_params_bgdas6bk --params-file /home/molar1/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_joy.yaml -r joy_vel_out:=joy_vel -r joy_vel_in:=input_joy/cmd_vel'].

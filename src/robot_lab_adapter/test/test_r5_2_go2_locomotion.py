@@ -51,7 +51,10 @@ from robot_lab_adapter.go2_locomotion import (
     FALL_RECOVER_ROLL_S,
     FALL_RECOVER_STAND_S,
     FALL_RECOVER_SUCCESS_DWELL_S,
+    FALL_RECOVER_SUPPORT_MIN_FOOT_N,
+    FALL_RECOVER_SUPPORT_DWELL_S,
     FALL_RECOVER_TUCK_S,
+    GO2_SUPPORT_GEOM_NAMES,
     JOINT_KINDS,
     JOINT_NAMES,
     LEG_PREFIXES,
@@ -824,15 +827,22 @@ class TestFallRecovery:
         assert recovery.terminal_pose is None
         assert recovery.status == FallRecovery.IDLE
 
-    def test_zero_effort_delay_starts_timeout_only_when_attempt_begins(self):
+    def test_delayed_attempt_holds_the_measured_pose_until_it_starts(self):
         recovery = FallRecovery(start_delay_s=1.0, timeout_s=2.0)
         fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
-        waiting = recovery.update(0.0, True, fallen_body, self._positions(), {})
+        positions = nominal_stance_pose()
+        recovery.update(0.0, True, fallen_body, positions, {})
         assert recovery.status == FallRecovery.WAITING
-        assert all(e == 0.0 for e in waiting.values())
-        recovery.update(0.99, True, fallen_body, self._positions(), {})
+        shifted = dict(positions)
+        shifted["FL_thigh_joint"] += 0.1
+        waiting = recovery.update(0.1, True, fallen_body, shifted, {})
+        assert waiting["FL_thigh_joint"] < 0.0
+        assert set(waiting) == set(JOINT_NAMES)
+        assert all(abs(effort) <= EFFORT_LIMITS[joint_kind(name)]
+               for name, effort in waiting.items())
+        recovery.update(0.99, True, fallen_body, shifted, {})
         assert recovery.status == FallRecovery.WAITING
-        driving = recovery.update(1.0, True, fallen_body, self._positions(), {})
+        driving = recovery.update(1.0, True, fallen_body, shifted, {})
         assert recovery.status == FallRecovery.ATTEMPTING
         assert driving["FL_thigh_joint"] > 0.0
         recovery.update(2.9, True, fallen_body, self._positions(), {})
@@ -840,6 +850,28 @@ class TestFallRecovery:
         stopped = recovery.update(3.1, True, fallen_body, self._positions(), {})
         assert recovery.status == FallRecovery.FAILED
         assert all(e == 0.0 for e in stopped.values())
+
+    def test_delayed_attempt_fails_closed_without_complete_joint_measurements(self):
+        recovery = FallRecovery(start_delay_s=1.0)
+        positions = self._positions()
+        positions.pop("FR_hip_joint")
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+
+        waiting = recovery.update(0.0, True, fallen_body, positions, {})
+
+        assert recovery.status == FallRecovery.WAITING
+        assert all(effort == 0.0 for effort in waiting.values())
+
+    def test_delayed_attempt_fails_closed_for_out_of_limit_joint_measurements(self):
+        recovery = FallRecovery(start_delay_s=1.0)
+        positions = nominal_stance_pose()
+        positions["FR_calf_joint"] = 0.0
+        fallen_body = BodyState(roll_rad=TILT_FALL_RAD, pitch_rad=0.0)
+
+        waiting = recovery.update(0.0, True, fallen_body, positions, {})
+
+        assert recovery.status == FallRecovery.WAITING
+        assert all(effort == 0.0 for effort in waiting.values())
 
     def test_rejects_unsafe_parameters(self):
         with pytest.raises(ValueError):
@@ -960,6 +992,72 @@ class TestFallRecoveryLadder:
         assert left["FR_thigh_joint"] == pytest.approx(TUCK_POSE["thigh"])
         assert right["FL_thigh_joint"] == pytest.approx(TUCK_POSE["thigh"])
         assert right["FR_thigh_joint"] == pytest.approx(BRACE_POSE["thigh"])
+
+    def test_roll_stroke_requires_a_dwelled_measured_support_transfer(self):
+        def support(hip_n, foot_n, trunk_n=0.0):
+            values = dict.fromkeys(GO2_SUPPORT_GEOM_NAMES, 0.0)
+            values["FR_hip_contact_0"] = hip_n / 2.0
+            values["RR_hip_contact_0"] = hip_n / 2.0
+            for leg in LEG_PREFIXES:
+                values[f"{leg}_foot_contact_0"] = foot_n / 4.0
+            values["trunk_contact_0"] = trunk_n
+            return values
+
+        body = BodyState(roll_rad=1.2, pitch_rad=0.0, body_height_m=0.14)
+        positions = TestFallRecovery()._positions()
+        recovery = FallRecovery(timeout_s=3.0)
+        settled_flank = support(122.0, 4.0)
+        recovery.update(0.0, True, body, positions, {},
+                        measured_support_forces=settled_flank)
+        roll_start = FALL_RECOVER_TUCK_S + 0.01
+        recovery.update(roll_start, True, body, positions, {},
+                        measured_support_forces=settled_flank)
+        assert recovery.phase == FallRecovery.ROLL
+        assert recovery._support_transfer_required
+
+        slam = support(0.0, 716.0)
+        recovery.update(roll_start + 0.05, True, body, positions, {},
+                        measured_support_forces=slam)
+        assert recovery._support_transfer_since is None
+
+        transferred = support(20.0, 120.0)
+        first_good = roll_start + 0.10
+        recovery.update(first_good, True, body, positions, {},
+                        measured_support_forces=transferred)
+        recovery.update(first_good + 0.10, True, body, positions, {},
+                measured_support_forces=support(20.0, 120.0, 716.0))
+        assert recovery._support_transfer_since is None
+
+        second_good = first_good + 0.20
+        recovery.update(second_good, True, body, positions, {},
+                measured_support_forces=transferred)
+        before_dwell = second_good + FALL_RECOVER_SUPPORT_DWELL_S - 0.01
+        recovery.update(before_dwell, True, body, positions, {},
+                        measured_support_forces=transferred)
+        assert recovery.phase == FallRecovery.ROLL
+        recovery.update(second_good + FALL_RECOVER_SUPPORT_DWELL_S + 0.01,
+                        True, body, positions, {},
+                        measured_support_forces=transferred)
+        assert recovery.phase == FallRecovery.CROUCH
+
+    def test_hip_supported_roll_stroke_fails_at_its_bound_without_transfer(self):
+        values = dict.fromkeys(GO2_SUPPORT_GEOM_NAMES, 0.0)
+        values["FR_hip_contact_0"] = 60.0
+        values["RR_hip_contact_0"] = 60.0
+        body = BodyState(roll_rad=1.2, pitch_rad=0.0, body_height_m=0.14)
+        recovery = FallRecovery(timeout_s=3.0)
+        positions = TestFallRecovery()._positions()
+        recovery.update(0.0, True, body, positions, {},
+                        measured_support_forces=values)
+        roll_start = FALL_RECOVER_TUCK_S + 0.01
+        recovery.update(roll_start, True, body, positions, {},
+                        measured_support_forces=values)
+        recovery.update(roll_start + FALL_RECOVER_ROLL_S + 0.01,
+                        True, body, positions, {},
+                        measured_support_forces=values)
+        assert recovery.status == FallRecovery.FAILED
+        assert recovery.last_reason == \
+            "roll stroke ended without settled foot support transfer"
 
     def test_ladder_reaches_stand_only_after_a_measured_gate_pass(self):
         recovery = self._recovery()
@@ -1160,12 +1258,58 @@ class TestFallRecoveryLadder:
         recovery = self._recovery(roll_brace_hip_rad=0.4)
         recovery.update(0.0, True, self._collapsed(), positions := self._positions(), {})
         efforts = recovery.update(FALL_RECOVER_TUCK_S, True, self._collapsed(),
-                                  positions, {})
+                                  positions, {}, measured_support_forces=
+                                  dict.fromkeys(GO2_SUPPORT_GEOM_NAMES, 0.0))
         assert recovery.phase == FallRecovery.ROLL
         assert efforts == pytest.approx(
-            self._stance(roll_phase_pose(1.2, 0.0, 0.4), positions))
+            self._stance(roll_phase_pose(1.2, 0.0), positions))
+        ramped = recovery.update(
+            FALL_RECOVER_TUCK_S + recovery.roll_s / 2.0, True,
+            self._collapsed(), positions, {},
+            measured_support_forces=dict.fromkeys(GO2_SUPPORT_GEOM_NAMES, 0.0))
+        assert ramped == pytest.approx(
+            self._stance(roll_phase_pose(1.2, 0.0, 0.2), positions))
         with pytest.raises(ValueError):
             FallRecovery(roll_brace_hip_rad=float("nan"))
+
+    def test_roll_phase_support_creation_ramps_over_stroke_and_ignores_slams(self):
+        body = BodyState(roll_rad=1.2, pitch_rad=0.0, body_height_m=0.14)
+        recovery = self._recovery(roll_brace_hip_rad=0.8)
+        roll_start = 1.0
+        recovery._enter_phase(FallRecovery.ROLL, roll_start)
+        low_support = dict.fromkeys(GO2_SUPPORT_GEOM_NAMES, 0.0)
+        low_support["FR_hip_contact_0"] = 60.0
+        low_support["RR_hip_contact_0"] = 60.0
+        assert recovery._support_creation_hip_rad(body, low_support, roll_start) \
+            == pytest.approx(0.0)
+        half_stroke = roll_start + recovery.roll_s / 2.0
+        assert recovery._support_creation_hip_rad(
+            body, low_support, half_stroke) == pytest.approx(0.4)
+        contact_slam = dict(low_support)
+        contact_slam["FR_foot_contact_0"] = 400.0
+        assert recovery._support_creation_hip_rad(
+            body, contact_slam, half_stroke) == pytest.approx(0.4)
+        support_ready = {
+            **dict.fromkeys(GO2_SUPPORT_GEOM_NAMES, 0.0),
+            "FR_hip_contact_0": 60.0,
+            "RR_hip_contact_0": 60.0,
+        }
+        for leg in LEG_PREFIXES:
+            support_ready[f"{leg}_foot_contact_0"] = \
+                FALL_RECOVER_SUPPORT_MIN_FOOT_N / 4.0
+        stroke_end = roll_start + recovery.roll_s
+        assert recovery._support_creation_hip_rad(
+            body, support_ready, stroke_end) == pytest.approx(0.8)
+        assert recovery._support_creation_hip_rad(body, None, stroke_end) == 0.0
+        incomplete_support = dict(support_ready)
+        incomplete_support.pop("FR_foot_contact_0")
+        assert recovery._support_creation_hip_rad(
+            body, incomplete_support, stroke_end) == 0.0
+        target = recovery._phase_efforts(
+            self._positions(), {}, body, stroke_end,
+            measured_support_forces=support_ready)
+        assert target == pytest.approx(self._stance(
+            roll_phase_pose(1.2, 0.0, 0.8), self._positions()))
 
     def test_crouch_keeps_the_measured_splay_only_while_roll_dominates(self):
         # The plain crouch waypoint is the pitch path, which measurably works,

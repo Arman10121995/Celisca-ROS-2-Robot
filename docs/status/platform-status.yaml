@@ -1,8 +1,8 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-09-30"
-current_revision: "e3d63b3"
+updated: "2026-10-01"
+current_revision: "af77f2f"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
@@ -65,9 +65,11 @@ supported_baseline:
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
   mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
-  fast_suite: "668 passed, 1 skipped on the 2026-09-30 working tree based on e3d63b3 via scripts/test_fast.sh; GUI command/Drive suite 34 passed; Health status/patch-guide Tk smoke passed"
+  fast_suite: "672 passed, 1 skipped on the 2026-10-01 working tree based on af77f2f via scripts/test_fast.sh; registry cross-reference validation passed."
   map_suite: "35 passed on the 2026-09-30 working tree; MJCF regeneration check passed"
-  registry_cross_references: "pass on the 2026-09-30 working tree"
+  registry_cross_references: "pass on the 2026-10-01 working tree"
+  go2_support_transfer: "2026-10-01 at af77f2f plus working-tree changes: primary and trunk-aware repeat delivered 2,503/2,502 18-geom /go2/support_contact_forces vectors. Settled flank remained ~125 N on hips and <=6.2 N on feet; final repeat had 0 N trunk contact and ended failed:roll at 1.692 s, 1.642 rad peak tilt and 0.139 m height. Negative result; no recovery qualification. Evidence: docs/status/evidence/r52-go2-support-transfer-2026-10-01/."
+  go2_support_transfer_tests: "2026-10-01: 121 Go2 locomotion/recovery tests and 22 MuJoCo effort/contact tests passed; robot_lab_utils, robot_lab_adapter, and robot_lab_mujoco builds passed."
   limitation: "Scoped source/static checks, not a clean build, universal mission matrix, GUI task qualification or hardware test."
 
 baseline:
@@ -605,18 +607,20 @@ tasks:
       R5.2:
         title: "Qualify Go2 locomotion"
         state: "active"
-        owner: cline-agent
+        owner: github-copilot
         depends_on:
           - "R5.1"
         scope_paths:
           - "src/robot_lab_robots/unitree/go2_description/"
           - "src/robot_lab_adapter/"
+          - "scripts/test_fast.sh"
           - "scripts/test_tiers.sh"
           - "src/robot_lab_robots/config/robots.yaml"
           - "src/robot_lab_bringup/launch/simulated_robot.launch.py"
           - "src/robot_lab_bringup/test/test_sim_profiles.py"
           - "src/robot_lab_mujoco/launch/mujoco_simulator.launch.py"
           - "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py"
+          - "src/robot_lab_utils/robot_lab_utils/go2_support.py"
           - "docs/status/evidence/r52-go2-2026-09-25/"
           - "docs/status/evidence/r52-go2-policy-2026-09-25/"
           - "docs/tutorials/go2.md"
@@ -624,6 +628,9 @@ tasks:
           - "README.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/r52-go2-support-transfer-2026-10-01/: ROS domain 212, nav_empty, SPAWN_ROLL=0.9, 1.0 s recovery delay, 7 s active timeout, 10 s probe. 2,503 per-geom support messages; transitions idle -> waiting -> attempting:tuck -> attempting:roll -> failed:roll at 0.004/0.100/0.856/1.208/1.808 s. Settled pre-stroke support remained ~125 N on the braced hips and <=6.2 N on feet; impact peaks were rejected by the 0.25 s in-range transfer dwell. Final height 0.139 m, peak tilt 1.648 rad. Valid bounded negative, not recovery qualification."
+          - "docs/status/evidence/r52-go2-support-transfer-2026-10-01/support_creation_ramp/: three matched 5 s placed-roll trials at +0.4 rad brace hip target compared the original scaling, instantaneous foot-gap taper, and stroke ramp. All ended failed:roll at ~0.139 m; the stroke ramp did not create dwell-qualified foot support. Scalar splay tuning is not qualified; keep experimental recovery opt-in."
+          - "docs/status/evidence/r52-go2-terrain-2026-10-01/: three +0.25 m/s terrain_stairs trials and one matched +0.5 m/s trial at explicit spawn (-7.5,-4.0), isolated domains 220-223. X displacement 0.039/0.122/0.149/0.132 m; peak tilt 0.548/0.137/0.080/0.320 rad; all stop short of the 4.4 m first step. Probe/launch returned 0 with truth/joint/effort telemetry. The course-specific runner pins spawn and rejects off-course or incomplete trials. Terrain remains unqualified."
           - "docs/status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925_repeat/: second matched five-case inverse-map flat-ground suite in isolated domains 221-225; all 5 trials returned zero and passed the bounded screening checks. First-versus-repeat drive deltas were +0.832/+0.836 m forward, -1.065/-1.111 m reverse, +1.496/+1.481 rad turn and +0.797/+0.802 m command-loss; this supports repeatable bounded screening, not velocity-tracking or terrain qualification."
           - "docs/status/evidence/r52-go2-policy-2026-09-25/terrain_stairs_inverse_20260925.json: opt-in inverse-map named stairs trial in ROS domain 231; it moved only 0.115 m during the 7 s command, crossed the 0.35 rad tilt-warning threshold at 3.212 s, peaked at 0.527 rad tilt and 35.55 N.m effort, then recovered and cleaned up. The named terrain task fails at the first ledge; no terrain qualification is claimed."
           - "docs/status/evidence/r52-go2-policy-2026-09-25/terrain_stairs_inverse_20260925_manifest.json: checksum manifest for the terrain trial; probe and launch return codes were both 0 and no simulator/controller process remains."
@@ -659,7 +666,7 @@ tasks:
           - "src/robot_lab_adapter/test/test_r5_2_go2_support_attribution.py: 5 hermetic contracts pinning the recorded support partition (every dropped rest is an equilibrium summing to the weight, the 5.8-5.9% flank coverage with the two down-side hips as the hidden carrier, the fully published upright/inverted rests, the published-sum invariant, and 5 published of 18 colliding geoms). Both this file and test_r5_2_go2_entry_phase.py are now in scripts/test_tiers.sh FAST_TESTS. Local fast tier: 633 passed, 1 skipped; R5.2 Go2 selection: 168 passed, 0 skipped."
           - "docs/status/evidence/r52-go2-policy-2026-09-25/trunk_contact_20260929Troll0.9/: first live trial on the new /go2/trunk_contact_forces topic (placed roll 0.9, 1.0 s start delay, 8 s, ROS domain 142, 2001 trunk messages, all 336 trace points populated). The trunk's own ground load is now measured rather than inferred: on the settled flank before the entry the trunk carries 0.0 N (the robot is on its side, on hip and thigh), the entry's first trunk contact is a 715.7 N slam at -3.127 rad, and the settled inverted rest carries 126.5 N with all four feet at 0.0 N. This is the support-creation number the closed-loop primitive has to beat, and it confirms the 997 N crouch transient as a real hazard a contact-keyed rule must not fire on."
           - "docs/status/evidence/r52-go2-policy-2026-09-25/probe_support_attribution.py, support_attribution.log and support_attribution.json: settled-rest support partition over every colliding robot geom (drop from 0.4 m at 7 rolls, settle 4 s under the spawner's own joint-hold springs; all seven rests at qvel 0.000, so each row is a static equilibrium). On both settled flanks the two published topics cover 5.8-5.9% of the support, 7.3-7.4 N of 126.5 N (the two down-side feet at ~3.7 N each, trunk 0.0 N), while the hidden 119.1-119.2 N sits on the two down-side hip geoms at ~59.6 N each. Upright (four feet at 27.1/27.1/36.1/36.1 N) and inverted (trunk 126.5 N) rests are covered 100%. The two topics publish 5 of the model's 18 colliding geoms. The entry primitive's contact signal is incomplete at exactly the pose it must fix: the support it must move is hip load the topics do not publish."
-        next_action: "R5.2 remains active. Keep go2_reverse_command_map:=inverse, go2_perturbation_* and both recovery options opt-in/off by default. Four five-case flat-ground suites pass bounded screening. The nominal-pose, immediate NJU-RLC actor, 1 s delayed actor and gain-corrected actor all fail the named 60 N collapse. Diagnosis is now separated from tuning: terminal poses are classified and unrecoverable is distinguished from failed, and the actor was re-mapped onto the measured per-joint gains with a slew limit, cutting peak joint velocity 5.1x without preventing the roll-over. The get-up entry is now measured from the entry side: keying it on trunk attitude was implemented, measured and reverted, because on a matched settled side rest the braced push (0.75-0.82 kN) and the fold (0.47-0.54 kN) both inverted 2 of 2 - the entry pose is not the lever, and the tuck entry is restored as the smaller stroke with the better measured population. Every measured single-waypoint stroke on a settled rest is a 0.18-0.82 kN leg drive applied while the trunk still rests on the legs, after which the trunk is ballistic (all four feet at 0.0 N). Next: a closed-loop entry primitive that bounds the stroke by the measured contact load rather than the waypoint. The signal set is now measured but incomplete at exactly the pose it must fix: /go2/trunk_contact_forces publishes the trunk ground load (0.0 N on the settled rest before the entry, a 715.7 N slam at the first trunk contact, 126.5 N with all four feet at 0.0 N once inverted), while the settled-rest support partition measures the two published topics as 5.8-5.9% of a flank rest (7.3-7.4 N of 126.5 N, on the down-side feet) with 119.1-119.2 N carried by the two down-side hip geoms, which publish nothing. The requirement is therefore precise and measured: get the legs from ~0 N to carrying the trunk 126.5 N while the trunk is still rolled over, not after it; the primitive must see the hip load it is trying to move (publish a per-geom support partition) and dwell so it does not fire on a 716-997 N slam. Or retrain an actor for this plant, then repeat the 60 N task. Do not tune actuator gains or add another open-loop schedule. terrain_stairs remains failed; velocity tracking and navigation remain unqualified, and GUI velocity-base, SLAM and navigation modes stay disabled. See docs/tutorials/go2.md and docs/WORKFLOW.md."
+        next_action: "R5.2 remains active. The shared 18-geom support stream, guarded delayed-pose hold, and 0.25 s in-range roll-transfer gate are implemented. Three matched +0.4 rad support-creation variants remained negative: transient foot contact only and failed:roll at ~0.139 m. Three aligned terrain_stairs runs at +0.25 m/s advanced 0.039/0.122/0.149 m; a matched +0.5 m/s run advanced 0.132 m but raised tilt/effort. All stop short of the first 4.4 m step. The dedicated harness pins the spawn and verifies measured start/telemetry. Next: target-domain terrain locomotion adaptation and a different whole-body get-up strategy; stop scalar splay/speed tuning. Keep recovery opt-in; terrain traversal, velocity tracking, and navigation remain unqualified."
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
         state: "partial"

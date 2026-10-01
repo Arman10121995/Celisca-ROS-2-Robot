@@ -13,6 +13,7 @@ from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Bool, Float64MultiArray, String
 from rclpy.node import Node
+from robot_lab_utils.go2_support import GO2_SUPPORT_GEOM_NAMES
 
 
 def attitude(q):
@@ -59,6 +60,8 @@ def main():
              "peak_foot_force_n": {leg: 0.0 for leg in ("FL", "FR", "RL", "RR")},
              "trunk_contact_messages": 0, "latest_trunk_force_n": None,
              "peak_trunk_force_n": 0.0,
+             "support_contact_messages": 0, "latest_support_forces": None,
+             "peak_support_force_n": {name: 0.0 for name in GO2_SUPPORT_GEOM_NAMES},
              "joint_names": [], "latest_q": {}, "latest_v": {},
              "latest_efforts": {}, "latest_tau": 0.0,
              "trace": [], "yaw": [], "safety_states": [],
@@ -101,6 +104,10 @@ def main():
                 if state["latest_trunk_force_n"] is not None:
                     point["trunk_force_n"] = round(
                         state["latest_trunk_force_n"], 2)
+                if state["latest_support_forces"] is not None:
+                    point["support_force_n"] = {
+                        geom: round(force, 2)
+                        for geom, force in state["latest_support_forces"].items()}
                 if args.trace_joints:
                     point["q"] = {k: round(v, 3) for k, v in state["latest_q"].items()}
                     point["v"] = {k: round(v, 3) for k, v in state["latest_v"].items()}
@@ -154,6 +161,15 @@ def main():
         state["latest_trunk_force_n"] = force
         state["peak_trunk_force_n"] = max(state["peak_trunk_force_n"], force)
 
+    def support_contacts(msg):
+        if len(msg.data) != len(GO2_SUPPORT_GEOM_NAMES):
+            return
+        state["support_contact_messages"] += 1
+        state["latest_support_forces"] = dict(zip(GO2_SUPPORT_GEOM_NAMES, msg.data))
+        for geom, force in state["latest_support_forces"].items():
+            state["peak_support_force_n"][geom] = max(
+                state["peak_support_force_n"][geom], force)
+
     def fallen(msg):
         state["fallen_messages"] += 1
         if state["sim"] is not None and msg.data != state["latest_fallen"]:
@@ -177,6 +193,8 @@ def main():
                              "/go2/foot_contact_forces", contacts, 10)
     node.create_subscription(Float64MultiArray,
                              "/go2/trunk_contact_forces", trunk_contacts, 10)
+    node.create_subscription(Float64MultiArray,
+                             "/go2/support_contact_forces", support_contacts, 10)
     node.create_subscription(String, "/go2/safety_state", safety, 10)
     node.create_subscription(Bool, "/go2/fallen", fallen, 10)
     node.create_subscription(String, "/go2/recovery_state", recovery_status, 10)
@@ -207,6 +225,10 @@ def main():
               "peak_foot_force_n": state["peak_foot_force_n"],
               "trunk_contact_messages": state["trunk_contact_messages"],
               "peak_trunk_force_n": round(state["peak_trunk_force_n"], 2),
+              "support_contact_messages": state["support_contact_messages"],
+              "peak_support_force_n": {
+                  geom: round(force, 2)
+                  for geom, force in state["peak_support_force_n"].items()},
               "max_command_nm": state["max_command_nm"],
               "safety_messages": state["safety_messages"],
               "safety_transitions": state["safety_transitions"],
