@@ -81,6 +81,41 @@ Fail: height estimate not stable` and `Preflight Fail: No connection to the
 GCS`: **the SITL EKF never converges a usable height fix in this session**, so
 the FCU refuses to arm regardless of the offboard setpoints being streamed.
 
+## The remaining fault is a Gazebo/PX4 version skew
+
+Reading the PX4 sources pins the topic contract exactly:
+
+* `GZMixingInterfaceESC.cpp`: rotor speeds are **published** on
+  `/<model>/command/motor_speed`;
+* `GZBridge.cpp`: sensors are **subscribed** on
+  `/world/<world>/model/<model>/link/...`;
+* `ROMFS/px4fmu_common/init.d-posix/px4-rc.gzsim`: the vehicle is spawned as a
+  *scoped* entity (`name:` in the create request, an absolute `file://` include
+  that the server resolves) so the rotor plugins' relative `commandSubTopic`
+  resolves where the FCU publishes.
+
+Every arrangement was measured:
+
+| vehicle inserted as | rotor topic | simulated? | FCU sees sensors | lifts off |
+|---|---|---|---|---|
+| PX4's own spawn (scoped) | `/x500_0/command/motor_speed` ✓ matches | yes | yes | **no** |
+| ours, flattened, unscoped | `/model/x500_0/command/motor_speed` | yes | yes | no (mismatch) |
+| ours, PX4 request form (scoped) | `/x500_0/command/motor_speed` ✓ matches | **no** | no | n/a |
+| ours, unscoped + rotor topic rewritten | absolute path ignored | yes | yes | no |
+
+With PX4's own vehicle the topics match by construction, the estimator converges
+(GPS fix type 3, 10 satellites, 0.7 m eph), the FCU **arms in OFFBOARD**
+(base_mode 145, custom_mode 393216, COMMAND_ACK result 0) and streams 20 Hz
+setpoints — and the rotors still produce no lift. That is the signature of a
+plugin/plant that loads but does not act: this host runs **gz-sim 8.15.0 (Harmonic,
+SDF 1.10)** while PX4 main's Gazebo models are **SDF 1.11** and target a newer
+Gazebo (the server logs `XML Element[gz_frame_id] not defined in SDF` while
+loading the model). The FCU side is healthy; the Gazebo side is not.
+
+`scripts/px4_sitl_model.py` and the include flattener stay in the tree: they are
+what makes the estimator converge at all on this host, and they are what a
+Harmonic-matched PX4 would need if its own spawn is still unreliable.
+
 ## What is still blocked (and how to unblock)
 
 * **Takeoff is not achieved.** No altitude was measured above the ground, so
