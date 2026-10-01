@@ -354,7 +354,7 @@ class FourWheelSteerDrive:
         """Turn rate the current (rate-limited) front steering produces."""
         return math.tan(self._angles.get(self.fl_steer, 0.0)) / (self.wheelbase / 2.0)
 
-    def _steering_goals(self, speed, wz):
+    def _steering_goals(self, speed, wz, vy=0.0):
         """The angle each wheel should hold to realise this command."""
         half_base = self.wheelbase / 2.0
         if abs(speed) > 1e-3:
@@ -364,27 +364,43 @@ class FourWheelSteerDrive:
             curvature = self.curvature()
         if self.steering_mode == "pivot":
             return {j: 0.0 for j in self.steer_joints}
+        # A lateral command is only realisable by the patterns whose wheels can
+        # leave the forward axis: crab (all four parallel) and in_phase (both
+        # axles the same way).  Ackermann follows a turning circle and pivot
+        # skids sideways by design, so they keep the forward-only behaviour.
+        lateral = abs(float(vy)) > 1e-3 and self.steering_mode in ("crab",
+                                                                    "in_phase")
         if self.steering_mode == "crab":
+            if lateral:
+                # Point every wheel along the commanded body velocity: the
+                # base then slides sideways without rotating (the steering
+                # limit caps the pure-lateral case at the joint angle).
+                angle = math.atan2(float(vy), speed if abs(speed) > 1e-3 else 0.0)
+                return {j: angle for j in self.steer_joints}
             angle = math.atan(curvature * half_base) if abs(speed) > 1e-3 else 0.0
             return {j: angle for j in self.steer_joints}
         front = math.atan(curvature * half_base)
+        if lateral:
+            front = math.atan2(float(vy), speed if abs(speed) > 1e-3 else 0.0)
         rear_sign = 1.0 if self.in_phase_4ws else -1.0
         return {self.fl_steer: front, self.fr_steer: front,
                 self.rl_steer: rear_sign * front, self.rr_steer: rear_sign * front}
 
     def targets(self, vx, wz, dt=None, vy=0.0):
-        """Joint targets for (vx, wz).
+        """Joint targets for (vx, wz) and, for crab/in_phase, a lateral *vy*.
 
-        *vy* is accepted and ignored: /cmd_vel is a Twist and carries no
-        lateral component.  Crab steering is a property of the steering
-        pattern, not of the commanded twist - a crab base moves sideways
-        because all four wheels point the same way, which the pattern
-        selects.  It is accepted so a bridge able to supply a lateral command
-        (a holonomic planner, a teleop slider) can pass one through.
+        With ``vy = 0`` this is the forward-only behaviour every pattern had
+        before.  A lateral command is honoured only by ``crab`` and
+        ``in_phase``, whose wheels can leave the forward axis: they are aimed
+        along the commanded body velocity so the base slides sideways with
+        (almost) no rotation.  ``ackermann`` follows a turning circle and
+        ``pivot`` skids in place, so a lateral command is ignored for them -
+        the command is clamped away rather than silently pretended.
         """
         vx = max(-self.max_speed, min(self.max_speed, float(vx)))
         wz = float(wz)
-        goals = self._steering_goals(vx, wz)
+        vy = float(vy) if self.steering_mode in ("crab", "in_phase") else 0.0
+        goals = self._steering_goals(vx, wz, vy)
         if dt is None:
             speed = vx
         else:
@@ -401,9 +417,9 @@ class FourWheelSteerDrive:
         for joint in self._angles:
             self._angles[joint] = max(-self.max_steer,
                                       min(self.max_steer, self._angles[joint]))
-        return self._wheel_targets(speed, wz)
+        return self._wheel_targets(speed, wz, vy)
 
-    def _wheel_targets(self, speed, wz):
+    def _wheel_targets(self, speed, wz, vy=0.0):
         half = self.track / 2.0
         half_base = self.wheelbase / 2.0
         velocity, position = {}, {}
@@ -455,7 +471,9 @@ class FourWheelSteerDrive:
                 continue
             angle = self._angles.get(joint, 0.0)
             vx_w = speed - wz * y
-            vy_w = wz * x
+            # vy is the commanded lateral body velocity; wz * x is the
+            # tangential component of the yaw rate at this contact point.
+            vy_w = vy + wz * x
             velocity[wheel] = (vx_w * math.cos(angle) + vy_w * math.sin(angle)) / self.radius
         velocity.pop("", None)
         position.pop("", None)

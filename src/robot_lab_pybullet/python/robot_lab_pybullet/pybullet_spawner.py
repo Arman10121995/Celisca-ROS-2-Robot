@@ -915,7 +915,9 @@ class PyBulletSpawner(Node):
                     self._drive.reset()
             targets = self._drive.targets(
                 t.linear.x, t.angular.z, dt=self._dt,
-                **({"vy": t.linear.y} if self._drive.kind == "mecanum" else {}))
+                **({"vy": t.linear.y}
+                    if self._drive.kind in ("mecanum", "four_wheel_steer")
+                    else {}))
             clamp = 50.0
             if getattr(self, "_hold_joints", False):
                 # Display hold: every non-drive joint servos to its spawn

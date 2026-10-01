@@ -110,12 +110,30 @@ turn is pure lateral scrub, and the skid-limited rate is far below the
 kinematic target on both plants. Recorded as a measured limitation of the
 pattern, not a pass.
 
-Still not reachable through `/cmd_vel`: a *pure lateral* crab translation. The
-four-wheel-steer drive model has no lateral term (a Twist carries `linear.y`
-but only the mecanum model consumes it), so crab's sideways motion is currently
-only observable as the lateral component of a curved command. Closing that means
-adding a `vy` term to `FourWheelSteerDrive.targets` and forwarding it in the
-bridges — not done here.
+## Lateral crab command (closed)
+
+The four-wheel-steer drive now carries a lateral term for the patterns that can
+use it. `FourWheelSteerDrive.targets` aims `crab` (all four wheels parallel) and
+`in_phase` (both axles the same way) along the commanded body velocity when
+`vy` is non-zero; `ackermann` (a turning circle) and `pivot` (an in-place skid)
+ignore it rather than pretend. Both bridges forward `Twist.linear.y` for the
+four-wheel-steer drive as well as the mecanum. With `vy = 0` every pattern's
+previous behaviour is unchanged — all 37 pre-existing kinematics tests still
+pass, and three new ones pin the lateral behaviour.
+
+Measured, MuJoCo ground truth (`mujoco/4ws_crab_lateral_command.json`,
+ROS domain 228, `--strafe`):
+
+| phase | command | vx | vy | wz | steering |
+|---|---|---|---|---|---|
+| **strafe (crab)** | vy = +0.3 | **+0.149** | **+0.149** | **−0.000** | all four +0.785 |
+| left arc (unchanged) | 0.4, +0.5 | +0.379 | +0.075 | +0.092 | all four +0.196 |
+
+The base translates **diagonally with no yaw** — the steering limit (±0.785
+rad = 45°) caps a pure lateral command, so a `vy` command becomes a 45° crab
+rather than a 90° one. That is the physical limit of this base, and the unit
+tests pin it (`0.3 · sin(0.785) / r` wheel rate, all four angles equal and
+clamped).
 
 ## GUI and command surface
 

@@ -668,6 +668,17 @@ Dependencies: `R5.1`, `R3.3`.
   (skid-limited, recorded as a measured limit). The GUI Drive pad gains mecanum-gated
   Strafe L/R latched buttons that publish `Twist.linear.y`. See
   [holonomic evidence](docs/status/evidence/r56-holonomic-measure-2026-10-01/README.md).
+- 2026-10-01 lateral crab closed: `FourWheelSteerDrive.targets` now honours a
+  lateral command for the patterns that can use it - `crab` and `in_phase` aim
+  their wheels along the commanded body velocity, while `ackermann` (a turning
+  circle) and `pivot` (an in-place skid) ignore it - and both bridges forward
+  `Twist.linear.y` for the four-wheel-steer drive. Measured on MuJoCo, a
+  `vy = 0.3` crab command translates diagonally at **vx +0.149 / vy +0.149 with
+  wz -0.000** and all four steering joints at +0.785 rad: the +/-0.785 rad joint
+  limit caps a pure lateral command to a 45-degree crab, which is the physical
+  limit of the base. With `vy = 0` every pattern is unchanged (the 37
+  pre-existing kinematics tests pass unchanged; 3 new tests pin the lateral
+  case).
   [The 2026-09-30 audit](docs/status/evidence/r55-holonomic-audit-2026-09-30/README.md)
   shows MuJoCo drive progress and the remaining Gazebo and strafing blockers.
 

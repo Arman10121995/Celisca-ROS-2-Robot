@@ -345,3 +345,79 @@ def test_mecanum_and_four_wheel_steering_come_from_the_drive_block():
     # are fixed to the hub, so the distinction has to survive the factory.
     assert len(_4ws().steer_joints) == 4
     assert tuple(_mecanum().steer_joints) == ()
+
+
+def test_crab_honours_a_lateral_command_and_ackermann_does_not():
+    """R5.6: crab can slide sideways; a turning circle cannot.
+
+    With vy = 0 every pattern keeps its previous forward-only behaviour.  A
+    lateral command is aimed along the commanded body velocity for crab and
+    in_phase only, so the base translates sideways without rotating; ackermann
+    (a turning circle) and pivot (in-place skid) ignore it rather than pretend.
+    """
+    crab = drive_from_config({"type": "four_wheel_steer", "steering_mode": "crab",
+                              "wheelbase": 0.32, "wheel_separation": 0.32,
+                              "wheel_radius": 0.05, "max_steer": 0.785,
+                              "front_left_steer_joint": "fl", "front_right_steer_joint": "fr",
+                              "rear_left_steer_joint": "rl", "rear_right_steer_joint": "rr",
+                              "front_left_wheel_joint": "flw", "front_right_wheel_joint": "frw",
+                              "rear_left_wheel_joint": "rlw", "rear_right_wheel_joint": "rrw"})
+    targets = crab.targets(0.0, 0.0, vy=0.3)
+    angles = set(round(a, 6) for a in targets.position.values())
+    assert len(angles) == 1, "crab must keep all four wheels parallel"
+    angle = angles.pop()
+    # The steering limit caps a pure lateral command: the wheels can only
+    # reach 0.785 rad (45 deg), so the body travels diagonally, not straight
+    # across.  The wheels still roll at the commanded lateral speed along
+    # their own (clamped) direction.
+    assert angle == pytest.approx(0.785, abs=1e-6), \
+        "a pure lateral command aims the wheels across the base, clamped"
+    # The wheels roll at the commanded lateral speed *projected onto their
+    # clamped 45 deg direction*, which is what makes the base travel
+    # diagonally: 0.3 * sin(0.785) / r.
+    expected = 0.3 * math.sin(0.785) / 0.05
+    for wheel in ("flw", "frw", "rlw", "rrw"):
+        assert targets.velocity[wheel] == pytest.approx(expected, rel=1e-6)
+
+    ackermann = drive_from_config({"type": "four_wheel_steer", "steering_mode": "ackermann",
+                                   "wheelbase": 0.32, "wheel_separation": 0.32,
+                                   "wheel_radius": 0.05, "max_steer": 0.785,
+                                   "front_left_steer_joint": "fl", "front_right_steer_joint": "fr",
+                                   "rear_left_steer_joint": "rl", "rear_right_steer_joint": "rr",
+                                   "front_left_wheel_joint": "flw", "front_right_wheel_joint": "frw",
+                                   "rear_left_wheel_joint": "rlw", "rear_right_wheel_joint": "rrw"})
+    lateral_only = ackermann.targets(0.0, 0.0, vy=0.3)
+    forward_only = ackermann.targets(0.0, 0.0, vy=0.0)
+    assert lateral_only.position == forward_only.position, \
+        "a turning circle must not answer a lateral command with steering"
+    assert lateral_only.velocity == forward_only.velocity
+
+
+def test_crab_lateral_command_is_clamped_to_the_steering_limit():
+    """The steering limit caps pure lateral motion at a diagonal crab."""
+    crab = drive_from_config({"type": "four_wheel_steer", "steering_mode": "crab",
+                              "wheelbase": 0.32, "wheel_separation": 0.32,
+                              "wheel_radius": 0.05, "max_steer": 0.5,
+                              "front_left_steer_joint": "fl", "front_right_steer_joint": "fr",
+                              "rear_left_steer_joint": "rl", "rear_right_steer_joint": "rr",
+                              "front_left_wheel_joint": "flw", "front_right_wheel_joint": "frw",
+                              "rear_left_wheel_joint": "rlw", "rear_right_wheel_joint": "rrw"})
+    targets = crab.targets(0.0, 0.0, dt=1.0, vy=0.3)
+    assert all(abs(a) <= 0.5 + 1e-9 for a in targets.position.values())
+    assert all(a == pytest.approx(0.5, abs=1e-9) for a in targets.position.values())
+
+
+def test_in_phase_slides_sideways_without_opposing_axles():
+    drive = drive_from_config({"type": "four_wheel_steer", "steering_mode": "in_phase",
+                               "wheelbase": 0.32, "wheel_separation": 0.32,
+                               "wheel_radius": 0.05, "max_steer": 0.785,
+                               "front_left_steer_joint": "fl", "front_right_steer_joint": "fr",
+                               "rear_left_steer_joint": "rl", "rear_right_steer_joint": "rr",
+                               "front_left_wheel_joint": "flw", "front_right_wheel_joint": "frw",
+                               "rear_left_wheel_joint": "rlw", "rear_right_wheel_joint": "rrw"})
+    targets = drive.targets(0.0, 0.0, dt=1.0, vy=0.2)
+    front = targets.position["fl"]
+    rear = targets.position["rl"]
+    assert front == pytest.approx(rear, abs=1e-6), \
+        "in_phase keeps both axles the same way when sliding sideways"
+    assert front != pytest.approx(0.0, abs=1e-6), "a lateral command must steer"
