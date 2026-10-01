@@ -479,6 +479,7 @@ def test_all_declared_occupancy_maps_pass_gui_validation(app):
         if profile.get('map', {}).get('has_2d_map'):
             assert app._map_has_2d_map(name), name
             checked.append(name)
+    assert len(checked) >= 20
 
 
 def test_mecanum_strafe_publishes_lateral_motion_only_for_mecanum(app):
@@ -528,5 +529,3 @@ def test_four_wheel_steer_pattern_is_appended_to_the_command(app):
     app.steering_mode_var.set("pivot")
     app._update_validation_and_command()
     assert "steering_mode:=" not in app.command_var.get()
-
-    assert len(checked) >= 20

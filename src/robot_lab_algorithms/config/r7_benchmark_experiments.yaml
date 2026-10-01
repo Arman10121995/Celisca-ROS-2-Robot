@@ -1,0 +1,2016 @@
+# R7.2-R7.8 Benchmark Experiments
+# Comprehensive benchmark experiment configurations for all algorithm categories
+# with input strata, metrics, success/failure criteria, and resource budgets
+
+benchmark_experiments:
+  # =============================================================================
+  # R7.2 PERCEPTION PIPELINES - 5 benchmark experiments
+  # =============================================================================
+  
+  perception:
+    # Experiment 1: Obstacle Detection - Sparse 2D LiDAR
+    perception_obstacle_sparse_lidar:
+      experiment_id: "perception_obstacle_sparse_lidar"
+      category: "perception"
+      method_id: "obstacle_detector"
+      input_stratum: "perception_lidar_2d_sparse"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [1001, 1002, 1003, 1004, 1005]
+      duration_seconds: 10.0
+      description: "Benchmark obstacle detection with sparse 2D LiDAR (100 points/scan) in open environment"
+      
+      metrics:
+        - "detection_accuracy"
+        - "false_positive_rate"
+        - "false_negative_rate"
+        - "compute_time_mean"
+        - "compute_time_std"
+        - "memory_usage_peak"
+        - "detection_latency"
+        
+      success_criteria:
+        detection_accuracy: ">= 0.95"
+        false_positive_rate: "<= 0.05"
+        false_negative_rate: "<= 0.05"
+        compute_time_mean: "<= 0.01"  # seconds
+        
+      failure_criteria:
+        detection_accuracy: "< 0.8"
+        compute_time_mean: "> 0.1"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 1.0  # core-seconds per run
+        memory_limit_mb: 512
+        real_time_factor_min: 0.9
+        timeout_seconds: 15.0
+        
+      input_generation:
+        type: "synthetic"
+        num_obstacles: [1, 3, 5]
+        obstacle_sizes: [0.2, 0.5, 0.8]
+        scan_points: 100
+        scan_frequency_hz: 10.0
+        noise_std: 0.02
+        
+      expected_output:
+        - "MarkerArray with obstacle detections"
+        - "PointCloud2 with filtered points"
+        
+      artifacts:
+        - "raw_scan_data"
+        - "detection_results"
+        - "performance_metrics"
+        - "timing_data"
+    
+    # Experiment 2: Scan Clustering - Dense 2D LiDAR
+    perception_cluster_dense_lidar:
+      experiment_id: "perception_cluster_dense_lidar"
+      category: "perception"
+      method_id: "scan_clusterer"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [1006, 1007, 1008, 1009, 1010]
+      duration_seconds: 15.0
+      description: "Benchmark scan clustering with dense 2D LiDAR (2000 points/scan) in office environment"
+      
+      metrics:
+        - "clustering_accuracy"
+        - "precision_per_cluster"
+        - "recall_per_cluster"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "cluster_count_variance"
+        
+      success_criteria:
+        clustering_accuracy: ">= 0.85"
+        precision_per_cluster: ">= 0.80"
+        recall_per_cluster: ">= 0.80"
+        compute_time_mean: "<= 0.05"  # seconds
+        
+      failure_criteria:
+        clustering_accuracy: "< 0.7"
+        compute_time_mean: "> 0.1"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 2.0
+        memory_limit_mb: 1024
+        real_time_factor_min: 0.8
+        timeout_seconds: 20.0
+        
+      input_generation:
+        type: "synthetic"
+        num_obstacles: [2, 4, 6]
+        obstacle_arrangements: ["line", "cluster", "random"]
+        scan_points: 2000
+        scan_frequency_hz: 20.0
+        noise_std: 0.01
+        
+      expected_output:
+        - "MarkerArray with cluster bounding boxes"
+        - "PointCloud2 with segmented points"
+        
+      artifacts:
+        - "raw_scan_data"
+        - "cluster_assignments"
+        - "bounding_boxes"
+        - "performance_metrics"
+    
+    # Experiment 3: Euclidean Clustering - Dense 2D LiDAR
+    perception_euclidean_dense_lidar:
+      experiment_id: "perception_euclidean_dense_lidar"
+      category: "perception"
+      method_id: "euclidean_clusterer"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "nav_maze"
+      simulator: "gazebo"
+      seeds: [1011, 1012, 1013, 1014, 1015]
+      duration_seconds: 12.0
+      description: "Benchmark Euclidean clustering with dense LiDAR in maze environment"
+      
+      metrics:
+        - "cluster_purity"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "cluster_size_std"
+        
+      success_criteria:
+        cluster_purity: ">= 0.80"
+        compute_time_mean: "<= 0.1"  # seconds
+        
+      failure_criteria:
+        cluster_purity: "< 0.6"
+        compute_time_mean: "> 0.5"  # seconds
+        memory_usage_peak: "> 2048"  # MB
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 5.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.7
+        timeout_seconds: 25.0
+        
+      input_generation:
+        type: "synthetic"
+        num_obstacles: [5, 8, 10]
+        scan_points: 3000
+        scan_frequency_hz: 15.0
+        noise_std: 0.005
+        
+      expected_output:
+        - "MarkerArray with cluster markers"
+        - "PointCloud2 with colored clusters"
+        
+      artifacts:
+        - "raw_point_cloud"
+        - "cluster_labels"
+        - "performance_metrics"
+    
+    # Experiment 4: DBSCAN - Dense 2D/3D LiDAR
+    perception_dbscan_dense_lidar:
+      experiment_id: "perception_dbscan_dense_lidar"
+      category: "perception"
+      method_id: "dbscan_clusterer"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "small_warehouse"
+      simulator: "gazebo"
+      seeds: [1016, 1017, 1018, 1019, 1020]
+      duration_seconds: 18.0
+      description: "Benchmark DBSCAN density-based clustering in warehouse with varying obstacle densities"
+      
+      metrics:
+        - "density_estimation_error"
+        - "cluster_count_accuracy"
+        - "noise_classification_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        cluster_count_accuracy: ">= 0.85"
+        noise_classification_rate: ">= 0.90"
+        compute_time_mean: "<= 0.15"  # seconds
+        
+      failure_criteria:
+        cluster_count_accuracy: "< 0.7"
+        noise_classification_rate: "< 0.8"
+        compute_time_mean: "> 0.5"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 8.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.6
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "synthetic"
+        num_obstacles: [3, 6, 9]
+        obstacle_densities: ["sparse", "medium", "dense"]
+        scan_points: 2500
+        scan_frequency_hz: 10.0
+        eps: 0.2
+        min_samples: 5
+        
+      expected_output:
+        - "MarkerArray with DBSCAN clusters"
+        - "PointCloud2 with classified points"
+        
+      artifacts:
+        - "raw_point_cloud"
+        - "density_estimates"
+        - "noise_points"
+        - "performance_metrics"
+    
+    # Experiment 5: RANSAC Ground Removal - RGB-D
+    perception_ransac_rgbd:
+      experiment_id: "perception_ransac_rgbd"
+      category: "perception"
+      method_id: "ransac_ground_removal"
+      input_stratum: "perception_rgbd"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [1021, 1022, 1023, 1024, 1025]
+      duration_seconds: 15.0
+      description: "Benchmark RANSAC ground plane removal with RGB-D data in office environment"
+      
+      metrics:
+        - "ground_plane_estimation_error"
+        - "inlier_ratio"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "ground_removal_accuracy"
+        
+      success_criteria:
+        inlier_ratio: ">= 0.80"
+        ground_removal_accuracy: ">= 0.90"
+        compute_time_mean: "<= 0.05"  # seconds
+        
+      failure_criteria:
+        inlier_ratio: "< 0.6"
+        ground_removal_accuracy: "< 0.7"
+        compute_time_mean: "> 0.2"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 10.0
+        memory_limit_mb: 4096
+        real_time_factor_min: 0.5
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "synthetic"
+        num_ground_points: [1000, 2000, 3000]
+        num_obstacle_points: [200, 500, 800]
+        depth_image_resolution: [320, 240]
+        depth_frequency_hz: 30.0
+        max_iterations: 1000
+        distance_threshold: 0.05
+        
+      expected_output:
+        - "PointCloud2 with ground plane removed"
+        - "PointCloud2 with obstacles only"
+        
+      artifacts:
+        - "raw_rgbd_data"
+        - "plane_parameters"
+        - "inlier_outlier_classification"
+        - "performance_metrics"
+
+  # =============================================================================
+  # R7.3 LOCALIZATION METHODS - 5 benchmark experiments
+  # =============================================================================
+  
+  localization:
+    # Experiment 1: Dead Reckoning - Odometry Only
+    localization_dead_reckoning_odometry:
+      experiment_id: "localization_dead_reckoning_odometry"
+      category: "localization"
+      method_id: "dead_reckoning"
+      input_stratum: "localization_odometry_only"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [2001, 2002, 2003, 2004, 2005]
+      duration_seconds: 20.0
+      description: "Benchmark dead reckoning with wheel odometry in open environment with straight-line motion"
+      
+      metrics:
+        - "ate_final"  # Absolute Trajectory Error at end
+        - "ate_mean"
+        - "rpe_mean"
+        - "position_drift_rate"
+        - "orientation_drift_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        ate_final: "<= 0.5"  # meters
+        position_drift_rate: "<= 0.025"  # m/s per m/s command
+        compute_time_mean: "<= 0.001"  # seconds
+        
+      failure_criteria:
+        ate_final: "> 2.0"  # meters
+        position_drift_rate: "> 0.1"  # m/s per m/s command
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 0.5
+        memory_limit_mb: 256
+        real_time_factor_min: 1.0
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "command_velocity"
+        commands: ["straight_0.2", "straight_0.3", "straight_0.4"]
+        command_duration: [5.0, 10.0, 15.0]
+        noise_levels: ["low", "medium"]
+        
+      expected_output:
+        - "Odometry messages"
+        - "TF transforms"
+        
+      artifacts:
+        - "ground_truth_trajectory"
+        - "estimated_trajectory"
+        - "error_analysis"
+        - "timing_data"
+    
+    # Experiment 2: AMCL - LiDAR Map Localization
+    localization_amcl_lidar_map:
+      experiment_id: "localization_amcl_lidar_map"
+      category: "localization"
+      method_id: "amcl"
+      input_stratum: "localization_lidar_map"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [2006, 2007, 2008, 2009, 2010]
+      duration_seconds: 30.0
+      description: "Benchmark AMCL localization with LiDAR in known office map with loop closure"
+      
+      metrics:
+        - "ate_final"
+        - "ate_convergence_time"
+        - "success_rate"
+        - "particle_diversity"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "localization_failures"
+        
+      success_criteria:
+        ate_final: "<= 0.2"  # meters
+        ate_convergence_time: "<= 10.0"  # seconds
+        success_rate: ">= 0.9"
+        
+      failure_criteria:
+        ate_final: "> 1.0"  # meters
+        ate_convergence_time: "> 30.0"  # seconds
+        success_rate: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 10.0
+        memory_limit_mb: 1024
+        real_time_factor_min: 0.8
+        timeout_seconds: 45.0
+        
+      input_generation:
+        type: "navigation"
+        waypoints: [[0,0], [2,0], [2,2], [0,2], [0,0]]
+        map_resolution: 0.05
+        laser_scan_points: 360
+        max_particles: 2000
+        
+      expected_output:
+        - "Odometry messages"
+        - "ParticleCloud messages"
+        - "TF transforms"
+        
+      artifacts:
+        - "particle_clouds"
+        - "estimated_poses"
+        - "error_analysis"
+        - "convergence_plots"
+    
+    # Experiment 3: ICP - LiDAR Scan Matching
+    localization_icp_lidar:
+      experiment_id: "localization_icp_lidar"
+      category: "localization"
+      method_id: "icp_localization"
+      input_stratum: "localization_lidar_map"
+      robot_class: "mobile"
+      environment: "nav_maze"
+      simulator: "gazebo"
+      seeds: [2011, 2012, 2013, 2014, 2015]
+      duration_seconds: 25.0
+      description: "Benchmark ICP localization with LiDAR scan matching in maze environment"
+      
+      metrics:
+        - "ate_final"
+        - "ate_convergence_rate"
+        - "icp_iterations_mean"
+        - "fitness_score"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        ate_final: "<= 0.3"  # meters
+        fitness_score: "<= 0.1"  # mean squared error
+        
+      failure_criteria:
+        ate_final: "> 1.0"  # meters
+        fitness_score: "> 0.5"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 15.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.6
+        timeout_seconds: 40.0
+        
+      input_generation:
+        type: "scan_matching"
+        initial_poses: [[0,0,0], [1,1,π/4], [2,1,π/2]]
+        scan_frequency_hz: 10.0
+        scan_points: 720
+        max_iterations: 100
+        
+      expected_output:
+        - "Odometry messages"
+        - "TF transforms"
+        
+      artifacts:
+        - "scan_pairs"
+        - "transformation_matrices"
+        - "error_analysis"
+        - "convergence_data"
+    
+    # Experiment 4: NDT - LiDAR Registration
+    localization_ndt_lidar:
+      experiment_id: "localization_ndt_lidar"
+      category: "localization"
+      method_id: "ndt_localization"
+      input_stratum: "localization_lidar_map"
+      robot_class: "mobile"
+      environment: "small_warehouse"
+      simulator: "gazebo"
+      seeds: [2016, 2017, 2018, 2019, 2020]
+      duration_seconds: 35.0
+      description: "Benchmark NDT localization with 3D LiDAR registration in warehouse environment"
+      
+      metrics:
+        - "ate_final"
+        - "ndt_score"
+        - "convergence_time"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        ate_final: "<= 0.25"  # meters
+        ndt_score: ">= 0.7"
+        
+      failure_criteria:
+        ate_final: "> 1.0"  # meters
+        ndt_score: "< 0.4"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 20.0
+        memory_limit_mb: 4096
+        real_time_factor_min: 0.5
+        timeout_seconds: 50.0
+        
+      input_generation:
+        type: "ndt_matching"
+        resolution: 0.1
+        scan_frequency_hz: 5.0
+        max_iterations: 50
+        
+      expected_output:
+        - "Odometry messages"
+        - "TF transforms"
+        
+      artifacts:
+        - "ndt_cells"
+        - "score_estimates"
+        - "error_analysis"
+        - "memory_profiles"
+    
+    # Experiment 5: RGB-D SLAM - Visual Localization
+    localization_rgbd_slam:
+      experiment_id: "localization_rgbd_slam"
+      category: "localization"
+      method_id: "rgbd_slam_localization"
+      input_stratum: "localization_multi_sensor"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [2021, 2022, 2023, 2024, 2025]
+      duration_seconds: 40.0
+      description: "Benchmark RGB-D SLAM localization with visual features in textured office environment"
+      
+      metrics:
+        - "ate_final"
+        - "rpe_mean"
+        - "mapping_quality"
+        - "feature_tracking_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "keyframe_frequency"
+        
+      success_criteria:
+        ate_final: "<= 0.15"  # meters
+        feature_tracking_rate: ">= 0.8"
+        
+      failure_criteria:
+        ate_final: "> 0.5"  # meters
+        feature_tracking_rate: "< 0.5"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 30.0
+        memory_limit_mb: 8192
+        real_time_factor_min: 0.3
+        timeout_seconds: 60.0
+        
+      input_generation:
+        type: "visual_slam"
+        camera_resolution: [640, 480]
+        camera_frequency_hz: 30.0
+        feature_type: "ORB"
+        num_features: 1000
+        depth_threshold: 3.0
+        
+      expected_output:
+        - "Odometry messages"
+        - "Map messages"
+        - "KeyFrame messages"
+        
+      artifacts:
+        - "feature_matches"
+        - "map_point_cloud"
+        - "keyframe_poses"
+        - "error_analysis"
+
+  # =============================================================================
+  # R7.4 STATE ESTIMATION METHODS - 5 benchmark experiments
+  # =============================================================================
+  
+  state_estimation:
+    # Experiment 1: EKF 3D - Linear Dynamics
+    state_estimation_ekf_3d_linear:
+      experiment_id: "state_estimation_ekf_3d_linear"
+      category: "state_estimation"
+      method_id: "ekf_3d_estimator"
+      input_stratum: "state_estimation_linear_dynamics"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [3001, 3002, 3003, 3004, 3005]
+      duration_seconds: 15.0
+      description: "Benchmark EKF 3D estimation with linear dynamics and IMU+odometry sensor fusion"
+      
+      metrics:
+        - "rmse_position"
+        - "rmse_orientation"
+        - "rmse_velocity"
+        - "covariance_consistency"
+        - "nees_score"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "convergence_time"
+        
+      success_criteria:
+        rmse_position: "<= 0.05"  # meters
+        rmse_orientation: "<= 0.01"  # radians
+        rmse_velocity: "<= 0.02"  # m/s
+        nees_score: "[0.8, 1.2]"  # should be around 1.0
+        
+      failure_criteria:
+        rmse_position: "> 0.2"  # meters
+        rmse_orientation: "> 0.1"  # radians
+        nees_score: "< 0.5 or > 2.0"  # not consistent
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 5.0
+        memory_limit_mb: 512
+        real_time_factor_min: 0.9
+        timeout_seconds: 25.0
+        
+      input_generation:
+        type: "sensor_fusion"
+        motion_type: "straight_line"
+        velocities: [0.1, 0.2, 0.3]
+        imu_noise_std: [0.001, 0.001, 0.001]
+        odometry_noise_std: [0.01, 0.01, 0.005]
+        initial_covariance: [0.1, 0.1, 0.1, 0.01, 0.01, 0.01]
+        
+      expected_output:
+        - "Odometry messages with covariance"
+        - "PoseWithCovariance messages"
+        
+      artifacts:
+        - "estimated_states"
+        - "covariance_matrices"
+        - "nees_analysis"
+        - "error_plots"
+    
+    # Experiment 2: Linear Kalman Filter - Linear Dynamics
+    state_estimation_linear_kf:
+      experiment_id: "state_estimation_linear_kf"
+      category: "state_estimation"
+      method_id: "linear_kalman_filter"
+      input_stratum: "state_estimation_linear_dynamics"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [3006, 3007, 3008, 3009, 3010]
+      duration_seconds: 20.0
+      description: "Benchmark Linear Kalman Filter for optimal estimation in linear system"
+      
+      metrics:
+        - "rmse_position"
+        - "rmse_velocity"
+        - "kalman_gain_stability"
+        - "innovation_sequence_whiteness"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        rmse_position: "<= 0.03"  # meters
+        rmse_velocity: "<= 0.01"  # m/s
+        innovation_sequence_whiteness: ">= 0.9"  # should be white noise
+        
+      failure_criteria:
+        rmse_position: "> 0.1"  # meters
+        innovation_sequence_whiteness: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 2.0
+        memory_limit_mb: 256
+        real_time_factor_min: 1.0
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "linear_motion"
+        motion_profiles: ["sinusoidal", "step", "ramp"]
+        process_noise_std: [0.001, 0.001]
+        measurement_noise_std: [0.01, 0.01]
+        initial_conditions: [0.0, 0.0, 0.0]
+        
+      expected_output:
+        - "Odometry messages with covariance"
+        
+      artifacts:
+        - "state_estimates"
+        - "kalman_gains"
+        - "innovation_sequences"
+        - "error_analysis"
+    
+    # Experiment 3: UKF - Nonlinear Dynamics
+    state_estimation_ukf_nonlinear:
+      experiment_id: "state_estimation_ukf_nonlinear"
+      category: "state_estimation"
+      method_id: "ukf_estimator"
+      input_stratum: "state_estimation_nonlinear_dynamics"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [3011, 3012, 3013, 3014, 3015]
+      duration_seconds: 25.0
+      description: "Benchmark Unscented Kalman Filter for nonlinear dynamics with significant nonlinearities"
+      
+      metrics:
+        - "rmse_position"
+        - "rmse_orientation"
+        - "estimation_consistency"
+        - "sigma_point_diversity"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "nonlinear_handling"
+        
+      success_criteria:
+        rmse_position: "<= 0.1"  # meters
+        estimation_consistency: ">= 0.85"
+        
+      failure_criteria:
+        rmse_position: "> 0.3"  # meters
+        estimation_consistency: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 15.0
+        memory_limit_mb: 1024
+        real_time_factor_min: 0.7
+        timeout_seconds: 40.0
+        
+      input_generation:
+        type: "nonlinear_motion"
+        motion_profiles: ["circular", "figure_eight", "spiral"]
+        alpha: 0.1
+        beta: 2.0
+        kappa: 0.0
+        nonlinearity_level: "high"
+        
+      expected_output:
+        - "Odometry messages with covariance"
+        - "PoseWithCovariance messages"
+        
+      artifacts:
+        - "sigma_points"
+        - "transformed_points"
+        - "state_estimates"
+        - "error_analysis"
+    
+    # Experiment 4: Particle Filter - Nonlinear Dynamics
+    state_estimation_particle_filter:
+      experiment_id: "state_estimation_particle_filter"
+      category: "state_estimation"
+      method_id: "particle_filter"
+      input_stratum: "state_estimation_nonlinear_dynamics"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [3016, 3017, 3018, 3019, 3020]
+      duration_seconds: 30.0
+      description: "Benchmark Particle Filter for highly nonlinear systems and non-Gaussian noise"
+      
+      metrics:
+        - "rmse_position"
+        - "effective_sample_size"
+        - "particle_diversity"
+        - "convergence_time"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "resampling_frequency"
+        
+      success_criteria:
+        rmse_position: "<= 0.15"  # meters
+        effective_sample_size: ">= 500"
+        particle_diversity: ">= 0.8"
+        
+      failure_criteria:
+        rmse_position: "> 0.5"  # meters
+        effective_sample_size: "< 200"
+        particle_diversity: "< 0.5"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 30.0
+        memory_limit_mb: 4096
+        real_time_factor_min: 0.4
+        timeout_seconds: 50.0
+        
+      input_generation:
+        type: "nonlinear_noisy"
+        num_particles: 1000
+        resampling_threshold: 0.5
+        motion_profiles: ["erratic", "stop_and_go", "spiral"]
+        noise_distribution: "non_gaussian"
+        
+      expected_output:
+        - "Odometry messages with covariance"
+        - "Particle distribution statistics"
+        
+      artifacts:
+        - "particle_clouds"
+        - "weight_distributions"
+        - "resampling_events"
+        - "error_analysis"
+    
+    # Experiment 5: Error-State EKF - High Frequency
+    state_estimation_error_state_ekf:
+      experiment_id: "state_estimation_error_state_ekf"
+      category: "state_estimation"
+      method_id: "error_state_ekf"
+      input_stratum: "state_estimation_high_frequency"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [3021, 3022, 3023, 3024, 3025]
+      duration_seconds: 20.0
+      description: "Benchmark Error-State EKF for high-frequency estimation with nominal trajectory correction"
+      
+      metrics:
+        - "rmse_error_state"
+        - "convergence_rate"
+        - "error_state_bounds"
+        - "nominal_trajectory_deviation"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        rmse_error_state: "<= 0.02"  # meters/radians
+        convergence_rate: "<= 5.0"  # seconds
+        
+      failure_criteria:
+        rmse_error_state: "> 0.1"  # meters/radians
+        convergence_rate: "> 15.0"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 8.0
+        memory_limit_mb: 512
+        real_time_factor_min: 0.8
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "high_frequency_motion"
+        nominal_source: "odometry"
+        error_state_dimension: 6
+        frequency_hz: 100.0
+        perturbation_level: "medium"
+        
+      expected_output:
+        - "Odometry messages"
+        - "Error state estimates"
+        - "Nominal trajectory"
+        
+      artifacts:
+        - "error_states"
+        - "nominal_trajectories"
+        - "correction_terms"
+        - "error_analysis"
+
+  # =============================================================================
+  # R7.5 SENSOR FUSION METHODS - 5 benchmark experiments
+  # =============================================================================
+  
+  sensor_fusion:
+    # Experiment 1: Complementary Filter - Attitude Only
+    sensor_fusion_complementary_attitude:
+      experiment_id: "sensor_fusion_complementary_attitude"
+      category: "sensor_fusion"
+      method_id: "complementary_imu"
+      input_stratum: "sensor_fusion_attitude_only"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [4001, 4002, 4003, 4004, 4005]
+      duration_seconds: 20.0
+      description: "Benchmark Complementary Filter for IMU-based attitude estimation"
+      
+      metrics:
+        - "roll_rmse"
+        - "pitch_rmse"
+        - "yaw_rmse"
+        - "convergence_time"
+        - "steady_state_error"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "sensor_drift_compensation"
+        
+      success_criteria:
+        roll_rmse: "<= 0.02"  # radians
+        pitch_rmse: "<= 0.02"  # radians
+        steady_state_error: "<= 0.01"  # radians
+        
+      failure_criteria:
+        roll_rmse: "> 0.1"  # radians
+        pitch_rmse: "> 0.1"  # radians
+        steady_state_error: "> 0.05"  # radians
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 1.0
+        memory_limit_mb: 128
+        real_time_factor_min: 1.0
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "attitude_motion"
+        motion_profiles: ["static", "tilt_sinusoidal", "rotation_yaw"]
+        imu_frequency_hz: 100.0
+        gyro_noise_std: [0.001, 0.001, 0.001]
+        accel_noise_std: [0.01, 0.01, 0.01]
+        alpha: 0.98
+        
+      expected_output:
+        - "Imu messages with orientation"
+        - "Pose messages"
+        
+      artifacts:
+        - "orientation_estimates"
+        - "sensor_data"
+        - "filter_states"
+        - "error_analysis"
+    
+    # Experiment 2: Mahony Filter - Attitude Only
+    sensor_fusion_mahony_attitude:
+      experiment_id: "sensor_fusion_mahony_attitude"
+      category: "sensor_fusion"
+      method_id: "mahony_filter"
+      input_stratum: "sensor_fusion_attitude_only"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [4006, 4007, 4008, 4009, 4010]
+      duration_seconds: 25.0
+      description: "Benchmark Mahony AHRS Filter for robust attitude estimation with PI correction"
+      
+      metrics:
+        - "convergence_time"
+        - "steady_state_accuracy"
+        - "disturbance_rejection"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "parameter_sensitivity"
+        
+      success_criteria:
+        convergence_time: "<= 2.0"  # seconds
+        steady_state_accuracy: "<= 0.01"  # radians
+        
+      failure_criteria:
+        convergence_time: "> 10.0"  # seconds
+        steady_state_accuracy: "> 0.05"  # radians
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 2.0
+        memory_limit_mb: 128
+        real_time_factor_min: 1.0
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "dynamic_attitude"
+        motion_profiles: ["step_response", "frequency_sweep", "random_walk"]
+        initial_errors: [0.1, 0.2, 0.3]
+        k_p: 1.0
+        k_i: 0.01
+        
+      expected_output:
+        - "Imu messages"
+        - "Pose messages"
+        
+      artifacts:
+        - "convergence_curves"
+        - "error_analysis"
+        - "parameter_tuning"
+        - "disturbance_tests"
+    
+    # Experiment 3: Madgwick Filter - Attitude Only
+    sensor_fusion_madgwick_attitude:
+      experiment_id: "sensor_fusion_madgwick_attitude"
+      category: "sensor_fusion"
+      method_id: "madgwick_filter"
+      input_stratum: "sensor_fusion_attitude_only"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [4011, 4012, 4013, 4014, 4015]
+      duration_seconds: 20.0
+      description: "Benchmark Madgwick AHRS Filter using gradient descent optimization"
+      
+      metrics:
+        - "convergence_rate"
+        - "solution_quality"
+        - "gradient_norm"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        convergence_rate: "<= 0.1"  # error reduction per second
+        gradient_norm: "<= 1e-6"
+        
+      failure_criteria:
+        convergence_rate: "> 0.5"  # error reduction per second
+        gradient_norm: "> 1e-3"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 3.0
+        memory_limit_mb: 128
+        real_time_factor_min: 0.9
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "attitude_optimization"
+        initial_conditions: ["upside_down", "tilted", "random"]
+        beta: 0.1
+        zeta: 0.0
+        reference_vectors: ["gravity", "magnetic"]
+        
+      expected_output:
+        - "Imu messages"
+        - "Pose messages"
+        
+      artifacts:
+        - "gradient_descent_history"
+        - "convergence_analysis"
+        - "error_analysis"
+    
+    # Experiment 4: Wheel-IMU Fusion - Pose
+    sensor_fusion_wheel_imu_pose:
+      experiment_id: "sensor_fusion_wheel_imu_pose"
+      category: "sensor_fusion"
+      method_id: "wheel_imu_fusion"
+      input_stratum: "sensor_fusion_pose"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [4016, 4017, 4018, 4019, 4020]
+      duration_seconds: 30.0
+      description: "Benchmark Wheel Odometry and IMU fusion for pose estimation"
+      
+      metrics:
+        - "position_rmse"
+        - "orientation_rmse"
+        - "sensor_consistency"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "calibration_quality"
+        
+      success_criteria:
+        position_rmse: "<= 0.05"  # meters
+        orientation_rmse: "<= 0.01"  # radians
+        sensor_consistency: ">= 0.9"
+        
+      failure_criteria:
+        position_rmse: "> 0.2"  # meters
+        orientation_rmse: "> 0.05"  # radians
+        sensor_consistency: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 10.0
+        memory_limit_mb: 512
+        real_time_factor_min: 0.8
+        timeout_seconds: 40.0
+        
+      input_generation:
+        type: "pose_estimation"
+        motion_profiles: ["straight", "curved", "figure_eight"]
+        wheelbase: 0.256
+        wheel_radius: 0.0315
+        imu_noise_std: [0.01, 0.01, 0.01, 0.001, 0.001, 0.001]
+        wheel_noise_std: [0.05, 0.05]
+        
+      expected_output:
+        - "Odometry messages"
+        - "Imu messages"
+        
+      artifacts:
+        - "fused_poses"
+        - "sensor_residuals"
+        - "error_analysis"
+        - "consistency_metrics"
+    
+    # Experiment 5: Multi-Sensor Fusion - Wheel/IMU/GNSS
+    sensor_fusion_multi_sensor:
+      experiment_id: "sensor_fusion_multi_sensor"
+      category: "sensor_fusion"
+      method_id: "wheel_imu_gnss_ukf"
+      input_stratum: "sensor_fusion_multi_sensor"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [4021, 4022, 4023, 4024, 4025]
+      duration_seconds: 40.0
+      description: "Benchmark Multi-sensor fusion (Wheel/IMU/GNSS) using UKF for complex estimation"
+      
+      metrics:
+        - "position_rmse"
+        - "velocity_rmse"
+        - "attitude_rmse"
+        - "sensor_fusion_benefit"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "robustness_to_failure"
+        
+      success_criteria:
+        position_rmse: "<= 0.1"  # meters
+        velocity_rmse: "<= 0.05"  # m/s
+        sensor_fusion_benefit: ">= 2.0"  # improvement factor over single sensor
+        
+      failure_criteria:
+        position_rmse: "> 0.5"  # meters
+        velocity_rmse: "> 0.2"  # m/s
+        sensor_fusion_benefit: "< 1.5"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 25.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.6
+        timeout_seconds: 60.0
+        
+      input_generation:
+        type: "multi_sensor_motion"
+        motion_profiles: ["urban_driving", "stop_and_go", "curved_paths"]
+        gps_frequency_hz: 1.0
+        imu_frequency_hz: 100.0
+        wheel_frequency_hz: 50.0
+        sensor_failures: ["gps_dropout", "imu_bias"]
+        
+      expected_output:
+        - "Odometry messages"
+        - "Imu messages"
+        - "NavSatFix messages"
+        
+      artifacts:
+        - "fused_states"
+        - "sensor_contributions"
+        - "failure_handling"
+        - "error_analysis"
+
+  # =============================================================================
+  # R7.6 GLOBAL PLANNING METHODS - 5 benchmark experiments
+  # =============================================================================
+  
+  global_planning:
+    # Experiment 1: Dijkstra - 2D Grid
+    global_planning_dijkstra_grid:
+      experiment_id: "global_planning_dijkstra_grid"
+      category: "global_planning"
+      method_id: "dijkstra_planner"
+      input_stratum: "planning_2d_grid"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [5001, 5002, 5003, 5004, 5005]
+      duration_seconds: 10.0
+      description: "Benchmark Dijkstra's algorithm for optimal path planning in 2D grid"
+      
+      metrics:
+        - "path_cost"
+        - "path_length"
+        - "planning_time"
+        - "success_rate"
+        - "memory_usage_peak"
+        - "path_smoothness"
+        - "obstacle_clearance"
+        
+      success_criteria:
+        path_cost: "optimal"
+        success_rate: "1.0"
+        planning_time: "<= 0.1"  # seconds
+        
+      failure_criteria:
+        success_rate: "< 0.9"
+        planning_time: "> 1.0"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 5.0
+        memory_limit_mb: 1024
+        real_time_factor_min: 0.9
+        timeout_seconds: 20.0
+        
+      input_generation:
+        type: "grid_planning"
+        map_resolution: 0.05
+        cost_weights: [1.0, 1.0, 0.1]
+        start_poses: [[0,0], [5,5], [2,2]]
+        goal_poses: [[5,5], [0,0], [8,8]]
+        obstacle_densities: ["low", "medium"]
+        
+      expected_output:
+        - "Path messages"
+        - "NavPath messages"
+        
+      artifacts:
+        - "occupancy_grids"
+        - "path_plans"
+        - "cost_maps"
+        - "performance_metrics"
+    
+    # Experiment 2: A* - 2D Grid
+    global_planning_a_star_grid:
+      experiment_id: "global_planning_a_star_grid"
+      category: "global_planning"
+      method_id: "a_star_planner"
+      input_stratum: "planning_2d_grid"
+      robot_class: "mobile"
+      environment: "nav_maze"
+      simulator: "gazebo"
+      seeds: [5006, 5007, 5008, 5009, 5010]
+      duration_seconds: 15.0
+      description: "Benchmark A* algorithm for optimal path finding in maze environment"
+      
+      metrics:
+        - "path_cost"
+        - "path_length"
+        - "nodes_expanded"
+        - "planning_time"
+        - "success_rate"
+        - "heuristic_accuracy"
+        
+      success_criteria:
+        path_cost: "optimal"
+        success_rate: "1.0"
+        planning_time: "<= 0.2"  # seconds
+        
+      failure_criteria:
+        path_cost: "> optimal * 1.1"
+        success_rate: "< 0.9"
+        planning_time: "> 2.0"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 8.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.8
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "maze_planning"
+        map_resolution: 0.05
+        heuristic_type: "euclidean"
+        heuristic_weight: 1.0
+        start_poses: [[0,0], [1,1], [2,2]]
+        goal_poses: [[8,8], [5,5], [10,10]]
+        
+      expected_output:
+        - "Path messages"
+        - "NavPath messages"
+        
+      artifacts:
+        - "frontier_expansion"
+        - "path_reconstructions"
+        - "performance_metrics"
+    
+    # Experiment 3: RRT - 2D Continuous
+    global_planning_rrt_continuous:
+      experiment_id: "global_planning_rrt_continuous"
+      category: "global_planning"
+      method_id: "rrt_planner"
+      input_stratum: "planning_2d_continuous"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [5011, 5012, 5013, 5014, 5015]
+      duration_seconds: 20.0
+      description: "Benchmark RRT planner for feasible path finding in continuous 2D space"
+      
+      metrics:
+        - "path_length"
+        - "tree_size"
+        - "planning_time"
+        - "success_rate"
+        - "memory_usage_peak"
+        - "path_quality"
+        
+      success_criteria:
+        success_rate: ">= 0.95"
+        planning_time: "<= 5.0"  # seconds
+        
+      failure_criteria:
+        success_rate: "< 0.7"
+        planning_time: "> 10.0"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 20.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.7
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "continuous_planning"
+        max_iterations: 10000
+        step_size: 0.1
+        goal_bias: 0.05
+        collision_check_resolution: 0.01
+        start_poses: [[0,0,0], [2,2,π/4], [5,5,π/2]]
+        goal_poses: [[10,10,0], [8,8,π/4], [12,12,π]]
+        
+      expected_output:
+        - "Path messages"
+        - "NavPath messages"
+        - "RRT tree visualization"
+        
+      artifacts:
+        - "tree_structures"
+        - "path_plans"
+        - "collision_checks"
+        - "performance_metrics"
+    
+    # Experiment 4: RRT* - Asymptotically Optimal
+    global_planning_rrt_star:
+      experiment_id: "global_planning_rrt_star"
+      category: "global_planning"
+      method_id: "rrt_star_planner"
+      input_stratum: "planning_2d_continuous"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [5016, 5017, 5018, 5019, 5020]
+      duration_seconds: 25.0
+      description: "Benchmark RRT* planner for asymptotically optimal sampling-based path finding"
+      
+      metrics:
+        - "path_cost"
+        - "solution_quality"
+        - "convergence_rate"
+        - "tree_size"
+        - "planning_time"
+        - "success_rate"
+        - "memory_usage_peak"
+        
+      success_criteria:
+        solution_quality: ">= 0.9"  # ratio to optimal
+        convergence_rate: "monotonic"
+        
+      failure_criteria:
+        solution_quality: "< 0.7"  # ratio to optimal
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 30.0
+        memory_limit_mb: 4096
+        real_time_factor_min: 0.5
+        timeout_seconds: 45.0
+        
+      input_generation:
+        type: "continuous_optimization"
+        max_iterations: 5000
+        step_size: 0.1
+        rewiring_radius: 0.5
+        goal_bias: 0.05
+        start_poses: [[0,0,0], [2,2,π/4]]
+        goal_poses: [[10,10,0], [8,8,π/4]]
+        
+      expected_output:
+        - "Path messages"
+        - "NavPath messages"
+        - "Optimization metrics"
+        
+      artifacts:
+        - "tree_structures"
+        - "cost_convergence"
+        - "rewiring_events"
+        - "performance_metrics"
+    
+    # Experiment 5: PRM - Probabilistic Roadmap
+    global_planning_prm:
+      experiment_id: "global_planning_prm"
+      category: "global_planning"
+      method_id: "prm_planner"
+      input_stratum: "planning_2d_continuous"
+      robot_class: "mobile"
+      environment: "nav_maze"
+      simulator: "gazebo"
+      seeds: [5021, 5022, 5023, 5024, 5025]
+      duration_seconds: 30.0
+      description: "Benchmark PRM planner for multiple queries on same environment"
+      
+      metrics:
+        - "roadmap_construction_time"
+        - "query_time"
+        - "success_rate"
+        - "path_cost"
+        - "memory_usage_peak"
+        - "coverage_ratio"
+        
+      success_criteria:
+        success_rate: ">= 0.9"
+        query_time: "<= 0.1"  # seconds
+        
+      failure_criteria:
+        success_rate: "< 0.7"
+        query_time: "> 1.0"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 25.0
+        memory_limit_mb: 4096
+        real_time_factor_min: 0.6
+        timeout_seconds: 50.0
+        
+      input_generation:
+        type: "roadmap_planning"
+        num_samples: 1000
+        k_nearest_neighbors: 10
+        collision_check_resolution: 0.01
+        queries_per_roadmap: 5
+        start_poses: [[0,0,0], [2,2,0], [5,5,0], [1,1,0], [3,3,0]]
+        goal_poses: [[10,10,0], [8,8,0], [12,12,0], [9,9,0], [11,11,0]]
+        
+      expected_output:
+        - "Path messages"
+        - "NavPath messages"
+        - "Roadmap structure"
+        
+      artifacts:
+        - "roadmap_graphs"
+        - "sampling_distributions"
+        - "connectivity_analysis"
+        - "performance_metrics"
+
+  # =============================================================================
+  # R7.7 LOCAL PLANNING METHODS - 5 benchmark experiments
+  # =============================================================================
+  
+  local_planning:
+    # Experiment 1: Follow the Gap - Reactive
+    local_planning_follow_gap:
+      experiment_id: "local_planning_follow_gap"
+      category: "local_planning"
+      method_id: "follow_the_gap"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [6001, 6002, 6003, 6004, 6005]
+      duration_seconds: 15.0
+      description: "Benchmark Follow the Gap reactive local planner in open environment"
+      
+      metrics:
+        - "collision_rate"
+        - "goal_reached_rate"
+        - "path_efficiency"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "smoothness_score"
+        - "obstacle_avoidance"
+        
+      success_criteria:
+        collision_rate: "0.0"
+        goal_reached_rate: ">= 0.95"
+        path_efficiency: ">= 0.8"
+        
+      failure_criteria:
+        collision_rate: "> 0.1"
+        goal_reached_rate: "< 0.7"
+        path_efficiency: "< 0.5"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 2.0
+        memory_limit_mb: 256
+        real_time_factor_min: 0.95
+        timeout_seconds: 25.0
+        
+      input_generation:
+        type: "reactive_navigation"
+        robot_width: 0.2
+        min_gap_size: 0.3
+        environments: ["open", "slightly_cluttered", "moderately_cluttered"]
+        obstacle_configurations: ["static", "moving"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Goal status"
+        - "Collision alerts"
+        
+      artifacts:
+        - "laser_scans"
+        - "gap_detections"
+        - "trajectory_log"
+        - "performance_metrics"
+    
+    # Experiment 2: DWB - Trajectory Evaluation
+    local_planning_dwb:
+      experiment_id: "local_planning_dwb"
+      category: "local_planning"
+      method_id: "dwb_local_planner"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [6006, 6007, 6008, 6009, 6010]
+      duration_seconds: 20.0
+      description: "Benchmark Dynamic Window Approach local planner with trajectory evaluation"
+      
+      metrics:
+        - "collision_rate"
+        - "goal_reached_rate"
+        - "trajectory_cost"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "trajectory_length"
+        - "obstacle_clearance"
+        
+      success_criteria:
+        collision_rate: "0.0"
+        goal_reached_rate: ">= 0.9"
+        trajectory_cost: ">= 0.7"  # normalized cost score
+        
+      failure_criteria:
+        collision_rate: "> 0.1"
+        goal_reached_rate: "< 0.6"
+        trajectory_cost: "< 0.4"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 10.0
+        memory_limit_mb: 512
+        real_time_factor_min: 0.8
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "trajectory_navigation"
+        max_vel_x: 0.5
+        min_vel_x: -0.1
+        max_vel_theta: 0.5
+        acc_lim_x: 0.2
+        acc_lim_theta: 0.3
+        cost_weights: [1.0, 1.0, 0.1]
+        environments: ["office", "corridor", "open"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Trajectory messages"
+        - "Cost evaluations"
+        
+      artifacts:
+        - "trajectory_samples"
+        - "cost_landscapes"
+        - "navigation_paths"
+        - "performance_metrics"
+    
+    # Experiment 3: Regulated Pure Pursuit - Path Following
+    local_planning_regulated_pure_pursuit:
+      experiment_id: "local_planning_regulated_pure_pursuit"
+      category: "local_planning"
+      method_id: "regulated_pure_pursuit"
+      input_stratum: "planning_2d_continuous"
+      robot_class: "mobile"
+      environment: "nav_maze"
+      simulator: "gazebo"
+      seeds: [6011, 6012, 6013, 6014, 6015]
+      duration_seconds: 25.0
+      description: "Benchmark Regulated Pure Pursuit path-following local planner in maze environment"
+      
+      metrics:
+        - "path_following_error"
+        - "curvature_handling"
+        - "speed_regulation"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "waypoint_reaching_time"
+        - "smoothness_score"
+        
+      success_criteria:
+        path_following_error: "<= 0.1"  # meters
+        curvature_handling: ">= 0.8"
+        speed_regulation: "<= 0.2"  # max speed error
+        
+      failure_criteria:
+        path_following_error: "> 0.5"  # meters
+        curvature_handling: "< 0.5"
+        speed_regulation: "> 0.5"  # max speed error
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 5.0
+        memory_limit_mb: 256
+        real_time_factor_min: 0.95
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "path_following"
+        lookahead_distance: 0.5
+        max_lookahead_distance: 2.0
+        curvature_gain: 1.0
+        path_types: ["straight", "curved", "complex"]
+        path_velocities: [0.2, 0.3, 0.4]
+        
+      expected_output:
+        - "Twist messages"
+        - "Path following status"
+        - "Waypoint progress"
+        
+      artifacts:
+        - "global_paths"
+        - "following_errors"
+        - "speed_profiles"
+        - "performance_metrics"
+    
+    # Experiment 4: TEB - Trajectory Optimization
+    local_planning_teb:
+      experiment_id: "local_planning_teb"
+      category: "local_planning"
+      method_id: "teb_local_planner"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "small_warehouse"
+      simulator: "gazebo"
+      seeds: [6016, 6017, 6018, 6019, 6020]
+      duration_seconds: 30.0
+      description: "Benchmark Timed Elastic Band local planner with trajectory optimization"
+      
+      metrics:
+        - "collision_rate"
+        - "goal_reached_rate"
+        - "optimization_success_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "trajectory_optimality"
+        - "constraint_satisfaction"
+        
+      success_criteria:
+        collision_rate: "0.0"
+        goal_reached_rate: ">= 0.85"
+        optimization_success_rate: ">= 0.9"
+        
+      failure_criteria:
+        collision_rate: "> 0.1"
+        goal_reached_rate: "< 0.6"
+        optimization_success_rate: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 20.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.6
+        timeout_seconds: 50.0
+        
+      input_generation:
+        type: "optimization_navigation"
+        max_vel_x: 0.5
+        max_vel_theta: 0.5
+        acc_lim_x: 0.2
+        acc_lim_theta: 0.3
+        min_obstacle_dist: 0.1
+        weight_time: 1.0
+        weight_kinematics: 1.0
+        weight_obstacles: 1.0
+        environments: ["warehouse", "obstacle_field", "narrow_passage"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Trajectory messages"
+        - "Optimization status"
+        
+      artifacts:
+        - "optimized_trajectories"
+        - "constraint_violations"
+        - "cost_evaluations"
+        - "performance_metrics"
+    
+    # Experiment 5: MPPI - Stochastic Optimization
+    local_planning_mppi:
+      experiment_id: "local_planning_mppi"
+      category: "local_planning"
+      method_id: "mppi_local_planner"
+      input_stratum: "perception_lidar_2d_dense"
+      robot_class: "mobile"
+      environment: "nav_dynamic"
+      simulator: "gazebo"
+      seeds: [6021, 6022, 6023, 6024, 6025]
+      duration_seconds: 35.0
+      description: "Benchmark MPPI local planner with stochastic trajectory optimization in dynamic environment"
+      
+      metrics:
+        - "collision_rate"
+        - "goal_reached_rate"
+        - "sample_diversity"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "stochastic_robustness"
+        - "cost_landscape_quality"
+        
+      success_criteria:
+        collision_rate: "<= 0.05"
+        goal_reached_rate: ">= 0.8"
+        sample_diversity: ">= 0.85"
+        
+      failure_criteria:
+        collision_rate: "> 0.2"
+        goal_reached_rate: "< 0.5"
+        sample_diversity: "< 0.6"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 30.0
+        memory_limit_mb: 4096
+        real_time_factor_min: 0.5
+        timeout_seconds: 60.0
+        
+      input_generation:
+        type: "stochastic_navigation"
+        num_samples: 100
+        time_horizon: 2.0
+        time_step: 0.1
+        temperature: 0.1
+        noise_covariance: [0.01, 0.01, 0.001]
+        environments: ["dynamic_obstacles", "unpredictable_motion", "cluttered"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Trajectory messages"
+        - "Sample distributions"
+        
+      artifacts:
+        - "sampled_trajectories"
+        - "cost_distributions"
+        - "optimization_history"
+        - "performance_metrics"
+
+  # =============================================================================
+  # R7.8 CONTROL METHODS - 5 benchmark experiments  
+  # =============================================================================
+  
+  control:
+    # Experiment 1: PID - Linear Plant
+    control_pid_linear:
+      experiment_id: "control_pid_linear"
+      category: "control"
+      method_id: "pid_controller"
+      input_stratum: "control_linear_plant"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [7001, 7002, 7003, 7004, 7005]
+      duration_seconds: 10.0
+      description: "Benchmark PID controller for linear plant with anti-windup and bumpless transfer"
+      
+      metrics:
+        - "rise_time"
+        - "settling_time"
+        - "overshoot_percent"
+        - "steady_state_error"
+        - "anti_windup_effectiveness"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "disturbance_rejection"
+        
+      success_criteria:
+        settling_time: "<= 2.0"  # seconds
+        overshoot_percent: "<= 5.0"  # percent
+        steady_state_error: "<= 0.01"  # normalized
+        anti_windup_effectiveness: ">= 0.95"
+        
+      failure_criteria:
+        settling_time: "> 5.0"  # seconds
+        overshoot_percent: "> 20.0"  # percent
+        steady_state_error: "> 0.05"  # normalized
+        anti_windup_effectiveness: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 0.5
+        memory_limit_mb: 128
+        real_time_factor_min: 1.0
+        timeout_seconds: 20.0
+        
+      input_generation:
+        type: "step_response"
+        setpoints: [0.2, 0.3, 0.4]
+        k_p: [1.0, 1.0]
+        k_i: [0.1, 0.1]
+        k_d: [0.01, 0.01]
+        disturbances: ["none", "step", "sinusoidal"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Control effort"
+        - "Error signals"
+        
+      artifacts:
+        - "step_responses"
+        - "error_signals"
+        - "control_efforts"
+        - "performance_metrics"
+    
+    # Experiment 2: LQR - Linear Plant
+    control_lqr_linear:
+      experiment_id: "control_lqr_linear"
+      category: "control"
+      method_id: "lqr_controller"
+      input_stratum: "control_linear_plant"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [7006, 7007, 7008, 7009, 7010]
+      duration_seconds: 15.0
+      description: "Benchmark LQR controller for optimal linear system control"
+      
+      metrics:
+        - "cost_function_value"
+        - "state_convergence"
+        - "control_effort_magnitude"
+        - "stability_margins"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "robustness_to_noise"
+        
+      success_criteria:
+        cost_function_value: "<= 0.1"  # normalized
+        state_convergence: "exponential"
+        stability_margins: ">= 0.3"  # gain margin
+        
+      failure_criteria:
+        cost_function_value: "> 1.0"  # normalized
+        stability_margins: "< 0.1"  # gain margin
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 2.0
+        memory_limit_mb: 256
+        real_time_factor_min: 0.9
+        timeout_seconds: 25.0
+        
+      input_generation:
+        type: "regulator_design"
+        q_matrix: [[1.0, 0.0], [0.0, 1.0]]
+        r_matrix: [[1.0, 0.0], [0.0, 1.0]]
+        a_matrix: [[0.0, 1.0], [0.0, 0.0]]
+        b_matrix: [[0.0], [1.0]]
+        disturbances: ["gaussian_noise", "step_disturbance"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Optimal control signals"
+        - "State trajectories"
+        
+      artifacts:
+        - "riccati_solutions"
+        - "control_gains"
+        - "state_trajectories"
+        - "performance_metrics"
+    
+    # Experiment 3: MPC - Constrained Linear Plant
+    control_mpc_constrained:
+      experiment_id: "control_mpc_constrained"
+      category: "control"
+      method_id: "mpc_controller"
+      input_stratum: "control_constrained"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [7011, 7012, 7013, 7014, 7015]
+      duration_seconds: 20.0
+      description: "Benchmark MPC controller for constrained linear system with constraint satisfaction"
+      
+      metrics:
+        - "constraint_violation_count"
+        - "cost_function_value"
+        - "solution_time"
+        - "feasibility_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "tracking_accuracy"
+        
+      success_criteria:
+        constraint_violation_count: "0"
+        feasibility_rate: "1.0"
+        solution_time: "<= 0.01"  # seconds
+        
+      failure_criteria:
+        constraint_violation_count: "> 5"
+        feasibility_rate: "< 0.8"
+        solution_time: "> 0.1"  # seconds
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 15.0
+        memory_limit_mb: 1024
+        real_time_factor_min: 0.7
+        timeout_seconds: 35.0
+        
+      input_generation:
+        type: "constrained_control"
+        prediction_horizon: 10
+        control_horizon: 5
+        state_constraints: [[-1.0, -1.0], [1.0, 1.0]]
+        control_constraints: [[-0.5, -0.5], [0.5, 0.5]]
+        setpoint_profiles: ["step", "ramp", "sinusoidal"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Control signals"
+        - "Constraint status"
+        
+      artifacts:
+        - "optimization_solutions"
+        - "constraint_monitoring"
+        - "cost_evaluations"
+        - "performance_metrics"
+    
+    # Experiment 4: Nonlinear MPC - Nonlinear Plant
+    control_nonlinear_mpc:
+      experiment_id: "control_nonlinear_mpc"
+      category: "control"
+      method_id: "nonlinear_mpc"
+      input_stratum: "control_nonlinear_plant"
+      robot_class: "mobile"
+      environment: "small_office"
+      simulator: "gazebo"
+      seeds: [7016, 7017, 7018, 7019, 7020]
+      duration_seconds: 25.0
+      description: "Benchmark Nonlinear MPC for nonlinear plant model with SQP optimization"
+      
+      metrics:
+        - "solution_quality"
+        - "convergence_iterations"
+        - "solution_time"
+        - "feasibility_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "nonlinear_handling"
+        
+      success_criteria:
+        convergence_iterations: "<= 10"
+        solution_quality: ">= 0.8"  # normalized
+        feasibility_rate: ">= 0.9"
+        
+      failure_criteria:
+        convergence_iterations: "> 20"
+        solution_quality: "< 0.5"  # normalized
+        feasibility_rate: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 30.0
+        memory_limit_mb: 2048
+        real_time_factor_min: 0.5
+        timeout_seconds: 45.0
+        
+      input_generation:
+        type: "nonlinear_control"
+        prediction_horizon: 5
+        control_horizon: 3
+        max_iterations: 20
+        tolerance: 1e-6
+        nonlinearity_levels: ["mild", "moderate", "strong"]
+        
+      expected_output:
+        - "Twist messages"
+        - "Optimization status"
+        - "Nonlinear model predictions"
+        
+      artifacts:
+        - "sqp_iterations"
+        - "linearization_accuracy"
+        - "convergence_history"
+        - "performance_metrics"
+    
+    # Experiment 5: Feedback Linearization - Nonlinear Plant with Disturbance Recovery
+    control_feedback_linearization:
+      experiment_id: "control_feedback_linearization"
+      category: "control"
+      method_id: "feedback_linearization"
+      input_stratum: "control_nonlinear_plant"
+      robot_class: "mobile"
+      environment: "nav_empty"
+      simulator: "gazebo"
+      seeds: [7021, 7022, 7023, 7024, 7025]
+      duration_seconds: 15.0
+      description: "Benchmark Feedback Linearization controller for exact linearization of nonlinear system with disturbance rejection and recovery testing"
+      
+      metrics:
+        - "linearization_quality"
+        - "tracking_accuracy"
+        - "control_effort_usage"
+        - "robustness_to_uncertainty"
+        - "disturbance_rejection_time"
+        - "recovery_success_rate"
+        - "compute_time_mean"
+        - "memory_usage_peak"
+        - "stability_envelope"
+        
+      success_criteria:
+        linearization_quality: ">= 0.95"
+        tracking_accuracy: "<= 0.02"  # normalized
+        control_effort_usage: "<= 0.8"  # fraction of max effort
+        disturbance_rejection_time: "<= 2.0"  # seconds
+        recovery_success_rate: ">= 0.9"
+        
+      failure_criteria:
+        linearization_quality: "< 0.7"
+        tracking_accuracy: "> 0.1"  # normalized
+        control_effort_usage: "> 1.0"  # exceeds max effort
+        disturbance_rejection_time: "> 5.0"  # seconds
+        recovery_success_rate: "< 0.7"
+        crash_or_error: true
+        
+      resource_budget:
+        cpu_limit: 5.0
+        memory_limit_mb: 512
+        real_time_factor_min: 0.8
+        timeout_seconds: 30.0
+        
+      input_generation:
+        type: "linearization_control_with_disturbances"
+        desired_dynamics: [1.0, 1.0]
+        max_control_effort: 10.0
+        reference_trajectories: ["sinusoidal", "step", "ramp"]
+        model_uncertainties: ["none", "small", "medium"]
+        disturbance_types: ["step", "sinusoidal", "impulse"]
+        disturbance_magnitudes: [0.1, 0.5, 1.0]
+        
+      expected_output:
+        - "Twist messages"
+        - "Linearized system outputs"
+        - "Control effort signals"
+        - "Disturbance responses"
+        
+      artifacts:
+        - "lie_derivatives"
+        - "linearization_accuracy"
+        - "tracking_errors"
+        - "disturbance_responses"
+        - "recovery_tests"
+        - "performance_metrics"

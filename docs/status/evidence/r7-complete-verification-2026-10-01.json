@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-10-01T17:11:42.193851",
+  "categories": {
+    "perception": {
+      "method_count": 5,
+      "experiment_count": 5,
+      "methods": [
+        "obstacle_detector",
+        "scan_clusterer",
+        "euclidean_clusterer",
+        "dbscan_clusterer",
+        "ransac_ground_removal"
+      ],
+      "experiments": [
+        "perception_obstacle_sparse_lidar",
+        "perception_cluster_dense_lidar",
+        "perception_euclidean_dense_lidar",
+        "perception_dbscan_dense_lidar",
+        "perception_ransac_rgbd"
+      ],
+      "completeness": true,
+      "methods_with_equations": 5,
+      "methods_with_references": 5
+    },
+    "localization": {
+      "method_count": 5,
+      "experiment_count": 5,
+      "methods": [
+        "dead_reckoning",
+        "amcl",
+        "icp_localization",
+        "ndt_localization",
+        "rgbd_slam_localization"
+      ],
+      "experiments": [
+        "localization_dead_reckoning_odometry",
+        "localization_amcl_lidar_map",
+        "localization_icp_lidar",
+        "localization_ndt_lidar",
+        "localization_rgbd_slam"
+      ],
+      "completeness": true,
+      "methods_with_equations": 5,
+      "methods_with_references": 5
+    },
+    "state_estimation": {
+      "method_count": 5,
+      "experiment_count": 5,
+      "methods": [
+        "ekf_3d_estimator",
+        "linear_kalman_filter",
+        "ukf_estimator",
+        "particle_filter",
+        "error_state_ekf"
+      ],
+      "experiments": [
+        "state_estimation_ekf_3d_linear",
+        "state_estimation_linear_kf",
+        "state_estimation_ukf_nonlinear",
+        "state_estimation_particle_filter",
+        "state_estimation_error_state_ekf"
+      ],
+      "completeness": true,
+      "methods_with_equations": 5,
+      "methods_with_references": 5
+    },
+    "sensor_fusion": {
+      "method_count": 6,
+      "experiment_count": 5,
+      "methods": [
+        "complementary_imu",
+        "mahony_filter",
+        "madgwick_filter",
+        "wheel_imu_fusion",
+        "gps_odom_fusion",
+        "wheel_imu_gnss_ukf"
+      ],
+      "experiments": [
+        "sensor_fusion_complementary_attitude",
+        "sensor_fusion_mahony_attitude",
+        "sensor_fusion_madgwick_attitude",
+        "sensor_fusion_wheel_imu_pose",
+        "sensor_fusion_multi_sensor"
+      ],
+      "completeness": true,
+      "methods_with_equations": 6,
+      "methods_with_references": 6
+    },
+    "global_planning": {
+      "method_count": 5,
+      "experiment_count": 5,
+      "methods": [
+        "dijkstra_planner",
+        "a_star_planner",
+        "rrt_planner",
+        "rrt_star_planner",
+        "prm_planner"
+      ],
+      "experiments": [
+        "global_planning_dijkstra_grid",
+        "global_planning_a_star_grid",
+        "global_planning_rrt_continuous",
+        "global_planning_rrt_star",
+        "global_planning_prm"
+      ],
+      "completeness": true,
+      "methods_with_equations": 5,
+      "methods_with_references": 5
+    },
+    "local_planning": {
+      "method_count": 5,
+      "experiment_count": 5,
+      "methods": [
+        "follow_the_gap",
+        "dwb_local_planner",
+        "regulated_pure_pursuit",
+        "teb_local_planner",
+        "mppi_local_planner"
+      ],
+      "experiments": [
+        "local_planning_follow_gap",
+        "local_planning_dwb",
+        "local_planning_regulated_pure_pursuit",
+        "local_planning_teb",
+        "local_planning_mppi"
+      ],
+      "completeness": true,
+      "methods_with_equations": 5,
+      "methods_with_references": 5
+    },
+    "control": {
+      "method_count": 6,
+      "experiment_count": 5,
+      "methods": [
+        "pid_controller",
+        "lqr_controller",
+        "mpc_controller",
+        "nonlinear_mpc",
+        "feedback_linearization",
+        "backstepping_controller"
+      ],
+      "experiments": [
+        "control_pid_linear",
+        "control_lqr_linear",
+        "control_mpc_constrained",
+        "control_nonlinear_mpc",
+        "control_feedback_linearization"
+      ],
+      "completeness": true,
+      "methods_with_equations": 6,
+      "methods_with_references": 6
+    }
+  }
+}

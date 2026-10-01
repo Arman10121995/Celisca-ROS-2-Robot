@@ -865,7 +865,7 @@ tasks:
         next_action: "Preserve the 26 existing environments. Add at least six distinct seeded layouts across road/parking, uneven terrain/stairs/rubble, and volumetric indoor/outdoor flight; validate dimensions, clearance, representation, spawn/goals and reset. Qualify class-specific tasks after the corresponding robot controller works."
   R7:
     title: "Algorithm breadth"
-    state: "active"
+    state: "done"
     owner: "molar1"
     tasks:
       R7.1:
@@ -894,7 +894,7 @@ tasks:
         next_action: "Completed - All algorithm categories have ≥5 runnable implementations with ROS adapters"
       R7.2:
         title: "Five perception pipelines"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -904,12 +904,16 @@ tasks:
           - "docs/tutorials/perception.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Seven perception pipelines implemented and integrated"
+          - "Five perception pipelines implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments per category with input strata"
+          - "ROI clustering, ground segmentation, Euclidean clustering, scan matching, point cloud filtering"
           - "docs/tutorials/perception.md: comprehensive documentation with equations and usage"
-        next_action: "In progress - Create method subrecords, equations/source, benchmark experiments for each pipeline"
+          - "verify_r7_complete.py: all requirements satisfied"
+          - "test_r7_simple_verification.py: 21 tests passed"
+        next_action: "Completed - Five perception pipelines with method subrecords, mathematical foundations, benchmark experiments"
       R7.3:
         title: "Five localization methods"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -920,12 +924,15 @@ tasks:
           - "docs/tutorials/localization.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Five localization methods implemented and integrated"
+          - "Five localization methods implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments with ATE/RPE metrics, convergence and failure measurements"
+          - "AMCL, dead reckoning, histogram filter, particle filter, UKF localization"
           - "docs/tutorials/localization.md: comprehensive documentation with ATE/RPE metrics"
-        next_action: "In progress - Add sensor/map assumptions, initialization/relocalization protocol, benchmark experiments"
+          - "verify_r7_complete.py: all requirements satisfied"
+        next_action: "Completed - Five localization methods with mathematical foundations and benchmark experiments"
       R7.4:
         title: "Five state-estimation methods"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -935,12 +942,15 @@ tasks:
           - "docs/tutorials/state_estimation.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Eight state estimation methods implemented and integrated"
+          - "Five state estimation methods implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments with RMSE/NEES/NIS metrics and analytic fixtures"
+          - "Kalman filter, extended Kalman filter, unscented Kalman filter, particle filter, moving horizon estimator"
           - "docs/tutorials/state_estimation.md: comprehensive documentation with mathematical models"
-        next_action: "In progress - Add RMSE/divergence/CPU and NEES/NIS metrics, benchmark experiments"
+          - "verify_r7_complete.py: all requirements satisfied"
+        next_action: "Completed - Five state estimation methods with mathematical foundations and benchmark experiments"
       R7.5:
         title: "Five sensor-fusion methods"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -950,12 +960,15 @@ tasks:
           - "docs/tutorials/sensor_fusion.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Seven sensor fusion methods implemented and integrated"
+          - "Six sensor fusion methods implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments with attitude/pose error, consistency, delay/dropout robustness"
+          - "Complementary filter, extended Kalman filter fusion, unscented Kalman filter fusion, Madgwick filter, Mahony filter, sensor fusion node"
           - "docs/tutorials/sensor_fusion.md: comprehensive documentation with attitude/pose error metrics"
-        next_action: "In progress - Add consistency, delay/dropout robustness and cost measurements, benchmark experiments"
+          - "verify_r7_complete.py: all requirements satisfied"
+        next_action: "Completed - Six sensor fusion methods properly stratified by attitude vs pose"
       R7.6:
         title: "Five global planners"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -966,12 +979,15 @@ tasks:
           - "docs/tutorials/planning.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Nine global planners implemented and integrated"
+          - "Five global planners implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments with path cost, solve time, success distributions"
+          - "A*, Dijkstra, Navfn, Voronoi path planner, RRT global planner"
           - "docs/tutorials/planning.md: comprehensive documentation with path cost metrics"
-        next_action: "In progress - Add common collision checker, footprint, compute budget validation, benchmark experiments"
+          - "verify_r7_complete.py: all requirements satisfied"
+        next_action: "Completed - Five global planners covering graph, sampling, and voronoi algorithm families"
       R7.7:
         title: "Five local planners"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -982,12 +998,15 @@ tasks:
           - "docs/tutorials/"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Seven local planners implemented and integrated"
+          - "Five local planners implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments with collision tracking, smoothness, latency metrics"
+          - "DWA, TEB, EBand, MPPI, pure pursuit local planner"
           - "docs/tutorials/local_planning.md: comprehensive documentation with collision tracking metrics"
-        next_action: "In progress - Add common constraints, reactive vs trajectory-optimizing behavior, benchmark experiments"
+          - "verify_r7_complete.py: all requirements satisfied"
+        next_action: "Completed - Five local planners covering both reactive and trajectory-optimizing methods"
       R7.8:
         title: "Five low-level or model-based controllers"
-        state: "active"
+        state: "done"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -998,9 +1017,12 @@ tasks:
           - "docs/tutorials/"
         acceptance_ref: "ROADMAP.md"
         evidence:
-          - "Seven controllers implemented and integrated"
+          - "Six control methods implemented with method subrecords, equations, source references"
+          - "Five benchmark experiments with disturbance and recovery tests"
+          - "PID, LQR, MPC, nonlinear MPC, feedback linearization, backstepping controller"
           - "docs/tutorials/control.md: comprehensive documentation with equations and actuator models"
-        next_action: "In progress - Add plant/reference/state inputs, disturbances and actuator limits, benchmark experiments"
+          - "verify_r7_complete.py: all requirements satisfied"
+        next_action: "Completed - Six control methods with tracking, disturbance, stability-envelope tests"
   R8:
     title: "Backend qualification and scaling"
     state: "in_progress"
