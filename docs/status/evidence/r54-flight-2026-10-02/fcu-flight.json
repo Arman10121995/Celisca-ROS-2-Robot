@@ -1,0 +1,723 @@
+{
+ "port": "udpout:127.0.0.1:14580",
+ "phases": {
+  "takeoff": [
+   {
+    "alt_m": 0.028,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.021,
+     -0.037,
+     0.153
+    ],
+    "climb_mps": -0.12,
+    "groundspeed_mps": 0.023,
+    "landed_state": 1,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 0.035,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546163,
+    "local_ned_m": [
+     -0.034,
+     -0.048,
+     0.146
+    ],
+    "climb_mps": -0.105,
+    "groundspeed_mps": 0.033,
+    "landed_state": 1,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 0.011,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546163,
+    "local_ned_m": [
+     -0.028,
+     -0.051,
+     0.134
+    ],
+    "climb_mps": -0.088,
+    "groundspeed_mps": 0.028,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 0.026,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546163,
+    "local_ned_m": [
+     -0.015,
+     -0.04,
+     0.119
+    ],
+    "climb_mps": -0.072,
+    "groundspeed_mps": 0.015,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 0.036,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.014,
+     -0.028,
+     0.109
+    ],
+    "climb_mps": -0.064,
+    "groundspeed_mps": 0.007,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 0.134,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.006,
+     0.006,
+     0.005
+    ],
+    "climb_mps": 0.228,
+    "groundspeed_mps": 0.083,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 0.579,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     0.031,
+     0.012,
+     -0.453
+    ],
+    "climb_mps": 0.957,
+    "groundspeed_mps": 0.06,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 1.098,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546165,
+    "local_ned_m": [
+     0.038,
+     0.066,
+     -0.966
+    ],
+    "climb_mps": 0.866,
+    "groundspeed_mps": 0.102,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 1.43,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546165,
+    "local_ned_m": [
+     0.029,
+     0.067,
+     -1.294
+    ],
+    "climb_mps": 0.602,
+    "groundspeed_mps": 0.034,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 1.726,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     0.008,
+     0.014,
+     -1.59
+    ],
+    "climb_mps": 0.59,
+    "groundspeed_mps": 0.109,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 2.022,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     0.004,
+     -0.019,
+     -1.886
+    ],
+    "climb_mps": 0.574,
+    "groundspeed_mps": 0.057,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 2.322,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     0.006,
+     -0.022,
+     -2.173
+    ],
+    "climb_mps": 0.517,
+    "groundspeed_mps": 0.018,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   }
+  ],
+  "hover": [
+   {
+    "alt_m": 2.595,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.004,
+     -0.026,
+     -2.451
+    ],
+    "climb_mps": 0.476,
+    "groundspeed_mps": 0.022,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 2.888,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546163,
+    "local_ned_m": [
+     -0.028,
+     -0.042,
+     -2.743
+    ],
+    "climb_mps": 0.175,
+    "groundspeed_mps": 0.017,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.015,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     0.002,
+     -0.024,
+     -2.87
+    ],
+    "climb_mps": 0.068,
+    "groundspeed_mps": 0.026,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.08,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.027,
+     0.006,
+     -2.934
+    ],
+    "climb_mps": 0.024,
+    "groundspeed_mps": 0.008,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.117,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.004,
+     -0.006,
+     -2.971
+    ],
+    "climb_mps": 0.006,
+    "groundspeed_mps": 0.014,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.142,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.003,
+     -0.001,
+     -2.997
+    ],
+    "climb_mps": -0.014,
+    "groundspeed_mps": 0.01,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   }
+  ],
+  "waypoint_1": [
+   {
+    "alt_m": 3.156,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     -0.03,
+     0.01,
+     -3.011
+    ],
+    "climb_mps": -0.018,
+    "groundspeed_mps": 0.011,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.181,
+    "lat_deg": 47.397982,
+    "lon_deg": 8.546163,
+    "local_ned_m": [
+     1.182,
+     -0.077,
+     -3.037
+    ],
+    "climb_mps": -0.085,
+    "groundspeed_mps": 2.016,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.163,
+    "lat_deg": 47.397996,
+    "lon_deg": 8.546163,
+    "local_ned_m": [
+     2.741,
+     -0.099,
+     -3.018
+    ],
+    "climb_mps": -0.041,
+    "groundspeed_mps": 1.139,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.15,
+    "lat_deg": 47.397999,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     3.112,
+     -0.003,
+     -3.006
+    ],
+    "climb_mps": -0.018,
+    "groundspeed_mps": 0.186,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.151,
+    "lat_deg": 47.397999,
+    "lon_deg": 8.546165,
+    "local_ned_m": [
+     3.069,
+     0.068,
+     -3.006
+    ],
+    "climb_mps": -0.012,
+    "groundspeed_mps": 0.091,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.174,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546165,
+    "local_ned_m": [
+     3.014,
+     0.078,
+     -3.029
+    ],
+    "climb_mps": -0.027,
+    "groundspeed_mps": 0.078,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216,
+    "setpoint_ned_m": [
+     3.0,
+     0.0,
+     -3.0
+    ]
+   }
+  ],
+  "waypoint_2": [
+   {
+    "alt_m": 3.154,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546164,
+    "local_ned_m": [
+     3.008,
+     0.034,
+     -3.009
+    ],
+    "climb_mps": -0.019,
+    "groundspeed_mps": 0.069,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.172,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546181,
+    "local_ned_m": [
+     2.996,
+     1.282,
+     -3.028
+    ],
+    "climb_mps": -0.077,
+    "groundspeed_mps": 1.974,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.149,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546201,
+    "local_ned_m": [
+     3.035,
+     2.766,
+     -3.005
+    ],
+    "climb_mps": -0.017,
+    "groundspeed_mps": 1.062,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.151,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546205,
+    "local_ned_m": [
+     3.003,
+     3.078,
+     -3.006
+    ],
+    "climb_mps": -0.012,
+    "groundspeed_mps": 0.16,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.159,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546205,
+    "local_ned_m": [
+     2.94,
+     3.074,
+     -3.014
+    ],
+    "climb_mps": -0.017,
+    "groundspeed_mps": 0.064,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.151,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     2.937,
+     3.033,
+     -3.007
+    ],
+    "climb_mps": -0.016,
+    "groundspeed_mps": 0.079,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216,
+    "setpoint_ned_m": [
+     3.0,
+     3.0,
+     -3.0
+    ]
+   }
+  ],
+  "waypoint_3": [
+   {
+    "alt_m": 3.144,
+    "lat_deg": 47.397998,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     2.974,
+     3.006,
+     -2.999
+    ],
+    "climb_mps": 0.001,
+    "groundspeed_mps": 0.064,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.158,
+    "lat_deg": 47.397986,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     1.711,
+     2.978,
+     -3.014
+    ],
+    "climb_mps": -0.061,
+    "groundspeed_mps": 1.982,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.151,
+    "lat_deg": 47.397973,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     0.186,
+     3.016,
+     -3.006
+    ],
+    "climb_mps": -0.013,
+    "groundspeed_mps": 1.058,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.157,
+    "lat_deg": 47.39797,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     -0.132,
+     3.008,
+     -3.012
+    ],
+    "climb_mps": -0.018,
+    "groundspeed_mps": 0.116,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.166,
+    "lat_deg": 47.39797,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     -0.085,
+     2.989,
+     -3.021
+    ],
+    "climb_mps": -0.025,
+    "groundspeed_mps": 0.1,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   {
+    "alt_m": 3.157,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     -0.033,
+     2.994,
+     -3.012
+    ],
+    "climb_mps": -0.018,
+    "groundspeed_mps": 0.084,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216,
+    "setpoint_ned_m": [
+     0.0,
+     3.0,
+     -3.0
+    ]
+   }
+  ],
+  "command_loss": {
+   "before": {
+    "alt_m": 3.15,
+    "lat_deg": 47.397971,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     -0.013,
+     2.997,
+     -3.005
+    ],
+    "climb_mps": -0.005,
+    "groundspeed_mps": 0.045,
+    "landed_state": 2,
+    "fcu_base_mode": 145,
+    "fcu_custom_mode": 393216
+   },
+   "after": {
+    "alt_m": 0.075,
+    "lat_deg": 47.397973,
+    "lon_deg": 8.546203,
+    "local_ned_m": [
+     0.155,
+     2.969,
+     0.07
+    ],
+    "climb_mps": 0.004,
+    "groundspeed_mps": 0.003,
+    "landed_state": 2,
+    "fcu_base_mode": 209,
+    "fcu_custom_mode": 196608
+   },
+   "still_armed": true,
+   "note": "setpoint stream stopped for 6 s; offboard-loss action is FCU-side"
+  },
+  "land": [
+   {
+    "alt_m": 0.091,
+    "lat_deg": 47.397973,
+    "lon_deg": 8.546203,
+    "local_ned_m": [
+     0.156,
+     2.959,
+     0.054
+    ],
+    "climb_mps": 0.002,
+    "groundspeed_mps": 0.013,
+    "landed_state": 1,
+    "fcu_base_mode": 157,
+    "fcu_custom_mode": 100925440
+   },
+   {
+    "alt_m": 0.107,
+    "lat_deg": 47.397972,
+    "lon_deg": 8.546204,
+    "local_ned_m": [
+     0.135,
+     2.972,
+     0.038
+    ],
+    "climb_mps": 0.004,
+    "groundspeed_mps": 0.01,
+    "landed_state": 1,
+    "fcu_base_mode": 157,
+    "fcu_custom_mode": 100925440
+   },
+   {
+    "alt_m": -0.004,
+    "lat_deg": 47.397972,
+    "lon_deg": 8.546203,
+    "local_ned_m": [
+     0.137,
+     2.964,
+     0.044
+    ],
+    "climb_mps": -0.0,
+    "groundspeed_mps": 0.009,
+    "landed_state": 1,
+    "fcu_base_mode": 17,
+    "fcu_custom_mode": 393216,
+    "armed_before_disarm": false
+   }
+  ]
+ },
+ "takeoff_alt_m": 3.0,
+ "fcu_present": true,
+ "position_estimate_ok": true,
+ "start": {
+  "alt_m": -0.11,
+  "lat_deg": 47.397971,
+  "lon_deg": 8.546164,
+  "local_ned_m": [
+   -0.015,
+   -0.031,
+   0.11
+  ],
+  "climb_mps": -0.144,
+  "groundspeed_mps": 0.017,
+  "landed_state": 1,
+  "fcu_base_mode": 29,
+  "fcu_custom_mode": 50593792
+ },
+ "params_set": {
+  "COM_OBL_RC_ACT": 4.0,
+  "COM_OF_LOSS_T": 0.5
+ },
+ "custom_mode_after_set": 393216,
+ "armed_after_arm_command": true,
+ "alt_after_takeoff": {
+  "alt_m": 3.156,
+  "lat_deg": 47.397971,
+  "lon_deg": 8.546164,
+  "local_ned_m": [
+   -0.03,
+   0.01,
+   -3.011
+  ],
+  "climb_mps": -0.018,
+  "groundspeed_mps": 0.011,
+  "landed_state": 2,
+  "fcu_base_mode": 145,
+  "fcu_custom_mode": 393216
+ },
+ "end": {
+  "alt_m": -0.001,
+  "lat_deg": 47.397973,
+  "lon_deg": 8.546204,
+  "local_ned_m": [
+   0.148,
+   2.974,
+   0.041
+  ],
+  "climb_mps": -0.005,
+  "groundspeed_mps": 0.002,
+  "landed_state": 1,
+  "fcu_base_mode": 17,
+  "fcu_custom_mode": 393216
+ },
+ "armed_end": false,
+ "mavlink": {
+  "sent": 2342,
+  "received": 22069
+ },
+ "acceptance": {
+  "takeoff_hover": true,
+  "waypoint_errors_m": {
+   "1": 0.08438601779915905,
+   "2": 0.0714632772828116,
+   "3": 0.03562302626111372
+  },
+  "waypoints": true,
+  "command_loss_left_offboard": true,
+  "landed_disarmed": true
+ },
+ "passed": true
+}

@@ -183,7 +183,7 @@ def test_bad_configuration_is_refused():
 
 FOUR_WHEEL = {
     "wheel_radius": 0.05, "wheel_separation": 0.32, "wheelbase": 0.32,
-    "max_steer": 0.785, "max_steer_rate": 2.5, "max_speed": 2.0,
+    "max_steer": math.pi / 2, "max_steer_rate": 2.5, "max_speed": 2.0,
     "max_accel": 1.5,
     "front_left_steer_joint": "fl_s", "front_right_steer_joint": "fr_s",
     "rear_left_steer_joint": "rl_s", "rear_right_steer_joint": "rr_s",
@@ -214,12 +214,8 @@ def test_every_four_wheel_steering_mode_turns_on_the_spot(mode):
     targets = _4ws(mode).targets(0.0, 1.0)
     assert targets.twist[0] == 0.0, "a zero-turn must not translate"
     assert any(abs(rate) > 1e-6 for rate in targets.velocity.values())
-    if mode == "pivot":
-        # Straight wheels, the two diagonals opposed.
-        assert set(round(a, 9) for a in targets.position.values()) == {0.0}
-    else:
-        # Each wheel is aimed tangentially to its own circle about the centre.
-        assert len(set(round(a, 6) for a in targets.position.values())) > 1
+    # Every pattern uses rolling tangents for yaw, including pivot.
+    assert len(set(round(a, 6) for a in targets.position.values())) > 1
 
 
 def test_four_wheel_steering_zero_turns_do_not_translate():
@@ -240,7 +236,10 @@ def test_four_wheel_odometry_uses_measured_steering_angles(mode):
         twist = drive.measured_twist(
             [targets.velocity[j] for j in drive.wheel_joints], targets.position)
         assert twist[0] == pytest.approx(speed, abs=0.01)
-        assert twist[2] == pytest.approx(yaw, abs=0.01)
+        expected_yaw = 0.0 if speed and mode in ("crab", "in_phase") else yaw
+        assert twist[2] == pytest.approx(expected_yaw, abs=0.01)
+        expected_lateral = yaw * drive.wheelbase / 2 if speed and mode == "in_phase" else 0.0
+        assert twist[1] == pytest.approx(expected_lateral, abs=1e-9)
 
 
 def test_four_wheel_pivot_is_stationary_without_a_command():
@@ -348,53 +347,21 @@ def test_mecanum_and_four_wheel_steering_come_from_the_drive_block():
 
 
 def test_crab_honours_a_lateral_command_and_ackermann_does_not():
-    """R5.6: crab can slide sideways; a turning circle cannot.
-
-    With vy = 0 every pattern keeps its previous forward-only behaviour.  A
-    lateral command is aimed along the commanded body velocity for crab and
-    in_phase only, so the base translates sideways without rotating; ackermann
-    (a turning circle) and pivot (in-place skid) ignore it rather than pretend.
-    """
-    crab = drive_from_config({"type": "four_wheel_steer", "steering_mode": "crab",
-                              "wheelbase": 0.32, "wheel_separation": 0.32,
-                              "wheel_radius": 0.05, "max_steer": 0.785,
-                              "front_left_steer_joint": "fl", "front_right_steer_joint": "fr",
-                              "rear_left_steer_joint": "rl", "rear_right_steer_joint": "rr",
-                              "front_left_wheel_joint": "flw", "front_right_wheel_joint": "frw",
-                              "rear_left_wheel_joint": "rlw", "rear_right_wheel_joint": "rrw"})
-    targets = crab.targets(0.0, 0.0, vy=0.3)
-    angles = set(round(a, 6) for a in targets.position.values())
-    assert len(angles) == 1, "crab must keep all four wheels parallel"
-    angle = angles.pop()
-    # The steering limit caps a pure lateral command: the wheels can only
-    # reach 0.785 rad (45 deg), so the body travels diagonally, not straight
-    # across.  The wheels still roll at the commanded lateral speed along
-    # their own (clamped) direction.
-    assert angle == pytest.approx(0.785, abs=1e-6), \
-        "a pure lateral command aims the wheels across the base, clamped"
-    # The wheels roll at the commanded lateral speed *projected onto their
-    # clamped 45 deg direction*, which is what makes the base travel
-    # diagonally: 0.3 * sin(0.785) / r.
-    expected = 0.3 * math.sin(0.785) / 0.05
-    for wheel in ("flw", "frw", "rlw", "rrw"):
-        assert targets.velocity[wheel] == pytest.approx(expected, rel=1e-6)
-
-    ackermann = drive_from_config({"type": "four_wheel_steer", "steering_mode": "ackermann",
-                                   "wheelbase": 0.32, "wheel_separation": 0.32,
-                                   "wheel_radius": 0.05, "max_steer": 0.785,
-                                   "front_left_steer_joint": "fl", "front_right_steer_joint": "fr",
-                                   "rear_left_steer_joint": "rl", "rear_right_steer_joint": "rr",
-                                   "front_left_wheel_joint": "flw", "front_right_wheel_joint": "frw",
-                                   "rear_left_wheel_joint": "rlw", "rear_right_wheel_joint": "rrw"})
+    crab = _4ws("crab")
+    for lateral in (-0.3, 0.3):
+        targets = crab.targets(0.0, 0.0, vy=lateral)
+        assert all(abs(angle) == pytest.approx(math.pi / 2)
+                   for angle in targets.position.values())
+        measured = crab.measured_twist(
+            [targets.velocity[j] for j in crab.wheel_joints], targets.position)
+        assert measured == pytest.approx((0.0, lateral, 0.0), abs=1e-9)
+    ackermann = _4ws("ackermann")
     lateral_only = ackermann.targets(0.0, 0.0, vy=0.3)
-    forward_only = ackermann.targets(0.0, 0.0, vy=0.0)
-    assert lateral_only.position == forward_only.position, \
-        "a turning circle must not answer a lateral command with steering"
-    assert lateral_only.velocity == forward_only.velocity
+    assert all(rate == 0.0 for rate in lateral_only.velocity.values())
 
 
 def test_crab_lateral_command_is_clamped_to_the_steering_limit():
-    """The steering limit caps pure lateral motion at a diagonal crab."""
+    """An unreachable lateral direction must not cause diagonal motion."""
     crab = drive_from_config({"type": "four_wheel_steer", "steering_mode": "crab",
                               "wheelbase": 0.32, "wheel_separation": 0.32,
                               "wheel_radius": 0.05, "max_steer": 0.5,
@@ -405,6 +372,7 @@ def test_crab_lateral_command_is_clamped_to_the_steering_limit():
     targets = crab.targets(0.0, 0.0, dt=1.0, vy=0.3)
     assert all(abs(a) <= 0.5 + 1e-9 for a in targets.position.values())
     assert all(a == pytest.approx(0.5, abs=1e-9) for a in targets.position.values())
+    assert all(rate == 0.0 for rate in targets.velocity.values())
 
 
 def test_in_phase_slides_sideways_without_opposing_axles():
@@ -421,3 +389,57 @@ def test_in_phase_slides_sideways_without_opposing_axles():
     assert front == pytest.approx(rear, abs=1e-6), \
         "in_phase keeps both axles the same way when sliding sideways"
     assert front != pytest.approx(0.0, abs=1e-6), "a lateral command must steer"
+
+
+@pytest.mark.parametrize("mode,vx,vy,wz", [
+    ("ackermann", 0.4, 0.0, 0.5), ("ackermann", -0.3, 0.0, 0.3),
+    ("pivot", 0.0, 0.0, 1.0), ("pivot", 0.0, 0.0, -1.0),
+    ("pivot", 0.4, 0.0, 0.5), ("crab", 0.0, 0.3, 0.0),
+    ("crab", -0.2, 0.3, 0.0), ("in_phase", 0.0, -0.3, 0.0),
+])
+def test_four_wheel_contact_velocities_satisfy_rigid_body_motion(mode, vx, vy, wz):
+    """Independent contact oracle: spinning wheel vectors must match v + w x r.
+
+    Checking only a target/odometry round trip would allow both solvers to
+    share the same incorrect slip model, as straight-wheel pivot once did.
+    """
+    drive = _4ws(mode)
+    targets = drive.targets(vx, wz, vy=vy)
+    contacts = (("fl_w", "fl_s", 0.16, 0.16),
+                ("fr_w", "fr_s", 0.16, -0.16),
+                ("rl_w", "rl_s", -0.16, 0.16),
+                ("rr_w", "rr_s", -0.16, -0.16))
+    for wheel, steer, x, y in contacts:
+        speed = targets.velocity[wheel] * 0.05
+        angle = targets.position[steer]
+        assert speed * math.cos(angle) == pytest.approx(vx - wz * y, abs=1e-9)
+        assert speed * math.sin(angle) == pytest.approx(vy + wz * x, abs=1e-9)
+
+
+def test_four_wheel_inner_outer_angles_are_different_and_axles_opposite():
+    angles = _4ws().targets(0.4, 0.5).position
+    assert angles["fl_s"] > angles["fr_s"] > 0.0
+    assert angles["fl_s"] == pytest.approx(-angles["rl_s"])
+    assert angles["fr_s"] == pytest.approx(-angles["rr_s"])
+
+
+def test_four_wheel_waits_for_steering_before_pure_lateral_motion():
+    drive = _4ws("crab")
+    first = drive.targets(0.0, 0.0, vy=0.3, dt=0.02)
+    assert all(abs(a) <= 0.05 for a in first.position.values())
+    assert all(rate == 0.0 for rate in first.velocity.values())
+    for _ in range(40):
+        targets = drive.targets(0.0, 0.0, vy=0.3, dt=0.02)
+    assert any(abs(rate) > 1 for rate in targets.velocity.values())
+    angles = dict(targets.position)
+    drive.reset()
+    stopped = drive.targets(0.0, 0.0, dt=0.02)
+    assert stopped.position == angles
+    assert all(rate == 0.0 for rate in stopped.velocity.values())
+
+
+def test_four_wheel_nonfinite_commands_and_odometry_stop():
+    drive = _4ws("crab")
+    targets = drive.targets(float("nan"), float("inf"), vy=float("nan"))
+    assert all(rate == 0.0 for rate in targets.velocity.values())
+    assert drive.measured_twist([float("nan")] * 4, {}) == (0.0, 0.0, 0.0)

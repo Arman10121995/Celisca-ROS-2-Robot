@@ -1,11 +1,11 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-01"
-current_revision: "af77f2f"
+updated: "2026-10-02"
+current_revision: "2a0aae2 plus October 2 continuation; see containing Git commit and evidence source hashes"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
-assessment: "Useful simulation-lab foundation; universal composition, class locomotion, algorithm breadth and measured benchmarking are not complete."
+assessment: "Useful simulation-lab foundation with scoped live robot evidence. The 2026-10-02 audit withdraws unsupported R6/R7/R8/R9 completion claims: metadata, simulated checks and generated scores do not qualify missions."
 audit_revision: "dff388f"
 documentation_only_revision: false
 priority_patches:
@@ -19,7 +19,7 @@ priority_patches:
     title: "Keep GUI keyboard/joystick neutral until operator input"
     state: partial
     owner: codex
-    result: "GUI no longer publishes when merely armed; 34 command/Drive tests pass. Physical joystick validation remains."
+    result: "GUI no longer publishes when merely armed; Flight command/backend/neutral-input checks join the passing command/Drive suite. Physical joystick validation remains."
   P3:
     title: "Celisca scale, spawn and furnished-map navigation"
     state: partial
@@ -35,12 +35,12 @@ priority_patches:
     title: "Four-wheel steering across crab, opposite-phase and pivot modes"
     state: active
     owner: codex
-    result: "MuJoCo default motion measured; Gazebo joint-controller bridge and hardware-plugin correction pass a forward/stop wheel-odometry check. Independent body truth, steering mode selector and full mapping/navigation matrix remain."
+    result: "4WS selector and four patterns measured on MuJoCo; selected PyBullet patterns measured. Exact rolling allocation and tangent steering repair pivot: Gazebo body truth reaches 0.994 rad/s for 1.0 commanded. MuJoCo all four patterns with current DWB defaults and crab screens on all four backends pass. Isaac lateral-command forwarding is fixed; 0.210 m body error / 16.13 degree heading error. Other patterns, precise final heading, obstacles and mapping/reset/watchdog remain."
   P6:
     title: "Physical mecanum lateral drive and mapping/navigation"
     state: active
     owner: codex
-    result: "Kinematics exist; solid wheels cannot physically strafe. Implement roller collisions and validate lateral motion before promoting holonomic support."
+    result: "MIT FUJI passive rollers and GUI strafe controls integrated. Historical full-mesh lateral speed was 0.283 m/s MuJoCo and 0.301 m/s PyBullet. Current convex-proxy repeats measure 0.253/0.276 m/s respectively for 0.3 commanded. Gazebo contact proxy restores physics: independent lateral speed 0.278 m/s for 0.3 commanded and one Nav2 goal passes. Remaining backend/map matrix, reset/watchdog and 2D/3D mapping missions remain."
   P7:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
     state: partial
@@ -49,9 +49,25 @@ priority_patches:
     evidence: "docs/status/policy-px4-candidates-2026-09-30.md"
   P8:
     title: "PX4 X500 drone integration"
-    state: queued
-    owner: unassigned
-    result: "Deferred from the current run by the user; upstream candidate documented."
+    state: done
+    owner: codex
+    result: "Native PX4 v1.16.2 X500 takeoff/hover/3D waypoints/landing/command-loss pass. ROS2 Flight mode, GUI Takeoff/Hold/Land and command autofill measured on Gazebo Harmonic/nav_empty; no obstacle-aware drone navigation or other backend/map qualification."
+    evidence: "docs/status/evidence/r54-flight-2026-10-02/README.md"
+storage_and_status_audit:
+  state: done
+  owner: codex
+  updated: "2026-10-02"
+  result: "65 PX4 paths moved with SHA-256/metadata verification and compatibility symlinks; 15.79 GiB reclaimed; internal disk 99% to 70% used. Completion audit published and unsupported task claims reopened."
+  evidence: "docs/status/evidence/storage-and-status-audit-2026-10-02/README.md"
+  scope: "Move dormant PX4 /tmp artifacts to the workspace SSD with verified content and compatibility symlinks; audit current roadmap completion claims against source and evidence."
+  baseline_revision: "2a0aae2"
+  baseline_internal_disk: "99% used; 644 MiB available; PX4 checkout already on SSD but trial logs remain on eMMC."
+completion_audit:
+  date: "2026-10-02"
+  revision: "2a0aae2"
+  result: "Project remains partial. Reset/backend/clean-host reports simulate success; comparison scores are generated; the dated support matrix extrapolates Isaac qualification to untested maps and modes."
+  report: "docs/status/audit-2026-10-02.md"
+  qualification: "Source/evidence audit and verified storage relocation; no new robot mission or clean-host qualification."
 patch_execution_guide: "docs/PATCH_EXECUTION_GUIDE.md"
 supported_baseline:
   os: "Ubuntu 22.04"
@@ -65,7 +81,10 @@ supported_baseline:
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
   mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
-  fast_suite: "672 passed, 1 skipped on the 2026-10-01 working tree based on af77f2f via scripts/test_fast.sh; registry cross-reference validation passed."
+  fast_suite: "2026-10-02 at 2a0aae2 plus recorded continuation source: scripts/test_tiers.sh fast 733 passed, 1 skipped. Focused dispatch/tutorial 64 passed; Tk command/composition/compatibility 66 passed, later selected drone/4WS checks 5 passed; actual installed Health/Flight GUI smoke passed. Evidence: docs/status/evidence/r56-functional-2026-10-02/."
+  native_flight: "PX4 v1.16.2 / Gazebo Harmonic / nav_empty: takeoff, hover, three 3D waypoints, command-loss landing and automatic disarm pass; ROS Flight services/Drive/neutral idle and independent body/rotor checks pass. Evidence: docs/status/evidence/r54-flight-2026-10-02/."
+  four_wheel_navigation: "MuJoCo / nav_empty: all four steering patterns reach goals with current Smac2D/DWB defaults. Crab diagonal goal screens also succeed on Gazebo, PyBullet and native Isaac 6.0.1. Isaac truth position error 0.210 m / heading error 16.13 degrees; precise heading, other patterns/maps, reset/watchdog and mapping remain unqualified. Current mecanum proxy lateral body speed is 0.278/0.253/0.276 m/s on Gazebo/MuJoCo/PyBullet; one Gazebo Nav2 goal passes."
+  continuation_builds: "Changed ROS packages and the C++ ParallelSteeringCritic built successfully; live Nav2 loaded the compiled critic. Latest changed-package rebuild: four packages passed. Builds are not clean-host qualification."
   map_suite: "35 passed on the 2026-09-30 working tree; MJCF regeneration check passed"
   registry_cross_references: "pass on the 2026-10-01 working tree"
   go2_support_transfer: "2026-10-01 at af77f2f plus working-tree changes: primary and trunk-aware repeat delivered 2,503/2,502 18-geom /go2/support_contact_forces vectors. Settled flank remained ~125 N on hips and <=6.2 N on feet; final repeat had 0 N trunk contact and ended failed:roll at 1.692 s, 1.642 rad peak tilt and 0.139 m height. Negative result; no recovery qualification. Evidence: docs/status/evidence/r52-go2-support-transfer-2026-10-01/."
@@ -405,6 +424,8 @@ tasks:
           - "src/robot_lab_gui/"
           - "src/robot_lab_mapping/"
           - "src/robot_lab/robot_lab_registry/config/robots.yaml"
+          - "src/robot_lab/robot_lab_registry/config/environments.yaml"
+          - "scripts/px4_ros_check.py"
           - "src/robot_lab_pybullet/"
           - "src/robot_lab_mujoco/"
           - "src/robot_lab_isaac/"
@@ -417,7 +438,7 @@ tasks:
         next_action: "Complete — R2.3 done. Advance to R3.1."
   R3:
     title: "Strict composition and execution"
-    state: "done"
+    state: "partial"
     owner: "cline-agent"
     next_task: "R5.1"
     tasks:
@@ -534,7 +555,7 @@ tasks:
         next_action: "Complete — R3.5 done (five benchmark scenarios + five benchmark experiments authored in the registry catalogs with state_estimation task_type added to schema; all resolver/composition/selector tests pass). Advance to R3.4 (connect GUI to the common resolver) or R4.1 (scenario lifecycle and truthful outcomes to make the cataloged scenarios executable)."
   R4:
     title: "Measured reference experiment"
-    state: "queued"
+    state: "partial"
     owner: null
     tasks:
       R4.1:
@@ -568,7 +589,7 @@ tasks:
         next_action: "Complete — R4.2 done (metrics.py: MeasuredMetrics/DerivedMetrics/RunMetrics schema distinguishing measured vs derived; trajectory_distance over pose sequences; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values. Truthful None-on-missing semantics everywhere: missing/NaN/stale data invalidate metrics instead of becoming zero. 83 unit tests pass; full suite 197 green with R4.1+P6.) Advance to R4.3 (first reproducible planner comparison with manifests, predeclared seeds/budgets, and bag artifacts)."
       R4.3:
         title: "Publish first reproducible planner comparison"
-        state: "done"
+        state: "partial"
         owner: "cline-agent"
         depends_on:
           - "R4.2"
@@ -581,10 +602,11 @@ tasks:
           - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/comparison.py"
           - "src/robot_lab/robot_lab_benchmark/test/test_r4_3_planner_comparison.py"
           - "src/robot_lab/robot_lab_registry/config/experiments.yaml"
-        next_action: "Complete — R4.3 done (comparison.py: ComparisonSpec predeclaration validation rejecting <5 evaluation seeds, duplicate seeds, tuning/evaluation overlap, identical arm ids, non-positive budgets and unjustified thresholds; ComparisonArm with all non-varied settings fixed; deterministic build_comparison_manifest with stable sha256 over canonical JSON pinning spec/revision/dirty/dependencies/asset_hashes/seeds/budgets/tolerances/artifact paths; verify_comparison_manifest detecting tampering; RunRecord retaining raw trace paths and outcome kinds for every run including failures; run_comparison executing only evaluation seeds by default with tuning tagged and excluded from summaries; summarize_comparison reporting per-arm n/mean/median/min/max/stdev distributions and failure rates — never best-run-only — plus median deltas; write_comparison_report JSON with manifest+summary+all runs. Canonical bumperbot_planner_comparison (navfn vs dijkstra, 5 eval seeds separate from 2 tuning seeds, measured+justified thresholds) mirrored in experiments.yaml and round-trip verified. 48 unit tests pass; full suite 245 green.) Advance to R5.1 (qualify Bumperbot and Labbot mobile tasks)."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Comparison/provenance code and unit tests exist; execute and publish the declared two-planner comparison with five evaluation seeds, recorded traces/bags and failure statistics. Unit fixtures alone do not complete a measured comparison."
   R5:
     title: "Robot-class qualification"
-    state: "in_progress"
+    state: "active"
     owner: "cline-agent"
     tasks:
       R5.1:
@@ -725,20 +747,33 @@ tasks:
         next_action: "2026-09-25 (second pass): the stalled pure-turn gait is diagnosed, not only observed. BHL_PROBE_EFFORT_VECTOR=1 makes the probe record the full 22-value effort vector at full rate and analyze_turn_gait.py digests it per window: in the clean 25 Hz run the summed-|effort| spread falls from ~10 N.m at 3-5 s (yaw +0.35 rad/s, 1.2x commanded) to 0.16-0.23 N.m from 5 to 13 s while the post-mux command stays (0,+0.3) in every sample, so the policy parks at a constant target - it is not stepping in place and slipping. Command feedback was then implemented, unit-tested and refuted live: the new opt-in boost-only yaw servo (node parameters yaw_servo_gain/yaw_servo_limit/yaw_servo_filter_tau_s, launch flag bhl_enable_yaw_servo, off by default) commanded an implied 1.38-1.50 rad/s through the stall at gain 4 and the yaw still collapsed to <=0.013 rad/s with only a slower effort-spread decay (3.3-4.9 N.m at 5-7 s), so the fixed point is command-invariant inside the trained command range and a command-path/rate/semantics explanation is refuted. Follow-up source audit (2026-09-25 third pass): upstream sends position targets at 250 Hz, while Recoil closes PD + torque EMA at 2 kHz. Its physical deployment overwrites motor-config 50/2 gains/limits with the same checkpoint 10/2 arms, 20/2 legs, and 4/6 N.m limits used here, so gain mismatch is refuted. The verified missing law is the Recoil EMA (alpha 0.2695973); an opt-in 250 Hz rate-composed equivalent now resets invalid state and SAFE_STOP to zero. Matched sequential live A/B is negative: 8-13 s dyaw 0.0098 rad versus 0.0120 rad baseline, with both effort spreads back to 0.17 N.m despite the live command, so the filter remains off. Tests: R5.3 adapter/backend/ROS graph 155 passed; bringup profiles 200 passed. Next: contact duplication is fixed and refuted as the stall remedy; do not tune rate/filter/contact further. Move to target-domain retraining or a new measured hypothesis. Also this round: one attempted run toppled during the ramp while a concurrent second launch ran (its own mujoco_spawner at ~167% CPU, load 9.3/12) - the identical re-run on an idle machine passed the same bend at 0.271 rad peak tilt, so bend fragility is CPU contention rather than command. Evidence: docs/status/evidence/r53-bhl-gui-drive-2026-09-24/{turn_pos03_gait_25hz,turn_pos03_gait_fall_25hz,turn_pos03_servo4_25hz}.{json,log}, with probe_key_vel.py and the new analyze_turn_gait.py; tests: adapter policy 47 passed, ROS-graph integration 10 passed, launch contracts 3, bringup algorithm dispatch 61. 2026-09-25 (instrumented): the post-mux twist was recorded on every sample of three delayed-turn runs and one walk run, so the command path is now verified end to end: /key_vel -> twist_mux -> policy kept the exact commanded (vx, wz) live for the whole window (no dropped/zero samples). With a +/-0.3 rad/s pure-turn command held for 10 s after the 2 s bend settles, the body yawed the correct way for about 2 s at 0.5-1.0x the commanded rate and then the policy stopped stepping: dyaw over 8-13 s was 0.002-0.006 rad with the command still live (net 10 s yaw +1.01 rad at 25 Hz and +0.23/-0.57 rad at 10 Hz). The previously reported 'negative yaw bias' is retired: the zero-command bend window drifts -0.24 to +0.14 rad/s depending on the run, so that number was the startup transient, not a turn-gain error. Sustained walking is also not robust: 3 of 4 walk runs today held 10 s (1.4-2.0 m) and 1 died at ~6 s and stood (0.67 m) with the command still live, and the same 10 Hz stream both stalled and sustained on repeat, so the stall is a policy/plant robustness item, not a command-rate effect. Next: qualify turn-rate calibration and sustained-motion robustness (closed-loop velocity feedback or a retrained policy), reverse command behavior, bounded perturbation recovery, and map/terrain qualification; do not enable SLAM or navigation until sensor and goal missions pass. Historical status: 2026-09-24: the normal MuJoCo localization launch walks from GUI /key_vel and stops upright in two long flat-map runs; isolated repeat pure-turn runs (+0.3 and -0.3 rad/s) completed the 2 s startup bend upright (peak tilt 0.21-0.30 rad) with a stable post-stop settle, so the earlier startup-bend fall was load contention in the full launch graph rather than a control defect. Historical status: 2026-09-22: live MuJoCo effort control and 12-second active stance now pass, with a failing passive comparison and verified effort-watchdog/reset/clean shutdown. Next qualify bounded perturbations and policy-driven walking/turning on this actual URDF/ROS effort path; use the policy operating limits and adequate PD/state rates. Controller-state reset, additional maps and GUI orchestration remain. Earlier native-model probes use a different plant and are not a substitute for these live checks. Historical findings follow. Live backend bringup proven (2026-09-16): the in-scope R5.3 live backend path — Gazebo Ignition Fortress 6.18 + gz_ros2_control + bhl_standing_controller + joint_state_broadcaster + IMU bridge + humanoid_policy_controller — was brought up headless with robot_name:=bhl in nav_empty. Verified: robot spawns (entity 42, name bhl) with no IMU frame-name collision (the pre-fix 'Non-unique name[imu]' error is absent), both controllers load and activate, /imu/out and /joint_states publish, the policy node pushes 22-element Float64MultiArray targets at 25.0 Hz, and the tilt crash guard fires as designed (safe_stop at 0.79 rad on the un-balanced spawn — intended, not a backend defect). Artifacts: docs/status/evidence/r53-bhl-live-backend-2026-09-16/ (README + launch.log + policy.log + diag.txt); gazebo.launch.py now accepts gui:=false for headless runs. The prior note that the live route was blocked on simulator availability was stale: Ignition Fortress 6.18 and both the ign_ros2_control-system and gz_ros2_control-system plugin libraries are installed and wired through the gazebo.launch.py path, and a headless bringup actually succeeds (see evidence). Remaining (residual, out of scope for the backend proof): the command-tracking gap — the policy's position targets do not yet close the loop into stable standing/walking because the onboard loop lacks real odometry/velocity feedback (IMU only). That is a policy/observation-gap issue, not a backend wiring defect; the backend path itself is sound. Dispatch-path integration done (same day, follow-up): robots.yaml gained the berkeley_humanoid_lite_sim profile (bhl_sim.xacro, spawn name bhl, display mode, ros2_control feature) declaring the robot's own controllers list, and simulated_robot.launch.py now spawns profile-declared controllers via controller_manager/spawner in display mode. Verified live through the dispatch path headless: entity bhl spawns, both controllers active, /imu/out + /joint_states + /bhl_standing_controller/commands live. Contract tests: robot_lab_bringup/test/test_sim_profiles.py. Remaining for R5.3: close the command-tracking gap (onboard odometry/state feedback or a retrained policy) and extend the sim profile beyond display mode if nav is wanted. Paused-start variant probed (same day, see evidence README): paused:=true works (load-while-paused, activate after unpause — both controllers end active), yet the policy still latches SAFE_STOP at 0.75 rad and the robot falls with joint positions pinned at zero despite active position commands — bringup ordering is confirmed not the blocker; the command-tracking gap (actuation/state feedback) is the sole residual. Actuation probe (same day, decisive, see docs/status/evidence/r53-bhl-actuation-2026-09-16/): a controlled two-phase probe through the dispatch path (both controllers active, unpaused) shows position commands DO actuate the joints — knees track 0.4 rad exactly, arms track 0.8 rad (arm_left clamped at its URDF upper limit 0.7854) — and the robot stands stably under zero commands (tilt 0.0 rad over 10 s). This overturns the paused-start reading that commands produce no joint motion (a correction note is appended in the live-backend evidence README). Corrected root cause of the spawn-fall SAFE_STOP: humanoid_policy_controller holds the policy default pose (bent legs, knee 0.4) from its first cycle, before any cmd_vel, while the robot spawns straight-legged (all zeros); commanding that pose instantly destabilizes the standing robot until tilt crosses the 0.70 rad fall threshold. Startup transient implemented and live-validated (same day, see docs/status/evidence/r53-bhl-settle-2026-09-16/): StartupSettle in bhl_policy.py + humanoid_policy_controller (measured-pose hold, bounded ramp on first cmd_vel, safe abort mid-ramp). Verified live through the dispatch path, two runs (2 s and 12 s ramps): the measured-pose hold fixed the pre-command fall — tilt stayed 0.0 rad through the pre-policy and policy-idle windows in both runs, so SAFE_STOP before driving is eliminated. But the squat transition itself topples the free-standing biped at any ramp speed: run 1 (2 s) max tilt 2.86 rad, run 2 (12 s) SAFE_STOP at knees ~0.17-0.26 rad, part way into the squat — geometric instability of position-controlled standing without CoM/balance feedback, not ramp dynamics. Remaining R5.3 residual is therefore precisely scoped as closed-loop balance: either (a) effort-interface joint drive with the training PD gains (kp 10-20, kd 2) so the policy loop closes, or (b) a dedicated standing/balance controller for the squat-to-stand transition. Both are controller work, not bringup work. Option (a) implemented (2026-09-17, see docs/status/evidence/r53-bhl-effort-interface-2026-09-16/): the bhl_joint macro in bhl_ros2_control.xacro now declares an effort command interface (+/-20 N.m, matching the URDF bound and the balance controller saturation) in place of the position command interface, and bhl_controllers.yaml declares bhl_standing_controller as effort_controllers/JointGroupEffortController. Correction (same day, static verification of the installed plugin): that controller type is a *pure effort forwarder* - it derives from forward_command_controller/ForwardCommandController, its installed header states it 'forwards the commanded efforts down to a set of joints', and its library exposes only interface_name as a parameter name (no kp/kd/ki/gains). Declaring kp/kd on it would therefore have been silently ignored, and the policy's position values (rad) would have been written to the effort interfaces as torques (N.m). The kp/kd were removed from bhl_controllers.yaml (a contract test now asserts the file carries no dead gains) and the PD-effort loop is closed in the publishing nodes instead: humanoid_policy_controller and humanoid_standing_controller gained a command_interface parameter (effort by default, matching the description; position publishes raw targets and is kept for the position marshalling path) and convert their targets via bhl_balance.pd_effort_command (tau = Kp*(q* - q) + Kd*(0 - qdot), clamped to +/-20 N.m, zero effort for a joint with no measurement, zero on SAFE_STOP), with node parameters kp_legs/kd_legs/kp_arms/kd_arms defaulting to the repo's own stance-PD constants (legs 120/4, arms 60/2 - the vendored policy configs declare no gains, so the earlier 'kp 10-20, kd 2' was a scoping estimate, not a value read from the checkpoints). pd_effort_command gained optional leg_gains/arm_gains overrides for this (pinned by TestPdGainOverrides in test_r5_3_bhl_balance.py). No separate parameter-file wiring was needed: the description plugin already loads this exact bhl_controllers.yaml, and the controller's 22-joint list still equals BHL_JOINT_NAMES so the adapter/policy command ordering stays correct. A redundant bhl_controllers_effort.yaml draft was deleted (referenced by nothing; its ankle joint order diverged from the canonical order). Contract tests updated and green (2026-09-17): test_sim_profiles.py (controller type + 22 joints + no dead kp/kd), test_r5_3_bhl_backend_contract.py (effort controller type, no control-law gains, canonical joint order, and the effort command interface in the macro), test_r5_3_bhl_balance.py::TestPdGainOverrides, and test_r5_3_bhl_policy_ros_graph.py (4 position-interface regression tests plus 2 new effort-interface tests on a live rclpy graph with real ONNX inference: the pre-command hold is zero drive on the effort interface, and driving yields finite efforts inside +/-20 N.m). Results: scripts/test_fast.sh 430 passed, 1 skipped, PASS with registry cross-reference validation PASS; the full adapter suite 243 passed including all 6 graph tests; integration tier 114 passed. Honest scope: the effort path is wired and unit-verified but NOT yet live-validated - because the effort command interface replaced the position one, the earlier live actuation proof (r53-bhl-actuation-2026-09-16) no longer applies to the current description, so a live dispatch-path re-run is required to confirm the policy targets now produce controlled joint motion rather than the pinned-near-zero stall and that tilt stays below the 0.70 rad fall threshold. If live balance still fails, the residual falls back to option (b), a dedicated standing/balance controller.  Live validation completed (2026-09-17, second session, trace-before-spawn): two of three failure modes were found and fixed - (1) the nodes defaulted to imu_topic /bhl/imu, a topic with no publisher (the gz bridge publishes /imu/out), so the tilt=pi fallback latched SAFE_STOP on the first cycle; defaults and the registry (robots.yaml BHL sensors.imu.topic, algorithms.yaml required_topics, contract test) now say /imu/out; (2) the draft nominal stance (knees 0.8, ankle 0.1) dragged the biped out of its balanced spawn pose and the knees buckled under the 20 N.m cap; NOMINAL_STANDING_POSE is now the URDF rest pose (all joints 0), live-verified: the robot stands in equilibrium at spawn (tilt 0.000, knees 0.000) - the first live-stable stance of the effort path. Remaining failure mode (3), open: a rigid-body pivot topple about the foot edge (tilt 0.005 to 1.27 rad in ~0.6 s with joints nearly still), caused by restoring stiffness (ankle PD 120 N.m/rad saturating at 20 N.m ~ 0.167 rad) being marginal against the gravity toppling stiffness (~86 N.m/rad at the 0.675 m CoM) and degraded further by the BHL 45-degree leg-axis mounting, which means body tilt does not map 1:1 onto ankle joint error. Holding stance needs gravity compensation from the URDF dynamics and/or a proper leg Jacobian (tilt to joint torques through the 45-degree axes) and/or a hip strategy with knees flexed inside the joint limits - quantitative justification for the option (b) dedicated balance controller; this is controller design, not bringup or wiring. Fast suite re-run after the changes: PASS (registry cross-reference PASS).  Continuation (2026-09-18, geometry audit of the parallel-ankle fix 80925bf): the same-sign parallel-ankle law stands (re-derived FK confirms both ankle-pitch axes +Y and both ankle-roll axes +X at the rest pose), but two of its pinned numbers were wrong and are corrected. (a) Sole height: the rest-pose sole bottom is +0.0400 m above the base origin, not +0.076 m - the earlier estimate ignored the Rx(90 deg) rotation of the sole collision box (box center z=0.06 in the base frame, half-thickness 0.02; the 0.006 m collision-origin z offset lives in the ROTATED ankle_roll frame and the box 0.04 m thickness axis maps to link y, not z). Verified three independent ways: full-SE(3) URDF FK of every foot collision element, pybullet collision AABBs with the base link pinned at the origin (z [+0.039,+0.081] incl. ~1 mm contact margin), and gz sdf -p on the exact spawned model (model frame == base link frame). Spawn z in robots.yaml corrected 0.078 -> 0.042: the old value dropped the soles 3.8 cm onto the ground at EVERY spawn - a symmetric flat drop, which is why the 2026-09-17 live trace shows clean tilt 0.000 for ~1.3 s and no tilt transient before the pivot topple, but it is an avoidable impact on the ankle gears at every start. (b) Topple stiffness: TOPPLE_STIFFNESS_NM_PER_RAD corrected to ~70.9 N.m/rad (16.3312 kg total mass, whole-body CoM z=0.4823 m in the base frame -> CoM 0.4423 m above the geometric sole (the pybullet AABB reports 0.039 - its ~1 mm contact-break padding - and the FK figure is the geometric truth)). The earlier ~108 N.m/rad used h=0.675 m, which is the base inertial origin height above the base ORIGIN, not the CoM height above the SOLE - it overestimated gravity by ~1.5x. The K=0.7 gain is therefore a ~2.4x margin, not 1.5x; gain values themselves unchanged (the unstable-direction conclusion for the earlier K=0.12/0.15 still holds: ~29 N.m/rad < 71 N.m/rad). Note the same-day failure-mode (3) text above quotes ~86 N.m/rad at the 0.675 m CoM - superseded by the 71 N.m/rad figure; the qualitative conclusion (ankle PD saturating at 20 N.m is marginal and the 45-degree leg-axis mounting breaks the 1:1 tilt-to-ankle map) is unchanged. Evidence: docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/sole_height_probe.{py,txt} (re-runnable). Tests: test_r5_3_bhl_balance.py 62 pass; full adapter suite 243 passed + 2 pre-existing environment failures in test_r5_3_bhl_policy_adapter that fail identically on clean HEAD (stale anyio/pytest plugin pin, unrelated). Next: live dispatch-path re-run with z=0.042 to confirm no spawn-drop transient; the open controller-design item is unchanged.  Continuation (2026-09-21, spawn sign + control-rate root cause + plant validation of the committed law): (a) SPAWN SIGN - the 2026-09-18 z=0.042 was itself sign-flipped: the sole is ABOVE the base origin, so the base origin must spawn BELOW ground; robots.yaml corrected z 0.042 -> -0.038 (2 mm settling margin). Plant-verified in pybullet: base at -0.038 establishes 8 foot contacts with Fz ~157 N (the full weight) within 25 ms; the same robot at +0.042 never touches down. The sole_height_probe RESULT line and yaml comment now derive the negative spawn explicitly. (b) CONTROL-RATE ROOT CAUSE of the ~5.5 s pivot topple: reproduced in MuJoCo on BOTH the legs-only biped and the full model with the exact committed law (balance_targets + pd_effort_command, 50 Hz, +/-20 N.m) - the 50 Hz control rate is discretely unstable (zero-order-hold torque staleness) for Kp=120 on the low-inertia ankle/foot links; rate sweep at 500 Hz sim: stable at >= 125 Hz, diverges at 50/25 Hz; BALANCE_RATE_HZ 50 -> 250. At 250 Hz the pure stance hold never exceeds 0.015 rad in 12 s and the full model rejects a pitch+roll nudge. (c) BALANCE SIGN re-validated at 250 Hz with the exact target-shift law: perturbed-stance max tilt 0.008 rad (committed +K) vs 0.129 rad (sign flipped) vs 0.014 rad (no reaction) - the committed same-sign law actively damps; it is correct. (d) STATIC FEASIBILITY: gravity-holding torque at the rest pose is <= 0.79 N.m on every joint (steady-state position-servo measurement, base pinned); note pybullet calculateInverseDynamics(flags=1) is unreliable here - it reports 116.6 N.m on arm_left_shoulder_pitch, contradicted by both the servo measurement and analytic gravity moments - so the stance hold is statically trivially feasible and every observed failure was dynamic. (e) LIVE GAZEBO A/B MATRIX at the corrected spawn (docs/status/evidence/r53-bhl-ankle-fix-2026-09-17/live_ab_matrix.md): base variants - 50 Hz node/100 Hz physics; 250 Hz node/100 Hz physics; 250 Hz node/500 Hz physics (empty+nav_empty worlds max_step_size 0.01 -> 0.002, also clearing the gz_ros2_control period-mismatch warning); imu_invert_tilt:=true (new diagnostic parameter on humanoid_standing_controller, default false); arms zero-drive A/B (STANCE_PD_ARMS 0/0, reverted - no effect); use_sim_time:=true on the node - ALL fall ~2.5-3 s after spawn with the same exponential runaway; the live divergence is invariant to all five interventions, so the remaining cause sits deeper in the gz_ros2_control command/measurement loop (next suspects: effort-interface joint mapping and latency inside the gz plugin, ODE-import contact/friction parameters vs MuJoCo, bridge sensor rates). Since MuJoCo - the R5.3 target backend per the project goal - validates the exact committed control path, the recommended route is to run the R5.3 live validation on the MuJoCo backend and treat the Gazebo loop as the open item. Evidence (all re-runnable): sole_height_probe.{py,txt} (sign-corrected RESULT), static_torque_probe.{py,txt}, plant_rate_probe.{py,txt} (rate sweep + sign test; strips the non-colliding visual meshes because the vendored mjcf assets layout lacks merged/*.stl), live run artifacts under /tmp/r53{ankle2,invert,noarms,simtime} with the 250 Hz baseline archived at /tmp/r53ankle2_250hz. Tests: test_r5_3_bhl_balance.py 62 pass; full adapter suite 243 passed + the 2 pre-existing environment failures in test_r5_3_bhl_policy_adapter (fail identically on clean HEAD); bringup 308 passed/2 skipped; maps 33 passed. Fast suite not re-run this session; registry cross-reference untouched (no registry keys changed - world/physics and node timing only)."
       R5.4:
         title: "Integrate real multirotor SITL flight"
-        state: "blocked"
-        owner: "cline-agent"
+        state: "done"
+        owner: "codex"
         depends_on:
           - "R5.1"
+        active_scope: "2026-10-02 user includes drone: inspect setpoint contract before changing rotor plant, repair flight client, qualify X500 flight and ROS2/GUI integration. All runtime state/logs on SSD."
         scope_paths:
           - "src/robot_lab_robots/quadrotor_sitl/"
           - "src/robot_lab_adapter/robot_lab_adapter/mavros_offboard_controller.py"
           - "src/robot_lab_bringup/"
+          - "scripts/px4_offboard_flight.py"
+          - "scripts/px4_sitl_model.py"
+          - "scripts/px4_sitl_check.sh"
+          - "docs/tutorials/px4_x500.md"
+          - "docs/status/continuation-2026-10-02.md"
+          - "scripts/test_tiers.sh"
+          - "src/robot_lab_utils/robot_lab_utils/mode_capability.py"
+          - "src/robot_lab/robot_lab_registry/config/robots.yaml"
+          - "src/robot_lab_adapter/"
+          - "src/robot_lab_gui/"
+          - "src/robot_lab_robots/config/robots.yaml"
         acceptance_ref: "ROADMAP.md"
-        blocked_on: "Gazebo-side rotor actuation produces no thrust on this host: the FCU arms in OFFBOARD, the estimator converges and every topic matches, but the vehicle does not lift - with PX4 main (SDF 1.11) and with the Harmonic-matched v1.16.2 (SDF 1.9) alike."
-        attempted: "PX4-Autopilot @ 9be7c6f391fb built rootless and runs with the Gazebo bridge. Measured: MAVLink telemetry, PARAM_SET/read-back, 20 Hz setpoints, OFFBOARD accepted (custom_mode 393216), GPS fix type 3 with 10 satellites, and ARMING SUCCEEDS (base_mode 145, COMMAND_ACK 0) when the setpoint stream is kept alive through the arm request. Every vehicle-insertion arrangement was tried: PX4's own scoped spawn (topics match, rotors still inert), an unscoped flattened insert (sensors live, rotor topic mismatched), a scoped insert via PX4's request form (entity not simulated), and a rotor-topic rewrite (absolute sub-topic ignored). A patch to the FCU publish path was tried and reverted; the PX4 checkout is unmodified."
+        result: "Measured native PX4 v1.16.2 X500 flight and ROS2/GUI integration on Gazebo Harmonic/nav_empty. Takeoff, hover, changing 3D waypoints, Land/disarm and command-loss landing pass; independent ROS body truth and rotor states recorded. No obstacle-aware aerial navigation or other map/backend qualification is claimed."
+        diagnosis_correction: "The former 0xFC7 MAVLink mask ignored XYZ and requested zero velocity. 0x9F8 requests actual position/yaw, and the client now forwards waypoint XYZ. Pinned native startup inserts and flies the upstream model; the October 1 rotor-actuation diagnosis is superseded."
         evidence:
-          - "docs/status/evidence/r54-px4-sitl-2026-10-01/: PX4 SITL (gz_x500) built and running with no root. Measured against the live FCU: MAVLink telemetry (21k+ packets), PARAM_SET/read-back, 20 Hz setpoint streaming, OFFBOARD accepted (custom_mode 393216), GPS fix type 3 with 10 satellites once the vehicle is in the world, and ARMING SUCCEEDS (base_mode 145, COMMAND_ACK result 0) when the setpoint stream is kept alive through the arm request. Takeoff/hover/waypoints/landing/command-loss are NOT measured: the FCU's rotor command topic does not reach the inserted Gazebo entity, so the armed vehicle does not lift off. scripts/px4_sitl_model.py (include flattener + inserter, 4 hermetic tests) and the offboard client are in the tree."
-        next_action: "Debug the Gazebo side, not the FCU: the MulticopterMotorModel system plugin receives no effective rotor command under gz-sim 8.15 even though PX4 publishes on the subscribed topic. Next to try: verify with a direct gz publish that a single motor_speed message spins rotor_0 (gz topic -t /model/x500_0/command/motor_speed -m gz.msgs.Double -p 'value: 800' and watch the joint), then inspect the plugin load in the world (gz model -m x500_0 -s). A newer Gazebo (Jetty/Ionic) is the other route and needs root. Once it lifts: record takeoff/hover/3D waypoints/landing/command-loss, then replace the stub mavros_offboard_controller.py and fixed-rotor URDF."
+          - "docs/status/evidence/r54-flight-2026-10-02/README.md: native FCU mission and ROS service/Drive flight with independent Gazebo body truth; GUI command and frame/protocol tests; exact source/PX4 revisions and negative trials preserved."
+          - "docs/status/evidence/r54-px4-sitl-2026-10-01/: historical trial; motor-topic diagnosis superseded by the measured mask/XYZ repair above. PX4 SITL (gz_x500) built and running with no root. Measured against the live FCU: MAVLink telemetry (21k+ packets), PARAM_SET/read-back, 20 Hz setpoint streaming, OFFBOARD accepted (custom_mode 393216), GPS fix type 3 with 10 satellites once the vehicle is in the world, and ARMING SUCCEEDS (base_mode 145, COMMAND_ACK result 0) when the setpoint stream is kept alive through the arm request. Takeoff/hover/waypoints/landing/command-loss are NOT measured: the FCU's rotor command topic does not reach the inserted Gazebo entity, so the armed vehicle does not lift off. scripts/px4_sitl_model.py (include flattener + inserter, 4 hermetic tests) and the offboard client are in the tree."
+        next_action: "Preserve the measured Flight path and neutral GUI enable. Further work belongs to aerial mapping/obstacle-aware navigation, additional environments, longer hover drift, broader failsafe and concurrent-FCU qualification; do not enable ground Nav2/SLAM as drone flight."
       R5.5:
         title: "Integrate four-wheel Ackermann and reverse Ackermann workflows"
         state: "active"
@@ -760,33 +795,47 @@ tasks:
           - "docs/status/evidence/r55-car-watchdog-2026-10-01/: PyBullet ground-truth publisher-loss for Ackermann/rear-steer/anti-Ackermann coasted 0.101/0.109/0.111 m; Gazebo controller-odom runs for all three coasted 0.155 m and settled; MuJoCo ground-truth Ackermann coasted 0.017 m and settled but arc tracking was weak. PyBullet and Gazebo steering traces show distinct steering geometries. Gazebo uses controller odometry, not independent truth; these are single runs, not full qualification."
           - "docs/status/evidence/r55-car-wheelwell-2026-10-01/: the weak MuJoCo arc was a geometry defect, not tuning: the chassis collision box overlapped the steered tires' swept volume, and MuJoCo resolved the sweep with a ~113 N chassis/tire contact whose lever arm saturated the 10 N*m steering servo (0.229 rad measured of 0.452 commanded; front wheels stalled at 5 N*m). With the chassis collision narrowed to a wheel well (visual unchanged), MuJoCo ground truth measures ackermann left arc 0.374 m/s / 0.486 rad/s, rear-steer 0.366 / 0.499 and anti-Ackermann 0.369 / 0.473 for a commanded 0.4 / 0.5 (95-100% yaw tracking, was 21%), steering joints 0.445/0.322, -0.459/-0.334 and +0.326/+0.448 respectively, and publisher loss coasts 0.115-0.122 m with a 0.000/0.000 tail for all three. Pinned by test_xacro_expansion.py::test_steered_wheel_sweep_clears_the_chassis_collision_box. Slalom/parking/obstacle missions remain open."
           - "docs/status/evidence/r55-car-wheelwell-2026-10-01/gazebo/: the Gazebo repeat for all three car profiles produced no /robot_lab_controller/odom and ended with a no-odometry result; a stale install of robot_lab_description (missing libexec gazebo_reset_bridge.py) was found and fixed so the launch now runs, but the Gazebo cells stay unmeasured and no Gazebo number may be compared with the MuJoCo rows."
-        next_action: "Gazebo first: the car profiles publish no /robot_lab_controller/odom in mode:=loc (the launch itself is fixed, the controller path is not), so restore Gazebo car odometry, then repeat publisher-loss/heading there and confirm the wheel-well repair on that backend. Then Isaac (Docker availability to be checked) and the slalom/parking/obstacle missions with curvature and swept-footprint checks. The rear-steer vs anti-Ackermann terminology is documented in robots.yaml and measured (+0.445/+0.322 vs -0.459/-0.334 vs +0.326/+0.448 steering joints) but no GUI/tutorial page carries it yet."
+        next_action: "Gazebo controller odometry now exists and the three car publisher-loss screens are recorded. Continue independent Gazebo body truth, Isaac command-loss evidence, final heading, slalom/parking and full robot/map/backend mapping/navigation qualification. Then Isaac (Docker availability to be checked) and the slalom/parking/obstacle missions with curvature and swept-footprint checks. The rear-steer vs anti-Ackermann terminology is documented in robots.yaml and measured (+0.445/+0.322 vs -0.459/-0.334 vs +0.326/+0.448 steering joints) but no GUI/tutorial page carries it yet."
       R5.6:
         title: "Qualify four-wheel steering patterns and physical mecanum travel"
-        state: "partial"
+        state: "active"
         owner: "codex"
         depends_on:
           - "R5.1"
           - "R3.3"
         scope_paths:
+          - "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py"
           - "src/robot_lab_robots/holonomic_wheels/"
           - "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py"
           - "src/robot_lab_controller/"
           - "src/robot_lab_gui/"
           - "src/robot_lab_bringup/"
+          - "src/robot_lab_description/launch/gazebo.launch.py"
+          - "src/robot_lab_description/scripts/"
+          - "src/robot_lab_navigation/"
+          - "src/robot_lab_localization/"
+          - "src/robot_lab_adapter/robot_lab_adapter/resolver.py"
+          - "src/robot_lab_robots/config/robots.yaml"
+          - "scripts/sim_drive_check.py"
+          - "scripts/sim_nav_check.py"
+          - "scripts/sim_drive_check.sh"
+          - "scripts/sim_nav_check.sh"
+          - "scripts/simplify_mecanum_collision.py"
+        active_scope: "2026-10-02 codex: correct 4WS rolling geometry, true lateral steering and pivot; configure holonomic estimation/navigation and GUI command fidelity; qualify physical movement and mapped missions sequentially. Preserve earlier audit and storage changes."
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/r56-functional-2026-10-02/README.md: exact per-wheel rolling, true +/-90 degree crab, physical tangent pivot, independent Gazebo pose, convex roller contact, real DWB/AMCL plugins and measured Nav2 goals. Historical weak-pivot and no-Gazebo-odom diagnoses are superseded for these cells."
           - "docs/status/evidence/r55-holonomic-audit-2026-09-30/: four-wheel-steering default pattern passed a real MuJoCo straight/arc/reverse/pivot/stop drive probe after fixing four coincident hubs and pure-yaw rates. Gazebo controller launch failed; alternative patterns remain source-only. Mecanum yaw improved but a 0.3 m/s lateral command yielded 0.000 m/s truth motion with solid collision cylinders; physical holonomic support remains unqualified."
           - "docs/status/evidence/r56-holonomic-measure-2026-10-01/: three defects fixed and measured. (1) The display hold pinned all 60 passive mecanum rollers (a mecanum is not a differential drive, so has_drive was false), so the roller wheel acted as a solid tire: 0.014 m/s of a commanded 0.30 m/s strafe through the bridge versus 0.280 m/s in a plain MuJoCo loop; robot_lab_utils.urdf_joints.driven_assembly_joints now keeps a driven assembly's passive parts out of the hold in both bridges (pinned by test_driven_assembly_hold.py, 60 rollers for the shipped mecanum). (2) The PyBullet bridge crashed with AttributeError on every non-differential drive (_drive.left) before publishing; the diff-only lookup moved into the diff branch. (3) The holonomic chassis collision became a wheel well, as for the cars. After the fixes, MuJoCo ground truth measures the mecanum at 0.397 m/s straight, 0.490/-0.490 rad/s arcs, 0.983 rad/s spin with no translation, and 0.283 m/s of a commanded 0.30 m/s strafe (1.03 m of lateral travel, no yaw leak) - the first measured physical lateral motion for this base. A new steering_mode:= launch argument plus a GUI pattern selector qualifies all four 4WS patterns on MuJoCo: opposite-phase 0.464 rad/s on a 0.5 command with front/rear in opposite phase, in_phase and crab translate with ~0.076 m/s lateral and ~0.09 rad/s yaw, pivot holds the wheels straight but reaches only 0.216 of 1.0 rad/s (skid-limited). GUI gains mecanum-gated Strafe L/R latched buttons publishing Twist.linear.y. Open: Gazebo/Isaac cells, mapped Nav2 missions per pattern, the pivot zero-turn rate, and in_phase vs crab separated by a pure lateral command."
-        next_action: "Measured on MuJoCo and PyBullet: the mecanum strafes physically (0.283 and 0.301 m/s), all four 4WS patterns are measured, and a lateral crab command now translates diagonally with no yaw (vx/vy +0.149, wz 0.000 at the 0.785 rad steering limit). Remaining: Gazebo cells for these two bases against independent truth (the Gazebo 4WS/mecanum controller publishes no odometry here, as the car profiles do not), localization/2D-3D mapping/Nav2 on one mapped obstacle route per pattern, and either raising or formally recording the pivot zero-turn rate (0.216 MuJoCo / 0.072 PyBullet of 1.0 rad/s, skid-limited)."
+        next_action: "Crab screens pass on all four backends and MuJoCo all patterns pass with current DWB defaults. Continue other steering patterns and mecanum on Gazebo, PyBullet and Isaac against body truth, including obstacle routes/precise repeated final heading, command loss/reset, Localization, 2D SLAM and RGB-D SLAM. Preserve failed RPP crab route; parallel steering uses DWB ParallelSteeringCritic to reject simultaneous translation/yaw. GUI defaults and saved manifests must reproduce the measured commands."
   R6:
     title: "Environment qualification"
-    state: "done"
+    state: "partial"
     owner: "molar1"
     tasks:
       R6.1:
         title: "Qualify geometry map alignment and resets"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R2.3"
@@ -826,13 +875,14 @@ tasks:
           - "docs/status/evidence/r61-furniture-collision-2026-09-30/: corrected the 20% Celisca resize for differently scaled furniture STLs and floor-2 model pose; 2D/3D footprint ratios are about 1.02 x 1.05-1.07. Above-floor collision proxies remove ODE mesh-floor contact overflow. Short floor-2 furniture /goal_pose missions now succeed for Bumperbot in Gazebo/PyBullet/MuJoCo/Isaac and Labbot in Gazebo; floor-1 furniture Bumperbot Gazebo also succeeds. Furniture obstacles remain absent from the static 2D PGM, and longer avoidance routes are unqualified."
           - "src/robot_lab_maps/tools/r6_geometry_map_alignment.py: Geometry-map alignment validation framework"
           - "src/robot_lab_maps/tools/r6_reset_validation.py: Reset validation framework"
-          - "src/robot_lab_maps/tools/r6_1_geometry-map-alignment-2026-10-01.json: 25/26 environments passed validation"
-          - "src/robot_lab_maps/tools/r6_1-reset-validation-2026-10-01.json: 24/24 reset configurations passed"
+          - "docs/status/evidence/r6-1-geometry-map-alignment-2026-10-01.json: static/demo findings, not runtime alignment qualification"
+          - "docs/status/evidence/r6-1-reset-validation-2026-10-01.json: simulated example resets, not backend qualification"
           - "verify_r6_complete.py: Comprehensive R6.1 verification script"
-        next_action: "Completed - Geometry/map alignment and reset functionality validated across all environments"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Retain scoped live Celisca/Nav2 and alignment evidence. Replace assumed file-presence alignment and simulated resets with per-backend measured pose/velocity/actor/sensor/estimator reset trials; furnished-map obstacle routes remain open."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R6.1"
@@ -847,12 +897,13 @@ tasks:
           - "src/robot_lab_maps/tools/r6_dynamic_sensor_disturbance.py: Dynamic sensor disturbance framework"
           - "src/robot_lab_maps/tools/r6_2_dynamic_scenarios.yaml: 3 dynamic scenarios with 6 disturbance types"
           - "src/robot_lab_maps/tools/r6_2_scenarios/: Individual scenario configurations"
-          - "src/robot_lab_maps/tools/r6_2-dynamic-sensor-disturbance-2026-10-01.json: Validation report"
+          - "docs/status/evidence/r6-2-dynamic-sensor-disturbance-2026-10-01.json: configuration/helper demonstration"
           - "verify_r6_complete.py: Comprehensive R6.2 verification"
-        next_action: "Completed - Dynamic cases and sensor disturbance framework with 6 disturbance types and moving obstacles"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Scenario configurations and disturbance helpers exist. Wire them to live sensors/actors and record repeatable baseline/degraded traces with collision, sensing and recovery outcomes; configuration validation is not mission qualification."
       R6.3:
         title: "Qualify 3D terrain and aerial representations"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R6.1"
@@ -867,12 +918,13 @@ tasks:
         evidence:
           - "src/robot_lab_maps/tools/r6_3d_terrain_aerial.py: 3D terrain and aerial representations framework"
           - "src/robot_lab_maps/tools/r6_3_terrain_maps.yaml: 4 terrain maps with height/voxel representations"
-          - "src/robot_lab_maps/tools/r6_3_3d-terrain-aerial-2026-10-01.json: Validation report with collision detection"
+          - "docs/status/evidence/r6-3-3d-terrain-aerial-2026-10-01.json: numerical representation demonstration, not terrain/flight missions"
           - "verify_r6_complete.py: Comprehensive R6.3 verification"
-        next_action: "Completed - 3D terrain and aerial representations with height maps, voxel grids, collision detection, and validation"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Height/voxel numerical helpers and terrain metadata exist. Record class-appropriate terrain/flight missions and overhang/foothold/altitude collision checks. Go2 terrain remains unsuccessful. Named PX4/nav_empty flight acceptance now passes; aerial terrain/course/overhang missions remain unqualified."
       R6.4:
         title: "Expand diverse maps for ground, legged and aerial tasks"
-        state: "queued"
+        state: "partial"
         owner: null
         depends_on:
           - "R6.1"
@@ -882,15 +934,16 @@ tasks:
           - "src/robot_lab_bringup/"
         acceptance_ref: "ROADMAP.md"
         evidence: []
-        next_action: "Preserve the 26 existing environments. Add at least six distinct seeded layouts across road/parking, uneven terrain/stairs/rubble, and volumetric indoor/outdoor flight; validate dimensions, clearance, representation, spawn/goals and reset. Qualify class-specific tasks after the corresponding robot controller works."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Seven diverse-map metadata records exist in r6_diverse_maps.py, but they do not establish seven runnable generated worlds. Generate/install/register collision and map assets, then record one real class-specific mission per added map with reproducible reset."
   R7:
     title: "Algorithm breadth"
-    state: "done"
+    state: "partial"
     owner: "molar1"
     tasks:
       R7.1:
         title: "Normalize numerical and ROS algorithm adapters"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R4.3"
@@ -911,10 +964,11 @@ tasks:
           - "Control: 7 implementations (pid_controller, lqr_controller, mpc_controller, nonlinear_mpc, feedback_linearization, backstepping_controller)"
           - "verify_r7_algorithms.py: verification script confirms ≥5 implementations per category"
           - "test_algorithm_dispatch.py: all entry points resolve correctly"
-        next_action: "Completed - All algorithm categories have ≥5 runnable implementations with ROS adapters"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Preserve the real ROS wrappers and numerical cores. Verify installed useful input/output, oracle accuracy, replay and failure contracts per category; counting dispatch entries, conversions and stack aliases does not prove five substantive algorithms."
       R7.2:
         title: "Five perception pipelines"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -930,29 +984,35 @@ tasks:
           - "docs/tutorials/perception.md: comprehensive documentation with equations and usage"
           - "verify_r7_complete.py: all requirements satisfied"
           - "test_r7_simple_verification.py: 21 tests passed"
-        next_action: "Completed - Five perception pipelines with method subrecords, mathematical foundations, benchmark experiments"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
       R7.3:
         title: "Five localization methods"
-        state: "done"
-        owner: "molar1"
+        state: "active"
+        owner: "codex"
         depends_on:
           - "R7.1"
+        active_scope: "2026-10-02 codex: repair algorithm dispatch overrides and the standalone AMCL callback failure found in Gazebo; verify actual Nav2 algorithm selection. Full localization comparison remains open."
         scope_paths:
           - "src/robot_lab_localization/"
           - "src/robot_lab_mapping/"
           - "src/robot_lab_algorithms/"
+          - "src/robot_lab_bringup/config/algorithm_dispatch.yaml"
+          - "src/robot_lab_bringup/test/test_algorithm_dispatch.py"
           - "docs/tutorials/localization.md"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/r56-functional-2026-10-02/: real Nav2/AMCL dispatch restored, duplicate keys rejected, educational AMCL callback/output repaired; 63 focused dispatch checks pass and actual Nav2 goals succeed. This does not qualify five localization methods."
           - "Five localization methods implemented with method subrecords, equations, source references"
           - "Five benchmark experiments with ATE/RPE metrics, convergence and failure measurements"
           - "AMCL, dead reckoning, histogram filter, particle filter, UKF localization"
           - "docs/tutorials/localization.md: comprehensive documentation with ATE/RPE metrics"
           - "verify_r7_complete.py: all requirements satisfied"
-        next_action: "Completed - Five localization methods with mathematical foundations and benchmark experiments"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Preserve the restored real stack AMCL/Nav2 dispatch and unique YAML keys. Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
       R7.4:
         title: "Five state-estimation methods"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -967,10 +1027,11 @@ tasks:
           - "Kalman filter, extended Kalman filter, unscented Kalman filter, particle filter, moving horizon estimator"
           - "docs/tutorials/state_estimation.md: comprehensive documentation with mathematical models"
           - "verify_r7_complete.py: all requirements satisfied"
-        next_action: "Completed - Five state estimation methods with mathematical foundations and benchmark experiments"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
       R7.5:
         title: "Five sensor-fusion methods"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -985,10 +1046,11 @@ tasks:
           - "Complementary filter, extended Kalman filter fusion, unscented Kalman filter fusion, Madgwick filter, Mahony filter, sensor fusion node"
           - "docs/tutorials/sensor_fusion.md: comprehensive documentation with attitude/pose error metrics"
           - "verify_r7_complete.py: all requirements satisfied"
-        next_action: "Completed - Six sensor fusion methods properly stratified by attitude vs pose"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
       R7.6:
         title: "Five global planners"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -1004,10 +1066,11 @@ tasks:
           - "A*, Dijkstra, Navfn, Voronoi path planner, RRT global planner"
           - "docs/tutorials/planning.md: comprehensive documentation with path cost metrics"
           - "verify_r7_complete.py: all requirements satisfied"
-        next_action: "Completed - Five global planners covering graph, sampling, and voronoi algorithm families"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
       R7.7:
         title: "Five local planners"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -1023,10 +1086,11 @@ tasks:
           - "DWA, TEB, EBand, MPPI, pure pursuit local planner"
           - "docs/tutorials/local_planning.md: comprehensive documentation with collision tracking metrics"
           - "verify_r7_complete.py: all requirements satisfied"
-        next_action: "Completed - Five local planners covering both reactive and trajectory-optimizing methods"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
       R7.8:
         title: "Five low-level or model-based controllers"
-        state: "done"
+        state: "partial"
         owner: "molar1"
         depends_on:
           - "R7.1"
@@ -1042,15 +1106,16 @@ tasks:
           - "PID, LQR, MPC, nonlinear MPC, feedback linearization, backstepping controller"
           - "docs/tutorials/control.md: comprehensive documentation with equations and actuator models"
           - "verify_r7_complete.py: all requirements satisfied"
-        next_action: "Completed - Six control methods with tracking, disturbance, stability-envelope tests"
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
   R8:
     title: "Backend qualification and scaling"
-    state: "done"
+    state: "partial"
     owner: null
     tasks:
       R8.1:
         title: "Qualify PyBullet and MuJoCo combinations"
-        state: "done"
+        state: "partial"
         owner: "codex"
         depends_on:
           - "R5.1"
@@ -1074,7 +1139,8 @@ tasks:
           - "Bag provenance is self-contained instead of hand-counted: the harness parses per-topic message counts straight from each run's rosbag2 metadata.yaml (bag_topic_counts / load_bag_topic_counts, 5 new unit tests), so every count cited here is recoverable from a committed file rather than an ad-hoc 'ros2 bag info'. Recorded totals 814-860 msgs/run (MuJoCo) and 801-804 msgs/run (PyBullet) across /clock, /odom/ground_truth, /scan and /cmd_vel. Artifacts: docs/status/evidence/r81-live-mujoco-2026-09-15/ and docs/status/evidence/r81-live-pybullet-2026-09-15/ (summary_<sim>.json verbatim harness output, stats.json holding per-metric distributions plus a per_seed breakdown, seed_<n>/ with manifest+metrics+trace head+launch head+progress log; every number above comes from stats.json). Raw trace.csv rows and bags/*.db3 are large and deliberately stay out of the repo - each README carries the exact reproduction command. The earlier 2026-09-14 single-seed runs are superseded and their artifact dirs were removed rather than left behind as a stale citation."
           - "Live opt-in tests validated end-to-end after the entry-point convention fix: the two live tests now launch the mission through the repo-standard route (ros2 run robot_lab_benchmark robot-lab-live-mission) rather than a bare console-script name. Sourcing install/setup.bash does not put install/<pkg>/lib/<pkg> on PATH (verified: zero matches), so the bare name only worked when the caller had exported PATH by hand - the earlier pass depended on exactly that leftover shell state. Both live tests now pass for real: MuJoCo 1 passed in 19.63 s, PyBullet 1 passed in 21.64 s, exit 0 (2026-09-15)."
           - "2026-10-01 R8.1 backend qualification framework completed: BackendQualificationFramework and verification scripts implemented with comprehensive checks for import fidelity, physics validation, sensor validation, reset functionality, R2 contracts, and R4 mobile experiments. Evidence: docs/status/evidence/r8-1-backend-qualification-2026-10-01.json and docs/status/evidence/r8-1-verification-2026-10-01.json"
-        next_action: "R8.1 backend qualification completed. Framework covers all acceptance criteria: import fidelity, frames, stepping, contacts, limits, sensors/noise and reset validation; R2 contracts and R4 mobile experiment verification; physics differences measurement; missing sensor modes gating; non-mobile support ready for separate evidence."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Preserve the historical scoped mobile ROS/physics/mission evidence. Replace assumed import/contact/reset checks and random performance metrics with actual per-cell backend traces; no universal robot/map qualification follows from the new demonstration report."
       R8.2:
         title: "Qualify Isaac on a named host configuration"
         state: "done"
@@ -1097,7 +1163,7 @@ tasks:
         next_action: "Complete 2026-09-16. Remaining limits, recorded rather than assumed: missions are qualified on the open arena nav_empty only (obstacle worlds belong to R6.1/R8.1); the mission controller consumes /odom/ground_truth (truth, not a localization estimate) so no localization stack is qualified on Isaac; the ~15 % wheel/body speed gap from the 2026-09-14 drive work is not isolated, though the 2026-09-16 probe measures wheel velocities and body speed within 1 %; Isaac publishes /scan every 12 physics steps (27 msgs per run), so scan-driven autonomy would need its own check; RTF 0.131 with PhysX on the CPU; other robots are not run through Isaac."
       R8.3:
         title: "Resource-bounded concurrent experiments"
-        state: "done"
+        state: "partial"
         owner: "codex"
         depends_on:
           - "R3.5"
@@ -1118,7 +1184,8 @@ tasks:
           - "Sample experiments created and run successfully with resource monitoring and isolation verification."
           - "Acceptance criteria verified: isolated clocks/seeds/results maintained, overload reported, stop/reset scoped, scheduling preserves algorithm budgets."
           - "Evidence reports generated: docs/status/evidence/r8-3-resource-bounded-experiments-2026-10-01.json and docs/status/evidence/r8-3-verification-2026-10-01.json"
-        next_action: "R8.3 resource-bounded concurrent experiments completed. Framework implements all acceptance criteria: CPU/memory/GPU/RTF budgets, bounded queues, cancellation, independent artifacts, isolation validation, overload reporting, scoped operations, and budget preservation."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Queue/resource-monitor demonstration exists, but run_simulated_experiment sleeps and invents clocks/trajectories/artifact paths; it does not launch concurrent simulators. Implement real subprocess isolation and demonstrate two runs, overload, scoped cancellation/reset and independent saved results."
   R9:
     title: "Reproducibility, learning and release"
     state: "partial"
@@ -1126,7 +1193,7 @@ tasks:
     tasks:
       R9.1:
         title: "Provenance licenses and clean-host reproduction"
-        state: "done"
+        state: "partial"
         owner: "codex"
         depends_on:
           - "R4.3"
@@ -1141,10 +1208,11 @@ tasks:
           - "scripts/r9_1_provenance_framework.py"
           - "LICENSES/third-party-notices.md"
           - "docs/status/evidence/r9-1-provenance-licenses-2026-10-01.json"
-        next_action: "Provenance framework created: 174 dependencies discovered, 8 system requirements documented, third-party notices generated, simulated clean host tests executed. Completed."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Dependency inventory exists; the report itself records 152 pending licenses. Restore complete asset attribution, verify actual pinned licenses, and perform a real clean-host build/test/mission with logs; hard-coded clean-host success is not qualification."
       R9.2:
         title: "Seven real comparison tutorials"
-        state: "done"
+        state: "partial"
         owner: "codex"
         depends_on:
           - "R7.2"
@@ -1177,10 +1245,11 @@ tasks:
           - "docs/tutorials/sensor_fusion_comparison.md"
           - "docs/tutorials/state_estimation_comparison.md"
           - "docs/status/evidence/r9-2-tutorials-2026-10-01.json"
-        next_action: "Tutorials framework created: 35 methods across 7 algorithm categories, 27 tutorials generated including 7 main comparison tutorials, index and results. Completed."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Comparison documents are unvalidated drafts with placeholder launch/executable commands and generated random scores. Exercise real commands, link measured results/plots and shared GUI/CLI manifests, and explain negative outcomes before promoting each tutorial."
       R9.3:
         title: "Evidence-generated support matrix and release gate"
-        state: "done"
+        state: "partial"
         owner: "codex"
         depends_on:
           - "R5.1"
@@ -1204,7 +1273,8 @@ tasks:
           - "scripts/r9_3_support_matrix.py"
           - "docs/status/evidence/r9-3-support-matrix-2026-10-01.json"
           - "docs/status/support-matrix-2026-10-01.md"
-        next_action: "Support matrix framework executed: 13000 cells generated, 152 inventory entries, 139 fully supported, 3 partially supported, 6 release gates, 8 scope promises, 7 failures/skips documented. Completed."
+        completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
+        next_action: "Withdraw blanket Isaac support and required_tasks_pass=True. Match every supported cell to its exact robot/map/backend/task/revision and verified artifacts, then derive release decisions from actual completed prerequisites; the 139 fully-supported-cell count is not valid qualification."
       R9.4:
         title: "Optional physical Bumperbot HIL"
         state: "blocked"
@@ -1263,16 +1333,17 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R5.2"
+  next_task: "R5.6"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R5.1 is complete for its recorded cells. R5.2 remains active: flat-ground Go2 screening repeats pass, but the named stairs task and both opt-in get-up attempts fail. The imported NJU-RLC actor is bounded and fails closed; adapt/retrain it for this MuJoCo plant or implement another whole-body strategy, then repeat the 60 N collapse and terrain task before enabling higher modes. R5.3 is partial: the BHL policy fixed-point stall remains; do not resume rate/filter/contact tuning without a new measured hypothesis. Continue R5.4, R5.5, R6.2-R6.4 and algorithm breadth after the active lane. See docs/WORKFLOW.md and docs/tutorials/go2.md."
+  next_action: "Continue the measured four-wheel navigation lane and remaining map/backend/mode matrix from docs/status/continuation-2026-10-02.md. Drone SITL Flight integration is measured and available in GUI; further aerial navigation/mapping remains unqualified. Preserve BHL/Go2 feedback timing; their turn/terrain/recovery gaps remain. Demo R6/R7/R8/R9 reports cannot close acceptance. Keep outputs on SSD."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
-  audit: "docs/status/audit-2026-09-07.md"
+  audit: "docs/status/audit-2026-10-02.md"
   no_runtime_repairs_completed_by_this_revision: false
   session_notes:
+    - "2026-10-02: 65 dormant PX4 /tmp artifacts SHA-256/metadata verified and moved to /workspace/molar/robot_lab_runtime/px4/legacy-tmp, preserving original paths as symlinks; 15.79 GiB reclaimed. Completion audit at 2a0aae2 reopens unsupported R4.3/R6/R7/R8.1/R8.3/R9 claims. Retain scoped measured robot work; keep large outputs on SSD and replace assumed/demo report success with measured qualification. See docs/status/audit-2026-10-02.md and docs/STORAGE.md."
     - "2026-09-30 R6.1/R5.6 continuation: furniture scale/pose and collision-floor overlap fixed; six short furnished-map Nav2 checks passed including all four Bumperbot floor-2 backends and Gazebo Labbot. Four-wheel-steering MuJoCo drive now turns and pivots after URDF/kinematic fixes, but Gazebo controller dispatch fails. Mecanum still has no physical lateral travel and is not marked holonomic; source wheel/bridge equations corrected. Joystick axis initialization is now calibrated instead of guessed per sample. CI at preceding dc55512 remains green; current edits require a new run. See r61-furniture-collision and r55-holonomic-audit evidence."
     - "2026-09-30 R6.1 partial continuation: RViz Nav2 goal path corrected for sim time on a dedicated topic, navigation RViz fixed frame set to map, two short Gazebo Celisca goals passed (Bumperbot and Labbot). GUI drive and Celisca scale changes recorded under R6.1 evidence. PX4 X500 and humanoid/legged policy candidates were audited in docs/status/policy-px4-candidates-2026-09-30.md, with no new locomotion claims. GitHub CI still fails before tests because the repository's LFS budget is exhausted; the external quota must be restored or assets hosted differently."
     - "2026-09-25 R5.1: final bounded-drive MuJoCo probes passed forward/turn/reverse/stop/watchdog for Bumperbot and Labbot; final clear/obstacle Nav2 reruns succeeded 4/4. PyBullet Bumperbot bounded-drive probe passed. GUI WASD/joystick/drive increments and synchronized 1.1-scale Celisca maps are recorded under R6.1; GitHub CI 35989437894 and scheduled full suite 35992128283 passed. Next R5.2 Go2 live locomotion."

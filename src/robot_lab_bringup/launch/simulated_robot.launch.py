@@ -659,6 +659,22 @@ def _build_simulation_actions(context):
         )
         _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
                                  _launch_value(context, "simulator"))
+        if robot_model == 'px4_x500':
+            spawn = map_config.get('spawn', {})
+            python = os.environ.get('PX4_PYTHON', '/workspace/molar/robot_lab_runtime/px4/venv/bin/python3')
+            if not Path(python).is_file():
+                raise RuntimeError('PX4 Python environment is missing: '+python+'; see docs/tutorials/px4_x500.md')
+            command = [python, '-m', 'robot_lab_adapter.px4_sitl_runtime',
+                       '--world', _resolve_world_path(map_config.get('gazebo', {})),
+                       '--gui', _launch_value(context, 'gui'),
+                       '--flight-enabled', 'true' if mode_name == 'flight' else 'false',
+                       '--rviz', 'true' if _auto_bool(context, 'start_rviz', True) else 'false']
+            for axis in ('x', 'y', 'z'):
+                # Upstream X500 already places its landing gear on the floor.
+                # Wheeled map defaults (often z=0.5) must not be added to it.
+                default = '0.0' if axis == 'z' else spawn.get(axis, '0.0')
+                command.extend(['--spawn-'+axis, _config_value(context, 'spawn_'+axis, default)])
+            return [ExecuteProcess(cmd=command, output='screen')]
         robot_package = _config_value(context, "robot_package", robot_config.get("package", "robot_lab_robots"))
         robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
         robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
@@ -1151,6 +1167,12 @@ def _build_simulation_actions(context):
     # starts everything at once, as before.
     gated_actions = []
 
+    motion_model = ("ackermann" if drive_type == "ackermann" else
+                    "omni" if drive_type == "mecanum" else
+                    "omni_parallel" if drive_type == "four_wheel_steer" and
+                        drive_config.get("steering_mode") in ("crab", "in_phase") else
+                    "diff")
+
     if _section_enabled(mode_config.get("global_localization")):
         gated_actions.append(
             IncludeLaunchDescription(
@@ -1164,6 +1186,7 @@ def _build_simulation_actions(context):
                     "initial_pose_x": initial_pose_x,
                     "initial_pose_y": initial_pose_y,
                     "initial_pose_yaw": initial_pose_yaw,
+                    "motion_model": motion_model,
                 }.items(),
             )
         )
@@ -1254,7 +1277,7 @@ def _build_simulation_actions(context):
             "robot_model": robot_model,
             "global_planner_plugin": global_plugin,
             "local_planner_plugin": local_plugin,
-            "motion_model": "ackermann" if drive_type == "ackermann" else "diff",
+            "motion_model": motion_model,
         }
         gated_actions.append(
             IncludeLaunchDescription(

@@ -1,4 +1,17 @@
 robots:
+  px4_x500:
+    package: robot_lab_adapter
+    name: px4_x500
+    type: drone
+    supported_modes: [display, flight]
+    default_mode: flight
+    supported_simulators: [gazebo]
+    features: [flight_controller]
+    drive:
+      type: px4
+      max_linear_velocity: 1.0
+      max_angular_velocity: 1.0
+    notes: "Real upstream X500 with PX4 v1.16.2 and Gazebo Harmonic. Explicit takeoff/land and 3D setpoints; no obstacle-aware planner or SLAM qualification."
   bumperbot:
     package: robot_lab_robots
     xacro: bumperbot/urdf/bumperbot.urdf.xacro
@@ -144,10 +157,10 @@ robots:
     xacro: holonomic_wheels/urdf/four_wheel_steer_car.urdf.xacro
     name: four_wheel_steer_car
     supported_modes: [display, loc, slam, 3d_slam, nav]
-    features: [ros2_control, lidar_2d, rgbd_camera, velocity_base, car_steering]
+    features: [ros2_control, lidar_2d, rgbd_camera, velocity_base, holonomic_base]
     default_algorithms:
-      global_planning: hybrid_a_star_planner
-      local_planning: pure_pursuit
+      global_planning: a_star_planner
+      local_planning: dwb_local_planner
     drive:
       type: four_wheel_steer
       steering_mode: ackermann
@@ -163,24 +176,20 @@ robots:
       wheel_radius: 0.05
       wheel_separation: 0.32
       wheelbase: 0.32
-      max_steer: 0.785
+      max_steer: 1.5707963267948966
       max_steer_rate: 2.5
       max_speed: 1.0
       max_accel: 1.5
     supports_room_vacuum: false
 
-  # Mecanum kinematics and four-wheel command joints are wired, but the
-  # current solid-cylinder collision wheels do not strafe: MuJoCo measured
-  # 0 m/s lateral travel for a 0.3 m/s command. The GUI exposes forward/yaw
-  # only; Twist.linear.y reaches the non-Gazebo drive model experimentally.
-  # Unlike the car-like bases this turns on the spot, so it keeps the default
-  # DWB local planner.
+  # Physical MIT FUJI passive rollers in an X layout; lateral drive is
+  # measured on MuJoCo and PyBullet. Each backend still needs mission evidence.
   mecanum_car:
     package: robot_lab_robots
     xacro: holonomic_wheels/urdf/mecanum_car.urdf.xacro
     name: mecanum_car
     supported_modes: [display, loc, slam, 3d_slam, nav]
-    features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
+    features: [ros2_control, lidar_2d, rgbd_camera, velocity_base, holonomic_base]
     drive:
       type: mecanum
       front_left_wheel_joint: front_left_wheel_joint

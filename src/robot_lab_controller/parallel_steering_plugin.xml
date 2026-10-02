@@ -1,0 +1,7 @@
+<library path="parallel_steering_critic">
+  <class name="robot_lab_controller::ParallelSteeringCritic"
+         type="robot_lab_controller::ParallelSteeringCritic"
+         base_class_type="dwb_core::TrajectoryCritic">
+    <description>Reject mixed translation/yaw for four-wheel parallel steering.</description>
+  </class>
+</library>

@@ -747,3 +747,10 @@ class HierarchicalLocalPlanner:
 - [Follow-the-Gap Method](https://ieeexplore.ieee.org/document/1641875)
 - [Pure Pursuit](https://ieeexplore.ieee.org/document/1187032)
 - [Path Planning and Local Planning](https://planning.cs.uiuc.edu/)
+
+## Run
+
+This page documents planned methods or configuration. Consult the
+[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
+for executable, scoped tests and remaining qualification. No measured comparison
+is established by this page alone.

@@ -48,6 +48,13 @@ def test_the_quadrotor_does_not_claim_flight():
         assert not {"slam", "3d_slam", "nav"} & runnable("quadrotor_sitl", simulator)
 
 
+def test_real_px4_flight_is_gazebo_only_and_does_not_claim_ground_navigation():
+    assert runnable('px4_x500', 'gazebo') == {'display', 'flight'}
+    for simulator in ('mujoco', 'pybullet', 'isaac'):
+        assert runnable('px4_x500', simulator) == set()
+    assert missing_features(PROFILES['bumperbot'], 'flight', 'gazebo') == ['flight_controller']
+
+
 def test_sim_modes_requirements_are_added():
     profile = {"features": ["lidar_2d", "stands", "velocity_base"]}
     assert missing_features(profile, "3d_slam", "gazebo") == ["rgbd_camera"]

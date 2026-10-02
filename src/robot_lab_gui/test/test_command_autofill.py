@@ -200,7 +200,7 @@ def test_command_tracks_robot_map_mode_backend_and_planner(app):
 @pytest.mark.parametrize(
     "robot,planner,controller",
     [
-        ("four_wheel_steer_car", "hybrid_a_star_planner", "pure_pursuit"),
+        ("four_wheel_steer_car", "a_star_planner", "dwb_local_planner"),
         ("mecanum_car", "a_star_planner", "dwb_local_planner"),
     ],
 )
@@ -529,3 +529,55 @@ def test_four_wheel_steer_pattern_is_appended_to_the_command(app):
     app.steering_mode_var.set("pivot")
     app._update_validation_and_command()
     assert "steering_mode:=" not in app.command_var.get()
+
+
+@pytest.mark.parametrize("pattern", ["crab", "in_phase"])
+def test_four_wheel_parallel_steering_enables_strafe_and_saved_manifest(app, pattern):
+    select(app, app.robot_combo, "four_wheel_steer_car")
+    select(app, app.map_combo, "nav_empty")
+    select(app, app.steering_mode_combo, pattern)
+    assert app.strafe_left_button.instate(["!disabled"])
+    assert app._lateral_drive_selectable()
+    ok, manifest = launcher.resolve_selection(app.composition_registry,
+                                              app._composition_selection())
+    assert ok, manifest
+    assert manifest["launch"]["arguments"]["steering_mode"] == pattern
+    assert "steering_mode:=" + pattern in manifest["ros2_command"]
+    assert manifest["resolved_from"]["steering_mode"] == pattern
+    with patch.object(app, "_publish_drive") as publish:
+        app._start_strafe(1.0)
+        app._repeat_drive()
+        assert publish.call_args.args[2] > 0.0
+        app._stop_drive()
+    select(app, app.steering_mode_combo, "ackermann")
+    assert app.strafe_left_button.instate(["disabled"])
+    assert not app.drive_strafe_buttons
+    app._apply_manifest_to_controls(manifest)
+    assert app.steering_mode_var.get() == pattern
+
+
+def test_px4_flight_autofill_services_and_backend_correction(app):
+    select(app, app.map_combo, 'celisca_floor_1')
+    select(app, app.robot_combo, 'px4_x500')
+    assert app.map_var.get() == 'nav_empty'
+    app.mode_var.set('flight')
+    app.simulator_var.set('pybullet')
+    app._update_from_selection()
+    assert app.simulator_var.get() == 'gazebo'
+    assert app.mode_var.get() == 'flight'
+    assert app._flight_selectable()
+    assert 'robot_model:=px4_x500' in app.command_var.get()
+    assert 'mode:=flight' in app.command_var.get()
+    assert 'use_sim_time:=false' in app.command_var.get()
+    assert 'spawn_z:=0.0' in app.command_var.get()
+    assert all(button.instate(['!disabled']) for button in app.flight_buttons)
+    assert app.strafe_left_button.instate(['!disabled'])
+    with patch.object(app, '_publish_drive') as publish, patch.object(app, '_run_aux_command') as command:
+        app.drive_input_enabled.set(True)
+        app._toggle_drive_input()
+        app._repeat_drive()
+        command.assert_not_called()
+        assert all(not any(call.args) for call in publish.call_args_list)
+    select(app, app.robot_combo, 'bumperbot')
+    assert not app._flight_selectable()
+    assert all(button.instate(['disabled']) for button in app.flight_buttons)

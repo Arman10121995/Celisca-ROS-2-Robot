@@ -45,6 +45,20 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+Read the [2026-10-02 completion audit](status/audit-2026-10-02.md) first.
+It reconciles baseline `2a0aae2`, retains actual measured robot work, and
+withdraws unsupported R6/R7/R8/R9 completion from demo/metadata reports.
+Do not promote those generators' PASS strings to mission qualification.
+
+All large build, trial, bag and log artifacts on this Jetson must live under
+`/workspace` on the SSD. Read [STORAGE.md](STORAGE.md) and source
+`scripts/ssd_env.sh`. The 65 dormant PX4 `/tmp` artifacts now resolve through
+compatibility symlinks to `/workspace/molar/robot_lab_runtime/px4/legacy-tmp/`.
+Their hashes and metadata are retained; do not duplicate them back to eMMC.
+Use PX4's `-d` option for a directly launched unattended FCU to avoid pxh
+prompt spam. Explicit `/tmp/name` redirections ignore TMPDIR and must be
+changed to a persistent SSD run directory.
+
 The user's 2026-09-30 instruction prioritizes the stabilization patches in
 [`PATCH_EXECUTION_GUIDE.md`](PATCH_EXECUTION_GUIDE.md) before further expansion.
 `priority_patches` in the status ledger records their current state. Follow
@@ -52,8 +66,18 @@ that queue when continuing the current session. BHL/Go2's MuJoCo startup
 regression is repaired and recorded under
 `status/evidence/r52-r53-mujoco-regression-2026-09-30/`: preserve map/robot
 spawn defaults and keep catch-up disabled for effort-controlled robots.
-The full walking/turning/terrain milestones remain partial. Drone work is
-excluded from this run by the user.
+The full walking/turning/terrain milestones remain partial. The user now explicitly includes drone work. R5.4
+SITL Flight acceptance is measured and its GUI path is available; see
+[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-02.md).
+Continue R5.6 four-wheel navigation and the remaining qualification matrix;
+do not use the historical no-thrust diagnosis to restart PX4 plant changes.
+The October 2 clear-map crab screen now passes on all four simulators, and
+MuJoCo records all four patterns with current DWB defaults. Isaac's bridge
+now forwards 4WS lateral commands. Independent final heading differs from
+Nav2's estimate; precise body-heading and obstacle/mapping/reset/watchdog
+acceptance remains open. The GUI Health tab loads these states and links the
+flight guide and measured trial report. Continue from the named evidence,
+including retained failed RPP and pre-fix Isaac trials.
 
 After baseline revision `0be23d2` (2026-09-25), `R5.2` is the active next task.
 Continue from the Go2 evidence under

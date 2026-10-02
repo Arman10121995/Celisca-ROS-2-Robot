@@ -19,6 +19,9 @@
   <depend>tf2_ros</depend>
   <depend>tf2</depend>
   <depend>eigen</depend>
+  <depend>dwb_core</depend>
+  <depend>dwb_msgs</depend>
+  <depend>pluginlib</depend>
   
   <exec_depend>tf_transformations</exec_depend>
   <exec_depend>ros2launch</exec_depend>

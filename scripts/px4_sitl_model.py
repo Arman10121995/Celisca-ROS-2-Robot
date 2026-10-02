@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Flatten a PX4 Gazebo model SDF and insert the vehicle into a running world.
+"""Optional diagnostic: flatten a PX4 model SDF and insert it into a world.
+
+The pinned v1.16.2 native startup now inserts and flies X500 successfully;
+this helper is not required by the working flight launch. The old diagnosis
+of inert rotors was superseded by the incorrect MAVLink setpoint mask: 0xFC7
+ignored XYZ and commanded zero velocity. See the October 2 flight evidence.
+The insertion observations below describe the October 1 experiments.
 
 PX4's own gz_bridge asks the Gazebo server to insert the vehicle, and on this
 host that request never produces an entity (``gz model --list`` shows only

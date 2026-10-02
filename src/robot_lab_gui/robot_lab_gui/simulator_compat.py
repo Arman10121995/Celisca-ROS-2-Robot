@@ -51,7 +51,7 @@ DEFAULT_MODE_FEATURES: Dict[str, Tuple[str, ...]] = {
     "3d_slam": ("rgbd_camera",),
 }
 
-MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
+MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight"]
 
 # Canonical algorithm category taxonomy (mirrors registry algorithms.yaml).
 ALGORITHM_CATEGORIES: List[str] = [
@@ -84,6 +84,7 @@ MODE_CATEGORIES: Dict[str, str] = {
     "slam": "2D Mapping & Localization",
     "3d_slam": "3D Mapping & Localization",
     "nav": "Navigation",
+    "flight": "PX4 Flight",
 }
 
 MODE_ALGORITHM_SLOTS: Dict[str, Tuple[str, ...]] = {
@@ -93,6 +94,7 @@ MODE_ALGORITHM_SLOTS: Dict[str, Tuple[str, ...]] = {
     "3d_slam": ("localization", "state_estimation", "perception"),
     "nav": ("global_planning", "local_planning", "control",
             "localization", "state_estimation", "sensor_fusion"),
+    "flight": (),
 }
 
 # Sensor feature -> the concrete asset/topic the simulator must provide.

@@ -1,0 +1,40 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Fixed Frame: map
+    Background Color: 48; 48; 48
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Ground grid
+      Enabled: true
+    - Class: rviz_default_plugins/RobotModel
+      Name: Upstream X500
+      Enabled: true
+      Description Source: Topic
+      Description Topic:
+        Value: /robot_description
+        Durability Policy: Transient Local
+    - Class: rviz_default_plugins/TF
+      Name: Live frames
+      Enabled: true
+    - Class: rviz_default_plugins/Odometry
+      Name: PX4 estimate
+      Enabled: true
+      Topic:
+        Value: /px4/odometry
+      Keep: 50
+    - Class: rviz_default_plugins/Odometry
+      Name: Gazebo truth
+      Enabled: true
+      Topic:
+        Value: /px4/odometry_truth
+      Keep: 50
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 10
+      Pitch: 0.6
+      Yaw: 0.8

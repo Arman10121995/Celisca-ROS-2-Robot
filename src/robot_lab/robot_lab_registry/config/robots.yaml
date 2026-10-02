@@ -1631,13 +1631,13 @@
   updated: "2026-09-24"
 
 # These profiles are launchable but still being qualified across backends.
-# Four-wheel steering has measured forward/yaw motion in MuJoCo; mecanum
-# lateral travel is not yet supported by its solid collision wheels.
+# Four-wheel steering has named Nav2 screens; mecanum has measured passive-roller
+# lateral travel. These results do not qualify every backend/map/mode.
 - id: four_wheel_steer_car
   version: "1.0.0"
   name: "Four-Wheel-Steering Car"
   ros_package: robot_lab_robots
-  description: "Four driven and four steered wheels; selectable front, rear, crab and pivot steering"
+  description: "Four driven/steered wheels with opposite-phase, in-phase, crab and tangent-pivot patterns. MuJoCo all-pattern and four-backend crab Nav2 screens pass; broader missions remain unqualified."
   status: available
   robot_class: mobile
   maturity: prototype
@@ -1668,21 +1668,26 @@
   command_interfaces: [geometry_msgs/Twist]
   state_interfaces: [nav_msgs/Odometry, sensor_msgs/JointState]
   frames: [base_footprint, base_link, laser_link, odom, map]
-  capabilities: [navigation, rgbd_camera, mapping, localization, state_estimation, sensor_fusion, control, costmap, car_steering]
+  capabilities: [navigation, rgbd_camera, mapping, localization, state_estimation, sensor_fusion, control, costmap, holonomic_base]
   dependencies: [robot_lab_robots, robot_lab_controller]
   assets:
     urdf: robot_lab_robots/holonomic_wheels/urdf/four_wheel_steer_car.urdf.xacro
     xacro: robot_lab_robots/holonomic_wheels/urdf/holonomic_wheels_macro.xacro
     meshes: []
   tags: [first-party, four_wheel_steer, experimental]
+  evidence:
+    - kind: integration_test
+      reference: "docs/status/evidence/r56-functional-2026-10-02/README.md"
+      description: "MuJoCo all four patterns and crab clear-map Nav2 screens on all four simulators; precise body heading and other missions remain open."
+      date: "2026-10-02"
   created: "2026-09-30"
-  updated: "2026-09-30"
+  updated: "2026-10-02"
 
 - id: mecanum_car
   version: "1.0.0"
   name: "Mecanum Car"
   ros_package: robot_lab_robots
-  description: "Four-wheel mecanum prototype; forward and yaw motion are supported, lateral travel awaits roller collision geometry"
+  description: "Passive-roller mecanum with measured lateral travel on Gazebo, MuJoCo and PyBullet; one Gazebo Nav2 goal passes. Isaac and the broader mission matrix remain unqualified."
   status: available
   robot_class: mobile
   maturity: prototype
@@ -1716,5 +1721,60 @@
     xacro: robot_lab_robots/holonomic_wheels/urdf/holonomic_wheels_macro.xacro
     meshes: []
   tags: [first-party, mecanum, experimental]
+  evidence:
+    - kind: integration_test
+      reference: "docs/status/evidence/r56-functional-2026-10-02/README.md"
+      description: "Independent passive-roller lateral travel on Gazebo/MuJoCo/PyBullet with current proxy; one Gazebo Nav2 goal. Other missions remain open."
+      date: "2026-10-02"
   created: "2026-09-30"
-  updated: "2026-09-30"
+  updated: "2026-10-02"
+
+- id: px4_x500
+  version: "1.16.2"
+  name: "PX4 X500"
+  ros_package: robot_lab_adapter
+  description: "Upstream PX4/Gazebo X500 with live Offboard flight control; explicit takeoff, manual flight, 3D goals and landing."
+  status: integrated
+  robot_class: aerial
+  maturity: simulated
+  source:
+    repository: "https://github.com/PX4/PX4-Autopilot"
+    license: "BSD-3-Clause"
+    maintainer: "PX4 / Robot Lab adapter"
+  supported_simulators: [gazebo]
+  locomotion: {type: multirotor, dof: 6, max_velocity: 1.0, max_acceleration: 1.0}
+  sensors:
+    - {type: odometry, name: fcu_estimate, frame: base_link, topic: /px4/odometry, message_type: nav_msgs/Odometry}
+  actuators:
+    - {type: rotor, name: rotor_0, joint: rotor_0_joint}
+    - {type: rotor, name: rotor_1, joint: rotor_1_joint}
+    - {type: rotor, name: rotor_2, joint: rotor_2_joint}
+    - {type: rotor, name: rotor_3, joint: rotor_3_joint}
+  command_interfaces: [geometry_msgs/Twist, geometry_msgs/PoseStamped, std_srvs/Trigger]
+  state_interfaces: [nav_msgs/Odometry, sensor_msgs/JointState]
+  frames: [map, base_link]
+  capabilities: [flight_control]
+  dependencies: [robot_lab_adapter, robot_lab_bringup]
+  safety_limits:
+    max_velocity: 1.0
+    max_acceleration: 1.0
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.0
+    collision_stop_time_s: null
+    max_tilt_rad: null
+    restricted_modes: [loc, slam, 3d_slam, nav, hardware]
+    notes: "SITL only. Manual vector capped at 1 m/s; PX4 horizontal motion caps set. No obstacle-clearance, collision-stop or tilt-monitor guarantee. FCU lands on Offboard process loss."
+  compute_limits:
+    cpu_cores: 4
+    memory_mb: 4096
+    min_real_time_factor: 0.0
+    notes: "Planning budget for PX4/Harmonic/ROS/RViz. No minimum real-time factor or multi-session resource qualification is claimed."
+  assets: {meshes: []}
+  tags: [px4, sitl, x500, harmonic, flight]
+  evidence:
+    - kind: integration_test
+      reference: "docs/status/evidence/r54-flight-2026-10-02/README.md"
+      description: "PX4 v1.16.2/Harmonic/nav_empty FCU flight, command-loss landing and ROS services/Drive/3D goal with independent truth and rotor state."
+      date: "2026-10-02"
+  created: "2026-10-02"
+  updated: "2026-10-02"

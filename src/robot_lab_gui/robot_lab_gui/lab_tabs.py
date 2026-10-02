@@ -55,6 +55,14 @@ def format_platform_status(data):
     lines = [f"Platform Status — updated {data.get('updated', 'unknown')}",
              f"Overall: {data.get('overall_state', 'unknown')}",
              data.get('assessment', '')]
+    audit = data.get('completion_audit', {})
+    if audit:
+        lines.extend(["", f"Completion audit: {audit.get('date', '?')}",
+                      audit.get('result', ''),
+                      f"Report: {audit.get('report', '')}"])
+    storage = data.get('storage_and_status_audit', {})
+    if storage.get('result'):
+        lines.extend(["", storage['result']])
     patches = data.get('priority_patches', {})
     if patches:
         lines.extend(["", "Stabilization patches"])
@@ -706,10 +714,24 @@ class HealthTab(LabTab):
             frame, text="Patch Execution Guide", command=self._show_patch_guide,
         ).grid(row=2, column=0, columnspan=3, sticky="ew", pady=(6, 2))
 
+        ttk.Button(
+            frame, text="Completion Audit", command=self._show_completion_audit,
+        ).grid(row=3, column=0, sticky="ew", padx=(0, 4), pady=2)
+        ttk.Button(
+            frame, text="Storage Guide", command=self._show_storage_guide,
+        ).grid(row=3, column=1, columnspan=2, sticky="ew", padx=(4, 0), pady=2)
+        ttk.Button(frame, text="PX4 Flight Guide", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/px4_x500.md')).grid(
+                row=4, column=0, sticky='ew', padx=(0, 4), pady=2)
+        ttk.Button(frame, text="Verified Robot Trials", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-02.md')).grid(
+                row=4, column=1, columnspan=2, sticky='ew', padx=(4, 0), pady=2)
+
         self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)
         self.summary.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
         self.summary.configure(state="disabled")
         self.rowconfigure(1, weight=1)
+        self._show_platform_status()
 
     def _show_platform_status(self):
         if not STATUS_YAML.exists():
@@ -728,6 +750,23 @@ class HealthTab(LabTab):
             self._set_summary(path.read_text(encoding="utf-8"))
         except OSError as exc:
             self.app.log(f"[health] failed to read patch guide: {exc}\n")
+
+    def _show_completion_audit(self):
+        data = load_yaml(str(STATUS_YAML))
+        report = data.get("completion_audit", {}).get("report")
+        if report:
+            self._show_document(WORKSPACE_ROOT / report)
+        else:
+            self._set_summary("No current completion audit is recorded.\n")
+
+    def _show_storage_guide(self):
+        self._show_document(WORKSPACE_ROOT / "docs" / "STORAGE.md")
+
+    def _show_document(self, path):
+        try:
+            self._set_summary(path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            self.app.log(f"[health] failed to read {path.name}: {exc}\n")
 
     def _set_summary(self, text):
         self.summary.configure(state="normal")

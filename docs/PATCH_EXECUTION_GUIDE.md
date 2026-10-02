@@ -8,6 +8,10 @@ must remain available.
 
 ## Establish the actual baseline
 
+Read [the 2026-10-02 audit](status/audit-2026-10-02.md) and
+[storage guide](STORAGE.md). Generated demonstration scores cannot qualify a
+mission. Keep all large artifacts on the mounted workspace SSD.
+
 1. Inspect `git status --short` and the task ledger. Preserve existing edits.
    Claim the next patch and record any additional scope paths before changing
    shared code. Current source baseline is `e3d63b3` plus documented working-tree
@@ -110,10 +114,12 @@ is not a speed result.
 ## P5: four-wheel steering
 
 Existing code is in `robot_lab_utils/drive_kinematics.py`,
-`robot_lab_robots/holonomic_wheels/`, and the new Gazebo
-`robot_lab_controller/holonomic_controller.py`. The steering drive supports
-opposite-phase/Ackermann, crab/in-phase and pivot targets; expose a launch/GUI
-selector and put its value in the command/manifest. Selecting a mode must change
+`robot_lab_robots/holonomic_wheels/`, and the Gazebo
+`robot_lab_controller/holonomic_controller.py`. October 2 exact rolling/pivot
+and navigation results supersede the earlier weak-pivot diagnosis; read
+[the continuation report](status/continuation-2026-10-02.md) first. The steering drive supports
+opposite-phase/Ackermann, crab/in-phase and pivot targets. The launch/GUI
+selector now exists; verify its value also reaches the resolved manifest. Selecting a mode must change
 the controller law, not merely a label.
 
 Gazebo needs joint-group position/velocity controllers and measured wheel/steer
@@ -127,20 +133,34 @@ stop, command loss, reset and joint limits. Use physics truth to detect wheel
 slip; kinematic wheel odometry alone cannot prove body travel. Pivot must change
 yaw with bounded translation; crab must show lateral body motion at nearly
 constant yaw. Then record Localization, 2D SLAM, RGB-D SLAM and Nav2 goals.
-Planner/controller defaults must suit the selected steering pattern.
+Planner/controller defaults must suit the selected steering pattern. The GUI
+now selects Smac2D/DWB for this base. Crab/in-phase use `omni_parallel` with
+`ParallelSteeringCritic`, which rejects mixed translation/yaw. Never switch
+back to unconstrained RPP for parallel steering: the diagonal trial aborted
+with no progress. Include a final-heading goal in every repeat.
+The named crab screen passes on all four backends after Isaac's 4WS `vy`
+forwarding repair; this does not close the other-pattern matrix. The newer
+probe reports independent final yaw explicitly. Isaac's 16.13° truth-heading
+error remains a precision gap even when Nav2 accepts its localization estimate.
 
 ## P6: physical mecanum wheels
 
-The current solid cylinders receive correct kinematic wheel rates but cannot
-strafe physically. Implement real passive rollers or reuse an appropriately
-licensed simulator model with rollers/contact anisotropy. Pin upstream revision,
-license and asset hashes. Keep roller geometry, wheel axis signs and joint order
-consistent across URDF/MJCF/USD imports.
+The MIT FUJI passive roller model is now imported with a pinned source/license,
+and display hold no longer pins its roller joints. Physical lateral travel is
+measured on MuJoCo and PyBullet; GUI strafe controls exist. Preserve that plant
+and inspect `status/evidence/r56-holonomic-measure-2026-10-01/README.md` before
+changing contact parameters. Gazebo now measures 0.278 m/s lateral body motion and a short Nav2 goal
+with the validated 68-face convex contact proxy. Remaining backend/mode/map
+missions are listed in the continuation report.
+The same proxy now has MuJoCo/PyBullet lateral movement repeats at
+0.253/0.276 m/s; qualify their navigation and obstacle routes separately.
+Keep roller geometry, wheel axis signs and joint order consistent across
+URDF/MJCF/USD imports.
 
 Measure pure `linear.y` in both directions, forward/reverse, diagonal travel,
 yaw, stop and command loss against physics truth. Check bounded vertical motion
 and roller contact. Do not implement lateral motion by directly setting the
-robot pose. After physical validation, expose lateral Drive controls and use
+robot pose. Keep the tested lateral Drive controls and use
 holonomic Nav2 controller/velocity limits; then test all mapping/localization/
 navigation modes on a clear and obstacle map per backend.
 
@@ -175,4 +195,5 @@ options and selected algorithms. Rebuild copied GUI modules and reopen the GUI.
 Run required focused tests, the combined fast suite and registry validation,
 then inspect GitHub Actions on the exact published revision when publishing is
 authorized. Diagnose the actual failing job/log; do not silence a test or label
-an untested backend successful. Drone remains R5.4 for a later run.
+an untested backend successful. R5.4 now has measured native/ROS2 X500 Flight acceptance. Use the
+[PX4 guide](tutorials/px4_x500.md); broader aerial mapping/planning remains open.

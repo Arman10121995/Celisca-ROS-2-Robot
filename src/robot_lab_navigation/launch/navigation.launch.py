@@ -143,6 +143,21 @@ CAR_PARAMS = {
     },
 }
 
+# Parameters for lateral travel on physical mecanum / parallel-steered bases.
+# Keep limits in the sampler, MPPI model and AMCL consistent with linear.y.
+HOLONOMIC_PARAMS = {
+    "min_y_velocity_threshold": 0.001,
+    "FollowPath.min_vel_y": -0.3,
+    "FollowPath.max_vel_y": 0.3,
+    "FollowPath.acc_lim_y": 0.5,
+    "FollowPath.decel_lim_y": -0.5,
+    "FollowPath.vy_samples": 9,
+    "FollowPath.vy_max": 0.3,
+    "FollowPath.ay_max": 0.5,
+    "FollowPath.ay_min": -0.5,
+    "FollowPath.motion_model": "Omni",
+}
+
 # A car cannot execute a grid/DWB plan by rotating in place. Resolve an
 # explicit ``auto`` to a motion-model-specific default, and reject an
 # incompatible explicit selection instead of silently running another one.
@@ -162,8 +177,10 @@ def _compatible_planners(motion_model, global_plugin, local_plugin):
                          if motion_model == "ackermann" else
                          "nav2_smac_planner/SmacPlanner2D")
     if local_plugin == "auto":
-        local_plugin = (
-            "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController")
+        local_plugin = ("dwb_core::DWBLocalPlanner" if motion_model.startswith("omni") else
+                        "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController")
+    if motion_model == 'omni_parallel' and local_plugin != 'dwb_core::DWBLocalPlanner':
+        raise ValueError('Parallel steering navigation requires DWB with ParallelSteeringCritic')
     if motion_model == "ackermann":
         if global_plugin not in CAR_GLOBAL_PLUGINS:
             raise ValueError(
@@ -196,6 +213,15 @@ def _motion_model_overrides(exec_name, motion_model, global_planner_plugin):
         overrides["GridBased.lattice_filepath"] = _lattice_file(motion_model)
     if motion_model == "ackermann":
         overrides.update(CAR_PARAMS.get(exec_name, {}))
+    elif motion_model.startswith("omni") and exec_name in _CONTROLLER_SERVERS:
+        overrides.update(HOLONOMIC_PARAMS)
+        if motion_model == 'omni_parallel':
+            overrides.update({
+                'FollowPath.critics': ['robot_lab_controller::ParallelSteeringCritic',
+                    'RotateToGoal', 'Oscillation', 'BaseObstacle', 'PathDist', 'GoalDist'],
+                'progress_checker.required_movement_radius': 0.2,
+                'progress_checker.movement_time_allowance': 20.0,
+            })
     return [overrides] if overrides else []
 
 
@@ -329,7 +355,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "motion_model",
             default_value="diff",
-            description="'diff' (turns on the spot) or 'ackermann' (a car: "
+            description="'diff', 'omni' (lateral travel) or 'ackermann' (a car: "
                         "turning-radius-aware planning, no rotation in place)",
         ),
         OpaqueFunction(function=_setup),

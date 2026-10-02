@@ -1,0 +1,92 @@
+Platform Status — updated 2026-10-02
+Overall: partial
+Useful simulation-lab foundation with scoped live robot evidence. The 2026-10-02 audit withdraws unsupported R6/R7/R8/R9 completion claims: metadata, simulated checks and generated scores do not qualify missions.
+
+Completion audit: 2026-10-02
+Project remains partial. Reset/backend/clean-host reports simulate success; comparison scores are generated; the dated support matrix extrapolates Isaac qualification to untested maps and modes.
+Report: docs/status/audit-2026-10-02.md
+
+65 PX4 paths moved with SHA-256/metadata verification and compatibility symlinks; 15.79 GiB reclaimed; internal disk 99% to 70% used. Completion audit published and unsupported task claims reopened.
+
+Stabilization patches
+P1: done — Restore BHL and Go2 MuJoCo localization startup and walking
+  Spawn defaults preserved; effort catch-up disabled; scoped Celisca walk repeats pass. Turning, terrain and universal backend qualification remain in R5.2/R5.3.
+  Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md
+P2: partial — Keep GUI keyboard/joystick neutral until operator input
+  GUI no longer publishes when merely armed; 34 command/Drive tests pass. Physical joystick validation remains.
+P3: partial — Celisca scale, spawn and furnished-map navigation
+  20% scale and collision proxies corrected; six short furnished-map Nav2 goals pass. Both bases across remaining cells and obstacle routes remain.
+  Evidence: docs/status/evidence/r61-furniture-collision-2026-09-30/README.md
+P4: partial — MuJoCo performance with correct control timing
+  Wheel drives retain catch-up; effort controllers preserve feedback cadence. Heavy-map real-time factor and sensor/collision optimization remain.
+P5: active — Four-wheel steering across crab, opposite-phase and pivot modes
+  4WS selector and four patterns measured on MuJoCo; selected PyBullet patterns measured. Pivot yaw remains far below target; Gazebo/Isaac body truth and mapping/navigation missions remain.
+P6: active — Physical mecanum lateral drive and mapping/navigation
+  MIT FUJI passive rollers and GUI strafe controls integrated. Physical lateral speed measured at 0.283 m/s MuJoCo and 0.301 m/s PyBullet for 0.3 commanded. Gazebo/Isaac and localization/SLAM/Nav2 missions remain.
+P7: partial — Model-specific humanoid/quadruped policies and truthful GUI modes
+  Primary upstream candidates audited; BHL/Go2 bounded MuJoCo walks exist. Other models need policy contracts, actuation and live tests; unsupported modes stay gated.
+  Evidence: docs/status/policy-px4-candidates-2026-09-30.md
+P8: blocked — PX4 X500 drone integration
+  Another agent built PX4 and measured telemetry/OFFBOARD/arming; no takeoff. The non-drone lane does not alter flight control. Rotor actuation and ROS2 mission integration remain open.
+
+Roadmap tasks
+R0: done — Documentation recovery
+  R0.1: done — Reconcile audited baseline
+  R0.2: done — Publish truthful documentation and agent work plan
+R1: partial — Trustworthy development baseline
+  R1.1: done — Repair installed entry points and portable paths
+  R1.2: done — Separate and repair test tiers
+  R1.3: done — Make CI bootstrap and doctor trustworthy
+R2: done — Simulator and ROS contracts
+  R2.1: done — Fix simulation clocks
+  R2.2: done — Unify commands odometry sensors and TF
+  R2.3: done — Gate readiness capabilities and failures
+R3: partial — Strict composition and execution
+  R3.1: done — Reconcile registry profiles and aliases
+  R3.2: done — Enforce typed composition compatibility
+  R3.3: done — Execute resolved experiments through CLI
+  R3.4: active — Connect GUI to the common resolver
+  R3.5: done — Author benchmark scenario and experiment catalogs
+R4: partial — Measured reference experiment
+  R4.1: done — Implement scenario lifecycle and truthful outcomes
+  R4.2: done — Measure metrics and preserve provenance
+  R4.3: partial — Publish first reproducible planner comparison
+R5: active — Robot-class qualification
+  R5.1: done — Qualify Bumperbot and Labbot mobile tasks
+  R5.2: active — Qualify Go2 locomotion
+  R5.3: partial — Qualify Berkeley Humanoid Lite balance and walking
+  R5.4: blocked — Integrate real multirotor SITL flight
+  R5.5: active — Integrate four-wheel Ackermann and reverse Ackermann workflows
+  R5.6: partial — Qualify four-wheel steering patterns and physical mecanum travel
+R6: partial — Environment qualification
+  R6.1: partial — Qualify geometry map alignment and resets
+  R6.2: partial — Add real dynamic and sensor-disturbance cases
+  R6.3: partial — Qualify 3D terrain and aerial representations
+  R6.4: partial — Expand diverse maps for ground, legged and aerial tasks
+R7: partial — Algorithm breadth
+  R7.1: partial — Normalize numerical and ROS algorithm adapters
+  R7.2: partial — Five perception pipelines
+  R7.3: partial — Five localization methods
+  R7.4: partial — Five state-estimation methods
+  R7.5: partial — Five sensor-fusion methods
+  R7.6: partial — Five global planners
+  R7.7: partial — Five local planners
+  R7.8: partial — Five low-level or model-based controllers
+R8: partial — Backend qualification and scaling
+  R8.1: partial — Qualify PyBullet and MuJoCo combinations
+  R8.2: done — Qualify Isaac on a named host configuration
+  R8.3: partial — Resource-bounded concurrent experiments
+R9: partial — Reproducibility, learning and release
+  R9.1: partial — Provenance licenses and clean-host reproduction
+  R9.2: partial — Seven real comparison tutorials
+  R9.3: partial — Evidence-generated support matrix and release gate
+  R9.4: blocked — Optional physical Bumperbot HIL
+
+Current verification
+mujoco_localization_regression: 2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open.
+fast_suite: 2026-10-02 at 2a0aae2 plus audit changes: 685 passed, 1 skipped via scripts/test_fast.sh; registry validation passed; GUI command/Drive tests 36 passed; robot_lab_gui rebuild passed.
+map_suite: 35 passed on the 2026-09-30 working tree; MJCF regeneration check passed
+registry_cross_references: pass on the 2026-10-01 working tree
+go2_support_transfer: 2026-10-01 at af77f2f plus working-tree changes: primary and trunk-aware repeat delivered 2,503/2,502 18-geom /go2/support_contact_forces vectors. Settled flank remained ~125 N on hips and <=6.2 N on feet; final repeat had 0 N trunk contact and ended failed:roll at 1.692 s, 1.642 rad peak tilt and 0.139 m height. Negative result; no recovery qualification. Evidence: docs/status/evidence/r52-go2-support-transfer-2026-10-01/.
+go2_support_transfer_tests: 2026-10-01: 121 Go2 locomotion/recovery tests and 22 MuJoCo effort/contact tests passed; robot_lab_utils, robot_lab_adapter, and robot_lab_mujoco builds passed.
+limitation: Scoped source/static checks, not a clean build, universal mission matrix, GUI task qualification or hardware test.

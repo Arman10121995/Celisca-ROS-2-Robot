@@ -1,7 +1,11 @@
 # Perception Algorithm Comparison: Obstacle Detection
 
+> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
+> the generated scores and placeholder command claims. R9.2 remains partial.
+
+
 **Category:** perception  
-**Type:** real_experiment  
+**Type:** draft_template
 **Target Audience:** intermediate  
 **Estimated Time:** 75 minutes  
 
@@ -24,17 +28,19 @@ Compare 5 perception algorithms for obstacle detection accuracy
 - Select appropriate perception method for different environments
 
 
-## Commands
+## Run
+
+Only the method/experiment declarations can currently be checked with this page:
 
 ```bash
-# Launch perception comparison experiment
-ros2 run robot_lab_benchmark perception_comparison --config perception_config.yaml
-# Run individual perception methods
-ros2 run robot_lab_algorithms scan_clusterer
-ros2 run robot_lab_algorithms dbscan_clusterer
-# Visualize results
-rqt --force-discover | grep rqt_reconfigure
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
 ```
+
+This checks numerical fixtures and configuration contracts. It does not execute
+five robot methods or produce the proposed comparison results below. Follow
+[the completion audit](../status/audit-2026-10-02.md) and
+[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+
 
 ## Expected Results
 

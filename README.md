@@ -4,17 +4,30 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status reconciled on **2026-09-30**, against `e3d63b3` plus the documented working-tree patches. The
-2026-09-07 audit remains the historical baseline for its recorded checks; later
-runtime evidence is tracked in the [current status ledger](docs/status/platform-status.yaml)
-and the R5.2/R5.3 evidence directories.
+Status reconciled on **2026-10-02**, against `2a0aae2` plus the audit and measured
+flight/navigation continuation. The [current completion audit](docs/status/audit-2026-10-02.md)
+reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
+success and invented performance scores do not establish working missions.
+Scoped measured robot results remain in the [status ledger](docs/status/platform-status.yaml).
 
+PX4 trial logs were moved to the workspace SSD with verified content and
+compatibility links, freeing **15.79 GiB** on internal storage. Use the
+[storage guide](docs/STORAGE.md) for new builds/trials.
 The 2026-09-30 MuJoCo localization regression is repaired in the current
-working tree: BHL and Go2 effort loops preserve feedback cadence, and GUI
+source: BHL and Go2 effort loops preserve feedback cadence, and GUI
 commands preserve the configured map/robot spawn. Sequential Celisca floor-1
 repeats walked upright. Go2 requires the GUI's flat-ground policy checkbox;
 BHL's walking policy defaults on. See the
 [before/after traces and instructions](docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md).
+
+
+October 2 continuation adds measured **PX4 X500 flight in the GUI**: Takeoff,
+Hold, Land, manual Drive, live FCU pose and measured rotor states. It also
+repairs four-wheel rolling/pivot, adds constrained DWB navigation for crab/
+in-phase steering, and restores physical Gazebo mecanum travel. See the
+[current measured trials and remaining gaps](docs/status/continuation-2026-10-02.md)
+and [flight guide](docs/tutorials/px4_x500.md). Full platform qualification
+remains partial; these results apply to the named recorded cells.
 
 ## Start here
 
@@ -45,14 +58,12 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-The fast development check on the 2026-10-01 working tree is **670 passed,
-1 skipped, 3 failed**, with registry cross-reference validation passing. The
-three failures are in `test_p6_benchmarking.py` (`third-party-notices.md`
-missing the Unitree entry, a stray external-asset check, and a tutorial missing
-its `Run` section); they come from the concurrent R6/R8 documentation work in
-this working tree and are **not** in the R5.5/R5.6/R5.4 scope changed below.
-These are scoped source and static checks. The Tk command/Drive suite passes
-(including the new mecanum strafe and 4WS pattern selector tests). Simulator
+The fast development check on the 2026-10-02 working tree is **685 passed,
+1 skipped**, with registry cross-reference validation passing. The prior asset
+attribution and missing tutorial-section regressions are repaired. The Tk
+command/Drive suite is **36 passed**, and the GUI package rebuild passes.
+These are scoped source/static checks, not universal mission qualification.
+Simulator
 evidence from this round is recorded per task under
 [status/evidence](docs/status/): the car steering repair and measured arcs
 ([r55](docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md)), the

@@ -38,6 +38,7 @@ MODE_ROBOT_FEATURES = {
     "slam": ("lidar_2d", "velocity_base"),
     "3d_slam": ("rgbd_camera", "velocity_base"),
     "nav": ("lidar_2d", "velocity_base"),
+    "flight": ("flight_controller",),
 }
 
 FEATURE_LABELS = {
@@ -49,6 +50,7 @@ FEATURE_LABELS = {
               "MuJoCo bridges hold its joints; Isaac's hold does not)",
     "car_steering": "a car-like base that cannot turn on the spot",
     "holonomic_base": "a base that translates sideways as well as forward",
+    "flight_controller": "a live PX4 flight controller",
 }
 
 
@@ -74,8 +76,12 @@ def required_features(mode, mode_config=None):
 def missing_features(robot_config, mode, simulator=None, mode_config=None):
     """Required features the robot lacks in *simulator* (all simulators if None)."""
     have = robot_features(robot_config, simulator)
-    return [feature for feature in required_features(mode, mode_config)
-            if feature not in have]
+    missing = [feature for feature in required_features(mode, mode_config)
+               if feature not in have]
+    supported = (robot_config or {}).get('supported_simulators', [])
+    if simulator and supported and simulator not in supported:
+        missing.append('support for simulator '+simulator+' (available: '+', '.join(supported)+')')
+    return missing
 
 
 def describe_missing(missing):

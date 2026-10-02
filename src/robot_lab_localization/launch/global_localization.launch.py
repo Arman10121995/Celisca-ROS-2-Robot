@@ -120,6 +120,10 @@ def generate_launch_description():
         base_frame = LaunchConfiguration("base_frame").perform(context).strip()
         if base_frame:
             amcl_parameters.append({"base_frame_id": base_frame})
+        model = LaunchConfiguration("motion_model").perform(context).strip().lower()
+        amcl_parameters.append({"robot_model_type": (
+            "nav2_amcl::OmniMotionModel" if model.startswith("omni") else
+            "nav2_amcl::DifferentialMotionModel")})
         return [
             Node(
                 package="nav2_amcl",
@@ -160,6 +164,7 @@ def generate_launch_description():
             default_value="",
             description="Robot base frame for AMCL; empty keeps the overlay/default",
         ),
+        DeclareLaunchArgument("motion_model", default_value="diff"),
         initial_pose_x_arg,
         initial_pose_y_arg,
         initial_pose_yaw_arg,

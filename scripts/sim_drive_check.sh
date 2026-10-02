@@ -21,7 +21,13 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:="$MODE" \
 LAUNCH=$!
 python3 "$HERE/sim_drive_check.py" --odom "$ODOM" --timeout "${TIMEOUT:-300}" \
   --warmup "${WARMUP:-3}" ${CHECK_ARGS:-} > "$OUT" 2> "$OUT.err"
+CHECK_RESULT=$?
 kill -INT "$LAUNCH" 2>/dev/null
 for _ in $(seq 1 40); do kill -0 "$LAUNCH" 2>/dev/null || break; sleep 1; done
-kill -0 "$LAUNCH" 2>/dev/null && kill -KILL -- -"$LAUNCH" 2>/dev/null
+# The launch parent may finish while a simulator descendant remains alive.
+kill -TERM -- -"$LAUNCH" 2>/dev/null || true
+sleep 1
+kill -KILL -- -"$LAUNCH" 2>/dev/null || true
 [ -s "$OUT" ] || echo '{"error": "checker produced no output"}' > "$OUT"
+
+exit "$CHECK_RESULT"

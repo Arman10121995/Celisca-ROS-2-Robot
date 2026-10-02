@@ -1,0 +1,87 @@
+{
+  "audit_date": "2026-10-02",
+  "baseline_revision": "2a0aae2",
+  "probes": {
+    "reset": {
+      "status": "passed",
+      "findings": [
+        "Testing reset for bumperbot in small_office (gazebo)",
+        "Reset validation: SIMULATED (actual backend integration required)",
+        "\u2705 All reset validations passed (simulated)"
+      ],
+      "actual_backend_integration": false
+    },
+    "clean_host": {
+      "returned_success": true,
+      "results": [
+        {
+          "test_type": "build",
+          "environment": "container",
+          "start_time": "2026-10-02T09:59:01Z",
+          "end_time": "2026-10-02T09:59:01Z",
+          "success": true,
+          "log_file": "/tmp/build_container_test.log",
+          "artifacts": [],
+          "error_message": "",
+          "golden_comparison": true
+        },
+        {
+          "test_type": "test",
+          "environment": "container",
+          "start_time": "2026-10-02T09:59:01Z",
+          "end_time": "2026-10-02T09:59:01Z",
+          "success": true,
+          "log_file": "/tmp/test_container_test.log",
+          "artifacts": [],
+          "error_message": "",
+          "golden_comparison": true
+        },
+        {
+          "test_type": "mission",
+          "environment": "bare_metal",
+          "start_time": "2026-10-02T09:59:01Z",
+          "end_time": "2026-10-02T09:59:01Z",
+          "success": true,
+          "log_file": "/tmp/mission_bare_metal_test.log",
+          "artifacts": [],
+          "error_message": "",
+          "golden_comparison": true
+        }
+      ],
+      "logs_exist": [
+        false,
+        false,
+        false
+      ],
+      "actual_build_or_mission": false
+    },
+    "unqualified_isaac_cell": {
+      "robot_id": "bumperbot",
+      "environment_id": "aerial_course",
+      "simulator": "isaac",
+      "task_type": "coverage",
+      "support_level": "fully_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-09-16",
+      "revision": "current",
+      "test_result": "PASSED",
+      "artifacts": [
+        "docs/status/evidence/r82-isaac-mission-2026-09-16/"
+      ],
+      "limitations": [
+        "Not yet tested"
+      ],
+      "notes": ""
+    }
+  },
+  "qualification": "Source/demo probes only; no simulator or flight launched.",
+  "source_sha256": {
+    "src/robot_lab_maps/tools/r6_reset_validation.py": "2652fecaf2a87cf758a0dfd5f91b79c7108b004e0caf7b47c163b0c7742838f5",
+    "src/robot_lab_maps/tools/r6_geometry_map_alignment.py": "a2f566f9498094bf875f9825e8dbdfe77f112aeaedfc9b87d6c6e2e788d55fb9",
+    "src/robot_lab_bringup/tools/r8_backend_qualification.py": "29e8e60f6a09c177d1888cf7fa1e0ba3386a5ebd1d2699397647ac074741a4f2",
+    "src/robot_lab_benchmark/tools/r8_resource_bounded_experiments.py": "6226381a22907ff38ee95fe2ca5a2309433a069dd3edfe66045cddb1c778eb44",
+    "scripts/r9_1_provenance_framework.py": "ee4dd8c1381a2b385d8e8461d0c6bc5318fb532d9cd974b2940f325f4d058ed6",
+    "scripts/r9_3_support_matrix.py": "8a820f7b72b585bbe7807064ee6f326cc55a1ed75185b68976ff475de4b19171",
+    "docs/tutorials/r9_2_tutorials_framework.py": "cfeb336c15f86dc31db35e5d138d3bec9472eb951fe6c5d29c9199252ff35502"
+  }
+}

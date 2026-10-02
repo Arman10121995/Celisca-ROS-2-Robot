@@ -447,3 +447,10 @@ initial_covariance: [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
 - [Nonlinear Filtering](https://en.wikipedia.org/wiki/Kalman_filter#Extensions)
 - [Particle Filtering](https://en.wikipedia.org/wiki/Particle_filter)
 - [Error-State Kalman Filter](https://ieeexplore.ieee.org/document/8461364)
+
+## Run
+
+This page documents planned methods or configuration. Consult the
+[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
+for executable, scoped tests and remaining qualification. No measured comparison
+is established by this page alone.

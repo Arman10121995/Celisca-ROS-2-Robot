@@ -1,7 +1,11 @@
 # Localization Algorithm Comparison: Pose Estimation
 
+> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
+> the generated scores and placeholder command claims. R9.2 remains partial.
+
+
 **Category:** localization  
-**Type:** real_experiment  
+**Type:** draft_template
 **Target Audience:** intermediate  
 **Estimated Time:** 75 minutes  
 
@@ -24,17 +28,19 @@ Compare 5 localization algorithms for pose estimation accuracy
 - Tune localization parameters
 
 
-## Commands
+## Run
+
+Only the method/experiment declarations can currently be checked with this page:
 
 ```bash
-# Launch localization comparison
-ros2 run robot_lab_benchmark localization_comparison --config loc_config.yaml
-# Test individual methods
-ros2 run robot_lab_algorithms amcl
-ros2 run robot_lab_algorithms icp_localization
-# Evaluate results
-python scripts/evaluate_localization.py --input loc_results.json
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
 ```
+
+This checks numerical fixtures and configuration contracts. It does not execute
+five robot methods or produce the proposed comparison results below. Follow
+[the completion audit](../status/audit-2026-10-02.md) and
+[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+
 
 ## Expected Results
 

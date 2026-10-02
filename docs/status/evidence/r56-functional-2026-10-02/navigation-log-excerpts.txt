@@ -1,0 +1,58 @@
+gazebo-4ws-crab-dwb-nav.json.launch.log
+[controller_server-18] [INFO] [1790941207.962641628] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-18] [INFO] [1790941217.603990758] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-21] [INFO] [1790941233.553014650] [bt_navigator]: Goal succeeded
+
+gazebo-4ws-pivot-drive.json.launch.log
+[ERROR] [launch]: Caught exception in launch (see debug for traceback): executable 'gazebo_reset_bridge.py' not found on the libexec directory '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description' 
+
+gazebo-mecanum-nav.json.launch.log
+[controller_server-18] [INFO] [1790938217.763930556] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-21] [INFO] [1790938231.682988889] [bt_navigator]: Goal succeeded
+
+isaac-4ws-crab-dwb-nav-fixed.json.launch.log
+[controller_server-16] [INFO] [1790942064.523878998] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-16] [INFO] [1790942077.340939307] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-19] [INFO] [1790942153.390454463] [bt_navigator]: Goal succeeded
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+
+isaac-4ws-crab-dwb-nav.json.launch.log
+[controller_server-16] [INFO] [1790941503.666106064] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-16] [INFO] [1790941515.793184718] [controller_server]: Received a goal, begin computing control effort.
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[isaac_spawner-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:389
+
+mujoco-4ws-ackermann-dwb-nav.json.launch.log
+[controller_server-15] [INFO] [1790942231.392977737] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-18] [INFO] [1790942247.532314140] [bt_navigator]: Goal succeeded
+
+mujoco-4ws-crab-diagonal-nav.json.launch.log
+[controller_server-15] [INFO] [1790940407.291310372] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [ERROR] [1790940445.041926946] [controller_server]: Failed to make progress
+[controller_server-15] [INFO] [1790940459.770911566] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [ERROR] [1790940494.371372290] [controller_server]: Failed to make progress
+
+mujoco-4ws-crab-dwb-nav.json.launch.log
+[controller_server-15] [INFO] [1790940831.266196455] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-15] [INFO] [1790940838.199902132] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-18] [INFO] [1790940856.069262863] [bt_navigator]: Goal succeeded
+
+mujoco-4ws-inphase-dwb-nav.json.launch.log
+[controller_server-15] [INFO] [1790940914.781604240] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-15] [INFO] [1790940921.486660737] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-18] [INFO] [1790940940.956017850] [bt_navigator]: Goal succeeded
+
+mujoco-4ws-nav.json.launch.log
+[controller_server-15] [INFO] [1790940205.721293493] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-18] [INFO] [1790940216.070813859] [bt_navigator]: Goal succeeded
+
+mujoco-4ws-pivot-dwb-nav.json.launch.log
+[controller_server-15] [INFO] [1790940955.025033139] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-18] [INFO] [1790940972.664424189] [bt_navigator]: Goal succeeded
+
+pybullet-4ws-crab-dwb-nav.json.launch.log
+[controller_server-15] [INFO] [1790941092.617817187] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-15] [INFO] [1790941099.709278855] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [INFO] [1790941124.399624608] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-18] [INFO] [1790941124.468790624] [bt_navigator]: Goal succeeded

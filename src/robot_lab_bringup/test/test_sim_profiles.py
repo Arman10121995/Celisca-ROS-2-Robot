@@ -222,7 +222,7 @@ def test_bhl_physics_timestep_launch_override_is_opt_in():
 
 
 def test_expected_profiles_are_present():
-    assert set(MODES) == {"display", "loc", "slam", "3d_slam", "nav"}
+    assert set(MODES) == {"display", "loc", "slam", "3d_slam", "nav", "flight"}
     # 14 legacy maps existed before P4.2; the P4.2/P4.3/P4.4/P4.5 arenas added more.
     assert len(MAPS) >= 14
     for legacy in (
@@ -301,7 +301,8 @@ def test_robot_modes_and_features_are_compatible(robot_name, robot_config):
         )
 
 
-@pytest.mark.parametrize("mode_name,mode_config", MODES.items())
+@pytest.mark.parametrize("mode_name,mode_config", [(name, config) for name, config in MODES.items()
+                                                  if name in ROBOTS['bumperbot']['supported_modes']])
 @pytest.mark.parametrize("map_name,map_config", MAPS.items())
 def test_bumperbot_mode_map_matrix(mode_name, mode_config, map_name, map_config):
     assert mode_name in ROBOTS["bumperbot"]["supported_modes"]

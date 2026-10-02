@@ -485,3 +485,10 @@ class MultiRateFusion:
 - [Mahony AHRS Algorithm](https://ieeexplore.ieee.org/document/5347500)
 - [Unscented Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter#Unscented_Kalman_filter)
 - [Multi-Sensor Fusion](https://ieeexplore.ieee.org/document/7353840)
+
+## Run
+
+This page documents planned methods or configuration. Consult the
+[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
+for executable, scoped tests and remaining qualification. No measured comparison
+is established by this page alone.

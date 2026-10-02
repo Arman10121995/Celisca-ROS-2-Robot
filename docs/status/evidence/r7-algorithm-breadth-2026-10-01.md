@@ -1,5 +1,11 @@
 # R7 Algorithm Breadth Evidence - 2026-10-01
 
+> Superseded by the 2026-10-02 completion audit (`docs/status/audit-2026-10-02.md`).
+> This historical report contains metadata/demo completion claims that do not
+> establish full runtime qualification. Retain its data; use the current ledger
+> and exact measured mission artifacts for supported combinations.
+
+
 **Status**: ✅ COMPLETE  
 **Date**: 2026-10-01  
 **Revision**: e3d63b3 (baseline) + working tree changes  

@@ -1,5 +1,11 @@
 # Support Matrix
 
+> Superseded by the 2026-10-02 completion audit (`docs/status/audit-2026-10-02.md`).
+> This historical report contains metadata/demo completion claims that do not
+> establish full runtime qualification. Retain its data; use the current ledger
+> and exact measured mission artifacts for supported combinations.
+
+
 *Generated: 2026-10-01*  
 *Task: R9.3 Evidence-Generated Support Matrix*  
 *Status: In Progress*

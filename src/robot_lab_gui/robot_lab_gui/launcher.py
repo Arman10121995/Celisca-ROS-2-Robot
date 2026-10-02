@@ -153,7 +153,7 @@ def selection_value(value):
     return NONE_VALUE if is_none_selection(value) else str(value).strip()
 
 
-MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav"]
+MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight"]
 MODE_TOOLTIPS = {
     "display": "Visualize a robot and/or a map in the selected simulator "
                "(unactuated legged robots hold their pose; no localization).",
@@ -161,6 +161,7 @@ MODE_TOOLTIPS = {
     "slam": "SLAM: build a 2D map while localizing.",
     "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",
     "nav": "Navigation: plan and follow paths (2D map required).",
+    "flight": "PX4 X500: explicit takeoff, manual flight and 3D waypoint control. No obstacle avoidance.",
 }
 MODE_LABELS = {
     "display": "Display",
@@ -168,6 +169,7 @@ MODE_LABELS = {
     "slam": "SLAM",
     "3d_slam": "3D SLAM",
     "nav": "Navigation",
+    "flight": "PX4 Flight",
 }
 
 SIMULATOR_ORDER = ["gazebo", "isaac", "pybullet", "mujoco"]
@@ -530,6 +532,10 @@ class SimulationLauncherGui(tk.Tk):
         profile's features (e.g. DWB turns a robot on the spot, which a car
         with ``car_steering`` cannot do); the launch refuses the same pairs.
         """
+        if category == 'local_planning' and self._four_wheel_steer_selectable() \
+                and self.steering_mode_var.get() in ('crab', 'in_phase') \
+                and algorithm_id != 'dwb_local_planner':
+            return 'Parallel steering uses DWB with a translation/pivot constraint.'
         entry = (self.algorithm_dispatch.get(category) or {}).get(algorithm_id) or {}
         excluded = set(entry.get("not_for_features") or [])
         if not excluded or self._robot_free():
@@ -871,7 +877,7 @@ class SimulationLauncherGui(tk.Tk):
         self.steering_mode_combo.pack(side="left", padx=(6, 0))
         self.steering_mode_combo.bind(
             "<<ComboboxSelected>>",
-            lambda _event: self._update_validation_and_command())
+            lambda _event: self._update_from_selection())
         add_tooltip(self.steering_mode_combo,
                     "Four-wheel-steer pattern for four_wheel_steer_car, passed "
                     "as steering_mode:= to the launch.  Empty keeps the "
@@ -910,6 +916,13 @@ class SimulationLauncherGui(tk.Tk):
         reverse_button = ttk.Button(drive_frame, text="Reverse")
         reverse_button.grid(row=2, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(reverse_button, -1.0, 0.0)
+
+        self.flight_buttons = []
+        for column, (label, action) in enumerate((('Takeoff', 'takeoff'), ('Hold', 'hold'), ('Land', 'land'))):
+            button = ttk.Button(drive_frame, text=label,
+                                command=lambda action=action: self._flight_action(action))
+            button.grid(row=3, column=column, sticky='ew', padx=2, pady=2)
+            self.flight_buttons.append(button)
 
         speed_frame = ttk.Frame(controls)
         speed_frame.grid(row=27, column=0, sticky="ew", pady=(0, 10))
@@ -1226,6 +1239,16 @@ class SimulationLauncherGui(tk.Tk):
         fixes = []
         simulator = self.simulator_var.get() or "gazebo"
         modes = self._robot_map_modes()
+        previous = getattr(self, '_automatically_changed_mode', None)
+        if previous:
+            robot, fallback, requested = previous
+            if robot != self.robot_var.get() or self.mode_var.get() != fallback:
+                self._automatically_changed_mode = None
+            elif requested in modes and self._robot_can_run(requested, simulator) \
+                    and _simulator_supports_mode(simulator, requested, self.mode_profiles):
+                self.mode_var.set(requested)
+                self._automatically_changed_mode = None
+                fixes.append('restored selected mode '+requested)
         if self._robot_free() or self._map_free():
             # A deliberately robot-free / map-free selection is display-only
             # by construction; nothing to correct beyond pinning the mode.
@@ -1239,18 +1262,23 @@ class SimulationLauncherGui(tk.Tk):
         for _ in range(3):
             modes = [mode for mode in self._robot_map_modes()
                      if _simulator_supports_mode(simulator, mode,
-                                                 self.mode_profiles)]
+                                                 self.mode_profiles)
+                     and self._robot_can_run(mode, simulator)]
             if self.mode_var.get() not in modes:
                 new_mode, note = _correction_for(
                     self.mode_var.get(), modes,
-                    ["slam", "display", "loc", "nav", "3d_slam"])
+                    [self._robot_config().get('default_mode', 'slam'),
+                     "slam", "display", "loc", "nav", "3d_slam"])
                 if new_mode:
                     fixes.append("mode %s" % note)
+                    self._automatically_changed_mode = (self.robot_var.get(), new_mode,
+                                                        self.mode_var.get())
                     self.mode_var.set(new_mode)
             sims = [sim for sim in SIMULATOR_ORDER
                     if _allowed_simulators(self.mode_var.get(),
                                            self.mode_profiles)
-                       .get(sim, (False, ""))[0]]
+                       .get(sim, (False, ""))[0]
+                    and self._robot_can_run(self.mode_var.get(), sim)]
             if simulator not in sims:
                 new_sim, note = _correction_for(simulator, sims, SIMULATOR_ORDER)
                 if new_sim and new_sim != simulator:
@@ -1289,7 +1317,8 @@ class SimulationLauncherGui(tk.Tk):
         """Backends that can run the active mode and are installed here."""
         mode = self.mode_var.get()
         return [sim for sim in SIMULATOR_ORDER
-                if self._simulator_mode_support(sim, mode)[0]]
+                if self._simulator_mode_support(sim, mode)[0]
+                and self._robot_can_run(mode, sim)]
 
     def _map_ok_for_mode(self, map_id):
         if self._mode_requires_2d_map(self.mode_var.get()):
@@ -1724,6 +1753,8 @@ class SimulationLauncherGui(tk.Tk):
             reset=True,
             mode=self.mode_var.get() or None,
             gui=self.gui_var.get() or None,
+            steering_mode=(self.steering_mode_var.get() or None
+                           if self._four_wheel_steer_selectable() else None),
         )
 
     def _update_validation_and_command(self):
@@ -1804,6 +1835,23 @@ class SimulationLauncherGui(tk.Tk):
         return (self._drive_type() in ("mecanum", "roller", "omni")
                 and self.launch_kind_var.get() == "simulation")
 
+    def _lateral_drive_selectable(self):
+        return (self._flight_selectable() or self._mecanum_selectable() or
+                (self._four_wheel_steer_selectable() and
+                 self.steering_mode_var.get() in ("crab", "in_phase")))
+
+    def _flight_selectable(self):
+        return (self.robot_var.get() == 'px4_x500' and self.mode_var.get() == 'flight'
+                and self.simulator_var.get() == 'gazebo'
+                and self.launch_kind_var.get() == 'simulation')
+
+    def _flight_action(self, action):
+        if not self._flight_selectable():
+            return
+        self._stop_drive(keep_input_enabled=True)
+        command = ['ros2', 'service', 'call', '/px4/'+action, 'std_srvs/srv/Trigger', '{}']
+        threading.Thread(target=self._run_aux_command, args=(command, 'PX4 '+action), daemon=True).start()
+
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
@@ -1841,6 +1889,12 @@ class SimulationLauncherGui(tk.Tk):
             self.status_var.set("Command copied")
 
     def _update_from_selection(self):
+        if self.robot_var.get() == 'px4_x500' and COMPOSITION_AVAILABLE \
+                and self.composition_registry is not None and not self._map_free():
+            environment_id = self._environment_id()
+            environment = self.composition_registry.environments.get(environment_id) or {}
+            if 'aerial' not in environment.get('supported_robot_classes', []):
+                self.map_var.set('nav_empty')
         # 1. Maps: every map stays selectable in display mode (a map can be
         # visualized in any backend, with or without a robot); the
         # map-dependent modes keep only environments that have a real 2D
@@ -1902,8 +1956,10 @@ class SimulationLauncherGui(tk.Tk):
             state="readonly" if self._four_wheel_steer_selectable() else "disabled")
         for button in self.drive_strafe_widgets.values():
             button.state(
-                ["!disabled"] if self._mecanum_selectable() else ["disabled"])
-        if not self._mecanum_selectable():
+                ["!disabled"] if self._lateral_drive_selectable() else ["disabled"])
+        for button in self.flight_buttons:
+            button.state(['!disabled'] if self._flight_selectable() else ['disabled'])
+        if not self._lateral_drive_selectable():
             self.drive_strafe_buttons.clear()
 
         # Clear cached compatibility results (robot/mode/map changed)
@@ -1943,6 +1999,10 @@ class SimulationLauncherGui(tk.Tk):
             lines.append(
                 "Walk: ONNX policy in Localization (experimental); "
                 "forward/stop measured, held turning stalls")
+        if self.robot_var.get() == 'px4_x500':
+            lines.append('PX4 Flight: Takeoff first; WASD/Drive controls XY and yaw, Strafe controls lateral flight. '
+                         'Hold or Space stops manual travel; Land returns to the ground. '
+                         '3D goals use /px4/goal; no obstacle avoidance. Health contains the flight guide and measured results.')
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):
@@ -2127,6 +2187,7 @@ class SimulationLauncherGui(tk.Tk):
         mode = resolved_from.get("mode") or manifest.get("mode")
         if mode and mode in self.mode_profiles:
             self.mode_var.set(mode)
+        self.steering_mode_var.set(resolved_from.get("steering_mode") or "")
         gui_value = resolved_from.get("gui") or manifest.get("gui")
         if gui_value in ("auto", "true", "false"):
             self.gui_var.set(gui_value)
@@ -2489,10 +2550,10 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_model.min_angular = 0.0
         linear_input = sum(value[0] for value in self.drive_buttons)
         angular_input = sum(value[1] for value in self.drive_buttons)
-        # Lateral input exists only for a mecanum drive; the buttons are
+        # Lateral input exists for mecanum and 4WS parallel steering; buttons are
         # disabled otherwise, so this also covers a stale latch.
         strafe_input = (sum(self.drive_strafe_buttons)
-                        if self._mecanum_selectable() else 0.0)
+                        if self._lateral_drive_selectable() else 0.0)
         if self.drive_input_enabled.get():
             linear_input += int("w" in self.drive_keys) - int("s" in self.drive_keys)
             angular_input += int("a" in self.drive_keys) - int("d" in self.drive_keys)

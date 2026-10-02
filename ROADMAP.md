@@ -1,11 +1,12 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-09-30. Continuation baseline: `e3d63b3`. Runtime audit
-baseline: `dff388f` (historical, retained in `docs/status/audit-2026-09-07.md`).
-R4.1 scenario lifecycle and truthful outcomes are complete. Current work is
-tracked in [`docs/status/platform-status.yaml`](docs/status/platform-status.yaml):
-`R5.2` is the active next task, while `R5.3` remains partial after a bounded
-negative locomotion diagnosis.
+Updated: 2026-10-02. Continuation baseline: `2a0aae2`. The
+[completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
+R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
+but full mission qualification remains partial. Existing scoped live robot
+results remain valid within their documented limits. Follow the stabilization
+queue and [storage guide](docs/STORAGE.md) before generating new large artifacts.
+Historical runtime audit: `dff388f`, retained in `docs/status/audit-2026-09-07.md`.
 
 This is an implementation specification, not a list of promised features.
 [Machine-readable status](docs/status/platform-status.yaml) owns task state,
@@ -21,16 +22,21 @@ points, commands and acceptance checks for a continuing agent. The ledger's
 `priority_patches` records current state; partial work is not a completed robot
 workflow.
 
+Pending verification housekeeping: protect the ledger/audited reports from
+legacy demonstration generators, and repair remaining root-relative paths in
+the R6/R7 verification scripts already moved into `scripts/`. Their metadata
+checks do not close runtime acceptance; use the task-linked measured probes.
+
 | Patch | Current evidence | Required next result |
 |---|---|---|
 | P1 BHL/Go2 localization regression | Repaired, bounded Celisca walks measured | Preserve the tested feedback cadence |
 | P2 GUI neutral input | Source/Tk checks pass | Physical joystick arming, release and disconnect trial |
 | P3 Celisca geometry/navigation | 20% resize corrected; six short furnished goals pass | Both differential bases in remaining cells and obstacle routes |
 | P4 MuJoCo speed | Safe wheel catch-up; effort catch-up disabled | Measured real-time factor with stable control |
-| P5 four-wheel steering | MuJoCo default drive measured; Gazebo repair active | Select and measure crab/opposite-phase/pivot, then map/navigate |
-| P6 mecanum | Wheel commands wired; no physical lateral motion | Roller contact model, lateral drive/stop, then map/navigate |
+| P5 four-wheel steering | MuJoCo four-pattern DWB goals and crab screens on all four simulators pass; exact rolling/pivot, constrained DWB and GUI autofill | Other backend patterns, precise final body heading, obstacle routes, SLAM, reset and watchdog matrix |
+| P6 mecanum | Physical rollers; Gazebo 0.278 m/s lateral truth and a real Nav2 goal pass; convex contact proxy restores speed | Other backend/map/mode missions, obstacle routes, reset and command loss |
 | P7 legged/humanoid policies | Primary candidates audited; limited BHL/Go2 walks | Model-specific contracts and bounded live qualification |
-| P8 PX4 drone | Candidate identified | Deferred from this run by the user |
+| P8 PX4 drone | Measured native X500 takeoff/hover/3D waypoints/landing/command-loss; ROS2/GUI Flight workflow and body truth pass | Other maps, obstacle-aware aerial planning/SLAM, longer hover and concurrent-FCU qualification |
 
 ## Goal and completion boundary
 
@@ -540,23 +546,19 @@ Dependencies: `R5.1`.
 
 Dependencies: `R5.1`.
 
-- 2026-10-01 progress (still `blocked`): a real PX4 SITL FCU now builds and runs
-  on this host with no root (`PX4-Autopilot @ 9be7c6f391fb`, `make px4_sitl
-  gz_x500`; pip `kconfiglib` + `PYTHONPATH=Tools/kconfig`). Three faults were
-  isolated. (1) The vehicle never entered the Gazebo world - this host is
-  gz-sim 8.15 (SDF 1.10) and PX4 main's models are SDF 1.11 - so the estimator
-  never converged and arming was refused; `scripts/px4_sitl_model.py` resolves the
-  include graph itself (`gz sdf -p` cannot, and yields a model with plugins but no
-  links) and inserts the vehicle, after which the FCU reports GPS fix type 3 with
-  10 satellites. (2) Arming is refused unless the setpoint stream is kept alive
-  while the arm request is evaluated - PX4 leaves OFFBOARD after ~0.5 s without
-  setpoints - and with that the FCU **arms**: base_mode 145 (ARMED|STABILIZE|
-  CUSTOM), OFFBOARD accepted (custom_mode 393216), COMMAND_ACK result 0.
-  (3) Still open: the FCU publishes rotor commands on `/x500_0/command/motor_speed`
-  while the inserted entity subscribes on `/model/x500_0/command/motor_speed`, so
-  the armed vehicle produces no thrust; takeoff, hover, 3D waypoints, landing and
-  the command-loss failsafe are **not measured** and the stub offboard controller
-  and fixed-rotor URDF are untouched.
+- 2026-10-02: **named SITL flight acceptance complete** on Gazebo Harmonic/
+  `nav_empty`, using unmodified PX4 v1.16.2 and upstream X500 dynamics. Native
+  takeoff/hover/three 3D waypoints/landing/command-loss landing pass. The ROS2
+  service/Drive path passes against independent body truth; measured rotor
+  states feed RViz. GUI offers `px4_x500`, PX4 Flight, Takeoff/Hold/Land and
+  command autofill. See [flight evidence](docs/status/evidence/r54-flight-2026-10-02/README.md)
+  and [operator/agent guide](docs/tutorials/px4_x500.md).
+- The October 1 no-thrust diagnosis is superseded: `0xFC7` ignored position
+  and commanded zero velocity. `0x9F8` plus forwarding actual waypoint XYZ
+  makes native pinned startup fly. Zero-thrust MAVROS demonstration is retired.
+- Scope remains one named SITL cell. Aerial SLAM, obstacle-aware planning,
+  additional maps/backends, hardware, long-hover drift and concurrent FCUs
+  are separate unqualified workflows.
 
 - Files: `src/robot_lab_robots/quadrotor_sitl/`, `src/robot_lab_adapter/robot_lab_adapter/mavros_offboard_controller.py`, `src/robot_lab_bringup/`.
 - Implement: Select/pin one FCU-SITL integration with license/dependency decision. Add rotor/thrust dynamics, actuator allocation, IMU/pose, ENU/NED conversion, arming/offboard/readiness and failsafe. Display URDF fixed rotors are not propulsion.
@@ -618,6 +620,26 @@ Dependencies: `R5.1`, `R3.3`.
   these geometries, but are likewise single-run.
 
 ### R5.6 — Qualify four-wheel steering and physical mecanum motion
+
+- 2026-10-02 continuation: full ±90° steering, per-contact rolling allocation,
+  tangent pivot and no-slip odometry replace straight-wheel skid pivot.
+  Gazebo independent truth measures 0.994 rad/s pivot on 1.0 commanded.
+  A 68-face roller contact proxy retains support within 0.42 mm and restores
+  Gazebo simulation; mecanum lateral truth is 0.278 m/s on 0.3 commanded and
+  a real Nav2 goal passes. MuJoCo opposite-phase, crab, in-phase and pivot
+  goals pass with the current DWB defaults. Crab diagonal goals requesting
+  90° heading succeed on all four simulators; the Isaac lateral-command bridge
+  is repaired. Its final body heading error is 16.13°, so precise final heading
+  remains open despite Nav2 accepting the localization estimate.
+  Parallel steering uses upstream DWB plus `ParallelSteeringCritic`, which
+  rejects simultaneous translation/yaw; the failed RPP crab route is retained.
+  GUI selects Smac2D/DWB, enables strafe for parallel patterns, and saves the
+  steering pattern in resolved manifests. RGB-D camera is now actually present
+  in the wheel descriptions. See [measured scope and remaining matrix](docs/status/continuation-2026-10-02.md).
+  Current-proxy mecanum repeats measure 0.253/0.276 m/s lateral travel on
+  MuJoCo/PyBullet for 0.3 commanded; their Nav2 and obstacle-route qualification
+  remains open, as does Isaac physical mecanum.
+
 
 Dependencies: `R5.1`, `R3.3`.
 

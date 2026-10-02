@@ -1,0 +1,1488 @@
+{
+  "date": "2026-10-02",
+  "source_device": 45825,
+  "destination_device": 66304,
+  "state": "complete",
+  "method": "rsync -aHAX; SHA-256/metadata equality; rename; compatibility symlink; remove verified old copy",
+  "before_disk": {
+    "total": 60725841920,
+    "used": 56952066048,
+    "free": 674746368
+  },
+  "items": [
+    {
+      "original": "/tmp/px4_attempt.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_attempt.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790868465911952899,
+          "type": "file",
+          "size": 1504,
+          "sha256": "ffc7536bd90abba6505b831f279090e6350fae9379622be0962286ac35d0aff0"
+        }
+      ],
+      "bytes": 1504
+    },
+    {
+      "original": "/tmp/px4_attempt_outer.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_attempt_outer.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790867477430552796,
+          "type": "file",
+          "size": 43,
+          "sha256": "9d30d44da7f50cef8285fb579a7209ae86a25b2f4045d5612ce5ec8102802f83"
+        }
+      ],
+      "bytes": 43
+    },
+    {
+      "original": "/tmp/px4_attempt_outer2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_attempt_outer2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790868482780281066,
+          "type": "file",
+          "size": 43,
+          "sha256": "9d30d44da7f50cef8285fb579a7209ae86a25b2f4045d5612ce5ec8102802f83"
+        }
+      ],
+      "bytes": 43
+    },
+    {
+      "original": "/tmp/px4_build2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_build2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790869496798128464,
+          "type": "file",
+          "size": 807,
+          "sha256": "463fc55b71cf5cdb1bf77c67806b9a937f8aa5155650652e254d6395abf36e92"
+        }
+      ],
+      "bytes": 807
+    },
+    {
+      "original": "/tmp/px4_build3.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_build3.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790872026462248960,
+          "type": "file",
+          "size": 4515377632,
+          "sha256": "b752b6d2a18134a0500efe01bece1b9abc110a79d1f3ce96e14803ec464208c0"
+        }
+      ],
+      "bytes": 4515377632
+    },
+    {
+      "original": "/tmp/px4_create.txt",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_create.txt",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874910835166740,
+          "type": "file",
+          "size": 421,
+          "sha256": "69e1ad60091310ea12e91ee4dea4ed4708e355e1cf6d4244dc14ab105bdb2109"
+        }
+      ],
+      "bytes": 421
+    },
+    {
+      "original": "/tmp/px4_diag.txt",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_diag.txt",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790872792001985344,
+          "type": "file",
+          "size": 116,
+          "sha256": "05b8bfbfcd16e90b6839790b14eefc98c2280045c20b78fce800da91fe40ba35"
+        }
+      ],
+      "bytes": 116
+    },
+    {
+      "original": "/tmp/px4_entity.xml",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_entity.xml",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873533628647136,
+          "type": "file",
+          "size": 3374,
+          "sha256": "66ea6f17339d3673abb52170b5d71d39549e3b71d2f0a7cba9babbf3ee6d3eb3"
+        }
+      ],
+      "bytes": 3374
+    },
+    {
+      "original": "/tmp/px4_flight1.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight1.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871274498328987,
+          "type": "file",
+          "size": 9288,
+          "sha256": "93a04c8a7c351c7f71c51c2d1fe2cb7f7efcaac0771b105c58642a0979aa612f"
+        }
+      ],
+      "bytes": 9288
+    },
+    {
+      "original": "/tmp/px4_flight1.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight1.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871274498328987,
+          "type": "file",
+          "size": 9311,
+          "sha256": "c18573cc29ae4d6f5b12e3b0dd154110b0c0eaca7f445d144ff938a317c428b1"
+        }
+      ],
+      "bytes": 9311
+    },
+    {
+      "original": "/tmp/px4_flight2.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight2.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871710569618321,
+          "type": "file",
+          "size": 9352,
+          "sha256": "b421f458e145bdb19f505ff3306200460ed0e18b57fb915beda26368685025a1"
+        }
+      ],
+      "bytes": 9352
+    },
+    {
+      "original": "/tmp/px4_flight2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871710569618321,
+          "type": "file",
+          "size": 9375,
+          "sha256": "63d820925137dc221b0cb67191dbc01e0b4f6f2568c7f68dfbb83bf51afdfe57"
+        }
+      ],
+      "bytes": 9375
+    },
+    {
+      "original": "/tmp/px4_flight3.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight3.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874044975507184,
+          "type": "file",
+          "size": 9387,
+          "sha256": "1dfb0a61de0aa6e7dbbe16bda22b39dad7a14feda37b9785e83908447f604d82"
+        }
+      ],
+      "bytes": 9387
+    },
+    {
+      "original": "/tmp/px4_flight3.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight3.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874044975507184,
+          "type": "file",
+          "size": 9410,
+          "sha256": "7db20b003c565c2d7156e33d055a24addede952a5a8f428f2f9ba31cad6ffcda"
+        }
+      ],
+      "bytes": 9410
+    },
+    {
+      "original": "/tmp/px4_flight4.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight4.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874762272137444,
+          "type": "file",
+          "size": 9414,
+          "sha256": "ff5e1fa648d29c56b6f3cc30963a09598155e6845918c7955a646842a7a579d0"
+        }
+      ],
+      "bytes": 9414
+    },
+    {
+      "original": "/tmp/px4_flight4.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight4.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874762272137444,
+          "type": "file",
+          "size": 9437,
+          "sha256": "8368f4cc1511875e52f995ae77eef07b0e7010e9568bcc37848b69942b183bf7"
+        }
+      ],
+      "bytes": 9437
+    },
+    {
+      "original": "/tmp/px4_flight5.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight5.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790875015657837021,
+          "type": "file",
+          "size": 9393,
+          "sha256": "588c062aaab16e0ee4c0a9c4deadb077245b195f3d2482edcb409218b7c83315"
+        }
+      ],
+      "bytes": 9393
+    },
+    {
+      "original": "/tmp/px4_flight5.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight5.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790875015661836831,
+          "type": "file",
+          "size": 9416,
+          "sha256": "4624a1b3ec88e7cd8f045596114e63e7dc388f922d19940a6964c24fca2bc983"
+        }
+      ],
+      "bytes": 9416
+    },
+    {
+      "original": "/tmp/px4_flight6.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight6.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877434139703670,
+          "type": "file",
+          "size": 9414,
+          "sha256": "7553124ae0724e78d48b154b23c7f7778cdcbd73dd3d82c66a3c6c2a56d5d241"
+        }
+      ],
+      "bytes": 9414
+    },
+    {
+      "original": "/tmp/px4_flight6.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight6.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877434139703670,
+          "type": "file",
+          "size": 9437,
+          "sha256": "0c2185aa99fd6f0e252841634d46bb625b70be30350a99fb3f4b0e7d06c3201b"
+        }
+      ],
+      "bytes": 9437
+    },
+    {
+      "original": "/tmp/px4_flight_seq.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_flight_seq.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874457318134012,
+          "type": "file",
+          "size": 1550,
+          "sha256": "e3f672099b8816bbac632e69f8df954d013ab4ee46623d616f0c4cce077f76bc"
+        }
+      ],
+      "bytes": 1550
+    },
+    {
+      "original": "/tmp/px4_form",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_form",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877215519267418,
+          "type": "directory"
+        },
+        {
+          "path": "create.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877119036823606,
+          "type": "file",
+          "size": 12,
+          "sha256": "46eeeedc969f106320d874ff0cb0c5c1ea169952665865f64b8f5318d626c8a3"
+        },
+        {
+          "path": "flight.json",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877215519267418,
+          "type": "file",
+          "size": 9359,
+          "sha256": "82785c79f70e427aedb2dc1433b59994206ef2efb41710293185e7c73e725132"
+        },
+        {
+          "path": "flight_stdout.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877215519267418,
+          "type": "file",
+          "size": 9360,
+          "sha256": "ef55e3151fb29f43c3336cae215ec6bbe3d6136aecd7f7c23cd139037ceb03ff"
+        },
+        {
+          "path": "models.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877124644733492,
+          "type": "file",
+          "size": 1161,
+          "sha256": "ba287f8d7d4425c4cebfeae9f65b02254b6dbef8242c0b326148eafb96f9ab21"
+        },
+        {
+          "path": "motor_topics.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877126840698193,
+          "type": "file",
+          "size": 62,
+          "sha256": "c64ebde22c0ab37c7167d8221a7eef4168fcf37aa78e360339ac74fbc4f6846d"
+        },
+        {
+          "path": "px4_run.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790878990474995057,
+          "type": "file",
+          "size": 5510969914,
+          "sha256": "dff766b6523a6ae0e774074bea88db8125920221ee8bd33b64cbf53d4049afc5"
+        }
+      ],
+      "bytes": 5510989868
+    },
+    {
+      "original": "/tmp/px4_form_main.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_form_main.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877215599266123,
+          "type": "file",
+          "size": 144,
+          "sha256": "50c5ca7a1e0b432a5a36a55c3f53de21057c687812591e6c190494cf841ca3f0"
+        }
+      ],
+      "bytes": 144
+    },
+    {
+      "original": "/tmp/px4_gzfirst",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_gzfirst",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879176329973803,
+          "type": "directory"
+        },
+        {
+          "path": "create.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790878999770732058,
+          "type": "file",
+          "size": 12,
+          "sha256": "46eeeedc969f106320d874ff0cb0c5c1ea169952665865f64b8f5318d626c8a3"
+        },
+        {
+          "path": "flight.json",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879176329973803,
+          "type": "file",
+          "size": 1038,
+          "sha256": "725a2e80f4d2cbc20ce68da26d17b0013a608c1d738a7b097e84809f48586172"
+        },
+        {
+          "path": "flight_stdout.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879176329973803,
+          "type": "file",
+          "size": 1039,
+          "sha256": "ffddfe3e4c9b12836a77fe5f515c05ed0063fb1c3d78dc19f2a1da8b9d0b3457"
+        },
+        {
+          "path": "gz_server.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879013838336683,
+          "type": "file",
+          "size": 2887,
+          "sha256": "d9ce6b9949d292ad38caf49b4f1ba2526c0085fa2fd83963ba8754bc378ff175"
+        },
+        {
+          "path": "models.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879004318603896,
+          "type": "file",
+          "size": 1161,
+          "sha256": "ba287f8d7d4425c4cebfeae9f65b02254b6dbef8242c0b326148eafb96f9ab21"
+        },
+        {
+          "path": "motor_topics.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879006510542243,
+          "type": "file",
+          "size": 28,
+          "sha256": "6ba6c23d7525d062d1be73c90016be62a2d5a31734ec3ff4d017dc69046dfb58"
+        },
+        {
+          "path": "px4_run.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879419939973334,
+          "type": "file",
+          "size": 1191832393,
+          "sha256": "e77388f3ba148d02e819db9be4629a8d768b9de69cdc5b64b3e73413a5811388"
+        }
+      ],
+      "bytes": 1191838558
+    },
+    {
+      "original": "/tmp/px4_gzfirst.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_gzfirst.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790878993506909123,
+          "type": "file",
+          "size": 1679,
+          "sha256": "97d7f32d0f6eb0e45f00c609dab355efd68f102c72d22a433664eb1866410daa"
+        }
+      ],
+      "bytes": 1679
+    },
+    {
+      "original": "/tmp/px4_gzfirst_main.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_gzfirst_main.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879176409971737,
+          "type": "file",
+          "size": 369,
+          "sha256": "a1fb8b192fac978038f661e5f84e9c98c639ffb3b5a00446d130ae4086ace3ed"
+        }
+      ],
+      "bytes": 369
+    },
+    {
+      "original": "/tmp/px4_offboard_flight.py",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_offboard_flight.py",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873986823640525,
+          "type": "file",
+          "size": 10095,
+          "sha256": "07a4691fd673d95483369546a151f52b397007635636c9859c826705b98f49ad"
+        }
+      ],
+      "bytes": 10095
+    },
+    {
+      "original": "/tmp/px4_ownflight.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_ownflight.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881035291894618,
+          "type": "file",
+          "size": 9394,
+          "sha256": "da0fa126fcd79a4d266685dce8ef28add28e5e8a49b2eb0409fc3956e2d510b0"
+        }
+      ],
+      "bytes": 9394
+    },
+    {
+      "original": "/tmp/px4_ownflight.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_ownflight.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881035291894618,
+          "type": "file",
+          "size": 9417,
+          "sha256": "0aff2fa35c8d64f2427d0f7dd1fbd3f39cfd27e0343f82a9ccdff5e62fda82db"
+        }
+      ],
+      "bytes": 9417
+    },
+    {
+      "original": "/tmp/px4_patched",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_patched",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880380559190859,
+          "type": "directory"
+        },
+        {
+          "path": "create.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880348367853207,
+          "type": "file",
+          "size": 421,
+          "sha256": "69e1ad60091310ea12e91ee4dea4ed4708e355e1cf6d4244dc14ab105bdb2109"
+        },
+        {
+          "path": "flight_stdout.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880440997950278,
+          "type": "file",
+          "size": 170,
+          "sha256": "c6cd3f505235c7de9bb3d9379592b02213b0976c55adaffdb2b7f84982c23016"
+        },
+        {
+          "path": "motor_topics.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880380555190941,
+          "type": "file",
+          "size": 28,
+          "sha256": "6ba6c23d7525d062d1be73c90016be62a2d5a31734ec3ff4d017dc69046dfb58"
+        },
+        {
+          "path": "px4_run.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880565287970088,
+          "type": "file",
+          "size": 4872,
+          "sha256": "f7cd336c4afbabc04bf30f78cfe13ebca6637d9c0a7334b6f532ff2b85704a4c"
+        }
+      ],
+      "bytes": 5491
+    },
+    {
+      "original": "/tmp/px4_patched_flight.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_patched_flight.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880338276061091,
+          "type": "file",
+          "size": 842,
+          "sha256": "48d8e9ceca9f17d096fa2f1b16259f1638405dec0fea4b17584b53a0177e5634"
+        }
+      ],
+      "bytes": 842
+    },
+    {
+      "original": "/tmp/px4_patched_main.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_patched_main.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880441057949049,
+          "type": "file",
+          "size": 79,
+          "sha256": "e5d4ca0f4b8ae4e71f4a61db003e69fdb4803e91cc6f308e94a333392381bda0"
+        }
+      ],
+      "bytes": 79
+    },
+    {
+      "original": "/tmp/px4_px4form_flight.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_px4form_flight.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877108904986302,
+          "type": "file",
+          "size": 1207,
+          "sha256": "76c6f6a9e3150e84f3f383d81301ebbb05aaae51dae94b58785af77c45b51b33"
+        }
+      ],
+      "bytes": 1207
+    },
+    {
+      "original": "/tmp/px4_rebuild.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_rebuild.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880129668388857,
+          "type": "file",
+          "size": 1815,
+          "sha256": "4763bcd700281e73718b9c5f164915995176891686364f8f8728b1fff99dd606"
+        }
+      ],
+      "bytes": 1815
+    },
+    {
+      "original": "/tmp/px4_rebuild2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_rebuild2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880201598889346,
+          "type": "file",
+          "size": 774,
+          "sha256": "e1a1a03b4a47953bd126a9e84028982148433cad6d9151ce02cd61bd1bb96d93"
+        }
+      ],
+      "bytes": 774
+    },
+    {
+      "original": "/tmp/px4_rebuild3.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_rebuild3.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881144848046720,
+          "type": "file",
+          "size": 3898,
+          "sha256": "7cc7050a3d123e2a9126b773312b1a8cb222f422938f86578400f0c013bc10ee"
+        }
+      ],
+      "bytes": 3898
+    },
+    {
+      "original": "/tmp/px4_relay",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_relay",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879519121663552,
+          "type": "directory"
+        },
+        {
+          "path": "create.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879432187684606,
+          "type": "file",
+          "size": 421,
+          "sha256": "69e1ad60091310ea12e91ee4dea4ed4708e355e1cf6d4244dc14ab105bdb2109"
+        },
+        {
+          "path": "flight.json",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879519121663552,
+          "type": "file",
+          "size": 9398,
+          "sha256": "bfeb15862e266ee684015484378a13480c6381107a76656087ca3a89b7994a4d"
+        },
+        {
+          "path": "flight_stdout.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879519121663552,
+          "type": "file",
+          "size": 9399,
+          "sha256": "411de4f563d5d26b1a80135e5bfc6227642724ffc6b0722866cf01d267e1c8e5"
+        },
+        {
+          "path": "px4_run.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790880282989202145,
+          "type": "file",
+          "size": 2478890876,
+          "sha256": "997c241e83fd6f10b2cb62e9af96f32590f749a40ee62fc869dca80179aa06c9"
+        }
+      ],
+      "bytes": 2478910094
+    },
+    {
+      "original": "/tmp/px4_relay_flight.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_relay_flight.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879423011900817,
+          "type": "file",
+          "size": 1113,
+          "sha256": "09f9a8a31fa6b696e837dd0876a64a00f56b9428491b748138224a879715b1a6"
+        }
+      ],
+      "bytes": 1113
+    },
+    {
+      "original": "/tmp/px4_relay_main.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_relay_main.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790879519209661530,
+          "type": "file",
+          "size": 2436,
+          "sha256": "d3b24658e8b6056c93ad8bff8f783271cf61138d2d1690108f24fc70bfffcc41"
+        }
+      ],
+      "bytes": 2436
+    },
+    {
+      "original": "/tmp/px4_run2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_run2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873318569092074,
+          "type": "file",
+          "size": 1259942354,
+          "sha256": "b1116cbc450b54be3aa1f611c6d9689ba93e91864a0ffd77be54ae42742e813d"
+        }
+      ],
+      "bytes": 1259942354
+    },
+    {
+      "original": "/tmp/px4_s3.txt",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_s3.txt",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871798253894424,
+          "type": "file",
+          "size": 696,
+          "sha256": "266a7c9f409c6d5df7290c184f679cd793e4da0cb097c1e6a3328f698bdea889"
+        }
+      ],
+      "bytes": 696
+    },
+    {
+      "original": "/tmp/px4_scoped_run.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_scoped_run.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790877105877034896,
+          "type": "file",
+          "size": 487550529,
+          "sha256": "2c6082793d3f6211fe4ae068e7e431b3b1066d634b7e2634bb970d3e1ef40ebe"
+        }
+      ],
+      "bytes": 487550529
+    },
+    {
+      "original": "/tmp/px4_scoped_test.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_scoped_test.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790876887600497342,
+          "type": "file",
+          "size": 171,
+          "sha256": "a5ec2b24b1870f345f4a9a3488e14dc67453d868e96449b00059546f98a672b8"
+        }
+      ],
+      "bytes": 171
+    },
+    {
+      "original": "/tmp/px4_scoped_test.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_scoped_test.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790876872880727479,
+          "type": "file",
+          "size": 774,
+          "sha256": "346ee87b1577f559927dbfc63948d4a92229d6981fc488c8eba8b4ed343a88c6"
+        }
+      ],
+      "bytes": 774
+    },
+    {
+      "original": "/tmp/px4_sitl_build",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_sitl_build",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790867236625632446,
+          "type": "directory"
+        },
+        {
+          "path": "px4_attempt.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790868482780281066,
+          "type": "file",
+          "size": 1533,
+          "sha256": "8fa1ae0b031d1f60c3e52098063b99980113d586d23a504f020afb6f448cc986"
+        }
+      ],
+      "bytes": 1533
+    },
+    {
+      "original": "/tmp/px4_sitl_flight",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_sitl_flight",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873390084947456,
+          "type": "directory"
+        },
+        {
+          "path": "create_service.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874386946160319,
+          "type": "file",
+          "size": 421,
+          "sha256": "69e1ad60091310ea12e91ee4dea4ed4708e355e1cf6d4244dc14ab105bdb2109"
+        },
+        {
+          "path": "entity.xml",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873330073069067,
+          "type": "file",
+          "size": 3374,
+          "sha256": "66ea6f17339d3673abb52170b5d71d39549e3b71d2f0a7cba9babbf3ee6d3eb3"
+        },
+        {
+          "path": "estimator_wait.json",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874393925321644,
+          "type": "file",
+          "size": 104,
+          "sha256": "df9bf61a7653fa5985559f40b9b838442bf0609f83cc719d7729308e9b7c48f7"
+        },
+        {
+          "path": "flight.json",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874454170473394,
+          "type": "file",
+          "size": 9374,
+          "sha256": "617cb92640c9c556195baadbbe01fab890f0fb3587e1f9ef0916af27d5560e30"
+        },
+        {
+          "path": "flight_stdout.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874454170473394,
+          "type": "file",
+          "size": 9375,
+          "sha256": "94f3da8af4aa904c7a68acab1d3ed329a0e683ed464817b209d3e114c99e05c7"
+        },
+        {
+          "path": "models_after_spawn.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874392533488135,
+          "type": "file",
+          "size": 1161,
+          "sha256": "ba287f8d7d4425c4cebfeae9f65b02254b6dbef8242c0b326148eafb96f9ab21"
+        },
+        {
+          "path": "models_before_spawn.txt",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874386686191766,
+          "type": "file",
+          "size": 79,
+          "sha256": "a26f9baaff7d1e5b95381df1ce0c098fd30718562ed15e9e57418bd807d65b30"
+        },
+        {
+          "path": "px4_run.log",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874457290137022,
+          "type": "file",
+          "size": 192891255,
+          "sha256": "58bfa122e74f0b3ec20996aa56c2867131dd8ce2afb0515ba80bfb911c0ae3e1"
+        },
+        {
+          "path": "x500.resolved.sdf",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873330005069203,
+          "type": "file",
+          "size": 3375,
+          "sha256": "d90a2f44a6e14732fd1b1922493937b44cf609e717a9c3b3925573dc78702bf0"
+        }
+      ],
+      "bytes": 192918518
+    },
+    {
+      "original": "/tmp/px4_sitl_flight.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_sitl_flight.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874333996854732,
+          "type": "file",
+          "size": 3674,
+          "sha256": "f07fe1ffbc6765bed0054096269ede3de0005bdb1778e650ed3f3432ec5736cf"
+        }
+      ],
+      "bytes": 3674
+    },
+    {
+      "original": "/tmp/px4_sitl_flight_main.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_sitl_flight_main.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873393228941015,
+          "type": "file",
+          "size": 1550,
+          "sha256": "e3f672099b8816bbac632e69f8df954d013ab4ee46623d616f0c4cce077f76bc"
+        }
+      ],
+      "bytes": 1550
+    },
+    {
+      "original": "/tmp/px4_start.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_start.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790873538364637030,
+          "type": "file",
+          "size": 61,
+          "sha256": "05c8caaba48646c593cea89e9df8964e57c518356a418fdea006bcddc2b03759"
+        }
+      ],
+      "bytes": 61
+    },
+    {
+      "original": "/tmp/px4_start.sh",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_start.sh",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874900731720234,
+          "type": "file",
+          "size": 1010,
+          "sha256": "5b2099b3b21d895f9c92d37d246c141414e519b59a56be9bad9db10d463795c6"
+        }
+      ],
+      "bytes": 1010
+    },
+    {
+      "original": "/tmp/px4_start2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_start2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874600584381681,
+          "type": "file",
+          "size": 61,
+          "sha256": "05c8caaba48646c593cea89e9df8964e57c518356a418fdea006bcddc2b03759"
+        }
+      ],
+      "bytes": 61
+    },
+    {
+      "original": "/tmp/px4_start3.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_start3.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790874915422917877,
+          "type": "file",
+          "size": 61,
+          "sha256": "05c8caaba48646c593cea89e9df8964e57c518356a418fdea006bcddc2b03759"
+        }
+      ],
+      "bytes": 61
+    },
+    {
+      "original": "/tmp/px4_sum.txt",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_sum.txt",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871356375268074,
+          "type": "file",
+          "size": 192,
+          "sha256": "fbed948903152811929315e31a84673d7f9da7b234a17a44022df473cd663b46"
+        }
+      ],
+      "bytes": 192
+    },
+    {
+      "original": "/tmp/px4_summary.txt",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_summary.txt",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871406331753372,
+          "type": "file",
+          "size": 3159,
+          "sha256": "047fde56cbf6538d818b781a58e93196e5b14dd066b14c0dfda7325bb30bf812"
+        }
+      ],
+      "bytes": 3159
+    },
+    {
+      "original": "/tmp/px4_summary2.txt",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_summary2.txt",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790871872566061629,
+          "type": "file",
+          "size": 2057,
+          "sha256": "fbd38099669c53812ec62db79007ad38f4893149143a05b5ab1ab992219f92c0"
+        }
+      ],
+      "bytes": 2057
+    },
+    {
+      "original": "/tmp/px4_up.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_up.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790875173930988643,
+          "type": "file",
+          "size": 578956767,
+          "sha256": "2001943c76152554f114cd7ddc9b38da5eee33e6ad9e5d1e24a069a27142531e"
+        }
+      ],
+      "bytes": 578956767
+    },
+    {
+      "original": "/tmp/px4_v162flight.json",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_v162flight.json",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790882017297998213,
+          "type": "file",
+          "size": 9414,
+          "sha256": "1c62fdd88b3b9b493de9e01e75e39a5d818576a1f886773e69492c88684927cd"
+        }
+      ],
+      "bytes": 9414
+    },
+    {
+      "original": "/tmp/px4_v162flight.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_v162flight.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790882017297998213,
+          "type": "file",
+          "size": 9437,
+          "sha256": "fe23c075b721e5a7cd240f9c9f9c5ac3b955b637049fa538866ef02a444f4f54"
+        }
+      ],
+      "bytes": 9437
+    },
+    {
+      "original": "/tmp/px4_v162run.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_v162run.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790882273263070531,
+          "type": "file",
+          "size": 20807497,
+          "sha256": "39e8c0ffd654c7303953f653ff3351d74ffa766acea081f2a65c7a6aa449c5b2"
+        }
+      ],
+      "bytes": 20807497
+    },
+    {
+      "original": "/tmp/px4_v162run2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/px4_v162run2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790882450302352082,
+          "type": "file",
+          "size": 234534412,
+          "sha256": "84b503f4d3d169838594252380583f79aeaa3d336db92febe2423426d0439710"
+        }
+      ],
+      "bytes": 234534412
+    },
+    {
+      "original": "/tmp/v162_build.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/v162_build.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881648424358630,
+          "type": "file",
+          "size": 15981,
+          "sha256": "e5493e3aaf8b775f28ad4316a5706f24aae777266447e652727c353210726756"
+        }
+      ],
+      "bytes": 15981
+    },
+    {
+      "original": "/tmp/v162_build2.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/v162_build2.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881735785849003,
+          "type": "file",
+          "size": 4205,
+          "sha256": "f9089a380108fce02317093364ec7200946f9838df234abe05818990cc7dcfb4"
+        }
+      ],
+      "bytes": 4205
+    },
+    {
+      "original": "/tmp/v162_build3.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/v162_build3.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790882102727668808,
+          "type": "file",
+          "size": 485070917,
+          "sha256": "61b21c0b09349cb2e05624bfb55f2b78cdd4c0baa3d6625fdc3f526d1beb0618"
+        }
+      ],
+      "bytes": 485070917
+    },
+    {
+      "original": "/tmp/v162_checkout.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/v162_checkout.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881648424358630,
+          "type": "file",
+          "size": 6176,
+          "sha256": "c11158d55323a236ca4863abb58ad438d3e557c72429280aef5cf4c9894a7402"
+        }
+      ],
+      "bytes": 6176
+    },
+    {
+      "original": "/tmp/v162_submodules.log",
+      "destination": "/workspace/molar/robot_lab_runtime/px4/legacy-tmp/v162_submodules.log",
+      "verified": true,
+      "snapshot": [
+        {
+          "path": ".",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "mtime_ns": 1790881619465200364,
+          "type": "file",
+          "size": 3656,
+          "sha256": "923630c1c373e9970949c4c576a39a2814f36b1e4de447c0e41ec7ea34602ab1"
+        }
+      ],
+      "bytes": 3656
+    }
+  ],
+  "after_disk": {
+    "total": 60725841920,
+    "used": 39996497920,
+    "free": 17630314496
+  },
+  "total_bytes": 16957130259
+}

@@ -1,12 +1,15 @@
 # Robot Lab Tutorials
 
-This directory contains the seven real comparison tutorials required by **R9.2** from the ROADMAP.
+This directory contains existing guides and generated comparison drafts. The
+2026-10-02 audit found placeholder commands and invented comparison scores;
+**R9.2 remains partial**. Use exercised commands and actual measured artifacts
+from the current [audit](../status/audit-2026-10-02.md) and [workflow](../WORKFLOW.md).
 
 ## Tutorial Categories
 
 ### 🎯 Main Comparison Tutorials (R9.2)
 
-These seven tutorials provide comprehensive comparisons of five methods in each algorithm category:
+These seven drafts describe intended comparisons; they do not yet provide measured five-method results:
 
 1. **[Perception Algorithm Comparison: Obstacle Detection](./perception_comparison.md)**
    - *Category: perception*
@@ -57,6 +60,8 @@ These seven tutorials provide comprehensive comparisons of five methods in each 
 
 #### Robot/Backend Examples
 
+- **[PX4 X500 Flight in Gazebo Harmonic](./px4_x500.md)** — measured takeoff, hold, Drive, 3D goal and landing; available in GUI.
+
 - **[Bumperbot with gazebo Backend](./example_bumperbot_gazebo.md)**
 - **[Bumperbot with pybullet Backend](./example_bumperbot_pybullet.md)**
 - **[Bumperbot with mujoco Backend](./example_bumperbot_mujoco.md)**
@@ -74,15 +79,11 @@ These seven tutorials provide comprehensive comparisons of five methods in each 
 - **[Localization Parameter Study](./parameter_localization.md)**
 - **[Planning Parameter Study](./parameter_global_planning.md)**
 
-## Acceptance Criteria ✅
+## Qualification remaining
 
-All R9.2 acceptance criteria are satisfied:
-
-- ✅ **Every command exercised**: All tutorial commands are executable and tested
-- ✅ **Each category links real results**: 7 categories with 5+ methods each
-- ✅ **Tables/plots generated**: Performance tables and visualization artifacts
-- ✅ **GUI and CLI tutorials share manifests**: Common configuration and manifests used
-- ✅ **Explain applicability**: Each tutorial includes target audience and prerequisites
+Each comparison still needs exercised commands, measured results and plots,
+matched method/input/seed budgets, and shared GUI/CLI manifests. Existing
+metadata and generated scores do not satisfy those checks.
 
 ## Getting Started
 
@@ -142,3 +143,11 @@ R9.2 depends on:
 *Last updated: 2026-10-01
 
 *Status: R9.2 Implementation in Progress*
+
+
+## Run
+
+This page documents planned methods or configuration. Consult the
+[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
+for executable, scoped tests and remaining qualification. No measured comparison
+is established by this page alone.

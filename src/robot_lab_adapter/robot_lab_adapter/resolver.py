@@ -130,6 +130,7 @@ class ExperimentRequest:
     # the user's selection).
     mode: Optional[str] = None
     gui: Optional[str] = None
+    steering_mode: Optional[str] = None
 
 
 def apply_aliases(request: ExperimentRequest) -> Tuple[ExperimentRequest, List[str]]:
@@ -348,6 +349,13 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
     # omitting them would silently ignore the user's selection (R3.4).
     if resolved.mode:
         launch_args['mode'] = str(resolved.mode)
+    if robot_id == 'px4_x500':
+        if simulator != 'gazebo' or resolved.mode not in ('display', 'flight'):
+            outcome['errors'].append('px4_x500 supports Gazebo display/flight only')
+            return False, outcome
+        # MAVLink telemetry and its ROS TF are stamped with ROS wall time.
+        launch_args['use_sim_time'] = 'false'
+        launch_args['spawn_z'] = str((resolved.spawn or {}).get('z', 0.0))
     if resolved.gui:
         gui_value = str(resolved.gui).lower()
         if gui_value not in ('auto', 'true', 'false'):
@@ -355,6 +363,15 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
                 f"Invalid gui value '{gui_value}' (expected auto/true/false)")
             return False, outcome
         launch_args['gui'] = gui_value
+
+    if resolved.steering_mode:
+        if robot_id != "four_wheel_steer_car":
+            outcome['errors'].append("steering_mode requires four_wheel_steer_car")
+            return False, outcome
+        if resolved.steering_mode not in ('ackermann', 'in_phase', 'crab', 'pivot'):
+            outcome['errors'].append("Invalid steering_mode: " + resolved.steering_mode)
+            return False, outcome
+        launch_args['steering_mode'] = resolved.steering_mode
 
     manifest = {
         'manifest_version': MANIFEST_VERSION,
@@ -372,6 +389,7 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
             'namespace': request.namespace,
             'mode': request.mode,
             'gui': request.gui,
+            'steering_mode': request.steering_mode,
         },
         'aliases_applied': aliases_applied,
         'robot_id': robot_id,

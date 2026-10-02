@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-02",
+  "baseline_revision": "2a0aae2",
+  "scope": "Verified dormant-artifact relocation, source/evidence audit and GUI Health changes; no new flight/robot mission",
+  "storage": {
+    "paths": 65,
+    "moved_bytes": 16957130259,
+    "before_available_bytes": 674746368,
+    "after_available_bytes": 17630314496,
+    "checks": "SHA-256 + full metadata before removal; all original paths verified as SSD compatibility links"
+  },
+  "verification": {
+    "fast_suite": {
+      "passed": 685,
+      "skipped": 1,
+      "log": "verification.log"
+    },
+    "gui_command_drive": {
+      "passed": 36,
+      "log": "gui-verification.log"
+    },
+    "gui_build": {
+      "result": "pass",
+      "log": "gui-build.log"
+    },
+    "installed_health_tab": {
+      "result": "pass",
+      "log": "gui-health-smoke.log"
+    },
+    "storage_guard": {
+      "result": "pass: refuses internal-disk override",
+      "log": "storage-guard-check.log"
+    },
+    "ssd_tempfile": "pass: generated temporary file on workspace device",
+    "px4_binary": "-h exits 0 and confirms -d daemon/no pxh mode",
+    "git_diff_check": "pass"
+  }
+}

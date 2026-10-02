@@ -1,7 +1,11 @@
 # State Estimation Comparison: Filter Performance
 
+> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
+> the generated scores and placeholder command claims. R9.2 remains partial.
+
+
 **Category:** state_estimation  
-**Type:** real_experiment  
+**Type:** draft_template
 **Target Audience:** intermediate  
 **Estimated Time:** 75 minutes  
 
@@ -24,17 +28,19 @@ Compare 5 state estimation algorithms for tracking accuracy
 - Analyze computational complexity
 
 
-## Commands
+## Run
+
+Only the method/experiment declarations can currently be checked with this page:
 
 ```bash
-# Launch state estimation comparison
-ros2 run robot_lab_benchmark state_estimation_comparison --config est_config.yaml
-# Test different estimators
-ros2 run robot_lab_algorithms ekf_3d_estimator
-ros2 run robot_lab_algorithms ukf_estimator
-# Compare with ground truth
-python scripts/compare_estimation.py --truth ground_truth.csv --estimated estimated.csv
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
 ```
+
+This checks numerical fixtures and configuration contracts. It does not execute
+five robot methods or produce the proposed comparison results below. Follow
+[the completion audit](../status/audit-2026-10-02.md) and
+[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+
 
 ## Expected Results
 

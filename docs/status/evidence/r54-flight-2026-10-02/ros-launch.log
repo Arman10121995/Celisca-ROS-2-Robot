@@ -1,0 +1,21 @@
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-02-13-20-41-975766-molar1-1179444
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python3-1]: process started with pid [1179457]
+[python3-1] PX4 runtime and logs: /workspace/molar/robot_lab_runtime/px4/ros-flight-20261002-132042-8d2635
+[python3-1] [INFO] [1790940043.114277411] [robot_state_publisher]: got segment base_link
+[python3-1] [INFO] [1790940043.114433709] [robot_state_publisher]: got segment rotor_0
+[python3-1] [INFO] [1790940043.114452078] [robot_state_publisher]: got segment rotor_1
+[python3-1] [INFO] [1790940043.114461071] [robot_state_publisher]: got segment rotor_2
+[python3-1] [INFO] [1790940043.114468431] [robot_state_publisher]: got segment rotor_3
+[python3-1] [INFO] [1790940055.082914456] [px4_offboard_controller]: Flight state: idle
+[python3-1] [INFO] [1790940075.357482203] [px4_offboard_controller]: Flight state: priming
+[python3-1] [INFO] [1790940077.398475015] [px4_offboard_controller]: Flight state: arming
+[python3-1] [INFO] [1790940079.148528280] [px4_offboard_controller]: Flight state: ascending
+[python3-1] [INFO] [1790940092.997347246] [px4_offboard_controller]: Flight state: flying
+[python3-1] [INFO] [1790940099.311480999] [px4_offboard_controller]: Flight state: flying
+[python3-1] [INFO] [1790940110.360708500] [px4_offboard_controller]: Flight state: landing
+[python3-1] [INFO] [1790940120.698660915] [px4_offboard_controller]: Flight state: idle
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python3-1]: sending signal 'SIGINT' to process[python3-1]
+[python3-1] [INFO] [1790940193.487287031] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [python3-1]: process has finished cleanly [pid 1179457]

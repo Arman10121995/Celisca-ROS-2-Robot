@@ -19,157 +19,11 @@ import time
 
 from pymavlink import mavutil
 
-IGNORE_VEL_ACC = 0b0000111111000111  # vel/acc/ang-vel/attitude-rate/yaw-rate
-# PX4 encodes the flight mode in the low 16 bits of the MAVLink custom_mode;
-# nav_state 6 is OFFBOARD.  It is not a mavlink.h constant.
-OFFBOARD_CUSTOM_MODE = 6
-
-
-class Flight:
-    def __init__(self, master, rate_hz=20.0):
-        self.master = master
-        self.period = 1.0 / rate_hz
-        self.state = self.position = self.vfr = self.ext_sys = None
-
-    def pump(self, seconds):
-        end = time.monotonic() + seconds
-        while time.monotonic() < end:
-            msg = self.master.recv_match(blocking=True, timeout=0.2)
-            if msg is None:
-                continue
-            self._absorb(msg)
-
-    def _absorb(self, msg):
-        kind = msg.get_type()
-        if kind == "HEARTBEAT":
-            self.state = msg
-        elif kind == "GLOBAL_POSITION_INT":
-            self.position = msg
-        elif kind == "VFR_HUD":
-            self.vfr = msg
-        elif kind == "EXTENDED_SYS_STATE":
-            self.ext_sys = msg
-
-    def heartbeat(self):
-        self.master.mav.heartbeat_send(
-            mavutil.mavlink.MAV_TYPE_GCS,
-            mavutil.mavlink.MAV_AUTOPILOT_PX4, 0, 0,
-            mavutil.mavlink.MAV_STATE_ACTIVE)
-
-    def position_ok(self):
-        if self.position is None or self.ext_sys is None:
-            return False
-        # MAV_LANDED_STATE_UNINIT == 0: PX4 cannot fly without an estimate.
-        return int(self.ext_sys.landed_state) != 0
-
-    def armed(self):
-        return bool(self.state is not None and self.state.base_mode & 0x80)
-
-    def reading(self):
-        out = {}
-        if self.position is not None:
-            out["alt_m"] = round(self.position.relative_alt / 1000.0, 3)
-            out["lat_deg"] = round(self.position.lat / 1e7, 6)
-            out["lon_deg"] = round(self.position.lon / 1e7, 6)
-        if self.vfr is not None:
-            out["climb_mps"] = round(self.vfr.climb, 3)
-            out["groundspeed_mps"] = round(self.vfr.groundspeed, 3)
-        if self.ext_sys is not None:
-            out["landed_state"] = int(self.ext_sys.landed_state)
-        if self.state is not None:
-            out["fcu_base_mode"] = int(self.state.base_mode)
-            out["fcu_custom_mode"] = int(self.state.custom_mode)
-        return out
-
-    def set_mode(self, mode):
-        self.master.mav.command_long_send(
-            self.master.target_system, self.master.target_component,
-            mavutil.mavlink.MAV_CMD_DO_SET_MODE, 0,
-            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mode, 0, 0, 0,
-            0, 0, 0)
-        self.pump(0.6)
-
-    def set_param(self, name, value, ptype=6):
-        """PARAM_SET with a zero-padded 16-byte id (REAL32)."""
-        self.master.mav.param_set_send(
-            self.master.target_system, self.master.target_component,
-            name.encode() + b"\x00" * (16 - len(name)), float(value), ptype)
-        self.pump(0.4)
-
-    def param_value(self, name):
-        """Request PARAM_VALUE_READ once and return the last matching value."""
-        self.master.mav.param_request_read_send(
-            self.master.target_system, self.master.target_component,
-            name.encode() + b"\x00" * (16 - len(name)), -1)
-        end = time.monotonic() + 2.0
-        found = None
-        while time.monotonic() < end:
-            msg = self.master.recv_match(blocking=True, timeout=0.2)
-            if msg is not None and msg.get_type() == "PARAM_VALUE":
-                raw = msg.param_id
-                label = (raw.split(b"\x00")[0].decode(errors="ignore")
-                         if isinstance(raw, bytes) else str(raw).split("\x00")[0])
-                if label == name:
-                    found = msg.param_value
-            if found is not None:
-                break
-        return found
-
-    def send_setpoint(self, x, y, z, yaw):
-        self.master.mav.set_position_target_local_ned_send(
-            (int(time.time() * 1000) % (1 << 32)), self.master.target_system,
-            self.master.target_component,
-            mavutil.mavlink.MAV_FRAME_LOCAL_NED, IGNORE_VEL_ACC,
-            float(x), float(y), float(z), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            float(yaw), 0.0)
-        self.heartbeat()
-
-    def arm(self, arm=True, hold=(0.0, 0.0, -0.3, 0.0), wait=8.0):
-        """Arm while *keeping the setpoint stream alive*.
-
-        PX4 leaves OFFBOARD about half a second after the last setpoint, and
-        the arm check then runs in a manual mode and is refused: streaming
-        the hold through the arm request is what makes it succeed (measured
-        2026-10-01: ARMED base_mode 145, COMMAND_ACK result 0).
-        """
-        self.master.mav.command_long_send(
-            self.master.target_system, self.master.target_component,
-            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 0,
-            1 if arm else 0, 0, 0, 0, 0, 0, 0)
-        end = time.monotonic() + wait
-        while time.monotonic() < end:
-            self.send_setpoint(*hold)
-            msg = self.master.recv_match(blocking=True, timeout=0.02)
-            if msg is None:
-                continue
-            self._absorb(msg)
-            if msg.get_type() == "HEARTBEAT" and self.armed():
-                return True
-        return self.armed()
-
-    def stream(self, x, y, z, yaw, seconds, sample_every=1.0):
-        """Stream position setpoints for `seconds`; sample the FCU state."""
-        end = time.monotonic() + seconds
-        next_send = last_sample = 0.0
-        samples = []
-        while time.monotonic() < end:
-            now = time.monotonic()
-            if now >= next_send:
-                self.master.mav.set_position_target_local_ned_send(
-                    (int(time.time() * 1000) % (1 << 32)), self.master.target_system,
-                    self.master.target_component,
-                    mavutil.mavlink.MAV_FRAME_LOCAL_NED,
-                    IGNORE_VEL_ACC, 0.0, 0.0, float(z), 0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0, float(yaw), 0.0)
-                self.heartbeat()
-                next_send = now + self.period
-            msg = self.master.recv_match(blocking=True, timeout=0.02)
-            if msg is not None:
-                self._absorb(msg)
-            if now - last_sample >= sample_every and self.position is not None:
-                last_sample = now
-                samples.append(self.reading())
-        return samples
+# Scripts also run directly from a source checkout, before a colcon install.
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src/robot_lab_adapter"))
+from robot_lab_adapter.px4_mavlink import Flight, OFFBOARD_CUSTOM_MODE
 
 
 def main():
@@ -192,26 +46,28 @@ def main():
             break
     report["fcu_present"] = flight.state is not None
     report["position_estimate_ok"] = flight.position_ok()
-    if flight.state is None:
-        report["error"] = "no heartbeat from the FCU"
-        print(json.dumps(report, indent=1))
-        return
+    if flight.state is None or not flight.position_ok():
+        report["error"] = "no heartbeat or valid position estimate from the FCU"
+        report["passed"] = False
+        text = json.dumps(report, indent=1)
+        print(text)
+        if args.out:
+            Path(args.out).write_text(text)
+        return 1
     report["start"] = flight.reading()
 
-    # SITL has no GPS lock inside the Gazebo session, so PX4's preflight
-    # refuses to arm with the default COM_ARM_WO_GPS=0.  Setting the parameter
-    # is recorded, not assumed: the value read back is part of the report.
+    # Configure a measured Offboard-loss landing. Keep normal GPS/arming checks.
     report["params_set"] = {}
-    for pname, value in (("COM_ARM_WO_GPS", 1.0), ("COM_ARM_AUTH_REQ", 0.0)):
-        flight.set_param(pname, value)
+    for pname, value, ptype in (("COM_OBL_RC_ACT", 4.0, 6), ("COM_OF_LOSS_T", 0.5, 9)):
+        flight.set_param(pname, value, ptype)
         report["params_set"][pname] = flight.param_value(pname)
 
     flight.stream(0.0, 0.0, -0.3, 0.0, 2.0)
-    flight.set_mode(OFFBOARD_CUSTOM_MODE)
-    flight.pump(1.0)
+    flight.set_mode(OFFBOARD_CUSTOM_MODE, hold=(0.0, 0.0, -0.3, 0.0))
+    flight.stream(0.0, 0.0, -0.3, 0.0, 1.0)
     report["custom_mode_after_set"] = int(flight.state.custom_mode) if flight.state else None
     flight.arm(True)
-    flight.pump(1.0)
+    flight.stream(0.0, 0.0, -0.3, 0.0, 1.0)
     report["armed_after_arm_command"] = flight.armed()
 
     samples = []
@@ -219,6 +75,7 @@ def main():
         z = -0.3 - (args.takeoff_alt - 0.3) * step / 12.0
         samples += flight.stream(0.0, 0.0, z, 0.0, 0.5)
     report["phases"]["takeoff"] = samples
+    report["phases"]["hover"] = flight.stream(0.0, 0.0, -args.takeoff_alt, 0.0, 6.0)
     report["alt_after_takeoff"] = flight.reading()
 
     for index, (x, y) in enumerate([(3.0, 0.0), (3.0, 3.0), (0.0, 3.0)], 1):
@@ -234,7 +91,17 @@ def main():
         "still_armed": flight.armed(),
         "note": "setpoint stream stopped for 6 s; offboard-loss action is FCU-side"}
 
-    land = flight.stream(0.0, 0.0, 0.2, 0.0, 9.0, sample_every=2.0)
+    flight.master.mav.command_long_send(
+        master.target_system, master.target_component,
+        mavutil.mavlink.MAV_CMD_DO_SET_MODE, 0,
+        mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 4, 6, 0, 0, 0, 0)
+    land = []
+    for _ in range(15):
+        flight.heartbeat()
+        flight.pump(1.0)
+        land.append(flight.reading())
+        if flight.ext_sys is not None and flight.ext_sys.landed_state == 1 and not flight.armed():
+            break
     if land:
         land[-1]["armed_before_disarm"] = flight.armed()
     report["phases"]["land"] = land
@@ -245,12 +112,32 @@ def main():
     report["armed_end"] = flight.armed()
     report["mavlink"] = {"sent": master.mav.total_packets_sent,
                          "received": master.mav.total_packets_received}
+    import math
+    errors = {}
+    for index, target in enumerate(((3.0, 0.0), (3.0, 3.0), (0.0, 3.0)), 1):
+        leg = report["phases"]["waypoint_%d" % index]
+        measured = leg[-1].get("local_ned_m") if leg else None
+        errors[str(index)] = (math.dist(measured, [*target, -args.takeoff_alt])
+                             if measured is not None else None)
+    hover = report["phases"]["hover"]
+    settled = [sample["local_ned_m"] for sample in hover[-3:] if "local_ned_m" in sample]
+    loss = report["phases"]["command_loss"]
+    report["acceptance"] = {
+        "takeoff_hover": bool(settled) and all(abs(p[2] + args.takeoff_alt) < 0.35 for p in settled),
+        "waypoint_errors_m": errors,
+        "waypoints": all(error is not None and error < 0.35 for error in errors.values()),
+        "command_loss_left_offboard": (loss["after"].get("fcu_custom_mode", 0) >> 16 & 0xFF) != 6,
+        "landed_disarmed": not flight.armed() and flight.ext_sys is not None and flight.ext_sys.landed_state == 1,
+    }
+    report["passed"] = all(report["acceptance"][key] for key in
+                            ("takeoff_hover", "waypoints", "command_loss_left_offboard", "landed_disarmed"))
     text = json.dumps(report, indent=1)
     print(text)
     if args.out:
         with open(args.out, "w") as handle:
             handle.write(text)
+    return 0 if report["passed"] else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

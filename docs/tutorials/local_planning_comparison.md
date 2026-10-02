@@ -1,7 +1,11 @@
 # Local Planning Comparison: Collision Avoidance
 
+> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
+> the generated scores and placeholder command claims. R9.2 remains partial.
+
+
 **Category:** local_planning  
-**Type:** real_experiment  
+**Type:** draft_template
 **Target Audience:** intermediate  
 **Estimated Time:** 75 minutes  
 
@@ -24,17 +28,19 @@ Compare 5 local planning algorithms for obstacle avoidance
 - Analyze computational complexity
 
 
-## Commands
+## Run
+
+Only the method/experiment declarations can currently be checked with this page:
 
 ```bash
-# Launch local planning comparison
-ros2 run robot_lab_benchmark local_planning_comparison --config local_planning_config.yaml
-# Test different local planners
-ros2 run robot_lab_algorithms dwb_local_planner
-ros2 run robot_lab_algorithms teb_local_planner
-# Analyze avoidance performance
-python scripts/analyze_avoidance.py --input local_planning_results.json
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
 ```
+
+This checks numerical fixtures and configuration contracts. It does not execute
+five robot methods or produce the proposed comparison results below. Follow
+[the completion audit](../status/audit-2026-10-02.md) and
+[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+
 
 ## Expected Results
 

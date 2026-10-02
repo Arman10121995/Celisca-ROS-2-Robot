@@ -543,7 +543,7 @@ class AMCLNode(Node):
         self.declare_parameter('initial_theta', 0.0)
         self.declare_parameter('odom_topic', '/odom/ground_truth')
         self.declare_parameter('scan_topic', '/scan')
-        self.declare_parameter('output_topic', '/amcl_pose')
+        self.declare_parameter('output_topic', '/robot_lab/algorithms/amcl_pose')
         
         self.amcl = AMCLLocalization(
             num_particles=int(self.get_parameter('num_particles').value),
@@ -608,6 +608,7 @@ class AMCLNode(Node):
         
         # Publish estimated pose
         x, y, theta = self.amcl.estimate_pose()
+        from geometry_msgs.msg import PoseWithCovarianceStamped
         pose_msg = PoseWithCovarianceStamped()
         pose_msg.header.stamp = self.get_clock().now().to_msg()
         pose_msg.header.frame_id = 'map'
@@ -616,7 +617,6 @@ class AMCLNode(Node):
         pose_msg.pose.pose.position.z = 0.0
         
         # Convert theta to quaternion
-        import math
         half_theta = theta / 2.0
         pose_msg.pose.pose.orientation.w = math.cos(half_theta)
         pose_msg.pose.pose.orientation.x = 0.0

@@ -1,0 +1,15 @@
+# Chassis and the full wheel swept envelope, with a small clearance.
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      robot_base_frame: base_footprint
+      footprint: "[[0.25, 0.22], [0.25, -0.22], [-0.25, -0.22], [-0.25, 0.22]]"
+      inflation_layer:
+        inflation_radius: 0.4
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      robot_base_frame: base_footprint
+      footprint: "[[0.25, 0.22], [0.25, -0.22], [-0.25, -0.22], [-0.25, 0.22]]"
+      inflation_layer:
+        inflation_radius: 0.4

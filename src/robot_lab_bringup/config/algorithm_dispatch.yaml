@@ -50,7 +50,7 @@ algorithms:
 
   localization:
     amcl:
-      node: {package: robot_lab_algorithms, executable: amcl}
+      stack: global_localization
     icp_localization:
       node: {package: robot_lab_algorithms, executable: icp_localization}
     ndt_localization:
@@ -67,8 +67,6 @@ algorithms:
       stack: local_localization
     odometry_motion_model:
       node: {package: robot_lab_localization, executable: odometry_motion_model}
-    dead_reckoning:
-      node: {package: robot_lab_algorithms, executable: dead_reckoning}
     hector_slam:
       unavailable: "cataloged only - hector_slam is not built in this workspace"
 
@@ -125,10 +123,6 @@ algorithms:
       node: {package: robot_lab_algorithms, executable: rrt_planner}
     voronoi_planner:
       node: {package: robot_lab_algorithms, executable: voronoi_planner}
-    dijkstra_planner:
-      node: {package: robot_lab_algorithms, executable: dijkstra_planner}
-    a_star_planner:
-      node: {package: robot_lab_algorithms, executable: a_star_planner}
     prm_planner:
       node: {package: robot_lab_algorithms, executable: prm_planner}
     rrt_star_planner:
@@ -149,12 +143,8 @@ algorithms:
       node: {package: robot_lab_motion, executable: pd_motion_planner.py}
     follow_the_gap:
       node: {package: robot_lab_algorithms, executable: follow_the_gap}
-    dwb_local_planner:
-      node: {package: robot_lab_algorithms, executable: dwb_local_planner}
     regulated_pure_pursuit:
       node: {package: robot_lab_algorithms, executable: regulated_pure_pursuit}
-    teb_local_planner:
-      node: {package: robot_lab_algorithms, executable: teb_local_planner}
     mppi_local_planner:
       node: {package: robot_lab_algorithms, executable: mppi_local_planner}
 

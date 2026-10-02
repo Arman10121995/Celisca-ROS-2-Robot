@@ -12,7 +12,7 @@
           <material name="holonomic_tyre"/>
         </visual>
         <collision>
-          <geometry><mesh filename="package://robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/roller.stl" scale="${mecanum_scale} ${mecanum_scale} ${mecanum_scale}"/></geometry>
+          <geometry><mesh filename="package://robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/roller_collision.stl" scale="${mecanum_scale} ${mecanum_scale} ${mecanum_scale}"/></geometry>
         </collision>
         <inertial>
           <mass value="${0.3 * mecanum_scale**3}"/>

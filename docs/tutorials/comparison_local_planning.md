@@ -1,5 +1,9 @@
 # Local Planning Method Comparison
 
+> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
+> the generated scores and placeholder command claims. R9.2 remains partial.
+
+
 **Category:** local_planning  
 **Type:** comparison_guide  
 **Target Audience:** intermediate  
@@ -24,14 +28,19 @@ Compare 5 local_planning methods on common benchmarks
 - Select appropriate methods for different scenarios
 
 
-## Commands
+## Run
+
+Only the method/experiment declarations can currently be checked with this page:
 
 ```bash
-# Compare local_planning methods
-ros2 launch robot_lab_bringup comparison_launch.py
-# Or run individual methods: ros2 run robot_lab_algorithms local_planning_method1
-ros2 run robot_lab_algorithms local_planning_method2
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
 ```
+
+This checks numerical fixtures and configuration contracts. It does not execute
+five robot methods or produce the proposed comparison results below. Follow
+[the completion audit](../status/audit-2026-10-02.md) and
+[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+
 
 ## Expected Results
 

@@ -110,6 +110,22 @@ class Check(Node):
             return None
         return t.transform.translation.x, t.transform.translation.y
 
+    def final_pose_report(self, base, goal_xy, goal_yaw):
+        report = {}
+        final = self.pose(base)
+        if final:
+            report['final_pose_estimate_xy'] = [round(v, 3) for v in final]
+            report['final_error_estimate_m'] = round(math.hypot(final[0]-goal_xy[0], final[1]-goal_xy[1]), 3)
+        if self.truth is not None:
+            p, q = self.truth.pose.pose.position, self.truth.pose.pose.orientation
+            yaw = math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z))
+            error = math.atan2(math.sin(yaw-goal_yaw), math.cos(yaw-goal_yaw))
+            report.update(final_truth_xy=[round(p.x, 3), round(p.y, 3)],
+                          final_truth_yaw_deg=round(math.degrees(yaw), 2),
+                          final_error_truth_m=round(math.hypot(p.x-goal_xy[0], p.y-goal_xy[1]), 3),
+                          final_yaw_error_truth_deg=round(math.degrees(error), 2))
+        return report
+
 
 def free_cell(grid, x, y, clearance):
     """Whether a map-frame point has the requested square free-space clearance."""
@@ -215,10 +231,15 @@ def main(argv=None):
         publisher.publish(goal.pose)
 
         terminal = None
+        accepted = False
         def finished():
-            nonlocal terminal
+            nonlocal terminal, accepted
             for message in statuses[-1:]:
                 for status in message.status_list:
+                    if status.status in (GoalStatus.STATUS_ACCEPTED,
+                                         GoalStatus.STATUS_EXECUTING,
+                                         GoalStatus.STATUS_CANCELING):
+                        accepted = True
                     if status.status in (GoalStatus.STATUS_SUCCEEDED,
                                          GoalStatus.STATUS_ABORTED,
                                          GoalStatus.STATUS_CANCELED):
@@ -227,15 +248,10 @@ def main(argv=None):
             return False
         node.spin_until(finished, args.timeout)
         last = terminal
-        result["outcome"] = STATUS.get(last, "no goal accepted" if last is None else str(last))
+        fallback = "timeout" if accepted else "no goal accepted"
+        result["outcome"] = STATUS.get(last, fallback if last is None else str(last))
         result["wall_s"] = round(time.monotonic() - sent, 1)
-        final = node.pose(args.base)
-        if final:
-            result["final_pose_estimate_xy"] = [round(v, 3) for v in final]
-            result["final_error_estimate_m"] = round(math.hypot(final[0] - goal_xy[0], final[1] - goal_xy[1]), 3)
-        if node.truth is not None:
-            p = node.truth.pose.pose.position
-            result["final_truth_xy"] = [round(p.x, 3), round(p.y, 3)]
+        result.update(node.final_pose_report(args.base, goal_xy, goal_yaw))
         result.update(node.motion_report())
         print(json.dumps(result))
         return 0 if result["outcome"] == "succeeded" else 1
@@ -251,13 +267,7 @@ def main(argv=None):
     status = done.result().status if done.done() else None
     result["outcome"] = STATUS.get(status, "timeout" if status is None else str(status))
     result["wall_s"] = round(time.monotonic() - sent, 1)
-    final = node.pose(args.base)
-    if final:
-        result["final_pose_estimate_xy"] = [round(v, 3) for v in final]
-        result["final_error_estimate_m"] = round(math.hypot(final[0] - goal_xy[0], final[1] - goal_xy[1]), 3)
-    if node.truth is not None:
-        p = node.truth.pose.pose.position
-        result["final_truth_xy"] = [round(p.x, 2), round(p.y, 2)]
+    result.update(node.final_pose_report(args.base, goal_xy, goal_yaw))
     result.update(node.motion_report())
     print(json.dumps(result))
     node.destroy_node()

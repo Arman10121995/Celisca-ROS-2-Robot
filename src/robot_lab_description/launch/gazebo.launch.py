@@ -247,6 +247,11 @@ def generate_launch_description():
             f"bumperbot_ros_gz_bridge_{safe_world_name}.yaml"
         )
         bridge_config = f"""\
+            - ros_topic_name: "/odom/ground_truth"
+              gz_topic_name: "/model/{rname}/odometry_truth"
+              ros_type_name: "nav_msgs/msg/Odometry"
+              gz_type_name: "gz.msgs.Odometry"
+              direction: "GZ_TO_ROS"
             - ros_topic_name: "/clock"
               gz_topic_name: "/clock"
               ros_type_name: "rosgraph_msgs/msg/Clock"

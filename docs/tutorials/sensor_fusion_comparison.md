@@ -1,7 +1,11 @@
 # Sensor Fusion Comparison: Multi-Sensor Integration
 
+> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
+> the generated scores and placeholder command claims. R9.2 remains partial.
+
+
 **Category:** sensor_fusion  
-**Type:** real_experiment  
+**Type:** draft_template
 **Target Audience:** intermediate  
 **Estimated Time:** 75 minutes  
 
@@ -24,17 +28,19 @@ Compare 5 sensor fusion algorithms for attitude and pose estimation
 - Analyze sensor dropout robustness
 
 
-## Commands
+## Run
+
+Only the method/experiment declarations can currently be checked with this page:
 
 ```bash
-# Launch sensor fusion comparison
-ros2 run robot_lab_benchmark sensor_fusion_comparison --config fusion_config.yaml
-# Test different fusion methods
-ros2 run robot_lab_algorithms complementary_imu
-ros2 run robot_lab_algorithms mahony_filter
-# Analyze fusion performance
-python scripts/analyze_fusion.py --input fusion_results.json
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
 ```
+
+This checks numerical fixtures and configuration contracts. It does not execute
+five robot methods or produce the proposed comparison results below. Follow
+[the completion audit](../status/audit-2026-10-02.md) and
+[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+
 
 ## Expected Results
 

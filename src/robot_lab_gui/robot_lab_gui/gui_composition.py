@@ -51,6 +51,7 @@ class GuiCompositionSelection:
     namespace: str = ''
     mode: Optional[str] = None
     gui: Optional[str] = None
+    steering_mode: Optional[str] = None
 
 
 def environment_id_for_map_name(
@@ -93,6 +94,7 @@ def build_request(selection: GuiCompositionSelection) -> ExperimentRequest:
         namespace=selection.namespace,
         mode=selection.mode,
         gui=selection.gui,
+        steering_mode=selection.steering_mode,
     )
 
 

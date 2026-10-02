@@ -742,3 +742,10 @@ class HybridPlanner:
 - [PRM Algorithm](https://en.wikipedia.org/wiki/Probabilistic_roadmap)
 - [Voronoi Diagram](https://en.wikipedia.org/wiki/Voronoi_diagram)
 - [Local Planning for Mobile Robots](https://ieeexplore.ieee.org/document/8461140)
+
+## Run
+
+This page documents planned methods or configuration. Consult the
+[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
+for executable, scoped tests and remaining qualification. No measured comparison
+is established by this page alone.

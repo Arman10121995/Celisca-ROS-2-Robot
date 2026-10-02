@@ -51,6 +51,34 @@ class AlgorithmDispatchTests(unittest.TestCase):
         cls.modes = _load(_MODES)["modes"]
         cls.launch = _launch_module()
 
+    def test_dispatch_keys_are_unique(self):
+        class UniqueLoader(yaml.SafeLoader):
+            pass
+
+        def unique_mapping(loader, node, deep=False):
+            result = {}
+            for key_node, value_node in node.value:
+                key = loader.construct_object(key_node, deep=deep)
+                if key in result:
+                    raise ValueError("Duplicate algorithm dispatch key: " + str(key))
+                result[key] = loader.construct_object(value_node, deep=deep)
+            return result
+
+        UniqueLoader.add_constructor(
+            yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, unique_mapping)
+        with open(_DISPATCH) as handle:
+            yaml.load(handle, Loader=UniqueLoader)
+
+    def test_default_navigation_uses_nav2_plugins_and_one_real_amcl(self):
+        self.assertEqual("global_localization", self.dispatch["localization"]["amcl"]["stack"])
+        self.assertEqual("nav2_smac_planner/SmacPlanner2D",
+                         self.dispatch["global_planning"]["a_star_planner"]["plugin"])
+        self.assertEqual("nav2_navfn_planner/NavfnPlanner",
+                         self.dispatch["global_planning"]["dijkstra_planner"]["plugin"])
+        self.assertEqual("dwb_core::DWBLocalPlanner",
+                         self.dispatch["local_planning"]["dwb_local_planner"]["plugin"])
+        self.assertIn("unavailable", self.dispatch["local_planning"]["teb_local_planner"])
+
     def test_every_registry_algorithm_has_a_dispatch_entry(self):
         """No cataloged algorithm can be selected without a launch decision."""
         missing = []

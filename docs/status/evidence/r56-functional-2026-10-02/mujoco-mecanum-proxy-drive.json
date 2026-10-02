@@ -1,0 +1,58 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phase_clock": "sim",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.39,
+    "vy": -0.001,
+    "wz": -0.001,
+    "distance": 1.168,
+    "measured_sim_s": 2.992,
+    "wall_s": 6.344,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "strafe",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.3,
+   "measured": {
+    "vx": 0.001,
+    "vy": 0.253,
+    "wz": 0.002,
+    "distance": 1.008,
+    "measured_sim_s": 3.992,
+    "wall_s": 7.958,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.0,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 0.0,
+    "measured_sim_s": 0.98,
+    "wall_s": 3.119,
+    "steering_positions_rad": {}
+   }
+  }
+ ]
+}

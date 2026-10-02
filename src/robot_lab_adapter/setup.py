@@ -39,6 +39,7 @@ setup(
             'humanoid-policy-controller = robot_lab_adapter.humanoid_policy_controller:main',
             'go2-stance-gait-controller = robot_lab_adapter.go2_stance_gait_controller:main',
             'mavros-offboard-controller = robot_lab_adapter.mavros_offboard_controller:main',
+            'px4-ros-controller = robot_lab_adapter.px4_ros_controller:main',
         ],
     },
 )

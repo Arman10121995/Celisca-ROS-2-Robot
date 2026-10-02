@@ -37,8 +37,9 @@ def _yaw(q):
 
 
 class DriveCheck(Node):
-    def __init__(self, odom_topic, cmd_topic="/cmd_vel"):
+    def __init__(self, odom_topic, cmd_topic="/cmd_vel", phase_clock="sim"):
         super().__init__("sim_drive_check")
+        self.phase_clock = phase_clock
         self.pub = self.create_publisher(Twist, cmd_topic, 10)
         self.samples = []
         self.joint_positions = {}
@@ -82,7 +83,14 @@ class DriveCheck(Node):
         twist = Twist()
         twist.linear.x, twist.linear.y, twist.angular.z = vx, vy, wz
         start = time.monotonic()
-        while time.monotonic() - start < duration:
+        sim_start = self.samples[-1][1] if self.samples else 0.0
+        def elapsed():
+            return ((self.samples[-1][1] - sim_start) if
+                    self.phase_clock == "sim" and self.samples else
+                    time.monotonic() - start)
+        # Sim-time phases give a slow backend the same settling and travel
+        # interval. The wall bound still detects a stalled/paused simulator.
+        while elapsed() < duration and time.monotonic() - start < max(30.0, duration * 30):
             self.pub.publish(twist)
             # Match the GUI's 10 Hz button repeat.  Spinning between sends
             # also lets odometry callbacks run when the mux is active.
@@ -90,7 +98,14 @@ class DriveCheck(Node):
             while time.monotonic() < next_send:
                 rclpy.spin_once(self, timeout_sec=min(
                     0.02, max(0.0, next_send - time.monotonic())))
-        window = [s for s in self.samples if start + settle <= s[0] <= start + duration]
+        if elapsed() < duration:
+            self.pub.publish(Twist())
+            self.get_logger().error('Phase timed out before the simulator clock advanced.')
+            return None
+        window = [s for s in self.samples if
+                  (sim_start + settle <= s[1] <= sim_start + duration
+                   if self.phase_clock == "sim" else
+                   start + settle <= s[0] <= start + duration)]
         if len(window) < 2:
             return None
         (_, _, x0, y0, a0), (_, _, x1, y1, a1) = window[0], window[-1]
@@ -105,6 +120,8 @@ class DriveCheck(Node):
         return {"vx": round(forward, 3), "vy": round(lateral, 3),
             "wz": round(yaw_change / dt, 3),
             "distance": round(math.hypot(x1 - x0, y1 - y0), 3),
+            "measured_sim_s": round(dt, 3),
+            "wall_s": round(time.monotonic() - start, 3),
             "steering_positions_rad": self._steering_positions()}
 
     def run_silence(self, duration):
@@ -161,12 +178,14 @@ def main():
                         help="Seconds to measure motion after publisher loss")
     parser.add_argument("--strafe", action="store_true",
                         help="Also command 0.3 m/s lateral velocity")
+    parser.add_argument("--phase-clock", choices=("sim", "wall"), default="sim",
+                        help="Phase durations and settling use simulation time by default")
     parser.add_argument("--timeout", type=float, default=240.0)
     parser.add_argument("--warmup", type=float, default=3.0)
     args = parser.parse_args()
     rclpy.init()
-    node = DriveCheck(args.odom, args.cmd_topic)
-    result = {"odom": args.odom, "cmd_topic": args.cmd_topic, "phases": []}
+    node = DriveCheck(args.odom, args.cmd_topic, args.phase_clock)
+    result = {"odom": args.odom, "cmd_topic": args.cmd_topic, "phase_clock": args.phase_clock, "phases": []}
     if not node.wait_for_odom(args.timeout):
         result["error"] = "no odometry on %s" % args.odom
     else:
@@ -190,7 +209,9 @@ def main():
     print(json.dumps(result, indent=1))
     node.destroy_node()
     rclpy.shutdown()
+    return 1 if result.get("error") or any(
+        phase["measured"] is None for phase in result["phases"]) else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

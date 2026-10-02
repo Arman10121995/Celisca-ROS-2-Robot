@@ -1,5 +1,11 @@
 # R8 Backend Qualification and Scaling - Completion Report
 
+> Superseded by the 2026-10-02 completion audit (`docs/status/audit-2026-10-02.md`).
+> This historical report contains metadata/demo completion claims that do not
+> establish full runtime qualification. Retain its data; use the current ledger
+> and exact measured mission artifacts for supported combinations.
+
+
 **Date:** 2026-10-01  
 **Status:** ✅ COMPLETED  
 **Owner:** codex  

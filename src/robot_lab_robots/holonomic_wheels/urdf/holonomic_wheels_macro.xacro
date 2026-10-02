@@ -11,9 +11,8 @@
                      in_phase, crab, pivot - is a drive-kinematics choice
                      (robot_lab_utils/drive_kinematics.py), not a different
                      description: the same eight joints serve all four.
-  mecanum            four fixed wheels on 45-degree rollers.  The rollers are
-                     visual only and need no joint; the lateral freedom comes
-                     from their geometry, which the drive model inverts.
+  mecanum            four driven hubs with 60 passive physical rollers in
+                     an X layout. These joints must remain free in physics.
 
   base_footprint is the geometric centre on the ground.  For the two
   curvature-following 4WS patterns that is the point with no sideways velocity,
@@ -21,7 +20,7 @@
   across every wheeled robot here.
 
   Dimensions: wheelbase 0.32 m, track 0.32 m, wheel radius 0.05 m, body
-  0.46 x 0.30 x 0.08 m.  The 4WS steering limit is +/-0.785 rad (45 deg), which
+  0.46 x 0.30 x 0.08 m.  The 4WS steering limit is +/-1.5707963267948966 rad (45 deg), which
   at a 0.16 m half-wheelbase gives a 0.16 m minimum turning radius - far tighter
   than a car, which is the reason to run this base at all.
 -->
@@ -79,7 +78,7 @@
       <child link="${corner}_steer_link"/>
       <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit lower="-0.785" upper="0.785" effort="10.0" velocity="3.0"/>
+      <limit lower="-1.5707963267948966" upper="1.5707963267948966" effort="10.0" velocity="3.0"/>
       <dynamics damping="0.05" friction="0.0"/>
     </joint>
     <xacro:holonomic_wheel name="${corner}_wheel"/>
@@ -111,9 +110,8 @@
       <collision>
         <!-- Wheel wells: the chassis collision is narrower than the body
              shell (0.20 m vs 0.30 m) so the steered wheels' swept volume
-             clears it.  At the 0.785 rad steering limit a 0.05 m wheel at
-             y=0.16 reaches min y = 0.16 - 0.02*cos(0.785) -
-             0.05*sin(0.785) = 0.110 m; a full-width box (edge 0.15 m)
+             clears it throughout +/-90 degrees. The wheel swept radius
+             is sqrt(0.05^2 + 0.02^2), leaving min y = 0.106 m; a full-width box (edge 0.15 m)
              overlapped even the rest pose.  The visual keeps the shell. -->
         <origin xyz="0 0 0.04" rpy="0 0 0"/>
         <geometry>
@@ -129,6 +127,9 @@
   </xacro:macro>
 
   <xacro:macro name="holonomic_sensors">
+    <xacro:oakd parent_link="base_link" mesh_visual="false">
+      <origin xyz="0.20 0 0.13" rpy="0 0 0"/>
+    </xacro:oakd>
     <link name="imu_link">
       <inertial>
         <mass value="0.01"/>
@@ -167,8 +168,8 @@
         <xacro:macro name="holonomic_steer_interface" params="joint">
           <joint name="${joint}">
             <command_interface name="position">
-              <param name="min">-0.785</param>
-              <param name="max">0.785</param>
+              <param name="min">-1.5707963267948966</param>
+              <param name="max">1.5707963267948966</param>
             </command_interface>
             <state_interface name="position"/>
             <state_interface name="velocity"/>
@@ -198,6 +199,27 @@
 
   <xacro:macro name="holonomic_gazebo" params="robot_name">
     <gazebo>
+      <!-- Independent model pose, never wheel odometry or a commanded pose. -->
+      <xacro:if value="$(arg is_ignition)">
+        <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+          <odom_frame>world</odom_frame>
+          <robot_base_frame>base_footprint</robot_base_frame>
+          <odom_topic>/model/${robot_name}/odometry_truth</odom_topic>
+          <tf_topic>/model/${robot_name}/truth_pose</tf_topic>
+          <dimensions>3</dimensions>
+          <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+          <odom_frame>world</odom_frame>
+          <robot_base_frame>base_footprint</robot_base_frame>
+          <odom_topic>/model/${robot_name}/odometry_truth</odom_topic>
+          <tf_topic>/model/${robot_name}/truth_pose</tf_topic>
+          <dimensions>3</dimensions>
+          <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+      </xacro:unless>
       <xacro:if value="$(arg is_ignition)">
         <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
           <parameters>$(find robot_lab_robots)/holonomic_wheels/config/${robot_name}_controllers.yaml</parameters>

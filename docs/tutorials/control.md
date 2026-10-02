@@ -1060,3 +1060,10 @@ class DisturbanceObserverController:
 - [Backstepping Control](https://ieeexplore.ieee.org/document/285921)
 - [Control Theory Overview](https://www.cds.caltech.edu/~murray/books/AM05/pdf/am05-complete.pdf)
 - [Practical Control System Design](https://ieeexplore.ieee.org/document/997394)
+
+## Run
+
+This page documents planned methods or configuration. Consult the
+[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
+for executable, scoped tests and remaining qualification. No measured comparison
+is established by this page alone.
