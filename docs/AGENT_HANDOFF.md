@@ -36,6 +36,9 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Commit discipline
 
+- The user requests work directly on the existing `master` branch, with pushes
+  to `origin/master` when requested. Do not create extra branches or worktrees
+  unless explicitly requested.
 - Update `platform-status.yaml` in the same change that completes, blocks or
   re-scopes a task (state, owner, evidence, `next_task`, `updated` date).
 - Keep the ledger and ROADMAP consistent; ROADMAP owns scope/acceptance,

@@ -5,6 +5,10 @@ Read `docs/AGENT_HANDOFF.md`, `docs/status/platform-status.yaml`,
 changing the platform. Preserve existing work and claim task ownership in the
 ledger. Follow the user's current priorities.
 
+The user requests a single primary branch in this existing repository. Work
+directly on `master`; do not create another branch or worktree unless the user
+explicitly asks. Commit there and push to `origin/master` when requested.
+
 On this Jetson, `/` and `/tmp` are on the 64 GB internal eMMC; `/workspace`
 is the 1 TB SSD. Keep all large source checkouts, builds, trial logs, bags,
 caches and generated assets on the mounted SSD. Read `docs/STORAGE.md` and
