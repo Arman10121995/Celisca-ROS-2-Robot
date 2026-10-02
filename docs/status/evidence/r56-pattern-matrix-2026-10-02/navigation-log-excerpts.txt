@@ -1,0 +1,150 @@
+== gazebo-4ws-ackermann-dwb-nav.json.launch.log
+[bt_navigator-21] [bt_navigator]: Goal succeeded
+[controller_server-18] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-18] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-18] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-18] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-18] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-18] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-18] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== gazebo-4ws-inphase-dwb-nav.json.launch.log
+[bt_navigator-21] [bt_navigator]: Goal succeeded
+[controller_server-18] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-18] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-18] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-18] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-18] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-18] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-18] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+
+== gazebo-4ws-inphase-obstacle-nav.json.launch.log
+[bt_navigator-21] [bt_navigator]: Goal succeeded
+[controller_server-18] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-18] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-18] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-18] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-18] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-18] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-18] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+
+== gazebo-4ws-pivot-dwb-nav.json.launch.log
+[bt_navigator-21] [bt_navigator]: Goal succeeded
+[controller_server-18] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-18] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-18] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-18] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-18] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-18] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-18] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== gazebo-mecanum-obstacle-nav.json.launch.log
+[bt_navigator-21] [bt_navigator]: Goal succeeded
+[controller_server-18] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-18] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-18] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-18] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-18] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-18] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-18] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== isaac-4ws-ackermann-dwb-nav.json.launch.log
+[bt_navigator-19] [bt_navigator]: Goal succeeded
+[controller_server-16] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-16] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-16] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-16] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-16] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-16] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-16] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== isaac-4ws-inphase-dwb-nav.json.launch.log
+[bt_navigator-19] [bt_navigator]: Goal succeeded
+[controller_server-16] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-16] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-16] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-16] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-16] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-16] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-16] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+
+== isaac-4ws-pivot-dwb-nav.json.launch.log
+[bt_navigator-19] [bt_navigator]: Goal succeeded
+[controller_server-16] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-16] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-16] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-16] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-16] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-16] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-16] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== isaac-mecanum-dwb-nav.json.launch.log
+[bt_navigator-19] [bt_navigator]: Goal succeeded
+[controller_server-16] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-16] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-16] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-16] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-16] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-16] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-16] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== mujoco-4ws-inphase-obstacle-nav.json.launch.log
+[bt_navigator-18] [bt_navigator]: Goal succeeded
+[controller_server-15] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-15] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-15] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+
+== mujoco-mecanum-dwb-nav.json.launch.log
+[bt_navigator-18] [bt_navigator]: Goal succeeded
+[controller_server-15] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-15] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-15] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== pybullet-4ws-ackermann-dwb-nav.json.launch.log
+[bt_navigator-18] [bt_navigator]: Goal succeeded
+[controller_server-15] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-15] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-15] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== pybullet-4ws-inphase-dwb-nav.json.launch.log
+[bt_navigator-18] [bt_navigator]: Goal succeeded
+[controller_server-15] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-15] [controller_server]: Using critic "robot_lab_controller::ParallelSteeringCritic" (robot_lab_controller::ParallelSteeringCritic)
+[controller_server-15] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+
+== pybullet-4ws-pivot-dwb-nav.json.launch.log
+[bt_navigator-18] [bt_navigator]: Goal succeeded
+[controller_server-15] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-15] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-15] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
+== pybullet-mecanum-dwb-nav.json.launch.log
+[bt_navigator-18] [bt_navigator]: Goal succeeded
+[controller_server-15] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-15] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-15] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-15] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-15] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-15] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-15] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+
