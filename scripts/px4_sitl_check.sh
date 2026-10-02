@@ -28,7 +28,7 @@ if [[ ! -e "$OUT_DIR/rootfs/etc" ]]; then
 fi
 PX4_PYTHON=${PX4_PYTHON:-$ROBOT_LAB_RUNTIME_ROOT/px4/venv/bin/python3}
 "$PX4_PYTHON" -c 'from pymavlink import mavutil' || exit 2
-FCU_PID='' 
+FCU_PID=''
 cleanup() {
     if [[ -n "$FCU_PID" ]]; then
         kill -INT -- -"$FCU_PID" 2>/dev/null || true
