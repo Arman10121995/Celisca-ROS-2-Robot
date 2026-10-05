@@ -1,0 +1,16 @@
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5844596Z     
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5844691Z     
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5844816Z     # add numpy types like their `numpy.typing.NDArray`
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5845028Z     # but with specific dimensionality, i.e. `NDArray2D[np.float64]`
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5845229Z     DType = TypeVar("DType", bound=generic)
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5845580Z >   NDArray1D: TypeAlias = ndarray[tuple[int], dtype[DType]]
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5845800Z E   TypeError: 'numpy._DTypeMeta' object is not subscriptable
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5845940Z 
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5846053Z ../../../.local/lib/python3.10/site-packages/trimesh/typed.py:93: TypeError
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5846300Z =========================== short test summary info ============================
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5846914Z FAILED src/robot_lab_mujoco/test/test_native_asset_display.py::test_keyed_native_joint_feedback_and_spawn
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.5847335Z 1 failed, 6 passed in 0.35s
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.7263894Z ##[error]Process completed with exit code 1.
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.7351044Z Post job cleanup.
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.9848667Z [command]/usr/bin/git version
+build-and-test	UNKNOWN STEP	2026-10-05T15:55:57.9875089Z git version 2.55.0

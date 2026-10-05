@@ -27,7 +27,7 @@ jobs:
       - name: Install Python dependencies
         shell: bash
         run: |
-          pip3 install pytest pybullet mujoco numpy
+          pip3 install pytest pybullet mujoco numpy trimesh==4.1.8
 
       - name: Install dependencies
         shell: bash
