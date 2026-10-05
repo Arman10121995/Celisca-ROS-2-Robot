@@ -1,0 +1,131 @@
+{
+  "baseline_revision": "36f38b5f293297e6d9ee0396469b3c211fb09e14",
+  "source_stage": "Containing commit; views and Drive availability adjusted after earlier import-stage reports as described in README",
+  "host": "Jetson AGX Orin / ROS Humble",
+  "raw_directories": [
+    "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05"
+  ],
+  "source_sha256": {
+    "scripts/provision_extension_assets.py": "fe5e61d0015834101a82f3b2b92f6536b181bf969ef5e0051d84094ae4a1fb6d",
+    "src/robot_lab_utils/robot_lab_utils/arm_trajectory.py": "324c747dc984ccfc4e7dda87afaedd216c6e676d12c8d12ae6307665027f5ce7",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py": "d55345bcfad414fc739f3edcb057a58ba3fa499a968cb7ef185075be3b5c2c79",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py": "349890f329e451387628034280ef0f253e5f01dce8d4d40c1a69ddee8d5a3186",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "17cbb88d5d97b26730b92225c57d7349f45d6a42f0a88f1f1d83a37d4b9a8b78",
+    "src/robot_lab_mujoco/launch/mujoco_simulator.launch.py": "117f34c969aab1683b2bf82b5a5e461ada8abe814578045822c209fb914b2786",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "106c5598f2bd8e5badc0410bdee746dc1b5dd00d5398fb725ee6870e1b984a2a",
+    "src/robot_lab_gui/robot_lab_gui/arm_tab.py": "7cd7f3fc6df34f3a3adb3cc58cf54b21a2effbd2a46a2fb2425cf82559a6d250",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "4eaa4745b2b2cae0f5f00e1f42a8af86d339087b4a1ed527b5b37a78234a49d1",
+    "src/robot_lab_gui/robot_lab_gui/lab_tabs.py": "7a0c6c8456f657f56399bfe8e978f9687812b857b77f64e43bdc6e8e6a70be6d",
+    "src/robot_lab_bringup/test/test_arm_trajectory.py": "d64b7c94d039aab8cf56c8c6a3dd6dc93210343c4652e26564e7338c664b34c8",
+    "src/robot_lab_gui/test/test_command_autofill.py": "779823e3f1ff81af98f583ab4b49ee5d1abdd7f4c5b171fb745b42dad2277aa2"
+  },
+  "raw_artifact_sha256": {
+    "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05/trace.json": "a56f5d68a3411b30355e24c639bee92421c795a6b8214671637936a8910a5349",
+    "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05/panda-arm-gui.png": "1f734520334147c0575f68f0af2ea33360d06d8708565cf6f2d1f0eb4eeb2a35",
+    "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05/negative-disabled-click/trace.json": "d87045d29e9bd075a32d80ded9bfd7680506adbf0ad41e85d758cb1c7b55d364",
+    "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05/gui-regression.log": "3b204112c6496bdb2437ae42f4aa1bf9345877a96999795f5dd35877f30b26a4",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_standard-gazebo/display.png": "6f125af2252bb134d570d92f2329834aeb1fed26aaf420698f2f9bbbab4c7cd5",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_standard-mujoco/display.png": "3abc1931dc9bdb5179fbc388d3a7687d4a0da58849dee59555679145d0d65973",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_standard-pybullet/display.png": "1a04234c17444f6e34302b45ad976b3c5749453ffd4933ea069cf9d6e80e7aae",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_standard-isaac/display.png": "cd3ebc37d3e3e289dfc8f6c17e013c37b0c8b86cd5d41d4a09eab346c1e97f37",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_lite-gazebo/display.png": "0c0c7be7a04f4a128559d2ca18bbe6c5abfc004bfc233da1017727fd670dc475",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_lite-mujoco/display.png": "16660e2d240073f5cb9b4525c0df44d739e063525fb1665190736d7cb365084f",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_lite-pybullet/display.png": "575fb7ab31186642904da7fd46b82c7502b89707661196add84ffbd3087bae7f",
+    "/workspace/molar/robot_lab_runtime/turtlebot4-2026-10-05/asset_turtlebot4_lite-isaac/display.png": "8bfa0c9e10843d4b4d0d9c008634d9f348189d410a61adabb968e010f06b7f73"
+  },
+  "turtlebot4_display_cases": [
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "joint_samples": 966,
+      "clock_samples": 969,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "joint_samples": 101,
+      "clock_samples": 101,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "joint_samples": 101,
+      "clock_samples": 101,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "joint_samples": 853,
+      "clock_samples": 854,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "joint_samples": 960,
+      "clock_samples": 965,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "joint_samples": 101,
+      "clock_samples": 101,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "joint_samples": 101,
+      "clock_samples": 101,
+      "launch_returncode": 0
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "joint_samples": 837,
+      "clock_samples": 838,
+      "launch_returncode": 0
+    }
+  ],
+  "scope": "Native Panda joint controls on MuJoCo/dataset_room2; eight TurtleBot4 display/state cases only",
+  "artifact_sha256": {
+    "README.md": "67c66b58614a794d58dd65c4e5e74cd3e487b6292bd9fd43f213a3d18b0d1fad",
+    "asset_turtlebot4_lite-gazebo-gui-output.log": "0cf93dae5fdfa7bd7b5610e2f9680a3b59bad5634bf3cbff1a15b07c77f59744",
+    "asset_turtlebot4_lite-gazebo-report.json": "5030300df75665e58b2272d16aabd5ce969f24c16b959ebc29a05f7565de9d1d",
+    "asset_turtlebot4_lite-isaac-gui-output.log": "ad189ee271c5ec7e06fa587cc8a8e4648794aec695ed928f5a738622de62a48a",
+    "asset_turtlebot4_lite-isaac-report.json": "7c62f015da21562a4a335b483ef51d4c4ce376206b430f24047ee145c06c0f54",
+    "asset_turtlebot4_lite-mujoco-gui-output.log": "027261f205f1a5ad680aac0bebda67e610f8fa12846a9f84ab657eec3ea54542",
+    "asset_turtlebot4_lite-mujoco-report.json": "e1a0cccc36e4a4b40e1d74a6b24a0e6aa758ea3a2ec9a5740c629bd1263d3ad0",
+    "asset_turtlebot4_lite-pybullet-gui-output.log": "6dc9ee7eb1a7397577d0c23dbaf58412bde617ea7105b682c2650145b0f660b8",
+    "asset_turtlebot4_lite-pybullet-report.json": "ac298ba5215ef03d26d9f9efed691ae161f80e1424eaeec7a45f56139c93cc60",
+    "asset_turtlebot4_standard-gazebo-gui-output.log": "2422a231d78207ddb1f162b4e8394bdd057bc422846c8086f9ff6f3e38fae4ce",
+    "asset_turtlebot4_standard-gazebo-report.json": "0c3e7b16133ca5f77bb69c6467e892db7fc5115887d063912fcda6ffce034d0e",
+    "asset_turtlebot4_standard-isaac-gui-output.log": "c8ca8bffba5482a64630613213c2185bb62d486b75854fa20a2bd321f6df7e24",
+    "asset_turtlebot4_standard-isaac-report.json": "e7653d01e9d9d1a54c5b87e2c9883fb4fd1551da3c51c72a1516b498d7141979",
+    "asset_turtlebot4_standard-mujoco-gui-output.log": "f5bc8895b331d2e3c77f672d9ab62e1a30ffe7bec7c00b55abd39f91e2d283c2",
+    "asset_turtlebot4_standard-mujoco-report.json": "3c5bc566d561584e3c6407d2b21981327df1d4297bfc8c18b1cc75dcf837d5fa",
+    "asset_turtlebot4_standard-pybullet-gui-output.log": "dfda2026ad2167bd12548b8e329f4d432201c620bf974b3cd7a6440e8f32054c",
+    "asset_turtlebot4_standard-pybullet-report.json": "2ab7922550277bd5fc3b82ecfb5b0ad601546c35aba6fe023b9dd3fa1a1e37c8",
+    "build-camera.log": "f9bbdefeba7246831a970f61be73261e0099d3494235eb4d9d41c80a9d88b0de",
+    "build-gui-drive-gate.log": "a027bc3585f8ed6649dccdcf4c8f70a191d81790521ae4b9745ee5446c718e15",
+    "fast.log": "c31d4e5c1701b0687561e5e709a17bd34997c3cd92f5b74aa097aae42c70f462",
+    "gui-final-44.log": "42d19b8f12a12fecc101c43177182f6e6dc8444dd95ecc4d482cab4e7667a105",
+    "installed-command-report.json": "b37bebd59ea8a4bb7ae0b73601dc9756b93ac76a5416dd5d26d888b21e79c4d9",
+    "integration.log": "08a8f098599a9a7feff1f79d71120307afebe8875790f930ca30d69d0b512dee",
+    "negative-disabled-click-probe-output.log": "dd2372de9d1e3046da2c8a10a910f142acedef6adb9c1366421dd18e97fc859a",
+    "negative-disabled-click-report.json": "e5901c8a6477549fab2e1a3809c8d2f0a25199b452aebf58f4bbce96c08456ff",
+    "panda-gui-output.log": "134a124b1e9183da95055af76c071d620fd52a4b59f1ccfc45c4c431bbcd29db",
+    "panda-report.json": "d45ff0e8c1fa9c18727d3b3ecfb3fa5de1764fceec272bf6b5dc25a916e8535a",
+    "physics.log": "9d73df6716098607466de90877f5c0468a06aa4c9195bd4dea95cf6ee3c656e8",
+    "probe_installed_commands.py": "75efd46e1f3f0f41256e327e4bafc7d8608f3bb41d61388bb163160024b2dabf",
+    "probe_panda_gui.py": "34fa0930f7818eb779ef53e01319eade53ff5930eb40d6a4301bd0fdbd02ec6c",
+    "probe_turtlebot4_display.py": "f8c5f38949e413ff21ddf23098492900bb820422002b10dfa2a0863c0f889b88",
+    "turtlebot4-import-checks.json": "417dba97dcf29bf977aa3106ebf81819789e32f803c748d350c2f466f179d0db",
+    "unit.log": "ace7b7a5b2947802fafef449277bed303506526554b03c80f2cb2f466cfb62f0"
+  }
+}

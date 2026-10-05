@@ -30,7 +30,7 @@ class NativeAssetDisplay(Node):
     def __init__(self):
         super().__init__('native_asset_display')
         for name, value in [('native_mjcf', ''), ('model', ''), ('world_xml', ''),
-                            ('gui', True), ('hold_position', True), ('spawn_x', 0.),
+                            ('gui', True), ('hold_position', True), ('arm_control', 'none'), ('spawn_x', 0.),
                             ('spawn_y', 0.), ('spawn_z', 0.), ('spawn_yaw', 0.)]:
             self.declare_parameter(name, value)
         # EGL avoids the Jetson GLX passive viewer's shutdown crash.
@@ -39,6 +39,7 @@ class NativeAssetDisplay(Node):
         self.mujoco = mujoco
         spec = mujoco.MjSpec.from_file(self.get_parameter('native_mjcf').value)
         original = spec.compile()
+        self.robot_extent = original.stat.extent
         self.robot_bodies = original.nbody
         self.robot_joints = original.njnt
         spawn = np.array([self.get_parameter('spawn_'+axis).value for axis in ('x', 'y', 'z')])
@@ -74,6 +75,14 @@ class NativeAssetDisplay(Node):
                     self.data.qpos[address+3:address+7] = result
         mujoco.mj_forward(self.model, self.data)
         self.hold = self.get_parameter('hold_position').value
+        self.arm = None
+        controller = self.get_parameter('arm_control').value
+        if controller == 'panda':
+            from robot_lab_mujoco.native_arm_control import NativePandaControl
+            self.arm = NativePandaControl(self)
+            self.hold = False
+        elif controller != 'none':
+            raise ValueError('Unknown native arm controller: '+controller)
         self.clock_pub = self.create_publisher(ClockMsg, '/clock', 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
         self.description_pub = self.create_publisher(String, '/robot_description',
@@ -85,7 +94,8 @@ class NativeAssetDisplay(Node):
         self.create_timer(self.dt, self.tick, clock=Clock(clock_type=ClockType.SYSTEM_TIME))
         self.get_logger().info('Installed native MJCF: %s; %d robot bodies / %d joints; %s' %
             (self.get_parameter('native_mjcf').value, self.robot_bodies, self.robot_joints,
-             'passive authored-pose display' if self.hold else 'native dynamics'))
+             'controlled Panda dynamics' if self.arm else
+             ('passive authored-pose display' if self.hold else 'native dynamics')))
 
     def tick(self):
         mj = self.mujoco
@@ -94,7 +104,14 @@ class NativeAssetDisplay(Node):
             mj.mj_forward(self.model, self.data)
         else:
             steps = max(1, round(self.dt / self.model.opt.timestep))
-            mj.mj_step(self.model, self.data, nstep=steps)
+            if self.arm:
+                for _ in range(steps):
+                    self.arm.before_step()
+                    mj.mj_step(self.model, self.data)
+                    self.arm.after_step()
+                self.arm.publish()
+            else:
+                mj.mj_step(self.model, self.data, nstep=steps)
         if not np.all(np.isfinite(self.data.qpos)):
             raise RuntimeError('Native model produced non-finite state')
         clock = ClockMsg()
@@ -139,7 +156,7 @@ class NativeAssetDisplay(Node):
         renderer = mj.Renderer(self.model, width=800, height=600)
         camera = mj.MjvCamera()
         camera.lookat[:] = self.data.xpos[1] if self.robot_bodies > 1 else self.model.stat.center
-        camera.distance = max(1., min(8., 2*self.model.stat.extent))
+        camera.distance = max(1., min(8., 2*self.robot_extent))
         camera.azimuth, camera.elevation = 125., -25.
         root = tk.Tk()
         root.title('Robot Lab — ' + Path(self.get_parameter('native_mjcf').value).parent.name)

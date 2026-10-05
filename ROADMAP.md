@@ -28,7 +28,7 @@ asset listing is separate from an installed robot with working control.
 | Task | Scope | Current boundary |
 |---|---|---|
 | R3.6 | Robot-assets, URDFHub and broader robot/world source catalogs | Pinned SSD installation / normal Launch selectors; cross-backend display, licenses and control qualification remain |
-| R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Queued real controller, planning, grasp/contact and combined missions |
+| R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Native Panda joint/Home/Stop/action controls measured on MuJoCo; Cartesian planning, grasp/contact, other backends and combined missions remain |
 | R5.10 | PX4 in every selected installed world | All world selections preserved; native `nav_empty` and `nav_obstacle` flight screens pass; full spawn/ceiling matrix remains |
 | R6.5 | Generate 2D grids for selected collision worlds | Actual primitive and both furnished Celisca exports; seed-connected projection checked; reviewed registration/Nav2 checks remain |
 | R6.6 | External worlds and packaged Gazebo examples | Catalog / resource / Classic-plugin migration and four-backend import work |
@@ -331,6 +331,8 @@ Dependencies: `R3.1`, `R3.4`.
 - Files: `src/robot_lab_gui/`, `docs/status/asset-sources-2026-10-05.yaml`, `docs/ASSET_EXTENSION_GUIDE.md`, import tooling.
 - Implement: Inventory every robot-assets URDF variant and URDFHub upstream link, compare broader Menagerie/robot-descriptions catalogs, deduplicate canonical robots and expose source/license/import/control state in GUI. Agents download and integrate complete pinned assets on SSD into normal Launch robot/map selectors and autofilled commands. Installed Extensions shows status and opens Launch; do not require operators to download assets in the GUI. Never execute upstream install scripts automatically.
 - Acceptance: Every requested source entry appears with provenance; dependencies and per-model licenses audited; imported URDF/MJCF and textures validated; real display/joint-state tests precede enabled launch profiles. Missing assets and control remain visible, rather than fake universal modes.
+
+- October 5 addition: official TurtleBot 4 Standard/Lite and pinned Create 3 dependencies are installed on SSD and selectable with autofilled commands. Both have actual Display/state/Run/Stop screens in all four backends on `dataset_room2`. Drive, vendor sensors/hazards/docking, mapping/navigation and full visual-material parity remain open; see [TurtleBot 4 guide](docs/tutorials/turtlebot4.md).
 
 ## R4 — Measured reference experiment
 
@@ -759,6 +761,8 @@ Dependencies: `R3.6`, `R2.2`, `R3.4`.
 
 - Implement: Start with a licensed Panda/UR5 source; add bounded joint jogging, home, Stop, trajectory actions, actual joint state/TF and robot-specific gains. Add MoveIt 2 planning and Servo Cartesian jogging with a real planning scene, limits and cancellation. Robot GUI selections resolve to executable backend-specific controllers.
 - Acceptance: Actual arm motion tracks joint and Cartesian targets; limit/collision checks, cancel/Stop and publisher loss pass. Repeat reach and pick/place with measured object/arm state on Gazebo, MuJoCo, PyBullet and Isaac. A URDF view is not control.
+
+- Partial evidence (2026-10-05): the native Menagerie Panda uses its actual seven MuJoCo actuators. GUI joint jogging/Home/Stop, real position-trajectory actions, model-limit/velocity/joint rejection, cancellation and 0.8 s heartbeat loss are measured in `dataset_room2`; Home error is below 0.009 rad. See [control evidence](docs/status/evidence/panda-turtlebot4-2026-10-05/README.md) and [tutorial](docs/tutorials/panda_arm.md). MoveIt/Cartesian planning, predictive/self-collision checks, grasp, additional maps and the other three arm backends remain open.
 
 ### R5.8 — Robot hands and grippers
 

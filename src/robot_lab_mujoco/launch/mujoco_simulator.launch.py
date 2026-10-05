@@ -76,6 +76,7 @@ def _build_mujoco_actions(context):
         return [Node(package='robot_lab_mujoco', executable='native_asset_display',
             output='screen', parameters=[{
                 'native_mjcf': native_mjcf, 'model': model_path,
+                'arm_control': LaunchConfiguration('arm_control').perform(context),
                 'world_xml': _resolve_mujoco_xml(context, world_name),
                 'gui': ParameterValue(gui, value_type=bool),
                 'hold_position': LaunchConfiguration('hold_position').perform(context) != 'false',
@@ -189,6 +190,7 @@ def generate_launch_description():
         DeclareLaunchArgument("world_path", default_value=""),
         DeclareLaunchArgument("model", default_value=""),
         DeclareLaunchArgument('native_mjcf', default_value=''),
+        DeclareLaunchArgument('arm_control', default_value='none'),
         DeclareLaunchArgument("effort_controller_config", default_value=""),
         DeclareLaunchArgument("physics_timestep", default_value="0.0"),
         DeclareLaunchArgument(

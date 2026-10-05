@@ -33,12 +33,16 @@ remains partial; these results apply to the named recorded cells.
 **Worlds** generates real occupancy PGM/YAML files. **Installed Extensions**
 opens downloaded assets in the normal Launch selectors with commands filled
 in automatically; it has no download buttons. On this SSD installation there
-are **111 Display profiles** (59 native Menagerie MJCF models, 48 robot-assets
-URDF variants/fragments, and four official TurtleBot3/Husky descriptions), **14 imported dataset worlds**, and three packaged
+are **113 installed robot profiles** (59 native Menagerie MJCF models, 48 robot-assets
+URDF variants/fragments, and six official TurtleBot3/Husky/TurtleBot4 descriptions), **14 imported dataset worlds**, and three packaged
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
 [installation evidence](docs/status/evidence/extensions-integrated-2026-10-05/README.md).
-Cross-backend qualification, remaining vendor/example imports, manipulation,
+TurtleBot 4 Standard/Lite have named display/state checks in all four simulators;
+see the [TurtleBot 4 guide](docs/tutorials/turtlebot4.md). The new **Arm** tab
+controls native Panda joints on MuJoCo with measured Home, Stop, cancellation
+and heartbeat loss; see the [Panda guide](docs/tutorials/panda_arm.md).
+Cross-backend qualification, remaining vendor/example imports, Cartesian planning,
 grasp and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
 [extension guide](docs/ASSET_EXTENSION_GUIDE.md).
 
@@ -72,13 +76,16 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-October 5 verification includes **772 passing direct fast tests, two skipped,
+The installed-extension checkpoint has **772 passing direct fast tests, two skipped,
 one integration case deselected**, that real xacro case passing separately,
 registry validation, **123 integration and 7 physics tests**, **35 earlier focused tests**, **43 passing Tk command/Drive tests** and
 scoped source, build and real simulator checks. Exact test totals, source
 stages, successful and failed robot trials are recorded in the
 [continuation evidence](docs/status/evidence/continuation-2026-10-05/README.md).
-The former no-flight diagnosis is superseded by actual native PX4 flight;
+The later Panda/TurtleBot4 stage passes **786 fast tests, one skip and one
+integration deselection**, plus **123 integration, 7 physics and 44 Tk command/Drive tests**.
+Exact `36f38b5` GitHub CI passes all tiers after the Trimesh compatibility repair;
+new control-stage CI is recorded separately. The former no-flight diagnosis is superseded by actual native PX4 flight;
 historical reports remain available for comparison. These checks do not
 establish all simulator missions, clean-host reproduction or hardware operation. See the
 [workflow](docs/WORKFLOW.md) for the evidence boundary and commands.

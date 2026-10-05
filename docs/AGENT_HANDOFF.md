@@ -96,12 +96,17 @@ PX4 GUI altitude controls and native `nav_obstacle` flight are measured. All
 installed worlds can be selected, but remaining spawn/ceiling/flight cells
 remain R5.10. The Worlds tab generates actual occupancy previews; its connected
 free region is not a whole-building map. Downloaded extensions use the normal Launch selectors; Installed Extensions shows import status and opens Launch. Provision assets with scripts/provision_extension_assets.py on the SSD; do not add operator download buttons.
-R3.6/R6.6 now have 111 installed Display profiles and 17 worlds with exact
+R3.6/R6.6 now have 113 installed robot profiles and 17 worlds with exact
 import/autofill and named live Panda display/state evidence. Read
 [the installation checkpoint](status/evidence/extensions-integrated-2026-10-05/README.md).
 Stable pose/texture/backend review, additional fixtures, controllers and robot
-missions remain. R6.7 terrain and R5.7/R5.8/R5.9 manipulation need their own
-implementation and actual control/mission proof. The Health tab loads
+missions remain. Official TurtleBot 4 Standard/Lite have eight named Display/state screens;
+Drive/sensors/missions remain R3.6. Native Panda has actual MuJoCo joint/Home/
+Stop/action/cancel/watchdog proof through the Arm tab; R5.7 remains partial
+for MoveIt/Cartesian/grasp/other backends. Read the [latest control/import
+evidence](status/evidence/panda-turtlebot4-2026-10-05/README.md) and new tutorials.
+R6.7 terrain and R5.8/R5.9 hand/mobile manipulation need their own
+implementation and actual mission proof. The Health tab loads
 the ledger and latest report; update those when advancing any task.
 
 The support generator now indexes exact hashed screens and derives blocked

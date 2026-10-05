@@ -2,7 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-10-05"
-current_revision: "cae43fd plus the installed-extension source stage; see containing commit and evidence source hashes"
+current_revision: "36f38b5 plus the Panda-control/TurtleBot4 source stage; see containing commit and evidence source hashes"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. New catalog/world/terrain/manipulation extensions have priority per latest October 5 user instruction. Historical demonstration reports do not qualify missions; full release remains blocked."
@@ -82,8 +82,9 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
-  installed_extensions: "111 Display profiles and 17 worlds installed on SSD; actual Tk selection/autofill across every installed profile; named Panda display/state screens on four backends. No control/mission qualification from imports."
-  extension_software_checks: "772 fast / 123 integration / 7 physics / 43 Tk command tests; seven-package build and registry checks. See extensions-integrated-2026-10-05 evidence."
+  installed_extensions: "113 profiles and 17 worlds installed on SSD; actual Tk selection/autofill across every installed profile; named Panda and eight TurtleBot4 Standard/Lite display/state screens. TurtleBot4 Drive/sensors/missions remain gated; counts do not establish control or mission qualification."
+  extension_software_checks: "Panda/TurtleBot4 source stage: 786 fast, one skip/one integration deselection; 123 integration / 7 physics / 44 Tk command tests and changed-package builds pass. Previous exact 36f38b5 remote CI passes build/all tiers/registry. New-stage remote CI is recorded separately after publication; see panda-turtlebot4-2026-10-05 evidence."
+  native_arm: "Panda/MuJoCo/dataset_room2 actual GUI seven-joint jog/Home, limit-speed-name rejection, cancellation/Stop and wall-heartbeat loss pass against independently observed joint states. Home maximum error 0.008143 rad; heartbeat abort 0.8291 wall s. No Cartesian planning, grasp, self-collision planning or cross-backend arm mission claim."
   mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
   fast_suite: "2026-10-05 at e69d1b2 plus recorded updates: Earlier scripts/test_fast.sh 756 passed, 2 skipped; registry cross-reference PASS. Fixed direct runner without inherited source/package paths: 755 passed, 2 skipped, one integration case deselected; that real xacro case passes separately. Focused world/heightfield/PCD/support guards 35 passed. Tk command/Drive suite 43 passed on its named source stage. Compact logs in docs/status/evidence/continuation-2026-10-05/."
   native_flight: "Named Gazebo Harmonic/nav_empty and nav_obstacle actual GUI altitude screens pass; nav_obstacle has 1295 independent body messages, +1.031/-1.018 m altitude, released hold drift 0.044/0.020 m, land idle/disarmed and actual rotor states. All-map selection is software coverage, not all-map flight."
@@ -329,11 +330,11 @@ tasks:
         next_action: "Completed: every advertised executable/plugin/launch in built packages resolves against the installed index; assets resolve via package shares; benchmark output remains configurable outside source/install."
       R1.2:
         title: "Separate and repair test tiers"
-        state: "active"
+        state: "done"
         owner: "codex"
         depends_on:
           - "R0.2"
-        active_scope: "2026-10-05 codex: exact 9d97b8c CI first hit transient ROS apt 404; retry built and passed fast but latest Trimesh failed against ROS Humble Ubuntu NumPy. Pin the CI geometry dependency compatibly and verify the published revision; preserve failed logs."
+        result: "Exact 36f38b5 CI run 37352290759 passes full build, fast/physics/integration and registry checks with Trimesh 4.1.8. Original apt/NumPy failure logs preserved; new Panda-control/TurtleBot4 revision requires its own remote CI observation."
         scope_paths:
           - ".github/workflows/"
           - "docs/status/evidence/ci-extensions-2026-10-05/"
@@ -344,6 +345,7 @@ tasks:
           - "scripts/test_fast.sh"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/ci-extensions-2026-10-05/README.md: exact 36f38b5 remote build/all-tier/registry success, original negative dependency traceback and isolated NumPy 1.21.6 reproduction retained."
           - "docs/status/evidence/extensions-2026-10-05/xacro-final.log: all xacro robots expand; native PX4 explicitly validates its adapter instead of requiring an absent xacro. 26 focused integration checks pass. CI 46d9a0e failed that old assumption after passing build/fast/physics; exact next CI revision remains to be checked."
           - "docs/status/evidence/continuation-2026-10-05/direct-fast-final.log: direct runner with inherited source/package paths removed: 755 passed, 2 skipped, 1 integration case deselected; real mecanum xacro case passes separately with sourced install."
           - "scripts/test_tiers.sh (tiered runner: fast/integration/physics/all with explicit manifests; preserves host PYTHONPATH so ROS-capable runs exercise launch/adapter checks)"
@@ -352,7 +354,7 @@ tasks:
           - "xacro subprocess test moved out of test_sim_profiles.py into test_xacro_expansion.py (integration tier); adapter.py top-level ROS launch imports made lazy; test_adapter_launch_generation skips explicitly without ROS launch"
           - "Isaac: removed host-specific paths (/workspace/isaac_env/bin/python,$/workspace/.tmp); isaac_python default now portable via ISAAC_PYTHON env; offline contract test made deterministic (6/6 physics passed in both plain-Python and ROS runs"
           - "Runs: fast 385 passed+1 explicit skip (no ROS); with ROS 386 passed; integration 106 passed; physics 6 passed (both modes); full all-tier 498 passed,  ​0 failed"
-        next_action: "Preserve direct source paths and tier boundaries. The marked real-model xacro check runs explicitly in the sourced integration tier; CI at the pushed revision remains to be observed."
+        next_action: "Preserve explicit tier boundaries and compatible Trimesh pin; observe CI at each newly published source revision. Runtime and clean-host missions remain separate qualification."
       R1.3:
         title: "Make CI bootstrap and doctor trustworthy"
         state: "done"
@@ -567,15 +569,16 @@ tasks:
         next_action: "Complete — R3.5 done (five benchmark scenarios + five benchmark experiments authored in the registry catalogs with state_estimation task_type added to schema; all resolver/composition/selector tests pass). Advance to R3.4 (connect GUI to the common resolver) or R4.1 (scenario lifecycle and truthful outcomes to make the cataloged scenarios executable)."
       R3.6:
         title: "Install external assets into normal Launch selectors"
-        state: "active"
+        state: "partial"
         owner: "codex"
         depends_on: ["R3.1", "R3.4"]
         scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md"]
         active_scope: "2026-10-05 user adds TurtleBot 4: download pinned official Standard/Lite and Create 3 source dependencies to SSD, import original geometry, integrate the normal Launch selector/autofill and run actual display/state checks. Preserve existing installed assets and the separately owned R6.7 terrain lane."
-        result: "111 Display profiles installed on SSD (59 native MJCF / 48 robot-assets URDF variants/fragments / 4 official TurtleBot3-Husky descriptions); two linkless upstream fixtures excluded. Normal Launch, autofill and Installed Extensions shortcut measured. Native Panda and URDF Panda have exact live display/state reports; other model/backend/control/license checks remain."
+        result: "113 installed profiles on SSD (59 native MJCF / 48 robot-assets variants-fragments / 6 official TurtleBot3-Husky-TurtleBot4 descriptions); two linkless fixtures excluded. Normal Launch/autofill measured across all entries. Standard/Lite have eight exact GUI display/state/Run/Stop checks on dataset_room2; original pinned Create3 geometry and four movable joints retained. Drive, vendor sensors/hazards/docking, missions and full material parity remain open."
         acceptance_ref: "ROADMAP.md"
-        next_action: "Finish remaining source/license/import batches and four-backend display qualification; advance arm/hand control as R5.7/R5.8. Preserve directory entries requiring their own upstream model/commit pin and coordinate active R6.7 terrain work."
+        next_action: "Continue TurtleBot4 physical differential drive, original suspension/caster, watchdog/reset and sensor adapters; qualify mapping/Nav2 before enabling their modes. Complete remaining source/license/material/backend checks. Preserve native Panda controls and separately owned R6.7 terrain work."
         evidence:
+          - "docs/status/evidence/panda-turtlebot4-2026-10-05/README.md: source/license/dependency hashes, actual Standard/Lite GUI checks on all four engines, 113-profile/17-world Tk commands and measured Panda controls. Imports do not establish TurtleBot4 Drive/SLAM/Nav2."
           - "docs/status/evidence/extensions-integrated-2026-10-05/README.md: actual imports, GUI reports, source pins, tests and preserved failures; no mission qualification from counts."
           - "docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed and passing screens; full project remains partial."
   R4:
@@ -879,12 +882,15 @@ tasks:
         result: "Selected strict crab goals, obstacle detours, localization Drive/reset/watchdog, real 2D/3D mapping and installed GUI DB/PCD export pass. Latest verified Isaac crab meets unchanged 0.15m/5deg body limits. Full current-setting pattern/backend/map/mode mission acceptance remains open; see docs/status/continuation-2026-10-05.md."
       R5.7:
         title: "Manipulator control and GUI motion planning"
-        state: "active"
+        state: "partial"
         owner: "codex"
         depends_on: ["R3.6", "R2.2", "R3.4"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/arm_trajectory.py", "scripts/provision_extension_assets.py", "scripts/test_tiers.sh", "docs/", "README.md", "ROADMAP.md"]
         acceptance_ref: "ROADMAP.md"
-        next_action: "Codex is implementing a bounded native Panda trajectory action and GUI joint/Home/Stop controls first. Qualify actual dynamics, rejection, cancellation and heartbeat loss; MoveIt/Cartesian/grasp and other backends remain separate acceptance."
+        result: "Actual native Panda MuJoCo seven-joint/Home/Stop GUI control and FollowJointTrajectory action pass in dataset_room2 with original model PD actuators. Independent joint-state Home error 0.008143 rad; model-limit/speed/name rejection, cancellation, GUI Stop, 0.8291 wall-s heartbeat-loss abort and owned cleanup measured. No qpos writes for motion; predictive collision/Cartesian/grasp/backend missions remain."
+        evidence:
+          - "docs/status/evidence/panda-turtlebot4-2026-10-05/README.md: scoped independent state trace, actual action and GUI measurements, negative producer correction, source hashes and software checks."
+        next_action: "Preserve measured native Panda joint control; implement real MoveIt scene and Servo Cartesian targets, predictive/self-collision checks, gripper contact and pick/place. Add controllers and repeated measured arm missions on the other three backends; follow docs/tutorials/panda_arm.md."
       R5.8:
         title: "Robot hand and gripper actuation"
         state: "queued"
@@ -1464,7 +1470,7 @@ handoff:
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "Latest October 5 user instruction: implement the new extensions first (R3.6/R6.5-R6.7, R5.10, then R5.7-R5.9), then resume older roadmap R5.6 and remaining stabilization/comparison/reproduction work. Codex owns R3.6; cline-agent owns active R6.7 heightfield work. Preserve existing fixes and source-matched failures; large assets/logs remain on SSD."
+  next_action: "Latest October 5 user instruction: implement the new extensions first (R3.6/R6.5-R6.7, R5.10, then R5.7-R5.9), then resume older roadmap R5.6 and remaining stabilization/comparison/reproduction work. Codex continues R3.6 TurtleBot4 drive/sensors after measured Display integration; R5.7 native Panda joint controls are partial and need Cartesian/grasp/backend work. cline-agent owns active R6.7 heightfield work. Preserve existing fixes and source-matched failures; large assets/logs remain on SSD."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-10-02.md"

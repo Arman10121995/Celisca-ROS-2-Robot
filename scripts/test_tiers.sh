@@ -56,6 +56,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
   "$BRG_TEST/test_occupancy_slice.py"
+  "$BRG_TEST/test_arm_trajectory.py"
   "$BRG_TEST/test_drive_kinematics.py"
   "$BRG_TEST/test_driven_assembly_hold.py"
   "$BRG_TEST/test_px4_sitl_model.py"

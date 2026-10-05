@@ -1,0 +1,22 @@
+{
+  "scope": "Native Panda / MuJoCo / dataset_room2, actual GUI controls and ROS action",
+  "limits": {
+    "goal_error_rad": 0.03,
+    "jog_min_motion_rad": 0.07,
+    "stopped_velocity_rad_s": 0.03,
+    "stopped_drift_rad": 0.02,
+    "watchdog_s": 0.8
+  },
+  "checks": {
+    "gui_command_and_measured_controls": true
+  },
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=true perception:=none arm_control:=panda",
+  "owned_pid": 280231,
+  "jog": [
+    {
+      "joint": 1,
+      "motion_rad": 0.09871548409953039,
+      "goal_error_rad": 0.0012845159004696155
+    }
+  ]
+}

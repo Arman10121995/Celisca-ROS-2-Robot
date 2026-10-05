@@ -1,0 +1,21 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=true perception:=none arm_control:=panda
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-20-10-46-261255-molar1-284393
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [native_asset_display-1]: process started with pid [284399]
+[INFO] [rviz2-2]: process started with pid [284401]
+[rviz2-2] [INFO] [1791223847.690631460] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1791223847.690814108] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[native_asset_display-1] [INFO] [1791223848.112392834] [native_asset_display]: Installed native MJCF: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml; 12 robot bodies / 9 joints; controlled Panda dynamics
+[rviz2-2] [INFO] [1791223848.345140421] [rviz2]: Stereo is NOT SUPPORTED
+[native_asset_display-1] [WARN] [1791223857.131336603] [native_asset_display]: Arm goal rejected: Waypoint exceeds the model joint limits with 0.005 rad margin
+[native_asset_display-1] [WARN] [1791223857.138551504] [native_asset_display]: Arm goal rejected: Trajectory exceeds the 0.5 rad/s target velocity limit
+[native_asset_display-1] [WARN] [1791223857.145877184] [native_asset_display]: Arm goal rejected: Supply each of the seven arm joints exactly once
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-2]: sending signal 'SIGINT' to process[rviz2-2]
+[INFO] [native_asset_display-1]: sending signal 'SIGINT' to process[native_asset_display-1]
+[rviz2-2] [INFO] [1791223866.597199061] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [rviz2-2]: process has finished cleanly [pid 284401]
+[INFO] [native_asset_display-1]: process has finished cleanly [pid 284399]
+
+[launch exited with code 0]
+

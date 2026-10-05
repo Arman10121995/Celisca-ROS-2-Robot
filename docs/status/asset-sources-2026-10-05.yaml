@@ -364,3 +364,20 @@ sources:
   license_note: BSD-3-Clause, official Humble description; retain per-package notices
   entries:
   - husky_description/urdf/husky.urdf.xacro
+- id: turtlebot4_vendor
+  kind: robot
+  repository: https://github.com/turtlebot/turtlebot4
+  revision: a6ee13b63cbd524500cc6a68cd20dbef69f326a9
+  status: downloaded
+  license_note: Apache-2.0; official Humble Standard/Lite description and original meshes
+  entries:
+  - turtlebot4_description/urdf/standard/turtlebot4.urdf.xacro
+  - turtlebot4_description/urdf/lite/turtlebot4.urdf.xacro
+- id: create3_vendor
+  kind: robot_dependency
+  repository: https://github.com/iRobotEducation/create3_sim
+  revision: 7d7a4f69a503d4eef22f13aeb8755c86955b8cc5
+  status: downloaded
+  license_note: BSD-3-Clause; original iRobot Create 3 base, sensors and control description dependencies
+  entries:
+  - irobot_create_common/irobot_create_description/urdf/create3.urdf.xacro

@@ -1502,6 +1502,24 @@ class MuJoCoSpawner(Node):
                 self._viewer = mujoco.viewer.launch_passive(
                     self._model, self._data
                 )
+                if self._body_id > 0:
+                    # The model's global extent includes the selected world;
+                    # focus the actual robot subtree instead of a map origin.
+                    geometry = []
+                    for geom in range(self._model.ngeom):
+                        body = int(self._model.geom_bodyid[geom])
+                        while body > 0 and body != self._body_id:
+                            body = int(self._model.body_parentid[body])
+                        if body == self._body_id:
+                            geometry.append(geom)
+                    if geometry:
+                        centers = self._data.geom_xpos[geometry]
+                        radius = self._model.geom_rbound[geometry, None]
+                        lower = np.min(centers-radius, axis=0)
+                        upper = np.max(centers+radius, axis=0)
+                        with self._viewer.lock():
+                            self._viewer.cam.lookat[:] = (lower+upper)/2
+                            self._viewer.cam.distance = max(1.5, 2*float(np.max(upper-lower)))
                 self.get_logger().info("MuJoCo viewer opened (GUI).")
             except Exception as exc:
                 self.get_logger().warn(

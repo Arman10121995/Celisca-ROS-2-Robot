@@ -937,7 +937,10 @@ class HealthTab(LabTab):
 
 def create_tabs(notebook, app):
     """Instantiate all control-center tabs and return them."""
+    from .arm_tab import ArmTab
+    app.arm_tab = ArmTab(notebook, app)
     tabs = [
+        app.arm_tab,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),
         AssetsTab(notebook, app),

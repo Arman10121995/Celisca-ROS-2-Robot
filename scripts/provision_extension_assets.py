@@ -45,7 +45,8 @@ def source_checkout(source, store, download):
         root, _ = checkout(source, first, store)
         subtree = {'robot_assets': 'urdfs/robots', 'gazebo_world_dataset': 'worlds',
                    'gazebo_examples':'examples/worlds','turtlebot3_vendor':'turtlebot3_description',
-                   'husky_vendor':'husky_description'}.get(source['id'])
+                   'husky_vendor':'husky_description','turtlebot4_vendor':'turtlebot4_description',
+                   'create3_vendor':'irobot_create_common'}.get(source['id'])
         directories = [subtree] if subtree else [e for e in source['entries'] if isinstance(e, str)]
         with (store/'locks'/(source['id']+'-'+source['revision']+'.lock')).open('a') as handle:
             fcntl.flock(handle, fcntl.LOCK_EX)
@@ -75,6 +76,21 @@ def hand_dependencies(store, download):
             raise ValueError('Missing pinned hand dependency: '+str(path))
     write_json(root/'manifest.json', dict(source=source, sha256={e:digest(root/e) for e in source['entries']}))
     return [root/entry for entry in source['entries']]
+
+
+def source_package_prefix(roots, prefix):
+    """Expose pinned description dependencies to Xacro without system copies."""
+    for root in roots:
+        for package_xml in root.rglob('package.xml'):
+            package = ET.parse(package_xml).getroot().findtext('name')
+            marker = prefix/'share/ament_index/resource_index/packages'/package
+            marker.parent.mkdir(parents=True, exist_ok=True); marker.touch()
+            share = prefix/'share'/package
+            if share.is_symlink() and share.resolve() != package_xml.parent.resolve():
+                raise ValueError('Conflicting source-backed package: '+package)
+            if not share.exists():
+                share.symlink_to(package_xml.parent, target_is_directory=True)
+    return dict(os.environ, AMENT_PREFIX_PATH=str(prefix)+':'+os.environ.get('AMENT_PREFIX_PATH',''))
 
 
 def resolve_resource(uri, model, source, paths):
@@ -204,7 +220,7 @@ def native_model(directory):
 
 
 def robot_class(name):
-    if any(value in name for value in ('turtlebot3','husky')):
+    if any(value in name for value in ('turtlebot3','turtlebot4','husky')):
         return 'mobile'
     if any(value in name for value in ('fetch', 'pr2', 'stretch', 'tidybot', 'google_robot', 'eve', 'halodi')):
         return 'hybrid'
@@ -221,7 +237,8 @@ def robot_entity(name, profile, source, entry, evidence):
     return {'id': name, 'version': '1.0.0', 'name': name.replace('_', ' ').title(),
         'status': 'available', 'robot_class': robot_class(name), 'maturity': 'prototype',
         'ros_package': profile['package'], 'supported_simulators': profile['supported_simulators'],
-        'capabilities': ['display'], 'assets': {'urdf': profile['xacro']},
+        'capabilities': ['display', 'joint_control'] if profile.get('arm_control') else ['display'],
+        'assets': {'urdf': profile['xacro']},
         'source': {'repository': source['repository'], 'revision': source['revision'],
                    'license': source['license_note']},
         'description': profile['notes'], 'state_interfaces': ['sensor_msgs/JointState'],
@@ -255,12 +272,18 @@ def install_robots(store, download, selected_source=None):
     import mujoco
     profiles, entities, records = {}, [], []
     for source in yaml.safe_load(CATALOG.read_text())['sources']:
-        if source['id'] not in ('robot_assets', 'mujoco_menagerie','turtlebot3_vendor','husky_vendor') or selected_source and source['id'] != selected_source:
+        if source['id'] not in ('robot_assets', 'mujoco_menagerie','turtlebot3_vendor','husky_vendor',
+                               'turtlebot4_vendor') or selected_source and source['id'] != selected_source:
             continue
         source_root = source_checkout(source, store, download)
         resources = [p for p in source_root.rglob('*') if p.is_file() and '.git' not in p.parts]
         if source['id'] == 'robot_assets':
             resources.extend(hand_dependencies(store, download))
+        dependency_roots = []
+        if source['id'] == 'turtlebot4_vendor':
+            dependency_roots.append(source_checkout(load_source('create3_vendor'), store, download))
+            resources.extend(p for root in dependency_roots for p in root.rglob('*')
+                             if p.is_file() and '.git' not in p.parts)
         for entry in source['entries']:
             record = {'source_id': source['id'], 'revision': source['revision'], 'entry': entry, 'profiles': []}
             evidence = store/'installed'/'checks'/(source['id']+'-'+hashlib.sha256(entry.encode()).hexdigest()[:16]+'.json')
@@ -278,23 +301,23 @@ def install_robots(store, download, selected_source=None):
                         'bodies': model.nbody, 'joints': model.njnt, 'geometries': model.ngeom, 'actuators': model.nu}
                     profile = {'package': 'robot_lab_robots', 'xacro': str(derived), 'native_mjcf': str(model_path),
                                'supported_simulators': ['mujoco'], 'spawn': {'z': '0.0'}}
+                    if name == 'menagerie_franka_emika_panda':
+                        profile['arm_control'] = 'panda'
                     del model
                 else:
-                    if source['id'] in ('turtlebot3_vendor','husky_vendor'):
+                    if source['id'] in ('turtlebot3_vendor','husky_vendor','turtlebot4_vendor'):
                         stem = path.name.removesuffix('.xacro').removesuffix('.urdf')
                         name = 'asset_'+stem
+                        if source['id'] == 'turtlebot4_vendor':
+                            name = 'asset_turtlebot4_'+path.parent.name
                         output = store/'models'/name/source['revision']
                         output.mkdir(parents=True,exist_ok=True)
                         prefix = store/'ros_source_prefixes'/source['id']/source['revision']
-                        for package_xml in source_root.glob('*/package.xml'):
-                            package = ET.parse(package_xml).getroot().findtext('name')
-                            marker = prefix/'share/ament_index/resource_index/packages'/package
-                            marker.parent.mkdir(parents=True,exist_ok=True); marker.touch()
-                            share = prefix/'share'/package
-                            if not share.exists(): share.symlink_to(package_xml.parent,target_is_directory=True)
-                        environment = dict(os.environ,AMENT_PREFIX_PATH=str(prefix)+':'+os.environ.get('AMENT_PREFIX_PATH',''))
+                        environment = source_package_prefix([source_root, *dependency_roots], prefix)
                         xacro_args = ['is_sim:=false','gazebo_controllers:=',
                                       'urdf_extras:='+str(path.parent/'empty.urdf')] if source['id']=='husky_vendor' else []
+                        if source['id'] == 'turtlebot4_vendor':
+                            xacro_args = ['gazebo:=ignition', 'namespace:=']
                         xacro_source = path
                         if source['id']=='husky_vendor':
                             # Xacro eagerly resolves this obsolete controller
@@ -326,17 +349,25 @@ def install_robots(store, download, selected_source=None):
                     model_path = path
                     profile = {'package': 'robot_lab_robots', 'xacro': str(derived),
                                'supported_simulators': ['gazebo', 'pybullet', 'mujoco', 'isaac']}
-                profile.update(name=name, supported_modes=['display'], default_mode='display', features=[],
+                profile.update(name=name, supported_modes=['display'], default_mode='display',
+                    features=['joint_control'] if profile.get('arm_control') else [],
                     source_id=source['id'], source_entry=entry,
                     notes='Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification.')
+                if profile.get('arm_control') == 'panda':
+                    profile['notes'] = ('Native Panda joint/Home/Stop controls in the Arm tab on MuJoCo. '
+                                        'Position trajectories use actual actuators. Cartesian planning, grasp and other backends remain pending.')
                 check.update(source_id=source['id'], repository=source['repository'], revision=source['revision'], entry=entry,
                              model_sha256=digest(model_path), derived_urdf_sha256=digest(derived),
                              runtime_mission_qualified=False)
                 if 'halodi' in entry:
                     check['hand_dependency_manifest'] = str(store/'dependencies/qb_hand_description'/
                         load_source('qb_hand_description')['revision']/'manifest.json')
-                if source['id'] in ('turtlebot3_vendor','husky_vendor'):
+                if source['id'] in ('turtlebot3_vendor','husky_vendor','turtlebot4_vendor'):
                     check.update(source_description_sha256=digest(source_root/entry), xacro_arguments=xacro_args)
+                if dependency_roots:
+                    check['source_dependencies'] = [{'source_id': root.parent.name,
+                        'revision': root.name, 'repository': load_source(root.parent.name)['repository'],
+                        'license_sha256': digest(root/'LICENSE')} for root in dependency_roots]
                 write_json(evidence, check)
                 profiles[name] = profile
                 entities.append(robot_entity(name, profile, source, entry, evidence))

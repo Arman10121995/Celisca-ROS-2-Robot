@@ -992,11 +992,12 @@ class SimulationLauncherGui(tk.Tk):
 
         input_frame = ttk.Frame(speed_frame)
         input_frame.grid(row=6, column=0, columnspan=4, sticky="ew", pady=(6, 0))
-        ttk.Checkbutton(
+        self.drive_input_checkbox = ttk.Checkbutton(
             input_frame, text="Enable WASD + joystick",
             variable=self.drive_input_enabled,
             command=self._toggle_drive_input,
-        ).pack(side="left")
+        )
+        self.drive_input_checkbox.pack(side="left")
         ttk.Label(input_frame, textvariable=self.drive_status_var).pack(side="left", padx=8)
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
@@ -1845,6 +1846,10 @@ class SimulationLauncherGui(tk.Tk):
         profile = self.robot_profiles.get(self.robot_var.get(), {})
         return str(profile.get("drive", {}).get("type", "diff"))
 
+    def _extension_drive_unavailable(self):
+        profile = self._robot_config()
+        return bool(profile.get('source_id') and not profile.get('drive'))
+
     def _four_wheel_steer_selectable(self):
         """The steering-pattern override is only meaningful for this drive."""
         return (self._drive_type() in ("four_wheel_steer", "4ws",
@@ -1909,6 +1914,10 @@ class SimulationLauncherGui(tk.Tk):
             command = [part for part in command
                        if not part.startswith("steering_mode:=")]
             command.append("steering_mode:=%s" % self.steering_mode_var.get())
+        if command and self._robot_config().get('arm_control') == 'panda' \
+                and self.simulator_var.get() == 'mujoco' and self.mode_var.get() == 'display':
+            command = [part for part in command if not part.startswith('arm_control:=')]
+            command.append('arm_control:=panda')
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -1991,6 +2000,14 @@ class SimulationLauncherGui(tk.Tk):
                 ["!disabled"] if self._lateral_drive_selectable() else ["disabled"])
         for button in self.flight_buttons:
             button.state(['!disabled'] if self._flight_selectable() else ['disabled'])
+        drive_unavailable = self._extension_drive_unavailable()
+        for button in self.drive_button_widgets.values():
+            button.state(['disabled'] if drive_unavailable else ['!disabled'])
+        self.drive_input_checkbox.state(['disabled'] if drive_unavailable else ['!disabled'])
+        if drive_unavailable:
+            if self.drive_input_enabled.get() or self.drive_repeat_job is not None:
+                self._stop_drive()
+            self.drive_status_var.set('Base Drive controller pending for this imported model')
         if not self._lateral_drive_selectable():
             self.drive_strafe_buttons.clear()
 
@@ -2017,6 +2034,8 @@ class SimulationLauncherGui(tk.Tk):
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
         self._update_drive_limits_label()
+        if hasattr(self, 'arm_tab'):
+            self.arm_tab.refresh_selection()
 
     def _robot_info_text(self, supported_modes, supports_vacuum):
         config = self._robot_config()
@@ -2036,6 +2055,9 @@ class SimulationLauncherGui(tk.Tk):
                          'Altitude Up/Down climb or descend; click again to slow to a hover. '
                          'Hold or Space stops manual travel; Land returns to the ground. '
                          '3D goals use /px4/goal; no obstacle avoidance. Health contains the flight guide and measured results.')
+        if config.get('arm_control') == 'panda':
+            lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
+                         'Cartesian planning, grasp and other arm backends remain pending.')
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):
@@ -2468,6 +2490,9 @@ class SimulationLauncherGui(tk.Tk):
         self._schedule_drive()
 
     def _toggle_drive_input(self):
+        if self._extension_drive_unavailable():
+            self.drive_input_enabled.set(False)
+            return
         if not self.drive_input_enabled.get():
             self.drive_keys.clear()
             self.drive_joystick.close()
@@ -2533,6 +2558,8 @@ class SimulationLauncherGui(tk.Tk):
         subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=subprocess_env())
 
     def _start_drive(self, linear_scale, angular_scale):
+        if self._extension_drive_unavailable():
+            return
         self.drive_stop_latched = False
         direction = (linear_scale, angular_scale)
         if direction in self.drive_buttons:
@@ -2800,6 +2827,8 @@ class SimulationLauncherGui(tk.Tk):
         if not self.process or not self._launch_running:
             return
         self._stop_drive()
+        if hasattr(self, 'arm_tab'):
+            self.arm_tab.stop()
         self.status_var.set("Stopping...")
         threading.Thread(target=stop_group, args=(self.process.pid,), daemon=False).start()
 
@@ -2895,6 +2924,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self, 'arm_tab'):
+            self.arm_tab.close()
         self._stop_drive()
         self.stop_all_bg()
         # Stop the live monitor's ROS thread before shutting rclpy down

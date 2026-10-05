@@ -1,0 +1,75 @@
+{
+  "scope": "Native Panda / MuJoCo / dataset_room2, actual GUI controls and ROS action",
+  "limits": {
+    "goal_error_rad": 0.03,
+    "jog_min_motion_rad": 0.07,
+    "stopped_velocity_rad_s": 0.03,
+    "stopped_drift_rad": 0.02,
+    "watchdog_s": 0.8
+  },
+  "checks": {
+    "gui_command_and_measured_controls": true,
+    "seven_joint_jog_and_home": true,
+    "limit_velocity_and_joint_rejection": true,
+    "cancel": true,
+    "gui_stop": true,
+    "heartbeat_loss": true,
+    "owned_cleanup": true
+  },
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=true perception:=none arm_control:=panda",
+  "owned_pid": 284393,
+  "jog": [
+    {
+      "joint": 1,
+      "motion_rad": 0.09759369400296819,
+      "goal_error_rad": 0.0024063059970318157
+    },
+    {
+      "joint": 2,
+      "motion_rad": 0.10590540598267786,
+      "goal_error_rad": 0.005905405982677858
+    },
+    {
+      "joint": 3,
+      "motion_rad": 0.09904095335475845,
+      "goal_error_rad": 0.0009590466452415597
+    },
+    {
+      "joint": 4,
+      "motion_rad": 0.09204847278465511,
+      "goal_error_rad": 0.007951527215344978
+    },
+    {
+      "joint": 5,
+      "motion_rad": 0.09819974617865616,
+      "goal_error_rad": 0.0018002538213438418
+    },
+    {
+      "joint": 6,
+      "motion_rad": 0.09746386775210913,
+      "goal_error_rad": 0.0025361322478909543
+    },
+    {
+      "joint": 7,
+      "motion_rad": 0.0986079570163324,
+      "goal_error_rad": 0.001392042983667574
+    }
+  ],
+  "home_max_error_rad": 0.008142335622071261,
+  "cancel": {
+    "max_velocity_rad_s": 2.759135267712004e-12,
+    "drift_rad": 9.29816446060272e-10
+  },
+  "stop": {
+    "max_velocity_rad_s": 4.060388283715386e-12,
+    "drift_rad": 9.185741056683128e-10
+  },
+  "watchdog": {
+    "observed_abort_wall_s": 0.8290965590058477,
+    "max_velocity_rad_s": 3.6005257550981045e-12,
+    "drift_rad": 8.872889090127956e-10
+  },
+  "joint_samples": 874,
+  "launch_returncode": 0,
+  "passed": true
+}

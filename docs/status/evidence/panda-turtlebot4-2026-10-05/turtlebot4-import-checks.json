@@ -1,0 +1,93 @@
+[
+  {
+    "native_import": {
+      "engine": "pybullet",
+      "api_version": 202010061,
+      "joints": 38,
+      "visual_shapes": 8
+    },
+    "removed_legacy_control_tags": [
+      "ros2_control",
+      "ros2_control"
+    ],
+    "identical_duplicates_removed": [],
+    "fragment_repairs": [],
+    "resource_sha256": {
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/meshes/body_visual.dae": "8a769b51aeac9489613f8aa7ebd89358681d145abcd7bfca1e4fe45c5df6cabf",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/meshes/bumper_visual.dae": "aa01eb9cbeb8b75cf2ae2aca545e8528b7940bf1a54a434c63efb60e51141d97",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/meshes/bumper_collision.dae": "f727eaf549c0a2fdd546af9703f2a518d75c4dc6ea4628662dce8898b05d51dd",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/rplidar.dae": "286069ee666ae858b02859838668ce2f9ac2adb2732eaffaf15a034e81b2a949",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/camera_bracket.dae": "66b83ccc9129183259be86ac5b8838004ab7b2eaa807b7aad941dcadca35474a",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/oakd_lite.dae": "10365f5a3a1ecf4ee03f32f87a11c5b259d901c0e000a93c32943ff1e9333051"
+    },
+    "import_recipe": "resolved-original-resources-v3",
+    "source_id": "turtlebot4_vendor",
+    "repository": "https://github.com/turtlebot/turtlebot4",
+    "revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+    "entry": "turtlebot4_description/urdf/lite/turtlebot4.urdf.xacro",
+    "model_sha256": "adfb3a3e4156d0398145b6e6feb956fe316e6e057cdeaa9e4c1b80e7fa0b542d",
+    "derived_urdf_sha256": "734f26d183ecc9c8ca1e810c467c1c81a517a4895a1254f3218f3bacf382d31c",
+    "runtime_mission_qualified": false,
+    "source_description_sha256": "438b99466d31a8c06e7f6e9be353ee31add11919f47bf78f881fbc60206c21d6",
+    "xacro_arguments": [
+      "gazebo:=ignition",
+      "namespace:="
+    ],
+    "source_dependencies": [
+      {
+        "source_id": "create3_vendor",
+        "revision": "7d7a4f69a503d4eef22f13aeb8755c86955b8cc5",
+        "repository": "https://github.com/iRobotEducation/create3_sim",
+        "license_sha256": "0ee55d30683855927f0df38b2dc1c3cc6faa8866c19ee6c0140e33fff1156747"
+      }
+    ]
+  },
+  {
+    "native_import": {
+      "engine": "pybullet",
+      "api_version": 202010061,
+      "joints": 48,
+      "visual_shapes": 18
+    },
+    "removed_legacy_control_tags": [
+      "ros2_control",
+      "ros2_control"
+    ],
+    "identical_duplicates_removed": [],
+    "fragment_repairs": [],
+    "resource_sha256": {
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/meshes/body_visual.dae": "8a769b51aeac9489613f8aa7ebd89358681d145abcd7bfca1e4fe45c5df6cabf",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/meshes/bumper_visual.dae": "aa01eb9cbeb8b75cf2ae2aca545e8528b7940bf1a54a434c63efb60e51141d97",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/meshes/bumper_collision.dae": "f727eaf549c0a2fdd546af9703f2a518d75c4dc6ea4628662dce8898b05d51dd",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/shell.dae": "7c97b3b6e83da249cb96ade95e093bf0e548b5731813f16e7907e3984f3d480f",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/shell_collision.dae": "9797524ea49c0127ab0287635cc6b065c771ef29fd8650603c8286afe0f29670",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/weight_block.dae": "29bc618bada01ef526aac1a822c630ad5ee4f78d16157f75cb550f552010e6d5",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/tower_standoff.dae": "aae113441ca01c5d3cd137c2f4b5f9c704b6036e3d075513f384ed1c33038bc6",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/tower_sensor_plate.dae": "857a80bde1a6ce798690ea9d9a94b7e3cc73a17304143d48a0de48fb6af501dc",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/rplidar.dae": "286069ee666ae858b02859838668ce2f9ac2adb2732eaffaf15a034e81b2a949",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/camera_bracket.dae": "66b83ccc9129183259be86ac5b8838004ab7b2eaa807b7aad941dcadca35474a",
+      "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/turtlebot4_description/meshes/oakd_pro.dae": "f858257010f74fb7c8189b0ba3c9d570a7cf477762b547c170294dc0816cc68b"
+    },
+    "import_recipe": "resolved-original-resources-v3",
+    "source_id": "turtlebot4_vendor",
+    "repository": "https://github.com/turtlebot/turtlebot4",
+    "revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+    "entry": "turtlebot4_description/urdf/standard/turtlebot4.urdf.xacro",
+    "model_sha256": "6b7edf7f5fad88975499a66f578b4b2af26094b46eaa991dc6efee8cbfd1e257",
+    "derived_urdf_sha256": "e75f9843a40e8b371bf9e56e35e0914dd8815ea83741c20950eddcb594e27957",
+    "runtime_mission_qualified": false,
+    "source_description_sha256": "960f9838aac3b49ff73276a98c930065cb83bfdcfdf0efb4c8281357270c0512",
+    "xacro_arguments": [
+      "gazebo:=ignition",
+      "namespace:="
+    ],
+    "source_dependencies": [
+      {
+        "source_id": "create3_vendor",
+        "revision": "7d7a4f69a503d4eef22f13aeb8755c86955b8cc5",
+        "repository": "https://github.com/iRobotEducation/create3_sim",
+        "license_sha256": "0ee55d30683855927f0df38b2dc1c3cc6faa8866c19ee6c0140e33fff1156747"
+      }
+    ]
+  }
+]

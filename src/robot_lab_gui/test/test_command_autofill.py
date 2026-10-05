@@ -87,6 +87,28 @@ def test_command_is_filled_and_run_is_visible_on_open(app):
     assert app.start_button.winfo_rooty() < app.winfo_rooty() + app.winfo_height()
 
 
+def test_import_without_base_controller_does_not_enable_twist_inputs(app):
+    profile = dict(app.robot_profiles['bumperbot'])
+    profile.update(source_id='test_vendor', supported_modes=['display'], features=[])
+    profile.pop('drive', None)
+    app.robot_profiles['imported_display_fixture'] = profile
+    app.robot_var.set('imported_display_fixture')
+    app.mode_var.set('display')
+    app._update_from_selection()
+    assert all(button.instate(['disabled']) for button in app.drive_button_widgets.values())
+    assert app.drive_input_checkbox.instate(['disabled'])
+    with patch.object(app, '_publish_drive') as publish:
+        app._start_drive(1., 0.)
+        app.drive_input_enabled.set(True)
+        app._toggle_drive_input()
+        assert not app.drive_input_enabled.get()
+        publish.assert_not_called()
+    app.robot_var.set('bumperbot')
+    app._update_from_selection()
+    assert all(button.instate(['!disabled']) for button in app.drive_button_widgets.values())
+    assert app.drive_input_checkbox.instate(['!disabled'])
+
+
 def test_robot_reset_stops_drive_and_is_gated_by_task(app):
     app.robot_var.set('four_wheel_steer_car')
     app.mode_var.set('loc')

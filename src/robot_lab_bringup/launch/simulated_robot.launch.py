@@ -817,7 +817,8 @@ def _build_simulation_actions(context):
         # "Fixed Frame [base_footprint] does not exist" and draws nothing —
         # however fresh the simulator's joint states are.
         rviz_arguments = ["-d", rviz_config]
-        rviz_frame = "" if robot_free else _rviz_fixed_frame(model_path)
+        rviz_frame = ("" if robot_free else "native_body_1" if robot_config.get('native_mjcf')
+                      else _rviz_fixed_frame(model_path))
         if rviz_frame:
             rviz_arguments += ["-f", rviz_frame]
 
@@ -924,6 +925,12 @@ def _build_simulation_actions(context):
         display_args.update(drive_args)
         if robot_config.get('native_mjcf'):
             display_args['native_mjcf'] = robot_config['native_mjcf']
+            arm = _launch_value(context, 'arm_control').strip().lower()
+            if arm == 'auto':
+                arm = robot_config.get('arm_control', 'none')
+            if arm != 'none' and (arm != 'panda' or robot_model != 'menagerie_franka_emika_panda'):
+                raise ValueError('Native Panda control is available only for menagerie_franka_emika_panda')
+            display_args['arm_control'] = arm
         if simulator in ("mujoco", "isaac"):
             display_args["hold_position"] = _launch_value(context, "display_hold")
         elif simulator == "pybullet":
@@ -1434,6 +1441,8 @@ def generate_launch_description():
             description="Opt-in lateral hip target [rad] for the roll phase's "
                         "*other* pair, to separate the support from the moment. "
                         "0.0 (the default) means no splay on that pair."),
+        DeclareLaunchArgument('arm_control', default_value='auto',
+                              description='Native arm controller: auto, none or panda'),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

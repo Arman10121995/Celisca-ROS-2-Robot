@@ -45,9 +45,9 @@ the older roadmap. Existing stabilization fixes must remain working.
   plugin and actual collision-mesh height slices. Real exports exist for
   `nav_obstacle` and both furnished Celisca floors (R6.5). They are previews
   of the seed-connected region, pending reviewed navigation registration.
-- [x] Download and install 111 Display profiles on SSD: 59 native Menagerie
-  models, 48 robot-assets URDF variants/fragments, and four official TurtleBot3/
-  Husky descriptions. Normal Launch selection,
+- [x] Download and install 113 robot profiles on SSD: 59 native Menagerie
+  models, 48 robot-assets URDF variants/fragments, and six official TurtleBot3/
+  Husky/TurtleBot4 descriptions. Normal Launch selection,
   command autofill and Installed Extensions shortcuts work; no operator
   download controls. Two upstream files have no robot links and are excluded.
 - [x] Import all 14 dataset worlds and three Gazebo environment examples with
@@ -55,6 +55,13 @@ the older roadmap. Existing stabilization fixes must remain working.
   Robot missions, actor behavior and full visual/backend parity remain separate.
 - [x] Record live GUI Panda display/state/Run/Stop checks and preserve failures;
   each report names the exact asset, world, backend and source stage.
+- [x] Add official TurtleBot 4 Standard/Lite to normal Launch/autofill and
+  measure Display/state/Run/Stop on all four backends in `dataset_room2`.
+  Drive, sensor parity, SLAM/Nav2 and original visual materials remain pending.
+- [x] Add native Panda Arm joint/Home/Stop controls and real MuJoCo position
+  trajectories; measure rejection, cancellation and heartbeat loss (R5.7).
+- [x] Repair Trimesh/NumPy CI compatibility; exact `36f38b5` remote CI passes
+  build, fast, physics, integration and registry checks.
 - [x] Replace invented support/release success with exact hashed measurements,
   retain negative results and block full-release claims on unfinished tasks.
   GUI Health, this checklist, the roadmap and agent guides expose those gaps
@@ -109,8 +116,9 @@ the older roadmap. Existing stabilization fixes must remain working.
   now exists with measured Gazebo conventions and MuJoCo/PyBullet contact
   screens; verify Isaac runtime contact, deterministic generation and actual
   robot traversal per backend.
-- [ ] **R5.7:** Integrate manipulators, joint/trajectory commands, MoveIt2
-  planning and GUI controls; measure reachable motions and obstacle avoidance.
+- [ ] **R5.7:** Extend measured native Panda joint/trajectory/Home/Stop controls
+  to Cartesian MoveIt2/Servo planning, predictive/self-collision checks, grasp
+  and the other arm backends; measure reachable targets and obstacle avoidance.
 - [ ] **R5.8:** Integrate robot hands/grippers, control limits and GUI commands;
   measure closure, grasp/contact, hold and release of actual simulated objects.
 - [ ] **R5.9:** Combine a mobile base and arm with consistent TF/controllers,

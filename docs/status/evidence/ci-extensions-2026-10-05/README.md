@@ -13,6 +13,9 @@ the unchanged actual MuJoCo native-state/spawn test. The SciPy warning comes
 from this host's unrelated newer inherited SciPy; CI supplies Ubuntu's SciPy.
 The regular host's NumPy 2.2.6 / Trimesh 4.11.5 installation is preserved.
 
-The containing published revision still needs its own complete CI result;
-the isolated check does not replace the remote build and all test tiers.
+The exact published revision `36f38b5` passes [Actions run 37352290759](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37352290759):
+full build, 770 fast checks/four skips/one deselection, seven physics checks,
+123 integration checks and registry validation. `ci-36f38b5-report.json` records
+the actual job/step results. Later control/TurtleBot4 changes require their
+own exact-revision CI result; this repair does not qualify robot missions.
 Full failed Actions logs remain on the SSD; manifest hashes identify them.

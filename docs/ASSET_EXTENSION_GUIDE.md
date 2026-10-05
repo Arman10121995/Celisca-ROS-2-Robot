@@ -46,12 +46,14 @@ Native Menagerie models use their actual MJCF in MuJoCo. Their ROS description
 exports the compiled rigid geometry, while measured native body transforms and
 hinge/slide states reach RViz. Display holds the authored pose passively;
 `display_hold:=false` runs native dynamics without a locomotion controller.
-Neither option provides a walking, trajectory or grasp controller. Native MJCF
+The native Panda is the measured exception: `arm_control:=auto` selects its
+real joint controller and the Arm tab; use `arm_control:=none` for passive
+Display. Other native imports do not gain walking/trajectory/grasp control. Native MJCF
 profiles are limited to MuJoCo; enabling another backend requires an actual
 plant and control adapter. Textures/skins and complete visual parity remain
 separate from rigid geometry checks.
 
-Robot-assets and official TurtleBot3/Husky URDF imports resolve mesh resources
+Robot-assets and official TurtleBot3/Husky/TurtleBot4 URDF imports resolve mesh resources
 and retain source scales. Vendor Xacro runs against a source-backed SSD ament
 index, without installing vendor packages into the system. Husky's Display
 derivative disables its obsolete upstream control dependency and resolves its
@@ -183,9 +185,11 @@ frames, payload stability, navigation footprint, cancellation and simultaneous
 command arbitration. Acceptance is a measured navigate/reach/grasp/transport/
 release mission, with object state and contact—not a moving URDF preview.
 
-R5.7/R5.8/R5.9 are queued implementation tasks. Controllers, MoveIt scenes,
-grasp missions and cross-backend manipulation qualification are not delivered
-by the source catalog. Preserve the wheeled and legged workflows while adding
+R5.7 is partial: native Panda joint/Home/Stop/action controls now have measured
+MuJoCo dynamics, rejection, cancellation and heartbeat-loss evidence; see the
+[Panda guide](tutorials/panda_arm.md). MoveIt scenes, Cartesian planning, grasp
+missions and cross-backend manipulation qualification remain. R5.8/R5.9 remain
+queued; the source catalog does not implement those missions. Preserve the wheeled and legged workflows while adding
 these components.
 
 ## Resume after this installation checkpoint
@@ -198,10 +202,9 @@ or old PX4 relocation as a substitute for controller work.
    to each model/backend, including valid joint-limit rest poses, mimic/tendon
    coupling, steady hold, textures/skins, and shutdown diagnostics. Isaac Panda
    feedback is measured, but stable authored-pose hold is not qualified.
-2. R5.7: claim the task, use native Panda's actual seven arm actuators and
-   joint limits, then expose a real ROS trajectory action with measured
-   feedback/cancel/Stop. Add GUI joint jog/home/plan/execute with single command
-   ownership. Use pinned upstream MoveIt2 configuration for Cartesian planning;
+2. R5.7: preserve the measured native Panda controller and GUI joint/Home/Stop
+   implementation, including the position-only action contract and heartbeat
+   ownership. Add GUI Cartesian plan/execute and upstream MoveIt2 configuration;
    validate collisions and reachable/failed targets before adding a capability.
 3. R5.8: control the actual coupled Panda/Robotiq gripper, qualify limits and
    contact force, then measure closure, object grasp/hold/release. A slider or
@@ -220,3 +223,13 @@ or old PX4 relocation as a substitute for controller work.
 7. Resume the older R5.6 obstacle/mapping/reset matrix and algorithm/release
    acceptance after those extension tasks. Update the ledger, checklist and
    GUI Health with exact measured cells and retained negatives.
+
+## TurtleBot 4 continuation
+
+The user additionally requests TurtleBot 4. Standard/Lite and the official
+Create 3 dependencies are installed at pinned Humble revisions. The normal
+Launch selectors/autofill and eight backend Display/state checks are recorded
+in [the latest evidence](status/evidence/panda-turtlebot4-2026-10-05/README.md).
+Follow [the TurtleBot 4 guide](tutorials/turtlebot4.md) for exact joint dimensions,
+source licenses, backend drive/sensor adapters and mission acceptance. Drive
+inputs stay disabled until an actual base controller is connected.

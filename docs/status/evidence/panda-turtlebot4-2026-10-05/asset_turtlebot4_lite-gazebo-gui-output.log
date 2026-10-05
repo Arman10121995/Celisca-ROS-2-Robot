@@ -1,0 +1,439 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=true perception:=none
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-20-04-39-282979-molar1-282432
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [rviz2-1]: process started with pid [282449]
+[INFO] [robot_state_publisher-2]: process started with pid [282451]
+[INFO] [parameter_bridge-3]: process started with pid [282453]
+[INFO] [ign gazebo-4]: process started with pid [282455]
+[INFO] [parameter_bridge-5]: process started with pid [282457]
+[INFO] [gazebo_reset_bridge.py-6]: process started with pid [282460]
+[INFO] [parameter_bridge-7]: process started with pid [282462]
+[INFO] [gz_pointcloud_to_optical.py-8]: process started with pid [282464]
+[robot_state_publisher-2] [WARN] [1791223481.136670703] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-2] [INFO] [1791223481.136891138] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1791223481.136984316] [robot_state_publisher]: got segment bump_front_center
+[robot_state_publisher-2] [INFO] [1791223481.136999547] [robot_state_publisher]: got segment bump_front_left
+[robot_state_publisher-2] [INFO] [1791223481.137009178] [robot_state_publisher]: got segment bump_front_right
+[robot_state_publisher-2] [INFO] [1791223481.137016730] [robot_state_publisher]: got segment bump_left
+[robot_state_publisher-2] [INFO] [1791223481.137023993] [robot_state_publisher]: got segment bump_right
+[robot_state_publisher-2] [INFO] [1791223481.137031449] [robot_state_publisher]: got segment bumper
+[robot_state_publisher-2] [INFO] [1791223481.137038936] [robot_state_publisher]: got segment button_1
+[robot_state_publisher-2] [INFO] [1791223481.137046520] [robot_state_publisher]: got segment button_2
+[robot_state_publisher-2] [INFO] [1791223481.137053431] [robot_state_publisher]: got segment button_power
+[robot_state_publisher-2] [INFO] [1791223481.137060727] [robot_state_publisher]: got segment cliff_front_left
+[robot_state_publisher-2] [INFO] [1791223481.137067927] [robot_state_publisher]: got segment cliff_front_right
+[robot_state_publisher-2] [INFO] [1791223481.137075062] [robot_state_publisher]: got segment cliff_side_left
+[robot_state_publisher-2] [INFO] [1791223481.137082326] [robot_state_publisher]: got segment cliff_side_right
+[robot_state_publisher-2] [INFO] [1791223481.137089589] [robot_state_publisher]: got segment front_caster_link
+[robot_state_publisher-2] [INFO] [1791223481.137096853] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1791223481.137104276] [robot_state_publisher]: got segment ir_intensity_front_center_left
+[robot_state_publisher-2] [INFO] [1791223481.137111988] [robot_state_publisher]: got segment ir_intensity_front_center_right
+[robot_state_publisher-2] [INFO] [1791223481.137119219] [robot_state_publisher]: got segment ir_intensity_front_left
+[robot_state_publisher-2] [INFO] [1791223481.137126643] [robot_state_publisher]: got segment ir_intensity_front_right
+[robot_state_publisher-2] [INFO] [1791223481.137133810] [robot_state_publisher]: got segment ir_intensity_left
+[robot_state_publisher-2] [INFO] [1791223481.137141042] [robot_state_publisher]: got segment ir_intensity_right
+[robot_state_publisher-2] [INFO] [1791223481.137148178] [robot_state_publisher]: got segment ir_intensity_side_left
+[robot_state_publisher-2] [INFO] [1791223481.137155473] [robot_state_publisher]: got segment ir_omni
+[robot_state_publisher-2] [INFO] [1791223481.137163025] [robot_state_publisher]: got segment left_wheel
+[robot_state_publisher-2] [INFO] [1791223481.137170448] [robot_state_publisher]: got segment mouse
+[robot_state_publisher-2] [INFO] [1791223481.137177840] [robot_state_publisher]: got segment oakd_camera_bracket
+[robot_state_publisher-2] [INFO] [1791223481.137185487] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-2] [INFO] [1791223481.137192815] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-2] [INFO] [1791223481.137200302] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791223481.137207502] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-2] [INFO] [1791223481.137215053] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-2] [INFO] [1791223481.137222669] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791223481.137230988] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-2] [INFO] [1791223481.137238412] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791223481.137245643] [robot_state_publisher]: got segment right_wheel
+[robot_state_publisher-2] [INFO] [1791223481.137253099] [robot_state_publisher]: got segment rplidar_link
+[robot_state_publisher-2] [INFO] [1791223481.137260491] [robot_state_publisher]: got segment wheel_drop_left
+[robot_state_publisher-2] [INFO] [1791223481.137267882] [robot_state_publisher]: got segment wheel_drop_right
+[parameter_bridge-3] [INFO] [1791223481.227962908] [joint_state_bridge]: Creating GZ->ROS Bridge: [/world/dataset_room2/model/asset_turtlebot4_lite/joint_state (ignition.msgs.Model) -> /world/dataset_room2/model/asset_turtlebot4_lite/joint_state (sensor_msgs/msg/JointState)] (Lazy 0)
+[ign gazebo-4] [1;36m[Dbg] [gz.cc:161] [0m[1;36mSubscribing to [[0m[1;36m/gazebo/starting_world[0m[1;36m].[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [gz.cc:163] [0m[1;36mWaiting for a world to be set from the GUI...[0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mReceived world [[0m[1;32m/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world[0m[1;32m] from the GUI.[0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [gz.cc:167] [0m[1;36mUnsubscribing from [[0m[1;36m/gazebo/starting_world[0m[1;36m].[0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mIgnition Gazebo Server v[0m[1;32m6.18.0[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world[0m[1;32m].[0m
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/light[@name="sun"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L6]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L85]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_0"]/collision[@name="Wall_0_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L93]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_0"]/visual[@name="Wall_0_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L109]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_0"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L122]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_1"]/collision[@name="Wall_1_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L134]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_1"]/visual[@name="Wall_1_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L150]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_1"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L163]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_10"]/collision[@name="Wall_10_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L175]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_10"]/visual[@name="Wall_10_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L191]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_10"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L204]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_11"]/collision[@name="Wall_11_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L216]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_11"]/visual[@name="Wall_11_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L232]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_11"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L245]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_12"]/collision[@name="Wall_12_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L257]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_12"]/visual[@name="Wall_12_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L273]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_12"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L286]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_16"]/collision[@name="Wall_16_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L298]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_16"]/visual[@name="Wall_16_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L314]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_16"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L327]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_17"]/collision[@name="Wall_17_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L339]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_17"]/visual[@name="Wall_17_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L355]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_17"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L368]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_19"]/collision[@name="Wall_19_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L380]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_19"]/visual[@name="Wall_19_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L396]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_19"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L409]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_2"]/collision[@name="Wall_2_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L421]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_2"]/visual[@name="Wall_2_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L437]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_2"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L450]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_3"]/collision[@name="Wall_3_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L462]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_3"]/visual[@name="Wall_3_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L478]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_3"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L491]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_38"]/collision[@name="Wall_38_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L503]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_38"]/visual[@name="Wall_38_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L519]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_38"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L532]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_43"]/collision[@name="Wall_43_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L544]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_43"]/visual[@name="Wall_43_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L560]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_43"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L573]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_44"]/collision[@name="Wall_44_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L585]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_44"]/visual[@name="Wall_44_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L601]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_44"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L614]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_47"]/collision[@name="Wall_47_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L626]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_47"]/visual[@name="Wall_47_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L642]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_47"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L655]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_49"]/collision[@name="Wall_49_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L667]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_49"]/visual[@name="Wall_49_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L683]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_49"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L696]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_51"]/collision[@name="Wall_51_Collision"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L708]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_51"]/visual[@name="Wall_51_Visual"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L724]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="exp_empty_rooms"]/link[@name="Wall_51"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L737]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L745]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L793]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone_clone_2_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L841]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone_clone_2_clone_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L889]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone_clone_2_clone_clone_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L937]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone_clone_2_clone_clone_clone_0"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L985]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_box_clone_clone_2_clone_clone_clone_1"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1033]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1086]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_0"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1089]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_1"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1095]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_10"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1101]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_11"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1107]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_12"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1113]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_16"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1119]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_17"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1125]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_19"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1131]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_2"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1137]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_3"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1143]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_38"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1149]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_43"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1155]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_44"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1161]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_47"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1167]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_49"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1173]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="exp_empty_rooms"]/link[@name="Wall_51"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1179]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="ground_plane"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1186]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="ground_plane"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1189]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1196]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1199]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1206]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1209]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1216]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1219]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1226]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1229]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone_clone"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1236]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone_clone"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1239]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone_clone_0"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1246]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone_clone_0"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1249]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone_clone_1"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1256]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_box_clone_clone_2_clone_clone_clone_1"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1259]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_cylinder"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1266]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/model[@name="unit_cylinder"]/link[@name="link"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1269]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/state/light[@name="sun"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1276]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/gui/camera[@name="user_camera"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1281]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33mWarning [Utils.cc:129][0m [/sdf/world[@name="dataset_room2"]/model[@name="unit_cylinder"]/pose[@frame=""]:/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world:L1287]: XML Attribute[frame] in element[pose] not defined in SDF.
+[ign gazebo-4] [1;33m[Wrn] [Conversions.cc:722] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo_reset_bridge.py-6] [INFO] [1791223481.760111863] [gazebo_reset_bridge]: Gazebo reset bridge ready for world 'dataset_room2'
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/Gazebo/GazeboDrawer.qml:242:3: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[rviz2-1] [INFO] [1791223482.157733701] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-1] [INFO] [1791223482.157888220] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/EntityContextMenuPlugin/EntityContextMenuPlugin.qml:56:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[parameter_bridge-7] [INFO] [1791223482.201048177] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/asset_turtlebot4_lite/odometry_truth (gz.msgs.Odometry) -> /odom/ground_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.203696363] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.204724779] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> /imu/out (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.206918722] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.208376455] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/dataset_room2/model/asset_turtlebot4_lite/link/oakd_rgb_camera_frame/sensor/rgbd_camera/image (gz.msgs.Image) -> /oakd/rgb/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.210018464] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/dataset_room2/model/asset_turtlebot4_lite/link/oakd_rgb_camera_frame/sensor/rgbd_camera/camera_info (gz.msgs.CameraInfo) -> /oakd/rgb/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.212016035] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/dataset_room2/model/asset_turtlebot4_lite/link/oakd_rgb_camera_frame/sensor/rgbd_camera/depth_image (gz.msgs.Image) -> /oakd/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791223482.214755512] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/dataset_room2/model/asset_turtlebot4_lite/link/oakd_rgb_camera_frame/sensor/rgbd_camera/points (gz.msgs.PointCloudPacked) -> /oakd/points_gz (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mIgnition Gazebo GUI    v[0m[1;32m6.18.0[0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [Gui.cc:253] [0m[1;36mWaiting for subscribers to [[0m[1;36m/gazebo/starting_world[0m[1;36m]...[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [Application.cc:92] [0m[1;36mInitializing application.[0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:560] [0m[1;36mCreate main window[0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [PathManager.cc:66] [0m[1;36mRequesting resource paths through [[0m[1;36m/gazebo/resource_paths/get[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Gui.cc:333] [0m[1;36mGUI requesting list of world names. The server may be busy [0m[1;36mdownloading resources. Please be patient.[0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [PathManager.cc:55] [0m[1;36mReceived resource paths.[0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Gui.cc:391] [0m[1;36mRequesting GUI from [[0m[1;36m/world/dataset_room2/gui/info[0m[1;36m]...[0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [GuiRunner.cc:145] [0m[1;36mRequesting initial state from [[0m[1;36m/world/dataset_room2/state[0m[1;36m]...[0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading config [[0m[1;32m/home/molar1/.ignition/gazebo/6/gui.config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mMinimalScene[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32m3D View[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mMinimalScene[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gui-6/plugins/libMinimalScene.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mEntityContextMenuPlugin[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mEntity Context Menu[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mEntityContextMenuPlugin[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libEntityContextMenuPlugin.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mGzSceneManager[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mScene Manager[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mGzSceneManager[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libGzSceneManager.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mInteractiveViewControl[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera view controller topic advertised on [[0m[1;32m/gui/camera/view_control[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera reference visual topic advertised on [[0m[1;32m/gui/camera/view_control/reference_visual[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera view control sensitivity advertised on [[0m[1;32m/gui/camera/view_control/sensitivity[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mInteractive view control[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mInteractiveViewControl[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gui-6/plugins/libInteractiveViewControl.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mCameraTracking[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mCamera tracking[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mCameraTracking[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gui-6/plugins/libCameraTracking.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/Spawn/Spawn.qml:32:3: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[INFO] [create-9]: process started with pid [282655]
+[create-9] [INFO] [1791223482.688716436] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mMarkerManager[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mListening to stats on [[0m[1;32m/world/dataset_room2/stats[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mMarker Manager[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mMarkerManager[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gui-6/plugins/libMarkerManager.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mSelectEntities[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mSelect entities[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mSelectEntities[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libSelectEntities.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mSpawn[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mSpawn[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mSpawn[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libSpawn.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mVisualizationCapabilities[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView as transparent service on [[0m[1;32m/gui/view/transparent[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView as wireframes service on [[0m[1;32m/gui/view/wireframes[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView center of mass service on [[0m[1;32m/gui/view/com[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView inertia service on [[0m[1;32m/gui/view/inertia[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView collisions service on [[0m[1;32m/gui/view/collisions[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView joints service on [[0m[1;32m/gui/view/joints[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mView frames service on [[0m[1;32m/gui/view/frames[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mVisualization capabilities[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mVisualizationCapabilities[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libVisualizationCapabilities.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mWorldControl[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mUsing world control service [[0m[1;32m/world/dataset_room2/control[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mListening to stats on [[0m[1;32m/world/dataset_room2/stats[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [WorldControl.cc:246] [0m[1;36mUsing an event to share WorldControl msgs with the server[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mWorld control[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mWorldControl[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gui-6/plugins/libWorldControl.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mWorldStats[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mListening to stats on [[0m[1;32m/world/dataset_room2/stats[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mWorld stats[0m[1;32m] to main window[0m[1;32m[0m
+[rviz2-1] [INFO] [1791223482.805971824] [rviz2]: Stereo is NOT SUPPORTED
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/TransformControl/TransformControl.qml:104:3: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/TransformControl/TransformControl.qml:99:3: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/TransformControl/TransformControl.qml:94:3: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/TransformControl/TransformControl.qml:89:3: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }[0m[1;33m[0m
+[create-9] [INFO] [1791223482.896403866] [ros_gz_sim]: Requested creation of entity.
+[create-9] [INFO] [1791223482.896548209] [ros_gz_sim]: OK creation of entity.
+[INFO] [create-9]: process has finished cleanly [pid 282655]
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Application.cc:802] [0m[1;33m[QT] file::/WorldStats/WorldStats.qml:53:3: QML RowLayout: Binding loop detected for property "x"[0m[1;33m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mWorldStats[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-[1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [Physics.cc:804] [0m[1;36mLoaded [[0m[1;36mignition::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/usr/lib/aarch64-linux-gnu/ign-physics-5/engine-plugins/libignition-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mCreate service on [[0m[1;32m/world/dataset_room2/create[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mRemove service on [[0m[1;32m/world/dataset_room2/remove[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/dataset_room2/set_pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/dataset_room2/set_pose_vector[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mLight configuration service on [[0m[1;32m/world/dataset_room2/light_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPhysics service on [[0m[1;32m/world/dataset_room2/set_physics[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mSphericalCoordinates service on [[0m[1;32m/world/dataset_room2/set_spherical_coordinates[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mEnable collision service on [[0m[1;32m/world/dataset_room2/enable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mDisable collision service on [[0m[1;32m/world/dataset_room2/disable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/dataset_room2/visual_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/dataset_room2/wheel_slip[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32m3[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/dataset_room2[0m[1;32m/control], [[0m[1;32m/world/dataset_room2[0m[1;32m/control/state] and [[0m[1;32m/world/dataset_room2[0m[1;32m/playback/control][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mdataset_room2[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m2[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m91[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:209] [0m[1;36m[JointPositionController] system parameters:[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:210] [0m[1;36mp_gain: [[0m[1;36m20[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:211] [0m[1;36mi_gain: [[0m[1;36m0.1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:212] [0m[1;36md_gain: [[0m[1;36m0.01[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:213] [0m[1;36mi_max: [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:214] [0m[1;36mi_min: [[0m[1;36m-1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:215] [0m[1;36mcmd_max: [[0m[1;36m5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:216] [0m[1;36mcmd_min: [[0m[1;36m-5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:217] [0m[1;36mcmd_offset: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:218] [0m[1;36mTopic: [[0m[1;36m/model/asset_turtlebot4_lite/joint/wheel_drop_left_joint/0/cmd_pos[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:219] [0m[1;36minitial_position: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::JointPositionController[0m[1;36m] for entity [[0m[1;36m91[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:209] [0m[1;36m[JointPositionController] system parameters:[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:210] [0m[1;36mp_gain: [[0m[1;36m20[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:211] [0m[1;36mi_gain: [[0m[1;36m0.1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:212] [0m[1;36md_gain: [[0m[1;36m0.01[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:213] [0m[1;36mi_max: [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:214] [0m[1;36mi_min: [[0m[1;36m-1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:215] [0m[1;36mcmd_max: [[0m[1;36m5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:216] [0m[1;36mcmd_min: [[0m[1;36m-5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:217] [0m[1;36mcmd_offset: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:218] [0m[1;36mTopic: [[0m[1;36m/model/asset_turtlebot4_lite/joint/left_wheel_joint/0/cmd_pos[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:219] [0m[1;36minitial_position: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::JointPositionController[0m[1;36m] for entity [[0m[1;36m91[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:209] [0m[1;36m[JointPositionController] system parameters:[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:210] [0m[1;36mp_gain: [[0m[1;36m20[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:211] [0m[1;36mi_gain: [[0m[1;36m0.1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:212] [0m[1;36md_gain: [[0m[1;36m0.01[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:213] [0m[1;36mi_max: [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:214] [0m[1;36mi_min: [[0m[1;36m-1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:215] [0m[1;36mcmd_max: [[0m[1;36m5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:216] [0m[1;36mcmd_min: [[0m[1;36m-5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:217] [0m[1;36mcmd_offset: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] libEGL warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+[ign gazebo-4] libEGL warning: MESA-LOADER: failed to open nvidia-drm: /usr/lib/dri/nvidia-drm_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/aarch64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+[ign gazebo-4] 
+[ign gazebo-4] libEGL warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:218] [0m[1;36mTopic: [[0m[1;36m/model/asset_turtlebot4_lite/joint/wheel_drop_right_joint/0/cmd_pos[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:219] [0m[1;36minitial_position: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::JointPositionController[0m[1;36m] for entity [[0m[1;36m91[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:209] [0m[1;36m[JointPositionController] system parameters:[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:210] [0m[1;36mp_gain: [[0m[1;36m20[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:211] [0m[1;36mi_gain: [[0m[1;36m0.1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:212] [0m[1;36md_gain: [[0m[1;36m0.01[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:213] [0m[1;36mi_max: [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:214] [0m[1;36mi_min: [[0m[1;36m-1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:215] [0m[1;36mcmd_max: [[0m[1;36m5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:216] [0m[1;36mcmd_min: [[0m[1;36m-5[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:217] [0m[1;36mcmd_offset: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:218] [0m[1;36mTopic: [[0m[1;36m/model/asset_turtlebot4_lite/joint/right_wheel_joint/0/cmd_pos[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [JointPositionController.cc:219] [0m[1;36minitial_position: [[0m[1;36m0[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::JointPositionController[0m[1;36m] for entity [[0m[1;36m91[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [UserCommands.cc:1303] [0m[1;36mCreated entity [[0m[1;36m91[0m[1;36m] named [[0m[1;36masset_turtlebot4_lite[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationFeatures.cc:71] [0m[1;36mSimulation timestep set to: [0m[1;36m0.002[0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/dataset_room2/scene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/dataset_room2/scene/deletion[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/dataset_room2/state[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/dataset_room2[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [EntityComponentManager.cc:1635] [0m[1;36mUpdated state thread iterators: [0m[1;36m12[0m[1;36m threads processing around [0m[1;36m10[0m[1;36m entities each.[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m3[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] libEGL warning: egl: failed to create dri2 screen
+[ign gazebo-4] [1;33m[GUI] [Wrn] [Ogre2RenderTarget.cc:574] [0m[1;33mAnti-aliasing level of '[0m[1;33m8[0m[1;33m' [0m[1;33mis not supported; valid FSAA levels are: [0m[1;33m[ 0 4 ][0m[1;33m. Setting to 0[0m[1;33m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[gui-6/plugins/libWorldStats.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mShapes[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mShapes[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mShapes[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libShapes.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mLights[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mLights[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mLights[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libLights.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mTransformControl[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [TransformControl.cc:222] [0m[1;36mLegacy mode is disabled; this plugin must be used with [0m[1;36mMinimalScene.[0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mTransform control[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mTransformControl[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libTransformControl.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mScreenshot[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mScreenshot service on [[0m[1;32m/gui/screenshot[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mScreenshot[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mScreenshot[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gui-6/plugins/libScreenshot.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mCopyPaste[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mCopy/Paste[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mCopyPaste[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libCopyPaste.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mComponentInspector[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mComponent inspector[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mComponentInspector[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libComponentInspector.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:431] [0m[1;36mLoading plugin [[0m[1;36mEntityTree[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mAdded plugin [[0m[1;32mEntity tree[0m[1;32m] to main window[0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoaded plugin [[0m[1;32mEntityTree[0m[1;32m] from path [[0m[1;32m/usr/lib/aarch64-linux-gnu/ign-gazebo-6/plugins/gui/libEntityTree.so[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:301] [0m[1;36mLoading window config[0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mUsing server control service [[0m[1;32m/server_control[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:574] [0m[1;36mApplying config[0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [MinimalScene.cc:602] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [gz_pointcloud_to_optical.py-8]: sending signal 'SIGINT' to process[gz_pointcloud_to_optical.py-8]
+[INFO] [parameter_bridge-7]: process has finished cleanly [pid 282462]
+[INFO] [parameter_bridge-3]: process has finished cleanly [pid 282453]
+[INFO] [gazebo_reset_bridge.py-6]: sending signal 'SIGINT' to process[gazebo_reset_bridge.py-6]
+[INFO] [parameter_bridge-5]: sending signal 'SIGINT' to process[parameter_bridge-5]
+[INFO] [ign gazebo-4]: sending signal 'SIGINT' to process[ign gazebo-4]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [rviz2-1]: sending signal 'SIGINT' to process[rviz2-1]
+[parameter_bridge-7] [INFO] [1791223486.326494510] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-3] [INFO] [1791223486.326505934] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791223486.326523597] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-1] [INFO] [1791223486.326529804] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-5] [INFO] [1791223486.326687842] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gz_pointcloud_to_optical.py-8] Traceback (most recent call last):
+[gz_pointcloud_to_optical.py-8]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gz_pointcloud_to_optical.py", line 120, in <module>
+[gz_pointcloud_to_optical.py-8]     main()
+[gz_pointcloud_to_optical.py-8]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gz_pointcloud_to_optical.py", line 114, in main
+[gz_pointcloud_to_optical.py-8]     node.destroy_node()
+[gz_pointcloud_to_optical.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1691, in destroy_node
+[gz_pointcloud_to_optical.py-8]     self.destroy_service(self._services[0])
+[gz_pointcloud_to_optical.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1615, in destroy_service
+[gz_pointcloud_to_optical.py-8]     service.destroy()
+[gz_pointcloud_to_optical.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/service.py", line 93, in destroy
+[gz_pointcloud_to_optical.py-8]     self.__service.destroy_when_not_in_use()
+[gz_pointcloud_to_optical.py-8] KeyboardInterrupt
+[parameter_bridge-5] [INFO] [1791223486.345001551] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791223486.349567539] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-1] [INFO] [1791223486.353938627] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ign gazebo-4] [1;36m[GUI] [Dbg] [TransformControl.cc:531] [0m[1;36mTransformControl plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Spawn.cc:289] [0m[1;36mSpawn plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [SelectEntities.cc:451] [0m[1;36mSelectEntities plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [MarkerManager.cc:173] [0m[1;36mAdvertise [0m[1;36m/marker[0m[1;36m/list service.[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [MarkerManager.cc:183] [0m[1;36mAdvertise [0m[1;36m/marker[0m[1;36m/list.[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [MarkerManager.cc:193] [0m[1;36mAdvertise [0m[1;36m/marker[0m[1;36m_array.[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [CameraTracking.cc:181] [0m[1;36mCameraTrackingPrivate plugin is moving camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mMove to service on [[0m[1;32m/gui/move_to[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mFollow service on [[0m[1;32m/gui/follow[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mMove to pose service on [[0m[1;32m/gui/move_to/pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mCamera pose topic advertised on [[0m[1;32m/gui/camera/pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mFollow offset service on [[0m[1;32m/gui/follow/offset[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [InteractiveViewControl.cc:174] [0m[1;36mInteractiveViewControl plugin is moving camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [EntityContextMenuPlugin.cc:79] [0m[1;36mEntity context menu plugin is using camera [[0m[1;36mscene::Camera(65527)[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [SignalHandler.cc:141] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Gui.cc:472] [0m[1;36mShutting down ign-gazebo-gui[0m[1;36m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [Application.cc:140] [0m[1;36mTerminating application.[0m[1;36m[0m
+[ign gazebo-4] [1;32m[GUI] [0m[1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mignition-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[GUI] [Dbg] [MinimalScene.cc:657] [0m[1;36mDestroy scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] 0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SignalHandler.cc:141] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[ign gazebo-4] [1;36m[Dbg] [ServerPrivate.cc:110] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[ign gazebo-4] [1;36m[Dbg] [gz.cc:410] [0m[1;36mShutting down ign-gazebo-server[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[ERROR] [ign gazebo-4]: process has died [pid 282455, exit code -2, cmd 'ruby /usr/bin/ign gazebo /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world -v 4  -r --force-version 6'].
+[INFO] [launch]: process[ign gazebo-4] was required: shutting down launched system
+[INFO] [parameter_bridge-5]: process has finished cleanly [pid 282457]
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 282451]
+[ERROR] [gz_pointcloud_to_optical.py-8]: process has died [pid 282464, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gz_pointcloud_to_optical.py --ros-args -r __node:=oakd_pointcloud_converter --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_cciiygi2'].
+[INFO] [gazebo_reset_bridge.py-6]: process has finished cleanly [pid 282460]
+[INFO] [rviz2-1]: process has finished cleanly [pid 282449]
+
+[launch exited with code 0]
+

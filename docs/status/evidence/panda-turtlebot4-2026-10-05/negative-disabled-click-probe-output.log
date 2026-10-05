@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05/probe_panda_gui.py", line 87, in <module>
+    wait(lambda: states and states[-1]['busy'])
+  File "/workspace/molar/robot_lab_runtime/r57-panda-2026-10-05/probe_panda_gui.py", line 41, in wait
+    assert condition(), 'Timed out: '+(states[-1]['status'] if states else 'no state')
+AssertionError: Timed out: target reached; holding target

@@ -73,3 +73,8 @@ qualification. Current validation has known gaps, component choices are not
 fully wired into launch, and benchmark outputs include placeholder behavior.
 Do not publish their output as measured comparative results until the roadmap's
 execution and measurement acceptance criteria are met.
+
+- [TurtleBot 4 Standard/Lite](turtlebot4.md): installed official models, measured
+  four-backend Display and remaining base/sensor/mission integration.
+- [Native Panda Arm controls](panda_arm.md): actual MuJoCo joint/Home/Stop/
+  trajectory interface and remaining planning/grasp/backend work.
