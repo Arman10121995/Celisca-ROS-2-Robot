@@ -1,0 +1,204 @@
+{
+  "baseline_revision": "0ff27e3bec3dadf46f3ff370a439ab62f3391ddd",
+  "revision": "containing commit; implementation hashes below",
+  "host": "Jetson AGX Orin / Ubuntu 22.04 / ROS Humble / native Isaac Sim 6.0.1",
+  "scope": "Display manual Drive/WASD on nav_empty, not mapping/navigation/reset/obstacle/vendor-stack qualification",
+  "raw_run_directory": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05",
+  "trials": [
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-gazebo/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-gazebo/trace.json",
+      "raw_trace_sha256": "b16d4cb9d088e92658bf5de6952288f537da16753b8e66d16ad34987858772a5",
+      "full_trace_body_samples": 1421,
+      "max_body_tilt_rad": 0.09364064498049553
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-isaac/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-isaac/trace.json",
+      "raw_trace_sha256": "8f7828741806a7e328a11e41f6c515c74806375385586c9be45bfe6613f137eb",
+      "full_trace_body_samples": 9289,
+      "max_body_tilt_rad": 0.10082035229864085
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-mujoco/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-mujoco/trace.json",
+      "raw_trace_sha256": "17b078d853c28491f1a8a9815c99fc7c63a61e6096352ceb812c725ad50e3d1b",
+      "full_trace_body_samples": 1277,
+      "max_body_tilt_rad": 0.106934573180142
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-pybullet/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_lite-pybullet/trace.json",
+      "raw_trace_sha256": "b7cae6b30fdf514e78aaad7957b4db6c78abf091d578e3ed9f6861f1098ca892",
+      "full_trace_body_samples": 1355,
+      "max_body_tilt_rad": 0.012753340606850497
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-gazebo/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-gazebo/trace.json",
+      "raw_trace_sha256": "bb8b0d87fe60979923802ea377b9e67673eba43e476aa3fb706dda5fe308517b",
+      "full_trace_body_samples": 1417,
+      "max_body_tilt_rad": 0.10990485254769027
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-isaac/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-isaac/trace.json",
+      "raw_trace_sha256": "a7ad656fd2a3d35ddf3b6ef988dc03336c502962d543a53c8a7dcfc7e9b46ee8",
+      "full_trace_body_samples": 9182,
+      "max_body_tilt_rad": 0.09586665874455214
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-mujoco/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-mujoco/trace.json",
+      "raw_trace_sha256": "26a853e19545b77add42dca337425289d96e5b8a093cdc4a59af05050f34d21d",
+      "full_trace_body_samples": 1279,
+      "max_body_tilt_rad": 0.10601709873413108
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "world": "nav_empty",
+      "mode": "display",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-pybullet/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/asset_turtlebot4_standard-pybullet/trace.json",
+      "raw_trace_sha256": "2931c2ce1d7432a6b7a6df3f5d83834dbc6e94fee0b7d9c911880be63ba448b2",
+      "full_trace_body_samples": 1354,
+      "max_body_tilt_rad": 0.0185955440534264
+    }
+  ],
+  "negative_trials": [
+    {
+      "name": "negative-isaac-missing-springs",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/negative-isaac-missing-springs/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/negative-isaac-missing-springs/trace.json",
+      "raw_trace_sha256": "5cbadd26c5e3fbad928476416010be9f287fd5c93113f91384ba934a3746913c"
+    },
+    {
+      "name": "negative-isaac-no-timeout",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/negative-isaac-no-timeout/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/negative-isaac-no-timeout/trace.json",
+      "raw_trace_sha256": "213d79c053f6ce7aacbda2bea825f669cacd93097611f0961428d8822573aae0"
+    },
+    {
+      "name": "negative-isaac-wall-acceleration",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/negative-isaac-wall-acceleration/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/negative-isaac-wall-acceleration/trace.json",
+      "raw_trace_sha256": "fd4959cbeb11d5ecac5a2bf94d3fdb56967053eba18a911a44662fbec58d9046"
+    },
+    {
+      "name": "negative-stop15-pybullet",
+      "report": "docs/status/evidence/turtlebot4-drive-2026-10-05/negative-stop15-pybullet/report.json",
+      "raw_trace": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/negative-stop15-pybullet/trace.json",
+      "raw_trace_sha256": "9487d180b7fc69752a9257b232709651019d23b5c3fd095876ef167fedf7510c"
+    }
+  ],
+  "implementation": {
+    "scripts/provision_extension_assets.py": "4e57cf8e1888cd3ef8c8a4a5477067f1f5b0a7d4aef03c21af6f57d6b175874f",
+    "scripts/test_tiers.sh": "ff9671ab3aa013a4cb8f572e4863a860a5dc5e7f5263198cbbd2f55b6bde02c8",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "a6e78a89d2d2b15c485b650533cc1ebe991b04690c627f524a73fd4b9a54ef02",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "cec454ffd14a3f44c52b3d8557bfe999dd4578a2356282bc5196679a4d152c48",
+    "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "cf905ca3a9acfad6ba646c0f1bacfe3c598e7af08e52c0be1624537d407d7464",
+    "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py": "105bfea005f4684b7c513d57836b5e9bd82cfbc4a30b9c963505fa8f2a3084d1",
+    "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py": "c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "6d747a471e58f614d24c05078ab0965d4f6aad90cad2335630450e98faf6b629",
+    "src/robot_lab_utils/robot_lab_utils/urdf_springs.py": "e02a1dd0adbb37cef471a48c81254f1993dc2bbafc01fdc9f341c48fd55cc721",
+    "src/robot_lab_bringup/test/test_isaac_drive_watchdog.py": "0ea85cdb61fc565c888f5d80dd9d5c97f40ccdb7db897bfba7120f698c53f66c",
+    "src/robot_lab_bringup/test/test_urdf_springs.py": "f56862078c08955143f3897ff0680c54ff2d6bddfc08133ba92e50fa7bab1e1f"
+  },
+  "assets": {
+    "asset_turtlebot4_standard": {
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_standard/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/drive.urdf": "c7468ccf5d7701fbad1191b0d63bc2f379b3771ffa3d6797bc946b079e0767e4",
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_standard/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/model.urdf": "e75f9843a40e8b371bf9e56e35e0914dd8815ea83741c20950eddcb594e27957",
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_standard/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/input.urdf": "6b7edf7f5fad88975499a66f578b4b2af26094b46eaa991dc6efee8cbfd1e257",
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_standard/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/drive-controllers.yaml": "ed59f89bfc3ae8c3472f4a75461eb59eb3234f5829e9a1fdd1648a2606be336f"
+    },
+    "asset_turtlebot4_lite": {
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/drive.urdf": "9987c7816f9ed8039bd674c1e0d0f56f7b33dbf823d9c4a7cb95c65075fc7c89",
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/model.urdf": "734f26d183ecc9c8ca1e810c467c1c81a517a4895a1254f3218f3bacf382d31c",
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/input.urdf": "adfb3a3e4156d0398145b6e6feb956fe316e6e057cdeaa9e4c1b80e7fa0b542d",
+      "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/drive-controllers.yaml": "ed59f89bfc3ae8c3472f4a75461eb59eb3234f5829e9a1fdd1648a2606be336f"
+    }
+  },
+  "artifacts": {
+    "angular-unit-review.json": "f7a1214f7d821ff03a5e155129ae075c48d0976d48ca0ea5a955a555fab89f84",
+    "asset_turtlebot4_lite-gazebo/gui-output.log": "7552a2ee09d9bc80d6d2ce7ef9b4763aeac062f8ec4dd32af77da2b8e9050c35",
+    "asset_turtlebot4_lite-gazebo/report.json": "e5bbe4481511b12dee5c43866d9a42aec8b00cd0bc25d3e6863d6654ea2488d8",
+    "asset_turtlebot4_lite-isaac/gui-output.log": "7560a3070063618c37e83f544993aa607984596c02714a49d4c8a47ce5e01044",
+    "asset_turtlebot4_lite-isaac/report.json": "ecca1411e962353037dd6e9b2588a6e7c239d5849a7a74c04befce1a02237c05",
+    "asset_turtlebot4_lite-mujoco/gui-output.log": "874e1d95ba2bae32587c1b1028d7ed60ebb022875fd162b61a627813e459026d",
+    "asset_turtlebot4_lite-mujoco/report.json": "778b9d76ff6c3788496d058a78a76387e3dec049a8a2af14b035ec7807042958",
+    "asset_turtlebot4_lite-pybullet/gui-output.log": "1c99f99e92dd99e28906f2610e814c856f663c8bc0ef738b35b07a3d7fbb2e3d",
+    "asset_turtlebot4_lite-pybullet/report.json": "1ee18c230ed8f9610aa7f75a787099034ba08baa2f646a30da5c22a2074d4e52",
+    "asset_turtlebot4_standard-gazebo/gui-output.log": "d726bcbb2ac239a345d77e2392a4ab8ad0648dfde3ebfcab6ae16c1e2787ac07",
+    "asset_turtlebot4_standard-gazebo/report.json": "bc44a8fd5929316d3a25d9895a32eb57ec82f8f60523f644decca0f3cc67fb52",
+    "asset_turtlebot4_standard-isaac/gui-output.log": "2809736b84771c2ae449815ab805147b218fda0ce8c6559ab1422d90fd28d4e3",
+    "asset_turtlebot4_standard-isaac/report.json": "7853ca341789891cf4b809821e33b0734153cd5ff65865b90107459ad7f0e785",
+    "asset_turtlebot4_standard-mujoco/gui-output.log": "efca55c246d5b7a51961534217054befc872a509c160d9fed66d3b426f0a3f3c",
+    "asset_turtlebot4_standard-mujoco/report.json": "8d020bb2891ba3a4367a1b0b8b787f8de2fa0786040dcdf69cdf9c0c9e2791d0",
+    "asset_turtlebot4_standard-pybullet/gui-output.log": "6cb6c967938c37e89bf7aadf20b46a24b5c3948077abc926751e56fd1f0c8384",
+    "asset_turtlebot4_standard-pybullet/report.json": "a05ddef9e44a0b801aba30f7a1c6247bcd4ec7511c14948d4b7a4e0135fd9f85",
+    "build-springs.log": "16d366bed511cb7dbde012a74587e6c200e15f3aabc6d4fff047d08df721da13",
+    "installed-command-report.json": "b37bebd59ea8a4bb7ae0b73601dc9756b93ac76a5416dd5d26d888b21e79c4d9",
+    "negative-isaac-missing-springs/gui-output.log": "4a6d1cbe32203c2e545b7149634c4b29b69b697399b65102a31c46e9f402c054",
+    "negative-isaac-missing-springs/probe-output.log": "565f3be06e9fd0d18801baad393283be9113c7633a1b372c92dbae3aaf9258f7",
+    "negative-isaac-missing-springs/probe.py": "45f398d96c96307466c7891ee0144f21535000a7b36c46d62781b6ae13638cb8",
+    "negative-isaac-missing-springs/report.json": "0f92e237fd733d65701d6938ac42786450ed33fdae6140d7d525055ca4d1ef5b",
+    "negative-isaac-no-timeout/gui-output.log": "6f133a880f1e536e2a0a358d7029f605648723f0a16ba31e0cb479487663c9b1",
+    "negative-isaac-no-timeout/probe-output.log": "2c6c070fc76f20f2ff7992210c987962c3f5feb2e97988cb79c43947cb74c0ce",
+    "negative-isaac-no-timeout/probe.py": "45f398d96c96307466c7891ee0144f21535000a7b36c46d62781b6ae13638cb8",
+    "negative-isaac-no-timeout/report.json": "b84fb4d9bf8cf4a4f8cda802fe42bacd55753176f1404347fdc1b4a464dc90af",
+    "negative-isaac-wall-acceleration/gui-output.log": "56b98f670da50a35a4aed1a2b7d830c82baf46a9b6e65be3b856d13f81ce8404",
+    "negative-isaac-wall-acceleration/probe-output.log": "565f3be06e9fd0d18801baad393283be9113c7633a1b372c92dbae3aaf9258f7",
+    "negative-isaac-wall-acceleration/probe.py": "45f398d96c96307466c7891ee0144f21535000a7b36c46d62781b6ae13638cb8",
+    "negative-isaac-wall-acceleration/report.json": "ad252669cce089fb294d8edb15b0b79ca5a1e9c935fdffcddfd4d5a9ecfd91c6",
+    "negative-stop15-pybullet/probe-output.log": "0180a3752e82faa4b961c0e00f6ec67b674af3f29b0b9dda87972d508edb32ac",
+    "negative-stop15-pybullet/probe.py": "f5cbdadbc4ffddfee1f9dfdaf01333fd4a3e8296873896b13e112a50b217c951",
+    "negative-stop15-pybullet/report.json": "07a49a0c196049f5dc979155e912c1bb834626eb5224ecbe008fad8b81b383c6",
+    "probe_drive_gui.py": "45f398d96c96307466c7891ee0144f21535000a7b36c46d62781b6ae13638cb8",
+    "probe_installed_commands.py": "75efd46e1f3f0f41256e327e4bafc7d8608f3bb41d61388bb163160024b2dabf",
+    "provision-springs.log": "36ab1c26c31a97c1104bb7cebb67082209eb6c62c84d5c376d314c2db8b7f294",
+    "spring-watchdog-tests.log": "b9fb6f449331fb2a6e05926458b5c22c9822cc823247eee453238d160b83f40e",
+    "README.md": "d55c4c53e353a2578cf4c47910c12edfe7240defebd303200ad0b61be79ecec5",
+    "all-tiers.log": "a49d9278b075c90bb9aa8c5bbdc8fa72089fca17cce257168e6f483124b9b92a",
+    "gui-regression.log": "a13387f6b88b4068465127c646eef37aa290396a97fe90fff443c9dffd880e54",
+    "tutorial-contract.log": "1ae086205dae6664d4e5e1efa89078436e756c9b332bb922da2a4f5689040873",
+    "registry.log": "e48ec5882c7cfe533bdcf15188bf1d50cb229cc6f41101b7b7db50ac17d038cf"
+  },
+  "trial_runtime_source": {
+    "path": "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/isaac_runtime-trial-source.py",
+    "sha256": "58276a8b06eed29c764f32d3bfe76ae3e6c84e864c84e9c98df881fd1010a7ab",
+    "difference_from_final": "Only future angular spring gain units changed during review. All original TurtleBot4 springs are prismatic and their executed values/targets are identical; no angular spring runtime claim."
+  },
+  "original_spring_source": {
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/urdf/wheel_drop.urdf.xacro",
+    "sha256": "1970b6e60fafd1d77e8302020abb48db4164c62447494724b9c5c35fce5c55f6"
+  }
+}

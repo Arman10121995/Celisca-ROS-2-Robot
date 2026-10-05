@@ -38,8 +38,10 @@ URDF variants/fragments, and six official TurtleBot3/Husky/TurtleBot4 descriptio
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
 [installation evidence](docs/status/evidence/extensions-integrated-2026-10-05/README.md).
-TurtleBot 4 Standard/Lite have named display/state checks in all four simulators;
-see the [TurtleBot 4 guide](docs/tutorials/turtlebot4.md). The new **Arm** tab
+TurtleBot 4 Standard/Lite have named display/state and physical Drive/WASD
+checks in all four simulators. Select Display to drive; mapping/navigation and
+vendor sensor/docking behavior remain pending. See the
+[TurtleBot 4 guide](docs/tutorials/turtlebot4.md). The new **Arm** tab
 controls native Panda joints on MuJoCo with measured Home, Stop, cancellation
 and heartbeat loss; see the [Panda guide](docs/tutorials/panda_arm.md).
 Cross-backend qualification, remaining vendor/example imports, Cartesian planning,
@@ -85,7 +87,12 @@ stages, successful and failed robot trials are recorded in the
 The later Panda/TurtleBot4 stage passes **786 fast tests, one skip and one
 integration deselection**, plus **123 integration, 7 physics and 44 Tk command/Drive tests**.
 Exact `36f38b5` GitHub CI passes all tiers after the Trimesh compatibility repair;
-new control-stage CI is recorded separately. The former no-flight diagnosis is superseded by actual native PX4 flight;
+`0ff27e3` built but failed the required tutorial Run-section check. That guide
+contract is repaired. The physical TurtleBot4 Drive stage passes a six-package
+build, **793 fast tests, one skip/one integration deselection, 125 integration,
+7 physics and 44 Tk GUI checks**; its exact remote CI is recorded separately.
+See [Drive evidence](docs/status/evidence/turtlebot4-drive-2026-10-05/README.md).
+The former no-flight diagnosis is superseded by actual native PX4 flight;
 historical reports remain available for comparison. These checks do not
 establish all simulator missions, clean-host reproduction or hardware operation. See the
 [workflow](docs/WORKFLOW.md) for the evidence boundary and commands.

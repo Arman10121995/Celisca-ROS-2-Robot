@@ -1,0 +1,68 @@
+{
+  "robot": "asset_turtlebot4_standard",
+  "backend": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": false,
+  "scope": "Actual GUI neutral, forward/reverse/turn/Stop/watchdog; physics body truth, not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 287621,
+  "phases": {
+    "armed_neutral": {
+      "dx": 4.225969314575195e-05,
+      "dy": 1.2129545211791992e-05,
+      "yaw": 0.000976142448796882,
+      "tail_vx": 1.1506356770769835e-07,
+      "tail_wz": 0.0001758901062960127,
+      "z": -0.0038894861936569214,
+      "sim_duration": 1.0
+    },
+    "forward": {
+      "dx": 0.6661604940891266,
+      "dy": 0.00042381882667541504,
+      "yaw": 0.00040675732403852024,
+      "tail_vx": 0.30463409574950573,
+      "tail_wz": 0.000631216753960094,
+      "z": -0.00371551513671875,
+      "sim_duration": 2.5
+    },
+    "forward_stop": {
+      "dx": 0.05205807089805603,
+      "dy": 4.604458808898926e-05,
+      "yaw": 0.0002776624190139928,
+      "tail_vx": -9.279249268129146e-08,
+      "tail_wz": -4.164215150692756e-06,
+      "z": -0.00373975932598114,
+      "sim_duration": 1.4791666660000002
+    },
+    "reverse": {
+      "dx": -0.6655455380678177,
+      "dy": -0.0014227330684661865,
+      "yaw": 0.001133102470897458,
+      "tail_vx": -0.30414319862619976,
+      "tail_wz": -7.282058422213853e-05,
+      "z": -0.0036021918058395386,
+      "sim_duration": 2.5208333330000006
+    },
+    "reverse_stop": {
+      "dx": -0.054188430309295654,
+      "dy": -0.0001214742660522461,
+      "yaw": -0.00036078026230057644,
+      "tail_vx": 2.478287463229922e-07,
+      "tail_wz": 4.789630984136325e-06,
+      "z": -0.0037360861897468567,
+      "sim_duration": 1.4791666670000012
+    },
+    "left_turn": {
+      "dx": -0.01201695203781128,
+      "dy": -0.0022020936012268066,
+      "yaw": 1.6761776981872807,
+      "tail_vx": -5.161665702108322e-05,
+      "tail_wz": 1.17103514764575,
+      "z": -0.0037875473499298096,
+      "sim_duration": 2.5
+    }
+  },
+  "neutral_commands": 0,
+  "launch_returncode": 0
+}

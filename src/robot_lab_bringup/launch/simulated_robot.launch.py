@@ -822,6 +822,17 @@ def _build_simulation_actions(context):
         if rviz_frame:
             rviz_arguments += ["-f", rviz_frame]
 
+        if not robot_free and robot_config.get('drive_in_display'):
+            # Imported mobile descriptions with a measured base controller
+            # also accept the GUI /key_vel in Display. Retain the same input
+            # priorities as normal modes; the actual controller owns timeout.
+            actions.append(Node(
+                package='twist_mux', executable='twist_mux',
+                parameters=[os.path.join(controller_share, 'config', 'twist_mux_topics.yaml'),
+                            {'use_sim_time': _as_bool(use_sim_time, True)}],
+                remappings=[('cmd_vel_out', '/robot_lab_controller/cmd_vel_unstamped')],
+                output='screen'))
+
         if simulator == "gazebo":
             # Gazebo runs for every display selection, like the other
             # backends: a robot without a map is spawned into the empty

@@ -1,0 +1,79 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-21-23-01-238863-molar1-294389
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [twist_mux-1]: process started with pid [294406]
+[INFO] [robot_state_publisher-2]: process started with pid [294408]
+[INFO] [mujoco_spawner-3]: process started with pid [294410]
+[INFO] [rviz2-4]: process started with pid [294412]
+[twist_mux-1] [INFO] [1791228182.212442999] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-1] [INFO] [1791228182.213430984] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-1] [INFO] [1791228182.213709475] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[robot_state_publisher-2] [WARN] [1791228182.229409903] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-2] [INFO] [1791228182.229607532] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1791228182.229677547] [robot_state_publisher]: got segment bump_front_center
+[robot_state_publisher-2] [INFO] [1791228182.229691883] [robot_state_publisher]: got segment bump_front_left
+[robot_state_publisher-2] [INFO] [1791228182.229701770] [robot_state_publisher]: got segment bump_front_right
+[robot_state_publisher-2] [INFO] [1791228182.229709898] [robot_state_publisher]: got segment bump_left
+[robot_state_publisher-2] [INFO] [1791228182.229717578] [robot_state_publisher]: got segment bump_right
+[robot_state_publisher-2] [INFO] [1791228182.229725418] [robot_state_publisher]: got segment bumper
+[robot_state_publisher-2] [INFO] [1791228182.229732970] [robot_state_publisher]: got segment button_1
+[robot_state_publisher-2] [INFO] [1791228182.229740522] [robot_state_publisher]: got segment button_2
+[robot_state_publisher-2] [INFO] [1791228182.229747978] [robot_state_publisher]: got segment button_power
+[robot_state_publisher-2] [INFO] [1791228182.229755626] [robot_state_publisher]: got segment cliff_front_left
+[robot_state_publisher-2] [INFO] [1791228182.229763049] [robot_state_publisher]: got segment cliff_front_right
+[robot_state_publisher-2] [INFO] [1791228182.229770633] [robot_state_publisher]: got segment cliff_side_left
+[robot_state_publisher-2] [INFO] [1791228182.229778089] [robot_state_publisher]: got segment cliff_side_right
+[robot_state_publisher-2] [INFO] [1791228182.229785577] [robot_state_publisher]: got segment front_caster_link
+[robot_state_publisher-2] [INFO] [1791228182.229792873] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1791228182.229800393] [robot_state_publisher]: got segment ir_intensity_front_center_left
+[robot_state_publisher-2] [INFO] [1791228182.229808041] [robot_state_publisher]: got segment ir_intensity_front_center_right
+[robot_state_publisher-2] [INFO] [1791228182.229815401] [robot_state_publisher]: got segment ir_intensity_front_left
+[robot_state_publisher-2] [INFO] [1791228182.229822825] [robot_state_publisher]: got segment ir_intensity_front_right
+[robot_state_publisher-2] [INFO] [1791228182.229830152] [robot_state_publisher]: got segment ir_intensity_left
+[robot_state_publisher-2] [INFO] [1791228182.229837672] [robot_state_publisher]: got segment ir_intensity_right
+[robot_state_publisher-2] [INFO] [1791228182.229845000] [robot_state_publisher]: got segment ir_intensity_side_left
+[robot_state_publisher-2] [INFO] [1791228182.229852360] [robot_state_publisher]: got segment ir_omni
+[robot_state_publisher-2] [INFO] [1791228182.229860008] [robot_state_publisher]: got segment left_wheel
+[robot_state_publisher-2] [INFO] [1791228182.229886344] [robot_state_publisher]: got segment mouse
+[robot_state_publisher-2] [INFO] [1791228182.229896999] [robot_state_publisher]: got segment oakd_camera_bracket
+[robot_state_publisher-2] [INFO] [1791228182.229904999] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-2] [INFO] [1791228182.229912455] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-2] [INFO] [1791228182.229919943] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791228182.229927399] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-2] [INFO] [1791228182.229934759] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-2] [INFO] [1791228182.229942567] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791228182.229951463] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-2] [INFO] [1791228182.229959046] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791228182.229966662] [robot_state_publisher]: got segment right_wheel
+[robot_state_publisher-2] [INFO] [1791228182.229975814] [robot_state_publisher]: got segment rplidar_link
+[robot_state_publisher-2] [INFO] [1791228182.229983526] [robot_state_publisher]: got segment wheel_drop_left
+[robot_state_publisher-2] [INFO] [1791228182.229991270] [robot_state_publisher]: got segment wheel_drop_right
+[rviz2-4] [INFO] [1791228183.177943544] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-4] [INFO] [1791228183.178140053] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[rviz2-4] [INFO] [1791228183.805692989] [rviz2]: Stereo is NOT SUPPORTED
+[mujoco_spawner-3] [INFO] [1791228183.998551806] [mujoco_spawner]: MuJoCo: 7 collision proxy geom(s) moved to group 3 (viewer Rendering tab to show them).
+[mujoco_spawner-3] [WARN] [1791228184.026917668] [mujoco_spawner]: MuJoCo: excluded 2 self-contact pair(s) that interpenetrate at the rest pose: asset_turtlebot4_lite_base/left_wheel, asset_turtlebot4_lite_base/right_wheel
+[mujoco_spawner-3] [INFO] [1791228184.028946532] [mujoco_spawner]: MuJoCo URDF import OK (all meshes staged).
+[mujoco_spawner-3] [INFO] [1791228184.061117102] [mujoco_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz
+[mujoco_spawner-3] [INFO] [1791228184.061903586] [mujoco_spawner]: Joints: ['wheel_drop_left_joint', 'left_wheel_joint', 'wheel_drop_right_joint', 'right_wheel_joint']   lw=left_wheel_joint rw=right_wheel_joint
+[mujoco_spawner-3] [INFO] [1791228184.065364940] [mujoco_spawner]: MuJoCo model loaded: 6 bodies, 5 joints
+[mujoco_spawner-3] [INFO] [1791228184.065950274] [mujoco_spawner]: MuJoCo gui param=False (resolved=False), DISPLAY=:100 -> mode=DIRECT
+[mujoco_spawner-3] [INFO] [1791228184.066470874] [mujoco_spawner]: MuJoCo running headless (gui=False, viewer=True).
+[mujoco_spawner-3] [INFO] [1791228184.069395437] [mujoco_spawner]: MuJoCo spawner running.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[rviz2-4] [INFO] [1791228259.681403248] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791228259.681402704] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-1] [INFO] [1791228259.681413744] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [rviz2-4]: sending signal 'SIGINT' to process[rviz2-4]
+[INFO] [mujoco_spawner-3]: sending signal 'SIGINT' to process[mujoco_spawner-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [twist_mux-1]: sending signal 'SIGINT' to process[twist_mux-1]
+[rviz2-4] [INFO] [1791228259.689027633] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791228259.691065039] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [twist_mux-1]: process has died [pid 294406, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_topics.yaml --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_l4q8rqrv -r cmd_vel_out:=/robot_lab_controller/cmd_vel_unstamped'].
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 294408]
+[INFO] [mujoco_spawner-3]: process has finished cleanly [pid 294410]
+[INFO] [rviz2-4]: process has finished cleanly [pid 294412]
+
+[launch exited with code 0]
+

@@ -6,6 +6,13 @@ on the mounted workspace SSD. `manifest.json` records implementation hashes,
 original resources and raw trace/screenshot hashes. This checkpoint does not
 complete manipulation, TurtleBot 4 missions or the wider platform.
 
+Follow-up: the containing source checkpoint was published as `0ff27e3`.
+Its CI built but failed the tutorial Run-section contract; the actual guide
+instructions repair is retained in [CI evidence](../ci-extensions-2026-10-05/README.md).
+The later [TurtleBot4 Drive checkpoint](../turtlebot4-drive-2026-10-05/README.md)
+supersedes this snapshot's disabled-Drive status with eight measured physical
+GUI screens. The reports/source hashes below retain their original scope.
+
 ## Actual native Panda control
 
 `menagerie_franka_emika_panda` / MuJoCo / `dataset_room2`: the real GUI Run

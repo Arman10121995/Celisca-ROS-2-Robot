@@ -1,5 +1,7 @@
 # Native Panda joint controls
 
+## Run
+
 Select `menagerie_franka_emika_panda`, MuJoCo and Display in Launch. Choose a
 map, then Run. The command includes `arm_control:=panda`. Open the **Arm** tab
 to jog each joint, return Home, cancel a trajectory or Stop Arm. The displayed

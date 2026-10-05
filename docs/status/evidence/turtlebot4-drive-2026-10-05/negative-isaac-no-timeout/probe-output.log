@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/probe_drive_gui.py", line 79, in <module>
+    result=report['phases']['publisher_loss']; assert abs(result['tail_vx'])<.025 and abs(result['tail_wz'])<.05,result
+AssertionError: {'dx': 0.7458612024784088, 'dy': -0.04737675189971924, 'yaw': -0.004756056412812709, 'tail_vx': 0.2994900893769074, 'tail_wz': 0.0005235649047494206, 'z': -0.004314139485359192, 'max_tilt': 0.02107272371450918, 'sim_duration': 2.5}

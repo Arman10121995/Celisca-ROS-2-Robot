@@ -230,6 +230,12 @@ The user additionally requests TurtleBot 4. Standard/Lite and the official
 Create 3 dependencies are installed at pinned Humble revisions. The normal
 Launch selectors/autofill and eight backend Display/state checks are recorded
 in [the latest evidence](status/evidence/panda-turtlebot4-2026-10-05/README.md).
-Follow [the TurtleBot 4 guide](tutorials/turtlebot4.md) for exact joint dimensions,
-source licenses, backend drive/sensor adapters and mission acceptance. Drive
-inputs stay disabled until an actual base controller is connected.
+Both variants now have actual GUI physical Drive/WASD/Stop and publisher-loss
+checks on all four engines in `nav_empty`; see
+[Drive evidence](status/evidence/turtlebot4-drive-2026-10-05/README.md).
+Display uses the lab wheel controller and original passive wheel-drop springs,
+not vendor firmware. Follow [the TurtleBot 4 guide](tutorials/turtlebot4.md) for
+joint dimensions, source licenses, sensor adapters and mission acceptance.
+Next qualify repeated reset, actual lidar/OAK-D frames, calibration and depth,
+then localization/2D/3D mapping and obstacle navigation. These modes remain
+gated; vendor hazard/docking behavior and visual parity remain separate.

@@ -57,7 +57,11 @@ the older roadmap. Existing stabilization fixes must remain working.
   each report names the exact asset, world, backend and source stage.
 - [x] Add official TurtleBot 4 Standard/Lite to normal Launch/autofill and
   measure Display/state/Run/Stop on all four backends in `dataset_room2`.
-  Drive, sensor parity, SLAM/Nav2 and original visual materials remain pending.
+- [x] Connect TurtleBot 4 physical wheel control in Display and measure GUI
+  neutral enable, WASD forward/reverse/turn, Stop and command loss on both
+  variants/all four engines in `nav_empty`. Restore original suspension springs
+  and repair Isaac's differential-drive watchdog and acceleration timing.
+  Sensor parity, reset/obstacle/mapping/Nav2 and original materials remain pending.
 - [x] Add native Panda Arm joint/Home/Stop controls and real MuJoCo position
   trajectories; measure rejection, cancellation and heartbeat loss (R5.7).
 - [x] Repair Trimesh/NumPy CI compatibility; exact `36f38b5` remote CI passes
@@ -102,6 +106,10 @@ the older roadmap. Existing stabilization fixes must remain working.
   runtime checks for the installed Display profiles; integrate remaining
   vendor controller interfaces, then add qualified control modes. All eight
   featured URDFHub models have installed equivalents with actual provenance. Import counts do not qualify joint control, walking or missions.
+- [ ] **R3.6, TurtleBot 4:** Preserve eight physical Drive screens and qualify
+  repeated reset/second-run behavior, actual lidar/OAK-D frames and depth,
+  localization, 2D/3D SLAM and obstacle Nav2 missions before enabling those modes.
+  Vendor hazards/docking and hardware control require separate integration.
 - [ ] **R6.5:** Review generated occupancy origin, mesh scale, height and
   seed; cover disconnected free regions, test rotated geometry and navigation
   alignment, then register validated maps. The new shared heightfield converter

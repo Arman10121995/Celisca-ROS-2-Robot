@@ -100,8 +100,12 @@ R3.6/R6.6 now have 113 installed robot profiles and 17 worlds with exact
 import/autofill and named live Panda display/state evidence. Read
 [the installation checkpoint](status/evidence/extensions-integrated-2026-10-05/README.md).
 Stable pose/texture/backend review, additional fixtures, controllers and robot
-missions remain. Official TurtleBot 4 Standard/Lite have eight named Display/state screens;
-Drive/sensors/missions remain R3.6. Native Panda has actual MuJoCo joint/Home/
+missions remain. Official TurtleBot 4 Standard/Lite have eight named Display/state
+screens and eight actual GUI Drive/WASD/Stop/command-loss screens across all four
+backends. Preserve the original Create 3 suspension and Isaac SDK-time acceleration
+and wall timeout; [Drive evidence](status/evidence/turtlebot4-drive-2026-10-05/README.md)
+retains failed and successful trials. Sensors/reset/obstacle/mapping/navigation
+missions remain R3.6. Native Panda has actual MuJoCo joint/Home/
 Stop/action/cancel/watchdog proof through the Arm tab; R5.7 remains partial
 for MoveIt/Cartesian/grasp/other backends. Read the [latest control/import
 evidence](status/evidence/panda-turtlebot4-2026-10-05/README.md) and new tutorials.

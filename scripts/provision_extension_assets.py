@@ -219,6 +219,76 @@ def native_model(directory):
     return candidates[0]
 
 
+def turtlebot4_drive(derived, name):
+    """Separate control derivative; preserve original geometry and suspension."""
+    root = ET.parse(derived).getroot()
+    wheels = ('left_wheel_joint', 'right_wheel_joint')
+    joints = {joint.get('name'): joint for joint in root.findall('joint')}
+    upstream = ET.parse(derived.parent/'input.urdf').getroot()
+    springs = [block for block in upstream.findall('gazebo')
+               if block.find('springStiffness') is not None]
+    if {block.get('reference') for block in springs} != {
+            'wheel_drop_left_joint', 'wheel_drop_right_joint'}:
+        raise ValueError('Missing original Create3 wheel-drop springs')
+    for spring in springs:
+        root.append(copy.deepcopy(spring))
+    for wheel in wheels:
+        if joints[wheel].get('type') != 'continuous':
+            raise ValueError('Unexpected TurtleBot4 wheel joint: '+wheel)
+        # Original continuous joints omit limits. Match the physics bridges'
+        # 5 Nm motor cap and bound this simulation derivative's joint speed.
+        ET.SubElement(joints[wheel], 'limit', effort='5', velocity='15')
+    drive = dict(type='diff', left_wheel_joint=wheels[0], right_wheel_joint=wheels[1],
+                 wheel_radius=0.03575, wheel_separation=0.233, max_speed=0.3,
+                 max_accel=0.5, max_angular_speed=1.2, max_angular_accel=2.0)
+    params = dict(use_sim_time=True, use_stamped_vel=False, left_wheel_names=[wheels[0]],
+                  right_wheel_names=[wheels[1]], wheel_radius=drive['wheel_radius'],
+                  wheel_separation=drive['wheel_separation'], base_frame_id='base_link',
+                  odom_frame_id='odom', enable_odom_tf=False, open_loop=False,
+                  cmd_vel_timeout=0.5, publish_rate=50.0, publish_limited_velocity=True)
+    for axis, key, speed, accel in (('linear','x','max_speed','max_accel'),
+                                  ('angular','z','max_angular_speed','max_angular_accel')):
+        params[axis] = {key: dict(has_velocity_limits=True, max_velocity=drive[speed],
+                                  has_acceleration_limits=True, max_acceleration=drive[accel])}
+    config = {'controller_manager': {'ros__parameters': {
+        'update_rate': 100, 'use_sim_time': True,
+        'robot_lab_controller': {'type': 'diff_drive_controller/DiffDriveController'},
+        'joint_state_broadcaster': {'type': 'joint_state_broadcaster/JointStateBroadcaster'}}},
+        'joint_state_broadcaster': {'ros__parameters': {'use_sim_time': True}},
+        'robot_lab_controller': {'ros__parameters': params}}
+    config_path = derived.parent/'drive-controllers.yaml'
+    write_yaml(config_path, config)
+    control = ET.SubElement(root, 'ros2_control', name='TurtleBot4System', type='system')
+    hardware = ET.SubElement(control, 'hardware')
+    ET.SubElement(hardware, 'plugin').text = 'ign_ros2_control/IgnitionSystem'
+    for joint in (*wheels, 'wheel_drop_left_joint', 'wheel_drop_right_joint'):
+        element = ET.SubElement(control, 'joint', name=joint)
+        if joint in wheels:
+            command = ET.SubElement(element, 'command_interface', name='velocity')
+            ET.SubElement(command, 'param', name='min').text = '-15'
+            ET.SubElement(command, 'param', name='max').text = '15'
+        for interface in ('position', 'velocity'):
+            ET.SubElement(element, 'state_interface', name=interface)
+    gazebo = ET.SubElement(root, 'gazebo')
+    plugin = ET.SubElement(gazebo, 'plugin', filename='ign_ros2_control-system',
+                           name='ign_ros2_control::IgnitionROS2ControlPlugin')
+    ET.SubElement(plugin, 'parameters').text = str(config_path)
+    truth = ET.SubElement(gazebo, 'plugin', filename='ignition-gazebo-odometry-publisher-system',
+                          name='ignition::gazebo::systems::OdometryPublisher')
+    for key, value in {'odom_frame': 'world', 'robot_base_frame': 'base_link',
+                       'odom_topic': '/model/'+name+'/odometry_truth',
+                       'tf_topic': '/model/'+name+'/truth_pose',
+                       'odom_publish_frequency': '50', 'dimensions': '3'}.items():
+        ET.SubElement(truth, key).text = value
+    for link in ('left_wheel', 'right_wheel', 'front_caster_link'):
+        surface = ET.SubElement(root, 'gazebo', reference=link)
+        for key in ('mu1', 'mu2'):
+            ET.SubElement(surface, key).text = '0.1' if 'caster' in link else '1.0'
+    path = derived.parent/'drive.urdf'
+    ET.ElementTree(root).write(path, encoding='unicode', xml_declaration=True)
+    return path, drive, config_path
+
+
 def robot_class(name):
     if any(value in name for value in ('turtlebot3','turtlebot4','husky')):
         return 'mobile'
@@ -237,7 +307,8 @@ def robot_entity(name, profile, source, entry, evidence):
     return {'id': name, 'version': '1.0.0', 'name': name.replace('_', ' ').title(),
         'status': 'available', 'robot_class': robot_class(name), 'maturity': 'prototype',
         'ros_package': profile['package'], 'supported_simulators': profile['supported_simulators'],
-        'capabilities': ['display', 'joint_control'] if profile.get('arm_control') else ['display'],
+        'capabilities': (['display', 'joint_control'] if profile.get('arm_control') else
+                         ['display', 'control'] if profile.get('drive_in_display') else ['display']),
         'assets': {'urdf': profile['xacro']},
         'source': {'repository': source['repository'], 'revision': source['revision'],
                    'license': source['license_note']},
@@ -356,6 +427,16 @@ def install_robots(store, download, selected_source=None):
                 if profile.get('arm_control') == 'panda':
                     profile['notes'] = ('Native Panda joint/Home/Stop controls in the Arm tab on MuJoCo. '
                                         'Position trajectories use actual actuators. Cartesian planning, grasp and other backends remain pending.')
+                if source['id'] == 'turtlebot4_vendor':
+                    controlled, drive, controllers = turtlebot4_drive(derived, name)
+                    profile.update(xacro=str(controlled), drive=drive, drive_in_display=True,
+                                   features=['velocity_base'],
+                                   controllers=['joint_state_broadcaster', 'robot_lab_controller'])
+                    profile['notes'] = ('Original TurtleBot4/Create3 geometry and suspension with physical wheel '
+                        'control in Display; bounded GUI Drive/WASD uses the lab controller, not vendor firmware. '
+                        'Sensors, SLAM/navigation, hazards/docking and visual-material parity remain pending.')
+                    check.update(drive_urdf=str(controlled), drive_urdf_sha256=digest(controlled),
+                                 drive_controllers_sha256=digest(controllers))
                 check.update(source_id=source['id'], repository=source['repository'], revision=source['revision'], entry=entry,
                              model_sha256=digest(model_path), derived_urdf_sha256=digest(derived),
                              runtime_mission_qualified=False)

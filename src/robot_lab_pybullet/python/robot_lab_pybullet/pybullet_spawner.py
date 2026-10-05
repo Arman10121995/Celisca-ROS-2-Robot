@@ -917,6 +917,16 @@ class PyBulletSpawner(Node):
 
         self.get_logger().info(
             f"Joints: {self._joint_names}  lw={lw} rw={rw}")
+        from robot_lab_utils.urdf_springs import joint_springs
+        self._spring_joints = []
+        for name, spring in joint_springs(urdf).items():
+            index = self._joint_idx.get(name, -1)
+            if index < 0:
+                raise ValueError('Imported passive spring joint missing: '+name)
+            # Apply the complete authored spring law once, not also Bullet's
+            # joint damping. These joints stay passive, not position-held.
+            p.changeDynamics(self._robot_id, index, jointDamping=0.0)
+            self._spring_joints.append((index, spring))
 
         # Start physics thread
         self._thread = threading.Thread(target=self._loop, daemon=True)
@@ -972,6 +982,12 @@ class PyBulletSpawner(Node):
                     if self._drive.kind in ("mecanum", "four_wheel_steer")
                     else {}))
             clamp = 50.0
+            from robot_lab_utils.urdf_springs import spring_force
+            if not getattr(self, '_hold_joints', False):
+                for index, spring in self._spring_joints:
+                    state = p.getJointState(self._robot_id, index)
+                    p.setJointMotorControl2(self._robot_id, index, p.TORQUE_CONTROL,
+                                           force=spring_force(spring, state[0], state[1]))
             if getattr(self, "_hold_joints", False):
                 # Display hold: every non-drive joint servos to its spawn
                 # angle through the physics engine's position motor, within

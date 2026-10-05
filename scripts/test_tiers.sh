@@ -57,6 +57,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_installed_extensions.py"
   "$BRG_TEST/test_occupancy_slice.py"
   "$BRG_TEST/test_arm_trajectory.py"
+  "$BRG_TEST/test_urdf_springs.py"
   "$BRG_TEST/test_drive_kinematics.py"
   "$BRG_TEST/test_driven_assembly_hold.py"
   "$BRG_TEST/test_px4_sitl_model.py"
@@ -69,6 +70,7 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$BRG_TEST/test_isaac_drive_watchdog.py"
   "$BRG_TEST/test_xacro_expansion.py"
   "$BRG_TEST/test_driven_assembly_hold.py::test_the_shipped_mecanum_description_is_covered"
   "$BRG_TEST/test_simulation_clocks.py"

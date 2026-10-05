@@ -313,6 +313,36 @@ def _prepare_camera(cfg, dt, robot, stage):
             "height": height, "far": float(camera_cfg["far"])}
 
 
+def _author_passive_springs(stage, springs):
+    """Preserve source spring forces with native USD drives, not pose writes."""
+    from pxr import Usd, UsdPhysics
+    found = set()
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        if name not in springs or prim.IsInstanceProxy():
+            continue
+        spring = springs[name]
+        linear = spring['type'] == 'prismatic'
+        if not prim.IsA(UsdPhysics.PrismaticJoint if linear else UsdPhysics.RevoluteJoint):
+            raise ValueError('Wrong passive spring joint type: '+name)
+        drive = UsdPhysics.DriveAPI.Apply(prim, 'linear' if linear else 'angular')
+        drive.CreateTypeAttr('force')
+        # USD angular drives use degrees, including their gain denominators;
+        # source URDF spring/damping gains use radians. Slides stay in SI.
+        gain_units = 1.0 if linear else math.pi / 180.0
+        drive.CreateStiffnessAttr(spring['stiffness'] * gain_units)
+        drive.CreateDampingAttr(spring['damping'] * gain_units)
+        drive.CreateTargetPositionAttr(spring['reference'] if linear else math.degrees(spring['reference']))
+        drive.CreateTargetVelocityAttr(0.0)
+        # URDF effort=0 disables an actuator, not the passive spring. USD's
+        # unbounded maxForce allows the authored elastic/damping force.
+        drive.CreateMaxForceAttr(float('inf'))
+        found.add(name)
+    if found != set(springs):
+        raise ValueError('Imported passive spring joints missing: '+str(set(springs)-found))
+    return sorted(found)
+
+
 def _author_wheel_velocity_drives(stage, joint_names,
                                   damping=_WHEEL_DRIVE_DAMPING,
                                   armature=_WHEEL_ARMATURE):
@@ -780,6 +810,9 @@ def _run_stage(app, reader, cfg, state):
     if not robot_free:
         # Author velocity drives on the wheel joints before the world reset, so
         # PhysX parses them with the articulation.
+        spring_joints = _author_passive_springs(stage_obj, cfg.get('joint_springs', {}))
+        if spring_joints:
+            _emit({'event': 'log', 'msg': 'Original passive springs: '+str(spring_joints)})
         driven = _author_wheel_velocity_drives(
             stage_obj, [cfg.get("left_wheel_joint", ""),
                         cfg.get("right_wheel_joint", "")]

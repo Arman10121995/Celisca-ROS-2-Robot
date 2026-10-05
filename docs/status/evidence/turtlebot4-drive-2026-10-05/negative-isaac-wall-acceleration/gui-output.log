@@ -1,0 +1,120 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-20-50-54-766650-molar1-290331
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [twist_mux-1]: process started with pid [290348]
+[INFO] [robot_state_publisher-2]: process started with pid [290350]
+[INFO] [isaac_spawner-3]: process started with pid [290352]
+[INFO] [sensor_bridge-4]: process started with pid [290354]
+[INFO] [rviz2-5]: process started with pid [290356]
+[twist_mux-1] [INFO] [1791226255.728650506] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-1] [INFO] [1791226255.729883614] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-1] [INFO] [1791226255.730287215] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[robot_state_publisher-2] [WARN] [1791226255.734586583] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-2] [INFO] [1791226255.734868557] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1791226255.734953194] [robot_state_publisher]: got segment bump_front_center
+[robot_state_publisher-2] [INFO] [1791226255.734969577] [robot_state_publisher]: got segment bump_front_left
+[robot_state_publisher-2] [INFO] [1791226255.734978985] [robot_state_publisher]: got segment bump_front_right
+[robot_state_publisher-2] [INFO] [1791226255.734988745] [robot_state_publisher]: got segment bump_left
+[robot_state_publisher-2] [INFO] [1791226255.734996296] [robot_state_publisher]: got segment bump_right
+[robot_state_publisher-2] [INFO] [1791226255.735004296] [robot_state_publisher]: got segment bumper
+[robot_state_publisher-2] [INFO] [1791226255.735012680] [robot_state_publisher]: got segment button_1
+[robot_state_publisher-2] [INFO] [1791226255.735020327] [robot_state_publisher]: got segment button_2
+[robot_state_publisher-2] [INFO] [1791226255.735027879] [robot_state_publisher]: got segment button_power
+[robot_state_publisher-2] [INFO] [1791226255.735035655] [robot_state_publisher]: got segment cliff_front_left
+[robot_state_publisher-2] [INFO] [1791226255.735042919] [robot_state_publisher]: got segment cliff_front_right
+[robot_state_publisher-2] [INFO] [1791226255.735050022] [robot_state_publisher]: got segment cliff_side_left
+[robot_state_publisher-2] [INFO] [1791226255.735057286] [robot_state_publisher]: got segment cliff_side_right
+[robot_state_publisher-2] [INFO] [1791226255.735064518] [robot_state_publisher]: got segment front_caster_link
+[robot_state_publisher-2] [INFO] [1791226255.735072006] [robot_state_publisher]: got segment front_left_bottom_weight_block
+[robot_state_publisher-2] [INFO] [1791226255.735080133] [robot_state_publisher]: got segment front_left_top_weight_block
+[robot_state_publisher-2] [INFO] [1791226255.735088869] [robot_state_publisher]: got segment front_left_tower_standoff
+[robot_state_publisher-2] [INFO] [1791226255.735096325] [robot_state_publisher]: got segment front_right_bottom_weight_block
+[robot_state_publisher-2] [INFO] [1791226255.735104453] [robot_state_publisher]: got segment front_right_top_weight_block
+[robot_state_publisher-2] [INFO] [1791226255.735111812] [robot_state_publisher]: got segment front_right_tower_standoff
+[robot_state_publisher-2] [INFO] [1791226255.735119364] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1791226255.735126916] [robot_state_publisher]: got segment ir_intensity_front_center_left
+[robot_state_publisher-2] [INFO] [1791226255.735134691] [robot_state_publisher]: got segment ir_intensity_front_center_right
+[robot_state_publisher-2] [INFO] [1791226255.735142179] [robot_state_publisher]: got segment ir_intensity_front_left
+[robot_state_publisher-2] [INFO] [1791226255.735149667] [robot_state_publisher]: got segment ir_intensity_front_right
+[robot_state_publisher-2] [INFO] [1791226255.735157027] [robot_state_publisher]: got segment ir_intensity_left
+[robot_state_publisher-2] [INFO] [1791226255.735164418] [robot_state_publisher]: got segment ir_intensity_right
+[robot_state_publisher-2] [INFO] [1791226255.735172898] [robot_state_publisher]: got segment ir_intensity_side_left
+[robot_state_publisher-2] [INFO] [1791226255.735182850] [robot_state_publisher]: got segment ir_omni
+[robot_state_publisher-2] [INFO] [1791226255.735190817] [robot_state_publisher]: got segment left_wheel
+[robot_state_publisher-2] [INFO] [1791226255.735198241] [robot_state_publisher]: got segment mouse
+[robot_state_publisher-2] [INFO] [1791226255.735206209] [robot_state_publisher]: got segment oakd_camera_bracket
+[robot_state_publisher-2] [INFO] [1791226255.735214625] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-2] [INFO] [1791226255.735222400] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-2] [INFO] [1791226255.735230016] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791226255.735237600] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-2] [INFO] [1791226255.735245184] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-2] [INFO] [1791226255.735252479] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791226255.735259999] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-2] [INFO] [1791226255.735267743] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791226255.735275582] [robot_state_publisher]: got segment rear_left_tower_standoff
+[robot_state_publisher-2] [INFO] [1791226255.735282814] [robot_state_publisher]: got segment rear_right_tower_standoff
+[robot_state_publisher-2] [INFO] [1791226255.735290046] [robot_state_publisher]: got segment right_wheel
+[robot_state_publisher-2] [INFO] [1791226255.735297982] [robot_state_publisher]: got segment rplidar_link
+[robot_state_publisher-2] [INFO] [1791226255.735383163] [robot_state_publisher]: got segment shell_link
+[robot_state_publisher-2] [INFO] [1791226255.735397946] [robot_state_publisher]: got segment tower_sensor_plate
+[robot_state_publisher-2] [INFO] [1791226255.735405946] [robot_state_publisher]: got segment wheel_drop_left
+[robot_state_publisher-2] [INFO] [1791226255.735413690] [robot_state_publisher]: got segment wheel_drop_right
+[sensor_bridge-4] [WARN] [1791226256.170780672] [isaac_sensor_bridge]: Isaac Sim Python API not available. Sensor bridge running in offline mode.
+[rviz2-5] [INFO] [1791226256.675703975] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-5] [INFO] [1791226256.675866369] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[isaac_spawner-3] [INFO] [1791226257.268623805] [isaac_spawner]: URDF written to /workspace/molar/robot_lab_runtime/tmp/tmpxyfak6mh.urdf
+[isaac_spawner-3] [WARN] [1791226257.278562909] [isaac_spawner]: Robot has no 'laser_link' link; /scan originates 0.12 m above the base, as in the PyBullet and MuJoCo bridges.
+[isaac_spawner-3] [INFO] [1791226257.290361370] [isaac_spawner]: World 'nav_empty.world': 9 static shape(s) for Isaac, 0 skipped
+[isaac_spawner-3] [INFO] [1791226257.291101728] [isaac_spawner]: Launching Isaac runtime: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/python.sh /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_runtime.py (gui=False)
+[isaac_spawner-3] [INFO] [1791226257.292047199] [isaac_spawner]: Isaac runtime LD_PRELOAD: /workspace/molar/installs/IsaacSim-6.0.1/_build/linux-aarch64/release/extsDeprecated/omni.isaac.ml_archive/pip_prebundle/nvidia/nvjitlink/lib/libnvJitLink.so.12 /lib/aarch64-linux-gnu/libgomp.so.1
+[rviz2-5] [INFO] [1791226257.309680269] [rviz2]: Stereo is NOT SUPPORTED
+[isaac_spawner-3] [INFO] [1791226275.501706925] [isaac_spawner]: Isaac runtime: World shapes created: 9 box
+[isaac_spawner-3] [INFO] [1791226275.706468629] [isaac_spawner]: Isaac runtime: Default lighting added: ['/World/robot_lab_lights/dome', '/World/robot_lab_lights/sun']
+[isaac_spawner-3] [INFO] [1791226279.029770810] [isaac_spawner]: Isaac runtime: Wheel velocity drives: ['/World/Physics/left_wheel_joint', '/World/Physics/right_wheel_joint']
+[isaac_spawner-3] [INFO] [1791226280.224813630] [isaac_spawner]: Isaac runtime: Initial articulation pose (array([-0.5, -0.5,  0.1], dtype=float32), array([1., 0., 0., 0.], dtype=float32)); root body base_link; URDF offset [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 0.0]]
+[isaac_spawner-3] [INFO] [1791226280.229269089] [isaac_spawner]: Isaac runtime ready (dofs=['wheel_drop_left_joint', 'wheel_drop_right_joint', 'left_wheel_joint', 'right_wheel_joint'])
+[isaac_spawner-3] [INFO] [1791226280.229941065] [isaac_spawner]: Isaac runtime: Scan: 360 rays every 12 steps from offset [0.0, 0.0, 0.12] of 'base_link' (root body 'base_link'); 41 robot bodies ignored
+[isaac_spawner-3] [INFO] [1791226280.358836364] [isaac_spawner]: Isaac runtime: RGB-D camera /World/Geometry/base_link/shell_link/oakd_camera_bracket/oakd_link/oakd_rgb_camera_frame/robot_lab_rgbd: 320x240 every 12 steps
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-5]: sending signal 'SIGINT' to process[rviz2-5]
+[INFO] [sensor_bridge-4]: sending signal 'SIGINT' to process[sensor_bridge-4]
+[INFO] [isaac_spawner-3]: sending signal 'SIGINT' to process[isaac_spawner-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [twist_mux-1]: sending signal 'SIGINT' to process[twist_mux-1]
+[twist_mux-1] [INFO] [1791226464.584868210] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [twist_mux-1]: process has died [pid 290348, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_topics.yaml --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_841r6fy4 -r cmd_vel_out:=/robot_lab_controller/cmd_vel_unstamped'].
+[robot_state_publisher-2] [INFO] [1791226464.584873682] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-5] [INFO] [1791226464.585354401] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-5] [INFO] [1791226464.590136064] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[sensor_bridge-4] Traceback (most recent call last):
+[sensor_bridge-4]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/robot_lab_isaac/sensor_bridge", line 33, in <module>
+[sensor_bridge-4]     sys.exit(load_entry_point('robot_lab_isaac==0.1.0', 'console_scripts', 'sensor_bridge')())
+[sensor_bridge-4]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/sensor_bridge.py", line 39, in main
+[sensor_bridge-4]     node.destroy_node()
+[sensor_bridge-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1691, in destroy_node
+[sensor_bridge-4]     self.destroy_service(self._services[0])
+[sensor_bridge-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1615, in destroy_service
+[robot_state_publisher-2] [INFO] [1791226464.592370965] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[sensor_bridge-4]     service.destroy()
+[sensor_bridge-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/service.py", line 93, in destroy
+[sensor_bridge-4]     self.__service.destroy_when_not_in_use()
+[sensor_bridge-4] KeyboardInterrupt
+[isaac_spawner-3] Traceback (most recent call last):
+[isaac_spawner-3]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/robot_lab_isaac/isaac_spawner", line 33, in <module>
+[isaac_spawner-3]     sys.exit(load_entry_point('robot_lab_isaac==0.1.0', 'console_scripts', 'isaac_spawner')())
+[isaac_spawner-3]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_spawner.py", line 969, in main
+[isaac_spawner-3]     node.shutdown()
+[isaac_spawner-3]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_spawner.py", line 936, in shutdown
+[isaac_spawner-3]     outcome = _terminate_runtime(proc)
+[isaac_spawner-3]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_spawner.py", line 190, in _terminate_runtime
+[isaac_spawner-3]     if wait_for_group(graceful_timeout):
+[isaac_spawner-3]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/python3.10/site-packages/robot_lab_isaac/isaac_spawner.py", line 183, in wait_for_group
+[isaac_spawner-3]     time.sleep(0.05)
+[isaac_spawner-3] KeyboardInterrupt
+[ERROR] [isaac_spawner-3]: process has died [pid 290352, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/robot_lab_isaac/isaac_spawner --ros-args -r __node:=isaac_spawner --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_vtssuxul'].
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 290350]
+[ERROR] [sensor_bridge-4]: process has died [pid 290354, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_isaac/lib/robot_lab_isaac/sensor_bridge --ros-args -r __node:=isaac_sensor_bridge --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_10rrhro8'].
+[INFO] [rviz2-5]: process has finished cleanly [pid 290356]
+
+[launch exited with code 0]
+

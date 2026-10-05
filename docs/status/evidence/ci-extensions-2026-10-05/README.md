@@ -19,3 +19,10 @@ full build, 770 fast checks/four skips/one deselection, seven physics checks,
 the actual job/step results. Later control/TurtleBot4 changes require their
 own exact-revision CI result; this repair does not qualify robot missions.
 Full failed Actions logs remain on the SSD; manifest hashes identify them.
+
+The later exact `0ff27e3` run [37356064721](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37356064721)
+built successfully but failed fast checks because the new TurtleBot4 tutorial
+lacked the repository-required `## Run` section (782 fast checks passed).
+Both new guides now have their actual run sections; all eight unchanged
+tutorial checks pass. The failure/job report is preserved. The containing
+drive/control revision requires its own complete CI observation.

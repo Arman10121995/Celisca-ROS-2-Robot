@@ -1,0 +1,122 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-21-21-53-055497-molar1-294206
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [twist_mux-1]: process started with pid [294223]
+[INFO] [robot_state_publisher-2]: process started with pid [294225]
+[INFO] [pybullet_spawner-3]: process started with pid [294227]
+[INFO] [rviz2-4]: process started with pid [294229]
+[twist_mux-1] [INFO] [1791228114.012121849] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-1] [INFO] [1791228114.014067037] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-1] [INFO] [1791228114.015021583] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[robot_state_publisher-2] [WARN] [1791228114.021201078] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-2] [INFO] [1791228114.021398707] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1791228114.021467890] [robot_state_publisher]: got segment bump_front_center
+[robot_state_publisher-2] [INFO] [1791228114.021483122] [robot_state_publisher]: got segment bump_front_left
+[robot_state_publisher-2] [INFO] [1791228114.021493010] [robot_state_publisher]: got segment bump_front_right
+[robot_state_publisher-2] [INFO] [1791228114.021501586] [robot_state_publisher]: got segment bump_left
+[robot_state_publisher-2] [INFO] [1791228114.021509234] [robot_state_publisher]: got segment bump_right
+[robot_state_publisher-2] [INFO] [1791228114.021516722] [robot_state_publisher]: got segment bumper
+[robot_state_publisher-2] [INFO] [1791228114.021524146] [robot_state_publisher]: got segment button_1
+[robot_state_publisher-2] [INFO] [1791228114.021554193] [robot_state_publisher]: got segment button_2
+[robot_state_publisher-2] [INFO] [1791228114.021565713] [robot_state_publisher]: got segment button_power
+[robot_state_publisher-2] [INFO] [1791228114.021573969] [robot_state_publisher]: got segment cliff_front_left
+[robot_state_publisher-2] [INFO] [1791228114.021581649] [robot_state_publisher]: got segment cliff_front_right
+[robot_state_publisher-2] [INFO] [1791228114.021589137] [robot_state_publisher]: got segment cliff_side_left
+[robot_state_publisher-2] [INFO] [1791228114.021596721] [robot_state_publisher]: got segment cliff_side_right
+[robot_state_publisher-2] [INFO] [1791228114.021604016] [robot_state_publisher]: got segment front_caster_link
+[robot_state_publisher-2] [INFO] [1791228114.021611344] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1791228114.021619152] [robot_state_publisher]: got segment ir_intensity_front_center_left
+[robot_state_publisher-2] [INFO] [1791228114.021627152] [robot_state_publisher]: got segment ir_intensity_front_center_right
+[robot_state_publisher-2] [INFO] [1791228114.021634768] [robot_state_publisher]: got segment ir_intensity_front_left
+[robot_state_publisher-2] [INFO] [1791228114.021642448] [robot_state_publisher]: got segment ir_intensity_front_right
+[robot_state_publisher-2] [INFO] [1791228114.021650032] [robot_state_publisher]: got segment ir_intensity_left
+[robot_state_publisher-2] [INFO] [1791228114.021657392] [robot_state_publisher]: got segment ir_intensity_right
+[robot_state_publisher-2] [INFO] [1791228114.021664784] [robot_state_publisher]: got segment ir_intensity_side_left
+[robot_state_publisher-2] [INFO] [1791228114.021672495] [robot_state_publisher]: got segment ir_omni
+[robot_state_publisher-2] [INFO] [1791228114.021680175] [robot_state_publisher]: got segment left_wheel
+[robot_state_publisher-2] [INFO] [1791228114.021687599] [robot_state_publisher]: got segment mouse
+[robot_state_publisher-2] [INFO] [1791228114.021695023] [robot_state_publisher]: got segment oakd_camera_bracket
+[robot_state_publisher-2] [INFO] [1791228114.021702639] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-2] [INFO] [1791228114.021710159] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-2] [INFO] [1791228114.021717711] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791228114.021725615] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-2] [INFO] [1791228114.021733263] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-2] [INFO] [1791228114.021741134] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791228114.021749646] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-2] [INFO] [1791228114.021757422] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-2] [INFO] [1791228114.021764718] [robot_state_publisher]: got segment right_wheel
+[robot_state_publisher-2] [INFO] [1791228114.021772110] [robot_state_publisher]: got segment rplidar_link
+[robot_state_publisher-2] [INFO] [1791228114.021779502] [robot_state_publisher]: got segment wheel_drop_left
+[robot_state_publisher-2] [INFO] [1791228114.021786862] [robot_state_publisher]: got segment wheel_drop_right
+[pybullet_spawner-3] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-3] [INFO] [1791228114.616798571] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-3] [INFO] [1791228114.622355419] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-3] [INFO] [1791228114.636393553] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-3] [INFO] [1791228114.638676048] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-3] [INFO] [1791228114.661851074] [pybullet_spawner]: Created /robot_lab/reset service
+[rviz2-4] [INFO] [1791228114.949801418] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-4] [INFO] [1791228114.949949608] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[pybullet_spawner-3] [INFO] [1791228115.362254889] [pybullet_spawner]: URDF written to /workspace/molar/robot_lab_runtime/tmp/tmpzddvsj1b.urdf
+[pybullet_spawner-3] [INFO] [1791228115.363310234] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:100 -> mode=DIRECT
+[pybullet_spawner-3] [INFO] [1791228115.364083279] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-3] [INFO] [1791228115.375138447] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-3] [INFO] [1791228115.376269695] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-3] [INFO] [1791228115.397400878] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-3] b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_front_centerb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_front_leftb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_front_rightb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_leftb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_rightb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] button_1b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] button_2b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] [INFO] [1791228115.473619170] [pybullet_spawner]: Loaded robot id=10 (38 joints)
+[pybullet_spawner-3] [INFO] [1791228115.474926095] [pybullet_spawner]: Joint damping capped for stability on 2 joint(s): wheel_drop_left_joint, wheel_drop_right_joint
+[pybullet_spawner-3] [INFO] [1791228115.475466791] [pybullet_spawner]: Friction from the description's <gazebo> blocks: front_caster_link=0.1, left_wheel=1, right_wheel=1
+[pybullet_spawner-3] [INFO] [1791228115.478031106] [pybullet_spawner]: RGB-D camera on 'oakd_rgb_camera_frame': 320x240 at 5.0 Hz (software renderer)
+[pybullet_spawner-3] button_powerb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_front_centerb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_front_leftb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_front_rightb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_leftb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] bump_rightb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] button_1b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] button_2b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frameb3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-3] [INFO] [1791228115.552268146] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-3] [INFO] [1791228115.556256473] [pybullet_spawner]: Joints: ['wheel_drop_left_joint', 'left_wheel_joint', 'wheel_drop_right_joint', 'right_wheel_joint']  lw=left_wheel_joint rw=right_wheel_joint
+[rviz2-4] [INFO] [1791228115.586946046] [rviz2]: Stereo is NOT SUPPORTED
+[pybullet_spawner-3] [INFO] [1791228115.758718030] [pybullet_spawner]: PyBullet spawner running
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-4]: sending signal 'SIGINT' to process[rviz2-4]
+[INFO] [pybullet_spawner-3]: sending signal 'SIGINT' to process[pybullet_spawner-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [twist_mux-1]: sending signal 'SIGINT' to process[twist_mux-1]
+[rviz2-4] [INFO] [1791228171.126910772] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-1] [INFO] [1791228171.126910964] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791228171.126922675] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-4] [INFO] [1791228171.132137219] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791228171.134138244] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [twist_mux-1]: process has died [pid 294223, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_topics.yaml --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_r873utm6 -r cmd_vel_out:=/robot_lab_controller/cmd_vel_unstamped'].
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 294225]
+[INFO] [pybullet_spawner-3]: process has finished cleanly [pid 294227]
+[pybullet_spawner-3] button_power
+[INFO] [rviz2-4]: process has finished cleanly [pid 294229]
+
+[launch exited with code 0]
+

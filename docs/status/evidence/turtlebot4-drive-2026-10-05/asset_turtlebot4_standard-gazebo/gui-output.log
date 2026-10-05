@@ -1,0 +1,269 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-21-21-06-882096-molar1-293862
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [twist_mux-1]: process started with pid [293879]
+[INFO] [rviz2-2]: process started with pid [293881]
+[INFO] [robot_state_publisher-3]: process started with pid [293883]
+[INFO] [ign gazebo-4]: process started with pid [293885]
+[INFO] [parameter_bridge-5]: process started with pid [293887]
+[INFO] [gazebo_reset_bridge.py-6]: process started with pid [293890]
+[INFO] [parameter_bridge-7]: process started with pid [293892]
+[INFO] [gz_pointcloud_to_optical.py-8]: process started with pid [293894]
+[INFO] [spawner-9]: process started with pid [293896]
+[INFO] [spawner-10]: process started with pid [293898]
+[twist_mux-1] [INFO] [1791228068.784494574] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-1] [INFO] [1791228068.789751174] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[robot_state_publisher-3] [WARN] [1791228068.792752510] [kdl_parser]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-3] [INFO] [1791228068.792987771] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-3] [INFO] [1791228068.793072313] [robot_state_publisher]: got segment bump_front_center
+[robot_state_publisher-3] [INFO] [1791228068.793087801] [robot_state_publisher]: got segment bump_front_left
+[robot_state_publisher-3] [INFO] [1791228068.793096825] [robot_state_publisher]: got segment bump_front_right
+[robot_state_publisher-3] [INFO] [1791228068.793104569] [robot_state_publisher]: got segment bump_left
+[robot_state_publisher-3] [INFO] [1791228068.793111801] [robot_state_publisher]: got segment bump_right
+[robot_state_publisher-3] [INFO] [1791228068.793118905] [robot_state_publisher]: got segment bumper
+[robot_state_publisher-3] [INFO] [1791228068.793126073] [robot_state_publisher]: got segment button_1
+[robot_state_publisher-3] [INFO] [1791228068.793133049] [robot_state_publisher]: got segment button_2
+[robot_state_publisher-3] [INFO] [1791228068.793140217] [robot_state_publisher]: got segment button_power
+[robot_state_publisher-3] [INFO] [1791228068.793147928] [robot_state_publisher]: got segment cliff_front_left
+[robot_state_publisher-3] [INFO] [1791228068.793155192] [robot_state_publisher]: got segment cliff_front_right
+[robot_state_publisher-3] [INFO] [1791228068.793162136] [robot_state_publisher]: got segment cliff_side_left
+[robot_state_publisher-3] [INFO] [1791228068.793169432] [robot_state_publisher]: got segment cliff_side_right
+[robot_state_publisher-3] [INFO] [1791228068.793176344] [robot_state_publisher]: got segment front_caster_link
+[robot_state_publisher-3] [INFO] [1791228068.793183480] [robot_state_publisher]: got segment front_left_bottom_weight_block
+[robot_state_publisher-3] [INFO] [1791228068.793191096] [robot_state_publisher]: got segment front_left_top_weight_block
+[robot_state_publisher-3] [INFO] [1791228068.793198616] [robot_state_publisher]: got segment front_left_tower_standoff
+[robot_state_publisher-3] [INFO] [1791228068.793205976] [robot_state_publisher]: got segment front_right_bottom_weight_block
+[robot_state_publisher-3] [INFO] [1791228068.793213176] [robot_state_publisher]: got segment front_right_top_weight_block
+[robot_state_publisher-3] [INFO] [1791228068.793220279] [robot_state_publisher]: got segment front_right_tower_standoff
+[robot_state_publisher-3] [INFO] [1791228068.793227735] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-3] [INFO] [1791228068.793234999] [robot_state_publisher]: got segment ir_intensity_front_center_left
+[robot_state_publisher-3] [INFO] [1791228068.793242167] [robot_state_publisher]: got segment ir_intensity_front_center_right
+[robot_state_publisher-3] [INFO] [1791228068.793249559] [robot_state_publisher]: got segment ir_intensity_front_left
+[robot_state_publisher-3] [INFO] [1791228068.793256951] [robot_state_publisher]: got segment ir_intensity_front_right
+[robot_state_publisher-3] [INFO] [1791228068.793264151] [robot_state_publisher]: got segment ir_intensity_left
+[robot_state_publisher-3] [INFO] [1791228068.793271479] [robot_state_publisher]: got segment ir_intensity_right
+[robot_state_publisher-3] [INFO] [1791228068.793278839] [robot_state_publisher]: got segment ir_intensity_side_left
+[robot_state_publisher-3] [INFO] [1791228068.793286199] [robot_state_publisher]: got segment ir_omni
+[robot_state_publisher-3] [INFO] [1791228068.793293654] [robot_state_publisher]: got segment left_wheel
+[robot_state_publisher-3] [INFO] [1791228068.793300886] [robot_state_publisher]: got segment mouse
+[robot_state_publisher-3] [INFO] [1791228068.793308214] [robot_state_publisher]: got segment oakd_camera_bracket
+[robot_state_publisher-3] [INFO] [1791228068.793316214] [robot_state_publisher]: got segment oakd_imu_frame
+[robot_state_publisher-3] [INFO] [1791228068.793323606] [robot_state_publisher]: got segment oakd_left_camera_frame
+[robot_state_publisher-3] [INFO] [1791228068.793330774] [robot_state_publisher]: got segment oakd_left_camera_optical_frame
+[robot_state_publisher-3] [INFO] [1791228068.793338102] [robot_state_publisher]: got segment oakd_link
+[robot_state_publisher-3] [INFO] [1791228068.793345270] [robot_state_publisher]: got segment oakd_rgb_camera_frame
+[robot_state_publisher-3] [INFO] [1791228068.793352726] [robot_state_publisher]: got segment oakd_rgb_camera_optical_frame
+[robot_state_publisher-3] [INFO] [1791228068.793359990] [robot_state_publisher]: got segment oakd_right_camera_frame
+[robot_state_publisher-3] [INFO] [1791228068.793367317] [robot_state_publisher]: got segment oakd_right_camera_optical_frame
+[robot_state_publisher-3] [INFO] [1791228068.793374517] [robot_state_publisher]: got segment rear_left_tower_standoff
+[robot_state_publisher-3] [INFO] [1791228068.793381557] [robot_state_publisher]: got segment rear_right_tower_standoff
+[robot_state_publisher-3] [INFO] [1791228068.793388757] [robot_state_publisher]: got segment right_wheel
+[robot_state_publisher-3] [INFO] [1791228068.793395733] [robot_state_publisher]: got segment rplidar_link
+[robot_state_publisher-3] [INFO] [1791228068.793474292] [robot_state_publisher]: got segment shell_link
+[robot_state_publisher-3] [INFO] [1791228068.793489428] [robot_state_publisher]: got segment tower_sensor_plate
+[robot_state_publisher-3] [INFO] [1791228068.793497204] [robot_state_publisher]: got segment wheel_drop_left
+[robot_state_publisher-3] [INFO] [1791228068.793506548] [robot_state_publisher]: got segment wheel_drop_right
+[twist_mux-1] [INFO] [1791228068.799216518] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mIgnition Gazebo Server v[0m[1;32m6.18.0[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world[0m[1;32m].[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32m3[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mNo systems loaded from SDF, loading defaults[0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [ServerConfig.cc:1043] [0m[1;36mLoaded ([0m[1;36m3[0m[1;36m) plugins from file [0m[1;36m[[0m[1;36m/home/molar1/.ignition/gazebo/6/server.config[0m[1;36m][0m
+[ign gazebo-4] [1;36m[Dbg] [Physics.cc:804] [0m[1;36mLoaded [[0m[1;36mignition::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/usr/lib/aarch64-linux-gnu/ign-physics-5/engine-plugins/libignition-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mCreate service on [[0m[1;32m/world/nav_empty/create[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mRemove service on [[0m[1;32m/world/nav_empty/remove[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/nav_empty/set_pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPose service on [[0m[1;32m/world/nav_empty/set_pose_vector[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mLight configuration service on [[0m[1;32m/world/nav_empty/light_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPhysics service on [[0m[1;32m/world/nav_empty/set_physics[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mSphericalCoordinates service on [[0m[1;32m/world/nav_empty/set_spherical_coordinates[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mEnable collision service on [[0m[1;32m/world/nav_empty/enable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mDisable collision service on [[0m[1;32m/world/nav_empty/disable_collision[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/nav_empty/visual_config[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mMaterial service on [[0m[1;32m/world/nav_empty/wheel_slip[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/nav_empty[0m[1;32m/control], [[0m[1;32m/world/nav_empty[0m[1;32m/control/state] and [[0m[1;32m/world/nav_empty[0m[1;32m/playback/control][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mnav_empty[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[spawner-9] [INFO] [1791228069.356711873] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[spawner-10] [INFO] [1791228069.429870465] [spawner_robot_lab_controller]: waiting for service /controller_manager/list_controllers to become available...
+[gazebo_reset_bridge.py-6] [INFO] [1791228069.516443787] [gazebo_reset_bridge]: Gazebo reset bridge ready for world 'nav_empty'
+[rviz2-2] [INFO] [1791228069.819769369] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1791228069.819926487] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[parameter_bridge-7] [INFO] [1791228069.895945648] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/asset_turtlebot4_standard/odometry_truth (gz.msgs.Odometry) -> /odom/ground_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.901863999] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.904833751] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> /imu/out (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.909301690] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.912252658] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/asset_turtlebot4_standard/link/oakd_rgb_camera_frame/sensor/rgbd_camera/image (gz.msgs.Image) -> /oakd/rgb/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.915370376] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/asset_turtlebot4_standard/link/oakd_rgb_camera_frame/sensor/rgbd_camera/camera_info (gz.msgs.CameraInfo) -> /oakd/rgb/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.918329152] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/asset_turtlebot4_standard/link/oakd_rgb_camera_frame/sensor/rgbd_camera/depth_image (gz.msgs.Image) -> /oakd/depth/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-7] [INFO] [1791228069.920973276] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/nav_empty/model/asset_turtlebot4_standard/link/oakd_rgb_camera_frame/sensor/rgbd_camera/points (gz.msgs.PointCloudPacked) -> /oakd/points_gz (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[INFO] [create-11]: process started with pid [294077]
+[create-11] [INFO] [1791228070.330109065] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[rviz2-2] [INFO] [1791228070.459583466] [rviz2]: Stereo is NOT SUPPORTED
+[create-11] [INFO] [1791228070.549036587] [ros_gz_sim]: Requested creation of entity.
+[create-11] [INFO] [1791228070.549137194] [ros_gz_sim]: OK creation of entity.
+[INFO] [create-11]: process has finished cleanly [pid 294077]
+[ign gazebo-4] [INFO] [1791228071.195029793] [GazeboSimROS2ControlPlugin]: robot_param_node is robot_state_publisher
+[ign gazebo-4] [INFO] [1791228071.195096000] [GazeboSimROS2ControlPlugin]: robot_param_node is robot_description
+[ign gazebo-4] [INFO] [1791228071.221724854] [gz_ros2_control]: connected to service!! robot_state_publisher asking for robot_description
+[ign gazebo-4] [INFO] [1791228071.222738856] [gz_ros2_control]: Received URDF from param server
+[ign gazebo-4] [INFO] [1791228071.236706762] [gz_ros2_control]: The position_proportional_gain has been set to: 0.1
+[ign gazebo-4] [INFO] [1791228071.236835240] [gz_ros2_control]: Loading joint: left_wheel_joint
+[ign gazebo-4] [INFO] [1791228071.236865544] [gz_ros2_control]: 	State:
+[ign gazebo-4] [INFO] [1791228071.236880904] [gz_ros2_control]: 		 position
+[ign gazebo-4] [INFO] [1791228071.236893543] [gz_ros2_control]: 		 velocity
+[ign gazebo-4] [INFO] [1791228071.236903975] [gz_ros2_control]: 	Command:
+[ign gazebo-4] [INFO] [1791228071.236913959] [gz_ros2_control]: 		 velocity
+[ign gazebo-4] [INFO] [1791228071.236943623] [gz_ros2_control]: Loading joint: right_wheel_joint
+[ign gazebo-4] [INFO] [1791228071.236958567] [gz_ros2_control]: 	State:
+[ign gazebo-4] [INFO] [1791228071.236969062] [gz_ros2_control]: 		 position
+[ign gazebo-4] [INFO] [1791228071.236978566] [gz_ros2_control]: 		 velocity
+[ign gazebo-4] [INFO] [1791228071.236987654] [gz_ros2_control]: 	Command:
+[ign gazebo-4] [INFO] [1791228071.236996582] [gz_ros2_control]: 		 velocity
+[ign gazebo-4] [INFO] [1791228071.237016070] [gz_ros2_control]: Loading joint: wheel_drop_left_joint
+[ign gazebo-4] [INFO] [1791228071.237028102] [gz_ros2_control]: 	State:
+[ign gazebo-4] [INFO] [1791228071.237037318] [gz_ros2_control]: 		 position
+[ign gazebo-4] [INFO] [1791228071.237046341] [gz_ros2_control]: 		 velocity
+[ign gazebo-4] [INFO] [1791228071.237055013] [gz_ros2_control]: 	Command:
+[ign gazebo-4] [INFO] [1791228071.237070213] [gz_ros2_control]: Loading joint: wheel_drop_right_joint
+[ign gazebo-4] [INFO] [1791228071.237081669] [gz_ros2_control]: 	State:
+[ign gazebo-4] [INFO] [1791228071.237090533] [gz_ros2_control]: 		 position
+[ign gazebo-4] [INFO] [1791228071.237099301] [gz_ros2_control]: 		 velocity
+[ign gazebo-4] [INFO] [1791228071.237107813] [gz_ros2_control]: 	Command:
+[ign gazebo-4] [INFO] [1791228071.237255939] [resource_manager]: Initialize hardware 'TurtleBot4System' 
+[ign gazebo-4] [WARN] [1791228071.237310370] [gz_ros2_control]: The ign_ros2_control plugin got renamed to gz_ros2_control.
+[ign gazebo-4] Update the <ros2_control> tag and gazebo plugin to
+[ign gazebo-4] <hardware>
+[ign gazebo-4]   <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+[ign gazebo-4] </hardware>
+[ign gazebo-4] <gazebo>
+[ign gazebo-4]   <plugin filename="gz_ros2_control-system"name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+[ign gazebo-4]     ...
+[ign gazebo-4]   </plugin>
+[ign gazebo-4] </gazebo>
+[ign gazebo-4] [INFO] [1791228071.237598622] [resource_manager]: Successful initialization of hardware 'TurtleBot4System'
+[ign gazebo-4] [INFO] [1791228071.237685117] [resource_manager]: 'configure' hardware 'TurtleBot4System' 
+[ign gazebo-4] [INFO] [1791228071.237696957] [gz_ros2_control]: System Successfully configured!
+[ign gazebo-4] [INFO] [1791228071.237722684] [resource_manager]: Successful 'configure' of hardware 'TurtleBot4System'
+[ign gazebo-4] [INFO] [1791228071.237733180] [resource_manager]: 'activate' hardware 'TurtleBot4System' 
+[ign gazebo-4] [INFO] [1791228071.237745628] [resource_manager]: Successful 'activate' of hardware 'TurtleBot4System'
+[ign gazebo-4] [INFO] [1791228071.237755804] [gz_ros2_control]: Loading controller_manager
+[ign gazebo-4] [INFO] [1791228071.364410529] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawner-9] [INFO] [1791228071.392112680] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[ign gazebo-4] [INFO] [1791228071.394365417] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[ign gazebo-4] [INFO] [1791228071.394644422] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ign gazebo-4] [WARN] [1791228071.424074933] [gz_ros2_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.002 s).
+[spawner-9] [INFO] [1791228071.441051694] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[ign gazebo-4] [INFO] [1791228071.442523258] [controller_manager]: Loading controller 'robot_lab_controller'
+[spawner-10] [INFO] [1791228071.471837612] [spawner_robot_lab_controller]: [94mLoaded [1mrobot_lab_controller[0m
+[ign gazebo-4] [INFO] [1791228071.473446966] [controller_manager]: Configuring controller 'robot_lab_controller'
+[spawner-10] [INFO] [1791228071.501202460] [spawner_robot_lab_controller]: [92mConfigured and activated [1mrobot_lab_controller[0m
+[INFO] [spawner-10]: process has finished cleanly [pid 293898]
+[INFO] [spawner-9]: process has finished cleanly [pid 293896]
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m2[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mign_ros2_control::IgnitionROS2ControlPlugin[0m[1;36m] for entity [[0m[1;36m42[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry on [[0m[1;32m/model/asset_turtlebot4_standard/odometry_truth[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry with covariance on [[0m[1;32m/model/asset_turtlebot4_standard/odometry_with_covariance[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing Pose_V (TF) on [[0m[1;32m/model/asset_turtlebot4_standard/truth_pose[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [SystemManager.cc:73] [0m[1;36mLoaded system [[0m[1;36mignition::gazebo::systems::OdometryPublisher[0m[1;36m] for entity [[0m[1;36m42[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [UserCommands.cc:1303] [0m[1;36mCreated entity [[0m[1;36m42[0m[1;36m] named [[0m[1;36masset_turtlebot4_standard[0m[1;36m][0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationFeatures.cc:71] [0m[1;36mSimulation timestep set to: [0m[1;36m0.002[0m[1;36m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/nav_empty/scene/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/nav_empty/scene/deletion[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/nav_empty/state[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/nav_empty[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:501] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m4[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:512] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [gz_pointcloud_to_optical.py-8]: sending signal 'SIGINT' to process[gz_pointcloud_to_optical.py-8]
+[INFO] [parameter_bridge-7]: sending signal 'SIGINT' to process[parameter_bridge-7]
+[INFO] [parameter_bridge-7]: process has finished cleanly [pid 293892]
+[INFO] [gazebo_reset_bridge.py-6]: sending signal 'SIGINT' to process[gazebo_reset_bridge.py-6]
+[INFO] [parameter_bridge-5]: sending signal 'SIGINT' to process[parameter_bridge-5]
+[INFO] [ign gazebo-4]: sending signal 'SIGINT' to process[ign gazebo-4]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [rviz2-2]: sending signal 'SIGINT' to process[rviz2-2]
+[INFO] [twist_mux-1]: sending signal 'SIGINT' to process[twist_mux-1]
+[parameter_bridge-7] [INFO] [1791228102.916679150] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-2] [INFO] [1791228102.916695342] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [twist_mux-1]: process has died [pid 293879, exit code -2, cmd '/opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_controller/share/robot_lab_controller/config/twist_mux_topics.yaml --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_jx6d0f33 -r cmd_vel_out:=/robot_lab_controller/cmd_vel_unstamped'].
+[robot_state_publisher-3] [INFO] [1791228102.916712653] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-1] [INFO] [1791228102.916746381] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-5] [INFO] [1791228102.916744077] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ign gazebo-4] [INFO] [1791228102.917332869] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ign gazebo-4] [INFO] [1791228102.917500034] [controller_manager]: Shutdown request received....
+[ign gazebo-4] [INFO] [1791228102.917618337] [controller_manager]: Shutting down all controllers in the controller manager.
+[ign gazebo-4] [INFO] [1791228102.917662368] [controller_manager]: Deactivating controller 'joint_state_broadcaster'
+[ign gazebo-4] [INFO] [1791228102.917726399] [controller_manager]: Shutting down controller 'joint_state_broadcaster'
+[ign gazebo-4] [INFO] [1791228102.917783710] [controller_manager]: Deactivating controller 'robot_lab_controller'
+[ign gazebo-4] [INFO] [1791228102.917837917] [controller_manager]: Shutting down controller 'robot_lab_controller'
+[ign gazebo-4] [INFO] [1791228102.917888477] [resource_manager]: 'deactivate' hardware 'TurtleBot4System' 
+[ign gazebo-4] [INFO] [1791228102.917916092] [resource_manager]: Successful 'deactivate' of hardware 'TurtleBot4System'
+[ign gazebo-4] [INFO] [1791228102.917922140] [resource_manager]: 'shutdown' hardware 'TurtleBot4System' 
+[ign gazebo-4] [INFO] [1791228102.917927836] [resource_manager]: Successful 'shutdown' of hardware 'TurtleBot4System'
+[ign gazebo-4] [INFO] [1791228102.917932860] [controller_manager]: Shutting down the controller manager.
+[parameter_bridge-5] [INFO] [1791228102.932776201] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-3] [INFO] [1791228102.936462293] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-2] [INFO] [1791228102.937975904] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gz_pointcloud_to_optical.py-8] Traceback (most recent call last):
+[gz_pointcloud_to_optical.py-8]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gz_pointcloud_to_optical.py", line 120, in <module>
+[gz_pointcloud_to_optical.py-8]     main()
+[gz_pointcloud_to_optical.py-8]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gz_pointcloud_to_optical.py", line 114, in main
+[gz_pointcloud_to_optical.py-8]     node.destroy_node()
+[gz_pointcloud_to_optical.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1687, in destroy_node
+[gz_pointcloud_to_optical.py-8]     self.destroy_subscription(self._subscriptions[0])
+[gz_pointcloud_to_optical.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1583, in destroy_subscription
+[gz_pointcloud_to_optical.py-8]     subscription.destroy()
+[gz_pointcloud_to_optical.py-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/subscription.py", line 80, in destroy
+[gz_pointcloud_to_optical.py-8]     self.handle.destroy_when_not_in_use()
+[gz_pointcloud_to_optical.py-8] KeyboardInterrupt
+[gazebo_reset_bridge.py-6] Traceback (most recent call last):
+[gazebo_reset_bridge.py-6]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gazebo_reset_bridge.py", line 150, in <module>
+[gazebo_reset_bridge.py-6]     main()
+[gazebo_reset_bridge.py-6]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gazebo_reset_bridge.py", line 144, in main
+[gazebo_reset_bridge.py-6]     node.destroy_node()
+[gazebo_reset_bridge.py-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1687, in destroy_node
+[gazebo_reset_bridge.py-6]     self.destroy_subscription(self._subscriptions[0])
+[gazebo_reset_bridge.py-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1583, in destroy_subscription
+[gazebo_reset_bridge.py-6]     subscription.destroy()
+[gazebo_reset_bridge.py-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/subscription.py", line 80, in destroy
+[gazebo_reset_bridge.py-6]     self.handle.destroy_when_not_in_use()
+[gazebo_reset_bridge.py-6] KeyboardInterrupt
+[INFO] [parameter_bridge-5]: process has finished cleanly [pid 293887]
+[ERROR] [gz_pointcloud_to_optical.py-8]: process has died [pid 293894, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gz_pointcloud_to_optical.py --ros-args -r __node:=oakd_pointcloud_converter --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_3cn30a00'].
+[ERROR] [gazebo_reset_bridge.py-6]: process has died [pid 293890, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_description/lib/robot_lab_description/gazebo_reset_bridge.py --ros-args -r __node:=gazebo_reset_bridge --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_77_o8mc3'].
+[ign gazebo-4] [1;36m[Dbg] [SignalHandler.cc:141] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[ign gazebo-4] [1;36m[Dbg] [ServerPrivate.cc:110] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[ign gazebo-4] [1;36m[Dbg] [gz.cc:410] [0m[1;36mShutting down ign-gazebo-server[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[ign gazebo-4] [1;36m[Dbg] [SimulationRunner.cc:528] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 293883]
+[ERROR] [ign gazebo-4]: process has died [pid 293885, exit code -2, cmd 'ruby /usr/bin/ign gazebo /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world -v 4 -s -r --force-version 6'].
+[INFO] [launch]: process[ign gazebo-4] was required: shutting down launched system
+[INFO] [rviz2-2]: process has finished cleanly [pid 293881]
+
+[launch exited with code 0]
+

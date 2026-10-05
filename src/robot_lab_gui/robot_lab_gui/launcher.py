@@ -2058,6 +2058,9 @@ class SimulationLauncherGui(tk.Tk):
         if config.get('arm_control') == 'panda':
             lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
                          'Cartesian planning, grasp and other arm backends remain pending.')
+        if config.get('drive_in_display'):
+            lines.append('Drive/WASD: physical wheel control in Display with bounded speed and timeout. '
+                         'Sensors, SLAM/navigation and vendor docking/hazards remain pending.')
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):

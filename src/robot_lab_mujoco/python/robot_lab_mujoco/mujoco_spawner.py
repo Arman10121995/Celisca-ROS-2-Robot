@@ -1272,6 +1272,7 @@ class MuJoCoSpawner(Node):
                 )
 
         self._robot_free = not model or str(model).strip().lower() == "none"
+        urdf = ''
         use_fallback = False
         self._model_source = "fallback"
         if model and os.path.isfile(str(model)):
@@ -1375,6 +1376,14 @@ class MuJoCoSpawner(Node):
 
         # --- build model ---
         self._model = mujoco.MjModel.from_xml_string(world_mjcf)
+        from robot_lab_utils.urdf_springs import joint_springs
+        for name, spring in joint_springs(urdf).items():
+            joint = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_JOINT, name)
+            if joint < 0:
+                raise ValueError('Imported passive spring joint missing: '+name)
+            self._model.jnt_stiffness[joint] = spring['stiffness']
+            self._model.qpos_spring[self._model.jnt_qposadr[joint]] = spring['reference']
+            self._model.dof_damping[self._model.jnt_dofadr[joint]] = spring['damping']
         physics_timestep = float(self.get_parameter("physics_timestep").value)
         if physics_timestep < 0 or not math.isfinite(physics_timestep):
             raise ValueError("physics_timestep must be finite and nonnegative")

@@ -1,0 +1,133 @@
+{
+  "robot": "asset_turtlebot4_standard",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual GUI neutral, forward/reverse/turn/Stop/watchdog; physics body truth, not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 293862,
+  "phases": {
+    "armed_neutral": {
+      "dx": 0.0,
+      "dy": 0.0,
+      "yaw": 0.0,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537079196700312,
+      "max_tilt": 0.005097933102820184,
+      "sim_duration": 1.0
+    },
+    "forward": {
+      "dx": 0.6434998508773379,
+      "dy": 2.47028654394299e-05,
+      "yaw": -5.768122256647734e-07,
+      "tail_vx": 0.29999997105155335,
+      "tail_wz": -2.6647830974326754e-07,
+      "z": -0.00453703918979171,
+      "max_tilt": 0.005097933102820184,
+      "sim_duration": 2.4999999999999996
+    },
+    "forward_stop": {
+      "dx": 0.08555006444677721,
+      "dy": 3.2544901335529453e-06,
+      "yaw": -1.5672997901514509e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537029096432532,
+      "max_tilt": 0.0050977100443615935,
+      "sim_duration": 2.5
+    },
+    "reverse": {
+      "dx": -0.6554998408758701,
+      "dy": -2.5111034871239113e-05,
+      "yaw": 6.602746472146359e-07,
+      "tail_vx": -0.29999997097899395,
+      "tail_wz": 2.664782458068285e-07,
+      "z": -0.004537039691365994,
+      "max_tilt": 0.005097720327174602,
+      "sim_duration": 2.5
+    },
+    "reverse_stop": {
+      "dx": -0.08850007739853838,
+      "dy": -3.419282531225143e-06,
+      "yaw": 8.792138238544858e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537040699134286,
+      "max_tilt": 0.005097720344467056,
+      "sim_duration": 2.5
+    },
+    "left_turn": {
+      "dx": -0.00036207057955972566,
+      "dy": 0.0001330142364590614,
+      "yaw": 2.440899638424062,
+      "tail_vx": 4.114599024613865e-07,
+      "tail_wz": 1.127432921986197,
+      "z": -0.004537040258923708,
+      "max_tilt": 0.005097724999750111,
+      "sim_duration": 2.4800000000000004
+    },
+    "left_turn_stop": {
+      "dx": -7.567650328743625e-05,
+      "dy": -2.703097653783404e-05,
+      "yaw": 0.3220552332725184,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537040278622998,
+      "max_tilt": 0.0050977250355110455,
+      "sim_duration": 2.5
+    },
+    "right_turn": {
+      "dx": 0.0003807442093776148,
+      "dy": 1.042765758357822e-05,
+      "yaw": -2.375131567042867,
+      "tail_vx": 1.3997799158317594e-07,
+      "tail_wz": -1.1274325496997448,
+      "z": -0.00453704077475735,
+      "max_tilt": 0.005097729128742534,
+      "sim_duration": 2.4800000000000004
+    },
+    "right_turn_stop": {
+      "dx": -9.837697848236182e-05,
+      "dy": -8.622548448555811e-05,
+      "yaw": -0.3336329168542487,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537040819855529,
+      "max_tilt": 0.0050977294543148605,
+      "sim_duration": 2.5
+    },
+    "pre_loss": {
+      "dx": 0.5047616724304698,
+      "dy": 0.027308767363760256,
+      "yaw": -4.0477178107900524e-07,
+      "tail_vx": 0.29999997163183234,
+      "tail_wz": -2.3470429863214419e-07,
+      "z": -0.004537041218348628,
+      "max_tilt": 0.005097729438808306,
+      "sim_duration": 2.0199999999999996
+    },
+    "publisher_loss": {
+      "dx": 0.22017805465256757,
+      "dy": 0.011912068563916467,
+      "yaw": -2.434675099027839e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537031160670291,
+      "max_tilt": 0.005097732222713296,
+      "sim_duration": 2.5400000000000027
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "joint_names": [
+    "left_wheel_joint",
+    "wheel_drop_left_joint",
+    "right_wheel_joint",
+    "wheel_drop_right_joint"
+  ],
+  "body_samples": 1413,
+  "joint_samples": 2826,
+  "launch_returncode": 0
+}

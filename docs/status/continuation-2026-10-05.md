@@ -21,9 +21,18 @@ failure was a missing utility source path, masked by the local wrapper.
 - GUI **Worlds** generates actual PGM/YAML occupancy files using the pinned
   Fortress map plugin and real collision-mesh slices. It preserves installed
   maps and stores exports, source hashes and logs on SSD.
-- **Asset Library** browses the inspected robot-assets, URDFHub, Menagerie,
-  world-library and terrain-tool catalogs. Entries remain cataloged until
-  dependencies, licenses, import and control are verified.
+- **Installed Extensions** opens downloaded robot-assets, URDFHub equivalents,
+  Menagerie and world-library assets in normal Launch selectors with filled
+  commands. Current installation has 113 profiles and 17 worlds; import and
+  mission status remain separate. The GUI has no operator download step.
+- **TurtleBot 4 Standard/Lite** now have physical Drive/WASD in Display on
+  all four simulators, with neutral enable, body feedback, Stop and command-loss
+  checks. Sensors, reset/obstacle/mapping/Nav2 and vendor docking remain open;
+  see [Drive evidence](evidence/turtlebot4-drive-2026-10-05/README.md).
+- **Arm** controls the native Panda's actual MuJoCo joints through trajectory
+  actions, with measured Home/Stop/cancel/heartbeat loss. Cartesian planning,
+  grasp and other arm backends remain open; see
+  [Panda guide](../tutorials/panda_arm.md).
 - **Reset Robot** now resets wheel motion and the estimator/mapping history,
   while keeping the simulation clock monotonic. Navigation-goal resets and
   drone/legged reset workflows are not covered by this wheel control.

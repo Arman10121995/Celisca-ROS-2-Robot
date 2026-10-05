@@ -291,11 +291,11 @@ class IsaacSpawner(Node):
         self._drive = self._make_drive()
         self._last_cmd_time = 0.0
         self._last_drive_time = None
+        self._last_diff_sim_time = None
 
         wall = Clock(clock_type=ClockType.SYSTEM_TIME)
-        if self._drive.kind != "diff":
-            self._drive_timer = self.create_timer(
-                1.0 / _DRIVE_RATE, self._send_drive_targets, clock=wall)
+        self._drive_timer = self.create_timer(
+            1.0 / _DRIVE_RATE, self._send_drive_targets, clock=wall)
         self._timer = self.create_timer(0.5, self._try_spawn, clock=wall)
         rate = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
         self._pub_timer = self.create_timer(rate, self._publish, clock=wall)
@@ -334,10 +334,10 @@ class IsaacSpawner(Node):
         return drive
 
     def _send_drive_targets(self):
-        """Stream a car's joint targets to the runtime at _DRIVE_RATE.
+        """Stream every wheel model's joint targets at _DRIVE_RATE.
 
-        The steering rate and acceleration limits need a steady step, and
-        a stale command (no /cmd_vel for 0.5 s) brings the car to a stop.
+        Limits need a steady step. A stale command stops the wheels even
+        when the mux receives no new message to trigger a callback.
         """
         proc = self._proc
         if proc is None or proc.stdin is None:
@@ -347,7 +347,24 @@ class IsaacSpawner(Node):
             else min(now - self._last_drive_time, 0.2)
         self._last_drive_time = now
         twist = self._twist
-        if now - self._last_cmd_time > 0.5:
+        stale = now - self._last_cmd_time > 0.5
+        if self._drive.kind == "diff":
+            # SDK physics can be much slower than wall time. Advancing a
+            # 0.5 m/s^2 limiter on every wall tick accelerated the tall T4
+            # in a few physics frames and tipped it. Use measured SDK time;
+            # a frozen/not-ready clock must not accumulate fresh targets.
+            with self._lock:
+                sim_time = (self._state or {}).get('t')
+            if sim_time is None:
+                dt = 0.0
+            else:
+                sim_time = float(sim_time)
+                dt = (0.0 if self._last_diff_sim_time is None else
+                      max(0.0, min(sim_time - self._last_diff_sim_time, 0.2)))
+                self._last_diff_sim_time = sim_time
+            if dt <= 0.0 and not stale:
+                return
+        if stale:
             twist = Twist()
             if self._drive.kind == "diff":
                 self._drive.reset()
@@ -375,16 +392,6 @@ class IsaacSpawner(Node):
     def _accept_cmd(self, msg):
         self._twist = msg
         self._last_cmd_time = time.monotonic()
-        if self._drive.kind != "diff":
-            return  # streamed by _send_drive_targets
-        proc = self._proc
-        if proc is not None and proc.stdin is not None:
-            try:
-                proc.stdin.write(json.dumps(
-                    {"cmd_vel": [msg.linear.x, msg.angular.z]}) + "\n")
-                proc.stdin.flush()
-            except Exception:
-                pass
 
     def _try_spawn(self):
         if self._spawned:
@@ -493,6 +500,8 @@ class IsaacSpawner(Node):
         # records: the runtime's interpreter has no ROS package index, and its
         # own SDF reader ignored primitives, poses and model:// includes.
         cfg["world_shapes"] = self._world_shapes(cfg["world_path"])
+        from robot_lab_utils.urdf_springs import joint_springs
+        cfg['joint_springs'] = joint_springs(urdf)
 
         runtime_py = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "isaac_runtime.py"
@@ -769,6 +778,7 @@ class IsaacSpawner(Node):
                 # Clear stale drive commands before the worker restores state.
                 self._twist = Twist()
                 self._last_cmd_time = 0.0
+                self._last_diff_sim_time = None
                 if self._drive is not None:
                     self._drive.reset()
                 self._reset_ack.clear()

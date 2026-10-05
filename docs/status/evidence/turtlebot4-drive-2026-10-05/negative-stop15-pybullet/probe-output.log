@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/probe_drive_gui.py", line 73, in <module>
+    report['phases'][label+'_stop']=stopped()
+  File "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/probe_drive_gui.py", line 44, in stopped
+    assert abs(result['tail_vx'])<.025 and abs(result['tail_wz'])<.05,result
+AssertionError: {'dx': 0.004417538642883301, 'dy': -0.004231810569763184, 'yaw': 0.7744923861983932, 'tail_vx': 0.0006912832151158357, 'tail_wz': 0.08924334516781235, 'z': -0.0038273707032203674, 'sim_duration': 1.4791666659999994}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/turtlebot4-drive-2026-10-05/probe_drive_gui.py", line 95, in <module>
+    (out/'gui-output.log').write_text(app.output_text.get('1.0','end'))
+  File "/usr/lib/python3.10/tkinter/__init__.py", line 2383, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'output_text'
