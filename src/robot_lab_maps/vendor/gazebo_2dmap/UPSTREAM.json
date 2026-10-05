@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/robotics-upo/gazebo_ros2_2Dmap_plugin",
+  "branch": "fortress",
+  "revision": "317a17d4dc8004e14299d767278f0ecbcb857819",
+  "sha256": {
+    "src/gz_2Dmap_system.cc": "fc2288603738c2a68a3cfdefcb160da170669ca43a43d9fd0777bad8d05a9ec6",
+    "include/gz_2Dmap_system.hh": "59791abf7b6c3df8d6b633ab9b332108214f0baf4214a489c97c125cfd81063f",
+    "LICENSE": "f04875a2ffad992335f117302e7dbe27226565e08f4f8fde3b8f91a541517f4d"
+  },
+  "changes": [
+    "Robot Lab collision_mask_path: grid-aligned actual mesh slices with exact dimensions and a four-million-cell bound.",
+    "Rotate cylinder bounds as well as boxes; refuse a collision-blocked seed. Original upstream hashes retained."
+  ],
+  "local_source_sha256": {
+    "gz_2Dmap_system.cc": "0745eb4a02abf30414321b299de6375f5a4ce8b70d315301d0f6899fedbfa6bd",
+    "gz_2Dmap_system.hh": "317723131ca300a16c9e9490be60d19ca7f867cf0cea150c4cc54d11f2db7345"
+  }
+}

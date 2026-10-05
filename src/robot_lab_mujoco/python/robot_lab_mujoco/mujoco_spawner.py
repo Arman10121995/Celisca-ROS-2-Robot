@@ -1124,6 +1124,7 @@ class MuJoCoSpawner(Node):
         self._last_cmd_time = time.monotonic()
         self._watchdog_timeout = 0.5  # stop if no cmd_vel for 500ms
         self._sim_t = 0.0
+        self._sim_time_offset = 0.0
         self._sim_step = 0
         self._bpos = [0.0, 0.0, 0.0]
         self._born = [0.0, 0.0, 0.0, 1.0]
@@ -1170,6 +1171,8 @@ class MuJoCoSpawner(Node):
             DiagnosticArray, "/robot_lab/health", 10)
         self._reset_srv = self.create_service(
             Trigger, "/robot_lab/reset", self._on_reset)
+        from robot_lab_utils.reset_notifications import ResetNotifications
+        self._reset_notifications = ResetNotifications(self)
         self._ready = False
         self._health_timer = self.create_timer(
             1.0, self._publish_health,
@@ -1841,7 +1844,7 @@ class MuJoCoSpawner(Node):
 
     def _read_physics_state(self):
         """Refresh publisher state from the model after a step or reset."""
-        self._sim_t = float(self._data.time)
+        self._sim_t = float(self._data.time) + self._sim_time_offset
         self._bpos = list(self._data.xpos[self._body_id])
         self._born = xyzw_from_wxyz(self._data.xquat[self._body_id])
         self._bang, self._blin = _body_frame_velocity(
@@ -1853,6 +1856,7 @@ class MuJoCoSpawner(Node):
 
     def _reset_physics(self):
         """Restore all model state, spawn pose and a stopped command."""
+        self._sim_time_offset = self._sim_t
         mujoco.mj_resetData(self._model, self._data)
         if hasattr(self._drive, "reset"):
             self._drive.reset()
@@ -1886,9 +1890,8 @@ class MuJoCoSpawner(Node):
             if self._effort_command is not None:
                 self._effort_command.clear()
         self._sim_step = 0
-        # Simulated time restarts at zero here, so any wall-clock the loop had
-        # banked belongs to the discarded timeline and must not be repaid as
-        # catch-up physics.
+        # Physics episode time restarts; ROS time continues from the offset.
+        # Discard accumulated wall debt from the previous physical episode.
         self._time_debt = 0.0
         if hasattr(self._data, "xfrc_applied"):
             self._data.xfrc_applied[:, :] = 0.0
@@ -1991,6 +1994,7 @@ class MuJoCoSpawner(Node):
             with self._physics_lock:
                 if self._body_id >= 0 and self._model is not None:
                     self._reset_physics()
+                    self._reset_notifications.notify()
                     self.get_logger().info("Simulation reset")
                     response.success = True
                     response.message = "Simulation reset successfully"

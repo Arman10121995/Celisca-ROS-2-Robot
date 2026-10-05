@@ -1,0 +1,189 @@
+updated: '2026-10-05'
+qualification: External source catalog only; listed assets are not installed or runtime-qualified
+sources:
+- id: gazebo_2dmap
+  kind: world_tool
+  repository: https://github.com/robotics-upo/gazebo_ros2_2Dmap_plugin
+  revision: 317a17d4dc8004e14299d767278f0ecbcb857819
+  status: cataloged
+  license_note: Fortress ABI 6; header Apache-2.0 and root MIT
+  entries: []
+- id: gazebo_world_dataset
+  kind: world
+  repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+  revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+  status: cataloged
+  license_note: Per-asset audit required; no root license found
+  entries:
+  - worlds/bookstore/bookstore.zip
+  - worlds/dynamic_world/world.model
+  - worlds/experiment_rooms/worlds/room1/world.model
+  - worlds/experiment_rooms/worlds/room2/world.model
+  - worlds/experiment_rooms/worlds/room2/world_dynamic.model
+  - worlds/experiment_rooms/worlds/room3/world.model
+  - worlds/experiment_rooms/worlds/room3/world_dynamic.model
+  - worlds/experiment_rooms/worlds/room4/world.model
+  - worlds/experiment_rooms/worlds/room4/world_dynamic.model
+  - worlds/factory/factory.model
+  - worlds/hospital/hospital.world
+  - worlds/hospital/hospital_two_floors.world
+  - worlds/hospital/models_part1.zip
+  - worlds/hospital/models_part2.zip
+  - worlds/hospital/models_part3.zip
+  - worlds/hospital/models_part4.zip
+  - worlds/office/office_part1.zip
+  - worlds/office/office_part2.zip
+  - worlds/small_house/small_house.zip
+- id: terrain_generator
+  kind: world_tool
+  repository: https://github.com/saiaravind19/gazebo_terrain_generator
+  revision: 4946f4c8150633e4c1fb2ffe9a2ab4f495de9577
+  status: cataloged
+  license_note: BSD-3-Clause; imagery/elevation terms separate
+  entries: []
+- id: robot_assets
+  kind: robot
+  repository: https://github.com/ankurhanda/robot-assets
+  revision: 24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99
+  status: cataloged
+  license_note: Per-model audit required; no root license found
+  entries:
+  - urdfs/robots/anymal/anymal.urdf
+  - urdfs/robots/fetch/robots/fetch.urdf
+  - urdfs/robots/franka_panda/panda.urdf
+  - urdfs/robots/ginger_robot/gingerurdf.urdf
+  - urdfs/robots/halodi/eve_r3.urdf
+  - urdfs/robots/kinova/kinova.urdf
+  - urdfs/robots/kuka_iiwa/model.urdf
+  - urdfs/robots/pr2/pr2.urdf
+  - urdfs/robots/r2_description/robots/r2_left_forearm.urdf
+  - urdfs/robots/r2_description/robots/r2_left_gripper.urdf
+  - urdfs/robots/r2_description/robots/r2b.urdf
+  - urdfs/robots/r2_description/robots/r2b_control.urdf
+  - urdfs/robots/r2_description/robots/r2b_dynamics.urdf
+  - urdfs/robots/r2_description/robots/r2b_sim_upperbody_control.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2b_sim_upperbody_dynamics.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2c1.urdf
+  - urdfs/robots/r2_description/robots/r2c1_control.urdf
+  - urdfs/robots/r2_description/robots/r2c1_dynamics.urdf
+  - urdfs/robots/r2_description/robots/r2c5.urdf
+  - urdfs/robots/r2_description/robots/r2c5_control.urdf
+  - urdfs/robots/r2_description/robots/r2c5_dynamics.urdf
+  - urdfs/robots/r2_description/robots/r2c6.urdf
+  - urdfs/robots/r2_description/robots/r2c6_control.urdf
+  - urdfs/robots/r2_description/robots/r2c6_dynamics.urdf
+  - urdfs/robots/r2_description/robots/r2c6_valve.urdf
+  - urdfs/robots/r2_description/robots/r2c_sim_full_control.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2c_sim_full_dynamics.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2c_sim_legs_control.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2c_sim_legs_dynamics.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2c_sim_upperbody_control.urdf.urdf
+  - urdfs/robots/r2_description/robots/r2c_sim_upperbody_dynamics.urdf.urdf
+  - urdfs/robots/ur10/ur10_robot.urdf
+  - urdfs/robots/ur5/ur5_gripper.urdf
+  - urdfs/robots/val_description/model/robots/forearm_left.urdf
+  - urdfs/robots/val_description/model/robots/forearm_right.urdf
+  - urdfs/robots/val_description/model/robots/imu_test.urdf
+  - urdfs/robots/val_description/model/robots/test_bench.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_A.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_A_arm_mass_sims.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_B.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_B_arm_mass_sims.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_C.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_C_arm_mass_sims.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_D.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_D_arm_mass_sims.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_sim.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_sim_angled_legj1s.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_sim_arm_mass_sims.urdf
+  - urdfs/robots/val_description/model/robots/valkyrie_sim_gazebo_sync.urdf
+  - urdfs/robots/yumi/yumi.urdf
+- id: mujoco_menagerie
+  kind: robot
+  repository: https://github.com/google-deepmind/mujoco_menagerie
+  revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
+  status: cataloged
+  license_note: Per-model licenses; native MJCF, no automatic cross-backend control
+  entries:
+  - agilex_piper
+  - agility_cassie
+  - aloha
+  - anybotics_anymal_b
+  - anybotics_anymal_c
+  - apptronik_apollo
+  - arx_l5
+  - berkeley_humanoid
+  - bitcraze_crazyflie_2
+  - booster_t1
+  - boston_dynamics_spot
+  - dynamixel_2r
+  - flexiv_rizon4
+  - flexiv_rizon4s
+  - flybody
+  - fourier_n1
+  - franka_emika_panda
+  - franka_fr3
+  - franka_fr3_v2
+  - google_barkour_v0
+  - google_barkour_vb
+  - google_robot
+  - hello_robot_stretch
+  - hello_robot_stretch_3
+  - i2rt_yam
+  - iit_softfoot
+  - kinova_gen3
+  - kuka_iiwa_14
+  - low_cost_robot_arm
+  - ms_human_700
+  - pndbotics_adam_lite
+  - rethink_robotics_sawyer
+  - robot_soccer_kit
+  - robotiq_2f85
+  - robotiq_2f85_v4
+  - robotis_omy_3m
+  - robotis_op3
+  - robotstudio_so101
+  - seeed_rebot_devarm
+  - shadow_dexee
+  - skydio_x2
+  - stanford_tidybot
+  - toddlerbot_2xc
+  - toddlerbot_2xm
+  - trossen_vx300s
+  - trossen_wx250s
+  - trossen_wxai
+  - trs_so_arm100
+  - ufactory_lite6
+  - ufactory_xarm7
+  - umi_gripper
+  - unitree_a1
+  - unitree_g1
+  - unitree_go1
+  - unitree_go2
+  - unitree_h1
+  - unitree_z1
+  - universal_robots_ur10e
+  - universal_robots_ur5e
+- id: urdfhub
+  kind: robot
+  repository: https://www.urdfhub.com/#robots
+  revision: web snapshot 2026-10-05
+  status: cataloged
+  license_note: Directory of upstream repositories; audit upstream asset licenses
+  entries:
+  - name: UR5e
+    source: https://github.com/ros-industrial/universal_robot
+  - name: Franka Panda
+    source: https://github.com/frankaemika/franka_ros2
+  - name: TurtleBot3 Burger
+    source: https://github.com/ROBOTIS-GIT/turtlebot3
+  - name: Spot
+    source: https://github.com/chvmp/spot_ros
+  - name: Fetch Mobile Manipulator
+    source: https://github.com/fetchrobotics/fetch_ros
+  - name: Unitree Go1
+    source: https://github.com/unitreerobotics/unitree_ros
+  - name: KUKA iiwa 14
+    source: https://github.com/IFL-CAMP/iiwa_stack
+  - name: Clearpath Husky
+    source: https://github.com/husky/husky

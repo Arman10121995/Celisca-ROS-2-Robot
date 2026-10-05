@@ -8,6 +8,8 @@ Health (doctor / platform status / ROS graph), and Live Monitor
 
 import json
 import threading
+import os
+import webbrowser
 from pathlib import Path
 
 import tkinter as tk
@@ -98,6 +100,85 @@ class LabTab(ttk.Frame):
         notebook.add(self, text=title)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
+
+
+class WorldsTab(LabTab):
+    """Generate actual occupancy files for the independently selected world."""
+    def __init__(self,notebook,app):
+        super().__init__(notebook,app,'Worlds')
+        self.world_var=tk.StringVar(value=app.map_var.get())
+        self.resolution_var=tk.DoubleVar(value=.1)
+        self.height_var=tk.DoubleVar(value=.3)
+        self.output_var=tk.StringVar(value=str(Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
+            '/workspace/molar/robot_lab_runtime'))/'generated_maps'))
+        controls=ttk.Frame(self);controls.grid(row=0,column=0,sticky='new')
+        controls.columnconfigure(1,weight=1)
+        ttk.Label(controls,text='World').grid(row=0,column=0,sticky='w')
+        ttk.Combobox(controls,textvariable=self.world_var,values=sorted(app.map_profiles),
+                     state='readonly').grid(row=0,column=1,sticky='ew')
+        for row,label,var in [(1,'Resolution (m)',self.resolution_var),(2,'Slice height (m)',self.height_var),
+                              (3,'Output directory',self.output_var)]:
+            ttk.Label(controls,text=label).grid(row=row,column=0,sticky='w')
+            ttk.Entry(controls,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
+        self.generate_button=ttk.Button(controls,text='Generate 2D Occupancy Grid',command=self.generate)
+        self.generate_button.grid(row=4,column=0,columnspan=2,sticky='ew',pady=6)
+        ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=5,column=0,sticky='ew')
+        ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=5,column=1,sticky='ew')
+        ttk.Label(controls,text='Uses the pinned Fortress plugin in a separate headless world. Existing maps are preserved.\n'
+            'Mesh collisions use their actual scale and height slice; heightfields need the terrain converter.\n'
+            'Review the generated PGM/YAML and report before registering it for navigation.\n'
+            'External world imports and terrain conversion are tracked as R6.6 / R6.7.',
+            wraplength=720,justify='left').grid(row=6,column=0,columnspan=2,sticky='w',pady=12)
+
+    def generation_command(self):
+        from ament_index_python.packages import get_package_share_directory
+        profile=self.app.map_profiles[self.world_var.get()]
+        config=profile.get('gazebo',{})
+        package=config.get('world_package','robot_lab_maps')
+        if package=='maps':package='robot_lab_maps'
+        path=Path(config.get('world_path',''))
+        if not path.is_absolute():path=Path(get_package_share_directory(package))/path
+        seed=profile.get('spawn',{})
+        return ['ros2','run','robot_lab_maps','generate_occupancy_map.py','--world',str(path),
+                '--output-dir',self.output_var.get(),'--resolution',str(self.resolution_var.get()),
+                '--height',str(self.height_var.get()),'--seed-x',str(seed.get('x',0)),
+                '--seed-y',str(seed.get('y',0))]
+
+    def generate(self):
+        try:self.app.start_bg_process(self.generation_command(),'world_maps')
+        except (KeyError,ValueError,tk.TclError) as exc:
+            messagebox.showerror('Generate occupancy grid',str(exc))
+
+    def open_guide(self):
+        messagebox.showinfo('World and robot extensions',(WORKSPACE_ROOT/'docs/ASSET_EXTENSION_GUIDE.md').read_text())
+
+
+class AssetsTab(LabTab):
+    """Source-pinned model catalogs kept separate from runnable robot profiles."""
+    def __init__(self,notebook,app):
+        super().__init__(notebook,app,'Asset Library')
+        ttk.Label(self,text='External robot and world catalogs. Cataloged assets still need download, license/import checks and control integration.\n'
+            'Use Launch for installed robots. Manipulator / hand / mobile-manipulator controls are queued as R5.7 / R5.8 / R5.9.',
+            wraplength=880,justify='left').grid(row=0,column=0,sticky='w',pady=6)
+        self.tree=ttk.Treeview(self,columns=('source','status'),show='tree headings',height=15)
+        self.tree.heading('#0',text='Robot / world asset');self.tree.heading('source',text='Source');self.tree.heading('status',text='Status')
+        self.tree.column('#0',width=520);self.tree.column('source',width=200);self.tree.column('status',width=100)
+        self.tree.grid(row=1,column=0,sticky='nsew');self.rowconfigure(1,weight=1)
+        scroll=ttk.Scrollbar(self,orient='vertical',command=self.tree.yview);scroll.grid(row=1,column=1,sticky='ns')
+        self.tree.configure(yscrollcommand=scroll.set);self.links={}
+        catalog=load_yaml(WORKSPACE_ROOT/'docs/status/asset-sources-2026-10-05.yaml') or {}
+        for source in catalog.get('sources',[]):
+            parent=self.tree.insert('', 'end',text=source['id'],values=(source['revision'][:12],source['status']))
+            self.links[parent]=source['repository']
+            for entry in source.get('entries',[]):
+                name=entry.get('name') if isinstance(entry,dict) else entry
+                row=self.tree.insert(parent,'end',text=name,values=(source['id'],'cataloged'))
+                self.links[row]=entry['source'] if isinstance(entry,dict) else source['repository']+'/tree/'+source['revision']+'/'+entry
+        ttk.Button(self,text='Open Selected Upstream Source',command=self.open_source).grid(row=2,column=0,sticky='ew',pady=6)
+
+    def open_source(self):
+        selection=self.tree.selection()
+        if selection:webbrowser.open(self.links[selection[0]])
 
 
 ENTITY_TYPES = [
@@ -724,7 +805,7 @@ class HealthTab(LabTab):
             WORKSPACE_ROOT / 'docs/tutorials/px4_x500.md')).grid(
                 row=4, column=0, sticky='ew', padx=(0, 4), pady=2)
         ttk.Button(frame, text="Verified Robot Trials", command=lambda: self._show_document(
-            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-02.md')).grid(
+            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-05.md')).grid(
                 row=4, column=1, columnspan=2, sticky='ew', padx=(4, 0), pady=2)
 
         self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)
@@ -801,6 +882,8 @@ def create_tabs(notebook, app):
     """Instantiate all control-center tabs and return them."""
     tabs = [
         RegistryTab(notebook, app),
+        WorldsTab(notebook, app),
+        AssetsTab(notebook, app),
         VacuumTab(notebook, app),
         BenchmarkTab(notebook, app),
         TestsTab(notebook, app),

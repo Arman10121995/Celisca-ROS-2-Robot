@@ -215,10 +215,16 @@ def _motion_model_overrides(exec_name, motion_model, global_planner_plugin):
         overrides.update(CAR_PARAMS.get(exec_name, {}))
     elif motion_model.startswith("omni") and exec_name in _CONTROLLER_SERVERS:
         overrides.update(HOLONOMIC_PARAMS)
+        # Evaluate the oriented footprint, not only the centre cell, for
+        # holonomic translation beside obstacles.
+        overrides.update({'FollowPath.critics': [
+            'RotateToGoal', 'Oscillation', 'ObstacleFootprint',
+            'GoalAlign', 'PathAlign', 'PathDist', 'GoalDist'],
+            'FollowPath.ObstacleFootprint.scale': 0.1})
         if motion_model == 'omni_parallel':
             overrides.update({
                 'FollowPath.critics': ['robot_lab_controller::ParallelSteeringCritic',
-                    'RotateToGoal', 'Oscillation', 'BaseObstacle', 'PathDist', 'GoalDist'],
+                    'RotateToGoal', 'Oscillation', 'ObstacleFootprint', 'PathDist', 'GoalDist'],
                 'progress_checker.required_movement_radius': 0.2,
                 'progress_checker.movement_time_allowance': 20.0,
             })
@@ -263,10 +269,14 @@ def _setup(context, *args, **kwargs):
     overlay_params = [overlay] if os.path.exists(overlay) else []
 
     def server(exec_name, name, config_file):
-        parameters = [os.path.join(pkg, "config", config_file)] + overlay_params
-        parameters.append({"use_sim_time": use_sim_time})
+        parameters = [os.path.join(pkg, "config", config_file)]
         parameters.extend(_planner_parameter_overrides(
             exec_name, global_planner_plugin, local_planner_plugin))
+        # Robot-specific footprints, arrival windows and critics override the
+        # generic plugin defaults. Loading DWB defaults last erased the full
+        # footprint critic configured for nonparallel four-wheel steering.
+        parameters += overlay_params
+        parameters.append({"use_sim_time": use_sim_time})
         parameters.extend(_motion_model_overrides(
             exec_name, motion_model, global_planner_plugin))
         if exec_name == "bt_navigator":

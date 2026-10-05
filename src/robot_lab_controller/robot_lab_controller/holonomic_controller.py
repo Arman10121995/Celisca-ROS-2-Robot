@@ -10,6 +10,7 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
+from std_srvs.srv import Trigger
 
 from robot_lab_utils.drive_kinematics import drive_from_config, parse_drive_config
 
@@ -47,6 +48,7 @@ class HolonomicController(Node):
         self._wheel_prev = None
         self._joint_time = None
         self._odom = [0.0, 0.0, 0.0]
+        self.create_service(Trigger, '/robot_lab/control_reset', self._reset_control)
         self.create_timer(1.0 / self._rate, self._step)
         self.get_logger().info(
             "%s drive: wheels %s; steering %s" %
@@ -56,6 +58,20 @@ class HolonomicController(Node):
         self._command = (msg.twist.linear.x, msg.twist.linear.y,
                          msg.twist.angular.z)
         self._command_time = self.get_clock().now()
+
+    def _reset_control(self, _request, response):
+        self._command = (0.0, 0.0, 0.0)
+        self._command_time = None
+        self._last_step = None
+        self._wheel_prev = None
+        self._joint_time = None
+        self._drive.reset()
+        # Keep the odom coordinate system continuous. AMCL resets map->odom
+        # for the physical teleport; erasing wheel odom breaks the EKF history.
+        self._step()
+        response.success = True
+        response.message = 'Drive stopped and control state reset; odom frame preserved'
+        return response
 
     def _step(self):
         now = self.get_clock().now()

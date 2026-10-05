@@ -39,6 +39,7 @@ install(
 
 install(PROGRAMS
   ${PROJECT_NAME}/mapping_with_known_poses.py
+  ${PROJECT_NAME}/slam_supervisor.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -10,8 +10,12 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 1. [`docs/status/platform-status.yaml`](status/platform-status.yaml) — the authoritative
    task ledger: states, owners, dependencies, evidence, `next_task`.
 2. [`ROADMAP.md`](../ROADMAP.md) — scope and acceptance criteria for every task.
-3. [`docs/status/audit-2026-09-07.md`](status/audit-2026-09-07.md) — what was inspected,
-   what passed, what failed, and what was excluded at the audited revision.
+3. [`docs/status/audit-2026-10-02.md`](status/audit-2026-10-02.md) and
+   [`docs/status/continuation-2026-10-05.md`](status/continuation-2026-10-05.md) —
+   audited claim boundaries, latest measured work and retained failures.
+4. [`docs/PATCH_EXECUTION_GUIDE.md`](PATCH_EXECUTION_GUIDE.md) and
+   [`docs/ASSET_EXTENSION_GUIDE.md`](ASSET_EXTENSION_GUIDE.md) — execution steps,
+   upstream pins and acceptance for stabilization and newly requested work.
 
 ## Session rules
 
@@ -71,18 +75,32 @@ regression is repaired and recorded under
 spawn defaults and keep catch-up disabled for effort-controlled robots.
 The full walking/turning/terrain milestones remain partial. The user now explicitly includes drone work. R5.4
 SITL Flight acceptance is measured and its GUI path is available; see
-[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-02.md).
+[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-05.md).
 Continue R5.6 four-wheel navigation and the remaining qualification matrix;
 do not use the historical no-thrust diagnosis to restart PX4 plant changes.
-The October 2 clear-map crab screen now passes on all four simulators, and
-MuJoCo records all four patterns with current DWB defaults. Isaac's bridge
-now forwards 4WS lateral commands. Independent final heading differs from
-Nav2's estimate; precise body-heading and obstacle/mapping/reset/watchdog
-acceptance remains open. The GUI Health tab loads these states and links the
-flight guide and measured trial report. Continue from the named evidence,
-including retained failed RPP and pre-fix Isaac trials.
+October 5 adds strict body-pose and obstacle screens, selected real mapping,
+reset and publisher-loss work. Each source stage is named; these do not close
+the full pattern/backend/map/mode matrix. Use `steering_mode:=crab`, not the
+undeclared `four_wheel_steer_mode` argument. The new probes query the running
+drive configuration before attributing a steering trial. One mistaken launch
+is retained separately from actual crab evidence. Preserve negative RPP,
+pre-fix Isaac and mapping/reset trials.
 
-After baseline revision `0be23d2` (2026-09-25), `R5.2` is the active next task.
+PX4 GUI altitude controls and native `nav_obstacle` flight are measured. All
+installed worlds can be selected, but remaining spawn/ceiling/flight cells
+remain R5.10. The Worlds tab generates actual occupancy previews; its connected
+free region is not a whole-building map. Source catalogs are in Asset Library.
+R3.6/R6.6 imports, R6.7 terrain conversion and R5.7/R5.8/R5.9 manipulation
+need implementation and actual control/mission proof. The Health tab loads
+the ledger and latest report; update those when advancing any task.
+
+The support generator now indexes exact hashed screens and derives blocked
+release gates from unfinished tasks. Do not run legacy demonstration scripts
+as evidence or overwrite the corrected ledger with their completion flags.
+
+## Historical Go2 continuation and negative evidence
+
+At baseline revision `0be23d2` (2026-09-25), `R5.2` was the next task.
 Continue from the Go2 evidence under
 `docs/status/evidence/r52-go2-policy-2026-09-25/`: the feed-forward and
 opt-in inverse reverse sweeps are recorded. The inverse map reduces low-speed

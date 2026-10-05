@@ -7,6 +7,24 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
+# The pinned occupancy generator is a Fortress system plugin, independent of
+# the active robot backend. Keep data-only builds usable without that SDK.
+find_package(ignition-gazebo6 QUIET)
+if(ignition-gazebo6_FOUND)
+  find_package(ignition-plugin1 REQUIRED COMPONENTS register)
+  find_package(ignition-transport11 REQUIRED)
+  find_package(ignition-msgs8 REQUIRED)
+  add_library(robot_lab_2dmap_system SHARED vendor/gazebo_2dmap/gz_2Dmap_system.cc)
+  target_compile_features(robot_lab_2dmap_system PRIVATE cxx_std_17)
+  target_include_directories(robot_lab_2dmap_system PRIVATE vendor/gazebo_2dmap)
+  target_link_libraries(robot_lab_2dmap_system
+    ignition-gazebo6::ignition-gazebo6 ignition-plugin1::ignition-plugin1
+    ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
+  install(TARGETS robot_lab_2dmap_system LIBRARY DESTINATION lib)
+endif()
+install(DIRECTORY vendor/gazebo_2dmap/ DESTINATION share/${PROJECT_NAME}/vendor/gazebo_2dmap)
+install(PROGRAMS tools/generate_occupancy_map.py DESTINATION lib/${PROJECT_NAME})
+
 # Install all map data under share/maps/maps/<map_name>/...
 install(
   DIRECTORY maps/

@@ -6,11 +6,14 @@
   <description>Consolidated package for all map and world data (with subfolders under maps/)</description>
   <maintainer email="user@todo.todo">user</maintainer>
   <license>Apache-2.0</license>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <exec_depend>python3-numpy</exec_depend>
   <exec_depend>python3-yaml</exec_depend>
   <exec_depend>robot_lab_utils</exec_depend>
+  <exec_depend>python3-pil</exec_depend>
+  <exec_depend>python3-trimesh</exec_depend>
   <test_depend>ament_cmake_pytest</test_depend>
 
   <export>

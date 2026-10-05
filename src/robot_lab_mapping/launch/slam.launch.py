@@ -48,9 +48,9 @@ def _setup(context, *args, **kwargs):
     )
 
     slam_toolbox = Node(
-        package="slam_toolbox",
-        executable="sync_slam_toolbox_node",
-        name="slam_toolbox",
+        package="robot_lab_mapping",
+        executable="slam_supervisor.py",
+        name="slam_supervisor",
         output="screen",
         parameters=parameters,
     )

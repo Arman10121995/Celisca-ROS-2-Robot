@@ -883,10 +883,16 @@ def _run_stage(app, reader, cfg, state):
                 world.reset()
             except Exception as exc:
                 _emit({"event": "log", "msg": "Reset failed: %s" % exc})
+                _emit({'event': 'reset_done', 'error': str(exc)})
             else:
+                reader.cmd = (0.0, 0.0)
+                if reader.joint_targets is not None:
+                    reader.joint_targets = {kind: {name: 0.0 for name in values}
+                        for kind, values in reader.joint_targets.items()}
                 # The step counter keeps running so /clock never goes back.
                 _emit({"event": "log",
                        "msg": "Reset applied: world returned to its initial state"})
+                _emit({'event': 'reset_done'})
         linear, angular = reader.cmd
         vl, vr = _wheel_velocities(linear, angular, wheel_radius,
                                    wheel_separation)

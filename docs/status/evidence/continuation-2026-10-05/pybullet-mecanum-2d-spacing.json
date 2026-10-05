@@ -1,0 +1,900 @@
+{
+  "mode": "slam",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5818,
+      "yaw_change_rad": -0.0001,
+      "tail_speed_mps": 0.19499729847303499,
+      "tail_yaw_speed_rps": 0.00025081502261719847,
+      "end": {
+        "x": 0.08297093957662582,
+        "y": -0.49731865525245667,
+        "z": 0.012742066755890846,
+        "yaw": 0.0007611589364265534
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.021,
+      "distance_m": 0.5803,
+      "yaw_change_rad": 0.0004,
+      "tail_speed_mps": 0.19655856618102097,
+      "tail_yaw_speed_rps": 0.00025138913853866435,
+      "end": {
+        "x": -0.48355692625045776,
+        "y": -0.49586763978004456,
+        "z": 0.01280225720256567,
+        "yaw": 0.0011516327105744923
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0021,
+      "yaw_change_rad": 1.1932,
+      "tail_speed_mps": 0.0009443875654495399,
+      "tail_yaw_speed_rps": 0.40672164659680243,
+      "end": {
+        "x": -0.49622777104377747,
+        "y": -0.49700668454170227,
+        "z": 0.012957995757460594,
+        "yaw": 1.1944181026975893
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0011,
+      "yaw_change_rad": -1.1948,
+      "tail_speed_mps": 0.0010085390616883262,
+      "tail_yaw_speed_rps": 0.40953310145157984,
+      "end": {
+        "x": -0.4960969090461731,
+        "y": -0.4956819713115692,
+        "z": 0.012829631567001343,
+        "yaw": 0.02346554748238374
+      }
+    },
+    "strafe": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5501,
+      "yaw_change_rad": 0.0086,
+      "tail_speed_mps": 0.191989005226241,
+      "tail_yaw_speed_rps": 0.007064756300112388,
+      "end": {
+        "x": -0.49052825570106506,
+        "y": 0.05418127030134201,
+        "z": 0.01306101679801941,
+        "yaw": 0.010194313831915578
+      }
+    },
+    "strafe_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5505,
+      "yaw_change_rad": -0.0018,
+      "tail_speed_mps": 0.1879100787741743,
+      "tail_yaw_speed_rps": 0.000834501579728069,
+      "end": {
+        "x": -0.4838402271270752,
+        "y": -0.48325586318969727,
+        "z": 0.012910963036119938,
+        "yaw": 0.007702804987237443
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0507,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 3.079745232746541e-05,
+      "tail_yaw_speed_rps": 8.955842432691562e-05,
+      "end": {
+        "x": -0.04959231615066528,
+        "y": -0.4937533736228943,
+        "z": 0.012650331482291222,
+        "yaw": 0.005785734255090385
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0015,
+      "yaw_change_rad": 0.0007,
+      "tail_speed_mps": 0.00011609112061762572,
+      "tail_yaw_speed_rps": 0.00012755433834910589,
+      "end": {
+        "x": -0.4989423155784607,
+        "y": -0.5010440945625305,
+        "z": 0.012656588107347488,
+        "yaw": 0.0006712637244123252
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.385,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19549652171437465,
+      "tail_yaw_speed_rps": 3.160974781515066e-05,
+      "end": {
+        "x": -0.11393889784812927,
+        "y": -0.5006087422370911,
+        "z": 0.01283212285488844,
+        "yaw": 0.0007078031960316626
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "strafe": true,
+    "strafe_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_2d_map": false,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": false,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true
+  },
+  "initial_map_to_world": {
+    "yaw": 0.00013752024870900914,
+    "x": -0.4998726507648747,
+    "y": -0.5001410925585307
+  },
+  "initial_truth": {
+    "x": -0.4988280236721039,
+    "y": -0.5011380314826965,
+    "z": 0.01266280934214592,
+    "yaw": 0.0008641410741731616
+  },
+  "localization_error_m": 0.016314801185556713,
+  "sensor_messages_during_drive": {
+    "/oakd/rgb/image_raw": 142,
+    "/oakd/depth/image_raw": 143,
+    "/scan": 143
+  },
+  "map_updates": [
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 0.8041666660000001
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 1.008333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 1.4125
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 1.820833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 2.020833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 2.429166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 2.833333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 3.241666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 3.445833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 1439,
+      "occupied": 0,
+      "stamp": 3.85
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 5635,
+      "occupied": 93,
+      "stamp": 4.254166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 5635,
+      "occupied": 93,
+      "stamp": 4.654166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 18684,
+      "occupied": 158,
+      "stamp": 4.854166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 18684,
+      "occupied": 158,
+      "stamp": 5.058333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 27386,
+      "occupied": 264,
+      "stamp": 5.4625
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 27386,
+      "occupied": 264,
+      "stamp": 5.870833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 35130,
+      "occupied": 335,
+      "stamp": 6.275
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 40934,
+      "occupied": 381,
+      "stamp": 6.683333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 40934,
+      "occupied": 381,
+      "stamp": 7.091666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 40934,
+      "occupied": 381,
+      "stamp": 7.495833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 40934,
+      "occupied": 381,
+      "stamp": 7.904166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 40934,
+      "occupied": 381,
+      "stamp": 8.108333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 44297,
+      "occupied": 399,
+      "stamp": 8.512499999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 47048,
+      "occupied": 415,
+      "stamp": 8.916666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 47048,
+      "occupied": 415,
+      "stamp": 9.320833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 48845,
+      "occupied": 431,
+      "stamp": 9.724999999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 48845,
+      "occupied": 431,
+      "stamp": 9.925
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 50264,
+      "occupied": 446,
+      "stamp": 10.333333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 10.7375
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 11.145833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 11.349999999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 11.754166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 12.162499999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 12.566666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 12.974999999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 13.179166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 13.583333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 13.991666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 14.395833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 14.599999999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 15.008333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 15.412499999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 15.616666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 16.024999999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 16.429166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 16.837499999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 17.0375
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 17.445833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 17.85
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 18.054166666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 18.462499999
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 18.866666666
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 19.070833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 19.475
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 51267,
+      "occupied": 449,
+      "stamp": 19.883333333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 52290,
+      "occupied": 454,
+      "stamp": 20.2875
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 52290,
+      "occupied": 454,
+      "stamp": 20.695833333
+    },
+    {
+      "width": 240,
+      "height": 240,
+      "known": 53226,
+      "occupied": 468,
+      "stamp": 21.1
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 54193,
+      "occupied": 700,
+      "stamp": 21.508333333
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 54193,
+      "occupied": 700,
+      "stamp": 21.9125
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 54822,
+      "occupied": 718,
+      "stamp": 22.320833333
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 55315,
+      "occupied": 729,
+      "stamp": 22.725
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 55315,
+      "occupied": 729,
+      "stamp": 23.133333333
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 55315,
+      "occupied": 729,
+      "stamp": 23.5375
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 55315,
+      "occupied": 729,
+      "stamp": 23.945833333
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 55664,
+      "occupied": 737,
+      "stamp": 24.35
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 55664,
+      "occupied": 737,
+      "stamp": 24.758333333
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 56004,
+      "occupied": 741,
+      "stamp": 24.962499999
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 56004,
+      "occupied": 741,
+      "stamp": 25.366666666
+    },
+    {
+      "width": 240,
+      "height": 241,
+      "known": 56238,
+      "occupied": 747,
+      "stamp": 25.774999999
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56645,
+      "occupied": 1037,
+      "stamp": 26.183333333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56645,
+      "occupied": 1037,
+      "stamp": 26.591666666000002
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56645,
+      "occupied": 1037,
+      "stamp": 26.995833333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56645,
+      "occupied": 1037,
+      "stamp": 27.199999999
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56645,
+      "occupied": 1037,
+      "stamp": 27.604166666
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56645,
+      "occupied": 1037,
+      "stamp": 28.012499999
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56758,
+      "occupied": 1067,
+      "stamp": 28.416666666
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56894,
+      "occupied": 1084,
+      "stamp": 28.824999999
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56894,
+      "occupied": 1084,
+      "stamp": 29.229166666
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 29.637499999
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 30.041666666
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 30.245833333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 30.654166666000002
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 31.058333333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 31.466666666
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 31.870833333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 32.279166666
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 32.483333333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 32.8875
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 33.295833333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 33.7
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 34.108333333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 34.5125
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 34.920833333
+    },
+    {
+      "width": 241,
+      "height": 241,
+      "known": 56939,
+      "occupied": 1089,
+      "stamp": 35.125
+    },
+    {
+      "width": 244,
+      "height": 241,
+      "known": 57024,
+      "occupied": 1162,
+      "stamp": 35.529166666
+    },
+    {
+      "width": 244,
+      "height": 241,
+      "known": 57098,
+      "occupied": 1252,
+      "stamp": 35.9375
+    },
+    {
+      "width": 244,
+      "height": 241,
+      "known": 57098,
+      "occupied": 1252,
+      "stamp": 36.341666666
+    },
+    {
+      "width": 244,
+      "height": 241,
+      "known": 57125,
+      "occupied": 1273,
+      "stamp": 36.75
+    },
+    {
+      "width": 244,
+      "height": 241,
+      "known": 57125,
+      "occupied": 1273,
+      "stamp": 37.154166666
+    }
+  ],
+  "accepted_slam_poses": [],
+  "reset_response": "Simulation reset successfully",
+  "post_reset_map_to_world": {
+    "yaw": -0.003928459108113889,
+    "x": -0.9638848440944962,
+    "y": -0.5136500334634153
+  },
+  "post_reset_localization_error_m": 1.5700924586837752e-16,
+  "post_reset_drive_localization_error_m": 0.45027523514835743,
+  "map_updates_after_reset": 13,
+  "cloud_updates_after_reset": 0,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1808,
+  "sensor_counts": {
+    "/oakd/rgb/image_raw": 185,
+    "/oakd/depth/image_raw": 185,
+    "/scan": 185
+  },
+  "scan_geometry": {
+    "frame": "laser_link",
+    "samples": 360,
+    "finite": 360,
+    "min_m": 5.4997944831848145,
+    "max_m": 8.638745307922363,
+    "range_min": 0.11999999731779099,
+    "range_max": 12.0
+  },
+  "passed": false
+}

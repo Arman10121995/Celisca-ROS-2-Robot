@@ -1,0 +1,36 @@
+{
+  "source_world": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world",
+  "source_sha256": "fb040b23f2a84fb7cc13ca5f37d1a69c96bdd2a3dd14e9984b47fda1f9f1f9ce",
+  "mesh_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/celisca_floor_1_furniture/meshes/celisca_floor_1_furniture_collision.stl": "23350d9b2d2b83486f301a110998f72d12c5a0a52606709332a1eda4ddbbb9c0"
+  },
+  "mesh_slice_paths": 1402,
+  "mesh_mask_cells": 17560,
+  "collision_count": 1,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    0.0,
+    1.32
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/generated_maps/celisca_floor_1_furniture-20261005-120438-758c98/celisca_floor_1_furniture.yaml",
+  "free_cells": 4781,
+  "occupied_cells": 711,
+  "unknown_cells": 155158,
+  "shape": [
+    315,
+    510
+  ],
+  "origin": [
+    -25.5,
+    -15.75,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "14fafa464b850dd23c0f507b333ed7406a1bce8919190a4a0db7ca15d26d81af",
+    ".pgm": "1a7df49b61549d6ef762fdf6dc57c3d3899aa2a5a16a7947158c3d6459ebea85"
+  }
+}

@@ -1,9 +1,9 @@
 # Stabilization and remaining work: agent execution guide
 
-Updated 2026-09-30. This guide implements the user's requested patch queue
+Updated 2026-10-05. This guide implements the user's requested patch queue
 before further project expansion. Read `docs/AGENT_HANDOFF.md`,
-`docs/status/platform-status.yaml`, and `ROADMAP.md` first. Drone integration is
-excluded from the current run. Existing Bumperbot/Labbot workflows and assets
+`docs/status/platform-status.yaml`, and `ROADMAP.md` first. The user includes
+drone integration; retain the measured PX4 Flight path. Existing Bumperbot/Labbot workflows and assets
 must remain available.
 
 ## Establish the actual baseline
@@ -14,7 +14,7 @@ mission. Keep all large artifacts on the mounted workspace SSD.
 
 1. Inspect `git status --short` and the task ledger. Preserve existing edits.
    Claim the next patch and record any additional scope paths before changing
-   shared code. Current source baseline is `e3d63b3` plus documented working-tree
+   shared code. October 5 source baseline is `700b94e` plus documented working-tree
    patches; an installed package can still be older than source.
 2. Source `/opt/ros/humble/setup.bash` and `install/setup.bash`. Build changed
    packages with `colcon build --packages-select ... --symlink-install`.
@@ -137,11 +137,38 @@ Planner/controller defaults must suit the selected steering pattern. The GUI
 now selects Smac2D/DWB for this base. Crab/in-phase use `omni_parallel` with
 `ParallelSteeringCritic`, which rejects mixed translation/yaw. Never switch
 back to unconstrained RPP for parallel steering: the diagonal trial aborted
-with no progress. Include a final-heading goal in every repeat.
-The named crab screen passes on all four backends after Isaac's 4WS `vy`
-forwarding repair; this does not close the other-pattern matrix. The newer
-probe reports independent final yaw explicitly. Isaac's 16.13° truth-heading
-error remains a precision gap even when Nav2 accepts its localization estimate.
+with no progress. Include a final-heading goal in every repeat. Use `steering_mode:=PATTERN`;
+the bounded wrappers query the running `drive_config` to catch launch typos.
+Generic plugin defaults must load before the robot overlay, so DWB cannot
+erase its footprint critic or arrival window.
+The clear-map screen matrix has all 16 pattern/backend cells and all four
+mecanum cells. October 5 crab repeats pass stricter independent terminal limits
+(0.15 m / 5°) on every backend. The continuous endpoint-distance critic avoids
+the grid-cost plateau that stalled parallel steering near a goal. These predate the final obstacle-scoring changes. Repeat each pattern and
+route with current settings and preserve any body-heading failure. Read the
+[October 5 measurements](status/continuation-2026-10-05.md) and retain the
+earlier aborted hard-gate/latched-critic trials as negative evidence.
+
+Use `scripts/sim_workflow_check.sh` for live localization, mapping, watchdog and
+reset checks. A robot reset preserves monotonic `/clock`, then resets the EKF
+from fresh raw odometry. Humble SLAM Toolbox 2.6.10 has no graph-reset service:
+`slam_supervisor.py` restarts the actual upstream process and acknowledges a
+fresh accepted `/pose`. Clearing its queue is insufficient. RTAB-Map uses its
+real reset service. Observe motion after reset: a stationary matching pose
+alone cannot prove the estimator resumed tracking.
+
+The GUI's **Reset Robot** is enabled for an owned wheeled Display/Localization/
+SLAM/3D SLAM launch. It is deliberately unavailable for an active navigation
+goal or flight until those reset workflows are qualified. Gazebo restores the
+robot's settled pose and controller commands, preserving the world clock;
+resetting actors or the entire world requires restarting the launch.
+
+For 2D SLAM, count accepted poses and occupied cells, not merely `/map`
+publications. Small bases need 0.1 m / 0.1 rad scan spacing for short Drive
+legs. For RGB-D SLAM, require a changing finite XYZ cloud with actual height.
+**Save 3D map** calls RTAB-Map's acknowledged backup service, copies the stable
+database and exports the real `/cloud_map` to PCD. Verify both files; no
+placeholder collision world counts as a reconstructed map.
 
 ## P6: physical mecanum wheels
 
@@ -197,3 +224,11 @@ then inspect GitHub Actions on the exact published revision when publishing is
 authorized. Diagnose the actual failing job/log; do not silence a test or label
 an untested backend successful. R5.4 now has measured native/ROS2 X500 Flight acceptance. Use the
 [PX4 guide](tutorials/px4_x500.md); broader aerial mapping/planning remains open.
+
+## October 5 world and robot extensions
+
+Follow [ASSET_EXTENSION_GUIDE](ASSET_EXTENSION_GUIDE.md) and R3.6, R5.7–R5.10,
+R6.5–R6.7. Catalogs and generated occupancy previews are available in GUI.
+All-map flight selection, imports, terrain conversion and manipulation
+acceptance remain distinct. New source listings must not close existing
+stabilization, measured comparison or clean-host tasks.

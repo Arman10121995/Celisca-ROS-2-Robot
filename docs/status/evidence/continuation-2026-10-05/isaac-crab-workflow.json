@@ -1,0 +1,174 @@
+{
+  "mode": "loc",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5951,
+      "yaw_change_rad": -0.0003,
+      "tail_speed_mps": 0.200109201305432,
+      "tail_yaw_speed_rps": 0.0005097388725403256,
+      "end": {
+        "x": 0.09491577231368226,
+        "y": -0.5000075683492712,
+        "z": 0.01208796462906709,
+        "yaw": -0.00039067872769018577
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.017,
+      "distance_m": 0.5991,
+      "yaw_change_rad": -0.0002,
+      "tail_speed_mps": 0.20031218130731906,
+      "tail_yaw_speed_rps": 0.0005036007600609071,
+      "end": {
+        "x": -0.4994558304926605,
+        "y": -0.4999020325131913,
+        "z": 0.012099271250845874,
+        "yaw": -0.0009596047579141051
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0028,
+      "yaw_change_rad": 1.0906,
+      "tail_speed_mps": 2.8455486401409877e-05,
+      "tail_yaw_speed_rps": 0.381473408603908,
+      "end": {
+        "x": -0.5022308313753665,
+        "y": -0.4992087885975516,
+        "z": 0.012209176953651014,
+        "yaw": 1.0895275674188403
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0001,
+      "yaw_change_rad": -1.132,
+      "tail_speed_mps": 0.0001771780115823512,
+      "tail_yaw_speed_rps": 0.38150722185201885,
+      "end": {
+        "x": -0.5021216774758183,
+        "y": -0.49922780461957655,
+        "z": 0.012110674617387157,
+        "yaw": -0.036130773161376036
+      }
+    },
+    "strafe": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5173,
+      "yaw_change_rad": -0.0208,
+      "tail_speed_mps": 0.20002105203211118,
+      "tail_yaw_speed_rps": 0.00040962859488938297,
+      "end": {
+        "x": -0.4014969569607904,
+        "y": 0.008327285366351137,
+        "z": 0.012084620841728164,
+        "yaw": -0.06282917812117104
+      }
+    },
+    "strafe_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.4295,
+      "yaw_change_rad": 0.0215,
+      "tail_speed_mps": 0.2003009688368405,
+      "tail_yaw_speed_rps": 0.0006074112815799837,
+      "end": {
+        "x": -0.30868555027869327,
+        "y": -0.4047756255015856,
+        "z": 0.012121078985840535,
+        "yaw": -0.040899203863626145
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0169,
+      "yaw_change_rad": 0.0004,
+      "tail_speed_mps": 4.594343171200584e-05,
+      "tail_yaw_speed_rps": 0.00029375550648132187,
+      "end": {
+        "x": 0.05208919093377477,
+        "y": -0.47030432826436763,
+        "z": 0.01201497846904262,
+        "yaw": -0.05258031296590684
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0002,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 8.81298722940422e-05,
+      "tail_yaw_speed_rps": 0.00010849502740687317,
+      "end": {
+        "x": -0.5002085469654509,
+        "y": -0.5000121230930563,
+        "z": 0.012022194294923294,
+        "yaw": 3.4796158967355416e-05
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3952,
+      "yaw_change_rad": 0.0004,
+      "tail_speed_mps": 0.20029642994757207,
+      "tail_yaw_speed_rps": 0.0003952541943313544,
+      "end": {
+        "x": -0.10497411993707649,
+        "y": -0.49970099513349614,
+        "z": 0.012030528918349985,
+        "yaw": 0.00047692111982924705
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "strafe": true,
+    "strafe_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "monotonic_clock": true
+  },
+  "initial_truth": {
+    "x": -0.5001616690300519,
+    "y": -0.5000493824043851,
+    "z": 0.012044666284458841,
+    "yaw": -6.250463658738702e-05
+  },
+  "localization_error_m": 0.02863628227443173,
+  "sensor_messages_during_drive": {
+    "/scan": 145,
+    "/oakd/rgb/image_raw": 145,
+    "/oakd/depth/image_raw": 145
+  },
+  "reset_response": "Isaac physical reset acknowledged",
+  "post_reset_localization_error_m": 0.0062241471092206015,
+  "post_reset_drive_localization_error_m": 0.008302522692618112,
+  "clock_backward_jumps": 0,
+  "truth_samples": 12351,
+  "sensor_counts": {
+    "/scan": 186,
+    "/oakd/rgb/image_raw": 186,
+    "/oakd/depth/image_raw": 186
+  },
+  "passed": true
+}

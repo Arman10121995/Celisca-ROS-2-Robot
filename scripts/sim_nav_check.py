@@ -20,6 +20,7 @@ import json
 import math
 import sys
 import time
+from pathlib import Path
 
 import rclpy
 from action_msgs.msg import GoalStatus
@@ -41,6 +42,8 @@ class Check(Node):
                              reliability=ReliabilityPolicy.RELIABLE)
         self.map = None
         self.truth = None
+        self.truth_received = None
+        self.trace = []
         self.motion_source = None
         self.monitor_motion = False
         self.previous_odom_pose = None
@@ -57,6 +60,14 @@ class Check(Node):
 
     def on_truth(self, message):
         self.truth = message
+        self.truth_received = time.monotonic()
+        if self.monitor_motion:
+            p, q = message.pose.pose.position, message.pose.pose.orientation
+            self.trace.append({
+                'stamp_s': message.header.stamp.sec + message.header.stamp.nanosec*1e-9,
+                'x': p.x, 'y': p.y, 'z': p.z,
+                'yaw': math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z)),
+            })
         self.on_motion(message, "/odom/ground_truth")
 
     def on_motion(self, message, source):
@@ -121,6 +132,7 @@ class Check(Node):
             yaw = math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z))
             error = math.atan2(math.sin(yaw-goal_yaw), math.cos(yaw-goal_yaw))
             report.update(final_truth_xy=[round(p.x, 3), round(p.y, 3)],
+                          truth_age_wall_s=round(time.monotonic()-self.truth_received, 3),
                           final_truth_yaw_deg=round(math.degrees(yaw), 2),
                           final_error_truth_m=round(math.hypot(p.x-goal_xy[0], p.y-goal_xy[1]), 3),
                           final_yaw_error_truth_deg=round(math.degrees(error), 2))
@@ -178,13 +190,74 @@ def main(argv=None):
                         help="goal heading in map frame; defaults to direction of travel")
     parser.add_argument("--via-topic", action="store_true",
                         help="publish the goal on /robot_lab/goal_pose as RViz's 2D Goal Pose does")
+    parser.add_argument('--max-position-error', type=float)
+    parser.add_argument('--max-yaw-error-deg', type=float)
+    parser.add_argument('--trace-out', help='Save independent stamped body-truth samples')
+    parser.add_argument('--world-file', help='Box-built SDF for independent swept-route clearance')
+    parser.add_argument('--robot-radius', type=float, default=0.34)
+    parser.add_argument('--min-route-clearance', type=float, default=0.02)
+    parser.add_argument('--require-detour', action='store_true',
+                        help='Require the start-to-goal straight segment to intersect an obstacle')
+    parser.add_argument('--drive-node',default='mujoco_spawner')
+    parser.add_argument('--expected-steering-mode',choices=('ackermann','crab','in_phase','pivot'))
     args = parser.parse_args(argv)
     if args.offset_x is None and args.offset_y != 0.0:
         parser.error("--offset-y requires --offset-x")
+    if (args.max_position_error is None) != (args.max_yaw_error_deg is None):
+        parser.error('Set both measured position and heading limits')
+    for limit in (args.max_position_error, args.max_yaw_error_deg):
+        if limit is not None and (not math.isfinite(limit) or limit <= 0):
+            parser.error('Acceptance limits must be positive and finite')
+    if args.world_file and (not math.isfinite(args.robot_radius) or args.robot_radius <= 0 or
+                           not math.isfinite(args.min_route_clearance) or args.min_route_clearance < 0):
+        parser.error('Route radius must be positive and clearance nonnegative, both finite')
+    if args.require_detour and not args.world_file:
+        parser.error('--require-detour requires --world-file')
+    if args.world_file and not Path(args.world_file).is_file():
+        parser.error('--world-file must name an existing SDF world')
 
     rclpy.init()
     node = Check()
     result = {}
+
+    def finish(goal_xy, goal_yaw):
+        # Measure after a full simulated second of zero-command settling.
+        if result.get('outcome') == 'succeeded' and node.truth is not None:
+            stamp = node.truth.header.stamp
+            start_stamp = stamp.sec + stamp.nanosec*1e-9
+            settled = node.spin_until(lambda: node.truth.header.stamp.sec +
+                node.truth.header.stamp.nanosec*1e-9 >= start_stamp+1.0, 30.0)
+            result['settled_sim_second'] = settled
+        result.update(node.final_pose_report(args.base, goal_xy, goal_yaw))
+        result.update(node.motion_report())
+        passed = result.get('outcome') == 'succeeded'
+        if args.max_position_error is not None:
+            from robot_lab_utils.qualification import navigation_acceptance
+            result['acceptance'] = navigation_acceptance(
+                result, args.max_position_error, args.max_yaw_error_deg)
+            if not result.get('settled_sim_second'):
+                result['acceptance']['checks']['settled_sim_second'] = False
+                result['acceptance']['passed'] = False
+            passed = result['acceptance']['passed']
+        if args.trace_out:
+            Path(args.trace_out).write_text(json.dumps({'samples': node.trace})+'\n')
+            result['truth_trace'] = args.trace_out
+            result['truth_samples'] = len(node.trace)
+        if args.world_file:
+            tools_dir = Path(__file__).resolve().parents[1] / 'src/robot_lab_maps/tools'
+            sys.path.insert(0, str(tools_dir))
+            from validate_nav_arenas import parse_world_boxes
+            from arena_clearance import measured_route_acceptance
+            boxes = parse_world_boxes(args.world_file)
+            points = [(sample['x'],sample['y']) for sample in node.trace]
+            result['route_acceptance'] = measured_route_acceptance(
+                boxes,points,goal_xy[:2],args.robot_radius,args.min_route_clearance,args.require_detour)
+            result['route_acceptance']['world_file'] = args.world_file
+            passed = passed and result['route_acceptance']['passed']
+        print(json.dumps(result))
+        node.destroy_node()
+        rclpy.shutdown()
+        return 0 if passed else 1
     started = time.monotonic()
     stages = (("map", lambda: node.map is not None),
               ("localization_tf", lambda: node.pose(args.base) is not None),
@@ -195,6 +268,13 @@ def main(argv=None):
             print(json.dumps(result))
             return 1
     result["stack_ready_wall_s"] = round(time.monotonic() - started, 1)
+    if args.expected_steering_mode:
+        from robot_lab_utils.qualification import inspect_drive_mode
+        result['drive_configuration']=inspect_drive_mode(node,args.drive_node,args.expected_steering_mode)
+        if not result['drive_configuration']['passed']:
+            result['error']='Running steering mode differs from the requested trial'
+            print(json.dumps(result))
+            return 1
     node.spin_until(lambda: False, 5.0)  # let AMCL settle on its initial pose
     start = node.pose(args.base)
     if args.offset_x is None:
@@ -251,10 +331,7 @@ def main(argv=None):
         fallback = "timeout" if accepted else "no goal accepted"
         result["outcome"] = STATUS.get(last, fallback if last is None else str(last))
         result["wall_s"] = round(time.monotonic() - sent, 1)
-        result.update(node.final_pose_report(args.base, goal_xy, goal_yaw))
-        result.update(node.motion_report())
-        print(json.dumps(result))
-        return 0 if result["outcome"] == "succeeded" else 1
+        return finish(goal_xy, goal_yaw)
     future = node.action.send_goal_async(goal)
     node.spin_until(future.done, 30.0)
     handle = future.result() if future.done() else None
@@ -267,12 +344,7 @@ def main(argv=None):
     status = done.result().status if done.done() else None
     result["outcome"] = STATUS.get(status, "timeout" if status is None else str(status))
     result["wall_s"] = round(time.monotonic() - sent, 1)
-    result.update(node.final_pose_report(args.base, goal_xy, goal_yaw))
-    result.update(node.motion_report())
-    print(json.dumps(result))
-    node.destroy_node()
-    rclpy.shutdown()
-    return 0 if result["outcome"] == "succeeded" else 1
+    return finish(goal_xy, goal_yaw)
 
 
 if __name__ == "__main__":

@@ -2,8 +2,8 @@
 """
 Export helper for 3D SLAM (RTAB-Map).
 Usage examples:
-  python3 export_3d_map.py --db /path/to/map.db --output-dir /tmp/export --pcd
-  python3 export_3d_map.py --cloud-topic /rtabmap/cloud_map --output /tmp/map.pcd
+  ros2 run robot_lab_bringup export_3d_map.py --cloud-topic /cloud_map \
+    --output /workspace/molar/robot_lab_runtime/map.pcd
 """
 
 import argparse
@@ -11,6 +11,7 @@ import os
 import struct
 import sys
 import time
+import math
 from pathlib import Path
 
 try:
@@ -18,6 +19,7 @@ try:
     from rclpy.node import Node
     from sensor_msgs.msg import PointCloud2
     from sensor_msgs_py import point_cloud2
+    from rclpy.qos import QoSProfile, DurabilityPolicy
 except Exception:
     rclpy = None
     PointCloud2 = None
@@ -29,11 +31,16 @@ def save_pcd_from_msg(msg, output_path):
     points = []
     has_rgb = False
 
-    for p in point_cloud2.read_points(msg, field_names=("x", "y", "z", "rgb"), skip_nans=True):
+    color = next((f for f in msg.fields if f.name in ('rgb','rgba')), None)
+    fields = ('x','y','z',color.name) if color else ('x','y','z')
+    for p in point_cloud2.read_points(msg, field_names=fields, skip_nans=False):
         x, y, z = p[0], p[1], p[2]
+        if not all(math.isfinite(float(v)) for v in (x,y,z)):
+            continue
         if len(p) > 3 and p[3] is not None:
             has_rgb = True
-            rgb_packed = int(p[3])
+            rgb_packed = (struct.unpack('I',struct.pack('f',float(p[3])))[0]
+                          if color.datatype == 7 else int(p[3]))
             r = (rgb_packed >> 16) & 0xFF
             g = (rgb_packed >> 8) & 0xFF
             b = rgb_packed & 0xFF
@@ -41,6 +48,8 @@ def save_pcd_from_msg(msg, output_path):
         else:
             points.append((x, y, z))
 
+    if not points:
+        raise ValueError('Point cloud contains no finite XYZ points')
     with open(output_path, "w") as f:
         f.write("# .PCD v0.7 - Point Cloud Data file format\n")
         f.write("VERSION 0.7\n")
@@ -73,7 +82,8 @@ class OneShotCloudSaver(Node):
         self.output_path = output_path
         self.received = False
         self.subscription = self.create_subscription(
-            PointCloud2, topic, self.callback, 10
+            PointCloud2, topic, self.callback,
+            QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         )
         self.timer = self.create_timer(timeout, self.timeout_cb)
         self.start_time = time.time()
@@ -81,8 +91,8 @@ class OneShotCloudSaver(Node):
     def callback(self, msg):
         if self.received:
             return
-        self.received = True
         save_pcd_from_msg(msg, self.output_path)
+        self.received = True
         rclpy.shutdown()
 
     def timeout_cb(self):
@@ -91,7 +101,7 @@ class OneShotCloudSaver(Node):
         rclpy.shutdown()
 
 
-def export_pcd_live(topic="/rtabmap/cloud_map", output_path="map_cloud.pcd", timeout=20.0):
+def export_pcd_live(topic="/cloud_map", output_path="map_cloud.pcd", timeout=20.0):
     if rclpy is None:
         print("rclpy not available, cannot export live cloud.")
         return False
@@ -101,7 +111,11 @@ def export_pcd_live(topic="/rtabmap/cloud_map", output_path="map_cloud.pcd", tim
         rclpy.spin(node)
     except Exception as e:
         print(f"Spin error: {e}")
-    return Path(output_path).exists()
+    success = node.received and Path(output_path).exists()
+    node.destroy_node()
+    if rclpy.ok():
+        rclpy.shutdown()
+    return success
 
 
 def export_pcd_from_db(db_path, output_path):
@@ -375,7 +389,8 @@ def create_mesh_world(pcd_or_mesh_path, output_world, map_name="exported_3d", me
 def main():
     parser = argparse.ArgumentParser(description="Export RTAB-Map 3D data")
     parser.add_argument("--db", help="Path to RTAB-Map .db file")
-    parser.add_argument("--cloud-topic", default="/rtabmap/cloud_map", help="Live cloud topic")
+    parser.add_argument("--cloud-topic", default="/cloud_map", help="Live cloud topic")
+    parser.add_argument('--output', help='Exact live PCD output path (implies --pcd)')
     parser.add_argument("--output-dir", default=".", help="Directory to write exports")
     parser.add_argument("--pcd", action="store_true", help="Export PCD")
     parser.add_argument("--octomap", action="store_true", help="Try to export OctoMap")
@@ -384,10 +399,12 @@ def main():
     parser.add_argument("--map-name", default="exported_map", help="Name for world")
     args = parser.parse_args()
 
-    out_dir = Path(args.output_dir)
+    if args.output:
+        args.pcd = True
+    out_dir = Path(args.output).parent if args.output else Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    pcd_file = out_dir / f"{args.map_name}.pcd"
+    pcd_file = Path(args.output) if args.output else out_dir / f"{args.map_name}.pcd"
     mesh_file = out_dir / f"{args.map_name}.ply"
     db_file = Path(args.db) if args.db else None
 
@@ -415,12 +432,16 @@ def main():
         try_export_octomap(pcd_file, bt_file)
 
     if args.world:
+        if not mesh_file.exists():
+            print('[export] World not generated: no reconstructed collision mesh available.')
+            return 1
         world_file = out_dir / f"{args.map_name}.world"
         used_mesh = str(mesh_file) if mesh_file.exists() else None
         create_mesh_world(pcd_file if pcd_file.exists() else "map.pcd", world_file, args.map_name, used_mesh)
 
     print("[export] Done.")
+    return 0 if success else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

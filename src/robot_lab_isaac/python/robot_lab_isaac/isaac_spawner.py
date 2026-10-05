@@ -253,6 +253,10 @@ class IsaacSpawner(Node):
             DiagnosticArray, "/robot_lab/health", 10)
         self._reset_srv = self.create_service(
             Trigger, "/robot_lab/reset", self._on_reset)
+        self._reset_ack = threading.Event()
+        self._reset_error = None
+        from robot_lab_utils.reset_notifications import ResetNotifications
+        self._reset_notifications = ResetNotifications(self)
         self._ready = False
         self._health_timer = self.create_timer(
             1.0, self._publish_health,
@@ -658,6 +662,9 @@ class IsaacSpawner(Node):
                         self._ready_pub.publish(Bool(data=True))
                         self.get_logger().info(
                             "Isaac runtime ready (dofs=%s)" % self._dofs)
+                    elif ev == "reset_done":
+                        self._reset_error = msg.get('error')
+                        self._reset_ack.set()
                     elif ev == "state":
                         with self._lock:
                             self._state = msg
@@ -699,12 +706,20 @@ class IsaacSpawner(Node):
         """Reset the simulation (R2.3)."""
         try:
             if self._proc is not None and self._proc.stdin is not None:
-                # Send reset command to Isaac runtime.
+                # Clear stale drive commands before the worker restores state.
+                self._twist = Twist()
+                self._last_cmd_time = 0.0
+                if self._drive is not None:
+                    self._drive.reset()
+                self._reset_ack.clear()
                 self._proc.stdin.write('{"reset": true}\n')
                 self._proc.stdin.flush()
-                self.get_logger().info("Reset command sent to Isaac runtime")
-                response.success = True
-                response.message = "Reset command sent to Isaac runtime"
+                completed = self._reset_ack.wait(timeout=10)
+                response.success = completed and self._reset_error is None
+                response.message = ('Isaac physical reset acknowledged' if response.success else
+                                    self._reset_error or 'Isaac reset acknowledgment timed out')
+                if response.success:
+                    self._reset_notifications.notify()
             else:
                 response.success = False
                 response.message = "Isaac runtime not running (offline mode)"

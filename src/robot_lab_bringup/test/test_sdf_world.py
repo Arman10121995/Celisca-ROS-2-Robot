@@ -79,3 +79,15 @@ class SdfWorldTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_occupancy_uses_collision_geometry_without_display_fallback(tmp_path):
+    world=tmp_path/'world.sdf'
+    world.write_text('<sdf version="1.7"><world name="test"><model name="model">'
+        '<link name="decorative"><visual name="v"><geometry><box><size>2 2 2</size></box></geometry></visual></link>'
+        '<link name="solid"><collision name="c"><geometry><box><size>1 1 1</size></box></geometry></collision></link>'
+        '</model></world></sdf>')
+    visible,_=sdf_world.extract_static_shapes(str(world),lambda uri,base:uri)
+    collision,_=sdf_world.extract_static_shapes(str(world),lambda uri,base:uri,collision_only=True)
+    assert len(visible)==2
+    assert len(collision)==1 and collision[0]['size']==[1,1,1]

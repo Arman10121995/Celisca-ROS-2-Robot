@@ -181,7 +181,7 @@ def _shape(geometry, frame, base_dir, resolve, model_name, skipped):
 
 
 def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
-                model_name, depth=0):
+                model_name, depth=0, collision_only=False):
     if depth > _MAX_INCLUDE_DEPTH:
         skipped.append("include nesting too deep")
         return
@@ -204,13 +204,15 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
                 for nested in _children(root, "model"):
                     _walk_model(nested, include_frame,
                                 os.path.dirname(sdf_path), resolve, shapes,
-                                skipped, model_name, depth + 1)
+                                skipped, model_name, depth + 1, collision_only)
 
     for link in _children(model, "link"):
         link_frame = compose(frame, frame_of(link))
         # Collision geometry is what physics sees; visual keeps decorative
         # models visible when they declare no collision.
-        sources = _children(link, "collision") or _children(link, "visual")
+        sources = _children(link, "collision")
+        if not sources and not collision_only:
+            sources = _children(link, "visual")
         for source in sources:
             geometry = _child(source, "geometry")
             if geometry is None:
@@ -222,10 +224,10 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
 
     for nested in _children(model, "model"):
         _walk_model(nested, frame, base_dir, resolve, shapes, skipped,
-                    model_name, depth + 1)
+                    model_name, depth + 1, collision_only)
 
 
-def extract_static_shapes(world_path, resolve):
+def extract_static_shapes(world_path, resolve, collision_only=False):
     """Return (shapes, skipped_notes) for every static shape in a world.
 
     Scripted ``<actor>`` elements are not static geometry and are reported in
@@ -239,12 +241,12 @@ def extract_static_shapes(world_path, resolve):
     shapes, skipped = [], []
     for model in _children(world, "model"):
         _walk_model(model, _IDENTITY, base_dir, resolve, shapes, skipped,
-                    model.get("name", "model"))
+                    model.get("name", "model"), collision_only=collision_only)
     for include in _children(world, "include"):
         wrapper = ET.Element("model")
         wrapper.append(include)
         _walk_model(wrapper, _IDENTITY, base_dir, resolve, shapes, skipped,
-                    _text(include, "name") or "include")
+                    _text(include, "name") or "include", collision_only=collision_only)
     for actor in _children(world, "actor"):
         skipped.append("actor '%s' (scripted motion, not static geometry)"
                        % actor.get("name", "?"))

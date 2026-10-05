@@ -6,6 +6,7 @@ import queue
 import shlex
 import shutil
 import signal
+import sqlite3
 import subprocess
 import threading
 import tkinter as tk
@@ -432,6 +433,10 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_repeat_job = None
         self.drive_model = RampDrive()
         self.drive_strafe_model = RampDrive()
+        self.drive_altitude_model = RampDrive()
+        self.drive_altitude_buttons = set()
+        self.drive_altitude_widgets = {}
+        self.current_vertical = 0.0
         self.drive_buttons = set()
         self.drive_button_widgets = {}
         self.drive_strafe_buttons = set()
@@ -923,6 +928,13 @@ class SimulationLauncherGui(tk.Tk):
                                 command=lambda action=action: self._flight_action(action))
             button.grid(row=3, column=column, sticky='ew', padx=2, pady=2)
             self.flight_buttons.append(button)
+        for column, (label, sign) in enumerate((('Altitude Up',1.0),('Altitude Down',-1.0))):
+            button = ttk.Button(drive_frame,text=label,
+                                command=lambda sign=sign:self._start_altitude(sign))
+            button.grid(row=4,column=column,sticky='ew',padx=2,pady=2)
+            self.drive_altitude_widgets[sign] = button
+            self.flight_buttons.append(button)
+            add_tooltip(button,'Click to climb or descend; click again to slow to a hover. Stop/Space stops altitude changes.')
 
         speed_frame = ttk.Frame(controls)
         speed_frame.grid(row=27, column=0, sticky="ew", pady=(0, 10))
@@ -988,6 +1000,12 @@ class SimulationLauncherGui(tk.Tk):
 
         self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
         self.save_map_button.grid(row=28, column=0, sticky="ew", pady=(0, 4))
+        self.reset_robot_button = ttk.Button(controls, text="Reset Robot",
+                                             command=self._reset_robot, state='disabled')
+        self.reset_robot_button.grid(row=29, column=0, sticky='ew', pady=(0, 4))
+        add_tooltip(self.reset_robot_button,
+                    'Stop and return to the initial pose in Display, Localization or SLAM. '
+                    'Restart the launch to reset the entire world.')
 
         output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
         output_frame.grid(row=0, column=1, sticky="nsew")
@@ -1759,6 +1777,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _update_validation_and_command(self):
         """Run the shared validator and refresh command + validation text."""
+        self._update_reset_button()
         if not COMPOSITION_AVAILABLE or self.composition_registry is None:
             self.validation_var.set(
                 "Composition resolver unavailable; direct launch used.")
@@ -1852,6 +1871,24 @@ class SimulationLauncherGui(tk.Tk):
         command = ['ros2', 'service', 'call', '/px4/'+action, 'std_srvs/srv/Trigger', '{}']
         threading.Thread(target=self._run_aux_command, args=(command, 'PX4 '+action), daemon=True).start()
 
+    def _update_reset_button(self):
+        profile = self.robot_profiles.get(self.robot_var.get(), {})
+        enabled = (self._launch_running and self.launch_kind_var.get() == 'simulation'
+                   and self.mode_var.get() in ('display', 'loc', 'slam', '3d_slam')
+                   and bool(self.robot_var.get()) and self.robot_var.get() != 'none'
+                   and bool(profile.get('drive'))
+                   and self._drive_type() in ('diff', 'ackermann', 'four_wheel_steer', 'mecanum'))
+        self.reset_robot_button.state(['!disabled'] if enabled else ['disabled'])
+
+    def _reset_robot(self):
+        self._update_reset_button()
+        if self.reset_robot_button.instate(['disabled']):
+            return
+        self._stop_drive()
+        command = ['timeout', '30', 'ros2', 'service', 'call', '/robot_lab/reset',
+                   'std_srvs/srv/Trigger', '{}']
+        threading.Thread(target=self._run_aux_command, args=(command, 'Robot reset'), daemon=True).start()
+
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
@@ -1889,12 +1926,6 @@ class SimulationLauncherGui(tk.Tk):
             self.status_var.set("Command copied")
 
     def _update_from_selection(self):
-        if self.robot_var.get() == 'px4_x500' and COMPOSITION_AVAILABLE \
-                and self.composition_registry is not None and not self._map_free():
-            environment_id = self._environment_id()
-            environment = self.composition_registry.environments.get(environment_id) or {}
-            if 'aerial' not in environment.get('supported_robot_classes', []):
-                self.map_var.set('nav_empty')
         # 1. Maps: every map stays selectable in display mode (a map can be
         # visualized in any backend, with or without a robot); the
         # map-dependent modes keep only environments that have a real 2D
@@ -2001,6 +2032,7 @@ class SimulationLauncherGui(tk.Tk):
                 "forward/stop measured, held turning stalls")
         if self.robot_var.get() == 'px4_x500':
             lines.append('PX4 Flight: Takeoff first; WASD/Drive controls XY and yaw, Strafe controls lateral flight. '
+                         'Altitude Up/Down climb or descend; click again to slow to a hover. '
                          'Hold or Space stops manual travel; Land returns to the ground. '
                          '3D goals use /px4/goal; no obstacle avoidance. Health contains the flight guide and measured results.')
         return "\n".join(lines)
@@ -2305,6 +2337,7 @@ class SimulationLauncherGui(tk.Tk):
         self.start_button.configure(state="disabled")
         self.stop_button.configure(state="normal")
         self._launch_running = True
+        self._update_reset_button()
         self.status_var.set(f"Running: {command[3]}")
         threading.Thread(target=self._read_process_output, daemon=True).start()
 
@@ -2335,6 +2368,7 @@ class SimulationLauncherGui(tk.Tk):
                     self._append_output(f"\n[launch exited with code {payload}]\n")
                     self._stop_drive()
                     self._launch_running = False
+                    self._update_reset_button()
                     self._update_validation_and_command()
                     self.stop_button.configure(state="disabled")
                     self.status_var.set("Idle")
@@ -2417,6 +2451,19 @@ class SimulationLauncherGui(tk.Tk):
                          else ["!pressed"])
         self._schedule_drive()
 
+    def _start_altitude(self, sign):
+        if not self._flight_selectable():
+            return
+        self.drive_stop_latched = False
+        if sign in self.drive_altitude_buttons:
+            self.drive_altitude_buttons.remove(sign)
+        else:
+            self.drive_altitude_buttons.clear()
+            self.drive_altitude_buttons.add(sign)
+        for direction,button in self.drive_altitude_widgets.items():
+            button.state(['pressed'] if direction in self.drive_altitude_buttons else ['!pressed'])
+        self._schedule_drive()
+
     def _toggle_drive_input(self):
         if not self.drive_input_enabled.get():
             self.drive_keys.clear()
@@ -2458,11 +2505,12 @@ class SimulationLauncherGui(tk.Tk):
             self.cmd_vel_pub = self.ros_node.create_publisher(Twist, "/key_vel", 10)
         return True
 
-    def _publish_drive(self, linear, angular, lateral=0.0):
+    def _publish_drive(self, linear, angular, lateral=0.0, vertical=0.0):
         if self._ensure_ros_publisher():
             msg = Twist()
             msg.linear.x = float(linear)
             msg.linear.y = float(lateral)
+            msg.linear.z = float(vertical) if self._flight_selectable() else 0.0
             msg.angular.z = float(angular)
             self.cmd_vel_pub.publish(msg)
             rclpy.spin_once(self.ros_node, timeout_sec=0.0)
@@ -2475,7 +2523,8 @@ class SimulationLauncherGui(tk.Tk):
             "--once",
             "/key_vel",
             "geometry_msgs/msg/Twist",
-            f"{{linear: {{x: {float(linear):.3f}, y: {float(lateral):.3f}}}, "
+            f"{{linear: {{x: {float(linear):.3f}, y: {float(lateral):.3f}, "
+            f"z: {float(vertical) if self._flight_selectable() else 0.0:.3f}}}, "
             f"angular: {{z: {float(angular):.3f}}}}}",
         ]
         subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=subprocess_env())
@@ -2537,6 +2586,8 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_repeat_job = None
         was_moving = (any(abs(value) > 1e-9 for value in self.current_drive)
                       or abs(self.current_lateral) > 1e-9)
+        was_vertical = abs(self.current_vertical)>1e-9
+        was_moving = was_moving or was_vertical
         (min_linear, max_linear, min_angular, max_angular,
          linear_step, angular_step, linear_brake, angular_brake) = self._resolved_drive_limits()
         self.drive_model.max_linear = max_linear
@@ -2545,6 +2596,8 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_model.max_angular = max_angular
         self.drive_strafe_model.max_linear = max_linear
         self.drive_strafe_model.min_linear = min_linear
+        self.drive_altitude_model.max_linear = max_linear
+        self.drive_altitude_model.min_linear = min_linear
         if self.drive_model.max_angular == 0.0:
             self.drive_model.angular = 0.0
             self.drive_model.min_angular = 0.0
@@ -2554,6 +2607,7 @@ class SimulationLauncherGui(tk.Tk):
         # disabled otherwise, so this also covers a stale latch.
         strafe_input = (sum(self.drive_strafe_buttons)
                         if self._lateral_drive_selectable() else 0.0)
+        vertical_input = sum(self.drive_altitude_buttons) if self._flight_selectable() else 0.0
         if self.drive_input_enabled.get():
             linear_input += int("w" in self.drive_keys) - int("s" in self.drive_keys)
             angular_input += int("a" in self.drive_keys) - int("d" in self.drive_keys)
@@ -2563,11 +2617,11 @@ class SimulationLauncherGui(tk.Tk):
             if self.drive_joystick.path:
                 self.drive_status_var.set(f"WASD + {self.drive_joystick.path}")
         if self.drive_stop_latched:
-            if not self.drive_buttons and not self.drive_strafe_buttons \
+            if not self.drive_buttons and not self.drive_strafe_buttons and not self.drive_altitude_buttons \
                     and not self.drive_keys and \
                     abs(linear_input) < 1e-9 and abs(angular_input) < 1e-9:
                 self.drive_stop_latched = False
-            linear_input = angular_input = strafe_input = 0.0
+            linear_input = angular_input = strafe_input = vertical_input = 0.0
         self._update_drive_limits_label()
         linear, angular = self.drive_model.step(
             linear_input, angular_input, linear_step, angular_step,
@@ -2577,19 +2631,25 @@ class SimulationLauncherGui(tk.Tk):
             linear_brake, angular_brake)
         self.current_drive = (linear, angular)
         self.current_lateral = lateral
+        vertical,_ = self.drive_altitude_model.step(vertical_input,0.0,linear_step,angular_step,
+                                                   linear_brake,angular_brake)
+        self.current_vertical = vertical
         # Arming WASD/joystick only starts polling. It must not put even a
         # zero Twist on /key_vel until a real input is made. Once moving,
         # keep publishing through the deceleration and its final zero.
         if (self.drive_buttons or self.drive_strafe_buttons or self.drive_keys or
                 abs(linear_input) > 1e-9 or abs(angular_input) > 1e-9 or
-                abs(strafe_input) > 1e-9 or was_moving or
+                abs(strafe_input) > 1e-9 or abs(vertical_input)>1e-9 or was_moving or
                 abs(linear) > 1e-9 or abs(angular) > 1e-9 or
                 abs(lateral) > 1e-9):
-            self._publish_drive(linear, angular, lateral)
-        if (self.drive_buttons or self.drive_strafe_buttons or self.drive_keys
+            if abs(vertical)>1e-9 or was_vertical:
+                self._publish_drive(linear, angular, lateral, vertical)
+            else:
+                self._publish_drive(linear, angular, lateral)
+        if (self.drive_buttons or self.drive_strafe_buttons or self.drive_altitude_buttons or self.drive_keys
                 or self.drive_input_enabled.get()
                 or abs(linear) > 1e-9 or abs(angular) > 1e-9
-                or abs(lateral) > 1e-9):
+                or abs(lateral) > 1e-9 or abs(vertical)>1e-9):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self, keep_input_enabled=False):
@@ -2602,6 +2662,9 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_status_var.set("Keyboard/joystick off")
         self.drive_buttons.clear()
         self.drive_strafe_buttons.clear()
+        self.drive_altitude_buttons.clear()
+        for button in self.drive_altitude_widgets.values():
+            button.state(['!pressed'])
         self.drive_stop_latched = keep_input_enabled
         for button in self.drive_button_widgets.values():
             button.state(["!pressed"])
@@ -2610,12 +2673,13 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_keys.clear()
         self.current_drive = self.drive_model.stop()
         self.current_lateral = self.drive_strafe_model.stop()[0]
+        self.current_vertical = self.drive_altitude_model.stop()[0]
         self._publish_drive(0.0, 0.0, 0.0)
         if keep_input_enabled:
             self._schedule_drive()
 
     def _default_map_save_dir(self):
-        workspace_maps = Path.cwd() / "src" / "maps" / "maps" / self.map_var.get() / "maps"
+        workspace_maps = Path.cwd() / "src" / "robot_lab_maps" / "maps" / self.map_var.get() / "maps"
         if workspace_maps.parent.exists():
             workspace_maps.mkdir(parents=True, exist_ok=True)
             return str(workspace_maps)
@@ -2653,7 +2717,7 @@ class SimulationLauncherGui(tk.Tk):
         threading.Thread(target=self._run_aux_command, args=(command, "map saver"), daemon=True).start()
 
     def _default_3d_map_save_dir(self):
-        workspace_maps = Path.cwd() / "src" / "maps" / "maps" / self.map_var.get() / "rtabmap"
+        workspace_maps = Path.cwd() / "src" / "robot_lab_maps" / "maps" / self.map_var.get() / "rtabmap"
         if workspace_maps.parent.exists():
             workspace_maps.mkdir(parents=True, exist_ok=True)
             return str(workspace_maps)
@@ -2672,7 +2736,7 @@ class SimulationLauncherGui(tk.Tk):
             return
 
         target = filedialog.asksaveasfilename(
-            title="Save 3D RTAB-Map (will also export PCD + world)",
+            title="Save 3D map (database and point cloud)",
             initialdir=self._default_3d_map_save_dir(),
             initialfile=f"{self.map_var.get()}_{self.robot_var.get()}_rtabmap.db",
             defaultextension=".db",
@@ -2683,32 +2747,32 @@ class SimulationLauncherGui(tk.Tk):
 
         target_path = Path(target)
         target_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target_path)
-        for suffix in ("-wal", "-shm"):
-            sidecar = Path(f"{source}{suffix}")
-            if sidecar.exists():
-                shutil.copy2(sidecar, Path(f"{target_path}{suffix}"))
-        self._append_output(f"[saved 3D RTAB-Map database to {target_path}]\n")
+        if source.resolve() == target_path.resolve():
+            messagebox.showerror('Save 3D map', 'Choose a file other than the active RTAB-Map database.')
+            return
+        self._stop_drive()
+        threading.Thread(target=self._snapshot_3d_map,
+                         args=(source, target_path), daemon=True).start()
 
-        # Use the new exporter for PCD + optional OctoMap + world
-        script = os.path.join(os.path.dirname(__file__), "export_3d_map.py")
-        if os.path.exists(script):
-            out_dir = str(target_path.parent)
-            base_name = target_path.stem
-            cmd = [
-                "python3", script,
-                "--db", str(target_path),
-                "--output-dir", out_dir,
-                "--map-name", base_name,
-                "--pcd",
-                "--mesh",
-                "--world",
-                "--octomap",
-            ]
-            self._append_output(f"$ {' '.join(cmd)}\n")
-            threading.Thread(target=self._run_aux_command, args=(cmd, "3d map exporter"), daemon=True).start()
-        else:
-            self._append_output("[warn] export_3d_map.py not found next to GUI script. Only .db was saved.\n")
+    def _snapshot_3d_map(self, source, target):
+        try:
+            # RTAB-Map keeps recent keyframes in memory. Its acknowledged
+            # backup service flushes them before creating a stable .back file.
+            command = ['ros2', 'service', 'call', '/rtabmap/backup', 'std_srvs/srv/Empty', '{}']
+            result = subprocess.run(command, env=subprocess_env(), capture_output=True,
+                                    text=True, timeout=35)
+            self.output_queue.put(('cline', result.stdout+result.stderr))
+            if result.returncode != 0 or 'response:' not in result.stdout:
+                raise RuntimeError('RTAB-Map backup was not acknowledged')
+            backup = Path(str(source)+'.back')
+            with sqlite3.connect(backup.resolve().as_uri()+'?mode=ro', uri=True) as src_db, \
+                    sqlite3.connect(target) as target_db:
+                src_db.backup(target_db)
+            self.output_queue.put(('cline', f'[saved 3D map database to {target}]\n'))
+            self._run_aux_command(['ros2', 'run', 'robot_lab_bringup', 'export_3d_map.py',
+                '--cloud-topic', '/cloud_map', '--output', str(target.with_suffix('.pcd'))], '3D point cloud export')
+        except (OSError, sqlite3.Error, RuntimeError, subprocess.TimeoutExpired) as exc:
+            self.output_queue.put(('cline', f'[3D map save failed: {exc}]\n'))
 
     def _run_aux_command(self, command, label):
         try:
@@ -2777,6 +2841,7 @@ class SimulationLauncherGui(tk.Tk):
         self.stop_button.configure(state="normal")
         self._launch_running = True
         self.status_var.set(f"Running: {command[3] if len(command) > 3 else command[0]}")
+        self._update_reset_button()
         threading.Thread(target=self._read_process_output, daemon=True).start()
 
     def stop_launch(self):

@@ -1,0 +1,225 @@
+{
+  "mode": "3d_slam",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5819,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19883322307205262,
+      "tail_yaw_speed_rps": 3.869630294933245e-07,
+      "end": {
+        "x": 0.08175613877053932,
+        "y": -0.4999978395226988,
+        "z": 0.011928825401944078,
+        "yaw": -4.296782648194205e-06
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5812,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19887409075127255,
+      "tail_yaw_speed_rps": 2.1044229441386033e-06,
+      "end": {
+        "x": -0.484055468830839,
+        "y": -0.4999986670051488,
+        "z": 0.011919272784094319,
+        "yaw": 4.503831078929616e-06
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0002,
+      "yaw_change_rad": 1.0247,
+      "tail_speed_mps": 1.4669897285907684e-05,
+      "tail_yaw_speed_rps": 0.37740657520413146,
+      "end": {
+        "x": -0.4996298713303468,
+        "y": -0.5001565922734086,
+        "z": 0.011990997815184003,
+        "yaw": 1.0247316998955418
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0001,
+      "yaw_change_rad": -1.1132,
+      "tail_speed_mps": 5.156073073654059e-05,
+      "tail_yaw_speed_rps": 0.3796418616382654,
+      "end": {
+        "x": -0.4995908353320889,
+        "y": -0.5000998457693483,
+        "z": 0.011919604549227985,
+        "yaw": -0.06706575781061633
+      }
+    },
+    "strafe": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.4197,
+      "yaw_change_rad": -0.0308,
+      "tail_speed_mps": 0.19881417896596718,
+      "tail_yaw_speed_rps": 9.311476535933672e-07,
+      "end": {
+        "x": -0.44914833946699956,
+        "y": -0.08339293868946558,
+        "z": 0.011935253687676155,
+        "yaw": -0.11896987261274022
+      }
+    },
+    "strafe_reverse": {
+      "completed": true,
+      "sim_s": 3.004,
+      "distance_m": 0.3564,
+      "yaw_change_rad": 0.0494,
+      "tail_speed_mps": 0.19884700272168562,
+      "tail_yaw_speed_rps": 9.490778271059597e-07,
+      "end": {
+        "x": -0.4710508489373773,
+        "y": -0.42380815557791585,
+        "z": 0.011927514641349878,
+        "yaw": -0.06958864543831703
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0669,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 4.458952852819433e-05,
+      "tail_yaw_speed_rps": 9.31944442450483e-08,
+      "end": {
+        "x": -0.12930073343548426,
+        "y": -0.47203791157788255,
+        "z": 0.011925631242830165,
+        "yaw": -0.09445643040682439
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.036,
+      "distance_m": 0.0001,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 4.5573340113965094e-05,
+      "tail_yaw_speed_rps": 7.397285812996805e-06,
+      "end": {
+        "x": -0.5000904398215925,
+        "y": -0.4999995741074794,
+        "z": 0.011928343130078574,
+        "yaw": -1.4745182720032762e-05
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3831,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19883131135469323,
+      "tail_yaw_speed_rps": 8.084078895414106e-07,
+      "end": {
+        "x": -0.11699575530115319,
+        "y": -0.49999349246751024,
+        "z": 0.011930469846458786,
+        "yaw": 1.0486118710551152e-05
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "strafe": true,
+    "strafe_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_3d_cloud": true,
+    "3d_geometry": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "monotonic_clock": true
+  },
+  "initial_map_to_world": {
+    "yaw": -1.1359191120310974e-06,
+    "x": -0.5000111563853207,
+    "y": -0.4999998184312263
+  },
+  "initial_truth": {
+    "x": -0.5001608673819667,
+    "y": -0.4999993860350418,
+    "z": 0.011928298308681003,
+    "yaw": -2.4659170185718242e-05
+  },
+  "localization_error_m": 0.0035009005555824255,
+  "sensor_messages_during_drive": {
+    "/scan": 145,
+    "/oakd/rgb/image_raw": 145,
+    "/oakd/depth/image_raw": 145,
+    "/cloud_map": 17
+  },
+  "cloud_message_points": [
+    1306,
+    2162,
+    5666,
+    6587,
+    9868,
+    10390,
+    10390,
+    11043,
+    12124,
+    13445,
+    13926,
+    14253,
+    14755,
+    15059,
+    15088,
+    15256,
+    15531,
+    15823,
+    1745,
+    2991,
+    6520
+  ],
+  "cloud_geometry": {
+    "frame": "map",
+    "sampled_points": 5275,
+    "min_xyz": [
+      -0.5156804919242859,
+      -4.2340545654296875,
+      -0.010495780035853386
+    ],
+    "max_xyz": [
+      6.524205684661865,
+      6.516716480255127,
+      0.9004634618759155
+    ]
+  },
+  "reset_response": "Simulation reset successfully",
+  "post_reset_map_to_world": {
+    "yaw": 0.10133673523985172,
+    "x": -0.8657603181818466,
+    "y": -0.5618272639533788
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 7.492987610004778e-06,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1692,
+  "sensor_counts": {
+    "/scan": 189,
+    "/oakd/rgb/image_raw": 189,
+    "/oakd/depth/image_raw": 189,
+    "/cloud_map": 21
+  },
+  "passed": true
+}

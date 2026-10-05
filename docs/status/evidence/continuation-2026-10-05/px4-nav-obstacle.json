@@ -1,0 +1,150 @@
+{
+  "robot_id": "px4_x500",
+  "simulator": "gazebo",
+  "map_name": "nav_obstacle",
+  "acceptance": {
+    "idle_unarmed_stationary": true,
+    "takeoff_hover_truth": true,
+    "gui_altitude_up": true,
+    "gui_altitude_down": true,
+    "gui_altitude_released_holds": true,
+    "goal_truth": true,
+    "drive_moves_body": true,
+    "released_drive_holds": true,
+    "landed_disarmed_truth": true,
+    "rotor_states_measured": true,
+    "fresh_body_truth": true
+  },
+  "phases": {
+    "idle": {
+      "start_truth": [
+        -7.0,
+        -7.0,
+        0.2269200916258035
+      ],
+      "end_truth": [
+        -7.0,
+        -7.0,
+        0.22699539020965645
+      ],
+      "state": {
+        "phase": "idle",
+        "armed": false,
+        "position_ready": true,
+        "flight_enabled": true,
+        "position_enu": [
+          -6.9670784247573465,
+          -6.98435639962554,
+          0.23576565623283385
+        ],
+        "target_enu": null
+      }
+    },
+    "takeoff_request": "Takeoff requested; priming the Offboard stream.",
+    "hover_truth": [
+      -6.925853208946109,
+      -6.998633746784122,
+      3.1547459415390144
+    ],
+    "gui_altitude": {
+      "up": {
+        "start_truth": [
+          -6.925853208946109,
+          -6.998633746784122,
+          3.1547459415390144
+        ],
+        "stopped_truth": [
+          -6.9516505022984205,
+          -7.027132814085383,
+          4.186075651662187
+        ],
+        "held_truth": [
+          -6.973397577527088,
+          -7.060348801594085,
+          4.204008866067503
+        ],
+        "delta_z_m": 1.0313297101231726,
+        "hold_drift_m": 0.043564174341843905
+      },
+      "down": {
+        "start_truth": [
+          -6.973397577527088,
+          -7.060348801594085,
+          4.204008866067503
+        ],
+        "stopped_truth": [
+          -6.998035867493256,
+          -7.053320886654373,
+          3.1855242925337444
+        ],
+        "held_truth": [
+          -6.978998640089703,
+          -7.046679249130958,
+          3.1852306979170213
+        ],
+        "delta_z_m": -1.0184845735337587,
+        "hold_drift_m": 0.020164661514788518
+      }
+    },
+    "goal": {
+      "target_enu": [
+        -4.969839866826078,
+        -6.047311972826719,
+        3.2225708568096163
+      ],
+      "final_truth": [
+        -5.208482486114916,
+        -6.083616025977884,
+        3.193507834028275
+      ],
+      "final_estimate": [
+        -5.100950688123703,
+        -6.050692033022642,
+        3.2198793494701388
+      ]
+    },
+    "drive": {
+      "start_truth": [
+        -4.989572203600559,
+        -6.085024287019611,
+        3.198497034893348
+      ],
+      "stop_truth": [
+        -3.790038299662041,
+        -6.10113815377715,
+        3.189893563071306
+      ],
+      "held_truth": [
+        -3.860653748693827,
+        -6.112282736255466,
+        3.1771350469490836
+      ]
+    },
+    "land_request": "Landing requested.",
+    "land_truth": [
+      -3.8676072262122556,
+      -6.075325991942621,
+      0.2247793125147112
+    ],
+    "land_state": {
+      "phase": "idle",
+      "armed": false,
+      "position_ready": true,
+      "flight_enabled": true,
+      "position_enu": [
+        -3.8736240565776825,
+        -6.064733278006315,
+        0.2917502874135971
+      ],
+      "target_enu": [
+        -3.858178824186325,
+        -6.02604092285037,
+        3.231484135389328
+      ]
+    }
+  },
+  "rotor_max_measured_rad_s": 88.32434412658598,
+  "truth_messages": 1295,
+  "truth_age_wall_s": 0.04448549100015953,
+  "passed": true
+}

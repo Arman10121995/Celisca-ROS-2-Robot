@@ -1,0 +1,135 @@
+{
+  "mode": "loc",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.581,
+      "yaw_change_rad": -0.0004,
+      "tail_speed_mps": 0.19669943884227886,
+      "end": {
+        "x": 0.08208608627319336,
+        "y": -0.49573805928230286,
+        "z": 0.01283186674118042,
+        "yaw": 0.00046779946893815255
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.021,
+      "distance_m": 0.5839,
+      "yaw_change_rad": 0.0002,
+      "tail_speed_mps": 0.19656012367780487,
+      "end": {
+        "x": -0.4878300726413727,
+        "y": -0.49922975897789,
+        "z": 0.012772549875080585,
+        "yaw": 0.0006282424143155399
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0026,
+      "yaw_change_rad": 1.1859,
+      "tail_speed_mps": 0.0011730854327919424,
+      "end": {
+        "x": -0.500939130783081,
+        "y": -0.49828919768333435,
+        "z": 0.013001727871596813,
+        "yaw": 1.186443288441311
+      }
+    },
+    "strafe": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5487,
+      "yaw_change_rad": 0.0271,
+      "tail_speed_mps": 0.18830327512329628,
+      "end": {
+        "x": -1.0141549110412598,
+        "y": -0.305232971906662,
+        "z": 0.012806708924472332,
+        "yaw": 1.236787919894768
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0369,
+      "yaw_change_rad": 0.0015,
+      "tail_speed_mps": 0.0003005249199632205,
+      "end": {
+        "x": -0.88706374168396,
+        "y": 0.09636746346950531,
+        "z": 0.012849646620452404,
+        "yaw": 1.2306515557143982
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0014,
+      "yaw_change_rad": 0.0006,
+      "tail_speed_mps": 0.00011172715377373842,
+      "end": {
+        "x": -0.49893030524253845,
+        "y": -0.5010549426078796,
+        "z": 0.012657346203923225,
+        "yaw": 0.0006890684530520014
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.386,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.19913054342812198,
+      "end": {
+        "x": -0.11288630962371826,
+        "y": -0.49904561042785645,
+        "z": 0.012862764298915863,
+        "yaw": 0.00065819291176525
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "strafe": true,
+    "publisher_loss": true,
+    "localization": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "monotonic_clock": true
+  },
+  "initial_truth": {
+    "x": -0.49884089827537537,
+    "y": -0.5011284947395325,
+    "z": 0.012662193737924099,
+    "yaw": 0.0008376064886172589
+  },
+  "localization_error_m": 0.03030491269323587,
+  "sensor_messages_during_drive": {
+    "/oakd/rgb/image_raw": 99,
+    "/oakd/depth/image_raw": 99,
+    "/scan": 104
+  },
+  "reset_response": "Simulation reset successfully",
+  "post_reset_localization_error_m": 0.000795670502442724,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1422,
+  "sensor_counts": {
+    "/oakd/rgb/image_raw": 140,
+    "/oakd/depth/image_raw": 140,
+    "/scan": 145
+  },
+  "passed": true
+}

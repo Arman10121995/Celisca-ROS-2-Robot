@@ -19,6 +19,8 @@
   <depend>tf2</depend>
 
   <exec_depend>tf_transformations</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
   <exec_depend>rtabmap_slam</exec_depend>
   <exec_depend>rtabmap_odom</exec_depend>

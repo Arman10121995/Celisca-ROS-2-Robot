@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-02. Continuation baseline: `2a0aae2`. The
+Updated: 2026-10-05. Continuation baseline: `700b94e` plus recorded patches. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
 but full mission qualification remains partial. Existing scoped live robot
@@ -13,6 +13,30 @@ This is an implementation specification, not a list of promised features.
 ownership, dependencies and the next task. This file owns scope and acceptance
 criteria. Update both together. Start each session with
 [AGENT_HANDOFF](docs/AGENT_HANDOFF.md).
+Use the [done / remaining checklist](docs/status/CHECKLIST.md) for a compact
+view of implemented features and remaining acceptance.
+
+## October 5 requested extensions
+
+The user adds world-to-occupancy generation, external world/robot libraries,
+terrain generation for all four backends, flight in all installed worlds,
+and manipulator, hand and mobile-manipulator control. These extend the scope;
+they do not replace the current wheeled/legged stabilization tasks. The GUI
+now exposes source catalogs and an occupancy-generation workflow. An external
+asset listing is separate from an installed robot with working control.
+
+| Task | Scope | Current boundary |
+|---|---|---|
+| R3.6 | Robot-assets, URDFHub and broader robot/world source catalogs | Source-pinned inventory / Asset Library; per-model import, licenses and runnable profiles remain |
+| R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Queued real controller, planning, grasp/contact and combined missions |
+| R5.10 | PX4 in every selected installed world | All world selections preserved; native `nav_empty` and `nav_obstacle` flight screens pass; full spawn/ceiling matrix remains |
+| R6.5 | Generate 2D grids for selected collision worlds | Actual primitive and both furnished Celisca exports; seed-connected projection checked; reviewed registration/Nav2 checks remain |
+| R6.6 | External worlds and packaged Gazebo examples | Catalog / resource / Classic-plugin migration and four-backend import work |
+| R6.7 | Terrain GUI and four-backend heightfield/mesh conversion | Queued; generator's Gazebo output alone does not establish other backend support |
+
+See [the implementation guide](docs/ASSET_EXTENSION_GUIDE.md) and
+[source snapshot](docs/status/asset-sources-2026-10-05.yaml). Preserve R5.6 and
+P1–P7 priority while implementing these tasks in independently testable steps.
 
 ## Stabilization patches before further expansion
 
@@ -33,10 +57,10 @@ checks do not close runtime acceptance; use the task-linked measured probes.
 | P2 GUI neutral input | Source/Tk checks pass | Physical joystick arming, release and disconnect trial |
 | P3 Celisca geometry/navigation | 20% resize corrected; six short furnished goals pass | Both differential bases in remaining cells and obstacle routes |
 | P4 MuJoCo speed | Safe wheel catch-up; effort catch-up disabled | Measured real-time factor with stable control |
-| P5 four-wheel steering | MuJoCo four-pattern DWB goals and crab screens on all four simulators pass; exact rolling/pivot, constrained DWB and GUI autofill | Other backend patterns, precise final body heading, obstacle routes, SLAM, reset and watchdog matrix |
-| P6 mecanum | Physical rollers; Gazebo 0.278 m/s lateral truth and a real Nav2 goal pass; convex contact proxy restores speed | Other backend/map/mode missions, obstacle routes, reset and command loss |
+| P5 four-wheel steering | Named crab goals meet 0.15 m / 5° body limits; static-box detours measured on four backends; selected reset/Drive/RGB-D SLAM screens | Current-setting repeats for every pattern, contacts, cancellation and full mapping/reset/watchdog matrix |
+| P6 mecanum | Physical rollers; Gazebo lateral truth; PyBullet real 2D SLAM, graph reset and resumed tracking measured | Remaining backend/map/mode missions, obstacle routes and full mapping/reset matrix |
 | P7 legged/humanoid policies | Primary candidates audited; limited BHL/Go2 walks | Model-specific contracts and bounded live qualification |
-| P8 PX4 drone | Measured native X500 takeoff/hover/3D waypoints/landing/command-loss; ROS2/GUI Flight workflow and body truth pass | Other maps, obstacle-aware aerial planning/SLAM, longer hover and concurrent-FCU qualification |
+| P8 PX4 drone | Native Flight integration and actual GUI altitude buttons measured; additional `nav_obstacle` takeoff/hold/goal/land pass | Remaining maps, obstacle-aware aerial planning/SLAM, longer hover and concurrent-FCU qualification |
 
 ## Goal and completion boundary
 
@@ -54,8 +78,8 @@ The goal is complete only when all of the following are evidenced:
   Ackermann and reverse Ackermann steering. Each completes its class-appropriate
   simulated tasks. Resolve whether reverse Ackermann means rear-wheel steering
   or anti-Ackermann geometry; reverse travel alone does not satisfy that requirement.
-  Manipulator support is an extension;
-  retain existing manipulator assets without claiming commandable support.
+  The October 5 extension also requires commandable manipulators, hands/grippers
+  and mobile manipulators, with measured manipulation and combined missions.
 - Existing worlds remain available. Navigation, terrain, stairs, stepping stones,
   aerial, moving-obstacle and degraded-sensor tasks have verified geometry,
   runtime resets and recorded seeds. A 2D projection is not a 3D map.
@@ -79,6 +103,10 @@ The goal is complete only when all of the following are evidenced:
   legged terrain and aerial volumes, with at least three applicable environment
   families per robot class in the final qualification matrix. Include learning
   examples explaining the selected algorithms, assumptions, measurements and failures.
+- Import the requested external world/robot libraries with per-asset provenance,
+  dependencies and qualification. GUI world-to-occupancy generation, terrain
+  generation/conversion for all four backends and all-world PX4 selection must
+  follow the exact acceptance of R3.6/R5.7–R5.10/R6.5–R6.7.
 
 The [2026-09-15 project goal and integration audit](docs/status/project-goal-2026-09-15.md)
 records the user's intended deliverable, current gaps and upstream candidates.
@@ -111,7 +139,7 @@ those labels from being treated as universal runtime claims.
 | P0 baseline | Partial; reverify | Hardware parsing/profile tests exist; installs, paths, topics and CI need repair | R1, R2, R9 |
 | P1 foundation | Partial | Catalog/schema/query code exists; compatibility checks insufficient | R3.1, R3.2 |
 | P2 composition | Partial | Selector/fragment classes exist; actual launch and applied choices incomplete | R3.3–R3.5 |
-| P3 robots | Partial | Go2 has measured stance and opt-in flat-ground policy motion; BHL has stance/startup evidence but no sustained walking; flight remains unqualified | R5 |
+| P3 robots | Partial | BHL/Go2 bounded MuJoCo walks and native PX4 Flight are measured; robust legged terrain/recovery and the broader robot/mode matrix remain | R5 |
 | P3.4 humanoid | Partial, ledger owner `codex` | BHL effort control and diagnostics are implemented; the held-turn/walk stall is not solved by rate, filter or contact duplication tuning | R5.3 |
 | P4 environments | Assets/static checks implemented | Geometry/generators retained; runtime reset, actors and 3D traversal unqualified | R6 |
 | P5 algorithms | Partial | Counts/kernels exist; empty/broken ROS entry points and simplified methods | R7 |
@@ -291,6 +319,14 @@ Dependencies: `R3.3`, `R2.2`.
 - Files: `src/robot_lab/robot_lab_registry/config/scenarios.yaml`, `src/robot_lab/robot_lab_registry/config/experiments.yaml`, `src/robot_lab/robot_lab_registry/robot_lab_registry/schemas.py`.
 - Implement: Author five representative benchmark scenarios (state_estimation_benchmark [mobile/state_estimation], dynamic_navigation [mobile/navigation], coverage_optimization [mobile/coverage], terrain_traversal_benchmark [legged/traversal], aerial_waypoint_benchmark [aerial/navigation]) and five matching benchmark experiments that bind each scenario to a concrete robot+environment+simulator+algorithm stack with declared seeds and metrics. Add the `state_estimation` task_type to the scenario schema.
 - Acceptance: All five scenarios and five experiments parse as valid YAML and pass the shared resolver/selector pipeline (typed composition compatibility, resolver/executor, and selectors tests: 44 passed). Each scenario carries task_type, stopping conditions, success/failure criteria, required robot classes/capabilities, timeout and metrics. Each experiment binds a scenario to a concrete robot+environment+simulator+algorithm stack with a unique seed.
+
+### R3.6 — External asset catalogs and import staging
+
+Dependencies: `R3.1`, `R3.4`.
+
+- Files: `src/robot_lab_gui/`, `docs/status/asset-sources-2026-10-05.yaml`, `docs/ASSET_EXTENSION_GUIDE.md`, import tooling.
+- Implement: Inventory every robot-assets URDF variant and URDFHub upstream link, compare broader Menagerie/robot-descriptions catalogs, deduplicate canonical robots and expose source/license/import/control state in GUI. Stage complete pinned assets on SSD; never execute catalog install scripts automatically.
+- Acceptance: Every requested source entry appears with provenance; dependencies and per-model licenses audited; imported URDF/MJCF and textures validated; real display/joint-state tests precede enabled launch profiles. Missing assets and control remain visible, rather than fake universal modes.
 
 ## R4 — Measured reference experiment
 
@@ -556,8 +592,11 @@ Dependencies: `R5.1`.
 - The October 1 no-thrust diagnosis is superseded: `0xFC7` ignored position
   and commanded zero velocity. `0x9F8` plus forwarding actual waypoint XYZ
   makes native pinned startup fly. Zero-thrust MAVROS demonstration is retired.
-- Scope remains one named SITL cell. Aerial SLAM, obstacle-aware planning,
-  additional maps/backends, hardware, long-hover drift and concurrent FCUs
+- October 5: actual GUI Up/Down buttons pass in `nav_empty` and `nav_obstacle`,
+  with measured lift, released hold and land/disarm. All installed world
+  selections now persist. See [the current report](docs/status/continuation-2026-10-05.md).
+- Scope remains named SITL screens. Aerial SLAM, obstacle-aware planning,
+  remaining maps/backends, hardware, long-hover drift and concurrent FCUs
   are separate unqualified workflows.
 
 - Files: `src/robot_lab_robots/quadrotor_sitl/`, `src/robot_lab_adapter/robot_lab_adapter/mavros_offboard_controller.py`, `src/robot_lab_bringup/`.
@@ -621,6 +660,12 @@ Dependencies: `R5.1`, `R3.3`.
 
 ### R5.6 — Qualify four-wheel steering and physical mecanum motion
 
+- October 5: strict body-pose screens, swept-circle static-box detours,
+  selected localization/reset/publisher-loss, real 2D/RGB-D mapping and GUI map
+  save work extend the earlier matrix. Goal scoring, full-footprint checking,
+  estimator reseeding and mapper history are repaired. Earlier source stages
+  and failed trials remain identified. Full pattern/backend/map/mode acceptance
+  is still partial; see [the current evidence](docs/status/continuation-2026-10-05.md).
 - 2026-10-02 continuation: full ±90° steering, per-contact rolling allocation,
   tangent pivot and no-slip odometry replace straight-wheel skid pivot.
   Gazebo independent truth measures 0.994 rad/s pivot on 1.0 commanded.
@@ -704,6 +749,34 @@ Dependencies: `R5.1`, `R3.3`.
   [The 2026-09-30 audit](docs/status/evidence/r55-holonomic-audit-2026-09-30/README.md)
   shows MuJoCo drive progress and the remaining Gazebo and strafing blockers.
 
+### R5.7 — Manipulators and motion planning
+
+Dependencies: `R3.6`, `R2.2`, `R3.4`.
+
+- Implement: Start with a licensed Panda/UR5 source; add bounded joint jogging, home, Stop, trajectory actions, actual joint state/TF and robot-specific gains. Add MoveIt 2 planning and Servo Cartesian jogging with a real planning scene, limits and cancellation. Robot GUI selections resolve to executable backend-specific controllers.
+- Acceptance: Actual arm motion tracks joint and Cartesian targets; limit/collision checks, cancel/Stop and publisher loss pass. Repeat reach and pick/place with measured object/arm state on Gazebo, MuJoCo, PyBullet and Isaac. A URDF view is not control.
+
+### R5.8 — Robot hands and grippers
+
+Dependencies: `R3.6`, `R5.7`.
+
+- Implement: Import licensed simple gripper and dexterous hand models; preserve mimic joints, tendon/coupling laws, force/position limits and contact geometry. GUI supports open/close, individual joint/pose control, Stop and robot-specific presets.
+- Acceptance: Measured articulated motion and contact-based grasp/release for a documented object; effort/force limits, cancellation and reset pass on every advertised backend. Visual attachment without grasp forces is not a hand mission.
+
+### R5.9 — Mobile manipulators
+
+Dependencies: `R5.1`, `R5.7`, `R5.8`.
+
+- Implement: Start with Fetch/PR2/TIAGo from the maintained upstream source. Add base/arm/hand ownership, full TF, payload/stability and changing navigation footprint, with coordinated Nav2 and MoveIt goals in GUI.
+- Acceptance: A measured navigate → stop → reach → grasp → transport → release mission with object pose and stability; base and arm commands cannot interfere. Reset/cancel/watchdog and obstacles verified per backend/map.
+
+### R5.10 — PX4 Flight in all installed worlds
+
+Dependencies: `R5.4`, `R6.1`.
+
+- Implement: Preserve selected maps through GUI/resolver; adapt real SDF resources and version-specific world plugins for native PX4/Harmonic. Resolve landing-gear support and takeoff/ceiling clearance per world; add useful altitude/goal controls. Keep Flight distinct from unimplemented aerial SLAM/obstacle-aware planning.
+- Acceptance: Each existing map can be selected without silent substitution; per-world display, actual takeoff/hold/manual XYZ/land/disarm and reset/cancel artifacts exist. Terrain and multilevel floors use measured support heights. Report actor/plugin failures. Other aerial backends and obstacle avoidance need real FCU/plant/planner integration rather than metadata changes.
+
 ## R6 — Environment qualification
 
 ### R6.1 — Qualify geometry map alignment and resets
@@ -746,6 +819,27 @@ Dependencies: `R6.1`; runtime qualification also requires the corresponding R5 t
   flight volume. Reset reproduces the declared state. Record at least one real
   class-appropriate mission per added map, including failures, before calling
   that map qualified. Pure visual changes do not count as new task diversity.
+
+### R6.5 — World-to-occupancy generation in GUI
+
+Dependencies: `R6.1`, `R3.4`.
+
+- Implement: Pin robotics-upo's Fortress map plugin, select the actual world independently in a Worlds tab, expose resolution/slice/seed, and generate PGM/YAML with logs/hashes on SSD. Meshes use real units, scene poses and surface slices rather than assumed unit cubes. Preserve existing maps; do not register a wrong grid automatically.
+- Acceptance: Real maps generated for primitive, rotated and furnished mesh worlds; free/occupied/unknown cells, map origin and world geometry agree within declared conservative cell limits. Verify free seed, no decorative-only obstacles, cancellation, fresh artifacts and Nav2 use. Actor motion is excluded from a static map and stated. Heightfields and multilevel ground require explicit support, not flattened placeholder grids.
+
+### R6.6 — External world library and Gazebo examples
+
+Dependencies: `R3.6`, `R6.5`.
+
+- Implement: Inventory all mlherd world/model/archive entries, installed Gazebo examples, and licensed Fuel/upstream worlds. Expose download/import/conversion/mission state in GUI. Resolve all mesh/model/include dependencies, per-asset licenses, Classic-to-Fortress/Harmonic plugin migration and conversion errors.
+- Acceptance: Every requested source entry appears with status. Imported geometry, textures, collision, scale/origin and spawn tested on all four backends; dynamic/actor functionality retained or explicitly unsupported. At least one applicable robot mission per new environment class and generated occupancy files prove functionality.
+
+### R6.7 — Terrain generation and four-backend conversion
+
+Dependencies: `R6.3`, `R6.6`.
+
+- Implement: Embed/launch the pinned terrain-generator web workflow from GUI; set all output/cache to SSD. Keep Mapbox/provider tokens outside repository/logs. Save provider/data attribution, geographic polygon, seed/spawn, vertical datum, metres-per-pixel and elevation range. Convert one canonical heightfield/building mesh into Gazebo SDF, MuJoCo hfield/mesh, PyBullet terrain collision and Isaac USD/PhysX geometry.
+- Acceptance: Deterministic regeneration from saved inputs where data availability permits, equivalent horizontal/vertical scale and support heights across backends, actual terrain contact/sensors and class-specific driving/walking/flight missions. Reject unsupported geometry. Gazebo output alone does not qualify MuJoCo/PyBullet/Isaac.
 
 ## R7 — Algorithm breadth
 
@@ -1041,6 +1135,10 @@ Dependencies: `R5.1`, `R5.2`, `R5.3`, `R5.4`, `R6.2`, `R6.3`, `R8.1`, `R8.2`, `R
 - Files: `docs/status/`, `README.md`, `ROADMAP.md`, `.github/workflows/`.
 - Implement: Generate inventories/support rows from metadata plus runtime evidence, with revision/date/host/backend/robot/scenario/seeds. Reconcile all scope promises before release; do not silently waive an unfinished backend requirement.
 - Acceptance: Required robot/world/seven-category tasks pass; every release claim maps to artifacts; failures/skips and limitations published. Any reduced-scope release needs an explicit recorded decision; never call remaining work complete.
+- October 5: the generator now reads exact hashed measurement artifacts,
+  recomputes screen checks and derives full-release blockers from the ledger,
+  including new extension tasks. The old blanket Isaac/139-cell success is
+  withdrawn. Short screens remain partial support; release acceptance remains open.
 
 ### R9.4 — Optional physical Bumperbot HIL
 

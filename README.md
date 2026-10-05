@@ -4,8 +4,8 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status reconciled on **2026-10-02**, against `2a0aae2` plus the audit and measured
-flight/navigation continuation. The [current completion audit](docs/status/audit-2026-10-02.md)
+Status updated on **2026-10-05**, against baseline `700b94e` and the recorded
+continuation source snapshots. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
 Scoped measured robot results remain in the [status ledger](docs/status/platform-status.yaml).
@@ -21,13 +21,22 @@ BHL's walking policy defaults on. See the
 [before/after traces and instructions](docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md).
 
 
-October 2 continuation adds measured **PX4 X500 flight in the GUI**: Takeoff,
-Hold, Land, manual Drive, live FCU pose and measured rotor states. It also
-repairs four-wheel rolling/pivot, adds constrained DWB navigation for crab/
-in-phase steering, and restores physical Gazebo mecanum travel. See the
-[current measured trials and remaining gaps](docs/status/continuation-2026-10-02.md)
+The GUI provides **PX4 X500 Flight**, Takeoff/Hold/Land and **Altitude Up/Down**,
+with measured native flight in `nav_empty` and `nav_obstacle`. World selections
+persist and commands autofill. Four-wheel work adds measured body-pose checks,
+obstacle routes and selected localization/mapping/reset repairs. See the
+[done / remaining checklist](docs/status/CHECKLIST.md) and
+[current measured trials and remaining gaps](docs/status/continuation-2026-10-05.md)
 and [flight guide](docs/tutorials/px4_x500.md). Full platform qualification
 remains partial; these results apply to the named recorded cells.
+
+New **Worlds** and **Asset Library** tabs provide actual occupancy generation
+and inspected upstream source catalogs. The generator produces PGM/YAML from
+primitive and furnished Celisca collision worlds. Full external asset imports,
+terrain conversion for four backends, and manipulator/hand/mobile-manipulator
+control are implementation tasks in the updated [roadmap](ROADMAP.md) and
+[extension guide](docs/ASSET_EXTENSION_GUIDE.md); catalog entries are not
+installed commandable robots.
 
 ## Start here
 
@@ -35,6 +44,7 @@ remains partial; these results apply to the named recorded cells.
 - [Implementation roadmap](ROADMAP.md): ordered work, dependencies and acceptance criteria toward the full platform.
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
 - [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
+- [Worlds and robot extension guide](docs/ASSET_EXTENSION_GUIDE.md): source pins, occupancy generation and concrete terrain/manipulation implementation contracts.
 - [Machine-readable status](docs/status/platform-status.yaml) and [support matrix](docs/status/support-matrix.md): current state, not historical completion claims.
 - [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
@@ -58,22 +68,13 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-The fast development check on the 2026-10-02 working tree is **685 passed,
-1 skipped**, with registry cross-reference validation passing. The prior asset
-attribution and missing tutorial-section regressions are repaired. The Tk
-command/Drive suite is **36 passed**, and the GUI package rebuild passes.
-These are scoped source/static checks, not universal mission qualification.
-Simulator
-evidence from this round is recorded per task under
-[status/evidence](docs/status/): the car steering repair and measured arcs
-([r55](docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md)), the
-mecanum's first measured physical lateral travel and the four 4WS patterns
-([r56](docs/status/evidence/r56-holonomic-measure-2026-10-01/README.md)), and a
-PX4 SITL FCU that builds, converges its estimator and arms in OFFBOARD but
-whose rotor commands do not yet reach the Gazebo vehicle, so no flight is
-claimed ([r54](docs/status/evidence/r54-px4-sitl-2026-10-01/README.md)). These checks do
-not prove all simulator missions, GUI sessions,
-optional-engine qualification or hardware operation. See the
+October 5 verification includes **43 passing Tk command/Drive tests** and
+scoped source, build and real simulator checks. Exact test totals, source
+stages, successful and failed robot trials are recorded in the
+[continuation evidence](docs/status/evidence/continuation-2026-10-05/README.md).
+The former no-flight diagnosis is superseded by actual native PX4 flight;
+historical reports remain available for comparison. These checks do not
+establish all simulator missions, clean-host reproduction or hardware operation. See the
 [workflow](docs/WORKFLOW.md) for the evidence boundary and commands.
 
 ## How it currently works
@@ -100,6 +101,7 @@ are one taxonomy (`config/sim_modes.yaml` is the authority):
 | `slam` | 2D Mapping & Localization | localization (SLAM backend), state estimation, sensor fusion, perception |
 | `3d_slam` | 3D Mapping & Localization | localization, state estimation, perception |
 | `nav` | Navigation | global planning, local planning, control, localization, state estimation, sensor fusion |
+| `flight` | Native PX4 3D Flight | PX4 estimation/control, manual XYZ/yaw and 3D position goals; aerial obstacle planning remains separate |
 
 Each of the seven registry categories is a launch argument:
 

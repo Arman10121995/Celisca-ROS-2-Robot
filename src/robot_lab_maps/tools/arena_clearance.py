@@ -77,6 +77,25 @@ def segment_clearance(boxes, start, end, radius):
     return min(box.segment_distance(start, end) for box in boxes) - radius
 
 
+def measured_route_acceptance(boxes, points, goal, radius, margin, require_detour=False):
+    """Check every measured segment with a conservative circular footprint."""
+    valid = (len(points)>1 and bool(boxes) and math.isfinite(radius) and radius>0
+             and math.isfinite(margin) and margin>=0
+             and all(math.isfinite(v) for p in points for v in p)
+             and all(math.isfinite(v) for v in goal))
+    minimum = min((segment_clearance(boxes,a,b,radius)
+                   for a,b in zip(points,points[1:])),default=None) if valid else None
+    direct = segment_clearance(boxes,points[0],goal,radius) if valid else None
+    checks = {'measured_trajectory':valid,
+              'swept_footprint_clear':minimum is not None and minimum>=margin}
+    if require_detour:
+        checks['straight_route_blocked'] = direct is not None and direct<0
+    return {'passed':all(checks.values()), 'checks':checks, 'robot_radius_m':radius,
+            'min_clearance_limit_m':margin, 'min_swept_clearance_m':minimum,
+            'direct_route_clearance_m':direct,
+            'scope':'Static box obstacles with conservative circular robot footprint; not contact telemetry'}
+
+
 def reference_route(boxes, start, goal, bounds, radius=0.14, margin=0.20):
     """Deterministic shortest visibility route with extra tracking clearance."""
     if not boxes or not math.isfinite(radius) or radius <= 0 or margin < 0:

@@ -382,6 +382,8 @@ class PyBulletSpawner(Node):
         try:
             self._reset_srv = self.create_service(
                 Trigger, "/robot_lab/reset", self._on_reset)
+            from robot_lab_utils.reset_notifications import ResetNotifications
+            self._reset_notifications = ResetNotifications(self)
             self.get_logger().info("Created /robot_lab/reset service")
         except Exception as e:
             self.get_logger().error("Failed to create /robot_lab/reset: %s" % e)
@@ -1102,9 +1104,9 @@ class PyBulletSpawner(Node):
                 with self._twist_lock:
                     self._twist = Twist()
                     self._last_cmd_time = 0.0
-                # Reset simulation time.
-                self._sim_t = 0.0
-                self._sim_step = 0
+                # Keep ROS/sensor time monotonic when resetting physical state.
+                # Rewinding invalidates TF caches and estimator timer state.
+                self._reset_notifications.notify()
                 self.get_logger().info("Simulation reset")
                 response.success = True
                 response.message = "Simulation reset successfully"

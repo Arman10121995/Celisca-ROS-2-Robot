@@ -9,7 +9,7 @@ import pytest
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from arena_clearance import Box2D, reference_route, segment_clearance
+from arena_clearance import Box2D, reference_route, segment_clearance, measured_route_acceptance
 from validate_nav_arenas import (
     ARENAS, MAPS_DIR, main, map_alignment_errors, map_route_clearance,
     parse_world_boxes, read_pgm, validate_arena,
@@ -52,6 +52,24 @@ def test_reference_route_avoids_wall_and_is_deterministic():
     assert all(segment_clearance(boxes, a, b, .14) >= .2
                for a, b in zip(route, route[1:]))
     assert sum(math.dist(a, b) for a, b in zip(route, route[1:])) > 4
+
+
+def test_measured_route_requires_avoidance_between_samples():
+    boxes = [Box2D('wall',0,0,.2,1)]
+    goal = (2,0)
+    crossing = measured_route_acceptance(boxes,[(-2,0),goal],goal,.34,.02,True)
+    assert crossing['checks']['straight_route_blocked']
+    assert not crossing['passed']
+    route = [(-2,0),(-2,1.5),(2,1.5),goal]
+    measured = measured_route_acceptance(boxes,route,goal,.34,.02,True)
+    assert measured['passed']
+    assert measured['min_swept_clearance_m'] == pytest.approx(.16)
+
+
+@pytest.mark.parametrize('points',[[],[(2,0)],[(-2,0),(math.nan,1)],[(math.inf,0),(2,0)]])
+def test_missing_or_nonfinite_trajectory_cannot_qualify(points):
+    result = measured_route_acceptance([Box2D('wall',0,0,.2,1)],points,(2,0),.34,.02)
+    assert not result['passed']
 
 
 def test_reference_route_rejects_invalid_start_and_disconnected_goal():

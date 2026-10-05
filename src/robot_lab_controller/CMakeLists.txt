@@ -62,6 +62,9 @@ install(PROGRAMS
 )
 
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(parallel_steering_critic_test test/test_parallel_steering_critic.cpp)
+  ament_target_dependencies(parallel_steering_critic_test dwb_core dwb_msgs pluginlib)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(map_saver test/test_map_saver.py TIMEOUT 60)
 endif()

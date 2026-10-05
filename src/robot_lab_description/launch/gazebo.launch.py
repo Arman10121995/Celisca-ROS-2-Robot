@@ -392,10 +392,19 @@ def generate_launch_description():
         ]
         gz_world_name = get_sdf_world_name(w, LaunchConfiguration("world_name").perform(context))
         actions.append(Node(
+            package='ros_gz_bridge', executable='parameter_bridge',
+            arguments=[f'/world/{gz_world_name}/set_pose@ros_gz_interfaces/srv/SetEntityPose'],
+            output='screen'))
+        actions.append(Node(
             package="robot_lab_description",
             executable="gazebo_reset_bridge.py",
             name="gazebo_reset_bridge",
-            parameters=[{"world_name": gz_world_name}],
+            parameters=[{"world_name": gz_world_name,
+                         'use_sim_time': LaunchConfiguration('use_sim_time'),
+                         'robot_name': LaunchConfiguration('robot_name'),
+                         'spawn_x': LaunchConfiguration('spawn_x'),
+                         'spawn_y': LaunchConfiguration('spawn_y'),
+                         'spawn_yaw': LaunchConfiguration('spawn_yaw')}],
             output="screen",
         ))
         return actions

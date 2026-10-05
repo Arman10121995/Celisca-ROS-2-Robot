@@ -1,15 +1,24 @@
 # Chassis and the full wheel swept envelope, with a small clearance.
+controller_server:
+  ros__parameters:
+    general_goal_checker:
+      xy_goal_tolerance: 0.08
+      yaw_goal_tolerance: 0.015
+    FollowPath:
+      xy_goal_tolerance: 0.08
 global_costmap:
   global_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       footprint: "[[0.25, 0.22], [0.25, -0.22], [-0.25, -0.22], [-0.25, 0.22]]"
+      footprint_padding: 0.05
       inflation_layer:
-        inflation_radius: 0.4
+        inflation_radius: 0.65
 local_costmap:
   local_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       footprint: "[[0.25, 0.22], [0.25, -0.22], [-0.25, -0.22], [-0.25, 0.22]]"
+      footprint_padding: 0.05
       inflation_layer:
-        inflation_radius: 0.4
+        inflation_radius: 0.65

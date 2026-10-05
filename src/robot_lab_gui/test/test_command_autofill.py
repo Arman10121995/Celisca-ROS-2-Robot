@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import shlex
 import sys
+import sqlite3
+from subprocess import CompletedProcess
 from unittest.mock import Mock, patch
 
 import pytest
@@ -83,6 +85,78 @@ def test_command_is_filled_and_run_is_visible_on_open(app):
     assert app.copy_command_button.instate(["!disabled"])
     assert app.start_button.winfo_viewable()
     assert app.start_button.winfo_rooty() < app.winfo_rooty() + app.winfo_height()
+
+
+def test_robot_reset_stops_drive_and_is_gated_by_task(app):
+    app.robot_var.set('four_wheel_steer_car')
+    app.mode_var.set('loc')
+    app._update_reset_button()
+    assert app.reset_robot_button.instate(['disabled'])
+    app._launch_running = True
+    app._update_reset_button()
+    assert app.reset_robot_button.instate(['!disabled'])
+    with patch.object(app, '_stop_drive') as stop, patch.object(launcher.threading, 'Thread') as thread:
+        app.reset_robot_button.invoke()
+        stop.assert_called_once_with()
+        command, label = thread.call_args.kwargs['args']
+        assert command[5:] == ['/robot_lab/reset', 'std_srvs/srv/Trigger', '{}']
+        assert command[:2] == ['timeout', '30']
+    for robot, mode in [('four_wheel_steer_car','nav'), ('px4_x500','flight'),
+                        ('berkeley_humanoid_lite_sim','loc')]:
+        app.robot_var.set(robot)
+        app.mode_var.set(mode)
+        app._update_reset_button()
+        assert app.reset_robot_button.instate(['disabled'])
+    app._launch_running = False
+
+
+def test_drone_altitude_buttons_ramp_both_directions_and_stop(app):
+    app.robot_var.set('px4_x500')
+    app.mode_var.set('flight')
+    app.simulator_var.set('gazebo')
+    app._update_from_selection()
+    with patch.object(app,'_publish_drive') as publish:
+        up, down = app.drive_altitude_widgets[1.0], app.drive_altitude_widgets[-1.0]
+        assert up.cget('text') == 'Altitude Up'
+        assert down.cget('text') == 'Altitude Down'
+        up.invoke()
+        assert app.current_vertical>0
+        first = app.current_vertical
+        app._repeat_drive()
+        assert app.current_vertical>first
+        assert publish.call_args.args[3]>0
+        up.invoke()
+        for _ in range(5):
+            app._repeat_drive()
+        assert app.current_vertical == 0
+        down.invoke()
+        assert publish.call_args.args[3]<0
+        app._stop_drive()
+        assert app.current_vertical == 0
+        assert not app.drive_altitude_buttons
+        publish.assert_called_with(0.0,0.0,0.0)
+        app.robot_var.set('bumperbot')
+        app._update_from_selection()
+        assert up.instate(['disabled']) and down.instate(['disabled'])
+        app._start_altitude(1.0)
+        assert not app.drive_altitude_buttons
+
+
+def test_3d_save_uses_flushed_backup_and_installed_cloud_exporter(app, tmp_path):
+    source = tmp_path/'live.db'
+    source.touch()
+    with sqlite3.connect(str(source)+'.back') as database:
+        database.execute('CREATE TABLE keyframes (id INTEGER)')
+        database.execute('INSERT INTO keyframes VALUES (42)')
+    target = tmp_path/'saved.db'
+    with patch.object(launcher.subprocess,'run',return_value=CompletedProcess([],0,'response: Empty_Response()','')) as run, \
+            patch.object(app,'_run_aux_command') as exporter:
+        app._snapshot_3d_map(source,target)
+        assert run.call_args.args[0][3] == '/rtabmap/backup'
+        assert exporter.call_args.args[0] == ['ros2','run','robot_lab_bringup','export_3d_map.py',
+                                              '--cloud-topic','/cloud_map','--output',str(target.with_suffix('.pcd'))]
+    with sqlite3.connect(target) as saved:
+        assert saved.execute('SELECT id FROM keyframes').fetchall() == [(42,)]
 
 
 def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
@@ -559,7 +633,7 @@ def test_four_wheel_parallel_steering_enables_strafe_and_saved_manifest(app, pat
 def test_px4_flight_autofill_services_and_backend_correction(app):
     select(app, app.map_combo, 'celisca_floor_1')
     select(app, app.robot_combo, 'px4_x500')
-    assert app.map_var.get() == 'nav_empty'
+    assert app.map_var.get() == 'celisca_floor_1'
     app.mode_var.set('flight')
     app.simulator_var.set('pybullet')
     app._update_from_selection()
@@ -568,6 +642,7 @@ def test_px4_flight_autofill_services_and_backend_correction(app):
     assert app._flight_selectable()
     assert 'robot_model:=px4_x500' in app.command_var.get()
     assert 'mode:=flight' in app.command_var.get()
+    assert 'map_name:=celisca_floor_1' in app.command_var.get()
     assert 'use_sim_time:=false' in app.command_var.get()
     assert 'spawn_z:=0.0' in app.command_var.get()
     assert all(button.instate(['!disabled']) for button in app.flight_buttons)
@@ -581,3 +656,18 @@ def test_px4_flight_autofill_services_and_backend_correction(app):
     select(app, app.robot_combo, 'bumperbot')
     assert not app._flight_selectable()
     assert all(button.instate(['disabled']) for button in app.flight_buttons)
+
+
+def test_px4_preserves_every_installed_world_and_autofills_flight(app):
+    app.robot_var.set('px4_x500')
+    app.mode_var.set('flight')
+    app.simulator_var.set('gazebo')
+    for world in sorted(app.map_profiles):
+        app.map_var.set(world)
+        app._update_from_selection()
+        assert app.map_var.get()==world
+        # The resolver canonicalizes aliases such as outdoor_terrain to the
+        # installed terrain_rough world, while keeping the operator selection.
+        canonical=app.map_profiles[world]['gazebo'].get('world_name',world)
+        assert 'map_name:='+canonical in app.command_var.get(), app.validation_var.get()
+        assert 'mode:=flight' in app.command_var.get()
