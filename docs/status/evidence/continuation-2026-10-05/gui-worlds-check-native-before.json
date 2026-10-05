@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "actual_world_and_asset_tabs": true
+  },
+  "source_sha256": {},
+  "catalog_rows": 136,
+  "cancel_command": [
+    "ros2",
+    "run",
+    "robot_lab_maps",
+    "generate_occupancy_map.py",
+    "--world",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world",
+    "--output-dir",
+    "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-world-cancel-native",
+    "--resolution",
+    "0.02",
+    "--height",
+    "0.3",
+    "--seed-x",
+    "-7.0",
+    "--seed-y",
+    "-7.0"
+  ],
+  "observed_processes": {},
+  "error": "Bounded GUI condition did not complete",
+  "console": "$ ros2 run robot_lab_maps generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-world-cancel-native --resolution 0.02 --height 0.3 --seed-x -7.0 --seed-y -7.0\n",
+  "passed": false
+}

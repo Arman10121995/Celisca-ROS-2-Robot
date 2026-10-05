@@ -1,7 +1,10 @@
 # Stabilization and remaining work: agent execution guide
 
 Updated 2026-10-05. This guide implements the user's requested patch queue
-before further project expansion. Read `docs/AGENT_HANDOFF.md`,
+and preserves its remaining acceptance. The latest user instruction prioritizes
+the new extensions first, then resumes this older queue; follow
+[ASSET_EXTENSION_GUIDE](ASSET_EXTENSION_GUIDE.md) and the live handoff/task owners.
+Read `docs/AGENT_HANDOFF.md`,
 `docs/status/platform-status.yaml`, and `ROADMAP.md` first. The user includes
 drone integration; retain the measured PX4 Flight path. Existing Bumperbot/Labbot workflows and assets
 must remain available.

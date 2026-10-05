@@ -6,6 +6,8 @@ qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
 [roadmap](../../ROADMAP.md) owns acceptance, and the
 [latest measurements](continuation-2026-10-05.md) give exact scopes and limits.
+The latest user instruction prioritizes the new extensions before resuming
+the older roadmap. Existing stabilization fixes must remain working.
 
 ## Implemented and measured
 
@@ -51,7 +53,7 @@ qualify every robot, map, mode or simulator. The
   GUI Health, this checklist, the roadmap and agent guides expose those gaps
   (R9.3).
 
-## Finish stabilization and original robot goals first
+## Stabilization and original robot goals: resume after the extensions
 
 - [ ] **P2:** Record an actual physical joystick trial: untouched enable,
   independent axes, neutral return, unplug, Space, selection change and close.
@@ -88,14 +90,16 @@ qualify every robot, map, mode or simulator. The
   Menagerie library is installed as runnable robots.
 - [ ] **R6.5:** Review generated occupancy origin, mesh scale, height and
   seed; cover disconnected free regions, test rotated geometry and navigation
-  alignment, then register validated maps. Heightfields remain unsupported
-  by this generator pending the terrain converter.
+  alignment, then register validated maps. The new shared heightfield converter
+  extends projection; its occupancy/terrain missions still need qualification.
 - [ ] **R6.6:** Import the external world library and packaged Gazebo/Fuel
   examples with per-asset licenses, resource resolution and Classic-plugin
   migration. Qualify visual/collision/spawn behavior in all four simulators.
 - [ ] **R6.7:** Implement a terrain-generation GUI with SSD output and shared
-  heightfield/mesh conversion for Gazebo, MuJoCo, PyBullet and Isaac. Verify
-  dimensions, origin, slope/contact and actual robot traversal per backend.
+  provider/attribution manifest. Shared four-backend heightfield conversion
+  now exists with measured Gazebo conventions and MuJoCo/PyBullet contact
+  screens; verify Isaac runtime contact, deterministic generation and actual
+  robot traversal per backend.
 - [ ] **R5.7:** Integrate manipulators, joint/trajectory commands, MoveIt2
   planning and GUI controls; measure reachable motions and obstacle avoidance.
 - [ ] **R5.8:** Integrate robot hands/grippers, control limits and GUI commands;

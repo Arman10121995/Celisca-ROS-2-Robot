@@ -1,0 +1,36 @@
+{
+  "checks": {
+    "active_database_exists": true,
+    "sqlite_integrity": true,
+    "mapped_keyframes": true,
+    "real_3d_geometry": true,
+    "source_preserved": true
+  },
+  "robot_id": "four_wheel_steer_car",
+  "map_name": "nav_empty",
+  "simulator": "mujoco",
+  "active_database": "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-save-corrected/nav_empty_four_wheel_steer_car.db",
+  "output_database": "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-save-corrected/saved.db",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=four_wheel_steer_car simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter steering_mode:=crab",
+  "point_cloud": {
+    "points": 7255,
+    "min_xyz": [
+      0.07687127590179443,
+      -4.720667362213135,
+      -0.09786630421876907
+    ],
+    "max_xyz": [
+      6.6666693687438965,
+      3.774308204650879,
+      0.8745630383491516
+    ]
+  },
+  "sqlite_nodes": 9,
+  "sqlite_integrity": "ok",
+  "artifact_sha256": {
+    "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-save-corrected/saved.db": "d1c8f79ea7db4ebfc68140684e7ec68657ec07cacde01d54711ae557e510bf2b",
+    "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-save-corrected/saved.pcd": "4adb2f814ca5ae0f6e87a417c4b3403a41d509f8d45818dfe8c4d52aa2df18a7"
+  },
+  "gui_console": "",
+  "passed": true
+}

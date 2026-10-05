@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "active_database_exists": true
+  },
+  "robot_id": "four_wheel_steer_car",
+  "map_name": "nav_empty",
+  "simulator": "mujoco",
+  "active_database": "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-save-live/nav_empty_four_wheel_steer_car.db",
+  "output_database": "/workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05/gui-save-live/saved.db",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=four_wheel_steer_car simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter",
+  "error": "GUI did not export a complete PCD within 70 seconds",
+  "passed": false
+}

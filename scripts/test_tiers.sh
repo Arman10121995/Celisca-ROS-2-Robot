@@ -21,7 +21,7 @@ set -euo pipefail
 WS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$WS"
 
-export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_adapter:src/robot_lab_pybullet/python:src/robot_lab_mujoco/python:src/robot_lab_isaac/python:${PYTHONPATH:-}"
+export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_adapter:src/robot_lab_utils:src/robot_lab_pybullet/python:src/robot_lab_mujoco/python:src/robot_lab_isaac/python:${PYTHONPATH:-}"
 export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
 PYTEST=(python3 -m pytest -q -p no:anyio)
 
@@ -66,6 +66,7 @@ FAST_TESTS=(
 
 INTEGRATION_TESTS=(
   "$BRG_TEST/test_xacro_expansion.py"
+  "$BRG_TEST/test_driven_assembly_hold.py::test_the_shipped_mecanum_description_is_covered"
   "$BRG_TEST/test_simulation_clocks.py"
   "$ADP_TEST/test_r3_3_launch_contracts.py"
   "$REG_TEST"/test_go2_qualification.py
@@ -88,7 +89,13 @@ run_tier() {
       return 0
     fi
   fi
-  "${PYTEST[@]}" "${files[@]}"
+  if [ "$name" = "fast" ]; then
+    # Mixed files retain their pure helpers here; explicitly marked ROS/xacro
+    # cases run in the integration manifest with the installed package index.
+    "${PYTEST[@]}" -m 'not integration' "${files[@]}"
+  else
+    "${PYTEST[@]}" "${files[@]}"
+  fi
   echo "=== Tier: $name PASS ==="
 }
 

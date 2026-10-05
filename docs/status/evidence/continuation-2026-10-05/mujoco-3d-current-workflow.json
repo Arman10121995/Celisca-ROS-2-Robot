@@ -1,0 +1,235 @@
+{
+  "mode": "3d_slam",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5819,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19883260406541728,
+      "tail_yaw_speed_rps": 2.468562234909221e-07,
+      "end": {
+        "x": 0.08178861348405868,
+        "y": -0.49999569981060504,
+        "z": 0.011928779449762268,
+        "yaw": -4.92995929258922e-07
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.004,
+      "distance_m": 0.5828,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19887389119542564,
+      "tail_yaw_speed_rps": 2.0952658428860173e-06,
+      "end": {
+        "x": -0.4856134259566221,
+        "y": -0.4999991010686616,
+        "z": 0.011919387075599858,
+        "yaw": 9.168558365869535e-06
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0004,
+      "yaw_change_rad": 1.0241,
+      "tail_speed_mps": 1.5577291360149433e-05,
+      "tail_yaw_speed_rps": 0.3774201912599214,
+      "end": {
+        "x": -0.5010976895342258,
+        "y": -0.4996541123098135,
+        "z": 0.011994615612888155,
+        "yaw": 1.0240726473021116
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.004,
+      "distance_m": 0.0002,
+      "yaw_change_rad": -1.1136,
+      "tail_speed_mps": 0.0001348945040339362,
+      "tail_yaw_speed_rps": 0.3795941421455319,
+      "end": {
+        "x": -0.5010565528140871,
+        "y": -0.4994198249442816,
+        "z": 0.01199707766622601,
+        "yaw": -0.06825403909790367
+      }
+    },
+    "strafe": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.0,
+      "yaw_change_rad": -0.0002,
+      "tail_speed_mps": 1.860456758530906e-06,
+      "tail_yaw_speed_rps": 6.228817441641943e-05,
+      "end": {
+        "x": -0.5010700669491817,
+        "y": -0.4994152285974365,
+        "z": 0.011929365794298801,
+        "yaw": -0.08810393983031659
+      }
+    },
+    "strafe_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0,
+      "yaw_change_rad": -0.0002,
+      "tail_speed_mps": 1.8603080532990267e-06,
+      "tail_yaw_speed_rps": 6.226248486634889e-05,
+      "end": {
+        "x": -0.5010766964003033,
+        "y": -0.49941860885768913,
+        "z": 0.011929365846711549,
+        "yaw": -0.08835303473119892
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0789,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 1.3297400746041691e-05,
+      "tail_yaw_speed_rps": 6.165423714926676e-06,
+      "end": {
+        "x": -0.08500768180823888,
+        "y": -0.5362554434730874,
+        "z": 0.011925303735191496,
+        "yaw": -0.08816210102744348
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.036,
+      "distance_m": 0.0001,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 4.5573340113965094e-05,
+      "tail_yaw_speed_rps": 7.397285812996805e-06,
+      "end": {
+        "x": -0.5000904398215925,
+        "y": -0.4999995741074794,
+        "z": 0.011928343130078574,
+        "yaw": -1.4745182720032762e-05
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3831,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19883131135469323,
+      "tail_yaw_speed_rps": 8.084078895414106e-07,
+      "end": {
+        "x": -0.11699575530115319,
+        "y": -0.49999349246751024,
+        "z": 0.011930469846458786,
+        "yaw": 1.0486118710551152e-05
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "strafe": false,
+    "strafe_reverse": false,
+    "publisher_loss": true,
+    "localization": true,
+    "live_3d_cloud": true,
+    "3d_geometry": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true
+  },
+  "initial_map_to_world": {
+    "yaw": -1.0223889007953238e-06,
+    "x": -0.5000098901883676,
+    "y": -0.4999998163854858
+  },
+  "initial_truth": {
+    "x": -0.5001277882490737,
+    "y": -0.4999994705148223,
+    "z": 0.011928317742147995,
+    "yaw": -2.08186556963973e-05
+  },
+  "localization_error_m": 0.0009562571832910233,
+  "sensor_messages_during_drive": {
+    "/scan": 145,
+    "/oakd/rgb/image_raw": 145,
+    "/oakd/depth/image_raw": 145,
+    "/cloud_map": 14
+  },
+  "cloud_message_points": [
+    1306,
+    2202,
+    5624,
+    6688,
+    7290,
+    7737,
+    7758,
+    8342,
+    9487,
+    10876,
+    11483,
+    12359,
+    13055,
+    13978,
+    14545,
+    1760,
+    3066,
+    3962,
+    7444
+  ],
+  "cloud_geometry": {
+    "frame": "map",
+    "sampled_points": 7273,
+    "min_xyz": [
+      -0.5299228429794312,
+      -4.215268135070801,
+      -0.010510450229048729
+    ],
+    "max_xyz": [
+      6.504730224609375,
+      6.5180230140686035,
+      0.9006973505020142
+    ]
+  },
+  "reset_response": "Simulation reset successfully",
+  "post_reset_map_to_world": {
+    "yaw": -3.5993713730628804e-07,
+    "x": -1.1985407099207191e-06,
+    "y": -2.385657698611432e-07
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 0.00040248530530570314,
+  "map_updates_after_reset": 4,
+  "cloud_updates_after_reset": 4,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1662,
+  "sensor_counts": {
+    "/scan": 186,
+    "/oakd/rgb/image_raw": 186,
+    "/oakd/depth/image_raw": 186,
+    "/cloud_map": 19
+  },
+  "scan_geometry": {
+    "frame": "laser_link",
+    "samples": 360,
+    "finite": 360,
+    "min_m": 5.500008583068848,
+    "max_m": 8.64095687866211,
+    "range_min": 0.11999999731779099,
+    "range_max": 12.0
+  },
+  "passed": false
+}

@@ -1,0 +1,245 @@
+{
+  "generated_utc": "2026-10-05T13:06:21.326830+00:00",
+  "task": "R9.3",
+  "status": "partial",
+  "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
+  "unlisted_cells": "not_tested",
+  "support_cells": [
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_obstacle",
+      "simulator": "gazebo",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/gazebo-crab-obstacle-final.json",
+        "docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json"
+      ],
+      "limitations": [
+        "Single bounded route, not full pattern/map/mode qualification",
+        "Swept circular footprint against static boxes; no measured contact telemetry",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh pose and detour check. Preserve the Isaac abort.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_obstacle",
+      "simulator": "pybullet",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/pybullet-crab-obstacle-final.json",
+        "docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json"
+      ],
+      "limitations": [
+        "Single bounded route, not full pattern/map/mode qualification",
+        "Swept circular footprint against static boxes; no measured contact telemetry",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh pose and detour check. Preserve the Isaac abort.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_obstacle",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/isaac-crab-final-heading.json",
+        "docs/status/evidence/continuation-2026-10-05/final-heading-source-hashes.json"
+      ],
+      "limitations": [
+        "Single bounded route, not full pattern/map/mode qualification",
+        "Swept circular footprint against static boxes; no measured contact telemetry",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Verified running crab configuration; 0.65 m inflation, 0.015 rad controller yaw tolerance. Independent 0.15m/5deg limits unchanged; actual body 0.074m/-4.21deg, swept clearance 0.255m.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "3d_slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/mujoco-3d-current-corrected.json",
+        "docs/status/evidence/continuation-2026-10-05/corrected-save-source-hashes.json"
+      ],
+      "limitations": [
+        "Short screen, not whole-map coverage or all backend/pattern missions",
+        "Actual save report retained separately with DB/PCD hashes; large raw artifacts stay on SSD",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Verified crab configuration; forward/reverse, both turns/strafe directions, real RGB-D reconstruction, publisher loss, monotonic reset and estimator/mapping resume. Companion actual GUI save has nine SQLite keyframes and 7255 finite PCD points.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "nav_obstacle",
+      "simulator": "gazebo_harmonic",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/px4-nav-obstacle.json",
+        "docs/status/evidence/continuation-2026-10-05/px4-nav-obstacle-source-hashes.json"
+      ],
+      "limitations": [
+        "One selected additional world, not all-map flight qualification",
+        "No aerial obstacle planner or ground Nav2 claim",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Native PX4 v1.16.2 X500, actual installed GUI Altitude Up/Down, takeoff/hover/waypoint/Drive/hold/land/disarm, 1295 independent body messages and actual rotor state.",
+      "steering_mode": ""
+    }
+  ],
+  "release_gates": {
+    "robot_tasks": {
+      "condition": "robot_tasks",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R5.10: partial",
+        "R5.2: active",
+        "R5.3: partial",
+        "R5.5: active",
+        "R5.6: partial",
+        "R5.7: queued",
+        "R5.8: queued",
+        "R5.9: queued"
+      ],
+      "evidence_required": [
+        "R5.1",
+        "R5.10",
+        "R5.2",
+        "R5.3",
+        "R5.4",
+        "R5.5",
+        "R5.6",
+        "R5.7",
+        "R5.8",
+        "R5.9"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "environment_tasks": {
+      "condition": "environment_tasks",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R6.1: partial",
+        "R6.2: partial",
+        "R6.3: partial",
+        "R6.4: partial",
+        "R6.5: partial",
+        "R6.6: queued",
+        "R6.7: active"
+      ],
+      "evidence_required": [
+        "R6.1",
+        "R6.2",
+        "R6.3",
+        "R6.4",
+        "R6.5",
+        "R6.6",
+        "R6.7"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "algorithm_breadth": {
+      "condition": "algorithm_breadth",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R7.1: partial",
+        "R7.2: partial",
+        "R7.3: active",
+        "R7.4: partial",
+        "R7.5: partial",
+        "R7.6: partial",
+        "R7.7: partial",
+        "R7.8: partial"
+      ],
+      "evidence_required": [
+        "R7.1",
+        "R7.2",
+        "R7.3",
+        "R7.4",
+        "R7.5",
+        "R7.6",
+        "R7.7",
+        "R7.8"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "backend_qualification": {
+      "condition": "backend_qualification",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R8.1: partial",
+        "R8.3: partial"
+      ],
+      "evidence_required": [
+        "R8.1",
+        "R8.2",
+        "R8.3"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "reproduction_and_comparisons": {
+      "condition": "reproduction_and_comparisons",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R3.6: active",
+        "R4.3: partial",
+        "R9.1: partial",
+        "R9.2: partial"
+      ],
+      "evidence_required": [
+        "R3.6",
+        "R4.3",
+        "R9.1",
+        "R9.2"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    }
+  },
+  "acceptance_criteria": {
+    "required_tasks_pass": false
+  }
+}

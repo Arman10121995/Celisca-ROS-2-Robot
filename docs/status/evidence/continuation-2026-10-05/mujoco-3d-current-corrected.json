@@ -1,0 +1,264 @@
+{
+  "mode": "3d_slam",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5819,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19883239428752597,
+      "tail_yaw_speed_rps": 2.6369421993007606e-07,
+      "end": {
+        "x": 0.08178625067881037,
+        "y": -0.4999944809322539,
+        "z": 0.0119284661107383,
+        "yaw": 1.4566505123725802e-06
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.004,
+      "distance_m": 0.582,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.1988736553772801,
+      "tail_yaw_speed_rps": 2.0814267646135324e-06,
+      "end": {
+        "x": -0.4848198910381682,
+        "y": -0.49999867456412955,
+        "z": 0.011919155688331514,
+        "yaw": 1.0555928196592671e-05
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0007,
+      "yaw_change_rad": 1.0247,
+      "tail_speed_mps": 1.731326400872564e-05,
+      "tail_yaw_speed_rps": 0.3773812343291525,
+      "end": {
+        "x": -0.5002625222323557,
+        "y": -0.49930613167267196,
+        "z": 0.011991002353307023,
+        "yaw": 1.0246993401921003
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0001,
+      "yaw_change_rad": -1.1121,
+      "tail_speed_mps": 0.00010993068882604687,
+      "tail_yaw_speed_rps": 0.37984555941320985,
+      "end": {
+        "x": -0.5002373312150195,
+        "y": -0.49918104944548825,
+        "z": 0.011907736905743796,
+        "yaw": -0.06598071500789515
+      }
+    },
+    "strafe": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.4192,
+      "yaw_change_rad": -0.0338,
+      "tail_speed_mps": 0.1988088033369422,
+      "tail_yaw_speed_rps": 1.3408795937301641e-06,
+      "end": {
+        "x": -0.44967483137463893,
+        "y": -0.08297138869234505,
+        "z": 0.011935247498372603,
+        "yaw": -0.12105446010889137
+      }
+    },
+    "strafe_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.3558,
+      "yaw_change_rad": 0.0462,
+      "tail_speed_mps": 0.19884736266820657,
+      "tail_yaw_speed_rps": 6.718464061414753e-07,
+      "end": {
+        "x": -0.47400601079368604,
+        "y": -0.42261284663559934,
+        "z": 0.011927579174439292,
+        "yaw": -0.07484755987702954
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.008,
+      "distance_m": 0.0709,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 4.323160588925358e-05,
+      "tail_yaw_speed_rps": 2.133175084779092e-07,
+      "end": {
+        "x": -0.12794745755071876,
+        "y": -0.47329297454221536,
+        "z": 0.011925634432070627,
+        "yaw": -0.09934416828605461
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.036,
+      "distance_m": 0.0001,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 4.5573340113965094e-05,
+      "tail_yaw_speed_rps": 7.397285812996805e-06,
+      "end": {
+        "x": -0.5000904398215925,
+        "y": -0.4999995741074794,
+        "z": 0.011928343130078574,
+        "yaw": -1.4745182720032762e-05
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3831,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19883131135469323,
+      "tail_yaw_speed_rps": 8.084078895414106e-07,
+      "end": {
+        "x": -0.11699575530115319,
+        "y": -0.49999349246751024,
+        "z": 0.011930469846458786,
+        "yaw": 1.0486118710551152e-05
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "steering_configuration": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "strafe": true,
+    "strafe_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_3d_cloud": true,
+    "3d_geometry": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true
+  },
+  "drive_configuration": {
+    "node": "mujoco_spawner",
+    "expected_mode": "crab",
+    "passed": true,
+    "configuration": {
+      "front_left_steer_joint": "front_left_steer_joint",
+      "front_left_wheel_joint": "front_left_wheel_joint",
+      "front_right_steer_joint": "front_right_steer_joint",
+      "front_right_wheel_joint": "front_right_wheel_joint",
+      "in_phase_4ws": false,
+      "max_accel": 1.5,
+      "max_speed": 1.0,
+      "max_steer": 1.5707963267948966,
+      "max_steer_rate": 2.5,
+      "rear_left_steer_joint": "rear_left_steer_joint",
+      "rear_left_wheel_joint": "rear_left_wheel_joint",
+      "rear_right_steer_joint": "rear_right_steer_joint",
+      "rear_right_wheel_joint": "rear_right_wheel_joint",
+      "steering_mode": "crab",
+      "type": "four_wheel_steer",
+      "wheel_radius": 0.05,
+      "wheel_separation": 0.32,
+      "wheelbase": 0.32
+    }
+  },
+  "initial_map_to_world": {
+    "yaw": -9.995701865577574e-07,
+    "x": -0.500009746597178,
+    "y": -0.49999983581671675
+  },
+  "initial_truth": {
+    "x": -0.5001297469686674,
+    "y": -0.4999994611885272,
+    "z": 0.011928371078000254,
+    "yaw": -2.1067102275498732e-05
+  },
+  "localization_error_m": 0.0027056570567166966,
+  "sensor_messages_during_drive": {
+    "/scan": 145,
+    "/oakd/rgb/image_raw": 145,
+    "/oakd/depth/image_raw": 145,
+    "/cloud_map": 17
+  },
+  "cloud_message_points": [
+    1306,
+    2193,
+    5702,
+    6844,
+    10080,
+    10558,
+    10558,
+    11189,
+    12238,
+    13617,
+    14076,
+    14372,
+    14864,
+    15123,
+    15168,
+    15315,
+    15613,
+    15880,
+    1745,
+    3051,
+    3833,
+    7255
+  ],
+  "cloud_geometry": {
+    "frame": "map",
+    "sampled_points": 5294,
+    "min_xyz": [
+      -0.5337514281272888,
+      -4.23681116104126,
+      -0.010489091277122498
+    ],
+    "max_xyz": [
+      6.512039661407471,
+      6.522770404815674,
+      0.9013164639472961
+    ]
+  },
+  "reset_response": "Simulation reset successfully",
+  "post_reset_map_to_world": {
+    "yaw": -3.659620858463612e-07,
+    "x": -1.1985407419029512e-06,
+    "y": -3.279727374128072e-07
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 0.0004172492653909475,
+  "map_updates_after_reset": 4,
+  "cloud_updates_after_reset": 4,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1664,
+  "sensor_counts": {
+    "/scan": 186,
+    "/oakd/rgb/image_raw": 186,
+    "/oakd/depth/image_raw": 186,
+    "/cloud_map": 22
+  },
+  "scan_geometry": {
+    "frame": "laser_link",
+    "samples": 360,
+    "finite": 360,
+    "min_m": 5.500008583068848,
+    "max_m": 8.639806747436523,
+    "range_min": 0.11999999731779099,
+    "range_max": 12.0
+  },
+  "passed": true
+}

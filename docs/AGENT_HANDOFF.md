@@ -52,6 +52,12 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+The latest October 5 user instruction prioritizes the new extensions before
+the older roadmap: R3.6/R6.5–R6.7, R5.10, then R5.7–R5.9. Preserve existing
+stabilization fixes; return to R5.6 and the remaining original acceptance next.
+Check live task ownership: another agent owns the R6.7 shared heightfield lane.
+Use the [checklist](status/CHECKLIST.md) and current ledger when coordinating.
+
 Read the [2026-10-02 completion audit](status/audit-2026-10-02.md) first.
 It reconciles baseline `2a0aae2`, retains actual measured robot work, and
 withdraws unsupported R6/R7/R8/R9 completion from demo/metadata reports.

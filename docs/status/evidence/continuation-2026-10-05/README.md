@@ -113,3 +113,34 @@ their corrected counterparts measure the actual passing crab/save workflow.
 Other exploratory precision/soft-gate failures and the early mesh-segment
 projection failures remain in the raw SSD directory. These failed runs are
 not erased or converted into passing support cells.
+
+## Final verification and support subset
+
+- `release-fast-final.log`: `scripts/test_fast.sh`, 756 passed / two skipped,
+  registry cross-reference PASS on `e69d1b2` plus recorded updates.
+- `direct-fast-final.log`: fixed direct runner without inherited source/package
+  paths, 755 passed / two skipped / one integration case deselected. The real
+  mecanum xacro check remains in the integration tier and passes separately
+  (`mecanum-integration-final.log`). The old GitHub runner omitted the utility
+  source path; `test_fast.sh` previously masked that through inherited paths.
+- `release-focused-final.log`: 35 world-reader/heightfield/PCD/support-guard
+  tests pass. `gui-43-final.log`: 43 Tk command/Drive tests pass on their named
+  source stage; full-tab live Save Map and flight trials are separate.
+- The final Isaac mode-verified repeat passes the unchanged body limits:
+  0.074 m / −4.21°, 0.255 m swept clearance, 14,487 body samples.
+- [Current support subset](support-matrix-current.md) indexes seven individual
+  pre-trial-hashed reports, with five latest exact support cells. Older
+  post-trial snapshots and wrong-argument trials are retained outside this
+  index. Absence from the subset does not erase older named evidence.
+
+Full-release gates remain blocked by unfinished task acceptance, including
+the new extensions. `--require-release-ready` must return a nonzero status
+until those prerequisites actually pass.
+
+`gui-worlds-check.json` exercises the installed full GUI's actual Generate and
+Stop buttons. It records the owned ROS CLI/generator/Gazebo/service process
+tree, cancellation before export, and a subsequent real map with 23,170 free
+/ 1,608 occupied cells. The original `/proc/*/children` observer missed the
+descendants; its failed reports remain beside the corrected `ps` observer.
+`gui_worlds_check.py` archives that producer; copy it to a fresh SSD run
+directory before reproducing rather than writing generated maps into docs.

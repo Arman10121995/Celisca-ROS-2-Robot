@@ -5,7 +5,7 @@ Updated: 2026-10-05. Continuation baseline: `700b94e` plus recorded patches. The
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
 but full mission qualification remains partial. Existing scoped live robot
 results remain valid within their documented limits. Follow the stabilization
-queue and [storage guide](docs/STORAGE.md) before generating new large artifacts.
+requirements and [storage guide](docs/STORAGE.md) before generating new large artifacts.
 Historical runtime audit: `dff388f`, retained in `docs/status/audit-2026-09-07.md`.
 
 This is an implementation specification, not a list of promised features.
@@ -35,10 +35,14 @@ asset listing is separate from an installed robot with working control.
 | R6.7 | Terrain GUI and four-backend heightfield/mesh conversion | Queued; generator's Gazebo output alone does not establish other backend support |
 
 See [the implementation guide](docs/ASSET_EXTENSION_GUIDE.md) and
-[source snapshot](docs/status/asset-sources-2026-10-05.yaml). Preserve R5.6 and
-P1–P7 priority while implementing these tasks in independently testable steps.
+[source snapshot](docs/status/asset-sources-2026-10-05.yaml). The latest October 5
+user instruction prioritizes these extensions first: R3.6/R6.5–R6.7, R5.10,
+then R5.7–R5.9; return to the older roadmap afterward. Preserve P1–P8 fixes and
+their remaining qualification tasks throughout. R6.7's shared heightfield
+converter now exists with measured Gazebo/MuJoCo/PyBullet geometry/contact
+screens; the terrain GUI/provider workflow and Isaac runtime contact remain.
 
-## Stabilization patches before further expansion
+## Stabilization patches to preserve and resume after the extensions
 
 The user requested these fixes before continuing the larger milestones. The
 [patch execution guide](docs/PATCH_EXECUTION_GUIDE.md) gives the exact starting

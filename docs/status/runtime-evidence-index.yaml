@@ -1,0 +1,132 @@
+schema_version: 1
+date: '2026-10-05'
+scope: Exact pre-trial-hashed October 5 subset. Older named evidence remains in its
+  reports; absence here means not indexed, not proof of universal failure.
+raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
+records:
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  steering_mode: crab
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/gazebo-crab-obstacle-final.json
+  sha256: 324300c65ef0bbb2fcccea0ac65a53233edd64f02086e479090e65efd211ef87
+  source_hashes: docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json
+  source_hashes_sha256: 67671242f46eb5aad20bfb41fe6382325f260aa8cea27a6fb1e6f430b0b91c1e
+  report_kind: navigation_screen
+  scope: Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller
+    yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh
+    pose and detour check. Preserve the Isaac abort.
+  limitations: &id001
+  - Single bounded route, not full pattern/map/mode qualification
+  - Swept circular footprint against static boxes; no measured contact telemetry
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation
+  steering_mode: crab
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/pybullet-crab-obstacle-final.json
+  sha256: 9a460510a8f6b4925b7ce9786c5e4a4b9b204b3e815f22e26ded1b3c94a44002
+  source_hashes: docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json
+  source_hashes_sha256: 67671242f46eb5aad20bfb41fe6382325f260aa8cea27a6fb1e6f430b0b91c1e
+  report_kind: navigation_screen
+  scope: Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller
+    yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh
+    pose and detour check. Preserve the Isaac abort.
+  limitations: *id001
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  steering_mode: crab
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/isaac-crab-obstacle-final.json
+  sha256: ceec2433e823614dcb258f2a4d5abc84100988d83283a27e4766373a999aa8a7
+  source_hashes: docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json
+  source_hashes_sha256: 67671242f46eb5aad20bfb41fe6382325f260aa8cea27a6fb1e6f430b0b91c1e
+  report_kind: navigation_screen
+  scope: Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller
+    yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh
+    pose and detour check. Preserve the Isaac abort.
+  limitations: *id001
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  steering_mode: crab
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/isaac-crab-mode-verified.json
+  sha256: 2836698645a3581967ebbdcf6cbe090efb9c22161b9e0a02df08e29f2b7507a7
+  source_hashes: docs/status/evidence/continuation-2026-10-05/mode-verified-source-hashes.json
+  source_hashes_sha256: eb7a3d85c1c115201261ce93a425f618ac99a68666e6da8cad21f7ea0137e85d
+  report_kind: navigation_screen
+  scope: Verified running crab configuration; 0.65 m inflation, 0.04 rad controller
+    yaw tolerance. Nav2 succeeds but measured heading -5.63deg fails the independent
+    5deg check.
+  limitations: *id001
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  steering_mode: crab
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/isaac-crab-final-heading.json
+  sha256: 12f47cacad58104d693cae49f5c62731dba9ccbc180df76bf0f2bd3c3fc2c5b3
+  source_hashes: docs/status/evidence/continuation-2026-10-05/final-heading-source-hashes.json
+  source_hashes_sha256: e5665bb9ea01216b87343816e3e5eeef79478302dadb92166e2d759c63d000e6
+  report_kind: navigation_screen
+  scope: Verified running crab configuration; 0.65 m inflation, 0.015 rad controller
+    yaw tolerance. Independent 0.15m/5deg limits unchanged; actual body 0.074m/-4.21deg,
+    swept clearance 0.255m.
+  limitations: *id001
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: 3d_slam
+  steering_mode: crab
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/mujoco-3d-current-corrected.json
+  sha256: 196f4caf27ccc7671e809c0ba2daa9fab7fe5070b2cab438c9e404a54e364b4d
+  source_hashes: docs/status/evidence/continuation-2026-10-05/corrected-save-source-hashes.json
+  source_hashes_sha256: e5665bb9ea01216b87343816e3e5eeef79478302dadb92166e2d759c63d000e6
+  report_kind: workflow_screen
+  scope: Verified crab configuration; forward/reverse, both turns/strafe directions,
+    real RGB-D reconstruction, publisher loss, monotonic reset and estimator/mapping
+    resume. Companion actual GUI save has nine SQLite keyframes and 7255 finite PCD
+    points.
+  limitations:
+  - Short screen, not whole-map coverage or all backend/pattern missions
+  - Actual save report retained separately with DB/PCD hashes; large raw artifacts
+    stay on SSD
+- robot_id: px4_x500
+  environment_id: nav_obstacle
+  simulator: gazebo_harmonic
+  task_type: flight
+  steering_mode: ''
+  date: '2026-10-05'
+  revision: 700b94e plus named working-tree stage; source hashes captured before this
+    trial
+  report: docs/status/evidence/continuation-2026-10-05/px4-nav-obstacle.json
+  sha256: 97c21c9d6563b3612a569016d968fd9caf507a210f9f10f5c81c4c839360393a
+  source_hashes: docs/status/evidence/continuation-2026-10-05/px4-nav-obstacle-source-hashes.json
+  source_hashes_sha256: 3ae4e8c1ecfda553417b415583e88bee3d96827c1b80de6478467ff8bb97c322
+  report_kind: flight_screen
+  scope: Native PX4 v1.16.2 X500, actual installed GUI Altitude Up/Down, takeoff/hover/waypoint/Drive/hold/land/disarm,
+    1295 independent body messages and actual rotor state.
+  limitations:
+  - One selected additional world, not all-map flight qualification
+  - No aerial obstacle planner or ground Nav2 claim

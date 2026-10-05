@@ -1,0 +1,111 @@
+=== Tier: fast (36 test files) ===
+........................................................................ [  9%]
+........................................................................ [ 18%]
+.......................................................s................ [ 28%]
+..................................s..................................... [ 37%]
+........................................................................ [ 47%]
+........................................................................ [ 56%]
+........................................................................ [ 66%]
+........................................................................ [ 75%]
+........................................................................ [ 85%]
+........................................F............................... [ 94%]
+......................................                                   [100%]
+=================================== FAILURES ===================================
+_______________ test_the_shipped_mecanum_description_is_covered ________________
+
+    @pytest.mark.integration
+    def test_the_shipped_mecanum_description_is_covered():
+        """The real robot: every roller of all four hubs must be excluded."""
+        xacro_bin = shutil.which("xacro")
+        if xacro_bin is None:
+            pytest.skip("xacro executable not available")
+        model = _SRC_DIR / "robot_lab_robots" / _ROBOTS["mecanum_car"]["xacro"]
+>       result = subprocess.run(
+            ["bash", "-c",
+             f"source /opt/ros/humble/setup.bash && {xacro_bin} {model}"],
+            capture_output=True, text=True, timeout=180, check=True)
+
+src/robot_lab_bringup/test/test_driven_assembly_hold.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = 180, check = True
+popenargs = (['bash', '-c', 'source /opt/ros/humble/setup.bash && /opt/ros/humble/bin/xacro /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/holonomic_wheels/urdf/mecanum_car.urdf.xacro'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 2 args: ['bash', '-c', 'source /opt/ros/humble/setup.bas...>
+stdout = ''
+stderr = 'error: <class \'ament_index_python.packages.PackageNotFoundError\'>: "package \'robot_lab_robots\' not found, searchi...cessing file: /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/holonomic_wheels/urdf/mecanum_car.urdf.xacro\n'
+retcode = 2
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['bash', '-c', 'source /opt/ros/humble/setup.bash && /opt/ros/humble/bin/xacro /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/holonomic_wheels/urdf/mecanum_car.urdf.xacro']' returned non-zero exit status 2.
+
+/usr/lib/python3.10/subprocess.py:526: CalledProcessError
+=========================== short test summary info ============================
+FAILED src/robot_lab_bringup/test/test_driven_assembly_hold.py::test_the_shipped_mecanum_description_is_covered
+1 failed, 755 passed, 2 skipped in 79.92s (0:01:19)

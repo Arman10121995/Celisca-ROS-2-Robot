@@ -45,7 +45,7 @@ installed commandable robots.
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
 - [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
 - [Worlds and robot extension guide](docs/ASSET_EXTENSION_GUIDE.md): source pins, occupancy generation and concrete terrain/manipulation implementation contracts.
-- [Machine-readable status](docs/status/platform-status.yaml) and [support matrix](docs/status/support-matrix.md): current state, not historical completion claims.
+- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [current measured support screens](docs/status/evidence/continuation-2026-10-05/support-matrix-current.md): scoped state and release blockers.
 - [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
 
@@ -68,7 +68,9 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-October 5 verification includes **43 passing Tk command/Drive tests** and
+October 5 verification includes **755 passing direct fast tests, two skipped,
+one integration case deselected**, that real xacro case passing separately,
+registry validation, **35 passing focused tests**, **43 passing Tk command/Drive tests** and
 scoped source, build and real simulator checks. Exact test totals, source
 stages, successful and failed robot trials are recorded in the
 [continuation evidence](docs/status/evidence/continuation-2026-10-05/README.md).
