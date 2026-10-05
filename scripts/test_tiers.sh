@@ -31,6 +31,7 @@ BRG_TEST="src/robot_lab_bringup/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "scripts/test_asset_staging.py"
   "$REG_TEST/test_p5_algorithm_breadth.py"
   "$REG_TEST/test_p6_benchmarking.py"
   "$REG_TEST/test_registry.py"

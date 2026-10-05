@@ -3,7 +3,8 @@
 
 """Integration tier (R1.2): cross-robot xacro URDF/Xacro expansion.
 
-Each robot profile is expanded on the real xacro executable (ROS-2-sourced).
+Each xacro robot profile is expanded on the real executable (ROS-2-sourced).
+Native PX4 supplies an upstream SDF through its flight adapter instead.
 This requires a sourced ROS 2 environment and the ``xacro`` tool, so it runs
 in the **integration** tier, never in the fast/unit suite. Fast tests must
 not spawn subprocesses or touch a shared ROS graph.
@@ -31,7 +32,8 @@ ROBOTS = _load(_ROBOTS_PATH)["robots"]
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("robot_name,robot_config", ROBOTS.items())
+@pytest.mark.parametrize("robot_name,robot_config", [
+    (name, config) for name, config in ROBOTS.items() if config.get("xacro")])
 def test_robot_profile_can_be_expanded(robot_name, robot_config):
     model_path = _SRC_DIR / "robot_lab_robots" / robot_config["xacro"]
     assert model_path.is_file(), f"{robot_name}: missing model {model_path}"
@@ -45,6 +47,19 @@ def test_robot_profile_can_be_expanded(robot_name, robot_config):
     )
     assert result.returncode == 0, (
         f"{robot_name}: xacro expansion failed:\n{result.stderr}")
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("robot_name,robot_config", [
+    (name, config) for name, config in ROBOTS.items() if not config.get("xacro")])
+def test_native_profile_has_an_explicit_model_loader(robot_name, robot_config):
+    """A missing xacro must be deliberate, never an accidental missing model."""
+    assert robot_name == "px4_x500", f"{robot_name}: no declared native model loader"
+    assert robot_config['package'] == 'robot_lab_adapter'
+    assert robot_config['drive']['type'] == 'px4'
+    assert 'flight' in robot_config['supported_modes']
+    assert 'flight_controller' in robot_config['features']
+    assert (_SRC_DIR/'robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py').is_file()
 
 
 @pytest.mark.integration

@@ -9,6 +9,9 @@ Health (doctor / platform status / ROS graph), and Live Monitor
 import json
 import threading
 import os
+import hashlib
+import shlex
+import sys
 import webbrowser
 from pathlib import Path
 
@@ -165,7 +168,9 @@ class AssetsTab(LabTab):
         self.tree.column('#0',width=520);self.tree.column('source',width=200);self.tree.column('status',width=100)
         self.tree.grid(row=1,column=0,sticky='nsew');self.rowconfigure(1,weight=1)
         scroll=ttk.Scrollbar(self,orient='vertical',command=self.tree.yview);scroll.grid(row=1,column=1,sticky='ns')
-        self.tree.configure(yscrollcommand=scroll.set);self.links={}
+        self.tree.configure(yscrollcommand=scroll.set);self.links={};self.asset_entries={}
+        self.asset_directory=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
+            '/workspace/molar/robot_lab_runtime'))/'external_assets'
         catalog=load_yaml(WORKSPACE_ROOT/'docs/status/asset-sources-2026-10-05.yaml') or {}
         for source in catalog.get('sources',[]):
             parent=self.tree.insert('', 'end',text=source['id'],values=(source['revision'][:12],source['status']))
@@ -173,8 +178,66 @@ class AssetsTab(LabTab):
             for entry in source.get('entries',[]):
                 name=entry.get('name') if isinstance(entry,dict) else entry
                 row=self.tree.insert(parent,'end',text=name,values=(source['id'],'cataloged'))
+                self.asset_entries[row]=(source,entry)
                 self.links[row]=entry['source'] if isinstance(entry,dict) else source['repository']+'/tree/'+source['revision']+'/'+entry
-        ttk.Button(self,text='Open Selected Upstream Source',command=self.open_source).grid(row=2,column=0,sticky='ew',pady=6)
+        actions=ttk.Frame(self);actions.grid(row=2,column=0,sticky='ew',pady=6)
+        ttk.Button(actions,text='Open Upstream Source',command=self.open_source).pack(side='left')
+        self.stage_button=ttk.Button(actions,text='Download / Check Selected Asset',command=self.stage_selected)
+        self.stage_button.pack(side='left',padx=6)
+        ttk.Button(actions,text='Stop Download',command=lambda:app.stop_bg_process('asset_import')).pack(side='left')
+        ttk.Button(actions,text='Refresh Local Status',command=self.refresh_local_status).pack(side='left',padx=6)
+        self.preview_button=ttk.Button(actions,text='Model Geometry Preview',command=self.preview_selected)
+        self.preview_button.pack(side='left')
+        ttk.Button(actions,text='Close Preview',command=lambda:app.stop_bg_process('asset_preview')).pack(side='left',padx=6)
+        self.asset_command_var=tk.StringVar()
+        ttk.Entry(self,textvariable=self.asset_command_var,state='readonly').grid(row=3,column=0,sticky='ew')
+        self.tree.bind('<<TreeviewSelect>>',lambda _event:self.update_asset_command())
+        self.refresh_local_status()
+
+    def staging_command(self):
+        selected=self.tree.selection()
+        if not selected or selected[0] not in self.asset_entries:
+            raise ValueError('Select an individual pinned model or world asset')
+        source,entry=self.asset_entries[selected[0]]
+        if not isinstance(entry,str):
+            raise ValueError('This directory links to an upstream project; an individual commit/model pin is still needed')
+        return [sys.executable,str(WORKSPACE_ROOT/'scripts/catalog_external_assets.py'),
+                '--source',source['id'],'--entry',entry,'--output-dir',str(self.asset_directory)]
+
+    def update_asset_command(self):
+        try:self.asset_command_var.set(shlex.join(self.staging_command()))
+        except ValueError as exc:self.asset_command_var.set(str(exc))
+
+    def stage_selected(self):
+        try:self.app.start_bg_process(self.staging_command(),'asset_import')
+        except ValueError as exc:messagebox.showinfo('Asset staging',str(exc))
+
+    def preview_selected(self):
+        try:
+            command=self.staging_command()
+            command[1]=str(WORKSPACE_ROOT/'scripts/preview_external_asset.py')
+            self.app.start_bg_process(command,'asset_preview')
+        except ValueError as exc:messagebox.showinfo('Model preview',str(exc))
+
+    def refresh_local_status(self):
+        for row,(source,entry) in self.asset_entries.items():
+            status='cataloged'
+            if isinstance(entry,str):
+                key=hashlib.sha256(entry.encode()).hexdigest()[:16]
+                path=self.asset_directory/'manifests'/source['id']/source['revision']/(key+'.json')
+                if path.is_file():
+                    try:
+                        report=json.loads(path.read_text())
+                        if (report['source_id'],report['revision'],report['entry'])!=(source['id'],source['revision'],entry):
+                            raise ValueError('Manifest identity mismatch')
+                        status=report['stage']
+                        models=report.get('models',[])
+                        if models and all(m.get('native_import',{}).get('status')=='import_checked' for m in models):
+                            status='native import checked'
+                        elif any(m.get('dependencies_complete') is False or m.get('native_import',{}).get('status')=='import_failed' for m in models):
+                            status='dependencies incomplete'
+                    except (OSError,KeyError,ValueError):status='manifest unreadable'
+            self.tree.set(row,'status',status)
 
     def open_source(self):
         selection=self.tree.selection()
