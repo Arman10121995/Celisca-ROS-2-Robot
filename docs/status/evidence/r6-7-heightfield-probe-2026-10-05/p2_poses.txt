@@ -1,0 +1,219 @@
+header {
+  stamp {
+    sec: 25
+    nsec: 527000000
+  }
+}
+pose {
+  name: "xb_left"
+  id: 16
+  position {
+    x: -68
+    y: -1.1214064440639934e-14
+    z: 0.19999922209408377
+  }
+  orientation {
+    x: 2.8023605597269633e-14
+    y: -1.1641342312608703e-31
+    z: 2.4522657803541889e-45
+    w: 1
+  }
+}
+pose {
+  name: "xb_right"
+  id: 20
+  position {
+    x: -52
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "yb_top"
+  id: 24
+  position {
+    x: 1.1262427639851705e-30
+    y: 8
+    z: 0.1999992220940873
+  }
+  orientation {
+    x: 1.2430836051172006e-12
+    y: 2.81556929292973e-30
+    z: -2.6999318462493682e-42
+    w: 1
+  }
+}
+pose {
+  name: "yb_bot"
+  id: 28
+  position {
+    x: 1.004175615465824e-30
+    y: -8
+    z: 4.1999991326474229
+  }
+  orientation {
+    x: -1.1474348549322753e-12
+    y: 2.5104009182057141e-30
+    z: 2.2041133591271411e-42
+    w: 1
+  }
+}
+pose {
+  name: "half"
+  id: 32
+  position {
+    x: 60
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "edge_in"
+  id: 36
+  position {
+    x: 69.5
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "edge_out"
+  id: 40
+  position {
+    x: 69.9
+    z: -3181.1009544006765
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "edge_neg"
+  id: 44
+  position {
+    x: 50.5
+    y: -1.7018283466981164e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450645601876e-15
+    y: -6.962447655509095e-17
+    z: 3.9896105056310492e-30
+    w: 1
+  }
+}
+pose {
+  name: "edge_negout"
+  id: 48
+  position {
+    x: 50.1
+    y: -1.043920866716765e-102
+    z: -3181.1009544006765
+  }
+  orientation {
+    x: -1.1128459830316793e-119
+    y: 1.6694176067561738e-30
+    z: -1.0439205284057295e-103
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 17
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 21
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 25
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 29
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 33
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 37
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 41
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 45
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 49
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+

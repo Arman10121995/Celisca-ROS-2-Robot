@@ -841,6 +841,23 @@ Dependencies: `R6.3`, `R6.6`.
 - Implement: Embed/launch the pinned terrain-generator web workflow from GUI; set all output/cache to SSD. Keep Mapbox/provider tokens outside repository/logs. Save provider/data attribution, geographic polygon, seed/spawn, vertical datum, metres-per-pixel and elevation range. Convert one canonical heightfield/building mesh into Gazebo SDF, MuJoCo hfield/mesh, PyBullet terrain collision and Isaac USD/PhysX geometry.
 - Acceptance: Deterministic regeneration from saved inputs where data availability permits, equivalent horizontal/vertical scale and support heights across backends, actual terrain contact/sensors and class-specific driving/walking/flight missions. Reject unsupported geometry. Gazebo output alone does not qualify MuJoCo/PyBullet/Isaac.
 
+  **Partial — shared conversion delivered, missions outstanding.** The
+  canonical heightfield conversion now exists in
+  `robot_lab_utils/heightfield.py`, and Gazebo, MuJoCo, PyBullet and Isaac all
+  build terrain from it instead of dropping `<heightmap>`. The layout was
+  *measured* against the installed Gazebo rather than assumed, because three
+  conventions are unstated in the SDF spec and each is a plausible wrong
+  guess: elevation is normalised by the raster's own **maximum** (not 255),
+  raster **row 0 is +y**, and the grid is cell-centred spanning
+  `(n-1)/2·size/n` (not `size/2` — Gazebo's own AABB measured ±9.69697 m for
+  a 20 m / 33-sample raster). A ball dropped on the converted surface rests at
+  the same height in MuJoCo and PyBullet as in Gazebo. Isaac is verified at
+  the geometry level only; its runtime contact is **not** qualified. The
+  terrain-generator workflow, provider attribution manifest, deterministic
+  regeneration and class-specific terrain missions remain outstanding.
+  Evidence:
+  [r6-7-heightfield-probe-2026-10-05](docs/status/evidence/r6-7-heightfield-probe-2026-10-05/README.md).
+
 ## R7 — Algorithm breadth
 
 ### R7.1 — Normalize numerical and ROS algorithm adapters

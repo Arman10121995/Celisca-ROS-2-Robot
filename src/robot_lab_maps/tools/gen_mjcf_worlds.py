@@ -23,13 +23,19 @@ What is converted
   as it already does for robot meshes;
 * ``<include><uri>model://...</uri></include>``, by recursing into the
   referenced ``model.sdf``.
+* ``<heightmap>`` terrain, emitted as a real ``<asset><hfield>`` plus an
+  ``<geom type="hfield">``.  The raster is re-encoded as PNG (MuJoCo reads
+  only PNG) and the SDF ``<size>`` becomes MuJoCo's
+  (radius_x, radius_y, elevation_x, elevation_y).  Both engines normalise the
+  raster by its own maximum, so the surface matches the layout measured
+  against Gazebo instead of being rescaled twice.
 
 What is skipped (and reported)
 ------------------------------
 * ``<actor>`` elements - scripted moving obstacles are not static geometry;
   the dynamics metadata in the registry describes them instead;
-* ``<heightmap>`` and ``<polyline>`` - no MJCF equivalent is emitted rather
-  than emitting something that does not match the Gazebo world.
+* ``<polyline>`` - no MJCF equivalent is emitted rather than emitting
+  something that does not match the Gazebo world.
 
 Usage::
 
@@ -95,7 +101,50 @@ def _mesh_name(meshes, path, scale):
     return meshes[key][0]
 
 
-def _geom(shape, meshes):
+def _hfield_name(hfields, shape):
+    """Unique MJCF asset name for one heightmap shape record."""
+    key = shape["heightmap"]
+    if key not in hfields:
+        stem = os.path.splitext(os.path.basename(key))[0]
+        name = "".join(c if c.isalnum() or c == "_" else "_" for c in stem)
+        name = name or "hfield"
+        candidate, index = name, 1
+        existing = {value[0] for value in hfields.values()}
+        while candidate in existing:
+            index += 1
+            candidate = "%s_%d" % (name, index)
+        hfields[key] = (candidate, key, [float(v) for v in shape["size"]])
+    return hfields[key][0]
+
+
+def _write_hfield_png(shape, asset_dir):
+    """Write the raster as a PNG MuJoCo can load, and return its path.
+
+    MuJoCo accepts only PNG heightfields, while SDF heightmaps are often PGM
+    or a DEM-derived raster, so the image is re-encoded next to the generated
+    MJCF.  The pixel values are preserved exactly - MuJoCo normalises by the
+    raster maximum itself, which is the same rule measured in Gazebo, so
+    re-encoding does not rescale the terrain.
+    """
+    import hashlib
+
+    from robot_lab_utils.heightfield import load_heightmap
+
+    elevations = load_heightmap(shape["heightmap"])
+    digest = hashlib.sha1(
+        ("%s|%s" % (os.path.abspath(shape["heightmap"]), shape["size"]))
+        .encode("utf-8")).hexdigest()[:8]
+    stem = os.path.splitext(os.path.basename(shape["heightmap"]))[0]
+    stem = "".join(c if c.isalnum() or c in "_-" else "_" for c in stem) or "hfield"
+    target = os.path.join(asset_dir, "%s-%s.hfield.png" % (stem, digest))
+    if not os.path.isfile(target):
+        from PIL import Image
+
+        Image.fromarray(elevations.astype("uint8"), "L").save(target)
+    return target
+
+
+def _geom(shape, meshes, hfields, asset_dir):
     """MJCF geom attributes for one shared-reader shape record.
 
     MJCF sizes are half extents where SDF sizes are full extents.
@@ -117,28 +166,55 @@ def _geom(shape, meshes):
     elif kind == "plane":
         geom.update(type="plane",
                     size="%.6g %.6g 0.1" % (size[0] / 2.0, size[1] / 2.0))
+    elif kind == "heightmap":
+        geom.update(type="hfield", hfield=_hfield_name(hfields, shape))
     else:
         scale = " ".join("%.6g" % value for value in shape["scale"])
         geom.update(type="mesh", mesh=_mesh_name(meshes, shape["mesh"], scale))
     return geom
 
 
-def convert_world(world_path, name=None):
-    """Return (mjcf_text, skipped_notes) for one SDF ``.world`` file."""
+def convert_world(world_path, name=None, asset_dir=None):
+    """Return (mjcf_text, skipped_notes) for one SDF ``.world`` file.
+
+    *asset_dir* is where derived heightfield PNGs are written; it defaults to
+    the sibling directory the MJCF itself is written to.
+    """
     name = name or os.path.splitext(os.path.basename(world_path))[0]
+    if asset_dir is None:
+        asset_dir = os.path.dirname(world_path)
     shapes, skipped = extract_static_shapes(world_path, _resolve_uri)
     meshes = {}
-    geoms = [_geom(shape, meshes) for shape in shapes]
+    hfields = {}
+    geoms = [_geom(shape, meshes, hfields, asset_dir) for shape in shapes]
 
     mujoco = ET.Element("mujoco", {"model": name})
     ET.SubElement(mujoco, "option", {"gravity": "0 0 -9.81"})
     ET.SubElement(mujoco, "compiler", {"angle": "radian"})
 
-    if meshes:
+    if meshes or hfields:
         asset = ET.SubElement(mujoco, "asset")
         for mesh_name, path, scale in sorted(meshes.values()):
             ET.SubElement(asset, "mesh",
                           {"name": mesh_name, "file": path, "scale": scale})
+        for shape in shapes:
+            if shape["type"] != "heightmap":
+                continue
+            hfield_name = hfields[shape["heightmap"]][0]
+            try:
+                png = _write_hfield_png(shape, asset_dir)
+            except Exception as exc:
+                skipped.append("hfield %s not generated: %s" % (hfield_name, exc))
+                continue
+            size = shape["size"]
+            # MuJoCo's hfield size is (radius_x, radius_y, elevation_x,
+            # elevation_y).  The radii are the SDF extent/2 and the elevations
+            # the SDF size_z; MuJoCo divides the raster by its own maximum,
+            # which is how Gazebo scales it too.
+            ET.SubElement(asset, "hfield", {
+                "name": hfield_name, "file": png,
+                "size": "%.6g %.6g %.6g %.6g" % (size[0] / 2.0, size[1] / 2.0,
+                                                 size[2], size[2])})
 
     worldbody = ET.SubElement(mujoco, "worldbody")
     has_plane = any(geom["type"] == "plane" for geom in geoms)

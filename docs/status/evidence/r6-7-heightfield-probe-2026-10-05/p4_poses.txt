@@ -1,0 +1,139 @@
+header {
+  stamp {
+    sec: 25
+    nsec: 549000000
+  }
+}
+pose {
+  name: "in33"
+  id: 8
+  position {
+    x: -50.603
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "out33"
+  id: 12
+  position {
+    x: -50.003
+    z: -3186.60705500068
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "in65"
+  id: 20
+  position {
+    x: 9.54615
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "out65"
+  id: 24
+  position {
+    x: 10.1462
+    z: -3186.60705500068
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "in17"
+  id: 32
+  position {
+    x: 69.1118
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "out17"
+  id: 36
+  position {
+    x: 69.7118
+    z: -3186.60705500068
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 9
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 13
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 21
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 25
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 33
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 37
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+

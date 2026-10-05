@@ -19,11 +19,13 @@ offline mode.
     backwards").  In that case the node falls back to offline mode.
 """
 import base64
+import hashlib
 import json
 import math
 import os
 import re
 import signal
+import struct
 import subprocess
 import tempfile
 import threading
@@ -113,6 +115,26 @@ def decode_rgbd_event(event):
     depth = np.frombuffer(base64.b64decode(event["depth"]), dtype="<f4")
     return (float(event.get("t", 0.0)), rgb.reshape(height, width, 3),
             depth.reshape(height, width).astype(np.float32))
+
+
+def _write_binary_stl(vertices, faces, path):
+    """Write a triangle soup as binary STL, the format the Isaac runtime reads."""
+    vertices = np.asarray(vertices, dtype=float)
+    triangles = vertices[np.asarray(faces, dtype=int)]
+    normals = np.cross(triangles[:, 1] - triangles[:, 0],
+                       triangles[:, 2] - triangles[:, 0])
+    lengths = np.linalg.norm(normals, axis=1)
+    lengths[lengths == 0.0] = 1.0
+    normals = normals / lengths[:, None]
+    with open(path, "wb") as handle:
+        handle.write(b"\0" * 80)
+        handle.write(struct.pack("<I", len(triangles)))
+        for index in range(len(triangles)):
+            handle.write(struct.pack("<3f", *normals[index]))
+            for corner in triangles[index]:
+                handle.write(struct.pack("<3f", *corner))
+            handle.write(struct.pack("<H", 0))
+    return path
 
 
 def _group_alive(pgid):
@@ -622,12 +644,50 @@ class IsaacSpawner(Node):
                                    % os.path.basename(shape["mesh"]))
                     continue
                 shape = dict(shape, mesh=staged)
+            elif shape["type"] == "heightmap":
+                # Isaac has no heightfield collider here either, so the
+                # terrain becomes a triangle mesh with the same metre layout
+                # measured against Gazebo (see robot_lab_utils.heightfield).
+                staged = self._stage_heightfield(shape)
+                if not staged:
+                    skipped.append("heightmap not convertible: %s"
+                                   % os.path.basename(shape["heightmap"]))
+                    continue
+                shape = dict(shape, type="mesh", mesh=staged,
+                             scale=[1.0, 1.0, 1.0])
             loadable.append(shape)
         self.get_logger().info(
             "World '%s': %d static shape(s) for Isaac, %d skipped%s"
             % (os.path.basename(world_path), len(loadable), len(skipped),
                (" (%s)" % "; ".join(skipped[:3])) if skipped else ""))
         return loadable
+
+    def _stage_heightfield(self, shape):
+        """Heightmap -> cached STL, the only mesh format the runtime reads."""
+        try:
+            from robot_lab_utils.heightfield import heightfield_grid
+        except ImportError:
+            self.get_logger().warn(
+                "robot_lab_utils.heightfield unavailable; heightmap skipped")
+            return ""
+        try:
+            vertices, faces = heightfield_grid(shape)
+        except Exception as exc:
+            self.get_logger().warn(
+                "heightmap %s: %s"
+                % (os.path.basename(shape.get("heightmap", "")), exc))
+            return ""
+        cache = os.path.join(
+            os.environ.get("ROBOT_LAB_RUNTIME_ROOT", tempfile.gettempdir()),
+            "heightfields")
+        os.makedirs(cache, exist_ok=True)
+        digest = hashlib.sha1(
+            ("%s|%s" % (os.path.abspath(shape["heightmap"]), shape["size"]))
+            .encode("utf-8")).hexdigest()[:12]
+        target = os.path.join(cache, "terrain-%s.stl" % digest)
+        if not os.path.isfile(target):
+            _write_binary_stl(vertices, faces, target)
+        return target
 
     def _drain_stdout(self):
         try:

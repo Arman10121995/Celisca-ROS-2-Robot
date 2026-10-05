@@ -3,7 +3,9 @@
 
 Meshes are sliced at their actual world pose/scale into a collision mask;
 the upstream plugin's invented 1 m mesh bounds are never used. Its AABB cell
-checks remain conservative. Heightfields need the R6.7 terrain converter.
+checks remain conservative. Heightfields are tessellated with the shared
+``robot_lab_utils.heightfield`` converter - the layout measured against
+Gazebo - and sliced by the same plane, so terrain contributes real obstacles.
 """
 import os
 import signal
@@ -42,15 +44,26 @@ from PIL import Image,ImageDraw
 from ament_index_python.packages import get_package_prefix,get_package_share_directory
 from robot_lab_utils.sdf_world import extract_static_shapes,uri_resolver,_rotate
 from robot_lab_utils.mesh_assets import _load_indexed_mesh
+from robot_lab_utils.heightfield import heightfield_grid
+
+# Elevation tolerance when deciding whether terrain reaches a slice height.
+# A raster quantises elevation to size_z/max_intensity, so an exact compare
+# would drop the samples that sit precisely on the slice.
+_HEIGHT_EPS=1e-6
+
+
+def world_transform(shape):
+    """4x4 transform placing a shape's local mesh at its composed world pose."""
+    transform=trimesh.transformations.quaternion_matrix(shape['orientation'])
+    transform[:3,3]=shape['position']
+    return transform
 
 
 def slice_mesh(shape,height,resolution):
     vertices,faces=_load_indexed_mesh(shape['mesh'])
     mesh=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
     mesh.apply_scale(shape['scale'])
-    transform=trimesh.transformations.quaternion_matrix(shape['orientation'])
-    transform[:3,3]=shape['position']
-    mesh.apply_transform(transform)
+    mesh.apply_transform(world_transform(shape))
     section=mesh.section(plane_origin=[0,0,height],plane_normal=[0,0,1])
     if section is None:
         return [],mesh.bounds
@@ -73,6 +86,26 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
             paths,box=slice_mesh(shape,height,resolution)
             mesh_paths.extend(paths);bounds.extend(box)
             path=Path(shape['mesh']);mesh_files[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
+        elif kind=='heightmap':
+            # Terrain is a heightfield, so the 2D slice is decided directly by
+            # elevation rather than by intersecting triangles: every sample at
+            # or above the slice height is solid at that x/y.  This is exact
+            # for a grid terrain and, unlike a mesh section, it also works for
+            # the vertical wall of a step.  The raster is hashed so a
+            # regenerated map traces back to its source terrain.
+            vertices,faces=heightfield_grid(shape)
+            section=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
+            section.apply_transform(world_transform(shape))
+            bounds.extend(section.bounds)
+            path=Path(shape['heightmap']);mesh_files[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
+            # A sample counts as solid at this slice when it is at or above the
+            # slice height; the epsilon absorbs the raster's own quantisation.
+            solid=section.vertices[section.vertices[:,2]>=height-_HEIGHT_EPS]
+            if len(solid):
+                # Contour of the solid samples, rasterised by the caller into
+                # the collision mask the map plugin consumes.
+                outline=solid[np.lexsort((solid[:,1],solid[:,0]))]
+                mesh_paths.append([[row[0],row[1]] for row in outline])
         else:
             projected.append(shape)
             size=shape['size']
@@ -117,9 +150,10 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     return {'source_world':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
             'mesh_sha256':mesh_files,'mesh_slice_paths':len(mesh_paths),
             'mesh_mask_cells':int(np.sum(np.asarray(mask)>0)),'collision_count':len(projected),
+            'heightfield_count':sum(1 for s in shapes if s['type']=='heightmap'),
             'resolution_m':resolution,'slice_height_m':height,'seed_xy':seed,'skipped_dynamic_actors':skipped,
             'engine':'robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask',
-            'limits':'Static height slice, conservative AABB checks; preview is not navigation qualification'}
+            'limits':'Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification'}
 
 
 def main():

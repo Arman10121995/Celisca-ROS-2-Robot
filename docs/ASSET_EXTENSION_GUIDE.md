@@ -47,8 +47,30 @@ path assumes a unit-sized cube; Robot Lab instead takes actual indexed mesh
 vertices, scene units, scale and composed world pose, then slices the surface
 into a grid-aligned collision mask for the generator. Decorative visuals are not
 collision obstacles. Scripted actors are excluded with a recorded note.
-Heightfields and unresolved includes fail explicitly until converted. A
-single-height static slice is not a multilevel floor map or aerial planner.
+Heightfields are tessellated by the shared converter described below and
+sliced by the same plane. A single-height static slice is not a multilevel
+floor map or aerial planner; a terrain sample at or above the slice height is
+marked solid, so one slice cannot represent a multilevel floor.
+
+### Heightfield layout (measured, not assumed)
+
+`<heightmap>` terrain is converted once in
+`robot_lab_utils/heightfield.py` and used by Gazebo, MuJoCo, PyBullet and
+Isaac. The SDF spec does not pin three details that each change where the
+surface ends up, so they were measured on the installed Gazebo by dropping
+spheres on asymmetric rasters and reading the settled poses back:
+
+- **elevation is normalised by the raster's own maximum**, not by 255 — a
+  uniform value of 100 with `size` z = 4 produced a surface at 4.0 m;
+- **raster row 0 is maximum +y**;
+- **the grid is cell-centred and spans `(n-1)/2 · size/n`**, not `size/2` —
+  Gazebo's own AABB measured ±9.69697 m for a 20 m / 33-sample raster
+  (±9.84615 m and ±9.41177 m for 65 and 17 samples).
+
+A test pins each value. Keep the elevation measured from the collision pose
+origin (Gazebo does not centre it), and note that MuJoCo's native `<hfield>`
+radius is `size/2` rather than the cell-centred span — interior points match,
+the outer half-cell differs.
 
 Before activating an export: inspect occupied/free/unknown regions, compare
 floor-plan landmarks and furnished geometry, check origin/resolution and a
@@ -72,10 +94,12 @@ are projection checks, not navigation acceptance or whole-building coverage.
 3. Terrain integration must configure `GAZEBO_TERRAIN_OUTPUT_PATH`, caches and
    provider settings before starting its local server. Keep tokens private;
    save public generation inputs and data attribution in a manifest.
-4. Add a canonical heightfield/triangle representation. The current shared
-   SDF reader rejects `<heightmap>`; implement hfield/mesh translation with
-   preserved metre scale, vertical offset, textures and buildings for all
-   four backends. Compare sampled elevations, support contacts and scans.
+4. Add a canonical heightfield/triangle representation. Done for the four
+   backends: `robot_lab_utils/heightfield.py` produces one metre layout and
+   each backend consumes it (MuJoCo native `<hfield>`, PyBullet and Isaac
+   triangle meshes), with the measured conventions documented above. Compare
+   sampled elevations, support contacts and scans; Isaac runtime contact and
+   the outer half-cell span difference are still to be measured.
 5. Execute terrain driving, legged and flight tasks only where the robot has
    working control. Store negative imports and missions. No flattened floor
    or geometry-only display qualifies a terrain mission.

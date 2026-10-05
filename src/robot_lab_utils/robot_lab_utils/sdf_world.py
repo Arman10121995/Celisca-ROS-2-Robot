@@ -14,13 +14,20 @@ build tool, or be handed across a process boundary as plain data.
 
 Shape records::
 
-    {"type": "box" | "sphere" | "cylinder" | "plane" | "mesh",
+    {"type": "box" | "sphere" | "cylinder" | "plane" | "mesh" | "heightmap",
      "model": <top-level model name>,
      "position": [x, y, z],
      "orientation": [w, x, y, z],
      "size": box [sx, sy, sz] full extents | sphere [r] |
              cylinder [r, length] | plane [sx, sy] full extents,
      "mesh": <absolute path>, "scale": [sx, sy, sz]}      # meshes only
+    {"type": "heightmap", "heightmap": <absolute image path>,
+     "size": [sx, sy, sz]}                              # heightmaps only
+
+Heightmap geometry is parsed but not rasterised here; see
+``robot_lab_utils.heightfield`` for the image -> metre conversion.  The
+``size`` is the SDF ``<size>`` in world units and the record keeps the
+collision pose, which is what places the terrain in the world.
 """
 import math
 import os
@@ -174,9 +181,23 @@ def _shape(geometry, frame, base_dir, resolve, model_name, skipped):
             return None
         return dict(record, type="mesh", mesh=path,
                     scale=_floats(_text(mesh, "scale"), 3, 1.0))
-    for unsupported in ("heightmap", "polyline"):
-        if _child(geometry, unsupported) is not None:
-            skipped.append("unsupported geometry <%s>" % unsupported)
+    heightmap = _child(geometry, "heightmap")
+    if heightmap is not None:
+        uri = _text(heightmap, "uri")
+        path = resolve(uri, base_dir)
+        if not path:
+            skipped.append("unresolved heightmap %s" % uri.strip())
+            return None
+        # SDF <size> is the terrain extent in world units.  Its third
+        # component is the elevation range, not a thickness, so it is kept
+        # verbatim; heightfield.py does the image -> metre conversion.
+        size = _floats(_text(heightmap, "size"), 3, 1.0)
+        if any(value <= 0.0 for value in size):
+            skipped.append("non-positive heightmap <size> for %s" % uri.strip())
+            return None
+        return dict(record, type="heightmap", heightmap=path, size=size)
+    if _child(geometry, "polyline") is not None:
+        skipped.append("unsupported geometry <polyline>")
     return None
 
 

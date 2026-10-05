@@ -1018,12 +1018,18 @@ tasks:
         next_action: "Inventory mlherd worlds, model-only environments, packaged Gazebo examples and licensed Fuel assets. Audit model/archive dependencies, migrate Classic plugins and measure display/collision/spawn in all four backends."
       R6.7:
         title: "GUI terrain generation with four-backend conversion"
-        state: "queued"
-        owner: "unassigned"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R6.3", "R6.6"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/", "src/robot_lab_gui/", "docs/ASSET_EXTENSION_GUIDE.md"]
+        active_scope: "2026-10-05: shared heightfield conversion for Gazebo/MuJoCo/PyBullet/Isaac. The SDF reader no longer drops <heightmap>; the layout is measured against the installed Gazebo rather than assumed. The terrain generator workflow, provider manifest and terrain missions remain outside this claim."
+        evidence:
+          - "docs/status/evidence/r6-7-heightfield-probe-2026-10-05/README.md: measured Gazebo conventions - raster-max normalisation, row 0 = +y, span (n-1)/2*size/n (AABB +-9.69697/9.84615/9.41177 for n=33/65/17); MuJoCo and PyBullet ball rest reproduce 0.0/4.0 m"
+          - "src/robot_lab_utils/robot_lab_utils/heightfield.py: one raster -> metres converter with no ROS or simulator dependency"
+          - "src/robot_lab_bringup/test/test_sdf_heightfield.py: tests pinning the measured conventions, the SDF reader and the generated hfield"
         acceptance_ref: "ROADMAP.md"
-        next_action: "Pin sai aravind terrain generator, set SSD output/cache and private provider settings, and build a shared heightfield/mesh conversion for Gazebo/MuJoCo/PyBullet/Isaac with origin/scale/terrain contacts verified."
+        completion_audit: "Not complete. Only the shared heightfield conversion and three non-Gazebo backends are delivered. Isaac is verified at the geometry level (STL face count, z bounds, unit normals) with no Isaac runtime contact trial, so Isaac terrain contact is unqualified. The pinned terrain-generator web workflow, GAZEBO_TERRAIN_OUTPUT_PATH/provider settings, attribution manifest, deterministic regeneration and class-specific terrain missions are all still outstanding."
+        next_action: "Pin the sai aravind terrain generator with SSD output/cache and private provider settings, save provider/data attribution with polygon, seed, vertical datum and elevation range, then record class-appropriate driving/walking/flight terrain missions per backend including an Isaac runtime contact trial."
   R7:
     title: "Algorithm breadth"
     state: "partial"

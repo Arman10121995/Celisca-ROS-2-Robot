@@ -4,6 +4,7 @@ Opens a PyBullet GUI window, loads the robot URDF, runs the physics
 step loop, and publishes all ROS 2 topics required by the rest of the
 stack (joint_states, TF, odom, scan, imu, clock).
 """
+import hashlib
 import math
 import os
 import re
@@ -493,6 +494,44 @@ class PyBulletSpawner(Node):
             % (os.path.basename(path), binary_stl_face_count(staged)))
         return staged
 
+    def _stage_heightfield(self, shape):
+        """Convert an SDF heightmap to a cached OBJ PyBullet can collide with.
+
+        PyBullet has no heightfield primitive, so the shared converter builds
+        the triangle surface in metres - the same layout measured against
+        Gazebo - and the OBJ is cached by content hash so repeated launches
+        do not re-tessellate the terrain.
+        """
+        try:
+            from robot_lab_utils.heightfield import (
+                heightfield_grid, write_obj)
+        except ImportError as exc:
+            self.get_logger().warn(
+                "robot_lab_utils.heightfield unavailable; skipping heightmap "
+                "(%s)" % exc)
+            return ""
+        try:
+            vertices, faces = heightfield_grid(shape)
+        except Exception as exc:
+            self.get_logger().warn(
+                "heightmap %s: %s" % (os.path.basename(shape.get("heightmap", "")),
+                                      exc))
+            return ""
+        cache = os.path.join(
+            os.environ.get("ROBOT_LAB_RUNTIME_ROOT", tempfile.gettempdir()),
+            "heightfields")
+        os.makedirs(cache, exist_ok=True)
+        digest = hashlib.sha1(
+            ("%s|%s" % (os.path.abspath(shape["heightmap"]), shape["size"]))
+            .encode("utf-8")).hexdigest()[:12]
+        target = os.path.join(cache, "terrain-%s.obj" % digest)
+        if not os.path.isfile(target):
+            write_obj(vertices, faces, target)
+        self.get_logger().info(
+            "Heightfield '%s': %d triangle(s) staged for PyBullet"
+            % (os.path.basename(shape["heightmap"]), len(faces)))
+        return target
+
     def _create_shape(self, shape, client: int = 0):
         """Create one static PyBullet body from a shared shape record."""
         kind = shape.get("type")
@@ -537,6 +576,18 @@ class PyBulletSpawner(Node):
                     flags=p.GEOM_FORCE_CONCAVE_TRIMESH, physicsClientId=client)
                 visual = p.createVisualShape(
                     p.GEOM_MESH, fileName=path, meshScale=scale,
+                    rgbaColor=colour, physicsClientId=client)
+            elif kind == "heightmap":
+                path = self._stage_heightfield(shape)
+                if not path:
+                    return False
+                # Concave trimesh: terrain is a heightfield surface, not a
+                # convex hull, so it needs the trim flag.
+                collision = p.createCollisionShape(
+                    p.GEOM_MESH, fileName=path, meshScale=[1.0, 1.0, 1.0],
+                    flags=p.GEOM_FORCE_CONCAVE_TRIMESH, physicsClientId=client)
+                visual = p.createVisualShape(
+                    p.GEOM_MESH, fileName=path, meshScale=[1.0, 1.0, 1.0],
                     rgbaColor=colour, physicsClientId=client)
             else:
                 return False

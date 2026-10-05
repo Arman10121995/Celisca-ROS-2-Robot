@@ -59,6 +59,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_mode_capability.py"
   "$BRG_TEST/test_mujoco_realtime_factor.py"
   "$BRG_TEST/test_nav_goals.py"
+  "$BRG_TEST/test_sdf_heightfield.py"
   "$BRG_TEST/test_wheel_navigation_contract.py"
   "$GUI_TEST/test_drive_control.py"
 )

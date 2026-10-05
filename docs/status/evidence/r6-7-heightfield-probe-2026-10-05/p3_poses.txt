@@ -1,0 +1,127 @@
+header {
+  stamp {
+    sec: 37
+    nsec: 225000000
+  }
+}
+pose {
+  name: "u100"
+  id: 16
+  position {
+    x: -60
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "two_lo"
+  id: 20
+  position {
+    x: -8
+    y: -1.1214064440639934e-14
+    z: 0.19999922209408377
+  }
+  orientation {
+    x: 2.8023605597269633e-14
+    y: -1.1641342312608703e-31
+    z: 2.4522657803541889e-45
+    w: 1
+  }
+}
+pose {
+  name: "two_hi"
+  id: 24
+  position {
+    x: 8
+    y: -1.7018283467642123e-15
+    z: 4.1999991326474264
+  }
+  orientation {
+    x: 4.2431450647254287e-15
+    y: -9.7705329266188286e-32
+    z: 1.1402187451499037e-46
+    w: 1
+  }
+}
+pose {
+  name: "b_top"
+  id: 28
+  position {
+    x: 60
+    y: 8
+    z: 4.19999913264743
+  }
+  orientation {
+    x: 1.1454938438302622e-12
+    y: -9.4931114390408512e-32
+    z: 8.321340523980447e-44
+    w: 1
+  }
+}
+pose {
+  name: "b_bot"
+  id: 32
+  position {
+    x: 60
+    y: -8
+    z: 1.5333323980767117
+  }
+  orientation {
+    x: -1.0356071624228564e-12
+    y: -1.9216232826512397e-29
+    z: -1.6372964846008752e-41
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 17
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 21
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 25
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 29
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  name: "link"
+  id: 33
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+
