@@ -990,6 +990,7 @@
   robot_id: bumperbot
   environment_id: small_office
   simulator: gazebo
+  algorithm_ids: {}
   scenario_id: point_to_point_navigation
   arms:
     - arm_id: navfn

@@ -1,0 +1,2639 @@
+{
+  "entries": [
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "agilex_piper",
+      "profiles": [
+        {
+          "id": "menagerie_agilex_piper",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-efb263b6ad4c4536.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "agility_cassie",
+      "profiles": [
+        {
+          "id": "menagerie_agility_cassie",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-786d83487b7f4787.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "aloha",
+      "profiles": [
+        {
+          "id": "menagerie_aloha",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-0206a97843b1ba4f.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "anybotics_anymal_b",
+      "profiles": [
+        {
+          "id": "menagerie_anybotics_anymal_b",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-0fcab3281a3b8636.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "anybotics_anymal_c",
+      "profiles": [
+        {
+          "id": "menagerie_anybotics_anymal_c",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-3840126f0114f1bf.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "apptronik_apollo",
+      "profiles": [
+        {
+          "id": "menagerie_apptronik_apollo",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-81adc398b632f71a.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "arx_l5",
+      "profiles": [
+        {
+          "id": "menagerie_arx_l5",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-00f8df0b4479a6e9.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "berkeley_humanoid",
+      "profiles": [
+        {
+          "id": "menagerie_berkeley_humanoid",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-7b29702975ad5407.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "bitcraze_crazyflie_2",
+      "profiles": [
+        {
+          "id": "menagerie_bitcraze_crazyflie_2",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-6be4d9e4175fa27c.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "booster_t1",
+      "profiles": [
+        {
+          "id": "menagerie_booster_t1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-f7a5a644f0824f41.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "boston_dynamics_spot",
+      "profiles": [
+        {
+          "id": "menagerie_boston_dynamics_spot",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-ec3b1dec78ac9a81.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "dynamixel_2r",
+      "profiles": [
+        {
+          "id": "menagerie_dynamixel_2r",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-2926b9d027fcf914.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "flexiv_rizon4",
+      "profiles": [
+        {
+          "id": "menagerie_flexiv_rizon4",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-28bff2016ffd5b45.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "flexiv_rizon4s",
+      "profiles": [
+        {
+          "id": "menagerie_flexiv_rizon4s",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-027ebf1a86adfd60.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "flybody",
+      "profiles": [
+        {
+          "id": "menagerie_flybody",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-9b8ffbd21a89ca56.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "fourier_n1",
+      "profiles": [
+        {
+          "id": "menagerie_fourier_n1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-040b707aa9e438ec.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "franka_emika_panda",
+      "profiles": [
+        {
+          "id": "menagerie_franka_emika_panda",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-4351d80158df84d0.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "franka_fr3",
+      "profiles": [
+        {
+          "id": "menagerie_franka_fr3",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-207c03a4fd351472.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "franka_fr3_v2",
+      "profiles": [
+        {
+          "id": "menagerie_franka_fr3_v2",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-a567037fbf93438b.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "google_barkour_v0",
+      "profiles": [
+        {
+          "id": "menagerie_google_barkour_v0",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-ee2dfe7f58ec99e7.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "google_barkour_vb",
+      "profiles": [
+        {
+          "id": "menagerie_google_barkour_vb",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-cb261cd69a305cc9.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "google_robot",
+      "profiles": [
+        {
+          "id": "menagerie_google_robot",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-611c6befc2ef5962.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "hello_robot_stretch",
+      "profiles": [
+        {
+          "id": "menagerie_hello_robot_stretch",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-36e64d95f1dda49e.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "hello_robot_stretch_3",
+      "profiles": [
+        {
+          "id": "menagerie_hello_robot_stretch_3",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-cbd753317778e02d.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "i2rt_yam",
+      "profiles": [
+        {
+          "id": "menagerie_i2rt_yam",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-12e7c20142160dad.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "iit_softfoot",
+      "profiles": [
+        {
+          "id": "menagerie_iit_softfoot",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-1082cd240546d19d.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "kinova_gen3",
+      "profiles": [
+        {
+          "id": "menagerie_kinova_gen3",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-30d2d719e0aadc9f.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "kuka_iiwa_14",
+      "profiles": [
+        {
+          "id": "menagerie_kuka_iiwa_14",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-eed1e5636e1fec30.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "low_cost_robot_arm",
+      "profiles": [
+        {
+          "id": "menagerie_low_cost_robot_arm",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-3fd525a435f59101.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "ms_human_700",
+      "profiles": [
+        {
+          "id": "menagerie_ms_human_700",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-958ac074e52e8f24.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "pndbotics_adam_lite",
+      "profiles": [
+        {
+          "id": "menagerie_pndbotics_adam_lite",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-fd71d69f3a8f81a2.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "rethink_robotics_sawyer",
+      "profiles": [
+        {
+          "id": "menagerie_rethink_robotics_sawyer",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-2c28a54a4c6cdcc9.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "robot_soccer_kit",
+      "profiles": [
+        {
+          "id": "menagerie_robot_soccer_kit",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-15680b5862aeea4a.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "robotiq_2f85",
+      "profiles": [
+        {
+          "id": "menagerie_robotiq_2f85",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-68ff9a78c96dd2ae.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "robotiq_2f85_v4",
+      "profiles": [
+        {
+          "id": "menagerie_robotiq_2f85_v4",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-0937a743733ce077.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "robotis_omy_3m",
+      "profiles": [
+        {
+          "id": "menagerie_robotis_omy_3m",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-6634935fb8991662.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "robotis_op3",
+      "profiles": [
+        {
+          "id": "menagerie_robotis_op3",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-be70cddec46b6c6e.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "robotstudio_so101",
+      "profiles": [
+        {
+          "id": "menagerie_robotstudio_so101",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-bf4785f0fde126de.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "seeed_rebot_devarm",
+      "profiles": [
+        {
+          "id": "menagerie_seeed_rebot_devarm",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-512410c7e84483e5.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "shadow_dexee",
+      "profiles": [
+        {
+          "id": "menagerie_shadow_dexee",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-7e691bad19654180.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "skydio_x2",
+      "profiles": [
+        {
+          "id": "menagerie_skydio_x2",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-e06f18e84763dc73.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "stanford_tidybot",
+      "profiles": [
+        {
+          "id": "menagerie_stanford_tidybot",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-7d0f2d79c9764709.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "toddlerbot_2xc",
+      "profiles": [
+        {
+          "id": "menagerie_toddlerbot_2xc",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-0820ea295b559cd4.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "toddlerbot_2xm",
+      "profiles": [
+        {
+          "id": "menagerie_toddlerbot_2xm",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-b708de83370ff516.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "trossen_vx300s",
+      "profiles": [
+        {
+          "id": "menagerie_trossen_vx300s",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-83b4bc76f7ed78d2.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "trossen_wx250s",
+      "profiles": [
+        {
+          "id": "menagerie_trossen_wx250s",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-b1820b0318300d24.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "trossen_wxai",
+      "profiles": [
+        {
+          "id": "menagerie_trossen_wxai",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-50ea4389ae19727e.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "trs_so_arm100",
+      "profiles": [
+        {
+          "id": "menagerie_trs_so_arm100",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-62fea0354330baa7.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "ufactory_lite6",
+      "profiles": [
+        {
+          "id": "menagerie_ufactory_lite6",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-0f01b6a22c5899cc.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "ufactory_xarm7",
+      "profiles": [
+        {
+          "id": "menagerie_ufactory_xarm7",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-b8df1580223847d8.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "umi_gripper",
+      "profiles": [
+        {
+          "id": "menagerie_umi_gripper",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-ad7a1c208dcfe833.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "unitree_a1",
+      "profiles": [
+        {
+          "id": "menagerie_unitree_a1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-8770b0f9349f8592.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "unitree_g1",
+      "profiles": [
+        {
+          "id": "menagerie_unitree_g1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-c309fa82bf39d278.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "unitree_go1",
+      "profiles": [
+        {
+          "id": "menagerie_unitree_go1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-5915e9e35c91a193.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "unitree_go2",
+      "profiles": [
+        {
+          "id": "menagerie_unitree_go2",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-819b2f50e62cf4f2.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "unitree_h1",
+      "profiles": [
+        {
+          "id": "menagerie_unitree_h1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-10e7044d63973ee9.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "unitree_z1",
+      "profiles": [
+        {
+          "id": "menagerie_unitree_z1",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-5a4d71353d3e6a5b.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "universal_robots_ur10e",
+      "profiles": [
+        {
+          "id": "menagerie_universal_robots_ur10e",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-ed8a7a2fa2b0d18c.json"
+    },
+    {
+      "source_id": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "entry": "universal_robots_ur5e",
+      "profiles": [
+        {
+          "id": "menagerie_universal_robots_ur5e",
+          "kind": "robot",
+          "support": "Display: mujoco",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/mujoco_menagerie-021c389e16f5a7e3.json"
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/bookstore/bookstore.zip",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_bookstore",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/dynamic_world/world.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_dynamic_world",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room1/world.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room1",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room2/world.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room2",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room2/world_dynamic.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room2_world_dynamic",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room3/world.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room3",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room3/world_dynamic.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room3_world_dynamic",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room4/world.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room4",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/experiment_rooms/worlds/room4/world_dynamic.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_room4_world_dynamic",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/factory/factory.model",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_factory",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/hospital/hospital.world",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_hospital",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/hospital/hospital_two_floors.world",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_hospital_hospital_two_floors",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/hospital/models_part1.zip",
+      "status": "downloaded dependency",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/hospital/models_part2.zip",
+      "status": "downloaded dependency",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/hospital/models_part3.zip",
+      "status": "downloaded dependency",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/hospital/models_part4.zip",
+      "status": "downloaded dependency",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/office/office_part1.zip",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_office_service",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/office/office_part2.zip",
+      "status": "downloaded dependency",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "entry": "worlds/small_house/small_house.zip",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "dataset_small_house",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/3k_shapes.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/ackermann_steering.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/actor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/actor_crowd.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/actors_population.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/apply_joint_force.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/apply_link_wrench.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/auv_controls.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/boundingbox_camera.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/breadcrumbs.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/buoyancy.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/buoyancy_engine.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/camera_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/camera_video_record_dbl_pendulum.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/collada_world_exporter.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/contact_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/conveyor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/debug_shapes.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/default.sdf",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "gazebo_example_default",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/depth_camera_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/detachable_joint.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/diff_drive.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/diff_drive_skid.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/elevator.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/empty.sdf",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "gazebo_example_empty",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/empty_gui.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/follow_actor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/fuel.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/fuel_textured_mesh.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/gpu_lidar_retro_values_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/gpu_lidar_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/graded_buoyancy.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/grid.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/heightmap.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/import_mesh.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/joint_controller.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/joint_position_controller.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/joint_trajectory_controller.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/kinetic_energy_monitor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/levels.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/levels_no_performers.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/lift_drag.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/lift_drag_battery.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/lift_drag_nested.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/lightmap.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/lights.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/linear_battery_demo.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/log_record_dbl_pendulum.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/log_record_keyboard.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/log_record_resources.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/log_record_shapes.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/logical_audio_sensor_plugin.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/logical_camera_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/mecanum_drive.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/minimal_scene.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/model_photo_shoot.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/multi_lrauv_race.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/multicopter_velocity_control.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/nested_model.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/optical_tactile_sensor_plugin.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/particle_emitter.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/particle_emitter2.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/pendulum_links.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/perfect_comms.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/performer_detector.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/physics_options.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/plane_propeller_demo.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/plot_3d.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/polylines.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/pose_publisher.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/quadcopter.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/resource_spawner.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/rf_comms.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/rolling_shapes.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/segmentation_camera.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/sensors.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/sensors_demo.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/shader_param.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/shapes.sdf",
+      "status": "installed",
+      "profiles": [
+        {
+          "id": "gazebo_example_shapes",
+          "kind": "world",
+          "support": "World + 2D map",
+          "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+        }
+      ]
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/shapes_bitmask.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/skid_steer_mecanum.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/sky.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/spaces.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/spherical_coordinates.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/thermal_camera.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/touch_plugin.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/track_drive.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/tracked_vehicle_simple.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/trajectory_follower.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/triggered_camera_sensor.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/triggered_publisher.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/trisphere_cycle_wheel_slip.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/tunnel.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/velocity_control.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/video_record_dbl_pendulum.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/visibility.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/visualize_contacts.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/visualize_lidar.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/wind.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "entry": "examples/worlds/world_joint.sdf",
+      "status": "downloaded; fixture integration pending",
+      "profiles": []
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/anymal/anymal.urdf",
+      "profiles": [
+        {
+          "id": "asset_anymal",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-a57db85fd157458d.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/fetch/robots/fetch.urdf",
+      "profiles": [
+        {
+          "id": "asset_fetch",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-b95d5058fe99fc30.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/franka_panda/panda.urdf",
+      "profiles": [
+        {
+          "id": "asset_franka_panda_panda",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-1128432a30b60d6c.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/ginger_robot/gingerurdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_ginger_robot_gingerurdf",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-2cca5c7d1204bac8.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/halodi/eve_r3.urdf",
+      "profiles": [
+        {
+          "id": "asset_halodi_eve_r3",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-b1696c62888ef18b.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/kinova/kinova.urdf",
+      "profiles": [
+        {
+          "id": "asset_kinova",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-c6aa7167e5d81b5a.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/kuka_iiwa/model.urdf",
+      "profiles": [
+        {
+          "id": "asset_kuka_iiwa",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-49fba27dd5150968.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/pr2/pr2.urdf",
+      "profiles": [
+        {
+          "id": "asset_pr2",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-86bcfe35b48550c7.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2_left_forearm.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2_left_forearm",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-afc947c996acbf05.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2_left_gripper.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2_left_gripper",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-1455c3048983e135.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2b.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2b",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-520c6e7640c8c1b9.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2b_control.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2b_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-6ee5294486c78e4a.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2b_dynamics.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2b_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-3aeeaf420aa9657e.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2b_sim_upperbody_control.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2b_sim_upperbody_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-ba9ef98c32b7553d.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2b_sim_upperbody_dynamics.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2b_sim_upperbody_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-c540a78c81f0e730.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c1.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c1",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-5feeee62fa717271.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c1_control.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c1_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-eaf97a65a157fb3e.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c1_dynamics.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c1_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-ffa61c5e20c12af4.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c5.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c5",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-6383088e5154569a.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c5_control.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c5_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-117603ab5b4e6db8.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c5_dynamics.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c5_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-c2144108b9bb6c7e.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c6.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c6",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-fc953337f18cfa0d.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c6_control.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c6_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-318d66ac6c43fff5.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c6_dynamics.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c6_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-777bededc3707105.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c6_valve.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c6_valve",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-6c5b0adb1c84db07.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c_sim_full_control.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c_sim_full_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-cf40cbab22754259.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c_sim_full_dynamics.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c_sim_full_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-5fca6abd02f9e140.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c_sim_legs_control.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c_sim_legs_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-f86a5a91dbb24080.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c_sim_legs_dynamics.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c_sim_legs_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-df30d00131f8ba86.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c_sim_upperbody_control.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c_sim_upperbody_control",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-67076383e688a7bd.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/r2_description/robots/r2c_sim_upperbody_dynamics.urdf.urdf",
+      "profiles": [
+        {
+          "id": "asset_r2_description_r2c_sim_upperbody_dynamics",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-22fcad316d038fc3.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/ur10/ur10_robot.urdf",
+      "profiles": [
+        {
+          "id": "asset_ur10_ur10_robot",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-38aaf1fe1ab5a20b.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/ur5/ur5_gripper.urdf",
+      "profiles": [
+        {
+          "id": "asset_ur5_ur5_gripper",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-c57aceb7d4f85d34.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/forearm_left.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_forearm_left",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-0ec95c9e481624fc.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/forearm_right.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_forearm_right",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-229af5679be8f725.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/imu_test.urdf",
+      "profiles": [],
+      "status": "needs integration repair",
+      "reason": "Upstream fixture contains no robot links; not a standalone robot"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/test_bench.urdf",
+      "profiles": [],
+      "status": "needs integration repair",
+      "reason": "Upstream fixture contains no robot links; not a standalone robot"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_A.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_A",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-f9ad4f2fe59ec59d.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_A_arm_mass_sims.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_A_arm_mass_sims",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-d305d9d6a803e33b.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_B.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_B",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-69e906b308ed0597.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_B_arm_mass_sims.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_B_arm_mass_sims",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-b0b7596ebef8a548.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_C.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_C",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-7d1be468cedd601c.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_C_arm_mass_sims.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_C_arm_mass_sims",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-b7f18babc305d7a8.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_D.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_D",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-0fc1cbb7a46e7c94.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_D_arm_mass_sims.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_D_arm_mass_sims",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-802650448bde11fe.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_sim.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_sim",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-2a70f2e32c848bd8.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_sim_angled_legj1s.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_sim_angled_legj1s",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-cf6b0248c6a03944.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_sim_arm_mass_sims.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_sim_arm_mass_sims",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-045b6d6bfbdb88ea.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/val_description/model/robots/valkyrie_sim_gazebo_sync.urdf",
+      "profiles": [
+        {
+          "id": "asset_val_description_valkyrie_sim_gazebo_sync",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-6dc14d91e4c6c80c.json"
+    },
+    {
+      "source_id": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "entry": "urdfs/robots/yumi/yumi.urdf",
+      "profiles": [
+        {
+          "id": "asset_yumi",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/robot_assets-0410995d2076f387.json"
+    },
+    {
+      "source_id": "turtlebot3_vendor",
+      "revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9",
+      "entry": "turtlebot3_description/urdf/turtlebot3_burger.urdf",
+      "profiles": [
+        {
+          "id": "asset_turtlebot3_burger",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/turtlebot3_vendor-1521683a371370af.json"
+    },
+    {
+      "source_id": "turtlebot3_vendor",
+      "revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9",
+      "entry": "turtlebot3_description/urdf/turtlebot3_waffle.urdf",
+      "profiles": [
+        {
+          "id": "asset_turtlebot3_waffle",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/turtlebot3_vendor-3af04cf56a467f15.json"
+    },
+    {
+      "source_id": "turtlebot3_vendor",
+      "revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9",
+      "entry": "turtlebot3_description/urdf/turtlebot3_waffle_pi.urdf",
+      "profiles": [
+        {
+          "id": "asset_turtlebot3_waffle_pi",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/turtlebot3_vendor-df64a1fc030a4164.json"
+    },
+    {
+      "source_id": "husky_vendor",
+      "revision": "729f8aa45ccd86fa33a05e07ef698c52c451cd9c",
+      "entry": "husky_description/urdf/husky.urdf.xacro",
+      "profiles": [
+        {
+          "id": "asset_husky",
+          "kind": "robot",
+          "support": "Display: gazebo, pybullet, mujoco, isaac",
+          "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+        }
+      ],
+      "status": "installed",
+      "check": "/workspace/molar/robot_lab_runtime/external_assets/installed/checks/husky_vendor-1c7942a8b61cabcc.json"
+    }
+  ],
+  "updated_utc": "2026-10-05T15:30:37Z",
+  "scope": "Installed display/model and world/map assets; catalog size is not mission qualification"
+}

@@ -1,0 +1,114 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=pybullet use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=true perception:=none
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-05-17-11-47-291545-molar1-267279
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [267297]
+[INFO] [pybullet_spawner-2]: process started with pid [267299]
+[INFO] [rviz2-3]: process started with pid [267301]
+[robot_state_publisher-1] [INFO] [1791213108.228296983] [robot_state_publisher]: got segment end_effector_frame
+[robot_state_publisher-1] [INFO] [1791213108.228442721] [robot_state_publisher]: got segment panda_hand
+[robot_state_publisher-1] [INFO] [1791213108.228460290] [robot_state_publisher]: got segment panda_leftfinger
+[robot_state_publisher-1] [INFO] [1791213108.228470755] [robot_state_publisher]: got segment panda_link0
+[robot_state_publisher-1] [INFO] [1791213108.228479076] [robot_state_publisher]: got segment panda_link1
+[robot_state_publisher-1] [INFO] [1791213108.228486692] [robot_state_publisher]: got segment panda_link2
+[robot_state_publisher-1] [INFO] [1791213108.228494053] [robot_state_publisher]: got segment panda_link3
+[robot_state_publisher-1] [INFO] [1791213108.228501221] [robot_state_publisher]: got segment panda_link4
+[robot_state_publisher-1] [INFO] [1791213108.228508550] [robot_state_publisher]: got segment panda_link5
+[robot_state_publisher-1] [INFO] [1791213108.228516070] [robot_state_publisher]: got segment panda_link6
+[robot_state_publisher-1] [INFO] [1791213108.228523047] [robot_state_publisher]: got segment panda_link7
+[robot_state_publisher-1] [INFO] [1791213108.228530183] [robot_state_publisher]: got segment panda_link8
+[robot_state_publisher-1] [INFO] [1791213108.228537160] [robot_state_publisher]: got segment panda_rightfinger
+[robot_state_publisher-1] [INFO] [1791213108.228544648] [robot_state_publisher]: got segment world
+[pybullet_spawner-2] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-2] [INFO] [1791213108.840036720] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-2] [INFO] [1791213108.845213039] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-2] [INFO] [1791213108.858371081] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-2] [INFO] [1791213108.860540828] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-2] [INFO] [1791213108.883009357] [pybullet_spawner]: Created /robot_lab/reset service
+[rviz2-3] [INFO] [1791213109.109670952] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1791213109.109815793] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[pybullet_spawner-2] [INFO] [1791213109.566222610] [pybullet_spawner]: URDF written to /workspace/molar/robot_lab_runtime/tmp/tmptbrdcsx2.urdf
+[pybullet_spawner-2] [INFO] [1791213109.566816986] [pybullet_spawner]: PyBullet gui param=True (resolved=True), DISPLAY=:101 -> mode=GUI
+[pybullet_spawner-2] [INFO] [1791213109.567620816] [pybullet_spawner]: Connecting to PyBullet...
+[rviz2-3] [INFO] [1791213109.742068339] [rviz2]: Stereo is NOT SUPPORTED
+[pybullet_spawner-2] [INFO] [1791213110.148328546] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-2] [INFO] [1791213110.148946476] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-2] startThreads creating 1 threads.
+[pybullet_spawner-2] starting thread 0
+[pybullet_spawner-2] started thread 0 
+[pybullet_spawner-2] argc=2
+[pybullet_spawner-2] argv[0] = --unused
+[pybullet_spawner-2] argv[1] = --start_demo_name=Physics Server
+[pybullet_spawner-2] ExampleBrowserThreadFunc started
+[pybullet_spawner-2] X11 functions dynamically loaded using dlopen/dlsym OK!
+[pybullet_spawner-2] X11 functions dynamically loaded using dlopen/dlsym OK!
+[pybullet_spawner-2] Creating context
+[pybullet_spawner-2] Created GL 3.3 context
+[pybullet_spawner-2] Direct GLX rendering context obtained
+[pybullet_spawner-2] Making context current
+[pybullet_spawner-2] GL_VENDOR=Mesa
+[pybullet_spawner-2] GL_RENDERER=llvmpipe (LLVM 15.0.7, 128 bits)
+[pybullet_spawner-2] GL_VERSION=4.5 (Core Profile) Mesa 23.2.1-1ubuntu3.1~22.04.4
+[pybullet_spawner-2] GL_SHADING_LANGUAGE_VERSION=4.50
+[pybullet_spawner-2] pthread_getconcurrency()=0
+[pybullet_spawner-2] Version = 4.5 (Core Profile) Mesa 23.2.1-1ubuntu3.1~22.04.4
+[pybullet_spawner-2] Vendor = Mesa
+[pybullet_spawner-2] Renderer = llvmpipe (LLVM 15.0.7, 128 bits)
+[pybullet_spawner-2] b3Printf: Selected demo: Physics Server
+[pybullet_spawner-2] startThreads creating 1 threads.
+[pybullet_spawner-2] starting thread 0
+[pybullet_spawner-2] started thread 0 
+[pybullet_spawner-2] MotionThreadFunc thread started
+[pybullet_spawner-2] ven = Mesa
+[pybullet_spawner-2] ven = Mesa
+[pybullet_spawner-2] [INFO] [1791213118.416236724] [pybullet_spawner]: SDF world 'dataset_room2.world': 25 static shape(s) created, 0 skipped
+[pybullet_spawner-2] b3Printf: b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] 
+[pybullet_spawner-2] b3Printf: No inertial data for link, using mass=1, localinertiadiagonal = 1,1,1, identity local inertial frame
+[pybullet_spawner-2] b3Printf: b3Warning[examples/Importers/ImportURDFDemo/BulletUrdfImporter.cpp,126]:
+[pybullet_spawner-2] 
+[pybullet_spawner-2] b3Printf: panda_link8
+[pybullet_spawner-2] [INFO] [1791213122.617807825] [pybullet_spawner]: Loaded robot id=26 (13 joints)
+[pybullet_spawner-2] [INFO] [1791213122.619969567] [pybullet_spawner]: Spawn ground clearance: raised root by 0.0098 m
+[pybullet_spawner-2] [INFO] [1791213122.622445953] [pybullet_spawner]: Robot has no 'oakd_rgb_camera_frame' link; no RGB-D camera is published.
+[pybullet_spawner-2] [INFO] [1791213122.627462697] [pybullet_spawner]: Display hold active (hold_position=auto): 9 joint(s) held at spawn pose by position motors
+[pybullet_spawner-2] [INFO] [1791213122.628059825] [pybullet_spawner]: Joints: ['panda_joint1', 'panda_joint2', 'panda_joint3', 'panda_joint4', 'panda_joint5', 'panda_joint6', 'panda_joint7', 'panda_finger_joint1', 'panda_finger_joint2']  lw=wheel_left_joint rw=wheel_right_joint
+[pybullet_spawner-2] [INFO] [1791213122.629456108] [pybullet_spawner]: PyBullet spawner running
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-3]: sending signal 'SIGINT' to process[rviz2-3]
+[INFO] [pybullet_spawner-2]: sending signal 'SIGINT' to process[pybullet_spawner-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[rviz2-3] [INFO] [1791213125.266366221] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1791213125.266442578] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1791213125.269901459] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1791213125.271138116] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[pybullet_spawner-2] numActiveThreads = 0
+[pybullet_spawner-2] stopping threads
+[pybullet_spawner-2] Thread with taskId 0 exiting
+[pybullet_spawner-2] Thread TERMINATED
+[pybullet_spawner-2] destroy semaphore
+[pybullet_spawner-2] semaphore destroyed
+[pybullet_spawner-2] destroy main semaphore
+[pybullet_spawner-2] main semaphore destroyed
+[pybullet_spawner-2] finished
+[pybullet_spawner-2] numActiveThreads = 0
+[pybullet_spawner-2] btShutDownExampleBrowser stopping threads
+[pybullet_spawner-2] Thread with taskId 0 exiting
+[pybullet_spawner-2] Thread TERMINATED
+[pybullet_spawner-2] destroy semaphore
+[pybullet_spawner-2] semaphore destroyed
+[pybullet_spawner-2] destroy main semaphore
+[pybullet_spawner-2] main semaphore destroyed
+[pybullet_spawner-2] Traceback (most recent call last):
+[pybullet_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/robot_lab_pybullet/pybullet_spawner", line 33, in <module>
+[pybullet_spawner-2]     sys.exit(load_entry_point('robot_lab_pybullet==0.1.0', 'console_scripts', 'pybullet_spawner')())
+[pybullet_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/python3.10/site-packages/robot_lab_pybullet/pybullet_spawner.py", line 1366, in main
+[pybullet_spawner-2]     node.destroy_node()
+[pybullet_spawner-2]   File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/python3.10/site-packages/robot_lab_pybullet/pybullet_spawner.py", line 1349, in destroy_node
+[pybullet_spawner-2]     p.disconnect()
+[pybullet_spawner-2] KeyboardInterrupt
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 267297]
+[INFO] [rviz2-3]: process has finished cleanly [pid 267301]
+[ERROR] [pybullet_spawner-2]: process has died [pid 267299, exit code -2, cmd '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_pybullet/lib/robot_lab_pybullet/pybullet_spawner --ros-args -r __node:=pybullet_spawner --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_5r5y13dg'].
+
+[launch exited with code 0]
+

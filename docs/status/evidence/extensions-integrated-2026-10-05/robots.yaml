@@ -1,0 +1,1888 @@
+robots:
+  menagerie_agilex_piper:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_agilex_piper/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/agilex_piper/piper.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_agilex_piper
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: agilex_piper
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_agility_cassie:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_agility_cassie/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/agility_cassie/cassie.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_agility_cassie
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: agility_cassie
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_aloha:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_aloha/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/aloha/aloha.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_aloha
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: aloha
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_anybotics_anymal_b:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_anybotics_anymal_b/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_b/anymal_b.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_anybotics_anymal_b
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: anybotics_anymal_b
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_anybotics_anymal_c:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_anybotics_anymal_c/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/anymal_c.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_anybotics_anymal_c
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: anybotics_anymal_c
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_apptronik_apollo:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_apptronik_apollo/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/apptronik_apollo/apptronik_apollo.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_apptronik_apollo
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: apptronik_apollo
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_arx_l5:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_arx_l5/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/arx_l5/arx_l5.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_arx_l5
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: arx_l5
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_berkeley_humanoid:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_berkeley_humanoid/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/berkeley_humanoid/berkeley_humanoid.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_berkeley_humanoid
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: berkeley_humanoid
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_bitcraze_crazyflie_2:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_bitcraze_crazyflie_2/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/bitcraze_crazyflie_2/cf2.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_bitcraze_crazyflie_2
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: bitcraze_crazyflie_2
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_booster_t1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_booster_t1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/booster_t1/t1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_booster_t1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: booster_t1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_boston_dynamics_spot:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_boston_dynamics_spot/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/boston_dynamics_spot/spot.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_boston_dynamics_spot
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: boston_dynamics_spot
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_dynamixel_2r:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_dynamixel_2r/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/dynamixel_2r/dynamixel_2r.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_dynamixel_2r
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: dynamixel_2r
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_flexiv_rizon4:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_flexiv_rizon4/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/flexiv_rizon4/flexiv_rizon4.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_flexiv_rizon4
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: flexiv_rizon4
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_flexiv_rizon4s:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_flexiv_rizon4s/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/flexiv_rizon4s/flexiv_rizon4s.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_flexiv_rizon4s
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: flexiv_rizon4s
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_flybody:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_flybody/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/flybody/fruitfly.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_flybody
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: flybody
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_fourier_n1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_fourier_n1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/fourier_n1/n1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_fourier_n1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: fourier_n1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_franka_emika_panda:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_franka_emika_panda/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_franka_emika_panda
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: franka_emika_panda
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_franka_fr3:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_franka_fr3/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3/fr3.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_franka_fr3
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: franka_fr3
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_franka_fr3_v2:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_franka_fr3_v2/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3_v2/fr3v2.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_franka_fr3_v2
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: franka_fr3_v2
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_google_barkour_v0:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_google_barkour_v0/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_barkour_v0/barkour_v0.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_google_barkour_v0
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: google_barkour_v0
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_google_barkour_vb:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_google_barkour_vb/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_barkour_vb/barkour_vb.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_google_barkour_vb
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: google_barkour_vb
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_google_robot:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_google_robot/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/robot.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_google_robot
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: google_robot
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_hello_robot_stretch:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_hello_robot_stretch/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch/stretch.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_hello_robot_stretch
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: hello_robot_stretch
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_hello_robot_stretch_3:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_hello_robot_stretch_3/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch_3/stretch.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_hello_robot_stretch_3
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: hello_robot_stretch_3
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_i2rt_yam:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_i2rt_yam/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/i2rt_yam/yam.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_i2rt_yam
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: i2rt_yam
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_iit_softfoot:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_iit_softfoot/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/iit_softfoot/softfoot.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_iit_softfoot
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: iit_softfoot
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_kinova_gen3:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_kinova_gen3/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/kinova_gen3/gen3.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_kinova_gen3
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: kinova_gen3
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_kuka_iiwa_14:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_kuka_iiwa_14/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/kuka_iiwa_14/iiwa14.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_kuka_iiwa_14
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: kuka_iiwa_14
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_low_cost_robot_arm:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_low_cost_robot_arm/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/low_cost_robot_arm/low_cost_robot_arm.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_low_cost_robot_arm
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: low_cost_robot_arm
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_ms_human_700:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_ms_human_700/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/ms_human_700/MS-Human-700.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_ms_human_700
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: ms_human_700
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_pndbotics_adam_lite:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_pndbotics_adam_lite/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/pndbotics_adam_lite/adam_lite.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_pndbotics_adam_lite
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: pndbotics_adam_lite
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_rethink_robotics_sawyer:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_rethink_robotics_sawyer/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/sawyer.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_rethink_robotics_sawyer
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: rethink_robotics_sawyer
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_robot_soccer_kit:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_robot_soccer_kit/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robot_soccer_kit/robot_soccer_kit.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_robot_soccer_kit
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: robot_soccer_kit
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_robotiq_2f85:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_robotiq_2f85/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85/2f85.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_robotiq_2f85
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: robotiq_2f85
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_robotiq_2f85_v4:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_robotiq_2f85_v4/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85_v4/2f85.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_robotiq_2f85_v4
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: robotiq_2f85_v4
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_robotis_omy_3m:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_robotis_omy_3m/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotis_omy_3m/omy_3m.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_robotis_omy_3m
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: robotis_omy_3m
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_robotis_op3:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_robotis_op3/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotis_op3/op3.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_robotis_op3
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: robotis_op3
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_robotstudio_so101:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_robotstudio_so101/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotstudio_so101/so101.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_robotstudio_so101
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: robotstudio_so101
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_seeed_rebot_devarm:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_seeed_rebot_devarm/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/seeed_rebot_devarm/seeed_rebot_devarm.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_seeed_rebot_devarm
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: seeed_rebot_devarm
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_shadow_dexee:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_shadow_dexee/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/shadow_dexee/shadow_dexee.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_shadow_dexee
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: shadow_dexee
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_skydio_x2:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_skydio_x2/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/skydio_x2/x2.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_skydio_x2
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: skydio_x2
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_stanford_tidybot:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_stanford_tidybot/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/stanford_tidybot/tidybot.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_stanford_tidybot
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: stanford_tidybot
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_toddlerbot_2xc:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_toddlerbot_2xc/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/toddlerbot_2xc/toddlerbot_2xc.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_toddlerbot_2xc
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: toddlerbot_2xc
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_toddlerbot_2xm:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_toddlerbot_2xm/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/toddlerbot_2xm/toddlerbot_2xm.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_toddlerbot_2xm
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: toddlerbot_2xm
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_trossen_vx300s:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_trossen_vx300s/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_vx300s/vx300s.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_trossen_vx300s
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: trossen_vx300s
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_trossen_wx250s:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_trossen_wx250s/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_wx250s/wx250s.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_trossen_wx250s
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: trossen_wx250s
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_trossen_wxai:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_trossen_wxai/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_wxai/wxai_follower_biarm.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_trossen_wxai
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: trossen_wxai
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_trs_so_arm100:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_trs_so_arm100/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trs_so_arm100/so_arm100.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_trs_so_arm100
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: trs_so_arm100
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_ufactory_lite6:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_ufactory_lite6/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/ufactory_lite6/lite6.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_ufactory_lite6
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: ufactory_lite6
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_ufactory_xarm7:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_ufactory_xarm7/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/ufactory_xarm7/xarm7.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_ufactory_xarm7
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: ufactory_xarm7
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_umi_gripper:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_umi_gripper/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/umi_gripper/umi_gripper.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_umi_gripper
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: umi_gripper
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_unitree_a1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_unitree_a1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_a1/a1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_unitree_a1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: unitree_a1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_unitree_g1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_unitree_g1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_g1/g1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_unitree_g1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: unitree_g1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_unitree_go1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_unitree_go1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go1/go1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_unitree_go1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: unitree_go1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_unitree_go2:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_unitree_go2/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/go2.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_unitree_go2
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: unitree_go2
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_unitree_h1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_unitree_h1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_h1/h1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_unitree_h1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: unitree_h1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_unitree_z1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_unitree_z1/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_z1/z1.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_unitree_z1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: unitree_z1
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_universal_robots_ur10e:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_universal_robots_ur10e/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur10e/ur10e.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_universal_robots_ur10e
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: universal_robots_ur10e
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  menagerie_universal_robots_ur5e:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/menagerie_universal_robots_ur5e/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf
+    native_mjcf: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/ur5e.xml
+    supported_simulators:
+    - mujoco
+    spawn:
+      z: '0.0'
+    name: menagerie_universal_robots_ur5e
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: mujoco_menagerie
+    source_entry: universal_robots_ur5e
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_anymal:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_anymal/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_anymal
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/anymal/anymal.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_fetch:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_fetch/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_fetch
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/fetch/robots/fetch.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_franka_panda_panda:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_franka_panda_panda/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_franka_panda_panda
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/franka_panda/panda.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_ginger_robot_gingerurdf:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_ginger_robot_gingerurdf/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_ginger_robot_gingerurdf
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/ginger_robot/gingerurdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_halodi_eve_r3:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_halodi_eve_r3/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_halodi_eve_r3
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/halodi/eve_r3.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_kinova:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_kinova/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_kinova
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/kinova/kinova.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_kuka_iiwa:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_kuka_iiwa/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_kuka_iiwa
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/kuka_iiwa/model.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_pr2:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_pr2/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_pr2
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/pr2/pr2.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2_left_forearm:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2_left_forearm/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2_left_forearm
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2_left_forearm.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2_left_gripper:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2_left_gripper/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2_left_gripper
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2_left_gripper.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2b:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2b/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2b
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2b.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2b_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2b_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2b_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2b_control.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2b_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2b_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2b_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2b_dynamics.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2b_sim_upperbody_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2b_sim_upperbody_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2b_sim_upperbody_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2b_sim_upperbody_control.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2b_sim_upperbody_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2b_sim_upperbody_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2b_sim_upperbody_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2b_sim_upperbody_dynamics.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c1:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c1/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c1
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c1.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c1_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c1_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c1_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c1_control.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c1_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c1_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c1_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c1_dynamics.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c5:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c5/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c5
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c5.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c5_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c5_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c5_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c5_control.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c5_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c5_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c5_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c5_dynamics.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c6:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c6
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c6.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c6_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c6_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c6_control.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c6_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c6_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c6_dynamics.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c6_valve:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6_valve/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c6_valve
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c6_valve.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c_sim_full_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c_sim_full_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c_sim_full_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c_sim_full_control.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c_sim_full_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c_sim_full_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c_sim_full_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c_sim_full_dynamics.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c_sim_legs_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c_sim_legs_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c_sim_legs_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c_sim_legs_control.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c_sim_legs_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c_sim_legs_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c_sim_legs_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c_sim_legs_dynamics.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c_sim_upperbody_control:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c_sim_upperbody_control/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c_sim_upperbody_control
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c_sim_upperbody_control.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_r2_description_r2c_sim_upperbody_dynamics:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c_sim_upperbody_dynamics/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_r2_description_r2c_sim_upperbody_dynamics
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/r2_description/robots/r2c_sim_upperbody_dynamics.urdf.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_ur10_ur10_robot:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_ur10_ur10_robot/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_ur10_ur10_robot
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/ur10/ur10_robot.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_ur5_ur5_gripper:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_ur5_ur5_gripper/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_ur5_ur5_gripper
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/ur5/ur5_gripper.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_forearm_left:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_forearm_left/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_forearm_left
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/forearm_left.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_forearm_right:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_forearm_right/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_forearm_right
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/forearm_right.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_A:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_A/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_A
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_A.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_A_arm_mass_sims:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_A_arm_mass_sims/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_A_arm_mass_sims
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_A_arm_mass_sims.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_B:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_B/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_B
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_B.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_B_arm_mass_sims:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_B_arm_mass_sims/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_B_arm_mass_sims
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_B_arm_mass_sims.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_C:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_C/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_C
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_C.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_C_arm_mass_sims:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_C_arm_mass_sims/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_C_arm_mass_sims
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_C_arm_mass_sims.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_D:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_D/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_D
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_D.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_D_arm_mass_sims:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_D_arm_mass_sims/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_D_arm_mass_sims
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_D_arm_mass_sims.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_sim:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_sim/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_sim
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_sim.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_sim_angled_legj1s:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_sim_angled_legj1s/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_sim_angled_legj1s
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_sim_angled_legj1s.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_sim_arm_mass_sims:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_sim_arm_mass_sims/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_sim_arm_mass_sims
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_sim_arm_mass_sims.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_val_description_valkyrie_sim_gazebo_sync:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_val_description_valkyrie_sim_gazebo_sync/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_val_description_valkyrie_sim_gazebo_sync
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/val_description/model/robots/valkyrie_sim_gazebo_sync.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_yumi:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_yumi/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_yumi
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: robot_assets
+    source_entry: urdfs/robots/yumi/yumi.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_turtlebot3_burger:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_turtlebot3_burger
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: turtlebot3_vendor
+    source_entry: turtlebot3_description/urdf/turtlebot3_burger.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_turtlebot3_waffle:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_waffle/90a68bd2e3c61c12966779da89d8eeaec82730e9/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_turtlebot3_waffle
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: turtlebot3_vendor
+    source_entry: turtlebot3_description/urdf/turtlebot3_waffle.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_turtlebot3_waffle_pi:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_waffle_pi/90a68bd2e3c61c12966779da89d8eeaec82730e9/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_turtlebot3_waffle_pi
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: turtlebot3_vendor
+    source_entry: turtlebot3_description/urdf/turtlebot3_waffle_pi.urdf
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.
+  asset_husky:
+    package: robot_lab_robots
+    xacro: /workspace/molar/robot_lab_runtime/external_assets/models/asset_husky/729f8aa45ccd86fa33a05e07ef698c52c451cd9c/model.urdf
+    supported_simulators:
+    - gazebo
+    - pybullet
+    - mujoco
+    - isaac
+    name: asset_husky
+    supported_modes:
+    - display
+    default_mode: display
+    features: []
+    source_id: husky_vendor
+    source_entry: husky_description/urdf/husky.urdf.xacro
+    notes: Installed source-pinned model for Display. Joint control, walking, localization,
+      SLAM and navigation require separate controller integration and qualification.

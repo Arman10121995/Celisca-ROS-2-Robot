@@ -1,0 +1,77 @@
+{
+  "scope": "Installed GUI selection and passive native display; no movement or mission claim",
+  "domain": "212",
+  "commands": [
+    "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+    "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_fetch simulator:=pybullet use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=auto perception:=none",
+    "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=gazebo use_sim_time:=true map_name:=dataset_bookstore world_package:=robot_lab_maps world_name:=dataset_bookstore world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_bookstore.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261005-170727-ad6212/dataset_bookstore.yaml mode:=display gui:=auto perception:=none",
+    "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=celisca_floor_1 world_package:=robot_lab_maps world_name:=celisca_floor_1 world_path:=maps/celisca_floor_1/worlds/celisca_floor_1.world map_yaml:=maps/celisca_floor_1/maps/map.yaml mode:=display gui:=auto perception:=none",
+    "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=gazebo use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=auto perception:=none"
+  ],
+  "checks": {
+    "selection_commands": true,
+    "installed_shortcut": true,
+    "clock": true,
+    "finite_native_joint_states": true,
+    "measured_native_body_tf": true,
+    "description": true,
+    "owned_stop": true
+  },
+  "runtime_command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=gazebo use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261005-170754-da927c/dataset_room2.yaml mode:=display gui:=true perception:=none",
+  "owned_launch_pid": 268344,
+  "observed_clock_samples": 101,
+  "observed_joint_samples": 101,
+  "observed_joint_names": [
+    "panda_joint_world",
+    "panda_joint1",
+    "panda_joint2",
+    "panda_joint3",
+    "panda_joint4",
+    "panda_joint5",
+    "panda_joint6",
+    "panda_joint7",
+    "panda_finger_joint1",
+    "panda_finger_joint2"
+  ],
+  "clock_samples": 101,
+  "sim_time_span": 0.2,
+  "joint_samples": 101,
+  "joint_names": [
+    "panda_joint_world",
+    "panda_joint1",
+    "panda_joint2",
+    "panda_joint3",
+    "panda_joint4",
+    "panda_joint5",
+    "panda_joint6",
+    "panda_joint7",
+    "panda_finger_joint1",
+    "panda_finger_joint2"
+  ],
+  "positions": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "measured_body_frames": [
+    "panda_leftfinger",
+    "panda_link1",
+    "panda_link2",
+    "panda_link3",
+    "panda_link4",
+    "panda_link5",
+    "panda_link6",
+    "panda_link7",
+    "panda_rightfinger"
+  ],
+  "description_bytes": 17860,
+  "launch_returncode": -15,
+  "passed": true
+}

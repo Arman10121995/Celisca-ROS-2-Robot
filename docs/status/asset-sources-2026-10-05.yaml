@@ -1,5 +1,6 @@
 updated: '2026-10-05'
-qualification: External source catalog only; listed assets are not installed or runtime-qualified
+qualification: Pinned sources; installation and exact model/world import checks are
+  recorded separately from runtime missions.
 sources:
 - id: gazebo_2dmap
   kind: world_tool
@@ -12,7 +13,7 @@ sources:
   kind: world
   repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
   revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
-  status: cataloged
+  status: downloaded
   license_note: Per-asset audit required; no root license found
   entries:
   - worlds/bookstore/bookstore.zip
@@ -45,7 +46,7 @@ sources:
   kind: robot
   repository: https://github.com/ankurhanda/robot-assets
   revision: 24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99
-  status: cataloged
+  status: downloaded
   license_note: Per-model audit required; no root license found
   entries:
   - urdfs/robots/anymal/anymal.urdf
@@ -102,7 +103,7 @@ sources:
   kind: robot
   repository: https://github.com/google-deepmind/mujoco_menagerie
   revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
-  status: cataloged
+  status: downloaded
   license_note: Per-model licenses; native MJCF, no automatic cross-backend control
   entries:
   - agilex_piper
@@ -173,17 +174,193 @@ sources:
   entries:
   - name: UR5e
     source: https://github.com/ros-industrial/universal_robot
+    installed_profiles:
+    - menagerie_universal_robots_ur5e
   - name: Franka Panda
     source: https://github.com/frankaemika/franka_ros2
+    installed_profiles:
+    - asset_franka_panda_panda
   - name: TurtleBot3 Burger
     source: https://github.com/ROBOTIS-GIT/turtlebot3
+    installed_profiles:
+    - asset_turtlebot3_burger
   - name: Spot
     source: https://github.com/chvmp/spot_ros
+    installed_profiles:
+    - menagerie_boston_dynamics_spot
   - name: Fetch Mobile Manipulator
     source: https://github.com/fetchrobotics/fetch_ros
+    installed_profiles:
+    - asset_fetch
   - name: Unitree Go1
     source: https://github.com/unitreerobotics/unitree_ros
+    installed_profiles:
+    - menagerie_unitree_go1
   - name: KUKA iiwa 14
     source: https://github.com/IFL-CAMP/iiwa_stack
+    installed_profiles:
+    - menagerie_kuka_iiwa_14
   - name: Clearpath Husky
     source: https://github.com/husky/husky
+    installed_profiles:
+    - asset_husky
+- id: gazebo_classic_models
+  kind: world_model
+  repository: https://github.com/osrf/gazebo_models
+  revision: 8163eb4b5e7e21985c6591d1c0bfb56468c0093f
+  status: downloaded
+  license_note: Per-model upstream licenses retained; imported as world dependencies
+  entries:
+  - coke_can
+- id: servicesim_models
+  kind: world_model
+  repository: https://github.com/osrf/servicesim
+  revision: 57992bb0e47e4a28f94dbf44e8eed543d77fe039
+  status: downloaded
+  license_note: Apache-2.0, upstream LICENSE retained
+  entries:
+  - servicesim_competition/models
+- id: qb_hand_description
+  kind: robot_dependency
+  repository: https://bitbucket.org/qbrobotics/qbhand-ros
+  revision: dd75e2f70bbb470be4a2360177dbde6a7afbd638
+  status: downloaded
+  license_note: BSD-3-Clause, upstream LICENSE and package.xml retained
+  entries:
+  - qb_hand_description/meshes/flange_iso_04.stl
+  - qb_hand_description/meshes/palm_pinch_l.stl
+  - qb_hand_description/meshes/palm_pinch_r.stl
+  - qb_hand_description/meshes/ph_distal.stl
+  - qb_hand_description/meshes/ph_knuckle.stl
+  - qb_hand_description/meshes/ph_medium.stl
+  - qb_hand_description/meshes/ph_small.stl
+  - qb_hand_description/meshes/ph_thumb_l.stl
+  - qb_hand_description/meshes/ph_thumb_r.stl
+  - qb_hand_description/package.xml
+  - LICENSE
+- id: gazebo_examples
+  kind: world
+  repository: https://github.com/gazebosim/gz-sim
+  revision: b90cd2c41a193102d6951857c2d83e13f59bb64b
+  status: downloaded
+  license_note: Apache-2.0; Fortress 6.18.0 source examples. Plugin demonstrations
+    require behavior-specific adaptation.
+  entries:
+  - examples/worlds/3k_shapes.sdf
+  - examples/worlds/ackermann_steering.sdf
+  - examples/worlds/actor.sdf
+  - examples/worlds/actor_crowd.sdf
+  - examples/worlds/actors_population.sdf
+  - examples/worlds/apply_joint_force.sdf
+  - examples/worlds/apply_link_wrench.sdf
+  - examples/worlds/auv_controls.sdf
+  - examples/worlds/boundingbox_camera.sdf
+  - examples/worlds/breadcrumbs.sdf
+  - examples/worlds/buoyancy.sdf
+  - examples/worlds/buoyancy_engine.sdf
+  - examples/worlds/camera_sensor.sdf
+  - examples/worlds/camera_video_record_dbl_pendulum.sdf
+  - examples/worlds/collada_world_exporter.sdf
+  - examples/worlds/contact_sensor.sdf
+  - examples/worlds/conveyor.sdf
+  - examples/worlds/debug_shapes.sdf
+  - examples/worlds/default.sdf
+  - examples/worlds/depth_camera_sensor.sdf
+  - examples/worlds/detachable_joint.sdf
+  - examples/worlds/diff_drive.sdf
+  - examples/worlds/diff_drive_skid.sdf
+  - examples/worlds/elevator.sdf
+  - examples/worlds/empty.sdf
+  - examples/worlds/empty_gui.sdf
+  - examples/worlds/follow_actor.sdf
+  - examples/worlds/fuel.sdf
+  - examples/worlds/fuel_textured_mesh.sdf
+  - examples/worlds/gpu_lidar_retro_values_sensor.sdf
+  - examples/worlds/gpu_lidar_sensor.sdf
+  - examples/worlds/graded_buoyancy.sdf
+  - examples/worlds/grid.sdf
+  - examples/worlds/heightmap.sdf
+  - examples/worlds/import_mesh.sdf
+  - examples/worlds/joint_controller.sdf
+  - examples/worlds/joint_position_controller.sdf
+  - examples/worlds/joint_trajectory_controller.sdf
+  - examples/worlds/kinetic_energy_monitor.sdf
+  - examples/worlds/levels.sdf
+  - examples/worlds/levels_no_performers.sdf
+  - examples/worlds/lift_drag.sdf
+  - examples/worlds/lift_drag_battery.sdf
+  - examples/worlds/lift_drag_nested.sdf
+  - examples/worlds/lightmap.sdf
+  - examples/worlds/lights.sdf
+  - examples/worlds/linear_battery_demo.sdf
+  - examples/worlds/log_record_dbl_pendulum.sdf
+  - examples/worlds/log_record_keyboard.sdf
+  - examples/worlds/log_record_resources.sdf
+  - examples/worlds/log_record_shapes.sdf
+  - examples/worlds/logical_audio_sensor_plugin.sdf
+  - examples/worlds/logical_camera_sensor.sdf
+  - examples/worlds/mecanum_drive.sdf
+  - examples/worlds/minimal_scene.sdf
+  - examples/worlds/model_photo_shoot.sdf
+  - examples/worlds/multi_lrauv_race.sdf
+  - examples/worlds/multicopter_velocity_control.sdf
+  - examples/worlds/nested_model.sdf
+  - examples/worlds/optical_tactile_sensor_plugin.sdf
+  - examples/worlds/particle_emitter.sdf
+  - examples/worlds/particle_emitter2.sdf
+  - examples/worlds/pendulum_links.sdf
+  - examples/worlds/perfect_comms.sdf
+  - examples/worlds/performer_detector.sdf
+  - examples/worlds/physics_options.sdf
+  - examples/worlds/plane_propeller_demo.sdf
+  - examples/worlds/plot_3d.sdf
+  - examples/worlds/polylines.sdf
+  - examples/worlds/pose_publisher.sdf
+  - examples/worlds/quadcopter.sdf
+  - examples/worlds/resource_spawner.sdf
+  - examples/worlds/rf_comms.sdf
+  - examples/worlds/rolling_shapes.sdf
+  - examples/worlds/segmentation_camera.sdf
+  - examples/worlds/sensors.sdf
+  - examples/worlds/sensors_demo.sdf
+  - examples/worlds/shader_param.sdf
+  - examples/worlds/shapes.sdf
+  - examples/worlds/shapes_bitmask.sdf
+  - examples/worlds/skid_steer_mecanum.sdf
+  - examples/worlds/sky.sdf
+  - examples/worlds/spaces.sdf
+  - examples/worlds/spherical_coordinates.sdf
+  - examples/worlds/thermal_camera.sdf
+  - examples/worlds/touch_plugin.sdf
+  - examples/worlds/track_drive.sdf
+  - examples/worlds/tracked_vehicle_simple.sdf
+  - examples/worlds/trajectory_follower.sdf
+  - examples/worlds/triggered_camera_sensor.sdf
+  - examples/worlds/triggered_publisher.sdf
+  - examples/worlds/trisphere_cycle_wheel_slip.sdf
+  - examples/worlds/tunnel.sdf
+  - examples/worlds/velocity_control.sdf
+  - examples/worlds/video_record_dbl_pendulum.sdf
+  - examples/worlds/visibility.sdf
+  - examples/worlds/visualize_contacts.sdf
+  - examples/worlds/visualize_lidar.sdf
+  - examples/worlds/wind.sdf
+  - examples/worlds/world_joint.sdf
+- id: turtlebot3_vendor
+  kind: robot
+  repository: https://github.com/ROBOTIS-GIT/turtlebot3
+  revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
+  status: downloaded
+  license_note: Apache-2.0, official ROS Humble description
+  entries:
+  - turtlebot3_description/urdf/turtlebot3_burger.urdf
+  - turtlebot3_description/urdf/turtlebot3_waffle.urdf
+  - turtlebot3_description/urdf/turtlebot3_waffle_pi.urdf
+- id: husky_vendor
+  kind: robot
+  repository: https://github.com/husky/husky
+  revision: 729f8aa45ccd86fa33a05e07ef698c52c451cd9c
+  status: downloaded
+  license_note: BSD-3-Clause, official Humble description; retain per-package notices
+  entries:
+  - husky_description/urdf/husky.urdf.xacro

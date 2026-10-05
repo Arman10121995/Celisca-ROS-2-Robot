@@ -21,7 +21,7 @@ bash scripts/test_tiers.sh fast
 
 echo ""
 echo "=== Registry validation ==="
-PYTHONPATH=src/robot_lab/robot_lab_registry python3 -c "
+PYTHONPATH=src/robot_lab/robot_lab_registry:src/robot_lab_utils python3 -c "
 from robot_lab_registry.catalog import Registry
 from robot_lab_registry.validation import validate_cross_references
 reg = Registry('src/robot_lab/robot_lab_registry/config')

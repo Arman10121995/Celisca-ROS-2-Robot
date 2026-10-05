@@ -27,7 +27,7 @@ asset listing is separate from an installed robot with working control.
 
 | Task | Scope | Current boundary |
 |---|---|---|
-| R3.6 | Robot-assets, URDFHub and broader robot/world source catalogs | Source-pinned inventory / Asset Library; per-model import, licenses and runnable profiles remain |
+| R3.6 | Robot-assets, URDFHub and broader robot/world source catalogs | Pinned SSD installation / normal Launch selectors; cross-backend display, licenses and control qualification remain |
 | R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Queued real controller, planning, grasp/contact and combined missions |
 | R5.10 | PX4 in every selected installed world | All world selections preserved; native `nav_empty` and `nav_obstacle` flight screens pass; full spawn/ceiling matrix remains |
 | R6.5 | Generate 2D grids for selected collision worlds | Actual primitive and both furnished Celisca exports; seed-connected projection checked; reviewed registration/Nav2 checks remain |
@@ -324,12 +324,12 @@ Dependencies: `R3.3`, `R2.2`.
 - Implement: Author five representative benchmark scenarios (state_estimation_benchmark [mobile/state_estimation], dynamic_navigation [mobile/navigation], coverage_optimization [mobile/coverage], terrain_traversal_benchmark [legged/traversal], aerial_waypoint_benchmark [aerial/navigation]) and five matching benchmark experiments that bind each scenario to a concrete robot+environment+simulator+algorithm stack with declared seeds and metrics. Add the `state_estimation` task_type to the scenario schema.
 - Acceptance: All five scenarios and five experiments parse as valid YAML and pass the shared resolver/selector pipeline (typed composition compatibility, resolver/executor, and selectors tests: 44 passed). Each scenario carries task_type, stopping conditions, success/failure criteria, required robot classes/capabilities, timeout and metrics. Each experiment binds a scenario to a concrete robot+environment+simulator+algorithm stack with a unique seed.
 
-### R3.6 — External asset catalogs and import staging
+### R3.6 — External asset installation and normal Launch integration
 
 Dependencies: `R3.1`, `R3.4`.
 
 - Files: `src/robot_lab_gui/`, `docs/status/asset-sources-2026-10-05.yaml`, `docs/ASSET_EXTENSION_GUIDE.md`, import tooling.
-- Implement: Inventory every robot-assets URDF variant and URDFHub upstream link, compare broader Menagerie/robot-descriptions catalogs, deduplicate canonical robots and expose source/license/import/control state in GUI. Stage complete pinned assets on SSD; never execute catalog install scripts automatically.
+- Implement: Inventory every robot-assets URDF variant and URDFHub upstream link, compare broader Menagerie/robot-descriptions catalogs, deduplicate canonical robots and expose source/license/import/control state in GUI. Agents download and integrate complete pinned assets on SSD into normal Launch robot/map selectors and autofilled commands. Installed Extensions shows status and opens Launch; do not require operators to download assets in the GUI. Never execute upstream install scripts automatically.
 - Acceptance: Every requested source entry appears with provenance; dependencies and per-model licenses audited; imported URDF/MJCF and textures validated; real display/joint-state tests precede enabled launch profiles. Missing assets and control remain visible, rather than fake universal modes.
 
 ## R4 — Measured reference experiment
@@ -835,7 +835,7 @@ Dependencies: `R6.1`, `R3.4`.
 
 Dependencies: `R3.6`, `R6.5`.
 
-- Implement: Inventory all mlherd world/model/archive entries, installed Gazebo examples, and licensed Fuel/upstream worlds. Expose download/import/conversion/mission state in GUI. Resolve all mesh/model/include dependencies, per-asset licenses, Classic-to-Fortress/Harmonic plugin migration and conversion errors.
+- Implement: Inventory all mlherd world/model/archive entries, installed Gazebo examples, and licensed Fuel/upstream worlds. Agents download and integrate actual assets into normal Launch selectors; expose installed/import/conversion/mission state in GUI. Resolve all mesh/model/include dependencies, per-asset licenses, Classic-to-Fortress/Harmonic plugin migration and conversion errors.
 - Acceptance: Every requested source entry appears with status. Imported geometry, textures, collision, scale/origin and spawn tested on all four backends; dynamic/actor functionality retained or explicitly unsupported. At least one applicable robot mission per new environment class and generated occupancy files prove functionality.
 
 ### R6.7 — Terrain generation and four-backend conversion

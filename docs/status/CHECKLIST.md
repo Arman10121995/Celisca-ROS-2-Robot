@@ -45,9 +45,16 @@ the older roadmap. Existing stabilization fixes must remain working.
   plugin and actual collision-mesh height slices. Real exports exist for
   `nav_obstacle` and both furnished Celisca floors (R6.5). They are previews
   of the seed-connected region, pending reviewed navigation registration.
-- [x] Add Asset Library source browsing for robot-assets, URDFHub, Menagerie
-  and external world/terrain sources. Source pins and licensing decisions
-  are recorded (R3.6); catalog entries are not installed runnable robots.
+- [x] Download and install 111 Display profiles on SSD: 59 native Menagerie
+  models, 48 robot-assets URDF variants/fragments, and four official TurtleBot3/
+  Husky descriptions. Normal Launch selection,
+  command autofill and Installed Extensions shortcuts work; no operator
+  download controls. Two upstream files have no robot links and are excluded.
+- [x] Import all 14 dataset worlds and three Gazebo environment examples with
+  real dependency resolution, derived MJCF and actual occupancy exports.
+  Robot missions, actor behavior and full visual/backend parity remain separate.
+- [x] Record live GUI Panda display/state/Run/Stop checks and preserve failures;
+  each report names the exact asset, world, backend and source stage.
 - [x] Replace invented support/release success with exact hashed measurements,
   retain negative results and block full-release claims on unfinished tasks.
   GUI Health, this checklist, the roadmap and agent guides expose those gaps
@@ -84,17 +91,19 @@ the older roadmap. Existing stabilization fixes must remain working.
 
 ## Implement the newly requested extensions
 
-- [ ] **R3.6:** Download/import licensed robot assets in SSD batches, resolve
-  complete model dependencies, qualify display/joint state/control, then add
-  enabled Launch profiles. Neither URDFHub nor the entire robot-assets or
-  Menagerie library is installed as runnable robots.
+- [ ] **R3.6:** Complete per-model license/texture/skin and cross-backend
+  runtime checks for the installed Display profiles; integrate remaining
+  vendor controller interfaces, then add qualified control modes. All eight
+  featured URDFHub models have installed equivalents with actual provenance. Import counts do not qualify joint control, walking or missions.
 - [ ] **R6.5:** Review generated occupancy origin, mesh scale, height and
   seed; cover disconnected free regions, test rotated geometry and navigation
   alignment, then register validated maps. The new shared heightfield converter
   extends projection; its occupancy/terrain missions still need qualification.
-- [ ] **R6.6:** Import the external world library and packaged Gazebo/Fuel
-  examples with per-asset licenses, resource resolution and Classic-plugin
-  migration. Qualify visual/collision/spawn behavior in all four simulators.
+- [ ] **R6.6:** Qualify visual/collision/spawn and robot routes across all
+  imported worlds/backends. All 100 Fortress example SDFs are downloaded;
+  three environment examples are installed, while 97 plugin/robot fixtures
+  require behavior/resource review. Preserve original actors/plugins, audit
+  licenses and include remaining licensed Fuel environments.
 - [ ] **R6.7:** Implement a terrain-generation GUI with SSD output and shared
   provider/attribution manifest. Shared four-backend heightfield conversion
   now exists with measured Gazebo conventions and MuJoCo/PyBullet contact

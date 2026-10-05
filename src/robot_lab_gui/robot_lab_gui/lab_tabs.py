@@ -9,8 +9,6 @@ Health (doctor / platform status / ROS graph), and Live Monitor
 import json
 import threading
 import os
-import hashlib
-import shlex
 import sys
 import webbrowser
 from pathlib import Path
@@ -157,91 +155,82 @@ class WorldsTab(LabTab):
 
 
 class AssetsTab(LabTab):
-    """Source-pinned model catalogs kept separate from runnable robot profiles."""
-    def __init__(self,notebook,app):
-        super().__init__(notebook,app,'Asset Library')
-        ttk.Label(self,text='External robot and world catalogs. Cataloged assets still need download, license/import checks and control integration.\n'
-            'Use Launch for installed robots. Manipulator / hand / mobile-manipulator controls are queued as R5.7 / R5.8 / R5.9.',
-            wraplength=880,justify='left').grid(row=0,column=0,sticky='w',pady=6)
-        self.tree=ttk.Treeview(self,columns=('source','status'),show='tree headings',height=15)
-        self.tree.heading('#0',text='Robot / world asset');self.tree.heading('source',text='Source');self.tree.heading('status',text='Status')
-        self.tree.column('#0',width=520);self.tree.column('source',width=200);self.tree.column('status',width=100)
-        self.tree.grid(row=1,column=0,sticky='nsew');self.rowconfigure(1,weight=1)
-        scroll=ttk.Scrollbar(self,orient='vertical',command=self.tree.yview);scroll.grid(row=1,column=1,sticky='ns')
-        self.tree.configure(yscrollcommand=scroll.set);self.links={};self.asset_entries={}
-        self.asset_directory=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
-            '/workspace/molar/robot_lab_runtime'))/'external_assets'
-        catalog=load_yaml(WORKSPACE_ROOT/'docs/status/asset-sources-2026-10-05.yaml') or {}
-        for source in catalog.get('sources',[]):
-            parent=self.tree.insert('', 'end',text=source['id'],values=(source['revision'][:12],source['status']))
-            self.links[parent]=source['repository']
-            for entry in source.get('entries',[]):
-                name=entry.get('name') if isinstance(entry,dict) else entry
-                row=self.tree.insert(parent,'end',text=name,values=(source['id'],'cataloged'))
-                self.asset_entries[row]=(source,entry)
-                self.links[row]=entry['source'] if isinstance(entry,dict) else source['repository']+'/tree/'+source['revision']+'/'+entry
-        actions=ttk.Frame(self);actions.grid(row=2,column=0,sticky='ew',pady=6)
-        ttk.Button(actions,text='Open Upstream Source',command=self.open_source).pack(side='left')
-        self.stage_button=ttk.Button(actions,text='Download / Check Selected Asset',command=self.stage_selected)
-        self.stage_button.pack(side='left',padx=6)
-        ttk.Button(actions,text='Stop Download',command=lambda:app.stop_bg_process('asset_import')).pack(side='left')
-        ttk.Button(actions,text='Refresh Local Status',command=self.refresh_local_status).pack(side='left',padx=6)
-        self.preview_button=ttk.Button(actions,text='Model Geometry Preview',command=self.preview_selected)
-        self.preview_button.pack(side='left')
-        ttk.Button(actions,text='Close Preview',command=lambda:app.stop_bg_process('asset_preview')).pack(side='left',padx=6)
-        self.asset_command_var=tk.StringVar()
-        ttk.Entry(self,textvariable=self.asset_command_var,state='readonly').grid(row=3,column=0,sticky='ew')
-        self.tree.bind('<<TreeviewSelect>>',lambda _event:self.update_asset_command())
+    """Installed extensions open through the same Launch controls as old assets."""
+    def __init__(self, notebook, app):
+        super().__init__(notebook, app, 'Installed Extensions')
+        ttk.Label(self, text='Downloaded extension robots and worlds use the normal Launch selectors and run command.\n'
+            'Select an installed entry below to open it in Launch. Modes follow its implemented model/controller support.',
+            wraplength=880, justify='left').grid(row=0, column=0, sticky='w', pady=6)
+        self.tree = ttk.Treeview(self, columns=('source', 'status'), show='tree headings', height=15)
+        for column, title in [('#0', 'Robot / world'), ('source', 'Source pin'), ('status', 'Integration')]:
+            self.tree.heading(column, text=title)
+        self.tree.column('#0', width=450); self.tree.column('source', width=180); self.tree.column('status', width=230)
+        self.tree.grid(row=1, column=0, sticky='nsew'); self.rowconfigure(1, weight=1)
+        scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.tree.yview)
+        scrollbar.grid(row=1, column=1, sticky='ns'); self.tree.configure(yscrollcommand=scrollbar.set)
+        actions = ttk.Frame(self); actions.grid(row=2, column=0, sticky='ew', pady=6)
+        ttk.Button(actions, text='Open Selected in Launch', command=self.open_selected).pack(side='left')
+        ttk.Button(actions, text='Refresh Installed Assets', command=self.refresh_local_status).pack(side='left', padx=6)
+        ttk.Button(actions, text='Open Upstream Source', command=self.open_source).pack(side='left')
+        self.detail_var = tk.StringVar()
+        ttk.Label(self, textvariable=self.detail_var, wraplength=880, justify='left').grid(row=3, column=0, sticky='w')
+        self.tree.bind('<<TreeviewSelect>>', self.show_details)
+        self.tree.bind('<Double-1>', lambda _event: self.open_selected())
         self.refresh_local_status()
 
-    def staging_command(self):
-        selected=self.tree.selection()
-        if not selected or selected[0] not in self.asset_entries:
-            raise ValueError('Select an individual pinned model or world asset')
-        source,entry=self.asset_entries[selected[0]]
-        if not isinstance(entry,str):
-            raise ValueError('This directory links to an upstream project; an individual commit/model pin is still needed')
-        return [sys.executable,str(WORKSPACE_ROOT/'scripts/catalog_external_assets.py'),
-                '--source',source['id'],'--entry',entry,'--output-dir',str(self.asset_directory)]
-
-    def update_asset_command(self):
-        try:self.asset_command_var.set(shlex.join(self.staging_command()))
-        except ValueError as exc:self.asset_command_var.set(str(exc))
-
-    def stage_selected(self):
-        try:self.app.start_bg_process(self.staging_command(),'asset_import')
-        except ValueError as exc:messagebox.showinfo('Asset staging',str(exc))
-
-    def preview_selected(self):
-        try:
-            command=self.staging_command()
-            command[1]=str(WORKSPACE_ROOT/'scripts/preview_external_asset.py')
-            self.app.start_bg_process(command,'asset_preview')
-        except ValueError as exc:messagebox.showinfo('Model preview',str(exc))
-
     def refresh_local_status(self):
-        for row,(source,entry) in self.asset_entries.items():
-            status='cataloged'
-            if isinstance(entry,str):
-                key=hashlib.sha256(entry.encode()).hexdigest()[:16]
-                path=self.asset_directory/'manifests'/source['id']/source['revision']/(key+'.json')
-                if path.is_file():
-                    try:
-                        report=json.loads(path.read_text())
-                        if (report['source_id'],report['revision'],report['entry'])!=(source['id'],source['revision'],entry):
-                            raise ValueError('Manifest identity mismatch')
-                        status=report['stage']
-                        models=report.get('models',[])
-                        if models and all(m.get('native_import',{}).get('status')=='import_checked' for m in models):
-                            status='native import checked'
-                        elif any(m.get('dependencies_complete') is False or m.get('native_import',{}).get('status')=='import_failed' for m in models):
-                            status='dependencies incomplete'
-                    except (OSError,KeyError,ValueError):status='manifest unreadable'
-            self.tree.set(row,'status',status)
+        from robot_lab_utils.installed_assets import installation_root
+        self.app._refresh_maps()
+        self.tree.delete(*self.tree.get_children()); self.rows = {}; self.links = {}
+        path = installation_root() / 'integration-report.json'
+        report = json.loads(path.read_text()) if path.is_file() else {}
+        catalog = load_yaml(WORKSPACE_ROOT / 'docs/status/asset-sources-2026-10-05.yaml') or {}
+        for source in catalog.get('sources', []):
+            parent = self.tree.insert('', 'end', text=source['id'], values=(source['revision'][:12], ''))
+            self.links[parent] = source['repository']
+            entries = {item['entry']: item for item in report.get('entries', []) if item['source_id'] == source['id']}
+            for entry in source.get('entries', []):
+                name = entry.get('name') if isinstance(entry, dict) else entry
+                item = entries.get(name, {})
+                profiles = item.get('profiles', [])
+                if not profiles and isinstance(entry,dict):
+                    profiles = [{'id':robot, 'kind':'robot', 'support':'Installed equivalent model',
+                                 'notes':self.app.robot_profiles[robot].get('notes','')}
+                                for robot in entry.get('installed_profiles',[])
+                                if robot in self.app.robot_profiles]
+                if profiles:
+                    for profile in profiles:
+                        row = self.tree.insert(parent, 'end', text=profile['id'], values=(source['revision'][:12], profile.get('support', 'installed')))
+                        self.rows[row] = profile
+                        self.links[row] = source['repository']
+                else:
+                    row = self.tree.insert(parent, 'end', text=name, values=(source['revision'][:12], item.get('status', 'integration pending')))
+                    self.rows[row] = {'reason': item.get('reason', 'Source model integration is pending'), 'id': name}
+                    self.links[row] = entry['source'] if isinstance(entry, dict) else source['repository']
+
+    def show_details(self, _event=None):
+        selected = self.tree.selection()
+        profile = self.rows.get(selected[0], {}) if selected else {}
+        self.detail_var.set(profile.get('reason') or profile.get('notes', 'Select a robot or world to see its available modes.'))
+
+    def open_selected(self):
+        selected = self.tree.selection()
+        profile = self.rows.get(selected[0], {}) if selected else {}
+        kind = profile.get('kind')
+        choices = self.app.robot_profiles if kind == 'robot' else self.app.map_profiles
+        if kind not in ('robot', 'world') or profile.get('id') not in choices:
+            self.show_details()
+            return
+        if kind == 'robot': self.app.robot_var.set(profile['id'])
+        else: self.app.map_var.set(profile['id'])
+        self.app.mode_var.set('display')
+        self.app._update_from_selection()
+        self.app.show_tab('Launch')
+        self.app.set_status('Selected ' + profile['id'] + '; run command filled')
 
     def open_source(self):
-        selection=self.tree.selection()
-        if selection:webbrowser.open(self.links[selection[0]])
+        selected = self.tree.selection()
+        if selected: webbrowser.open(self.links[selected[0]])
 
 
 ENTITY_TYPES = [
@@ -347,6 +336,11 @@ class RegistryTab(LabTab):
                     for index, item in enumerate(data)
                     if isinstance(item, dict)
                 }
+        from robot_lab_registry.catalog import Registry
+        registry = Registry(REGISTRY_CONFIG_DIR)
+        registry.load()
+        self.entities['robots'] = registry.robots.get_all()
+        self.entities['environments'] = registry.environments.get_all()
         self._refresh_tree()
 
     def _current_type(self):

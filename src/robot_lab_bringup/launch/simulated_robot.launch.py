@@ -608,6 +608,9 @@ def _build_simulation_actions(context):
     map_configs = _load_yaml(_launch_value(context, "sim_maps_config"))
     mode_configs = _load_yaml(_launch_value(context, "sim_modes_config"))
     robot_configs = _load_yaml(_launch_value(context, "sim_robots_config"))
+    from robot_lab_utils.installed_assets import merge_installed_profiles
+    robot_configs = merge_installed_profiles(robot_configs, 'robots')
+    map_configs = merge_installed_profiles(map_configs, 'maps')
 
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
@@ -919,6 +922,8 @@ def _build_simulation_actions(context):
             "gui": gui_value,
         }
         display_args.update(drive_args)
+        if robot_config.get('native_mjcf'):
+            display_args['native_mjcf'] = robot_config['native_mjcf']
         if simulator in ("mujoco", "isaac"):
             display_args["hold_position"] = _launch_value(context, "display_hold")
         elif simulator == "pybullet":

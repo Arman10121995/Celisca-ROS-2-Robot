@@ -24,6 +24,11 @@ def _resolve_mujoco_xml(context, world_name):
     candidates = [world_name.perform(context)]
     world_path = LaunchConfiguration("world_path").perform(context)
     if world_path:
+        candidate = os.path.join(os.path.dirname(os.path.dirname(world_path)),
+                                 'mjcf', candidates[0] + '.xml')
+        if os.path.isfile(candidate):
+            return candidate
+    if world_path:
         candidates.append(
             os.path.splitext(os.path.basename(world_path))[0])
     for name in candidates:
@@ -65,6 +70,18 @@ def _build_mujoco_actions(context):
     # whole launch.
     model_path = LaunchConfiguration("model").perform(context).strip()
     spawn_robot = bool(model_path) and model_path.lower() != "none"
+
+    native_mjcf = LaunchConfiguration('native_mjcf').perform(context).strip()
+    if native_mjcf:
+        return [Node(package='robot_lab_mujoco', executable='native_asset_display',
+            output='screen', parameters=[{
+                'native_mjcf': native_mjcf, 'model': model_path,
+                'world_xml': _resolve_mujoco_xml(context, world_name),
+                'gui': ParameterValue(gui, value_type=bool),
+                'hold_position': LaunchConfiguration('hold_position').perform(context) != 'false',
+                **{'spawn_'+axis: ParameterValue(LaunchConfiguration('spawn_'+axis), value_type=float)
+                   for axis in ('x', 'y', 'z', 'yaw')},
+            }])]
 
     if spawn_robot:
         # Robot description + state publisher (mirrors gazebo.launch.py).
@@ -171,6 +188,7 @@ def generate_launch_description():
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),
         DeclareLaunchArgument("model", default_value=""),
+        DeclareLaunchArgument('native_mjcf', default_value=''),
         DeclareLaunchArgument("effort_controller_config", default_value=""),
         DeclareLaunchArgument("physics_timestep", default_value="0.0"),
         DeclareLaunchArgument(

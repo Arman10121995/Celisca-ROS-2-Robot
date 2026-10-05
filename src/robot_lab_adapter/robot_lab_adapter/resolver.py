@@ -16,6 +16,7 @@ Legacy aliases preserved (R3.1 deferred them here):
 """
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
@@ -170,6 +171,14 @@ def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
     """
     args: Dict[str, str] = {}
     world_file = environment.get('world_file') or ''
+    if Path(world_file).is_absolute():
+        # Installed extension assets live on SSD, outside package/share. Their
+        # absolute path must never be parsed as a legacy package/map key.
+        args.update(map_name=environment['id'], world_package=environment.get('ros_package', WORLD_PACKAGE),
+                    world_name=Path(world_file).stem, world_path=world_file)
+        if environment.get('occupancy_yaml'):
+            args['map_yaml'] = environment['occupancy_yaml']
+        return args
     parts = world_file.split('/')
     # robot_lab_maps / maps / <key> / worlds / <key>.world
     if len(parts) >= 5 and parts[2] and parts[-1].endswith('.world'):
@@ -319,6 +328,7 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
         simulator=simulator or '',
         scenario_id=scenario_id,
         algorithm_ids=algorithm_ids,
+        mode=resolved.mode,
     )
     validation = check_composition(registry, composition)
     if not validation.valid:

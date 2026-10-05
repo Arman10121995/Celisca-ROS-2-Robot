@@ -33,9 +33,10 @@ import xml.etree.ElementTree as ET
 # parent is terminated by Stop Generation or timeout, terminate here too.
 # Gazebo's own lifetime is bound to this process by the --child entry above.
 import ctypes
-generator_parent=os.getppid()
-if ctypes.CDLL(None).prctl(1,signal.SIGTERM,0,0,0)!=0 or os.getppid()!=generator_parent:
-    raise SystemExit('Cannot bind the map generator to its parent process')
+if __name__ == '__main__':
+    generator_parent=os.getppid()
+    if ctypes.CDLL(None).prctl(1,signal.SIGTERM,0,0,0)!=0 or os.getppid()!=generator_parent:
+        raise SystemExit('Cannot bind the map generator to its parent process')
 
 import numpy as np
 import trimesh
@@ -122,6 +123,15 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     for path in mesh_paths:
         pixels=[((p[0]+sizes[0]/2)/resolution,(p[1]+sizes[1]/2)/resolution) for p in path]
         draw.line(pixels,fill=255,width=2)
+    # Compute conservative primitive bounds once rather than asking the
+    # Gazebo ECM for every shape at every flood-fill cell in a large world.
+    from robot_lab_utils.occupancy_slice import primitive_slice_cells
+    for shape in projected:
+        cells=primitive_slice_cells(shape,sizes,resolution,height)
+        if cells is None:continue
+        x0,y0,x1,y1=cells
+        x0,y0=max(x0,0),max(y0,0);x1,y1=min(x1,width-1),min(y1,height_cells-1)
+        if x0<=x1 and y0<=y1:draw.rectangle((int(x0),int(y0),int(x1),int(y1)),fill=255)
     mask_path=destination.with_suffix('.collision-mask')
     mask_path.write_bytes(f'{width} {height_cells}\n'.encode()+mask.tobytes())
     root=ET.Element('sdf',version='1.7');world=ET.SubElement(root,'world',name='robot_lab_map_generation')
@@ -144,12 +154,13 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     plugin=ET.SubElement(world,'plugin',filename=str(library),name='ignition::gazebo::systems::OccupancyMapFromWorld')
     for name,value in [('map_resolution',resolution),('map_height',height),('map_size_x',sizes[0]),
                        ('map_size_y',sizes[1]),('init_robot_x',seed[0]),('init_robot_y',seed[1]),('output_path',output),
-                       ('collision_mask_path',mask_path)]:
+                       ('collision_mask_path',mask_path),('collision_mask_complete','true')]:
         ET.SubElement(plugin,name).text=str(value)
     ET.ElementTree(root).write(destination,encoding='unicode',xml_declaration=True)
     return {'source_world':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
             'mesh_sha256':mesh_files,'mesh_slice_paths':len(mesh_paths),
             'mesh_mask_cells':int(np.sum(np.asarray(mask)>0)),'collision_count':len(projected),
+            'projection_recipe':'complete-static-height-slice-v2',
             'heightfield_count':sum(1 for s in shapes if s['type']=='heightmap'),
             'resolution_m':resolution,'slice_height_m':height,'seed_xy':seed,'skipped_dynamic_actors':skipped,
             'engine':'robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask',
@@ -192,7 +203,9 @@ def main():
                     response=subprocess.run(['ign','service','-s','/gazebo_2Dmap_plugin/generate_map',
                         '--reqtype','ignition.msgs.Empty','--reptype','ignition.msgs.Empty','--timeout','1000','--req',''],
                         env=environment,capture_output=True,text=True,timeout=4)
-                    triggered=response.returncode==0
+                    # ign service exits 0 even when discovery/request times
+                    # out. Retry until the service actually acknowledges it.
+                    triggered=response.returncode==0 and 'timed out' not in (response.stdout+response.stderr).lower()
                 if output.with_suffix('.yaml').is_file() and output.with_suffix('.pgm').is_file():break
                 time.sleep(.5)
             if not output.with_suffix('.pgm').is_file():raise RuntimeError('Generation did not create a map; inspect '+str(run/'gazebo.log'))

@@ -112,6 +112,8 @@ void OccupancyMapFromWorld::Configure(
     }
     collisionMaskWidth_ = width;
     collisionMaskHeight_ = height;
+    collisionMaskComplete_ = _sdf->HasElement("collision_mask_complete") &&
+        _sdf->Get<bool>("collision_mask_complete");
   }
 
   // Get initial robot position
@@ -447,6 +449,7 @@ bool OccupancyMapFromWorld::WorldCellIntersection(
     unsigned int x = 0, y = 0, index = 0;
     World2Cell(cellCenter.X(), cellCenter.Y(), x, y);
     if (Cell2Index(x, y, index) && collisionMask_[index] != 0) {return true;}
+    if (collisionMaskComplete_) {return false;}
   }
   // Check AABB overlap with all collision geometries
   double halfCell = cellLength / 2.0;

@@ -15,6 +15,7 @@ from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 from ament_index_python.packages import get_package_share_directory
 from .process_control import stop_group
 from .drive_control import LinuxJoystick, RampDrive, limits_from_drive
+from robot_lab_utils.installed_assets import merge_installed_profiles
 
 try:
     from robot_lab_utils.mode_capability import (
@@ -394,8 +395,8 @@ class SimulationLauncherGui(tk.Tk):
         self.robots_config_path = os.path.join(self.robots_share, "config", "robots.yaml")
 
         self.mode_profiles = load_yaml(self.modes_config_path).get("modes", {})
-        self.map_profiles = load_yaml(self.maps_config_path).get("maps", {})
-        self.robot_profiles = load_yaml(self.robots_config_path).get("robots", {})
+        self.map_profiles = merge_installed_profiles(load_yaml(self.maps_config_path), 'maps').get('maps', {})
+        self.robot_profiles = merge_installed_profiles(load_yaml(self.robots_config_path), 'robots').get('robots', {})
 
         # Which simulators are actually usable on this host (installed
         # binaries / configured runtimes) — gates the Simulator combo.
@@ -2378,12 +2379,14 @@ class SimulationLauncherGui(tk.Tk):
 
     def _refresh_maps(self):
         """Reload maps, robots and algorithms from the config files."""
-        self.map_profiles = load_yaml(self.maps_config_path).get("maps", {})
-        self.robot_profiles = load_yaml(self.robots_config_path).get("robots", {})
+        self.map_profiles = merge_installed_profiles(load_yaml(self.maps_config_path), 'maps').get('maps', {})
+        self.robot_profiles = merge_installed_profiles(load_yaml(self.robots_config_path), 'robots').get('robots', {})
         self.algorithms = self._load_algorithms()
+        if COMPOSITION_AVAILABLE:
+            self.composition_registry = get_registry()
         # Update the dropdown values so new entries appear immediately
-        self.robot_combo.configure(values=sorted(self.robot_profiles.keys()))
-        self.map_combo.configure(values=sorted(self.map_profiles.keys()))
+        self.robot_combo.configure(values=[NONE_LABEL] + sorted(self.robot_profiles.keys()))
+        self.map_combo.configure(values=[NONE_LABEL] + sorted(self.map_profiles.keys()))
         self._refresh_slot_combos()
         self._update_from_selection()
         self.status_var.set("Refreshed catalogs")

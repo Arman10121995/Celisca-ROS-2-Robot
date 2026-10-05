@@ -376,6 +376,18 @@ class Registry:
             self.environments.load_file(env_catalog_file)
         else:
             self.environments.load_directory(self.config_dir / "environments")
+
+        from robot_lab_utils.installed_assets import installed_registry_entities
+        for kind, catalog in [('robots', self.robots), ('maps', self.environments)]:
+            for entity in installed_registry_entities(kind):
+                entity_id = entity['id']
+                valid, errors = validate_entity(catalog.entity_type, entity)
+                if not valid:
+                    catalog._errors.extend(['Installed extension: ' + error for error in errors])
+                elif entity_id in catalog.entities:
+                    catalog._errors.append('Installed extension duplicates existing ID: ' + entity_id)
+                else:
+                    catalog.entities[entity_id] = entity
         
         algo_catalog_file = self.config_dir / "algorithms.yaml"
         if algo_catalog_file.exists():

@@ -71,6 +71,7 @@ class Composition:
     simulator: str
     scenario_id: Optional[str] = None
     algorithm_ids: Dict[str, str] = field(default_factory=dict)
+    mode: Optional[str] = None
     
     def get_all_algorithm_ids(self) -> List[str]:
         """Get all algorithm IDs."""
@@ -220,6 +221,15 @@ def check_simulator_compatibility(
         result.errors.append(
             f"Environment '{environment['id']}' supports simulator(s) "
             f"{sorted(supported)} but the composition requests '{simulator}'"
+        )
+    robot_supported = robot.get('supported_simulators') or []
+    # Legacy catalogs use this field for the original authoring backend;
+    # installed extensions declare an explicit implemented import contract.
+    if 'extension' in robot.get('tags', []) and robot_supported and simulator not in robot_supported:
+        result.valid = False
+        result.errors.append(
+            f"Robot '{robot['id']}' supports simulator(s) {sorted(robot_supported)} "
+            f"but the composition requests '{simulator}'"
         )
 
     return result
@@ -507,8 +517,12 @@ def check_composition(
 
     # 2. Check simulator typing and robot-environment compatibility
     result.merge(check_simulator_compatibility(composition.simulator, robot, environment))
-    env_result = check_robot_environment_compatibility(robot, environment)
-    result.merge(env_result)
+    # Passive model display has no class-specific world mission. Keep the
+    # backend check, and retain class restrictions for algorithms/scenarios
+    # and every operational mode.
+    if composition.mode != 'display' or composition.scenario_id or algorithms:
+        env_result = check_robot_environment_compatibility(robot, environment)
+        result.merge(env_result)
     
     # 3. Check scenario requirements
     if scenario:

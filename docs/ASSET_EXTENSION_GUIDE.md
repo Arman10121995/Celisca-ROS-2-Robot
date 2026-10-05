@@ -16,11 +16,73 @@ builds and output remain on the SSD. Source `scripts/ssd_env.sh` first.
 | [URDFHub](https://www.urdfhub.com/#robots) | Eight featured upstream robot sources at inspection. A directory, not a downloadable simulation stack; inspect the linked vendor/ROS repositories. |
 | [MuJoCo Menagerie](https://github.com/google-deepmind/mujoco_menagerie/tree/4d038b3feae26ec82b46a4d586379114012a8ac7) / [robot_descriptions](https://github.com/robot-descriptions/robot_descriptions.py) | Broader complementary sources. Prefer verified physics assets and maintained upstream ROS descriptions to redundant mirrors. Audit licenses per model; MJCF availability does not prove URDF/USD control parity. |
 
-The [catalog snapshot](status/asset-sources-2026-10-05.yaml) drives the GUI
-**Asset Library**. Existing Launch profiles remain separate. Imported assets
-advance through cataloged → downloaded → import checked → actuated → measured
-mission; each step records its evidence. Do not add unactuated assets as fully
-working robots or enable all algorithms from a label.
+The [source snapshot](status/asset-sources-2026-10-05.yaml) records pinned
+upstreams. Agents install the extension assets on the SSD; operators use the
+normal **Launch** robot/map selectors and autofilled command. The **Installed
+Extensions** tab opens those same selections and shows remaining import repairs.
+It has no download controls.
+
+### Install and integrate assets (agent/bootstrap workflow)
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+python3 scripts/provision_extension_assets.py --kind all
+# Recheck existing pinned SSD sources without downloading:
+python3 scripts/provision_extension_assets.py --kind all --no-download
+```
+
+The installer stores source checkouts, dependency archives, derived geometry,
+actual occupancy maps and model checks under
+`$ROBOT_LAB_RUNTIME_ROOT/external_assets/`. Its `installed/` snapshots feed the
+GUI, bringup and common registry. Refresh Installed Assets or reopen the GUI
+after installation. Missing source/model files are filtered out; an extension
+cannot overwrite a legacy profile with the same ID. Checkouts reject source
+edits and wrong revisions rather than resetting them. Do not commit multi-GB
+source trees into this repository.
+
+Native Menagerie models use their actual MJCF in MuJoCo. Their ROS description
+exports the compiled rigid geometry, while measured native body transforms and
+hinge/slide states reach RViz. Display holds the authored pose passively;
+`display_hold:=false` runs native dynamics without a locomotion controller.
+Neither option provides a walking, trajectory or grasp controller. Native MJCF
+profiles are limited to MuJoCo; enabling another backend requires an actual
+plant and control adapter. Textures/skins and complete visual parity remain
+separate from rigid geometry checks.
+
+Robot-assets and official TurtleBot3/Husky URDF imports resolve mesh resources
+and retain source scales. Vendor Xacro runs against a source-backed SSD ament
+index, without installing vendor packages into the system. Husky's Display
+derivative disables its obsolete upstream control dependency and resolves its
+relative extras include; this does not provide a Husky driving controller.
+Fetch's obsolete Classic XML extensions and byte-identical duplicate nodes
+are repaired only in derived files. The malformed R2 gripper snapshot loses
+one dangling duplicate-parent joint referencing a missing ankle; the sensor,
+foot and their valid parent remain. Its exact removed joint is recorded. Eve uses the manufacturer's pinned BSD-licensed QB Hand
+meshes. Two upstream URDF fixtures contain no robot links and cannot launch.
+URDF profiles use existing backend import paths in Display; full cross-backend
+runtime qualification and control remain pending.
+
+World imports expand real model includes and archive dependencies, resolve
+mesh/material files, preserve original sources and record removed Classic
+plugins. Missing Office models are supplied from pinned OSRF ServiceSim;
+Factory uses the original Gazebo coke-can model. The importer chooses a free
+spawn from real geometry, prefers sufficiently large floor slabs, generates
+MJCF and invokes the actual Fortress occupancy plugin. The generated grid
+uses a complete conservative static slice mask and the actual Fortress plugin;
+primitives are projected once to avoid repeated geometry queries per cell.
+It represents the selected seed-connected height slice, not every room or floor.
+Robot navigation/flight missions and scripted actor behavior remain unqualified.
+
+The installation report records exact entries and repair reasons. Native import
+checks and source counts never imply control or mission acceptance. URDFHub
+is a directory of upstream sources: overlapping models are covered by the
+installed libraries, and official pinned TurtleBot3/Husky descriptions cover the remaining
+featured models. Equivalent models retain their actual source provenance. All 100 Fortress 6.18 example SDFs are downloaded from a pinned source;
+empty/default/shapes environment examples are installed. The other 97 are
+plugin/robot fixtures requiring behavior/resource review. Fuel environments
+need their own dependency imports and qualification.
 
 ## Generate a 2D grid
 
@@ -125,3 +187,36 @@ R5.7/R5.8/R5.9 are queued implementation tasks. Controllers, MoveIt scenes,
 grasp missions and cross-backend manipulation qualification are not delivered
 by the source catalog. Preserve the wheeled and legged workflows while adding
 these components.
+
+## Resume after this installation checkpoint
+
+Read [the exact installation evidence](status/evidence/extensions-integrated-2026-10-05/README.md)
+before changing the importer or enabling modes. Do not rerun source downloads
+or old PX4 relocation as a substitute for controller work.
+
+1. Preserve the named Panda GUI display/state screens. Extend runtime checks
+   to each model/backend, including valid joint-limit rest poses, mimic/tendon
+   coupling, steady hold, textures/skins, and shutdown diagnostics. Isaac Panda
+   feedback is measured, but stable authored-pose hold is not qualified.
+2. R5.7: claim the task, use native Panda's actual seven arm actuators and
+   joint limits, then expose a real ROS trajectory action with measured
+   feedback/cancel/Stop. Add GUI joint jog/home/plan/execute with single command
+   ownership. Use pinned upstream MoveIt2 configuration for Cartesian planning;
+   validate collisions and reachable/failed targets before adding a capability.
+3. R5.8: control the actual coupled Panda/Robotiq gripper, qualify limits and
+   contact force, then measure closure, object grasp/hold/release. A slider or
+   rendered hand is insufficient. Add dexterous-hand actuator/tendon adapters
+   only against their exact native model.
+4. R5.9: choose installed Fetch or another maintained mobile manipulator;
+   implement base/arm controllers and sensing, qualify base navigation, then
+   measured navigate/reach/grasp/transport/release with command arbitration.
+5. R6.6/R5.10: compare each imported world's visuals, collisions, floor
+   support, spawn, ceiling and map alignment in each backend. Record actual
+   wheeled routes and PX4 flights separately. A seed-connected height slice
+   can leave disconnected rooms unknown and does not encode all drop-offs.
+6. Coordinate R6.7 with its recorded owner; preserve its measured heightfield
+   conventions. Finish provider attribution, deterministic GUI generation,
+   Isaac terrain contacts and class-specific traversal.
+7. Resume the older R5.6 obstacle/mapping/reset matrix and algorithm/release
+   acceptance after those extension tasks. Update the ledger, checklist and
+   GUI Health with exact measured cells and retained negatives.

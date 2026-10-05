@@ -7,7 +7,6 @@ import json
 import os
 from pathlib import Path
 import signal
-import time
 
 from catalog_external_assets import load_source, manifest_path, digest
 

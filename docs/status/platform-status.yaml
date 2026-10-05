@@ -2,7 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-10-05"
-current_revision: "e69d1b2 plus recorded October 5 measurements and checklist/priority update; see containing commit and source hashes"
+current_revision: "cae43fd plus the installed-extension source stage; see containing commit and evidence source hashes"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. New catalog/world/terrain/manipulation extensions have priority per latest October 5 user instruction. Historical demonstration reports do not qualify missions; full release remains blocked."
@@ -82,6 +82,8 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
+  installed_extensions: "111 Display profiles and 17 worlds installed on SSD; actual Tk selection/autofill across every installed profile; named Panda display/state screens on four backends. No control/mission qualification from imports."
+  extension_software_checks: "772 fast / 123 integration / 7 physics / 43 Tk command tests; seven-package build and registry checks. See extensions-integrated-2026-10-05 evidence."
   mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
   fast_suite: "2026-10-05 at e69d1b2 plus recorded updates: Earlier scripts/test_fast.sh 756 passed, 2 skipped; registry cross-reference PASS. Fixed direct runner without inherited source/package paths: 755 passed, 2 skipped, one integration case deselected; that real xacro case passes separately. Focused world/heightfield/PCD/support guards 35 passed. Tk command/Drive suite 43 passed on its named source stage. Compact logs in docs/status/evidence/continuation-2026-10-05/."
   native_flight: "Named Gazebo Harmonic/nav_empty and nav_obstacle actual GUI altitude screens pass; nav_obstacle has 1295 independent body messages, +1.031/-1.018 m altitude, released hold drift 0.044/0.020 m, land idle/disarmed and actual rotor states. All-map selection is software coverage, not all-map flight."
@@ -340,6 +342,7 @@ tasks:
           - "scripts/test_fast.sh"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/extensions-2026-10-05/xacro-final.log: all xacro robots expand; native PX4 explicitly validates its adapter instead of requiring an absent xacro. 26 focused integration checks pass. CI 46d9a0e failed that old assumption after passing build/fast/physics; exact next CI revision remains to be checked."
           - "docs/status/evidence/continuation-2026-10-05/direct-fast-final.log: direct runner with inherited source/package paths removed: 755 passed, 2 skipped, 1 integration case deselected; real mecanum xacro case passes separately with sourced install."
           - "scripts/test_tiers.sh (tiered runner: fast/integration/physics/all with explicit manifests; preserves host PYTHONPATH so ROS-capable runs exercise launch/adapter checks)"
           - "docs/TESTING.md (tier taxonomy: unit hermetic no-ROS-graph; integration needs sourced ROS; physics optional engines explicit skips;)"
@@ -561,15 +564,17 @@ tasks:
           - "catalog counts: scenarios.yaml 23 entries total; experiments.yaml 20 entries total; both parse cleanly as YAML"
         next_action: "Complete — R3.5 done (five benchmark scenarios + five benchmark experiments authored in the registry catalogs with state_estimation task_type added to schema; all resolver/composition/selector tests pass). Advance to R3.4 (connect GUI to the common resolver) or R4.1 (scenario lifecycle and truthful outcomes to make the cataloged scenarios executable)."
       R3.6:
-        title: "Import and browse external robot/world asset catalogs"
-        state: "active"
+        title: "Install external assets into normal Launch selectors"
+        state: "partial"
         owner: "codex"
         depends_on: ["R3.1", "R3.4"]
-        scope_paths: ["src/robot_lab_gui/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md", "scripts/catalog_external_assets.py"]
-        active_scope: "2026-10-05 user requests robot-assets, URDFHub and broader catalogs. Add source-pinned catalog browsing; distinguish downloadable assets from installed runnable profiles and measured control."
+        scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md"]
+        active_scope: "2026-10-05 latest user correction: codex downloads and integrates external robots/worlds into the existing Launch selectors with automatic commands. Remove GUI download actions. Preserve actual native model import checks; enable controller/mission modes only with implemented support. Coordinate the separately owned R6.7 terrain lane."
+        result: "111 Display profiles installed on SSD (59 native MJCF / 48 robot-assets URDF variants/fragments / 4 official TurtleBot3-Husky descriptions); two linkless upstream fixtures excluded. Normal Launch, autofill and Installed Extensions shortcut measured. Native Panda and URDF Panda have exact live display/state reports; other model/backend/control/license checks remain."
         acceptance_ref: "ROADMAP.md"
-        next_action: "New-extension priority: implement source-pinned SSD download/import staging and GUI actions. Preserve catalog-only status until complete dependencies, per-model licenses, display and measured control pass. Coordinate with the cline-agent terrain lane."
+        next_action: "Finish remaining source/license/import batches and four-backend display qualification; advance arm/hand control as R5.7/R5.8. Preserve directory entries requiring their own upstream model/commit pin and coordinate active R6.7 terrain work."
         evidence:
+          - "docs/status/evidence/extensions-integrated-2026-10-05/README.md: actual imports, GUI reports, source pins, tests and preserved failures; no mission qualification from counts."
           - "docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed and passing screens; full project remains partial."
   R4:
     title: "Measured reference experiment"
@@ -1019,7 +1024,7 @@ tasks:
         state: "partial"
         owner: "codex"
         depends_on: ["R6.1", "R3.4"]
-        scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_gui/", "scripts/", "docs/ASSET_EXTENSION_GUIDE.md"]
+        scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/occupancy_slice.py", "src/robot_lab_gui/", "scripts/", "docs/ASSET_EXTENSION_GUIDE.md"]
         active_scope: "2026-10-05 user requests robotics-upo 2D-map generator button. Pin the Fortress branch, keep generated maps/logs on SSD, preserve existing maps and report geometry limitations."
         acceptance_ref: "ROADMAP.md"
         next_action: "New-extension priority: GUI Generate/Stop passes with owned Gazebo child cleanup; finish multi-region/rotated/heightfield projection checks, review origin/scale/obstacle alignment, then register generated assets with actual Nav2 routes. Preserve existing maps."
@@ -1028,12 +1033,15 @@ tasks:
           - "docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed and passing screens; full project remains partial."
       R6.6:
         title: "External world library and Gazebo example imports"
-        state: "queued"
-        owner: "unassigned"
+        state: "partial"
+        owner: "codex"
         depends_on: ["R3.6", "R6.5"]
-        scope_paths: ["src/robot_lab_maps/", "src/robot_lab_gui/", "docs/ASSET_EXTENSION_GUIDE.md"]
+        scope_paths: ["src/robot_lab_maps/", "src/robot_lab_bringup/config/sim_maps.yaml", "src/robot_lab/robot_lab_registry/config/environments.yaml", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "docs/ASSET_EXTENSION_GUIDE.md"]
         acceptance_ref: "ROADMAP.md"
         next_action: "Inventory mlherd worlds, model-only environments, packaged Gazebo examples and licensed Fuel assets. Audit model/archive dependencies, migrate Classic plugins and measure display/collision/spawn in all four backends."
+        result: "All 14 dataset worlds and three Fortress environment examples installed with real geometry/dependencies, derived MJCF and actual occupancy files. All 100 example SDFs downloaded; 97 plugin/robot fixtures remain for review. Dynamic plugins, full backend/visual parity and robot missions unqualified."
+        evidence:
+          - "docs/status/evidence/extensions-integrated-2026-10-05/README.md"
       R6.7:
         title: "GUI terrain generation with four-backend conversion"
         state: "active"

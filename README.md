@@ -30,13 +30,17 @@ obstacle routes and selected localization/mapping/reset repairs. See the
 and [flight guide](docs/tutorials/px4_x500.md). Full platform qualification
 remains partial; these results apply to the named recorded cells.
 
-New **Worlds** and **Asset Library** tabs provide actual occupancy generation
-and inspected upstream source catalogs. The generator produces PGM/YAML from
-primitive and furnished Celisca collision worlds. Full external asset imports,
-terrain conversion for four backends, and manipulator/hand/mobile-manipulator
-control are implementation tasks in the updated [roadmap](ROADMAP.md) and
-[extension guide](docs/ASSET_EXTENSION_GUIDE.md); catalog entries are not
-installed commandable robots.
+**Worlds** generates real occupancy PGM/YAML files. **Installed Extensions**
+opens downloaded assets in the normal Launch selectors with commands filled
+in automatically; it has no download buttons. On this SSD installation there
+are **111 Display profiles** (59 native Menagerie MJCF models, 48 robot-assets
+URDF variants/fragments, and four official TurtleBot3/Husky descriptions), **14 imported dataset worlds**, and three packaged
+Gazebo environment examples. Their source, dependency and import checks are
+recorded separately from robot missions. See the
+[installation evidence](docs/status/evidence/extensions-integrated-2026-10-05/README.md).
+Cross-backend qualification, remaining vendor/example imports, manipulation,
+grasp and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
+[extension guide](docs/ASSET_EXTENSION_GUIDE.md).
 
 ## Start here
 
@@ -68,9 +72,9 @@ source tests, plus **5 passing, 1 deselected** selected backend tests. That audi
 is retained as historical evidence at `dff388f`; it is not a current platform
 qualification badge.
 
-October 5 verification includes **755 passing direct fast tests, two skipped,
+October 5 verification includes **772 passing direct fast tests, two skipped,
 one integration case deselected**, that real xacro case passing separately,
-registry validation, **35 passing focused tests**, **43 passing Tk command/Drive tests** and
+registry validation, **123 integration and 7 physics tests**, **35 earlier focused tests**, **43 passing Tk command/Drive tests** and
 scoped source, build and real simulator checks. Exact test totals, source
 stages, successful and failed robot trials are recorded in the
 [continuation evidence](docs/status/evidence/continuation-2026-10-05/README.md).

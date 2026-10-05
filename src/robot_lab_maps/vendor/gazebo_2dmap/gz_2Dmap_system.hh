@@ -95,6 +95,7 @@ private:
   std::vector<uint8_t> collisionMask_;
   unsigned int collisionMaskWidth_{0};
   unsigned int collisionMaskHeight_{0};
+  bool collisionMaskComplete_{false};
   /// \brief Compute world bounding box from all models
   /// \param[in] _ecm Entity component manager
   /// \param[out] minX Minimum x coordinate

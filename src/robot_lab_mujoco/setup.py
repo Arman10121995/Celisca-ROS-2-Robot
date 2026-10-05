@@ -21,6 +21,7 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
+            "native_asset_display = robot_lab_mujoco.native_asset_display:main",
             "mujoco_spawner = robot_lab_mujoco.mujoco_spawner:main",
             "sensor_bridge = robot_lab_mujoco.sensor_bridge:main",
         ],
