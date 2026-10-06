@@ -28,7 +28,7 @@ asset listing is separate from an installed robot with working control.
 | Task | Scope | Current boundary |
 |---|---|---|
 | R3.6 | Robot-assets, URDFHub and broader robot/world source catalogs | Pinned SSD installation / normal Launch selectors; cross-backend display, licenses and control qualification remain |
-| R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Native Panda joint/Home/Stop/action controls measured on MuJoCo; Cartesian planning, grasp/contact, other backends and combined missions remain |
+| R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Native Panda arm and bounded-force Hand controls measured on MuJoCo, including physical cube lift/hold/release and interruption/reset; Cartesian planning, other hands/backends and mobile missions remain |
 | R5.10 | PX4 in every selected installed world | All world selections preserved; native `nav_empty` and `nav_obstacle` flight screens pass; full spawn/ceiling matrix remains |
 | R6.5 | Generate 2D grids for selected collision worlds | Actual primitive and both furnished Celisca exports; seed-connected projection checked; reviewed registration/Nav2 checks remain |
 | R6.6 | External worlds and packaged Gazebo examples | Catalog / resource / Classic-plugin migration and four-backend import work |
@@ -762,7 +762,7 @@ Dependencies: `R3.6`, `R2.2`, `R3.4`.
 - Implement: Start with a licensed Panda/UR5 source; add bounded joint jogging, home, Stop, trajectory actions, actual joint state/TF and robot-specific gains. Add MoveIt 2 planning and Servo Cartesian jogging with a real planning scene, limits and cancellation. Robot GUI selections resolve to executable backend-specific controllers.
 - Acceptance: Actual arm motion tracks joint and Cartesian targets; limit/collision checks, cancel/Stop and publisher loss pass. Repeat reach and pick/place with measured object/arm state on Gazebo, MuJoCo, PyBullet and Isaac. A URDF view is not control.
 
-- Partial evidence (2026-10-05): the native Menagerie Panda uses its actual seven MuJoCo actuators. GUI joint jogging/Home/Stop, real position-trajectory actions, model-limit/velocity/joint rejection, cancellation and 0.8 s heartbeat loss are measured in `dataset_room2`; Home error is below 0.009 rad. See [control evidence](docs/status/evidence/panda-turtlebot4-2026-10-05/README.md) and [tutorial](docs/tutorials/panda_arm.md). MoveIt/Cartesian planning, predictive/self-collision checks, grasp, additional maps and the other three arm backends remain open.
+- Partial evidence (2026-10-05/06): the native Menagerie Panda uses its actual seven MuJoCo actuators. GUI joint jogging/Home/Stop, real position-trajectory actions, model-limit/velocity/joint rejection, cancellation and 0.8 s heartbeat loss are measured in `dataset_room2`; Home error is below 0.009 rad. The October 6 `nav_empty` fixture adds a real coupled-finger cube lift/hold/release and reset. See [control evidence](docs/status/evidence/panda-turtlebot4-2026-10-05/README.md), [grasp evidence](docs/status/evidence/panda-gripper-2026-10-06/README.md) and [tutorial](docs/tutorials/panda_arm.md). MoveIt/Cartesian planning, predictive/self-collision checks, arbitrary repeated pick/place, additional maps and the other three arm backends remain open.
 
 ### R5.8 — Robot hands and grippers
 
@@ -770,6 +770,8 @@ Dependencies: `R3.6`, `R5.7`.
 
 - Implement: Import licensed simple gripper and dexterous hand models; preserve mimic joints, tendon/coupling laws, force/position limits and contact geometry. GUI supports open/close, individual joint/pose control, Stop and robot-specific presets.
 - Acceptance: Measured articulated motion and contact-based grasp/release for a documented object; effort/force limits, cancellation and reset pass on every advertised backend. Visual attachment without grasp forces is not a hand mission.
+
+- Partial evidence (2026-10-06): native Panda/MuJoCo/`nav_empty` uses the original finger tendon, equality and collision geometry through GripperCommand and the actual GUI Hand tab. A 3 cm, 50 g cube closes at 29.94 mm opening with a 0.5 N per-finger actuator bound, lifts 7.57 cm, holds for two simulation seconds, and falls under gravity on release. Invalid commands, Cancel/Stop, heartbeat loss at 0.808679 wall seconds and GUI reset during closing pass. [Evidence](docs/status/evidence/panda-gripper-2026-10-06/README.md) names exact source and executed installed modules. Other hands, objects, repeated missions and backends remain open.
 
 ### R5.9 — Mobile manipulators
 

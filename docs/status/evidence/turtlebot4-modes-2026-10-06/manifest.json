@@ -1,0 +1,1464 @@
+{
+  "runtime_root": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4",
+  "source_baseline": "531c542d441bf8dc6d38e438bdc8c2705bced4e1",
+  "records": [
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "loc",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/live-gui-output.log",
+          "sha256": "22e34b190ae6d9444e4e92bded0d69020629c3f4bf9c291b0bc23a2aedae2172",
+          "bytes": 43216
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/source-manifest.json",
+          "sha256": "13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/gui-output.log",
+          "sha256": "cba1478d84fe0bc2d0a11e373a2539b0a92520f9f7f2fc17a4d8a11390de1081",
+          "bytes": 44151
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/report.json",
+          "sha256": "18d6c15678f0dc23ffefbec93233af3552fce9abf7f4474d5c0a4dcd22874994",
+          "bytes": 5774
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/check.log",
+          "sha256": "89bae6c1a4fafc5c0eb601a7658057fcbcc3a3cf1b697e61db7b21f52814bf19",
+          "bytes": 3332
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/workflow.trace.json",
+          "sha256": "99f570e69eaa67b0593c126892c4b4a084f4e0479d7fcdf304b80ae5204aa16e",
+          "bytes": 228179
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/workflow.json",
+          "sha256": "4017f9271a3198e7683fcfee4c0cf5aace82bf90e4e63a64169c5639c53f4660",
+          "bytes": 4166
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-loc-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/live-gui-output.log",
+          "sha256": "1ae2cf5a8556d50c3288830d6511e09a40c14616afee90b23a79206ce9f78d61",
+          "bytes": 34097
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/saved-map.pgm",
+          "sha256": "a1dff5f02cc31db0783d76fa8fbb132ef2b28082dafa4ba563fd1d999edb8e68",
+          "bytes": 58579
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/source-manifest.json",
+          "sha256": "13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/saved-map.yaml",
+          "sha256": "b54f609ad272bf9e7ba45deb02db2d054629526adf8356d75cbaafd2a410e4b3",
+          "bytes": 127
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/workflow.map.npz",
+          "sha256": "a3b164e309539f1c78725487be5831c39fb5ab35814ca13d1e0efbea2ea5d5e6",
+          "bytes": 7414
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/gui-output.log",
+          "sha256": "8f0893ec437c724051e80480556ef4deef895615ac6c12f03bf481cbcd6ceae8",
+          "bytes": 41539
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/report.json",
+          "sha256": "c45c7f67301a10a4cf19a134e46c1ec2a19a45d12c7b068402928fb005fe9c02",
+          "bytes": 11658
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/check.log",
+          "sha256": "ff194afd9bfd391f0e3881c250e706a0638b60a4b8e11a0f778eaf44c20b2df9",
+          "bytes": 6763
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/workflow.trace.json",
+          "sha256": "3b8b7b3f4bd5825167927d83581233cc437af15547b54a675b089c720c10af35",
+          "bytes": 228025
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/workflow.json",
+          "sha256": "86c20830463a28dfa08f0a7e700a4be6f59c0f59f3a36a1913a2ba1956293b48",
+          "bytes": 9179
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-slam-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "3d_slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/live-gui-output.log",
+          "sha256": "e17a81a66938fae93d0e57a88a9549dd3e10309eb10b6cfa5cbd730787bee7ee",
+          "bytes": 56510
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/saved-map.pcd",
+          "sha256": "9fb9b600ef2fd153592dc2ce84a0c695a57340f48d51dacfb79d0ee85c7b5fda",
+          "bytes": 239110
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/source-manifest.json",
+          "sha256": "13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/gui-output.log",
+          "sha256": "9b114eda6a7cc88c8a6bf0fb9a829045ceb6e1d624156d9d88d20e5245b33bfc",
+          "bytes": 67085
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/report.json",
+          "sha256": "93edaa0a09ffd2e3fac3e3612058fe640d1a198d186c8c33c5c71f5fe2734a63",
+          "bytes": 6881
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/saved-map.db",
+          "sha256": "7237f866dba4adfb4867b45afd382b653ca83330d3e0df464fa36454e8beca64",
+          "bytes": 532480
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/check.log",
+          "sha256": "c439e4590b26b0accd74536c712c7fdb7dfd2e00a6f43ed0791c206ea437e513",
+          "bytes": 4011
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/workflow.trace.json",
+          "sha256": "6752df968f9d611001496cb4ffd385239df4a5535885f2aed3e5233f875d5403",
+          "bytes": 221479
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/workflow.json",
+          "sha256": "d48aeb903437a422ef6fbcca0cbb4004afbcc12e6157aedf88eb206fa75883bb",
+          "bytes": 5049
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "nav",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/live-gui-output.log",
+          "sha256": "5fa188563ab46c523ab46d10b3c0cd1b8714cb384257d65cdc5ad84ab3b07205",
+          "bytes": 54299
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/navigation.json",
+          "sha256": "565a4149026a22277cc4b1916afd0c65da14e76ddcb01f6814dd9629f9f2b07b",
+          "bytes": 1688
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/source-manifest.json",
+          "sha256": "13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/gui-output.log",
+          "sha256": "d3c61f14c9daae0f3f1dafe42ff7e16addfe873b1c48c25f1397a9745756a740",
+          "bytes": 68318
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/report.json",
+          "sha256": "862cf6eac411b2743d8ae3f8552e0a8261a7266f0698e12990b98b90c680ef44",
+          "bytes": 3790
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/navigation.trace.json",
+          "sha256": "31f5cd36615407f26d2eea97385d4bc4ca96222e57256b40c8d09a938f90a557",
+          "bytes": 94177
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/check.log",
+          "sha256": "4f0309df368ea5fedd550acc1d575301633aa09858f9fb0ec21a639dcae58031",
+          "bytes": 1466
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-nav-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "loc",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/live-gui-output.log",
+          "sha256": "24a17d95d9ab8da8bf252dae56d768eb42254b3ab60d90b1b088b8eaf6ea2c3a",
+          "bytes": 16529
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/source-manifest.json",
+          "sha256": "45edece1752f64fd457c208b27289c3a8940e7e0b0f16ccffe5e3954546fb8cb",
+          "bytes": 30697
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/gui-output.log",
+          "sha256": "fb60eb80d3eefd8cf010b81aeda7b68a9d07b02f74fa2c6e30eacd471f8868f4",
+          "bytes": 22823
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/report.json",
+          "sha256": "cc8bb79de83f92868bec3c94ecd7e095e457e7b12f92c2d3edceee5d3b18dd68",
+          "bytes": 5841
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/check.log",
+          "sha256": "f2ab5f3f6f3a314b0c4c29f099a081df21cbf628a43266646eb44403bade9b46",
+          "bytes": 3399
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/workflow.trace.json",
+          "sha256": "602870634f18041931a0d1ab1fab365d76d15c9928ca688ed6c72e8ef31b45dd",
+          "bytes": 210629
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/workflow.json",
+          "sha256": "93c6a3563db26edc016619cdc7a6f0b21f516610cc6842a45560ed84a255ea5a",
+          "bytes": 4233
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-loc-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/live-gui-output.log",
+          "sha256": "20eb7a198a07dfef8269b15d7bbe5fdf4ce3ead85176ea5a6fac9a164ebec250",
+          "bytes": 13839
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/saved-map.pgm",
+          "sha256": "07a397b320217809585bfff665ada357351f11d59be44e97093c3de237458835",
+          "bytes": 57615
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/source-manifest.json",
+          "sha256": "79e02e449f5c635337c9574fd2d5de61763a0d46f913dd9fd264b76924c643fe",
+          "bytes": 30825
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/saved-map.yaml",
+          "sha256": "5ea42d4e7439967c648a35bd7092ddfc6a083bcb3e8d05dfaef6ab040d1972fd",
+          "bytes": 124
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/workflow.map.npz",
+          "sha256": "1a6be3ec89f17b9bdfb36569c8435d2d0278ed40069d96a70d33945eb2f8326f",
+          "bytes": 5515
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/gui-output.log",
+          "sha256": "c47f73e0e28d66f3af8a1c2d73d6a7fb8732fee2ab71a39b00b0970b4e53a079",
+          "bytes": 19910
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/report.json",
+          "sha256": "1c8562e08cc40d87383570f9719cb4edd7562f6d5f9c4ffc6484d283b10fad63",
+          "bytes": 23109
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/check.log",
+          "sha256": "57d30621f820d66f48210e9721806aa0e0192fe33fee4210c26a1d1ccdd0ed03",
+          "bytes": 13819
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/workflow.trace.json",
+          "sha256": "721569e4102164e51ada60497f9874e91827fce4a709873e78df91f49f0a4c00",
+          "bytes": 212100
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/workflow.json",
+          "sha256": "de2b6de27142e55a67c01f4162d66cf75ef781446c07ff17d5c7dd003b0c54e3",
+          "bytes": 19493
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-slam-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "3d_slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/live-gui-output.log",
+          "sha256": "8fc8532365f71e2504e449de5a9e65acf26152a8afc96b7118c7d99af5063b83",
+          "bytes": 36885
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/saved-map.pcd",
+          "sha256": "b643ebe3529ac6fc2841bd58750e01721f59f6bc09e7d2b3121ff0a00913fa41",
+          "bytes": 377341
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/source-manifest.json",
+          "sha256": "0bfa33fe3833fa6d89cf17a59f0cb2dd7ca4b56a74334c8c5fe4d67478245384",
+          "bytes": 30825
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/gui-output.log",
+          "sha256": "c3a32572e117aac8301ab9fa1dbe8eeefaa2f391e10870721391cf2faa602094",
+          "bytes": 44046
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/report.json",
+          "sha256": "92f448d92f1e85391b59e39107b96ce87084207e45dd6ab986ed3e721cfa8b46",
+          "bytes": 6953
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/saved-map.db",
+          "sha256": "3bc26afcaaf3dadf8ae83c37c7a15f490e4b2ef1b98a9ddbf15f7b39e4bb2f0a",
+          "bytes": 638976
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/check.log",
+          "sha256": "3f4227b86710ce54359f5a2b954598996d0099d480c31764d68ad9e44c7a3fd8",
+          "bytes": 4077
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/workflow.trace.json",
+          "sha256": "ee66002ec7ace45fd8d02415afa04a02ab3bb03bbcbeddaf6c3700423a7d94f9",
+          "bytes": 202864
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/workflow.json",
+          "sha256": "58436147c8aad37338d87e7284bbd5e0183147f087239feee62b7eb231dc14eb",
+          "bytes": 5119
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "nav",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/live-gui-output.log",
+          "sha256": "75e23e121c5f1c81f57357835ef8790f6ec5e3fee6fbddf8a33754f1f5dc9cee",
+          "bytes": 40325
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/navigation.json",
+          "sha256": "ed817724d099b6e5f20d4cba59ea2f242b7efb600f826a67858eb4141d325c38",
+          "bytes": 1685
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/source-manifest.json",
+          "sha256": "3f23ce2c3eb3dbbc2b291275925c5d7364c77765a12aaddc9459ee084b9c5fb4",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/gui-output.log",
+          "sha256": "c755c016e015f18e6061f8d53715eb6802f417f4db299827a7252c9ee5222b8e",
+          "bytes": 53032
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/report.json",
+          "sha256": "4c5a4b3f365e9da8bfcc0d50804a6cabbc5466c85067eda1da2f54816d4f9e82",
+          "bytes": 3787
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/navigation.trace.json",
+          "sha256": "753368dd5631dc3db517c4d618b8a7b9ee9a18ff7bc73bbfebad883f897d1a80",
+          "bytes": 87389
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/check.log",
+          "sha256": "adf1a724bf0e8d4da76555e1e318a50a1038d2c63bb3a2f7c3f9ed419f9cc5d0",
+          "bytes": 1463
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "nav",
+      "map": "nav_obstacle",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/live-gui-output.log",
+          "sha256": "e3fc6940f26a02ff77c62ae086225bad9d312b20f3f4be35346e23e5580359c8",
+          "bytes": 61040
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/navigation.json",
+          "sha256": "1d2b597fa890e76d9f742d660abd325888ef2d477eab052814b247285923e13d",
+          "bytes": 1734
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/source-manifest.json",
+          "sha256": "3f23ce2c3eb3dbbc2b291275925c5d7364c77765a12aaddc9459ee084b9c5fb4",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/gui-output.log",
+          "sha256": "165a71adf3c1c017e457a9a0638574166b9ff6e412c08d5a6e5b4740810072b5",
+          "bytes": 63712
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/report.json",
+          "sha256": "054af9a3e3fe1630c23ec968be81b8945fc9e0d555f993ba6f04a3512df819fb",
+          "bytes": 3920
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/navigation.trace.json",
+          "sha256": "b405d69c94e6c7bcf00d0d0d9f82fbd00109efc268ed0ba74f822ac89e73e83e",
+          "bytes": 246315
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/check.log",
+          "sha256": "8a7fd620777df760aaaefd6f20db143f97c333c8927834b1d3f6ef2943aba115",
+          "bytes": 1506
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "loc",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/live-gui-output.log",
+          "sha256": "a5a9e3471b0c8612f41d9ffa8c937648f56768dda0f05371fbc73a62e94ccab8",
+          "bytes": 21779
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/source-manifest.json",
+          "sha256": "13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/gui-output.log",
+          "sha256": "e32a612e445a7058ba7431de401f1c630fa9cd64e36f1c3f840905c9c12b6ff8",
+          "bytes": 28160
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/report.json",
+          "sha256": "2142065b1abe1acfae23ae10a4669e903df03a1b30dfd8b056f1eac000dd2036",
+          "bytes": 5863
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/check.log",
+          "sha256": "a44e05bedd67b59782f47cff902b702de1b8dedf1512644a3b6566db539e1214",
+          "bytes": 3415
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/workflow.trace.json",
+          "sha256": "735e7f771cab6f67d61bb23be8ca9f0c8fd05daf0404dc38b8836fcae8eb7980",
+          "bytes": 229237
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/workflow.json",
+          "sha256": "6bf86090635e3192ffc6dd2e4d1c1650d3638f947df9f12ed1e4e32fe7833fbc",
+          "bytes": 4249
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-loc-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/producer.py",
+          "sha256": "3101c5720a4903eb214629a429e2a9e7700c20aca09eba4e4edce5abd558afb9",
+          "bytes": 6340
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/saved-map.pgm",
+          "sha256": "85ebe34a895e54a9c5dfadfa741eae43e848102d3599b4ddb66328fe343810c5",
+          "bytes": 57615
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/source-manifest.json",
+          "sha256": "f5e7ae49230f37b334e9ced2d042730f69b973eb7fbd2cca68bd7ca5ecc2dc43",
+          "bytes": 30300
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/saved-map.yaml",
+          "sha256": "12f52646f76f1b72190e9c095a16f2658b3f478eb542575ede0dc8ff89c72296",
+          "bytes": 121
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/workflow.map.npz",
+          "sha256": "0d37db34762ee112a8caafda659481473b70b3b455210ab3de08a6e9239f7e5b",
+          "bytes": 5917
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/gui-output.log",
+          "sha256": "9b04b443d17afd595931daeaa3b41206b3d65e2eb715d22f596ee784db0437a8",
+          "bytes": 25862
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/report.json",
+          "sha256": "d214b0ba06c4d6db4c1e7ec0691028b294b8d98bda6498af2bd6ffaf7973aa68",
+          "bytes": 17341
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/check.log",
+          "sha256": "3b3fbba5998525034f7ee000f93992b2f791ed15e038c79537ff26626aaee932",
+          "bytes": 10352
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/workflow.trace.json",
+          "sha256": "0ec7707be07d366168c311e591506f6a59528e98df684a4f92a7b7c5bcd0b971",
+          "bytes": 230551
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/workflow.json",
+          "sha256": "1a98f166ebecf04708024f21f994761668939dc3d87b81e01eb57f5d32a62e97",
+          "bytes": 14328
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-slam-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "3d_slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/producer.py",
+          "sha256": "3101c5720a4903eb214629a429e2a9e7700c20aca09eba4e4edce5abd558afb9",
+          "bytes": 6340
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/saved-map.pcd",
+          "sha256": "4fc25c3f2beb60f821cb7e643541356ef60e2043cd97a0e1e5dfd15c54985227",
+          "bytes": 370464
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/source-manifest.json",
+          "sha256": "f5e7ae49230f37b334e9ced2d042730f69b973eb7fbd2cca68bd7ca5ecc2dc43",
+          "bytes": 30300
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/gui-output.log",
+          "sha256": "7fe6bc273a39e6405f4541594a76e05bce9558f4d1a494ade969b4b7c8daed73",
+          "bytes": 51167
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/report.json",
+          "sha256": "82ad0919bc44cfe8330f6098e426988f6f1bf38970a2b2d199510e21c78847c3",
+          "bytes": 6979
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/saved-map.db",
+          "sha256": "c5dc6117944a60166c04e410c83efce9cef83837af9cc248912b2a9c27db26aa",
+          "bytes": 618496
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/check.log",
+          "sha256": "d055b23b7e4f34775aad977c691a8ce1aacd8387492b9392ddbc42493ff01b96",
+          "bytes": 4097
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/workflow.trace.json",
+          "sha256": "596be0be8fb30e765ea15a5725e0bf0b72fe3ebe9ccd0011f70efcfddc51dedc",
+          "bytes": 221999
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/workflow.json",
+          "sha256": "bf51cdbba9622d782933c7e4b9695e50b09e4c20bbe67157a955f70580684958",
+          "bytes": 5147
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "nav",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/live-gui-output.log",
+          "sha256": "855a487d9e1c8f6dc1f3c66858304e4add75f3a8c1ce97191925dd5400d30069",
+          "bytes": 41877
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/navigation.json",
+          "sha256": "51b4e18a6718dee143971f4b7e8303030c908b63115c5c4e3913521d5c3706fe",
+          "bytes": 1693
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/source-manifest.json",
+          "sha256": "49fe972081bd102db19a562854282b51b8b2e25cf5f72fa54db71e3a4d14f211",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/gui-output.log",
+          "sha256": "206227de494fdb131f632066e045d543d654f034aa9fc1e68d8c0841a4825b1b",
+          "bytes": 54624
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/report.json",
+          "sha256": "1ad315a8d78b52d3c95e66c9ed0222a32f939610548ca2a279357642677f78da",
+          "bytes": 3801
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/navigation.trace.json",
+          "sha256": "9d531dfb3671cdcbc30f05c4c6c8cfaa25f950c1da65d74d01138bafd3e55398",
+          "bytes": 97519
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/check.log",
+          "sha256": "489011f8b940c4948c8eb85966a135dee7a4e50179af39abe1173f93f95863f3",
+          "bytes": 1471
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_empty/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "nav",
+      "map": "nav_obstacle",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/live-gui-output.log",
+          "sha256": "cbfe586ecc8729e867405ac86b1710bc67cf93aea9cc6a3e09c6b2c318981a58",
+          "bytes": 50580
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/navigation.json",
+          "sha256": "38a48a19431bd1718acfde96a557757e46191dbcaf2a447cd3efe94b4b86011b",
+          "bytes": 1735
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/source-manifest.json",
+          "sha256": "49fe972081bd102db19a562854282b51b8b2e25cf5f72fa54db71e3a4d14f211",
+          "bytes": 30957
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/gui-output.log",
+          "sha256": "23894c92ee669a1c3407144b22ee8e9beef90e1cafb9cbfe920cca83cf832b51",
+          "bytes": 63702
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/report.json",
+          "sha256": "ae01ee19000c7d112ec3ab9942f7e4defb802837157eb62d9fec49c62f236afe",
+          "bytes": 3927
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/navigation.trace.json",
+          "sha256": "1a54d386b7785d9db92eadbeb6afcadf87b99a18692c1e53b38a138d6fb7d8d2",
+          "bytes": 280148
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/check.log",
+          "sha256": "477085014a17e72231dbad61963f689739602f8ead30733ce676c38312412149",
+          "bytes": 1507
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "loc",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/live-gui-output.log",
+          "sha256": "fbe6466c27ecb30579fb62405f53b112fc80aa32afcd898dca570ac96e0c33ff",
+          "bytes": 15047
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/source-manifest.json",
+          "sha256": "d54f784f9ca7d0088a33c19a2e9ad591bba639c7645df32432485bff6f8522f1",
+          "bytes": 30813
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/gui-output.log",
+          "sha256": "78fe71c2a8b679b6896aae40af00cb66dc2c19c0418067d6de69134a31cd891b",
+          "bytes": 21341
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/report.json",
+          "sha256": "5a33842745771b53891699005cf5ba55edd5f4b02af309a13af073617ccb03e1",
+          "bytes": 5819
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/check.log",
+          "sha256": "6a3d7826642b9837d66e10024955a3e4bfd87e18dc3ffe622f0fa1be4db8717e",
+          "bytes": 3389
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/workflow.trace.json",
+          "sha256": "85b7ea5df2f8768eb40c3e10c5d8e8a52ae4126728041d25c4ff321a5d8aa3a2",
+          "bytes": 210902
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/workflow.json",
+          "sha256": "e75786d3f59dddefb3ff37d7ca3c9cd957c4b05fd226da151c6aa89b62523e6f",
+          "bytes": 4223
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-loc-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/live-gui-output.log",
+          "sha256": "68a67e7eba738cde504989f481ff4add6f6facf727708969ea494aca3bcd41fd",
+          "bytes": 12642
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/saved-map.pgm",
+          "sha256": "ed4f606da207ac604bede77a4212e729e8a0aa58ffe124e0dc9cb4934b6d53a9",
+          "bytes": 57615
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/source-manifest.json",
+          "sha256": "d54f784f9ca7d0088a33c19a2e9ad591bba639c7645df32432485bff6f8522f1",
+          "bytes": 30813
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/saved-map.yaml",
+          "sha256": "5ea42d4e7439967c648a35bd7092ddfc6a083bcb3e8d05dfaef6ab040d1972fd",
+          "bytes": 124
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.map.npz",
+          "sha256": "d0601da0e562ee95513a934c2d5f6050cc73c3083ad843dcdce416e8e7edf667",
+          "bytes": 5488
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/gui-output.log",
+          "sha256": "f4278e2e86098a277fc66aef11d39be9030d67b1df5d96d51a072fb29fd96ffb",
+          "bytes": 20687
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/report.json",
+          "sha256": "a4c99149e9858be59fa5d3d052d6bbce100b9cb665d5b240f95fbf8e7fa2dfca",
+          "bytes": 18023
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/check.log",
+          "sha256": "14172e0c79b12a6dce5aa22918055a92851bf4a115d1f958aa9f6b8adbb31a7d",
+          "bytes": 10743
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.trace.json",
+          "sha256": "f606748ae9abb0086e5edcf06ee6d477604f9e449569a15325e5f37751664b1d",
+          "bytes": 212319
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.json",
+          "sha256": "e4acd7ed82f95ac3c84a753f06af3afd73bb4b5e967b8e749fe28bbab64f61b0",
+          "bytes": 14937
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "3d_slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/live-gui-output.log",
+          "sha256": "30103d4a72af98f46205f539e6b20597d14b11eef3a64d11acfb320881b21215",
+          "bytes": 35017
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/saved-map.pcd",
+          "sha256": "cedfabbb91211a41096c950c15fc35ad4c635f8747ef67f24939edf64fdfc96f",
+          "bytes": 365564
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/source-manifest.json",
+          "sha256": "d54f784f9ca7d0088a33c19a2e9ad591bba639c7645df32432485bff6f8522f1",
+          "bytes": 30813
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/gui-output.log",
+          "sha256": "501aa8f7893bc2133ee911d0ceace9f61e11b53e1c41ddaaefb6f3d501eac05a",
+          "bytes": 43126
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/report.json",
+          "sha256": "4072d0bfd190bfa6bce090a914625e55779af35854fda866cc1dfc45d8c451e3",
+          "bytes": 6934
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/saved-map.db",
+          "sha256": "04e5e4bee1c99ed846c798146ee11f0e9bb1ffe1debf8fc98137ccbbdfa6a134",
+          "bytes": 663552
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/check.log",
+          "sha256": "322cf8b95db89fe90e832a8130dd705727ad1328d28ea9cf533dc518719b94f2",
+          "bytes": 4070
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/workflow.trace.json",
+          "sha256": "cef0446cca61a8bc8d0607d403233d06345dd4beb756339a10b7f3da8fc48b73",
+          "bytes": 204691
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/workflow.json",
+          "sha256": "1b28558fdd7e53593e9918223172b558279bb8f3e1abb271ad164220781045fb",
+          "bytes": 5112
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "nav",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/live-gui-output.log",
+          "sha256": "87880dee214c41bff61ecde03cb4050417e84c2eb27292c60a9e3e4e61d8990b",
+          "bytes": 36086
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/navigation.json",
+          "sha256": "4ce91fb453e5b444d9416dd749af97b22b4e0c2de6c4641551e832a96a72b4d7",
+          "bytes": 1684
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/source-manifest.json",
+          "sha256": "6bd5ae241edf56f126c71f70545e815a978a938eb14adf6d2f2d9802105a7b4a",
+          "bytes": 30813
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/gui-output.log",
+          "sha256": "3340d7f807508c22ecb6b3a7e30de413bde3d5e7a050bbe6555e588ce8292d26",
+          "bytes": 49517
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/report.json",
+          "sha256": "a10a4d4c4244bf5df2e7d52d82e195fc6b6e3bc0d521f802c87faeed347e0e55",
+          "bytes": 3774
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/navigation.trace.json",
+          "sha256": "8220dafc0d33d0ec85a2574cf677aed2d50810e9bff7dc12cbe9a5c5a43c52bc",
+          "bytes": 91141
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/check.log",
+          "sha256": "f9d2157e4b7449d2d8a0c67760d8dd6bba4e5466fd547ca3f8ef6f90bf5748fe",
+          "bytes": 1462
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "nav",
+      "map": "nav_obstacle",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/live-gui-output.log",
+          "sha256": "85c4050a8468de999144459817e3da318c58f0162a3d9cff7eb18707e0489ef6",
+          "bytes": 56956
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/navigation.json",
+          "sha256": "c6bd7eb8b088097d4e6ecd7027e80735b89175b2b787441a51dd46644279c5af",
+          "bytes": 1728
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/source-manifest.json",
+          "sha256": "99e62dc122bbe23e0196bfd6896c9d49f61878d2035468effa73d2c436317541",
+          "bytes": 30945
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/gui-output.log",
+          "sha256": "c12884adc268c2c89009a51f68424651ca943c6f9f70bd177e0d2ff2ef224380",
+          "bytes": 57756
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/report.json",
+          "sha256": "935f96c48c8d5e02fe346c39d03bee2d470fa4f1d42a16854a292f54ad612bbc",
+          "bytes": 3902
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/navigation.trace.json",
+          "sha256": "79cf7ca193681f237eed94320d27aa54728df81450176168fdfeff9b267631a4",
+          "bytes": 267100
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/check.log",
+          "sha256": "5b317b17f9be19aa566566d5af0a27ef140c6fa5d7932db421c9a22734fc9317",
+          "bytes": 1500
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "loc",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/live-gui-output.log",
+          "sha256": "f9a446615b0ae621d9336dae628353ee85be0be5cbb625b8f2b82c48c88e88e3",
+          "bytes": 20341
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/source-manifest.json",
+          "sha256": "37ecf6607d0690aeeb48ccc1dda0901edeba17b2c068082f5d8d30489cc8c093",
+          "bytes": 30685
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/gui-output.log",
+          "sha256": "ccaeda75f26c5392674fbc3e80250c3e173555c737fe83cfc03959c97dd3b581",
+          "bytes": 26744
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/report.json",
+          "sha256": "ff375f9faa18b6302bdb1f6236791d4b57ed4278ab1f34c3ac18cacf2fc1d9c0",
+          "bytes": 5830
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/check.log",
+          "sha256": "1e9d261d52b55d7ef2a31f4dcbddaee1f2cee0d82ae85dd66c01284de9b1231e",
+          "bytes": 3394
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/workflow.trace.json",
+          "sha256": "a1a2dfe5876a2215b205002cbde7b34cb4ac001b28e9df5d8ff921d47ed5b580",
+          "bytes": 228919
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/workflow.json",
+          "sha256": "cac67ffc117e341f5307f4b6ba04ec2986d9d84c264bba1327b53a7740210779",
+          "bytes": 4228
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-loc-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/live-gui-output.log",
+          "sha256": "a12af12c18b50ca01f58e8e1b7e52896760ecf2c3b4c92c487de3a7eeff8157a",
+          "bytes": 18504
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/saved-map.pgm",
+          "sha256": "27ae12e88ab8878693aedac6d78d7b9ad0d8540afa1e99d1f02b3255f547faae",
+          "bytes": 57615
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/source-manifest.json",
+          "sha256": "37ecf6607d0690aeeb48ccc1dda0901edeba17b2c068082f5d8d30489cc8c093",
+          "bytes": 30685
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/saved-map.yaml",
+          "sha256": "12f52646f76f1b72190e9c095a16f2658b3f478eb542575ede0dc8ff89c72296",
+          "bytes": 121
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/workflow.map.npz",
+          "sha256": "c53d9607a97b4b126de9b2e55a152c8df5e4b52d60a8125c23f306ee7fd35dd8",
+          "bytes": 7040
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/gui-output.log",
+          "sha256": "25ce5c15b8fb381285089c80cc14f8d34816aa165fa4ff1901166cff47fe3d64",
+          "bytes": 24682
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/report.json",
+          "sha256": "97d6bd263aeccc8b0193b5d396810ad80a2d5a0fafd1e238420da54f41e4d764",
+          "bytes": 15516
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/check.log",
+          "sha256": "52702e7a778d1302078f213da3f03022cee7b0c9fa72a83d00220ab6a54d7bdd",
+          "bytes": 9253
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/workflow.trace.json",
+          "sha256": "3d32eb82776524fbbf7ce5f886b716488704216f6b92a55b97d0cc52599f04b7",
+          "bytes": 232236
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/workflow.json",
+          "sha256": "af515675a96f3826f8a72bde91660983b29e2c8ecdaff1be981653a5e1ef8cc9",
+          "bytes": 12691
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-slam-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "3d_slam",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/live-gui-output.log",
+          "sha256": "9f8e957875a784610ddc5177e7562645ed646512dbcf3e0ea26d8f814717ca72",
+          "bytes": 41412
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/saved-map.pcd",
+          "sha256": "e82b8ebdc53e17a46f7303d9c3146c49a507b3ff3e4f6a45c963bfcaa745127e",
+          "bytes": 278827
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/source-manifest.json",
+          "sha256": "37ecf6607d0690aeeb48ccc1dda0901edeba17b2c068082f5d8d30489cc8c093",
+          "bytes": 30685
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/gui-output.log",
+          "sha256": "dab3bd2cb88bf0cd9ec1fd923d9e6989b9471dd2c4b833391d26869da719a055",
+          "bytes": 51499
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/report.json",
+          "sha256": "8009b43eceb0dee510c7867eb5c3739c1a457afff2521011b23934bfb372414f",
+          "bytes": 6965
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/saved-map.db",
+          "sha256": "1a9ece201691eff47d2d3aabec3d15cd298ceb53b9637cdb61a4631653c92b0c",
+          "bytes": 655360
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/check.log",
+          "sha256": "3b25e7b7ceae681d09bf78fcc38d181b614be32e9313c1e8b5e5cd7c5d8384b4",
+          "bytes": 4089
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/workflow.trace.json",
+          "sha256": "0fb1df8a1fce70cffb7872007313f2086b61a2839b5e0c0d1a43d64ce933c4b4",
+          "bytes": 222090
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/workflow.json",
+          "sha256": "60985f8b09eb461981202a6cec0f83a9acf041e7402c9f0d2fa4b3771e759008",
+          "bytes": 5135
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "nav",
+      "map": "nav_empty",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/live-gui-output.log",
+          "sha256": "ab10942d416b4b70cd88cae6d356fcae1099959346aae4a990ec8a16e92c080a",
+          "bytes": 38983
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/navigation.json",
+          "sha256": "1d8176adb164f49a787d8bae0d2f07bbd87d2fd0034d12776a6b3da020e1fb2c",
+          "bytes": 1683
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/source-manifest.json",
+          "sha256": "235d915f3d34bd67c3d24a765c6b5209c2fd6dd1c62637c9b6683e8a9c15203e",
+          "bytes": 30945
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/gui-output.log",
+          "sha256": "e029fe24411b285e943ef75bd694c6151b44d6551eba524ebf46b4bdc0756053",
+          "bytes": 52105
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/report.json",
+          "sha256": "ae966711bcb707655b8f67f2e02409287b7c0001cfe5c0a64adda007f591af4c",
+          "bytes": 3779
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/navigation.trace.json",
+          "sha256": "29472519b7a244b7eb5056dfe0c85ab8c8b01a2d56d99e7d6cb18517ac96aed9",
+          "bytes": 101420
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/check.log",
+          "sha256": "052572101185b1a61ccb0b62bb50b4ef15594d3ec6d149903784ce4201d215fe",
+          "bytes": 1461
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_empty/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "nav",
+      "map": "nav_obstacle",
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/live-gui-output.log",
+          "sha256": "6a2880b867a984246658e3d3bcd6f639b030fb87a04ec83442028d6d122e996d",
+          "bytes": 47420
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/producer.py",
+          "sha256": "299ca8973b4345a86b33426749eb41e14d99598ff5ef701931cb61d4f5ea6374",
+          "bytes": 6501
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/navigation.json",
+          "sha256": "d90d3de204b95127097487cf9c39c37e987ff16cd68fcab283b63fafe47f4040",
+          "bytes": 1731
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/source-manifest.json",
+          "sha256": "d22e9bc1ec9d3a21bda6d95522a147de6f9ef6b7bc32de3dff0077babd81a238",
+          "bytes": 30945
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/gui-output.log",
+          "sha256": "87af7c7ff06d9e7c3c547280977383a896b80e70e19aae7b7b9d51f099172834",
+          "bytes": 60167
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/report.json",
+          "sha256": "568491a338014a9769e07fb5cbf639c4a7d2d304a11b4b581a7c89c4c75e69a5",
+          "bytes": 3911
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/navigation.trace.json",
+          "sha256": "ddedc8f55ca470b0ebe92386e7e163ce569c1f5ae62fbf33ac403b44354ce97c",
+          "bytes": 284321
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/check.log",
+          "sha256": "253fc0d68a7d49f3b71b0b3630a75af9d6f9fa5ef4db15d0333decded253d995",
+          "bytes": 1503
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/gazebo-source-sensor-links-lumped/report.json",
+      "sha256": "921e5557a315adb4a5642016b3fb3feb0d2834b5232898d8523020acb58a66ee",
+      "bytes": 4004
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/gui-loc-metadata-shutdown/trial/report.json",
+      "sha256": "9f353e289e26ec382ffa564f80fb0e5eb564fe29c124a56750d31198f3214bf7",
+      "bytes": 5860
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/navigation-heading-18deg/trial/report.json",
+      "sha256": "3ee086fcd2640d070d89b419751a4fae19db1b9271ccbd45805e549fcff0e15e",
+      "bytes": 3827
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/slam-missing-urdf-root/report.json",
+      "sha256": "7ac77171a4764f74f4902dadb95b1c00ed08be94892c0df92e8476a5a4acbdd5",
+      "bytes": 6340
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/navigation-progress-window/trial/report.json",
+      "sha256": "ff5f81a7b85b260e9d76fffeaeb621f8837dde7094d9ebe1ef35769d9f434411",
+      "bytes": 3917
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/navigation-low-acceleration-deadzone/trial/report.json",
+      "sha256": "f0a0060d0bf75330cfdb89dd725dc18bd33368d575301f6c93ca18334e1c2da3",
+      "bytes": 3917
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/lite-mujoco-clear-position-153mm/trial/report.json",
+      "sha256": "cbcc4ed1b11e8108f2826f9d0934e1bd72ec84cbb3328ac8184878e7d5508ea9",
+      "bytes": 3774
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/navigation-heading-coast/trial/report.json",
+      "sha256": "299a02a9a63f1928a078992c770e6700f0a1dda71f8c3b5844ae4384d92e4272",
+      "bytes": 3912
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/isaac-depth-blank/report.json",
+      "sha256": "1f75fc81738821bbcd19f1cea7f61766b83d97099a23a440baba6e9f16d9d3cd",
+      "bytes": 1012
+    }
+  ]
+}

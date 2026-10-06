@@ -26,3 +26,5 @@ lacked the repository-required `## Run` section (782 fast checks passed).
 Both new guides now have their actual run sections; all eight unchanged
 tutorial checks pass. The failure/job report is preserved. The containing
 drive/control revision requires its own complete CI observation.
+
+The exact published `531c542` revision passes [Actions run 37364784938](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37364784938), observed October 6: the build, fast, physics, integration and registry steps all succeed. `ci-531c542-report.json` records that exact job. This closes the tutorial CI repair; later sensor and mode changes still require their own published run.

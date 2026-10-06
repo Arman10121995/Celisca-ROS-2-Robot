@@ -27,8 +27,9 @@ def distance(a, b):
 
 
 class Workflow(Node):
-    def __init__(self):
+    def __init__(self, base_frame='base_footprint'):
         super().__init__('sim_workflow_check')
+        self.base_frame = base_frame
         self.samples = []
         self.clock_samples = []
         self.counts = {}
@@ -96,7 +97,7 @@ class Workflow(Node):
 
     def estimate(self):
         try:
-            tr = self.tf_buffer.lookup_transform('map', 'base_footprint', rclpy.time.Time()).transform
+            tr = self.tf_buffer.lookup_transform('map', self.base_frame, rclpy.time.Time()).transform
             return {'x': tr.translation.x, 'y': tr.translation.y, 'yaw': yaw(tr.rotation)}
         except Exception:
             return None
@@ -158,13 +159,15 @@ def main():
     parser.add_argument('--lateral', action='store_true')
     parser.add_argument('--timeout', type=float, default=240)
     parser.add_argument('--skip-reset', action='store_true')
+    parser.add_argument('--base-frame', default='base_footprint')
     parser.add_argument('--drive-node',default='mujoco_spawner')
     parser.add_argument('--expected-steering-mode',choices=('ackermann','crab','in_phase','pivot'))
     parser.add_argument('--out', required=True)
     args = parser.parse_args()
     rclpy.init()
-    node = Workflow()
-    report = {'mode': args.mode, 'command_topic': '/key_vel', 'phases': {}, 'checks': {}}
+    node = Workflow(args.base_frame)
+    report = {'mode': args.mode, 'base_frame': args.base_frame,
+              'command_topic': '/key_vel', 'phases': {}, 'checks': {}}
     checks = report['checks']
     try:
         ready = node.spin_until(lambda: bool(node.samples) and node.counts.get('/scan',0)>1

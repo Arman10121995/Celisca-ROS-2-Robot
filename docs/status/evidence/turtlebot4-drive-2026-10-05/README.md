@@ -118,3 +118,7 @@ and hardware control remain separate. Preserve native Panda controls and the
 separately owned R6.7 terrain lane. See the
 [operator/agent TurtleBot4 guide](../../../tutorials/turtlebot4.md) and
 [full project checklist](../../CHECKLIST.md).
+
+## October 6 interpretation correction
+
+The eight October 5 manual Drive traces remain real scoped measurements. However, the sentence above claiming that those Isaac trials authored native passive suspension is incorrect: `_launch_runtime` passed an already stripped URDF into `joint_springs()`, which therefore returned an empty dictionary. Their original logs contain no `Original passive springs` event. The source helper existed but was never supplied that physics. The old missing-springs negative report and positive repeats do not establish a causal spring repair. Preserve all original reports and raw hashes. October 6 extracts passive physics before stripping the SDK import description and requires a new native trial whose log records both actual spring joints; its sensor/mapping evidence is recorded separately.

@@ -109,6 +109,58 @@ def test_import_without_base_controller_does_not_enable_twist_inputs(app):
     assert app.drive_input_checkbox.instate(['!disabled'])
 
 
+def test_backend_qualification_gates_modes_and_preserves_real_algorithm_defaults(app):
+    profile = dict(app.robot_profiles['bumperbot'])
+    profile['supported_modes_by_simulator'] = {
+        'mujoco': ['display'], 'pybullet': ['display', 'loc']}
+    app.robot_profiles['bumperbot'] = profile
+    app.robot_var.set('bumperbot'); app.map_var.set('nav_empty')
+    app.simulator_var.set('mujoco'); app.mode_var.set('loc')
+    app._update_from_selection(); app.update()
+    assert app.mode_var.get() == 'display'
+    assert 'qualified loc support in mujoco' in app._mode_reasons()['loc']
+    app.simulator_var.set('pybullet'); app.mode_var.set('loc')
+    app._update_from_selection(); app.update()
+    assert app.mode_var.get() == 'loc'
+    assert app.slot_vars['localizer'].get() == 'amcl'
+    assert 'localization:=amcl' in displayed_command(app)
+
+
+def test_hand_fixture_and_reset_require_the_selected_native_panda(app):
+    from robot_lab_gui.arm_tab import ArmTab
+    from robot_lab_gui.hand_tab import HandTab
+    profile = dict(app.robot_profiles['bumperbot'])
+    profile.update(supported_modes=['display'], supported_simulators=['mujoco'],
+                   features=['joint_control'], source_id='test_vendor', arm_control='panda', hand_control='panda')
+    profile.pop('drive', None)
+    app.robot_profiles['menagerie_franka_emika_panda'] = profile
+    app.arm_tab = ArmTab(app.notebook, app)
+    app.hand_tab = HandTab(app.notebook, app)
+    try:
+        app.robot_var.set('menagerie_franka_emika_panda')
+        app.simulator_var.set('mujoco'); app.map_var.set('nav_empty'); app.mode_var.set('display')
+        app._update_from_selection(); app.update()
+        assert app.hand_tab.selected()
+        assert app.hand_tab.fixture_button.instate(['!disabled'])
+        assert all(b.instate(['disabled']) for b in
+                   (app.hand_tab.open_button, app.hand_tab.close_button, app.hand_tab.stop_button))
+        app.hand_tab.fixture_button.invoke(); app.update()
+        assert 'grasp_fixture:=true' in displayed_command(app)
+        app._launch_running = True; app._update_reset_button()
+        assert app.reset_robot_button.instate(['!disabled'])
+        app._launch_running = False
+        app.robot_var.set('bumperbot'); app._update_from_selection(); app.update()
+        assert not app.hand_tab.selected()
+        assert app.hand_tab.fixture_button.instate(['disabled'])
+        assert 'grasp_fixture:=true' not in displayed_command(app)
+        app.simulator_var.set('pybullet'); app.robot_var.set('menagerie_franka_emika_panda')
+        # Direct selection counterexample; do not auto-correct it back to MuJoCo.
+        assert not app.hand_tab.selected()
+    finally:
+        app._launch_running = False
+        app.hand_tab.close(); app.arm_tab.close()
+
+
 def test_robot_reset_stops_drive_and_is_gated_by_task(app):
     app.robot_var.set('four_wheel_steer_car')
     app.mode_var.set('loc')

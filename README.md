@@ -4,7 +4,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status updated on **2026-10-05**, against baseline `700b94e` and the recorded
+Status updated on **2026-10-06**, against baseline `531c542` and the recorded
 continuation source snapshots. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
@@ -43,9 +43,13 @@ checks in all four simulators. Select Display to drive; mapping/navigation and
 vendor sensor/docking behavior remain pending. See the
 [TurtleBot 4 guide](docs/tutorials/turtlebot4.md). The new **Arm** tab
 controls native Panda joints on MuJoCo with measured Home, Stop, cancellation
-and heartbeat loss; see the [Panda guide](docs/tutorials/panda_arm.md).
+and heartbeat loss. **Hand** adds original coupled-finger opening/closing,
+bounded force, Cancel/Stop and GUI Reset. A physical 3 cm cube lift, hold and
+gravity release is measured on MuJoCo/`nav_empty`; see the
+[Panda guide](docs/tutorials/panda_arm.md) and
+[grasp evidence](docs/status/evidence/panda-gripper-2026-10-06/README.md).
 Cross-backend qualification, remaining vendor/example imports, Cartesian planning,
-grasp and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
+other grasp setups and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
 [extension guide](docs/ASSET_EXTENSION_GUIDE.md).
 
 ## Start here

@@ -105,6 +105,14 @@ def _strip_gazebo_tags(urdf_text):
     return urdf_text
 
 
+def _portable_description(urdf_text, packages):
+    # Passive physics lives in Gazebo extensions too. Extract it before the
+    # SDK import derivative removes ROS/Gazebo plugins and sensor declarations.
+    from robot_lab_utils.urdf_springs import joint_springs
+    springs = joint_springs(urdf_text)
+    return _strip_gazebo_tags(_rewrite_package_uris(urdf_text, packages)), springs
+
+
 def decode_rgbd_event(event):
     """``(t, rgb, depth)`` arrays from a runtime ``rgbd`` event.
 
@@ -432,6 +440,7 @@ class IsaacSpawner(Node):
         self._robot_free = robot_free
         urdf_file = ""
         urdf = ""
+        springs = {}
         if not robot_free:
             if not os.path.isfile(str(model)):
                 raise RuntimeError("robot model not found: %r" % model)
@@ -445,7 +454,7 @@ class IsaacSpawner(Node):
             rp = self.get_parameter("robot_package").value
             if rp and rp not in pkg_map:
                 pkg_map[rp] = get_package_share_directory(rp)
-            urdf = _strip_gazebo_tags(_rewrite_package_uris(urdf_text, pkg_map))
+            urdf, springs = _portable_description(urdf_text, pkg_map)
             self._urdf_text = urdf
             # Odometry child frame: the description's root link (was fixed to
             # base_footprint, which most non-wheeled robots do not have).
@@ -500,8 +509,7 @@ class IsaacSpawner(Node):
         # records: the runtime's interpreter has no ROS package index, and its
         # own SDF reader ignored primitives, poses and model:// includes.
         cfg["world_shapes"] = self._world_shapes(cfg["world_path"])
-        from robot_lab_utils.urdf_springs import joint_springs
-        cfg['joint_springs'] = joint_springs(urdf)
+        cfg['joint_springs'] = springs
 
         runtime_py = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "isaac_runtime.py"

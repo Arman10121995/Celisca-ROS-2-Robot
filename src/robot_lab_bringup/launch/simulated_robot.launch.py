@@ -697,6 +697,9 @@ def _build_simulation_actions(context):
     drive_args = {key: str(value) for key, value in drive_config.items()
                   if key in _DIFF_DRIVE_KEYS}
     drive_args["drive_config"] = json.dumps(drive_config, sort_keys=True)
+    # Explicit imported sensors carry their actual mounting frame and source
+    # calibration into each physics bridge. Empty retains existing defaults.
+    drive_args['sensor_config'] = json.dumps(robot_config.get('sensor_config', {}), sort_keys=True)
     drive_type = str(drive_config.get("type", "diff"))
     # Localization runs in the robot's own root frame (base_footprint for
     # the wheeled bases, 'base' or 'pelvis' for legged and humanoid ones).
@@ -942,6 +945,7 @@ def _build_simulation_actions(context):
             if arm != 'none' and (arm != 'panda' or robot_model != 'menagerie_franka_emika_panda'):
                 raise ValueError('Native Panda control is available only for menagerie_franka_emika_panda')
             display_args['arm_control'] = arm
+            display_args['grasp_fixture'] = _launch_value(context, 'grasp_fixture')
         if simulator in ("mujoco", "isaac"):
             display_args["hold_position"] = _launch_value(context, "display_hold")
         elif simulator == "pybullet":
@@ -1236,6 +1240,7 @@ def _build_simulation_actions(context):
         slam_args = {
             "use_sim_time": use_sim_time,
             "robot_model": robot_model,
+            "base_frame": base_frame,
         }
         slam_backend = algorithm_selection.get("localization", "")
         if slam_backend:
@@ -1264,7 +1269,7 @@ def _build_simulation_actions(context):
                         rtabmap_config.get("camera_info_topic", "/oakd/rgb/camera_info"),
                     ),
                     "odom_topic": _config_value(context, "odom_topic", rtabmap_config.get("odom_topic", "/odom")),
-                    "frame_id": _config_value(context, "rtabmap_frame_id", rtabmap_config.get("frame_id", "base_footprint")),
+                    "frame_id": _config_value(context, "rtabmap_frame_id", base_frame or rtabmap_config.get("frame_id", "base_footprint")),
                     "map_frame_id": _config_value(context, "rtabmap_map_frame_id", rtabmap_config.get("map_frame_id", "map")),
                     "rtabmap_config": _config_value(context, "rtabmap_config", "auto"),
                     "rtabmap_database_path": _config_value(context, "rtabmap_database_path", "auto"),
@@ -1298,6 +1303,7 @@ def _build_simulation_actions(context):
         nav_args = {
             "use_sim_time": use_sim_time,
             "robot_model": robot_model,
+            "base_frame": base_frame,
             "global_planner_plugin": global_plugin,
             "local_planner_plugin": local_plugin,
             "motion_model": motion_model,
@@ -1454,6 +1460,8 @@ def generate_launch_description():
                         "0.0 (the default) means no splay on that pair."),
         DeclareLaunchArgument('arm_control', default_value='auto',
                               description='Native arm controller: auto, none or panda'),
+        DeclareLaunchArgument('grasp_fixture', default_value='false',
+                             description='Add a physical Panda object/pedestal for grasp trials'),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

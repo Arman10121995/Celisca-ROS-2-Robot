@@ -4,6 +4,7 @@ Native model geometry, joint state and body transforms come from MuJoCo. A
 passive display keeps the model's authored starting pose; hold=false runs its
 unmodified dynamics. This node does not claim walking or manipulation control.
 """
+import json
 import math
 import os
 import signal
@@ -20,6 +21,7 @@ from geometry_msgs.msg import TransformStamped
 from rosgraph_msgs.msg import Clock as ClockMsg
 from sensor_msgs.msg import JointState
 from std_msgs.msg import String
+from std_srvs.srv import Trigger
 from tf2_ros import TransformBroadcaster
 
 from robot_lab_utils.native_mjcf_assets import body_frame
@@ -30,7 +32,8 @@ class NativeAssetDisplay(Node):
     def __init__(self):
         super().__init__('native_asset_display')
         for name, value in [('native_mjcf', ''), ('model', ''), ('world_xml', ''),
-                            ('gui', True), ('hold_position', True), ('arm_control', 'none'), ('spawn_x', 0.),
+                            ('gui', True), ('hold_position', True), ('arm_control', 'none'),
+                            ('grasp_fixture', False), ('spawn_x', 0.),
                             ('spawn_y', 0.), ('spawn_z', 0.), ('spawn_yaw', 0.)]:
             self.declare_parameter(name, value)
         # EGL avoids the Jetson GLX passive viewer's shutdown crash.
@@ -61,6 +64,40 @@ class NativeAssetDisplay(Node):
             world_text = _stage_world_meshes(world_text, logger=self.get_logger())
             world = mujoco.MjSpec.from_string(world_text)
             spec.attach(world, frame=spec.worldbody.add_frame(), prefix='environment_')
+        if self.get_parameter('grasp_fixture').value:
+            if self.get_parameter('arm_control').value != 'panda':
+                raise ValueError('The grasp fixture requires native Panda control')
+            # Measure the source home FK to position a supported object between
+            # the pads. Its free joint is used only by the physics engine.
+            preview = spec.compile()
+            home_data = mujoco.MjData(preview)
+            mujoco.mj_resetDataKeyframe(preview, home_data, 0)
+            mujoco.mj_forward(preview, home_data)
+            fingers = [mujoco.mj_name2id(preview, mujoco.mjtObj.mjOBJ_BODY, name)
+                       for name in ('left_finger', 'right_finger')]
+            pads = [index for index in range(preview.ngeom)
+                    if int(preview.geom_bodyid[index]) in fingers
+                    and int(preview.geom_type[index]) == int(mujoco.mjtGeom.mjGEOM_BOX)
+                    and np.allclose(preview.geom_size[index], [.0085, .004, .0085])]
+            if len(pads) != 2:
+                raise ValueError('The Panda source fingertip geometry differs')
+            center = np.mean(home_data.geom_xpos[pads], axis=0)
+            if center[2] <= .03:
+                raise ValueError('The grasp fixture requires a positive support height')
+            support_height = center[2]-.015
+            pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
+                pos=[center[0], center[1], support_height/2])
+            pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+                size=[.011, .011, support_height/2], rgba=[.35, .4, .45, 1])
+            cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
+            cube.add_freejoint(name='manipulation_object_joint')
+            cube.add_geom(name='manipulation_object_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+                size=[.015, .015, .015], mass=.05, friction=[1., .005, .0001],
+                rgba=[1., .45, .05, 1])
+            # MjSpec extends existing keyframes with zeros for a new free
+            # joint. Author its initial pose so home/reset retain the support.
+            for key in spec.keys:
+                key.qpos = np.concatenate((key.qpos, center, [1., 0., 0., 0.]))
         self.model = spec.compile()
         self.data = mujoco.MjData(self.model)
         if self.model.nkey:
@@ -74,17 +111,24 @@ class NativeAssetDisplay(Node):
                     mujoco.mju_mulQuat(result, yaw_quat, self.data.qpos[address+3:address+7])
                     self.data.qpos[address+3:address+7] = result
         mujoco.mj_forward(self.model, self.data)
+        self.initial_qpos, self.initial_ctrl = self.data.qpos.copy(), self.data.ctrl.copy()
+        self.object_body = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, 'manipulation_object')
         self.hold = self.get_parameter('hold_position').value
         self.arm = None
+        self.gripper = None
         controller = self.get_parameter('arm_control').value
         if controller == 'panda':
             from robot_lab_mujoco.native_arm_control import NativePandaControl
             self.arm = NativePandaControl(self)
+            from robot_lab_mujoco.native_gripper_control import NativePandaGripper
+            self.gripper = NativePandaGripper(self)
+            self.create_service(Trigger, '/robot_lab/reset', self.reset)
             self.hold = False
         elif controller != 'none':
             raise ValueError('Unknown native arm controller: '+controller)
         self.clock_pub = self.create_publisher(ClockMsg, '/clock', 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
+        self.object_pub = self.create_publisher(String, '/manipulation/object_state', 10)
         self.description_pub = self.create_publisher(String, '/robot_description',
             QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
         self.description = String(data=Path(self.get_parameter('model').value).read_text())
@@ -107,11 +151,19 @@ class NativeAssetDisplay(Node):
             if self.arm:
                 for _ in range(steps):
                     self.arm.before_step()
+                    self.gripper.before_step()
                     mj.mj_step(self.model, self.data)
                     self.arm.after_step()
+                    self.gripper.after_step()
                 self.arm.publish()
+                self.gripper.publish()
             else:
                 mj.mj_step(self.model, self.data, nstep=steps)
+        if self.object_body >= 0:
+            body = self.object_body
+            self.object_pub.publish(String(data=json.dumps(dict(time=self.data.time,
+                position=self.data.xpos[body].tolist(), orientation_wxyz=self.data.xquat[body].tolist(),
+                spatial_velocity=self.data.cvel[body].tolist()))))
         if not np.all(np.isfinite(self.data.qpos)):
             raise RuntimeError('Native model produced non-finite state')
         clock = ClockMsg()
@@ -146,6 +198,20 @@ class NativeAssetDisplay(Node):
         if self.data.time - self.last_description >= 1.:
             self.description_pub.publish(self.description)
             self.last_description = self.data.time
+
+    def reset(self, _request, response):
+        self.arm.finish('aborted', -4, 'reset; holding source home position')
+        self.gripper.finish('aborted', 'reset; holding source home gap')
+        sim_time = self.data.time
+        self.mujoco.mj_resetData(self.model, self.data)
+        self.data.qpos[:] = self.initial_qpos
+        self.data.ctrl[:] = self.initial_ctrl
+        self.data.time = sim_time
+        self.mujoco.mj_forward(self.model, self.data)
+        self.arm.target = self.data.qpos[self.arm.qpos].copy()
+        self.gripper.target = self.gripper.commanded = self.gripper.opening()
+        response.success, response.message = True, 'Native robot/object reset; simulation clock preserved'
+        return response
 
     def run_viewer(self):
         import tkinter as tk

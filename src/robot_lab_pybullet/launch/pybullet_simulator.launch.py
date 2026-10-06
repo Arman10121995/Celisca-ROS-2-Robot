@@ -75,6 +75,10 @@ def _build_pybullet_actions(context):
     # The whole drive block as JSON (a car's steering joints and limits).
     spawner_params["drive_config"] = ParameterValue(
         LaunchConfiguration("drive_config"), value_type=str)
+    from robot_lab_utils.sensor_config import sensor_parameters
+    spawner_params.update(sensor_parameters(
+        LaunchConfiguration('sensor_config').perform(context),
+        load_description(model_path) if spawn_robot else None))
     if hold_position is not None:
         spawner_params["hold_position"] = ParameterValue(hold_position, value_type=str)
     actions.append(
@@ -100,6 +104,7 @@ def generate_launch_description():
         DeclareLaunchArgument("wheel_radius", default_value="0.033"),
         DeclareLaunchArgument("wheel_separation", default_value="0.17"),
         DeclareLaunchArgument("drive_config", default_value=""),
+        DeclareLaunchArgument('sensor_config', default_value=''),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),

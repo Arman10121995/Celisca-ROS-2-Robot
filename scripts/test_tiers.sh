@@ -55,9 +55,12 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
+  "$BRG_TEST/test_asset_runtime_support.py"
+  "$BRG_TEST/test_gazebo_physics_world.py"
   "$BRG_TEST/test_occupancy_slice.py"
   "$BRG_TEST/test_arm_trajectory.py"
   "$BRG_TEST/test_urdf_springs.py"
+  "$BRG_TEST/test_sensor_config.py"
   "$BRG_TEST/test_drive_kinematics.py"
   "$BRG_TEST/test_driven_assembly_hold.py"
   "$BRG_TEST/test_px4_sitl_model.py"
@@ -84,6 +87,7 @@ INTEGRATION_TESTS=(
 PHYSICS_TESTS=(
   "$BRG_TEST/test_simulator_backends.py"
   "src/robot_lab_mujoco/test/test_native_asset_display.py"
+  "src/robot_lab_mujoco/test/test_native_gripper_control.py"
 )
 
 run_tier() {

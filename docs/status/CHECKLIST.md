@@ -1,6 +1,6 @@
 # Robot Lab done and remaining checklist
 
-Updated October 5, 2026. **The project is partial.** A checked item below
+Updated October 6, 2026. **The project is partial.** A checked item below
 describes an implemented feature or a named measured screen; it does not
 qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
@@ -64,6 +64,10 @@ the older roadmap. Existing stabilization fixes must remain working.
   Sensor parity, reset/obstacle/mapping/Nav2 and original materials remain pending.
 - [x] Add native Panda Arm joint/Home/Stop controls and real MuJoCo position
   trajectories; measure rejection, cancellation and heartbeat loss (R5.7).
+- [x] Add native Panda Hand open/close/opening/Cancel/Stop and GUI Reset controls.
+  Measure real bounded-force cube contact, a 7.57 cm lift and gravity release
+  in MuJoCo/`nav_empty`, plus lost heartbeats and reset during closing (R5.8).
+  Other hands, objects, Cartesian plans and manipulation backends remain open.
 - [x] Repair Trimesh/NumPy CI compatibility; exact `36f38b5` remote CI passes
   build, fast, physics, integration and registry checks.
 - [x] Replace invented support/release success with exact hashed measurements,

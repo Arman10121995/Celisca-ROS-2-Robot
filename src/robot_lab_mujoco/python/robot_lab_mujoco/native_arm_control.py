@@ -60,6 +60,10 @@ class NativePandaControl:
     def contact_blocked(self):
         for contact in self.data.contact[:self.data.ncon]:
             bodies = [int(self.model.geom_bodyid[g]) for g in contact.geom]
+            gripper = getattr(self.node, 'gripper', None)
+            if (gripper is not None and getattr(self.node, 'object_body', -1) in bodies
+                    and any(body in gripper.finger_bodies for body in bodies)):
+                continue
             # The fixed base may rest on a floor. Moving arm/environment
             # contacts stop the trajectory; original native collision filters
             # retain Panda's self-contact exclusions and finger coupling.
@@ -103,7 +107,8 @@ class NativePandaControl:
         return plan, path, goal, grace or 1.
 
     def accept(self, request):
-        if self.reserved or time.monotonic()-self.last_heartbeat > .8 or self.contact_blocked():
+        if (self.reserved or getattr(getattr(self.node, 'gripper', None), 'reserved', False)
+                or time.monotonic()-self.last_heartbeat > .8 or self.contact_blocked()):
             self.node.get_logger().warn('Arm goal rejected: busy, missing heartbeat or arm/environment contact')
             return GoalResponse.REJECT
         try:

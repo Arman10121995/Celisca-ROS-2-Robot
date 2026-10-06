@@ -127,6 +127,13 @@ class Check(Node):
         if final:
             report['final_pose_estimate_xy'] = [round(v, 3) for v in final]
             report['final_error_estimate_m'] = round(math.hypot(final[0]-goal_xy[0], final[1]-goal_xy[1]), 3)
+            rotation = self.tf.lookup_transform('map', base, rclpy.time.Time()).transform.rotation
+            estimate_yaw = math.atan2(2*(rotation.w*rotation.z + rotation.x*rotation.y),
+                                      1 - 2*(rotation.y**2 + rotation.z**2))
+            estimate_error = math.atan2(math.sin(estimate_yaw-goal_yaw),
+                                        math.cos(estimate_yaw-goal_yaw))
+            report['final_yaw_estimate_deg'] = round(math.degrees(estimate_yaw), 2)
+            report['final_yaw_error_estimate_deg'] = round(math.degrees(estimate_error), 2)
         if self.truth is not None:
             p, q = self.truth.pose.pose.position, self.truth.pose.pose.orientation
             yaw = math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z))

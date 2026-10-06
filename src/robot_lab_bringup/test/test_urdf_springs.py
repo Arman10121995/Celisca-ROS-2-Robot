@@ -30,3 +30,19 @@ def test_bad_spring_cannot_silently_become_a_free_joint(old,new):
 def test_absent_springs_preserve_legacy_models():
     assert joint_springs('<robot name="legacy"/>') == {}
     assert joint_springs('') == {}
+
+
+def test_isaac_extracts_passive_physics_before_stripping_import_extensions():
+    from robot_lab_isaac.isaac_spawner import _portable_description
+    plugin = '<gazebo><plugin name="unwanted" filename="gazebo_only"/></gazebo>'
+    imported, springs = _portable_description(URDF.replace('</robot>', plugin+'</robot>'), {})
+    assert '<gazebo' not in imported and 'gazebo_only' not in imported
+    assert joint_springs(imported) == {}
+    assert spring_force(springs['drop'], 0.0, 0.0) == pytest.approx(13.5)
+    assert springs['drop']['damping'] == 50.0
+
+
+def test_isaac_does_not_discard_malformed_physics_with_plugins():
+    from robot_lab_isaac.isaac_spawner import _portable_description
+    with pytest.raises(ValueError):
+        _portable_description(URDF.replace('>450<', '>nan<'), {})

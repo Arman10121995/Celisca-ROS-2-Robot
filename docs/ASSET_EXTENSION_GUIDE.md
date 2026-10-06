@@ -187,9 +187,13 @@ release mission, with object state and contact—not a moving URDF preview.
 
 R5.7 is partial: native Panda joint/Home/Stop/action controls now have measured
 MuJoCo dynamics, rejection, cancellation and heartbeat-loss evidence; see the
-[Panda guide](tutorials/panda_arm.md). MoveIt scenes, Cartesian planning, grasp
-missions and cross-backend manipulation qualification remain. R5.8/R5.9 remain
-queued; the source catalog does not implement those missions. Preserve the wheeled and legged workflows while adding
+[Panda guide](tutorials/panda_arm.md). R5.8 adds the native coupled-finger
+GripperCommand, actual GUI Hand controls and a physical cube lift/hold/release
+with Cancel/Stop/watchdog and GUI reset; see
+[grasp evidence](status/evidence/panda-gripper-2026-10-06/README.md).
+MoveIt scenes, Cartesian planning, arbitrary pick/place, other hands and
+cross-backend manipulation qualification remain. R5.9 is queued; the source
+catalog does not implement mobile manipulation. Preserve the wheeled and legged workflows while adding
 these components.
 
 ## Resume after this installation checkpoint
@@ -206,10 +210,12 @@ or old PX4 relocation as a substitute for controller work.
    implementation, including the position-only action contract and heartbeat
    ownership. Add GUI Cartesian plan/execute and upstream MoveIt2 configuration;
    validate collisions and reachable/failed targets before adding a capability.
-3. R5.8: control the actual coupled Panda/Robotiq gripper, qualify limits and
-   contact force, then measure closure, object grasp/hold/release. A slider or
-   rendered hand is insufficient. Add dexterous-hand actuator/tendon adapters
-   only against their exact native model.
+3. R5.8: preserve the measured coupled Panda controller and supported cube
+   setup; repeat different object dimensions/masses and pick/place. Native
+   Robotiq's 0–255 command has the opposite closure direction to Panda and its
+   linkage is not a pair of Panda slide joints. Implement its own actuator,
+   coupling, opening and force conversion before adding GUI control. Add
+   dexterous-hand adapters only against their exact native model.
 4. R5.9: choose installed Fetch or another maintained mobile manipulator;
    implement base/arm controllers and sensing, qualify base navigation, then
    measured navigate/reach/grasp/transport/release with command arbitration.
@@ -239,3 +245,48 @@ joint dimensions, source licenses, sensor adapters and mission acceptance.
 Next qualify repeated reset, actual lidar/OAK-D frames, calibration and depth,
 then localization/2D/3D mapping and obstacle navigation. These modes remain
 gated; vendor hazard/docking behavior and visual parity remain separate.
+
+## Recording and enabling a new controller
+
+1. Claim the exact ledger lane and record backend, robot, source pin and map.
+   Preserve an existing owner's terrain/controller changes. Read prior negative
+   trials before changing gains, axes, frames or support claims.
+2. Build the changed ROS packages after editing. Compare source and installed
+   Python SHA-256, including byte-compilation diagnostics. The native MuJoCo
+   package copies Python modules with setuptools despite symlink-install.
+   Record the executed model, derived URDF, control/sensor configuration,
+   upstream licenses, dependency revisions and actual producer bytes.
+3. Use a separate SSD qualification installation when trying a previously
+   disabled mode. Copy installed catalog metadata and point its profiles at the
+   same pinned assets. Provisional test modes stay in that qualification root;
+   the normal operator catalog keeps its measured backend restrictions. Set a
+   separate `ROS_DOMAIN_ID`, finite trial budget and SSD log directory. Run one
+   physics trial at a time on this Jetson.
+4. Exercise actual GUI selection, algorithm defaults, command preview, Run and
+   Stop. Observe engine body/joint/object state independently of command or
+   controller status. For mapping, record accepted poses/occupied cells or
+   changing finite 3D geometry, then use the GUI Save Map and validate its
+   PGM/YAML or SQLite/PCD contents. For navigation, test a clear goal and a
+   goal whose straight path intersects an obstacle; use body error after a
+   simulation settling window and swept geometry clearance. Keep estimate
+   error and ground truth separate.
+5. Capture reset during activity, monotonic clock, resumed estimation/mapping
+   and post-reset motion. Measure lost publisher input, command expiry,
+   Stop/cancel and fresh-state ownership. Source/metadata PASS strings cannot
+   replace physical observations. Keep failures and later corrections in
+   distinct directories; record upstream cleanup errors even when the owned
+   launch returns zero.
+6. Add immutable actual reports and their SHA-256 to
+   `docs/status/asset-runtime-support.yaml`. `robot_lab_utils.asset_support`
+   verifies source pins/control configuration and recomputes acceptance from
+   measured body, map or object values. TurtleBot4 Nav2 settings are also
+   fingerprinted. Panda Hand requires contact, bounded effort, physical lift
+   and release plus interruption/reset measurements. Do not copy that hand
+   contract onto a different tendon or linkage.
+7. Run `provision_extension_assets.py --no-download` for the changed source to
+   refresh normal Launch profiles, registry sensor/controller metadata and
+   Installed Extensions descriptions. Verify actual GUI backend mode gating,
+   algorithm auto-selection, command autofill and new controls again. Update
+   the roadmap, ledger, checklist, tutorial and evidence index in the same
+   checkpoint. Software tests and remote CI are separate from robot missions.
+   Keep a task partial until its full stated acceptance passes.

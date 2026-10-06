@@ -59,3 +59,16 @@ def test_sim_modes_requirements_are_added():
     profile = {"features": ["lidar_2d", "stands", "velocity_base"]}
     assert missing_features(profile, "3d_slam", "gazebo") == ["rgbd_camera"]
     assert missing_features(profile, "nav", "gazebo", {"required_features": ["gps"]}) == ["gps"]
+
+
+def test_sensors_do_not_enable_unqualified_imported_backend_modes():
+    profile = {'features': ['velocity_base', 'lidar_2d', 'rgbd_camera'],
+               'supported_simulators': list(SIMULATORS),
+               'supported_modes': ['display', 'loc', 'slam', '3d_slam', 'nav'],
+               'supported_modes_by_simulator': {
+                   'mujoco': ['display', 'loc', 'slam'], 'gazebo': ['display']}}
+    assert not missing_features(profile, 'slam', 'mujoco')
+    assert missing_features(profile, 'nav', 'mujoco') == ['qualified nav support in mujoco']
+    assert missing_features(profile, 'slam', 'gazebo') == ['qualified slam support in gazebo']
+    assert missing_features(profile, 'loc', 'isaac') == ['qualified loc support in isaac']
+    assert not missing_features(profile, 'nav', None)

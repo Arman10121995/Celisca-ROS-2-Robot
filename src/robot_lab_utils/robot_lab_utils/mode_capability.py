@@ -81,6 +81,11 @@ def missing_features(robot_config, mode, simulator=None, mode_config=None):
     supported = (robot_config or {}).get('supported_simulators', [])
     if simulator and supported and simulator not in supported:
         missing.append('support for simulator '+simulator+' (available: '+', '.join(supported)+')')
+    # Imported robots may qualify one backend before another. Do not expose
+    # unmeasured mode/backend combinations merely because sensors exist.
+    mode_matrix = (robot_config or {}).get('supported_modes_by_simulator')
+    if simulator and mode_matrix is not None and mode not in mode_matrix.get(simulator, []):
+        missing.append('qualified '+mode+' support in '+simulator)
     return missing
 
 

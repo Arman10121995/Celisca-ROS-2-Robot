@@ -186,7 +186,7 @@
     "probe_installed_commands.py": "75efd46e1f3f0f41256e327e4bafc7d8608f3bb41d61388bb163160024b2dabf",
     "provision-springs.log": "36ab1c26c31a97c1104bb7cebb67082209eb6c62c84d5c376d314c2db8b7f294",
     "spring-watchdog-tests.log": "b9fb6f449331fb2a6e05926458b5c22c9822cc823247eee453238d160b83f40e",
-    "README.md": "d55c4c53e353a2578cf4c47910c12edfe7240defebd303200ad0b61be79ecec5",
+    "README.md": "29a1b031d04999114f4440d02634c3c18da83b02b9c3f5b5f52e01f293569718",
     "all-tiers.log": "a49d9278b075c90bb9aa8c5bbdc8fa72089fca17cce257168e6f483124b9b92a",
     "gui-regression.log": "a13387f6b88b4068465127c646eef37aa290396a97fe90fff443c9dffd880e54",
     "tutorial-contract.log": "1ae086205dae6664d4e5e1efa89078436e756c9b332bb922da2a4f5689040873",
@@ -200,5 +200,11 @@
   "original_spring_source": {
     "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5/irobot_create_common/irobot_create_description/urdf/wheel_drop.urdf.xacro",
     "sha256": "1970b6e60fafd1d77e8302020abb48db4164c62447494724b9c5c35fce5c55f6"
+  },
+  "interpretation_correction": {
+    "date": "2026-10-06",
+    "scope": "Earlier actual Isaac Drive traces did not author original passive springs: parsing occurred after stripping Gazebo tags. Raw traces still measure motion/stability, not source suspension fidelity or the claimed causal repair. See the appended README correction.",
+    "original_readme": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/october5-original-evidence-readme.md",
+    "original_readme_sha256": "d55c4c53e353a2578cf4c47910c12edfe7240defebd303200ad0b61be79ecec5"
   }
 }

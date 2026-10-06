@@ -77,6 +77,7 @@ def _build_mujoco_actions(context):
             output='screen', parameters=[{
                 'native_mjcf': native_mjcf, 'model': model_path,
                 'arm_control': LaunchConfiguration('arm_control').perform(context),
+                'grasp_fixture': ParameterValue(LaunchConfiguration('grasp_fixture'), value_type=bool),
                 'world_xml': _resolve_mujoco_xml(context, world_name),
                 'gui': ParameterValue(gui, value_type=bool),
                 'hold_position': LaunchConfiguration('hold_position').perform(context) != 'false',
@@ -157,6 +158,10 @@ def _build_mujoco_actions(context):
     # The whole drive block as JSON (a car's steering joints and limits).
     spawner_params["drive_config"] = ParameterValue(
         LaunchConfiguration("drive_config"), value_type=str)
+    from robot_lab_utils.sensor_config import sensor_parameters
+    spawner_params.update(sensor_parameters(
+        LaunchConfiguration('sensor_config').perform(context),
+        load_description(model_path) if spawn_robot else None))
     if hold_position is not None:
         try:
             spawner_params["hold_position"] = ParameterValue(hold_position, value_type=str)
@@ -185,12 +190,14 @@ def generate_launch_description():
         DeclareLaunchArgument("wheel_radius", default_value="0.033"),
         DeclareLaunchArgument("wheel_separation", default_value="0.17"),
         DeclareLaunchArgument("drive_config", default_value=""),
+        DeclareLaunchArgument('sensor_config', default_value=''),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),
         DeclareLaunchArgument("model", default_value=""),
         DeclareLaunchArgument('native_mjcf', default_value=''),
         DeclareLaunchArgument('arm_control', default_value='none'),
+        DeclareLaunchArgument('grasp_fixture', default_value='false'),
         DeclareLaunchArgument("effort_controller_config", default_value=""),
         DeclareLaunchArgument("physics_timestep", default_value="0.0"),
         DeclareLaunchArgument(

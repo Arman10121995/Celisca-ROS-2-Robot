@@ -1,5 +1,6 @@
 """Prevent success reports without fresh truth and unreachable rotation windows."""
 import copy
+import importlib.util
 from pathlib import Path
 
 import pytest
@@ -29,3 +30,26 @@ def test_action_success_alone_cannot_pass_measured_acceptance(key, value):
     bad = copy.copy(report)
     bad[key] = value
     assert not navigation_acceptance(bad, 0.15, 5)['passed']
+
+
+def test_selected_urdf_root_reaches_nav2_servers_and_nested_costmaps():
+    from launch import LaunchContext
+    src = Path(__file__).resolve().parents[2]
+    path = src/'robot_lab_navigation/launch/navigation.launch.py'
+    spec = importlib.util.spec_from_file_location('navigation_root_contract', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    for config, root in [('controller_server.yaml', ('local_costmap', 'local_costmap')),
+                         ('planner_server.yaml', ('global_costmap', 'global_costmap')),
+                         ('bt_navigator.yaml', ('bt_navigator',)),
+                         ('behavior_server.yaml', ('behavior_server',))]:
+        original = str(src/'robot_lab_navigation/config'/config)
+        assert module._with_base_frame(original, '') == original
+        rewritten = Path(module._with_base_frame(original, 'base_link').perform(LaunchContext()))
+        try:
+            loaded = yaml.safe_load(rewritten.read_text())
+            for key in root:
+                loaded = loaded[key]
+            assert loaded['ros__parameters']['robot_base_frame'] == 'base_link'
+        finally:
+            rewritten.unlink()

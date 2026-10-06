@@ -1,0 +1,181 @@
+updated: '2026-10-06'
+scope: Named measured simulation screens. Other maps, objects and vendor/hardware
+  behavior require qualification.
+robots:
+  asset_turtlebot4_standard:
+    source_revision: a6ee13b63cbd524500cc6a68cd20dbef69f326a9
+    drive:
+      type: diff
+      left_wheel_joint: left_wheel_joint
+      right_wheel_joint: right_wheel_joint
+      wheel_radius: 0.03575
+      wheel_separation: 0.233
+      max_speed: 0.3
+      max_accel: 0.5
+      max_angular_speed: 1.2
+      max_angular_accel: 2.0
+    sensor_config:
+      laser_link_name: rplidar_link
+      scan_rate: 5.0
+      scan_samples: 640
+      scan_range_min: 0.164
+      scan_range_max: 12.0
+      camera_link_name: oakd_rgb_camera_frame
+      camera_optical_frame: oakd_rgb_camera_optical_frame
+      camera_rate: 5.0
+      camera_width: 320
+      camera_height: 240
+      camera_horizontal_fov: 1.047
+      camera_near: 0.3
+      camera_far: 100.0
+    configuration_files:
+    - path: src/robot_lab_navigation/config/robots/asset_turtlebot4_standard.yaml
+      sha256: 06a9319a7b511daf7bd6ea371ec93df604e532517fa4e0e4e30dc5d68fc3acc0
+    screens:
+    - backend: gazebo
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-loc-nav_empty/report.json
+        sha256: 18d6c15678f0dc23ffefbec93233af3552fce9abf7f4474d5c0a4dcd22874994
+    - backend: gazebo
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-slam-nav_empty/report.json
+        sha256: c45c7f67301a10a4cf19a134e46c1ec2a19a45d12c7b068402928fb005fe9c02
+    - backend: gazebo
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/report.json
+        sha256: 93edaa0a09ffd2e3fac3e3612058fe640d1a198d186c8c33c5c71f5fe2734a63
+    - backend: mujoco
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-loc-nav_empty/report.json
+        sha256: cc8bb79de83f92868bec3c94ecd7e095e457e7b12f92c2d3edceee5d3b18dd68
+    - backend: mujoco
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-slam-nav_empty/report.json
+        sha256: 1c8562e08cc40d87383570f9719cb4edd7562f6d5f9c4ffc6484d283b10fad63
+    - backend: mujoco
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/report.json
+        sha256: 92f448d92f1e85391b59e39107b96ce87084207e45dd6ab986ed3e721cfa8b46
+    - backend: mujoco
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_empty/report.json
+        sha256: 4c5a4b3f365e9da8bfcc0d50804a6cabbc5466c85067eda1da2f54816d4f9e82
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/report.json
+        sha256: 054af9a3e3fe1630c23ec968be81b8945fc9e0d555f993ba6f04a3512df819fb
+    - backend: pybullet
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-loc-nav_empty/report.json
+        sha256: 2142065b1abe1acfae23ae10a4669e903df03a1b30dfd8b056f1eac000dd2036
+    - backend: pybullet
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-slam-nav_empty/report.json
+        sha256: d214b0ba06c4d6db4c1e7ec0691028b294b8d98bda6498af2bd6ffaf7973aa68
+    - backend: pybullet
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/report.json
+        sha256: 82ad0919bc44cfe8330f6098e426988f6f1bf38970a2b2d199510e21c78847c3
+    - backend: pybullet
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_empty/report.json
+        sha256: 1ad315a8d78b52d3c95e66c9ed0222a32f939610548ca2a279357642677f78da
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/report.json
+        sha256: ae01ee19000c7d112ec3ab9942f7e4defb802837157eb62d9fec49c62f236afe
+  asset_turtlebot4_lite:
+    source_revision: a6ee13b63cbd524500cc6a68cd20dbef69f326a9
+    drive:
+      type: diff
+      left_wheel_joint: left_wheel_joint
+      right_wheel_joint: right_wheel_joint
+      wheel_radius: 0.03575
+      wheel_separation: 0.233
+      max_speed: 0.3
+      max_accel: 0.5
+      max_angular_speed: 1.2
+      max_angular_accel: 2.0
+    sensor_config:
+      laser_link_name: rplidar_link
+      scan_rate: 5.0
+      scan_samples: 640
+      scan_range_min: 0.164
+      scan_range_max: 12.0
+      camera_link_name: oakd_rgb_camera_frame
+      camera_optical_frame: oakd_rgb_camera_optical_frame
+      camera_rate: 5.0
+      camera_width: 320
+      camera_height: 240
+      camera_horizontal_fov: 1.047
+      camera_near: 0.3
+      camera_far: 100.0
+    configuration_files:
+    - path: src/robot_lab_navigation/config/robots/asset_turtlebot4_lite.yaml
+      sha256: 06a9319a7b511daf7bd6ea371ec93df604e532517fa4e0e4e30dc5d68fc3acc0
+    screens:
+    - backend: mujoco
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-loc-nav_empty/report.json
+        sha256: 5a33842745771b53891699005cf5ba55edd5f4b02af309a13af073617ccb03e1
+    - backend: mujoco
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-slam-nav_empty/report.json
+        sha256: a4c99149e9858be59fa5d3d052d6bbce100b9cb665d5b240f95fbf8e7fa2dfca
+    - backend: mujoco
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/report.json
+        sha256: 4072d0bfd190bfa6bce090a914625e55779af35854fda866cc1dfc45d8c451e3
+    - backend: mujoco
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_empty/report.json
+        sha256: a10a4d4c4244bf5df2e7d52d82e195fc6b6e3bc0d521f802c87faeed347e0e55
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/report.json
+        sha256: 935f96c48c8d5e02fe346c39d03bee2d470fa4f1d42a16854a292f54ad612bbc
+    - backend: pybullet
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-loc-nav_empty/report.json
+        sha256: ff375f9faa18b6302bdb1f6236791d4b57ed4278ab1f34c3ac18cacf2fc1d9c0
+    - backend: pybullet
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-slam-nav_empty/report.json
+        sha256: 97d6bd263aeccc8b0193b5d396810ad80a2d5a0fafd1e238420da54f41e4d764
+    - backend: pybullet
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/report.json
+        sha256: 8009b43eceb0dee510c7867eb5c3739c1a457afff2521011b23934bfb372414f
+    - backend: pybullet
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_empty/report.json
+        sha256: ae966711bcb707655b8f67f2e02409287b7c0001cfe5c0a64adda007f591af4c
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/report.json
+        sha256: 568491a338014a9769e07fb5cbf639c4a7d2d304a11b4b581a7c89c4c75e69a5
+hands:
+  menagerie_franka_emika_panda:
+    source_revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
+    native_xml_sha256: 96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273
+    configuration_files:
+    - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py
+      sha256: dd33d3dc5f6905083530cb651f539cde676156d53d6aab07d178d578b76e7bef
+    - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py
+      sha256: e59c3bfcd8447719ada88bd66020b0d60ca7bae4e8df11def09162d15c2f633a
+    - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_gripper_control.py
+      sha256: 84e24c692413e784e16a378e5ec5084782faf5ec322df660979ad990250f6ccc
+    report:
+      path: docs/status/evidence/panda-gripper-2026-10-06/report.json
+      sha256: 368b122aa51c4ca0937afa37127b431b65e0338c74e217fab4cc8b11ef8840e1

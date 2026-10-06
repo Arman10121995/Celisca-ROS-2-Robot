@@ -864,6 +864,15 @@ class HealthTab(LabTab):
         ttk.Button(frame, text="Verified Robot Trials", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/status/continuation-2026-10-05.md')).grid(
                 row=4, column=1, columnspan=2, sticky='ew', padx=(4, 0), pady=2)
+        ttk.Button(frame, text="TurtleBot 4 Guide", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/turtlebot4.md')).grid(
+                row=5, column=0, sticky='ew', padx=(0, 4), pady=2)
+        ttk.Button(frame, text="Panda Arm / Hand Guide", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/panda_arm.md')).grid(
+                row=5, column=1, sticky='ew', padx=4, pady=2)
+        ttk.Button(frame, text="Done / Remaining", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
+                row=5, column=2, sticky='ew', padx=(4, 0), pady=2)
 
         self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)
         self.summary.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
@@ -939,8 +948,11 @@ def create_tabs(notebook, app):
     """Instantiate all control-center tabs and return them."""
     from .arm_tab import ArmTab
     app.arm_tab = ArmTab(notebook, app)
+    from .hand_tab import HandTab
+    app.hand_tab = HandTab(notebook, app)
     tabs = [
         app.arm_tab,
+        app.hand_tab,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),
         AssetsTab(notebook, app),

@@ -13,7 +13,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
 from ament_index_python.packages import get_package_share_directory
-from .process_control import stop_group
+from .process_control import stop_group, stop_owned_launch
 from .drive_control import LinuxJoystick, RampDrive, limits_from_drive
 from robot_lab_utils.installed_assets import merge_installed_profiles
 
@@ -1879,11 +1879,13 @@ class SimulationLauncherGui(tk.Tk):
 
     def _update_reset_button(self):
         profile = self.robot_profiles.get(self.robot_var.get(), {})
+        native_arm = (profile.get('arm_control') == 'panda' and self.simulator_var.get() == 'mujoco'
+                      and self.mode_var.get() == 'display')
         enabled = (self._launch_running and self.launch_kind_var.get() == 'simulation'
                    and self.mode_var.get() in ('display', 'loc', 'slam', '3d_slam')
                    and bool(self.robot_var.get()) and self.robot_var.get() != 'none'
-                   and bool(profile.get('drive'))
-                   and self._drive_type() in ('diff', 'ackermann', 'four_wheel_steer', 'mecanum'))
+                   and (native_arm or (bool(profile.get('drive'))
+                   and self._drive_type() in ('diff', 'ackermann', 'four_wheel_steer', 'mecanum'))))
         self.reset_robot_button.state(['!disabled'] if enabled else ['disabled'])
 
     def _reset_robot(self):
@@ -1918,6 +1920,9 @@ class SimulationLauncherGui(tk.Tk):
                 and self.simulator_var.get() == 'mujoco' and self.mode_var.get() == 'display':
             command = [part for part in command if not part.startswith('arm_control:=')]
             command.append('arm_control:=panda')
+            if hasattr(self, 'hand_tab') and self.hand_tab.selected() and self.hand_tab.fixture_var.get():
+                command = [part for part in command if not part.startswith('grasp_fixture:=')]
+                command.append('grasp_fixture:=true')
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -2036,6 +2041,8 @@ class SimulationLauncherGui(tk.Tk):
         self._update_drive_limits_label()
         if hasattr(self, 'arm_tab'):
             self.arm_tab.refresh_selection()
+        if hasattr(self, 'hand_tab'):
+            self.hand_tab.refresh_selection()
 
     def _robot_info_text(self, supported_modes, supports_vacuum):
         config = self._robot_config()
@@ -2057,10 +2064,23 @@ class SimulationLauncherGui(tk.Tk):
                          '3D goals use /px4/goal; no obstacle avoidance. Health contains the flight guide and measured results.')
         if config.get('arm_control') == 'panda':
             lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
-                         'Cartesian planning, grasp and other arm backends remain pending.')
+                         'Cartesian planning and other arm backends remain pending; see Hand for qualified gripper controls.')
+        if config.get('hand_control') == 'panda':
+            lines.append('Hand tab: native coupled-finger Open/Close/Stop and bounded force. '
+                         'The selected grasp fixture has a measured cube lift/release/reset on MuJoCo/nav_empty. '
+                         'Dexterous hands and other gripper backends remain pending.')
         if config.get('drive_in_display'):
             lines.append('Drive/WASD: physical wheel control in Display with bounded speed and timeout. '
-                         'Sensors, SLAM/navigation and vendor docking/hazards remain pending.')
+                         'Vendor docking/hazards remain pending.')
+            screens = [screen for screen in config.get('runtime_screens', [])
+                       if screen['backend'] == self.simulator_var.get()]
+            if screens:
+                lines.append('Recorded in this backend: '+ '; '.join(
+                    MODE_LABELS.get(screen['mode'], screen['mode'])+' on '+', '.join(screen['maps'])
+                    for screen in screens)+'. Other maps are experiments.')
+            else:
+                lines.append('Original sensor configuration is installed; mapping/navigation screens '
+                             'for this backend remain pending.')
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):
@@ -2832,8 +2852,10 @@ class SimulationLauncherGui(tk.Tk):
         self._stop_drive()
         if hasattr(self, 'arm_tab'):
             self.arm_tab.stop()
+        if hasattr(self, 'hand_tab'):
+            self.hand_tab.stop()
         self.status_var.set("Stopping...")
-        threading.Thread(target=stop_group, args=(self.process.pid,), daemon=False).start()
+        threading.Thread(target=stop_owned_launch, args=(self.process,), daemon=False).start()
 
     # ---- Control-center APIs used by the lab tabs ----
     def show_tab(self, title):
@@ -2929,6 +2951,8 @@ class SimulationLauncherGui(tk.Tk):
     def _on_close(self):
         if hasattr(self, 'arm_tab'):
             self.arm_tab.close()
+        if hasattr(self, 'hand_tab'):
+            self.hand_tab.close()
         self._stop_drive()
         self.stop_all_bg()
         # Stop the live monitor's ROS thread before shutting rclpy down

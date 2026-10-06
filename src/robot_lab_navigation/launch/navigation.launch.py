@@ -10,6 +10,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from nav2_common.launch import RewrittenYaml
 
 
 # Extra parameters required by specific local planner plugins (the base
@@ -251,10 +252,18 @@ def _planner_parameter_overrides(exec_name, global_planner_plugin, local_planner
     return []
 
 
+def _with_base_frame(path, base_frame):
+    """Use the selected URDF root for servers and their nested costmap nodes."""
+    return RewrittenYaml(source_file=path,
+                         param_rewrites={'robot_base_frame': base_frame},
+                         convert_types=True) if base_frame else path
+
+
 def _setup(context, *args, **kwargs):
     pkg = get_package_share_directory("robot_lab_navigation")
     use_sim_time = LaunchConfiguration("use_sim_time").perform(context).lower() == "true"
     robot_model = LaunchConfiguration("robot_model").perform(context)
+    base_frame = LaunchConfiguration("base_frame").perform(context).strip()
     global_planner_plugin = LaunchConfiguration("global_planner_plugin").perform(context)
     local_planner_plugin = LaunchConfiguration("local_planner_plugin").perform(context)
     motion_model = LaunchConfiguration("motion_model").perform(context).strip().lower()
@@ -266,10 +275,10 @@ def _setup(context, *args, **kwargs):
               f"global={global_planner_plugin}, local={local_planner_plugin}")
 
     overlay = os.path.join(pkg, "config", "robots", f"{robot_model}.yaml")
-    overlay_params = [overlay] if os.path.exists(overlay) else []
+    overlay_params = [_with_base_frame(overlay, base_frame)] if os.path.exists(overlay) else []
 
     def server(exec_name, name, config_file):
-        parameters = [os.path.join(pkg, "config", config_file)]
+        parameters = [_with_base_frame(os.path.join(pkg, "config", config_file), base_frame)]
         parameters.extend(_planner_parameter_overrides(
             exec_name, global_planner_plugin, local_planner_plugin))
         # Robot-specific footprints, arrival windows and critics override the
@@ -341,6 +350,8 @@ def _setup(context, *args, **kwargs):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument("base_frame", default_value="",
+                             description="Selected URDF root; empty retains per-robot YAML frames"),
         DeclareLaunchArgument(
             "robot_model",
             default_value="bumperbot",

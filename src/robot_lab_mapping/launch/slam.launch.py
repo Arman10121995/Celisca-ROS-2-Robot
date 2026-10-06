@@ -17,6 +17,7 @@ def _setup(context, *args, **kwargs):
     use_sim_time = LaunchConfiguration("use_sim_time").perform(context).lower() == "true"
     slam_config = LaunchConfiguration("slam_config").perform(context)
     robot_model = LaunchConfiguration("robot_model").perform(context)
+    base_frame = LaunchConfiguration("base_frame").perform(context).strip()
     slam_backend = LaunchConfiguration("slam_backend").perform(context).strip()
 
     # The only 2D SLAM backend built in this workspace is slam_toolbox; a
@@ -33,6 +34,8 @@ def _setup(context, *args, **kwargs):
     if os.path.exists(overlay):
         parameters.append(overlay)
     parameters.append({"use_sim_time": use_sim_time})
+    if base_frame:
+        parameters.append({'base_frame': base_frame})
 
     nav2_map_saver = Node(
         package="nav2_map_server",
@@ -74,6 +77,8 @@ def generate_launch_description():
     mapping_share = get_package_share_directory("robot_lab_mapping")
     return LaunchDescription([
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument("base_frame", default_value="",
+                             description="Selected URDF root; empty retains YAML frames"),
         DeclareLaunchArgument(
             "slam_config",
             default_value=os.path.join(mapping_share, "config", "slam_toolbox.yaml"),

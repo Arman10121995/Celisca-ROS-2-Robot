@@ -232,6 +232,51 @@ def turtlebot4_drive(derived, name):
         raise ValueError('Missing original Create3 wheel-drop springs')
     for spring in springs:
         root.append(copy.deepcopy(spring))
+    # Retain the original mounting geometry, optical frame and calibration.
+    # Explicit lab sampling rates avoid importing the vendor's 62/30 Hz load;
+    # the untouched source still records those upstream rates.
+    sensors = {}
+    for block in upstream.findall('gazebo'):
+        original = block.find('sensor')
+        if original is None or original.get('name') not in ('rplidar', 'rgbd_camera', 'imu'):
+            continue
+        mounted = copy.deepcopy(block)
+        sensor = mounted.find('sensor')
+        frame = block.get('reference')
+        rate = 50.0 if original.get('name') == 'imu' else 5.0
+        sensor.find('update_rate').text = str(rate)
+        ET.SubElement(sensor, 'gz_frame_id').text = (
+            original.findtext('camera/optical_frame_id')
+            if original.get('name') == 'rgbd_camera' else frame)
+        if original.get('name') in ('rplidar', 'imu'):
+            ET.SubElement(sensor, 'topic').text = '/scan' if original.get('name') == 'rplidar' else '/imu'
+        sensors[original.get('name')] = (frame, original)
+        root.append(mounted)
+    if set(sensors) != {'rplidar', 'rgbd_camera', 'imu'}:
+        raise ValueError('Missing original TurtleBot4 lidar/camera/IMU declarations')
+    # Keep the original sensor links in Gazebo. Fixed-joint lumping otherwise
+    # changes camera topic paths away from the link named by the ROS bridge.
+    sensor_links = {frame for frame, _ in sensors.values()}
+    sensor_joints = {joint.get('name') for joint in upstream.findall('joint')
+                     if joint.find('child').get('link') in sensor_links}
+    for block in upstream.findall('gazebo'):
+        if block.get('reference') in sensor_joints and block.find('preserveFixedJoint') is not None:
+            root.append(copy.deepcopy(block))
+    lidar_frame, lidar = sensors['rplidar']
+    camera_frame, camera = sensors['rgbd_camera']
+    sensor_config = dict(laser_link_name=lidar_frame, scan_rate=5.0,
+        scan_samples=int(lidar.findtext('lidar/scan/horizontal/samples')),
+        scan_range_min=float(lidar.findtext('lidar/range/min')),
+        scan_range_max=float(lidar.findtext('lidar/range/max')),
+        camera_link_name=camera_frame,
+        camera_optical_frame=camera.findtext('camera/optical_frame_id'),
+        camera_rate=5.0, camera_width=int(camera.findtext('camera/image/width')),
+        camera_height=int(camera.findtext('camera/image/height')),
+        camera_horizontal_fov=float(camera.findtext('camera/horizontal_fov')),
+        camera_near=float(camera.findtext('camera/clip/near')),
+        camera_far=float(camera.findtext('camera/clip/far')))
+    from robot_lab_utils.sensor_config import sensor_parameters
+    sensor_config = sensor_parameters(sensor_config, ET.tostring(root, encoding='unicode'))
     for wheel in wheels:
         if joints[wheel].get('type') != 'continuous':
             raise ValueError('Unexpected TurtleBot4 wheel joint: '+wheel)
@@ -273,6 +318,11 @@ def turtlebot4_drive(derived, name):
     plugin = ET.SubElement(gazebo, 'plugin', filename='ign_ros2_control-system',
                            name='ign_ros2_control::IgnitionROS2ControlPlugin')
     ET.SubElement(plugin, 'parameters').text = str(config_path)
+    ET.SubElement(gazebo, 'plugin', filename='ignition-gazebo-imu-system',
+                  name='ignition::gazebo::systems::Imu')
+    rendering = ET.SubElement(gazebo, 'plugin', filename='ignition-gazebo-sensors-system',
+                              name='ignition::gazebo::systems::Sensors')
+    ET.SubElement(rendering, 'render_engine').text = 'ogre2'
     truth = ET.SubElement(gazebo, 'plugin', filename='ignition-gazebo-odometry-publisher-system',
                           name='ignition::gazebo::systems::OdometryPublisher')
     for key, value in {'odom_frame': 'world', 'robot_base_frame': 'base_link',
@@ -286,7 +336,7 @@ def turtlebot4_drive(derived, name):
             ET.SubElement(surface, key).text = '0.1' if 'caster' in link else '1.0'
     path = derived.parent/'drive.urdf'
     ET.ElementTree(root).write(path, encoding='unicode', xml_declaration=True)
-    return path, drive, config_path
+    return path, drive, config_path, sensor_config
 
 
 def robot_class(name):
@@ -304,7 +354,7 @@ def robot_class(name):
 
 
 def robot_entity(name, profile, source, entry, evidence):
-    return {'id': name, 'version': '1.0.0', 'name': name.replace('_', ' ').title(),
+    entity = {'id': name, 'version': '1.0.0', 'name': name.replace('_', ' ').title(),
         'status': 'available', 'robot_class': robot_class(name), 'maturity': 'prototype',
         'ros_package': profile['package'], 'supported_simulators': profile['supported_simulators'],
         'capabilities': (['display', 'joint_control'] if profile.get('arm_control') else
@@ -316,6 +366,41 @@ def robot_entity(name, profile, source, entry, evidence):
         'evidence': [{'kind': 'integration_test', 'reference': str(evidence),
                      'description': 'Named model import/geometry check only; no movement or mission qualification',
                      'date': '2026-10-05'}], 'tags': ['extension', source['id'], 'display']}
+    sensor = profile.get('sensor_config')
+    if sensor:
+        entity['sensors'] = [
+            dict(type='lidar', name='rplidar', frame=sensor['laser_link_name'],
+                 topic='/scan', message_type='sensor_msgs/LaserScan'),
+            dict(type='camera', name='oakd_rgb', frame=sensor['camera_optical_frame'],
+                 topic='/oakd/rgb/image_raw', message_type='sensor_msgs/Image'),
+            dict(type='depth_camera', name='oakd_depth', frame=sensor['camera_optical_frame'],
+                 topic='/oakd/depth/image_raw', message_type='sensor_msgs/Image'),
+            dict(type='imu', name='imu', frame='imu_link', topic='/imu/out',
+                 message_type='sensor_msgs/Imu'),
+            dict(type='odometry', name='wheel_odometry', frame='odom', topic='/odom',
+                 message_type='nav_msgs/Odometry')]
+        entity['state_interfaces'].append('nav_msgs/Odometry')
+        entity['command_interfaces'] = ['geometry_msgs/Twist']
+        entity['frames'] = ['base_link', 'odom', sensor['laser_link_name'],
+                            sensor['camera_optical_frame'], 'imu_link']
+        entity['locomotion'] = dict(type='differential_drive', dof=2,
+            max_velocity=profile['drive']['max_speed'],
+            max_acceleration=profile['drive']['max_accel'])
+    modes = set(profile.get('supported_modes', []))
+    capabilities = set(entity['capabilities'])
+    if modes & {'loc', 'slam', '3d_slam', 'nav'}:
+        capabilities.update(['localization', 'state_estimation', 'sensor_fusion', 'perception'])
+    if modes & {'slam', '3d_slam'}:
+        capabilities.add('mapping')
+    if 'nav' in modes:
+        capabilities.update(['navigation', 'costmap', 'global_planning', 'local_planning'])
+    entity['capabilities'] = sorted(capabilities)
+    for screen in profile.get('runtime_screens', []):
+        for reference in screen['reports']:
+            entity['evidence'].append(dict(kind='runtime_test', reference=reference,
+                description='%s / %s / %s; named screen only' % (screen['backend'], screen['mode'],
+                    ', '.join(screen['maps'])), date='2026-10-06'))
+    return entity
 
 
 def checkpoint_robots(store, profiles, entities, records):
@@ -425,18 +510,38 @@ def install_robots(store, download, selected_source=None):
                     source_id=source['id'], source_entry=entry,
                     notes='Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification.')
                 if profile.get('arm_control') == 'panda':
+                    from robot_lab_utils.asset_support import apply_recorded_panda_hand
+                    support_path = ROOT/'docs/status/asset-runtime-support.yaml'
+                    support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
+                    profile = apply_recorded_panda_hand(profile, source['revision'],
+                        (support or {}).get('hands', {}).get(name), ROOT)
                     profile['notes'] = ('Native Panda joint/Home/Stop controls in the Arm tab on MuJoCo. '
-                                        'Position trajectories use actual actuators. Cartesian planning, grasp and other backends remain pending.')
+                                        'Position trajectories use actual actuators. Cartesian planning and other backends remain pending.')
+                    if profile.get('hand_control'):
+                        profile['notes'] += (' Hand tab: original coupled fingers, bounded-force opening/closing, '
+                            'Cancel/Stop and reset. Physical cube lift/hold/release recorded on MuJoCo/nav_empty; '
+                            'other objects, MoveIt and dexterous hands require separate qualification.')
                 if source['id'] == 'turtlebot4_vendor':
-                    controlled, drive, controllers = turtlebot4_drive(derived, name)
+                    controlled, drive, controllers, sensor_config = turtlebot4_drive(derived, name)
                     profile.update(xacro=str(controlled), drive=drive, drive_in_display=True,
-                                   features=['velocity_base'],
+                                   sensor_config=sensor_config,
+                                   features=['velocity_base', 'lidar_2d', 'rgbd_camera'],
                                    controllers=['joint_state_broadcaster', 'robot_lab_controller'])
                     profile['notes'] = ('Original TurtleBot4/Create3 geometry and suspension with physical wheel '
                         'control in Display; bounded GUI Drive/WASD uses the lab controller, not vendor firmware. '
                         'Sensors, SLAM/navigation, hazards/docking and visual-material parity remain pending.')
                     check.update(drive_urdf=str(controlled), drive_urdf_sha256=digest(controlled),
                                  drive_controllers_sha256=digest(controllers))
+                    from robot_lab_utils.asset_support import apply_recorded_modes
+                    support_path = ROOT/'docs/status/asset-runtime-support.yaml'
+                    support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
+                    profile = apply_recorded_modes(profile, source['revision'],
+                        (support or {}).get('robots', {}).get(name), ROOT)
+                    if profile.get('runtime_screens'):
+                        profile['notes'] = ('Original TurtleBot4/Create3 wheels, suspension, RPLidar and OAK-D frames; '
+                            'lab sensors at 5 Hz. Recorded localization, mapping and Nav2 modes vary by backend; '
+                            'see robot status and exact runtime screens. Other maps are experiments. '
+                            'Vendor hazards/docking and complete visual-material parity remain pending.')
                 check.update(source_id=source['id'], repository=source['repository'], revision=source['revision'], entry=entry,
                              model_sha256=digest(model_path), derived_urdf_sha256=digest(derived),
                              runtime_mission_qualified=False)
@@ -452,8 +557,11 @@ def install_robots(store, download, selected_source=None):
                 write_json(evidence, check)
                 profiles[name] = profile
                 entities.append(robot_entity(name, profile, source, entry, evidence))
+                support_label = '; '.join(backend+': '+', '.join(modes) for backend, modes in
+                    profile.get('supported_modes_by_simulator',
+                        {backend: profile['supported_modes'] for backend in profile['supported_simulators']}).items())
                 record.update(status='installed', check=str(evidence), profiles=[{'id': name, 'kind': 'robot',
-                    'support': 'Display: '+', '.join(profile['supported_simulators']), 'notes': profile['notes']}])
+                    'support': support_label, 'notes': profile['notes']}])
             except Exception as exc:
                 record.update(status='needs integration repair', reason=str(exc))
             records.append(record)

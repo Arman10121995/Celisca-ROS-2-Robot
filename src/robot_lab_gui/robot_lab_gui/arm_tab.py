@@ -40,7 +40,8 @@ class ArmTab(ttk.Frame):
         self.stop_button.grid(row=9, column=2, columnspan=2, sticky='ew')
         ttk.Label(self, text='Joint trajectories use the actual native Panda actuators and model limits.\n'
             'Stop, cancellation or GUI heartbeat loss holds the measured arm position.\n'
-            'Cartesian planning, predictive collision checking, grasp and other arm backends remain pending.',
+            'Use Hand for qualified coupled-finger controls. Cartesian planning, predictive collision checking\n'
+            'and other arm backends remain pending.',
             wraplength=880, justify='left').grid(row=10, column=0, columnspan=4, sticky='w', pady=12)
         self.node = None
         self.state = None
