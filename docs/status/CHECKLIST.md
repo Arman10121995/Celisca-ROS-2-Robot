@@ -5,7 +5,7 @@ describes an implemented feature or a named measured screen; it does not
 qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
 [roadmap](../../ROADMAP.md) owns acceptance, and the
-[latest measurements](continuation-2026-10-05.md) give exact scopes and limits.
+[latest measurements](continuation-2026-10-06.md) give exact scopes and limits.
 The latest user instruction prioritizes the new extensions before resuming
 the older roadmap. Existing stabilization fixes must remain working.
 
@@ -61,13 +61,21 @@ the older roadmap. Existing stabilization fixes must remain working.
   neutral enable, WASD forward/reverse/turn, Stop and command loss on both
   variants/all four engines in `nav_empty`. Restore original suspension springs
   and repair Isaac's differential-drive watchdog and acceleration timing.
-  Sensor parity, reset/obstacle/mapping/Nav2 and original materials remain pending.
+  Eight final source-frame/lidar/RGB-D/Drive checks and forty localization,
+  reset/resume, actual mapping/export and clear/obstacle Nav2 trials now pass.
+  The normal GUI selects algorithms and autofills commands for all 40 mode
+  combinations. Other maps/routes, materials and vendor firmware remain open.
 - [x] Add native Panda Arm joint/Home/Stop controls and real MuJoCo position
   trajectories; measure rejection, cancellation and heartbeat loss (R5.7).
 - [x] Add native Panda Hand open/close/opening/Cancel/Stop and GUI Reset controls.
   Measure real bounded-force cube contact, a 7.57 cm lift and gravity release
   in MuJoCo/`nav_empty`, plus lost heartbeats and reset during closing (R5.8).
-  Other hands, objects, Cartesian plans and manipulation backends remain open.
+  Other hands, objects and manipulation backends remain open.
+- [x] Add native Panda MoveIt Cartesian Plan/Execute against actual native
+  collision geometry and the selected static world. Measure two physical
+  TCP targets, floor/self-collision and unreachable rejection, joint/finger
+  plan invalidation, Cancel/Stop/heartbeat loss, reset and clean MoveIt exit
+  in MuJoCo/`nav_empty` (R5.7). Attached-object planning and Servo remain open.
 - [x] Repair Trimesh/NumPy CI compatibility; exact `36f38b5` remote CI passes
   build, fast, physics, integration and registry checks.
 - [x] Replace invented support/release success with exact hashed measurements,
@@ -110,10 +118,10 @@ the older roadmap. Existing stabilization fixes must remain working.
   runtime checks for the installed Display profiles; integrate remaining
   vendor controller interfaces, then add qualified control modes. All eight
   featured URDFHub models have installed equivalents with actual provenance. Import counts do not qualify joint control, walking or missions.
-- [ ] **R3.6, TurtleBot 4:** Preserve eight physical Drive screens and qualify
-  repeated reset/second-run behavior, actual lidar/OAK-D frames and depth,
-  localization, 2D/3D SLAM and obstacle Nav2 missions before enabling those modes.
-  Vendor hazards/docking and hardware control require separate integration.
+- [ ] **R3.6, TurtleBot 4:** Preserve the measured four-backend modes, final
+  sensors/Drive, reset/resume, saves and clear/obstacle routes. Qualify longer
+  routes and additional maps, original materials and vendor hazards/docking;
+  hardware/vendor firmware control requires separate integration.
 - [ ] **R6.5:** Review generated occupancy origin, mesh scale, height and
   seed; cover disconnected free regions, test rotated geometry and navigation
   alignment, then register validated maps. The new shared heightfield converter
@@ -129,10 +137,11 @@ the older roadmap. Existing stabilization fixes must remain working.
   screens; verify Isaac runtime contact, deterministic generation and actual
   robot traversal per backend.
 - [ ] **R5.7:** Extend measured native Panda joint/trajectory/Home/Stop controls
-  to Cartesian MoveIt2/Servo planning, predictive/self-collision checks, grasp
-  and the other arm backends; measure reachable targets and obstacle avoidance.
-- [ ] **R5.8:** Integrate robot hands/grippers, control limits and GUI commands;
-  measure closure, grasp/contact, hold and release of actual simulated objects.
+  beyond the measured MoveIt Cartesian/static-world screens to Servo,
+  attached-object scenes, repeated pick/place and the other arm backends.
+- [ ] **R5.8:** Preserve the native Panda physical cube grasp and interruption
+  proof. Add model-specific Robotiq/dexterous-hand controls and measure other
+  objects, repeated pick/place and the other backends.
 - [ ] **R5.9:** Combine a mobile base and arm with consistent TF/controllers,
   navigation-to-object and grasp/place missions through the GUI.
 

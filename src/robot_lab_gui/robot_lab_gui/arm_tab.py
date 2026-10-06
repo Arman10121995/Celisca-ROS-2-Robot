@@ -40,9 +40,9 @@ class ArmTab(ttk.Frame):
         self.stop_button.grid(row=9, column=2, columnspan=2, sticky='ew')
         ttk.Label(self, text='Joint trajectories use the actual native Panda actuators and model limits.\n'
             'Stop, cancellation or GUI heartbeat loss holds the measured arm position.\n'
-            'Use Hand for qualified coupled-finger controls. Cartesian planning, predictive collision checking\n'
-            'and other arm backends remain pending.',
-            wraplength=880, justify='left').grid(row=10, column=0, columnspan=4, sticky='w', pady=12)
+            'Use Hand for qualified coupled-finger controls. Cartesian plans require an acknowledged\n'
+            'selected-world scene and fresh measured state. Other arm backends remain pending.',
+            wraplength=880, justify='left').grid(row=11, column=0, columnspan=4, sticky='w', pady=12)
         self.node = None
         self.state = None
         self.received = -math.inf
@@ -50,6 +50,8 @@ class ArmTab(ttk.Frame):
         self.handle = None
         self.sending = False
         self.closed = False
+        from .cartesian_controls import CartesianControls
+        self.cartesian = CartesianControls(self)
         self.refresh_selection()
         self.job = self.after(100, self.poll)
 
@@ -69,6 +71,7 @@ class ArmTab(ttk.Frame):
                     and 'arm_control:=panda' in process.args)
 
     def refresh_selection(self):
+        self.cartesian.refresh()
         if not self.selected():
             self.status_var.set('Select menagerie_franka_emika_panda, MuJoCo, Display in Launch.')
         for button in self.buttons+[self.cancel_button, self.stop_button]:
@@ -133,11 +136,13 @@ class ArmTab(ttk.Frame):
         self.cancel_button.state(['!disabled'] if ready and self.handle else ['disabled'])
         self.stop_button.state(['!disabled'] if ready else ['disabled'])
         self.was_owned = owned
+        self.cartesian.poll()
         self.job = self.after(100, self.poll)
 
     def send_positions(self, target):
         if not self.ready() or self.sending or self.state['busy'] or not self.action.server_is_ready():
             return
+        self.cartesian.invalidate()
         from control_msgs.action import FollowJointTrajectory
         from trajectory_msgs.msg import JointTrajectoryPoint
         distance = max(abs(a-b) for a, b in zip(target, self.state['positions']))
@@ -195,10 +200,12 @@ class ArmTab(ttk.Frame):
             self.send_positions(self.state['home'])
 
     def cancel(self):
+        self.cartesian.invalidate()
         if self.handle:
             self.handle.cancel_goal_async()
 
     def stop(self):
+        self.cartesian.invalidate()
         if self.node and self.stop_client.service_is_ready():
             from std_srvs.srv import Trigger
             self.stop_client.call_async(Trigger.Request())

@@ -510,17 +510,24 @@ def install_robots(store, download, selected_source=None):
                     source_id=source['id'], source_entry=entry,
                     notes='Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification.')
                 if profile.get('arm_control') == 'panda':
-                    from robot_lab_utils.asset_support import apply_recorded_panda_hand
+                    from robot_lab_utils.asset_support import apply_recorded_panda_hand, apply_recorded_panda_planning
                     support_path = ROOT/'docs/status/asset-runtime-support.yaml'
                     support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
                     profile = apply_recorded_panda_hand(profile, source['revision'],
                         (support or {}).get('hands', {}).get(name), ROOT)
+                    profile = apply_recorded_panda_planning(profile, source['revision'],
+                        (support or {}).get('arm_planning', {}).get(name), ROOT)
                     profile['notes'] = ('Native Panda joint/Home/Stop controls in the Arm tab on MuJoCo. '
                                         'Position trajectories use actual actuators. Cartesian planning and other backends remain pending.')
+                    if profile.get('arm_planning'):
+                        profile['notes'] = ('Arm tab: joint/Home and MoveIt Cartesian Plan/Execute through native '
+                            'MuJoCo actuators. Two offsets, static nav_empty collision rejection, stale-plan '
+                            'invalidation, Cancel/Stop/watchdog and reset measured. Other maps are experiments; '
+                            'payload planning, Servo and other backends remain pending.')
                     if profile.get('hand_control'):
                         profile['notes'] += (' Hand tab: original coupled fingers, bounded-force opening/closing, '
                             'Cancel/Stop and reset. Physical cube lift/hold/release recorded on MuJoCo/nav_empty; '
-                            'other objects, MoveIt and dexterous hands require separate qualification.')
+                            'other objects, planned grasping and dexterous hands require separate qualification.')
                 if source['id'] == 'turtlebot4_vendor':
                     controlled, drive, controllers, sensor_config = turtlebot4_drive(derived, name)
                     profile.update(xacro=str(controlled), drive=drive, drive_in_display=True,
@@ -532,6 +539,9 @@ def install_robots(store, download, selected_source=None):
                         'Sensors, SLAM/navigation, hazards/docking and visual-material parity remain pending.')
                     check.update(drive_urdf=str(controlled), drive_urdf_sha256=digest(controlled),
                                  drive_controllers_sha256=digest(controllers))
+                    from robot_lab_utils.gazebo_physics_world import COMPLIANT_STEP_BOUNDS
+                    if name in COMPLIANT_STEP_BOUNDS:
+                        profile['gazebo_max_physics_step_s'] = COMPLIANT_STEP_BOUNDS[name]
                     from robot_lab_utils.asset_support import apply_recorded_modes
                     support_path = ROOT/'docs/status/asset-runtime-support.yaml'
                     support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
@@ -542,6 +552,14 @@ def install_robots(store, download, selected_source=None):
                             'lab sensors at 5 Hz. Recorded localization, mapping and Nav2 modes vary by backend; '
                             'see robot status and exact runtime screens. Other maps are experiments. '
                             'Vendor hazards/docking and complete visual-material parity remain pending.')
+                    # Measured 2026-10-06: the suspended Create3 base slips its
+                    # wheels in the coarse (10 ms) Gazebo worlds and the wheel
+                    # odometry diverges from truth; Gazebo launches a capped
+                    # derivative of the selected world for this robot only.
+                    if name in COMPLIANT_STEP_BOUNDS:
+                        profile['notes'] += (' Gazebo caps the selected world to a 2 ms physics '
+                            'step for this base (measured wheel-odometry divergence in the stock '
+                            '10 ms worlds); other backends launch the world unchanged.')
                 check.update(source_id=source['id'], repository=source['repository'], revision=source['revision'], entry=entry,
                              model_sha256=digest(model_path), derived_urdf_sha256=digest(derived),
                              runtime_mission_qualified=False)

@@ -1,0 +1,214 @@
+{
+  "robot": "asset_turtlebot4_lite",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 544343,
+  "phases": {
+    "armed_neutral": {
+      "dx": 0.0,
+      "dy": 0.0,
+      "yaw": 0.0,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004471828095158767,
+      "max_tilt": 0.004573946058021814,
+      "sim_duration": 0.98
+    },
+    "forward": {
+      "dx": 0.6494998821919002,
+      "dy": 1.7231960314445516e-05,
+      "yaw": -6.448190187371138e-07,
+      "tail_vx": 0.29999997136717926,
+      "tail_wz": -2.6298325271145207e-07,
+      "z": -0.004471805628469961,
+      "max_tilt": 0.004575539729802581,
+      "sim_duration": 2.48
+    },
+    "forward_stop": {
+      "dx": 0.08554997158753322,
+      "dy": 2.2371093515993756e-06,
+      "yaw": -1.5476076657653802e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.00447019422460934,
+      "max_tilt": 0.004575263780627616,
+      "sim_duration": 2.5
+    },
+    "reverse": {
+      "dx": -0.6434999292731646,
+      "dy": -1.7013634896145824e-05,
+      "yaw": 6.411738497574349e-07,
+      "tail_vx": -0.2999999713640151,
+      "tail_wz": 2.629940272833584e-07,
+      "z": -0.004468842730845481,
+      "max_tilt": 0.004562565489780735,
+      "sim_duration": 2.5
+    },
+    "reverse_stop": {
+      "dx": -0.08850003614900998,
+      "dy": -2.36951156273868e-06,
+      "yaw": 1.5574052046647425e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004468846410156199,
+      "max_tilt": 0.004551824593405024,
+      "sim_duration": 2.5
+    },
+    "left_turn": {
+      "dx": -0.0003253815235465529,
+      "dy": 0.00011531455459085072,
+      "yaw": 2.463432983435187,
+      "tail_vx": 3.218129240231818e-07,
+      "tail_wz": 1.1274272753858816,
+      "z": -0.004468842695546065,
+      "max_tilt": 0.004551824593405024,
+      "sim_duration": 2.4999999999999982
+    },
+    "left_turn_stop": {
+      "dx": -6.493133258395067e-05,
+      "dy": -2.701697941132064e-05,
+      "yaw": 0.32197298137166985,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004468842831385916,
+      "max_tilt": 0.004551772180205262,
+      "sim_duration": 2.479999999999997
+    },
+    "right_turn": {
+      "dx": 0.00034224533019805436,
+      "dy": 9.750870695213187e-06,
+      "yaw": -2.4183352488660614,
+      "tail_vx": 1.612190166322776e-07,
+      "tail_wz": -1.1274271243946337,
+      "z": -0.004468842806324027,
+      "max_tilt": 0.00455177295147586,
+      "sim_duration": 2.479999999999997
+    },
+    "right_turn_stop": {
+      "dx": -0.00011298543068199995,
+      "dy": -7.654309352866928e-05,
+      "yaw": -0.3336471784236441,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004468842948093221,
+      "max_tilt": 0.004551773150726638,
+      "sim_duration": 2.5
+    },
+    "pre_loss": {
+      "dx": 0.5022218107452113,
+      "dy": 0.01671502016794857,
+      "yaw": -4.907759290559421e-07,
+      "tail_vx": 0.29999997134722667,
+      "tail_wz": -2.487549741423768e-07,
+      "z": -0.004468843064209544,
+      "max_tilt": 0.004551826851456812,
+      "sim_duration": 2.0
+    },
+    "publisher_loss": {
+      "dx": 0.21438126147440575,
+      "dy": 0.007134998770873702,
+      "yaw": -2.5325644649465406e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004467292672824666,
+      "max_tilt": 0.004551774276692156,
+      "sim_duration": 2.4800000000000004
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "sensors": {
+    "scan_messages": 141,
+    "depth_messages": 141,
+    "camera_info_messages": 141,
+    "last_scan": {
+      "frame": "rplidar_link",
+      "samples": 640,
+      "range_min": 0.164000004529953,
+      "range_max": 12.0,
+      "finite": 640,
+      "angle_min": -3.1415927410125732,
+      "angle_increment": 0.009832840412855148
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "encoding": "32FC1",
+      "finite_positive": 2577,
+      "min": 0.4249019920825958,
+      "max": 5.931603908538818,
+      "mean": 2.490684986114502
+    },
+    "camera_info": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "k": [
+        277.19135641132203,
+        0.0,
+        160.0,
+        0.0,
+        277.19135641132203,
+        120.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "expected_fx": 277.19135641132203,
+    "depth_mean_change_m": 0.5043642520904541,
+    "mounted_frames": {
+      "rplidar_link": {
+        "position": [
+          0.00393584,
+          0.0,
+          0.13949272000000001
+        ],
+        "expected_position": [
+          0.00393584,
+          0.0,
+          0.13949272000000001
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position": [
+          -0.03705974,
+          0.0,
+          0.18588622
+        ],
+        "expected_position": [
+          -0.03705974,
+          0.0,
+          0.18588622
+        ],
+        "rotation_xyzw": [
+          -0.5,
+          0.4999999999999999,
+          -0.5,
+          0.5000000000000001
+        ]
+      }
+    }
+  },
+  "joint_names": [
+    "left_wheel_joint",
+    "wheel_drop_left_joint",
+    "right_wheel_joint",
+    "wheel_drop_right_joint"
+  ],
+  "body_samples": 1406,
+  "joint_samples": 2812,
+  "real_time_factor": 0.8905913301472064,
+  "launch_returncode": 0
+}

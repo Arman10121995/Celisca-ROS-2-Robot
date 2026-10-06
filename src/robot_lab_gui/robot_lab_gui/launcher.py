@@ -9,6 +9,7 @@ import signal
 import sqlite3
 import subprocess
 import threading
+import time
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
@@ -450,6 +451,10 @@ class SimulationLauncherGui(tk.Tk):
         self._launch_running = False
         self._last_fixes = []
         self.output_queue = queue.Queue()
+        self._lifecycle_queue = queue.Queue()
+        self._aux_processes = set()
+        self._aux_lock = threading.Lock()
+        self._aux_stopping = threading.Event()
         self._output_autoscroll = True  # follow-tail for Launch Output
 
         self.robot_var = tk.StringVar(
@@ -1920,9 +1925,13 @@ class SimulationLauncherGui(tk.Tk):
                 and self.simulator_var.get() == 'mujoco' and self.mode_var.get() == 'display':
             command = [part for part in command if not part.startswith('arm_control:=')]
             command.append('arm_control:=panda')
-            if hasattr(self, 'hand_tab') and self.hand_tab.selected() and self.hand_tab.fixture_var.get():
+            fixture = hasattr(self, 'hand_tab') and self.hand_tab.selected() and self.hand_tab.fixture_var.get()
+            if fixture:
                 command = [part for part in command if not part.startswith('grasp_fixture:=')]
                 command.append('grasp_fixture:=true')
+            if self._robot_config().get('arm_planning') == 'moveit':
+                command = [part for part in command if not part.startswith('arm_planning:=')]
+                command.append('arm_planning:='+('none' if fixture else 'moveit'))
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -2064,7 +2073,10 @@ class SimulationLauncherGui(tk.Tk):
                          '3D goals use /px4/goal; no obstacle avoidance. Health contains the flight guide and measured results.')
         if config.get('arm_control') == 'panda':
             lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
-                         'Cartesian planning and other arm backends remain pending; see Hand for qualified gripper controls.')
+                         'See Hand for qualified gripper controls; other arm backends remain pending.')
+            lines.append('Cartesian: MoveIt Plan/Execute with the selected static collision scene. '
+                         'Nav_empty targets are measured; other maps remain experiments and the grasp fixture uses joint controls.'
+                         if config.get('arm_planning') == 'moveit' else 'Cartesian planning remains pending qualification.')
         if config.get('hand_control') == 'panda':
             lines.append('Hand tab: native coupled-finger Open/Close/Stop and bounded force. '
                          'The selected grasp fixture has a measured cube lift/release/reset on MuJoCo/nav_empty. '
@@ -2366,6 +2378,7 @@ class SimulationLauncherGui(tk.Tk):
             self.status_var.set("Launch blocked: invalid configuration")
             return
         self._append_output(f"$ {self.command_var.get()}\n")
+        self._aux_stopping.clear()
         try:
             self.process = subprocess.Popen(
                 command,
@@ -2391,8 +2404,23 @@ class SimulationLauncherGui(tk.Tk):
         assert self.process is not None
         process = self.process
         def read_lines():
-            for line in process.stdout:
-                self.output_queue.put(("line", line))
+            log_root = Path(subprocess_env().get('ROBOT_LAB_RUNTIME_ROOT',
+                            '/workspace/molar/robot_lab_runtime'))/'gui'/'runs'
+            log_root.mkdir(parents=True, exist_ok=True)
+            log_path = log_root/f'launch-{time.time_ns()}-{process.pid}.log'
+            self.output_queue.put(('line', f'[full launch log: {log_path}]\n'))
+            dropped = 0
+            with log_path.open('w', buffering=1) as log:
+                for line in process.stdout:
+                    log.write(line)
+                    if self.output_queue.qsize() >= 4000:
+                        dropped += 1
+                        continue
+                    if dropped:
+                        self.output_queue.put(('line', f'[{dropped} console lines omitted; '
+                            f'full output is in {log_path}]\n'))
+                        dropped = 0
+                    self.output_queue.put(("line", line))
         reader = threading.Thread(target=read_lines, daemon=True)
         reader.start()
         # Do not wait for pipe EOF first: an orphaned server can retain that
@@ -2400,26 +2428,42 @@ class SimulationLauncherGui(tk.Tk):
         return_code = process.wait()
         stop_group(process.pid, interrupt_timeout=0.0)
         reader.join(timeout=1.0)
-        self.output_queue.put(("done", return_code))
+        self._lifecycle_queue.put((process, return_code))
 
     def _poll_output(self):
+        # A failing ROS graph can produce lines faster than Tk can draw them.
+        # Bound each callback so Drive/Stop and window events still run.
+        deadline = time.monotonic() + .02
+        launch_lines, console_lines = [], []
         try:
             while True:
-                kind, payload = self.output_queue.get_nowait()
-                if kind == "line":
-                    self._append_output(payload)
-                elif kind == "cline":
-                    self._console_append(payload)
-                elif kind == "done":
-                    self._append_output(f"\n[launch exited with code {payload}]\n")
+                process, return_code = self._lifecycle_queue.get_nowait()
+                launch_lines.append(f'\n[launch exited with code {return_code}]\n')
+                if process is self.process:
+                    self._stop_aux_commands()
                     self._stop_drive()
                     self._launch_running = False
                     self._update_reset_button()
                     self._update_validation_and_command()
-                    self.stop_button.configure(state="disabled")
-                    self.status_var.set("Idle")
+                    self.stop_button.configure(state='disabled')
+                    self.status_var.set('Idle')
         except queue.Empty:
             pass
+        try:
+            for _ in range(200):
+                kind, payload = self.output_queue.get_nowait()
+                if kind == "line":
+                    launch_lines.append(payload)
+                elif kind in ("cline", "live_monitor"):
+                    console_lines.append(payload)
+                if time.monotonic() >= deadline:
+                    break
+        except queue.Empty:
+            pass
+        if launch_lines:
+            self._append_output(''.join(launch_lines))
+        if console_lines:
+            self._console_append(''.join(console_lines))
         self.after(100, self._poll_output)
 
     def _refresh_maps(self):
@@ -2467,6 +2511,7 @@ class SimulationLauncherGui(tk.Tk):
     def _append_output(self, text):
         self.output.configure(state="normal")
         self.output.insert("end", text)
+        self._trim_console(self.output)
         self.output.see("end")
         self.output.configure(state="disabled")
         self._update_proc_count()
@@ -2475,8 +2520,17 @@ class SimulationLauncherGui(tk.Tk):
         """Append text to the shared bottom console (all lab tabs)."""
         self.console.configure(state="normal")
         self.console.insert("end", text)
+        self._trim_console(self.console)
         self.console.see("end")
         self.console.configure(state="disabled")
+
+    @staticmethod
+    def _trim_console(widget):
+        # Keep a useful recent history without making long trials redraw an
+        # unbounded Text widget. ROS still writes its full logs separately.
+        lines = int(widget.index('end-1c').split('.')[0])
+        if lines > 10000:
+            widget.delete('1.0', f'{lines-9999}.0')
 
     def _bind_drive_button(self, button, linear_scale, angular_scale):
         direction = (linear_scale, angular_scale)
@@ -2828,25 +2882,44 @@ class SimulationLauncherGui(tk.Tk):
             self.output_queue.put(('cline', f'[3D map save failed: {exc}]\n'))
 
     def _run_aux_command(self, command, label):
+        if self._aux_stopping.is_set():
+            return
         try:
-            process = subprocess.Popen(
-                command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                bufsize=1,
-                env=subprocess_env(),
-            )
+            with self._aux_lock:
+                if self._aux_stopping.is_set():
+                    return
+                process = subprocess.Popen(
+                    command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                    text=True, start_new_session=True, env=subprocess_env())
+                self._aux_processes.add(process)
         except OSError as exc:
             self.output_queue.put(("cline", f"[{label} failed to start: {exc}]\n"))
             return
 
-        for line in process.stdout:
-            self.output_queue.put(("cline", line))
-        return_code = process.wait()
-        self.output_queue.put(("cline", f"[{label} exited with code {return_code}]\n"))
+        try:
+            try:
+                output, _ = process.communicate(timeout=40)
+            except subprocess.TimeoutExpired:
+                self.output_queue.put(('cline', f'[{label} timed out after 40 seconds]\n'))
+                stop_group(process.pid, interrupt_timeout=.5, terminate_timeout=.5)
+                output, _ = process.communicate(timeout=3)
+            self.output_queue.put(('cline', output))
+            self.output_queue.put(('cline', f'[{label} exited with code {process.returncode}]\n'))
+        finally:
+            with self._aux_lock:
+                self._aux_processes.discard(process)
+
+    def _stop_aux_commands(self):
+        self._aux_stopping.set()
+        with self._aux_lock:
+            processes = list(self._aux_processes)
+        for process in processes:
+            threading.Thread(target=stop_group, args=(process.pid,),
+                             kwargs=dict(interrupt_timeout=.5, terminate_timeout=.5),
+                             daemon=False).start()
 
     def _stop_launch(self):
+        self._stop_aux_commands()
         if not self.process or not self._launch_running:
             return
         self._stop_drive()
@@ -2881,6 +2954,7 @@ class SimulationLauncherGui(tk.Tk):
             )
             return
         self._append_output(f"$ {' '.join(str(part) for part in command)}\n")
+        self._aux_stopping.clear()
         try:
             self.process = subprocess.Popen(
                 command,
@@ -2949,6 +3023,7 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        self._stop_aux_commands()
         if hasattr(self, 'arm_tab'):
             self.arm_tab.close()
         if hasattr(self, 'hand_tab'):
@@ -2960,7 +3035,7 @@ class SimulationLauncherGui(tk.Tk):
         if monitor is not None:
             monitor.shutdown()
         if self.process and self._launch_running:
-            threading.Thread(target=stop_group, args=(self.process.pid,), daemon=False).start()
+            threading.Thread(target=stop_owned_launch, args=(self.process,), daemon=False).start()
         if self.ros_node is not None:
             self.ros_node.destroy_node()
             self.ros_node = None

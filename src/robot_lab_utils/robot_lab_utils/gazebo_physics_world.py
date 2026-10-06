@@ -7,6 +7,41 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 
+# Robots whose compliant/suspended contacts were measured diverging from
+# ground truth in the coarse worlds declare the finest Gazebo integration
+# step they need. 2026-10-06: the TurtleBot4's original Create3 suspension
+# and casters integrated 3.18 m of phantom wheel odometry against 1.15 m of
+# real travel inside 16 s in the stock 10 ms nav_obstacle world (Nav2
+# aborted); the same selected world capped to 2 ms passed the identical
+# route at 0.084 m truth error. Worlds already at or below the bound
+# (nav_empty is 2 ms) launch unchanged.
+COMPLIANT_STEP_BOUNDS = {
+    "asset_turtlebot4_standard": .002,
+    "asset_turtlebot4_lite": .002,
+}
+
+
+def bounded_world_for_robot(world_file, robot_profile, simulator, runtime_root=None):
+    """World path to launch for this robot/backend selection.
+
+    Returns the selected world unchanged unless the robot declares a
+    ``gazebo_max_physics_step_s`` bound *and* Gazebo is the selected
+    backend; a coarser world then launches as a cached derivative with the
+    bound applied (see ``cap_physics_step``).
+    """
+    if simulator != "gazebo":
+        return str(world_file)
+    bound = (robot_profile or {}).get("gazebo_max_physics_step_s")
+    if not bound:
+        return str(world_file)
+    target = cap_physics_step(world_file, bound, runtime_root=runtime_root)
+    if target != str(Path(world_file).resolve()):
+        print("[robot_lab] %s needs a bounded Gazebo physics step: launching "
+              "cached derivative %s (source world unchanged)"
+              % ((robot_profile or {}).get("name", "robot"), target))
+    return target
+
+
 def cap_physics_step(world_file, maximum_step, runtime_root=None):
     source = Path(world_file).resolve()
     maximum = float(maximum_step)

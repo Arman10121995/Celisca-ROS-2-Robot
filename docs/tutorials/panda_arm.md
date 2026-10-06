@@ -3,7 +3,8 @@
 ## Run
 
 Select `menagerie_franka_emika_panda`, MuJoCo and Display in Launch. Choose a
-map, then Run. The command includes `arm_control:=panda`. Open the **Arm** tab
+map, then Run. The command includes `arm_control:=panda` and
+`arm_planning:=moveit` for the qualified profile without a grasp fixture. Open the **Arm** tab
 to jog each joint, return Home, cancel a trajectory or Stop Arm. The displayed
 positions come from the simulator. The base Drive/WASD controls are disabled
 for this fixed arm. Other installed Panda/arm profiles remain Display imports.
@@ -20,7 +21,7 @@ source /opt/ros/humble/setup.bash
 source install/setup.bash
 ros2 launch robot_lab_bringup simulated_robot.launch.py \
   robot_model:=menagerie_franka_emika_panda simulator:=mujoco \
-  mode:=display map_name:=nav_empty arm_control:=panda
+  mode:=display map_name:=nav_empty arm_control:=panda arm_planning:=moveit
 ```
 
 Use `arm_control:=none` for the original passive authored-pose Display.
@@ -44,14 +45,52 @@ without heartbeat aborts it and holds the measured position. `/arm/stop`
 simultaneous goal is rejected. Stop is a controlled hold, so physical inertia
 can continue briefly while the native actuators brake.
 
-Actual moving-arm/environment contacts abort motion reactively. The optional
-grasp fixture allows contact between its cube and the source finger pads;
-other moving-arm/environment contacts still abort the arm. This is **not
-predictive collision checking** or a MoveIt planning scene. Cartesian targets,
-MoveIt/Servo, self-collision planning, arbitrary pick/place and other
-backends remain R5.7–R5.9. Do not enable those mission labels from this joint
-screen alone. Measured joint/Home/Stop/cancel/watchdog results and negative
-probes are in the [control evidence](../status/evidence/panda-turtlebot4-2026-10-05/README.md).
+Actual moving-arm/environment contacts abort native joint motion reactively.
+The optional grasp fixture allows contact between its cube and the source
+finger pads; other moving-arm/environment contacts still abort the arm. Joint
+jog/Home commands retain this native safety contract. The separate MoveIt
+controls below predict collisions for their planned path.
+
+## Cartesian Plan / Execute
+
+Select the native Panda, MuJoCo, Display and `nav_empty`, leave the Hand grasp
+fixture unchecked, and Run. In **Arm**, wait for the selected-world scene and
+measured joint state. Set the Cartesian offsets, for example Δz = 0.05 m with
+Δx = Δy = 0, then press **Plan**. Review the reported waypoints and duration;
+press **Execute Plan** to move. A subsequent Δy = 0.04 m was also measured.
+Offsets are relative to the measured TCP in `native_world`; orientation is
+preserved. Each component is bounded to ±0.25 m; reachability and collision
+checks can reject a request within that input range.
+
+This reuses installed [MoveIt 2 planning scenes](https://moveit.picknik.ai/humble/doc/examples/planning_scene/planning_scene_tutorial.html),
+KDL inverse kinematics, OMPL RRTConnect and FCL collision checks. The planning
+URDF/SRDF is generated from the same pinned native MJCF: exact joint axes,
+limits with the native 0.005 rad margin, source collision hulls and native
+collision exclusions. A static selected-world scene is acknowledged before
+planning. Moving links carry 1 cm environment padding. The TCP comes from
+the original finger-pad midpoint, 0.1029 m along the hand's local z axis.
+
+The GUI sends measured joints as the [MoveIt IK seed](https://github.com/moveit/moveit_msgs/blob/ros2/msg/PositionIKRequest.msg),
+requests collision avoidance and plans to that joint solution. This avoids
+far redundant elbow solutions for small offsets. Checked joint edges are
+retimed at at most 0.35 rad/s and executed by the existing native action.
+Paths exceeding its 15 s contract are rejected; no path is truncated or
+executed automatically. Actual FK and independent physical TCP feedback
+are checked in the [Cartesian evidence](../status/evidence/panda-cartesian-2026-10-06/README.md).
+
+A cached plan expires after ten wall seconds or a joint/finger change above
+0.01 in the corresponding joint units. Jog/Home, Reset, Cancel, Stop,
+selection changes and editing an offset also invalidate it. Stale joint/scene
+feedback disables execution. Arm Cancel/Stop and heartbeat loss hold the
+measured position. Live Monitor may remain connected during these controls.
+
+The measured mission covers two targets and rejection/interruption/reset in
+static `nav_empty`. Other static maps are operator experiments; actor/heightmap
+scenes fail explicitly. The optional grasp fixture sets `arm_planning:=none`
+because its free cube and pedestal are not yet represented as planning-scene
+objects. Use the proven joint/Hand controls for that fixture. Attached payload
+planning, Servo Cartesian jogging, arbitrary repeated pick/place and the
+other arm backends remain R5.7–R5.9.
 
 ## Hand and physical grasp
 

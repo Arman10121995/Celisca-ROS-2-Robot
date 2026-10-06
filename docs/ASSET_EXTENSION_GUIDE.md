@@ -191,8 +191,11 @@ MuJoCo dynamics, rejection, cancellation and heartbeat-loss evidence; see the
 GripperCommand, actual GUI Hand controls and a physical cube lift/hold/release
 with Cancel/Stop/watchdog and GUI reset; see
 [grasp evidence](status/evidence/panda-gripper-2026-10-06/README.md).
-MoveIt scenes, Cartesian planning, arbitrary pick/place, other hands and
-cross-backend manipulation qualification remain. R5.9 is queued; the source
+Native Panda MoveIt KDL/OMPL/FCL Cartesian Plan/Execute now has measured
+static-world/native-geometry collision and physical TCP proof in `nav_empty`;
+see [Cartesian evidence](status/evidence/panda-cartesian-2026-10-06/README.md).
+Servo, dynamic/attached-object scenes, arbitrary repeated pick/place, other
+hands and cross-backend manipulation qualification remain. R5.9 is queued; the source
 catalog does not implement mobile manipulation. Preserve the wheeled and legged workflows while adding
 these components.
 
@@ -208,8 +211,11 @@ or old PX4 relocation as a substitute for controller work.
    feedback is measured, but stable authored-pose hold is not qualified.
 2. R5.7: preserve the measured native Panda controller and GUI joint/Home/Stop
    implementation, including the position-only action contract and heartbeat
-   ownership. Add GUI Cartesian plan/execute and upstream MoveIt2 configuration;
-   validate collisions and reachable/failed targets before adding a capability.
+   ownership, upstream MoveIt2 KDL/OMPL/FCL and seeded native Panda Cartesian
+   Plan/Execute. Preserve native collision exclusions, 0.005 rad soft margins,
+   exact model/world hashes and the checked-edge retimer. Add Servo and a
+   dynamic/attached-object scene before planned pick/place; repeat independent
+   TCP/contact measurements on each additional map/backend.
 3. R5.8: preserve the measured coupled Panda controller and supported cube
    setup; repeat different object dimensions/masses and pick/place. Native
    Robotiq's 0–255 command has the opposite closure direction to Panda and its
@@ -242,9 +248,17 @@ checks on all four engines in `nav_empty`; see
 Display uses the lab wheel controller and original passive wheel-drop springs,
 not vendor firmware. Follow [the TurtleBot 4 guide](tutorials/turtlebot4.md) for
 joint dimensions, source licenses, sensor adapters and mission acceptance.
-Next qualify repeated reset, actual lidar/OAK-D frames, calibration and depth,
-then localization/2D/3D mapping and obstacle navigation. These modes remain
-gated; vendor hazard/docking behavior and visual parity remain separate.
+October 6 adds forty source-matched localization/reset/resume, real 2D/3D
+Save Map and clear/obstacle Nav2 trials across all four backends, plus eight
+final source-frame/lidar/depth/Drive screens. Normal GUI enables all five
+modes and auto-selects the measured algorithms; named maps are `nav_empty`
+and navigation's `nav_obstacle`. Other maps are experiments. See
+[mode evidence](status/evidence/turtlebot4-modes-2026-10-06/README.md) and
+[sensor evidence](status/evidence/turtlebot4-sensors-2026-10-06/README.md).
+Preserve the Gazebo selected-world 2 ms cap, Isaac pose-derived ideal twist,
+headless render cadence and map-export/GUI cleanup. Continue longer routes,
+other maps, vendor hazards/docking and visual parity; do not substitute
+ideal-sensor simulation for the vendor firmware stack.
 
 ## Recording and enabling a new controller
 
@@ -281,8 +295,11 @@ gated; vendor hazard/docking behavior and visual parity remain separate.
    verifies source pins/control configuration and recomputes acceptance from
    measured body, map or object values. TurtleBot4 Nav2 settings are also
    fingerprinted. Panda Hand requires contact, bounded effort, physical lift
-   and release plus interruption/reset measurements. Do not copy that hand
-   contract onto a different tendon or linkage.
+   and release plus interruption/reset measurements. Panda Cartesian requires
+   physical TCP errors, collision rejection, real joint/finger invalidation,
+   bounded Stop/watchdog, monotonic reset and clean planner exit; native
+   resources and source/world files are fingerprinted. Do not copy these
+   model-specific contracts onto a different tendon, linkage or arm.
 7. Run `provision_extension_assets.py --no-download` for the changed source to
    refresh normal Launch profiles, registry sensor/controller metadata and
    Installed Extensions descriptions. Verify actual GUI backend mode gating,
@@ -290,3 +307,42 @@ gated; vendor hazard/docking behavior and visual parity remain separate.
    the roadmap, ledger, checklist, tutorial and evidence index in the same
    checkpoint. Software tests and remote CI are separate from robot missions.
    Keep a task partial until its full stated acceptance passes.
+
+## Reproduce the native Panda Cartesian qualification
+
+1. Source the SSD environment and ROS/installed workspace. Build
+   `robot_lab_utils robot_lab_bringup robot_lab_gui robot_lab_mujoco`. Verify
+   installed Python/launch hashes against source; do not rely on symlinks alone.
+2. Preserve the pinned native MJCF. `native_arm_description.py` generates the
+   planning URDF/SRDF from compiled native axes, collision hulls, limits and
+   exclusions. Review this against actual FK and native contacts if the model
+   changes. A visual-only URDF does not supply a collision scene.
+3. Start one isolated domain/owned GUI launch with MuJoCo/Display/`nav_empty`.
+   The static scene must acknowledge its world checksum and geometry. Test
+   actual floor/self-collision and unreachable requests; they must produce
+   no physical movement. Do not bypass the scene status.
+4. Use Arm Plan/Execute for small z/y offsets. Record independent physical
+   hand-body TF plus the source TCP offset, joint feedback and real controller
+   results. Require 0.02 m / 5°, fresh truth and actual displacement above 0.02 m.
+   `GetPositionIK` uses the measured seed and collision avoidance, then OMPL
+   plans joint constraints. Preserve every checked edge when retiming.
+5. While a plan is cached, jog an actual joint and move actual fingers; both
+   must disable Execute. Test invalid input, Cancel, Stop, missing heartbeats,
+   reset with monotonic clock/Home, monitor connected, Stop/Close and a new Run.
+   The 15 s action duration and speed limits remain unchanged.
+6. Inspect **each child exit**, not only the launch root. MoveIt Humble on this
+   host needed process-local plugin residency for clean callback destruction;
+   preserve the SDK hashes and [upstream lifetime report](https://github.com/moveit/moveit2/issues/1597).
+   A plugin/version change needs a new shutdown trial. Retain failed raw logs.
+7. The actual archived producer in
+   `status/evidence/panda-cartesian-2026-10-06/producer.py` takes
+   `PANDA_PROBE_OUT` (new SSD directory) and `PANDA_PROBE_NORMAL=1` for the
+   installed profile. Run it under `xvfb-run -a` with a dedicated ROS domain.
+   Source/SDK/native hashes precede launch. Its optional flag override is
+   explicitly experimental and must not be used as a normal-profile claim.
+8. Archive compact reports/producer/hash manifests; leave large traces and
+   source snapshots on SSD. Add the exact report to the evidence index and
+   `arm_planning` support certificate; recompute numeric acceptance, provision
+   that source, then check normal GUI autofill and repeat actual execution.
+   Keep fixture planning disabled until its moving cube/pedestal and attached
+   object transitions exist in the planning scene.

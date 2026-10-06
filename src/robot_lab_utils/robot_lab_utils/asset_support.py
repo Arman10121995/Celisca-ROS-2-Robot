@@ -80,7 +80,9 @@ def apply_recorded_modes(profile, source_revision, support, repository):
         return result
     if (support.get('source_revision') != source_revision
             or support.get('drive') != profile.get('drive')
-            or support.get('sensor_config') != profile.get('sensor_config')):
+            or support.get('sensor_config') != profile.get('sensor_config')
+            or ('gazebo_max_physics_step_s' in support and
+                support['gazebo_max_physics_step_s'] != profile.get('gazebo_max_physics_step_s'))):
         raise ValueError('Recorded runtime support does not match the current source/control configuration')
     for contract in support.get('configuration_files', []):
         path = Path(repository)/contract['path']
@@ -92,6 +94,12 @@ def apply_recorded_modes(profile, source_revision, support, repository):
         backend, mode = cell['backend'], cell['mode']
         if backend not in matrix or mode not in ('loc', 'slam', '3d_slam', 'nav'):
             raise ValueError('Unsupported runtime screen cell')
+        contracts = list(support.get('configuration_files_by_simulator', {}).get(backend, []))
+        contracts += support.get('configuration_files_by_mode', {}).get(backend, {}).get(mode, [])
+        for contract in contracts:
+            path = Path(repository)/contract['path']
+            if hashlib.sha256(path.read_bytes()).hexdigest() != contract['sha256']:
+                raise ValueError('Recorded backend runtime configuration differs: '+str(path))
         maps = set()
         for proof in cell['reports']:
             path = Path(repository)/proof['path']
@@ -123,8 +131,8 @@ def apply_recorded_modes(profile, source_revision, support, repository):
     result['supported_modes'] = [mode for mode in ('display', 'loc', 'slam', '3d_slam', 'nav')
                                  if any(mode in modes for modes in matrix.values())]
     result['runtime_screens'] = scopes
-    result['defaults'] = dict(result.get('defaults', {}), global_planning='a_star_planner',
-                              local_planning='pure_pursuit')
+    result['default_algorithms'] = dict(result.get('default_algorithms', {}),
+        global_planning='a_star_planner', local_planning='pure_pursuit')
     return result
 
 
@@ -177,4 +185,133 @@ def apply_recorded_panda_hand(profile, source_revision, support, repository):
         raise ValueError('Panda hand measurements do not pass contact/lift/interruption acceptance')
     result['hand_control'] = 'panda'
     result['hand_runtime_screen'] = dict(backend='mujoco', map='nav_empty', report=proof['path'])
+    return result
+
+
+def panda_planning_acceptance(report):
+    """Recheck physical Cartesian, rejection and interruption measurements.
+
+    This is the bounded native Panda / MuJoCo / static nav_empty screen. It
+    does not qualify payload planning, Servo, other robots or other backends.
+    Malformed or incomplete reports fail closed, even when labelled PASS.
+    """
+    def bounded(value, lo, hi):
+        return (isinstance(value, (int, float)) and not isinstance(value, bool)
+                and math.isfinite(value) and lo <= value < hi)
+
+    def vector(value, size):
+        return (isinstance(value, list) and len(value) == size
+                and all(bounded(v, -1e6, 1e6) for v in value))
+
+    try:
+        if not (report['robot'] == 'menagerie_franka_emika_panda'
+                and report['backend'] == 'mujoco' and report['map'] == 'nav_empty'
+                and report['mode'] == 'display' and report['launch_returncode'] == 0
+                and report['passed'] is True and report['planner_clean_exit'] is True
+                and report['joint_samples'] > 100 and report['live_monitor']['clock_samples'] > 5
+                and report['scene']['ready'] is True and report['scene']['geometry_count'] >= 9
+                and bounded(report['measured_fk_error_m'], 0, .003)):
+            return False
+        checks = report['checks']
+        required = ('selected_world_scene_acknowledged', 'collision_and_unreachable_rejection',
+                    'two_cartesian_targets_measured', 'real_joint_change_invalidates_plan',
+                    'real_hand_change_invalidates_plan', 'invalid_offset_no_motion',
+                    'cancel', 'stop', 'heartbeat_loss', 'reset_invalidates_plan_and_restores_home',
+                    'owned_cleanup')
+        if not all(checks.get(key) is True for key in required):
+            return False
+        motions = report['motions']
+        if len(motions) != 2:
+            return False
+        for motion in motions:
+            actual, target = motion['actual'], motion['target_position']
+            a, b = actual['quaternion_wxyz'], motion['target_quaternion_wxyz']
+            if not (vector(actual['position'], 3) and vector(target, 3)
+                    and vector(a, 4) and vector(b, 4)
+                    and abs(sum(x*x for x in a)-1) < 1e-4
+                    and abs(sum(x*x for x in b)-1) < 1e-4):
+                return False
+            angle = math.degrees(2*math.acos(min(1., abs(sum(x*y for x, y in zip(a, b))))))
+            if not (math.dist(actual['position'], target) < .02 and angle < 5
+                    and bounded(motion['position_error_m'], 0, .02)
+                    and bounded(motion['orientation_error_deg'], 0, 5)
+                    and bounded(actual['age_sim_s'], -.001, .08)
+                    and bounded(motion['physical_displacement_m'], .02, .3)
+                    and bounded(motion['duration_sim_s'], .05, 15.001)
+                    and motion['joint_samples'] > 20
+                    and motion['terminal_status']['busy'] is False
+                    and motion['terminal_status']['contact_blocked'] is False):
+                return False
+        floor, self_contact = report['floor_collision'], report['self_collision']
+        if not (floor['valid'] is False and self_contact['valid'] is False
+                and any(c['second'].startswith('robot_lab_world_') for c in floor['contacts'])
+                and self_contact['native_contacts']
+                and any(c['first'].startswith('native_body_') and c['second'].startswith('native_body_')
+                        for c in self_contact['planner_contacts'])):
+            return False
+        negatives = report['planning_negatives']
+        if {item['case'] for item in negatives} != {'floor_blocked', 'unreachable'}:
+            return False
+        if not all(item['error_code'] != 1 and item['waypoints'] == 0
+                   and bounded(item['physical_drift_rad'], 0, .003) for item in negatives):
+            return False
+        for name, reason in [('cancel', 'canceled'), ('stop', 'stopped'),
+                             ('heartbeat_loss', 'heartbeat lost')]:
+            item = report[name]
+            if not (bounded(item['drift_rad'], 0, .02)
+                    and bounded(item['max_velocity_rad_s'], 0, .03)
+                    and bounded(item['abort_wall_s'], .65 if name == 'heartbeat_loss' else 0, 1.3)
+                    and item['status']['busy'] is False and reason in item['status']['status']):
+                return False
+        for name, key, lower in [('joint_invalidation', 'change_rad', .01),
+                                 ('hand_invalidation', 'change_m', .005)]:
+            item = report[name]
+            if not (bounded(item[key], lower, .1) and item['execute_disabled'] is True
+                    and item['plan_removed'] is True):
+                return False
+        reset = report['reset']
+        return (bounded(report['invalid_offset_drift_rad'], 0, .003)
+                and reset['plan_removed'] is True and reset['execute_disabled'] is True
+                and reset['after_sim'] > reset['before_sim']
+                and bounded(reset['home_error_rad'], 0, .015)
+                and vector(reset['tcp']['position'], 3) and vector(report['initial_tcp']['position'], 3)
+                and math.dist(reset['tcp']['position'], report['initial_tcp']['position']) < .004)
+    except (KeyError, TypeError, ValueError, AttributeError, OverflowError):
+        return False
+
+
+def apply_recorded_panda_planning(profile, source_revision, support, repository):
+    """Expose Plan/Execute only with a matching native model and physical proof."""
+    result = dict(profile)
+    if not support:
+        return result
+    if (profile.get('name') != 'menagerie_franka_emika_panda'
+            or profile.get('arm_control') != 'panda'
+            or profile.get('supported_simulators') != ['mujoco']
+            or support.get('source_revision') != source_revision
+            or hashlib.sha256(Path(profile['native_mjcf']).read_bytes()).hexdigest()
+                != support.get('native_xml_sha256')):
+        raise ValueError('Panda planning evidence differs from the native model')
+    for resource in support.get('native_resource_files', []):
+        path = Path(profile['native_mjcf']).parent/resource['path']
+        if hashlib.sha256(path.read_bytes()).hexdigest() != resource['sha256']:
+            raise ValueError('Panda planning native resource differs: '+str(path))
+    for contract in support['configuration_files']:
+        path = Path(repository)/contract['path']
+        if hashlib.sha256(path.read_bytes()).hexdigest() != contract['sha256']:
+            raise ValueError('Panda planning configuration differs from measured source: '+str(path))
+    proof = support['report']
+    data = (Path(repository)/proof['path']).read_bytes()
+    if hashlib.sha256(data).hexdigest() != proof['sha256']:
+        raise ValueError('Panda planning evidence checksum differs')
+    report = json.loads(data)
+    expected = ('robot_model:=menagerie_franka_emika_panda', 'simulator:=mujoco',
+                'map_name:=nav_empty', 'mode:=display', 'arm_control:=panda', 'arm_planning:=moveit')
+    if not (panda_planning_acceptance(report) and all(token in report['command'].split() for token in expected)
+            and 'grasp_fixture:=true' not in report['command'].split()
+            and report['scene']['world_sha256'] == support['world_sha256']):
+        raise ValueError('Panda planning measurements do not pass physical acceptance')
+    result['arm_planning'] = 'moveit'
+    result['arm_planning_runtime_screen'] = dict(backend='mujoco', map='nav_empty', report=proof['path'],
+                                               scope='Static world; no grasp fixture or attached payload')
     return result

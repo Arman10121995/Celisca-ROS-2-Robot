@@ -85,20 +85,12 @@ class OneShotCloudSaver(Node):
             PointCloud2, topic, self.callback,
             QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         )
-        self.timer = self.create_timer(timeout, self.timeout_cb)
-        self.start_time = time.time()
 
     def callback(self, msg):
         if self.received:
             return
         save_pcd_from_msg(msg, self.output_path)
         self.received = True
-        rclpy.shutdown()
-
-    def timeout_cb(self):
-        if not self.received:
-            print(f"[export] Timeout: no point cloud received on {self.subscription.topic_name}")
-        rclpy.shutdown()
 
 
 def export_pcd_live(topic="/cloud_map", output_path="map_cloud.pcd", timeout=20.0):
@@ -107,14 +99,21 @@ def export_pcd_live(topic="/cloud_map", output_path="map_cloud.pcd", timeout=20.
         return False
     rclpy.init()
     node = OneShotCloudSaver(topic, output_path, timeout)
+    deadline = time.monotonic() + timeout
     try:
-        rclpy.spin(node)
+        # Shut down outside the subscription callback. Destroying the DDS
+        # context inside a callback can deadlock this Humble/CycloneDDS host.
+        while rclpy.ok() and not node.received and time.monotonic() < deadline:
+            rclpy.spin_once(node, timeout_sec=min(.1, max(0, deadline-time.monotonic())))
+        if not node.received:
+            print(f'[export] Timeout: no point cloud received on {topic}')
     except Exception as e:
         print(f"Spin error: {e}")
-    success = node.received and Path(output_path).exists()
-    node.destroy_node()
-    if rclpy.ok():
-        rclpy.shutdown()
+    finally:
+        success = node.received and Path(output_path).exists()
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
     return success
 
 

@@ -893,6 +893,11 @@ def _run_stage(app, reader, cfg, state):
     wheel_separation = float(cfg.get("wheel_separation", 0.17))
     action_error_reported = False
     sim_step = 0
+    headless = not bool(cfg.get('gui', False)) or not os.environ.get('DISPLAY')
+    render_every = camera['every'] if camera is not None else max(1, int(round(.1/dt)))
+    if headless:
+        _emit({'event': 'log', 'msg': 'Headless rendering every %d physics steps; '
+               'physics dt remains %.6f s' % (render_every, dt)})
     # Display hold: freeze joints at spawn so passive visualization of
     # legged/humanoid robots stays stable instead of collapsing under
     # gravity (the RViz "jump like crazy").  'true' always holds; 'auto'
@@ -985,7 +990,16 @@ def _run_stage(app, reader, cfg, state):
                     _emit({"event": "log",
                            "msg": "Wheel command failed: %s" % exc})
 
-        world.step(render=True)
+        if headless:
+            # Keep every physics/control step. Render only when a camera
+            # sample is due (or periodically to service Kit without a camera).
+            # render() disables Kit physics advancement, so this remains one
+            # physical dt per loop, including loops with an image.
+            world.step(render=False)
+            if (sim_step + 1) % render_every == 0:
+                world.render()
+        else:
+            world.step(render=True)
         sim_step += 1
         t = sim_step * dt
 

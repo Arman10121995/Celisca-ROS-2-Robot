@@ -12,7 +12,7 @@
     "sensor_fusion": "wheel_imu_fusion",
     "map_visualizer": "costmap_2d_observation"
   },
-  "owned_pid": 340682,
+  "owned_pid": 530779,
   "check_command": [
     "python3",
     "scripts/sim_workflow_check.py",
@@ -23,7 +23,7 @@
     "--timeout",
     "300",
     "--out",
-    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.json"
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/cleanup-stage/workflows/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.json"
   ],
   "check_returncode": 0,
   "workflow": {
@@ -33,72 +33,72 @@
     "phases": {
       "forward": {
         "completed": true,
-        "sim_s": 3.008,
-        "distance_m": 0.5591,
+        "sim_s": 3.0,
+        "distance_m": 0.5567,
         "yaw_change_rad": -0.0002,
-        "tail_speed_mps": 0.1989612867267833,
-        "tail_yaw_speed_rps": 2.0654537693704444e-05,
+        "tail_speed_mps": 0.19897324749330175,
+        "tail_yaw_speed_rps": 6.117437658623046e-05,
         "end": {
-          "x": 0.058173551975415766,
-          "y": -0.5000345746986302,
-          "z": 0.005639542001966444,
-          "yaw": -0.00016336446935870125
+          "x": 0.055789287413773515,
+          "y": -0.5000533236906692,
+          "z": 0.005643350974647018,
+          "yaw": -0.00016724564732275128
         }
       },
       "reverse": {
         "completed": true,
         "sim_s": 3.0,
         "distance_m": 0.5574,
-        "yaw_change_rad": 0.0003,
-        "tail_speed_mps": 0.1989906980922519,
-        "tail_yaw_speed_rps": 0.0002894238175816085,
+        "yaw_change_rad": 0.0002,
+        "tail_speed_mps": 0.19899504259725065,
+        "tail_yaw_speed_rps": 0.00031793988506329055,
         "end": {
-          "x": -0.45828557702978423,
-          "y": -0.4999142261694194,
-          "z": 0.005741791358644498,
-          "yaw": 0.0001211811447569715
+          "x": -0.4622806563704266,
+          "y": -0.4998865580283487,
+          "z": 0.0057382214236532504,
+          "yaw": 3.39875123049697e-06
         }
       },
       "turn": {
         "completed": true,
-        "sim_s": 3.004,
+        "sim_s": 3.0,
         "distance_m": 0.0028,
         "yaw_change_rad": 1.1325,
-        "tail_speed_mps": 0.0010569700809213516,
-        "tail_yaw_speed_rps": 0.3921235299973198,
+        "tail_speed_mps": 0.0010569859297734673,
+        "tail_yaw_speed_rps": 0.39211115370752037,
         "end": {
-          "x": -0.4973769644319623,
-          "y": -0.5025248390393263,
-          "z": 0.005579399859532146,
-          "yaw": 1.1326516974981362
+          "x": -0.5013706175669684,
+          "y": -0.5024912298866264,
+          "z": 0.005580178975528222,
+          "yaw": 1.132475688414343
         }
       },
       "turn_reverse": {
         "completed": true,
         "sim_s": 3.004,
         "distance_m": 0.0028,
-        "yaw_change_rad": -1.1356,
-        "tail_speed_mps": 0.0010862464243738225,
-        "tail_yaw_speed_rps": 0.3911317345095144,
+        "yaw_change_rad": -1.1342,
+        "tail_speed_mps": 0.0010860956209148875,
+        "tail_yaw_speed_rps": 0.39115544769118726,
         "end": {
-          "x": -0.49897329574572474,
-          "y": -0.5003664284237009,
-          "z": 0.005562292989562108,
-          "yaw": 0.036581665325022696
+          "x": -0.5029679488766052,
+          "y": -0.5003400561927084,
+          "z": 0.005568730743281107,
+          "yaw": 0.037879175305374414
         }
       },
       "publisher_loss": {
         "completed": true,
         "sim_s": 3.0,
-        "distance_m": 0.0271,
-        "yaw_change_rad": 0.0,
-        "tail_speed_mps": 1.8108718955087222e-06,
-        "tail_yaw_speed_rps": 7.831631473087172e-06,
+        "distance_m": 0.0272,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 1.8068737774456667e-06,
+        "tail_yaw_speed_rps": 7.863456250541134e-06,
         "end": {
-          "x": -0.10938027706330113,
-          "y": -0.5021176466594187,
-          "z": 0.005726806930118832,
-          "yaw": -0.005017877351281145
+          "x": -0.11320101129029926,
+          "y": -0.5015800504063216,
+          "z": 0.005725178400284654,
+          "yaw": -0.00372159260006025
         }
       },
       "post_reset_idle": {
@@ -118,15 +118,15 @@
       "post_reset_drive": {
         "completed": true,
         "sim_s": 2.0,
-        "distance_m": 0.3585,
+        "distance_m": 0.3577,
         "yaw_change_rad": -0.0003,
-        "tail_speed_mps": 0.19896796210164586,
-        "tail_yaw_speed_rps": 3.321953082203045e-05,
+        "tail_speed_mps": 0.19896170703594454,
+        "tail_yaw_speed_rps": 2.2449142413126988e-05,
         "end": {
-          "x": -0.1423883701661088,
-          "y": -0.5000395972111167,
-          "z": 0.005639826895381212,
-          "yaw": -0.00024565823861145557
+          "x": -0.1431844688087543,
+          "y": -0.5000428005321249,
+          "z": 0.005635996630897386,
+          "yaw": -0.00025245937234892997
         }
       }
     },
@@ -150,7 +150,7 @@
       "monotonic_clock": true
     },
     "initial_map_to_world": {
-      "yaw": 1.3642949684499009e-05,
+      "yaw": 1.364294968405492e-05,
       "x": -0.5013129221434696,
       "y": -0.5000028558056029
     },
@@ -160,7 +160,7 @@
       "z": 0.005770480058950767,
       "yaw": 2.719367137989795e-05
     },
-    "localization_error_m": 0.001029929960327653,
+    "localization_error_m": 0.0011576551736731504,
     "sensor_messages_during_drive": {
       "/scan": 105,
       "/oakd/rgb/image_raw": 105,
@@ -172,7 +172,7 @@
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 0.6040000000000001
+        "stamp": 0.404
       },
       {
         "width": 240,
@@ -193,28 +193,35 @@
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 1.604
+        "stamp": 1.404
       },
       {
         "width": 240,
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 2.004
+        "stamp": 1.804
       },
       {
         "width": 240,
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 2.403999999
+        "stamp": 2.203999999
       },
       {
         "width": 240,
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 2.803999999
+        "stamp": 2.603999999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 4720,
+        "occupied": 0,
+        "stamp": 3.003999999
       },
       {
         "width": 240,
@@ -228,476 +235,483 @@
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 3.607999999
+        "stamp": 3.603999999
       },
       {
         "width": 240,
         "height": 240,
         "known": 4720,
         "occupied": 0,
-        "stamp": 4.007999999
+        "stamp": 4.003999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 19185,
+        "known": 19092,
         "occupied": 276,
-        "stamp": 4.207999999
+        "stamp": 4.403999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 19185,
-        "occupied": 276,
-        "stamp": 4.6079999990000005
-      },
-      {
-        "width": 240,
-        "height": 240,
-        "known": 38415,
+        "known": 38380,
         "occupied": 379,
-        "stamp": 5.011999999
+        "stamp": 4.803999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 47851,
-        "occupied": 439,
-        "stamp": 5.411999999
+        "known": 38380,
+        "occupied": 379,
+        "stamp": 5.203999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 47851,
-        "occupied": 439,
-        "stamp": 5.811999999
+        "known": 47965,
+        "occupied": 426,
+        "stamp": 5.403999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 52462,
-        "occupied": 448,
-        "stamp": 6.211999999
+        "known": 47965,
+        "occupied": 426,
+        "stamp": 5.803999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 54400,
-        "occupied": 459,
-        "stamp": 6.611999999
+        "known": 52423,
+        "occupied": 446,
+        "stamp": 6.203999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 54400,
-        "occupied": 459,
-        "stamp": 6.811999999
+        "known": 54347,
+        "occupied": 457,
+        "stamp": 6.603999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 54400,
-        "occupied": 459,
-        "stamp": 7.211999999
+        "known": 54347,
+        "occupied": 457,
+        "stamp": 7.003999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 54400,
-        "occupied": 459,
-        "stamp": 7.611999999
+        "known": 54347,
+        "occupied": 457,
+        "stamp": 7.203999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 54400,
-        "occupied": 459,
-        "stamp": 8.011999999
+        "known": 54347,
+        "occupied": 457,
+        "stamp": 7.603999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 54400,
-        "occupied": 459,
-        "stamp": 8.411999999
+        "known": 54347,
+        "occupied": 457,
+        "stamp": 8.003999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 55193,
-        "occupied": 464,
-        "stamp": 8.811999999
+        "known": 54347,
+        "occupied": 457,
+        "stamp": 8.403999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 55193,
-        "occupied": 464,
-        "stamp": 9.011999999
+        "known": 55142,
+        "occupied": 462,
+        "stamp": 8.803999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 55673,
-        "occupied": 482,
-        "stamp": 9.411999999
+        "known": 55142,
+        "occupied": 462,
+        "stamp": 9.203999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 55673,
-        "occupied": 482,
-        "stamp": 9.811999999
+        "known": 55619,
+        "occupied": 477,
+        "stamp": 9.403999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 55932,
-        "occupied": 482,
-        "stamp": 10.212
+        "known": 55619,
+        "occupied": 477,
+        "stamp": 9.803999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 10.612
+        "known": 55904,
+        "occupied": 479,
+        "stamp": 10.204
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 11.012
+        "known": 55904,
+        "occupied": 479,
+        "stamp": 10.404
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 11.212
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 10.804
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 11.612
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 11.204
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 12.012
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 11.604
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 12.412
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 12.004
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 12.812
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 12.404
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 13.212
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 12.604
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 13.616
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 13.004
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 14.016
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 13.404
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 14.416
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 13.804
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 14.616
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 14.204
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 15.016
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 14.404
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 15.416
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 14.804
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 15.816
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 15.208
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 16.216
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 15.608
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 16.616
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 16.008
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 16.816
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 16.208
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 17.216
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 16.608
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 17.616
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 17.008
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 18.02
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 17.408
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 18.42
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 17.808
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 18.82
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 18.008
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 19.22
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 18.412
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 19.42
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 18.812
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 19.819999999
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 19.212
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 20.219999999
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 19.612
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56060,
-        "occupied": 484,
-        "stamp": 20.619999999
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 20.011999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56282,
-        "occupied": 492,
-        "stamp": 21.019999999
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 20.211999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 21.419999999
+        "known": 56032,
+        "occupied": 480,
+        "stamp": 20.611999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 21.819999999
+        "known": 56222,
+        "occupied": 486,
+        "stamp": 21.011999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 22.219999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 21.411999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 22.619999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 21.811999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 23.019999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 22.011999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 23.419999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 22.411999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 23.819999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 22.811999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 56424,
-        "occupied": 504,
-        "stamp": 24.219999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 23.211999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 4754,
-        "occupied": 0,
-        "stamp": 24.903999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 23.611999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 4754,
-        "occupied": 0,
-        "stamp": 25.303999999
-      },
-      {
-        "width": 240,
-        "height": 240,
-        "known": 4754,
-        "occupied": 0,
-        "stamp": 25.703999999
+        "known": 56365,
+        "occupied": 501,
+        "stamp": 24.011999999
       },
       {
         "width": 240,
         "height": 240,
         "known": 4754,
         "occupied": 0,
-        "stamp": 26.103999999
+        "stamp": 24.895999999
       },
       {
         "width": 240,
         "height": 240,
         "known": 4754,
         "occupied": 0,
-        "stamp": 26.503999999
+        "stamp": 25.295999999
       },
       {
         "width": 240,
         "height": 240,
         "known": 4754,
         "occupied": 0,
-        "stamp": 26.903999999
+        "stamp": 25.695999999
       },
       {
         "width": 240,
         "height": 240,
         "known": 4754,
         "occupied": 0,
-        "stamp": 27.103999999
+        "stamp": 25.895999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 19404,
+        "known": 4754,
+        "occupied": 0,
+        "stamp": 26.295999999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 4754,
+        "occupied": 0,
+        "stamp": 26.695999999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 4754,
+        "occupied": 0,
+        "stamp": 27.095999999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 19344,
         "occupied": 270,
-        "stamp": 27.503999999
+        "stamp": 27.495999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 38488,
-        "occupied": 376,
-        "stamp": 27.903999999
+        "known": 38463,
+        "occupied": 371,
+        "stamp": 27.895999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 38488,
-        "occupied": 376,
-        "stamp": 28.303999999
+        "known": 38463,
+        "occupied": 371,
+        "stamp": 28.295999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 47893,
-        "occupied": 437,
-        "stamp": 28.703999999
+        "known": 47839,
+        "occupied": 438,
+        "stamp": 28.695999999
       },
       {
         "width": 240,
         "height": 240,
-        "known": 47893,
-        "occupied": 437,
-        "stamp": 29.107999999
+        "known": 47839,
+        "occupied": 438,
+        "stamp": 29.095999999
       }
     ],
     "accepted_slam_poses": [
@@ -706,58 +720,58 @@
         "y": 4.430427444824682e-06
       },
       {
-        "x": 0.10894355116946118,
-        "y": 2.5139878821656397e-06
+        "x": 0.10736925695647762,
+        "y": 2.3751965147433286e-06
       },
       {
-        "x": 0.2280174237116676,
-        "y": -1.5577667655845337e-05
+        "x": 0.22647494835638668,
+        "y": -1.35248825185357e-05
       },
       {
-        "x": 0.3478489451625236,
-        "y": -2.872571174751703e-05
+        "x": 0.3455396318002937,
+        "y": -4.6390895387044614e-05
       },
       {
-        "x": 0.4668935534577901,
-        "y": -3.24073143254008e-05
+        "x": 0.46457031167419766,
+        "y": -5.7415288875633814e-05
       },
       {
-        "x": 0.5814861842615295,
-        "y": -2.1364315840733725e-05
+        "x": 0.5786240558343342,
+        "y": -7.084368332974217e-05
       },
       {
-        "x": 0.3714794354129797,
-        "y": 4.8974390468627764e-05
+        "x": 0.3675604265591145,
+        "y": 1.9083877152885384e-05
       },
       {
-        "x": 0.2524179069704027,
-        "y": 5.1760839532838524e-05
+        "x": 0.2484858920362303,
+        "y": 7.584905892672924e-05
       },
       {
-        "x": 0.13337443740776642,
-        "y": 4.893614716561398e-05
+        "x": 0.12946837639368428,
+        "y": 0.00013600910448982234
       },
       {
-        "x": 0.019043417327916784,
-        "y": 2.5787240932717762e-05
+        "x": 0.015132160490513486,
+        "y": 0.0001782507194604411
       },
       {
-        "x": 0.22902091838359506,
-        "y": -0.0007624012703944601
+        "x": 0.22536245982409486,
+        "y": -0.00037084991120201437
       },
       {
-        "x": 0.3480997671005926,
-        "y": -0.0013579641591437582
+        "x": 0.3443961558715106,
+        "y": -0.0008639114519089927
       }
     ],
     "reset_response": "Simulation reset successfully",
     "post_reset_map_to_world": {
-      "yaw": 1.0054636844231486e-05,
-      "x": -0.0013131780306712066,
-      "y": 2.5047666608601915e-06
+      "yaw": 9.424669220831433e-06,
+      "x": -0.0013129279399521948,
+      "y": 2.3132426329453004e-06
     },
     "post_reset_localization_error_m": 0.0,
-    "post_reset_drive_localization_error_m": 0.01849129088761206,
+    "post_reset_drive_localization_error_m": 0.008400330329889604,
     "map_updates_after_reset": 12,
     "cloud_updates_after_reset": 0,
     "clock_backward_jumps": 0,
@@ -771,16 +785,17 @@
       "frame": "rplidar_link",
       "samples": 640,
       "finite": 640,
-      "min_m": 5.49996280670166,
-      "max_m": 8.78190803527832,
+      "min_m": 5.499960422515869,
+      "max_m": 8.78319263458252,
       "range_min": 0.164000004529953,
       "range_max": 12.0
     },
     "passed": true
   },
   "save_map": {
-    "yaml": "image: saved-map.pgm\nmode: trinary\nresolution: 0.05\norigin: [-5.99, -6, 0]\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.25",
+    "yaml": "image: saved-map.pgm\nmode: trinary\nresolution: 0.05\norigin: [-6, -6, 0]\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.25",
     "image_bytes": 57615
   },
+  "map_exporter_exited": true,
   "launch_returncode": 0
 }

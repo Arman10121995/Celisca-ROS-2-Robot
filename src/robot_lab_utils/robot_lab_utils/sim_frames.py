@@ -90,6 +90,52 @@ def body_odometry(position, orientation_xyzw, linear_world, angular_world,
             list(world_to_body(angular_world, quaternion)))
 
 
+class PoseTwist:
+    """Ground-truth body twist measured from successive physical poses.
+
+    Some PhysX contact-corrected articulations report velocities that do not
+    integrate to their reported poses. Use the actual pose/time displacement
+    for the simulation's ideal odometry input, including angular displacement
+    on SO(3). This does not change the plant or implement wheel odometry.
+    Reset explicitly after a teleport; duplicate timestamps reuse the sample.
+    """
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.previous = None
+        self.twist = ([0.0] * 3, [0.0] * 3)
+
+    def update(self, stamp, position, orientation_xyzw):
+        quaternion = wxyz_from_xyzw(orientation_xyzw)
+        norm = math.sqrt(sum(v*v for v in quaternion))
+        if norm <= 0.0 or not math.isfinite(norm):
+            raise ValueError("A finite nonzero pose quaternion is required")
+        quaternion = tuple(v / norm for v in quaternion)
+        position = tuple(float(v) for v in position)
+        stamp = float(stamp)
+        if not math.isfinite(stamp) or not all(math.isfinite(v) for v in position):
+            raise ValueError("A finite pose and timestamp are required")
+        if self.previous is not None:
+            before, old_position, old_quaternion = self.previous
+            dt = stamp - before
+            if dt <= 0.0:
+                return self.twist
+            linear = tuple((p-o) / dt for p, o in zip(position, old_position))
+            delta = compose(((0.0, 0.0, 0.0), quaternion),
+                            ((0.0, 0.0, 0.0), conjugate(old_quaternion)))[1]
+            if delta[0] < 0.0:
+                delta = tuple(-v for v in delta)
+            sine = math.sqrt(sum(v*v for v in delta[1:]))
+            scale = 2.0 * math.atan2(sine, delta[0]) / (sine * dt) if sine > 1e-12 else 0.0
+            angular = tuple(v * scale for v in delta[1:])
+            self.twist = (list(world_to_body(linear, quaternion)),
+                          list(world_to_body(angular, quaternion)))
+        self.previous = (stamp, position, quaternion)
+        return self.twist
+
+
 def yaw_of(quaternion):
     """Heading in radians of a scalar-first quaternion."""
     w, x, y, z = quaternion

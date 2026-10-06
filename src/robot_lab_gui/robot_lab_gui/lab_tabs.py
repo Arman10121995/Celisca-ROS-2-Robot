@@ -862,7 +862,7 @@ class HealthTab(LabTab):
             WORKSPACE_ROOT / 'docs/tutorials/px4_x500.md')).grid(
                 row=4, column=0, sticky='ew', padx=(0, 4), pady=2)
         ttk.Button(frame, text="Verified Robot Trials", command=lambda: self._show_document(
-            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-05.md')).grid(
+            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-06.md')).grid(
                 row=4, column=1, columnspan=2, sticky='ew', padx=(4, 0), pady=2)
         ttk.Button(frame, text="TurtleBot 4 Guide", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/tutorials/turtlebot4.md')).grid(

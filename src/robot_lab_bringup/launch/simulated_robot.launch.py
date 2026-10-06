@@ -727,6 +727,13 @@ def _build_simulation_actions(context):
             {**gazebo_config, "world_package": world_package})
     world_path = _resolve_asset_override(
         _config_value(context, "world_path", configured_world_path), world_package)
+    # A robot that declares a bound on the Gazebo integration step (the
+    # measured TurtleBot4 Create3 suspension/caster case above) launches a
+    # cached capped derivative of the *selected* world; every other robot,
+    # every other backend and worlds already inside the bound are unchanged.
+    from robot_lab_utils.gazebo_physics_world import bounded_world_for_robot
+    world_path = bounded_world_for_robot(
+        world_path, robot_config, _launch_value(context, "simulator"))
     configured_map_yaml = "" if map_free else _resolve_map_yaml(map_name, map_config)
     map_yaml = _resolve_asset_override(
         _config_value(context, "map_yaml", configured_map_yaml),
@@ -956,6 +963,25 @@ def _build_simulation_actions(context):
                 launch_arguments=display_args.items(),
             )
         )
+        planning = _launch_value(context, 'arm_planning').strip().lower()
+        if planning == 'auto':
+            planning = robot_config.get('arm_planning', 'none')
+            if _as_bool(display_args.get('grasp_fixture', 'false')):
+                planning = 'none'
+        if planning != 'none':
+            if (planning != 'moveit' or simulator != 'mujoco'
+                    or robot_model != 'menagerie_franka_emika_panda'
+                    or display_args.get('arm_control') != 'panda'):
+                raise ValueError('MoveIt planning requires native Panda control on MuJoCo Display')
+            if _as_bool(display_args.get('grasp_fixture', 'false')):
+                raise ValueError('The optional grasp fixture needs a dynamic object planning scene; use arm_planning:=none')
+            actions.append(IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(_launch_file(bringup_share, 'panda_planning.launch.py')),
+                launch_arguments={
+                    'native_mjcf': robot_config['native_mjcf'], 'world_path': world_path,
+                    'use_sim_time': use_sim_time,
+                    **{'spawn_'+axis: display_args['spawn_'+axis] for axis in ('x', 'y', 'z', 'yaw')},
+                }.items()))
         if start_rviz and rviz_config and not robot_free:
             actions.append(
                 Node(
@@ -1460,6 +1486,8 @@ def generate_launch_description():
                         "0.0 (the default) means no splay on that pair."),
         DeclareLaunchArgument('arm_control', default_value='auto',
                               description='Native arm controller: auto, none or panda'),
+        DeclareLaunchArgument('arm_planning', default_value='auto',
+                              description='Native Panda collision planning: auto, none or moveit'),
         DeclareLaunchArgument('grasp_fixture', default_value='false',
                              description='Add a physical Panda object/pedestal for grasp trials'),
         DeclareLaunchArgument("display_hold", default_value="auto",

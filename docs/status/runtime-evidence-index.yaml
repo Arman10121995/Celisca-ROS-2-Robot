@@ -135,11 +135,12 @@ records:
   simulator: gazebo
   task_type: localization
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-loc-nav_empty/workflow.json
-  sha256: 4017f9271a3198e7683fcfee4c0cf5aace82bf90e4e63a64169c5639c53f4660
+  sha256: 906ff1ee76d952031358d01aac65dc89b6356db7d9cb71727490c20b9771d1a4
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-loc-nav_empty/source-manifest.json
-  source_hashes_sha256: 13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172
+  source_hashes_sha256: acb023c81b282bf4f4cefab324cf5d76da63ab07d5a6cb4cdb36b57570418099
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -155,11 +156,12 @@ records:
   simulator: gazebo
   task_type: slam
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-slam-nav_empty/workflow.json
-  sha256: 86c20830463a28dfa08f0a7e700a4be6f59c0f59f3a36a1913a2ba1956293b48
+  sha256: 8ac9675e235ed8b736581c4009e4d78800762bc6937a0335e86bd760f6756131
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-slam-nav_empty/source-manifest.json
-  source_hashes_sha256: 13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172
+  source_hashes_sha256: 0cd8cb10e349bfbb764401a8c152fcdd414a81053b89c3cc85dae30db59a363c
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -175,11 +177,12 @@ records:
   simulator: gazebo
   task_type: slam_3d
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/workflow.json
-  sha256: d48aeb903437a422ef6fbcca0cbb4004afbcc12e6157aedf88eb206fa75883bb
+  sha256: 34a01124982dfb8b6ee7342f37a2c46f2553b573e9336753a6f6b6a722bb49f7
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/source-manifest.json
-  source_hashes_sha256: 13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172
+  source_hashes_sha256: 0cd8cb10e349bfbb764401a8c152fcdd414a81053b89c3cc85dae30db59a363c
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -195,11 +198,32 @@ records:
   simulator: gazebo
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_empty/navigation.json
-  sha256: 565a4149026a22277cc4b1916afd0c65da14e76ddcb01f6814dd9629f9f2b07b
+  sha256: a0f681c4ac7c7a2fd41337ef395a7a0ba160997af8d9c081a5826b96b3b35cb4
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_empty/source-manifest.json
-  source_hashes_sha256: 13d874c5aa3075719c33357ccb1b0acd87963e786edd75d6fae9510f78e5c172
+  source_hashes_sha256: 2687cb65bdb34dbb6586486b82c005ddf65bd541761f57c39ba5589f0b13b2b3
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_obstacle/navigation.json
+  sha256: d3b4a601277d120fe873830c44fbb8570009128dc24b19bdb8a577c3e088f703
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: bc3d1b4ebff9e0a3fdd97007cbbe9d3a307add89afed1ebcb168df7eab143f1f
   report_kind: navigation_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
@@ -214,7 +238,8 @@ records:
   simulator: mujoco
   task_type: localization
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-loc-nav_empty/workflow.json
   sha256: 93c6a3563db26edc016619cdc7a6f0b21f516610cc6842a45560ed84a255ea5a
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-loc-nav_empty/source-manifest.json
@@ -234,11 +259,12 @@ records:
   simulator: mujoco
   task_type: slam
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-slam-nav_empty/workflow.json
-  sha256: de2b6de27142e55a67c01f4162d66cf75ef781446c07ff17d5c7dd003b0c54e3
+  sha256: e2abfa7fd62fe8ca2416e586bab57a706373582cbd2662186b2e0191460a9def
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-slam-nav_empty/source-manifest.json
-  source_hashes_sha256: 79e02e449f5c635337c9574fd2d5de61763a0d46f913dd9fd264b76924c643fe
+  source_hashes_sha256: 0cd8cb10e349bfbb764401a8c152fcdd414a81053b89c3cc85dae30db59a363c
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -254,11 +280,12 @@ records:
   simulator: mujoco
   task_type: slam_3d
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/workflow.json
-  sha256: 58436147c8aad37338d87e7284bbd5e0183147f087239feee62b7eb231dc14eb
+  sha256: 2bca5bf039d3ab30fa8a3b5cdd39eacf129768f9354f4128158b5fbbabe29e75
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/source-manifest.json
-  source_hashes_sha256: 0bfa33fe3833fa6d89cf17a59f0cb2dd7ca4b56a74334c8c5fe4d67478245384
+  source_hashes_sha256: 0cd8cb10e349bfbb764401a8c152fcdd414a81053b89c3cc85dae30db59a363c
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -274,7 +301,8 @@ records:
   simulator: mujoco
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_empty/navigation.json
   sha256: ed817724d099b6e5f20d4cba59ea2f242b7efb600f826a67858eb4141d325c38
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_empty/source-manifest.json
@@ -293,7 +321,8 @@ records:
   simulator: mujoco
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/navigation.json
   sha256: 1d2b597fa890e76d9f742d660abd325888ef2d477eab052814b247285923e13d
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/source-manifest.json
@@ -312,7 +341,8 @@ records:
   simulator: pybullet
   task_type: localization
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-loc-nav_empty/workflow.json
   sha256: 6bf86090635e3192ffc6dd2e4d1c1650d3638f947df9f12ed1e4e32fe7833fbc
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-loc-nav_empty/source-manifest.json
@@ -332,11 +362,12 @@ records:
   simulator: pybullet
   task_type: slam
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-slam-nav_empty/workflow.json
-  sha256: 1a98f166ebecf04708024f21f994761668939dc3d87b81e01eb57f5d32a62e97
+  sha256: c34aa83b9b2f6f6e38f69c572178c2c4c9d14af69f886722f8cb229e5b8034d9
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-slam-nav_empty/source-manifest.json
-  source_hashes_sha256: f5e7ae49230f37b334e9ced2d042730f69b973eb7fbd2cca68bd7ca5ecc2dc43
+  source_hashes_sha256: 0cd8cb10e349bfbb764401a8c152fcdd414a81053b89c3cc85dae30db59a363c
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -352,11 +383,12 @@ records:
   simulator: pybullet
   task_type: slam_3d
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/workflow.json
-  sha256: bf51cdbba9622d782933c7e4b9695e50b09e4c20bbe67157a955f70580684958
+  sha256: c8127c01bd2f45b252a98709a9c464ba945887bd84431ef2d4ce43895f6856d8
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/source-manifest.json
-  source_hashes_sha256: f5e7ae49230f37b334e9ced2d042730f69b973eb7fbd2cca68bd7ca5ecc2dc43
+  source_hashes_sha256: 61e882184a71ec2103e711f916772ec556b27a26bfb0f1ca19922cb036ef1c69
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -372,7 +404,8 @@ records:
   simulator: pybullet
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_empty/navigation.json
   sha256: 51b4e18a6718dee143971f4b7e8303030c908b63115c5c4e3913521d5c3706fe
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_empty/source-manifest.json
@@ -391,11 +424,218 @@ records:
   simulator: pybullet
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/navigation.json
   sha256: 38a48a19431bd1718acfde96a557757e46191dbcaf2a447cd3efe94b4b86011b
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/source-manifest.json
   source_hashes_sha256: 49fe972081bd102db19a562854282b51b8b2e25cf5f72fa54db71e3a4d14f211
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: localization
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-loc-nav_empty/workflow.json
+  sha256: dd3cefd23ca172b99c7d19dbf645f94c51499d4292f4f02f4e2489fc7936c570
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4f9ccde39c1ae31c02b6de18b7a19a7cfd4677d9959782b642d500bbe1b34cee
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-slam-nav_empty/workflow.json
+  sha256: 8735e56ad1f7ab704d9638b466e003195e9ce3d72c4107ec0425760084b4e91d
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4f9ccde39c1ae31c02b6de18b7a19a7cfd4677d9959782b642d500bbe1b34cee
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam_3d
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-3d_slam-nav_empty/workflow.json
+  sha256: cc745e41aa6c7f5b739a286963fcd3fc6cfcc465069aa6680d2fb1c654167f03
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4f9ccde39c1ae31c02b6de18b7a19a7cfd4677d9959782b642d500bbe1b34cee
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_empty/navigation.json
+  sha256: 33501a5807015d67b2e115f887216008bde49c2b9d55ff67cf617afcf4f8f88a
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4f9ccde39c1ae31c02b6de18b7a19a7cfd4677d9959782b642d500bbe1b34cee
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_obstacle/navigation.json
+  sha256: 6ef349400aec9cbc5f3b89745625d72c8e34ca04ec95812df4158a89eb14a596
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: cec741f7d5fb78fa17a0bcc241d9cb20ab133912c9cd75a70847d14ea99caaf2
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: localization
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-loc-nav_empty/workflow.json
+  sha256: f1e99741b85cc11ef336b17a29428918a3ab065846255f3838151e4215b6845c
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: bf5459bbfe023ec4a85f1f54539b44ff85f496ca60810e117bb5f8f4d1c00f01
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-slam-nav_empty/workflow.json
+  sha256: d131f67010f2ee7fd49b176482daa391a3fa524309b2bc2008d20405a83f1e8e
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: f14f69b35eb9860a41987adea70959d57cc628c57d36d51b9a5358af71790239
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam_3d
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-3d_slam-nav_empty/workflow.json
+  sha256: 385a5d47d0be424d5507aec989dbc878a4e1b0d5807e7087d490243f1135b402
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: f14f69b35eb9860a41987adea70959d57cc628c57d36d51b9a5358af71790239
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_empty/navigation.json
+  sha256: 3ce915bd3c7e394f058c6fd20b2778a2a1e7a76069fb319eec2aeef3394e0713
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: bf5459bbfe023ec4a85f1f54539b44ff85f496ca60810e117bb5f8f4d1c00f01
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_obstacle/navigation.json
+  sha256: 2d289c2365e874e18531476554bb4b925d49d1b74788ad8f7c833d57dd936ec2
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: c2403e3a2574ea88f8d775c8a1cf6a147c898d98721181a6cb23b40a57478d8d
   report_kind: navigation_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
@@ -410,7 +650,8 @@ records:
   simulator: mujoco
   task_type: localization
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-loc-nav_empty/workflow.json
   sha256: e75786d3f59dddefb3ff37d7ca3c9cd957c4b05fd226da151c6aa89b62523e6f
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-loc-nav_empty/source-manifest.json
@@ -430,11 +671,12 @@ records:
   simulator: mujoco
   task_type: slam
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.json
-  sha256: e4acd7ed82f95ac3c84a753f06af3afd73bb4b5e967b8e749fe28bbab64f61b0
+  sha256: 93cb3afa16fd800b5299f844a940c7f19ce356331bd8fa2566c5a31e22f19aac
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-slam-nav_empty/source-manifest.json
-  source_hashes_sha256: d54f784f9ca7d0088a33c19a2e9ad591bba639c7645df32432485bff6f8522f1
+  source_hashes_sha256: f14f69b35eb9860a41987adea70959d57cc628c57d36d51b9a5358af71790239
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -450,11 +692,12 @@ records:
   simulator: mujoco
   task_type: slam_3d
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/workflow.json
-  sha256: 1b28558fdd7e53593e9918223172b558279bb8f3e1abb271ad164220781045fb
+  sha256: d7cb576f917a665344260f775cb4d53c2db4a0c558df69303dd569658c973dfc
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/source-manifest.json
-  source_hashes_sha256: d54f784f9ca7d0088a33c19a2e9ad591bba639c7645df32432485bff6f8522f1
+  source_hashes_sha256: f14f69b35eb9860a41987adea70959d57cc628c57d36d51b9a5358af71790239
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -470,7 +713,8 @@ records:
   simulator: mujoco
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_empty/navigation.json
   sha256: 4ce91fb453e5b444d9416dd749af97b22b4e0c2de6c4641551e832a96a72b4d7
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_empty/source-manifest.json
@@ -489,7 +733,8 @@ records:
   simulator: mujoco
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/navigation.json
   sha256: c6bd7eb8b088097d4e6ecd7027e80735b89175b2b787441a51dd46644279c5af
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/source-manifest.json
@@ -508,7 +753,8 @@ records:
   simulator: pybullet
   task_type: localization
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-loc-nav_empty/workflow.json
   sha256: cac67ffc117e341f5307f4b6ba04ec2986d9d84c264bba1327b53a7740210779
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-loc-nav_empty/source-manifest.json
@@ -528,11 +774,12 @@ records:
   simulator: pybullet
   task_type: slam
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-slam-nav_empty/workflow.json
-  sha256: af515675a96f3826f8a72bde91660983b29e2c8ecdaff1be981653a5e1ef8cc9
+  sha256: 8558eb9407fa6c50a143c27959b066b61b43bdc2b1e21c308cc4fab172f015fa
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-slam-nav_empty/source-manifest.json
-  source_hashes_sha256: 37ecf6607d0690aeeb48ccc1dda0901edeba17b2c068082f5d8d30489cc8c093
+  source_hashes_sha256: f14f69b35eb9860a41987adea70959d57cc628c57d36d51b9a5358af71790239
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -548,11 +795,12 @@ records:
   simulator: pybullet
   task_type: slam_3d
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/workflow.json
-  sha256: 60985f8b09eb461981202a6cec0f83a9acf041e7402c9f0d2fa4b3771e759008
+  sha256: 471b7b05da1ed2062e8a310ef1fa362388572e73223c09f4a10f5bca9662fd0b
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/source-manifest.json
-  source_hashes_sha256: 37ecf6607d0690aeeb48ccc1dda0901edeba17b2c068082f5d8d30489cc8c093
+  source_hashes_sha256: f14f69b35eb9860a41987adea70959d57cc628c57d36d51b9a5358af71790239
   report_kind: workflow_screen
   scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
     Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
@@ -568,7 +816,8 @@ records:
   simulator: pybullet
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_empty/navigation.json
   sha256: 1d8176adb164f49a787d8bae0d2f07bbd87d2fd0034d12776a6b3da020e1fb2c
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_empty/source-manifest.json
@@ -587,7 +836,8 @@ records:
   simulator: pybullet
   task_type: navigation
   date: '2026-10-06'
-  revision: 531c542 plus source/installed stage in the pre-trial manifest
+  revision: 531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage
+    in pre-trial manifest
   report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/navigation.json
   sha256: d90d3de204b95127097487cf9c39c37e987ff16cd68fcab283b63fafe47f4040
   source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/source-manifest.json
@@ -601,3 +851,293 @@ records:
   - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
   - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
     are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: localization
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-loc-nav_empty/workflow.json
+  sha256: 286bd62e9cb226aa48e7522b876826cb1cf7437eb241e5c2d4eec10b5ff1f960
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 463f389237ba38612e0c4aac21427ca2b2cae1604a2cf06bbb502b0facd7ce50
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-slam-nav_empty/workflow.json
+  sha256: 415c966fdc63dd2132e6d286da434b97579318143a2644f25c78e90500ac6265
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 463f389237ba38612e0c4aac21427ca2b2cae1604a2cf06bbb502b0facd7ce50
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam_3d
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-3d_slam-nav_empty/workflow.json
+  sha256: db0df8b94787b0a4658d1d27aa42814131510df13e78ab8cd28b417561ef7a2f
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: edb63def808b4ce1b470963757f15d28a3874cefaf736741c2102f48092a343e
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_empty/navigation.json
+  sha256: 525489e69bc0fb28a18cd02adb4fb9dc33c9bb2b4dbe1b297331e9487857d90d
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 7f9596ff1c5e161bf18eb07c170ad296163fa2898ff6a1bd56cdfc33ad329702
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/navigation.json
+  sha256: 422c373b8a5f679765c3a1cc2f145419c975f1d6370946f42e8c465b227a2ed3
+  source_hashes: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: e16907acc0f0bc6481548c72bf5401d32acf7cd6d49541d521ce51e7a6f1e134
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop and independent physical workflow.
+    Clear/blocked-direct-path goal with body error, heading and settled swept clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps need measurements
+  - Lab sensor rates, not vendor hazard/docking or hardware qualification
+  - Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim
+  - Headless RViz may log map shader/cleanup errors; owned root exit and plant state
+    are measured separately
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-gazebo/report.json
+  sha256: 3af545f9f2fc44c1fdd5ba9e246804119cbf0883c4a93284adbedf4bb1c4dd0e
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-gazebo/source-manifest.json
+  source_hashes_sha256: 265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-mujoco/report.json
+  sha256: 02842eb35eefa3c4a6a87359cf05892de44f25e74ab7278b8b2c6d7fa5d4e1e9
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-mujoco/source-manifest.json
+  source_hashes_sha256: 265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-pybullet/report.json
+  sha256: ca441898455eb9edfaf9790d9164e2fc6ebd272ed3e62c9babc9158915437ab1
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-pybullet/source-manifest.json
+  source_hashes_sha256: 265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-isaac/report.json
+  sha256: 9fb5200884253671236663cd71cef0379121a2a437aa6b15c489ce2e97bd6400
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-isaac/source-manifest.json
+  source_hashes_sha256: 265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-gazebo/report.json
+  sha256: 51784dd232739914c3dd8d193a0b1dee794650b9d4e9698a06226de8aac5083b
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-gazebo/source-manifest.json
+  source_hashes_sha256: f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-mujoco/report.json
+  sha256: ef2a617a6a5ca5f1610ee588cf42ef5151f2ed06a94956b0681cb8ef241256b8
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-mujoco/source-manifest.json
+  source_hashes_sha256: f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-pybullet/report.json
+  sha256: 611e3289fec8b8ca2c41fbc7495dbcc895ca3057a4bacdb276504c12fc9909e5
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-pybullet/source-manifest.json
+  source_hashes_sha256: f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed
+    manifest
+  report: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-isaac/report.json
+  sha256: bc6587c2a4147785efe886a2f1d7bcaf421f86f45037cc0e3699bda4c1e0f01e
+  source_hashes: docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-isaac/source-manifest.json
+  source_hashes_sha256: f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Serial producer exit 0 and owned plant cleanup checked
+    by batch.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain
+    untested
+  - Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise
+    stack remains open
+  - Measured RTF recorded, not a real-time performance guarantee
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-06'
+  revision: 61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source/installed
+    and MoveIt SDK manifests
+  report: docs/status/evidence/panda-cartesian-2026-10-06/report.json
+  sha256: 1418a22748a2a5b3ace9da3f50b1ccb652f4536b9eb4dd82f4ad24767d8f491e
+  source_hashes: docs/status/evidence/panda-cartesian-2026-10-06/source-manifest.json
+  source_hashes_sha256: 4398c897fd776a3491a9a2b969abbaa89056acc845e0f77c3c8f905d67c1a7f7
+  report_kind: arm_cartesian_screen
+  scope: Actual Tk Plan/Execute, native Panda PD actuators and independent physical
+    hand-body TF; static nav_empty only; normal GUI profile, clean child exit
+  limitations:
+  - Two static-world offsets only; other maps/backends, Servo and repeated pick/place
+    remain open
+  - Optional grasp fixture and attached payloads require a dynamic-object scene; native
+    joint/hand fixture controls remain available

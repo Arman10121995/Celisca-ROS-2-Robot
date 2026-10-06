@@ -13,7 +13,7 @@ install(
 )
 
 install(
-  PROGRAMS scripts/export_3d_map.py
+  PROGRAMS scripts/export_3d_map.py scripts/native_arm_scene.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

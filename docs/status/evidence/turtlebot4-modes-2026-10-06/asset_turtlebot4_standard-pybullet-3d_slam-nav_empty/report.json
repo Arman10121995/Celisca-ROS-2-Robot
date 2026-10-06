@@ -11,7 +11,7 @@
     "state_estimator": "ekf_3d_estimator",
     "map_visualizer": "pointcloud_segmenter"
   },
-  "owned_pid": 325891,
+  "owned_pid": 526030,
   "check_command": [
     "python3",
     "scripts/sim_workflow_check.py",
@@ -22,7 +22,7 @@
     "--timeout",
     "300",
     "--out",
-    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/workflow.json"
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/cleanup-stage/workflows/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/workflow.json"
   ],
   "check_returncode": 0,
   "workflow": {
@@ -33,99 +33,99 @@
       "forward": {
         "completed": true,
         "sim_s": 3.021,
-        "distance_m": 0.5702,
-        "yaw_change_rad": 0.0002,
-        "tail_speed_mps": 0.20256344418598954,
-        "tail_yaw_speed_rps": 6.019286583583042e-05,
+        "distance_m": 0.5695,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.2026485735799417,
+        "tail_yaw_speed_rps": 0.00021406678727767782,
         "end": {
-          "x": 0.06649734824895859,
-          "y": -0.5000032782554626,
-          "z": -0.0036613717675209045,
-          "yaw": -0.00015818136992488236
+          "x": 0.06579840928316116,
+          "y": -0.4999885559082031,
+          "z": -0.003707610070705414,
+          "yaw": -0.000405542905135171
         }
       },
       "reverse": {
         "completed": true,
         "sim_s": 3.021,
-        "distance_m": 0.567,
-        "yaw_change_rad": 0.0024,
-        "tail_speed_mps": 0.2021687330786779,
-        "tail_yaw_speed_rps": 0.0011705114747570739,
+        "distance_m": 0.5674,
+        "yaw_change_rad": 0.0003,
+        "tail_speed_mps": 0.20223313575096052,
+        "tail_yaw_speed_rps": 0.00015267898422977928,
         "end": {
-          "x": -0.45896637439727783,
-          "y": -0.5005992650985718,
-          "z": -0.0037083029747009277,
-          "yaw": 0.0022528835812818753
+          "x": -0.46107643842697144,
+          "y": -0.49999579787254333,
+          "z": -0.0037345513701438904,
+          "yaw": -3.9239876343174915e-05
         }
       },
       "turn": {
         "completed": true,
         "sim_s": 3.0,
-        "distance_m": 0.0056,
-        "yaw_change_rad": 0.9438,
-        "tail_speed_mps": 0.0007362447659284853,
-        "tail_yaw_speed_rps": 0.39981434215386313,
+        "distance_m": 0.0018,
+        "yaw_change_rad": 0.9773,
+        "tail_speed_mps": 0.0007779264425558113,
+        "tail_yaw_speed_rps": 0.39636503341425855,
         "end": {
-          "x": -0.5067406296730042,
-          "y": -0.5009348392486572,
-          "z": -0.0037766844034194946,
-          "yaw": 0.9465848081669992
+          "x": -0.5029217600822449,
+          "y": -0.4982561469078064,
+          "z": -0.003771364688873291,
+          "yaw": 0.9774392813582566
         }
       },
       "turn_reverse": {
         "completed": true,
         "sim_s": 3.0,
-        "distance_m": 0.0012,
-        "yaw_change_rad": -1.0541,
-        "tail_speed_mps": 0.00022847647583833689,
-        "tail_yaw_speed_rps": 0.3943140493752386,
+        "distance_m": 0.0023,
+        "yaw_change_rad": -1.0453,
+        "tail_speed_mps": 0.0003312556755832012,
+        "tail_yaw_speed_rps": 0.39061058737193877,
         "end": {
-          "x": -0.5087766051292419,
-          "y": -0.5018211603164673,
-          "z": -0.003776147961616516,
-          "yaw": 0.013878482010242214
+          "x": -0.5047730803489685,
+          "y": -0.4984588921070099,
+          "z": -0.0037837177515029907,
+          "yaw": 0.0506180311487537
         }
       },
       "publisher_loss": {
         "completed": true,
         "sim_s": 3.0,
         "distance_m": 0.0372,
-        "yaw_change_rad": 0.0012,
-        "tail_speed_mps": 1.0678758909187817e-05,
-        "tail_yaw_speed_rps": 8.592453981648429e-05,
+        "yaw_change_rad": -0.0004,
+        "tail_speed_mps": 4.9629826799978907e-05,
+        "tail_yaw_speed_rps": 0.0003970347456936363,
         "end": {
-          "x": -0.11827103793621063,
-          "y": -0.5779259204864502,
-          "z": -0.003733105957508087,
-          "yaw": -0.1856232921354884
+          "x": -0.11038077622652054,
+          "y": -0.5624071359634399,
+          "z": -0.003736622631549835,
+          "yaw": -0.15863415585290017
         }
       },
       "post_reset_idle": {
         "completed": true,
         "sim_s": 2.0,
-        "distance_m": 0.0021,
+        "distance_m": 0.0022,
         "yaw_change_rad": -0.0004,
-        "tail_speed_mps": 0.0016959913835894215,
-        "tail_yaw_speed_rps": 0.0003105783147028464,
+        "tail_speed_mps": 0.0017652520059587278,
+        "tail_yaw_speed_rps": 0.0003104444569003253,
         "end": {
-          "x": -0.5021210312843323,
-          "y": -0.49999818205833435,
-          "z": -0.0036700814962387085,
-          "yaw": -0.00040588712198787207
+          "x": -0.5021510720252991,
+          "y": -0.49999821186065674,
+          "z": -0.003788858652114868,
+          "yaw": -0.00040600719050165737
         }
       },
       "post_reset_drive": {
         "completed": true,
         "sim_s": 2.0,
-        "distance_m": 0.357,
-        "yaw_change_rad": -0.0005,
-        "tail_speed_mps": 0.20249788449510356,
-        "tail_yaw_speed_rps": 0.000797627854341284,
+        "distance_m": 0.3484,
+        "yaw_change_rad": -0.0045,
+        "tail_speed_mps": 0.20148807437190736,
+        "tail_yaw_speed_rps": 0.0048932355242377506,
         "end": {
-          "x": -0.14512643218040466,
-          "y": -0.5003827214241028,
-          "z": -0.003710418939590454,
-          "yaw": -0.000860932915204079
+          "x": -0.15370644629001617,
+          "y": -0.5008401274681091,
+          "z": -0.0037289708852767944,
+          "yaw": -0.004932076591691035
         }
       }
     },
@@ -150,7 +150,7 @@
       "monotonic_clock": true
     },
     "initial_map_to_world": {
-      "yaw": 0.00010775416683000841,
+      "yaw": 0.0001077541668304525,
       "x": -0.5007510814913544,
       "y": -0.49998455258788094
     },
@@ -160,7 +160,7 @@
       "z": -0.003918074071407318,
       "yaw": -0.00037573881320320445
     },
-    "localization_error_m": 0.0037637189532024776,
+    "localization_error_m": 0.003055075162895928,
     "sensor_messages_during_drive": {
       "/oakd/rgb/image_raw": 103,
       "/oakd/depth/image_raw": 103,
@@ -169,49 +169,49 @@
     },
     "cloud_message_points": [
       1558,
-      2545,
-      3301,
-      4079,
-      4741,
-      5241,
-      5763,
-      6247,
-      7212,
-      8360,
-      9434,
-      9989,
-      10499,
-      10752,
-      11343,
-      12005,
-      12582,
-      2108,
-      3611,
-      4652,
-      5449
+      2544,
+      3308,
+      4077,
+      4737,
+      5276,
+      5829,
+      6353,
+      7316,
+      8500,
+      9548,
+      10184,
+      10767,
+      10980,
+      11479,
+      11973,
+      12617,
+      1827,
+      3354,
+      4891,
+      5734
     ],
     "cloud_geometry": {
       "frame": "map",
-      "sampled_points": 6291,
+      "sampled_points": 6309,
       "min_xyz": [
-        -0.17957118153572083,
-        -4.484261512756348,
-        0.006068212445825338
+        -0.3580426573753357,
+        -4.301124572753906,
+        0.005983378738164902
       ],
       "max_xyz": [
-        6.504189491271973,
-        6.525763511657715,
-        0.9280581474304199
+        6.5023603439331055,
+        6.525524139404297,
+        0.9303936958312988
       ]
     },
     "reset_response": "Simulation reset successfully",
     "post_reset_map_to_world": {
-      "yaw": 6.95861278584794e-07,
-      "x": -0.00027641741251947734,
-      "y": 1.4382352418573774e-05
+      "yaw": 7.734171924010961e-06,
+      "x": -0.0003009797238068309,
+      "y": 1.872492174376239e-05
     },
     "post_reset_localization_error_m": 0.0,
-    "post_reset_drive_localization_error_m": 0.0003906986950289275,
+    "post_reset_drive_localization_error_m": 0.00013172948050606752,
     "map_updates_after_reset": 4,
     "cloud_updates_after_reset": 4,
     "clock_backward_jumps": 0,
@@ -226,8 +226,8 @@
       "frame": "rplidar_link",
       "samples": 640,
       "finite": 628,
-      "min_m": 5.499662399291992,
-      "max_m": 8.76350212097168,
+      "min_m": 5.499243259429932,
+      "max_m": 8.827363014221191,
       "range_min": 0.164000004529953,
       "range_max": 12.0
     },
@@ -235,7 +235,8 @@
   },
   "save_map": {
     "database_nodes": 6,
-    "pointcloud_points": 5449
+    "pointcloud_points": 1192
   },
+  "map_exporter_exited": true,
   "launch_returncode": 0
 }

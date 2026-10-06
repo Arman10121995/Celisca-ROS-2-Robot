@@ -1,0 +1,344 @@
+{
+  "raw_root": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors",
+  "baseline": "61335fe plus pre-trial source/installed manifests",
+  "records": [
+    {
+      "case": "asset_turtlebot4_standard-gazebo",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo/source-manifest.json",
+          "sha256": "265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33",
+          "bytes": 33269
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo/gui-output.log",
+          "sha256": "6b64f59121be7f22670986c5fb147969608a7833027652f401db35e141bab77f",
+          "bytes": 30831
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo/report.json",
+          "sha256": "3af545f9f2fc44c1fdd5ba9e246804119cbf0883c4a93284adbedf4bb1c4dd0e",
+          "bytes": 5931
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo/trace.json",
+          "sha256": "bcdbd3eb769bb0d04e7ae0caf76b3692d7831ad097f2ffacac569251573672d4",
+          "bytes": 1457140
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-gazebo/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_standard-mujoco",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco/source-manifest.json",
+          "sha256": "265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33",
+          "bytes": 33269
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco/gui-output.log",
+          "sha256": "03bcb8119bcfd0214e7ddd77676de0e7c504114e97bf8199026c4a7b1bfdadeb",
+          "bytes": 9515
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco/report.json",
+          "sha256": "02842eb35eefa3c4a6a87359cf05892de44f25e74ab7278b8b2c6d7fa5d4e1e9",
+          "bytes": 6241
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco/trace.json",
+          "sha256": "3bf45e64bab6f9872919db892e6a138dedc7a5d3c344a13fbf9fc1d88d6b0b31",
+          "bytes": 804215
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-mujoco/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_standard-pybullet",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet/source-manifest.json",
+          "sha256": "265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33",
+          "bytes": 33269
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet/gui-output.log",
+          "sha256": "dc8e4ca2942bf8125c120ae937e9151d86f339402dda460a42f76a155826182d",
+          "bytes": 15404
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet/report.json",
+          "sha256": "ca441898455eb9edfaf9790d9164e2fc6ebd272ed3e62c9babc9158915437ab1",
+          "bytes": 6285
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet/trace.json",
+          "sha256": "41921cc02efa595d550e7dbf1321543dca1fb2594ccc14a47fe5a98d56e06dda",
+          "bytes": 848776
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-pybullet/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_standard-isaac",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac/source-manifest.json",
+          "sha256": "265a754e6c4b9fe797e9e99621e8bb2dd170b38a59df396a985d4b6fd5dfcb33",
+          "bytes": 33269
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac/gui-output.log",
+          "sha256": "f60123a69bbb6fa6d0c6c4a4fadab6709e2f74bc963cbb200a3f6224f01b7458",
+          "bytes": 11791
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac/report.json",
+          "sha256": "9fb5200884253671236663cd71cef0379121a2a437aa6b15c489ce2e97bd6400",
+          "bytes": 6218
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac/trace.json",
+          "sha256": "518bbf91c1d2bd526a8571a48a1c6acb680df0902d3f32d70270a2af96cffd84",
+          "bytes": 1438706
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_standard-isaac/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_lite-gazebo",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo/source-manifest.json",
+          "sha256": "f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2",
+          "bytes": 33613
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo/gui-output.log",
+          "sha256": "083b297601c56c28c34773d0eacf3f21dfe5348083b5f421dd7b4ce0416f9a86",
+          "bytes": 29623
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo/report.json",
+          "sha256": "51784dd232739914c3dd8d193a0b1dee794650b9d4e9698a06226de8aac5083b",
+          "bytes": 5914
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo/trace.json",
+          "sha256": "7ee9026ed168bbf267b9a2dccd3f4c413eae2cf29f543ea0199bb4796290ee21",
+          "bytes": 1458002
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-gazebo/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_lite-mujoco",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco/source-manifest.json",
+          "sha256": "f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2",
+          "bytes": 33613
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco/gui-output.log",
+          "sha256": "3025a8885ae7c69a224e6b155f4c2e12e6bafd52bec4016917b17b2e6d90b7fd",
+          "bytes": 8318
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco/report.json",
+          "sha256": "ef2a617a6a5ca5f1610ee588cf42ef5151f2ed06a94956b0681cb8ef241256b8",
+          "bytes": 6225
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco/trace.json",
+          "sha256": "537616142e9385dcb0da9eb1310c03480732cc3da13c8643b59dce3091f45b52",
+          "bytes": 801534
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-mujoco/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_lite-pybullet",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet/source-manifest.json",
+          "sha256": "f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2",
+          "bytes": 33613
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet/gui-output.log",
+          "sha256": "2f93df558a253980588e3398f7be1cf45064a42a743c043c2d9b08af3ae1804d",
+          "bytes": 14216
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet/report.json",
+          "sha256": "611e3289fec8b8ca2c41fbc7495dbcc895ca3057a4bacdb276504c12fc9909e5",
+          "bytes": 6197
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet/trace.json",
+          "sha256": "c4dea8a59b34ca667e3f872fb042ee27fb34e9d7a33f8a9e7a06c64ac021d513",
+          "bytes": 848770
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-pybullet/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    },
+    {
+      "case": "asset_turtlebot4_lite-isaac",
+      "producer_returncode": 0,
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac/producer.py",
+          "sha256": "c2e5d8da32dd95f40345d3c549ed25fd04eeb3a9d6eab5053716698094305986",
+          "bytes": 11194
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac/source-manifest.json",
+          "sha256": "f95ae731f6ac848cd118045edbbe9cdad4215e309f069d3e13f53bdc9b3001e2",
+          "bytes": 33613
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac/gui-output.log",
+          "sha256": "2858e73d3512ad272d2d0aa02ee6364782eb54aa6ba333226d8aab79f458caf2",
+          "bytes": 10608
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac/report.json",
+          "sha256": "bc6587c2a4147785efe886a2f1d7bcaf421f86f45037cc0e3699bda4c1e0f01e",
+          "bytes": 6271
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac/trace.json",
+          "sha256": "2d51faf6e1578490b661731115d99805e145b6368629e3d1b2998d57af16c864",
+          "bytes": 1215381
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/current-sensors/asset_turtlebot4_lite-isaac/executed.urdf",
+          "sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+          "bytes": 25835
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "scope": "First repeated Standard/Gazebo sensor probe exited 139 at teardown; retained and excluded from support",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/producer.py",
+          "sha256": "a2995d93ab2bc04efc765744f3eb681f598466d3d9f9edfe15b1602d9248bef0",
+          "bytes": 11192
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/source-manifest.json",
+          "sha256": "dedf098f46a59eeb5f39a842e182bd075635fd5d735e5ec9d5e2471184c4bf6c",
+          "bytes": 33269
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/wrapper.log",
+          "sha256": "26d422b0a44e4f756144e1c3fde97aaeb3b0e308dc74279a303e17249c0bfa25",
+          "bytes": 33
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/gui-output.log",
+          "sha256": "6555cc3866b29a1e415bd9852c7b2925af7bd0c7714c2353ebd13f14b3a095c7",
+          "bytes": 30831
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/report.json",
+          "sha256": "89f7eaf86fcf85ff94281090d5f77558d01e553849a2398fe5642a086a769cf8",
+          "bytes": 5903
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/trace.json",
+          "sha256": "c04e0da0ca491b82e98ac2b9f3da47bb8fa647155e4425f43518da823b74e740",
+          "bytes": 1453963
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/negative/standard-gazebo-sensors-destroy-without-monitor-shutdown/executed.urdf",
+          "sha256": "747f0e743f26a6d55fc820e923f95d24f6e169cb589bf7338e6524c66d717cc9",
+          "bytes": 34181
+        }
+      ]
+    }
+  ]
+}

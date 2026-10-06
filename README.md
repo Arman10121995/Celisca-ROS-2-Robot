@@ -4,7 +4,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status updated on **2026-10-06**, against baseline `531c542` and the recorded
+Status updated on **2026-10-06**, against baseline `61335fe` and the recorded
 continuation source snapshots. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
@@ -26,7 +26,7 @@ with measured native flight in `nav_empty` and `nav_obstacle`. World selections
 persist and commands autofill. Four-wheel work adds measured body-pose checks,
 obstacle routes and selected localization/mapping/reset repairs. See the
 [done / remaining checklist](docs/status/CHECKLIST.md) and
-[current measured trials and remaining gaps](docs/status/continuation-2026-10-05.md)
+[current measured trials and remaining gaps](docs/status/continuation-2026-10-06.md)
 and [flight guide](docs/tutorials/px4_x500.md). Full platform qualification
 remains partial; these results apply to the named recorded cells.
 
@@ -38,9 +38,11 @@ URDF variants/fragments, and six official TurtleBot3/Husky/TurtleBot4 descriptio
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
 [installation evidence](docs/status/evidence/extensions-integrated-2026-10-05/README.md).
-TurtleBot 4 Standard/Lite have named display/state and physical Drive/WASD
-checks in all four simulators. Select Display to drive; mapping/navigation and
-vendor sensor/docking behavior remain pending. See the
+TurtleBot 4 Standard/Lite expose Display, Localization, 2D/3D SLAM and
+Navigation in all four simulators, with compatible algorithms and commands
+filled in. Forty named mode trials and eight final sensor/Drive trials measure
+reset/resume, actual map saves, source lidar/RGB-D frames and clear/obstacle
+Nav2 goals. Other maps and vendor hazards/docking remain experiments. See the
 [TurtleBot 4 guide](docs/tutorials/turtlebot4.md). The new **Arm** tab
 controls native Panda joints on MuJoCo with measured Home, Stop, cancellation
 and heartbeat loss. **Hand** adds original coupled-finger opening/closing,
@@ -48,8 +50,11 @@ bounded force, Cancel/Stop and GUI Reset. A physical 3 cm cube lift, hold and
 gravity release is measured on MuJoCo/`nav_empty`; see the
 [Panda guide](docs/tutorials/panda_arm.md) and
 [grasp evidence](docs/status/evidence/panda-gripper-2026-10-06/README.md).
-Cross-backend qualification, remaining vendor/example imports, Cartesian planning,
-other grasp setups and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
+**Cartesian Plan / Execute** adds real MoveIt KDL/OMPL/FCL planning through the
+native Panda actuators, with measured TCP targets, collision rejection,
+stale-plan invalidation, Stop/watchdog and reset in static `nav_empty`.
+Cross-backend qualification, remaining vendor/example imports, Servo,
+planned payload/grasp setups and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
 [extension guide](docs/ASSET_EXTENSION_GUIDE.md).
 
 ## Start here
@@ -59,7 +64,7 @@ other grasp setups and mobile-manipulator control remain in the [roadmap](ROADMA
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
 - [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
 - [Worlds and robot extension guide](docs/ASSET_EXTENSION_GUIDE.md): source pins, occupancy generation and concrete terrain/manipulation implementation contracts.
-- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [current measured support screens](docs/status/evidence/continuation-2026-10-05/support-matrix-current.md): scoped state and release blockers.
+- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [current measured support screens](docs/status/evidence/continuation-2026-10-06/support-matrix-current.md): scoped state and release blockers.
 - [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
 
@@ -76,6 +81,10 @@ other grasp setups and mobile-manipulator control remain in the [roadmap](ROADMA
 | 4 simulator launch routes | Gazebo, PyBullet, MuJoCo and Isaac; this is not feature parity |
 
 ### Verification snapshot
+
+The October 6 [current evidence](docs/status/evidence/continuation-2026-10-06/README.md)
+records the latest build/test results and source-matched TurtleBot 4 and Panda
+trials. Older totals below describe their dated stages, not the current suite.
 
 The dated 2026-09-07 audit reported **485 passing, 1 failing, 9 deselected**
 source tests, plus **5 passing, 1 deselected** selected backend tests. That audit

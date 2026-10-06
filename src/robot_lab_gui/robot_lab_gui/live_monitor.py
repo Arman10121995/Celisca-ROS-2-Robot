@@ -49,6 +49,7 @@ class LiveMonitorTab(ttk.Frame):
         self._ros_thread = None
         self._node = None
         self._subscriptions = []
+        self._disconnected = threading.Event()
 
         self._odom_buf = deque(maxlen=100)
         self._scan_buf = deque(maxlen=10)
@@ -166,10 +167,14 @@ class LiveMonitorTab(ttk.Frame):
 
     def _connect(self):
         if not ROS_AVAILABLE:
-            self.app.log("[live_monitor] rclpy not available.\n")
+            self.app.output_queue.put(('live_monitor', '[live_monitor] rclpy not available.\n'))
             return
         if self._running:
             return
+        if self._ros_thread is not None and self._ros_thread.is_alive():
+            self.status_label.configure(text='Disconnecting...', style='Status.Warn.TLabel')
+            return
+        self._disconnected.clear()
         self._running = True
         self.btn_connect.configure(text="Disconnect", state="normal")
         self.status_label.configure(text="Connecting...", style="Status.Warn.TLabel")
@@ -179,41 +184,33 @@ class LiveMonitorTab(ttk.Frame):
         self._ros_thread.start()
 
     def _disconnect(self, from_thread=False):
-        """Disconnect; safe to call from the ROS background thread."""
+        """Stop spinning before destroying ROS handles; Tk stays on its thread."""
         self._running = False
-        def _ui():
-            self.btn_connect.configure(text="Connect")
-            self.status_dot.configure(fg=STATUS_IDLE)
-            self.status_label.configure(text="Disconnected", style="Status.Idle.TLabel")
         if from_thread:
-            # Never touch Tk widgets from a background thread (segfaults);
-            # marshal the update onto the main Tk loop instead.
-            try:
-                self.after(0, _ui)
-            except RuntimeError:
-                pass  # widget already destroyed during shutdown
-        else:
-            _ui()
-        for sub in self._subscriptions:
-            try:
-                self._node.destroy_subscription(sub)
-            except Exception:
-                pass
-        self._subscriptions.clear()
-        if self._node is not None:
-            try:
-                self._node.destroy_node()
-            except Exception:
-                pass
-            self._node = None
+            # Even Tk.after is a Tcl call. The display timer consumes this
+            # event without requiring the worker to wait for the Tk loop.
+            self._disconnected.set()
+            return
+        thread = self._ros_thread
+        if thread is not None and thread.is_alive():
+            thread.join(timeout=2.)
+        self.btn_connect.configure(text='Connect')
+        self.status_dot.configure(fg=STATUS_IDLE)
+        self.status_label.configure(text='Disconnected', style='Status.Idle.TLabel')
 
     def _ros_spin(self):
+        node, executor = None, None
         try:
             try:
                 rclpy.init()
             except RuntimeError:
                 pass  # already initialized by the main application
-            self._node = rclpy.create_node("robot_lab_live_monitor")
+            from rclpy.executors import SingleThreadedExecutor
+            node = self._node = rclpy.create_node('robot_lab_live_monitor')
+            # The global executor is also spun by the Arm/Hand Tk callbacks.
+            # A dedicated executor cannot run their futures on this worker.
+            executor = SingleThreadedExecutor(context=node.context)
+            executor.add_node(node)
             qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.BEST_EFFORT)
             self._subscriptions.append(
                 self._node.create_subscription(Odometry, "/odom", self._on_odom, qos))
@@ -224,18 +221,21 @@ class LiveMonitorTab(ttk.Frame):
             self._subscriptions.append(
                 self._node.create_subscription(Clock, "/clock", self._on_clock, 10))
             while self._running:
-                rclpy.spin_once(self._node, timeout_sec=0.1)
+                executor.spin_once(timeout_sec=.1)
         except Exception as exc:
             self.app.output_queue.put(("live_monitor", "[ROS error: %s]\n" % exc))
         finally:
+            if executor is not None:
+                executor.shutdown()
+            if node is not None:
+                node.destroy_node()
+            self._subscriptions.clear()
+            self._node = None
             self._disconnect(from_thread=True)
 
     def shutdown(self):
         """Stop the ROS thread and wait for it — called on app close."""
-        self._running = False
-        thread = self._ros_thread
-        if thread is not None and thread.is_alive():
-            thread.join(timeout=2.0)
+        self._disconnect()
 
     def _on_odom(self, msg):
         p = msg.pose.pose.position
@@ -270,6 +270,11 @@ class LiveMonitorTab(ttk.Frame):
         self._clock_buf.append(float(msg.clock.sec) + float(msg.clock.nanosec) * 1e-9)
 
     def _update_display(self):
+        if self._disconnected.is_set() and not self._running:
+            self.btn_connect.configure(text='Connect')
+            self.status_dot.configure(fg=STATUS_IDLE)
+            self.status_label.configure(text='Disconnected', style='Status.Idle.TLabel')
+            self._disconnected.clear()
         if self._running:
             self._refresh_labels()
         try:

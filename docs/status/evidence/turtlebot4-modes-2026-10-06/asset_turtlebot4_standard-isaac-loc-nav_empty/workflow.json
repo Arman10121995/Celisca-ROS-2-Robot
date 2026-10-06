@@ -1,0 +1,156 @@
+{
+  "mode": "loc",
+  "base_frame": "base_link",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.017,
+      "distance_m": 0.5516,
+      "yaw_change_rad": 0.0013,
+      "tail_speed_mps": 0.20022600143685768,
+      "tail_yaw_speed_rps": 0.001121884686425606,
+      "end": {
+        "x": 0.05002439022064209,
+        "y": -0.5036841630935669,
+        "z": -0.00425788015127182,
+        "yaw": -0.0065371334302312635
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5364,
+      "yaw_change_rad": 0.0064,
+      "tail_speed_mps": 0.19396576909358634,
+      "tail_yaw_speed_rps": 0.0034465539740677078,
+      "end": {
+        "x": -0.4370599091053009,
+        "y": -0.5010525584220886,
+        "z": -0.004364609718322754,
+        "yaw": 0.00012497457032019436
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.017,
+      "distance_m": 0.0013,
+      "yaw_change_rad": 1.0411,
+      "tail_speed_mps": 0.000610410733871682,
+      "tail_yaw_speed_rps": 0.36790559220503194,
+      "end": {
+        "x": -0.4843854606151581,
+        "y": -0.5017109513282776,
+        "z": -0.004376985132694244,
+        "yaw": 1.0411105643059622
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0011,
+      "yaw_change_rad": -1.0358,
+      "tail_speed_mps": 0.0002953715555867966,
+      "tail_yaw_speed_rps": 0.36948605577446947,
+      "end": {
+        "x": -0.4844346046447754,
+        "y": -0.500767171382904,
+        "z": -0.0044024065136909485,
+        "yaw": 0.05576154762979104
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0828,
+      "yaw_change_rad": -0.0038,
+      "tail_speed_mps": 2.7776380118386335e-05,
+      "tail_yaw_speed_rps": 0.00022589162164271163,
+      "end": {
+        "x": -0.0502859428524971,
+        "y": -0.497729629278183,
+        "z": -0.004385046660900116,
+        "yaw": 0.0021516969391743132
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.067,
+      "distance_m": 0.0001,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 4.488985629978831e-06,
+      "tail_yaw_speed_rps": 2.748677467493363e-05,
+      "end": {
+        "x": -0.5001714825630188,
+        "y": -0.5000408291816711,
+        "z": -0.0043487995862960815,
+        "yaw": 4.9989124746538666e-05
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.017,
+      "distance_m": 0.3695,
+      "yaw_change_rad": -0.0005,
+      "tail_speed_mps": 0.19945037398479315,
+      "tail_yaw_speed_rps": 0.0011910289244840663,
+      "end": {
+        "x": -0.13062840700149536,
+        "y": -0.500022828578949,
+        "z": -0.00434991717338562,
+        "yaw": -0.00046295926334632764
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "monotonic_clock": true
+  },
+  "initial_truth": {
+    "x": -0.5016031861305237,
+    "y": -0.5000132918357849,
+    "z": -0.004399590194225311,
+    "yaw": -0.0078004781695975665
+  },
+  "localization_error_m": 0.031184554360007968,
+  "sensor_messages_during_drive": {
+    "/scan": 105,
+    "/oakd/rgb/image_raw": 105,
+    "/oakd/depth/image_raw": 105
+  },
+  "reset_response": "Isaac physical reset acknowledged",
+  "post_reset_localization_error_m": 0.0015522534848852957,
+  "post_reset_drive_localization_error_m": 0.010219819646480211,
+  "map_updates_after_reset": 0,
+  "cloud_updates_after_reset": 0,
+  "clock_backward_jumps": 0,
+  "truth_samples": 2160,
+  "sensor_counts": {
+    "/scan": 147,
+    "/oakd/rgb/image_raw": 145,
+    "/oakd/depth/image_raw": 145
+  },
+  "scan_geometry": {
+    "frame": "rplidar_link",
+    "samples": 640,
+    "finite": 640,
+    "min_m": 5.499913692474365,
+    "max_m": 8.744014739990234,
+    "range_min": 0.164000004529953,
+    "range_max": 12.0
+  },
+  "passed": true
+}

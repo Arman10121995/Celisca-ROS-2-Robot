@@ -11,7 +11,7 @@
     "state_estimator": "ekf_3d_estimator",
     "map_visualizer": "pointcloud_segmenter"
   },
-  "owned_pid": 352633,
+  "owned_pid": 518700,
   "check_command": [
     "python3",
     "scripts/sim_workflow_check.py",
@@ -22,7 +22,7 @@
     "--timeout",
     "300",
     "--out",
-    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/workflow.json"
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/cleanup-stage/workflows/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/workflow.json"
   ],
   "check_returncode": 0,
   "workflow": {
@@ -35,13 +35,13 @@
         "sim_s": 3.0,
         "distance_m": 0.559,
         "yaw_change_rad": -0.0,
-        "tail_speed_mps": 0.1999999709893736,
-        "tail_yaw_speed_rps": 2.6647836055741054e-07,
+        "tail_speed_mps": 0.19999997098937347,
+        "tail_yaw_speed_rps": 2.6647836058715834e-07,
         "end": {
-          "x": 0.06173961542250692,
-          "y": -0.4999855534257202,
-          "z": -0.004537039116406263,
-          "yaw": 3.794015919738899e-05
+          "x": 0.061739615422432254,
+          "y": -0.49998555342572076,
+          "z": -0.004537039114351655,
+          "yaw": 3.794015919738938e-05
         }
       },
       "reverse": {
@@ -50,12 +50,12 @@
         "distance_m": 0.559,
         "yaw_change_rad": 0.0,
         "tail_speed_mps": 0.19999997097981229,
-        "tail_yaw_speed_rps": 2.664782367375109e-07,
+        "tail_yaw_speed_rps": 2.6647823666881313e-07,
         "end": {
-          "x": -0.45626019612737795,
-          "y": -0.5000053791838186,
-          "z": -0.004537039517818781,
-          "yaw": 3.862848145219402e-05
+          "x": -0.4562601961274526,
+          "y": -0.5000053791838192,
+          "z": -0.004537039515764014,
+          "yaw": 3.8628481452226316e-05
         }
       },
       "turn": {
@@ -63,41 +63,41 @@
         "sim_s": 3.0,
         "distance_m": 0.0002,
         "yaw_change_rad": 1.088,
-        "tail_speed_mps": 7.68687046922747e-05,
-        "tail_yaw_speed_rps": 0.3758203316630495,
+        "tail_speed_mps": 7.686870444059175e-05,
+        "tail_yaw_speed_rps": 0.3758203316630311,
         "end": {
-          "x": -0.4973698220838202,
-          "y": -0.49982472212410484,
-          "z": -0.0045370399384644195,
-          "yaw": 1.0880417542845624
+          "x": -0.49736982208353764,
+          "y": -0.49982472212470536,
+          "z": -0.004537039936409657,
+          "yaw": 1.0880417542845413
         }
       },
       "turn_reverse": {
         "completed": true,
-        "sim_s": 3.02,
+        "sim_s": 3.0,
         "distance_m": 0.0002,
-        "yaw_change_rad": -1.0955,
-        "tail_speed_mps": 7.717844266184267e-05,
-        "tail_yaw_speed_rps": 0.3758231929149129,
+        "yaw_change_rad": -1.088,
+        "tail_speed_mps": 7.718690006227124e-05,
+        "tail_yaw_speed_rps": 0.37582315618460554,
         "end": {
-          "x": -0.49725097897987836,
-          "y": -0.4999870111359452,
-          "z": -0.004537040351460242,
-          "yaw": 0.03215344241122327
+          "x": -0.49725103243675756,
+          "y": -0.4999854684799614,
+          "z": -0.00453704034735084,
+          "yaw": 0.03966991527558405
         }
       },
       "publisher_loss": {
         "completed": true,
         "sim_s": 3.0,
-        "distance_m": 0.137,
+        "distance_m": 0.125,
         "yaw_change_rad": 0.0,
         "tail_speed_mps": 0.0,
         "tail_yaw_speed_rps": 0.0,
         "end": {
-          "x": -0.0012881134764860488,
-          "y": -0.5037895389160806,
-          "z": -0.004537031554047131,
-          "yaw": -0.007648826679131931
+          "x": -0.011277744954076695,
+          "y": -0.500068336598493,
+          "z": -0.004537031543785191,
+          "yaw": -0.0001518883608847702
         }
       },
       "post_reset_idle": {
@@ -108,10 +108,10 @@
         "tail_speed_mps": 0.0,
         "tail_yaw_speed_rps": 0.0,
         "end": {
-          "x": -0.4972602451031005,
-          "y": -0.5000069648420574,
-          "z": -0.004537081537458606,
-          "yaw": 3.868798008262392e-05
+          "x": -0.49726024510324196,
+          "y": -0.5000069648420576,
+          "z": -0.00453708153355791,
+          "yaw": 3.868798008305497e-05
         }
       },
       "post_reset_drive": {
@@ -119,13 +119,13 @@
         "sim_s": 2.0,
         "distance_m": 0.359,
         "yaw_change_rad": -0.0,
-        "tail_speed_mps": 0.19999997114464269,
-        "tail_yaw_speed_rps": 2.664782678134421e-07,
+        "tail_speed_mps": 0.1999999711446424,
+        "tail_yaw_speed_rps": 2.6647826788043225e-07,
         "end": {
-          "x": -0.13826035534231956,
-          "y": -0.4999931662947058,
-          "z": -0.004537041384448959,
-          "yaw": 3.8206637384242594e-05
+          "x": -0.13826035534246933,
+          "y": -0.49999316629470564,
+          "z": -0.004537041380339669,
+          "yaw": 3.8206637384637535e-05
         }
       }
     },
@@ -150,9 +150,9 @@
       "monotonic_clock": true
     },
     "initial_map_to_world": {
-      "yaw": 8.185207572809256e-06,
-      "x": -0.4978510106252037,
-      "y": -0.5000069844291736
+      "yaw": 8.165509338654336e-06,
+      "x": -0.4978501589950187,
+      "y": -0.5000069844598701
     },
     "initial_truth": {
       "x": -0.4972602451876053,
@@ -160,64 +160,63 @@
       "z": -0.00453707919670032,
       "yaw": 3.868798030445352e-05
     },
-    "localization_error_m": 0.0011371074298937532,
+    "localization_error_m": 0.0009373291089947453,
     "sensor_messages_during_drive": {
       "/oakd/depth/image_raw": 105,
       "/oakd/rgb/image_raw": 105,
-      "/scan": 105,
-      "/cloud_map": 14
+      "/scan": 106,
+      "/cloud_map": 13
     },
     "cloud_message_points": [
       150,
-      1696,
-      2881,
-      3840,
-      4519,
-      5227,
-      6209,
-      7233,
-      8512,
-      9256,
-      9798,
-      10244,
-      10776,
-      11268,
-      11440,
-      1499,
-      2529,
-      3471
+      1704,
+      2911,
+      3870,
+      4606,
+      5320,
+      6316,
+      7321,
+      8620,
+      9343,
+      9785,
+      10145,
+      10665,
+      11238,
+      1552,
+      2686,
+      3551
     ],
     "cloud_geometry": {
       "frame": "map",
-      "sampled_points": 5720,
+      "sampled_points": 5619,
       "min_xyz": [
-        -0.6282973885536194,
-        -3.4512338638305664,
-        -0.09841438382863998
+        -0.6906251907348633,
+        -3.4013962745666504,
+        -0.09841489791870117
       ],
       "max_xyz": [
-        6.547354698181152,
-        6.627411365509033,
-        0.8850162029266357
+        6.547201156616211,
+        6.6309309005737305,
+        0.8832195997238159
       ]
     },
     "reset_response": "Gazebo robot pose/control reset; world clock preserved",
     "post_reset_map_to_world": {
-      "yaw": 0.008038965360494164,
-      "x": -0.9943644875435994,
-      "y": -0.5000350301208861
+      "yaw": 3.896582892476708e-05,
+      "x": -0.9843644934210124,
+      "y": -0.5000258102644768
     },
-    "post_reset_localization_error_m": 5.551115123125783e-17,
-    "post_reset_drive_localization_error_m": 0.00030742211585412627,
+    "post_reset_localization_error_m": 0.0,
+    "post_reset_drive_localization_error_m": 0.00015396999050433237,
     "map_updates_after_reset": 3,
     "cloud_updates_after_reset": 3,
     "clock_backward_jumps": 0,
-    "truth_samples": 1421,
+    "truth_samples": 1419,
     "sensor_counts": {
       "/oakd/depth/image_raw": 142,
-      "/oakd/rgb/image_raw": 140,
+      "/oakd/rgb/image_raw": 142,
       "/scan": 142,
-      "/cloud_map": 18
+      "/cloud_map": 17
     },
     "scan_geometry": {
       "frame": "rplidar_link",
@@ -232,7 +231,8 @@
   },
   "save_map": {
     "database_nodes": 7,
-    "pointcloud_points": 3471
+    "pointcloud_points": 4456
   },
+  "map_exporter_exited": true,
   "launch_returncode": 0
 }

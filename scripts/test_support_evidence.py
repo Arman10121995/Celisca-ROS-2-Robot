@@ -34,6 +34,14 @@ def measured_nav():
             'acceptance':{'limits':{'position_m':.15,'yaw_deg':5}}}
 
 
+def test_cartesian_matrix_rechecks_the_same_physical_screen():
+    root = Path(__file__).resolve().parents[1]
+    report = json.loads((root/'docs/status/evidence/panda-cartesian-2026-10-06/report.json').read_text())
+    assert module.measured_result(report, 'arm_cartesian_screen')
+    report['planner_clean_exit'] = False
+    assert not module.measured_result(report, 'arm_cartesian_screen')
+
+
 def test_short_valid_screen_is_partial_and_cannot_transfer_to_other_maps(tmp_path):
     catalog = framework(tmp_path,measured_nav())
     cell = module.SupportCell('four_wheel_steer_car','nav_empty','isaac','navigation',steering_mode='crab')
@@ -72,6 +80,30 @@ def test_missing_or_changed_artifact_is_unverified(tmp_path):
     (tmp_path/'nav.json').unlink()
     catalog._determine_support_level(cell)
     assert cell.support_level == module.SupportLevel.NOT_TESTED
+
+
+def test_source_manifest_checksum_cannot_be_replaced(tmp_path):
+    catalog = framework(tmp_path, measured_nav())
+    source = tmp_path/'hashes.json'
+    catalog.records[0]['source_hashes_sha256'] = hashlib.sha256(source.read_bytes()).hexdigest()
+    source.write_text(json.dumps({'different_source': 'b'*64}))
+    cell = module.SupportCell('four_wheel_steer_car', 'nav_empty', 'isaac', 'navigation', steering_mode='crab')
+    catalog._determine_support_level(cell)
+    assert cell.support_level == module.SupportLevel.NOT_TESTED
+    assert 'Source manifest hash mismatch' in cell.limitations[0]
+
+
+@pytest.mark.parametrize('failure', ['no_motion', 'neutral_motion', 'no_stop', 'wrong_mount', 'no_depth', 'bad_calibration'])
+def test_drive_pass_marker_cannot_override_physical_or_sensor_failure(failure):
+    report = json.loads((path.parent.parent/'docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-mujoco/report.json').read_text())
+    assert module.measured_result(report, 'drive_sensor_screen')
+    if failure == 'no_motion': report['phases']['forward']['tail_vx'] = 0.
+    elif failure == 'neutral_motion': report['neutral_commands'] = 1
+    elif failure == 'no_stop': report['phases']['publisher_loss']['tail_wz'] = .6
+    elif failure == 'wrong_mount': report['sensors']['mounted_frames']['rplidar_link']['position'][2] += .1
+    elif failure == 'no_depth': report['sensors']['last_depth']['finite_positive'] = 0
+    else: report['sensors']['camera_info']['k'][0] = 1.
+    assert not module.measured_result(report, 'drive_sensor_screen')
 
 
 def test_active_tasks_block_release_without_inventing_scope_approval(tmp_path):

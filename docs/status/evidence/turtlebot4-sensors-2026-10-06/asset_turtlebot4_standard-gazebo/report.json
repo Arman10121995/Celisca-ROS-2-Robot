@@ -1,0 +1,214 @@
+{
+  "robot": "asset_turtlebot4_standard",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 540684,
+  "phases": {
+    "armed_neutral": {
+      "dx": 0.0,
+      "dy": 0.0,
+      "yaw": 0.0,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.00453707919670032,
+      "max_tilt": 0.005097933102820184,
+      "sim_duration": 0.98
+    },
+    "forward": {
+      "dx": 0.643499850877338,
+      "dy": 2.47028654394299e-05,
+      "yaw": -5.768122256108479e-07,
+      "tail_vx": 0.29999997105155335,
+      "tail_wz": -2.664783097806454e-07,
+      "z": -0.0045370391897917245,
+      "max_tilt": 0.005097933102820184,
+      "sim_duration": 2.5199999999999996
+    },
+    "forward_stop": {
+      "dx": 0.08555006444677724,
+      "dy": 3.2544901335529453e-06,
+      "yaw": -1.5672997902806064e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537029096432546,
+      "max_tilt": 0.0050977100443615935,
+      "sim_duration": 2.5
+    },
+    "reverse": {
+      "dx": -0.6404998423378709,
+      "dy": -2.4532109841768346e-05,
+      "yaw": 6.469507357477044e-07,
+      "tail_vx": -0.2999999709787536,
+      "tail_wz": 2.664782494345012e-07,
+      "z": -0.0045370396911360925,
+      "max_tilt": 0.005097720324670028,
+      "sim_duration": 2.5
+    },
+    "reverse_stop": {
+      "dx": -0.08850007739857363,
+      "dy": -3.4181033643498893e-06,
+      "yaw": 8.792138357094234e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537040699132926,
+      "max_tilt": 0.005097720342202049,
+      "sim_duration": 2.5
+    },
+    "left_turn": {
+      "dx": -0.00036646458107081337,
+      "dy": 0.00012763773944474144,
+      "yaw": 2.4747226033312897,
+      "tail_vx": 4.010185154524935e-07,
+      "tail_wz": 1.1274327540079963,
+      "z": -0.004537040263038818,
+      "max_tilt": 0.005097725032701569,
+      "sim_duration": 2.5199999999999996
+    },
+    "left_turn_stop": {
+      "dx": -7.303100483446734e-05,
+      "dy": -2.9436310676755895e-05,
+      "yaw": 0.32207116704403216,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537040283027034,
+      "max_tilt": 0.005097725071620442,
+      "sim_duration": 2.5199999999999996
+    },
+    "right_turn": {
+      "dx": 0.00038641693268004484,
+      "dy": 8.759148314663179e-06,
+      "yaw": -2.4521728751865806,
+      "tail_vx": 1.2955219866278372e-07,
+      "tail_wz": -1.127432700859167,
+      "z": -0.004537040780927247,
+      "max_tilt": 0.005097729178137012,
+      "sim_duration": 2.4800000000000004
+    },
+    "right_turn_stop": {
+      "dx": -0.00010118495492644763,
+      "dy": -8.086853360039781e-05,
+      "yaw": -0.3225981194247923,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537040824000395,
+      "max_tilt": 0.005097729493320815,
+      "sim_duration": 2.5
+    },
+    "pre_loss": {
+      "dx": 0.5023776324130109,
+      "dy": 0.011082860292558838,
+      "yaw": -4.408276950140788e-07,
+      "tail_vx": 0.29999997160470804,
+      "tail_wz": -2.572777703625927e-07,
+      "z": -0.004537041223066017,
+      "max_tilt": 0.005097729469080934,
+      "sim_duration": 2.0
+    },
+    "publisher_loss": {
+      "dx": 0.23844203743173692,
+      "dy": 0.00526014527334101,
+      "yaw": -2.824604519308105e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": -0.004537031170934576,
+      "max_tilt": 0.00509773244137302,
+      "sim_duration": 2.479999999999997
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "sensors": {
+    "scan_messages": 141,
+    "depth_messages": 141,
+    "camera_info_messages": 142,
+    "last_scan": {
+      "frame": "rplidar_link",
+      "samples": 640,
+      "range_min": 0.164000004529953,
+      "range_max": 12.0,
+      "finite": 640,
+      "angle_min": -3.1415927410125732,
+      "angle_increment": 0.009832840412855148
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "encoding": "32FC1",
+      "finite_positive": 2527,
+      "min": 0.5602868795394897,
+      "max": 5.890344619750977,
+      "mean": 2.692319631576538
+    },
+    "camera_info": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "k": [
+        277.19135641132203,
+        0.0,
+        160.0,
+        0.0,
+        277.19135641132203,
+        120.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "expected_fx": 277.19135641132203,
+    "depth_mean_change_m": 0.6273314952850342,
+    "mounted_frames": {
+      "rplidar_link": {
+        "position": [
+          -0.04,
+          0.0,
+          0.192915
+        ],
+        "expected_position": [
+          -0.04,
+          0.0,
+          0.192915
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position": [
+          -0.05960000000000001,
+          0.0,
+          0.24353
+        ],
+        "expected_position": [
+          -0.05960000000000001,
+          0.0,
+          0.24353000000000002
+        ],
+        "rotation_xyzw": [
+          -0.5,
+          0.4999999999999999,
+          -0.5,
+          0.5000000000000001
+        ]
+      }
+    }
+  },
+  "joint_names": [
+    "left_wheel_joint",
+    "wheel_drop_left_joint",
+    "right_wheel_joint",
+    "wheel_drop_right_joint"
+  ],
+  "body_samples": 1412,
+  "joint_samples": 2823,
+  "real_time_factor": 0.8338856688479973,
+  "launch_returncode": 0
+}

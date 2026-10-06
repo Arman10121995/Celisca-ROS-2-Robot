@@ -32,6 +32,7 @@ GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
   "scripts/test_asset_staging.py"
+  "scripts/test_support_evidence.py"
   "$REG_TEST/test_p5_algorithm_breadth.py"
   "$REG_TEST/test_p6_benchmarking.py"
   "$REG_TEST/test_registry.py"
@@ -73,7 +74,9 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$BRG_TEST/test_pointcloud_export.py"
   "$BRG_TEST/test_isaac_drive_watchdog.py"
+  "$BRG_TEST/test_isaac_odometry.py"
   "$BRG_TEST/test_xacro_expansion.py"
   "$BRG_TEST/test_driven_assembly_hold.py::test_the_shipped_mecanum_description_is_covered"
   "$BRG_TEST/test_simulation_clocks.py"

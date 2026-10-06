@@ -11,7 +11,7 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
    task ledger: states, owners, dependencies, evidence, `next_task`.
 2. [`ROADMAP.md`](../ROADMAP.md) — scope and acceptance criteria for every task.
 3. [`docs/status/audit-2026-10-02.md`](status/audit-2026-10-02.md) and
-   [`docs/status/continuation-2026-10-05.md`](status/continuation-2026-10-05.md) —
+   [`docs/status/continuation-2026-10-06.md`](status/continuation-2026-10-06.md) —
    audited claim boundaries, latest measured work and retained failures.
 4. [`docs/PATCH_EXECUTION_GUIDE.md`](PATCH_EXECUTION_GUIDE.md) and
    [`docs/ASSET_EXTENSION_GUIDE.md`](ASSET_EXTENSION_GUIDE.md) — execution steps,
@@ -81,7 +81,7 @@ regression is repaired and recorded under
 spawn defaults and keep catch-up disabled for effort-controlled robots.
 The full walking/turning/terrain milestones remain partial. The user now explicitly includes drone work. R5.4
 SITL Flight acceptance is measured and its GUI path is available; see
-[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-05.md).
+[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-06.md).
 Continue R5.6 four-wheel navigation and the remaining qualification matrix;
 do not use the historical no-thrust diagnosis to restart PX4 plant changes.
 October 5 adds strict body-pose and obstacle screens, selected real mapping,
@@ -100,15 +100,22 @@ R3.6/R6.6 now have 113 installed robot profiles and 17 worlds with exact
 import/autofill and named live Panda display/state evidence. Read
 [the installation checkpoint](status/evidence/extensions-integrated-2026-10-05/README.md).
 Stable pose/texture/backend review, additional fixtures, controllers and robot
-missions remain. Official TurtleBot 4 Standard/Lite have eight named Display/state
-screens and eight actual GUI Drive/WASD/Stop/command-loss screens across all four
-backends. Preserve the original Create 3 suspension and Isaac SDK-time acceleration
-and wall timeout; [Drive evidence](status/evidence/turtlebot4-drive-2026-10-05/README.md)
-retains failed and successful trials. Sensors/reset/obstacle/mapping/navigation
-missions remain R3.6. Native Panda has actual MuJoCo joint/Home/
-Stop/action/cancel/watchdog proof through the Arm tab; R5.7 remains partial
-for MoveIt/Cartesian/grasp/other backends. Read the [latest control/import
-evidence](status/evidence/panda-turtlebot4-2026-10-05/README.md) and new tutorials.
+missions remain. Official TurtleBot 4 Standard/Lite now have forty named
+localization/reset/resume, actual 2D/3D Save Map and clear/obstacle Nav2 screens,
+plus eight final source-frame lidar/RGB-D/Drive screens across all four engines.
+Normal Launch enables their five modes with compatible defaults/autofill;
+see [mode evidence](status/evidence/turtlebot4-modes-2026-10-06/README.md)
+and [sensor evidence](status/evidence/turtlebot4-sensors-2026-10-06/README.md).
+Preserve Gazebo's selected-world 2 ms cap, Isaac pose-derived ideal twist and
+sensor cadence, bounded console/lifecycle queues and normal export cleanup.
+Other maps, longer routes, materials and vendor firmware remain unqualified.
+Native Panda joint/Hand controls and physical cube lift/release remain. Its
+actual MoveIt KDL/OMPL/FCL GUI Plan/Execute now passes two physical TCP targets,
+collision/unreachable rejection, joint/finger invalidation, interruptions,
+reset, Live Monitor and clean planner shutdown in static `nav_empty`; see
+[Cartesian evidence](status/evidence/panda-cartesian-2026-10-06/README.md).
+Servo, dynamic/attached-object scenes, repeated pick/place and other backends
+remain R5.7–R5.9. Preserve failed trials and the original actuator contracts.
 R6.7 terrain and R5.8/R5.9 hand/mobile manipulation need their own
 implementation and actual mission proof. The Health tab loads
 the ledger and latest report; update those when advancing any task.

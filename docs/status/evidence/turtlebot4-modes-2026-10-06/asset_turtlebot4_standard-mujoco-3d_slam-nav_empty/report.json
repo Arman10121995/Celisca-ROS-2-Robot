@@ -11,7 +11,7 @@
     "state_estimator": "ekf_3d_estimator",
     "map_visualizer": "pointcloud_segmenter"
   },
-  "owned_pid": 337789,
+  "owned_pid": 522042,
   "check_command": [
     "python3",
     "scripts/sim_workflow_check.py",
@@ -22,7 +22,7 @@
     "--timeout",
     "300",
     "--out",
-    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/workflow.json"
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/cleanup-stage/workflows/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/workflow.json"
   ],
   "check_returncode": 0,
   "workflow": {
@@ -49,55 +49,55 @@
         "sim_s": 3.0,
         "distance_m": 0.5574,
         "yaw_change_rad": 0.0002,
-        "tail_speed_mps": 0.19899553092180794,
-        "tail_yaw_speed_rps": 0.00020860725822497743,
+        "tail_speed_mps": 0.1989965981098955,
+        "tail_yaw_speed_rps": 0.00020373168880639765,
         "end": {
-          "x": -0.4614931121256096,
-          "y": -0.49990574893655004,
-          "z": 0.0057474798839774405,
-          "yaw": -2.07209208183007e-05
+          "x": -0.46069504742286416,
+          "y": -0.4998904245375049,
+          "z": 0.005744900967987448,
+          "yaw": -1.7665301928820515e-05
         }
       },
       "turn": {
         "completed": true,
         "sim_s": 3.0,
         "distance_m": 0.0028,
-        "yaw_change_rad": 1.1309,
-        "tail_speed_mps": 0.0010573783433171665,
-        "tail_yaw_speed_rps": 0.39212839640588015,
+        "yaw_change_rad": 1.1325,
+        "tail_speed_mps": 0.0010580511901424601,
+        "tail_yaw_speed_rps": 0.3921036903481365,
         "end": {
-          "x": -0.49979852262865043,
-          "y": -0.5025072607203228,
-          "z": 0.005583902243844425,
-          "yaw": 1.1309164670873566
+          "x": -0.4997877052971227,
+          "y": -0.5024934216050342,
+          "z": 0.005578685701222241,
+          "yaw": 1.132471340575877
         }
       },
       "turn_reverse": {
         "completed": true,
-        "sim_s": 3.02,
-        "distance_m": 0.0028,
-        "yaw_change_rad": -1.1404,
-        "tail_speed_mps": 0.0010852271614193373,
-        "tail_yaw_speed_rps": 0.3911103308999215,
+        "sim_s": 3.0,
+        "distance_m": 0.0027,
+        "yaw_change_rad": -1.1326,
+        "tail_speed_mps": 0.001086132971751418,
+        "tail_yaw_speed_rps": 0.3911890755530335,
         "end": {
-          "x": -0.5013935647035765,
-          "y": -0.5003366523254218,
-          "z": 0.0055670664017837355,
-          "yaw": 0.030050518947631225
+          "x": -0.5013866534762998,
+          "y": -0.5003513569123423,
+          "z": 0.00556552524824753,
+          "yaw": 0.039424929982331935
         }
       },
       "publisher_loss": {
         "completed": true,
         "sim_s": 3.0,
-        "distance_m": 0.0273,
-        "yaw_change_rad": 0.0,
-        "tail_speed_mps": 1.8407642212492102e-06,
-        "tail_yaw_speed_rps": 7.979807034687314e-06,
+        "distance_m": 0.031,
+        "yaw_change_rad": -0.0002,
+        "tail_speed_mps": 1.228894043663509e-05,
+        "tail_yaw_speed_rps": 6.91765748075451e-05,
         "end": {
-          "x": -0.11164365375238966,
-          "y": -0.5040514431692102,
-          "z": 0.005728644514619035,
-          "yaw": -0.010018527924900574
+          "x": -0.10783262346255537,
+          "y": -0.5002994416575784,
+          "z": 0.005748026611761996,
+          "yaw": -0.0005775945534342626
         }
       },
       "post_reset_idle": {
@@ -117,15 +117,15 @@
       "post_reset_drive": {
         "completed": true,
         "sim_s": 2.0,
-        "distance_m": 0.3577,
+        "distance_m": 0.3585,
         "yaw_change_rad": -0.0003,
-        "tail_speed_mps": 0.19896170703594454,
-        "tail_yaw_speed_rps": 2.2449142413126988e-05,
+        "tail_speed_mps": 0.19896796210164586,
+        "tail_yaw_speed_rps": 3.321953082203045e-05,
         "end": {
-          "x": -0.1431844688087543,
-          "y": -0.5000428005321249,
-          "z": 0.005635996630897386,
-          "yaw": -0.00025245937234892997
+          "x": -0.1423883701661088,
+          "y": -0.5000395972111167,
+          "z": 0.005639826895381212,
+          "yaw": -0.00024565823861145557
         }
       }
     },
@@ -150,7 +150,7 @@
       "monotonic_clock": true
     },
     "initial_map_to_world": {
-      "yaw": 1.1300275454047569e-05,
+      "yaw": 1.130027545360348e-05,
       "x": -0.5013133707883766,
       "y": -0.5000025836597379
     },
@@ -160,7 +160,7 @@
       "z": 0.005770073706798144,
       "yaw": 3.02946919030839e-05
     },
-    "localization_error_m": 0.0009802211089438265,
+    "localization_error_m": 0.0008734023665768507,
     "sensor_messages_during_drive": {
       "/scan": 105,
       "/oakd/rgb/image_raw": 105,
@@ -171,49 +171,49 @@
       1223,
       2765,
       3904,
-      7401,
-      7977,
-      8459,
-      9003,
-      9947,
-      11002,
-      12329,
-      12808,
-      13148,
-      13887,
-      13926,
-      14474,
-      1814,
-      3503,
-      4554,
-      5661
+      7400,
+      7984,
+      8467,
+      9131,
+      10095,
+      11136,
+      12480,
+      12960,
+      13294,
+      14052,
+      14055,
+      14667,
+      1969,
+      3658,
+      4709,
+      5816
     ],
     "cloud_geometry": {
       "frame": "map",
-      "sampled_points": 7237,
+      "sampled_points": 7334,
       "min_xyz": [
-        -0.7943446040153503,
-        -3.3909945487976074,
+        -0.8014044761657715,
+        -3.3928401470184326,
         -0.0984487235546112
       ],
       "max_xyz": [
-        6.49544095993042,
-        6.502714157104492,
-        1.3896788358688354
+        6.496062278747559,
+        6.501733779907227,
+        1.3896145820617676
       ]
     },
     "reset_response": "Simulation reset successfully",
     "post_reset_map_to_world": {
-      "yaw": 1.0054163909651127e-05,
-      "x": -0.0013131780306725824,
-      "y": 2.504766662136948e-06
+      "yaw": 1.0054602284321031e-05,
+      "x": -0.001313088624004238,
+      "y": 2.5345698825285368e-06
     },
     "post_reset_localization_error_m": 0.0,
-    "post_reset_drive_localization_error_m": 0.0015986145674252085,
+    "post_reset_drive_localization_error_m": 0.0015524794029861187,
     "map_updates_after_reset": 4,
     "cloud_updates_after_reset": 4,
     "clock_backward_jumps": 0,
-    "truth_samples": 1275,
+    "truth_samples": 1274,
     "sensor_counts": {
       "/scan": 143,
       "/oakd/rgb/image_raw": 143,
@@ -224,8 +224,8 @@
       "frame": "rplidar_link",
       "samples": 640,
       "finite": 640,
-      "min_m": 5.499970436096191,
-      "max_m": 8.75156307220459,
+      "min_m": 5.499982833862305,
+      "max_m": 8.750317573547363,
       "range_min": 0.164000004529953,
       "range_max": 12.0
     },
@@ -233,7 +233,8 @@
   },
   "save_map": {
     "database_nodes": 6,
-    "pointcloud_points": 3442
+    "pointcloud_points": 6251
   },
+  "map_exporter_exited": true,
   "launch_returncode": 0
 }

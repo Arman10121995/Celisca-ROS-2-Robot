@@ -1,0 +1,164 @@
+{
+  "runtime_root": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning",
+  "qualification_run": "physical-gui-10-normal",
+  "retained_trials": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-1",
+      "passed": false,
+      "error": "AssertionError('Planning from measured joints with the selected-world collision scene\u2026')",
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "59431bf2a3ed70e91b020af7a34ebd36f514917949694702ff0d0a21dae1d4f0",
+        "producer.py": "684b51ae733c1cda1b47be463a937fc1d0e418b6a47d3265bfec18bcf94ba3c2",
+        "ownership.json": "e985f12d28e4b16d05e7ee2a745938649937a03ea793e4d651b83d999add3ee9",
+        "error.log": "9c0634c2c72c2f9d8d732fd45ce69d84cac823e1d9cf020a3c040259abd087ee",
+        "source-manifest.json": "0fca1b463bd141138146c03b445b07413390833e8e2eaa6f526938e323750ea4",
+        "gui-output.log": "d52b013ddbe4e523b8e007dddb9b73818b92c52cff6d520f29843ccfec3bf755",
+        "report.json": "89f8e6cfd601a1008745b1a8fcea011078264f376ac109853574c20dc8f3f718",
+        "trace.json": "a5a9dcc41e1b53a35dd39333c065d727ec5cbe6a57d082562cf716fef930788f"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-2",
+      "passed": false,
+      "error": "AssertionError('Plan exceeds the native execution contract: Waypoint exceeds the model joint limits with 0.005 rad margin')",
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "2f520d1423a787e1190ec7e4180f8d98182f5e7fa50f96ba4d2d8ed8bd9a0134",
+        "producer.py": "684b51ae733c1cda1b47be463a937fc1d0e418b6a47d3265bfec18bcf94ba3c2",
+        "ownership.json": "4346d4f439cbd4d487d218a65bdb56734a899eae1c4f590d541b576c359fb162",
+        "error.log": "305236c89b1e4ff052e0f3c7ec009faab13902069b8339fccef2a53d8afaf2a6",
+        "source-manifest.json": "4defc92d9d5ed8a36b76338078c10812bfc844e87ea9a77fc38be7d061ffc461",
+        "gui-output.log": "1e10075897d1ee7492825aa7b8ecf72fcb538a675811d26090e11c6c2b52b0a4",
+        "report.json": "b14ad612f09f7447c8ad5348dfee5ff30b2e1d3e3ac1c446242899e4d4e4b9d2",
+        "trace.json": "5ebd8d57ce845f21e34fe66d72edc80727a92a0397eccf845eb091515872d2db"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-3",
+      "passed": false,
+      "error": "AssertionError({'offset_m': [0.0, 0.0, 0.05], 'duration_sim_s': 1.9608101719631075, 'waypoints': [{'time': 0.2451012714953884, 'positions': [0.053341617995666675, 0.012640315136158807, -0.0571920753873952, -1.5544759331907254, 0.005732786671184523, 1.5539256872773055, -0.7865372505329792]}, {'time': 0.4902025429907768, 'positions': [0.10668323599133334, 0.01869891602964545, -0.1143823720696525, -1.5318489559653836, 0.011800057876330008, 1.538202490441896, -0.7877745219445216]}, {'time': 0.7353038144861652, 'positions': [0.160024853987, 0.024757516923132092, -0.1715726687519098, -1.5092219787400416, 0.01786732908147549, 1.5224792936064866, -0.7890117933560639]}, {'time': 0.9804050859815536, 'positions': [0.21336647198266667, 0.03081611781661873, -0.22876296543416708, -1.4865950015146998, 0.023934600286620974, 1.5067560967710771, -0.7902490647676061]}, {'time': 1.225506357476942, 'positions': [0.26670808997833334, 0.03687471871010537, -0.28595326211642436, -1.4639680242893578, 0.03000187149176646, 1.4910328999356677, -0.7914863361791484]}, {'time': 1.4706076289723307, 'positions': [0.320049707974, 0.042933319603592014, -0.3431435587986817, -1.4413410470640158, 0.03606914269691194, 1.4753097031002582, -0.7927236075906907]}, {'time': 1.715708900467719, 'positions': [0.3733913259696667, 0.04899192049707866, -0.40033385548093897, -1.418714069838674, 0.042136413902057426, 1.4595865062648488, -0.7939608790022331]}, {'time': 1.9608101719631075, 'positions': [0.42673294396533334, 0.055050521390565293, -0.45752415216319625, -1.396087092613332, 0.04820368510720291, 1.4438633094294393, -0.7951981504137754]}], 'target_position': [0.05465470945329082, -0.5000712264504725, 0.5648799290433099], 'target_quaternion_wxyz': [-0.004843837618074269, 0.7071240173564125, 0.7070546983179573, -0.005080836679150926], 'actual': {'sim': 10.6, 'position': [0.057526200688250755, -0.5015888875116171, 0.5391180693651313], 'quaternion_wxyz': [-0.013919526803636928, 0.7109325881148263, 0.7031211209209067, -0.0013383739556783979]}, 'position_error_m': 0.025965788474204457, 'orientation_error_deg': 1.2880913648580736, 'physical_displacement_m': 0.024454778741157427, 'joint_samples': 103, 'terminal_status': {'controller': 'panda_native', 'status': 'target reached; holding target', 'joint_names': ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6', 'joint7'], 'positions': [0.42673292289623777, 0.061309187481532926, -0.4573222160158215, -1.4021597564552837, 0.04785211371782316, 1.442722842357765, -0.7951977935682686], 'velocities': [2.1535122453113336e-07, 3.089849167723389e-08, -2.3692751150738914e-07, 7.746687145738278e-08, 2.3923561316100294e-08, -6.865049518625007e-08, -5.151236157372725e-09], 'target': [0.42673294396533334, 0.055050521390565293, -0.45752415216319625, -1.396087092613332, 0.04820368510720291, 1.4438633094294393, -0.7951981504137754], 'home': [0.0, 0.0, 0.0, -1.57079, 0.0, 1.57079, -0.7853], 'limits': [[-2.8973, 2.8973], [-1.7628, 1.7628], [-2.8973, 2.8973], [-3.0718, -0.0698], [-2.8973, 2.8973], [-0.0175, 3.7525], [-2.8973, 2.8973]], 'busy': False, 'contact_blocked': False, 'time': 12.560000000000864}})",
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "bf89d3c0bc387b6ab73375f7a9b3df69625dafa1552ff7951eb74437d876b509",
+        "producer.py": "684b51ae733c1cda1b47be463a937fc1d0e418b6a47d3265bfec18bcf94ba3c2",
+        "ownership.json": "2a7792f3f96a3beeb6b5d7edf8c1820248e569980797fa1dbf906af65ab5a626",
+        "error.log": "bed1a9c1312dfb576f6f524bc882982247858e3a797cd940637ad510ecd940ba",
+        "source-manifest.json": "a3d40b7a6586bc7e64927870e0c6ccf8e3e9cd6c2620338fc6d8716c782d5a3e",
+        "gui-output.log": "eba5647ebe8496a182fadef23504bfa1825eaa0d6191b4e90dbfde99ae72a1c3",
+        "report.json": "1a1f76aca2dcfedec20f4783aea0b3da62fc48720d2c446dd91afcd8dc243d14",
+        "trace.json": "ad3ff3548d663e517c937c79ddf780d53b13a4510e9808c2d5c60f73a24211a5"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-4",
+      "passed": true,
+      "error": null,
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "263064e6d48f4bfb90e626a55f4334e12dcb79aa0cba10583540247207cf8f78",
+        "producer.py": "77d21ee3b38f4cfe37b7977b912b985bc963151d810cb5db2f9340403bd064b1",
+        "ownership.json": "39b81cfc775f578c4234ee1376e411c98494d581b5aea5f031b85ff9f768e6f4",
+        "source-manifest.json": "b6156287320685faf3277db25def534484276628fc82a2796083848bed381318",
+        "gui-output.log": "c7594cea8f751bda05a2f5ea5c11e2483b4705298f6683b212a1745ca8d95325",
+        "report.json": "0d14c817507763f2f2c2ff057af3cac8c825d5dcae459e643a72f13953f82a1b",
+        "trace.json": "4fe3b749471cf95799582fdb22e7ddce62bf03ef657f801fa6ae8c9615e6f2a8"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-5",
+      "passed": true,
+      "error": null,
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "187320ad92cc3f348d4f6e9f73acc5cc348fb2247ab7aee79756d952c10d1f6a",
+        "producer.py": "77d21ee3b38f4cfe37b7977b912b985bc963151d810cb5db2f9340403bd064b1",
+        "ownership.json": "8888071f4c0d7308237a6cac01fc0729cd9a0bc2f88da8a383c2a91ea5f24887",
+        "source-manifest.json": "15fb4750ffb0bd43863f715f318adeeccae5fe248edefd1ab370756cffb7a1e6",
+        "gui-output.log": "d6e98a2d047ef927f1a6370a6d9003c178e0a09e91995f8248ebcae96b136042",
+        "report.json": "3eb83938397888c002361146e3276f119b5f8db93e929654d5ca7f508a8b709e",
+        "trace.json": "bd09afba378f23b6def7a5481eccdc6fa7a6bcb4ce6e5c6d5bfe7d6d9e6f3d40"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-6",
+      "passed": true,
+      "error": null,
+      "planner_clean_exit": true,
+      "files": {
+        "live-gui-output.log": "3ae287748f9765200d06dab00879489b2b7030fb1d08e9deae0ac51892cfa625",
+        "producer.py": "2ac74206e01a27107fe157ad0fd64768da95d57a04f29f39b0b71160151c1511",
+        "ownership.json": "d5e1706eff10cf8238bc3b9ffa65e4b74e1d0324ec496a7e41acfcb7281ae2db",
+        "source-manifest.json": "bcae9b4e6fdb0a5f46a312ac45b8a906d6e7d0e9b8ac8b45ef02c57d69a19446",
+        "gui-output.log": "56393c79083d5f350855246d1b5520d41b642493e665b62e1baf9236d2f236df",
+        "report.json": "ea9edf39915866d9a431f1fb4637a106edc5909e82c28da6b6d61b23a9c22def",
+        "trace.json": "a91dbc27d9171a05e709d0350601ece80c7ede2e44477ffd50310cec609f032b"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-7",
+      "passed": false,
+      "error": "AssertionError('Timed out: Plan expired or robot state changed; plan again. / Native Panda / MuJoCo \u2014 target reached; holding target')",
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "bf15556c3b9247f812650af29be80a7ef0a4701d62c00c717f14636f8b25fc0d",
+        "producer.py": "5621ab42b68d28c92d05ed7bd11e795300c083d4764cd53c06a778550aa258bd",
+        "ownership.json": "82dbc90a8139907ba78178ad62660d785cbd7b2cd04108dde62c48d0d1255bb3",
+        "error.log": "3eb1252deb95a44fd6c8f1d364888e4f63613bef92e8f4d71efb638bfc997cd9",
+        "source-manifest.json": "91dbf0793700facc7650defa02a2ee093ac43ce4e195e1c0b7b8fd604c6c3691",
+        "sdk-manifest.json": "240398053fadec93bf81866b15e27e63167cdd92c83e366736a3050f47aa08ee",
+        "gui-output.log": "ee3b9cb533a03bd9cb6f921cdf31bd916f9fcf9c6488ccd7cdaf6138b5fd4bb6",
+        "report.json": "954f64fa5f2b84e7b2ebfecd10f7527a2b188b285997f21d3bd82e1ec5f9673f",
+        "trace.json": "2c269c71864ccf0ae1adf8e8ba201f83c62bbd6eeff5443a251424450da846aa"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-8",
+      "passed": false,
+      "error": "AssertionError('Plan exceeds the native execution contract: Waypoint times must increase and finish within 15 seconds')",
+      "planner_clean_exit": null,
+      "files": {
+        "live-gui-output.log": "5b915137c5efa6a817e78a8c665a8e4653cea6eafae5ef69fbdaef5ac9f8efea",
+        "producer.py": "7b8fdac08c8ae77ae0d30b143108609824a95bfe2e45c2730123b4a20d6509c2",
+        "ownership.json": "52204dd41b4d26ca46ed4c316f525d58d610b6b601689663f94e6689b97bf7d6",
+        "error.log": "8b319767f5f57df4a24a943178a4b6cd0329d88ea01b1065cb3d841ebbedfcf7",
+        "source-manifest.json": "608199e91975d09fbedb069d329614741600794ff2329b38517034f3f18639ba",
+        "sdk-manifest.json": "240398053fadec93bf81866b15e27e63167cdd92c83e366736a3050f47aa08ee",
+        "gui-output.log": "1a05c467ae498c620ed311f82849d90e05e5af53845a18984390a25706035ffa",
+        "report.json": "fbce48871f13ee3733c05972c6f21cd57af7fa81fdf00b40905f2c8c84643250",
+        "trace.json": "b094ba243cc5a1f7bc0bdc842e76ee3b87fc3c615acd01a2053b15f9226544bb"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-9",
+      "passed": true,
+      "error": null,
+      "planner_clean_exit": true,
+      "files": {
+        "live-gui-output.log": "a1daa63b1d532cd848d55462202c8a2d621e35ac2ced58a30a9672b3b6f6bef9",
+        "producer.py": "7b8fdac08c8ae77ae0d30b143108609824a95bfe2e45c2730123b4a20d6509c2",
+        "ownership.json": "442fad5952b344cf0e773d382a67fca64e49019da917633846aa1883d2fda15f",
+        "source-manifest.json": "a96854b5346ee7a5db84bc11c9f50d6005c9829bc0bc6f74c9159adec4f69fa8",
+        "sdk-manifest.json": "240398053fadec93bf81866b15e27e63167cdd92c83e366736a3050f47aa08ee",
+        "gui-output.log": "7b41472d5dbca05786dd878b1fe70c73634ac78eabca59b4e3a9bae33e022fe4",
+        "report.json": "0dcb5b61a60862a2727d03751584a762d4e66ba019818939bc3e6ea4ee994323",
+        "trace.json": "283792f5ce9127233ae21732942a56f4cd84558275f9b88b125314546f13eb05"
+      }
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/panda-planning/physical-gui-10-normal",
+      "passed": true,
+      "normal_installed_profile": true,
+      "files": {
+        "live-gui-output.log": "6db87b8fea119d683b218cd4bbaac2183242688dcd70439e320d539a2d1ef70a",
+        "producer.py": "a746c3506c85bdbc92d8b3ff5586004c8490fec8621e462357671a5a9c012f0c",
+        "ownership.json": "623d3a36ad48edfd3b84dfd8c594b897c8d131490918f158cb6bba2045d95ba2",
+        "source-manifest.json": "4398c897fd776a3491a9a2b969abbaa89056acc845e0f77c3c8f905d67c1a7f7",
+        "sdk-manifest.json": "240398053fadec93bf81866b15e27e63167cdd92c83e366736a3050f47aa08ee",
+        "gui-output.log": "f0a89cd797ff0a95da9fa9c2f71cacc162d9b54fbb6a6370f8b27b516f3e4c91",
+        "report.json": "1418a22748a2a5b3ace9da3f50b1ccb652f4536b9eb4dd82f4ad24767d8f491e",
+        "trace.json": "fa015c57d8f9532e1c13202dc2382ea2dad69e9d9ae36a156bf4994bd90b8d3f"
+      }
+    }
+  ]
+}

@@ -5,15 +5,15 @@
 The official ROS 2 Humble **Standard** and **Lite** descriptions are installed
 on the workspace SSD. Select `asset_turtlebot4_standard` or
 `asset_turtlebot4_lite` in Launch, select a map and simulator, and use Display.
-The command fills automatically. Restart an already open GUI after rebuilding;
+The command and compatible algorithms fill automatically. Restart an already open GUI after rebuilding;
 Installed Extensions → Refresh Installed Assets reloads the model catalog.
 
 Both variants have measured GUI Run/Stop, clock, joint state, description and
-TF checks on Gazebo Fortress, MuJoCo, PyBullet and native Isaac Sim, using
-`dataset_room2`. Physical wheel control is now connected in **Display** through
-the existing Drive panel and input mux. Original visual materials, simulated
-sensor parity, SLAM and navigation remain open. Selecting a lidar mesh does
-not establish `/scan`.
+TF checks on Gazebo Fortress, MuJoCo, PyBullet and native Isaac Sim. The October 6
+continuation adds real source-mounted RPLidar/OAK-D sensing, Localization,
+2D SLAM, 3D SLAM, reset/resume and clear/obstacle Nav2 trials. Mode availability
+comes from hashed backend-specific measurements. Original visual-material
+parity, vendor hazard/docking behavior and other-map missions remain open.
 
 For a first drive test, choose `nav_empty`, Display and the desired simulator.
 Run, open Drive and enable keyboard control. Enabling it publishes no motion.
@@ -35,8 +35,17 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 ```
 
 Use `asset_turtlebot4_lite` for Lite and `gazebo`, `pybullet` or `isaac` for
-the other installed backends. The GUI autofills these commands; unsupported
-SLAM/localization/navigation selections remain gated.
+the other installed backends. Choose Localization, SLAM, 3D SLAM or Navigation
+in Launch where enabled. The GUI selects AMCL, Slam Toolbox, RTAB-Map and the
+compatible Nav2 controller as appropriate and fills the run command. Support
+records require real measurements; unavailable combinations retain a reason.
+
+Use **Reset Robot** to restore the selected spawn without rewinding simulation
+time. In 2D SLAM, **Save Map** writes the actual occupancy YAML/PGM. In 3D SLAM,
+it saves an intact RTAB-Map database and finite PCD points and waits for the
+export process to exit. These are measured on `nav_empty`; the navigation
+screens also include a blocked direct path in `nav_obstacle`. A different map
+is selectable for testing but does not inherit qualification from those two.
 
 The source pins and licenses are retained:
 
@@ -79,6 +88,21 @@ drive now sends timed wheel targets on message loss and advances acceleration us
 actual SDK time, preserving behavior when physics runs slower than real time.
 The original Isaac no-timeout and tipping trials remain negative evidence.
 
+The lab sensor configuration uses the real source transforms for
+`rplidar_link` and the OAK-D optical frame: a 640-ray scan and 320×240 calibrated
+RGB-D images. Trials require changing depth geometry and finite measured wheel
+and suspension state. These simulate the selected lab rates and ranges; they
+do not reproduce the vendor firmware's complete noise/timing/hazard stack.
+
+Gazebo caps coarse selected worlds at a 2 ms physics step for the compliant
+Create 3 suspension. The cached derivative preserves the selected world name,
+geometry and plugins and never increases a finer authored step. Isaac headless
+rendering samples the camera separately from 60 Hz physics. Its ideal body
+odometry derives twist from successive actual root poses: the raw contact
+solver reported nonzero velocity while the Lite body was stationary, which
+previously drifted the EKF. This remains ideal simulated odometry, not a claim
+about noisy wheel or hardware localization.
+
 Gazebo uses Humble's upstream
 [diff_drive_controller](https://control.ros.org/humble/doc/ros2_controllers/diff_drive_controller/doc/userdoc.html)
 with the original wheel names/dimensions; the other backends use the existing
@@ -90,11 +114,17 @@ For agents continuing integration: read the R3.6 ledger, exact evidence and the
 [official Humble simulator guide](https://turtlebot.github.io/turtlebot4-user-manual/software/turtlebot4_simulator.html).
 Use `left_wheel_joint`, `right_wheel_joint`, wheel radius 0.03575 m and track
 0.233 m from the pinned Create 3 description. Preserve the actual suspension
-and caster, measured command-loss behavior and neutral GUI enable. Next verify
-repeated reset/second-run behavior and real lidar, OAK-D optical frames, camera
-calibration and changing depth/point clouds on each backend. Add Localization/
-SLAM/3D SLAM/Nav2 only after their actual sensor adapters, estimate TF, footprint
-and controller resolve and recorded moving-robot tasks pass. Test obstacle
-routes, goal cancellation, second goals and contacts. Keep vendor docking/
-hazards, full visual parity and hardware qualification as separate tasks.
+and caster, measured command-loss behavior and neutral GUI enable. Preserve the
+October 6 named reset/Save Map/estimate and strict Nav2 screens when changing
+timing, collision geometry or sensor adapters. Require a fresh pre-trial source
+manifest, independently measured physical body position and heading, and no
+orphan plant or export process before the next Run. Next test other imported
+and furnished maps, goal cancellation, second goals and contact telemetry.
+Keep vendor docking/hazards, full visual parity and hardware qualification as
+separate tasks.
 Do not enable a navigation mode from an import count.
+
+The [October 6 mode trials](../status/evidence/turtlebot4-modes-2026-10-06/README.md)
+and [final sensors/Drive trials](../status/evidence/turtlebot4-sensors-2026-10-06/README.md)
+record exact commands, truth limits, saved-map measurements and retained
+failures. MuJoCo performance remains below real time on this host.

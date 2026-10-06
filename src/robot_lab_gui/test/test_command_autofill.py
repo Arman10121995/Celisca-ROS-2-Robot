@@ -161,6 +161,98 @@ def test_hand_fixture_and_reset_require_the_selected_native_panda(app):
         app.hand_tab.close(); app.arm_tab.close()
 
 
+def test_qualified_panda_planning_autofill_and_fixture_fallback(app):
+    from robot_lab_gui.arm_tab import ArmTab
+    from robot_lab_gui.hand_tab import HandTab
+    profile = dict(app.robot_profiles['bumperbot'])
+    profile.update(supported_modes=['display'], supported_simulators=['mujoco'],
+                   features=['joint_control'], source_id='test_vendor',
+                   arm_control='panda', hand_control='panda', arm_planning='moveit')
+    profile.pop('drive', None)
+    app.robot_profiles['menagerie_franka_emika_panda'] = profile
+    app.arm_tab = ArmTab(app.notebook, app)
+    app.hand_tab = HandTab(app.notebook, app)
+    try:
+        app.robot_var.set('menagerie_franka_emika_panda')
+        app.simulator_var.set('mujoco')
+        app.mode_var.set('display')
+        app._update_from_selection(); app.update()
+        assert 'arm_control:=panda' in displayed_command(app)
+        assert 'arm_planning:=moveit' in displayed_command(app)
+        assert app.arm_tab.cartesian.plan_button.instate(['disabled'])  # No owned/fresh state.
+        app.hand_tab.fixture_button.invoke(); app.update()
+        assert 'grasp_fixture:=true' in displayed_command(app)
+        assert 'arm_planning:=none' in displayed_command(app)
+        app.robot_var.set('bumperbot'); app._update_from_selection(); app.update()
+        assert not any(part.startswith('arm_planning:=') for part in displayed_command(app))
+    finally:
+        app.hand_tab.close(); app.arm_tab.close()
+
+
+def test_stale_cartesian_callback_cannot_replace_a_new_plan_after_stop(app):
+    from robot_lab_gui.arm_tab import ArmTab
+    arm = ArmTab(app.notebook, app)
+    try:
+        controls = arm.cartesian
+        old = controls.generation
+        arm.stop()  # Invalidates the in-flight request before any result.
+        controls.planning = True  # A later request now owns this generation.
+        current = controls.generation
+        future = Mock()
+        controls.got_plan(future, old)
+        controls.got_fk(future, old, [0, 0, .05], None)
+        controls.got_ik(future, old, None)
+        future.result.assert_not_called()
+        assert controls.generation == current and controls.planning
+        assert controls.points is None
+    finally:
+        arm.close()
+
+
+def test_live_monitor_uses_its_own_executor_and_disconnects_before_destroy(app):
+    import threading
+    import time
+    import rclpy
+    from std_msgs.msg import String
+    from rosgraph_msgs.msg import Clock
+    from robot_lab_gui.live_monitor import LiveMonitorTab
+    initialized_here = not rclpy.ok()
+    assert app._ensure_ros_publisher()
+    monitor = LiveMonitorTab(app.notebook, app)
+    gui_threads, monitor_threads = [], []
+    main_thread = threading.get_ident()
+    receive = monitor._on_clock
+    def measured_clock(message):
+        monitor_threads.append(threading.get_ident())
+        receive(message)
+    monitor._on_clock = measured_clock
+    app.ros_node.create_subscription(String, '/robot_lab/test_tk_callback',
+        lambda message: gui_threads.append(threading.get_ident()), 10)
+    gui_pub = app.ros_node.create_publisher(String, '/robot_lab/test_tk_callback', 10)
+    clock_pub = app.ros_node.create_publisher(Clock, '/clock', 10)
+    try:
+        for _ in range(2):
+            monitor._connect()
+            end = time.monotonic()+5
+            while time.monotonic() < end and (len(gui_threads)<5 or len(monitor_threads)<5):
+                gui_pub.publish(String(data='measured callback'))
+                clock_pub.publish(Clock())
+                app.update()
+                for _ in range(8): rclpy.spin_once(app.ros_node, timeout_sec=0.)
+                time.sleep(.02)
+            assert gui_threads and monitor_threads
+            assert set(gui_threads) == {main_thread}
+            assert main_thread not in monitor_threads
+            monitor._disconnect()
+            assert not monitor._ros_thread.is_alive() and monitor._node is None
+            assert not monitor._subscriptions
+            gui_threads.clear(); monitor_threads.clear()
+    finally:
+        monitor.shutdown()
+        app.ros_node.destroy_node(); app.ros_node = None
+        if initialized_here: rclpy.shutdown()
+
+
 def test_robot_reset_stops_drive_and_is_gated_by_task(app):
     app.robot_var.set('four_wheel_steer_car')
     app.mode_var.set('loc')
@@ -231,6 +323,70 @@ def test_3d_save_uses_flushed_backup_and_installed_cloud_exporter(app, tmp_path)
                                               '--cloud-topic','/cloud_map','--output',str(target.with_suffix('.pcd'))]
     with sqlite3.connect(target) as saved:
         assert saved.execute('SELECT id FROM keyframes').fetchall() == [(42,)]
+
+
+def test_console_flood_leaves_tk_events_and_stop_responsive(app):
+    for i in range(1000):
+        app.output_queue.put(('line', f'ROS warning {i}\n'))
+    with patch.object(app, 'after') as after:
+        app._poll_output()
+    assert app.output_queue.qsize() >= 800
+    after.assert_called_with(100, app._poll_output)
+    responsive = []
+    app.after_idle(lambda: responsive.append(True))
+    app.update_idletasks()
+    assert responsive == [True]
+    app._append_output('older line\n' * 10050 + 'most recent line\n')
+    assert int(app.output.index('end-1c').split('.')[0]) <= 10000
+    assert 'most recent line' in app.output.get('end-3l', 'end')
+
+
+def test_launch_exit_bypasses_console_backlog_and_cannot_stop_a_new_run(app):
+    old_process, current_process = Mock(), Mock()
+    app.process = current_process
+    app._launch_running = True
+    for _ in range(1000):
+        app.output_queue.put(('line', 'noisy node\n'))
+    app._lifecycle_queue.put((old_process, 0))
+    with patch.object(app, 'after'), patch.object(app, '_stop_drive') as stop:
+        app._poll_output()
+        assert app._launch_running
+        stop.assert_not_called()
+        app._lifecycle_queue.put((current_process, 0))
+        app._poll_output()
+        assert not app._launch_running
+        assert app.output_queue.qsize() >= 600
+        assert app.status_var.get() == 'Idle'
+        stop.assert_called_once()
+    app.process = None
+
+
+def test_stopping_launch_reaches_its_owned_auxiliary_process(app, tmp_path):
+    import threading
+    import time
+    pid_file = tmp_path/'export.pid'
+    command = [sys.executable, '-c',
+               'import os,sys,time; open(sys.argv[1], "w").write(str(os.getpid())); time.sleep(60)',
+               str(pid_file)]
+    thread = threading.Thread(target=app._run_aux_command, args=(command, 'test export'))
+    thread.start()
+    try:
+        deadline = time.monotonic()+5
+        while not pid_file.exists() and time.monotonic()<deadline:
+            time.sleep(.01)
+        assert pid_file.exists()
+        with app._aux_lock:
+            process = next(iter(app._aux_processes))
+        assert process.pid == int(pid_file.read_text())
+        # This also applies after the launch leader has already exited.
+        app._stop_launch()
+        thread.join(timeout=5)
+        assert not thread.is_alive()
+        assert process.poll() is not None
+        assert not app._aux_processes
+    finally:
+        app._stop_aux_commands()
+        thread.join(timeout=5)
 
 
 def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):

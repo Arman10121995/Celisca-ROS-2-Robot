@@ -19,6 +19,12 @@ def pump():
   (out/'live-gui-output.log').write_text(app.output.get('1.0','end'))
   last_log=time.monotonic()
 try:
+ if os.environ.get('PROBE_WORLD_OVERRIDE'):
+  setter=app._set_command
+  def override_world(command):
+   command=[arg for arg in command if not arg.startswith('world_path:=')]
+   command.append('world_path:='+os.environ['PROBE_WORLD_OVERRIDE']);setter(command)
+  app._set_command=override_world
  app.robot_var.set(robot);app.simulator_var.set(backend);app.map_var.set(world);app.mode_var.set(mode)
  app.gui_var.set('false');app._update_from_selection();app.update()
  assert app.mode_var.get()==mode,app.validation_var.get()
@@ -30,7 +36,9 @@ try:
   slot,value=expected[mode]
   assert value in selected.values(),(mode,selected)
  if mode=='nav':assert 'amcl' in selected.values() and 'pure_pursuit' in selected.values(),selected
- report['command']=app.command_var.get();report['algorithm_selection']={k:v.get() for k,v in app.slot_vars.items()}
+ report['command']=app.command_var.get()
+ if os.environ.get('PROBE_WORLD_OVERRIDE'):assert 'world_path:='+os.environ['PROBE_WORLD_OVERRIDE'] in report['command']
+ report['algorithm_selection']={k:v.get() for k,v in app.slot_vars.items()}
  profile=app.robot_profiles[robot];model=Path(profile['xacro']);(out/'executed.urdf').write_bytes(model.read_bytes())
  files={}
  for package in ('robot_lab_utils','robot_lab_gui','robot_lab_bringup','robot_lab_description',
@@ -40,11 +48,12 @@ try:
    if path.is_file() and path.suffix in ('.py','.yaml','.xml','.xacro','.cpp'):
     files[str(path.relative_to(root))]=hashlib.sha256(path.read_bytes()).hexdigest()
  (out/'source-manifest.json').write_text(json.dumps(dict(git_head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
-  source_sha256=files,profile=profile,executed_urdf_sha256=hashlib.sha256(model.read_bytes()).hexdigest(),
+  installed_sha256={str(f.relative_to(root)):hashlib.sha256(f.read_bytes()).hexdigest() for package in ('robot_lab_utils','robot_lab_gui','robot_lab_bringup','robot_lab_isaac') for f in (root/'install'/package).rglob('*.py') if f.is_file()}, source_sha256=files,profile=profile,map_profile=app.map_profiles[world],executed_urdf_sha256=hashlib.sha256(model.read_bytes()).hexdigest(),
   producer_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()),indent=2)+'\n')
  app._start_launch();report['owned_pid']=app.process.pid
+ (out/'launch-ownership.json').write_text(json.dumps(dict(pid=app.process.pid,command=report['command'],robot=robot,backend=backend))+'\n')
  if mode=='nav':
-  command=['python3','scripts/sim_nav_check.py','--base','base_link','--timeout','360','--via-topic',
+  command=['python3','scripts/sim_nav_check.py','--base','base_link','--timeout',str(600 if backend=='isaac' else 360),'--via-topic',
    '--max-position-error','0.15','--max-yaw-error-deg','5','--trace-out',str(out/'navigation.trace.json'),
    '--robot-radius','0.185','--min-route-clearance','0.02',
    '--world-file',str(root/'src/robot_lab_maps/maps'/world/'worlds'/(world+'.world'))]
@@ -85,11 +94,19 @@ try:
    assert np.isfinite(points[:,:3]).all()
    report['save_map']=dict(database_nodes=nodes,pointcloud_points=len(points))
   else:report['save_map']=dict(yaml=outputs[0].read_text(),image_bytes=outputs[1].stat().st_size)
+  deadline=time.monotonic()+10
+  while app._aux_processes and time.monotonic()<deadline:pump()
+  assert not app._aux_processes, 'map exporter did not exit after saving'
+  report['map_exporter_exited']=True
  app._stop_drive();app._stop_launch();deadline=time.monotonic()+30
  while app._launch_running and time.monotonic()<deadline:pump()
  report['launch_returncode']=app.process.poll();assert report['launch_returncode']==0
  report['passed']=True
+except BaseException as exc:
+ report['exception']=repr(exc)
+ raise
 finally:
+ (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
  if check and check.poll() is None:
   check.terminate()
   try:check.wait(timeout=10)

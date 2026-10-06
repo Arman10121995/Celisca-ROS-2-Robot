@@ -126,6 +126,31 @@ class SimFramesTests(unittest.TestCase):
         self.assertVectorAlmostEqual((3.0, 4.0, 0.0), position)
         self.assertVectorAlmostEqual((0.2, 0.0, 0.0), linear)
 
+    def test_pose_twist_stationary_body_does_not_integrate_solver_bias(self):
+        measured = sim_frames.PoseTwist()
+        for stamp in (0.0, 0.016, 0.032, 0.048):
+            self.assertEqual(([0.0]*3, [0.0]*3),
+                             measured.update(stamp, (1, 2, 0), (0, 0, 0, 1)))
+
+    def test_pose_twist_body_direction_and_simulation_time(self):
+        measured = sim_frames.PoseTwist()
+        q = sim_frames.xyzw_from_wxyz(_yaw_quaternion(math.pi/2))
+        measured.update(1.0, (1, 2, 0), q)
+        linear, angular = measured.update(1.5, (1, 2.15, 0), q)
+        self.assertVectorAlmostEqual((0.3, 0, 0), linear)
+        self.assertVectorAlmostEqual((0, 0, 0), angular)
+
+    def test_pose_twist_heading_wrap_and_quaternion_sign(self):
+        measured = sim_frames.PoseTwist()
+        measured.update(0.0, (0, 0, 0),
+                        sim_frames.xyzw_from_wxyz(_yaw_quaternion(math.pi-.1)))
+        q = sim_frames.xyzw_from_wxyz(_yaw_quaternion(-math.pi+.1))
+        linear, angular = measured.update(.5, (0, 0, 0), [-v for v in q])
+        self.assertVectorAlmostEqual((0, 0, .4), angular)
+        self.assertEqual((linear, angular), measured.update(.5, (0, 0, 0), q))
+        measured.reset()
+        self.assertEqual(([0.0]*3, [0.0]*3), measured.update(.6, (10, 20, 0), q))
+
     def test_mounted_pose_follows_the_base_heading(self):
         offset = ((1.0, 0.0, 0.5), _yaw_quaternion(math.pi))
         position, quaternion = sim_frames.mounted_pose(

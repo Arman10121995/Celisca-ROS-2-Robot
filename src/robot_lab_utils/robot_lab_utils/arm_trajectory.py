@@ -51,3 +51,35 @@ def position_trajectory(names, expected_names, points, actual, limits,
         positions.append(position)
         times.append(duration)
     return PositionTrajectory(np.asarray(times), np.asarray(positions))
+
+
+def retime_collision_checked_path(names, expected_names, positions, actual, limits):
+    """Preserve planned joint edges for the position-only native controller.
+
+    Each edge uses the controller's cubic blend, which stays on the same
+    straight joint-space edge. Use a conservative 0.35 rad/s bound; reject
+    paths outside the existing 15 s action contract instead of truncating.
+    """
+    if len(names) != len(expected_names) or set(names) != set(expected_names):
+        raise ValueError('Planner returned a different arm joint set')
+    order = [names.index(name) for name in expected_names]
+    previous = np.asarray(actual, dtype=float)
+    points, elapsed = [], 0.
+    for values in positions:
+        if len(values) != len(names):
+            raise ValueError('Planner returned an incomplete waypoint')
+        target = np.asarray(values, dtype=float)[order]
+        if not np.all(np.isfinite(target)):
+            raise ValueError('Planner returned a non-finite waypoint')
+        distance = float(np.max(np.abs(target-previous)))
+        if distance < 1e-8:
+            continue
+        elapsed += max(.05, 1.5*distance/.35)
+        points.append((elapsed, target.tolist()))
+        previous = target
+    # The same validator used by the real action also checks limits, every
+    # initial/intermediate segment and total duration before GUI execution.
+    # GUI limits arrive through JSON as lists, while the native controller
+    # supplies a NumPy array. Preserve the same numeric contract for both.
+    position_trajectory(expected_names, expected_names, points, actual, np.asarray(limits, dtype=float))
+    return points

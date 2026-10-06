@@ -55,7 +55,7 @@ from robot_lab_utils import camera_model
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 from robot_lab_utils.sim_frames import (
-    body_odometry, mounted_sensor_offsets, relative_frame, urdf_link_frames)
+    PoseTwist, body_odometry, mounted_sensor_offsets, relative_frame, urdf_link_frames)
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
 
@@ -313,6 +313,7 @@ class IsaacSpawner(Node):
         self._lock = threading.Lock()
         self._dofs = []
         self._state = None
+        self._pose_twist = PoseTwist()
         self._spawned = False
         self._twist = Twist()
         self._urdf_text = ""
@@ -741,6 +742,10 @@ class IsaacSpawner(Node):
                             "Isaac runtime ready (dofs=%s)" % self._dofs)
                     elif ev == "reset_done":
                         self._reset_error = msg.get('error')
+                        if self._reset_error is None:
+                            with self._lock:
+                                self._state = None
+                                self._pose_twist.reset()
                         self._reset_ack.set()
                     elif ev == "state":
                         with self._lock:
@@ -899,20 +904,22 @@ class IsaacSpawner(Node):
             state = self._state
             dofs = list(self._dofs)
             root_offset = self._root_offset
+            if state is not None:
+                pos, orn, _, _ = body_odometry(
+                    state.get('pos', [0.0, 0.0, 0.0]),
+                    state.get('orn', [0.0, 0.0, 0.0, 1.0]),
+                    state.get('lin', [0.0, 0.0, 0.0]),
+                    state.get('ang', [0.0, 0.0, 0.0]), root_offset)
+                # Contact-solver velocities on the SDK articulation can have
+                # nonzero bias at a stationary pose. The ideal odometry twist
+                # must integrate to the same native body poses as its pose.
+                lin, ang = self._pose_twist.update(float(state.get('t', 0.0)), pos, orn)
         if state is None:
             return
         t = float(state.get("t", 0.0))
         stamp = Time(sec=int(t), nanosec=int((t - int(t)) * 1e9))
-        pos = state.get("pos", [0.0, 0.0, 0.0])
-        orn = state.get("orn", [0.0, 0.0, 0.0, 1.0])
-        lin = state.get("lin", [0.0, 0.0, 0.0])
-        ang = state.get("ang", [0.0, 0.0, 0.0])
         jpos = state.get("jpos", [])
         jvel = state.get("jvel", [])
-        # Isaac reports its root body with world-frame velocities; odometry
-        # is the URDF root's pose with the twist and IMU rates in the robot's
-        # own frame, which is how robot_localization fuses vx / vy / vyaw.
-        pos, orn, lin, ang = body_odometry(pos, orn, lin, ang, root_offset)
 
         clock_msg = RosClock()
         clock_msg.clock = stamp

@@ -28,25 +28,45 @@ robots:
       camera_horizontal_fov: 1.047
       camera_near: 0.3
       camera_far: 100.0
+    gazebo_max_physics_step_s: 0.002
     configuration_files:
     - path: src/robot_lab_navigation/config/robots/asset_turtlebot4_standard.yaml
       sha256: 06a9319a7b511daf7bd6ea371ec93df604e532517fa4e0e4e30dc5d68fc3acc0
+    configuration_files_by_simulator:
+      gazebo:
+      - path: src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py
+        sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
+      isaac:
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+        sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+      - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
+        sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
+    configuration_files_by_mode: {}
     screens:
     - backend: gazebo
       mode: loc
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-loc-nav_empty/report.json
-        sha256: 18d6c15678f0dc23ffefbec93233af3552fce9abf7f4474d5c0a4dcd22874994
+        sha256: cd740e5a9de983f5c3d3d49883be46b4ba5f55945fb5ec84703caf84f58ed384
     - backend: gazebo
       mode: slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-slam-nav_empty/report.json
-        sha256: c45c7f67301a10a4cf19a134e46c1ec2a19a45d12c7b068402928fb005fe9c02
+        sha256: 24cd7c81cffe561b03b7d6bf368ff069ea5c19ceeb9dc37498a27ff479a77696
     - backend: gazebo
       mode: 3d_slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/report.json
-        sha256: 93edaa0a09ffd2e3fac3e3612058fe640d1a198d186c8c33c5c71f5fe2734a63
+        sha256: f6e21a90b800bea7be85ce63a189c34b77230003984253cf9b8cee1ac34ee5bc
+    - backend: gazebo
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_empty/report.json
+        sha256: 213a6f5c7eb03304029aeda2b1bb66268af555ff3e523c4e9888b06706d4244a
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_obstacle/report.json
+        sha256: 1b9ab133eb9274b5974c0484632372f5045feae3448416cbe4e05dfc8dd9e28a
     - backend: mujoco
       mode: loc
       reports:
@@ -56,12 +76,12 @@ robots:
       mode: slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-slam-nav_empty/report.json
-        sha256: 1c8562e08cc40d87383570f9719cb4edd7562f6d5f9c4ffc6484d283b10fad63
+        sha256: a910ec3f4c30bc816d34826f81359ff04d285638edee81ea84a1e639d89a3350
     - backend: mujoco
       mode: 3d_slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/report.json
-        sha256: 92f448d92f1e85391b59e39107b96ce87084207e45dd6ab986ed3e721cfa8b46
+        sha256: 2f7c09728a9f7a18f014e2520f56013c49aeff2b5cffe7a9f478c2f08444d951
     - backend: mujoco
       mode: nav
       reports:
@@ -78,12 +98,12 @@ robots:
       mode: slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-slam-nav_empty/report.json
-        sha256: d214b0ba06c4d6db4c1e7ec0691028b294b8d98bda6498af2bd6ffaf7973aa68
+        sha256: f45eb79ab954f424d3bc0cd2008c3ba484b2b12dd0c9c5c3ecddec9f3144e696
     - backend: pybullet
       mode: 3d_slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/report.json
-        sha256: 82ad0919bc44cfe8330f6098e426988f6f1bf38970a2b2d199510e21c78847c3
+        sha256: 57ec54267827ed68194d70e645ae447c1a19054edeb3a5baa2b2f074c63268a6
     - backend: pybullet
       mode: nav
       reports:
@@ -91,6 +111,28 @@ robots:
         sha256: 1ad315a8d78b52d3c95e66c9ed0222a32f939610548ca2a279357642677f78da
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/report.json
         sha256: ae01ee19000c7d112ec3ab9942f7e4defb802837157eb62d9fec49c62f236afe
+    - backend: isaac
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-loc-nav_empty/report.json
+        sha256: 81496cc7b4a62997fc7586e3df01ff7c3fc4f6dc72c07be228de9e3acb031246
+    - backend: isaac
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-slam-nav_empty/report.json
+        sha256: 2bae728faafbe650d861ce7c3b4d51861c4621df96162a961a3dbe66b6324eaa
+    - backend: isaac
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-3d_slam-nav_empty/report.json
+        sha256: fb689d9644e8d3bd61a9b56c88bf12a90234843a121d244a5c7b07f7c7ed94ba
+    - backend: isaac
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_empty/report.json
+        sha256: 2d1be654e58130c8262628e1dba2e136ad571f444c2b1952b39284ab4ba43e79
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_obstacle/report.json
+        sha256: e30f9d5b6083290df03a2989f86fc59882f12d8b2b52780d5586e853552c14f7
   asset_turtlebot4_lite:
     source_revision: a6ee13b63cbd524500cc6a68cd20dbef69f326a9
     drive:
@@ -117,10 +159,45 @@ robots:
       camera_horizontal_fov: 1.047
       camera_near: 0.3
       camera_far: 100.0
+    gazebo_max_physics_step_s: 0.002
     configuration_files:
     - path: src/robot_lab_navigation/config/robots/asset_turtlebot4_lite.yaml
       sha256: 06a9319a7b511daf7bd6ea371ec93df604e532517fa4e0e4e30dc5d68fc3acc0
+    configuration_files_by_simulator:
+      gazebo:
+      - path: src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py
+        sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
+      isaac:
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+        sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+      - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
+        sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
+    configuration_files_by_mode: {}
     screens:
+    - backend: gazebo
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-loc-nav_empty/report.json
+        sha256: 77b4934eae5475fb645ce0f3640943dfaa1b6612dad487fe0c7cf9cfb3227723
+    - backend: gazebo
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-slam-nav_empty/report.json
+        sha256: 9b2040539462ec45a104ed249edc095ba53dd6baa4a8c349abd4b10e91e5f56d
+    - backend: gazebo
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-3d_slam-nav_empty/report.json
+        sha256: 9e352b1f4c7b7f3b65a6c0cef5f462ed37215b2c3286c03cfaabed2aafa9c24c
+    - backend: gazebo
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_empty/report.json
+        sha256: 1ed9be32e93c917437329ef2ea96976bea384f4c3c56928ad85f23778b1b2725
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_obstacle/report.json
+        sha256: f95c6f632461b07dc89f994985f1a959c1bb2acda0972a8009dbf65f9e25134e
     - backend: mujoco
       mode: loc
       reports:
@@ -130,12 +207,12 @@ robots:
       mode: slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-slam-nav_empty/report.json
-        sha256: a4c99149e9858be59fa5d3d052d6bbce100b9cb665d5b240f95fbf8e7fa2dfca
+        sha256: 2eef33f57e7c7da74f7bcf0810eebb78a071c1da078230060d4920bb5c1110cf
     - backend: mujoco
       mode: 3d_slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/report.json
-        sha256: 4072d0bfd190bfa6bce090a914625e55779af35854fda866cc1dfc45d8c451e3
+        sha256: d02dbd129ec0cb3b6cb39a1d0537a34682f3c480bad750f8e8a67e75dc94ea5a
     - backend: mujoco
       mode: nav
       reports:
@@ -152,12 +229,12 @@ robots:
       mode: slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-slam-nav_empty/report.json
-        sha256: 97d6bd263aeccc8b0193b5d396810ad80a2d5a0fafd1e238420da54f41e4d764
+        sha256: 7952662dc146638e74214943871df0c29424e63f624830a09ed997ccddc87240
     - backend: pybullet
       mode: 3d_slam
       reports:
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/report.json
-        sha256: 8009b43eceb0dee510c7867eb5c3739c1a457afff2521011b23934bfb372414f
+        sha256: 000a410620fa1ec1a669248e166ecdc719ca4ba1e344a46a1868eb46ce59af9c
     - backend: pybullet
       mode: nav
       reports:
@@ -165,6 +242,28 @@ robots:
         sha256: ae966711bcb707655b8f67f2e02409287b7c0001cfe5c0a64adda007f591af4c
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/report.json
         sha256: 568491a338014a9769e07fb5cbf639c4a7d2d304a11b4b581a7c89c4c75e69a5
+    - backend: isaac
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-loc-nav_empty/report.json
+        sha256: 3794aa94b9c61a272a362e626be9eea7f7857bd1110489798016a0bc58c57bcd
+    - backend: isaac
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-slam-nav_empty/report.json
+        sha256: fbe75f1d5ade5531b11c8baaa6cc559cc62a055961656ae24c56d1f01db4c498
+    - backend: isaac
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-3d_slam-nav_empty/report.json
+        sha256: 77fbe5b46b0a5555781bfbd6f4058e0d103f8f12d9b0d974f20c2bb100084b29
+    - backend: isaac
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_empty/report.json
+        sha256: 9a5be1dfefcc769e3079641b5feed5d6273c9740dac2dd3dcce9c6330e9570fa
+      - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/report.json
+        sha256: d51ea7b6a4853701231540b3ead5a0d4c6941eaa4d9d3d707fac9183a88cd672
 hands:
   menagerie_franka_emika_panda:
     source_revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
@@ -179,3 +278,205 @@ hands:
     report:
       path: docs/status/evidence/panda-gripper-2026-10-06/report.json
       sha256: 368b122aa51c4ca0937afa37127b431b65e0338c74e217fab4cc8b11ef8840e1
+arm_planning:
+  menagerie_franka_emika_panda:
+    source_revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
+    native_xml_sha256: 96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273
+    world_sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    configuration_files:
+    - path: src/robot_lab_utils/robot_lab_utils/native_arm_description.py
+      sha256: a4afbc4a9194d4c6a3571011934e6c74d30329af2f2d5c01f13e2efad27917b5
+    - path: src/robot_lab_utils/robot_lab_utils/arm_trajectory.py
+      sha256: 0293029d5f1b834ecd42834bb25dabc8aba18a5c4a363d52ef8bda4d75f30201
+    - path: src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py
+      sha256: 568369da3ee2d6762e7e81170ed7ad2fa1219e448154bf2a985338b7ec705438
+    - path: src/robot_lab_utils/robot_lab_utils/sdf_world.py
+      sha256: 1a048f97401f2f37079c4b980c28ea61a4f275744926a29f42ff8a8577ba3e44
+    - path: src/robot_lab_gui/robot_lab_gui/arm_tab.py
+      sha256: 231c958ceff393c86fbffa4fdde121c0fb2a4d12034e815d8eb1261d0e2428be
+    - path: src/robot_lab_gui/robot_lab_gui/cartesian_controls.py
+      sha256: e7327be91343c061c5190f1f9b6b79f2e79dd8c8b23939c522707183c37d889c
+    - path: src/robot_lab_gui/robot_lab_gui/launcher.py
+      sha256: 937b1cdbb2d15e832883ba78273d8babb0aa0d242235181b3b0dbf0dcf64d61c
+    - path: src/robot_lab_gui/robot_lab_gui/live_monitor.py
+      sha256: c418d3362c6f5f963e60665ec664df2b3eec72727545537499c11769dbf41c3c
+    - path: src/robot_lab_gui/robot_lab_gui/hand_tab.py
+      sha256: fa8249f97f32428cb39c223360d4c33dfa58f820863cbb0f98d7965795859097
+    - path: src/robot_lab_bringup/launch/panda_planning.launch.py
+      sha256: e13b0bd00c23c07d178e066d26db3b56855d4c8ef639717a6975d138f1222b0e
+    - path: src/robot_lab_bringup/launch/simulated_robot.launch.py
+      sha256: 9800fa6b4744946fad20ef234696f45d790c2ab918572fa10e81fdf411b19b63
+    - path: src/robot_lab_bringup/scripts/native_arm_scene.py
+      sha256: 55f99789d6e30214ddf7472aa6e6e448f16fd9890cb3babb2610aa68d886a3d1
+    - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py
+      sha256: dd33d3dc5f6905083530cb651f539cde676156d53d6aab07d178d578b76e7bef
+    - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py
+      sha256: e59c3bfcd8447719ada88bd66020b0d60ca7bae4e8df11def09162d15c2f633a
+    - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_gripper_control.py
+      sha256: 84e24c692413e784e16a378e5ec5084782faf5ec322df660979ad990250f6ccc
+    - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+      sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    report:
+      path: docs/status/evidence/panda-cartesian-2026-10-06/report.json
+      sha256: 1418a22748a2a5b3ace9da3f50b1ccb652f4536b9eb4dd82f4ad24767d8f491e
+    native_resource_files:
+    - path: CHANGELOG.md
+      sha256: 164a6ec704aa1714b1311f8b1538e20b4223b6ef08b7d3cb03edc26192892f67
+    - path: panda_nohand.xml
+      sha256: e7090a5e2384b18a223ef532d98bf914f7f9a6b74dc8bc9f74c8291201074071
+    - path: mjx_panda.xml
+      sha256: 8c0f15b755f686a09f04a2cae4afa3b8444d61d3318ea36cee87cc8bb98f9098
+    - path: mjx_panda_nohand.xml
+      sha256: 92a6ff0be23a90f3a5888e57067f0ecad1b2bda95c58aa30c4284750da97d075
+    - path: scene.xml
+      sha256: 4b08c2e5108f0ed67fa689e096e58850210130c3e6ef889b1e22822d369fd8c3
+    - path: panda.png
+      sha256: d6ad5fcfc60237f0f006cf22d6e0b70febb559f609d915cd4316e9f1ad383c2d
+    - path: mjx_scene.xml
+      sha256: 7877363e91409da51973cc042209b34257354c17c8e7b4eccde8353e88398af7
+    - path: LICENSE
+      sha256: a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9
+    - path: mjx_single_cube.xml
+      sha256: 333997ddcb065ff94871247fb2b96e1847119549bfba7a6db645fdb6cdc5199b
+    - path: hand.xml
+      sha256: d2a6539d0fd7c55c75c14f11c78f04505ee33f31d93e6112e3ad7120e5ee786a
+    - path: panda.xml
+      sha256: 96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273
+    - path: README.md
+      sha256: e12684556d0154bdf2a9e77e7009ed680cd06ca89904f9e6303050f9fe59300c
+    - path: mjx_hand.xml
+      sha256: cf1d16467d4bd5c69f77cdcc5af2e7e1ad957416661f20d3c4029b73622b4068
+    - path: assets/link5_collision_0.obj
+      sha256: 3e5aa75fb13f193555c3dfb999df91d81df25006a5c3af5338297d78137c129b
+    - path: assets/link4_3.obj
+      sha256: 1495d17f45bdb230cf58b0beef9da4e8c9cfe76a3d2d38da89017efe5e093136
+    - path: assets/link6_6.obj
+      sha256: 8fbc031e0d07b795ebf99115c75223141caaba317cab569159f3d477a7821681
+    - path: assets/hand_3.obj
+      sha256: a431a06d99e88a1b322b3122a01424ee7704daeaad0bc343b90b9604f014ad0c
+    - path: assets/link6_9.obj
+      sha256: 25a56ea9b02a03b6cb5a81f31c54f54d0185e1a0b3937c37e4289d896e50215a
+    - path: assets/hand_0.obj
+      sha256: b94aab901086f85df04c019b30f43bf9aa23a7ad0443ec80a8c14662a41cabd2
+    - path: assets/link7_5.obj
+      sha256: 099071d3090b51471ba52f4f90814fd3089f4975d196e4d488117073d0bfe491
+    - path: assets/link7_0.obj
+      sha256: 04586b0bde011715cfc22072ac72fe0717eb4d4817bcf665987ce6cd88eb2b93
+    - path: assets/link0_11.obj
+      sha256: f0adec78d6677b7799d25121981270e8bfe119b5c18d08a91ee37a54ad75f65c
+    - path: assets/link5_collision_2.obj
+      sha256: 823ab6c8f7b1d79e0844fa071d82a03499ff68e34fddb1ba3451032c22736040
+    - path: assets/link3_3.obj
+      sha256: 30ede0c812efd0e0b767d134a4eae0b84e0fa407bb6325a5a555e0569b3a3ffd
+    - path: assets/link6_8.obj
+      sha256: e3f77381817a341030f9dcc4c4aa7c559f80411b453fd87eb0fefecca82151bf
+    - path: assets/link6_5.obj
+      sha256: 7c87664623c3e1a6cb330db273227a69626dc5e53b4caff1d4ee7911eb3340c6
+    - path: assets/link7_1.obj
+      sha256: c3f72289f394c9d6749a4a327fb11f05b203c37c95032c92f28019b40ebe7e00
+    - path: assets/link0_10.obj
+      sha256: c9198b9d8534d628d097b0f2b239bb30343353182df098ce0d9db6bc13326848
+    - path: assets/link3_1.obj
+      sha256: 2880b7753a7173f38fa87ee21da4dfc7fa7be46fbe07bac5aef9e128513cb118
+    - path: assets/link4_2.obj
+      sha256: c89caf26d379c35bb9e191ee2d91d09ab29ecc792b48d8bc10b39e5b38222175
+    - path: assets/link7_6.obj
+      sha256: 99469e2d95ab74ce0292f2f16954c87a8a7dc16652e62e970fe37c94330a81bb
+    - path: assets/link0_3.obj
+      sha256: 3e9c6334d2b3b47944af3458ee5f20519abc20fe7ee23063bb53405ccab28046
+    - path: assets/link3_2.obj
+      sha256: 670cff81ae84693769ca4ae658c154cf909d81167e7c8d22b70ea977f2504efa
+    - path: assets/link2.obj
+      sha256: 5c9f8e715de52c3eb71b475de35993b3b96081e02abea9f28c414768877fc59b
+    - path: assets/link6_2.obj
+      sha256: e54eee4d8232947ee8af65afd5a067e09dac2da6e7e585cb1dccb65496457da0
+    - path: assets/link5_2.obj
+      sha256: 83b4ffe9f772cd7fe182e98640650eebc899aaf01842656574b0416c90dd40a4
+    - path: assets/finger_1.obj
+      sha256: cf239e9aca26bba09dbbf1c544c47d87cfc9a2f0637c8bb786af750b6d4eca44
+    - path: assets/link7_4.obj
+      sha256: cb78ccb61fd4ad6c7bff4c4d2e6cb41e1964a5a3e1a28e67c0c6202371cfc018
+    - path: assets/link0.stl
+      sha256: dfc6d94330de8ddb005b311bfdba9f3b8e1aa7c256b71592ee7ff32cb9a9a5aa
+    - path: assets/link0_5.obj
+      sha256: 9361b104e93743045107aa5b15fb1a0835ba9c1f355aae71f56403cf6a9c33f6
+    - path: assets/link6_12.obj
+      sha256: f28d1bfd62b0244ffd19fb35fe9edefdf583d3c9167db944e87185d919e1d021
+    - path: assets/finger_0.obj
+      sha256: 215098c0fcdf7192f6c503a37cf49e3efecf8a9e1320f02b17c5584d89cc5b2c
+    - path: assets/link6_14.obj
+      sha256: 750ae3ee4781e62e3a045c662195247b03f6642b05aa93104f08258e5f6eba26
+    - path: assets/link5_collision_1.obj
+      sha256: 87cd8f621071df010f774cbde789282b8463840dfe704f8bdfa2e29be0142e15
+    - path: assets/link2.stl
+      sha256: 370f7605a0fae3529db169ded50f52f171024aa792d4d773bc84197301f6a039
+    - path: assets/link6_1.obj
+      sha256: 45f7ca77695198b6d86ec2417ad4e42e6275044f0f96266699ee8e1057757ac1
+    - path: assets/link6_4.obj
+      sha256: be353480fe71d46f7a96f0a3cbb7e112caaf8d88368826f321a36a253c8749b2
+    - path: assets/link4_1.obj
+      sha256: ca935ec7cc8b3f0e86aa079c76b0b3bf593b1e9830bab0fa7131ac51577c74f0
+    - path: assets/link6_3.obj
+      sha256: d4f6a25ef32fa1fa4734146981994ee760232cb077c80fea6487d78a077c7f27
+    - path: assets/link6_10.obj
+      sha256: 365f26c21d10332cab8d8704645cb46930c30b3085956f2d097498c793f24db4
+    - path: assets/link0_1.obj
+      sha256: 57673d2ee2a9db2e10c8986ae57c56a7c39c012b60fd26d7d8549553b664a5ed
+    - path: assets/link5_0.obj
+      sha256: a3238b8f2af0f2eb66d9fe63dc5d41ac52d5d38507241b5ed10e3cb019ab3e71
+    - path: assets/link4_0.obj
+      sha256: 443bf6d178177cf347951ecf107ccd10ca444e605e375b67304579e5f948806f
+    - path: assets/link6_7.obj
+      sha256: 7dc5ebb799fe281aab27d6e84e7a4efa0a8e42da2369ec83de3ea3f206f62d73
+    - path: assets/link0_2.obj
+      sha256: 1ca435a2a87a9608a146a47955724d43dd7ce10fc3dd3018800aa98f8ba86e05
+    - path: assets/link0_9.obj
+      sha256: 45178f97d2b5da6bce11f610212c4ef7d08c73db33a4fc38e1b7f66b93d023f5
+    - path: assets/link1.stl
+      sha256: e41a39a94108fcf56aacff603fc91ec80541f4c1af17b51a0de5617f5566e6d2
+    - path: assets/link6.stl
+      sha256: 20b768e99a0e0440b5754dcca108016434e57937cc356acd9c352ccd3cb27f77
+    - path: assets/link0_4.obj
+      sha256: 215d25789704936120f119c0bc1cc7f68516dd3f8f1df61457b71acac3873f26
+    - path: assets/link7_3.obj
+      sha256: b62d87c4d4bdb7b281ed341d347c39dad0e50bf36aed8ac11d050073701d5f70
+    - path: assets/link0_7.obj
+      sha256: 2dc0b8ebbbc80e4c065d71e195adbc384f673438641fac82b07b801b4d2837cb
+    - path: assets/link3.stl
+      sha256: 0a8d638b9349c6c0eefc4e888636ac4838c4b27170f18a51699321118af709c1
+    - path: assets/link6_13.obj
+      sha256: 0a55fa92dccb261d07200e6565fca4c850fd17f0c1ecf38821c0b97d51796c7d
+    - path: assets/hand.stl
+      sha256: 94493e94f30fe940f2c8ca2f155c3bbe67bbff406d3edf5e261670d2f0f6e2ed
+    - path: assets/link7_7.obj
+      sha256: 426c3db8a19373f3dc73d4bec672e948121b2914c10e2e7b9c7ea80643a19e54
+    - path: assets/hand_2.obj
+      sha256: e0f44a71712afa5b98eb20355eff17763d3e2e19f459b2bef19abed3727e64b3
+    - path: assets/link0_0.obj
+      sha256: 6b9f41a4c203540daaeb7a33cc3d0d6c6a32dc8bba187074eeaf97b3e36b3f9c
+    - path: assets/hand_1.obj
+      sha256: cd76f7494bb314406a1819c46eb826ee254894f87235714f604a470653d9badb
+    - path: assets/hand_4.obj
+      sha256: 21f96ef6a8de082e41b1ea9834f1043de359e5d60305541bcb63539581f53bff
+    - path: assets/link5_1.obj
+      sha256: 9d994bbf83ec241e301b5197a6846da13f2a4a0582edb2c0f76962c5549649d6
+    - path: assets/link6_0.obj
+      sha256: 0504c70ebf1b284ee8faae7dcb896b8830bc672a6552015dd5dbd121fa031fb9
+    - path: assets/link3_0.obj
+      sha256: ce2da87f51708e11b189249d41401065dabe89a06e251185a06cef4d5ff27178
+    - path: assets/link1.obj
+      sha256: 51091e776b16babdbe2f3849b5c041f921d1f11dd94ac19a0f1c81abf496fbae
+    - path: assets/link6_11.obj
+      sha256: 8ae61e08b3ad064f25bbf03b22e59cc15d65883b5a7ce92711aff29df2493901
+    - path: assets/link0_8.obj
+      sha256: 3b8c436999db5586b8eb47bed2b0aa7de6993868b2681b4c04246eeac42fdb7a
+    - path: assets/link6_16.obj
+      sha256: 551d7a8b37c53e7a152d008b4e36992e5b5abe74a4be18b57ee6319c27def09f
+    - path: assets/link4.stl
+      sha256: 0180ebb5772ec9840cb049750cffb29a9ddc90311752a16ea34757782ef9e48d
+    - path: assets/link6_15.obj
+      sha256: 5999c1c2497a004a7c4bbe034cdf13744f839d85ae7a11b1bc386c48a3e642e6
+    - path: assets/link7_2.obj
+      sha256: d2faecedb304d0989040d082410378dc949dbbda23bd18c05134f08aae984db5
+    - path: assets/link7.stl
+      sha256: 92ac6afcf7574c034d3170d8a68e95ac9048ab9d0dd5bbd8311b86e551b9ab1c

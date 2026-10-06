@@ -1,0 +1,206 @@
+{
+  "mode": "3d_slam",
+  "base_frame": "base_link",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5474,
+      "yaw_change_rad": 0.0004,
+      "tail_speed_mps": 0.20037354277436775,
+      "tail_yaw_speed_rps": 0.00016806844860878004,
+      "end": {
+        "x": 0.04737645760178566,
+        "y": -0.5004189610481262,
+        "z": -0.0031877607107162476,
+        "yaw": 0.00037680090664150335
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5291,
+      "yaw_change_rad": 0.0073,
+      "tail_speed_mps": 0.19275406990708172,
+      "tail_yaw_speed_rps": 0.011111346830673432,
+      "end": {
+        "x": -0.43225494027137756,
+        "y": -0.49807676672935486,
+        "z": -0.0026493072509765625,
+        "yaw": 0.007767575191321631
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0016,
+      "yaw_change_rad": 1.0646,
+      "tail_speed_mps": 0.0007712176780478141,
+      "tail_yaw_speed_rps": 0.368619916478094,
+      "end": {
+        "x": -0.48523780703544617,
+        "y": -0.49978578090667725,
+        "z": -0.002813868224620819,
+        "yaw": 1.069571453733951
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.017,
+      "distance_m": 0.0015,
+      "yaw_change_rad": -1.0704,
+      "tail_speed_mps": 0.0007941539612411894,
+      "tail_yaw_speed_rps": 0.3685368881296106,
+      "end": {
+        "x": -0.4855787456035614,
+        "y": -0.49844685196876526,
+        "z": -0.0029507577419281006,
+        "yaw": 0.05765864736038169
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.066,
+      "yaw_change_rad": -0.0019,
+      "tail_speed_mps": 2.3949337868608583e-05,
+      "tail_yaw_speed_rps": 0.00010563346186873381,
+      "end": {
+        "x": -0.06945653259754181,
+        "y": -0.49645936489105225,
+        "z": -0.003143526613712311,
+        "yaw": 0.0034981352084803114
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0008,
+      "yaw_change_rad": -0.0007,
+      "tail_speed_mps": 2.255325082601675e-05,
+      "tail_yaw_speed_rps": 0.00014139076703576143,
+      "end": {
+        "x": -0.5009194612503052,
+        "y": -0.5000447630882263,
+        "z": -0.0029420852661132812,
+        "yaw": -0.0006975829521366432
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3512,
+      "yaw_change_rad": -0.0008,
+      "tail_speed_mps": 0.19983516710647586,
+      "tail_yaw_speed_rps": 0.00046888472346537206,
+      "end": {
+        "x": -0.1497279703617096,
+        "y": -0.5004907846450806,
+        "z": -0.003156237304210663,
+        "yaw": -0.0014727943135413799
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_3d_cloud": true,
+    "3d_geometry": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true
+  },
+  "initial_map_to_world": {
+    "yaw": -0.00024421245299799073,
+    "x": -0.49956712564533934,
+    "y": -0.49997957929608966
+  },
+  "initial_truth": {
+    "x": -0.5000630021095276,
+    "y": -0.5000467896461487,
+    "z": -0.00298444926738739,
+    "yaw": -4.567856841552707e-05
+  },
+  "localization_error_m": 0.01504159914885286,
+  "sensor_messages_during_drive": {
+    "/scan": 105,
+    "/oakd/rgb/image_raw": 105,
+    "/oakd/depth/image_raw": 105,
+    "/cloud_map": 14
+  },
+  "cloud_message_points": [
+    1275,
+    2209,
+    2941,
+    3595,
+    4087,
+    4576,
+    5023,
+    5874,
+    6785,
+    7917,
+    8368,
+    9001,
+    9416,
+    9606,
+    9923,
+    1568,
+    2905,
+    3544,
+    4163
+  ],
+  "cloud_geometry": {
+    "frame": "map",
+    "sampled_points": 9923,
+    "min_xyz": [
+      -0.567394495010376,
+      -3.0796008110046387,
+      -0.012524634599685669
+    ],
+    "max_xyz": [
+      6.591419219970703,
+      6.501428127288818,
+      0.9623501300811768
+    ]
+  },
+  "reset_response": "Isaac physical reset acknowledged",
+  "post_reset_map_to_world": {
+    "yaw": 0.00020574463152565122,
+    "x": -0.0011583173859139868,
+    "y": 0.00017226694855027036
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 0.0015369119496092978,
+  "map_updates_after_reset": 4,
+  "cloud_updates_after_reset": 4,
+  "clock_backward_jumps": 0,
+  "truth_samples": 2244,
+  "sensor_counts": {
+    "/scan": 143,
+    "/oakd/rgb/image_raw": 141,
+    "/oakd/depth/image_raw": 141,
+    "/cloud_map": 19
+  },
+  "scan_geometry": {
+    "frame": "rplidar_link",
+    "samples": 640,
+    "finite": 640,
+    "min_m": 5.499451637268066,
+    "max_m": 8.777997016906738,
+    "range_min": 0.164000004529953,
+    "range_max": 12.0
+  },
+  "passed": true
+}

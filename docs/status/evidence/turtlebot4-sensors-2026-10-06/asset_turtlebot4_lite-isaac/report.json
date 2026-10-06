@@ -1,0 +1,214 @@
+{
+  "robot": "asset_turtlebot4_lite",
+  "backend": "isaac",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 546522,
+  "phases": {
+    "armed_neutral": {
+      "dx": -6.67572021484375e-06,
+      "dy": -9.000301361083984e-06,
+      "yaw": -1.3184644581603799e-05,
+      "tail_vx": -1.720953179082221e-06,
+      "tail_wz": 0.00010019941465969252,
+      "z": -0.0029912516474723816,
+      "max_tilt": 0.007550912108941904,
+      "sim_duration": 0.983333333
+    },
+    "forward": {
+      "dx": 0.6472959220409393,
+      "dy": -0.0002778768539428711,
+      "yaw": -0.0007144274361009763,
+      "tail_vx": 0.30052094014788105,
+      "tail_wz": 0.0008837890029816975,
+      "z": -0.003239743411540985,
+      "max_tilt": 0.04369562054745859,
+      "sim_duration": 2.533333333
+    },
+    "forward_stop": {
+      "dx": 0.07935458421707153,
+      "dy": -2.187490463256836e-05,
+      "yaw": 0.000329921047204225,
+      "tail_vx": -1.529731080871023e-05,
+      "tail_wz": 0.00013930255746465208,
+      "z": -0.0029564350843429565,
+      "max_tilt": 0.02962014939460242,
+      "sim_duration": 2.483333333
+    },
+    "reverse": {
+      "dx": -0.5922408998012543,
+      "dy": 0.002217918634414673,
+      "yaw": -0.0029290915492008593,
+      "tail_vx": -0.29145174941987895,
+      "tail_wz": 0.024157625735713367,
+      "z": -0.00219060480594635,
+      "max_tilt": 0.044294021434382956,
+      "sim_duration": 2.500000001000001
+    },
+    "reverse_stop": {
+      "dx": -0.07129216194152832,
+      "dy": 0.00031492114067077637,
+      "yaw": -0.00524443350907312,
+      "tail_vx": 1.6868750347100502e-05,
+      "tail_wz": 0.0002525464931467762,
+      "z": -0.0029324665665626526,
+      "max_tilt": 0.014765010232430783,
+      "sim_duration": 2.483333334000001
+    },
+    "left_turn": {
+      "dx": 0.004517257213592529,
+      "dy": -0.0006361603736877441,
+      "yaw": 2.3015372751635126,
+      "tail_vx": 0.00045405024668800027,
+      "tail_wz": 1.1301480791552316,
+      "z": -0.0028234198689460754,
+      "max_tilt": 0.013654178790537009,
+      "sim_duration": 2.549999998999999
+    },
+    "left_turn_stop": {
+      "dx": 0.00017181038856506348,
+      "dy": 0.0008687376976013184,
+      "yaw": 0.2508983315278628,
+      "tail_vx": -3.107948656123378e-05,
+      "tail_wz": -0.0001441058629866469,
+      "z": -0.0028783008456230164,
+      "max_tilt": 0.01128415052492003,
+      "sim_duration": 2.599999999999998
+    },
+    "right_turn": {
+      "dx": -0.0036034584045410156,
+      "dy": 0.002273261547088623,
+      "yaw": -2.455854649522854,
+      "tail_vx": 0.0006056293393625017,
+      "tail_wz": -1.1231579338767752,
+      "z": -0.0028464943170547485,
+      "max_tilt": 0.019229676140318737,
+      "sim_duration": 2.533333332999998
+    },
+    "right_turn_stop": {
+      "dx": 0.00011077523231506348,
+      "dy": 0.00038185715675354004,
+      "yaw": -0.24890760608053067,
+      "tail_vx": -5.492214792426679e-06,
+      "tail_wz": 0.00033379514075185864,
+      "z": -0.0029277876019477844,
+      "max_tilt": 0.008371156556794249,
+      "sim_duration": 2.5500000000000007
+    },
+    "pre_loss": {
+      "dx": 0.49098269641399384,
+      "dy": -0.08785954117774963,
+      "yaw": 0.0024288330207045405,
+      "tail_vx": 0.29974647749099725,
+      "tail_wz": -3.409259009411171e-05,
+      "z": -0.0030507370829582214,
+      "max_tilt": 0.0367712980071588,
+      "sim_duration": 2.033333332999998
+    },
+    "publisher_loss": {
+      "dx": 0.08327651023864746,
+      "dy": -0.014879405498504639,
+      "yaw": -0.0002720741932174253,
+      "tail_vx": -6.0312493658703604e-06,
+      "tail_wz": 0.00012995983500312325,
+      "z": -0.0029583126306533813,
+      "max_tilt": 0.043684283256514196,
+      "sim_duration": 2.5500000000000007
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "sensors": {
+    "scan_messages": 138,
+    "depth_messages": 136,
+    "camera_info_messages": 136,
+    "last_scan": {
+      "frame": "rplidar_link",
+      "samples": 640,
+      "range_min": 0.164000004529953,
+      "range_max": 12.0,
+      "finite": 640,
+      "angle_min": -3.1415927410125732,
+      "angle_increment": 0.009817477315664291
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "encoding": "32FC1",
+      "finite_positive": 2614,
+      "min": 0.41764429211616516,
+      "max": 6.6657562255859375,
+      "mean": 2.477403402328491
+    },
+    "camera_info": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "k": [
+        277.19135641132203,
+        0.0,
+        160.0,
+        0.0,
+        277.19135641132203,
+        120.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "expected_fx": 277.19135641132203,
+    "depth_mean_change_m": 0.2607111930847168,
+    "mounted_frames": {
+      "rplidar_link": {
+        "position": [
+          0.00393584,
+          0.0,
+          0.13949272000000001
+        ],
+        "expected_position": [
+          0.00393584,
+          0.0,
+          0.13949272000000001
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position": [
+          -0.03705974,
+          0.0,
+          0.18588622
+        ],
+        "expected_position": [
+          -0.03705974,
+          0.0,
+          0.18588622
+        ],
+        "rotation_xyzw": [
+          -0.5,
+          0.4999999999999999,
+          -0.5,
+          0.5000000000000001
+        ]
+      }
+    }
+  },
+  "joint_names": [
+    "wheel_drop_left_joint",
+    "wheel_drop_right_joint",
+    "left_wheel_joint",
+    "right_wheel_joint"
+  ],
+  "body_samples": 2047,
+  "joint_samples": 2047,
+  "real_time_factor": 0.6649890973591421,
+  "launch_returncode": 0
+}

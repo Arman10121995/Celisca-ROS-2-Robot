@@ -11,6 +11,8 @@
   <depend>trajectory_msgs</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
+  <exec_depend>moveit_msgs</exec_depend>
+  <exec_depend>shape_msgs</exec_depend>
   <exec_depend>robot_lab_utils</exec_depend>
   <export>
     <build_type>ament_python</build_type>

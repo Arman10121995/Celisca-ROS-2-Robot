@@ -1,0 +1,185 @@
+{
+  "robot": "asset_turtlebot4_lite",
+  "backend": "gazebo",
+  "mode": "loc",
+  "map": "nav_empty",
+  "passed": true,
+  "scope": "Actual GUI Launch/autofill/Run/Stop; workflow motion sent through its /key_vel channel and independent engine truth. Sensor/Drive keyboard widgets separately recorded.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "algorithm_selection": {
+    "localizer": "amcl",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion"
+  },
+  "owned_pid": 417022,
+  "check_command": [
+    "python3",
+    "scripts/sim_workflow_check.py",
+    "--mode",
+    "loc",
+    "--base-frame",
+    "base_link",
+    "--timeout",
+    "300",
+    "--out",
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-06/turtlebot4/final-stage/workflows/asset_turtlebot4_lite-gazebo-loc-nav_empty/workflow.json"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "mode": "loc",
+    "base_frame": "base_link",
+    "command_topic": "/key_vel",
+    "phases": {
+      "forward": {
+        "completed": true,
+        "sim_s": 3.02,
+        "distance_m": 0.563,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.19999997136760803,
+        "tail_yaw_speed_rps": 2.629832968860992e-07,
+        "end": {
+          "x": 0.06309745426986085,
+          "y": -0.4999859608324721,
+          "z": -0.004471805632510754,
+          "yaw": 2.610213989430841e-05
+        }
+      },
+      "reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.559,
+        "yaw_change_rad": 0.0,
+        "tail_speed_mps": 0.1999999713649209,
+        "tail_yaw_speed_rps": 2.6299045326132306e-07,
+        "end": {
+          "x": -0.45490247961653774,
+          "y": -0.49999965585339373,
+          "z": -0.004469815057114295,
+          "yaw": 2.6781447854497496e-05
+        }
+      },
+      "turn": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0002,
+        "yaw_change_rad": 1.088,
+        "tail_speed_mps": 6.870380037821512e-05,
+        "tail_yaw_speed_rps": 0.37581451875218325,
+        "end": {
+          "x": -0.49600046536717934,
+          "y": -0.49983848183029544,
+          "z": -0.004469815131283573,
+          "yaw": 1.0880118777477337
+        }
+      },
+      "turn_reverse": {
+        "completed": true,
+        "sim_s": 3.02,
+        "distance_m": 0.0002,
+        "yaw_change_rad": -1.0955,
+        "tail_speed_mps": 6.874943228367026e-05,
+        "tail_yaw_speed_rps": 0.37581626140180174,
+        "end": {
+          "x": -0.49589606930388735,
+          "y": -0.49999105745116984,
+          "z": -0.004469815220604975,
+          "yaw": 0.03209067966290932
+        }
+      },
+      "publisher_loss": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.137,
+        "yaw_change_rad": 0.0,
+        "tail_speed_mps": 0.0,
+        "tail_yaw_speed_rps": 0.0,
+        "end": {
+          "x": 7.793535107067168e-05,
+          "y": -0.5037878545335004,
+          "z": -0.0044687737098104,
+          "yaw": -0.007639299878999249
+        }
+      },
+      "post_reset_idle": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.0,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.0,
+        "tail_yaw_speed_rps": 0.0,
+        "end": {
+          "x": -0.4999025344382981,
+          "y": -0.5000008663542532,
+          "z": -0.004468755689712291,
+          "yaw": 2.6896458755043933e-05
+        }
+      },
+      "post_reset_drive": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.359,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.19999997136466902,
+        "tail_yaw_speed_rps": 2.629943882908104e-07,
+        "end": {
+          "x": -0.14090262659549563,
+          "y": -0.4999913163662541,
+          "z": -0.004468750761159555,
+          "yaw": 2.6374590449156933e-05
+        }
+      }
+    },
+    "checks": {
+      "ready": true,
+      "settled": true,
+      "forward": true,
+      "reverse": true,
+      "turn": true,
+      "turn_reverse": true,
+      "publisher_loss": true,
+      "localization": true,
+      "reset_service": true,
+      "reset_spawn": true,
+      "reset_stopped": true,
+      "reset_localization": true,
+      "reset_drive_resumes": true,
+      "reset_estimator_tracks_motion": true,
+      "monotonic_clock": true
+    },
+    "initial_truth": {
+      "x": -0.49990243021623637,
+      "y": -0.5000008621986586,
+      "z": -0.004471828095158767,
+      "yaw": 2.6892354473575522e-05
+    },
+    "localization_error_m": 0.02437793686485321,
+    "sensor_messages_during_drive": {
+      "/oakd/depth/image_raw": 106,
+      "/oakd/rgb/image_raw": 106,
+      "/scan": 105
+    },
+    "reset_response": "Gazebo robot pose/control reset; world clock preserved",
+    "post_reset_localization_error_m": 0.00246699220284629,
+    "post_reset_drive_localization_error_m": 0.014589239454391646,
+    "map_updates_after_reset": 0,
+    "cloud_updates_after_reset": 0,
+    "clock_backward_jumps": 0,
+    "truth_samples": 1464,
+    "sensor_counts": {
+      "/oakd/depth/image_raw": 147,
+      "/oakd/rgb/image_raw": 147,
+      "/scan": 147
+    },
+    "scan_geometry": {
+      "frame": "rplidar_link",
+      "samples": 640,
+      "finite": 640,
+      "min_m": 5.50034761428833,
+      "max_m": 8.799027442932129,
+      "range_min": 0.164000004529953,
+      "range_max": 12.0
+    },
+    "passed": true
+  },
+  "launch_returncode": 0
+}

@@ -1,0 +1,1411 @@
+{
+  "generated_utc": "2026-10-06T12:21:20.568039+00:00",
+  "task": "R9.3",
+  "status": "partial",
+  "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
+  "unlisted_cells": "not_tested",
+  "support_cells": [
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_obstacle",
+      "simulator": "gazebo",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/gazebo-crab-obstacle-final.json",
+        "docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json"
+      ],
+      "limitations": [
+        "Single bounded route, not full pattern/map/mode qualification",
+        "Swept circular footprint against static boxes; no measured contact telemetry",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh pose and detour check. Preserve the Isaac abort.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_obstacle",
+      "simulator": "pybullet",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/pybullet-crab-obstacle-final.json",
+        "docs/status/evidence/continuation-2026-10-05/final-control-source-hashes.json"
+      ],
+      "limitations": [
+        "Single bounded route, not full pattern/map/mode qualification",
+        "Swept circular footprint against static boxes; no measured contact telemetry",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Footprint/terminal-approach critic stage, 0.4 m inflation and 0.04 rad controller yaw tolerance. Goal (-3,-4,90deg) from (-7,-7); body truth plus settled/fresh pose and detour check. Preserve the Isaac abort.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_obstacle",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/isaac-crab-final-heading.json",
+        "docs/status/evidence/continuation-2026-10-05/final-heading-source-hashes.json"
+      ],
+      "limitations": [
+        "Single bounded route, not full pattern/map/mode qualification",
+        "Swept circular footprint against static boxes; no measured contact telemetry",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Verified running crab configuration; 0.65 m inflation, 0.015 rad controller yaw tolerance. Independent 0.15m/5deg limits unchanged; actual body 0.074m/-4.21deg, swept clearance 0.255m.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "four_wheel_steer_car",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "3d_slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/mujoco-3d-current-corrected.json",
+        "docs/status/evidence/continuation-2026-10-05/corrected-save-source-hashes.json"
+      ],
+      "limitations": [
+        "Short screen, not whole-map coverage or all backend/pattern missions",
+        "Actual save report retained separately with DB/PCD hashes; large raw artifacts stay on SSD",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Verified crab configuration; forward/reverse, both turns/strafe directions, real RGB-D reconstruction, publisher loss, monotonic reset and estimator/mapping resume. Companion actual GUI save has nine SQLite keyframes and 7255 finite PCD points.",
+      "steering_mode": "crab"
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "nav_obstacle",
+      "simulator": "gazebo_harmonic",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-05",
+      "revision": "700b94e plus named working-tree stage; source hashes captured before this trial",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/continuation-2026-10-05/px4-nav-obstacle.json",
+        "docs/status/evidence/continuation-2026-10-05/px4-nav-obstacle-source-hashes.json"
+      ],
+      "limitations": [
+        "One selected additional world, not all-map flight qualification",
+        "No aerial obstacle planner or ground Nav2 claim",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Native PX4 v1.16.2 X500, actual installed GUI Altitude Up/Down, takeoff/hover/waypoint/Drive/hold/land/disarm, 1295 independent body messages and actual rotor state.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_obstacle",
+      "simulator": "gazebo",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-gazebo-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_obstacle",
+      "simulator": "mujoco",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-mujoco-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_obstacle",
+      "simulator": "pybullet",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-pybullet-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_obstacle",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_obstacle",
+      "simulator": "gazebo",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-gazebo-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_obstacle",
+      "simulator": "mujoco",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-mujoco-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_obstacle",
+      "simulator": "pybullet",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "531c542d441bf8dc6d38e438bdc8c2705bced4e1 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-pybullet-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "localization",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-loc-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-loc-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "slam",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "slam_3d",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-3d_slam-nav_empty/workflow.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-3d_slam-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Forward/reverse/both turns, command loss, reset/resume and actual sensor/estimate feedback.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_empty/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_empty/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_obstacle",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus exact source/installed stage in pre-trial manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/navigation.json",
+        "docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty/nav_obstacle screens; other maps need measurements",
+        "Lab sensor rates, not vendor hazard/docking or hardware qualification",
+        "Non-Gazebo EKF uses idealized ground truth input; no noisy hardware odometry claim",
+        "Headless RViz may log map shader/cleanup errors; owned root exit and plant state are measured separately",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk selection/autofill/Run/Stop and independent physical workflow. Clear/blocked-direct-path goal with body error, heading and settled swept clearance.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-gazebo/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-gazebo/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-mujoco/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-mujoco/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-pybullet/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-pybullet/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_standard",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-isaac/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_standard-isaac/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-gazebo/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-gazebo/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-mujoco/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-mujoco/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "pybullet",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-pybullet/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-pybullet/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "asset_turtlebot4_lite",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "teleoperation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source and installed manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-isaac/report.json",
+        "docs/status/evidence/turtlebot4-sensors-2026-10-06/asset_turtlebot4_lite-isaac/source-manifest.json"
+      ],
+      "limitations": [
+        "Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps remain untested",
+        "Original source-mounted lidar/depth/calibration at lab rates; vendor hazard/docking/noise stack remains open",
+        "Measured RTF recorded, not a real-time performance guarantee",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation Serial producer exit 0 and owned plant cleanup checked by batch.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "menagerie_franka_emika_panda",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "arm_cartesian",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-06",
+      "revision": "61335feadb2e9614d2d3ee1cc8966ac89bd2c978 plus pre-trial source/installed and MoveIt SDK manifests",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/panda-cartesian-2026-10-06/report.json",
+        "docs/status/evidence/panda-cartesian-2026-10-06/source-manifest.json"
+      ],
+      "limitations": [
+        "Two static-world offsets only; other maps/backends, Servo and repeated pick/place remain open",
+        "Optional grasp fixture and attached payloads require a dynamic-object scene; native joint/hand fixture controls remain available",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Actual Tk Plan/Execute, native Panda PD actuators and independent physical hand-body TF; static nav_empty only; normal GUI profile, clean child exit",
+      "steering_mode": ""
+    }
+  ],
+  "release_gates": {
+    "robot_tasks": {
+      "condition": "robot_tasks",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R5.10: partial",
+        "R5.2: active",
+        "R5.3: partial",
+        "R5.5: active",
+        "R5.6: partial",
+        "R5.7: active",
+        "R5.8: active",
+        "R5.9: queued"
+      ],
+      "evidence_required": [
+        "R5.1",
+        "R5.10",
+        "R5.2",
+        "R5.3",
+        "R5.4",
+        "R5.5",
+        "R5.6",
+        "R5.7",
+        "R5.8",
+        "R5.9"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "environment_tasks": {
+      "condition": "environment_tasks",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R6.1: partial",
+        "R6.2: partial",
+        "R6.3: partial",
+        "R6.4: partial",
+        "R6.5: partial",
+        "R6.6: partial",
+        "R6.7: active"
+      ],
+      "evidence_required": [
+        "R6.1",
+        "R6.2",
+        "R6.3",
+        "R6.4",
+        "R6.5",
+        "R6.6",
+        "R6.7"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "algorithm_breadth": {
+      "condition": "algorithm_breadth",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R7.1: partial",
+        "R7.2: partial",
+        "R7.3: active",
+        "R7.4: partial",
+        "R7.5: partial",
+        "R7.6: partial",
+        "R7.7: partial",
+        "R7.8: partial"
+      ],
+      "evidence_required": [
+        "R7.1",
+        "R7.2",
+        "R7.3",
+        "R7.4",
+        "R7.5",
+        "R7.6",
+        "R7.7",
+        "R7.8"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "backend_qualification": {
+      "condition": "backend_qualification",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R8.1: partial",
+        "R8.3: partial"
+      ],
+      "evidence_required": [
+        "R8.1",
+        "R8.2",
+        "R8.3"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    },
+    "reproduction_and_comparisons": {
+      "condition": "reproduction_and_comparisons",
+      "status": "blocked",
+      "required_for": [
+        "full_release"
+      ],
+      "blocking_issues": [
+        "R3.6: active",
+        "R4.3: partial",
+        "R9.1: partial",
+        "R9.2: partial"
+      ],
+      "evidence_required": [
+        "R3.6",
+        "R4.3",
+        "R9.1",
+        "R9.2"
+      ],
+      "decision": "Derived from current task states and evidence references; no scope waiver recorded"
+    }
+  },
+  "acceptance_criteria": {
+    "required_tasks_pass": false
+  }
+}

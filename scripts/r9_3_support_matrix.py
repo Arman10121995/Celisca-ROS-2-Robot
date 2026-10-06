@@ -12,6 +12,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import sys
 
 import yaml
 
@@ -92,6 +93,44 @@ def valid_position(value):
 
 def measured_result(report,kind):
     """Recompute declared screen checks; never accept a bare PASS marker."""
+    if kind == 'arm_cartesian_screen':
+        sys.path.insert(0, str(ROOT/'src/robot_lab_utils'))
+        from robot_lab_utils.asset_support import panda_planning_acceptance
+        return panda_planning_acceptance(report)
+    if kind == 'drive_sensor_screen':
+        phases, sensors = report.get('phases', {}), report.get('sensors', {})
+        def bounded(phase, key, lo, hi):
+            value = phases.get(phase, {}).get(key)
+            return finite(value) and lo < value < hi
+        passed = (report.get('launch_returncode') == 0 and report.get('neutral_commands') == 0
+            and report.get('silence_commands') in (0, 1) and report.get('body_samples', 0) > 50
+            and report.get('joint_samples', 0) > 30
+            and bounded('forward', 'tail_vx', .15, .36)
+            and bounded('reverse', 'tail_vx', -.36, -.15)
+            and bounded('left_turn', 'tail_wz', .5, 1.45)
+            and bounded('right_turn', 'tail_wz', -1.45, -.5))
+        for label in ('forward_stop', 'reverse_stop', 'left_turn_stop', 'right_turn_stop', 'publisher_loss'):
+            passed = passed and bounded(label, 'tail_vx', -.025, .025) and bounded(label, 'tail_wz', -.05, .05)
+        scan, depth, info = (sensors.get(key, {}) for key in ('last_scan', 'last_depth', 'camera_info'))
+        fx = 160 / math.tan(1.047 / 2)
+        calibration = info.get('k', [])
+        passed = (passed and all(sensors.get(key, 0) >= 5 for key in
+            ('scan_messages', 'depth_messages', 'camera_info_messages'))
+            and scan.get('samples') == 640 and scan.get('frame') == 'rplidar_link'
+            and finite(scan.get('range_min')) and abs(scan['range_min']-.164) < 1e-6
+            and finite(scan.get('range_max')) and abs(scan['range_max']-12) < 1e-6
+            and depth.get('frame') == info.get('frame') == 'oakd_rgb_camera_optical_frame'
+            and depth.get('width') == info.get('width') == 320
+            and depth.get('height') == info.get('height') == 240
+            and depth.get('finite_positive', 0) > 100 and len(calibration) == 9
+            and finite(calibration[0]) and abs(calibration[0]-fx) < .01
+            and finite(calibration[4]) and abs(calibration[4]-fx) < .01
+            and finite(sensors.get('depth_mean_change_m')) and sensors['depth_mean_change_m'] > .01)
+        for name in ('rplidar_link', 'oakd_rgb_camera_optical_frame'):
+            frame = sensors.get('mounted_frames', {}).get(name, {})
+            actual, expected = frame.get('position'), frame.get('expected_position')
+            passed = passed and valid_position(actual) and valid_position(expected) and math.dist(actual, expected) < 1e-5
+        return bool(passed)
     if kind == 'navigation_screen':
         limits = report.get('acceptance',{}).get('limits',{})
         position,heading,age = (report.get(key) for key in (
@@ -178,11 +217,16 @@ class SupportMatrixFramework:
             sources = self.path(record['source_hashes'])
             if not sources.is_file() or not json.loads(sources.read_text()):
                 raise ValueError('Missing source-hash manifest')
+            if record.get('source_hashes_sha256') and hashlib.sha256(sources.read_bytes()).hexdigest() != record['source_hashes_sha256']:
+                raise ValueError('Source manifest hash mismatch')
             report_file = self.path(record['report'])
             payload = report_file.read_bytes()
             if hashlib.sha256(payload).hexdigest()!=record.get('sha256'):
                 raise ValueError('Report hash mismatch')
             report = json.loads(payload)
+            for key, expected in (('robot', cell.robot_id), ('map', cell.environment_id), ('backend', cell.simulator)):
+                if key in report and report[key] != expected:
+                    raise ValueError('Report identity does not match the indexed '+key)
             observed = report.get('drive_configuration')
             if cell.steering_mode and observed is not None:
                 configuration = observed.get('configuration', {})
