@@ -2,7 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-10-07"
-current_revision: "61335fe plus October 6 TurtleBot4 sensors/modes, Isaac pose-derived odometry, GUI/export/monitor cleanup and native Panda MoveIt Plan/Execute; see containing commit and pre-trial source/installed hashes"
+current_revision: "18ecdd2 plus containing October 7 commit: TurtleBot3 physical control/source LDS and 48 measured modes; consolidated assets/native Registry 3D; responsive right-hand control column and structural robot categories; source-matched normal physical regressions"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. New catalog/world/terrain/manipulation extensions have priority per latest October 5 user instruction. Historical demonstration reports do not qualify missions; full release remains blocked."
@@ -82,10 +82,11 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
-  installed_extensions: "113 profiles and 17 worlds installed on SSD; normal Tk selection/autofill checked. TurtleBot4 Standard/Lite expose all five modes on all four engines from forty exact mode screens and eight final sensor/Drive screens. Native Panda has actual joint, Hand fixture and MoveIt Plan/Execute proof on MuJoCo; counts do not establish other robot missions."
+  gui_workspace: "Final rebuilt GUI has a right-hand Drive/Arm/Hand/Drone control column with limits, reviewed category/type tags and filters, sidebar navigation and working 1600/1024 resize. 94 final GUI tests pass; preceding 936 fast/one skip/four integration deselections and 146 integration tests plus five final real-Tk layout checks are scoped separately. Final normal Panda physical Plan/Execute and Burger/PyBullet neutral/Drive/Stop/watchdog/source LDS/joints/TF repeat pass. The initial Drive minimum-sample failure is retained. Exact interface/physical/negative artifacts: docs/status/evidence/gui-controls-column-2026-10-07/README.md."
+  installed_extensions: "113 raw extension profiles and 17 worlds remain installed on SSD; GUI consolidates complete parent families with exact variants/components. Native embedded Registry viewport renders seven source scenes and passes neutral live-plant/Drive checks. T3 four modes and T4 five modes on all four engines have separate named measured screens; imports/previews do not qualify other robot missions."
   extension_software_checks: "October 6 final source stage passes changed-package builds, 885 fast/one skip/one integration deselection, 131 integration, 18 physics and 81 GUI tests, plus module/registry validation. Normal TurtleBot4 forty mode/default/autofill checks and normal native Panda physical MoveIt Plan/Execute pass separately. Exact 531c542 CI is historical Drive-stage proof; final-stage CI is checked after publishing. Logs/source/installed hashes: docs/status/evidence/continuation-2026-10-06/verification-manifest.json."
   turtlebot4_drive: "Historical October 5 Display Drive source stage retained separately. October 6 final Standard/Lite/nav_empty GUI neutral enable, WASD both directions/turns, Space Stop and command loss pass on all four engines with independent body/joint/sensor feedback, normal producer Close, zero root exits and no orphan plant. See turtlebot4-sensors-2026-10-06; vendor firmware and physical joystick remain unqualified."
-  native_arm: "Native Panda/MuJoCo retains measured joint/Home/Stop/action and cube-grasp controls. Normal GUI MoveIt Plan/Execute in static nav_empty measures two TCP targets within 0.00732 m / 0.838 deg, real floor/self-collision and unreachable rejection, physical joint/finger plan invalidation, Cancel/Stop, 1.001 s heartbeat abort, monotonic Reset/Home and clean planner/plant/RViz exit. Servo, payload planning, other maps/backends and repeated arbitrary pick/place remain open; panda-cartesian-2026-10-06."
+  native_arm: "Final normal responsive control-column Panda/MuJoCo/nav_empty physical MoveIt repeat measures 0.00649 m / 0.780 deg and 0.00639 m / 0.765 deg, all original collision/unreachable/invalidation/interruption/reset/monitor checks and clean children. Strict source certificate includes workspace_ui.py. Original native joint/Hand/physical cube proof retained; Servo, moving/attached scenes, repeated pick/place and other maps/backends remain open."
   mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
   fast_suite: "2026-10-05 at e69d1b2 plus recorded updates: Earlier scripts/test_fast.sh 756 passed, 2 skipped; registry cross-reference PASS. Fixed direct runner without inherited source/package paths: 755 passed, 2 skipped, one integration case deselected; that real xacro case passes separately. Focused world/heightfield/PCD/support guards 35 passed. Tk command/Drive suite 43 passed on its named source stage. Compact logs in docs/status/evidence/continuation-2026-10-05/."
   native_flight: "Named Gazebo Harmonic/nav_empty and nav_obstacle actual GUI altitude screens pass; nav_obstacle has 1295 independent body messages, +1.031/-1.018 m altitude, released hold drift 0.044/0.020 m, land idle/disarmed and actual rotor states. All-map selection is software coverage, not all-map flight."
@@ -98,7 +99,7 @@ current_verification:
   limitation: "Source tests/builds and named simulator/GUI screens only; no clean-host, physical joystick, universal mission matrix, hardware or completed external catalog/terrain/manipulation claim."
   mapping_reset: "Current MuJoCo crab 3D SLAM: 21 workflow checks and 5 actual GUI-save checks pass; cloud 1306 to 15880, post-reset tracking 0.00042 m, intact nine-keyframe DB and 7255 finite PCD points. Named PyBullet mecanum 2D SLAM and earlier localization/reset/watchdog cells recorded, not a universal matrix."
   occupancy_generation: "Real nav_obstacle and furnished Celisca floor-1/floor-2 exports; seed-connected free region and mesh-mask consistency measured. Reviewed Nav2 registration, disconnected regions and broader terrain/geometry missions remain."
-  support_release: "Seven exact pre-trial-hashed reports indexed; latest per-cell measurement controls support. Corrected matrix reports partial support/experimental failures and blocked full-release gates. Other historical evidence remains separate; unindexed cells are not qualified by this index."
+  support_release: "Exact pre-trial-hashed named screens index actual T3/T4 modes, native Panda, flight and selected 4WS/mecanum work; latest per-cell measurement controls scoped support. Current ledger-derived full-release gates remain blocked. Static previews and catalog counts are not added as mission qualification."
 baseline:
   recorded_on: "2026-09-07"
   revision: "dff388f"
@@ -331,12 +332,12 @@ tasks:
         next_action: "Completed: every advertised executable/plugin/launch in built packages resolves against the installed index; assets resolve via package shares; benchmark output remains configurable outside source/install."
       R1.2:
         title: "Separate and repair test tiers"
-        state: "active"
+        state: "done"
         owner: "codex"
         depends_on:
           - "R0.2"
         active_scope: "2026-10-07 codex: repair exact dc39922 CI failures without removing checks. Three ROS-import tests must run in the sourced integration tier; keep pure spring/navigation acceptance tests fast. Correct the unresolved Trimesh rosdep key. Preserve separate R6.5 occupancy-review work and all measured runtime source contracts."
-        result: "Exact dc39922 CI 37463485222 builds, then fails three ROS-dependent tests in the unsourced fast tier. Those unchanged checks now run explicitly in integration; local plain-Python fast 881 passed/2 skips/4 deselected and sourced integration 134 passed. Canonical python3-trimesh-pip rosdep resolution and maps rebuild pass. Earlier exact 531c542 CI is green; the new correction needs its own published result. Negative logs are preserved."
+        result: "Exact 18ecdd2 CI run 37586958626 passes full build, fast 879 passed/4 skips/4 deselected, physics 18 passed, integration 134 passed and registry validation. Three unchanged ROS-import checks moved to the sourced integration manifest; canonical python3-trimesh-pip dependency resolves. Local unsourced fast 881 passed/2 skips and integration 134 passed. Original exact dc39922 fast-tier failure and earlier negatives are preserved; later source stages need their own CI."
         scope_paths:
           - ".github/workflows/"
           - "docs/status/evidence/ci-extensions-2026-10-05/"
@@ -361,7 +362,7 @@ tasks:
           - "xacro subprocess test moved out of test_sim_profiles.py into test_xacro_expansion.py (integration tier); adapter.py top-level ROS launch imports made lazy; test_adapter_launch_generation skips explicitly without ROS launch"
           - "Isaac: removed host-specific paths (/workspace/isaac_env/bin/python,$/workspace/.tmp); isaac_python default now portable via ISAAC_PYTHON env; offline contract test made deterministic (6/6 physics passed in both plain-Python and ROS runs"
           - "Runs: fast 385 passed+1 explicit skip (no ROS); with ROS 386 passed; integration 106 passed; physics 6 passed (both modes); full all-tier 498 passed,  ​0 failed"
-        next_action: "Publish the tier/dependency correction on master and observe its exact complete CI result. Preserve all assertions and the compatible Trimesh pin; runtime and clean-host missions remain separate qualification."
+        next_action: "Completed at 18ecdd2: preserve tier boundaries and the compatible Trimesh pin. Observe complete CI at each later source revision; runtime and clean-host missions remain separate qualification."
       R1.3:
         title: "Make CI bootstrap and doctor trustworthy"
         state: "done"
@@ -534,18 +535,20 @@ tasks:
         next_action: "Complete — R3.3 done (resolver/executor, seven independent selectors, spawn/reset/params/seed, safe dry-run + --execute, legacy aliases, planner switching, LaunchConfiguration fix, single stack start). Advance to R3.4 (connect GUI to the common resolver: full composition controls replacing the ignored algorithm argument, filter by validator, show maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
       R3.4:
         title: "Connect GUI to the common resolver"
-        state: "active"
+        state: "partial"
         owner: "codex"
         depends_on:
           - "R3.3"
         scope_paths:
           - "src/robot_lab_gui/"
+          - "src/robot_lab_utils/"
           - "src/robot_lab_bringup/"
           - "src/robot_lab_description/"
           - "src/robot_lab_mujoco/"
           - "src/robot_lab_pybullet/"
           - "src/robot_lab_isaac/"
           - "src/robot_lab_robots/config/robots.yaml"
+        active_scope: "2026-10-07 codex, latest user priority and column correction: redesign the GUI around Launch setup and command beside a right-hand Drive/Arm/Hand/Drone control column with limits; reviewed robot class/subclass tags and filters; consistent workspace navigation, logs and native asset previews. Shared utils taxonomy/config are in scope. Preserve exact command/runtime gates and repeat normal physical Drive/Panda acceptance after shared GUI changes."
         acceptance_ref: "ROADMAP.md"
         evidence:
           - "gui_composition.py (new): headless GUI-adjacent composition logic that builds resolver.ExperimentRequest from GuiCompositionSelection, resolves via the SAME resolver/validator the CLI uses, and serializes the same manifest YAML the CLI --out writes; provides build_request, resolve_selection, command_for_selection, validation_lines, migrate_legacy_selection, manifest_to_yaml/from_yaml, manifest_running_summary, get_registry, ALGORITHM_SLOT_LABELS and ALGORITHM_CATEGORIES (all 7 slots: perception/localization/state_estimation/sensor_fusion/global_planning/local_planning/control)"
@@ -554,7 +557,8 @@ tasks:
           - "test_r3_4_gui_composition.py: 11 headless GUI-adjacent tests — CLI and GUI resolve identical manifests; GUI-saved profile reloaded by CLI resolves identically; manifest_to_yaml/from_yaml roundtrips; selection changes active nav2 plugin (a_star vs navfn differ only in global_planner_plugin); validator filters invalid selection (go2 without LiDAR rejected for amcl); legacy profile migration map_name->environment; profile delete never touches user artifacts; ensure_defaults never overwrites user profiles; manifest_running_summary exposes robot/environment/simulator/plugins/launch_file; CLI --out manifest loadable by GUI layer resolves to same command"
           - "Shared resolver/selector pipeline still passes: test_r3_2_composition_compatibility, test_r3_3_resolver_executor, test_selectors (44 passed)"
           - "docs/status/gui-command-autofill-2026-09-11.md: working-tree follow-up on 726707a; 37 GUI tests passed under Xvfb, including 10 real-Tk autofill/clipboard/run regression cases; GUI package rebuilt and installed-window smoke check passed. Preview, Copy and Run share resolved arguments; GUI/headless and vacuum choices refresh the command; map aliases normalize for validation. No simulator mission executed."
-        next_action: "2026-09-22 user regression report: restore GUI map-only and robot-plus-map display across backends, stable humanoid display with measured joint states, Labbot Gazebo spawn, and mobile localization/SLAM/navigation launches. Inspect existing uncommitted fixes and validate actual installed launch routes; humanoid mode gating preference pending."
+          - "docs/status/evidence/gui-controls-column-2026-10-07/README.md: actual rebuilt responsive control column, structural tags/filters, sidebar/native Registry, 94 GUI tests, five final resize/selection/limit/neutral checks and source-matched normal Panda physical regression. Preserved failure stages are separate from passes; no new model mission support is granted by layout or classification."
+        next_action: "Preserve the completed control-column/category/command workflow and exact runtime gates. Continue the extension robot/world/controller matrix before older goals; repeat actual affected commands/Drive/normal Panda whenever shared controller or strict source contracts change. Keep unqualified class/backend/mode paths explained in the GUI."
       R3.5:
         title: "Author benchmark scenario and experiment catalogs"
         state: "done"
@@ -576,15 +580,19 @@ tasks:
         next_action: "Complete — R3.5 done (five benchmark scenarios + five benchmark experiments authored in the registry catalogs with state_estimation task_type added to schema; all resolver/composition/selector tests pass). Advance to R3.4 (connect GUI to the common resolver) or R4.1 (scenario lifecycle and truthful outcomes to make the cataloged scenarios executable)."
       R3.6:
         title: "Install external assets into normal Launch selectors"
-        state: "active"
+        state: "partial"
         owner: "codex"
         depends_on: ["R3.1", "R3.4"]
-        scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md"]
-        active_scope: "2026-10-06 codex: complete the extension on master from 61335fe. Final TurtleBot4 Isaac repeats and source-matched sensor/mode screens passed; normal profiles/defaults/autofill are enabled. Preserve qualified native Panda and separately owned R6.7 terrain work; finish remaining model/world/controller acceptance with actual proof."
+        scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/robot_spawn.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/asset_groups.py", "src/robot_lab_utils/robot_lab_utils/asset_preview.py", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md"]
+        active_scope: "2026-10-07 codex: latest user priority adds complete-model catalog consolidation, nested variants/components and an isolated interactive registry 3D preview. Continue the extension from dc39922/18ecdd2. Integrate official TurtleBot3 Burger/Waffle/Waffle Pi physical wheels and source-mounted sensor contracts using pinned ROBOTIS simulation definitions. Measure GUI Drive and compatible modes before normal enablement. Preserve measured TurtleBot4/native Panda and separately owned R6.5 occupancy/R6.7 terrain work."
+        current_work: "Complete-parent Launch/Worlds/Installed Extensions selectors and nested registry components are implemented, preserving exact runtime IDs and controller/backend gates. Native embedded Tk/OpenGL inspection renders seven actual source scenes with camera input and unchanged launch selections; a live Burger/PyBullet preview sends no movement commands and retains physical Drive/Stop/watchdog. TurtleBot3 12 source LDS/Drive screens and all 48 localization/SLAM/export/Nav2 screens pass; normal 48 defaults/autofill and a current MuJoCo obstacle repeat pass. Initial Pi costmap failures and all reruns remain preserved."
         result: "113 source-pinned installed profiles / 17 worlds remain. TurtleBot4 Standard/Lite passed forty localization/reset/resume, actual 2D/3D Save Map and clear/obstacle Nav2 screens across all four engines plus eight final source-mounted lidar/RGB-D/Drive trials. All sixteen map exporters and all owned plants exited cleanly. Normal GUI forty mode/default/autofill checks passed; measured backend modes are enabled by checksum/numeric guards. Gazebo retains selected worlds with a 2 ms suspension step cap; Isaac pose-derived ideal twist removes solver bias. Other maps/routes, materials/licenses, vendor hazards/docking and other model controllers remain open; MuJoCo RTF remains a P4 gap."
         acceptance_ref: "ROADMAP.md"
-        next_action: "Preserve final mode/sensor/default contracts and retained failures. Qualify longer TurtleBot4 routes/additional worlds, imported model rest poses/materials/licenses, vendor controller interfaces and cross-backend missions. Continue world/terrain/PX4 and manipulation lanes per owner; do not equate imports or tests with missions."
+        next_action: "Preserve grouping/native viewport cleanup, exact source/controller identity and final TurtleBot3/TurtleBot4 mode/sensor/default contracts. Qualify longer routes/additional maps, textures/rest poses/licenses, remaining vendor controllers and cross-backend missions. R6.6 hospital fixtures need actual source-pose review; preview Fit is not repair. Continue separately owned occupancy/terrain lanes, PX4 world missions and manipulation before the old roadmap."
         evidence:
+          - "docs/status/evidence/registry-3d-2026-10-07/README.md: seven actual embedded rendered source scenes, camera controls, six source component topology checks, neutral live Burger/PyBullet preview and retained Drive/Stop/watchdog; static inspection does not qualify missions."
+          - "docs/status/evidence/turtlebot3-modes-2026-10-07/README.md: 48 real mode screens and 12 clean map saves, exact source guards, normal GUI 48 defaults/autofill and current normal obstacle navigation, preserved initial failures."
+          - "docs/status/evidence/turtlebot3-sensors-2026-10-07/README.md: twelve final normal GUI Drive/source LDS/TF/joint trials, zero producer/launch exits and plant cleanup, raw-trace-derived tilt/joint ranges, exact source stages and retained negative inertia/braking cases."
           - "docs/status/evidence/turtlebot4-sensors-2026-10-06/README.md: eight final source-mounted sensor/GUI Drive screens, actual neutral enable/Stop/watchdog, serial zero exits and plant cleanup, measured RTF and source manifests."
           - "docs/status/evidence/turtlebot4-modes-2026-10-06/README.md: forty real bounded mode screens, sixteen clean map exports, normal GUI forty default/autofill checks, source/config/report checksums and retained negative stages."
           - "docs/status/evidence/turtlebot4-drive-2026-10-05/README.md: eight actual GUI Drive/Stop/publisher-loss trials, independent body/four-joint feedback, original spring/asset/source hashes and four preserved failures. No sensor/SLAM/Nav2/reset/vendor qualification."
@@ -893,14 +901,15 @@ tasks:
         result: "Selected strict crab goals, obstacle detours, localization Drive/reset/watchdog, real 2D/3D mapping and installed GUI DB/PCD export pass. Latest verified Isaac crab meets unchanged 0.15m/5deg body limits. Full current-setting pattern/backend/map/mode mission acceptance remains open; see docs/status/continuation-2026-10-05.md."
       R5.7:
         title: "Manipulator control and GUI motion planning"
-        state: "active"
+        state: "partial"
         owner: "codex"
         depends_on: ["R3.6", "R2.2", "R3.4"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/arm_trajectory.py", "src/robot_lab_utils/robot_lab_utils/native_arm_description.py", "scripts/provision_extension_assets.py", "scripts/test_tiers.sh", "docs/", "README.md", "ROADMAP.md"]
-        active_scope: "2026-10-06 codex: upstream MoveIt2 KDL/OMPL/FCL planning integrated with native Panda geometry/static selected world and actual GUI Plan/Execute. Seed IK from measured joints; preserve the native action and R5.8 hand contracts. Physical qualification and normal-profile repeat passed; remaining Servo/payload/other-backend missions stay open."
+        active_scope: "2026-10-07 codex: preserve upstream KDL/OMPL/FCL and native Panda actuators. Final normal responsive control-column GUI Cartesian/negative/invalidation/interruption/reset/monitor/cleanup acceptance is measured, with its strict source certificate including workspace_ui.py. Preserve original joint/hand/physical cube proof; Servo/payload/other-backend missions remain open."
         acceptance_ref: "ROADMAP.md"
-        result: "Native Panda actual joint/Home/Stop/action proof and original actuators retained. MuJoCo/nav_empty normal GUI Cartesian Plan/Execute reaches two TCP offsets within 0.00732 m / 0.838 deg. Actual FCL/native collision negatives, unreachable rejection, joint/finger stale-plan invalidation, Cancel/Stop/heartbeat loss, monotonic reset and clean MoveGroup/plant/RViz shutdown measured. Source-matched numeric/native-resource checks enable planning only for this profile; fixture planning stays disabled until its dynamic object scene exists. Failed soft-limit, teardown, stale-observer, disabled-button and long-path trials retained."
+        result: "Native Panda original joint/Hand actuators and physical grasp proof retained. Fresh normal consolidated-GUI MuJoCo/nav_empty MoveIt Plan/Execute reaches two physical TCP offsets within 0.00656 m / 0.771 deg. All original collision/unreachable negatives, joint/finger plan invalidation, Cancel/Stop/heartbeat loss, monotonic Reset/Home, Live Monitor and four child exits pass; strict certificate matches actual source/SDK/native proof. Servo, moving/attached objects, repeated grasp and other backends remain open."
         evidence:
+          - "docs/status/evidence/panda-cartesian-grouped-gui-2026-10-07/README.md: fresh actual normal GUI physical regression after shared command/catalog/SDF changes, original actuators, pre-trial fingerprints and unchanged physical limits."
           - "docs/status/evidence/panda-cartesian-2026-10-06/README.md: real MoveIt service and Tk Plan/Execute with independent physical TCP/joints, normal installed profile, SDK/native asset/source hashes, collision negatives, interruptions/reset/monitor, child cleanup and retained failed runs."
           - "docs/status/evidence/panda-turtlebot4-2026-10-05/README.md: scoped independent state trace, actual action and GUI measurements, negative producer correction, source hashes and software checks."
         next_action: "Preserve native Panda joint/hand/Cartesian source contracts. Implement Servo, moving/attached-object planning scenes and repeated arbitrary pick/place; qualify additional static maps and real arm controllers/missions on the other three backends. Keep optional cube-fixture planning gated and independent physical/contact evidence mandatory."
@@ -1064,8 +1073,8 @@ tasks:
         depends_on: ["R3.6", "R6.5"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_bringup/config/sim_maps.yaml", "src/robot_lab/robot_lab_registry/config/environments.yaml", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "docs/ASSET_EXTENSION_GUIDE.md"]
         acceptance_ref: "ROADMAP.md"
-        next_action: "Inventory mlherd worlds, model-only environments, packaged Gazebo examples and licensed Fuel assets. Audit model/archive dependencies, migrate Classic plugins and measure display/collision/spawn in all four backends."
-        result: "All 14 dataset worlds and three Fortress environment examples installed with real geometry/dependencies, derived MJCF and actual occupancy files. All 100 example SDFs downloaded; 97 plugin/robot fixtures remain for review. Dynamic plugins, full backend/visual parity and robot missions unqualified."
+        next_action: "Review hospital source fixture transforms before qualified spawn/collision/navigation, retaining raw poses and negatives. Inventory remaining model-only/examples/Fuel assets and per-asset licenses; migrate plugins and measure display/collision/spawn/routes on each backend. Preserve source scale and include chains."
+        result: "All 14 dataset worlds and three Fortress environment examples installed with real geometry/dependencies, derived MJCF and actual occupancy files. Complete world variants are nested under parent families; embedded inspection includes furnished Celisca and hospital source scenes. Six hospital fixtures around z=-754989000 m are measured and flagged; default camera Fit preserves authored geometry and does not repair physics. All 100 example SDFs downloaded; 97 plugin/robot fixtures, actors, full visual/backend parity and robot missions remain for review."
         evidence:
           - "docs/status/evidence/extensions-integrated-2026-10-05/README.md"
       R6.7:
@@ -1409,7 +1418,7 @@ tasks:
           - "R8.3"
           - "R9.1"
           - "R9.2"
-        active_scope: "2026-10-05 codex: remove fabricated support/release success from the legacy generator; require exact scoped report artifacts and derive release blockers from the task ledger."
+        active_scope: "2026-10-07 codex: index the actual TurtleBot3 lidar/Drive and mode trials plus the fresh Panda Cartesian regression. Derive motion/joint envelopes from retained physical traces; preserve prior screens, negatives and ledger-based release blockers."
         scope_paths:
           - "scripts/r9_3_support_matrix.py"
           - "scripts/test_support_evidence.py"

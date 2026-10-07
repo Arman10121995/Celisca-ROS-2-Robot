@@ -56,6 +56,9 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
+  "$BRG_TEST/test_asset_groups.py"
+  "$BRG_TEST/test_robot_taxonomy.py"
+  "$BRG_TEST/test_asset_preview.py"
   "$BRG_TEST/test_asset_runtime_support.py"
   "$BRG_TEST/test_gazebo_physics_world.py"
   "$BRG_TEST/test_occupancy_slice.py"
@@ -74,6 +77,8 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$GUI_TEST/test_registry_preview.py"
+  "$GUI_TEST/test_workspace_layout.py"
   "$BRG_TEST/test_urdf_springs.py::test_isaac_extracts_passive_physics_before_stripping_import_extensions"
   "$BRG_TEST/test_urdf_springs.py::test_isaac_does_not_discard_malformed_physics_with_plugins"
   "$BRG_TEST/test_wheel_navigation_contract.py::test_selected_urdf_root_reaches_nav2_servers_and_nested_costmaps"
@@ -92,6 +97,7 @@ INTEGRATION_TESTS=(
 
 PHYSICS_TESTS=(
   "$BRG_TEST/test_simulator_backends.py"
+  "$BRG_TEST/test_backend_assets.py::MujocoSmallWheelServoTests"
   "src/robot_lab_mujoco/test/test_native_asset_display.py"
   "src/robot_lab_mujoco/test/test_native_gripper_control.py"
 )

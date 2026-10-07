@@ -1,0 +1,783 @@
+{
+  "kind": "maps",
+  "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world",
+  "source_sha256": "9ccedc0ec46669b45467091a7bca6f4e7afc3bf6701db7d379f25c6347520b90",
+  "shapes": [
+    {
+      "model": "ground_plane",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "plane",
+      "size": [
+        100.0,
+        100.0
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 0
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -16.58639,
+        0.072106,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        -0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        5.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -1.66139,
+        -2.352894,
+        0.25
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        30.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 2
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -6.71639,
+        1.447106,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        -0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.25,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -6.54139,
+        0.397106,
+        0.25
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.5,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -6.36639,
+        1.447106,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.25,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -6.54139,
+        -0.452894,
+        0.25
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.5,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -6.36639,
+        -1.377894,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        -0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -6.71639,
+        -1.377894,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        -0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        13.26361,
+        0.072106,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        5.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        -1.66139,
+        2.4971059999999996,
+        0.25
+      ],
+      "orientation": [
+        1.3267948966775328e-06,
+        0.0,
+        0.0,
+        0.9999999999991198
+      ],
+      "type": "box",
+      "size": [
+        30.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 2
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        3.5236099999999997,
+        -1.367894,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        -0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        3.6986100000000004,
+        -0.442894,
+        0.25
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.5,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        3.87361,
+        -1.367894,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        -0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.0,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        3.51361,
+        1.437106,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.25,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        3.6886099999999997,
+        0.387106,
+        0.25
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.5,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "exp_empty_rooms",
+      "position": [
+        3.8636100000000004,
+        1.437106,
+        0.25
+      ],
+      "orientation": [
+        0.7071054825112363,
+        0.0,
+        0.0,
+        0.7071080798594735
+      ],
+      "type": "box",
+      "size": [
+        2.25,
+        0.15,
+        0.5
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "unit_box_clone",
+      "position": [
+        -3.15305,
+        -0.028544,
+        0.243066
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        0.712184,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 6
+    },
+    {
+      "model": "unit_box_clone_clone",
+      "position": [
+        -0.800903,
+        -1.10327,
+        0.243066
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        0.712184,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 6
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone",
+      "position": [
+        7.57023,
+        1.58634,
+        0.243066
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        0.41249,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 7
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone",
+      "position": [
+        8.93395,
+        -1.67677,
+        0.243066
+      ],
+      "orientation": [
+        0.999999999998875,
+        0.0,
+        0.0,
+        -1.4999999999994376e-06
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        1.22961,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 8
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone",
+      "position": [
+        10.6858,
+        1.74416,
+        0.243066
+      ],
+      "orientation": [
+        0.999999999998875,
+        0.0,
+        0.0,
+        -1.4999999999994376e-06
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        1.22961,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 8
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone_0",
+      "position": [
+        11.9853,
+        -1.72376,
+        0.243066
+      ],
+      "orientation": [
+        0.999999999998875,
+        0.0,
+        0.0,
+        -1.4999999999994376e-06
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        1.22961,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 8
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone_1",
+      "position": [
+        10.2257,
+        -0.24986,
+        0.243066
+      ],
+      "orientation": [
+        0.999999999998875,
+        0.0,
+        0.0,
+        -1.4999999999994376e-06
+      ],
+      "type": "box",
+      "size": [
+        0.832545,
+        1.95429,
+        0.486131
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 9
+    },
+    {
+      "model": "unit_cylinder",
+      "position": [
+        2.55143,
+        1.08863,
+        0.5
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "cylinder",
+      "size": [
+        0.5,
+        0.999998
+      ],
+      "rgba": [
+        0.7,
+        0.7,
+        0.7,
+        1.0
+      ],
+      "render_mesh": 10
+    },
+    {
+      "model": "DynamicObstacle",
+      "position": [
+        -8.05619,
+        -0.992958,
+        0.15
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.3,
+        0.3,
+        0.3
+      ],
+      "render_mesh": 11
+    },
+    {
+      "model": "DynamicObstacle_clone",
+      "position": [
+        -9.997,
+        1.03839,
+        0.15
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.3,
+        0.3,
+        0.3
+      ],
+      "render_mesh": 11
+    },
+    {
+      "model": "DynamicObstacle_clone_clone",
+      "position": [
+        -12.3843,
+        -0.985271,
+        0.15
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        0.3,
+        0.3,
+        0.3
+      ],
+      "render_mesh": 11
+    }
+  ],
+  "bounds": {
+    "min_xyz": [
+      -16.661399183012254,
+      -2.427894275473517,
+      0.0
+    ],
+    "max_xyz": [
+      13.338619183012252,
+      2.572145803846636,
+      0.9999990000000001
+    ],
+    "center_xyz": [
+      -1.6613900000000008,
+      0.07212576418655936,
+      0.49999950000000004
+    ],
+    "span_m": 30.430272768357113,
+    "raw_min_xyz": [
+      -16.661399183012254,
+      -2.427894275473517,
+      0.0
+    ],
+    "raw_max_xyz": [
+      13.338619183012252,
+      2.572145803846636,
+      0.9999990000000001
+    ],
+    "remote_geometry_count": 0
+  },
+  "notes": [],
+  "meshes": [],
+  "scope": "Static source geometry in metres; scripted actors, physics, policies and missions are not executed",
+  "asset_id": "dataset_room2_world_dynamic",
+  "render_geometry": {
+    "path": "/workspace/molar/robot_lab_runtime/registry_previews/624f23db53ff468da30c1b511d86ac86/geometry.npz",
+    "meshes": 12,
+    "triangles": 452,
+    "scope": "Full source geometry; colors retained where declared; embedded textures are not reconstructed"
+  },
+  "preparation_wall_s": 0.6242138790003082
+}

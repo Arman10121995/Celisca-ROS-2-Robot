@@ -1,0 +1,42 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____ test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable ______
+
+app = <robot_lab_gui.launcher.SimulationLauncherGui object .>
+
+    def test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable(app):
+        app.geometry('1024x768'); settle(app)
+        assert app.compact_setup.select() == str(app.session_frame)
+        setup_page = next(page for page in app.compact_setup.tabs() if page != str(app.session_frame))
+        app.compact_setup.select(setup_page); settle(app)
+        assert app.robot_combo.winfo_viewable()
+        app.compact_setup.select(app.session_frame); settle(app)
+        for button in (app.start_button, app.copy_command_button):
+            assert button.winfo_viewable()
+            assert button.winfo_rootx()+button.winfo_width() <= app.winfo_rootx()+app.winfo_width()
+        app.show_tab('Drive'); settle(app)
+        canvas = app.drive_page.canvas
+        assert canvas.winfo_viewable()
+        assert canvas.xview()[1] == 1.
+        assert canvas.bbox('all')[3] > canvas.winfo_height()
+        canvas.yview_moveto(1.); settle(app)
+        assert app.drive_input_checkbox.winfo_rooty()+app.drive_input_checkbox.winfo_height() \
+            <= canvas.winfo_rooty()+canvas.winfo_height()
+        app.drive_override_var.set(True); app._update_drive_limits_label()
+        assert all('disabled' not in field.state() for field in app.drive_limit_widgets)
+        app.drive_override_var.set(False); app._update_drive_limits_label()
+        assert all('disabled' in field.state() for field in app.drive_limit_widgets)
+        # Resize an already opened GUI, not just its initial dimensions. Setup
+        # and command become columns again without replacing the live widgets.
+        app.geometry('1600x980'); settle(app)
+        assert not app.compact_setup.tabs()
+>       assert app.setup_notebook.winfo_viewable()
+E       assert 0
+E        +  where 0 = <bound method Misc.winfo_viewable of <tkinter.ttk.Notebook object .!notebook.!frame.!panedwindow.!frame.!labelframe.!notebook>>()
+E        +    where <bound method Misc.winfo_viewable of <tkinter.ttk.Notebook object .!notebook.!frame.!panedwindow.!frame.!labelframe.!notebook>> = <tkinter.ttk.Notebook object .!notebook.!frame.!panedwindow.!frame.!labelframe.!notebook>.winfo_viewable
+E        +      where <tkinter.ttk.Notebook object .!notebook.!frame.!panedwindow.!frame.!labelframe.!notebook> = <robot_lab_gui.launcher.SimulationLauncherGui object .>.setup_notebook
+
+src/robot_lab_gui/test/test_workspace_layout.py:94: AssertionError
+=========================== short test summary info ============================
+FAILED src/robot_lab_gui/test/test_workspace_layout.py::test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable
+1 failed, 4 passed in 19.27s

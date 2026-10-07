@@ -1,0 +1,29 @@
+{
+  "robot": "asset_turtlebot3_burger",
+  "backend": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": false,
+  "scope": "Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+  "owned_pid": 186424,
+  "phases": {},
+  "embedded_preview": {
+    "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+    "colors": 91,
+    "geometry_count": 5,
+    "directory": "/workspace/molar/robot_lab_runtime/registry_previews/b0c9598903894c1caba9766537d6dcc9",
+    "neutral": {
+      "dx": -0.00022220611572265625,
+      "dy": -4.76837158203125e-07,
+      "yaw": 0.0007968607305723272,
+      "tail_vx": -0.00013036417386098575,
+      "tail_wz": 0.0004945498443496899,
+      "z": 0.000989491236396134,
+      "max_tilt": 0.015591383422335266,
+      "sim_duration": 2.020833333
+    },
+    "movement_commands_during_preview": 0
+  },
+  "launch_returncode": 0
+}

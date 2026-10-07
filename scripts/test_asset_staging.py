@@ -58,3 +58,26 @@ def test_web_directory_snapshot_cannot_be_cloned_as_pinned_robot(tmp_path):
               'repository': 'https://www.urdfhub.com/#robots'}
     with pytest.raises(ValueError, match='pinned'):
         assets.checkout(source, 'Panda', tmp_path)
+
+
+def test_failed_source_refresh_preserves_previously_installed_robot(tmp_path, monkeypatch):
+    import json
+    from types import SimpleNamespace
+    import yaml
+    monkeypatch.syspath_prepend(str(Path(__file__).parent))
+    import provision_extension_assets as provisioning
+    store = tmp_path/'store'; installed = store/'installed'; installed.mkdir(parents=True)
+    original = installed/'robot.urdf'; original.write_text('<robot name="retained"><link name="base"/></robot>')
+    profile = dict(source_id='fixture', xacro=str(original), supported_modes=['display'])
+    entity = dict(id='retained', tags=['extension','fixture'], capabilities=['display'])
+    (installed/'robots.yaml').write_text(yaml.safe_dump({'robots': {'retained':profile}}))
+    (installed/'registry_robots.yaml').write_text(yaml.safe_dump([entity]))
+    failure = dict(source_id='fixture', entry='missing.urdf', status='needs integration repair',
+                   reason='Missing source geometry')
+    monkeypatch.setattr(provisioning, 'install_robots', lambda *args: ({}, [], [failure]))
+    args = SimpleNamespace(source='fixture', kind='robots', no_download=True)
+    assert provisioning.provision(args, store, installed, installed/'integration-report.json') == 0
+    assert yaml.safe_load((installed/'robots.yaml').read_text())['robots']['retained'] == profile
+    assert yaml.safe_load((installed/'registry_robots.yaml').read_text()) == [entity]
+    assert original.read_text() == '<robot name="retained"><link name="base"/></robot>'
+    assert json.loads((installed/'integration-report.json').read_text())['entries'] == [failure]

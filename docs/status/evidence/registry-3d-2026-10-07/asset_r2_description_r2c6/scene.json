@@ -1,0 +1,2406 @@
+{
+  "kind": "robots",
+  "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf",
+  "source_sha256": "6d760e0d85644f9cd74b5da444eb1a60d98f176b56cb0af45ae885986ec0e6c2",
+  "shapes": [
+    {
+      "model": "r2/waist_center",
+      "position": [
+        0.020001359964628256,
+        -0.05000005307558068,
+        0.5624999469262237
+      ],
+      "orientation": [
+        -0.49999999999730327,
+        -0.49999949019478174,
+        -0.49999999999730327,
+        -0.5000005098100917
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/d848a27241fa0e0abe182e9f0080d5798c4cd8f64600cc705667f38feddeb87b_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 0
+    },
+    {
+      "model": "r2/body_cover",
+      "position": [
+        0.020001359964628256,
+        -0.05000005307558068,
+        0.5624999469262237
+      ],
+      "orientation": [
+        -0.49999999999730327,
+        -0.49999949019478174,
+        -0.49999999999730327,
+        -0.5000005098100917
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6ff0553255551f42d9d30ad1cc78f368f98517f3fb08f90abe0705f0cceef182_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "r2/backpack",
+      "position": [
+        1.4329384884215202e-06,
+        -3.8024309473623005e-12,
+        0.5399999999980988
+      ],
+      "orientation": [
+        -1.654160533504159e-07,
+        -0.9921975018097824,
+        0.1246760498278096,
+        1.3164430208495607e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e96cd85c7c8df63aa0925e5d99dfc8a0fd2c1b549eee80dc2df9cac5897f154d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 2
+    },
+    {
+      "model": "r2/neck_lower",
+      "position": [
+        0.08636162976022099,
+        -2.2916814650109085e-07,
+        0.6141718757952916
+      ],
+      "orientation": [
+        -0.707106420692613,
+        1.6591548304319307e-06,
+        -9.381861470169705e-07,
+        -0.7071071416777293
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/836c7a5f08777292468e3d07e79e259940e55cb0da96c401996acb3a999494fd_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "r2/neck_upper",
+      "position": [
+        0.0863616297592129,
+        -6.090678446317523e-07,
+        0.6141718757972011
+      ],
+      "orientation": [
+        -0.7071064206891667,
+        1.6591513842636745e-06,
+        -3.5355391544999762e-06,
+        -0.7071071416729588
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/9ab310ed97545294dd6a1418bc6703169d13516229645681c3a756a780031d5d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "r2/head",
+      "position": [
+        0.06096208728958266,
+        1.0215554981200803e-06,
+        0.8619593157627439
+      ],
+      "orientation": [
+        -0.4999999999924296,
+        -0.4999994901947816,
+        -0.500001836603228,
+        -0.49999867320416685
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/ac0784b46203dc1dcae94a2e3a1e43a26bf16c3b9b8645c33167df6366a2a622_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "r2/left_shoulder_roll",
+      "position": [
+        -0.028799004423039558,
+        0.08210288405206093,
+        0.5443090296266055
+      ],
+      "orientation": [
+        -0.4304608105623534,
+        0.5609883154237238,
+        0.43045396590202456,
+        0.560985725101159
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b57af4865937652ed98593edfcfd54288a82347bd3dee004b499ece3a38f01fb_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 6
+    },
+    {
+      "model": "r2/left_shoulder_pitch",
+      "position": [
+        0.028857492415763603,
+        0.29727388734388105,
+        0.5443095234910339
+      ],
+      "orientation": [
+        0.5609854188269272,
+        0.560990202865017,
+        0.4304568625094608,
+        0.4304558533363849
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/3f97bcf9ea738ba9fac7a236f820de835f1235f92e7af82abab47456d69a0f39_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 7
+    },
+    {
+      "model": "r2/left_upper_arm",
+      "position": [
+        0.054418755760195274,
+        0.3956088357656875,
+        0.5443100804211076
+      ],
+      "orientation": [
+        0.6243692420422837,
+        -0.5171873571955222,
+        0.4822007683137712,
+        0.33190767720295933
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/ef8085226935b447225e21ab91c71f0cb062981c7f230496385301feaa0b4673_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 8
+    },
+    {
+      "model": "r2/left_elbow",
+      "position": [
+        0.13661466034918196,
+        0.6352295787830592,
+        0.49387898484734677
+      ],
+      "orientation": [
+        0.6459246483232787,
+        0.4606472617647629,
+        0.3534630043066714,
+        0.4956302588659981
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/f0d268bf44eaa76681c280a23b007d661661316fbb661bff9b0f13213d9d4121_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 9
+    },
+    {
+      "model": "r2/left_lower_arm",
+      "position": [
+        0.14500165251990982,
+        0.736510077811442,
+        0.5440448251667379
+      ],
+      "orientation": [
+        0.33190542017171587,
+        -0.48220416804173294,
+        -0.5171904926082261,
+        -0.6243652190340816
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/7f427d9e7bcd277ff1c619047a81ce6d32efc76ede30a4441f65eb025809e434_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 10
+    },
+    {
+      "model": "r2/left_palm",
+      "position": [
+        0.21269190252335698,
+        0.9898636650746654,
+        0.5439754320257854
+      ],
+      "orientation": [
+        0.9800389524345104,
+        -0.06582588264326575,
+        -0.15638658442954934,
+        -0.10360425230539855
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/9af4a064bf31f7a40d83a0f82ed61362ee7da3eff3f47b204b584e83ebe9fc46_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 11
+    },
+    {
+      "model": "r2/left_thumb_proximal",
+      "position": [
+        0.25212419483168585,
+        1.0154463953850985,
+        0.5451100684313015
+      ],
+      "orientation": [
+        -0.6360372331923722,
+        0.7572133989429426,
+        0.12138125617114379,
+        0.08573853920252107
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/46d769338bd127d4ff0f78f11cfd5567de6cb32ea57d309317bcbb651ccf7b66_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 12
+    },
+    {
+      "model": "r2/left_thumb_medial_prime",
+      "position": [
+        0.2616825047026005,
+        1.0161939675911182,
+        0.5479525758118305
+      ],
+      "orientation": [
+        -0.38911931611653294,
+        0.44959985614874065,
+        0.6212594122662936,
+        0.5103752245618626
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6c56e1fe30e6b917e8ddf8ad84be4cc6da6061ab6204d9f149e8898ba7bf57a7_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 13
+    },
+    {
+      "model": "r2/left_thumb_medial",
+      "position": [
+        0.2903618680924668,
+        1.0170270121963405,
+        0.5594181561825623
+      ],
+      "orientation": [
+        -0.3986001005265718,
+        -0.6525649266388075,
+        -0.6152194619352247,
+        0.19178631347733377
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/25e680f16bc2c85e9b24e90802b12029a17364afb0be02f1016a15d1c7a7698b_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 14
+    },
+    {
+      "model": "r2/left_thumb_distal",
+      "position": [
+        0.3279929340542578,
+        1.0199702039714404,
+        0.5706091077397052
+      ],
+      "orientation": [
+        0.026409414945285415,
+        -0.14624010097884113,
+        0.41746926114061045,
+        0.8964573563034983
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b69100fc5270b21d4a4f6f3b7c414f47fde2ea72e079f37f91965be89c586fc1_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 15
+    },
+    {
+      "model": "r2/left_index_proximal",
+      "position": [
+        0.2586466551025615,
+        1.0930682624455,
+        0.5577199710890111
+      ],
+      "orientation": [
+        0.07571601652455628,
+        -0.8004430685373383,
+        0.1551401635577725,
+        0.5740117668858796
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/left_index_medial",
+      "position": [
+        0.2735500480236784,
+        1.134868945632256,
+        0.5551912827809653
+      ],
+      "orientation": [
+        0.80044279041148,
+        0.07571895671560974,
+        0.5740111970203667,
+        -0.15514227201967737
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/left_middle_proximal",
+      "position": [
+        0.2362924749504396,
+        1.1046263159793006,
+        0.5487927750208129
+      ],
+      "orientation": [
+        0.026708876590980257,
+        -0.8035725227149573,
+        0.1198085061834081,
+        0.5824120178145937
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/left_middle_medial",
+      "position": [
+        0.24623414918018305,
+        1.1477368467223432,
+        0.5444976903228318
+      ],
+      "orientation": [
+        0.8035724246023542,
+        0.026711828277491412,
+        0.5824115777294484,
+        -0.11981064550139603
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/left_ring_proximal",
+      "position": [
+        0.2149651699834917,
+        1.1006483247781376,
+        0.5387762881367943
+      ],
+      "orientation": [
+        -0.02239789769450412,
+        -0.8037043432317481,
+        0.0840299171372445,
+        0.5886396485755934
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/left_little_proximal",
+      "position": [
+        0.19453770625842537,
+        1.089998792835706,
+        0.5276401288242184
+      ],
+      "orientation": [
+        -0.06733322639193318,
+        -0.7887007109773573,
+        0.10473776693042963,
+        0.6020360664494195
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/left_index_distal",
+      "position": [
+        0.2837695174553014,
+        1.1635322712460316,
+        0.5534573250840197
+      ],
+      "orientation": [
+        0.0024698365465326555,
+        -0.22893316702237712,
+        -0.6475157472210084,
+        0.7268472068085259
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/left_middle_distal",
+      "position": [
+        0.2530512972234357,
+        1.1772983535175725,
+        0.5415524893870733
+      ],
+      "orientation": [
+        -0.03706450548527501,
+        -0.18413331882846773,
+        -0.646458622684255,
+        0.7394676412714224
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/left_ring_medial",
+      "position": [
+        0.21979691883872537,
+        1.1444260277471325,
+        0.5327788365314546
+      ],
+      "orientation": [
+        0.8037199875186751,
+        -0.02280247097346999,
+        0.5887150332592181,
+        -0.08323964557277867
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/left_ring_distal",
+      "position": [
+        0.22311011805374276,
+        1.1744450240687292,
+        0.5286662982877931
+      ],
+      "orientation": [
+        -0.07646058269825945,
+        -0.13864658274454517,
+        -0.6429899595832615,
+        0.7493295778639847
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/left_little_medial",
+      "position": [
+        0.19827766307431513,
+        1.1330705484994679,
+        0.5173135085127866
+      ],
+      "orientation": [
+        0.7886888654263541,
+        -0.06772048206712306,
+        0.6021459149307642,
+        -0.10394280635656697
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/left_little_distal",
+      "position": [
+        0.20084220489092525,
+        1.1626054666689045,
+        0.5102323974420905
+      ],
+      "orientation": [
+        -0.07438763722241215,
+        -0.11234557255861738,
+        -0.6093639939156139,
+        0.7813580963131783
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/right_shoulder_roll",
+      "position": [
+        -0.045518452496895595,
+        -0.019703735812817452,
+        0.5443088367033959
+      ],
+      "orientation": [
+        0.21901153758957764,
+        0.38555610078178587,
+        -0.5927436207500324,
+        0.6723358086646407
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/7e28ff541fbe66a2ebb2ab347009c949bd972540f05d25f5f1b562c0c4d75611_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 19
+    },
+    {
+      "model": "r2/right_shoulder_pitch",
+      "position": [
+        0.028854027538710005,
+        -0.2972749010271818,
+        0.5443098662778627
+      ],
+      "orientation": [
+        -0.560983266537401,
+        -0.5609826037108183,
+        0.4304637886680462,
+        0.4304616355082181
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b10c77ac707ba5423c48cb0bb1b9664e6af60bcd54d0277215ae7faef5af58aa_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 20
+    },
+    {
+      "model": "r2/right_upper_arm",
+      "position": [
+        0.0544125826582542,
+        -0.3956105572426322,
+        0.544310417615753
+      ],
+      "orientation": [
+        -0.6243679209329195,
+        -0.5171928189432631,
+        -0.48219491020331756,
+        0.33191016241965116
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/c05159e1ce56849cafa4a0f6a1661053f6712c398e1c8d6643e73606e1b0c51a_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 21
+    },
+    {
+      "model": "r2/right_elbow",
+      "position": [
+        0.13660516434109438,
+        -0.6352327042138556,
+        0.49387966726346205
+      ],
+      "orientation": [
+        -0.4606379907101988,
+        -0.6459229406674831,
+        0.4956394912298612,
+        0.35346526133036893
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/15f4981030c3482fdfea3663d3b75015ca30af60857039d76d2a7d7be57d652f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 22
+    },
+    {
+      "model": "r2/right_lower_arm",
+      "position": [
+        0.1449889832845902,
+        -0.7365137604851995,
+        0.5440449170528932
+      ],
+      "orientation": [
+        0.3319059333059277,
+        0.4821993407381577,
+        -0.5171938460186759,
+        0.624365896625061
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/8751f2b059f766bacb51ec3baaae5152536d85785e340c37d53670db7ee151ab_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 23
+    },
+    {
+      "model": "r2/right_palm",
+      "position": [
+        0.21267705877601512,
+        -0.989867932072728,
+        0.5439761310134001
+      ],
+      "orientation": [
+        -0.1666433409402607,
+        -0.16031439733219316,
+        -0.05559285821695485,
+        0.9713077396188875
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/2565417360ab0cd9ab10c8161310c3fbb90fd5fcd47f7cacd92eb053beb58f9b_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 24
+    },
+    {
+      "model": "r2/right_thumb_proximal",
+      "position": [
+        0.25475198721851555,
+        -1.0104546784546424,
+        0.5471454554005453
+      ],
+      "orientation": [
+        0.6283896227649397,
+        0.74026054229766,
+        -0.14514816472062766,
+        0.1899284649459979
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/46d769338bd127d4ff0f78f11cfd5567de6cb32ea57d309317bcbb651ccf7b66_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 12
+    },
+    {
+      "model": "r2/right_thumb_medial_prime",
+      "position": [
+        0.26360917098814535,
+        -1.0102166461084396,
+        0.5517815783791954
+      ],
+      "orientation": [
+        0.5786380765689946,
+        0.6260772346841839,
+        0.4208107797555764,
+        -0.31003799798773374
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/fc40e6e7ece7a718edd5c7fda0dc88d36910dca1ed7bef11b4f609732d4f3129_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 25
+    },
+    {
+      "model": "r2/right_thumb_medial",
+      "position": [
+        0.2894905466607772,
+        -1.0080347663272158,
+        0.5685163677388613
+      ],
+      "orientation": [
+        -0.7022626173507355,
+        -0.4363952269062452,
+        -0.13683875801834217,
+        0.5455837025692183
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/25e680f16bc2c85e9b24e90802b12029a17364afb0be02f1016a15d1c7a7698b_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 14
+    },
+    {
+      "model": "r2/right_thumb_distal",
+      "position": [
+        0.3243612791618098,
+        -1.0070976329802155,
+        0.5867687839058067
+      ],
+      "orientation": [
+        0.2118195618954481,
+        -0.11078956560340247,
+        0.8823618800931674,
+        0.4053340078383248
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b69100fc5270b21d4a4f6f3b7c414f47fde2ea72e079f37f91965be89c586fc1_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 15
+    },
+    {
+      "model": "r2/right_index_proximal",
+      "position": [
+        0.27045312591155957,
+        -1.0861364574679506,
+        0.5625835930039831
+      ],
+      "orientation": [
+        -0.7938914055707929,
+        0.12722557077032712,
+        -0.5627943821444145,
+        -0.19186603068203967
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/right_index_medial",
+      "position": [
+        0.2903597998309783,
+        -1.1258748798749607,
+        0.5619634171676454
+      ],
+      "orientation": [
+        -0.12722265464350635,
+        -0.7938918728910529,
+        -0.19186396342154866,
+        0.5627950869039008
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/right_middle_proximal",
+      "position": [
+        0.24987418357466143,
+        -1.100648999566013,
+        0.5537018107757158
+      ],
+      "orientation": [
+        -0.8001777299262212,
+        0.07852257072885802,
+        -0.5734575662499032,
+        -0.15715032970690118
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/right_middle_medial",
+      "position": [
+        0.26505626051443365,
+        -1.142355392324887,
+        0.5512761473948323
+      ],
+      "orientation": [
+        -0.07851963151140713,
+        -0.8001780183503306,
+        -0.15714822327858202,
+        0.5734581434914275
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/right_ring_proximal",
+      "position": [
+        0.22843583342416324,
+        -1.099671035833513,
+        0.5431366561420692
+      ],
+      "orientation": [
+        -0.8034780156283959,
+        0.029526875168923494,
+        -0.5819830093993792,
+        -0.12184834350558549
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/right_little_proximal",
+      "position": [
+        0.207156172266229,
+        -1.09199728716351,
+        0.5312256241481909
+      ],
+      "orientation": [
+        -0.788234181729996,
+        -0.014567402589657441,
+        -0.5986343118716713,
+        -0.14181546525031852
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 16
+    },
+    {
+      "model": "r2/right_index_distal",
+      "position": [
+        0.30401009051857975,
+        -1.1531240838111962,
+        0.5615381537370139
+      ],
+      "orientation": [
+        -0.710771413508656,
+        0.6460414358063951,
+        0.2748114118745962,
+        -0.04373955719493283
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/right_middle_distal",
+      "position": [
+        0.2754668275588489,
+        -1.1709540616452578,
+        0.5496128353622265
+      ],
+      "orientation": [
+        -0.7262223348081024,
+        0.6475068330440779,
+        0.2309074034358159,
+        -0.004218130584227264
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/right_ring_medial",
+      "position": [
+        0.2386669847786269,
+        -1.142723655966808,
+        0.5389416660800699
+      ],
+      "orientation": [
+        -0.03039952633506324,
+        -0.8035027374965826,
+        -0.12199034320099889,
+        0.5818741924160266
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/right_ring_distal",
+      "position": [
+        0.24568263142168772,
+        -1.1722454526296386,
+        0.5360651014661275
+      ],
+      "orientation": [
+        -0.7389642322298142,
+        0.6465571244398466,
+        0.18614083431366873,
+        0.035317674358435025
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/right_little_medial",
+      "position": [
+        0.21631845552360918,
+        -1.134640537546396,
+        0.5226577619706094
+      ],
+      "orientation": [
+        0.013700206107380803,
+        -0.7883020046413861,
+        -0.14197682847013388,
+        0.5985272207749193
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 17
+    },
+    {
+      "model": "r2/right_little_distal",
+      "position": [
+        0.22260116404295557,
+        -1.1638816235232319,
+        0.5167826564774107
+      ],
+      "orientation": [
+        -0.7716875681987811,
+        0.6152317680616928,
+        0.1581166637991181,
+        0.031421159815819555
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 18
+    },
+    {
+      "model": "r2/pelvis",
+      "position": [
+        -2.60051799747652e-07,
+        6.900708015558068e-13,
+        -0.09799999999965497
+      ],
+      "orientation": [
+        -1.3267948966728614e-06,
+        -2.6535897933503943e-06,
+        3.520769395695991e-12,
+        -0.9999999999955991
+      ],
+      "rgba": [
+        0.878,
+        0.49,
+        0.008,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/820fb5a690b26bd96749120ca183332f674ef4454486b49a154687bf9ee1a679_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 26
+    },
+    {
+      "model": "r2/left_hip_roll",
+      "position": [
+        -8.846785831752079e-08,
+        0.11049000000061787,
+        -0.1277179999994281
+      ],
+      "orientation": [
+        0.4304590626399424,
+        -0.5609828011002747,
+        0.5609882462034154,
+        0.4304596146939317
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/98fbd21c7109475c28adf2bc6fadb9dd547dfccb2c6db466524b3dcfa43241e2_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 27
+    },
+    {
+      "model": "r2/left_hip_pitch",
+      "position": [
+        -0.0022860007667191854,
+        0.1973580140957003,
+        -0.203409986802005
+      ],
+      "orientation": [
+        2.1169230633444336e-06,
+        -0.7071049048096053,
+        2.09797743649931e-06,
+        0.7071086575522296
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 28
+    },
+    {
+      "model": "r2/left_upper_leg",
+      "position": [
+        -0.0062867641640027986,
+        0.24735804329968553,
+        -0.4034099642316027
+      ],
+      "orientation": [
+        -1.8668978100100375e-06,
+        -0.7071046737300544,
+        0.7071088886311265,
+        2.1169230130513306e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 29
+    },
+    {
+      "model": "r2/left_knee",
+      "position": [
+        0.0437123632221936,
+        0.2493578007773011,
+        -0.5604102452206814
+      ],
+      "orientation": [
+        0.4999975946109984,
+        0.49999958839739467,
+        0.5000007517929151,
+        -0.5000020651879065
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 28
+    },
+    {
+      "model": "r2/left_lower_leg",
+      "position": [
+        -0.006288776799733359,
+        0.24535810221644172,
+        -0.7604099662403117
+      ],
+      "orientation": [
+        -2.116925490069921e-06,
+        0.7071079504476316,
+        0.7071056119178968,
+        -1.8668950012568075e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 29
+    },
+    {
+      "model": "r2/left_ankle_pitch",
+      "position": [
+        -0.056289667946693635,
+        0.2433583230915408,
+        -0.917409685246307
+      ],
+      "orientation": [
+        -0.4999987616045478,
+        0.49999842140512785,
+        -0.5000015651863076,
+        -0.5000012517959744
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 28
+    },
+    {
+      "model": "r2/left_ankle_roll",
+      "position": [
+        -0.00549086511611052,
+        0.24660828774215598,
+        -1.1420529713617114
+      ],
+      "orientation": [
+        9.476631797622481e-07,
+        -0.7071070122641238,
+        -0.7071065501073097,
+        1.1597857933487109e-06
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "cylinder",
+      "size": [
+        0.066,
+        0.06
+      ],
+      "render_mesh": 30
+    },
+    {
+      "model": "r2/left_leg_foot",
+      "position": [
+        -0.0054909382307287286,
+        0.24660843208780675,
+        -1.1665847713622042
+      ],
+      "orientation": [
+        -5.163391292818288e-06,
+        -1.509799764820574e-06,
+        0.9999999999782216,
+        -3.823187758351829e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/cfc70321bca489f952304b86703e9941f90306c2360e4908285e19a9e7a3eadc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 31
+    },
+    {
+      "model": "r2/left_leg/gripper/jaw_left",
+      "position": [
+        -0.005492737715541509,
+        0.26565709045146196,
+        -1.3420449170115984
+      ],
+      "orientation": [
+        -5.252842856080797e-06,
+        -1.733584944429989e-06,
+        0.9990480648841797,
+        -0.04362297583358982
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 32
+    },
+    {
+      "model": "r2/left_leg/gripper/jaw_right",
+      "position": [
+        -0.005492762616409623,
+        0.22755709045258393,
+        -1.3420446256838399
+      ],
+      "orientation": [
+        -0.043615336716755396,
+        0.9990483984122565,
+        -2.3865690494950798e-06,
+        -5.224319102395403e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 32
+    },
+    {
+      "model": "r2/right_hip_roll",
+      "position": [
+        -7.470732670967878e-07,
+        -0.11048999999840067,
+        -0.12771799999904482
+      ],
+      "orientation": [
+        0.4304572085740072,
+        0.5609852173684157,
+        0.5609858299407646,
+        -0.43046146875934954
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/98fbd21c7109475c28adf2bc6fadb9dd547dfccb2c6db466524b3dcfa43241e2_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 27
+    },
+    {
+      "model": "r2/right_hip_pitch",
+      "position": [
+        -0.0022874076843172756,
+        -0.1973579943999189,
+        -0.20340998680009703
+      ],
+      "orientation": [
+        0.707104904811741,
+        1.1597929808135343e-06,
+        0.7071086575544411,
+        -1.1787360814086156e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 28
+    },
+    {
+      "model": "r2/right_upper_leg",
+      "position": [
+        0.0017113655206990172,
+        -0.2473580129845266,
+        -0.4034100066860803
+      ],
+      "orientation": [
+        -1.6547640128705374e-06,
+        -0.7071056119185253,
+        0.7071079504482353,
+        1.8668994176342038e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 29
+    },
+    {
+      "model": "r2/right_knee",
+      "position": [
+        0.05171059021392857,
+        -0.24535813124148056,
+        -0.560410255103367
+      ],
+      "orientation": [
+        0.49999843480304734,
+        0.49999907500190904,
+        0.5000012383980232,
+        -0.5000012517906139
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 28
+    },
+    {
+      "model": "r2/right_lower_leg",
+      "position": [
+        0.0017095915234921766,
+        -0.24935797320040462,
+        -0.7604100085888714
+      ],
+      "orientation": [
+        -1.8669016131900307e-06,
+        0.7071070122634956,
+        0.7071065501051229,
+        -1.6547615359074896e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 29
+    },
+    {
+      "model": "r2/right_ankle_pitch",
+      "position": [
+        -0.04829119170329904,
+        -0.2513578934188682,
+        -0.9174097601677422
+      ],
+      "orientation": [
+        -0.49999824820821326,
+        0.49999926159665464,
+        -0.5000007517882017,
+        -0.5000017383997287
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 28
+    },
+    {
+      "model": "r2/right_ankle_roll",
+      "position": [
+        0.0025077493275441876,
+        -0.24810780600498464,
+        -1.1420530132556663
+      ],
+      "orientation": [
+        6.976399595237659e-07,
+        -0.7071060740784807,
+        -0.7071074882929278,
+        9.476511083628538e-07
+      ],
+      "rgba": [
+        0.322,
+        0.322,
+        0.322,
+        1.0
+      ],
+      "type": "cylinder",
+      "size": [
+        0.066,
+        0.06
+      ],
+      "render_mesh": 30
+    },
+    {
+      "model": "r2/right_leg_foot",
+      "position": [
+        0.0025076922462731062,
+        -0.24810766297388953,
+        -1.1665848132562093
+      ],
+      "orientation": [
+        -4.836591479683945e-06,
+        -2.836593308797042e-06,
+        0.999999999976869,
+        -3.8499844723264516e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/cfc70321bca489f952304b86703e9941f90306c2360e4908285e19a9e7a3eadc_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 31
+    },
+    {
+      "model": "r2/right_leg/gripper/jaw_left",
+      "position": [
+        0.002505956893066147,
+        -0.2290590140158578,
+        -1.3420449599273614
+      ],
+      "orientation": [
+        -4.868480465707037e-06,
+        -3.0448609518174408e-06,
+        0.9990480637140309,
+        -0.04362300260495311
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 32
+    },
+    {
+      "model": "r2/right_leg/gripper/jaw_right",
+      "position": [
+        0.002506033093780722,
+        -0.2671590140146521,
+        -1.3420446665582362
+      ],
+      "orientation": [
+        -0.04361530994668596,
+        0.9990483995846242,
+        -1.046783573488419e-06,
+        -4.95570384359198e-06
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 32
+    },
+    {
+      "model": "r2/objects/argos_support/argos_support_link",
+      "position": [
+        -0.5999976064514441,
+        1.5921475245212255e-06,
+        0.40200318430105547
+      ],
+      "orientation": [
+        -9.338608738445478e-07,
+        0.7103514046977359,
+        -9.424906186015023e-07,
+        -0.7038472006353319
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "type": "box",
+      "size": [
+        1.0,
+        0.1,
+        0.4
+      ],
+      "render_mesh": 33
+    }
+  ],
+  "bounds": {
+    "min_xyz": [
+      -0.8045883963530511,
+      -1.179284666901967,
+      -1.3981470868062806
+    ],
+    "max_xyz": [
+      0.4207345952872566,
+      1.1843249330062675,
+      1.0029102299745625
+    ],
+    "center_xyz": [
+      -0.19192690053289727,
+      0.002520133052150264,
+      -0.19761842841585908
+    ],
+    "span_m": 3.5851280330118676,
+    "raw_min_xyz": [
+      -0.8045883963530511,
+      -1.179284666901967,
+      -1.3981470868062806
+    ],
+    "raw_max_xyz": [
+      0.4207345952872566,
+      1.1843249330062675,
+      1.0029102299745625
+    ],
+    "remote_geometry_count": 0
+  },
+  "notes": [
+    "URDF nominal joint pose; static inspection, no controller or plant"
+  ],
+  "meshes": [
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/e70124168e6615bb5587.stl",
+      "sha256": "d848a27241fa0e0abe182e9f0080d5798c4cd8f64600cc705667f38feddeb87b",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/d848a27241fa0e0abe182e9f0080d5798c4cd8f64600cc705667f38feddeb87b_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/41af0e81b5da71c2bc93.stl",
+      "sha256": "6ff0553255551f42d9d30ad1cc78f368f98517f3fb08f90abe0705f0cceef182",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6ff0553255551f42d9d30ad1cc78f368f98517f3fb08f90abe0705f0cceef182_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/551b6fe6341b28d3bfdb.stl",
+      "sha256": "e96cd85c7c8df63aa0925e5d99dfc8a0fd2c1b549eee80dc2df9cac5897f154d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e96cd85c7c8df63aa0925e5d99dfc8a0fd2c1b549eee80dc2df9cac5897f154d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/3893d758624a49edf7d4.stl",
+      "sha256": "836c7a5f08777292468e3d07e79e259940e55cb0da96c401996acb3a999494fd",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/836c7a5f08777292468e3d07e79e259940e55cb0da96c401996acb3a999494fd_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/b74791c0328e43e0040c.stl",
+      "sha256": "9ab310ed97545294dd6a1418bc6703169d13516229645681c3a756a780031d5d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/9ab310ed97545294dd6a1418bc6703169d13516229645681c3a756a780031d5d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/7e20cc93e8d70123a4fd.stl",
+      "sha256": "ac0784b46203dc1dcae94a2e3a1e43a26bf16c3b9b8645c33167df6366a2a622",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/ac0784b46203dc1dcae94a2e3a1e43a26bf16c3b9b8645c33167df6366a2a622_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/d27aa1f440e4c4e8b763.stl",
+      "sha256": "b57af4865937652ed98593edfcfd54288a82347bd3dee004b499ece3a38f01fb",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b57af4865937652ed98593edfcfd54288a82347bd3dee004b499ece3a38f01fb_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/5f31554ff6954f77e352.stl",
+      "sha256": "3f97bcf9ea738ba9fac7a236f820de835f1235f92e7af82abab47456d69a0f39",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/3f97bcf9ea738ba9fac7a236f820de835f1235f92e7af82abab47456d69a0f39_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/36ed81a91b97c62bf0ee.stl",
+      "sha256": "ef8085226935b447225e21ab91c71f0cb062981c7f230496385301feaa0b4673",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/ef8085226935b447225e21ab91c71f0cb062981c7f230496385301feaa0b4673_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/7faf75070865607a42d8.stl",
+      "sha256": "f0d268bf44eaa76681c280a23b007d661661316fbb661bff9b0f13213d9d4121",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/f0d268bf44eaa76681c280a23b007d661661316fbb661bff9b0f13213d9d4121_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/13742c459c6700398bf8.stl",
+      "sha256": "7f427d9e7bcd277ff1c619047a81ce6d32efc76ede30a4441f65eb025809e434",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/7f427d9e7bcd277ff1c619047a81ce6d32efc76ede30a4441f65eb025809e434_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/2951677ff11f34331901.stl",
+      "sha256": "9af4a064bf31f7a40d83a0f82ed61362ee7da3eff3f47b204b584e83ebe9fc46",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/9af4a064bf31f7a40d83a0f82ed61362ee7da3eff3f47b204b584e83ebe9fc46_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8323c49bd1a95fe03943.stl",
+      "sha256": "46d769338bd127d4ff0f78f11cfd5567de6cb32ea57d309317bcbb651ccf7b66",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/46d769338bd127d4ff0f78f11cfd5567de6cb32ea57d309317bcbb651ccf7b66_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/afcd061df5de37ca7d76.stl",
+      "sha256": "6c56e1fe30e6b917e8ddf8ad84be4cc6da6061ab6204d9f149e8898ba7bf57a7",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6c56e1fe30e6b917e8ddf8ad84be4cc6da6061ab6204d9f149e8898ba7bf57a7_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/91eb7b7a22f73d4ba64e.stl",
+      "sha256": "25e680f16bc2c85e9b24e90802b12029a17364afb0be02f1016a15d1c7a7698b",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/25e680f16bc2c85e9b24e90802b12029a17364afb0be02f1016a15d1c7a7698b_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/3006016c015247a5700b.stl",
+      "sha256": "b69100fc5270b21d4a4f6f3b7c414f47fde2ea72e079f37f91965be89c586fc1",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b69100fc5270b21d4a4f6f3b7c414f47fde2ea72e079f37f91965be89c586fc1_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/58181093c9322468fcb1.stl",
+      "sha256": "7e28ff541fbe66a2ebb2ab347009c949bd972540f05d25f5f1b562c0c4d75611",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/7e28ff541fbe66a2ebb2ab347009c949bd972540f05d25f5f1b562c0c4d75611_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/c03c320f8cdb4b79fe09.stl",
+      "sha256": "b10c77ac707ba5423c48cb0bb1b9664e6af60bcd54d0277215ae7faef5af58aa",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b10c77ac707ba5423c48cb0bb1b9664e6af60bcd54d0277215ae7faef5af58aa_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/e6d2caef9b6125283aaf.stl",
+      "sha256": "c05159e1ce56849cafa4a0f6a1661053f6712c398e1c8d6643e73606e1b0c51a",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/c05159e1ce56849cafa4a0f6a1661053f6712c398e1c8d6643e73606e1b0c51a_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/d2187265ec338d6aa513.stl",
+      "sha256": "15f4981030c3482fdfea3663d3b75015ca30af60857039d76d2a7d7be57d652f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/15f4981030c3482fdfea3663d3b75015ca30af60857039d76d2a7d7be57d652f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/5ea5e6d6ac1d02b013fa.stl",
+      "sha256": "8751f2b059f766bacb51ec3baaae5152536d85785e340c37d53670db7ee151ab",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/8751f2b059f766bacb51ec3baaae5152536d85785e340c37d53670db7ee151ab_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/689fef50b3f6f05a8064.stl",
+      "sha256": "2565417360ab0cd9ab10c8161310c3fbb90fd5fcd47f7cacd92eb053beb58f9b",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/2565417360ab0cd9ab10c8161310c3fbb90fd5fcd47f7cacd92eb053beb58f9b_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8323c49bd1a95fe03943.stl",
+      "sha256": "46d769338bd127d4ff0f78f11cfd5567de6cb32ea57d309317bcbb651ccf7b66",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/46d769338bd127d4ff0f78f11cfd5567de6cb32ea57d309317bcbb651ccf7b66_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8a023f10ed319ab1b968.stl",
+      "sha256": "fc40e6e7ece7a718edd5c7fda0dc88d36910dca1ed7bef11b4f609732d4f3129",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/fc40e6e7ece7a718edd5c7fda0dc88d36910dca1ed7bef11b4f609732d4f3129_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/91eb7b7a22f73d4ba64e.stl",
+      "sha256": "25e680f16bc2c85e9b24e90802b12029a17364afb0be02f1016a15d1c7a7698b",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/25e680f16bc2c85e9b24e90802b12029a17364afb0be02f1016a15d1c7a7698b_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/3006016c015247a5700b.stl",
+      "sha256": "b69100fc5270b21d4a4f6f3b7c414f47fde2ea72e079f37f91965be89c586fc1",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b69100fc5270b21d4a4f6f3b7c414f47fde2ea72e079f37f91965be89c586fc1_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/95b1324b9e5911542a75.stl",
+      "sha256": "78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/78b3d3b61aa22a8b9eace874176da0175c64796e96461f016e7f85756bd20ccc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/82e3bef54d45176ce1ce.stl",
+      "sha256": "e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/e6e314d0672d6f6a3042ed0a408c261eb4567414291d6cfd2397d20da9f3b782_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/af123087c86c154af1f3.stl",
+      "sha256": "0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0549f55cf1814c7b5508300b0df4344e48da22209d2db1cb5a6c22125019644f_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/ea563bc902db01a00bf1.stl",
+      "sha256": "820fb5a690b26bd96749120ca183332f674ef4454486b49a154687bf9ee1a679",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/820fb5a690b26bd96749120ca183332f674ef4454486b49a154687bf9ee1a679_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/d5cd33bf8df6075cb67f.stl",
+      "sha256": "98fbd21c7109475c28adf2bc6fadb9dd547dfccb2c6db466524b3dcfa43241e2",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/98fbd21c7109475c28adf2bc6fadb9dd547dfccb2c6db466524b3dcfa43241e2_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/182a0b3bf944153fe9ab.stl",
+      "sha256": "6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8ec483fb2a2c2465372e.stl",
+      "sha256": "0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/182a0b3bf944153fe9ab.stl",
+      "sha256": "6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8ec483fb2a2c2465372e.stl",
+      "sha256": "0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/182a0b3bf944153fe9ab.stl",
+      "sha256": "6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/beb24956eb8f9faacbe4.stl",
+      "sha256": "cfc70321bca489f952304b86703e9941f90306c2360e4908285e19a9e7a3eadc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/cfc70321bca489f952304b86703e9941f90306c2360e4908285e19a9e7a3eadc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/9be593bb3a6b06640bd3.stl",
+      "sha256": "b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/9be593bb3a6b06640bd3.stl",
+      "sha256": "b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/d5cd33bf8df6075cb67f.stl",
+      "sha256": "98fbd21c7109475c28adf2bc6fadb9dd547dfccb2c6db466524b3dcfa43241e2",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/98fbd21c7109475c28adf2bc6fadb9dd547dfccb2c6db466524b3dcfa43241e2_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/182a0b3bf944153fe9ab.stl",
+      "sha256": "6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8ec483fb2a2c2465372e.stl",
+      "sha256": "0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/182a0b3bf944153fe9ab.stl",
+      "sha256": "6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/8ec483fb2a2c2465372e.stl",
+      "sha256": "0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/0c9656056a36d3a1afcb38282e6d4637299f0abd34905b8d60b32b0c7c5f05c1_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/182a0b3bf944153fe9ab.stl",
+      "sha256": "6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/6151d097dc415ab95477b34d1257d4dd4c0fa1a19688a5e368600233c5dc606d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/beb24956eb8f9faacbe4.stl",
+      "sha256": "cfc70321bca489f952304b86703e9941f90306c2360e4908285e19a9e7a3eadc",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/cfc70321bca489f952304b86703e9941f90306c2360e4908285e19a9e7a3eadc_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/9be593bb3a6b06640bd3.stl",
+      "sha256": "b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/9be593bb3a6b06640bd3.stl",
+      "sha256": "b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/meshes/b2ba34cf69daf8c6433485017d3a52d44a2380793a5b2ead42d3988dc9d7ea7d_1000000000f.stl"
+    }
+  ],
+  "scope": "Static source geometry in metres; scripted actors, physics, policies and missions are not executed",
+  "asset_id": "asset_r2_description_r2c6",
+  "render_geometry": {
+    "path": "/workspace/molar/robot_lab_runtime/registry_previews/b6fe074cc3a847048a4e6858a7f01369/geometry.npz",
+    "meshes": 34,
+    "triangles": 346502,
+    "scope": "Full source geometry; colors retained where declared; embedded textures are not reconstructed"
+  },
+  "preparation_wall_s": 1.4124937770011456
+}

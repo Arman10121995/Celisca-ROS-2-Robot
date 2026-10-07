@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "robots",
+  "asset_id": "px4_x500",
+  "profile": {
+    "package": "robot_lab_adapter",
+    "name": "px4_x500",
+    "type": "drone",
+    "supported_modes": [
+      "display",
+      "flight"
+    ],
+    "default_mode": "flight",
+    "supported_simulators": [
+      "gazebo"
+    ],
+    "features": [
+      "flight_controller"
+    ],
+    "drive": {
+      "type": "px4",
+      "max_linear_velocity": 1.0,
+      "max_angular_velocity": 1.0
+    },
+    "notes": "Real upstream X500 with PX4 v1.16.2 and Gazebo Harmonic. Explicit takeoff/land and 3D setpoints; no obstacle-aware planner or SLAM qualification."
+  },
+  "output": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14",
+  "scope": "Embedded static inspection; no ROS nodes or simulator"
+}

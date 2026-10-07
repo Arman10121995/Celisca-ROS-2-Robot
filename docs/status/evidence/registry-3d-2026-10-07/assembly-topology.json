@@ -1,0 +1,84 @@
+[
+  {
+    "component": "asset_r2_description_r2_left_forearm",
+    "parent": "asset_r2_description_r2c6",
+    "links": 21,
+    "joints": 19,
+    "virtual_attachment_frames": [
+      "r2/robot_world",
+      "r2/world_ref"
+    ],
+    "missing_links": [],
+    "missing_joints": [],
+    "contained": true,
+    "scope": "Authored internal link/joint topology containment; virtual standalone mount excluded. Not controller or physical equivalence."
+  },
+  {
+    "component": "asset_r2_description_r2_left_gripper",
+    "parent": "asset_r2_description_r2c6",
+    "links": 10,
+    "joints": 8,
+    "virtual_attachment_frames": [
+      "r2/robot_world",
+      "r2/world_ref"
+    ],
+    "missing_links": [],
+    "missing_joints": [],
+    "contained": true,
+    "scope": "Authored internal link/joint topology containment; virtual standalone mount excluded. Not controller or physical equivalence."
+  },
+  {
+    "component": "asset_r2_description_r2c_sim_legs_control",
+    "parent": "asset_r2_description_r2c6",
+    "links": 32,
+    "joints": 31,
+    "virtual_attachment_frames": [
+      "r2/robot_world",
+      "r2/world_ref"
+    ],
+    "missing_links": [],
+    "missing_joints": [],
+    "contained": true,
+    "scope": "Authored internal link/joint topology containment; virtual standalone mount excluded. Not controller or physical equivalence."
+  },
+  {
+    "component": "asset_r2_description_r2c_sim_upperbody_control",
+    "parent": "asset_r2_description_r2c6",
+    "links": 72,
+    "joints": 71,
+    "virtual_attachment_frames": [
+      "r2/robot_world",
+      "r2/world_ref"
+    ],
+    "missing_links": [],
+    "missing_joints": [],
+    "contained": true,
+    "scope": "Authored internal link/joint topology containment; virtual standalone mount excluded. Not controller or physical equivalence."
+  },
+  {
+    "component": "asset_val_description_forearm_left",
+    "parent": "asset_val_description_valkyrie_sim",
+    "links": 16,
+    "joints": 15,
+    "virtual_attachment_frames": [
+      "world"
+    ],
+    "missing_links": [],
+    "missing_joints": [],
+    "contained": true,
+    "scope": "Authored internal link/joint topology containment; virtual standalone mount excluded. Not controller or physical equivalence."
+  },
+  {
+    "component": "asset_val_description_forearm_right",
+    "parent": "asset_val_description_valkyrie_sim",
+    "links": 16,
+    "joints": 15,
+    "virtual_attachment_frames": [
+      "world"
+    ],
+    "missing_links": [],
+    "missing_joints": [],
+    "contained": true,
+    "scope": "Authored internal link/joint topology containment; virtual standalone mount excluded. Not controller or physical equivalence."
+  }
+]

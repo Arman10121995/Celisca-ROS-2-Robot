@@ -9,16 +9,16 @@ import tkinter as tk
 from tkinter import ttk
 
 # -- Color palette ----------------------------------------------------------
-BG_DARK = "#1e1e2e"
-BG_CARD = "#2a2a3e"
-BG_CARD_LIGHT = "#313244"
-BG_HOVER = "#3a3a4e"
-BG_INPUT = "#181825"
+BG_DARK = "#171d29"
+BG_CARD = "#202938"
+BG_CARD_LIGHT = "#2b3749"
+BG_HOVER = "#293548"
+BG_INPUT = "#111824"
 FG_PRIMARY = "#cdd6f4"
 FG_SECONDARY = "#a6adc8"
 FG_MUTED = "#7f849c"
 FG_DISABLED = "#585b70"
-ACCENT = "#89b4fa"
+ACCENT = "#71c7ce"
 ACCENT_HOVER = "#b4c7fb"
 ACCENT_ACTIVE = "#74a7f5"
 ACCENT_GREEN = "#a6e3a1"
@@ -97,6 +97,14 @@ def apply(root):
     # Frames
     style.configure("TFrame", background=BG_DARK)
     style.configure("Card.TFrame", background=BG_CARD)
+    style.configure('Nav.TButton', background=BG_DARK, foreground=FG_SECONDARY,
+                    padding=(10, 8), anchor='w', borderwidth=0)
+    style.configure('NavActive.TButton', background=BG_CARD_LIGHT, foreground=ACCENT,
+                    padding=(10, 8), anchor='w', borderwidth=0)
+    style.map('Nav.TButton', background=[('active', BG_CARD)])
+    style.map('NavActive.TButton', background=[('active', BG_CARD_LIGHT)])
+    style.configure('Workspace.TNotebook', borderwidth=0, tabmargins=0)
+    style.layout('Workspace.TNotebook.Tab', [])
 
     # Labels
     style.configure("TLabel", background=BG_DARK, foreground=FG_PRIMARY, font=fonts["body"])
@@ -111,6 +119,8 @@ def apply(root):
                     font=fonts["mono"])
     style.configure("MonoCard.TLabel", background=BG_CARD, foreground=FG_PRIMARY,
                     font=fonts["mono"])
+    style.configure('Tag.TLabel', foreground=ACCENT, font=fonts['small_bold'])
+    style.configure('MonoSmall.TLabel', font=fonts['mono_small'])
 
     # Buttons
     style.configure("TButton", background=BG_HOVER, foreground=FG_PRIMARY,

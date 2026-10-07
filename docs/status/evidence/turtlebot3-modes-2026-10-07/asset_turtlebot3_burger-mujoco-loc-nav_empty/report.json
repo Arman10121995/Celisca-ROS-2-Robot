@@ -1,0 +1,181 @@
+{
+  "robot": "asset_turtlebot3_burger",
+  "backend": "mujoco",
+  "mode": "loc",
+  "map": "nav_empty",
+  "passed": true,
+  "scope": "Actual GUI Launch/autofill/Run/Stop; workflow motion sent through its /key_vel channel and independent engine truth. Sensor/Drive keyboard widgets separately recorded.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+  "algorithm_selection": {
+    "localizer": "amcl",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion"
+  },
+  "owned_pid": 45981,
+  "check_command": [
+    "python3",
+    "scripts/sim_workflow_check.py",
+    "--mode",
+    "loc",
+    "--base-frame",
+    "base_footprint",
+    "--timeout",
+    "300",
+    "--out",
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/modes-final/workflows/asset_turtlebot3_burger-mujoco-loc-nav_empty/workflow.json"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "mode": "loc",
+    "base_frame": "base_footprint",
+    "command_topic": "/key_vel",
+    "phases": {
+      "forward": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.4866,
+        "yaw_change_rad": 0.0004,
+        "tail_speed_mps": 0.17975824300831567,
+        "tail_yaw_speed_rps": 0.0001189351041641514,
+        "end": {
+          "x": -3.5133760894702255,
+          "y": -3.9999119005268198,
+          "z": -7.646621993436598e-05,
+          "yaw": 0.00034972282009577065
+        }
+      },
+      "reverse": {
+        "completed": true,
+        "sim_s": 3.004,
+        "distance_m": 0.4863,
+        "yaw_change_rad": 0.0008,
+        "tail_speed_mps": 0.17976912319209842,
+        "tail_yaw_speed_rps": 0.00020914955301177187,
+        "end": {
+          "x": -3.951574127220998,
+          "y": -4.000652957181354,
+          "z": 5.71316125004371e-05,
+          "yaw": 0.0011726914166333775
+        }
+      },
+      "turn": {
+        "completed": true,
+        "sim_s": 3.004,
+        "distance_m": 0.0035,
+        "yaw_change_rad": 1.1376,
+        "tail_speed_mps": 0.0014705893218280393,
+        "tail_yaw_speed_rps": 0.39217331308024006,
+        "end": {
+          "x": -4.007355258890845,
+          "y": -4.002344410107528,
+          "z": -6.676076495573709e-05,
+          "yaw": 1.1388406041531132
+        }
+      },
+      "turn_reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0037,
+        "yaw_change_rad": -1.1371,
+        "tail_speed_mps": 0.0022427365053521637,
+        "tail_yaw_speed_rps": 0.39422521699436774,
+        "end": {
+          "x": -4.004177082356241,
+          "y": -4.000712798890104,
+          "z": -7.092635908850878e-05,
+          "yaw": 0.04307556666783333
+        }
+      },
+      "publisher_loss": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.1099,
+        "yaw_change_rad": 0.0001,
+        "tail_speed_mps": 1.519232349232402e-06,
+        "tail_yaw_speed_rps": 3.763450922462941e-07,
+        "end": {
+          "x": -3.5858022333210835,
+          "y": -3.9992675372444877,
+          "z": -1.444589303721196e-05,
+          "yaw": 0.0036362467135649863
+        }
+      },
+      "post_reset_idle": {
+        "completed": true,
+        "sim_s": 2.036,
+        "distance_m": 0.0,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 1.1906787783891998e-06,
+        "tail_yaw_speed_rps": 4.919698680251709e-07,
+        "end": {
+          "x": -4.000000390637254,
+          "y": -4.000004643558957,
+          "z": -8.126618640132373e-05,
+          "yaw": -8.00403102613492e-07
+        }
+      },
+      "post_reset_drive": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.3076,
+        "yaw_change_rad": 0.0002,
+        "tail_speed_mps": 0.17976306192720154,
+        "tail_yaw_speed_rps": 0.00010471500870089739,
+        "end": {
+          "x": -3.692415273506834,
+          "y": -3.999959638297765,
+          "z": -8.36140977242565e-05,
+          "yaw": 0.00023402551234563213
+        }
+      }
+    },
+    "checks": {
+      "ready": true,
+      "settled": true,
+      "forward": true,
+      "reverse": true,
+      "turn": true,
+      "turn_reverse": true,
+      "publisher_loss": true,
+      "localization": true,
+      "reset_service": true,
+      "reset_spawn": true,
+      "reset_stopped": true,
+      "reset_localization": true,
+      "reset_drive_resumes": true,
+      "reset_estimator_tracks_motion": true,
+      "monotonic_clock": true
+    },
+    "initial_truth": {
+      "x": -4.000001393038132,
+      "y": -4.000006290541025,
+      "z": -8.126608312114142e-05,
+      "yaw": -1.5999712425434754e-06
+    },
+    "localization_error_m": 0.07414285431718029,
+    "sensor_messages_during_drive": {
+      "/scan": 105
+    },
+    "reset_response": "Simulation reset successfully",
+    "post_reset_localization_error_m": 0.004430518360267002,
+    "post_reset_drive_localization_error_m": 0.014913214515600952,
+    "map_updates_after_reset": 0,
+    "cloud_updates_after_reset": 0,
+    "clock_backward_jumps": 0,
+    "truth_samples": 1337,
+    "sensor_counts": {
+      "/scan": 150
+    },
+    "scan_geometry": {
+      "frame": "base_scan",
+      "samples": 360,
+      "finite": 193,
+      "min_m": 0.8558090925216675,
+      "max_m": 3.488386631011963,
+      "range_min": 0.11999999731779099,
+      "range_max": 3.5
+    },
+    "passed": true
+  },
+  "launch_returncode": 0
+}

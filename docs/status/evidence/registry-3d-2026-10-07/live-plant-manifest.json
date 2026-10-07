@@ -1,0 +1,37 @@
+{
+  "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet",
+  "producer_returncode": 0,
+  "artifacts": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet/executed.urdf",
+      "bytes": 9927,
+      "sha256": "dc64421f1bb69c95d5b57f5d4b9d9ecdb5f7b496d019022856138aaf4a7f92e5"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet/gui-output.log",
+      "bytes": 5389,
+      "sha256": "86fdd39f51687b4ee8354e606dc4d3d79f885d4ff9c82e9f9a9deb6002780973"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet/producer.py",
+      "bytes": 11993,
+      "sha256": "e6336dc7e9dee4eb9a557083f279f7227a73a094bfa04f8a20fe53f2a396cb6f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet/report.json",
+      "bytes": 6042,
+      "sha256": "102718e57348c7868e63e25a9ad6326ccdf32e50a6041f609987ebc87bab7708"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet/source-manifest.json",
+      "bytes": 34110,
+      "sha256": "24febdff35e8aaa56311a8b159e8bc80f85d5de1fba197e05ae1dfaf2855a9f6"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/normal-current-with-preview/asset_turtlebot3_burger-pybullet/trace.json",
+      "bytes": 613436,
+      "sha256": "c0e09444482d640fe38c23ba41d094830d6dabe40945ab8b8b789a7e8bee4216"
+    }
+  ],
+  "scope": "Actual normal GUI embedded preview while PyBullet runs; independent neutral body truth, no preview movement commands, then original Drive/Stop/watchdog and LDS/joint/TF acceptance"
+}

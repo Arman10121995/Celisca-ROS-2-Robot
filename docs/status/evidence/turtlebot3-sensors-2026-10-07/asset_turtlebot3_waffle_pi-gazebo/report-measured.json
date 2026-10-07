@@ -1,0 +1,206 @@
+{
+  "robot": "asset_turtlebot3_waffle_pi",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_waffle_pi simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+  "owned_pid": 45541,
+  "phases": {
+    "armed_neutral": {
+      "dx": 0.0,
+      "dy": 0.0,
+      "yaw": 0.0,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.152867775035066e-06,
+      "max_tilt": 0.0026000265542205523,
+      "sim_duration": 0.98
+    },
+    "forward": {
+      "dx": 0.3896997874650179,
+      "dy": 9.889584169364696e-07,
+      "yaw": 5.202352681422837e-07,
+      "tail_vx": 0.1799999731529878,
+      "tail_wz": 2.1614748822484644e-07,
+      "z": 7.206897627239841e-06,
+      "max_tilt": 0.002600249748681594,
+      "sim_duration": 2.5
+    },
+    "forward_stop": {
+      "dx": 0.05310013410599357,
+      "dy": 1.4806268122669053e-07,
+      "yaw": 6.26305844433773e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206790187641029e-06,
+      "max_tilt": 0.0026002466114872485,
+      "sim_duration": 2.5
+    },
+    "reverse": {
+      "dx": -0.3896997791805674,
+      "dy": -9.683758483980398e-07,
+      "yaw": -5.869735915762333e-07,
+      "tail_vx": -0.17999997312482194,
+      "tail_wz": -2.1851292180731155e-07,
+      "z": 7.206894917427542e-06,
+      "max_tilt": 0.0026002465977388515,
+      "sim_duration": 2.4800000000000004
+    },
+    "reverse_stop": {
+      "dx": -0.051330133089303676,
+      "dy": -1.1417972789473652e-07,
+      "yaw": -3.902266930276201e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.207179329249253e-06,
+      "max_tilt": 0.002600249738775929,
+      "sim_duration": 2.4800000000000004
+    },
+    "left_turn": {
+      "dx": -0.004635853188739603,
+      "dy": -0.01671625048756864,
+      "yaw": 2.622000813321894,
+      "tail_vx": -0.010620092998057013,
+      "tail_wz": 1.1999999629290965,
+      "z": 7.2069286626739456e-06,
+      "max_tilt": 0.002600249738775929,
+      "sim_duration": 2.480000000000002
+    },
+    "left_turn_stop": {
+      "dx": 0.0029907529606396643,
+      "dy": -0.0010208838706917689,
+      "yaw": 0.3539992341202831,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206938274780476e-06,
+      "max_tilt": 0.0026002471226542916,
+      "sim_duration": 2.5
+    },
+    "right_turn": {
+      "dx": -0.0020014023066106112,
+      "dy": 0.017203145199305325,
+      "yaw": -2.6099983613749997,
+      "tail_vx": 0.01062033598502021,
+      "tail_wz": -1.2000004216619562,
+      "z": 7.2069288582804575e-06,
+      "max_tilt": 0.0026002471261127383,
+      "sim_duration": 2.4800000000000004
+    },
+    "right_turn_stop": {
+      "dx": 0.0030030354493475464,
+      "dy": 0.0005660942292879945,
+      "yaw": -0.3422017792857658,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206919536901903e-06,
+      "max_tilt": 0.0026002470613415776,
+      "sim_duration": 2.4800000000000004
+    },
+    "pre_loss": {
+      "dx": 0.2906160700361369,
+      "dy": 0.006976784809033187,
+      "yaw": 3.8268192978710425e-07,
+      "tail_vx": 0.1799999733743859,
+      "tail_wz": 1.9427594665378365e-07,
+      "z": 7.2069056558965465e-06,
+      "max_tilt": 0.0026002497391175035,
+      "sim_duration": 1.9800000000000004
+    },
+    "publisher_loss": {
+      "dx": 0.13046253256110507,
+      "dy": 0.003132022686572533,
+      "yaw": 1.4639749281938896e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206790220155372e-06,
+      "max_tilt": 0.0026002466533301943,
+      "sim_duration": 2.4800000000000004
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "sensors": {
+    "scan_messages": 141,
+    "depth_messages": 0,
+    "camera_info_messages": 0,
+    "last_scan": {
+      "frame": "base_scan",
+      "samples": 360,
+      "range_min": 0.11999999731779099,
+      "range_max": 3.5,
+      "finite": 192,
+      "angle_min": 0.0,
+      "angle_increment": 0.01749303564429283
+    },
+    "max_finite_scan_points": 203,
+    "mounted_frames": {
+      "base_scan": {
+        "position": [
+          -0.064,
+          0.0,
+          0.132
+        ],
+        "expected_position": [
+          -0.064,
+          0.0,
+          0.132
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "imu_link": {
+        "position": [
+          0.0,
+          0.0,
+          0.078
+        ],
+        "expected_position": [
+          0.0,
+          0.0,
+          0.078
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "joint_names": [
+    "wheel_left_joint",
+    "wheel_right_joint"
+  ],
+  "body_samples": 1406,
+  "joint_samples": 2811,
+  "real_time_factor": 0.8539404366769155,
+  "launch_returncode": 0,
+  "max_body_tilt_rad": 0.002600249748681594,
+  "trace_samples_including_shutdown": {
+    "body": 1410,
+    "joints": 3321
+  },
+  "joint_position_ranges": {
+    "wheel_left_joint": 26.56363636279107,
+    "wheel_right_joint": 13.52727272736092
+  },
+  "derived_from": {
+    "producer_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/sensors-final/asset_turtlebot3_waffle_pi-gazebo/report.json",
+      "sha256": "7307de9dc3d080a4c13968749246b4bddcf58c34897c58f29028a453fe2dcdef",
+      "bytes": 5172
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/sensors-final/asset_turtlebot3_waffle_pi-gazebo/trace.json",
+      "sha256": "9b7d6968137a4553cddb17edeee50a0efd73c8639cbc683d5f53c7a75dce17dc",
+      "bytes": 902518
+    }
+  }
+}

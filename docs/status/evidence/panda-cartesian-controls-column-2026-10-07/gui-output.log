@@ -1,0 +1,131 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none arm_control:=panda arm_planning:=moveit
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1791371417545403267-168983.log]
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-07-13-10-18-069532-molar1-168983
+[INFO] [launch]: Default logging verbosity is set to INFO
+[robot_lab] Native Panda MoveIt description: /workspace/molar/robot_lab_runtime/arm_planning/1791371418676040444/panda.urdf
+[INFO] [native_asset_display-1]: process started with pid [169110]
+[INFO] [move_group-2]: process started with pid [169112]
+[INFO] [native_arm_scene.py-3]: process started with pid [169114]
+[INFO] [rviz2-4]: process started with pid [169116]
+[move_group-2] [INFO] [1791371419.986963918] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0 seconds
+[move_group-2] [INFO] [1791371419.987084944] [moveit_robot_model.robot_model]: Loading robot model 'native_panda'...
+[move_group-2] [INFO] [1791371419.987100208] [moveit_robot_model.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[move_group-2] [INFO] [1791371420.025939490] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-2] [INFO] [1791371420.026774285] [moveit.ros_planning_interface.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-2] [INFO] [1791371420.027943292] [moveit_ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-2] [INFO] [1791371420.029041642] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-2] [INFO] [1791371420.029509520] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[move_group-2] [INFO] [1791371420.030827681] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-2] [INFO] [1791371420.031310951] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-2] [INFO] [1791371420.032211858] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-2] [INFO] [1791371420.033131774] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-2] [WARN] [1791371420.034459855] [moveit.ros.occupancy_map_monitor.middleware_handle]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-2] [ERROR] [1791371420.034857364] [moveit.ros.occupancy_map_monitor.middleware_handle]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-2] [INFO] [1791371420.036361799] [moveit.ros_planning_interface.moveit_cpp]: Loading planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371420.042099025] [moveit.ros_planning.planning_pipeline]: Using planning interface 'OMPL'
+[move_group-2] [INFO] [1791371420.047713273] [moveit_ros.fix_workspace_bounds]: Param 'ompl.default_workspace_bounds' was not set. Using default value: 10.000000
+[move_group-2] [INFO] [1791371420.048602308] [moveit_ros.fix_start_state_bounds]: Param 'ompl.start_state_max_bounds_error' was set to 0.010000
+[move_group-2] [INFO] [1791371420.049018890] [moveit_ros.fix_start_state_bounds]: Param 'ompl.start_state_max_dt' was not set. Using default value: 0.500000
+[move_group-2] [INFO] [1791371420.049390990] [moveit_ros.fix_start_state_collision]: Param 'ompl.start_state_max_dt' was not set. Using default value: 0.500000
+[move_group-2] [INFO] [1791371420.049727187] [moveit_ros.fix_start_state_collision]: Param 'ompl.jiggle_fraction' was not set. Using default value: 0.020000
+[move_group-2] [INFO] [1791371420.050063607] [moveit_ros.fix_start_state_collision]: Param 'ompl.max_sampling_attempts' was not set. Using default value: 100
+[move_group-2] [INFO] [1791371420.050404443] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Resolve constraint frames to robot links'
+[move_group-2] [INFO] [1791371420.050726559] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Workspace Bounds'
+[move_group-2] [INFO] [1791371420.051043075] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Start State Bounds'
+[move_group-2] [INFO] [1791371420.051358247] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Start State In Collision'
+[move_group-2] [INFO] [1791371420.051695244] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Start State Path Constraints'
+[move_group-2] [WARN] [1791371420.058046813] [moveit_ros.trajectory_execution_manager]: Parameter '~moveit_controller_manager' is not specified but only one matching plugin was found: 'moveit_simple_controller_manager/MoveItSimpleControllerManager'. Using that one.
+[move_group-2] [WARN] [1791371420.059346254] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[move_group-2] [ERROR] [1791371420.079392334] [moveit.plugins.moveit_simple_controller_manager]: No controller_names specified.
+[move_group-2] [INFO] [1791371420.079688882] [moveit.plugins.moveit_simple_controller_manager]: Returned 0 controllers in list
+[move_group-2] [INFO] [1791371420.079711251] [moveit.plugins.moveit_simple_controller_manager]: Returned 0 controllers in list
+[move_group-2] [INFO] [1791371420.080041943] [moveit_ros.trajectory_execution_manager]: Trajectory execution is not managing controllers
+[move_group-2] [INFO] [1791371420.080069623] [move_group.move_group]: MoveGroup debug mode is ON
+[move_group-2] [INFO] [1791371420.107489526] [move_group.move_group]: 
+[move_group-2] 
+[move_group-2] ********************************************************
+[move_group-2] * MoveGroup using: 
+[move_group-2] *     - ApplyPlanningSceneService
+[move_group-2] *     - ClearOctomapService
+[move_group-2] *     - CartesianPathService
+[move_group-2] *     - GetPlanningSceneService
+[move_group-2] *     - KinematicsService
+[move_group-2] *     - MotionPlanService
+[move_group-2] *     - QueryPlannersService
+[move_group-2] *     - StateValidationService
+[move_group-2] ********************************************************
+[move_group-2] 
+[move_group-2] [INFO] [1791371420.109072458] [moveit_move_group_capabilities_base.move_group_context]: MoveGroup context using planning plugin ompl_interface/OMPLPlanner
+[move_group-2] [INFO] [1791371420.109544145] [moveit_move_group_capabilities_base.move_group_context]: MoveGroup context initialization complete
+[move_group-2] [96mLoading 'move_group/ApplyPlanningSceneService'...
+[move_group-2] [0m[96mLoading 'move_group/ClearOctomapService'...
+[move_group-2] [0m[96mLoading 'move_group/MoveGroupCartesianPathService'...
+[move_group-2] [0m[96mLoading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-2] [0m[96mLoading 'move_group/MoveGroupKinematicsService'...
+[move_group-2] [0m[96mLoading 'move_group/MoveGroupPlanService'...
+[move_group-2] [0m[96mLoading 'move_group/MoveGroupQueryPlannersService'...
+[move_group-2] [0m[96mLoading 'move_group/MoveGroupStateValidationService'...
+[move_group-2] [0m[92m
+[move_group-2] You can start planning now!
+[move_group-2] 
+[rviz2-4] [INFO] [1791371420.905160316] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-4] [INFO] [1791371420.905327998] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[native_asset_display-1] [INFO] [1791371421.403613818] [native_asset_display]: Installed native MJCF: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml; 12 robot bodies / 9 joints; controlled Panda dynamics
+[rviz2-4] [INFO] [1791371421.568040109] [rviz2]: Stereo is NOT SUPPORTED
+[move_group-2] [INFO] [1791371424.006109384] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371424.006196777] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371424.007496730] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [ERROR] [1791371427.017206194] [ompl]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm[RRTConnect]: Unable to sample any valid states for goal tree
+[move_group-2] [WARN] [1791371427.017336980] [moveit.ompl_planning.model_based_planning_context]: Invalid goal state
+[move_group-2] [INFO] [1791371427.229722105] [moveit.ompl_planning.model_based_planning_context]: Unable to solve the planning problem
+[move_group-2] [INFO] [1791371427.248821096] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371427.248953898] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371427.250122968] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [ERROR] [1791371430.259568560] [ompl]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm[RRTConnect]: Unable to sample any valid states for goal tree
+[move_group-2] [WARN] [1791371430.259723378] [moveit.ompl_planning.model_based_planning_context]: Invalid goal state
+[move_group-2] [INFO] [1791371430.464137340] [moveit.ompl_planning.model_based_planning_context]: Unable to solve the planning problem
+[move_group-2] [INFO] [1791371430.492415515] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371430.492496060] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371430.493253669] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371432.943044094] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371432.943133119] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371432.943902793] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371434.884391263] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371434.884478176] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371434.885180937] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371436.083651520] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371436.083740833] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371436.084429225] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371439.318696409] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371439.318790650] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371439.319609476] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371442.463285772] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371442.463370413] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371442.464035861] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371445.411372371] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371445.411460180] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371445.412345758] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-2] [INFO] [1791371449.122944359] [moveit_move_group_default_capabilities.plan_service_capability]: Received new planning service request...
+[move_group-2] [INFO] [1791371449.123022408] [moveit_move_group_capabilities_base.move_group_capability]: Using planning pipeline 'ompl'
+[move_group-2] [INFO] [1791371449.123723088] [moveit.ompl_planning.model_based_planning_context]: Planner configuration 'panda_arm[RRTConnect]' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-4]: sending signal 'SIGINT' to process[rviz2-4]
+[INFO] [native_arm_scene.py-3]: sending signal 'SIGINT' to process[native_arm_scene.py-3]
+[INFO] [move_group-2]: sending signal 'SIGINT' to process[move_group-2]
+[INFO] [native_asset_display-1]: sending signal 'SIGINT' to process[native_asset_display-1]
+[move_group-2] [INFO] [1791371451.145482034] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-4] [INFO] [1791371451.148395956] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[move_group-2] [INFO] [1791371451.165954496] [moveit.ros_planning_interface.moveit_cpp]: Deleting MoveItCpp
+[move_group-2] [INFO] [1791371451.166902699] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-2] [INFO] [1791371451.167542867] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping world geometry monitor
+[move_group-2] [INFO] [1791371451.168618943] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping planning scene monitor
+[move_group-2] Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
+[move_group-2]          at line 127 in ./src/class_loader.cpp
+[INFO] [move_group-2]: process has finished cleanly [pid 169112]
+[move_group-2] [0m
+[INFO] [rviz2-4]: process has finished cleanly [pid 169116]
+[INFO] [native_arm_scene.py-3]: process has finished cleanly [pid 169114]
+[INFO] [native_asset_display-1]: process has finished cleanly [pid 169110]
+
+[launch exited with code 0]
+

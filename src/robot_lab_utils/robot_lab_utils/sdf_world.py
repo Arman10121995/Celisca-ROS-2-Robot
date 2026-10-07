@@ -202,7 +202,7 @@ def _shape(geometry, frame, base_dir, resolve, model_name, skipped):
 
 
 def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
-                model_name, depth=0, collision_only=False):
+                model_name, depth=0, collision_only=False, prefer_visual=False):
     if depth > _MAX_INCLUDE_DEPTH:
         skipped.append("include nesting too deep")
         return
@@ -225,13 +225,15 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
                 for nested in _children(root, "model"):
                     _walk_model(nested, include_frame,
                                 os.path.dirname(sdf_path), resolve, shapes,
-                                skipped, model_name, depth + 1, collision_only)
+                                skipped, model_name, depth + 1, collision_only, prefer_visual)
 
     for link in _children(model, "link"):
         link_frame = compose(frame, frame_of(link))
         # Collision geometry is what physics sees; visual keeps decorative
         # models visible when they declare no collision.
-        sources = _children(link, "collision")
+        sources = _children(link, "visual") if prefer_visual else _children(link, "collision")
+        if prefer_visual and not sources:
+            sources = _children(link, "collision")
         if not sources and not collision_only:
             sources = _children(link, "visual")
         for source in sources:
@@ -241,19 +243,29 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
             shape = _shape(geometry, compose(link_frame, frame_of(source)),
                            base_dir, resolve, model_name, skipped)
             if shape is not None:
+                if prefer_visual:
+                    material = _child(source, 'material')
+                    diffuse = _text(material, 'diffuse') or _text(material, 'ambient')
+                    if diffuse:
+                        shape['rgba'] = _floats(diffuse, 4, 1.0)
                 shapes.append(shape)
 
     for nested in _children(model, "model"):
         _walk_model(nested, frame, base_dir, resolve, shapes, skipped,
-                    model_name, depth + 1, collision_only)
+                    model_name, depth + 1, collision_only, prefer_visual)
 
 
-def extract_static_shapes(world_path, resolve, collision_only=False):
+def extract_static_shapes(world_path, resolve, collision_only=False, prefer_visual=False):
     """Return (shapes, skipped_notes) for every static shape in a world.
 
     Scripted ``<actor>`` elements are not static geometry and are reported in
     *skipped_notes* rather than dropped silently.
+    ``prefer_visual`` is for static catalog inspection. Physics callers keep
+    the existing collision-first behavior. It cannot be combined with
+    ``collision_only``.
     """
+    if prefer_visual and collision_only:
+        raise ValueError('Visual inspection and collision-only extraction are mutually exclusive')
     root = ET.parse(world_path).getroot()
     world = _child(root, "world")
     if world is None:
@@ -262,12 +274,12 @@ def extract_static_shapes(world_path, resolve, collision_only=False):
     shapes, skipped = [], []
     for model in _children(world, "model"):
         _walk_model(model, _IDENTITY, base_dir, resolve, shapes, skipped,
-                    model.get("name", "model"), collision_only=collision_only)
+                    model.get("name", "model"), collision_only=collision_only, prefer_visual=prefer_visual)
     for include in _children(world, "include"):
         wrapper = ET.Element("model")
         wrapper.append(include)
         _walk_model(wrapper, _IDENTITY, base_dir, resolve, shapes, skipped,
-                    _text(include, "name") or "include", collision_only=collision_only)
+                    _text(include, "name") or "include", collision_only=collision_only, prefer_visual=prefer_visual)
     for actor in _children(world, "actor"):
         skipped.append("actor '%s' (scripted motion, not static geometry)"
                        % actor.get("name", "?"))

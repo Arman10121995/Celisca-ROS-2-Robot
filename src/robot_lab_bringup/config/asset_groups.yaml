@@ -1,0 +1,219 @@
+# Presentation groups retain executable IDs and their individual support gates.
+# A variant is not an alias for its parent's controllers or measured missions.
+schema_version: 1
+robots:
+  - id: bhl
+    name: Berkeley Humanoid Lite
+    preferred: berkeley_humanoid_lite_sim
+    members:
+      - {id: berkeley_humanoid_lite_sim, label: Simulation model}
+      - {id: berkeley_humanoid_lite, label: Full source model}
+      - {id: berkeley_humanoid_lite_biped, label: Biped assembly, role: component}
+  - id: unitree_a1
+    name: Unitree A1
+    members:
+      - {id: unitree_a1, label: ROS description, registry_ids: [a1]}
+      - {id: menagerie_unitree_a1, label: Native MuJoCo description, role: source_alternative}
+  - id: unitree_go1
+    name: Unitree Go1
+    members:
+      - {id: unitree_go1, label: ROS description, registry_ids: [go1]}
+      - {id: menagerie_unitree_go1, label: Native MuJoCo description, role: source_alternative}
+  - id: unitree_go2
+    name: Unitree Go2
+    members:
+      - {id: unitree_go2, label: Robot Lab policy model, registry_ids: [go2]}
+      - {id: menagerie_unitree_go2, label: Menagerie source model, role: source_alternative}
+  - id: unitree_g1
+    name: Unitree G1
+    members:
+      - {id: unitree_g1, label: ROS description, registry_ids: [g1]}
+      - {id: unitree_g1_29dof, label: 29 DOF description}
+      - {id: menagerie_unitree_g1, label: Native MuJoCo description, role: source_alternative}
+  - id: unitree_b2
+    name: Unitree B2
+    members:
+      - {id: unitree_b2, label: ROS description, registry_ids: [b2]}
+      - {id: unitree_b2_mujoco, label: MuJoCo source description, role: source_alternative}
+  - id: unitree_h1
+    name: Unitree H1
+    members:
+      - {id: menagerie_unitree_h1, label: H1 source model, registry_ids: [h1]}
+      - {id: unitree_h1_2, label: H1 v2 source model, registry_ids: [h1_2]}
+  - id: unitree_z1
+    name: Unitree Z1
+    members:
+      - {id: menagerie_unitree_z1, label: Native source arm, registry_ids: [z1]}
+  - id: turtlebot3
+    name: TurtleBot3
+    preferred: asset_turtlebot3_burger
+    members:
+      - {id: asset_turtlebot3_burger, label: Burger}
+      - {id: asset_turtlebot3_waffle, label: Waffle}
+      - {id: asset_turtlebot3_waffle_pi, label: Waffle Pi}
+  - id: turtlebot4
+    name: TurtleBot4
+    preferred: asset_turtlebot4_standard
+    members:
+      - {id: asset_turtlebot4_standard, label: Standard}
+      - {id: asset_turtlebot4_lite, label: Lite}
+  - id: franka_panda
+    name: Franka Emika Panda
+    preferred: menagerie_franka_emika_panda
+    members:
+      - {id: menagerie_franka_emika_panda, label: Native MuJoCo arm and hand}
+      - {id: asset_franka_panda_panda, label: URDF arm and hand, role: source_alternative}
+  - id: anymal
+    name: ANYmal
+    preferred: menagerie_anybotics_anymal_b
+    members:
+      - {id: menagerie_anybotics_anymal_b, label: ANYmal B native source}
+      - {id: menagerie_anybotics_anymal_c, label: ANYmal C native source}
+      - {id: asset_anymal, label: URDF source variant, role: source_alternative}
+  - id: universal_robots_ur5
+    name: Universal Robots UR5
+    members:
+      - {id: menagerie_universal_robots_ur5e, label: UR5e native source}
+      - {id: asset_ur5_ur5_gripper, label: UR5 URDF source (no actuated gripper), role: source_alternative}
+  - id: universal_robots_ur10
+    name: Universal Robots UR10
+    members:
+      - {id: menagerie_universal_robots_ur10e, label: UR10e native source}
+      - {id: asset_ur10_ur10_robot, label: UR10 URDF source, role: source_alternative}
+  - id: kinova_arms
+    name: Kinova arms
+    members:
+      - {id: menagerie_kinova_gen3, label: Gen3 native source}
+      - {id: asset_kinova, label: URDF source model, role: source_alternative}
+  - id: kuka_iiwa
+    name: KUKA iiwa
+    members:
+      - {id: menagerie_kuka_iiwa_14, label: Native iiwa 14}
+      - {id: asset_kuka_iiwa, label: URDF source variant, role: source_alternative}
+  - id: nasa_r2
+    name: NASA Robonaut 2
+    preferred: asset_r2_description_r2c6
+    notes: Full r2c6 includes both hands and legs. Forearm/gripper/leg/upper-body source subassemblies are retained for inspection; no duplicate limb is attached.
+    members:
+      - {id: asset_r2_description_r2c6, label: Complete r2c6 assembly}
+      - {id: asset_r2_description_r2c6_control, label: r2c6 control variant}
+      - {id: asset_r2_description_r2c6_dynamics, label: r2c6 dynamics variant}
+      - {id: asset_r2_description_r2c6_valve, label: r2c6 valve fixture variant}
+      - {id: asset_r2_description_r2c_sim_full_control, label: Simulation full control}
+      - {id: asset_r2_description_r2c_sim_full_dynamics, label: Simulation full dynamics}
+      - {id: asset_r2_description_r2b, label: Complete r2b}
+      - {id: asset_r2_description_r2b_control, label: r2b control variant}
+      - {id: asset_r2_description_r2b_dynamics, label: r2b dynamics variant}
+      - {id: asset_r2_description_r2c1, label: Complete r2c1}
+      - {id: asset_r2_description_r2c1_control, label: r2c1 control variant}
+      - {id: asset_r2_description_r2c1_dynamics, label: r2c1 dynamics variant}
+      - {id: asset_r2_description_r2_left_forearm, label: Left forearm, role: component, contained_in: asset_r2_description_r2c6}
+      - {id: asset_r2_description_r2_left_gripper, label: Left gripper, role: component, contained_in: asset_r2_description_r2c6}
+      - {id: asset_r2_description_r2c_sim_legs_control, label: Legs control, role: component, contained_in: asset_r2_description_r2c6}
+      - {id: asset_r2_description_r2c_sim_legs_dynamics, label: Legs dynamics, role: component}
+      - {id: asset_r2_description_r2c_sim_upperbody_control, label: Upper body control, role: component, contained_in: asset_r2_description_r2c6}
+      - {id: asset_r2_description_r2c_sim_upperbody_dynamics, label: Upper body dynamics, role: component}
+      - {id: asset_r2_description_r2b_sim_upperbody_control, label: r2b upper body control, role: component}
+      - {id: asset_r2_description_r2b_sim_upperbody_dynamics, label: r2b upper body dynamics, role: component}
+      - {id: asset_r2_description_r2c5, label: r2c5 upper body, role: component}
+      - {id: asset_r2_description_r2c5_control, label: r2c5 upper body control, role: component}
+      - {id: asset_r2_description_r2c5_dynamics, label: r2c5 upper body dynamics, role: component}
+  - id: nasa_valkyrie
+    name: NASA Valkyrie
+    preferred: asset_val_description_valkyrie_sim
+    notes: Complete simulation model retains the authored arms, hands and legs. Isolated forearms and reduced mass models remain nested source entries.
+    members:
+      - {id: asset_val_description_valkyrie_sim, label: Complete simulation assembly}
+      - {id: asset_val_description_valkyrie_sim_angled_legj1s, label: Angled leg joint variant}
+      - {id: asset_val_description_valkyrie_sim_gazebo_sync, label: Gazebo synchronization variant}
+      - {id: asset_val_description_valkyrie_A, label: Complete revision A}
+      - {id: asset_val_description_valkyrie_B, label: Complete revision B}
+      - {id: asset_val_description_valkyrie_C, label: Complete revision C}
+      - {id: asset_val_description_valkyrie_D, label: Complete revision D}
+      - {id: asset_val_description_forearm_left, label: Forearm (upstream left file uses right-hand link names), role: component, contained_in: asset_val_description_valkyrie_sim}
+      - {id: asset_val_description_forearm_right, label: Right forearm, role: component, contained_in: asset_val_description_valkyrie_sim}
+      - {id: asset_val_description_valkyrie_A_arm_mass_sims, label: Revision A reduced mass model, role: simplified}
+      - {id: asset_val_description_valkyrie_B_arm_mass_sims, label: Revision B reduced mass model, role: simplified}
+      - {id: asset_val_description_valkyrie_C_arm_mass_sims, label: Revision C reduced mass model, role: simplified}
+      - {id: asset_val_description_valkyrie_D_arm_mass_sims, label: Revision D reduced mass model, role: simplified}
+      - {id: asset_val_description_valkyrie_sim_arm_mass_sims, label: Simulation reduced mass model, role: simplified}
+  - id: flexiv_rizon
+    name: Flexiv Rizon
+    members:
+      - {id: menagerie_flexiv_rizon4, label: Rizon 4}
+      - {id: menagerie_flexiv_rizon4s, label: Rizon 4s}
+  - id: franka_fr3
+    name: Franka FR3
+    members:
+      - {id: menagerie_franka_fr3, label: Original source}
+      - {id: menagerie_franka_fr3_v2, label: Source v2}
+  - id: barkour
+    name: Google Barkour
+    members:
+      - {id: menagerie_google_barkour_v0, label: v0}
+      - {id: menagerie_google_barkour_vb, label: vB}
+  - id: stretch
+    name: Hello Robot Stretch
+    members:
+      - {id: menagerie_hello_robot_stretch, label: Original}
+      - {id: menagerie_hello_robot_stretch_3, label: Stretch 3}
+  - id: toddlerbot
+    name: ToddlerBot
+    members:
+      - {id: menagerie_toddlerbot_2xc, label: 2XC}
+      - {id: menagerie_toddlerbot_2xm, label: 2XM}
+  - id: component_library
+    name: Unattached components
+    complete: false
+    notes: No compatible mounting transform is established for these standalone components. Inspect them here; they are not offered as complete robots in Launch.
+    members:
+      - {id: menagerie_robotiq_2f85, label: Robotiq 2F85 gripper, role: component}
+      - {id: menagerie_robotiq_2f85_v4, label: Robotiq 2F85 source v4, role: component}
+      - {id: menagerie_umi_gripper, label: UMI gripper, role: component}
+      - {id: menagerie_iit_softfoot, label: IIT SoftFoot, role: component}
+  - id: reference_models
+    name: Biological reference models
+    complete: false
+    members:
+      - {id: menagerie_ms_human_700, label: Human musculoskeletal reference, role: reference}
+      - {id: menagerie_flybody, label: Fruit fly reference, role: reference}
+maps:
+  - id: celisca_floor_1
+    name: Celisca Floor 1
+    members:
+      - {id: celisca_floor_1, label: Building shell}
+      - {id: celisca_floor_1_furniture, label: With furniture}
+      - {id: celisca_f1_actor, label: With actors}
+  - id: celisca_floor_2
+    name: Celisca Floor 2
+    members:
+      - {id: celisca_floor_2, label: Building shell}
+      - {id: celisca_floor_2_furniture, label: With furniture}
+      - {id: celisca_f2_actor, label: With actors}
+  - id: dataset_room2
+    name: Dataset Room 2
+    members:
+      - {id: dataset_room2, label: Static world}
+      - {id: dataset_room2_world_dynamic, label: Dynamic source variant}
+  - id: dataset_room3
+    name: Dataset Room 3
+    members:
+      - {id: dataset_room3, label: Static world}
+      - {id: dataset_room3_world_dynamic, label: Dynamic source variant}
+  - id: dataset_room4
+    name: Dataset Room 4
+    members:
+      - {id: dataset_room4, label: Static world}
+      - {id: dataset_room4_world_dynamic, label: Dynamic source variant}
+  - id: dataset_hospital
+    name: Dataset Hospital
+    preferred: dataset_hospital_hospital_two_floors
+    members:
+      - {id: dataset_hospital_hospital_two_floors, label: Complete two-floor source world}
+      - {id: dataset_hospital, label: Single-floor source world}
+  - id: empty
+    name: Empty World
+    members:
+      - {id: empty, label: Robot Lab empty world}
+      - {id: gazebo_example_empty, label: Gazebo empty example, role: source_alternative}
+      - {id: gazebo_example_default, label: Gazebo default example, role: source_alternative}

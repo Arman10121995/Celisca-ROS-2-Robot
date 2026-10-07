@@ -17,6 +17,7 @@ import tkinter as tk
 from tkinter import messagebox, scrolledtext, ttk
 
 from .launcher import load_yaml, subprocess_env
+from robot_lab_utils.asset_groups import AssetGroups, load_group_definitions
 
 try:
     from .live_monitor import LiveMonitorTab
@@ -108,6 +109,7 @@ class WorldsTab(LabTab):
     def __init__(self,notebook,app):
         super().__init__(notebook,app,'Worlds')
         self.world_var=tk.StringVar(value=app.map_var.get())
+        self.world_family_var=tk.StringVar(value=app.map_groups.family(app.map_var.get()))
         self.resolution_var=tk.DoubleVar(value=.1)
         self.height_var=tk.DoubleVar(value=.3)
         self.output_var=tk.StringVar(value=str(Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
@@ -115,21 +117,34 @@ class WorldsTab(LabTab):
         controls=ttk.Frame(self);controls.grid(row=0,column=0,sticky='new')
         controls.columnconfigure(1,weight=1)
         ttk.Label(controls,text='World').grid(row=0,column=0,sticky='w')
-        ttk.Combobox(controls,textvariable=self.world_var,values=sorted(app.map_profiles),
-                     state='readonly').grid(row=0,column=1,sticky='ew')
-        for row,label,var in [(1,'Resolution (m)',self.resolution_var),(2,'Slice height (m)',self.height_var),
-                              (3,'Output directory',self.output_var)]:
+        self.world_combo=ttk.Combobox(controls,textvariable=self.world_family_var,values=app.map_groups.choices(),state='readonly')
+        self.world_combo.grid(row=0,column=1,sticky='ew')
+        self.world_combo.bind('<<ComboboxSelected>>',self._family_selected)
+        ttk.Label(controls,text='World variant').grid(row=1,column=0,sticky='w')
+        self.variant_combo=ttk.Combobox(controls,textvariable=self.world_var,
+            values=app.map_groups.members(self.world_family_var.get(),selectable=True),state='readonly')
+        self.variant_combo.grid(row=1,column=1,sticky='ew')
+        for row,label,var in [(2,'Resolution (m)',self.resolution_var),(3,'Slice height (m)',self.height_var),
+                              (4,'Output directory',self.output_var)]:
             ttk.Label(controls,text=label).grid(row=row,column=0,sticky='w')
             ttk.Entry(controls,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
         self.generate_button=ttk.Button(controls,text='Generate 2D Occupancy Grid',command=self.generate)
-        self.generate_button.grid(row=4,column=0,columnspan=2,sticky='ew',pady=6)
-        ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=5,column=0,sticky='ew')
-        ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=5,column=1,sticky='ew')
+        self.generate_button.grid(row=5,column=0,columnspan=2,sticky='ew',pady=6)
+        ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=6,column=0,sticky='ew')
+        ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=6,column=1,sticky='ew')
+        ttk.Button(controls,text='Preview 3D',command=lambda:app.preview_asset('maps',self.world_var.get())).grid(row=7,column=0,columnspan=2,sticky='ew',pady=6)
         ttk.Label(controls,text='Uses the pinned Fortress plugin in a separate headless world. Existing maps are preserved.\n'
             'Mesh collisions use their actual scale and height slice; heightfields need the terrain converter.\n'
             'Review the generated PGM/YAML and report before registering it for navigation.\n'
             'External world imports and terrain conversion are tracked as R6.6 / R6.7.',
-            wraplength=720,justify='left').grid(row=6,column=0,columnspan=2,sticky='w',pady=12)
+            wraplength=720,justify='left').grid(row=8,column=0,columnspan=2,sticky='w',pady=12)
+
+    def _family_selected(self,_event=None):
+        family=self.world_family_var.get()
+        members=self.app.map_groups.members(family,selectable=True)
+        self.variant_combo.configure(values=members,state='readonly' if len(members)>1 else 'disabled')
+        preferred=self.app.map_groups.preferred(family)
+        if preferred:self.world_var.set(preferred)
 
     def generation_command(self):
         from ament_index_python.packages import get_package_share_directory
@@ -172,6 +187,7 @@ class AssetsTab(LabTab):
         ttk.Button(actions, text='Open Selected in Launch', command=self.open_selected).pack(side='left')
         ttk.Button(actions, text='Refresh Installed Assets', command=self.refresh_local_status).pack(side='left', padx=6)
         ttk.Button(actions, text='Open Upstream Source', command=self.open_source).pack(side='left')
+        ttk.Button(actions, text='Preview 3D', command=self.preview_selected).pack(side='left', padx=6)
         self.detail_var = tk.StringVar()
         ttk.Label(self, textvariable=self.detail_var, wraplength=880, justify='left').grid(row=3, column=0, sticky='w')
         self.tree.bind('<<TreeviewSelect>>', self.show_details)
@@ -185,9 +201,9 @@ class AssetsTab(LabTab):
         path = installation_root() / 'integration-report.json'
         report = json.loads(path.read_text()) if path.is_file() else {}
         catalog = load_yaml(WORKSPACE_ROOT / 'docs/status/asset-sources-2026-10-05.yaml') or {}
+        installed = {}
+        pending = []
         for source in catalog.get('sources', []):
-            parent = self.tree.insert('', 'end', text=source['id'], values=(source['revision'][:12], ''))
-            self.links[parent] = source['repository']
             entries = {item['entry']: item for item in report.get('entries', []) if item['source_id'] == source['id']}
             for entry in source.get('entries', []):
                 name = entry.get('name') if isinstance(entry, dict) else entry
@@ -200,22 +216,52 @@ class AssetsTab(LabTab):
                                 if robot in self.app.robot_profiles]
                 if profiles:
                     for profile in profiles:
-                        row = self.tree.insert(parent, 'end', text=profile['id'], values=(source['revision'][:12], profile.get('support', 'installed')))
-                        self.rows[row] = profile
-                        self.links[row] = source['repository']
+                        installed[profile['id']] = (profile, source)
                 else:
-                    row = self.tree.insert(parent, 'end', text=name, values=(source['revision'][:12], item.get('status', 'integration pending')))
-                    self.rows[row] = {'reason': item.get('reason', 'Source model integration is pending'), 'id': name}
-                    self.links[row] = entry['source'] if isinstance(entry, dict) else source['repository']
+                    pending.append((name, item, source, entry))
+        from robot_lab_utils.installed_assets import installed_profiles
+        for kind, title in [('robots', 'Complete robots / devices'), ('maps', 'Complete worlds')]:
+            profiles = installed_profiles(kind)
+            groups = AssetGroups(kind, profiles)
+            section = self.tree.insert('', 'end', text=title, open=True)
+            for family, group in sorted(groups.groups.items()):
+                parent = self.tree.insert(section, 'end', text=group['name'],
+                    values=('', 'Components / references' if not group.get('complete', True) else ''))
+                preferred = groups.preferred(family)
+                if preferred:
+                    info = installed.get(preferred, ({'id': preferred, 'kind': 'robot' if kind == 'robots' else 'world'}, {}))
+                    self.rows[parent], source = info
+                    self.links[parent] = source.get('repository', '')
+                for member in group['members']:
+                    profile, source = installed.get(member['id'], ({'id': member['id'], 'kind': 'robot' if kind == 'robots' else 'world'}, {}))
+                    inspection = member['role'] in ('component', 'simplified', 'reference')
+                    row = self.tree.insert(parent, 'end', text=member['label'],
+                        values=(source.get('revision', '')[:12],
+                                'Inspect ' + member['role'] if inspection else profile.get('support', 'installed')))
+                    self.rows[row] = dict(profile, inspection_only=inspection)
+                    self.links[row] = source.get('repository', '')
+        if pending:
+            parent = self.tree.insert('', 'end', text='Pending source imports', open=False)
+            for name, item, source, entry in pending:
+                row = self.tree.insert(parent, 'end', text=name,
+                    values=(source['revision'][:12], item.get('status', 'integration pending')))
+                self.rows[row] = {'reason': item.get('reason', 'Source model integration is pending'), 'id': name}
+                self.links[row] = entry['source'] if isinstance(entry, dict) else source['repository']
 
     def show_details(self, _event=None):
         selected = self.tree.selection()
         profile = self.rows.get(selected[0], {}) if selected else {}
+        if profile.get('inspection_only'):
+            self.detail_var.set('This source subassembly is retained under its complete parent. Use Preview 3D to inspect it.')
+            return
         self.detail_var.set(profile.get('reason') or profile.get('notes', 'Select a robot or world to see its available modes.'))
 
     def open_selected(self):
         selected = self.tree.selection()
         profile = self.rows.get(selected[0], {}) if selected else {}
+        if profile.get('inspection_only'):
+            self.show_details()
+            return
         kind = profile.get('kind')
         choices = self.app.robot_profiles if kind == 'robot' else self.app.map_profiles
         if kind not in ('robot', 'world') or profile.get('id') not in choices:
@@ -230,7 +276,14 @@ class AssetsTab(LabTab):
 
     def open_source(self):
         selected = self.tree.selection()
-        if selected: webbrowser.open(self.links[selected[0]])
+        if selected and self.links.get(selected[0]): webbrowser.open(self.links[selected[0]])
+
+    def preview_selected(self):
+        selected = self.tree.selection()
+        profile = self.rows.get(selected[0], {}) if selected else {}
+        kind = {'robot': 'robots', 'world': 'maps'}.get(profile.get('kind'))
+        if kind:
+            self.app.preview_asset(kind, profile['id'])
 
 
 ENTITY_TYPES = [
@@ -263,31 +316,49 @@ class RegistryTab(LabTab):
             textvariable=self.type_var,
             values=[label for _, label, _ in ENTITY_TYPES],
             state="readonly",
-            width=16,
+            width=12,
         )
         type_combo.grid(row=0, column=1, sticky="w", padx=(0, 12))
         type_combo.bind("<<ComboboxSelected>>", lambda _e: self._refresh_tree())
 
         ttk.Label(top, text="Search").grid(row=0, column=2, sticky="w", padx=(0, 4))
         self.search_var = tk.StringVar()
-        search_entry = ttk.Entry(top, textvariable=self.search_var, width=30)
+        search_entry = ttk.Entry(top, textvariable=self.search_var, width=20)
         search_entry.grid(row=0, column=3, sticky="ew", padx=(0, 12))
         search_entry.bind("<KeyRelease>", lambda _e: self._refresh_tree())
 
-        ttk.Button(top, text="Reload", command=self._load_all).grid(row=0, column=4)
+        ttk.Button(top, text="Reload", command=self._load_all, style='Small.TButton', width=8).grid(row=0, column=4)
+        self.preview_button = ttk.Button(top, text='Preview 3D', command=self._preview_selected, style='Small.TButton', width=10)
+        self.preview_button.grid(row=0, column=5, padx=(6, 0))
+        self.launch_button = ttk.Button(top, text='Open in Launch', command=self._open_selected, style='Small.TButton', width=14)
+        self.launch_button.grid(row=0, column=6, padx=(6, 0))
 
-        body = ttk.Frame(self)
-        body.grid(row=1, column=0, sticky="nsew", pady=(8, 0))
-        body.columnconfigure(0, weight=3)
-        body.columnconfigure(1, weight=2)
-        body.rowconfigure(0, weight=1)
+        from robot_lab_utils.robot_taxonomy import ALL_CATEGORIES, ALL_TYPES, CATEGORIES
+        self.category_var = tk.StringVar(value=ALL_CATEGORIES)
+        self.subtype_var = tk.StringVar(value=ALL_TYPES)
+        self.category_combo = ttk.Combobox(top, textvariable=self.category_var,
+            values=(ALL_CATEGORIES, *CATEGORIES), state='readonly', width=23)
+        self.category_combo.grid(row=1, column=0, columnspan=2, sticky='ew', pady=(7, 0), padx=(0, 12))
+        self.subtype_combo = ttk.Combobox(top, textvariable=self.subtype_var,
+            values=(ALL_TYPES, *self.app.robot_taxonomy.subtypes()), state='readonly', width=26)
+        self.subtype_combo.grid(row=1, column=2, columnspan=2, sticky='ew', pady=(7, 0), padx=(0, 12))
+        self.category_combo.bind('<<ComboboxSelected>>', self._filter_changed)
+        self.subtype_combo.bind('<<ComboboxSelected>>', lambda _e: self._refresh_tree())
+
+        self.rowconfigure(1, weight=0)
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(2, weight=1)
+        body = self.body_split = ttk.Panedwindow(self, orient='horizontal')
+        body.grid(row=2, column=0, sticky="nsew", pady=(8, 0))
 
         tree_frame = ttk.Frame(body)
-        tree_frame.grid(row=0, column=0, sticky="nsew")
+        body.add(tree_frame, weight=1)
         tree_frame.columnconfigure(0, weight=1)
         tree_frame.rowconfigure(0, weight=1)
 
-        self.tree = ttk.Treeview(tree_frame, columns=("a", "b", "c", "d"), show="headings")
+        self.tree = ttk.Treeview(tree_frame, columns=("a", "b", "c", "d"), show="tree headings")
+        self.tree.heading('#0', text='Complete model / variants / components')
+        self.tree.column('#0', width=230)
         for index, heading in enumerate(("ID", "Class/Category", "Status", "Name")):
             self.tree.heading(index, text=heading)
         self.tree.column("a", width=200)
@@ -299,20 +370,44 @@ class RegistryTab(LabTab):
         vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree.yview)
         vsb.grid(row=0, column=1, sticky="ns")
         self.tree.configure(yscrollcommand=vsb.set)
+        hsb = ttk.Scrollbar(tree_frame, orient='horizontal', command=self.tree.xview)
+        hsb.grid(row=1, column=0, sticky='ew')
+        self.tree.configure(xscrollcommand=hsb.set)
         self.tree.bind("<<TreeviewSelect>>", lambda _e: self._show_details())
 
-        detail_frame = ttk.LabelFrame(body, text="Details", padding=6)
-        detail_frame.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
+        self.detail_notebook = ttk.Notebook(body)
+        body.add(self.detail_notebook, weight=1)
+        def size_split(_event=None):
+            if body.winfo_width() > 100 and not getattr(self, '_split_sized', False):
+                body.sashpos(0, int(body.winfo_width()*.5))
+                self._split_sized = True
+        body.bind('<Configure>', size_split, add='+')
+        from .native_viewer import NativePreviewPane
+        self.preview_pane = NativePreviewPane(self.detail_notebook, self.app)
+        self.detail_notebook.add(self.preview_pane, text='3D Preview')
+        detail_frame = ttk.Frame(self.detail_notebook, padding=6)
+        self.detail_notebook.add(detail_frame, text='Details')
+        self.detail_notebook.select(detail_frame)
         detail_frame.columnconfigure(0, weight=1)
         detail_frame.rowconfigure(0, weight=1)
         self.details = scrolledtext.ScrolledText(detail_frame, wrap="word", width=50)
         self.details.grid(row=0, column=0, sticky="nsew")
         self.details.configure(state="disabled")
+        self.app.registry_tab = self
+        self.app.registry_preview = self.preview_pane
 
         self.count_var = tk.StringVar(value="")
-        ttk.Label(self, textvariable=self.count_var, foreground="#555555").grid(
-            row=2, column=0, sticky="w", pady=(6, 0)
+        ttk.Label(self, textvariable=self.count_var, style='Muted.TLabel', wraplength=950).grid(
+            row=3, column=0, sticky="w", pady=(6, 0)
         )
+
+    def _filter_changed(self, _event=None):
+        from robot_lab_utils.robot_taxonomy import ALL_TYPES
+        subtypes = self.app.robot_taxonomy.subtypes(self.category_var.get())
+        self.subtype_combo.configure(values=(ALL_TYPES, *subtypes))
+        if self.subtype_var.get() not in subtypes:
+            self.subtype_var.set(ALL_TYPES)
+        self._refresh_tree()
 
     def _load_all(self):
         self.entities = {}
@@ -363,10 +458,70 @@ class RegistryTab(LabTab):
         for index, column in enumerate(columns):
             self.tree.heading(index, text=column.replace("_", " ").title())
 
+        is_robot = entity_type == 'robots'
+        self.category_combo.configure(state='readonly' if is_robot else 'disabled')
+        self.subtype_combo.configure(state='readonly' if is_robot else 'disabled')
+        if is_robot:
+            self.tree.heading('b', text='Category / type / tags')
+            self.tree.column('b', width=260)
+
         query = self.search_var.get().strip().lower()
         items = self.entities.get(entity_type, {})
         self.tree.delete(*self.tree.get_children())
-
+        self.rows = {}
+        if entity_type in ('robots', 'environments'):
+            kind = 'robots' if entity_type == 'robots' else 'maps'
+            profiles = self.app.robot_profiles if kind == 'robots' else self.app.map_profiles
+            groups = AssetGroups(kind, profiles)
+            if kind == 'robots':
+                from robot_lab_adapter.resolver import LAUNCH_PROFILES
+                for registry_id, profile_id in LAUNCH_PROFILES.items():
+                    if profile_id in profiles:
+                        groups.registry_profiles.setdefault(registry_id, profile_id)
+            elif 'simple_office' in profiles:
+                groups.registry_profiles['small_office'] = 'simple_office'
+            parents = groups.registry_view(items)
+            shown = 0
+            for family, group in sorted(parents.items(), key=lambda pair: pair[1]['name'].lower()):
+                members = []
+                for member in group['members']:
+                    labels = self.app.robot_taxonomy.classify(member['profile_id']) if is_robot else {}
+                    if is_robot and not self.app.robot_taxonomy.matches(member['profile_id'],
+                            self.category_var.get(), self.subtype_var.get()):
+                        continue
+                    if query and query not in json.dumps(dict(member, classification=labels), default=str).lower() \
+                            and query not in (family+' '+group['name']).lower():
+                        continue
+                    members.append(member)
+                if not members:
+                    continue
+                parent = 'family:'+family
+                preferred = groups.preferred(family)
+                # A registry-only model can still have a real source asset;
+                # the preview resolver handles its description without Launch.
+                first = next((m for m in members if m['profile_id'] == preferred), members[0])
+                labels = self.app.robot_taxonomy.classify(first['profile_id']) if is_robot else {}
+                classification = ' / '.join([labels['category'], labels['subtype']]) if labels else first['entity'].get(columns[1], '')
+                self.tree.insert('', 'end', iid=parent, text=group['name'],
+                    values=(family, classification,
+                            'Components' if not group['complete'] else '', ''), open=bool(query))
+                self.rows[parent] = dict(first, kind=kind, group=group,
+                    inspection_only=not group['complete'])
+                for member in members:
+                    values = [str(member['entity'].get(column, '')) for column in columns]
+                    if is_robot:
+                        labels = self.app.robot_taxonomy.classify(member['profile_id'])
+                        values[1] = ' / '.join([labels['category'], labels['subtype'], *labels['tags']])
+                    if member['role'] != 'variant':
+                        values[2] = member['role'].replace('_', ' ')
+                    self.tree.insert(parent, 'end', iid=member['id'], text=member['label'], values=values)
+                    self.rows[member['id']] = dict(member, kind=kind,
+                        inspection_only=member['role'] in ('component', 'simplified', 'reference'))
+                    shown += 1
+            total = sum(len(group['members']) for group in parents.values())
+            self.count_var.set(f'{len(self.tree.get_children())} families; {shown} of {total} registry/profile entries. Expand a model to inspect its variants/components.')
+            self._show_details()
+            return
         shown = 0
         for entity_id, entity in sorted(items.items()):
             haystack = json.dumps(entity, default=str).lower()
@@ -374,16 +529,23 @@ class RegistryTab(LabTab):
                 continue
             values = [str(entity.get(column, "")) for column in columns]
             self.tree.insert("", "end", iid=entity_id, values=values)
+            self.rows[entity_id] = dict(entity=entity)
             shown += 1
 
         self.count_var.set(f"{shown} of {len(items)} {entity_type} shown")
+        self._show_details()
 
     def _show_details(self):
         selection = self.tree.selection()
-        entity_type = self._current_type()
-        entity = self.entities.get(entity_type, {}).get(
-            selection[0] if selection else "", {}
-        )
+        row = self.rows.get(selection[0], {}) if selection else {}
+        entity = dict(row.get('group', row.get('entity', {})))
+        if entity and row.get('kind') == 'robots':
+            entity['structural_classification'] = self.app.robot_taxonomy.classify(row['profile_id'])
+        previewable = row.get('kind') in ('robots', 'maps')
+        self.preview_button.state(['!disabled'] if previewable else ['disabled'])
+        launchable = previewable and not row.get('inspection_only') and row.get('profile_id') in (
+            self.app.robot_profiles if row.get('kind') == 'robots' else self.app.map_profiles)
+        self.launch_button.state(['!disabled'] if launchable else ['disabled'])
         self.details.configure(state="normal")
         self.details.delete("1.0", "end")
         if entity:
@@ -395,6 +557,50 @@ class RegistryTab(LabTab):
                 text = json.dumps(entity, indent=2, default=str)
             self.details.insert("1.0", text)
         self.details.configure(state="disabled")
+
+    def _preview_selected(self):
+        selection = self.tree.selection()
+        row = self.rows.get(selection[0], {}) if selection else {}
+        if row.get('kind') in ('robots', 'maps'):
+            self.app.preview_asset(row['kind'], row['profile_id'], row.get('entity'))
+
+    def show_preview(self, kind, asset_id, profile):
+        self.app.show_tab('Registry')
+        label = 'Robots' if kind == 'robots' else 'Environments'
+        from robot_lab_utils.robot_taxonomy import ALL_CATEGORIES, ALL_TYPES
+        if self.type_var.get() != label or self.search_var.get() or (
+                kind == 'robots' and not self.app.robot_taxonomy.matches(asset_id,
+                    self.category_var.get(), self.subtype_var.get())):
+            self.type_var.set(label)
+            self.search_var.set('')
+            self.category_var.set(ALL_CATEGORIES)
+            self.subtype_var.set(ALL_TYPES)
+            self._refresh_tree()
+        selected = next((row_id for row_id, row in self.rows.items()
+                         if row.get('profile_id') == asset_id and 'group' not in row), None)
+        if selected:
+            parent = self.tree.parent(selected)
+            if parent:
+                self.tree.item(parent, open=True)
+            self.tree.selection_set(selected)
+            self.tree.see(selected)
+            self._show_details()
+        self.detail_notebook.select(self.preview_pane)
+        self.preview_pane.load(kind, asset_id, profile)
+
+    def _open_selected(self):
+        selection = self.tree.selection()
+        row = self.rows.get(selection[0], {}) if selection else {}
+        if row.get('inspection_only'):
+            return
+        kind = row.get('kind')
+        profiles = self.app.robot_profiles if kind == 'robots' else self.app.map_profiles
+        if row.get('profile_id') not in profiles:
+            return
+        (self.app.robot_var if kind == 'robots' else self.app.map_var).set(row['profile_id'])
+        self.app.mode_var.set('display')
+        self.app._update_from_selection()
+        self.app.show_tab('Launch')
 
 
 class VacuumTab(LabTab):
@@ -862,7 +1068,7 @@ class HealthTab(LabTab):
             WORKSPACE_ROOT / 'docs/tutorials/px4_x500.md')).grid(
                 row=4, column=0, sticky='ew', padx=(0, 4), pady=2)
         ttk.Button(frame, text="Verified Robot Trials", command=lambda: self._show_document(
-            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-06.md')).grid(
+            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-07.md')).grid(
                 row=4, column=1, columnspan=2, sticky='ew', padx=(4, 0), pady=2)
         ttk.Button(frame, text="TurtleBot 4 Guide", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/tutorials/turtlebot4.md')).grid(
@@ -870,6 +1076,9 @@ class HealthTab(LabTab):
         ttk.Button(frame, text="Panda Arm / Hand Guide", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/tutorials/panda_arm.md')).grid(
                 row=5, column=1, sticky='ew', padx=4, pady=2)
+        ttk.Button(frame, text="TurtleBot 3 Guide", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/turtlebot3.md')).grid(
+                row=6, column=0, sticky='ew', padx=(0, 4), pady=2)
         ttk.Button(frame, text="Done / Remaining", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
                 row=5, column=2, sticky='ew', padx=(4, 0), pady=2)
@@ -947,9 +1156,9 @@ class HealthTab(LabTab):
 def create_tabs(notebook, app):
     """Instantiate all control-center tabs and return them."""
     from .arm_tab import ArmTab
-    app.arm_tab = ArmTab(notebook, app)
+    app.arm_tab = ArmTab(app.control_notebook, app)
     from .hand_tab import HandTab
-    app.hand_tab = HandTab(notebook, app)
+    app.hand_tab = HandTab(app.control_notebook, app)
     tabs = [
         app.arm_tab,
         app.hand_tab,
@@ -963,4 +1172,6 @@ def create_tabs(notebook, app):
     ]
     if HAS_LIVE_MONITOR:
         tabs.append(LiveMonitorTab(notebook, app))
+    app.control_notebook.insert(1, app.arm_tab)
+    app.control_notebook.insert(2, app.hand_tab)
     return tabs

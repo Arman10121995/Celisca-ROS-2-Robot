@@ -5,7 +5,7 @@ describes an implemented feature or a named measured screen; it does not
 qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
 [roadmap](../../ROADMAP.md) owns acceptance, and the
-[latest measurements](continuation-2026-10-06.md) give exact scopes and limits.
+[latest measurements](continuation-2026-10-07.md) give exact scopes and limits.
 The latest user instruction prioritizes the new extensions before resuming
 the older roadmap. Existing stabilization fixes must remain working.
 
@@ -20,6 +20,12 @@ the older roadmap. Existing stabilization fixes must remain working.
 - [x] Autofill GUI run commands and choose compatible algorithm defaults,
   including 4WS steering patterns, mecanum and native PX4 Flight. Preserve the
   selected map. Unsupported legged actuation modes retain an explanation.
+- [x] Redesign Launch with a separate right-hand Drive/Arm/Hand/Drone control
+  column and limits; add reviewed robot category/type tags and filters,
+  sidebar navigation, Logs and compact setup/command switching at 1024 pixels.
+  Preserve exact command, ownership and neutral-input behavior. Final actual
+  Tk layout and source-matched normal Drive/Panda regressions are recorded in
+  [GUI evidence](evidence/gui-controls-column-2026-10-07/README.md).
 - [x] Implement latched/ramped GUI Drive, WASD, joystick neutral calibration,
   immediate Space/Stop and mecanum/crab strafe controls. Software and selected
   live Drive checks pass; physical joystick checks remain (P2).
@@ -50,6 +56,13 @@ the older roadmap. Existing stabilization fixes must remain working.
   Husky/TurtleBot4 descriptions. Normal Launch selection,
   command autofill and Installed Extensions shortcuts work; no operator
   download controls. Two upstream files have no robot links and are excluded.
+- [x] Consolidate robot/map selectors into reviewed complete parent families.
+  Preserve exact source variants and keep limbs/grippers nested in Registry.
+  Six R2/Valkyrie component topologies are measured inside full source assemblies.
+- [x] Add native embedded Registry 3D Preview with actual URDF/MJCF/SDF geometry,
+  orbit/pan/zoom/Fit and unchanged launch commands. Seven real rendered scenes
+  and live Burger/PyBullet preview plus physical Drive/Stop/watchdog pass.
+  Texture/GPU/actor and universal asset review remain separate.
 - [x] Import all 14 dataset worlds and three Gazebo environment examples with
   real dependency resolution, derived MJCF and actual occupancy exports.
   Robot missions, actor behavior and full visual/backend parity remain separate.
@@ -67,6 +80,13 @@ the older roadmap. Existing stabilization fixes must remain working.
   combinations. Other maps/routes, materials and vendor firmware remain open.
 - [x] Add native Panda Arm joint/Home/Stop controls and real MuJoCo position
   trajectories; measure rejection, cancellation and heartbeat loss (R5.7).
+- [x] Connect official TurtleBot3 Burger/Waffle/Waffle Pi physical wheels and
+  original 360-ray/3.5 m LDS. Twelve final normal GUI Drive/neutral enable/
+  WASD/Stop/publisher-loss/joint/TF trials pass across all four engines.
+  Preserve original source models, named nav_empty spawn and failed physics
+  stages. Forty-eight actual localization/reset/resume, 2D SLAM/GUI-save and
+  clear/obstacle Nav2 screens pass. Normal algorithms/commands and a current
+  normal MuJoCo obstacle repeat pass; source RGB-only cameras leave 3D SLAM pending.
 - [x] Add native Panda Hand open/close/opening/Cancel/Stop and GUI Reset controls.
   Measure real bounded-force cube contact, a 7.57 cm lift and gravity release
   in MuJoCo/`nav_empty`, plus lost heartbeats and reset during closing (R5.8).
@@ -76,11 +96,17 @@ the older roadmap. Existing stabilization fixes must remain working.
   TCP targets, floor/self-collision and unreachable rejection, joint/finger
   plan invalidation, Cancel/Stop/heartbeat loss, reset and clean MoveIt exit
   in MuJoCo/`nav_empty` (R5.7). Attached-object planning and Servo remain open.
+  The October 7 actual normal-profile regression after shared spawn changes
+  also passes; a second grouped-GUI repeat refreshes the current strict
+  planning certificate. Physical errors and all four child exits are archived.
+  The final control-column repeat measures 0.00649/0.00639 m and 0.780/0.765°;
+  it refreshes the strict certificate including the shared workspace layout.
 - [x] Repair Trimesh/NumPy CI compatibility; exact `36f38b5` remote CI passes
   build, fast, physics, integration and registry checks.
-- [ ] Observe complete CI for the latest extension correction. `dc39922`
-  built but failed three ROS imports in the fast tier; unchanged checks moved
-  to integration pass locally. See [October 7 evidence](evidence/ci-extensions-2026-10-07/README.md).
+- [x] Repair the latest extension CI tier failure. Exact `18ecdd2` passes
+  build, fast, physics, integration and registry validation. `dc39922`'s three
+  ROS-import failures remain recorded; the unchanged checks run in integration.
+  Later controller changes need their own CI. See [October 7 evidence](evidence/ci-extensions-2026-10-07/README.md).
 - [x] Replace invented support/release success with exact hashed measurements,
   retain negative results and block full-release claims on unfinished tasks.
   GUI Health, this checklist, the roadmap and agent guides expose those gaps
@@ -132,7 +158,9 @@ the older roadmap. Existing stabilization fixes must remain working.
 - [ ] **R6.6:** Qualify visual/collision/spawn and robot routes across all
   imported worlds/backends. All 100 Fortress example SDFs are downloaded;
   three environment examples are installed, while 97 plugin/robot fixtures
-  require behavior/resource review. Preserve original actors/plugins, audit
+  require behavior/resource review. Repair the two-floor hospital
+  source fixtures around z=-754,989,000 m with reviewed authored placement;
+  preview camera Fit only flags this defect. Preserve original actors/plugins, audit
   licenses and include remaining licensed Fuel environments.
 - [ ] **R6.7:** Implement a terrain-generation GUI with SSD output and shared
   provider/attribution manifest. Shared four-backend heightfield conversion

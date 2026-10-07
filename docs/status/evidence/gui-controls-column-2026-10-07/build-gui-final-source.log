@@ -1,0 +1,45 @@
+Starting >>> robot_lab_gui
+running egg_info
+writing ../../build/robot_lab_gui/robot_lab_gui.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_lab_gui/robot_lab_gui.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_lab_gui/robot_lab_gui.egg-info/entry_points.txt
+writing requirements to ../../build/robot_lab_gui/robot_lab_gui.egg-info/requires.txt
+writing top-level names to ../../build/robot_lab_gui/robot_lab_gui.egg-info/top_level.txt
+reading manifest file '../../build/robot_lab_gui/robot_lab_gui.egg-info/SOURCES.txt'
+writing manifest file '../../build/robot_lab_gui/robot_lab_gui.egg-info/SOURCES.txt'
+running build
+running build_py
+copying robot_lab_gui/hand_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/registry_preview.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/arm_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/gui_composition.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/launcher.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/drive_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/cartesian_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/launch_profiles.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/simulator_compat.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/lab_tabs.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/workspace_ui.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/live_monitor.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/process_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_viewer.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/themes/modern.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/themes
+copying robot_lab_gui/themes/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/themes
+running install
+running install_lib
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/lab_tabs.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/lab_tabs.py to lab_tabs.cpython-310.pyc
+running install_data
+copying resource/robot_lab_gui -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/share/robot_lab_gui
+running install_egg_info
+removing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui-0.1.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/robot_lab_gui/robot_lab_gui.egg-info to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui-0.1.0-py3.10.egg-info
+running install_scripts
+Installing registry_preview script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/robot_lab_gui
+Installing robot_lab_gui script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/robot_lab_gui
+writing list of installed files to '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/install.log'
+Finished <<< robot_lab_gui [2.74s]
+
+Summary: 1 package finished [3.57s]

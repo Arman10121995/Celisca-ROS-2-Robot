@@ -1,6 +1,6 @@
 # Stabilization and remaining work: agent execution guide
 
-Updated 2026-10-06. This guide implements the user's requested patch queue
+Updated 2026-10-07. This guide implements the user's requested patch queue
 and preserves its remaining acceptance. The latest user instruction prioritizes
 the new extensions first, then resumes this older queue; follow
 [ASSET_EXTENSION_GUIDE](ASSET_EXTENSION_GUIDE.md) and the live handoff/task owners.
@@ -17,10 +17,10 @@ mission. Keep all large artifacts on the mounted workspace SSD.
 
 1. Inspect `git status --short` and the task ledger. Preserve existing edits.
    Claim the next patch and record any additional scope paths before changing
-   shared code. October 6 source baseline is `61335fe` plus the containing
+   shared code. October 7 source baseline is `18ecdd2` plus the containing
    commit's documented source stages; installed packages can still be older
-   than source. Read [the latest continuation](status/continuation-2026-10-06.md)
-   before repeating completed TurtleBot 4 or native Panda implementation.
+   than source. Read [the latest continuation](status/continuation-2026-10-07.md)
+   before repeating completed TurtleBot 3/4 or native Panda implementation.
 2. Source `/opt/ros/humble/setup.bash` and `install/setup.bash`. Build changed
    packages with `colcon build --packages-select ... --symlink-install`.
    Python packages on this host sometimes copy files despite that option;
@@ -218,6 +218,13 @@ MuJoCo walking policy runs there. Gazebo/Isaac modes require their own actuation
 and sensing proof; retain a clear unavailable reason until that exists.
 
 ## Documentation, GUI and CI completion
+
+The October 7 redesign places controls/limits in Launch's right-hand column.
+See [GUI workspace](tutorials/gui-workspace.md). Controller widgets now belong
+to `control_notebook`; keep old `show_tab('Arm'/'Hand'/'Drone'/'Drive')` routes.
+After selection/layout changes, verify actual filtered selection, exact command,
+neutral enablement, accessible controls at 1600 and 1024 pixels, and owned
+Drive/native Panda callbacks. A screenshot alone does not establish motion.
 
 After each patch, update evidence, the ledger, roadmap and tutorials in the same
 logical change. Health → Platform Status displays `priority_patches` and task

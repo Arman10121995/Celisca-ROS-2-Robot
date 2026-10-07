@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/registry-3d-2026-10-07/live-burger-pybullet/producer.py", line 111, in <module>
+    report['phases']['armed_neutral']=measure(samples[begin:]); report['neutral_commands']=len(commands)-count
+  File "/workspace/molar/ros_ws/bumperbot_ws/docs/status/evidence/registry-3d-2026-10-07/live-burger-pybullet/producer.py", line 50, in measure
+    assert len(points)>10
+AssertionError

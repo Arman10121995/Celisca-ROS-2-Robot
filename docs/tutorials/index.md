@@ -65,7 +65,7 @@ packages have been built and sourced:
 
 ```bash
 ros2 run robot_lab_registry robot-lab list experiments
-ros2 run robot_lab_registry robot-lab validate --cross-references
+ros2 run robot_lab_registry robot-lab validate -c src/robot_lab/robot_lab_registry/config --cross-references
 ```
 
 These are inventory checks, not experiment execution or complete compatibility
@@ -75,6 +75,14 @@ Do not publish their output as measured comparative results until the roadmap's
 execution and measurement acceptance criteria are met.
 
 - [TurtleBot 4 Standard/Lite](turtlebot4.md): installed official models, measured
-  four-backend Display and remaining base/sensor/mission integration.
+  four-backend Drive, sensors, localization, mapping/export and navigation
+  screens; longer routes, other maps and vendor firmware remain.
+- [Registry 3D preview](registry-3d.md): native embedded geometry, complete
+  parent families and nested source variants/components; orbit/pan/zoom/Fit.
+- [GUI workspace](gui-workspace.md): Launch setup and command beside a separate
+  control column; robot categories/types, limits and sidebar navigation.
+- [TurtleBot 3 Burger/Waffle/Waffle Pi](turtlebot3.md): source-backed wheels
+  and LDS, measured four-backend GUI Drive and evidence-gated modes.
 - [Native Panda Arm controls](panda_arm.md): actual MuJoCo joint/Home/Stop/
-  trajectory interface and remaining planning/grasp/backend work.
+  Hand and MoveIt Plan/Execute, measured static-world TCP and physical cube
+  grasp; Servo, attached-payload planning and other backends remain.

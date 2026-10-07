@@ -1,0 +1,63 @@
+{
+  "stack_ready_wall_s": 4.8,
+  "start": [
+    -4.0,
+    -4.0
+  ],
+  "goal": [
+    -2.0,
+    -4.0
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "succeeded",
+  "wall_s": 24.0,
+  "settled_sim_second": true,
+  "final_pose_estimate_xy": [
+    -2.098,
+    -4.044
+  ],
+  "final_error_estimate_m": 0.105,
+  "final_yaw_estimate_deg": 0.81,
+  "final_yaw_error_estimate_deg": 0.81,
+  "final_truth_xy": [
+    -2.049,
+    -3.99
+  ],
+  "truth_age_wall_s": 0.001,
+  "final_truth_yaw_deg": 1.64,
+  "final_error_truth_m": 0.048,
+  "final_yaw_error_truth_deg": 1.64,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 1.957,
+  "motion_reverse_m": 0.0,
+  "motion_heading_travel_rad": 0.543,
+  "acceptance": {
+    "passed": true,
+    "checks": {
+      "goal_succeeded": true,
+      "truth_position": true,
+      "truth_heading": true,
+      "fresh_truth": true
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/modes-final/workflows/asset_turtlebot3_waffle_pi-pybullet-nav-nav_empty/navigation.trace.json",
+  "truth_samples": 1061,
+  "route_acceptance": {
+    "passed": true,
+    "checks": {
+      "measured_trajectory": true,
+      "swept_footprint_clear": true
+    },
+    "robot_radius_m": 0.26,
+    "min_clearance_limit_m": 0.02,
+    "min_swept_clearance_m": 0.30377889925461987,
+    "direct_route_clearance_m": 0.30380006961706973,
+    "scope": "Static box obstacles with conservative circular robot footprint; not contact telemetry",
+    "world_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world"
+  }
+}

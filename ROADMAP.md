@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-07. Extension checkpoint: `dc39922` plus recorded corrections. The
+Updated: 2026-10-07. Extension checkpoint: `18ecdd2` plus recorded corrections. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
 but full mission qualification remains partial. Existing scoped live robot
@@ -218,8 +218,9 @@ Dependencies: `R0.2`.
 
 The October 7 correction moves three unchanged ROS-import checks into the
 explicit integration manifest after `dc39922` built but failed the unsourced
-fast tier. Local plain-Python fast and sourced integration pass; observe the
-correction's exact remote run before closing R1.2 again. See
+fast tier. The exact correction `18ecdd2` passes the complete remote build,
+fast, physics, integration and registry checks. Later changes need their own
+CI observation. See
 [CI evidence](docs/status/evidence/ci-extensions-2026-10-07/README.md).
 
 ### R1.3 — Make CI bootstrap and doctor trustworthy
@@ -292,6 +293,16 @@ Dependencies: `R3.3`.
 - Acceptance: CLI and GUI resolve identical saved profiles (test: GUI and CLI resolve identical manifest; GUI-saved profile reloaded by CLI resolves identically; CLI `--out` manifest loadable by GUI layer resolves to same command). Selection changes the active component (test: global_planning a_star vs navfn differ only in `global_planner_plugin`). Stop/close only clean owned processes and never delete user artifacts (test: profile delete never touches user artifacts; ensure_defaults never overwrites user profiles). Headless GUI-adjacent logic tests pass (11 passed).
 - Command autofill follow-up (2026-09-11): `_update_validation_and_command` resolves once and stores the argument list used by the visible preview, Copy Command and Run Command. GUI/headless and room-vacuum choices update the command; map profile keys are translated to registry environment IDs. Invalid selections clear the command and disable Run/Copy. Verification: 37 GUI tests passed under Xvfb, package rebuild and installed-window smoke check passed; see [evidence](docs/status/gui-command-autofill-2026-09-11.md).
 
+- October 7 layout priority: the user corrected the requested control row to
+  a **separate right-hand column**. Launch now keeps setup/command review beside
+  Drive, Arm, Hand and Drone controls with their limits. Structural category/
+  subtype tags and filters distinguish wheel/leg counts, single/dual arms and
+  mobile manipulators without changing runtime support. Sidebar navigation,
+  adjustable panes, smaller-window scrolling and shared Logs preserve existing
+  command, ownership, neutral-input and controller callbacks. Use the
+  [operator guide](docs/tutorials/gui-workspace.md); retain source-matched actual
+  Drive/native Panda regressions separately from software and layout tests.
+
 - Applied-selection follow-up (2026-09-11): the resolver recorded all seven
   algorithm slots in the manifest but only `global_planning` and
   `local_planning` ever became launch arguments, so five categories were
@@ -335,10 +346,14 @@ Dependencies: `R3.3`, `R2.2`.
 Dependencies: `R3.1`, `R3.4`.
 
 - Files: `src/robot_lab_gui/`, `docs/status/asset-sources-2026-10-05.yaml`, `docs/ASSET_EXTENSION_GUIDE.md`, import tooling.
-- Implement: Inventory every robot-assets URDF variant and URDFHub upstream link, compare broader Menagerie/robot-descriptions catalogs, deduplicate canonical robots and expose source/license/import/control state in GUI. Agents download and integrate complete pinned assets on SSD into normal Launch robot/map selectors and autofilled commands. Installed Extensions shows status and opens Launch; do not require operators to download assets in the GUI. Never execute upstream install scripts automatically.
+- Implement: Inventory every robot-assets URDF variant and URDFHub upstream link, compare broader Menagerie/robot-descriptions catalogs, deduplicate canonical robots and expose source/license/import/control state in GUI. Show complete parent families with nested exact source variants/components, retaining old IDs and compatible controllers. Provide native embedded Registry 3D inspection with real source frames/scale and camera controls; components are inspectable but not standalone launch robots. Agents download and integrate complete pinned assets on SSD into normal Launch robot/map selectors and autofilled commands. Installed Extensions shows status and opens Launch; do not require operators to download assets in the GUI. Never execute upstream install scripts automatically.
 - Acceptance: Every requested source entry appears with provenance; dependencies and per-model licenses audited; imported URDF/MJCF and textures validated; real display/joint-state tests precede enabled launch profiles. Missing assets and control remain visible, rather than fake universal modes.
 
 - October 6 continuation: official TurtleBot 4 Standard/Lite have forty source-matched localization/reset/resume, 2D/3D SLAM with actual GUI saves, and clear/obstacle Nav2 trials across all four backends, plus eight final source lidar/RGB-D/Drive screens. Normal Launch exposes all five modes with measured algorithm defaults/autofill; other maps are experiments. Gazebo caps coarse physics steps to 2 ms for Create 3; Isaac ideal odometry derives twist from actual root poses and headless rendering follows sensor cadence. Preserve [mode evidence](docs/status/evidence/turtlebot4-modes-2026-10-06/README.md), [sensor evidence](docs/status/evidence/turtlebot4-sensors-2026-10-06/README.md) and retained failures. Longer routes, vendor hazards/docking, original materials and other robot controllers remain open.
+
+- October 7 continuation: official TurtleBot3 Burger/Waffle/Waffle Pi have twelve final normal GUI physical Drive/source LDS/joint/TF/Stop/watchdog screens across all four backends. Preserve pinned ROBOTIS sources, original 3.5 m LDS, named nav_empty spawn, explicit frame-inertia regularization and profile-local small-wheel MuJoCo/watchdog settings. Forty-eight actual localization/reset/resume, 2D SLAM/GUI-export and clear/obstacle Nav2 screens now pass; normal GUI mode/default/autofill checks and a fresh normal MuJoCo obstacle repeat pass. [Mode evidence](docs/status/evidence/turtlebot3-modes-2026-10-07/README.md) retains original Pi obstacle failures and measured 0.65 m inflation reruns. Source RGB-only cameras leave 3D SLAM pending. [Drive evidence](docs/status/evidence/turtlebot3-sensors-2026-10-07/README.md) retains both passing final runs and earlier failed stages. R3.6 remains partial beyond these exact cells.
+
+- October 7 catalog/inspection follow-up: reviewed robot/world parent families retain exact profiles and nested components; six R2/Valkyrie subassemblies are measured inside their complete source assemblies. The native Tk/OpenGL Registry preview renders seven actual scenes and passes orbit/pan/zoom/Fit, unchanged launch selection and clean closure. A live Burger/PyBullet preview sends no movement commands and retains physical Drive/Stop/watchdog control. [Evidence](docs/status/evidence/registry-3d-2026-10-07/README.md). Textures, huge-mesh GPU performance, actor animation and remaining model/backend missions remain; hospital remote source fixtures are flagged rather than silently repaired.
 
 ## R4 — Measured reference experiment
 

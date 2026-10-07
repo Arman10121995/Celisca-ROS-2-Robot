@@ -1,0 +1,472 @@
+{
+  "robot": "asset_turtlebot3_burger",
+  "backend": "pybullet",
+  "mode": "slam",
+  "map": "nav_empty",
+  "passed": true,
+  "scope": "Actual GUI Launch/autofill/Run/Stop; workflow motion sent through its /key_vel channel and independent engine truth. Sensor/Drive keyboard widgets separately recorded.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=false localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+  "algorithm_selection": {
+    "slam_backend": "slam_toolbox",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion",
+    "map_visualizer": "costmap_2d_observation"
+  },
+  "owned_pid": 40618,
+  "check_command": [
+    "python3",
+    "scripts/sim_workflow_check.py",
+    "--mode",
+    "slam",
+    "--base-frame",
+    "base_footprint",
+    "--timeout",
+    "300",
+    "--out",
+    "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/modes-final/workflows/asset_turtlebot3_burger-pybullet-slam-nav_empty/workflow.json"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "mode": "slam",
+    "base_frame": "base_footprint",
+    "command_topic": "/key_vel",
+    "phases": {
+      "forward": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.4995,
+        "yaw_change_rad": -0.0021,
+        "tail_speed_mps": 0.18489602230987343,
+        "tail_yaw_speed_rps": 0.0010571189520035352,
+        "end": {
+          "x": -3.5008959770202637,
+          "y": -3.999751567840576,
+          "z": 0.0009270253358408809,
+          "yaw": -0.0008370822759213298
+        }
+      },
+      "reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.499,
+        "yaw_change_rad": -0.0015,
+        "tail_speed_mps": 0.18501487472031822,
+        "tail_yaw_speed_rps": 0.0001767594713352038,
+        "end": {
+          "x": -3.9445340633392334,
+          "y": -3.998746156692505,
+          "z": 0.0008710121037438512,
+          "yaw": -0.002650005088119151
+        }
+      },
+      "turn": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0103,
+        "yaw_change_rad": 1.1899,
+        "tail_speed_mps": 0.003720880454174553,
+        "tail_yaw_speed_rps": 0.4102727174757943,
+        "end": {
+          "x": -4.0094075202941895,
+          "y": -4.003889560699463,
+          "z": 0.0009143154602497816,
+          "yaw": 1.1878798402098578
+        }
+      },
+      "turn_reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0096,
+        "yaw_change_rad": -1.1779,
+        "tail_speed_mps": 0.003754059846331325,
+        "tail_yaw_speed_rps": 0.4087843493679723,
+        "end": {
+          "x": -4.001521587371826,
+          "y": -3.9992024898529053,
+          "z": 0.0008958698017522693,
+          "yaw": 0.05123353425352589
+        }
+      },
+      "publisher_loss": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0709,
+        "yaw_change_rad": 0.0005,
+        "tail_speed_mps": 1.430511474609375e-06,
+        "tail_yaw_speed_rps": 1.1168985361974942e-05,
+        "end": {
+          "x": -3.6165308952331543,
+          "y": -3.9958064556121826,
+          "z": 0.0008367588161490858,
+          "yaw": 0.008526677015820898
+        }
+      },
+      "post_reset_idle": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.0001,
+        "yaw_change_rad": 0.0003,
+        "tail_speed_mps": 7.915496826171875e-05,
+        "tail_yaw_speed_rps": 0.0002253084038679151,
+        "end": {
+          "x": -4.000122547149658,
+          "y": -4.0,
+          "z": 0.0009953720727935433,
+          "yaw": 0.0003031268603025841
+        }
+      },
+      "post_reset_drive": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.314,
+        "yaw_change_rad": 0.0005,
+        "tail_speed_mps": 0.18497329858247416,
+        "tail_yaw_speed_rps": 8.826259414215776e-05,
+        "end": {
+          "x": -3.686159610748291,
+          "y": -3.9997737407684326,
+          "z": 0.0009641211363486946,
+          "yaw": 0.0008524487067623016
+        }
+      }
+    },
+    "checks": {
+      "ready": true,
+      "settled": true,
+      "forward": true,
+      "reverse": true,
+      "turn": true,
+      "turn_reverse": true,
+      "publisher_loss": true,
+      "localization": true,
+      "live_2d_map": true,
+      "reset_service": true,
+      "reset_spawn": true,
+      "reset_stopped": true,
+      "reset_localization": true,
+      "reset_drive_resumes": true,
+      "reset_estimator_tracks_motion": true,
+      "reset_mapping_resumes": true,
+      "monotonic_clock": true
+    },
+    "initial_map_to_world": {
+      "yaw": 4.028666430264897e-05,
+      "x": -4.000020583934328,
+      "y": -4.000000110931625
+    },
+    "initial_truth": {
+      "x": -4.000394344329834,
+      "y": -4.000000476837158,
+      "z": 0.0009892615489661694,
+      "yaw": 0.0012817567946007214
+    },
+    "localization_error_m": 0.0006318028218233681,
+    "sensor_messages_during_drive": {
+      "/scan": 103
+    },
+    "map_updates": [
+      {
+        "width": 96,
+        "height": 96,
+        "known": 903,
+        "occupied": 38,
+        "stamp": 2.429166666
+      },
+      {
+        "width": 96,
+        "height": 96,
+        "known": 903,
+        "occupied": 38,
+        "stamp": 3.445833333
+      },
+      {
+        "width": 96,
+        "height": 96,
+        "known": 903,
+        "occupied": 38,
+        "stamp": 4.254166666
+      },
+      {
+        "width": 96,
+        "height": 96,
+        "known": 903,
+        "occupied": 38,
+        "stamp": 5.2625
+      },
+      {
+        "width": 101,
+        "height": 96,
+        "known": 2325,
+        "occupied": 142,
+        "stamp": 6.075
+      },
+      {
+        "width": 103,
+        "height": 96,
+        "known": 3353,
+        "occupied": 169,
+        "stamp": 6.8875
+      },
+      {
+        "width": 107,
+        "height": 96,
+        "known": 3966,
+        "occupied": 187,
+        "stamp": 7.904166666
+      },
+      {
+        "width": 107,
+        "height": 96,
+        "known": 3966,
+        "occupied": 187,
+        "stamp": 8.7125
+      },
+      {
+        "width": 107,
+        "height": 96,
+        "known": 4068,
+        "occupied": 189,
+        "stamp": 9.724999999
+      },
+      {
+        "width": 107,
+        "height": 96,
+        "known": 4110,
+        "occupied": 192,
+        "stamp": 10.537499999
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4150,
+        "occupied": 194,
+        "stamp": 11.55
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4150,
+        "occupied": 194,
+        "stamp": 12.566666666
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4150,
+        "occupied": 194,
+        "stamp": 13.383333333
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4150,
+        "occupied": 194,
+        "stamp": 14.395833333
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 15.412499999
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 16.225
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 17.241666666
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 18.054166666
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 19.070833333
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 19.883333333
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4172,
+        "occupied": 196,
+        "stamp": 20.899999999
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4176,
+        "occupied": 196,
+        "stamp": 21.712499999
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4194,
+        "occupied": 198,
+        "stamp": 22.725
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4194,
+        "occupied": 198,
+        "stamp": 23.741666666
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4194,
+        "occupied": 198,
+        "stamp": 24.554166666
+      },
+      {
+        "width": 107,
+        "height": 97,
+        "known": 4194,
+        "occupied": 198,
+        "stamp": 25.366666666
+      },
+      {
+        "width": 96,
+        "height": 96,
+        "known": 894,
+        "occupied": 37,
+        "stamp": 26.591666666000002
+      },
+      {
+        "width": 96,
+        "height": 96,
+        "known": 894,
+        "occupied": 37,
+        "stamp": 27.604166666
+      },
+      {
+        "width": 96,
+        "height": 96,
+        "known": 894,
+        "occupied": 37,
+        "stamp": 28.416666666
+      },
+      {
+        "width": 101,
+        "height": 96,
+        "known": 3303,
+        "occupied": 166,
+        "stamp": 29.229166666
+      },
+      {
+        "width": 103,
+        "height": 96,
+        "known": 3645,
+        "occupied": 176,
+        "stamp": 30.041666666
+      }
+    ],
+    "accepted_slam_poses": [
+      {
+        "x": -7.122610249514316e-05,
+        "y": -7.677956860095094e-09
+      },
+      {
+        "x": 0.20416715315559364,
+        "y": 0.00014914681767538753
+      },
+      {
+        "x": 0.31661289860908237,
+        "y": 6.615427634688322e-05
+      },
+      {
+        "x": 0.42911840449781075,
+        "y": -0.00014268621037595363
+      },
+      {
+        "x": 0.5337444179729358,
+        "y": -0.0003474933871557049
+      },
+      {
+        "x": 0.41878828389317574,
+        "y": -5.374959548932209e-05
+      },
+      {
+        "x": 0.30622660532375434,
+        "y": 0.00026220512562254655
+      },
+      {
+        "x": 0.19366722131278494,
+        "y": 0.0005998373150804028
+      },
+      {
+        "x": 0.08113048270994472,
+        "y": 0.0009361468067096171
+      },
+      {
+        "x": -0.008813303153391095,
+        "y": -0.002236905524612403
+      },
+      {
+        "x": 0.09362043359871805,
+        "y": 0.0025373949916887416
+      },
+      {
+        "x": 0.20618139404420227,
+        "y": 0.0035140220440476873
+      },
+      {
+        "x": 0.31859664202560856,
+        "y": 0.004081864410624085
+      }
+    ],
+    "reset_response": "Simulation reset successfully",
+    "post_reset_map_to_world": {
+      "yaw": 0.00010476807842312445,
+      "x": -0.0004870677427689911,
+      "y": 0.0004190633355878326
+    },
+    "post_reset_localization_error_m": 0.0,
+    "post_reset_drive_localization_error_m": 0.0005056967544230909,
+    "map_updates_after_reset": 5,
+    "cloud_updates_after_reset": 0,
+    "clock_backward_jumps": 0,
+    "truth_samples": 1474,
+    "sensor_counts": {
+      "/scan": 151
+    },
+    "scan_geometry": {
+      "frame": "base_scan",
+      "samples": 360,
+      "finite": 194,
+      "min_m": 0.8399733901023865,
+      "max_m": 3.4898617267608643,
+      "range_min": 0.11999999731779099,
+      "range_max": 3.5
+    },
+    "passed": true
+  },
+  "save_map": {
+    "yaml": "image: saved-map.pgm\nmode: trinary\nresolution: 0.05\norigin: [-6, -6.01, 0]\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.25",
+    "image_bytes": 9902
+  },
+  "map_exporter_exited": true,
+  "launch_returncode": 0
+}

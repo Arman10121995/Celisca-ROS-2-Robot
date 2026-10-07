@@ -11,7 +11,7 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
    task ledger: states, owners, dependencies, evidence, `next_task`.
 2. [`ROADMAP.md`](../ROADMAP.md) — scope and acceptance criteria for every task.
 3. [`docs/status/audit-2026-10-02.md`](status/audit-2026-10-02.md) and
-   [`docs/status/continuation-2026-10-06.md`](status/continuation-2026-10-06.md) —
+   [`docs/status/continuation-2026-10-07.md`](status/continuation-2026-10-07.md) —
    audited claim boundaries, latest measured work and retained failures.
 4. [`docs/PATCH_EXECUTION_GUIDE.md`](PATCH_EXECUTION_GUIDE.md) and
    [`docs/ASSET_EXTENSION_GUIDE.md`](ASSET_EXTENSION_GUIDE.md) — execution steps,
@@ -52,6 +52,14 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+The latest October 7 GUI priority is implemented as a **control column**, not
+a row. Read [the workspace guide](tutorials/gui-workspace.md): Drive/Arm/Hand/
+Drone pages belong to Launch's `control_notebook`; the main workspace notebook
+is reached through the sidebar. Preserve `show_tab` aliases for saved workflows
+and real producers. Structural labels in `robot_taxonomy.yaml` never grant
+mode/controller support. Shared GUI changes require actual neutral/Drive and
+normal native Panda acceptance before refreshing strict source certificates.
+
 The latest October 5 user instruction prioritizes the new extensions before
 the older roadmap: R3.6/R6.5–R6.7, R5.10, then R5.7–R5.9. Preserve existing
 stabilization fixes; return to R5.6 and the remaining original acceptance next.
@@ -81,7 +89,7 @@ regression is repaired and recorded under
 spawn defaults and keep catch-up disabled for effort-controlled robots.
 The full walking/turning/terrain milestones remain partial. The user now explicitly includes drone work. R5.4
 SITL Flight acceptance is measured and its GUI path is available; see
-[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-06.md).
+[tutorial](tutorials/px4_x500.md) and [current continuation](status/continuation-2026-10-07.md).
 Continue R5.6 four-wheel navigation and the remaining qualification matrix;
 do not use the historical no-thrust diagnosis to restart PX4 plant changes.
 October 5 adds strict body-pose and obstacle screens, selected real mapping,
@@ -109,16 +117,38 @@ and [sensor evidence](status/evidence/turtlebot4-sensors-2026-10-06/README.md).
 Preserve Gazebo's selected-world 2 ms cap, Isaac pose-derived ideal twist and
 sensor cadence, bounded console/lifecycle queues and normal export cleanup.
 Other maps, longer routes, materials and vendor firmware remain unqualified.
+Official TurtleBot3 Burger/Waffle/Waffle Pi now have twelve final normal GUI
+source LDS/physical Drive/joint/TF/Stop/watchdog screens across all four engines;
+forty-eight separate localization/reset/resume, actual 2D Save Map and clear/obstacle
+Nav2 screens now pass. Normal GUI enables the four measured modes on every
+engine with compatible defaults/autofill. Keep 3D SLAM unavailable for RGB-only cameras.
+Read the [TurtleBot3 guide](tutorials/turtlebot3.md) and
+[Drive evidence](status/evidence/turtlebot3-sensors-2026-10-07/README.md).
+Preserve the original 3.5 m LDS, named nav_empty spawn, virtual-frame inertia
+regularizer and profile-local small-wheel servo/watchdog settings. Source
+RGB-only cameras do not qualify 3D SLAM. Preserve failed replacement imports
+and negative physics trials; do not purge previous working profiles.
 Native Panda joint/Hand controls and physical cube lift/release remain. Its
 actual MoveIt KDL/OMPL/FCL GUI Plan/Execute now passes two physical TCP targets,
 collision/unreachable rejection, joint/finger invalidation, interruptions,
 reset, Live Monitor and clean planner shutdown in static `nav_empty`; see
-[Cartesian evidence](status/evidence/panda-cartesian-2026-10-06/README.md).
+[October 7 control-column regression](status/evidence/panda-cartesian-controls-column-2026-10-07/README.md).
 Servo, dynamic/attached-object scenes, repeated pick/place and other backends
 remain R5.7–R5.9. Preserve failed trials and the original actuator contracts.
 R6.7 terrain and R5.8/R5.9 hand/mobile manipulation need their own
 implementation and actual mission proof. The Health tab loads
 the ledger and latest report; update those when advancing any task.
+
+The GUI now uses reviewed `asset_groups.yaml` parent families with exact
+source-variant IDs and nested components. Do not overwrite runtime/controller
+identity with a family alias or guess component mounts. The native Registry
+Tk/OpenGL viewport owns its GLX context and bounded background geometry loader;
+close it before destroying the Tk window. Read
+[the operator guide](tutorials/registry-3d.md) and
+[actual render/live-plant evidence](status/evidence/registry-3d-2026-10-07/README.md).
+Source SDF visuals are an optional inspection path; physics still prefers
+collision geometry. Hospital has six extreme source-pose fixtures; camera Fit
+is not a world/collision/navigation repair. Keep buffers and full meshes on SSD.
 
 The support generator now indexes exact hashed screens and derives blocked
 release gates from unfinished tasks. Do not run legacy demonstration scripts

@@ -1,0 +1,20 @@
+11:03:37 START asset_turtlebot3_waffle_pi-gazebo-loc-nav_empty
+11:04:25 END asset_turtlebot3_waffle_pi-gazebo-loc-nav_empty 0 True
+11:04:25 START asset_turtlebot3_waffle_pi-gazebo-slam-nav_empty
+11:05:16 END asset_turtlebot3_waffle_pi-gazebo-slam-nav_empty 0 True
+11:05:16 START asset_turtlebot3_waffle_pi-gazebo-nav-nav_empty
+11:06:08 END asset_turtlebot3_waffle_pi-gazebo-nav-nav_empty 0 True
+11:06:08 START asset_turtlebot3_waffle_pi-gazebo-nav-nav_obstacle
+11:07:32 END asset_turtlebot3_waffle_pi-gazebo-nav-nav_obstacle 0 True
+11:07:32 START asset_turtlebot3_waffle_pi-isaac-loc-nav_empty
+11:08:38 END asset_turtlebot3_waffle_pi-isaac-loc-nav_empty 0 True
+11:08:38 START asset_turtlebot3_waffle_pi-isaac-slam-nav_empty
+11:09:45 END asset_turtlebot3_waffle_pi-isaac-slam-nav_empty 0 True
+11:09:45 START asset_turtlebot3_waffle_pi-isaac-nav-nav_empty
+11:10:58 END asset_turtlebot3_waffle_pi-isaac-nav-nav_empty 0 True
+11:10:58 START asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle
+11:12:25 END asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle 1 False
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/turtlebot3/run_workflows.py", line 31, in <module>
+    if rc!=0 or not report['passed']:raise RuntimeError('Mode qualification failed: '+key)
+RuntimeError: Mode qualification failed: asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle

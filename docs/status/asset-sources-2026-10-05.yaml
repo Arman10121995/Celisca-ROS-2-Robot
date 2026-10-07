@@ -2,6 +2,16 @@ updated: '2026-10-05'
 qualification: Pinned sources; installation and exact model/world import checks are
   recorded separately from runtime missions.
 sources:
+- id: turtlebot3_simulation_vendor
+  kind: robot_dependency
+  repository: https://github.com/ROBOTIS-GIT/turtlebot3_simulations
+  revision: a35a56c8b04877dc89772b598084d8ce648a9023
+  status: downloaded
+  license_note: Apache-2.0; official Humble simulation sensor and wheel definitions
+  entries:
+  - turtlebot3_gazebo/models/turtlebot3_burger/model.sdf
+  - turtlebot3_gazebo/models/turtlebot3_waffle/model.sdf
+  - turtlebot3_gazebo/models/turtlebot3_waffle_pi/model.sdf
 - id: gazebo_2dmap
   kind: world_tool
   repository: https://github.com/robotics-upo/gazebo_ros2_2Dmap_plugin

@@ -17,6 +17,8 @@ from ament_index_python.packages import get_package_share_directory
 from .process_control import stop_group, stop_owned_launch
 from .drive_control import LinuxJoystick, RampDrive, limits_from_drive
 from robot_lab_utils.installed_assets import merge_installed_profiles
+from robot_lab_utils.asset_groups import AssetGroups
+from robot_lab_utils.robot_taxonomy import RobotTaxonomy, ALL_CATEGORIES, ALL_TYPES, CATEGORIES
 
 try:
     from robot_lab_utils.mode_capability import (
@@ -372,7 +374,7 @@ class SimulationLauncherGui(tk.Tk):
             self.fonts = {}
 
         self.title("Robot Lab Control Center")
-        self.geometry("1280x860")
+        self.geometry("1600x980")
         self.minsize(1024, 768)
 
         # Keyboard shortcuts
@@ -398,6 +400,9 @@ class SimulationLauncherGui(tk.Tk):
         self.mode_profiles = load_yaml(self.modes_config_path).get("modes", {})
         self.map_profiles = merge_installed_profiles(load_yaml(self.maps_config_path), 'maps').get('maps', {})
         self.robot_profiles = merge_installed_profiles(load_yaml(self.robots_config_path), 'robots').get('robots', {})
+        self.robot_groups = AssetGroups('robots', self.robot_profiles)
+        self.map_groups = AssetGroups('maps', self.map_profiles)
+        self.robot_taxonomy = RobotTaxonomy(self.robot_groups)
 
         # Which simulators are actually usable on this host (installed
         # binaries / configured runtimes) — gates the Simulator combo.
@@ -461,6 +466,11 @@ class SimulationLauncherGui(tk.Tk):
             value=self._first_key(self.robot_profiles, "bumperbot"))
         self.map_var = tk.StringVar(
             value=self._first_key(self.map_profiles, "celisca_floor_1"))
+        self.robot_family_var = tk.StringVar(value=self.robot_groups.family(self.robot_var.get()))
+        self.map_family_var = tk.StringVar(value=self.map_groups.family(self.map_var.get()))
+        self.robot_category_var = tk.StringVar(value=ALL_CATEGORIES)
+        self.robot_subtype_var = tk.StringVar(value=ALL_TYPES)
+        self.robot_tags_var = tk.StringVar()
         self.mode_var = tk.StringVar(value="display")
         self.simulator_var = tk.StringVar(value="gazebo")
         self.launch_kind_var = tk.StringVar(value="simulation")
@@ -582,98 +592,71 @@ class SimulationLauncherGui(tk.Tk):
         return algorithm_id
 
     def _build_ui(self):
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-
-        # Top-level notebook: one full-size tab per control-center area
-        self.notebook = ttk.Notebook(self)
-        self.notebook.grid(row=0, column=0, sticky="nsew")
-
-        launch_tab = ttk.Frame(self.notebook)
-        self.notebook.add(launch_tab, text="Launch")
-        launch_tab.columnconfigure(0, weight=0)
-        launch_tab.columnconfigure(1, weight=1)
-        launch_tab.rowconfigure(0, weight=1)
-
-        # Scrollable left controls panel (inside the Launch tab)
-        left_container = ttk.Frame(launch_tab)
-        left_container.grid(row=0, column=0, sticky="ns")
-        left_container.columnconfigure(0, weight=1)
-        left_container.rowconfigure(0, weight=1)
-
-        scrollbar = ttk.Scrollbar(left_container, orient="vertical")
-        scrollbar.grid(row=0, column=1, sticky="ns")
-
-        canvas = tk.Canvas(
-            left_container,
-            borderwidth=0,
-            highlightthickness=0,
-            yscrollcommand=scrollbar.set,
-            width=372,
-        )
-        try:
-            canvas.configure(bg='#1e1e2e')
-        except Exception:
-            pass
-        canvas.grid(row=0, column=0, sticky="nsew")
-        scrollbar.configure(command=canvas.yview)
-
-        controls = ttk.Frame(canvas, padding=12)
-        canvas_window = canvas.create_window((0, 0), window=controls, anchor="nw")
-
-        def _on_frame_configure(event):
-            canvas.configure(scrollregion=canvas.bbox("all"))
-
-        controls.bind("<Configure>", _on_frame_configure)
-
-        def _on_canvas_configure(event):
-            canvas.itemconfig(canvas_window, width=event.width)
-
-        canvas.bind("<Configure>", _on_canvas_configure)
-
-        def _on_mousewheel(event):
-            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-        def _on_button4(event):
-            canvas.yview_scroll(-1, "units")
-
-        def _on_button5(event):
-            canvas.yview_scroll(1, "units")
-
-        for _seq, _fn in (("<MouseWheel>", _on_mousewheel),
-                           ("<Button-4>", _on_button4),
-                           ("<Button-5>", _on_button5)):
-            canvas.bind(_seq, _fn)
-            controls.bind(_seq, _fn)
-
+        from .workspace_ui import build_workspace, ScrollPanel
+        controls, advanced = build_workspace(self)
+        launch_tab = self.launch_tab
+        output_frame = self.session_frame
+        output_frame.columnconfigure(0, weight=1)
+        output_frame.rowconfigure(3, weight=1)
+        self.session_details = ttk.Notebook(output_frame)
+        self.session_details.grid(row=3, column=0, sticky='nsew', pady=(6, 0))
+        algorithms = ScrollPanel(self.session_details, width=430)
+        self.session_details.add(algorithms, text='Algorithms & checks')
+        algorithm_controls = algorithms.body
+        diagnostics = ScrollPanel(self.session_details, width=430)
+        self.session_details.add(diagnostics, text='Details')
+        diagnostics_controls = diagnostics.body
+        self.launch_log_page = ttk.Frame(self.session_details)
+        self.launch_log_page.columnconfigure(0, weight=1)
+        self.launch_log_page.rowconfigure(0, weight=1)
+        self.session_details.add(self.launch_log_page, text='Launch log')
+        self.session_action_frame = ttk.Frame(output_frame)
+        self.session_action_frame.grid(row=2, column=0, sticky='ew')
+        advanced.columnconfigure(0, weight=1)
         controls.columnconfigure(0, weight=1)
 
         ttk.Label(controls, text="Robot").grid(row=0, column=0, sticky="w")
         robot_frame = ttk.Frame(controls)
         robot_frame.grid(row=1, column=0, sticky="ew", pady=(2, 12))
         robot_frame.columnconfigure(0, weight=1)
+        filters = ttk.Frame(robot_frame)
+        filters.grid(row=0, column=0, sticky='ew', pady=(0, 8))
+        filters.columnconfigure(0, weight=1); filters.columnconfigure(1, weight=1)
+        self.robot_category_combo = ttk.Combobox(filters, textvariable=self.robot_category_var,
+            values=(ALL_CATEGORIES, *CATEGORIES), state='readonly', width=18)
+        self.robot_category_combo.grid(row=0, column=0, columnspan=2, sticky='ew')
+        self.robot_subtype_combo = ttk.Combobox(filters, textvariable=self.robot_subtype_var,
+            values=(ALL_TYPES, *self.robot_taxonomy.subtypes()), state='readonly', width=17)
+        self.robot_subtype_combo.grid(row=1, column=0, columnspan=2, sticky='ew', pady=(4, 0))
+        self.robot_category_combo.bind('<<ComboboxSelected>>', self._robot_filter_changed)
+        self.robot_subtype_combo.bind('<<ComboboxSelected>>', self._robot_filter_changed)
         self.robot_combo = ttk.Combobox(
             robot_frame,
-            textvariable=self.robot_var,
-            values=[NONE_LABEL] + sorted(self.robot_profiles.keys()),
+            textvariable=self.robot_family_var,
+            values=[NONE_LABEL] + self.robot_groups.choices(),
             state="readonly",
-            width=34,
+            width=26,
         )
-        self.robot_combo.grid(row=0, column=0, sticky="ew")
-        self.robot_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
+        self.robot_combo.grid(row=1, column=0, sticky="ew")
+        self.robot_combo.bind("<<ComboboxSelected>>", self._robot_family_selected)
         add_tooltip(
             self.robot_combo,
             "Robot to simulate. '%s' shows the map with no robot "
             "(display mode only)." % NONE_LABEL)
+        ttk.Label(robot_frame, text='Model / source variant').grid(row=2, column=0, sticky='w', pady=(4, 0))
+        self.robot_variant_combo = ttk.Combobox(robot_frame, textvariable=self.robot_var, state='readonly', width=26)
+        self.robot_variant_combo.grid(row=3, column=0, sticky='ew')
+        self.robot_variant_combo.bind('<<ComboboxSelected>>', self._on_selection_changed)
         self.robot_info_var = tk.StringVar(value="")
         ttk.Label(
             robot_frame,
             textvariable=self.robot_info_var,
             foreground="#a6adc8" if THEME_AVAILABLE else "#555555",
-            wraplength=330,
+            wraplength=295,
             justify="left",
-        ).grid(row=1, column=0, sticky="ew", pady=(4, 0))
+        ).grid(row=5, column=0, sticky="ew", pady=(4, 0))
 
+        ttk.Label(robot_frame, textvariable=self.robot_tags_var, style='Tag.TLabel', wraplength=300).grid(row=4, column=0, sticky='w', pady=(6, 0))
         ttk.Label(controls, text="Mode").grid(row=2, column=0, sticky="w")
         mode_frame = ttk.Frame(controls)
         mode_frame.grid(row=3, column=0, sticky="ew", pady=(2, 12))
@@ -685,20 +668,27 @@ class SimulationLauncherGui(tk.Tk):
                 value=mode,
                 command=self._update_from_selection,
             )
-            button.grid(row=index, column=0, sticky="w", pady=2)
+            button.grid(row=index//2, column=index%2, sticky="w", pady=2)
             self.mode_buttons[mode] = button
             add_tooltip(button, MODE_TOOLTIPS.get(mode, ""))
 
         ttk.Label(controls, text="Map").grid(row=4, column=0, sticky="w")
+        map_frame = ttk.Frame(controls)
+        map_frame.grid(row=5, column=0, sticky='ew', pady=(2, 12))
+        map_frame.columnconfigure(0, weight=1)
         self.map_combo = ttk.Combobox(
-            controls,
-            textvariable=self.map_var,
-            values=[NONE_LABEL] + sorted(self.map_profiles.keys()),
+            map_frame,
+            textvariable=self.map_family_var,
+            values=[NONE_LABEL] + self.map_groups.choices(),
             state="readonly",
-            width=34,
+            width=26,
         )
-        self.map_combo.grid(row=5, column=0, sticky="ew", pady=(2, 12))
-        self.map_combo.bind("<<ComboboxSelected>>", self._on_selection_changed)
+        self.map_combo.grid(row=0, column=0, sticky="ew")
+        self.map_combo.bind("<<ComboboxSelected>>", self._map_family_selected)
+        ttk.Label(map_frame, text='World variant').grid(row=1, column=0, sticky='w', pady=(4, 0))
+        self.map_variant_combo = ttk.Combobox(map_frame, textvariable=self.map_var, state='readonly', width=26)
+        self.map_variant_combo.grid(row=2, column=0, sticky='ew')
+        self.map_variant_combo.bind('<<ComboboxSelected>>', self._on_selection_changed)
         add_tooltip(
             self.map_combo,
             "Environment to load. '%s' shows the robot with no world "
@@ -710,14 +700,14 @@ class SimulationLauncherGui(tk.Tk):
             textvariable=self.simulator_var,
             values=[v for v in SIMULATOR_ORDER],
             state="readonly",
-            width=34,
+            width=26,
         )
         self.simulator_combo.grid(row=7, column=0, sticky="ew", pady=(2, 12))
         self.simulator_combo.bind("<<ComboboxSelected>>", self._simulator_selected)
         add_tooltip(self.simulator_combo, "Select the simulator backend.")
 
-        ttk.Label(controls, text="Launch").grid(row=8, column=0, sticky="w")
-        launch_frame = ttk.Frame(controls)
+        ttk.Label(advanced, text="Launch").grid(row=8, column=0, sticky="w")
+        launch_frame = ttk.Frame(advanced)
         launch_frame.grid(row=9, column=0, sticky="ew", pady=(2, 12))
         self.simulation_radio = ttk.Radiobutton(
             launch_frame,
@@ -738,8 +728,8 @@ class SimulationLauncherGui(tk.Tk):
         self.vacuum_radio.grid(row=1, column=0, sticky="w", pady=2)
         add_tooltip(self.vacuum_radio, "Run a vacuum cleaning mission (robot must support it).")
 
-        ttk.Label(controls, text="GUI").grid(row=10, column=0, sticky="w", pady=(12, 0))
-        gui_frame = ttk.Frame(controls)
+        ttk.Label(advanced, text="GUI").grid(row=10, column=0, sticky="w", pady=(12, 0))
+        gui_frame = ttk.Frame(advanced)
         gui_frame.grid(row=11, column=0, sticky="ew", pady=(2, 12))
         gui_tooltip = "Auto: GUI if DISPLAY is set. GUI: always launch the simulator UI. Headless: no UI."
         for column, text in enumerate(["Auto", "GUI", "Headless"]):
@@ -755,7 +745,7 @@ class SimulationLauncherGui(tk.Tk):
 
         # --- Simulator availability (host-detected; R3.4+ gating) ---------
         sim_panel = ttk.LabelFrame(
-            controls, text="Simulator availability", padding=(8, 4))
+            advanced, text="Simulator availability", padding=(8, 4))
         sim_panel.grid(row=12, column=0, sticky="ew", pady=(0, 10))
         self.simulator_status_labels = {}
         for index, sim_id in enumerate(SIMULATOR_ORDER):
@@ -771,14 +761,14 @@ class SimulationLauncherGui(tk.Tk):
         # --- Full composition controls (R3.4): dynamic algorithm slots ---
         # The slots are rebuilt when the mode changes (see _refresh_mode_steps).
         self.composition_frame = ttk.LabelFrame(
-            controls, text="Composition - algorithm slots", padding=(8, 6))
+            algorithm_controls, text="Composition - algorithm slots", padding=(8, 6))
         self.composition_frame.grid(row=13, column=0, sticky="ew", pady=(12, 6))
         self.composition_frame.columnconfigure(1, weight=1)
         self._current_mode_steps = None  # Track when mode changes
 
         # Compatibility status label (color-coded)
         self.compatibility_label = ttk.Label(
-            controls,
+            algorithm_controls,
             textvariable=self.compatibility_var,
             justify="left",
             wraplength=330,
@@ -789,11 +779,11 @@ class SimulationLauncherGui(tk.Tk):
                    "Shows whether the current robot/mode supports all slots.")
 
         # Separator between composition and validation
-        ttk.Separator(controls, orient="horizontal").grid(
+        ttk.Separator(algorithm_controls, orient="horizontal").grid(
             row=15, column=0, sticky="ew", pady=(2, 4))
 
         # Action buttons for composition management
-        action_frame = ttk.Frame(controls)
+        action_frame = ttk.Frame(algorithm_controls)
         action_frame.grid(row=16, column=0, sticky="ew", pady=(2, 4))
         action_frame.columnconfigure(0, weight=1)
         action_frame.columnconfigure(1, weight=1)
@@ -803,29 +793,29 @@ class SimulationLauncherGui(tk.Tk):
         ttk.Button(action_frame, text="Reset",
                    command=self._reset_composition,
                    style="Small.TButton").grid(row=0, column=0, sticky="ew", padx=(0, 3))
-        ttk.Button(action_frame, text="Incompat",
+        ttk.Button(action_frame, text="Compatibility",
                    command=self._show_incompatible,
                    style="Small.TButton").grid(row=0, column=1, sticky="ew", padx=3)
-        ttk.Button(action_frame, text="Quick",
+        ttk.Button(action_frame, text="Presets",
                    command=self._quick_select,
                    style="Small.TButton").grid(row=0, column=2, sticky="ew", padx=3)
-        ttk.Button(action_frame, text="Cleared",
+        ttk.Button(action_frame, text="Cleared choices",
                    command=self._show_cleared,
                    style="Small.TButton").grid(row=0, column=3, sticky="ew", padx=(3, 0))
 
-        ttk.Label(controls, text="Validation", foreground="#a6adc8" if THEME_AVAILABLE else "#333333"
+        ttk.Label(diagnostics_controls, text="Validation", foreground="#a6adc8" if THEME_AVAILABLE else "#333333"
                   ).grid(row=17, column=0, sticky="w", pady=(4, 2))
         ttk.Label(
-            controls,
+            diagnostics_controls,
             textvariable=self.validation_var,
             justify="left",
             wraplength=330,
             foreground="#a6adc8" if THEME_AVAILABLE else "#333333",
         ).grid(row=18, column=0, sticky="ew", pady=(2, 8))
 
-        ttk.Label(controls, text="Resolved Configuration").grid(row=19, column=0, sticky="w")
+        ttk.Label(diagnostics_controls, text="Resolved Configuration").grid(row=19, column=0, sticky="w")
         summary = ttk.Label(
-            controls,
+            diagnostics_controls,
             textvariable=self.summary_var,
             justify="left",
             wraplength=330,
@@ -833,7 +823,7 @@ class SimulationLauncherGui(tk.Tk):
         )
         summary.grid(row=20, column=0, sticky="ew", pady=(2, 12))
 
-        button_frame = ttk.Frame(controls)
+        button_frame = ttk.Frame(advanced)
         button_frame.grid(row=21, column=0, sticky="ew")
         button_frame.columnconfigure(0, weight=1)
         button_frame.columnconfigure(1, weight=1)
@@ -854,7 +844,7 @@ class SimulationLauncherGui(tk.Tk):
         self.bg_processes = {}
 
         self.go2_policy_checkbox = ttk.Checkbutton(
-            controls,
+            advanced,
             text="Go2 flat-ground policy (experimental)",
             variable=self.go2_policy_var,
             command=self._update_validation_and_command,
@@ -865,7 +855,7 @@ class SimulationLauncherGui(tk.Tk):
                     "slow reverse and stairs still fail qualification.")
 
         self.bhl_policy_checkbox = ttk.Checkbutton(
-            controls,
+            advanced,
             text="BHL walking policy (experimental)",
             variable=self.bhl_policy_var,
             command=self._update_validation_and_command,
@@ -878,8 +868,8 @@ class SimulationLauncherGui(tk.Tk):
                     "unqualified. Uncheck for the passive spawn stance with no "
                     "policy node.")
 
-        steering_frame = ttk.Frame(controls)
-        steering_frame.grid(row=24, column=0, sticky="ew", pady=(8, 0))
+        steering_frame = self.steering_frame = ttk.Frame(self.drive_pad_host)
+        steering_frame.grid(row=0, column=0, sticky="ew", pady=(8, 0))
         ttk.Label(steering_frame, text="4WS pattern").pack(side="left")
         self.steering_mode_combo = ttk.Combobox(
             steering_frame, textvariable=self.steering_mode_var,
@@ -895,160 +885,150 @@ class SimulationLauncherGui(tk.Tk):
                     "profile default (ackermann = opposite-phase).  Patterns "
                     "are measured per backend under R5.6; see the ledger.")
 
-        ttk.Label(controls, text="Drive").grid(row=25, column=0, sticky="w", pady=(12, 0))
-        drive_frame = ttk.Frame(controls)
-        drive_frame.grid(row=26, column=0, sticky="ew", pady=(2, 8))
+        drive_frame = ttk.Frame(self.drive_pad_host)
+        drive_frame.grid(row=1, column=0, sticky="ew", pady=(2, 8))
         for column in range(3):
             drive_frame.columnconfigure(column, weight=1)
 
-        forward_button = ttk.Button(drive_frame, text="Forward")
+        forward_button = ttk.Button(drive_frame, text="Forward", width=8)
         forward_button.grid(row=0, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(forward_button, 1.0, 0.0)
 
-        self.strafe_left_button = ttk.Button(drive_frame, text="Strafe L")
+        self.strafe_left_button = ttk.Button(drive_frame, text="Strafe L", width=8)
         self.strafe_left_button.grid(row=0, column=0, sticky="ew", padx=2, pady=2)
         self._bind_strafe_button(self.strafe_left_button, 1.0)
 
-        self.strafe_right_button = ttk.Button(drive_frame, text="Strafe R")
+        self.strafe_right_button = ttk.Button(drive_frame, text="Strafe R", width=8)
         self.strafe_right_button.grid(row=0, column=2, sticky="ew", padx=2, pady=2)
         self._bind_strafe_button(self.strafe_right_button, -1.0)
 
-        left_button = ttk.Button(drive_frame, text="Left")
+        left_button = ttk.Button(drive_frame, text="Left", width=8)
         left_button.grid(row=1, column=0, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(left_button, 0.0, 1.0)
 
-        stop_drive_button = ttk.Button(drive_frame, text="Stop", command=self._stop_drive)
+        stop_drive_button = ttk.Button(drive_frame, text="Stop", command=self._stop_drive, width=8)
         stop_drive_button.grid(row=1, column=1, sticky="ew", padx=2, pady=2)
 
-        right_button = ttk.Button(drive_frame, text="Right")
+        right_button = ttk.Button(drive_frame, text="Right", width=8)
         right_button.grid(row=1, column=2, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(right_button, 0.0, -1.0)
 
-        reverse_button = ttk.Button(drive_frame, text="Reverse")
+        reverse_button = ttk.Button(drive_frame, text="Reverse", width=8)
         reverse_button.grid(row=2, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
+        ttk.Label(self.drone_actions_host, text='Take off, then use Drive for XY/yaw.\nAltitude controls change height; Hold stops travel.', wraplength=310).grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 8))
         self.flight_buttons = []
         for column, (label, action) in enumerate((('Takeoff', 'takeoff'), ('Hold', 'hold'), ('Land', 'land'))):
-            button = ttk.Button(drive_frame, text=label,
+            button = ttk.Button(self.drone_actions_host, text=label, width=8,
                                 command=lambda action=action: self._flight_action(action))
             button.grid(row=3, column=column, sticky='ew', padx=2, pady=2)
             self.flight_buttons.append(button)
+        altitude = ttk.Frame(self.drone_actions_host)
+        altitude.grid(row=4, column=0, columnspan=3, sticky='ew')
         for column, (label, sign) in enumerate((('Altitude Up',1.0),('Altitude Down',-1.0))):
-            button = ttk.Button(drive_frame,text=label,
+            button = ttk.Button(altitude,text=label, width=12,
                                 command=lambda sign=sign:self._start_altitude(sign))
-            button.grid(row=4,column=column,sticky='ew',padx=2,pady=2)
+            button.grid(row=0,column=column,sticky='ew',padx=2,pady=2)
             self.drive_altitude_widgets[sign] = button
             self.flight_buttons.append(button)
             add_tooltip(button,'Click to climb or descend; click again to slow to a hover. Stop/Space stops altitude changes.')
 
-        speed_frame = ttk.Frame(controls)
-        speed_frame.grid(row=27, column=0, sticky="ew", pady=(0, 10))
-        speed_frame.columnconfigure(1, weight=1)
-        speed_frame.columnconfigure(3, weight=1)
-        ttk.Checkbutton(speed_frame, text="Override robot drive limits",
-                        variable=self.drive_override_var,
-                        command=self._update_drive_limits_label).grid(row=0, column=0,
-                                                               columnspan=4, sticky="w")
-        ttk.Label(speed_frame, textvariable=self.drive_limits_var).grid(
-            row=1, column=0, columnspan=4, sticky="w")
-        ttk.Label(speed_frame, text="Δ linear / 0.1 s").grid(row=2, column=0, sticky="w", padx=(0, 4))
-        ttk.Spinbox(
-            speed_frame,
-            from_=0.001,
-            to=1.0,
-            increment=0.005,
-            textvariable=self.drive_linear_var,
-            width=6,
-        ).grid(row=2, column=1, sticky="ew", padx=(0, 8))
-        ttk.Label(speed_frame, text="Δ angular / 0.1 s").grid(row=2, column=2, sticky="w", padx=(0, 4))
-        ttk.Spinbox(
-            speed_frame,
-            from_=0.001,
-            to=2.0,
-            increment=0.01,
-            textvariable=self.drive_angular_var,
-            width=6,
-        ).grid(row=2, column=3, sticky="ew")
-        ttk.Label(speed_frame, text="Δ linear brake").grid(row=3, column=0, sticky="w")
-        ttk.Spinbox(speed_frame, from_=0.001, to=1.0, increment=0.005,
-                    textvariable=self.drive_decel_linear_var, width=6).grid(
-                        row=3, column=1, sticky="ew")
-        ttk.Label(speed_frame, text="Δ angular brake").grid(row=3, column=2, sticky="w")
-        ttk.Spinbox(speed_frame, from_=0.001, to=2.0, increment=0.01,
-                    textvariable=self.drive_decel_angular_var, width=6).grid(
-                        row=3, column=3, sticky="ew")
-        ttk.Label(speed_frame, text="Max linear m/s").grid(row=4, column=0, sticky="w")
-        ttk.Spinbox(speed_frame, from_=0.01, to=5.0, increment=0.05,
-                    textvariable=self.drive_max_linear_var, width=6).grid(
-                        row=4, column=1, sticky="ew")
-        ttk.Label(speed_frame, text="Max angular rad/s").grid(row=4, column=2, sticky="w")
-        ttk.Spinbox(speed_frame, from_=0.01, to=10.0, increment=0.1,
-                    textvariable=self.drive_max_angular_var, width=6).grid(
-                        row=4, column=3, sticky="ew")
-        ttk.Label(speed_frame, text="Min linear m/s").grid(row=5, column=0, sticky="w")
-        ttk.Spinbox(speed_frame, from_=-5.0, to=0.0, increment=0.05,
-                    textvariable=self.drive_min_linear_var, width=6).grid(
-                        row=5, column=1, sticky="ew")
-        ttk.Label(speed_frame, text="Min angular rad/s").grid(row=5, column=2, sticky="w")
-        ttk.Spinbox(speed_frame, from_=-10.0, to=0.0, increment=0.1,
-                    textvariable=self.drive_min_angular_var, width=6).grid(
-                        row=5, column=3, sticky="ew")
-
+        speed_frame = ttk.Frame(self.drive_limits_host)
+        speed_frame.grid(row=0, column=0, sticky='ew')
+        speed_frame.columnconfigure(0, weight=1)
+        ttk.Checkbutton(speed_frame, text='Override robot drive limits', variable=self.drive_override_var,
+            command=self._update_drive_limits_label).grid(row=0, column=0, columnspan=2, sticky='w')
+        ttk.Label(speed_frame, textvariable=self.drive_limits_var, wraplength=305).grid(
+            row=1, column=0, columnspan=2, sticky='w', pady=6)
+        self.drive_limit_widgets = []
+        for row, (label, variable, low, high, step) in enumerate((
+            ('Δ linear / 0.1 s (m/s)', self.drive_linear_var, .001, 1., .005),
+            ('Δ angular / 0.1 s (rad/s)', self.drive_angular_var, .001, 2., .01),
+            ('Δ linear brake', self.drive_decel_linear_var, .001, 1., .005),
+            ('Δ angular brake', self.drive_decel_angular_var, .001, 2., .01),
+            ('Max linear (m/s)', self.drive_max_linear_var, .01, 5., .05),
+            ('Max angular (rad/s)', self.drive_max_angular_var, .01, 10., .1),
+            ('Min linear (m/s)', self.drive_min_linear_var, -5., 0., .05),
+            ('Min angular (rad/s)', self.drive_min_angular_var, -10., 0., .1)), start=2):
+            ttk.Label(speed_frame, text=label).grid(row=row, column=0, sticky='w', pady=2)
+            spin = ttk.Spinbox(speed_frame, textvariable=variable, from_=low, to=high,
+                increment=step, width=8)
+            spin.grid(row=row, column=1, sticky='w', padx=(6, 0))
+            self.drive_limit_widgets.append(spin)
         input_frame = ttk.Frame(speed_frame)
-        input_frame.grid(row=6, column=0, columnspan=4, sticky="ew", pady=(6, 0))
-        self.drive_input_checkbox = ttk.Checkbutton(
-            input_frame, text="Enable WASD + joystick",
-            variable=self.drive_input_enabled,
-            command=self._toggle_drive_input,
-        )
-        self.drive_input_checkbox.pack(side="left")
-        ttk.Label(input_frame, textvariable=self.drive_status_var).pack(side="left", padx=8)
+        input_frame.grid(row=10, column=0, columnspan=2, sticky='ew', pady=(8, 0))
+        self.drive_input_checkbox = ttk.Checkbutton(input_frame, text='Enable WASD + joystick',
+            variable=self.drive_input_enabled, command=self._toggle_drive_input)
+        self.drive_input_checkbox.grid(row=0, column=0, sticky='w')
+        ttk.Label(input_frame, textvariable=self.drive_status_var, wraplength=305, style='Muted.TLabel').grid(row=1, column=0, sticky='w', pady=4)
 
-        self.save_map_button = ttk.Button(controls, text="Save Map", command=self._save_map)
-        self.save_map_button.grid(row=28, column=0, sticky="ew", pady=(0, 4))
-        self.reset_robot_button = ttk.Button(controls, text="Reset Robot",
+        self.save_map_button = ttk.Button(self.session_action_frame, text="Save Map", command=self._save_map)
+        self.save_map_button.grid(row=0, column=0, sticky="ew", pady=(0, 4))
+        self.reset_robot_button = ttk.Button(self.session_action_frame, text="Reset Robot",
                                              command=self._reset_robot, state='disabled')
-        self.reset_robot_button.grid(row=29, column=0, sticky='ew', pady=(0, 4))
+        self.reset_robot_button.grid(row=0, column=1, sticky='ew', pady=(0, 4))
         add_tooltip(self.reset_robot_button,
                     'Stop and return to the initial pose in Display, Localization or SLAM. '
                     'Restart the launch to reset the entire world.')
 
-        output_frame = ttk.Frame(launch_tab, padding=(0, 12, 12, 12))
-        output_frame.grid(row=0, column=1, sticky="nsew")
-        output_frame.columnconfigure(0, weight=1)
-        output_frame.rowconfigure(3, weight=1)
+        ttk.Label(self.drive_pad_host, text='Click once to latch; click again to release.\nWASD/joystick starts neutral. Space stops Drive.',
+            wraplength=280, style='Muted.TLabel').grid(row=2, column=0, sticky='w', pady=8)
+        ttk.Button(self.drone_actions_host, text='Open XY/yaw Drive', command=lambda: self.show_tab('Drive')).grid(row=5, column=0, columnspan=3, sticky='ew', pady=8)
+        ttk.Label(self.drone_limits_host, textvariable=self.drive_limits_var, wraplength=305).grid(row=0, column=0, columnspan=2, sticky='w')
+        ttk.Checkbutton(self.drone_limits_host, text='Override manual velocity limits', variable=self.drive_override_var,
+            command=self._update_drive_limits_label).grid(row=1, column=0, columnspan=2, sticky='w', pady=8)
+        for row, (label, variable, ceiling) in enumerate((
+            ('Max manual speed (m/s)', self.drive_max_linear_var, 5.),
+            ('Max manual yaw (rad/s)', self.drive_max_angular_var, 10.),
+            ('Linear increment / 0.1 s', self.drive_linear_var, 1.)), start=2):
+            ttk.Label(self.drone_limits_host, text=label).grid(row=row, column=0, sticky='w', pady=4)
+            spin = ttk.Spinbox(self.drone_limits_host, textvariable=variable, from_=.001, to=ceiling, increment=.01,
+                width=8)
+            spin.grid(row=row, column=1, sticky='w', padx=8)
+            self.drive_limit_widgets.append(spin)
+        ttk.Label(self.drone_limits_host, text='Overrides stay within robot-profile caps.\nAltitude uses the same bounded linear increment; PX4 enforces its flight limits.',
+            wraplength=305, style='Muted.TLabel').grid(row=5, column=0, columnspan=2, sticky='w', pady=10)
         command_header = ttk.Frame(output_frame)
         command_header.grid(row=0, column=0, sticky="ew", pady=(0, 4))
-        command_header.columnconfigure(0, weight=1)
-        ttk.Label(command_header, text="Command (auto-filled)").grid(
-            row=0, column=0, sticky="w")
+        ttk.Label(command_header, text="Run the selected experiment").grid(
+            row=0, column=0, columnspan=4, sticky="w", pady=(0, 6))
         self.copy_command_button = ttk.Button(
-            command_header, text="Copy Command", command=self._copy_command)
-        self.copy_command_button.grid(row=0, column=1, padx=(8, 4))
+            command_header, text="Copy command", command=self._copy_command)
+        self.copy_command_button.grid(row=1, column=1, padx=4)
         self.start_button = ttk.Button(
             command_header, text="Run Command", command=self._start_launch,
             style="Accent.TButton")
-        self.start_button.grid(row=0, column=2, padx=4)
+        self.start_button.grid(row=1, column=0, sticky='w', padx=(0, 4))
         self.stop_button = ttk.Button(
             command_header, text="Stop", command=self._stop_launch,
-            state="disabled", style="Danger.TButton")
-        self.stop_button.grid(row=0, column=3, padx=(4, 0))
+            state="disabled", style="Danger.TButton", width=6)
+        self.stop_button.grid(row=1, column=2, padx=(4, 0))
+        def fit_command_actions(event):
+            if event.width < 340:
+                self.copy_command_button.grid(row=2, column=0, columnspan=3, sticky='w', pady=(4, 0))
+                self.stop_button.grid(row=1, column=1, padx=4)
+            else:
+                self.copy_command_button.grid(row=1, column=1, columnspan=1, sticky='w', pady=0)
+                self.stop_button.grid(row=1, column=2, padx=(4, 0))
+        command_header.bind('<Configure>', fit_command_actions)
         self.command_preview = scrolledtext.ScrolledText(
-            output_frame, wrap="word", height=5, width=1, state="disabled")
+            output_frame, wrap="word", height=4, width=1, state="disabled")
         self.command_preview.grid(row=1, column=0, sticky="ew", pady=(0, 12))
         add_tooltip(self.command_preview,
                     "Updates from the selected options. Run here or copy into a ROS 2 terminal.")
-        ttk.Label(output_frame, text="Launch Output").grid(row=2, column=0, sticky="w")
-        self.output = scrolledtext.ScrolledText(output_frame, wrap="word", height=24)
-        self.output.grid(row=3, column=0, sticky="nsew", pady=(2, 0))
+        self.output = scrolledtext.ScrolledText(self.launch_log_page, wrap="word", height=8)
+        self.output.grid(row=0, column=0, sticky="nsew")
         self.output.configure(state="disabled")
 
         # Shared console: every control-center tab streams its output here
         console_frame = ttk.LabelFrame(self, text="Console", padding=(12, 2, 12, 6))
-        console_frame.grid(row=1, column=0, sticky="ew")
+        console_frame.grid(row=2, column=1, sticky="ew")
+        self.console_frame = console_frame
+        self.console_visible = False
+        console_frame.grid_remove()
         console_frame.columnconfigure(0, weight=1)
-        self.console = scrolledtext.ScrolledText(console_frame, wrap="word", height=10)
+        self.console = scrolledtext.ScrolledText(console_frame, wrap="word", height=6)
         self.console.grid(row=0, column=0, sticky="ew", pady=(2, 0))
         self.console.configure(state="disabled")
 
@@ -1057,7 +1037,7 @@ class SimulationLauncherGui(tk.Tk):
             status_frame = ttk.Frame(self, style="Statusbar.TFrame")
         else:
             status_frame = ttk.Frame(self, relief="sunken")
-        status_frame.grid(row=2, column=0, sticky="ew", pady=(4, 0))
+        status_frame.grid(row=3, column=0, columnspan=2, sticky="ew", pady=(4, 0))
 
         status_style = "Statusbar.TLabel" if THEME_AVAILABLE else None
         self._ros_status_dot = tk.Label(status_frame, text="*",
@@ -1096,9 +1076,136 @@ class SimulationLauncherGui(tk.Tk):
         # Remaining control-center tabs (Registry, Vacuum, Benchmark, Tests, Health)
         from .lab_tabs import create_tabs
         create_tabs(self.notebook, self)
+        from .workspace_ui import build_navigation
+        build_navigation(self)
+
+    def _robot_filter_changed(self, _event=None):
+        category = self.robot_category_var.get()
+        subtypes = self.robot_taxonomy.subtypes(category)
+        self.robot_subtype_combo.configure(values=(ALL_TYPES, *subtypes))
+        if self.robot_subtype_var.get() not in subtypes:
+            self.robot_subtype_var.set(ALL_TYPES)
+        allowed = [name for name in self._allowed_robots() if name in self.robot_profiles
+                   and self.robot_taxonomy.matches(name, category, self.robot_subtype_var.get())
+                   and self.robot_groups.member(name).get('role') not in ('component', 'simplified', 'reference')]
+        if allowed and self.robot_var.get() not in allowed:
+            family = self.robot_groups.choices(allowed)[0]
+            self.robot_var.set(self.robot_groups.preferred(family, allowed))
+        self._update_from_selection()
+
+    def _refresh_workspace_selection(self):
+        robot = self.robot_var.get()
+        if is_none_selection(robot):
+            self.robot_tags_var.set('World only')
+            self.control_context.set('World-only display · no robot selected')
+            return
+        info = self.robot_taxonomy.classify(robot)
+        self.robot_tags_var.set('  ·  '.join([info['category'], info['subtype'], *info['tags']]))
+        self.steering_frame.grid() if self._four_wheel_steer_selectable() else self.steering_frame.grid_remove()
+        self.control_context.set(robot+' · '+info['category']+' / '+info['subtype']+
+            ' · Controls require a compatible controller and an owned running simulation.')
+        if robot != getattr(self, '_control_robot', None):
+            self._control_robot = robot
+            if self._flight_selectable():
+                self.control_notebook.select(self.drone_page)
+            elif self._robot_config().get('arm_control') and hasattr(self, 'arm_tab'):
+                self.control_notebook.select(self.arm_tab)
+            else:
+                # Select the control page without leaving an asset browser.
+                self.control_notebook.select(self.drive_page)
+
+    def _toggle_console(self):
+        self.console_visible = not getattr(self, 'console_visible', False)
+        self.console_frame.grid() if self.console_visible else self.console_frame.grid_remove()
+
+    def _stop_all_motion(self):
+        self._stop_drive()
+        for name in ('arm_tab', 'hand_tab'):
+            control = getattr(self, name, None)
+            if control is not None:
+                control.stop()
 
     def _on_selection_changed(self, _event):
         self._update_from_selection()
+
+    def _robot_family_selected(self, _event=None):
+        requested = self.robot_family_var.get()
+        if is_none_selection(requested):
+            self.robot_var.set(NONE_LABEL)
+        elif requested in self.robot_profiles and requested not in self.robot_groups.groups:
+            # Preserve programmatic selections and saved legacy profile IDs.
+            self.robot_var.set(requested)
+        else:
+            members = self.robot_groups.members(requested, selectable=True)
+            mode, backend = self.mode_var.get(), self.simulator_var.get()
+            compatible = [member for member in members if mode in self.robot_profiles[member].get('supported_modes', ['display'])
+                          and not missing_robot_features(self.robot_profiles[member], mode, backend, self.mode_profiles.get(mode))]
+            selected = self.robot_groups.preferred(requested, compatible or members)
+            if selected:
+                self.robot_var.set(selected)
+        self._update_from_selection()
+
+    def _map_family_selected(self, _event=None):
+        requested = self.map_family_var.get()
+        if is_none_selection(requested):
+            self.map_var.set(NONE_LABEL)
+        elif requested in self.map_profiles and requested not in self.map_groups.groups:
+            self.map_var.set(requested)
+        else:
+            selected = self.map_groups.preferred(requested, self._allowed_maps())
+            if selected:
+                self.map_var.set(selected)
+        self._update_from_selection()
+
+    def _sync_asset_selectors(self, allowed_maps):
+        # Tests, profile restoration and Registry may set exact executable IDs
+        # directly. The family controls follow them without replacing variants.
+        if set(self.robot_groups.profiles) != set(self.robot_profiles):
+            self.robot_groups = AssetGroups('robots', self.robot_profiles)
+            self.robot_taxonomy = RobotTaxonomy(self.robot_groups)
+        if set(self.map_groups.profiles) != set(self.map_profiles):
+            self.map_groups = AssetGroups('maps', self.map_profiles)
+        for kind, groups, selected, family_var, combo, variant_combo, allowed in (
+            ('robots', self.robot_groups, self.robot_var, self.robot_family_var, self.robot_combo,
+             self.robot_variant_combo, self._allowed_robots()),
+            ('maps', self.map_groups, self.map_var, self.map_family_var, self.map_combo,
+             self.map_variant_combo, allowed_maps)):
+            family = NONE_LABEL if is_none_selection(selected.get()) else groups.family(selected.get())
+            family_var.set(family)
+            if kind == 'robots':
+                allowed = [name for name in allowed if name == NONE_LABEL or self.robot_taxonomy.matches(
+                    name, self.robot_category_var.get(), self.robot_subtype_var.get())]
+            choices = groups.choices(allowed)
+            if NONE_LABEL in allowed:
+                choices.insert(0, NONE_LABEL)
+            combo.configure(values=choices, state='readonly' if choices else 'disabled')
+            variants = groups.members(family, selectable=True, allowed=allowed)
+            variant_combo.configure(values=variants, state='readonly' if len(variants) > 1 else 'disabled')
+
+    def preview_asset(self, kind, asset_id, entity=None):
+        """Open an owned static inspector, preserving the active launch."""
+        profiles = self.robot_profiles if kind == 'robots' else self.map_profiles
+        profile = profiles.get(asset_id)
+        if profile is None and entity:
+            path = (entity.get('assets', {}).get('urdf') if kind == 'robots' else entity.get('world_file'))
+            if path:
+                path = path.removeprefix('package://')
+                if os.path.isabs(path):
+                    package, relative = entity.get('ros_package', 'robot_lab_robots'), path
+                else:
+                    package, _, relative = path.partition('/')
+                profile = (dict(package=package, xacro=relative, name=entity.get('name', asset_id)) if kind == 'robots'
+                           else dict(gazebo=dict(world_package=package, world_path=relative)))
+        if profile is None:
+            messagebox.showinfo('Preview 3D', 'This registry entry has no installed 3D description.')
+            return
+        if not hasattr(self, 'registry_tab'):
+            from .lab_tabs import RegistryTab
+            self.registry_tab = RegistryTab(self.notebook, self)
+        try:
+            self.registry_tab.show_preview(kind, asset_id, profile)
+        except (OSError, ValueError) as exc:
+            messagebox.showerror('Preview 3D', str(exc))
 
     def _robot_config(self):
         return self.robot_profiles.get(self.robot_var.get(), {})
@@ -1904,6 +2011,12 @@ class SimulationLauncherGui(tk.Tk):
 
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
+        if command:
+            from robot_lab_utils.robot_spawn import map_spawn_override
+            for axis, value in map_spawn_override(self._robot_config(), self.map_var.get()).items():
+                argument = 'spawn_'+axis+':='
+                if not any(part.startswith(argument) for part in command):
+                    command.append(argument+str(value))
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
             command = [part for part in command
                        if not part.startswith("go2_policy_path:=")]
@@ -1980,11 +2093,7 @@ class SimulationLauncherGui(tk.Tk):
         # Display mode is exactly where the map selector matters most: a map
         # can be shown on its own in any simulator.  It is only locked when
         # no environment is valid for the mode at all.
-        self.map_combo.configure(
-            values=allowed_maps,
-            state="readonly" if allowed_maps else "disabled",
-        )
-        self.robot_combo.configure(values=self._allowed_robots())
+        self._sync_asset_selectors(allowed_maps)
 
         # Simulators: every backend stays listed, and the panel underneath
         # says which are selectable and why the others are not, so the choice
@@ -2048,6 +2157,7 @@ class SimulationLauncherGui(tk.Tk):
         self.summary_var.set(self._summary_text(supported_modes, supports_vacuum))
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
         self._update_drive_limits_label()
+        self._refresh_workspace_selection()
         if hasattr(self, 'arm_tab'):
             self.arm_tab.refresh_selection()
         if hasattr(self, 'hand_tab'):
@@ -2474,8 +2584,9 @@ class SimulationLauncherGui(tk.Tk):
         if COMPOSITION_AVAILABLE:
             self.composition_registry = get_registry()
         # Update the dropdown values so new entries appear immediately
-        self.robot_combo.configure(values=[NONE_LABEL] + sorted(self.robot_profiles.keys()))
-        self.map_combo.configure(values=[NONE_LABEL] + sorted(self.map_profiles.keys()))
+        self.robot_groups = AssetGroups('robots', self.robot_profiles)
+        self.map_groups = AssetGroups('maps', self.map_profiles)
+        self.robot_taxonomy = RobotTaxonomy(self.robot_groups)
         self._refresh_slot_combos()
         self._update_from_selection()
         self.status_var.set("Refreshed catalogs")
@@ -2681,6 +2792,9 @@ class SimulationLauncherGui(tk.Tk):
             f"angular [{min_angular:.2f}, {max_angular:.2f}] rad/s\n"
             f"Δ accel/brake per 0.1 s: {linear_step:.3f}/{linear_brake:.3f} m/s, "
             f"{angular_step:.3f}/{angular_brake:.3f} rad/s")
+
+        for widget in getattr(self, 'drive_limit_widgets', []):
+            widget.state(['!disabled'] if self.drive_override_var.get() else ['disabled'])
 
     def _release_drive(self, linear_scale, angular_scale):
         direction = (linear_scale, angular_scale)
@@ -2932,7 +3046,15 @@ class SimulationLauncherGui(tk.Tk):
 
     # ---- Control-center APIs used by the lab tabs ----
     def show_tab(self, title):
-        """Raise the control-center tab with the given title."""
+        """Raise a workspace or a page in the Launch control column."""
+        controls = {'Drive': 'Drive & limits', 'Arm': 'Arm', 'Hand': 'Hand', 'Drone': 'Drone & limits'}
+        if title in controls:
+            self.notebook.select(self.launch_tab)
+            for page in self.control_notebook.tabs():
+                if self.control_notebook.tab(page, 'text') == controls[title]:
+                    self.control_notebook.select(page)
+                    return
+
         for tab_id in self.notebook.tabs():
             if self.notebook.tab(tab_id, "text") == title:
                 self.notebook.select(tab_id)
@@ -3023,6 +3145,9 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        preview = getattr(self, 'registry_preview', None)
+        if preview is not None:
+            preview.close()
         self._stop_aux_commands()
         if hasattr(self, 'arm_tab'):
             self.arm_tab.close()

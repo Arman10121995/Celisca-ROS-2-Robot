@@ -759,7 +759,7 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
 # ---------------------------------------------------------------------------
 
 def _add_wheel_velocity_actuators(mjcf_text, joint_names, force_limit=5.0,
-                                  armature=0.005):
+                                  armature=0.005, velocity_gain=1.0):
     """Give the named wheel joints velocity actuators when they have none.
 
     MuJoCo's URDF importer creates no actuators, so every imported wheeled
@@ -773,8 +773,15 @@ def _add_wheel_velocity_actuators(mjcf_text, joint_names, force_limit=5.0,
     well below 2; at MuJoCo's 2 ms step it was ~130, the wheels spun up to
     300 rad/s from a zero command and the robot tumbled.  0.005 kg*m^2 is a
     small geared motor's reflected rotor inertia.  Joints that are absent or
-    already actuated are left alone.
+    already actuated are left alone. Small imported bases can explicitly
+    choose a lower, stable gain/inertia pair through their drive profile;
+    the existing defaults stay unchanged for other robots.
     """
+    for name, value, positive in [('armature', armature, False),
+                                  ('velocity gain', velocity_gain, True)]:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) \
+                or not math.isfinite(value) or value < 0 or positive and value == 0:
+            raise ValueError('Wheel '+name+' must be finite and '+('positive' if positive else 'nonnegative'))
     try:
         root = ET.fromstring(mjcf_text)
     except ET.ParseError:
@@ -798,7 +805,7 @@ def _add_wheel_velocity_actuators(mjcf_text, joint_names, force_limit=5.0,
         actuator = ET.SubElement(root, "actuator")
     for name in missing:
         ET.SubElement(actuator, "velocity", {
-            "name": name + "_velocity", "joint": name, "kv": "1",
+            "name": name + "_velocity", "joint": name, "kv": "%g" % velocity_gain,
             "ctrllimited": "true", "ctrlrange": "-50 50",
             "forcelimited": "true",
             "forcerange": "%g %g" % (-force_limit, force_limit),
@@ -1345,8 +1352,14 @@ class MuJoCoSpawner(Node):
                                   "from the robot's own MJCF (%s)." % path)
                     robot_mjcf = self._effort_command.add_actuators(
                         robot_mjcf, native)
+                wheel_config = parse_drive_config(self.get_parameter('drive_config').value)
+                self._ramp_watchdog_stop = wheel_config.get('mujoco_ramp_watchdog_stop', False)
+                if not isinstance(self._ramp_watchdog_stop, bool):
+                    raise ValueError('mujoco_ramp_watchdog_stop must be a boolean')
                 robot_mjcf = _add_wheel_velocity_actuators(
-                    robot_mjcf, self._drive.wheel_joints)
+                    robot_mjcf, self._drive.wheel_joints,
+                    armature=wheel_config.get('mujoco_wheel_armature', .005),
+                    velocity_gain=wheel_config.get('mujoco_wheel_velocity_gain', 1.))
                 robot_mjcf = _add_steer_position_actuators(
                     robot_mjcf, self._drive.steer_joints)
                 camera_offset = offset_from_root(
@@ -1838,7 +1851,7 @@ class MuJoCoSpawner(Node):
             stale = (time.monotonic() - self._last_cmd_time) > self._watchdog_timeout
         if stale:
             command = Twist()
-            if self._drive.kind == "diff":
+            if self._drive.kind == "diff" and not getattr(self, '_ramp_watchdog_stop', False):
                 self._drive.reset()
         if self._model.nu > 0 and not getattr(self, "_robot_free", False):
             targets = self._drive.targets(

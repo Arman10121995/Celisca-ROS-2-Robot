@@ -7,23 +7,23 @@ from tkinter import ttk
 
 class CartesianControls(ttk.LabelFrame):
     def __init__(self, arm):
-        super().__init__(arm, text='Cartesian motion — MoveIt', padding=8)
+        super().__init__(arm.body, text='Cartesian motion — MoveIt', padding=8)
         self.arm = arm
-        self.grid(row=10, column=0, columnspan=4, sticky='ew', pady=8)
+        self.grid(row=10, column=0, columnspan=5, sticky='ew', pady=8)
         self.status = tk.StringVar(value='Cartesian planning is not enabled for this profile.')
         self.offset = []
         for i, axis in enumerate('xyz'):
-            ttk.Label(self, text='Δ'+axis+' (m)').grid(row=0, column=2*i)
+            ttk.Label(self, text='Δ'+axis+' (m)').grid(row=i, column=0)
             value = tk.DoubleVar(value=.05 if axis == 'z' else 0.)
             self.offset.append(value)
             ttk.Spinbox(self, textvariable=value, from_=-.25, to=.25, increment=.01,
-                        width=8).grid(row=0, column=2*i+1, padx=4)
+                        width=8).grid(row=i, column=1, padx=4)
             value.trace_add('write', lambda *_: self.invalidate())
         self.plan_button = ttk.Button(self, text='Plan', command=self.plan)
         self.execute_button = ttk.Button(self, text='Execute Plan', command=self.execute)
-        self.plan_button.grid(row=1, column=0, columnspan=2, sticky='ew', pady=8)
-        self.execute_button.grid(row=1, column=2, columnspan=2, sticky='ew', padx=4)
-        ttk.Label(self, textvariable=self.status, wraplength=850).grid(row=2, column=0, columnspan=6, sticky='w')
+        self.plan_button.grid(row=3, column=0, sticky='ew', pady=8)
+        self.execute_button.grid(row=3, column=1, sticky='ew', padx=4)
+        ttk.Label(self, textvariable=self.status, wraplength=285).grid(row=4, column=0, columnspan=2, sticky='w')
         self.connected = False
         self.joints, self.received = {}, -math.inf
         self.scene, self.scene_received = {}, -math.inf

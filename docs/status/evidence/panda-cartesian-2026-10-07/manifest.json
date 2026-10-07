@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-07",
+  "run_directory": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal",
+  "source_stage": "18ecdd2 plus optional robot-specific per-map spawn handling; exact pre-trial source/installed hashes in source-manifest.json",
+  "experimental_override": "none; normal installed profile",
+  "artifacts": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/gui-output.log",
+      "sha256": "da86b7931d4c6a28b63e155c5611cf61988ac0958af0114cabe5a6216691e1ea",
+      "bytes": 17146
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/live-gui-output.log",
+      "sha256": "0095b127709e1a60561c3412551eff88c7c06fe55940747c4c7c29c708158d3d",
+      "bytes": 14958
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/ownership.json",
+      "sha256": "13fa49406ad8762044c2bb5e3ed7bb28a50756febf40065ef29a8fe23c9a73b5",
+      "bytes": 407
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/producer.py",
+      "sha256": "a746c3506c85bdbc92d8b3ff5586004c8490fec8621e462357671a5a9c012f0c",
+      "bytes": 20797
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/report.json",
+      "sha256": "0d7e789744ad006e8d76394895e80bbfc14fb657c2af1091e85ea23511a643bd",
+      "bytes": 23352
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/sdk-manifest.json",
+      "sha256": "240398053fadec93bf81866b15e27e63167cdd92c83e366736a3050f47aa08ee",
+      "bytes": 10520
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/source-manifest.json",
+      "sha256": "4adb0b592fcfbb418aa12c79476ac2475cbcc5ba2a6ebce75a434437a740b060",
+      "bytes": 34979
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/panda-planning/physical-gui-1-normal/trace.json",
+      "sha256": "767378504158f32bd1d6f7db3f14fb3f72d047b71d2bda760707cefbc9839bfd",
+      "bytes": 2404540
+    }
+  ],
+  "source_snapshot_files": 120,
+  "previous_trial_manifest": "docs/status/evidence/panda-cartesian-2026-10-06/manifest.json",
+  "host_load": "Independent TurtleBot3 Gazebo sensor/Drive screen running in a different ROS domain; recorded RTF is not a benchmark"
+}

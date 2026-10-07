@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "robots",
+  "asset_id": "asset_r2_description_r2_left_forearm",
+  "profile": {
+    "package": "robot_lab_robots",
+    "xacro": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2_left_forearm/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf",
+    "supported_simulators": [
+      "gazebo",
+      "pybullet",
+      "mujoco",
+      "isaac"
+    ],
+    "name": "asset_r2_description_r2_left_forearm",
+    "supported_modes": [
+      "display"
+    ],
+    "default_mode": "display",
+    "features": [],
+    "source_id": "robot_assets",
+    "source_entry": "urdfs/robots/r2_description/robots/r2_left_forearm.urdf",
+    "notes": "Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification."
+  },
+  "output": "/workspace/molar/robot_lab_runtime/registry_previews/725e5c29cd164f5ba23f430f6e6089a9",
+  "scope": "Embedded static inspection; no ROS nodes or simulator"
+}

@@ -12,5 +12,6 @@ setup(
     maintainer='Robot Lab',
     description='Simulation launcher GUI',
     license='MIT',
-    entry_points={'console_scripts': ['robot_lab_gui = robot_lab_gui.launcher:main']},
+    entry_points={'console_scripts': ['robot_lab_gui = robot_lab_gui.launcher:main',
+                                     'registry_preview = robot_lab_gui.registry_preview:main']},
 )

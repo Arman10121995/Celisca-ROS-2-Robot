@@ -1,0 +1,79 @@
+# Structural catalog tags, never a runtime/controller qualification.
+schema_version: 1
+classes:
+  - category: Mobile robots
+    subtype: Two-wheel drive
+    tags: [Differential drive]
+    members: [bumperbot, labbot, turtlebot3, turtlebot4]
+  - category: Mobile robots
+    subtype: Four-wheel drive
+    tags: [Ackermann steering]
+    members: [ackermann_car, anti_ackermann_car, rear_steer_car]
+  - category: Mobile robots
+    subtype: Four-wheel drive
+    tags: [Four-wheel steering, Crab, Pivot]
+    members: [four_wheel_steer_car]
+  - category: Mobile robots
+    subtype: Four-wheel drive
+    tags: [Mecanum, Holonomic]
+    members: [mecanum_car]
+  - category: Mobile robots
+    subtype: Four-wheel drive
+    tags: [Skid steer]
+    members: [asset_husky]
+  - category: Mobile robots
+    subtype: Omnidirectional base
+    tags: [Robot soccer]
+    members: [menagerie_robot_soccer_kit]
+  - category: Legged robots
+    subtype: Four legs
+    tags: [Quadruped]
+    members: [unitree_a1, unitree_aliengo, unitree_b1, unitree_b2, unitree_go1, unitree_go2, anymal, barkour, menagerie_boston_dynamics_spot]
+  - category: Legged robots
+    subtype: Four legs and wheels
+    tags: [Quadruped, Wheeled legs]
+    members: [unitree_b2w, unitree_go2w]
+  - category: Legged robots
+    subtype: Two legs
+    tags: [Humanoid]
+    members: [bhl, unitree_g1, unitree_h1, nasa_r2, nasa_valkyrie, toddlerbot, menagerie_apptronik_apollo, menagerie_berkeley_humanoid, menagerie_booster_t1, menagerie_fourier_n1, menagerie_pndbotics_adam_lite, menagerie_robotis_op3, asset_ginger_robot_gingerurdf]
+  - category: Legged robots
+    subtype: Two legs
+    tags: [Biped]
+    members: [menagerie_agility_cassie]
+  - category: Manipulators
+    subtype: Single arm
+    tags: [Robot arm]
+    members: [franka_panda, franka_fr3, kuka_iiwa, kinova_arms, universal_robots_ur5, universal_robots_ur10, flexiv_rizon, unitree_z1, menagerie_agilex_piper, menagerie_arx_l5, menagerie_dynamixel_2r, menagerie_i2rt_yam, menagerie_low_cost_robot_arm, menagerie_rethink_robotics_sawyer, menagerie_robotis_omy_3m, menagerie_robotstudio_so101, menagerie_seeed_rebot_devarm, menagerie_trossen_vx300s, menagerie_trossen_wx250s, menagerie_trossen_wxai, menagerie_trs_so_arm100, menagerie_ufactory_lite6, menagerie_ufactory_xarm7]
+  - category: Manipulators
+    subtype: Dual arm
+    tags: [Two manipulators, Bimanual]
+    members: [asset_yumi, menagerie_aloha]
+  - category: Mobile manipulators
+    subtype: Single arm on mobile base
+    tags: [Mobile base, Robot arm]
+    members: [asset_fetch, stretch, menagerie_google_robot, menagerie_stanford_tidybot]
+  - category: Mobile manipulators
+    subtype: Dual arm on mobile base
+    tags: [Mobile base, Two manipulators, Bimanual]
+    members: [asset_pr2, asset_halodi_eve_r3]
+  - category: Hands and components
+    subtype: Dexterous hand
+    tags: [Robot hand]
+    members: [menagerie_shadow_dexee]
+  - category: Hands and components
+    subtype: Gripper
+    tags: [Component]
+    members: [menagerie_robotiq_2f85, menagerie_robotiq_2f85_v4, menagerie_umi_gripper]
+  - category: Hands and components
+    subtype: Foot component
+    tags: [Component]
+    members: [menagerie_iit_softfoot]
+  - category: Drones
+    subtype: Quadrotor
+    tags: [Aerial]
+    members: [px4_x500, quadrotor_sitl, menagerie_bitcraze_crazyflie_2, menagerie_skydio_x2]
+  - category: Reference models
+    subtype: Biological reference
+    tags: [Reference only]
+    members: [reference_models, menagerie_ms_human_700, menagerie_flybody]

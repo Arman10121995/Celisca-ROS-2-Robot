@@ -1,0 +1,25 @@
+RENDERED bumperbot 231 colors 0.17056338922764228 orbit pixel change
+RENDERED celisca_floor_2_furniture 127 colors 0.30742505081300814 orbit pixel change
+RENDERED menagerie_franka_emika_panda 325 colors 0.13196480938416422 orbit pixel change
+RENDERED asset_r2_description_r2_left_forearm 355 colors 0.09221413352272727 orbit pixel change
+RENDERED asset_r2_description_r2c6 660 colors 0.10939238745574102 orbit pixel change
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/registry-preview/probe_embedded.py", line 21, in <module>
+    if 'Could not' in pane.status.get():raise RuntimeError((pane.output/'loader.log').read_text())
+RuntimeError: Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/registry_preview.py", line 38, in <module>
+    raise SystemExit(main())
+  File "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/registry_preview.py", line 26, in main
+    scene = prepare_scene(request['kind'], request['profile'], output, get_package_share_directory)
+  File "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/asset_preview.py", line 251, in prepare_scene
+    from robot_lab_adapter.px4_sitl_runtime import x500_urdf
+  File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_sitl_runtime.py", line 20, in <module>
+    from .px4_ros_controller import PX4Controller
+  File "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_ros_controller.py", line 18, in <module>
+    from pymavlink import mavutil
+ModuleNotFoundError: No module named 'pymavlink'
+

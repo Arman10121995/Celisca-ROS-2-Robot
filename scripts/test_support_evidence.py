@@ -106,6 +106,27 @@ def test_drive_pass_marker_cannot_override_physical_or_sensor_failure(failure):
     assert not module.measured_result(report, 'drive_sensor_screen')
 
 
+@pytest.mark.parametrize('failure', [
+    'no_motion', 'neutral_motion', 'no_stop', 'wrong_mount', 'wrong_scan',
+    'no_obstacles', 'fabricated_depth', 'static_joint', 'tilt', 'nonfinite_tilt',
+])
+def test_turtlebot3_lidar_screen_rechecks_physical_trace_envelopes(failure):
+    report = json.loads((path.parent.parent/'docs/status/evidence/turtlebot3-sensors-2026-10-07/'
+                        'asset_turtlebot3_burger-mujoco/report-measured.json').read_text())
+    assert module.measured_result(report, 'drive_lidar_screen')
+    if failure == 'no_motion': report['phases']['forward']['tail_vx'] = 0.
+    elif failure == 'neutral_motion': report['phases']['armed_neutral']['dx'] = .3
+    elif failure == 'no_stop': report['phases']['publisher_loss']['tail_wz'] = .6
+    elif failure == 'wrong_mount': report['sensors']['mounted_frames']['imu_link']['position'][2] += .1
+    elif failure == 'wrong_scan': report['sensors']['last_scan']['range_max'] = 12.
+    elif failure == 'no_obstacles': report['sensors']['max_finite_scan_points'] = 0
+    elif failure == 'fabricated_depth': report['sensors']['depth_messages'] = 100
+    elif failure == 'static_joint': report['joint_position_ranges']['wheel_right_joint'] = 0.
+    elif failure == 'tilt': report['max_body_tilt_rad'] = .42
+    else: report['max_body_tilt_rad'] = float('nan')
+    assert not module.measured_result(report, 'drive_lidar_screen')
+
+
 def test_active_tasks_block_release_without_inventing_scope_approval(tmp_path):
     catalog = framework(tmp_path,measured_nav())
     catalog.ledger = {'tasks':{'R5':{'tasks':{'R5.6':{'state':'active','evidence':['nav.json']}}}}}

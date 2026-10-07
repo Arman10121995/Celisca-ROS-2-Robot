@@ -308,7 +308,187 @@ ideal-sensor simulation for the vendor firmware stack.
    checkpoint. Software tests and remote CI are separate from robot missions.
    Keep a task partial until its full stated acceptance passes.
 
+## TurtleBot3 integration and repeat protocol
+
+The October 7 lane connects the already installed official Burger/Waffle/
+Waffle Pi models to lab physical controllers. Read the
+[operator guide](tutorials/turtlebot3.md), [actual Drive evidence](status/evidence/turtlebot3-sensors-2026-10-07/README.md)
+and latest R3.6 ledger state. Display/Drive proof and mode proof remain
+separate. The old TurtleBot4/Panda contracts must survive shared changes.
+
+1. Claim R3.6 before changing the model or command paths. Preserve another
+   agent's R6.5 occupancy review and R6.7 terrain work. Start from the current
+   containing `master` commit, source `scripts/ssd_env.sh`, and allocate a new
+   persistent directory under `$ROBOT_LAB_RUNTIME_ROOT`. Do not overwrite a
+   failed or successful trial directory when repeating it.
+2. Keep the official description pin `90a68bd2e3c61c12966779da89d8eeaec82730e9`
+   and simulation pin `a35a56c8b04877dc89772b598084d8ce648a9023`, with their
+   Apache-2.0 notices. `scripts/extension_mobile_control.py` generates a
+   separate `drive.urdf` and `drive-controllers.yaml`; source checkouts remain
+   unchanged. Inspect the actual wheel collision radius, source joint axes,
+   centers and mounted scan/IMU frames before adapting another model.
+3. Preserve 0.033 m wheel radius, 0.160/0.288 m executed track and the source
+   local wheel-axis transforms. The Waffle SDF rounds its track to 0.287 m;
+   the executed URDF geometry governs control. Undefined virtual-frame masses
+   are explicitly 1e-6 kg with 1e-9 kg·m² diagonal inertia; authored inertias
+   remain unchanged. PyBullet's implicit 1 kg defaults failed the turn-stop
+   screen. This regularizer is a lab assumption, not vendor payload data.
+4. Preserve the measured 0.18 m/s / 0.3 m/s² and 1.2 rad/s / 2 rad/s² caps,
+   source-named wheels, 5 Nm/15 rad/s simulation limits, MuJoCo wheel armature
+   0.0002, velocity gain 0.1 and acceleration-limited watchdog deceleration.
+   Those MuJoCo settings are profile-local; default wheel profiles retain the
+   existing values. Reducing speed or rotor inertia alone failed the tilt
+   limit, so retain those negatives when evaluating a different remedy.
+5. Keep the LDS 360-ray / 0.12–3.5 m / `base_scan` contract at 5 Hz. The
+   Fortress derivative attaches source scan/IMU geometry at the URDF frame's
+   local origin, not at the already applied model-relative SDF pose. The
+   source cameras are RGB-only. Camera rendering and RGB/depth algorithms
+   require their own implementation and physical measurement before 3D SLAM
+   can be enabled. Other bridges currently retain ideal sensor behavior.
+6. Keep `nav_empty`'s named (-4,-4,0 yaw) override in the robot profile.
+   `robot_lab_utils.robot_spawn.map_spawn_override` validates finite values;
+   bringup merges it after map/global-robot defaults, and explicit launch
+   arguments override that result. GUI command preview includes the same
+   named pose. Changing to Celisca must remove these extra spawn arguments.
+   Never extend the LDS range to hide a geometry-free AMCL/SLAM spawn.
+7. Build changed packages, then compare executed modules with source:
+
+   ```bash
+   source scripts/ssd_env.sh
+   source /opt/ros/humble/setup.bash
+   source install/setup.bash
+   colcon build --packages-select robot_lab_utils robot_lab_mujoco \
+     robot_lab_bringup robot_lab_gui robot_lab_navigation --symlink-install
+   source install/setup.bash
+   ```
+
+   Python files can be copied despite symlink-install. Compare actual source
+   and installed SHA-256, not only build return codes. Keep logs on SSD.
+8. Repeat the archived real GUI producer from
+   `status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-mujoco/producer.py`
+   under Xvfb with a dedicated `ROS_DOMAIN_ID` below 233, `PROBE_ROBOT`,
+   `PROBE_BACKEND` and a new `PROBE_ROOT`. It creates an owned normal Display
+   launch, observes independent engine body and joint state, exercises neutral
+   enable/W/S/A/D/Space and publisher loss, verifies mounted TF/scan geometry
+   and closes the GUI normally. Require physical tilt <0.3 rad and both
+   wheels' finite changing state. Check producer, launch and all owned plants
+   for clean termination before the next case.
+9. Preserve the original producer report and raw trace. `collect_sensors.py`
+   derives maximum body tilt and joint-position ranges from real samples;
+   it cannot replace the trial. Trace counts include Stop/Close callbacks
+   after the producer's earlier report counts. Every derived report links the
+   exact original report and trace checksums. `drive_lidar_screen` recomputes
+   physical motion, neutral, stop, mount, range and joint/tilt limits.
+10. Qualify disabled modes through a separate SSD catalog pointing to the same
+    pinned executed URDF. Use the archived actual mode producer for three
+    robots × four backends × Localization/SLAM/Navigation-clear/Navigation-
+    obstacle: 48 named producers. Workflow checks require both translations,
+    both turns, publisher loss, monotonic reset, estimator/graph restart and
+    post-reset movement. SLAM needs accepted poses and occupied cells plus
+    an actual GUI YAML/PGM save and clean exporter exit. Navigation uses
+    RViz-style topic goals, fresh independent truth, 0.15 m / 5°, a simulation
+    settling second, source world obstacles and ≥0.02 m swept clearance.
+    Burger radius is 0.185 m; Waffle/Pi radius is 0.26 m. An obstacle route
+    must actually detour around a blocked direct path.
+11. Archive the real producer return codes, reports and pre-trial model/drive/
+    sensor/spawn/runtime fingerprints. Record capture timing honestly: the
+    initial mode producer swept runtime packages but omitted `robot_lab_maps`.
+    Its named map assets are verified against recorded Git HEAD and installed
+    bytes during collection. Generation/controller-file fingerprints recorded
+    at collection are distinguished from the pre-trial executed-URDF hashes.
+    Add map/world, generated controller and critical runtime fingerprints to
+    `asset-runtime-support.yaml`; source changes require new evidence.
+12. Recompute `apply_recorded_modes` against the actual numeric reports. Require
+    both clear and obstacle navigation reports for each enabled backend. Only
+    then provision `turtlebot3_vendor --no-download` into the normal catalog.
+    The installed merger preserves prior profiles on failed replacements;
+    a failed replacement never qualifies new behavior. Check all 48 normal
+    GUI robot/backend/mode selections, actual algorithm defaults, Run state,
+    command/spawn autofill and unsupported 3D SLAM. Exercise a normal owned
+    navigation launch too. Keep software checks, UI checks and physical
+    mission evidence in separate records.
+13. A shared GUI/bringup change also needs a native Panda normal-profile
+    Cartesian repeat before refreshing its strict certificate. The October 7
+    repeat is in [Panda grouped-GUI regression](status/evidence/panda-cartesian-grouped-gui-2026-10-07/README.md).
+    Preserve its original three actuator/control files and physical cube
+    grasp certificate. Changing unrelated documentation links does not qualify
+    a robot or justify replacing source hashes without actual runtime proof.
+14. Update roadmap, ledger, checklist, tutorial, support index and GUI Health
+    together. Run appropriate source/physics/integration and Xvfb checks,
+    commit on `master`, push to `origin/master` as authorized, then observe
+    exact remote CI. Keep R3.6 partial until all model/controller/material/
+    mission acceptance passes. Next extend map and repeated-route coverage;
+    preserve other extension owners before returning to the old roadmap.
+
+## Maintain complete catalogs and the embedded 3D inspector
+
+The native [Registry viewer guide](tutorials/registry-3d.md) and
+[actual rendering/live-plant evidence](status/evidence/registry-3d-2026-10-07/README.md)
+describe the current implementation. Continue it as follows:
+
+1. Claim the relevant R3.6/R6.6 scope and preserve other task owners. Inspect
+   actual source descriptions before grouping. `asset_groups.yaml` records
+   reviewed families, exact profile/registry IDs, preferred complete variants
+   and component/reference roles; it is presentation metadata, not a controller
+   certificate. Do not merge robots merely because filenames resemble one another.
+2. Keep executable profile IDs and saved manifests stable. `AssetGroups`
+   supplies parent choices and compatible variant selection; unsupported source
+   alternatives retain their own mode/backend restrictions. Newly installed
+   uncurated complete assets stay independent until reviewed. Test old exact
+   IDs, normal command autofill and missing preferred-source fallbacks.
+3. Prefer a complete authored assembly. Use `audit_contained_components` to
+   measure source link/internal joint containment; exclude only documented
+   empty standalone mount frames. This does not prove mesh/inertia equivalence.
+   If a compatible assembly is absent, define and test real mount frames,
+   collision/inertia/transmission contracts before adding a composed robot.
+   Unattached components remain inspection-only, not standalone Launch choices.
+4. Parent maps by the actual complete room/floor. Shell/furniture/actor source
+   variants remain explicit. Do not invent multi-floor placements or flatten
+   distinct environments into one source asset. Retain source include chains,
+   original meshes/units, actors and provenance.
+5. `asset_preview.py` resolves URDF joint/visual FK, compiled native nominal
+   keyframes and SDF visuals/includes. The existing SDF reader's default physics
+   collision path must remain unchanged. Missing/invalid geometry reports an
+   error instead of showing a fake placeholder. X500 inspection reads its
+   source SDF without importing the FCU/offboard runtime.
+6. Prepare full geometry in an owned, bounded background loader with all meshes,
+   buffers and logs on SSD. Render into Tk's own matching GLX child window.
+   OpenGL calls remain on Tk's thread; cancel stale loads by generation and
+   release buffers/context/drawable before destroying the widget. Do not re-add
+   external viewer windows or ROS preview command publishers.
+7. Test actual full-GUI rendering/input, not just nonempty metadata. Read the
+   rendered GL_BACK buffer before presentation, save a whole GUI screenshot,
+   verify orbit changes pixels, pan/zoom/Fit change the measured camera, and
+   preserve selected robot/map/command/process. Test Close, load errors and
+   source scale. Keep the original failed Tk/GLX/readback/source-load stages.
+8. Preview during a normal owned simulation. Record independent neutral body
+   truth and zero movement commands, then actual Drive/Stop/watchdog control.
+   The archived Burger/PyBullet producer supplies this protocol. Static visual
+   proof must never enable a controller, localization or navigation mode.
+9. Source pose defects remain source tasks. The hospital has six extreme
+   remote fixtures; default Fit reports and excludes their bounds from camera
+   framing while Whole scene includes their raw extent. Do not call this a
+   world repair. Review actual authored placements and repeat collision/spawn/
+   route checks before closing R6.6.
+10. Update the ledger, roadmap, checklist, tutorial and GUI status together.
+    Run meaningful grouping/FK/missing-geometry tests and actual Tk/OpenGL
+    tests. Shared launcher/planning changes need the source-matched physical
+    Panda regression before refreshing its strict certificate. Keep rendering,
+    software tests and robot missions separate, then commit/push on `master`
+    and check exact CI. Texture/actor/GPU and remaining mission work stays open.
+
 ## Reproduce the native Panda Cartesian qualification
+
+The [GUI workspace guide](tutorials/gui-workspace.md) describes the control
+column and category/type filters. For further GUI work, claim R3.4 alongside
+the runtime task, preserve exact saved profile IDs and shared resolver output,
+and classify reviewed families in `robot_taxonomy.yaml`. Keep source components
+under their parent and label unknown imports Unclassified. Do not infer a
+controller from a structural tag. Run taxonomy and actual Tk command/layout/
+neutral-input checks, build copied packages, then repeat the real normal
+Drive and Panda screens below. Extend their source contracts from measured
+pre-trial hashes, archive any failure, update Health/ledger/roadmap together,
+and inspect exact CI after the authorized master push.
 
 1. Source the SSD environment and ROS/installed workspace. Build
    `robot_lab_utils robot_lab_bringup robot_lab_gui robot_lab_mujoco`. Verify

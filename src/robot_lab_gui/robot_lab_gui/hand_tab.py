@@ -11,33 +11,40 @@ class HandTab(ttk.Frame):
         super().__init__(notebook, padding=10)
         self.app = app
         notebook.add(self, text='Hand')
+        from .workspace_ui import ScrollPanel
+        panel = ScrollPanel(self, width=390)
+        panel.grid(row=0, column=0, sticky='nsew')
+        self.columnconfigure(0, weight=1); self.rowconfigure(0, weight=1)
+        body = self.body = panel.body
         self.status_var = tk.StringVar(value='Select a robot with a qualified hand controller in Launch.')
-        ttk.Label(self, textvariable=self.status_var, wraplength=880).grid(row=0, column=0, columnspan=4, sticky='w')
+        ttk.Label(body, textvariable=self.status_var, wraplength=305).grid(row=0, column=0, columnspan=4, sticky='w')
         self.gap_var = tk.DoubleVar(value=80.)
         self.force_var = tk.DoubleVar(value=.5)
         self.actual_var = tk.StringVar(value='No measured finger state')
-        ttk.Label(self, text='Opening (mm)').grid(row=1, column=0, sticky='w', pady=10)
-        ttk.Spinbox(self, textvariable=self.gap_var, from_=0., to=80., increment=5., width=8).grid(row=1, column=1)
-        ttk.Label(self, text='Force limit per finger (N)').grid(row=2, column=0, sticky='w', pady=10)
-        ttk.Spinbox(self, textvariable=self.force_var, from_=.1, to=20., increment=.1, width=8).grid(row=2, column=1)
-        ttk.Label(self, textvariable=self.actual_var).grid(row=3, column=0, columnspan=4, sticky='w', pady=10)
-        self.open_button = ttk.Button(self, text='Open', command=lambda: self.command(.08))
-        self.close_button = ttk.Button(self, text='Close', command=lambda: self.command(0.))
-        self.set_button = ttk.Button(self, text='Set Opening', command=self.set_opening)
+        ttk.Label(body, text='Opening (mm)').grid(row=1, column=0, sticky='w', pady=6)
+        ttk.Spinbox(body, textvariable=self.gap_var, from_=0., to=80., increment=5., width=8).grid(row=1, column=1)
+        ttk.Label(body, text='Force limit per finger (N)').grid(row=2, column=0, sticky='w', pady=6)
+        ttk.Spinbox(body, textvariable=self.force_var, from_=.1, to=20., increment=.1, width=8).grid(row=2, column=1)
+        ttk.Label(body, textvariable=self.actual_var, wraplength=305).grid(row=3, column=0, columnspan=4, sticky='w', pady=6)
+        actions = ttk.Frame(body)
+        actions.grid(row=4, column=0, columnspan=4, sticky='ew')
+        self.open_button = ttk.Button(actions, text='Open', command=lambda: self.command(.08), width=7)
+        self.close_button = ttk.Button(actions, text='Close', command=lambda: self.command(0.), width=7)
+        self.set_button = ttk.Button(actions, text='Set Opening', command=self.set_opening, width=10)
         for column, button in enumerate((self.open_button, self.close_button, self.set_button)):
-            button.grid(row=4, column=column, padx=5, pady=8)
-        self.cancel_button = ttk.Button(self, text='Cancel', command=self.cancel)
-        self.stop_button = ttk.Button(self, text='Stop Hand', command=self.stop)
-        self.cancel_button.grid(row=5, column=0, padx=5, pady=8)
-        self.stop_button.grid(row=5, column=1, padx=5, pady=8)
+            button.grid(row=0, column=column, padx=2, pady=8)
+        self.cancel_button = ttk.Button(actions, text='Cancel', command=self.cancel, width=7)
+        self.stop_button = ttk.Button(actions, text='Stop Hand', command=self.stop, width=10)
+        self.cancel_button.grid(row=1, column=0, padx=2, pady=8)
+        self.stop_button.grid(row=1, column=1, padx=2, pady=8)
         self.fixture_var = tk.BooleanVar(value=False)
-        self.fixture_button = ttk.Checkbutton(self, text='Add a supported grasp object on next Run',
+        self.fixture_button = ttk.Checkbutton(body, text='Add grasp object on next Run',
             variable=self.fixture_var, command=app._update_validation_and_command)
-        self.fixture_button.grid(row=6, column=0, columnspan=4, sticky='w', pady=12)
-        ttk.Label(self, text='Controls use measured finger motion and the source tendon coupling.\n'
+        self.fixture_button.grid(row=6, column=0, columnspan=4, sticky='w', pady=6)
+        ttk.Label(body, text='Controls use measured finger motion and the source tendon coupling.\n'
             'The opening is the sum of the two finger-joint displacements.\n'
             'Stop or heartbeat loss holds the measured opening; select the fixture before Run.',
-            justify='left', wraplength=880).grid(row=7, column=0, columnspan=4, sticky='w')
+            justify='left', wraplength=305).grid(row=7, column=0, columnspan=4, sticky='w')
         self.node = None
         self.state = None
         self.received = -math.inf

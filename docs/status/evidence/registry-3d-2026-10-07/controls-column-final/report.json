@@ -1,0 +1,160 @@
+{
+  "cases": [
+    {
+      "kind": "maps",
+      "asset_id": "celisca_floor_2_furniture",
+      "embedded_widget": ".!notebook.!registrytab.!panedwindow.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        642,
+        673,
+        3
+      ],
+      "colors": 134,
+      "orbit_changed_pixel_fraction": 0.4329847754741174,
+      "max_ui_gap_s": 3.485441771001206,
+      "preparation_wall_s": 12.273511805000453,
+      "geometry_count": 3,
+      "triangles": 7937664,
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world",
+      "source_sha256": "2c7061d96e32afbf2491ba904bb8429d245dc44fce27eebe8627cc80fcf7b4ca",
+      "bounds": {
+        "min_xyz": [
+          -23.59555227956772,
+          -13.75,
+          -0.1
+        ],
+        "max_xyz": [
+          23.478155891132356,
+          13.75,
+          2.3908503800153733
+        ],
+        "center_xyz": [
+          -0.05869819421768163,
+          0.0,
+          1.1454251900076866
+        ],
+        "span_m": 54.57461256441366,
+        "raw_min_xyz": [
+          -23.59555227956772,
+          -13.75,
+          -0.1
+        ],
+        "raw_max_xyz": [
+          23.478155891132356,
+          13.75,
+          2.3908503800153733
+        ],
+        "remote_geometry_count": 0
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/742c0475e9bc4aef82a2e38c96eecb20",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "maps",
+      "asset_id": "dataset_room2",
+      "embedded_widget": ".!notebook.!registrytab.!panedwindow.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        642,
+        673,
+        3
+      ],
+      "colors": 143,
+      "orbit_changed_pixel_fraction": 0.993408414455199,
+      "max_ui_gap_s": 0.03571877000103996,
+      "preparation_wall_s": 0.651012902999355,
+      "geometry_count": 25,
+      "triangles": 416,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world",
+      "source_sha256": "c820c23f32d37e7078065e8646aa6936d84a6a8c0e68909d6520d4a19cd5e289",
+      "bounds": {
+        "min_xyz": [
+          -16.661399183012254,
+          -2.427894275473517,
+          0.0
+        ],
+        "max_xyz": [
+          13.338619183012252,
+          2.572145803846636,
+          0.9999994999999999
+        ],
+        "center_xyz": [
+          -1.6613900000000008,
+          0.07212576418655936,
+          0.49999974999999997
+        ],
+        "span_m": 30.43027278478811,
+        "raw_min_xyz": [
+          -16.661399183012254,
+          -2.427894275473517,
+          0.0
+        ],
+        "raw_max_xyz": [
+          13.338619183012252,
+          2.572145803846636,
+          0.9999994999999999
+        ],
+        "remote_geometry_count": 0
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/a853242845fc4f5e9c9af2a34e969ed8",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "maps",
+      "asset_id": "dataset_room2_world_dynamic",
+      "embedded_widget": ".!notebook.!registrytab.!panedwindow.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        642,
+        673,
+        3
+      ],
+      "colors": 258,
+      "orbit_changed_pixel_fraction": 0.993424615683715,
+      "max_ui_gap_s": 0.038580286000069464,
+      "preparation_wall_s": 0.6242138790003082,
+      "geometry_count": 28,
+      "triangles": 452,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world",
+      "source_sha256": "9ccedc0ec46669b45467091a7bca6f4e7afc3bf6701db7d379f25c6347520b90",
+      "bounds": {
+        "min_xyz": [
+          -16.661399183012254,
+          -2.427894275473517,
+          0.0
+        ],
+        "max_xyz": [
+          13.338619183012252,
+          2.572145803846636,
+          0.9999990000000001
+        ],
+        "center_xyz": [
+          -1.6613900000000008,
+          0.07212576418655936,
+          0.49999950000000004
+        ],
+        "span_m": 30.430272768357113,
+        "raw_min_xyz": [
+          -16.661399183012254,
+          -2.427894275473517,
+          0.0
+        ],
+        "raw_max_xyz": [
+          13.338619183012252,
+          2.572145803846636,
+          0.9999990000000001
+        ],
+        "remote_geometry_count": 0
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/624f23db53ff468da30c1b511d86ac86",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    }
+  ],
+  "scope": "Actual embedded Tk/OpenGL geometry and input; no physics or mission qualification",
+  "baseline": "18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae",
+  "closed": true
+}

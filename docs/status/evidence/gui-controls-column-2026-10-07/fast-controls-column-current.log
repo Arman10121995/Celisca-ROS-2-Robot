@@ -1,0 +1,28 @@
+=== Tier: fast (48 test files) ===
+........................................................................ [  7%]
+........................................................................ [ 15%]
+........................................................................ [ 23%]
+......................................................................s. [ 30%]
+........................................................................ [ 38%]
+........................................................................ [ 46%]
+........................................................................ [ 53%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 76%]
+........................................................................ [ 84%]
+........................................................................ [ 92%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+=============================== warnings summary ===============================
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /usr/lib/python3/dist-packages/_pytest/monkeypatch.py:308: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+    from pkg_resources import fixup_namespace_packages
+
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /home/molar1/.local/lib/python3.10/site-packages/pkg_resources/__init__.py:3148: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    declare_namespace(pkg)
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+936 passed, 1 skipped, 4 deselected, 2 warnings in 169.76s (0:02:49)
+=== Tier: fast PASS ===

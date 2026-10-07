@@ -4,7 +4,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
 
-Status updated on **2026-10-06**, against baseline `61335fe` and the recorded
+Status updated on **2026-10-07**, against baseline `18ecdd2` and the recorded
 continuation source snapshots. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
@@ -26,9 +26,22 @@ with measured native flight in `nav_empty` and `nav_obstacle`. World selections
 persist and commands autofill. Four-wheel work adds measured body-pose checks,
 obstacle routes and selected localization/mapping/reset repairs. See the
 [done / remaining checklist](docs/status/CHECKLIST.md) and
-[current measured trials and remaining gaps](docs/status/continuation-2026-10-06.md)
+[current measured trials and remaining gaps](docs/status/continuation-2026-10-07.md)
 and [flight guide](docs/tutorials/px4_x500.md). Full platform qualification
 remains partial; these results apply to the named recorded cells.
+
+**Launch & control** keeps Drive, Arm, Hand, Drone and their limits in a
+separate right-hand column beside setup and command/algorithm review. Robot
+category/type filters and structural tags distinguish wheel counts, leg counts,
+single/dual arms, mobile manipulators and drones. The sidebar opens the other
+workspaces; panels and dividers adapt to available space. See the
+[GUI workspace guide](docs/tutorials/gui-workspace.md).
+
+**Registry → Preview 3D** now renders robots and worlds natively inside the
+GUI, with orbit, pan, zoom and Fit. Parent families collect source variants and
+components; complete models remain in Launch and isolated limbs stay nested
+for inspection. See the [embedded viewer guide](docs/tutorials/registry-3d.md)
+and [actual rendering/live-plant checks](docs/status/evidence/registry-3d-2026-10-07/README.md).
 
 **Worlds** generates real occupancy PGM/YAML files. **Installed Extensions**
 opens downloaded assets in the normal Launch selectors with commands filled
@@ -43,7 +56,15 @@ Navigation in all four simulators, with compatible algorithms and commands
 filled in. Forty named mode trials and eight final sensor/Drive trials measure
 reset/resume, actual map saves, source lidar/RGB-D frames and clear/obstacle
 Nav2 goals. Other maps and vendor hazards/docking remain experiments. See the
-[TurtleBot 4 guide](docs/tutorials/turtlebot4.md). The new **Arm** tab
+[TurtleBot 4 guide](docs/tutorials/turtlebot4.md).
+Official **TurtleBot3 Burger, Waffle and Waffle Pi** now have source-backed
+physical wheels and LDS sensing, with twelve final normal GUI Drive/Stop/
+publisher-loss/joint/TF trials across all four engines. Their original 3.5 m
+lidar uses a named `nav_empty` spawn near geometry. Forty-eight real mode
+screens enable Localization, 2D SLAM and Navigation on all four engines, with
+actual map saves and clear/obstacle goals. RGB-only source cameras leave 3D
+SLAM pending. See the [TurtleBot3 guide](docs/tutorials/turtlebot3.md).
+The new **Arm** tab
 controls native Panda joints on MuJoCo with measured Home, Stop, cancellation
 and heartbeat loss. **Hand** adds original coupled-finger opening/closing,
 bounded force, Cancel/Stop and GUI Reset. A physical 3 cm cube lift, hold and
@@ -53,6 +74,8 @@ gravity release is measured on MuJoCo/`nav_empty`; see the
 **Cartesian Plan / Execute** adds real MoveIt KDL/OMPL/FCL planning through the
 native Panda actuators, with measured TCP targets, collision rejection,
 stale-plan invalidation, Stop/watchdog and reset in static `nav_empty`.
+The [October 7 control-column regression](docs/status/evidence/panda-cartesian-controls-column-2026-10-07/README.md)
+passes after the shared command/spawn and catalog changes and refreshes its strict proof.
 Cross-backend qualification, remaining vendor/example imports, Servo,
 planned payload/grasp setups and mobile-manipulator control remain in the [roadmap](ROADMAP.md) and
 [extension guide](docs/ASSET_EXTENSION_GUIDE.md).
@@ -64,7 +87,7 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
 - [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
 - [Worlds and robot extension guide](docs/ASSET_EXTENSION_GUIDE.md): source pins, occupancy generation and concrete terrain/manipulation implementation contracts.
-- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [current measured support screens](docs/status/evidence/continuation-2026-10-06/support-matrix-current.md): scoped state and release blockers.
+- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [latest measured trials](docs/status/continuation-2026-10-07.md): scoped state, evidence and release blockers.
 - [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
 
@@ -82,9 +105,13 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ### Verification snapshot
 
-The October 6 [current evidence](docs/status/evidence/continuation-2026-10-06/README.md)
-records the latest build/test results and source-matched TurtleBot 4 and Panda
-trials. Older totals below describe their dated stages, not the current suite.
+The October 7 [current continuation](docs/status/continuation-2026-10-07.md)
+records source-matched TurtleBot3 and fresh native Panda trials. Exact
+`18ecdd2` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
+passes build, fast, physics, integration and registry checks; later controller
+changes require their own CI. [October 6 evidence](docs/status/evidence/continuation-2026-10-06/README.md)
+retains TurtleBot4 and prior Panda checks. Older totals below describe their
+dated stages, not the current suite.
 
 The dated 2026-09-07 audit reported **485 passing, 1 failing, 9 deselected**
 source tests, plus **5 passing, 1 deselected** selected backend tests. That audit

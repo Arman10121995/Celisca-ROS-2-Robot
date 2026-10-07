@@ -1,0 +1,5 @@
+usage: robot-lab validate [-h] -c CONFIG_DIR
+                          [-t {robot,environment,algorithm,scenario,experiment}]
+                          [--cross-references]
+robot-lab validate: error: the following arguments are required: -c/--config-dir
+[ros2run]: Process exited with failure 2

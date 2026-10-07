@@ -1,0 +1,479 @@
+{
+  "kind": "robots",
+  "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf",
+  "source_sha256": "d97e53de8c50f167b0b3a4f86dc21413236387f7b72cb817549362b63534e83c",
+  "shapes": [
+    {
+      "model": "x500_base",
+      "position": [
+        0.0,
+        0.0,
+        0.265
+      ],
+      "orientation": [
+        -2.0510342851533115e-10,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/7321861b113866996dfa79b403def5666d4b796810840d2c057c7b51fc315b0a_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 0
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.174,
+        0.174,
+        0.272
+      ],
+      "orientation": [
+        0.9747941070689433,
+        0.0,
+        0.0,
+        -0.22310636213174545
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.174,
+        0.174,
+        0.272
+      ],
+      "orientation": [
+        0.9747941070689433,
+        0.0,
+        0.0,
+        -0.22310636213174545
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.174,
+        -0.174,
+        0.272
+      ],
+      "orientation": [
+        0.9747941070689433,
+        0.0,
+        0.0,
+        -0.22310636213174545
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.174,
+        -0.174,
+        0.272
+      ],
+      "orientation": [
+        0.9747941070689433,
+        0.0,
+        0.0,
+        -0.22310636213174545
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.047,
+        0.001,
+        0.283
+      ],
+      "orientation": [
+        0.6207916095069478,
+        0.33914000194777966,
+        0.33887004315045344,
+        0.6202974532430737
+      ],
+      "type": "plane",
+      "size": [
+        0.013,
+        0.007
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 2
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.023,
+        0.0,
+        0.2915
+      ],
+      "orientation": [
+        0.7073882691671998,
+        0.0,
+        0.0,
+        -0.706825181105366
+      ],
+      "type": "plane",
+      "size": [
+        0.013,
+        0.007
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 2
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.03,
+        0.0,
+        0.2915
+      ],
+      "orientation": [
+        0.7073882691671998,
+        0.0,
+        0.0,
+        -0.706825181105366
+      ],
+      "type": "plane",
+      "size": [
+        0.032,
+        0.0034
+      ],
+      "rgba": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.152,
+        -0.3203846153846154,
+        0.284
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/ba197e0961117a3462b555d65edf3433ba8ff5691624100a185242cb5f456244_1000000000f.stl",
+      "scale": [
+        0.8461538461538461,
+        0.8461538461538461,
+        0.8461538461538461
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.174,
+        -0.174,
+        0.268
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.19599999999999998,
+        0.027615384615384625,
+        0.284
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/ba197e0961117a3462b555d65edf3433ba8ff5691624100a185242cb5f456244_1000000000f.stl",
+      "scale": [
+        0.8461538461538461,
+        0.8461538461538461,
+        0.8461538461538461
+      ],
+      "render_mesh": 4
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.174,
+        0.174,
+        0.268
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.152,
+        0.027615384615384625,
+        0.284
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/7aa4b61c1ddc5304c9c1f5602eacf5e2ec5eafb95dd1f2a3368342f256122fc0_1000000000f.stl",
+      "scale": [
+        0.8461538461538461,
+        0.8461538461538461,
+        0.8461538461538461
+      ],
+      "render_mesh": 6
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        0.174,
+        0.174,
+        0.268
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 5
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.19599999999999998,
+        -0.3203846153846154,
+        0.284
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/7aa4b61c1ddc5304c9c1f5602eacf5e2ec5eafb95dd1f2a3368342f256122fc0_1000000000f.stl",
+      "scale": [
+        0.8461538461538461,
+        0.8461538461538461,
+        0.8461538461538461
+      ],
+      "render_mesh": 6
+    },
+    {
+      "model": "x500_base",
+      "position": [
+        -0.174,
+        -0.174,
+        0.268
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "render_mesh": 5
+    }
+  ],
+  "bounds": {
+    "min_xyz": [
+      -0.20350000017881392,
+      -0.3203846153846154,
+      0.01240049242973329
+    ],
+    "max_xyz": [
+      0.20350000017881392,
+      0.3203845278299772,
+      0.309384614817225
+    ],
+    "center_xyz": [
+      0.0,
+      -4.37773191030999e-08,
+      0.16089255362347915
+    ],
+    "span_m": 0.8151280047559039,
+    "raw_min_xyz": [
+      -0.20350000017881392,
+      -0.3203846153846154,
+      0.01240049242973329
+    ],
+    "raw_max_xyz": [
+      0.20350000017881392,
+      0.3203845278299772,
+      0.309384614817225
+    ],
+    "remote_geometry_count": 0
+  },
+  "notes": [
+    "SDF nominal link pose; static inspection, no flight controller or plant"
+  ],
+  "meshes": [
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/NXP-HGD-CF.dae",
+      "sha256": "7321861b113866996dfa79b403def5666d4b796810840d2c057c7b51fc315b0a",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/7321861b113866996dfa79b403def5666d4b796810840d2c057c7b51fc315b0a_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Base.dae",
+      "sha256": "798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Base.dae",
+      "sha256": "798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Base.dae",
+      "sha256": "798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Base.dae",
+      "sha256": "798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/798396a1945c7ff55a0840b77869e27affdd35fed0d784fff96b68f50f160ea0_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/1345_prop_ccw.stl",
+      "sha256": "ba197e0961117a3462b555d65edf3433ba8ff5691624100a185242cb5f456244",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/ba197e0961117a3462b555d65edf3433ba8ff5691624100a185242cb5f456244_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Bell.dae",
+      "sha256": "b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/1345_prop_ccw.stl",
+      "sha256": "ba197e0961117a3462b555d65edf3433ba8ff5691624100a185242cb5f456244",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/ba197e0961117a3462b555d65edf3433ba8ff5691624100a185242cb5f456244_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Bell.dae",
+      "sha256": "b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/1345_prop_cw.stl",
+      "sha256": "7aa4b61c1ddc5304c9c1f5602eacf5e2ec5eafb95dd1f2a3368342f256122fc0",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/7aa4b61c1ddc5304c9c1f5602eacf5e2ec5eafb95dd1f2a3368342f256122fc0_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Bell.dae",
+      "sha256": "b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/1345_prop_cw.stl",
+      "sha256": "7aa4b61c1ddc5304c9c1f5602eacf5e2ec5eafb95dd1f2a3368342f256122fc0",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/7aa4b61c1ddc5304c9c1f5602eacf5e2ec5eafb95dd1f2a3368342f256122fc0_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/models/x500_base/meshes/5010Bell.dae",
+      "sha256": "b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/meshes/b90a1b2dd63a8ebbe1f3339ed18cef23673e0d8f03314fd9b9533a68b6b66668_1000000000f.stl"
+    }
+  ],
+  "scope": "Static source geometry in metres; scripted actors, physics, policies and missions are not executed",
+  "asset_id": "px4_x500",
+  "render_geometry": {
+    "path": "/workspace/molar/robot_lab_runtime/registry_previews/3ab0851b9be74c63ac49f472b745fa14/geometry.npz",
+    "meshes": 7,
+    "triangles": 251592,
+    "scope": "Full source geometry; colors retained where declared; embedded textures are not reconstructed"
+  },
+  "preparation_wall_s": 3.682183631999578
+}

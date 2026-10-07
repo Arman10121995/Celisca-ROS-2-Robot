@@ -1,0 +1,98 @@
+....FF.................................................................. [ 76%]
+......................                                                   [100%]
+=================================== FAILURES ===================================
+________ test_hand_fixture_and_reset_require_the_selected_native_panda _________
+
+app = <robot_lab_gui.launcher.SimulationLauncherGui object .>
+
+    def test_hand_fixture_and_reset_require_the_selected_native_panda(app):
+        from robot_lab_gui.arm_tab import ArmTab
+        from robot_lab_gui.hand_tab import HandTab
+        profile = dict(app.robot_profiles['bumperbot'])
+        profile.update(supported_modes=['display'], supported_simulators=['mujoco'],
+                       features=['joint_control'], source_id='test_vendor', arm_control='panda', hand_control='panda')
+        profile.pop('drive', None)
+        app.robot_profiles['menagerie_franka_emika_panda'] = profile
+        app.arm_tab = ArmTab(app.notebook, app)
+        app.hand_tab = HandTab(app.notebook, app)
+        try:
+            app.robot_var.set('menagerie_franka_emika_panda')
+            app.simulator_var.set('mujoco'); app.map_var.set('nav_empty'); app.mode_var.set('display')
+>           app._update_from_selection(); app.update()
+
+src/robot_lab_gui/test/test_command_autofill.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:2160: in _update_from_selection
+    self._refresh_workspace_selection()
+src/robot_lab_gui/robot_lab_gui/launcher.py:1112: in _refresh_workspace_selection
+    self.control_notebook.select(self.arm_tab)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tkinter.ttk.Notebook object .!notebook.!frame.!panedwindow.!labelframe.!notebook>
+tab_id = <robot_lab_gui.arm_tab.ArmTab object .!notebook.!armtab>
+
+    def select(self, tab_id=None):
+        """Selects the specified tab.
+    
+        The associated child window will be displayed, and the
+        previously-selected window (if different) is unmapped. If tab_id
+        is omitted, returns the widget name of the currently selected
+        pane."""
+>       return self.tk.call(self._w, "select", tab_id)
+E       _tkinter.TclError: .!notebook.!armtab is not managed by .!notebook.!frame.!panedwindow.!labelframe.!notebook
+
+/usr/lib/python3.10/tkinter/ttk.py:885: TclError
+_________ test_qualified_panda_planning_autofill_and_fixture_fallback __________
+
+app = <robot_lab_gui.launcher.SimulationLauncherGui object .>
+
+    def test_qualified_panda_planning_autofill_and_fixture_fallback(app):
+        from robot_lab_gui.arm_tab import ArmTab
+        from robot_lab_gui.hand_tab import HandTab
+        profile = dict(app.robot_profiles['bumperbot'])
+        profile.update(supported_modes=['display'], supported_simulators=['mujoco'],
+                       features=['joint_control'], source_id='test_vendor',
+                       arm_control='panda', hand_control='panda', arm_planning='moveit')
+        profile.pop('drive', None)
+        app.robot_profiles['menagerie_franka_emika_panda'] = profile
+        app.arm_tab = ArmTab(app.notebook, app)
+        app.hand_tab = HandTab(app.notebook, app)
+        try:
+            app.robot_var.set('menagerie_franka_emika_panda')
+            app.simulator_var.set('mujoco')
+            app.mode_var.set('display')
+>           app._update_from_selection(); app.update()
+
+src/robot_lab_gui/test/test_command_autofill.py:194: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:2160: in _update_from_selection
+    self._refresh_workspace_selection()
+src/robot_lab_gui/robot_lab_gui/launcher.py:1112: in _refresh_workspace_selection
+    self.control_notebook.select(self.arm_tab)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tkinter.ttk.Notebook object .!notebook.!frame.!panedwindow.!labelframe.!notebook>
+tab_id = <robot_lab_gui.arm_tab.ArmTab object .!notebook.!armtab>
+
+    def select(self, tab_id=None):
+        """Selects the specified tab.
+    
+        The associated child window will be displayed, and the
+        previously-selected window (if different) is unmapped. If tab_id
+        is omitted, returns the widget name of the currently selected
+        pane."""
+>       return self.tk.call(self._w, "select", tab_id)
+E       _tkinter.TclError: .!notebook.!armtab is not managed by .!notebook.!frame.!panedwindow.!labelframe.!notebook
+
+/usr/lib/python3.10/tkinter/ttk.py:885: TclError
+=============================== warnings summary ===============================
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+  /usr/lib/python3/dist-packages/OpenGL/images.py:142: DeprecationWarning: tostring() is deprecated. Use tobytes() instead.
+    return data.tostring()
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+=========================== short test summary info ============================
+FAILED src/robot_lab_gui/test/test_command_autofill.py::test_hand_fixture_and_reset_require_the_selected_native_panda
+FAILED src/robot_lab_gui/test/test_command_autofill.py::test_qualified_panda_planning_autofill_and_fixture_fallback
+2 failed, 92 passed, 2 warnings in 200.46s (0:03:20)

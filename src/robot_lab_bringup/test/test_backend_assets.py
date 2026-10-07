@@ -167,6 +167,38 @@ class MujocoRobotImportTests(unittest.TestCase):
 
 
 @unittest.skipUnless(_mujoco_available(), "mujoco / workspace shares unavailable")
+class MujocoSmallWheelServoTests(unittest.TestCase):
+    """Actual Euler integration of a small unloaded wheel under both servos."""
+
+    def test_small_wheel_profile_tracks_reverse_and_brakes_without_instability(self):
+        import math
+        import mujoco
+        from robot_lab_mujoco.mujoco_spawner import _add_wheel_velocity_actuators
+        source = ('<mujoco><option timestep="0.002"/><worldbody><body>'
+                  '<joint name="wheel" type="hinge"/>'
+                  '<geom type="cylinder" size="0.033 0.009" mass="0.028"/>'
+                  '</body></worldbody></mujoco>')
+        for parameters in ({}, dict(armature=.0002, velocity_gain=.1)):
+            model = mujoco.MjModel.from_xml_string(_add_wheel_velocity_actuators(source, ['wheel'], **parameters))
+            data = mujoco.MjData(model)
+            for target in [0., 5., -5., 0.]:
+                data.ctrl[0] = target
+                for _ in range(250):
+                    mujoco.mj_step(model, data)
+                    self.assertTrue(math.isfinite(data.qvel[0]))
+                    self.assertLess(abs(data.qvel[0]), 6.)
+                self.assertAlmostEqual(target, data.qvel[0], delta=.02)
+
+    def test_invalid_small_wheel_servo_parameters_fail_closed(self):
+        from robot_lab_mujoco.mujoco_spawner import _add_wheel_velocity_actuators
+        for parameters in [dict(armature=-1.), dict(armature=float('nan')),
+                           dict(velocity_gain=0.), dict(velocity_gain=float('inf')),
+                           dict(velocity_gain=True)]:
+            with self.assertRaises(ValueError):
+                _add_wheel_velocity_actuators('<mujoco/>', ['wheel'], **parameters)
+
+
+@unittest.skipUnless(_mujoco_available(), "mujoco / workspace shares unavailable")
 class MujocoRclpyLoggingTests(unittest.TestCase):
     """Log through a real rclpy logger, which enforces one severity per call
     site. A permissive fake logger hid that every Berkeley Humanoid Lite

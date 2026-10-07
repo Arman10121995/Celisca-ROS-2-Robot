@@ -1,0 +1,44 @@
+=== Tier: fast (48 test files) ===
+........................................................................ [  7%]
+............................F........................................... [ 15%]
+........................................................................ [ 23%]
+......................................................................s. [ 30%]
+........................................................................ [ 38%]
+........................................................................ [ 46%]
+........................................................................ [ 53%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 76%]
+........................................................................ [ 84%]
+........................................................................ [ 92%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+=================================== FAILURES ===================================
+________ TutorialDocumentationTests.test_each_tutorial_has_run_section _________
+
+self = <test_p6_benchmarking.TutorialDocumentationTests testMethod=test_each_tutorial_has_run_section>
+
+    def test_each_tutorial_has_run_section(self):
+        tutorials_dir = Path(__file__).resolve().parents[4] / "docs" / "tutorials"
+        for tutorial in tutorials_dir.glob("*.md"):
+            if tutorial.name == "index.md":
+                continue
+            content = tutorial.read_text()
+>           self.assertIn("## Run", content, f"{tutorial.name} missing Run section")
+E           AssertionError: '## Run' not found in "# Inspect robots and worlds inside the GUI\n\nOpen **Registry**, choose **Robots** or **Environments**, select an entry and\nclick **Preview 3D**. The geometry appears in the Registry's **3D Preview**\npane inside Robot Lab GUI. The same button in **Worlds** and\n**Installed Extensions** opens this pane.\n\n![Furnished Celisca floor 2 in the embedded Registry viewer](../status/evidence/registry-3d-2026-10-07/grouped-worlds-final/celisca_floor_2_furniture/gui.png)\n\n| Control | Action |\n|---|---|\n| Left mouse drag | Orbit around the model |\n| Right mouse drag | Pan the camera |\n| Mouse wheel | Zoom |\n| Fit | Frame the model or building |\n| Top / Front / Side | Inspect an axis-aligned view |\n| Whole scene | Include remote authored objects in Fit |\n\nThe preview reads the installed source geometry in metres: URDF joint and\nvisual frames, native MuJoCo nominal/keyframe geometry, and SDF world/model\nincludes. It is a static inspection view. Use Run and Live Monitor for actual\nphysics, sensor and controller feedback. Previewing an asset preserves the\ncurrent launch selection and command; it also works while an owned simulation\nis running. Large meshes prepare in the background, with buffers on the SSD.\nDeclared colors are displayed; embedded mesh textures are not reconstructed.\n\nRobot and map selectors now show parent families. **Model/source variant**\nand **World variant** select the exact executable profile. For example,\nTurtleBot3 contains Burger/Waffle/Waffle Pi, Celisca floor 2 contains shell,\nfurniture and actors, and R2 contains complete source revisions and retained\nsubassemblies. Search still finds the original profile or registry ID.\n\nExpand a Registry family to inspect its variants and components. A forearm\ncan be previewed, but **Open in Launch** is disabled for an isolated component.\nComplete R2 and Valkyrie source assemblies already contain their corresponding\nparts. Unattached grippers stay in a component library until a compatible\nmount is defined; the GUI does not guess mounting transforms. Changing a\nsource variant retains that profile's controller and backend restrictions.\n\nIf preparation or rendering fails, the pane reports the error and Console\ncontains the loader details. The viewer uses Linux Tk/GLX, PyOpenGL and\nTrimesh; ROS package dependencies declare those libraries. The checked\ninstallation supports both native MJCF and downloaded URDF/SDF assets.\n\nThe imported two-floor hospital has six fixtures with extreme source poses.\nDefault Fit frames the main building and reports the remote geometry;\n**Whole scene** exposes the full raw extent. This does not repair that world's\nspawn, collision or navigation behavior. Those checks remain in R6.6.\n\n[Actual rendered scenes, camera-input checks and live-plant regression](../status/evidence/registry-3d-2026-10-07/README.md)\nrecord the tested scope. Preview availability does not qualify a robot mission.\n" : registry-3d.md missing Run section
+
+src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py:692: AssertionError
+=============================== warnings summary ===============================
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /usr/lib/python3/dist-packages/_pytest/monkeypatch.py:308: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+    from pkg_resources import fixup_namespace_packages
+
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /home/molar1/.local/lib/python3.10/site-packages/pkg_resources/__init__.py:3148: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    declare_namespace(pkg)
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+=========================== short test summary info ============================
+FAILED src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py::TutorialDocumentationTests::test_each_tutorial_has_run_section
+1 failed, 935 passed, 1 skipped, 4 deselected, 2 warnings in 171.52s (0:02:51)

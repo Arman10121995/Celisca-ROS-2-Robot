@@ -1,0 +1,210 @@
+{
+  "kind": "robots",
+  "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/drive.urdf",
+  "source_sha256": "dc64421f1bb69c95d5b57f5d4b9d9ecdb5f7b496d019022856138aaf4a7f92e5",
+  "shapes": [
+    {
+      "model": "base_link",
+      "position": [
+        -0.032,
+        0.0,
+        0.01
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.4,
+        0.4,
+        0.4,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/7d7f3329a437b43bbcbbec59f9a2d1df1d88b59c3882c543d979baf73670f025_1000000000f.stl",
+      "scale": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "render_mesh": 0
+    },
+    {
+      "model": "wheel_left_link",
+      "position": [
+        0.0,
+        0.08,
+        0.033
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.3,
+        0.3,
+        0.3,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/578c9452ee51c2f71e5e6723b503d784e58a6ac317fa53ee308e645f204c8d6a_1000000000f.stl",
+      "scale": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "wheel_right_link",
+      "position": [
+        0.0,
+        -0.08,
+        0.033
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.3,
+        0.3,
+        0.3,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/407aaf271ba7051c6186b220e1dc36b2a6eca688fced66a3347f49747b684596_1000000000f.stl",
+      "scale": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "render_mesh": 2
+    },
+    {
+      "model": "caster_back_link",
+      "position": [
+        -0.081,
+        7.963267107332934e-07,
+        0.005000000317068165
+      ],
+      "orientation": [
+        0.7073882691671998,
+        -0.706825181105366,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.68,
+        0.73,
+        0.8,
+        1.0
+      ],
+      "type": "box",
+      "size": [
+        0.03,
+        0.009,
+        0.02
+      ],
+      "render_mesh": 3
+    },
+    {
+      "model": "base_scan",
+      "position": [
+        -0.032,
+        0.0,
+        0.182
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rgba": [
+        0.3,
+        0.3,
+        0.3,
+        1.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/98f0bd7046159f83caab9509293112ef13534368535669124b91b5114c3132f6_1000000000f.stl",
+      "scale": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "render_mesh": 4
+    }
+  ],
+  "bounds": {
+    "min_xyz": [
+      -0.10077350616455079,
+      -0.08910000038146973,
+      -0.00012250041961669837
+    ],
+    "max_xyz": [
+      0.03677350616455079,
+      0.08910000038146973,
+      0.191
+    ],
+    "center_xyz": [
+      -0.032,
+      0.0,
+      0.09543874979019165
+    ],
+    "span_m": 0.2953002388065747,
+    "raw_min_xyz": [
+      -0.10077350616455079,
+      -0.08910000038146973,
+      -0.00012250041961669837
+    ],
+    "raw_max_xyz": [
+      0.03677350616455079,
+      0.08910000038146973,
+      0.191
+    ],
+    "remote_geometry_count": 0
+  },
+  "notes": [
+    "Link caster_back_link has no visual; showing its authored collision geometry",
+    "URDF nominal joint pose; static inspection, no controller or plant"
+  ],
+  "meshes": [
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/7d7f3329a437b43bbcbb.stl",
+      "sha256": "7d7f3329a437b43bbcbbec59f9a2d1df1d88b59c3882c543d979baf73670f025",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/7d7f3329a437b43bbcbbec59f9a2d1df1d88b59c3882c543d979baf73670f025_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/578c9452ee51c2f71e5e.stl",
+      "sha256": "578c9452ee51c2f71e5e6723b503d784e58a6ac317fa53ee308e645f204c8d6a",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/578c9452ee51c2f71e5e6723b503d784e58a6ac317fa53ee308e645f204c8d6a_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/407aaf271ba7051c6186.stl",
+      "sha256": "407aaf271ba7051c6186b220e1dc36b2a6eca688fced66a3347f49747b684596",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/407aaf271ba7051c6186b220e1dc36b2a6eca688fced66a3347f49747b684596_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/98f0bd7046159f83caab.stl",
+      "sha256": "98f0bd7046159f83caab9509293112ef13534368535669124b91b5114c3132f6",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/meshes/98f0bd7046159f83caab9509293112ef13534368535669124b91b5114c3132f6_1000000000f.stl"
+    }
+  ],
+  "scope": "Static source geometry in metres; scripted actors, physics, policies and missions are not executed",
+  "asset_id": "asset_turtlebot3_burger",
+  "render_geometry": {
+    "path": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900/geometry.npz",
+    "meshes": 5,
+    "triangles": 154446,
+    "scope": "Full source geometry; colors retained where declared; embedded textures are not reconstructed"
+  },
+  "preparation_wall_s": 1.3339546010010963
+}

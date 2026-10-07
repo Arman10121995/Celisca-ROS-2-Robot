@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "robots",
+  "asset_id": "bumperbot",
+  "profile": {
+    "package": "robot_lab_robots",
+    "xacro": "bumperbot/urdf/bumperbot.urdf.xacro",
+    "name": "bumperbot",
+    "supported_modes": [
+      "display",
+      "loc",
+      "slam",
+      "3d_slam",
+      "nav"
+    ],
+    "features": [
+      "ros2_control",
+      "lidar_2d",
+      "rgbd_camera",
+      "velocity_base"
+    ],
+    "drive": {
+      "max_speed": 1.0,
+      "max_accel": 2.0,
+      "max_angular_speed": 2.0,
+      "max_angular_accel": 4.0
+    },
+    "supports_room_vacuum": true
+  },
+  "output": "/workspace/molar/robot_lab_runtime/registry_previews/3ceb9811379f4e0ead9cae17f206dd0f",
+  "scope": "Embedded static inspection; no ROS nodes or simulator"
+}

@@ -87,6 +87,36 @@
     {
       "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/dc39922-failed-report.json",
       "sha256": "dcfa9f4a85ebfb6331136e581ee0a2daddaf053258cf0e431753276215f187db"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/18ecdd2.log",
+      "bytes": 2375896,
+      "sha256": "80845831e4f85b8e095c6663a57c09c2d55d25a380aeb26eb9aa812119cc316a"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/18ecdd2-report.json",
+      "bytes": 2526,
+      "sha256": "c3bafe99ecf84f4a138f7460bb8c2a4e035be5b2d052860f27825aae26936ff7"
     }
-  ]
+  ],
+  "remote_ci": {
+    "revision": "18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae",
+    "url": "https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37586958626",
+    "conclusion": "success",
+    "fast": {
+      "passed": 879,
+      "skipped": 4,
+      "deselected": 4,
+      "wall_seconds": 42.46
+    },
+    "physics": {
+      "passed": 18,
+      "wall_seconds": 0.69
+    },
+    "integration": {
+      "passed": 134,
+      "wall_seconds": 14.8
+    },
+    "scope": "Full build, all declared tiers and registry validation; no robot missions"
+  }
 }

@@ -27,6 +27,21 @@ pytestmark = [
 ]
 
 
+def test_named_map_spawn_is_visible_in_command_and_does_not_leak_to_other_map(app):
+    app.robot_profiles['bumperbot']['spawn_by_map'] = {'nav_empty': {'x': -4., 'y': -4.}}
+    app.robot_var.set('bumperbot'); app.simulator_var.set('mujoco')
+    app.map_var.set('nav_empty'); app.mode_var.set('display'); app._update_from_selection()
+    arguments = shlex.split(app.command_var.get())
+    assert 'spawn_x:=-4.0' in arguments and 'spawn_y:=-4.0' in arguments
+    assert 'map_name:=nav_empty' in arguments
+    app._set_command(['ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py', 'spawn_x:=1.5'])
+    assert [v for v in app._prepared_command if v.startswith('spawn_x:=')] == ['spawn_x:=1.5']
+    app.map_var.set('celisca_floor_1'); app._update_from_selection()
+    arguments = shlex.split(app.command_var.get())
+    assert 'map_name:=celisca_floor_1' in arguments
+    assert not any(v.startswith(('spawn_x:=', 'spawn_y:=')) for v in arguments)
+
+
 @pytest.fixture
 def app():
     registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
@@ -134,8 +149,8 @@ def test_hand_fixture_and_reset_require_the_selected_native_panda(app):
                    features=['joint_control'], source_id='test_vendor', arm_control='panda', hand_control='panda')
     profile.pop('drive', None)
     app.robot_profiles['menagerie_franka_emika_panda'] = profile
-    app.arm_tab = ArmTab(app.notebook, app)
-    app.hand_tab = HandTab(app.notebook, app)
+    app.arm_tab = ArmTab(app.control_notebook, app)
+    app.hand_tab = HandTab(app.control_notebook, app)
     try:
         app.robot_var.set('menagerie_franka_emika_panda')
         app.simulator_var.set('mujoco'); app.map_var.set('nav_empty'); app.mode_var.set('display')
@@ -170,8 +185,8 @@ def test_qualified_panda_planning_autofill_and_fixture_fallback(app):
                    arm_control='panda', hand_control='panda', arm_planning='moveit')
     profile.pop('drive', None)
     app.robot_profiles['menagerie_franka_emika_panda'] = profile
-    app.arm_tab = ArmTab(app.notebook, app)
-    app.hand_tab = HandTab(app.notebook, app)
+    app.arm_tab = ArmTab(app.control_notebook, app)
+    app.hand_tab = HandTab(app.control_notebook, app)
     try:
         app.robot_var.set('menagerie_franka_emika_panda')
         app.simulator_var.set('mujoco')
@@ -191,7 +206,7 @@ def test_qualified_panda_planning_autofill_and_fixture_fallback(app):
 
 def test_stale_cartesian_callback_cannot_replace_a_new_plan_after_stop(app):
     from robot_lab_gui.arm_tab import ArmTab
-    arm = ArmTab(app.notebook, app)
+    arm = ArmTab(app.control_notebook, app)
     try:
         controls = arm.cartesian
         old = controls.generation

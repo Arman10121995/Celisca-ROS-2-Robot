@@ -28,5 +28,12 @@ Measured local checks on the Jetson:
 
 The manifest records exact source hashes, commands and complete SSD output.
 These are development checks, separate from the actual TurtleBot4/Panda
-mission evidence. The containing correction still needs its own published
-CI result; an older green run does not validate `dc39922` or later revisions.
+mission evidence.
+
+The exact published correction `18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae`
+passes [Actions run 37586958626](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37586958626):
+full build, **879 fast checks / four skips / four deselections**, **18 physics
+checks**, **134 integration checks**, and registry cross-reference validation.
+The report and complete log are retained and hashed. This closes this tier
+repair at that source revision; later robot/controller changes need their
+own CI observation.

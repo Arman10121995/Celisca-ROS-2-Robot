@@ -1,0 +1,152 @@
+{
+  "mode": "loc",
+  "base_frame": "base_footprint",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.4887,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.17999998018121705,
+      "tail_yaw_speed_rps": 3.4360236076767323e-07,
+      "end": {
+        "x": -3.5113774500160186,
+        "y": -4.000004487526643,
+        "z": 7.56852847339216e-06,
+        "yaw": -1.3606443476085622e-05
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.4851,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.1799999801983051,
+      "tail_yaw_speed_rps": 3.4585615550140436e-07,
+      "end": {
+        "x": -3.941577205936631,
+        "y": -4.000000479720463,
+        "z": 7.568527259252902e-06,
+        "yaw": -1.3027844637337721e-05
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0098,
+      "yaw_change_rad": 1.158,
+      "tail_speed_mps": 0.003584141943806094,
+      "tail_yaw_speed_rps": 0.39999884050456075,
+      "end": {
+        "x": -4.004802262580497,
+        "y": -4.005213036118819,
+        "z": 7.568531763092241e-06,
+        "yaw": 1.1579891550571733
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.0099,
+      "yaw_change_rad": -1.166,
+      "tail_speed_mps": 0.003584212238775789,
+      "tail_yaw_speed_rps": 0.4000031599889361,
+      "end": {
+        "x": -3.9967868052849167,
+        "y": -3.9999927754395643,
+        "z": 7.568531686563968e-06,
+        "yaw": 0.03398731948589153
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.1431,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.0,
+      "tail_yaw_speed_rps": 0.0,
+      "end": {
+        "x": -3.5482242930293673,
+        "y": -4.003584574022709,
+        "z": 7.568391610811834e-06,
+        "yaw": -0.00801371499899688
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.0,
+      "tail_yaw_speed_rps": 0.0,
+      "end": {
+        "x": -4.000077300265417,
+        "y": -4.000000074901466,
+        "z": 7.4961392208157025e-06,
+        "yaw": -1.2876309697731661e-05
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3051,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.17999998012949678,
+      "tail_yaw_speed_rps": 3.261711410241868e-07,
+      "end": {
+        "x": -3.6949774351196156,
+        "y": -4.000002798265672,
+        "z": 7.568537813880795e-06,
+        "yaw": -1.332231780685492e-05
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "monotonic_clock": true
+  },
+  "initial_truth": {
+    "x": -4.000077300254467,
+    "y": -4.00000007490098,
+    "z": 6.946606113453138e-06,
+    "yaw": -1.2875976552240602e-05
+  },
+  "localization_error_m": 0.11611642062946977,
+  "sensor_messages_during_drive": {
+    "/scan": 106
+  },
+  "reset_response": "Gazebo robot pose/control reset; world clock preserved",
+  "post_reset_localization_error_m": 0.0047931467306799565,
+  "post_reset_drive_localization_error_m": 0.014324262832458419,
+  "map_updates_after_reset": 0,
+  "cloud_updates_after_reset": 0,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1464,
+  "sensor_counts": {
+    "/scan": 147
+  },
+  "scan_geometry": {
+    "frame": "base_scan",
+    "samples": 360,
+    "finite": 193,
+    "min_m": 0.829407811164856,
+    "max_m": 3.446242332458496,
+    "range_min": 0.11999999731779099,
+    "range_max": 3.5
+  },
+  "passed": true
+}

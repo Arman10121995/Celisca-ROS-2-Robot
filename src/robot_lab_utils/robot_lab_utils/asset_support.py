@@ -81,9 +81,19 @@ def apply_recorded_modes(profile, source_revision, support, repository):
     if (support.get('source_revision') != source_revision
             or support.get('drive') != profile.get('drive')
             or support.get('sensor_config') != profile.get('sensor_config')
+            or ('spawn_by_map' in support and
+                support['spawn_by_map'] != profile.get('spawn_by_map'))
             or ('gazebo_max_physics_step_s' in support and
                 support['gazebo_max_physics_step_s'] != profile.get('gazebo_max_physics_step_s'))):
         raise ValueError('Recorded runtime support does not match the current source/control configuration')
+    if 'executed_urdf_sha256' in support:
+        model = Path(profile['xacro'])
+        if hashlib.sha256(model.read_bytes()).hexdigest() != support['executed_urdf_sha256']:
+            raise ValueError('Recorded executed robot geometry/inertia differs: '+str(model))
+    for generated in support.get('generated_model_files', []):
+        path = Path(profile['xacro']).parent/generated['path']
+        if hashlib.sha256(path.read_bytes()).hexdigest() != generated['sha256']:
+            raise ValueError('Recorded generated robot controller differs: '+str(path))
     for contract in support.get('configuration_files', []):
         path = Path(repository)/contract['path']
         if hashlib.sha256(path.read_bytes()).hexdigest() != contract['sha256']:

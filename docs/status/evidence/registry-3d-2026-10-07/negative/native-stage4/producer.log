@@ -1,0 +1,10 @@
+RENDERED bumperbot 231 colors 0.17056338922764228 orbit pixel change
+RENDERED celisca_floor_2_furniture 127 colors 0.30742505081300814 orbit pixel change
+RENDERED menagerie_franka_emika_panda 325 colors 0.13196480938416422 orbit pixel change
+RENDERED asset_r2_description_r2_left_forearm 355 colors 0.09221413352272727 orbit pixel change
+RENDERED asset_r2_description_r2c6 660 colors 0.10939238745574102 orbit pixel change
+RENDERED px4_x500 450 colors 0.13236153455284552 orbit pixel change
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/registry-preview/probe_embedded.py", line 28, in <module>
+    assert colors>25,(asset,colors)
+AssertionError: ('dataset_hospital_hospital_two_floors', 1)

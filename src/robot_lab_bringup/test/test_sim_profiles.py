@@ -24,6 +24,30 @@ MAPS = _load(MAPS_PATH)["maps"]
 ROBOTS = _load(ROBOTS_PATH)["robots"]
 
 
+def test_short_range_robot_spawn_applies_only_to_the_selected_map():
+    from robot_lab_utils.robot_spawn import map_spawn_override
+    profile = {'spawn': {'z': .5}, 'spawn_by_map': {
+        'nav_empty': {'x': '-4', 'y': -4, 'yaw': 0}}}
+    assert map_spawn_override(profile, 'nav_empty') == {'x': -4., 'y': -4., 'yaw': 0.}
+    assert map_spawn_override(profile, 'celisca_floor_1') == {}
+    assert map_spawn_override({}, 'nav_empty') == {}
+    assert profile['spawn'] == {'z': .5}
+
+
+@pytest.mark.parametrize('value', [float('nan'), float('inf'), '-inf', None, True, 'missing'])
+def test_named_robot_spawn_rejects_nonfinite_or_invalid_coordinates(value):
+    from robot_lab_utils.robot_spawn import map_spawn_override
+    with pytest.raises(ValueError, match='finite'):
+        map_spawn_override({'spawn_by_map': {'nav_empty': {'x': value}}}, 'nav_empty')
+
+
+@pytest.mark.parametrize('poses', [[], {'nav_empty': None}, {'nav_empty': {'world': 'other'}}])
+def test_named_robot_spawn_rejects_malformed_configuration(poses):
+    from robot_lab_utils.robot_spawn import map_spawn_override
+    with pytest.raises(ValueError):
+        map_spawn_override({'spawn_by_map': poses}, 'nav_empty')
+
+
 # ---------------------------------------------------------------------------
 # R5.3: dispatch-path contract for the BHL live-backend bringup.
 #

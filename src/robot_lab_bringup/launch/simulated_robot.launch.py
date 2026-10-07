@@ -713,6 +713,8 @@ def _build_simulation_actions(context):
     # and the slam topples it before the balance loop can react.
     spawn_config = dict(map_config.get("spawn", {}))
     spawn_config.update(robot_config.get("spawn", {}))
+    from robot_lab_utils.robot_spawn import map_spawn_override
+    spawn_config.update(map_spawn_override(robot_config, map_name))
 
     world_package = _config_value(context, "world_package", gazebo_config.get("world_package", "robot_lab_maps"))
     # A map-free display run still needs a ground plane to stand on, so it

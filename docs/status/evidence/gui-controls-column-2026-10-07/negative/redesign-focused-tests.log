@@ -1,0 +1,627 @@
+...............EEEEE.EEEEEE                                              [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_robot_filters_change_exact_selection_and_autofill_without_commands _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff5bb76f80>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_control_pages_share_the_right_launch_column_and_old_routes_still_work _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff5b823a30>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff5b5dc700>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_header_stop_uses_existing_controllers_and_logs_preserve_command _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff5af5c5e0>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_registry_classification_filters_components_and_searches_structural_tags _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff5af5d2d0>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_complete_robot_selection_uses_the_authored_assembly_and_retains_variants _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff31966710>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_world_variant_preserves_exact_world_command_and_saved_selection _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff314a4c10>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_installed_dataset_rooms_hide_duplicate_sources_but_keep_exact_world_commands _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff314a5cf0>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_family_picks_compatible_source_without_borrowing_native_panda_controller _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff30e71480>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_registry_nested_components_are_previewable_and_cannot_replace_launch _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff30e72a70>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+_ ERROR at setup of test_registry_core_alias_previews_actual_installed_policy_model _
+
+    @pytest.fixture
+    def app():
+        registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))
+    
+        def package_share(name):
+            if name == "robot_lab_registry":
+                return str(SRC / "robot_lab" / name)
+            return str(SRC / name)
+    
+        available = {sim: (True, "") for sim in launcher.SIMULATOR_ORDER}
+        with patch.object(launcher, "get_package_share_directory", side_effect=package_share), \
+                patch.object(launcher, "get_registry", return_value=registry), \
+                patch.object(launcher, "ensure_defaults"), \
+                patch.object(launcher, "_available_simulators", return_value=available), \
+                patch.object(launcher, "_allowed_simulators", return_value=available), \
+                patch("robot_lab_gui.lab_tabs.create_tabs"):
+>           gui = launcher.SimulationLauncherGui()
+
+src/robot_lab_gui/test/test_command_autofill.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_gui/robot_lab_gui/launcher.py:499: in __init__
+    self._build_ui()
+src/robot_lab_gui/robot_lab_gui/launcher.py:596: in _build_ui
+    controls, advanced = build_workspace(self)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:75: in build_workspace
+    basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
+src/robot_lab_gui/robot_lab_gui/workspace_ui.py:23: in __init__
+    self.bind_class(tag, '<Button-4>', lambda _e: scroll(-1))
+/usr/lib/python3.10/tkinter/__init__.py:1449: in bind_class
+    return self._bind(('bind', className), sequence, func, add, 0)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <robot_lab_gui.workspace_ui.ScrollPanel object .!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel>
+what = ('bind', '.!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll')
+sequence = '<Button-4>'
+func = <function ScrollPanel.__init__.<locals>.<lambda> at 0xffff30d15cf0>
+add = None, needcleanup = 0
+
+    def _bind(self, what, sequence, func, add, needcleanup=1):
+        """Internal function."""
+        if isinstance(func, str):
+            self.tk.call(what + (sequence, func))
+        elif func:
+            funcid = self._register(func, self._substitute,
+                        needcleanup)
+            cmd = ('%sif {"[%s %s]" == "break"} break\n'
+                   %
+                   (add and '+' or '',
+                funcid, self._subst_format_str))
+>           self.tk.call(what + (sequence, cmd))
+E           _tkinter.TclError: bad window path name ".!notebook.!frame.!panedwindow.!panedwindow.!labelframe.!notebook.!scrollpanel.scroll"
+
+/usr/lib/python3.10/tkinter/__init__.py:1375: TclError
+=============================== warnings summary ===============================
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+  /usr/lib/python3/dist-packages/OpenGL/images.py:142: DeprecationWarning: tostring() is deprecated. Use tobytes() instead.
+    return data.tostring()
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+=========================== short test summary info ============================
+ERROR src/robot_lab_gui/test/test_workspace_layout.py::test_robot_filters_change_exact_selection_and_autofill_without_commands
+ERROR src/robot_lab_gui/test/test_workspace_layout.py::test_control_pages_share_the_right_launch_column_and_old_routes_still_work
+ERROR src/robot_lab_gui/test/test_workspace_layout.py::test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable
+ERROR src/robot_lab_gui/test/test_workspace_layout.py::test_header_stop_uses_existing_controllers_and_logs_preserve_command
+ERROR src/robot_lab_gui/test/test_workspace_layout.py::test_registry_classification_filters_components_and_searches_structural_tags
+ERROR src/robot_lab_gui/test/test_registry_preview.py::test_complete_robot_selection_uses_the_authored_assembly_and_retains_variants
+ERROR src/robot_lab_gui/test/test_registry_preview.py::test_world_variant_preserves_exact_world_command_and_saved_selection
+ERROR src/robot_lab_gui/test/test_registry_preview.py::test_installed_dataset_rooms_hide_duplicate_sources_but_keep_exact_world_commands
+ERROR src/robot_lab_gui/test/test_registry_preview.py::test_family_picks_compatible_source_without_borrowing_native_panda_controller
+ERROR src/robot_lab_gui/test/test_registry_preview.py::test_registry_nested_components_are_previewable_and_cannot_replace_launch
+ERROR src/robot_lab_gui/test/test_registry_preview.py::test_registry_core_alias_previews_actual_installed_policy_model
+16 passed, 2 warnings, 11 errors in 33.36s

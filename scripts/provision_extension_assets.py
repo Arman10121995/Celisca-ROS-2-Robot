@@ -369,20 +369,24 @@ def robot_entity(name, profile, source, entry, evidence):
     sensor = profile.get('sensor_config')
     if sensor:
         entity['sensors'] = [
-            dict(type='lidar', name='rplidar', frame=sensor['laser_link_name'],
+            dict(type='lidar', name='lds' if source['id'] == 'turtlebot3_vendor' else 'rplidar', frame=sensor['laser_link_name'],
                  topic='/scan', message_type='sensor_msgs/LaserScan'),
-            dict(type='camera', name='oakd_rgb', frame=sensor['camera_optical_frame'],
-                 topic='/oakd/rgb/image_raw', message_type='sensor_msgs/Image'),
-            dict(type='depth_camera', name='oakd_depth', frame=sensor['camera_optical_frame'],
-                 topic='/oakd/depth/image_raw', message_type='sensor_msgs/Image'),
             dict(type='imu', name='imu', frame='imu_link', topic='/imu/out',
                  message_type='sensor_msgs/Imu'),
             dict(type='odometry', name='wheel_odometry', frame='odom', topic='/odom',
                  message_type='nav_msgs/Odometry')]
+        if sensor.get('camera_rate', 0) > 0:
+            entity['sensors'][1:1] = [
+                dict(type='camera', name='oakd_rgb', frame=sensor['camera_optical_frame'],
+                     topic='/oakd/rgb/image_raw', message_type='sensor_msgs/Image'),
+                dict(type='depth_camera', name='oakd_depth', frame=sensor['camera_optical_frame'],
+                     topic='/oakd/depth/image_raw', message_type='sensor_msgs/Image')]
         entity['state_interfaces'].append('nav_msgs/Odometry')
         entity['command_interfaces'] = ['geometry_msgs/Twist']
-        entity['frames'] = ['base_link', 'odom', sensor['laser_link_name'],
-                            sensor['camera_optical_frame'], 'imu_link']
+        entity['frames'] = ['base_footprint' if source['id'] == 'turtlebot3_vendor' else 'base_link',
+                            'odom', sensor['laser_link_name'], 'imu_link']
+        if sensor.get('camera_rate', 0) > 0:
+            entity['frames'].append(sensor['camera_optical_frame'])
         entity['locomotion'] = dict(type='differential_drive', dof=2,
             max_velocity=profile['drive']['max_speed'],
             max_acceleration=profile['drive']['max_accel'])
@@ -440,6 +444,8 @@ def install_robots(store, download, selected_source=None):
             dependency_roots.append(source_checkout(load_source('create3_vendor'), store, download))
             resources.extend(p for root in dependency_roots for p in root.rglob('*')
                              if p.is_file() and '.git' not in p.parts)
+        if source['id'] == 'turtlebot3_vendor':
+            dependency_roots.append(source_checkout(load_source('turtlebot3_simulation_vendor'), store, download))
         for entry in source['entries']:
             record = {'source_id': source['id'], 'revision': source['revision'], 'entry': entry, 'profiles': []}
             evidence = store/'installed'/'checks'/(source['id']+'-'+hashlib.sha256(entry.encode()).hexdigest()[:16]+'.json')
@@ -560,6 +566,28 @@ def install_robots(store, download, selected_source=None):
                         profile['notes'] += (' Gazebo caps the selected world to a 2 ms physics '
                             'step for this base (measured wheel-odometry divergence in the stock '
                             '10 ms worlds); other backends launch the world unchanged.')
+                if source['id'] == 'turtlebot3_vendor':
+                    from extension_mobile_control import turtlebot3_drive
+                    controlled, drive, controllers, sensor_config, control_source = turtlebot3_drive(
+                        derived, name, dependency_roots[0])
+                    profile.update(xacro=str(controlled), drive=drive, drive_in_display=True,
+                                   sensor_config=sensor_config, features=['velocity_base', 'lidar_2d'],
+                                   spawn_by_map={'nav_empty': {'x':-4., 'y':-4., 'yaw':0.}},
+                                   controllers=['joint_state_broadcaster', 'robot_lab_controller'])
+                    profile['notes'] = ('Original ROBOTIS TurtleBot3 wheels and LDS sensor frame; lab physical '
+                        'wheel control with 5 Hz lidar and 50 Hz IMU. Original RGB-camera geometry retained; '
+                        'RGB/depth rendering and 3D SLAM are not enabled. Mapping/navigation modes require '
+                        'recorded backend trials; OpenCR firmware, longer missions and materials remain pending.')
+                    check.update(drive_urdf=str(controlled), drive_urdf_sha256=digest(controlled),
+                                 drive_controllers_sha256=digest(controllers), control_source=control_source,
+                                 source_sdf_sha256=digest(Path(control_source['source_sdf'])))
+                    from robot_lab_utils.asset_support import apply_recorded_modes
+                    support_path = ROOT/'docs/status/asset-runtime-support.yaml'
+                    support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
+                    profile = apply_recorded_modes(profile, source['revision'],
+                        (support or {}).get('robots', {}).get(name), ROOT)
+                    if profile.get('runtime_screens'):
+                        profile['notes'] += ' Named localization/mapping/Nav2 screens are available in Robot status; other maps are experiments.'
                 check.update(source_id=source['id'], repository=source['repository'], revision=source['revision'], entry=entry,
                              model_sha256=digest(model_path), derived_urdf_sha256=digest(derived),
                              runtime_mission_qualified=False)
@@ -621,10 +649,14 @@ def provision(args, store, installed, report_path):
                 profiles.update(imported); entities.extend(catalog); entries.extend(records)
         if args.source:
             old = yaml.safe_load((installed/(kind+'.yaml')).read_text()) if (installed/(kind+'.yaml')).is_file() else {kind: {}}
-            old[kind] = {k:v for k,v in old[kind].items() if v.get('source_id') != args.source}
+            # A failed new import must not remove previously installed assets.
+            # Successful IDs replace their own record; omission is not removal.
             old[kind].update(profiles); profiles = old[kind]
             old_entities = yaml.safe_load((installed/('registry_'+kind+'.yaml')).read_text()) if (installed/('registry_'+kind+'.yaml')).is_file() else []
-            entities = [e for e in old_entities if args.source not in e.get('tags', [])] + entities
+            replacements = {e['id']: e for e in entities}
+            retained = {e['id']: e for e in old_entities}
+            retained.update(replacements)
+            entities = list(retained.values())
         write_yaml(installed/(kind+'.yaml'), {kind: profiles})
         write_yaml(installed/('registry_'+kind+'.yaml'), entities)
         report = json.loads(report_path.read_text()) if report_path.exists() else {'entries': []}

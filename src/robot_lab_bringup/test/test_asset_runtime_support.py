@@ -122,6 +122,36 @@ def test_changed_model_control_or_evidence_is_rejected(tmp_path):
         apply_recorded_modes(profile, 'fixed', data, tmp_path)
 
 
+def test_matching_commands_cannot_hide_changed_imported_geometry_or_spawn(tmp_path):
+    profile, data = support(tmp_path, measurement())
+    model = tmp_path/'robot.urdf'; model.write_text('Original executed geometry/inertia')
+    profile['xacro'] = str(model)
+    data['executed_urdf_sha256'] = hashlib.sha256(model.read_bytes()).hexdigest()
+    profile['spawn_by_map'] = {'nav_empty': {'x': -4., 'y': -4.}}
+    data['spawn_by_map'] = copy.deepcopy(profile['spawn_by_map'])
+    apply_recorded_modes(profile, 'fixed', data, tmp_path)
+    model.write_text('Changed imported mass/contact geometry')
+    with pytest.raises(ValueError, match='geometry/inertia differs'):
+        apply_recorded_modes(profile, 'fixed', data, tmp_path)
+    model.write_text('Original executed geometry/inertia')
+    profile['spawn_by_map']['nav_empty']['x'] = 8.
+    with pytest.raises(ValueError, match='configuration'):
+        apply_recorded_modes(profile, 'fixed', data, tmp_path)
+
+
+def test_same_model_cannot_hide_changed_generated_controller_limits(tmp_path):
+    profile, data = support(tmp_path, measurement())
+    model = tmp_path/'robot.urdf'; model.write_text('Executed model with controller file reference')
+    limits = tmp_path/'drive_controllers.yaml'; limits.write_text('max_velocity: 0.18\n')
+    profile['xacro'] = str(model)
+    data['generated_model_files'] = [dict(path=limits.name,
+        sha256=hashlib.sha256(limits.read_bytes()).hexdigest())]
+    apply_recorded_modes(profile, 'fixed', data, tmp_path)
+    limits.write_text('max_velocity: 0.5\n')
+    with pytest.raises(ValueError, match='generated robot controller differs'):
+        apply_recorded_modes(profile, 'fixed', data, tmp_path)
+
+
 def test_clear_map_alone_cannot_enable_obstacle_navigation(tmp_path):
     profile, data = support(tmp_path, measurement())
     data['screens'][0]['reports'] = data['screens'][0]['reports'][:1]

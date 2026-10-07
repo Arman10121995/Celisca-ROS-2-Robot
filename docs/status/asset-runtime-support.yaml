@@ -1,4 +1,4 @@
-updated: '2026-10-06'
+updated: '2026-10-07'
 scope: Named measured simulation screens. Other maps, objects and vendor/hardware
   behavior require qualification.
 robots:
@@ -264,6 +264,645 @@ robots:
         sha256: 9a5be1dfefcc769e3079641b5feed5d6273c9740dac2dd3dcce9c6330e9570fa
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/report.json
         sha256: d51ea7b6a4853701231540b3ead5a0d4c6941eaa4d9d3d707fac9183a88cd672
+  asset_turtlebot3_burger:
+    source_revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
+    drive:
+      type: diff
+      left_wheel_joint: wheel_left_joint
+      right_wheel_joint: wheel_right_joint
+      wheel_radius: 0.033
+      wheel_separation: 0.16
+      max_speed: 0.18
+      max_accel: 0.3
+      max_angular_speed: 1.2
+      max_angular_accel: 2.0
+      mujoco_wheel_armature: 0.0002
+      mujoco_wheel_velocity_gain: 0.1
+      mujoco_ramp_watchdog_stop: true
+    sensor_config:
+      laser_link_name: base_scan
+      scan_rate: 5.0
+      scan_samples: 360
+      scan_range_min: 0.12
+      scan_range_max: 3.5
+      camera_rate: 0.0
+    spawn_by_map:
+      nav_empty:
+        x: -4.0
+        y: -4.0
+        yaw: 0.0
+    executed_urdf_sha256: dc64421f1bb69c95d5b57f5d4b9d9ecdb5f7b496d019022856138aaf4a7f92e5
+    generated_model_files:
+    - path: drive-controllers.yaml
+      sha256: 4bebb94766770fd663d3e53c9b0e2079c60aad0fc310d139eab9ba60436f7311
+    configuration_files:
+    - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
+      sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
+    - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+      sha256: ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4
+    - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
+      sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
+    - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
+      sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
+    - path: src/robot_lab_gui/robot_lab_gui/drive_control.py
+      sha256: 34eb002f0630cc1b318aaafb59311f889d61a2bba8d267eba2cf1e18b4054cb1
+    - path: src/robot_lab_bringup/launch/simulated_robot.launch.py
+      sha256: 03c4bab819c1ef3510285c8bcafa5549daae7f55d8cbfd3beda2099cec1430c7
+    - path: src/robot_lab_localization/launch/global_localization.launch.py
+      sha256: f9b48b5dd77fb5d50aa1857008be918561724a4db8ee0f3af845f01ce16a3403
+    - path: src/robot_lab_localization/launch/local_localization.launch.py
+      sha256: 4660708a8f1fb0f914421fec81f6e5783bf84c8316b4509f81f8ec3fadaed016
+    - path: src/robot_lab_localization/config/amcl.yaml
+      sha256: bcd02f19213db3c0443a2902ace59e77e1387015653f9886c5562898df1344df
+    - path: src/robot_lab_localization/config/ekf.yaml
+      sha256: 1f57ad1a4719f44c3881911d600476ca7860fb44482bb50255cf355df187ceb6
+    - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+      sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.yaml
+      sha256: 874a874fc47e2017989d91c4173c5ccdff03749f0e6904071103e81545528732
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.pgm
+      sha256: 3ef7289a9cfb0a3f9820eb3d565b4d5aab7e33848a32149d56b515eda40b1d78
+    - path: src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
+      sha256: 6d3e034f6efcce42fa682f9a5a3506ff7d900a1ce3877e72189d9a65cc3a3da4
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.yaml
+      sha256: 6722a10d051eb948ff516c5392ac5d19fec66b8e2091a02e0d573872acd0f9a6
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.pgm
+      sha256: f4ac118ad2c3a7bff3f94871088a6dbe2afb2948cb99da3dd54b04c22e19efc8
+    configuration_files_by_simulator:
+      gazebo:
+      - path: src/robot_lab_description/launch/gazebo.launch.py
+        sha256: c2d78c06a8ead5307cb983589e5c8843a8e0f53383b15d04b51d7f42fccb1761
+      - path: src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py
+        sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
+      mujoco:
+      - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+        sha256: fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535
+      - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
+        sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
+      pybullet:
+      - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+        sha256: c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7
+      - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
+        sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
+      isaac:
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+        sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
+      - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
+        sha256: a705a51ce119d0bf01213a16d4bddf77c562a2c76bac03d567f68c2f005eb9fa
+    configuration_files_by_mode:
+      gazebo:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_burger.yaml
+          sha256: 823ce1c44125a7858abfeac7bdca7fab80bb05361669bc5a9e1c6cf82d1d4aac
+      mujoco:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_burger.yaml
+          sha256: 823ce1c44125a7858abfeac7bdca7fab80bb05361669bc5a9e1c6cf82d1d4aac
+      pybullet:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_burger.yaml
+          sha256: 823ce1c44125a7858abfeac7bdca7fab80bb05361669bc5a9e1c6cf82d1d4aac
+      isaac:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_burger.yaml
+          sha256: 823ce1c44125a7858abfeac7bdca7fab80bb05361669bc5a9e1c6cf82d1d4aac
+    screens:
+    - backend: gazebo
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-loc-nav_empty/report.json
+        sha256: 7e3f86a2f69960aafd06c81a222ac730502d1ed2886b48f9bfd13bdb29616700
+    - backend: gazebo
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-slam-nav_empty/report.json
+        sha256: 2fa1a16b5793cd63871e18133bef58f1eb15da8bc4f6231bf0faa6a14b151b91
+    - backend: gazebo
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_empty/report.json
+        sha256: 58110162dced849bed658b5bf7328a3de92a9c8174d965fd90eaac413292f85c
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_obstacle/report.json
+        sha256: 8a9d7ae8d0d78bd0ad6946f04a9ab9be89fff76ee2e83febe032bfce2b725cf9
+    - backend: mujoco
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-loc-nav_empty/report.json
+        sha256: 69d25a5e01587ccf5bc89305168117507ae1ccf1b89266c2c4f139ce36e63102
+    - backend: mujoco
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-slam-nav_empty/report.json
+        sha256: fbe9de3d6de120869747603b329c178b9ae6b5e3d4dfbea6c36eedf30cee0d85
+    - backend: mujoco
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_empty/report.json
+        sha256: 4c678a1d6306da9f8ef58a776e086daa5f813d207e7e26269f4676a2759a52d5
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_obstacle/report.json
+        sha256: 372eec3a38de1615df6e2925bda677281e48962d71f5d5bd31dad16817f4c642
+    - backend: pybullet
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-loc-nav_empty/report.json
+        sha256: 53eada713c9aedf982dd0912de2cd919cb9e5a3e065526dd2e5ca26c35e1f907
+    - backend: pybullet
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-slam-nav_empty/report.json
+        sha256: bac804aec30e2255349f1494535a6c3ba5a2d61d946df86e9fe6a29b04069d8a
+    - backend: pybullet
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_empty/report.json
+        sha256: a65fd25fe2c192b47a258526710d65f20aa69e74b6aefffb557367377a123fd7
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_obstacle/report.json
+        sha256: 0ca7e8b06d14212092ba8f8a977feacc1d71d16aa31bb12335f5dff3b9586cac
+    - backend: isaac
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-loc-nav_empty/report.json
+        sha256: 6783492b93fd3d1f1c6a636face9d0a7b76b2951bef817e65d01727f816c1092
+    - backend: isaac
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-slam-nav_empty/report.json
+        sha256: f56b8a5b7b9e9408780bd2286dfb61fb967183bbf37a6e8636bce24994cfbcfc
+    - backend: isaac
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_empty/report.json
+        sha256: 478073544f57783fede59c2c9e5ec7b0236db0d58d26fbc63ce5efab15ceb0b0
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_obstacle/report.json
+        sha256: f6e2b2e816e906f17274c246d9ab8b9ad61d4fa2e44cc03ecdebd27137147ac2
+  asset_turtlebot3_waffle:
+    source_revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
+    drive:
+      type: diff
+      left_wheel_joint: wheel_left_joint
+      right_wheel_joint: wheel_right_joint
+      wheel_radius: 0.033
+      wheel_separation: 0.288
+      max_speed: 0.18
+      max_accel: 0.3
+      max_angular_speed: 1.2
+      max_angular_accel: 2.0
+      mujoco_wheel_armature: 0.0002
+      mujoco_wheel_velocity_gain: 0.1
+      mujoco_ramp_watchdog_stop: true
+    sensor_config:
+      laser_link_name: base_scan
+      scan_rate: 5.0
+      scan_samples: 360
+      scan_range_min: 0.12
+      scan_range_max: 3.5
+      camera_rate: 0.0
+    spawn_by_map:
+      nav_empty:
+        x: -4.0
+        y: -4.0
+        yaw: 0.0
+    executed_urdf_sha256: 2b7b463585b79db66901491a19d2e055744cc51f74407010386935b6c0f04e7e
+    generated_model_files:
+    - path: drive-controllers.yaml
+      sha256: 7c4d24ddde0ca898132b892b5aa13afcb34c24e8f2b968582be158192705dfb1
+    configuration_files:
+    - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
+      sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
+    - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+      sha256: ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4
+    - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
+      sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
+    - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
+      sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
+    - path: src/robot_lab_gui/robot_lab_gui/drive_control.py
+      sha256: 34eb002f0630cc1b318aaafb59311f889d61a2bba8d267eba2cf1e18b4054cb1
+    - path: src/robot_lab_bringup/launch/simulated_robot.launch.py
+      sha256: 03c4bab819c1ef3510285c8bcafa5549daae7f55d8cbfd3beda2099cec1430c7
+    - path: src/robot_lab_localization/launch/global_localization.launch.py
+      sha256: f9b48b5dd77fb5d50aa1857008be918561724a4db8ee0f3af845f01ce16a3403
+    - path: src/robot_lab_localization/launch/local_localization.launch.py
+      sha256: 4660708a8f1fb0f914421fec81f6e5783bf84c8316b4509f81f8ec3fadaed016
+    - path: src/robot_lab_localization/config/amcl.yaml
+      sha256: bcd02f19213db3c0443a2902ace59e77e1387015653f9886c5562898df1344df
+    - path: src/robot_lab_localization/config/ekf.yaml
+      sha256: 1f57ad1a4719f44c3881911d600476ca7860fb44482bb50255cf355df187ceb6
+    - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+      sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.yaml
+      sha256: 874a874fc47e2017989d91c4173c5ccdff03749f0e6904071103e81545528732
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.pgm
+      sha256: 3ef7289a9cfb0a3f9820eb3d565b4d5aab7e33848a32149d56b515eda40b1d78
+    - path: src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
+      sha256: 6d3e034f6efcce42fa682f9a5a3506ff7d900a1ce3877e72189d9a65cc3a3da4
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.yaml
+      sha256: 6722a10d051eb948ff516c5392ac5d19fec66b8e2091a02e0d573872acd0f9a6
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.pgm
+      sha256: f4ac118ad2c3a7bff3f94871088a6dbe2afb2948cb99da3dd54b04c22e19efc8
+    configuration_files_by_simulator:
+      gazebo:
+      - path: src/robot_lab_description/launch/gazebo.launch.py
+        sha256: c2d78c06a8ead5307cb983589e5c8843a8e0f53383b15d04b51d7f42fccb1761
+      - path: src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py
+        sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
+      mujoco:
+      - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+        sha256: fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535
+      - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
+        sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
+      pybullet:
+      - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+        sha256: c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7
+      - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
+        sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
+      isaac:
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+        sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
+      - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
+        sha256: a705a51ce119d0bf01213a16d4bddf77c562a2c76bac03d567f68c2f005eb9fa
+    configuration_files_by_mode:
+      gazebo:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle.yaml
+          sha256: 10bb7e814659f245c61e223201a050ed418f7331aa9c1e334dad94ee5d3e232f
+      mujoco:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle.yaml
+          sha256: 10bb7e814659f245c61e223201a050ed418f7331aa9c1e334dad94ee5d3e232f
+      pybullet:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle.yaml
+          sha256: 10bb7e814659f245c61e223201a050ed418f7331aa9c1e334dad94ee5d3e232f
+      isaac:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle.yaml
+          sha256: 10bb7e814659f245c61e223201a050ed418f7331aa9c1e334dad94ee5d3e232f
+    screens:
+    - backend: gazebo
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-loc-nav_empty/report.json
+        sha256: dc876467c456a6913e6b9d9210cb5d3919e8ed33e1c94453284115fd079ebc10
+    - backend: gazebo
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-slam-nav_empty/report.json
+        sha256: 06485f72080f7ceabec9e0fc4fd2380cefb6b6209605939e99c8249b3cd16f98
+    - backend: gazebo
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-nav-nav_empty/report.json
+        sha256: 6bd044135cb0a3f868915592b9c6d3bc13df348e4202044c5afcb21aac49c8a7
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-nav-nav_obstacle/report.json
+        sha256: 3bb02c83bb870927ce02c09322b0cdabf1bb767e1bacdc1cce66c7bfe4ada8b7
+    - backend: mujoco
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-loc-nav_empty/report.json
+        sha256: f3c0975b554d279bf9924db7ca7346dc9744769fac13ca77ddfb7ea8fc907158
+    - backend: mujoco
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-slam-nav_empty/report.json
+        sha256: a339ab19d1ffa1d0db1e3bb0439530f751eadb5fe0b4fa6d8408dc4a4206fefc
+    - backend: mujoco
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-nav-nav_empty/report.json
+        sha256: 64db6b7c74de08c8bf59dfafe96d4302673cc4ea55b556729034f736e2e02eec
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-nav-nav_obstacle/report.json
+        sha256: cf078871766349a4ff729e507c9be9c039dd6c411f1fb74377888abd1f5d1054
+    - backend: pybullet
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-loc-nav_empty/report.json
+        sha256: da378fca2b64666d056fb46b8fba6d0034d4485e7a0d567203f909a03f97a8a4
+    - backend: pybullet
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-slam-nav_empty/report.json
+        sha256: f9141c32b7d80ff1b8f15f3d179323bf23e6b532202f42427b71defeed00eea2
+    - backend: pybullet
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-nav-nav_empty/report.json
+        sha256: ddddf0570c026be39536b8e2d63f7289db81c5d174898a40693d44014bad44f3
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-nav-nav_obstacle/report.json
+        sha256: 7c33d369644b8f8de5e60530350c1ad7308ea44bcaea46aa09e2a5ea415e2720
+    - backend: isaac
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-loc-nav_empty/report.json
+        sha256: 4f51f01739cd5dff3c8707abba66708e4c1df606e0071b2eeb7f9c203854cc42
+    - backend: isaac
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-slam-nav_empty/report.json
+        sha256: 9005d49ce073260341062c7afc3f2ae2cb8b91ecdb66f9619d7ca1add6a2eba8
+    - backend: isaac
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_empty/report.json
+        sha256: aa381537c38270b33b6fa87e30fdfed32f226aa012a9697c911c0fc8f1d90d1e
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_obstacle/report.json
+        sha256: c91a0e02bdeb6c573d5c3239bdf0ba9ec727ad861939855cc7f3f9bf02ec3ec8
+  asset_turtlebot3_waffle_pi:
+    source_revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
+    drive:
+      type: diff
+      left_wheel_joint: wheel_left_joint
+      right_wheel_joint: wheel_right_joint
+      wheel_radius: 0.033
+      wheel_separation: 0.288
+      max_speed: 0.18
+      max_accel: 0.3
+      max_angular_speed: 1.2
+      max_angular_accel: 2.0
+      mujoco_wheel_armature: 0.0002
+      mujoco_wheel_velocity_gain: 0.1
+      mujoco_ramp_watchdog_stop: true
+    sensor_config:
+      laser_link_name: base_scan
+      scan_rate: 5.0
+      scan_samples: 360
+      scan_range_min: 0.12
+      scan_range_max: 3.5
+      camera_rate: 0.0
+    spawn_by_map:
+      nav_empty:
+        x: -4.0
+        y: -4.0
+        yaw: 0.0
+    executed_urdf_sha256: 8a974f6559822d42c351ec6659699669fe991442fbe76d62b1ea4f4f1679fb95
+    generated_model_files:
+    - path: drive-controllers.yaml
+      sha256: 7c4d24ddde0ca898132b892b5aa13afcb34c24e8f2b968582be158192705dfb1
+    configuration_files:
+    - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
+      sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
+    - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+      sha256: ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4
+    - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
+      sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
+    - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
+      sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
+    - path: src/robot_lab_gui/robot_lab_gui/drive_control.py
+      sha256: 34eb002f0630cc1b318aaafb59311f889d61a2bba8d267eba2cf1e18b4054cb1
+    - path: src/robot_lab_bringup/launch/simulated_robot.launch.py
+      sha256: 03c4bab819c1ef3510285c8bcafa5549daae7f55d8cbfd3beda2099cec1430c7
+    - path: src/robot_lab_localization/launch/global_localization.launch.py
+      sha256: f9b48b5dd77fb5d50aa1857008be918561724a4db8ee0f3af845f01ce16a3403
+    - path: src/robot_lab_localization/launch/local_localization.launch.py
+      sha256: 4660708a8f1fb0f914421fec81f6e5783bf84c8316b4509f81f8ec3fadaed016
+    - path: src/robot_lab_localization/config/amcl.yaml
+      sha256: bcd02f19213db3c0443a2902ace59e77e1387015653f9886c5562898df1344df
+    - path: src/robot_lab_localization/config/ekf.yaml
+      sha256: 1f57ad1a4719f44c3881911d600476ca7860fb44482bb50255cf355df187ceb6
+    - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+      sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.yaml
+      sha256: 874a874fc47e2017989d91c4173c5ccdff03749f0e6904071103e81545528732
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.pgm
+      sha256: 3ef7289a9cfb0a3f9820eb3d565b4d5aab7e33848a32149d56b515eda40b1d78
+    - path: src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
+      sha256: 6d3e034f6efcce42fa682f9a5a3506ff7d900a1ce3877e72189d9a65cc3a3da4
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.yaml
+      sha256: 6722a10d051eb948ff516c5392ac5d19fec66b8e2091a02e0d573872acd0f9a6
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.pgm
+      sha256: f4ac118ad2c3a7bff3f94871088a6dbe2afb2948cb99da3dd54b04c22e19efc8
+    configuration_files_by_simulator:
+      gazebo:
+      - path: src/robot_lab_description/launch/gazebo.launch.py
+        sha256: c2d78c06a8ead5307cb983589e5c8843a8e0f53383b15d04b51d7f42fccb1761
+      - path: src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py
+        sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
+      mujoco:
+      - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+        sha256: fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535
+      - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
+        sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
+      pybullet:
+      - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+        sha256: c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7
+      - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
+        sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
+      isaac:
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+        sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
+      - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
+        sha256: a705a51ce119d0bf01213a16d4bddf77c562a2c76bac03d567f68c2f005eb9fa
+    configuration_files_by_mode:
+      gazebo:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle_pi.yaml
+          sha256: 0ae03ce5a6c7b11a48671af8e5cd916894d8aec0367fc8bc3a4aa92ece97f33d
+      mujoco:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle_pi.yaml
+          sha256: 0ae03ce5a6c7b11a48671af8e5cd916894d8aec0367fc8bc3a4aa92ece97f33d
+      pybullet:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle_pi.yaml
+          sha256: 0ae03ce5a6c7b11a48671af8e5cd916894d8aec0367fc8bc3a4aa92ece97f33d
+      isaac:
+        loc: []
+        slam:
+        - path: src/robot_lab_mapping/launch/slam.launch.py
+          sha256: 39b2f928ec09d51b595d0ef8c905693834d517bb90203d9f01a4d19fb50f4337
+        - path: src/robot_lab_mapping/config/slam_toolbox.yaml
+          sha256: f264bd0a502a87786ac1d5181b232ab8cf188f4ecaff9180cbf55eaaa27edcc1
+        - path: src/robot_lab_mapping/robot_lab_mapping/slam_supervisor.py
+          sha256: 87b9a80376cc29519f0390d97315e77843c89b896c22260e760f99a27569a6ad
+        nav:
+        - path: src/robot_lab_navigation/launch/navigation.launch.py
+          sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+        - path: src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle_pi.yaml
+          sha256: 0ae03ce5a6c7b11a48671af8e5cd916894d8aec0367fc8bc3a4aa92ece97f33d
+    screens:
+    - backend: gazebo
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-loc-nav_empty/report.json
+        sha256: cc2bdca8aa5878a79f2cb2b5d019f54cbfb7006b902060bdb356647a14d2122a
+    - backend: gazebo
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-slam-nav_empty/report.json
+        sha256: 232f949ad8e8d1622042dce8306c2fa9d9725cab241a0d016e95e288748922a7
+    - backend: gazebo
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-nav-nav_empty/report.json
+        sha256: c373c3221d5ce8fe0c34f478724fbacd43d1facc1816796e2b61b6579dea845f
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-nav-nav_obstacle/report.json
+        sha256: d16cd56b6e5df144f72b51ea63723ece66af9489664f6b8f5c6f36659284786b
+    - backend: mujoco
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-loc-nav_empty/report.json
+        sha256: 7572ce43ef41377a13b9ac7da414b7087937bc594a07501d87222c43c8187fc0
+    - backend: mujoco
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-slam-nav_empty/report.json
+        sha256: dac9aaf5975bbb71908232beeff13ea1150fa728b7be0a1136055992c4bcf210
+    - backend: mujoco
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-nav-nav_empty/report.json
+        sha256: fd2166099a1cdce2f9cb416434e75cd169491c8615f7fe884f3f5e484f24725b
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-nav-nav_obstacle/report.json
+        sha256: f38207ef7a7ec167cd8e5c365b621bdfa352e803699e3e7c56e25061ea124d6d
+    - backend: pybullet
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-loc-nav_empty/report.json
+        sha256: 62be3b76ee493b9daf838f15748464d7f2fdce76ec938f7a5a4e54a7c88a2975
+    - backend: pybullet
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-slam-nav_empty/report.json
+        sha256: 40ebd619ce73c364d56cd13d83f268c75e668e7113943a8fc58bda90e2e80f29
+    - backend: pybullet
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-nav-nav_empty/report.json
+        sha256: 289d877270b0baf866a64ee38639719cf81f2662cf75984eb01755f86323ceab
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-nav-nav_obstacle/report.json
+        sha256: 76472019056b443decb8e5e1d6efe77ef296658654371b979e85e89230217750
+    - backend: isaac
+      mode: loc
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-loc-nav_empty/report.json
+        sha256: e9c54e087dc59c37b1cfa0ba4deeb41b4b63d7e0f19e18285769b0443f1d5814
+    - backend: isaac
+      mode: slam
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-slam-nav_empty/report.json
+        sha256: 1a2cb24e490ecd28866decbab5da1d53ced24e7776877df1c32cd10e657e31e3
+    - backend: isaac
+      mode: nav
+      reports:
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_empty/report.json
+        sha256: 5a2e3b9351b9953f66e4cee30662fb821fbbdea2f2586f81694fcd9b2a4b2307
+      - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle/report.json
+        sha256: 4377e961cbb81657ca24279e9abd2e75f31e842bf4e646f1de9b4aafe590eb6d
 hands:
   menagerie_franka_emika_panda:
     source_revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
@@ -291,21 +930,21 @@ arm_planning:
     - path: src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py
       sha256: 568369da3ee2d6762e7e81170ed7ad2fa1219e448154bf2a985338b7ec705438
     - path: src/robot_lab_utils/robot_lab_utils/sdf_world.py
-      sha256: 1a048f97401f2f37079c4b980c28ea61a4f275744926a29f42ff8a8577ba3e44
+      sha256: c909854d1ba5a9e5bc6cb582246cd4b63334c7c48a0442b0824f33f446ee6148
     - path: src/robot_lab_gui/robot_lab_gui/arm_tab.py
-      sha256: 231c958ceff393c86fbffa4fdde121c0fb2a4d12034e815d8eb1261d0e2428be
+      sha256: 4b55a80c9e3c2156f1bcfe143d1b0918070570051dce2d7aa0ea6c60788da047
     - path: src/robot_lab_gui/robot_lab_gui/cartesian_controls.py
-      sha256: e7327be91343c061c5190f1f9b6b79f2e79dd8c8b23939c522707183c37d889c
+      sha256: 59ee6b56e3706572a9c0569ddd354e61d1846bf9a09f8c02b7f96fa527b11174
     - path: src/robot_lab_gui/robot_lab_gui/launcher.py
-      sha256: 937b1cdbb2d15e832883ba78273d8babb0aa0d242235181b3b0dbf0dcf64d61c
+      sha256: 92f1e6042477882e6a0e0c039cb29daf74b92bc9d7a144b4e4ae4774c6da5b0f
     - path: src/robot_lab_gui/robot_lab_gui/live_monitor.py
       sha256: c418d3362c6f5f963e60665ec664df2b3eec72727545537499c11769dbf41c3c
     - path: src/robot_lab_gui/robot_lab_gui/hand_tab.py
-      sha256: fa8249f97f32428cb39c223360d4c33dfa58f820863cbb0f98d7965795859097
+      sha256: e77640e5436783bad60f21da1d385e5b26e9dea5d7dd742151d9aee8d5bf8edc
     - path: src/robot_lab_bringup/launch/panda_planning.launch.py
       sha256: e13b0bd00c23c07d178e066d26db3b56855d4c8ef639717a6975d138f1222b0e
     - path: src/robot_lab_bringup/launch/simulated_robot.launch.py
-      sha256: 9800fa6b4744946fad20ef234696f45d790c2ab918572fa10e81fdf411b19b63
+      sha256: 03c4bab819c1ef3510285c8bcafa5549daae7f55d8cbfd3beda2099cec1430c7
     - path: src/robot_lab_bringup/scripts/native_arm_scene.py
       sha256: 55f99789d6e30214ddf7472aa6e6e448f16fd9890cb3babb2610aa68d886a3d1
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py
@@ -316,9 +955,13 @@ arm_planning:
       sha256: 84e24c692413e784e16a378e5ec5084782faf5ec322df660979ad990250f6ccc
     - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
       sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
+      sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
+    - path: src/robot_lab_gui/robot_lab_gui/workspace_ui.py
+      sha256: 766637d985c5ffbc13e76ee44e92c559067ac89aef84a2af4e74ed1609555763
     report:
-      path: docs/status/evidence/panda-cartesian-2026-10-06/report.json
-      sha256: 1418a22748a2a5b3ace9da3f50b1ccb652f4536b9eb4dd82f4ad24767d8f491e
+      path: docs/status/evidence/panda-cartesian-controls-column-2026-10-07/final-responsive/report.json
+      sha256: 091f3c0f02ec1252575c8fcb2fcf841ab599a3aeb479fa1055058212a833d400
     native_resource_files:
     - path: CHANGELOG.md
       sha256: 164a6ec704aa1714b1311f8b1538e20b4223b6ef08b7d3cb03edc26192892f67

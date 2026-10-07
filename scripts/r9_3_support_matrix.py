@@ -97,7 +97,7 @@ def measured_result(report,kind):
         sys.path.insert(0, str(ROOT/'src/robot_lab_utils'))
         from robot_lab_utils.asset_support import panda_planning_acceptance
         return panda_planning_acceptance(report)
-    if kind == 'drive_sensor_screen':
+    if kind in ('drive_sensor_screen', 'drive_lidar_screen'):
         phases, sensors = report.get('phases', {}), report.get('sensors', {})
         def bounded(phase, key, lo, hi):
             value = phases.get(phase, {}).get(key)
@@ -111,6 +111,33 @@ def measured_result(report,kind):
             and bounded('right_turn', 'tail_wz', -1.45, -.5))
         for label in ('forward_stop', 'reverse_stop', 'left_turn_stop', 'right_turn_stop', 'publisher_loss'):
             passed = passed and bounded(label, 'tail_vx', -.025, .025) and bounded(label, 'tail_wz', -.05, .05)
+        if kind == 'drive_lidar_screen':
+            # TurtleBot3's pinned simulation cameras are RGB-only. This screen
+            # validates its actual LDS geometry and wheel feedback; it must
+            # neither borrow TurtleBot4's RGB-D proof nor invent a depth stream.
+            scan = sensors.get('last_scan', {})
+            neutral = phases.get('armed_neutral', {})
+            passed = (passed and sensors.get('scan_messages', 0) >= 5
+                and scan.get('frame') == 'base_scan' and scan.get('samples') == 360
+                and finite(scan.get('range_min')) and abs(scan['range_min']-.12) < 1e-6
+                and finite(scan.get('range_max')) and abs(scan['range_max']-3.5) < 1e-6
+                and sensors.get('max_finite_scan_points', 0) > 30
+                and sensors.get('depth_messages') == sensors.get('camera_info_messages') == 0
+                and finite(neutral.get('dx')) and finite(neutral.get('dy'))
+                and math.hypot(neutral['dx'], neutral['dy']) < .02
+                and bounded('armed_neutral', 'yaw', -.05, .05)
+                and finite(report.get('max_body_tilt_rad')) and 0 <= report['max_body_tilt_rad'] < .3)
+            ranges = report.get('joint_position_ranges', {})
+            for wheel in ('wheel_left_joint', 'wheel_right_joint'):
+                extent = ranges.get(wheel)
+                passed = (passed and wheel in report.get('joint_names', [])
+                          and finite(extent) and extent > .1)
+            for name in ('base_scan', 'imu_link'):
+                frame = sensors.get('mounted_frames', {}).get(name, {})
+                actual, expected = frame.get('position'), frame.get('expected_position')
+                passed = (passed and valid_position(actual) and valid_position(expected)
+                          and math.dist(actual, expected) < 1e-5)
+            return bool(passed)
         scan, depth, info = (sensors.get(key, {}) for key in ('last_scan', 'last_depth', 'camera_info'))
         fx = 160 / math.tan(1.047 / 2)
         calibration = info.get('k', [])

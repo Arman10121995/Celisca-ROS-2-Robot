@@ -1,0 +1,53 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1791373267282809715-189828.log]
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-07-13-41-07-873651-molar1-189828
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [twist_mux-1]: process started with pid [189862]
+[INFO] [robot_state_publisher-2]: process started with pid [189864]
+[INFO] [pybullet_spawner-3]: process started with pid [189866]
+[INFO] [rviz2-4]: process started with pid [189868]
+[twist_mux-1] [INFO] [1791373269.083544540] [twist_mux]: Topic handler 'topics.joystick' subscribed to topic 'joy_vel': timeout = 0.500000s , priority = 99.
+[twist_mux-1] [INFO] [1791373269.085499983] [twist_mux]: Topic handler 'topics.keyboard' subscribed to topic 'key_vel': timeout = 0.500000s , priority = 90.
+[twist_mux-1] [INFO] [1791373269.086588872] [twist_mux]: Topic handler 'topics.navigation' subscribed to topic 'cmd_vel': timeout = 0.500000s , priority = 80.
+[robot_state_publisher-2] [WARN] [1791373269.092656574] [kdl_parser]: The root link base_footprint has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-2] [INFO] [1791373269.093420921] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-2] [INFO] [1791373269.094154164] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1791373269.094972910] [robot_state_publisher]: got segment base_scan
+[robot_state_publisher-2] [INFO] [1791373269.094998798] [robot_state_publisher]: got segment caster_back_link
+[robot_state_publisher-2] [INFO] [1791373269.095010990] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-2] [INFO] [1791373269.095019534] [robot_state_publisher]: got segment wheel_left_link
+[robot_state_publisher-2] [INFO] [1791373269.095028398] [robot_state_publisher]: got segment wheel_right_link
+[pybullet_spawner-3] pybullet build time: Sep  2 2026 15:08:17
+[pybullet_spawner-3] [INFO] [1791373269.718132243] [pybullet_spawner]: PyBulletSpawner __init__ started
+[pybullet_spawner-3] [INFO] [1791373269.724016906] [pybullet_spawner]: Parameters declared
+[pybullet_spawner-3] [INFO] [1791373269.737646701] [pybullet_spawner]: Created /robot_lab/ready publisher
+[pybullet_spawner-3] [INFO] [1791373269.739896285] [pybullet_spawner]: Created /robot_lab/health publisher
+[pybullet_spawner-3] [INFO] [1791373269.761276810] [pybullet_spawner]: Created /robot_lab/reset service
+[rviz2-4] [INFO] [1791373270.009102595] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-4] [INFO] [1791373270.009245538] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[pybullet_spawner-3] [INFO] [1791373270.434769717] [pybullet_spawner]: URDF written to /workspace/molar/robot_lab_runtime/tmp/tmp332f7v4a.urdf
+[pybullet_spawner-3] [INFO] [1791373270.435342897] [pybullet_spawner]: PyBullet gui param=False (resolved=False), DISPLAY=:99 -> mode=DIRECT
+[pybullet_spawner-3] [INFO] [1791373270.435790894] [pybullet_spawner]: Connecting to PyBullet...
+[pybullet_spawner-3] [INFO] [1791373270.443323866] [pybullet_spawner]: PyBullet connected with client_id=0
+[pybullet_spawner-3] [INFO] [1791373270.443875926] [pybullet_spawner]: PyBullet physics engine configured
+[pybullet_spawner-3] [INFO] [1791373270.454454990] [pybullet_spawner]: SDF world 'nav_empty.world': 9 static shape(s) created, 0 skipped
+[pybullet_spawner-3] [INFO] [1791373270.554669341] [pybullet_spawner]: Loaded robot id=10 (6 joints)
+[pybullet_spawner-3] [INFO] [1791373270.555821781] [pybullet_spawner]: Friction from the description's <gazebo> blocks: caster_back_link=0.1, wheel_left_link=1, wheel_right_link=1
+[pybullet_spawner-3] [INFO] [1791373270.557292811] [pybullet_spawner]: Joints: ['wheel_left_joint', 'wheel_right_joint']  lw=wheel_left_joint rw=wheel_right_joint
+[pybullet_spawner-3] [INFO] [1791373270.559674426] [pybullet_spawner]: PyBullet spawner running
+[rviz2-4] [INFO] [1791373270.644819985] [rviz2]: Stereo is NOT SUPPORTED
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-4]: sending signal 'SIGINT' to process[rviz2-4]
+[INFO] [pybullet_spawner-3]: sending signal 'SIGINT' to process[pybullet_spawner-3]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [twist_mux-1]: sending signal 'SIGINT' to process[twist_mux-1]
+[rviz2-4] [INFO] [1791373304.191621397] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1791373304.193834053] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[twist_mux-1] [INFO] [1791373304.196385044] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 189864]
+[INFO] [twist_mux-1]: process has finished cleanly [pid 189862]
+[INFO] [rviz2-4]: process has finished cleanly [pid 189868]
+[INFO] [pybullet_spawner-3]: process has finished cleanly [pid 189866]
+
+[launch exited with code 0]
+

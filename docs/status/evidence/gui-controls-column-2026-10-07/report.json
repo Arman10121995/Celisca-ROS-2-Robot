@@ -1,0 +1,157 @@
+{
+  "scope": "Actual Tk workspace/selection/command/neutral screenshots; no movement or robot mission",
+  "cases": [
+    {
+      "name": "launch-drive",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "bumperbot",
+      "map": "celisca_floor_1",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=gazebo use_sim_time:=true map_name:=celisca_floor_1 world_package:=robot_lab_maps world_name:=celisca_floor_1 world_path:=maps/celisca_floor_1/worlds/celisca_floor_1.world map_yaml:=maps/celisca_floor_1/maps/map.yaml mode:=display gui:=auto perception:=none",
+      "structural_tags": "Mobile robots  \u00b7  Two-wheel drive  \u00b7  Differential drive",
+      "workspace": "Launch",
+      "control": "Drive & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "four-wheel-tags",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "four_wheel_steer_car",
+      "map": "celisca_floor_1",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=four_wheel_steer_car simulator:=gazebo use_sim_time:=true map_name:=celisca_floor_1 world_package:=robot_lab_maps world_name:=celisca_floor_1 world_path:=maps/celisca_floor_1/worlds/celisca_floor_1.world map_yaml:=maps/celisca_floor_1/maps/map.yaml mode:=display gui:=auto perception:=none",
+      "structural_tags": "Mobile robots  \u00b7  Four-wheel drive  \u00b7  Four-wheel steering  \u00b7  Crab  \u00b7  Pivot",
+      "workspace": "Launch",
+      "control": "Drive & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "legged-tags",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "unitree_go2",
+      "map": "celisca_floor_1",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=unitree_go2 simulator:=mujoco use_sim_time:=true map_name:=celisca_floor_1 world_package:=robot_lab_maps world_name:=celisca_floor_1 world_path:=maps/celisca_floor_1/worlds/celisca_floor_1.world map_yaml:=maps/celisca_floor_1/maps/map.yaml mode:=display gui:=auto perception:=none",
+      "structural_tags": "Legged robots  \u00b7  Four legs  \u00b7  Quadruped",
+      "workspace": "Launch",
+      "control": "Drive & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "arm-and-limits",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "menagerie_franka_emika_panda",
+      "map": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none arm_control:=panda arm_planning:=moveit",
+      "structural_tags": "Manipulators  \u00b7  Single arm  \u00b7  Robot arm",
+      "workspace": "Launch",
+      "control": "Arm",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "hand-and-limits",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "menagerie_franka_emika_panda",
+      "map": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none arm_control:=panda arm_planning:=moveit",
+      "structural_tags": "Manipulators  \u00b7  Single arm  \u00b7  Robot arm",
+      "workspace": "Launch",
+      "control": "Hand",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "drone-and-limits",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "px4_x500",
+      "map": "nav_empty",
+      "mode": "flight",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=auto",
+      "structural_tags": "Drones  \u00b7  Quadrotor  \u00b7  Aerial",
+      "workspace": "Launch",
+      "control": "Drone & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "launch-1024",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "robot": "bumperbot",
+      "map": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+      "structural_tags": "Mobile robots  \u00b7  Two-wheel drive  \u00b7  Differential drive",
+      "workspace": "Launch",
+      "control": "Drive & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "drive-limits-1024",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "robot": "bumperbot",
+      "map": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+      "structural_tags": "Mobile robots  \u00b7  Two-wheel drive  \u00b7  Differential drive",
+      "workspace": "Launch",
+      "control": "Drive & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    },
+    {
+      "name": "registry-classifications",
+      "dimensions": [
+        1600,
+        980
+      ],
+      "robot": "bumperbot",
+      "map": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+      "structural_tags": "Mobile robots  \u00b7  Two-wheel drive  \u00b7  Differential drive",
+      "workspace": "Registry",
+      "control": "Drive & limits",
+      "keyboard_enabled": false,
+      "ros_node_created": false
+    }
+  ],
+  "control_pages": [
+    "Drive & limits",
+    "Arm",
+    "Hand",
+    "Drone & limits"
+  ],
+  "visible_families": 73,
+  "closed": true
+}

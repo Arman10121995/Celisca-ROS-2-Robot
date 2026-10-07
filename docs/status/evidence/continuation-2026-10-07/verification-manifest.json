@@ -1,0 +1,229 @@
+{
+  "date": "2026-10-07",
+  "baseline": "18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae",
+  "scope": "Source/installed software checks only; physical and render trials separately archived",
+  "logs": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/build-final-native.log",
+      "sha256": "20dec7ac04d335e97929216fe52e11eb56ba0a7326a0cc58e96b788d386c93f6",
+      "bytes": 6400
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/fast-final-current.log",
+      "sha256": "b865ca1d95fc248f0a3f9397871eeeed1e9d1bcdfb04d18c931fe3fff193eeaa",
+      "bytes": 2269
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/physics-final-current.log",
+      "sha256": "35ef1c0a7352988152680265632c24f74da248d65516f7162959ae873b10edf2",
+      "bytes": 163
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/integration-final-current.log",
+      "sha256": "46fa6f3ff01d167e5a171546b60151e5ad09b9122d7c831f695d45e05cb13297",
+      "bytes": 796
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/gui-final-current.log",
+      "sha256": "f72e7f5d77fea3c4f9af2d15da1252b3cdb24878b30fefb5acff0a546f7fd928",
+      "bytes": 191
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/grouped-rooms-final-tests.log",
+      "sha256": "2ba15f3b6fd93246d3d96b1fcc7d82ca978343bf48974f852a563622b58f98ce",
+      "bytes": 632
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/support-final.log",
+      "sha256": "e071e9a1c1571f7dbd1c937085fc05d315c07b83e32123f19e7815802fba407b",
+      "bytes": 189
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/provision-panda-current.log",
+      "sha256": "9fc4bff6a3f185cab2b14c10b6e0e2423d4ed6b205a22a904dfb07f1f6e72972",
+      "bytes": 2530
+    }
+  ],
+  "source_fingerprints": [
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/scripts/extension_mobile_control.py",
+      "sha256": "645a84209473dd0b067ef07d4c4f73d91d02d4aecfeffe41e9a606defa5c3d31",
+      "bytes": 9758
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/config/asset_groups.yaml",
+      "sha256": "4c038950ed262bdbaa6cdb1fd9ce49d50f136c6e696cc5b2d3f49ea201703283",
+      "bytes": 11333
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_asset_groups.py",
+      "sha256": "bfdc9cb69aec937899f181f169b09701043e7306cfb29c8ad3c8856daab7bb06",
+      "bytes": 5162
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_asset_preview.py",
+      "sha256": "a23c8bddb32dc5888566a4f0acd2d1dde23da54be7f729972eab54745a63ce1d",
+      "bytes": 4401
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/native_viewer.py",
+      "sha256": "d7d1c9fbdd876321155b09b2fe048324fff90c8bd805d5689dcd988905259dd7",
+      "bytes": 19901
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/registry_preview.py",
+      "sha256": "73f13c3456e6f04955f03b6b5ea4875585b0f579f18458ec801c3dcf82732859",
+      "bytes": 1580
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/test/test_registry_preview.py",
+      "sha256": "8a8c68794fc30a7fd257ebc6f31be192020ac37a34a802bb45faa9791c24bd53",
+      "bytes": 6275
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_navigation/config/robots/asset_turtlebot3_burger.yaml",
+      "sha256": "823ce1c44125a7858abfeac7bdca7fab80bb05361669bc5a9e1c6cf82d1d4aac",
+      "bytes": 1348
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle.yaml",
+      "sha256": "10bb7e814659f245c61e223201a050ed418f7331aa9c1e334dad94ee5d3e232f",
+      "bytes": 1346
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_navigation/config/robots/asset_turtlebot3_waffle_pi.yaml",
+      "sha256": "0ae03ce5a6c7b11a48671af8e5cd916894d8aec0367fc8bc3a4aa92ece97f33d",
+      "bytes": 1490
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/asset_groups.py",
+      "sha256": "b707af6d862099e33369ecc43e74396d621fb07fb013b8dc68558a044d27c116",
+      "bytes": 9632
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/asset_preview.py",
+      "sha256": "83e8258c09b1dc2f83df0274b6d5e231b2eb908e842a2b8b2608766525539f7c",
+      "bytes": 17952
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/robot_spawn.py",
+      "sha256": "b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e",
+      "bytes": 1275
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/asset-runtime-support.yaml",
+      "sha256": "6e5574cffcf09fa326fe4cddffbe636f6702ae91e9e4b9bafb14c64a278de659",
+      "bytes": 62018
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/asset-sources-2026-10-05.yaml",
+      "sha256": "af3ca4cfdf022daba511a318c5e1fe268718b68a436b3e03de5221a645245e3f",
+      "bytes": 15077
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/platform-status.yaml",
+      "sha256": "5a29ed6d767460d1888088033587c2f228bec0d41bbe4a438b3412c84012a7df",
+      "bytes": 196435
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/docs/status/runtime-evidence-index.yaml",
+      "sha256": "b8cfc60b670317271d9db1227124bde1c93aac451091e2bc3cc10405e5ab52bf",
+      "bytes": 154201
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/scripts/provision_extension_assets.py",
+      "sha256": "11bee4787701b6e4d39f816b5c117388da4d3b63766d7a85a9a7688e94fb3016",
+      "bytes": 42347
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/scripts/r9_3_support_matrix.py",
+      "sha256": "1347892113c9a03d9e1b0bef63df4aea046078e2e0a38f827e3171fd8ffb219c",
+      "bytes": 18852
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/scripts/test_asset_staging.py",
+      "sha256": "3f61822e2cb5d3397ec81b3af4259a0aefbe07914f5c552a017505a6de97f036",
+      "bytes": 4445
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/scripts/test_support_evidence.py",
+      "sha256": "0fd2e812f7e66c9828966f8df13ab7d0ce815dabfdefe025de6da157cdff6758",
+      "bytes": 9025
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/scripts/test_tiers.sh",
+      "sha256": "0aaa7265e6d4d801838f840899fdf6181c3a8035bec7b33fc9f9b975251895b7",
+      "bytes": 5519
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/launch/simulated_robot.launch.py",
+      "sha256": "03c4bab819c1ef3510285c8bcafa5549daae7f55d8cbfd3beda2099cec1430c7",
+      "bytes": 79388
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_asset_runtime_support.py",
+      "sha256": "c235b74ba3fcd8a373eedc61b1da5a2a1ec985bc9e8aaf05d0bb096be26b120b",
+      "bytes": 12795
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_backend_assets.py",
+      "sha256": "3d71462d2ad92503ba585d149f59620dd9ee9f10af418fbb345f22505f94c10a",
+      "bytes": 15996
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_sim_profiles.py",
+      "sha256": "16200929436cdfa67bda992fada14a23a43901a90e3f556db53ce0c0864ffbd7",
+      "bytes": 18331
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/package.xml",
+      "sha256": "0b7d95c850b2108bb4fc04b435629b133940f766bb80a835e78b81fc759a604a",
+      "bytes": 830
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/lab_tabs.py",
+      "sha256": "0736467783ecdd3954cd99fed463a9af00706413d093f00646c0bea732478b86",
+      "bytes": 51863
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/launcher.py",
+      "sha256": "735be14c54e7ee97eb21afad84ee0c0aac01e33222ede7c3f6ad8faae7676351",
+      "bytes": 143916
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/setup.py",
+      "sha256": "22c3f719a7b6ae26b672e9bdd4b3d41a30c60876409ea3c975f4b182cb434097",
+      "bytes": 615
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/test/test_command_autofill.py",
+      "sha256": "2e95f74cc847ba35eb5da3299c9c6fe816832f02232bd214276698b583202a78",
+      "bytes": 40813
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py",
+      "sha256": "fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535",
+      "bytes": 101602
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/asset_support.py",
+      "sha256": "4c3c01bc5e8ebf8f0bc633252a78505d0c3dbeb11dbe9c1875a1b377c8db536b",
+      "bytes": 18719
+    },
+    {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/sdf_world.py",
+      "sha256": "c909854d1ba5a9e5bc6cb582246cd4b63334c7c48a0442b0824f33f446ee6148",
+      "bytes": 11727
+    }
+  ],
+  "captured_at": "after these checks; prior to containing commit, not a pre-trial runtime manifest",
+  "results": {
+    "fast": "920 passed, 1 skipped, 4 integration deselected",
+    "physics": "20 passed",
+    "integration": "140 passed under Xvfb, including six pre-room-correction native GUI cases",
+    "gui": "82 passed",
+    "grouping_follow_up": "15 passed, including reviewed room IDs and seven native/grouped GUI cases",
+    "registry": "pending separate validation"
+  },
+  "room_metadata_scope": "Original tiers precede room grouping spelling correction; focused pure and actual Tk/render button follow-up validate that correction without changing geometry/controller code"
+}

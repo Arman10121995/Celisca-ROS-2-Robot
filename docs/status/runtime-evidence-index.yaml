@@ -1,7 +1,7 @@
 schema_version: 1
-date: '2026-10-06'
-scope: Exact hashed October 5 and October 6 named simulation screens; unlisted cells
-  remain untested.
+date: '2026-10-07'
+scope: "Exact hashed October 5\u20137 named simulation screens; unlisted cells remain\
+  \ untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
 - robot_id: four_wheel_steer_car
@@ -1136,8 +1136,1538 @@ records:
   report_kind: arm_cartesian_screen
   scope: Actual Tk Plan/Execute, native Panda PD actuators and independent physical
     hand-body TF; static nav_empty only; normal GUI profile, clean child exit
+  limitations: &id002
+  - Two static-world offsets only; other maps/backends, Servo and repeated pick/place
+    remain open
+  - Optional grasp fixture and attached payloads require a dynamic-object scene; native
+    joint/hand fixture controls remain available
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-gazebo/report-measured.json
+  sha256: 6747a345742d922c3058a50eb51a2036affca87f45c71ee4dd411e6b39d47599
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-gazebo/source-manifest.json
+  source_hashes_sha256: a3a9310e57152dd17652fe058a33c6ad5954129ee8f0876996f29a49204504f3
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-mujoco/report-measured.json
+  sha256: b6eb44ce0a449e56d1a3453f072403fbe684c528d6c595cc72d9ed4f750f8032
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-mujoco/source-manifest.json
+  source_hashes_sha256: a3a9310e57152dd17652fe058a33c6ad5954129ee8f0876996f29a49204504f3
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-pybullet/report-measured.json
+  sha256: 791784395a4dc34b7460d8f79a16f963225b42e92e83a5039e69c855137b470c
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-pybullet/source-manifest.json
+  source_hashes_sha256: a3a9310e57152dd17652fe058a33c6ad5954129ee8f0876996f29a49204504f3
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-isaac/report-measured.json
+  sha256: 6829426c366ec18fa94faff2962f8e51a1110f27813519a914aa34adff94014b
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_burger-isaac/source-manifest.json
+  source_hashes_sha256: a3a9310e57152dd17652fe058a33c6ad5954129ee8f0876996f29a49204504f3
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-gazebo/report-measured.json
+  sha256: 1675d831830d58ec37a72909df92cf38182717244c3b9935c72a1c9fce5681be
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-gazebo/source-manifest.json
+  source_hashes_sha256: 11974a5fefdd1e7fbdf2c3943d54b3399199c091f0853debd985bad4e7036eb9
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-mujoco/report-measured.json
+  sha256: 587bba68431cbf5b1570587ffd38fdda341006e7206751699a3918cc398f2917
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-mujoco/source-manifest.json
+  source_hashes_sha256: 11974a5fefdd1e7fbdf2c3943d54b3399199c091f0853debd985bad4e7036eb9
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-pybullet/report-measured.json
+  sha256: 4f49735bb8a3308dc30246e8022755519cffe691e5fd01465153892a45dc6f72
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-pybullet/source-manifest.json
+  source_hashes_sha256: 11974a5fefdd1e7fbdf2c3943d54b3399199c091f0853debd985bad4e7036eb9
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-isaac/report-measured.json
+  sha256: ad8b73783a3c549dfb8efbec44fcfcf4e0649418a8608077b16d56bfde60a1d4
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle-isaac/source-manifest.json
+  source_hashes_sha256: 11974a5fefdd1e7fbdf2c3943d54b3399199c091f0853debd985bad4e7036eb9
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-gazebo/report-measured.json
+  sha256: 3aa8bfc94fc0e3b50b3baf72b96b396913e2b699d981f297bf3d26d577fd75c3
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-gazebo/source-manifest.json
+  source_hashes_sha256: 60a78f145688283cfcd878d104d1d07584bb95d5b6ffbe93433f8bc075ecb5e0
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-mujoco/report-measured.json
+  sha256: cad676fa20d7cfe155c7a9e2bbde3771fcdef1b0d029f3a8e09901559acd5615
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-mujoco/source-manifest.json
+  source_hashes_sha256: 60a78f145688283cfcd878d104d1d07584bb95d5b6ffbe93433f8bc075ecb5e0
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-pybullet/report-measured.json
+  sha256: 0c8e5238c604ef6ce44f21b1015390b22f6f73d1ca99fc8fca647cca6e2e643b
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-pybullet/source-manifest.json
+  source_hashes_sha256: 60a78f145688283cfcd878d104d1d07584bb95d5b6ffbe93433f8bc075ecb5e0
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-isaac/report-measured.json
+  sha256: 13759168a6d8b399a83ae49b26148f4fb0eb39ccc683c8970e427948c4c6d773
+  source_hashes: docs/status/evidence/turtlebot3-sensors-2026-10-07/asset_turtlebot3_waffle_pi-isaac/source-manifest.json
+  source_hashes_sha256: 60a78f145688283cfcd878d104d1d07584bb95d5b6ffbe93433f8bc075ecb5e0
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Joint ranges/tilt derived from the retained physical trace.
+    Serial producer exit 0 and owned plant cleanup checked by the archived batch runner.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/panda-cartesian-2026-10-07/report.json
+  sha256: 0d7e789744ad006e8d76394895e80bbfc14fb657c2af1091e85ea23511a643bd
+  source_hashes: docs/status/evidence/panda-cartesian-2026-10-07/source-manifest.json
+  source_hashes_sha256: 4adb0b592fcfbb418aa12c79476ac2475cbcc5ba2a6ebce75a434437a740b060
+  report_kind: arm_cartesian_screen
+  scope: Fresh normal GUI MoveIt/native Panda regression after shared named-map spawn
+    changes. Two physical TCP targets, floor/self-collision and unreachable rejection,
+    joint/finger invalidation, Cancel/Stop/watchdog, monotonic Reset/Home, Live Monitor
+    and all four clean child exits. Static nav_empty with no grasp fixture or attached
+    payload.
+  limitations: *id002
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-loc-nav_empty/workflow.json
+  sha256: b8a29d6cad1ff0cf15cd960b307cf9e7b7757ea8be65e93b78ce9b4141843a44
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-slam-nav_empty/workflow.json
+  sha256: 0d33cc83239a428641f4032f44fd460a20f30323ca82cbc2353b1d43904ac3c1
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_empty/navigation.json
+  sha256: 9adc851140e34eeb417a54d7daf32f40a5a62acfddfcbe1669a3761dfff48e5b
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_obstacle/navigation.json
+  sha256: b4f5ebe1903c44c1f33ae33b81d16185a919d098ffd01847ea554dcb834e311d
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 4fe031b7f13c544f112b3027dd61a22c8a5b6d76a73f594826e086467a6de488
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-loc-nav_empty/workflow.json
+  sha256: b2f1126344961132570f57520d92454d71ca8deb3356b4dd13feb8f3faa2dfae
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-slam-nav_empty/workflow.json
+  sha256: 7165f4b98af92e15dcc4b5b69e4a28e5ba8ba484f8571ea974ff530fe7b710f6
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_empty/navigation.json
+  sha256: 5cb39c5ddc8c9ba2845cc175b7f3c704b89763e7dac695a52d0386864d7eb332
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_obstacle/navigation.json
+  sha256: 0b959cde8624d522add0c007ea9195ea77368b2608df692146c3e948be3dcc0e
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 4fe031b7f13c544f112b3027dd61a22c8a5b6d76a73f594826e086467a6de488
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-loc-nav_empty/workflow.json
+  sha256: b5c0f97a27486412efe59b7867e9b55a2a0a2336dec206d23f8d2004be0b23c5
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-slam-nav_empty/workflow.json
+  sha256: b77f1e766e5d53210119c872280b5443993dc73ffee38991c4e9b2e12ab675f7
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_empty/navigation.json
+  sha256: 5a80db155cb3435a39e4a2ebdbf4ed2e0845c3f1160b31ba62b551b917b4a64d
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_obstacle/navigation.json
+  sha256: 4224dfb6c1254dbf9681028f26b07e8b00586caf1dea0dd6d4c40861c69f2f9f
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 4fe031b7f13c544f112b3027dd61a22c8a5b6d76a73f594826e086467a6de488
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-loc-nav_empty/workflow.json
+  sha256: 3c13ebf2a645169c28750d4fc6cead9f296212386da216bafe8c4fc0b7e9af9d
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-slam-nav_empty/workflow.json
+  sha256: 3d0b3a36544be6e1c5af88fd85ca93205a9b27574bd5c08655fca138d020ee2c
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_empty/navigation.json
+  sha256: 7061616fdc4dd95c057bae70e969091c0eb7b6c2a8b9d7b4af1d2018d316776b
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4efd7537e89b8dca17b4b96f93a5029eb15734e4a347ee41db24cea1f6ef6b0c
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_obstacle/navigation.json
+  sha256: d722de4c26785ee064bf75e6541d8755360c2d029d65724522c01a50689b26db
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 4fe031b7f13c544f112b3027dd61a22c8a5b6d76a73f594826e086467a6de488
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-loc-nav_empty/workflow.json
+  sha256: a7c4704012288f7021b437f54022a02ca039ca4087d69d4a74f6ee1deada2326
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 5c88901bdefa94416d8cc62c08364987ae312ada028f831742f86544992e94f8
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-slam-nav_empty/workflow.json
+  sha256: 66f31829018e68c097eb8c5078b85568f74eff8c919018811b3651a52f7ae4c2
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 5c88901bdefa94416d8cc62c08364987ae312ada028f831742f86544992e94f8
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-nav-nav_empty/navigation.json
+  sha256: 04be58929727736e021cb2df8bbc19b99748990f543131f06388c032d892da84
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 37dce0e42842b357fafe23f90ab9271ae73f7f6f1fd1054afbaa2f9d1271d7c8
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-nav-nav_obstacle/navigation.json
+  sha256: f5da3cb3fc21f8cfe0e235d69600ec7afb80e402c6622744074c9a916190f7f2
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: c73d3a2062ef417523c93122e46be929fcbf27367e235208de16e0d178e0532f
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-loc-nav_empty/workflow.json
+  sha256: 147fde01691416d5a80d94baebc8ef3686aee38d1ce1d0265b30e43a0b2f323e
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 5c88901bdefa94416d8cc62c08364987ae312ada028f831742f86544992e94f8
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-slam-nav_empty/workflow.json
+  sha256: 348767f755bf2cc73bcec80046938a16e4fa70f7a92df1564a11abf78298b8bb
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 5c88901bdefa94416d8cc62c08364987ae312ada028f831742f86544992e94f8
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-nav-nav_empty/navigation.json
+  sha256: c8be2eff81caad318e38ef67bf04d22ae18df885e1939d87759acdc598661c5a
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 5c88901bdefa94416d8cc62c08364987ae312ada028f831742f86544992e94f8
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-nav-nav_obstacle/navigation.json
+  sha256: 3bcdf637d306c285bbdb3105bef25b442acea6e4be82843d876414048b84f8af
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-mujoco-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 0ab16fb6cf48b832ef8951335080185353c49e4205ca36377fe13299bcaacf18
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-loc-nav_empty/workflow.json
+  sha256: c5ca596bd7e270301599f5284b024bcc202107c721e703150867771a825be0ed
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 7427f9e21d634fc03aad9a7b6b0c9bae27db379e25c4470e6612b0770c185591
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-slam-nav_empty/workflow.json
+  sha256: 8bb99a13bf4f63ff86110a8414cecec458962f31c977d03e314c76212b6cecd8
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 7427f9e21d634fc03aad9a7b6b0c9bae27db379e25c4470e6612b0770c185591
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-nav-nav_empty/navigation.json
+  sha256: 3879c8f01cb1ba14412e0c36ab63dc71b2c3e63285002e180737448524ff2f3c
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 7427f9e21d634fc03aad9a7b6b0c9bae27db379e25c4470e6612b0770c185591
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-nav-nav_obstacle/navigation.json
+  sha256: 01ac209d17ad1bacb3241cbdbd24634fbb701f75c1f147da2b1b2af4e40c6267
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-pybullet-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: a9b2f4eb8d5bcc4fcce2e073a5a5b3a8d7803d45853c8d0ff224bbb501d127d9
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-loc-nav_empty/workflow.json
+  sha256: 17467b45161659aecdfe7d9a4fe64a453c7ceece365b89208151c242fe73dea3
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 37dce0e42842b357fafe23f90ab9271ae73f7f6f1fd1054afbaa2f9d1271d7c8
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-slam-nav_empty/workflow.json
+  sha256: 4622cf66a8a4912511920c137990c0027f6d3a6525cd8859af4b7acd43971eec
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 37dce0e42842b357fafe23f90ab9271ae73f7f6f1fd1054afbaa2f9d1271d7c8
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_empty/navigation.json
+  sha256: f84cbf075ef2eb11e77424a115a4b32cb121311f36fe7934bc60d56be6548941
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 37dce0e42842b357fafe23f90ab9271ae73f7f6f1fd1054afbaa2f9d1271d7c8
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_obstacle/navigation.json
+  sha256: 2b89484fec6c1cab6dc2692cb57655b674a27f3291cc904d6e604fd7e1a55a95
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: c73d3a2062ef417523c93122e46be929fcbf27367e235208de16e0d178e0532f
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-loc-nav_empty/workflow.json
+  sha256: 81eb7efcf9cd77d75c89ae4dcc098312755b7a99aaac65af6b0c56f4cbcafab8
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 7dbae5a1a2ac335c6e7daa798d72d1f08b21878c91d6ba7950e4c2c781758fdb
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-slam-nav_empty/workflow.json
+  sha256: d477646b04e1b23bdbb853eafdd42a1d114a03746e4e8c990d5db8893b0758b4
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 7dbae5a1a2ac335c6e7daa798d72d1f08b21878c91d6ba7950e4c2c781758fdb
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-nav-nav_empty/navigation.json
+  sha256: 9799f0573c06b88cdd4c580f67fd4ae40a888cb2c5728445802f71ff327466ea
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 75478e7b89c40fa52725a97eb75c14ac5179e7dad2c5e24b6fbe036170a1f85b
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-nav-nav_obstacle/navigation.json
+  sha256: 31329f677db14693ab44680401fdb5ca472e87309b30fd7dee1158671b3b290d
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 527d1d71d948e9f7d8065248eba5a3376e07a45786045d5afbec5f98cec3311d
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-loc-nav_empty/workflow.json
+  sha256: ca368cf75d51c493c5a2785c9cbdcefefc84928ed1b2df2d066f78e1db9aad48
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 7dbae5a1a2ac335c6e7daa798d72d1f08b21878c91d6ba7950e4c2c781758fdb
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-slam-nav_empty/workflow.json
+  sha256: de24f16b3aa88cee2366d5044438a11917255b865997660daceaa8a5fe4fc8b8
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 7dbae5a1a2ac335c6e7daa798d72d1f08b21878c91d6ba7950e4c2c781758fdb
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-nav-nav_empty/navigation.json
+  sha256: 60d3b6a278787e8809525d23286a2d7fdd0cae91ab71ed986e196fb32ee8324b
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 2a1e091208c8401e8e79b123f194e42c958481e48c5be03d9fc0fa0a349f73a8
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-nav-nav_obstacle/navigation.json
+  sha256: 275d2de76f5efe27118a62167ba3b5af952607c8d369ed8644414635762ccad7
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-mujoco-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 564d8584ff19177473044d4aaf7d42230c25f907619e42f66a5c8c4e54379f40
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations: &id003
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-loc-nav_empty/workflow.json
+  sha256: 9d100991960675d6d4fc0f8fdd622e543b0e84a717a663634e15114142195c06
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 7dbae5a1a2ac335c6e7daa798d72d1f08b21878c91d6ba7950e4c2c781758fdb
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-slam-nav_empty/workflow.json
+  sha256: 3ce51c880977d59ee9976ebffae7f1306635e142fd8bd33cbf7602bfce291329
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 7dbae5a1a2ac335c6e7daa798d72d1f08b21878c91d6ba7950e4c2c781758fdb
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-nav-nav_empty/navigation.json
+  sha256: 6e9fed800642460e14e97011440602d985a10ba8cb8ad2b4ef96fcfabb36587a
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4b049a145cbd6db96fc1c4afd3c5146ab8437593242b6ee71d4028a0d6f3ea8c
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-nav-nav_obstacle/navigation.json
+  sha256: ffb273cd0890cba1187d18000b10fc092b8134f94b1ab56d8f6d4bc3c07d4143
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-pybullet-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 1525391165f418c08a493929588a9baa49b0fd25bb80080b511047908501b57a
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: localization
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-loc-nav_empty/workflow.json
+  sha256: 3df0cfda84383c957c3c773acdaf10fcb51baad2e5eab87c9781d79d70f03eae
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 524a90cd150080a584c745bbe731c745b4d13e0311212ed63dae6f81732038a2
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-slam-nav_empty/workflow.json
+  sha256: 0c3245762eae888a03f3b72bb3fd2feb9968b75cd51dee267b36a5b605e21228
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 524a90cd150080a584c745bbe731c745b4d13e0311212ed63dae6f81732038a2
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    Physical Drive, both turns, publisher loss, reset/resume and actual sensor/estimate
+    feedback.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_empty/navigation.json
+  sha256: e09104ff9294e1fd381483be2f2d4fa7a00fd3364064d6cd92da3ed75ae39a7e
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: f96ab75564d4c2309fe10b35a21340e8a2443339a209a5b5521eb52b59c435a7
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle/navigation.json
+  sha256: 404281251e3f96a39446af38217e7918ac144660c1cb2fcfd5389e900fb35a22
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 08ca3b91c0ea2a6b5d0b39f774a262e0b02ff5fd91ff1f2fe89b2ff9dab4340f
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Stop in a private qualification catalog;
+    same executed model/drive/sensors/runtime settings as the normal installation.
+    RViz-style topic goal, independent body terminal error and swept static clearance.
+  limitations:
+  - Named nav_empty/nav_obstacle screens; other maps/routes need measurements
+  - Lab source LDS at 5 Hz; no RGB-D or OpenCR/vendor firmware qualification
+  - Non-Gazebo estimation uses ideal engine odometry; no independent noisy hardware
+    localization claim
+  - Static swept footprint clearance is not measured contact-force telemetry
+  - Headless RViz can log shader errors; owned plant/launch exits and physical acceptance
+    are measured separately
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/panda-cartesian-grouped-gui-2026-10-07/report.json
+  sha256: 4fbbe893ff2d7dcbecbac4e0ff0851eb80c59ad407fd68bf37e47e6d18628832
+  source_hashes: docs/status/evidence/panda-cartesian-grouped-gui-2026-10-07/source-manifest.json
+  source_hashes_sha256: 892dd472779f75e0f997ce5ae2f5729d3ac8f776792ee107104666e0f32a6888
+  report_kind: arm_cartesian_screen
+  scope: Fresh actual normal consolidated-GUI Panda physical Plan/Execute after grouping
+    and the shared SDF visual-reader change; two independent physical TCP offsets
+    and all original rejection/invalidation/interruption/reset/monitor/cleanup checks.
+  limitations: *id002
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/turtlebot3-modes-2026-10-07/normal-current-waffle-pi-mujoco-obstacle/navigation.json
+  sha256: 9339cf45796bd9fd13f30f47614e577d35b4836b0be57cf2b308be8b1763df57
+  source_hashes: docs/status/evidence/turtlebot3-modes-2026-10-07/normal-current-waffle-pi-mujoco-obstacle/source-manifest.json
+  source_hashes_sha256: ee0e5bf0d5d272abc87266c9831b19f49a9b126d9afa36e2fd0be9f50286968f
+  report_kind: navigation_screen
+  scope: Actual normal-installed consolidated GUI Waffle Pi MuJoCo obstacle navigation
+    repeat with current 0.65 m inflation; independent body terminal and swept-clearance
+    limits unchanged.
+  limitations: *id003
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/panda-cartesian-controls-column-2026-10-07/report.json
+  sha256: 36927d96004f0eceb4ca946fadd2219a22e9e7e13237cadfee08c87b497f06be
+  source_hashes: docs/status/evidence/panda-cartesian-controls-column-2026-10-07/source-manifest.json
+  source_hashes_sha256: fceed6ab9954295db79494e8552a4334c2a34b1230d4affc94a5c0e8fe6785ee
+  report_kind: arm_cartesian_screen
+  scope: Actual normal right-column GUI Panda physical Plan/Execute, two body-TF targets,
+    all original rejection/invalidation/interruption/reset/monitor and clean owned
+    exits; exact pre-trial stage in manifest.
   limitations:
   - Two static-world offsets only; other maps/backends, Servo and repeated pick/place
     remain open
   - Optional grasp fixture and attached payloads require a dynamic-object scene; native
     joint/hand fixture controls remain available
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact pre-trial source/installed
+    stage
+  report: docs/status/evidence/panda-cartesian-controls-column-2026-10-07/final-responsive/report.json
+  sha256: 091f3c0f02ec1252575c8fcb2fcf841ab599a3aeb479fa1055058212a833d400
+  source_hashes: docs/status/evidence/panda-cartesian-controls-column-2026-10-07/final-responsive/source-manifest.json
+  source_hashes_sha256: 26e1eb8135ae0f8e75156ec7c502b6736c24fba426e7953d5dfd3a1c2553c7cb
+  report_kind: arm_cartesian_screen
+  scope: Actual final normal responsive control-column GUI physical Panda Plan/Execute
+    plus all original rejection, invalidation, interruption, reset, monitor and clean
+    owned exits; exact pre-trial stage.
+  limitations:
+  - Two static-world offsets only; other maps/backends, Servo and repeated pick/place
+    remain open
+  - Optional grasp fixture and attached payloads require a dynamic-object scene; native
+    joint/hand fixture controls remain available
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-07'
+  revision: 18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae plus exact source/installed stage
+    in pre-trial manifest
+  report: docs/status/evidence/gui-controls-column-2026-10-07/live-drive-final/report-measured.json
+  sha256: efb2e397c5ab8830897a29e2168bc1d235aa03506edc5bed31de7f82b99dae93
+  source_hashes: docs/status/evidence/gui-controls-column-2026-10-07/live-drive-final/source-manifest.json
+  source_hashes_sha256: f0c6c1d62e2b956679903b092bcbf27af48c4f486e01dcd15e0848dd39f7c40b
+  report_kind: drive_lidar_screen
+  scope: Actual final normal control-column GUI native preview plus neutral enable,
+    W/S/A/D, Stop and lost commands, source LDS/IMU/joints/TF on nav_empty; peak tilt
+    and wheel extents derived from the retained engine trace.
+  limitations:
+  - Named nav_empty GUI keyboard/Drive screen; physical joystick and other maps untested
+  - "Original 360-ray LDS with 0.12\u20133.5 m bounds at 5 Hz; source cameras are\
+    \ RGB-only and rendering is disabled"
+  - Lab wheel control and virtual-frame inertia regularization, not OpenCR/vendor
+    firmware qualification
+  - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
+    physical braking
+  - RTF is measured on this host/run, not a general performance guarantee

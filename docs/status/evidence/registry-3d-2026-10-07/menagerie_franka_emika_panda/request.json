@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "robots",
+  "asset_id": "menagerie_franka_emika_panda",
+  "profile": {
+    "package": "robot_lab_robots",
+    "xacro": "/workspace/molar/robot_lab_runtime/external_assets/models/menagerie_franka_emika_panda/4d038b3feae26ec82b46a4d586379114012a8ac7/display.urdf",
+    "native_mjcf": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml",
+    "supported_simulators": [
+      "mujoco"
+    ],
+    "spawn": {
+      "z": "0.0"
+    },
+    "arm_control": "panda",
+    "name": "menagerie_franka_emika_panda",
+    "supported_modes": [
+      "display"
+    ],
+    "default_mode": "display",
+    "features": [
+      "joint_control"
+    ],
+    "source_id": "mujoco_menagerie",
+    "source_entry": "franka_emika_panda",
+    "notes": "Arm tab: joint/Home and MoveIt Cartesian Plan/Execute through native MuJoCo actuators. Two offsets, static nav_empty collision rejection, stale-plan invalidation, Cancel/Stop/watchdog and reset measured. Other maps are experiments; payload planning, Servo and other backends remain pending. Hand tab: original coupled fingers, bounded-force opening/closing, Cancel/Stop and reset. Physical cube lift/hold/release recorded on MuJoCo/nav_empty; other objects, planned grasping and dexterous hands require separate qualification.",
+    "hand_control": "panda",
+    "hand_runtime_screen": {
+      "backend": "mujoco",
+      "map": "nav_empty",
+      "report": "docs/status/evidence/panda-gripper-2026-10-06/report.json"
+    },
+    "arm_planning": "moveit",
+    "arm_planning_runtime_screen": {
+      "backend": "mujoco",
+      "map": "nav_empty",
+      "report": "docs/status/evidence/panda-cartesian-2026-10-06/report.json",
+      "scope": "Static world; no grasp fixture or attached payload"
+    }
+  },
+  "output": "/workspace/molar/robot_lab_runtime/registry_previews/9a5267345f234e468a6dde20cfd910c8",
+  "scope": "Embedded static inspection; no ROS nodes or simulator"
+}

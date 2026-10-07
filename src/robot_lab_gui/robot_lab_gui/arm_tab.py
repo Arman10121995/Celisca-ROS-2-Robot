@@ -11,38 +11,51 @@ class ArmTab(ttk.Frame):
         super().__init__(notebook, padding=10)
         self.app = app
         notebook.add(self, text='Arm')
+        from .workspace_ui import ScrollPanel
+        panel = ScrollPanel(self, width=390)
+        panel.grid(row=0, column=0, sticky='nsew')
+        self.columnconfigure(0, weight=1); self.rowconfigure(0, weight=1)
+        body = self.body = panel.body
         self.status_var = tk.StringVar(value='Select the native Panda in Launch, with MuJoCo and Display.')
-        ttk.Label(self, textvariable=self.status_var, wraplength=880).grid(row=0, column=0, columnspan=4, sticky='w')
+        ttk.Label(body, textvariable=self.status_var, wraplength=305).grid(row=0, column=0, columnspan=5, sticky='w')
+        step_frame = ttk.Frame(body)
+        step_frame.grid(row=1, column=0, columnspan=5, sticky='ew', pady=6)
         self.step_var = tk.DoubleVar(value=.1)
-        ttk.Label(self, text='Jog increment (rad)').grid(row=1, column=0, sticky='w', pady=8)
-        ttk.Spinbox(self, textvariable=self.step_var, from_=.02, to=.2, increment=.02,
-                    width=8).grid(row=1, column=1, sticky='w')
+        ttk.Label(step_frame, text='Jog increment (rad)').grid(row=0, column=0, sticky='w')
+        ttk.Spinbox(step_frame, textvariable=self.step_var, from_=.02, to=.2, increment=.02,
+                    width=6).grid(row=0, column=1, sticky='w', padx=8)
+        self.limit_values = []
         self.values = []
         self.buttons = []
         self.jog_buttons = []
         for index in range(7):
             row = index+2
-            ttk.Label(self, text='Joint '+str(index+1)).grid(row=row, column=0, sticky='w', pady=5)
-            value = tk.StringVar(value='No measured state')
+            ttk.Label(body, text='Joint '+str(index+1)).grid(row=row, column=0, sticky='w', pady=2)
+            value = tk.StringVar(value='—')
             self.values.append(value)
-            ttk.Label(self, textvariable=value, width=18).grid(row=row, column=1, sticky='w')
-            for column, sign, title in [(2, -1, '−'), (3, 1, '+')]:
-                button = ttk.Button(self, text=title, width=5,
+            ttk.Label(body, textvariable=value, width=6).grid(row=row, column=1, sticky='w')
+            limit = tk.StringVar(value='—')
+            self.limit_values.append(limit)
+            ttk.Label(body, textvariable=limit, width=12, style='MonoSmall.TLabel').grid(row=row, column=2, sticky='w')
+            for column, sign, title in [(3, -1, '−'), (4, 1, '+')]:
+                button = ttk.Button(body, text=title, width=2, style='Small.TButton',
                     command=lambda i=index, s=sign: self.jog(i, s))
-                button.grid(row=row, column=column, padx=5)
+                button.grid(row=row, column=column, padx=2)
                 self.buttons.append(button); self.jog_buttons.append(button)
-        self.home_button = ttk.Button(self, text='Home', command=self.home)
-        self.home_button.grid(row=9, column=0, sticky='ew', pady=10)
+        actions = ttk.Frame(body)
+        actions.grid(row=9, column=0, columnspan=5, sticky='ew', pady=6)
+        self.home_button = ttk.Button(actions, text='Home', command=self.home, width=6, style='Small.TButton')
+        self.home_button.grid(row=0, column=0, sticky='ew')
         self.buttons.append(self.home_button)
-        self.cancel_button = ttk.Button(self, text='Cancel Trajectory', command=self.cancel)
-        self.cancel_button.grid(row=9, column=1, sticky='ew', padx=5)
-        self.stop_button = ttk.Button(self, text='Stop Arm', command=self.stop)
-        self.stop_button.grid(row=9, column=2, columnspan=2, sticky='ew')
-        ttk.Label(self, text='Joint trajectories use the actual native Panda actuators and model limits.\n'
+        self.cancel_button = ttk.Button(actions, text='Cancel Trajectory', command=self.cancel, style='Small.TButton')
+        self.cancel_button.grid(row=0, column=1, sticky='ew', padx=2)
+        self.stop_button = ttk.Button(actions, text='Stop Arm', command=self.stop, width=8, style='Small.TButton')
+        self.stop_button.grid(row=0, column=2, sticky='ew')
+        ttk.Label(body, text='Joint trajectories use the actual native Panda actuators and model limits.\n'
             'Stop, cancellation or GUI heartbeat loss holds the measured arm position.\n'
             'Use Hand for qualified coupled-finger controls. Cartesian plans require an acknowledged\n'
             'selected-world scene and fresh measured state. Other arm backends remain pending.',
-            wraplength=880, justify='left').grid(row=11, column=0, columnspan=4, sticky='w', pady=12)
+            wraplength=305, justify='left').grid(row=11, column=0, columnspan=5, sticky='w', pady=6)
         self.node = None
         self.state = None
         self.received = -math.inf
@@ -124,7 +137,9 @@ class ArmTab(ttk.Frame):
                 self.heartbeat_pub.publish(Empty())
                 self.status_var.set('Native Panda / MuJoCo — '+self.state['status'])
                 for variable, position in zip(self.values, self.state['positions']):
-                    variable.set('%.4f rad' % position)
+                    variable.set('%.4f' % position)
+                for variable, limit in zip(self.limit_values, self.state.get('limits', [])):
+                    variable.set('%.2f … %.2f' % tuple(limit))
             else:
                 self.status_var.set('Waiting for measured native Panda state…')
         elif self.selected():

@@ -1,0 +1,141 @@
+{
+  "kind": "maps",
+  "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world",
+  "source_sha256": "2c7061d96e32afbf2491ba904bb8429d245dc44fce27eebe8627cc80fcf7b4ca",
+  "shapes": [
+    {
+      "model": "physics_floor",
+      "position": [
+        0.0,
+        0.0,
+        -0.05
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "box",
+      "size": [
+        44.0,
+        27.5,
+        0.1
+      ],
+      "rgba": [
+        0.3,
+        0.3,
+        0.3,
+        1.0
+      ],
+      "render_mesh": 0
+    },
+    {
+      "model": "celisca_floor_2_furniture",
+      "position": [
+        1.188,
+        -3.564,
+        0.0
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/cdadaa892479442998a6a6181871ef34/meshes/06b3acb3b779306d50be584c761c7436e43c174c7c34a1965fd7114f7e440838_1000000000f.stl",
+      "scale": [
+        0.79695,
+        0.79695,
+        0.79695
+      ],
+      "rgba": [
+        0.1,
+        0.1,
+        0.4,
+        1.0
+      ],
+      "render_mesh": 1
+    },
+    {
+      "model": "celisca_floor_2_furniture",
+      "position": [
+        1.188,
+        -3.564,
+        0.0
+      ],
+      "orientation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "mesh",
+      "mesh": "/workspace/molar/robot_lab_runtime/registry_previews/cdadaa892479442998a6a6181871ef34/meshes/06b3acb3b779306d50be584c761c7436e43c174c7c34a1965fd7114f7e440838_1000000000f.stl",
+      "scale": [
+        0.79695,
+        0.79695,
+        0.79695
+      ],
+      "rgba": [
+        0.1,
+        0.1,
+        0.4,
+        1.0
+      ],
+      "render_mesh": 1
+    }
+  ],
+  "bounds": {
+    "min_xyz": [
+      -23.59555227956772,
+      -13.75,
+      -0.1
+    ],
+    "max_xyz": [
+      23.478155891132356,
+      13.75,
+      2.3908503800153733
+    ],
+    "center_xyz": [
+      -0.05869819421768163,
+      0.0,
+      1.1454251900076866
+    ],
+    "span_m": 54.57461256441366,
+    "raw_min_xyz": [
+      -23.59555227956772,
+      -13.75,
+      -0.1
+    ],
+    "raw_max_xyz": [
+      23.478155891132356,
+      13.75,
+      2.3908503800153733
+    ],
+    "remote_geometry_count": 0
+  },
+  "notes": [],
+  "meshes": [
+    {
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl",
+      "sha256": "06b3acb3b779306d50be584c761c7436e43c174c7c34a1965fd7114f7e440838",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/cdadaa892479442998a6a6181871ef34/meshes/06b3acb3b779306d50be584c761c7436e43c174c7c34a1965fd7114f7e440838_1000000000f.stl"
+    },
+    {
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/celisca_floor_2_furniture/meshes/celisca_floor_2_furniture.stl",
+      "sha256": "06b3acb3b779306d50be584c761c7436e43c174c7c34a1965fd7114f7e440838",
+      "preview_mesh": "/workspace/molar/robot_lab_runtime/registry_previews/cdadaa892479442998a6a6181871ef34/meshes/06b3acb3b779306d50be584c761c7436e43c174c7c34a1965fd7114f7e440838_1000000000f.stl"
+    }
+  ],
+  "scope": "Static source geometry in metres; scripted actors, physics, policies and missions are not executed",
+  "asset_id": "celisca_floor_2_furniture",
+  "render_geometry": {
+    "path": "/workspace/molar/robot_lab_runtime/registry_previews/cdadaa892479442998a6a6181871ef34/geometry.npz",
+    "meshes": 2,
+    "triangles": 7937664,
+    "scope": "Full source geometry; colors retained where declared; embedded textures are not reconstructed"
+  },
+  "preparation_wall_s": 12.612586920000467
+}

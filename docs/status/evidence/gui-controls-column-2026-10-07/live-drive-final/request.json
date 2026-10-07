@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "kind": "robots",
+  "asset_id": "asset_turtlebot3_burger",
+  "profile": {
+    "package": "robot_lab_robots",
+    "xacro": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot3_burger/90a68bd2e3c61c12966779da89d8eeaec82730e9/drive.urdf",
+    "supported_simulators": [
+      "gazebo",
+      "pybullet",
+      "mujoco",
+      "isaac"
+    ],
+    "name": "asset_turtlebot3_burger",
+    "supported_modes": [
+      "display",
+      "loc",
+      "slam",
+      "nav"
+    ],
+    "default_mode": "display",
+    "features": [
+      "velocity_base",
+      "lidar_2d"
+    ],
+    "source_id": "turtlebot3_vendor",
+    "source_entry": "turtlebot3_description/urdf/turtlebot3_burger.urdf",
+    "notes": "Original ROBOTIS TurtleBot3 wheels and LDS sensor frame; lab physical wheel control with 5 Hz lidar and 50 Hz IMU. Original RGB-camera geometry retained; RGB/depth rendering and 3D SLAM are not enabled. Mapping/navigation modes require recorded backend trials; OpenCR firmware, longer missions and materials remain pending. Named localization/mapping/Nav2 screens are available in Robot status; other maps are experiments.",
+    "drive": {
+      "type": "diff",
+      "left_wheel_joint": "wheel_left_joint",
+      "right_wheel_joint": "wheel_right_joint",
+      "wheel_radius": 0.033,
+      "wheel_separation": 0.16,
+      "max_speed": 0.18,
+      "max_accel": 0.3,
+      "max_angular_speed": 1.2,
+      "max_angular_accel": 2.0,
+      "mujoco_wheel_armature": 0.0002,
+      "mujoco_wheel_velocity_gain": 0.1,
+      "mujoco_ramp_watchdog_stop": true
+    },
+    "drive_in_display": true,
+    "sensor_config": {
+      "laser_link_name": "base_scan",
+      "scan_rate": 5.0,
+      "scan_samples": 360,
+      "scan_range_min": 0.12,
+      "scan_range_max": 3.5,
+      "camera_rate": 0.0
+    },
+    "spawn_by_map": {
+      "nav_empty": {
+        "x": -4.0,
+        "y": -4.0,
+        "yaw": 0.0
+      }
+    },
+    "controllers": [
+      "joint_state_broadcaster",
+      "robot_lab_controller"
+    ],
+    "supported_modes_by_simulator": {
+      "gazebo": [
+        "display",
+        "loc",
+        "slam",
+        "nav"
+      ],
+      "pybullet": [
+        "display",
+        "loc",
+        "slam",
+        "nav"
+      ],
+      "mujoco": [
+        "display",
+        "loc",
+        "slam",
+        "nav"
+      ],
+      "isaac": [
+        "display",
+        "loc",
+        "slam",
+        "nav"
+      ]
+    },
+    "runtime_screens": [
+      {
+        "backend": "gazebo",
+        "mode": "loc",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-loc-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "gazebo",
+        "mode": "slam",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-slam-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "gazebo",
+        "mode": "nav",
+        "maps": [
+          "nav_empty",
+          "nav_obstacle"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_empty/report.json",
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-gazebo-nav-nav_obstacle/report.json"
+        ]
+      },
+      {
+        "backend": "mujoco",
+        "mode": "loc",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-loc-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "mujoco",
+        "mode": "slam",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-slam-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "mujoco",
+        "mode": "nav",
+        "maps": [
+          "nav_empty",
+          "nav_obstacle"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_empty/report.json",
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-mujoco-nav-nav_obstacle/report.json"
+        ]
+      },
+      {
+        "backend": "pybullet",
+        "mode": "loc",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-loc-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "pybullet",
+        "mode": "slam",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-slam-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "pybullet",
+        "mode": "nav",
+        "maps": [
+          "nav_empty",
+          "nav_obstacle"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_empty/report.json",
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-pybullet-nav-nav_obstacle/report.json"
+        ]
+      },
+      {
+        "backend": "isaac",
+        "mode": "loc",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-loc-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "isaac",
+        "mode": "slam",
+        "maps": [
+          "nav_empty"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-slam-nav_empty/report.json"
+        ]
+      },
+      {
+        "backend": "isaac",
+        "mode": "nav",
+        "maps": [
+          "nav_empty",
+          "nav_obstacle"
+        ],
+        "reports": [
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_empty/report.json",
+          "docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_obstacle/report.json"
+        ]
+      }
+    ],
+    "default_algorithms": {
+      "global_planning": "a_star_planner",
+      "local_planning": "pure_pursuit"
+    }
+  },
+  "output": "/workspace/molar/robot_lab_runtime/registry_previews/196a7b6b66a54317840e0e0c70873900",
+  "scope": "Embedded static inspection; no ROS nodes or simulator"
+}

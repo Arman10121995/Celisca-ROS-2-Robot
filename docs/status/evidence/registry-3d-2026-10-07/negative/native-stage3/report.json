@@ -1,0 +1,206 @@
+{
+  "cases": [
+    {
+      "kind": "robots",
+      "asset_id": "bumperbot",
+      "embedded_widget": ".!notebook.!registrytab.!frame2.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        480,
+        656,
+        3
+      ],
+      "colors": 231,
+      "orbit_changed_pixel_fraction": 0.17056338922764228,
+      "max_ui_gap_s": 0.5609699209999235,
+      "preparation_wall_s": 2.300660005001191,
+      "geometry_count": 8,
+      "triangles": 567370,
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/bumperbot/urdf/bumperbot.urdf.xacro",
+      "source_sha256": "349f94ba32e65a1b43fb2e8f2ea553365804cd38472be1459cee64207d8c3489",
+      "bounds": {
+        "min_xyz": [
+          -0.06877350062131882,
+          -0.0990998344814738,
+          7.839510328117028e-05
+        ],
+        "max_xyz": [
+          0.06877350062131882,
+          0.09909916339784697,
+          0.21298624972999097
+        ],
+        "center_xyz": [
+          0.0,
+          -3.355418134176613e-07,
+          0.10653232241663607
+        ],
+        "span_m": 0.3217635387562695
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/7c7b6126a6a04a23b4e5ffd6cc826747",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "maps",
+      "asset_id": "celisca_floor_2_furniture",
+      "embedded_widget": ".!notebook.!registrytab.!frame2.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        480,
+        656,
+        3
+      ],
+      "colors": 127,
+      "orbit_changed_pixel_fraction": 0.30742505081300814,
+      "max_ui_gap_s": 3.0212112789995444,
+      "preparation_wall_s": 12.398575772000186,
+      "geometry_count": 3,
+      "triangles": 7937664,
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world",
+      "source_sha256": "2c7061d96e32afbf2491ba904bb8429d245dc44fce27eebe8627cc80fcf7b4ca",
+      "bounds": {
+        "min_xyz": [
+          -23.59555227956772,
+          -13.75,
+          -0.1
+        ],
+        "max_xyz": [
+          23.478155891132356,
+          13.75,
+          2.3908503800153733
+        ],
+        "center_xyz": [
+          -0.05869819421768163,
+          0.0,
+          1.1454251900076866
+        ],
+        "span_m": 54.57461256441366
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/0a4beca9adc6408988b00ba6a8cd8dcf",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "robots",
+      "asset_id": "menagerie_franka_emika_panda",
+      "embedded_widget": ".!notebook.!registrytab.!frame2.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        480,
+        682,
+        3
+      ],
+      "colors": 325,
+      "orbit_changed_pixel_fraction": 0.13196480938416422,
+      "max_ui_gap_s": 5.75964334100172,
+      "preparation_wall_s": 1.904379899999185,
+      "geometry_count": 58,
+      "triangles": 134888,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml",
+      "source_sha256": "96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273",
+      "bounds": {
+        "min_xyz": [
+          -0.1902164723038609,
+          -0.15048039708810806,
+          -0.08519318778592305
+        ],
+        "max_xyz": [
+          0.6551748910376813,
+          0.14990462611167532,
+          0.826023521014247
+        ],
+        "center_xyz": [
+          0.23247920936691022,
+          -0.0002878854882163717,
+          0.37041516661416196
+        ],
+        "span_m": 1.278762530641174
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/fbfb7bde6ce843e6b06e28bbae010361",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "robots",
+      "asset_id": "asset_r2_description_r2_left_forearm",
+      "embedded_widget": ".!notebook.!registrytab.!frame2.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        480,
+        704,
+        3
+      ],
+      "colors": 355,
+      "orbit_changed_pixel_fraction": 0.09221413352272727,
+      "max_ui_gap_s": 0.27783371999976225,
+      "preparation_wall_s": 0.8818210509998607,
+      "geometry_count": 12,
+      "triangles": 7918,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2_left_forearm/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf",
+      "source_sha256": "8e2a524959c5829d41357c706e2853456092fe1e2ce23881edc2ceeee7163698",
+      "bounds": {
+        "min_xyz": [
+          -0.14170120187453003,
+          -0.06350000202612953,
+          -0.017622302026557922
+        ],
+        "max_xyz": [
+          0.2613052376050603,
+          0.10509871129514078,
+          0.48117877568148887
+        ],
+        "center_xyz": [
+          0.059802017865265136,
+          0.020799354634505628,
+          0.23177823682746548
+        ],
+        "span_m": 0.6630552250893689
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/1e48c272f3aa4c14b3452f9c96da5ad5",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "robots",
+      "asset_id": "asset_r2_description_r2c6",
+      "embedded_widget": ".!notebook.!registrytab.!frame2.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        480,
+        659,
+        3
+      ],
+      "colors": 660,
+      "orbit_changed_pixel_fraction": 0.10939238745574102,
+      "max_ui_gap_s": 0.7078495060013665,
+      "preparation_wall_s": 1.438897005000399,
+      "geometry_count": 72,
+      "triangles": 346502,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_r2_description_r2c6/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99/model.urdf",
+      "source_sha256": "6d760e0d85644f9cd74b5da444eb1a60d98f176b56cb0af45ae885986ec0e6c2",
+      "bounds": {
+        "min_xyz": [
+          -0.8045883963530511,
+          -1.179284666901967,
+          -1.3981470868062806
+        ],
+        "max_xyz": [
+          0.4207345952872566,
+          1.1843249330062675,
+          1.0029102299745625
+        ],
+        "center_xyz": [
+          -0.19192690053289727,
+          0.002520133052150264,
+          -0.19761842841585908
+        ],
+        "span_m": 3.5851280330118676
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/6895414a024c4084a16aa68fbb985bc5",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    }
+  ],
+  "scope": "Actual embedded Tk/OpenGL geometry and input; no physics or mission qualification",
+  "baseline": "18ecdd24172fd6adfa0d5e2c55809dd2d882d4ae"
+}
