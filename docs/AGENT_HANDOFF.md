@@ -3,7 +3,8 @@
 These are the repository's current operating rules. The dated
 [2026-09-07 audit](status/audit-2026-09-07.md) is historical evidence, not the
 current source snapshot; use [`platform-status.yaml`](status/platform-status.yaml)
-for live task state and the [workflow](WORKFLOW.md) for commands.
+for live task state, [current status](status/CURRENT_STATUS.md) for the
+published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Read first, in this order
 
@@ -51,6 +52,13 @@ for live task state and the [workflow](WORKFLOW.md) for commands.
   (e.g. `R1.1: fix benchmark executable ROS placement`).
 
 ## Current continuation
+
+Published runtime checkpoint **`091d388`** passes required build/fast/physics/
+integration/registry CI. Final GUI and normal physical Drive/Panda acceptance
+have separate actual artifacts. The user additionally requests all maintained
+documentation to match this state: README, roadmap, status, tutorials, workflow,
+architecture, tests, package guides and agent entry points. Keep dated reports
+historical, correct broken commands/links, and retain full-release blockers.
 
 The latest October 7 GUI priority is implemented as a **control column**, not
 a row. Read [the workspace guide](tutorials/gui-workspace.md): Drive/Arm/Hand/

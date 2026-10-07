@@ -1,5 +1,9 @@
 # Sensor Fusion Method Comparison
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 > Draft template, not a measured comparison. The 2026-10-02 audit withdrew
 > the generated scores and placeholder command claims. R9.2 remains partial.
 
@@ -42,9 +46,9 @@ five robot methods or produce the proposed comparison results below. Follow
 [workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
 
 
-## Expected Results
+## Proposed artifacts
 
-This tutorial produces the following artifacts:
+An executed comparison must produce and validate these artifacts:
 
 - `docs/tutorials/sensor_fusion_comparison.md`
 - `docs/tutorials/sensor_fusion_results.json`
@@ -59,23 +63,24 @@ This tutorial produces the following artifacts:
 - [ ] Clear recommendations documented
 
 
-## Related Tutorials
+## Related tutorials
 
-- [All Tutorials Index](../README.md)
-- [Comparison Guide for {tutorial.category.value} Category](./{tutorial.category.value}_comparison.md)
-- [Failure Interpretation Guide](./{tutorial.category.value}_failures.md)
-- [Parameter Study Guide](./{tutorial.category.value}_parameter_study.md)
+- [Tutorial index](README.md)
+- [Numerical learning notes](sensor_fusion.md)
+- [Related comparison draft](sensor_fusion_comparison.md)
+- [Measured-run and failure workflow](../WORKFLOW.md)
+- [Current done/remaining checklist](../status/CHECKLIST.md)
 
 ## Notes
 
 - This tutorial assumes you have a working robot_lab installation
 - All commands should be run from the workspace root
-- For GUI tutorials, ensure you have a display available or use X11 forwarding
+- For GUI tutorials, ensure you have a display available or use a tested X11 display
 - Results may vary based on your hardware configuration
 
 ---
 
-*Last updated: 2026-10-01
+*Draft reviewed: 2026-10-07; original generated template: 2026-10-01*
 
 *Part of R9.2: Seven Real Comparison Tutorials
 

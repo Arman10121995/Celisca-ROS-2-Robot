@@ -1,7 +1,10 @@
 # Extension continuation — October 7, 2026
 
 The platform remains **partial**. Work continues directly on `master` from
-`18ecdd2`, with exact source/installed/asset stages in the trial manifests.
+`18ecdd2`; its delivered runtime checkpoint is **`091d388`**, with exact
+source/installed/asset stages in the trial manifests. The
+[current overview](CURRENT_STATUS.md) collects the published GUI, inventory,
+CI and remaining work.
 The [October 2 audit](audit-2026-10-02.md) and [October 6 work](continuation-2026-10-06.md)
 remain within their recorded scopes. Extensions have priority over the older
 roadmap; imports and tests do not establish robot missions.
@@ -102,8 +105,9 @@ routes and noisy hardware localization need their own qualification.
 
 The shared named-map command change was followed by an actual normal-profile
 MuJoCo/Display/`nav_empty` Plan/Execute repeat, followed by a second normal
-grouped-GUI regression after the shared SDF visual-reader change. The latest
-two physical TCP errors are 0.00656 m / 0.771° and 0.00607 m / 0.762°.
+grouped-GUI regression after the shared SDF visual-reader change. That grouped-stage repeat
+measures 0.00656 m / 0.771° and 0.00607 m / 0.762°. The final control-column
+repeat above is the current strict source certificate; both stages are retained.
 Floor/self-collision and unreachable
 rejection, joint/finger invalidation, Cancel/Stop/heartbeat loss, monotonic
 Reset/Home, Live Monitor and all four clean child exits pass. The exact new
@@ -116,12 +120,19 @@ mobile manipulation and cross-backend control remain open.
 
 ## CI and verification boundaries
 
-Exact `18ecdd2` [remote CI](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37586958626)
-passes the full build, fast, physics, integration and registry checks. The
-previous `dc39922` ROS-import failures are retained; the unchanged contracts
-now run in the sourced integration tier. ROS's canonical Trimesh dependency
-key resolves. Later TurtleBot3 source changes require their own exact CI.
-See [CI evidence](evidence/ci-extensions-2026-10-07/README.md).
+Exact published `091d388` [remote CI](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37617835178)
+passes the full 25-package core build, **933 fast checks / four skips / four
+deselections**, **20 physics checks**, **134 integration checks / twelve skips**
+and registry validation. Final local GUI has **94 passes**, plus five focused
+real-Tk layout passes. The preceding control-column stage has 936 fast passes
+(one skip/four deselections) and 146 integration passes. Their host/source
+stages and explicit skips remain separate from actual robot trials.
+
+The earlier `18ecdd2` tier repair also passed; `dc39922` ROS-import failures
+remain recorded. Those unchanged contracts run in sourced integration, and
+ROS's canonical Trimesh dependency key resolves. Later runtime changes require
+their own exact CI. See [CI evidence](evidence/ci-extensions-2026-10-07/README.md)
+and [Testing](../TESTING.md).
 
 All large source checkouts, trials, traces, maps and logs remain on the
 workspace SSD. The completed PX4 storage relocation is preserved. Individual

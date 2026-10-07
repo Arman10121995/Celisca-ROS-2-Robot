@@ -17,8 +17,8 @@ mission. Keep all large artifacts on the mounted workspace SSD.
 
 1. Inspect `git status --short` and the task ledger. Preserve existing edits.
    Claim the next patch and record any additional scope paths before changing
-   shared code. October 7 source baseline is `18ecdd2` plus the containing
-   commit's documented source stages; installed packages can still be older
+   shared code. Published runtime checkpoint is `091d388`, with the
+   [current status](status/CURRENT_STATUS.md) and documented source stages; installed packages can still be older
    than source. Read [the latest continuation](status/continuation-2026-10-07.md)
    before repeating completed TurtleBot 3/4 or native Panda implementation.
 2. Source `/opt/ros/humble/setup.bash` and `install/setup.bash`. Build changed
@@ -218,6 +218,13 @@ MuJoCo walking policy runs there. Gazebo/Isaac modes require their own actuation
 and sensing proof; retain a clear unavailable reason until that exists.
 
 ## Documentation, GUI and CI completion
+
+The exact published `091d388` CI passes core build, 933 fast checks (four
+skips/four deselections), 20 physics checks, 134 integration checks (twelve
+skips) and registry validation. Final local GUI/Drive/Panda evidence is separate.
+Keep [current status](status/CURRENT_STATUS.md), README, roadmap, tutorial
+indexes, workflow, architecture, testing and package guides consistent. Mark
+older reports historical; preserve their actual measurements and failures.
 
 The October 7 redesign places controls/limits in Launch's right-hand column.
 See [GUI workspace](tutorials/gui-workspace.md). Controller widgets now belong

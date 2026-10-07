@@ -1,5 +1,9 @@
 # TurtleBot 4 in Robot Lab
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Run
 
 The official ROS 2 Humble **Standard** and **Lite** descriptions are installed
@@ -16,7 +20,7 @@ comes from hashed backend-specific measurements. Original visual-material
 parity, vendor hazard/docking behavior and other-map missions remain open.
 
 For a first drive test, choose `nav_empty`, Display and the desired simulator.
-Run, open Drive and enable keyboard control. Enabling it publishes no motion.
+Run, open **Launch → Drive & limits** in the right-hand column and enable keyboard control. Enabling it publishes no motion.
 Hold **W/S** for forward/reverse and **A/D** for left/right rotation. Releasing
 input ramps to zero; **Space** or **Stop** sends zero immediately. The GUI
 buttons use the same control path. The displayed linear/angular values are

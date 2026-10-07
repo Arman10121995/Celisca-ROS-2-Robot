@@ -1,5 +1,10 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+Updated October 7, 2026 against published runtime checkpoint `091d388`.
+Read [current status](status/CURRENT_STATUS.md) and
+[the continuation](status/continuation-2026-10-07.md) for measured scopes and
+remaining owners; exact CI and real GUI/robot evidence are separate.
+
 The October 5 user request extends the existing robot/map/algorithm project.
 Follow the [ledger](status/platform-status.yaml), [roadmap](../ROADMAP.md) and
 [stabilization guide](PATCH_EXECUTION_GUIDE.md). Work on `master`; large assets,
@@ -193,7 +198,7 @@ with Cancel/Stop/watchdog and GUI reset; see
 [grasp evidence](status/evidence/panda-gripper-2026-10-06/README.md).
 Native Panda MoveIt KDL/OMPL/FCL Cartesian Plan/Execute now has measured
 static-world/native-geometry collision and physical TCP proof in `nav_empty`;
-see [Cartesian evidence](status/evidence/panda-cartesian-2026-10-06/README.md).
+see [final control-column Cartesian evidence](status/evidence/panda-cartesian-controls-column-2026-10-07/README.md).
 Servo, dynamic/attached-object scenes, arbitrary repeated pick/place, other
 hands and cross-backend manipulation qualification remain. R5.9 is queued; the source
 catalog does not implement mobile manipulation. Preserve the wheeled and legged workflows while adding
@@ -409,7 +414,7 @@ separate. The old TurtleBot4/Panda contracts must survive shared changes.
     mission evidence in separate records.
 13. A shared GUI/bringup change also needs a native Panda normal-profile
     Cartesian repeat before refreshing its strict certificate. The October 7
-    repeat is in [Panda grouped-GUI regression](status/evidence/panda-cartesian-grouped-gui-2026-10-07/README.md).
+    repeat is in [Panda control-column regression](status/evidence/panda-cartesian-controls-column-2026-10-07/README.md).
     Preserve its original three actuator/control files and physical cube
     grasp certificate. Changing unrelated documentation links does not qualify
     a robot or justify replacing source hashes without actual runtime proof.
@@ -515,7 +520,7 @@ and inspect exact CI after the authorized master push.
    preserve the SDK hashes and [upstream lifetime report](https://github.com/moveit/moveit2/issues/1597).
    A plugin/version change needs a new shutdown trial. Retain failed raw logs.
 7. The actual archived producer in
-   `status/evidence/panda-cartesian-2026-10-06/producer.py` takes
+   `status/evidence/panda-cartesian-controls-column-2026-10-07/final-responsive/producer.py` takes
    `PANDA_PROBE_OUT` (new SSD directory) and `PANDA_PROBE_NORMAL=1` for the
    installed profile. Run it under `xvfb-run -a` with a dedicated ROS domain.
    Source/SDK/native hashes precede launch. Its optional flag override is

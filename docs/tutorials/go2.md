@@ -1,5 +1,9 @@
 # Go2 flat-ground policy: bounded runtime evidence
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 This tutorial exercises the opt-in Go2 flat-ground ONNX policy through the
 standard MuJoCo ROS route. It is a controlled evidence walkthrough, not a
 claim that Go2 terrain traversal, navigation or the GUI velocity-base mode is
@@ -7,7 +11,7 @@ qualified.
 
 The recorded evidence is under
 [`docs/status/evidence/r52-go2-policy-2026-09-25/`](../status/evidence/r52-go2-policy-2026-09-25/README.md).
-At the current source snapshot, the policy has produced measured forward
+At the recorded September source stage, the policy produced measured forward
 motion, a stop, a large turn, command-loss stop, feed-forward/inverse reverse A/Bs
 and two five-case inverse-map flat-ground screening suites. The suites passed all
 bounded checks, but the named stairs task failed at the first ledge; low-speed
@@ -24,15 +28,18 @@ this workflow.
 From the workspace root:
 
 ```bash
-cd /home/molar1/bumperbot_ws
+cd /workspace/molar/ros_ws/bumperbot_ws
+source scripts/ssd_env.sh
+ROBOT_LAB_TUTORIAL_RUN_DIR=$(mktemp -d "$ROBOT_LAB_RUNTIME_ROOT/go2-tutorial-XXXXXX")
+export ROBOT_LAB_TUTORIAL_RUN_DIR
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 export ROS_DOMAIN_ID=78
 ```
 
 The policy is deliberately opt-in. The normal Go2 stance controller remains
-the default. A GUI checkbox is available for the Go2/MuJoCo localization
-profile and fills the same launch argument shown below.
+the default. In **Launch → Options**, the policy checkbox for the Go2/MuJoCo localization
+profile is available and fills the same launch argument shown below.
 
 ## Run a stance and forward/stop trial
 
@@ -45,7 +52,7 @@ terminal with the same environment.
 # Terminal 1: start the probe and leave it running.
 python3 docs/status/evidence/r52-go2-2026-09-25/probe_stance.py \
   --duration 7 --drive-vx 0.25 --drive-start 1 --drive-end 4 \
-  > /tmp/go2-forward.json 2> /tmp/go2-forward.log
+  > "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-forward.json" 2> "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-forward.log"
 ```
 
 ```bash
@@ -73,7 +80,7 @@ windows fixed when comparing trials.
 python3 docs/status/evidence/r52-go2-2026-09-25/probe_stance.py \
   --duration 7 --drive-wz 0.5 --drive-start 1 --drive-end 4 \
   --drop-command-after-drive \
-  > /tmp/go2-turn-command-loss.json 2> /tmp/go2-turn-command-loss.log
+  > "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-turn-command-loss.json" 2> "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-turn-command-loss.log"
 ```
 
 For command loss, stop the publisher during the drive window and verify that
@@ -91,7 +98,7 @@ validated reverse controller.
 ```bash
 python3 docs/status/evidence/r52-go2-2026-09-25/probe_stance.py \
   --duration 7 --drive-vx -0.25 --drive-start 1 --drive-end 4 \
-  > /tmp/go2-reverse.json 2> /tmp/go2-reverse.log
+  > "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-reverse.json" 2> "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-reverse.log"
 ```
 
 For the next R5.2 iteration, run the reproducible suite first; it records raw
@@ -100,7 +107,7 @@ five-case runner also includes command loss and zero-command settle:
 
 ```bash
 docs/status/evidence/r52-go2-policy-2026-09-25/run_flat_ground_suite.sh \
-  --out-dir /tmp/go2-flat-suite \
+  --out-dir "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-flat-suite" \
   --domain-base 211 \
   --map inverse
 ```
@@ -145,7 +152,7 @@ real transitions:
 ```bash
 ROS_DOMAIN_ID=231 FORCE_N=35.0 \
   docs/status/evidence/r52-go2-policy-2026-09-25/run_perturbation_trial.sh \
-  /tmp/go2-perturbation
+  "$ROBOT_LAB_TUTORIAL_RUN_DIR/go2-perturbation"
 ```
 
 The recorded sweep used a 0.2 s lateral pulse at 3.0 s with a 2.0 s recovery
@@ -252,8 +259,8 @@ To measure the sequence itself, spawn the robot already down. `spawn_pitch` and
 # 1.4 rad nose-down, then the ladder: measured stand at 0.33 m, held to 20 s
 FORCE_N=0.0 SPAWN_PITCH=1.4 FALL_RECOVERY=true \
   FALL_RECOVERY_TIMEOUT_S=8.0 DURATION_S=20 \
-  ../status/evidence/r52-go2-policy-2026-09-25/run_perturbation_trial.sh \
-  /tmp/placed_pitch
+  docs/status/evidence/r52-go2-policy-2026-09-25/run_perturbation_trial.sh \
+  "$ROBOT_LAB_TUTORIAL_RUN_DIR/placed_pitch"
 ```
 
 From that pose the ladder walks `tuck → roll → crouch → stand`, reports
@@ -418,3 +425,8 @@ After any trial, update the R5.2 evidence README and the machine-readable
 ledger with the revision, exact command, seed/protocol, raw artifact paths and
 remaining limitations. Follow the general [workflow](../WORKFLOW.md) and
 [roadmap](../../ROADMAP.md) before changing defaults or enabling a new mode.
+
+The later [MuJoCo startup/feedback repair](../status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md)
+preserves bounded upright Celisca walking. It does not resolve the recorded
+terrain/recovery failures. Current GUI Drive and limits are in Launch's right-hand
+column; the flat-ground policy option remains explicit. Store each new run on SSD.

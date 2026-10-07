@@ -1,5 +1,9 @@
 # Robot Lab GUI workspace
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Run the GUI
 
 Start the rebuilt GUI from a sourced workspace:

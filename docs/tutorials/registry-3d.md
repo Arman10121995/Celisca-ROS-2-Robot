@@ -1,8 +1,12 @@
 # Inspect robots and worlds inside the GUI
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Run the embedded viewer
 
-Open **Registry**, choose **Robots** or **Environments**, select an entry and
+Open **Registry · 3D** from the sidebar, choose **Robots** or **Environments**, select an entry and
 click **Preview 3D**. The geometry appears in the Registry's **3D Preview**
 pane inside Robot Lab GUI. The same button in **Worlds** and
 **Installed Extensions** opens this pane.
@@ -32,7 +36,8 @@ TurtleBot3 contains Burger/Waffle/Waffle Pi, Celisca floor 2 contains shell,
 furniture and actors, and R2 contains complete source revisions and retained
 subassemblies. Search still finds the original profile or registry ID.
 
-Expand a Registry family to inspect its variants and components. A forearm
+Use Registry's category/type filters and tagged search; drag its divider to
+resize the catalog beside native 3D/details. Expand a Registry family to inspect its variants and components. A forearm
 can be previewed, but **Open in Launch** is disabled for an isolated component.
 Complete R2 and Valkyrie source assemblies already contain their corresponding
 parts. Unattached grippers stay in a component library until a compatible

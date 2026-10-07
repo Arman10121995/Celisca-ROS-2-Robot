@@ -1,41 +1,38 @@
 # Robot Lab architecture: current implementation and target
 
-Current documentation snapshot: source revision `d06a411`, 2026-09-25. The
-2026-09-07 audit at `dff388f` remains historical evidence for its exact scope;
-later runtime results are recorded in the [status ledger](../status/platform-status.yaml)
-and evidence directories. This page separates implemented wiring from target
-architecture and does not claim universal runtime qualification.
-
-Start with [the support matrix](../status/support-matrix.md), the [current
-status ledger](../status/platform-status.yaml) and the [operational workflow](../WORKFLOW.md).
-The 2026-09-07 [audit](../status/audit-2026-09-07.md) remains historical
-evidence for its exact scope. Implementation order, task ownership,
-and acceptance criteria belong in [ROADMAP.md](../../ROADMAP.md); an agent
-resuming work must also read [AGENT_HANDOFF.md](../AGENT_HANDOFF.md).
+Documentation updated October 7, 2026 against published runtime checkpoint
+`091d388`. The [current status](../status/CURRENT_STATUS.md),
+[ledger](../status/platform-status.yaml) and
+[support matrix](../status/support-matrix.md) distinguish implemented wiring,
+named measured missions and remaining qualification. Historical audits and
+source-stage reports retain their original scope.
 
 ## Goal and present gap
 
-The goal is a unified learning and evaluation platform for mobile, legged,
-humanoid, and aerial robots in 2D and 3D environments. Users should independently
-select perception, localization, state estimation, sensor fusion, global
-planning, local planning, and control algorithms, then compare measured
-performance under the same scenario conditions. Five genuinely distinct,
-runnable choices per category is a target, not a claim established by catalog
-counts.
+The target is a reproducible learning platform with independently selected
+robots, simulators, maps and seven algorithm categories. Five substantive,
+ROS-connected and fairly measured alternatives in every category remain a
+qualification goal. Metadata, numerical examples and static previews do not
+close it.
 
-The current repository has a substantial Bumperbot-oriented ROS stack, robot and
-map assets, four simulator launch adapters, a desktop GUI, algorithm examples,
-and benchmark/reporting foundations. The shared resolver/CLI path and GUI
-composition path now share typed validation and resolved manifests, while
-runtime compatibility remains combination-specific. Non-Gazebo clock, truth,
-command-watchdog, TF and readiness contracts have been repaired, but class
-locomotion, terrain, aerial flight and broad algorithm comparison remain
-partial. The active continuation task is R5.2 Go2 locomotion.
+The current system includes profile-driven four-backend bringup, shared GUI/CLI
+resolution, physical wheel drives, measured TurtleBot3/TurtleBot4 modes, native
+Panda joint/Hand/MoveIt control, and actual PX4 X500 flight on Gazebo Harmonic.
+Launch has a separate right-hand control column and structural robot filters;
+Registry has grouped variants/components and native embedded 3D inspection.
+These workflows have exact plant/world/backend/source evidence. Remaining
+asset/controllers/world missions, algorithm comparisons, concurrency and
+clean-host reproduction are partial.
+
+The current user priority is R3.6 and R6.5–R6.7, then R5.10 and R5.7–R5.9,
+before the older wheel/legged/comparison roadmap. Follow actual owners and
+[AGENT_HANDOFF](../AGENT_HANDOFF.md); preserve separately owned terrain and
+occupancy work.
 
 ## Actual source-tree and package map
 
-There are 26 discoverable ROS packages at the audited baseline, including optional
-ORB-SLAM3. Nested vendor descriptions are assets of the enclosing
+There are 26 discoverable ROS packages; current CI builds 25 and excludes
+optional ORB-SLAM3. Nested vendor descriptions are assets of the enclosing
 `robot_lab_robots` package, not individually supported robot stacks.
 
 ```text
@@ -52,6 +49,7 @@ src/
   robot_lab_pybullet/       # PyBullet bridge and spawner
   robot_lab_mujoco/         # MuJoCo bridge and spawner
   robot_lab_isaac/          # ROS bridge plus external Isaac runtime process
+  robot_lab_utils/          # shared contracts, source geometry, grouping/taxonomy
   robot_lab_algorithms/     # numerical examples and ROS adapters
   robot_lab_gui/            # Tkinter launch/control center
   robot_lab_*/              # ROS stack, hardware utilities and examples below
@@ -72,7 +70,7 @@ src/
 | `robot_lab_controller`, `robot_lab_utils` | Wheel control, joystick/multiplexer, mapping/cleaning, safety | Translate commands, enforce limits and stop safely |
 | `robot_lab_algorithms` | Additional numerical algorithms and entry points | One functioning contract per implementation; no empty-node integrations |
 | `robot_lab_benchmark` | Records, execution helpers, reporting and regression utilities | Measure real runs; never manufacture success or ground truth |
-| `robot_lab_gui` | Profiles, catalog browser, drive/map tools, monitoring | Use the same resolver/runner as CLI; no private support rules |
+| `robot_lab_gui` | Launch control column, category/type filters, native Registry 3D, profiles/maps/status/monitoring | Use the same resolver/runner as CLI; no private support rules |
 | `robot_lab_vacuum_cleaning` | Additional basic vacuum controller | Reconcile duplication with cleaning logic in `robot_lab_controller` |
 | `robot_lab_firmware`, `robot_lab_msgs` | Serial/Arduino interface and shared messages | Separate hardware operation from simulation-only workflows |
 | `robot_lab_cpp_examples`, `robot_lab_py_examples`, `orbslam3` | Teaching examples and optional external integration | Keep optional dependencies out of the reference build's critical path |
@@ -84,9 +82,9 @@ src/
 ```text
 GUI or ros2 launch robot_lab_bringup simulated_robot.launch.py
   → load robot profile + map profile + mode profile
-  → check a subset of profile requirements
+  → resolve exact source profile, backend, mode, algorithms and runtime gates
   → choose Gazebo / PyBullet / MuJoCo / Isaac launch adapter
-  → launch the mode's localization, mapping and/or navigation nodes
+  → launch the compatible localization/mapping/navigation, native-arm or Flight stack
   → sensors → pose estimate → planner → path follower → command → robot
 ```
 
@@ -94,26 +92,41 @@ The implementation is
 [simulated_robot.launch.py](../../src/robot_lab_bringup/launch/simulated_robot.launch.py).
 Its configuration sources are:
 
-- [Robot launch profiles](../../src/robot_lab_robots/config/robots.yaml).
+- [Core robot profiles](../../src/robot_lab_robots/config/robots.yaml) and pinned SSD installed extension profiles.
+- [Grouping](../../src/robot_lab_bringup/config/asset_groups.yaml) and
+  [structural taxonomy](../../src/robot_lab_bringup/config/robot_taxonomy.yaml); neither grants controller support.
+- [Measured extension support](../status/asset-runtime-support.yaml) with exact source/numeric guards.
 - [Environment launch profiles](../../src/robot_lab_bringup/config/sim_maps.yaml).
 - [Mode profiles](../../src/robot_lab_bringup/config/sim_modes.yaml).
 - Package-specific controller, localization, mapping and Nav2 configuration.
 
-| Mode | Current launch intent | Qualification caveat |
+| Mode | Current path | Qualification boundary |
 |---|---|---|
-| `display` | Gazebo selection uses RViz; other selections include their simulator viewer | Non-Gazebo display forwards `gui=true`; headless display behavior remains backend-specific |
-| `loc` | Known-map AMCL plus local EKF and drive controls | Needs compatible map, sensor topics, clock and TF; legged/humanoid localization is not a locomotion qualification |
-| `slam` | SLAM Toolbox plus local state estimation | Needs working scan/odometry; not qualified on every backend |
-| `3d_slam` | RTAB-Map with RGB, depth, camera info and optional points | RGB-D exists on recorded PyBullet/MuJoCo/Isaac smokes; no complete RTAB-Map mission is claimed |
-| `nav` | Known-map localization plus Nav2 | Bumperbot has measured open-arena missions; other robot/backend/map cells remain separate |
+| `display` | Selected robot/world and requested backend/RViz viewers; either robot or world may be omitted | Source imports and rest/display behavior remain asset/backend-specific; native Panda additionally has its guarded arm workflow |
+| `loc` | Known-map localization and compatible state estimation/Drive | Named T3/T4 and mobile screens; passive legged localization does not supply a gait |
+| `slam` | SLAM Toolbox, odometry and actual map export | Named T3/T4 and selected 4WS/mecanum mapping/reset screens; full matrix remains |
+| `3d_slam` | RTAB-Map RGB/depth/info and real database/PCD export | Named T4 and selected wheeled RGB-D screens; RGB-only T3 cameras remain unavailable |
+| `nav` | Map/localization/Nav2 with robot-specific overlays | Named clear/obstacle missions; other maps and repeated avoidance/contact tasks remain |
+| `flight` | PX4 X500 FCU/ROS2 control on Gazebo Harmonic | Actual `nav_empty`/`nav_obstacle` flight/altitude/goals/land; wider world/aerial autonomy remains |
 
-Configured Nav2 defaults are SmacPlanner2D and Regulated Pure Pursuit; do not infer
-the active implementation from the registry inventory. Gazebo uses the
-`ros2_control` layer; other bridges implement their own command subscriptions and
-state publication. The legacy EKF expects `/robot_lab_controller/odom`, while
-those bridges publish `/odom`. The joystick multiplexer targets
-`robot_lab_controller/cmd_vel_unstamped`, while the bridges subscribe to
-`/cmd_vel`. These need deliberate adapters and tests.
+Robot and steering overlays choose compatible planners/controllers. Differential
+bases use their measured Nav2 defaults; car turning constraints and parallel
+4WS critics are explicit. The GUI command and shared resolver apply those
+choices before startup.
+
+The `/key_vel` Drive route reaches the multiplexer and each selected controller.
+Non-Gazebo bridges accept the post-mux command with a raw command fallback;
+Gazebo uses the active `ros2_control` interfaces. Controller odometry and
+`/odom/ground_truth` remain separate. Sensors use authored link frames; filter/
+TF ownership and reset must be verified per exact cell. Robot reset preserves
+monotonic simulation time and reseeds estimators from measured state.
+
+Native Panda uses original MuJoCo position/finger actuators, guarded actions
+and a source-derived static MoveIt scene. PX4 Flight uses its FCU and actual
+X500 plant; wheel controllers and passive model holds do not implement either
+workflow. See [Panda](../tutorials/panda_arm.md),
+[PX4](../tutorials/px4_x500.md) and the
+[GUI workspace](../tutorials/gui-workspace.md).
 
 ### Shared resolver and GUI composition route
 
@@ -303,11 +316,12 @@ Progress from schema/references to assets/install, launch construction, numerica
 correctness, ROS contracts, scenario smoke and repeated measured benchmarks.
 Each level proves only its own scope.
 
-At `d06a411`, the fast suite records 466 passed and 1 skipped, and the latest
-contact-fidelity map suite records 35 passed.
-or all-missions certification. The 2026-09-07 audit remains the source for its
-historical selected counts and exclusions; use the [workflow](../WORKFLOW.md) for
-current reproduction and evidence rules.
+Exact `091d388` CI passes the core build, 933 fast checks with four skips/four
+deselections, 20 physics checks, 134 integration checks with twelve skips and
+registry validation. Final local GUI and physical Drive/Panda checks have
+separate measured artifacts. [Testing](../TESTING.md) and
+[current status](../status/CURRENT_STATUS.md) retain the scopes; full mission,
+concurrency, hardware and clean-host qualification remain open.
 
 When completing a roadmap task, update evidence, support matrix and machine status
 together. Keep historical counts dated. Verify licenses per asset/dependency;

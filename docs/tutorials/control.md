@@ -1,6 +1,10 @@
 # Control Algorithms
 
-This tutorial covers the seven control algorithms implemented in `robot_lab_algorithms`, providing comprehensive guidance on low-level robot control, trajectory tracking, and model-based control techniques for various robot classes.
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
+These are educational control notes and numerical API sketches in `robot_lab_algorithms`. PID/LQR/MPC/nonlinear labels do not establish complete ROS-connected, measured robot controllers. R7.8 and fair comparisons remain partial.
 
 ## Overview
 
@@ -835,7 +839,12 @@ def evaluate_controller(controller_class, systems, setpoints, **kwargs):
     return results
 ```
 
-## Benchmarking Results
+## Historical illustrative benchmark tables
+
+These values have no linked executed trial, seed protocol, measured artifact
+or source/host manifest. They remain unmeasured placeholders and cannot rank
+methods or qualify R7/R9.2. Use [current status](../status/CURRENT_STATUS.md)
+for actual named robot evidence and the workflow for a real comparison.
 
 ### Performance Comparison (Position Control)
 

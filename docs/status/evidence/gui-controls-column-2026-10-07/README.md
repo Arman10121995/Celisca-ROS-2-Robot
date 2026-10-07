@@ -13,7 +13,9 @@ The sidebar, Logs and Stop motion retain existing commands/controllers.
 
 [Actual normal workspace producer](producer.py), [selection report](report.json)
 and screenshots cover nine views, exact autofilled commands, neutral input,
-all four control pages, tags and 1600/1024 sizes. These are interface checks;
+all four control pages, tags and 1600/1024 sizes. The
+[published-source check](published-source.json) confirms that twelve installed
+GUI/runtime files match the exact pushed revision `091d388`. These are interface checks;
 they do not qualify a flight or robot mission. Pre-trial screenshot fingerprints
 and [software verification](verification-manifest.json) retain their stages.
 

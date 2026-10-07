@@ -1,5 +1,10 @@
 # R3.4 command autofill follow-up
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+
 Date: 2026-09-11. Base revision: `726707a`, with the accompanying working-tree
 changes. Scope: GUI command generation, presentation, clipboard and execution
 dispatch; this is not simulator mission qualification.

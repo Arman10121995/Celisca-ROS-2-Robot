@@ -1,6 +1,8 @@
 # Robot Lab operational workflow
 
-This is the current source/evidence workflow for the repository. It separates
+Updated October 7, 2026 against runtime checkpoint `091d388`.
+[Current status](status/CURRENT_STATUS.md) lists the measured scopes.
+This is the source/evidence workflow for the repository. It separates
 static checks, isolated runtime probes, scenario trials and promotion claims.
 The machine-readable [status ledger](status/platform-status.yaml) is authoritative
 for task state and ownership; [ROADMAP.md](../ROADMAP.md) is authoritative for
@@ -12,7 +14,8 @@ Record the source revision and whether the tree is dirty before running a
 claim-producing check:
 
 ```bash
-cd /home/molar1/bumperbot_ws
+cd /workspace/molar/ros_ws/bumperbot_ws
+source scripts/ssd_env.sh
 git rev-parse --short HEAD
 git status --short --branch
 ```
@@ -32,15 +35,18 @@ simulator. Run it before live work:
 scripts/test_fast.sh
 ```
 
-At revision `d06a411` the recorded result is **466 passed, 1 skipped**, with
-registry cross-reference validation passing. The result is a source/static
-gate, not a clean build, GUI mission or simulator qualification. For a
+Published `091d388` CI records **933 fast passes, four skips and four
+deselections**, plus required build/physics/integration and registry checks.
+The final local GUI has 94 passes; the preceding local fast stage has 936.
+Each result has its own source/host scope in [Testing](TESTING.md) and
+[CI evidence](status/evidence/ci-extensions-2026-10-07/README.md). These checks
+are separate from robot missions and clean-host reproduction. For a
 ROS-dependent check, source the intended environment first:
 
 ```bash
 source /opt/ros/humble/setup.bash
 source install/setup.bash
-bash -c 'source /opt/ros/humble/setup.bash && scripts/test_tiers.sh integration'
+bash scripts/test_tiers.sh integration
 ```
 
 Optional physics tests must report an explicit skip when an engine is absent;
@@ -51,7 +57,7 @@ a skipped engine is not a passing engine result.
 Use the source registry for a quick inventory check:
 
 ```bash
-export PYTHONPATH="$PWD/src/robot_lab/robot_lab_registry${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="$PWD/src/robot_lab/robot_lab_registry:$PWD/src/robot_lab_utils:$PWD/src/robot_lab_adapter${PYTHONPATH:+:$PYTHONPATH}"
 python3 -m robot_lab_registry.cli validate \
   -c src/robot_lab/robot_lab_registry/config --cross-references
 ```
@@ -75,7 +81,8 @@ controller, sensor or task.
 ## 4. Isolate a live simulator run
 
 Use an unused `ROS_DOMAIN_ID`, non-conflicting simulator transport and an
-artifact directory outside the source tree. Never kill all ROS or simulator
+artifact directory on the mounted workspace SSD. Source `scripts/ssd_env.sh`
+and create a fresh directory under `$ROBOT_LAB_RUNTIME_ROOT`. Never kill all ROS or simulator
 processes to clean up another run. Prefer the repository's task-specific probe
 and capture both stdout/stderr and machine-readable output.
 

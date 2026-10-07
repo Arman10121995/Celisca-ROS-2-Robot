@@ -1,153 +1,75 @@
-# Robot Lab Tutorials
+# Robot Lab tutorials
 
-This directory contains existing guides and generated comparison drafts. The
-2026-10-02 audit found placeholder commands and invented comparison scores;
-**R9.2 remains partial**. Use exercised commands and actual measured artifacts
-from the current [audit](../status/audit-2026-10-02.md) and [workflow](../WORKFLOW.md).
+Updated October 7, 2026 against runtime checkpoint `091d388` and its named
+measurements. Start with [current status](../status/CURRENT_STATUS.md) and the
+[done/remaining checklist](../status/CHECKLIST.md). The project remains partial;
+a guide, imported model or numerical example does not qualify every mission.
 
-## Tutorial Categories
+## Operator guides
 
-### 🎯 Main Comparison Tutorials (R9.2)
+| Guide | Working scope and limits |
+|---|---|
+| [GUI workspace](gui-workspace.md) | Launch control column, categories/types, compatible defaults/autofill, limits and sidebar navigation |
+| [Registry 3D](registry-3d.md) | Native embedded source geometry, grouped variants/components and camera controls; static inspection |
+| [TurtleBot3](turtlebot3.md) | Three official models, measured four-backend Drive/localization/2D SLAM/export/navigation; RGB-only 3D SLAM remains unavailable |
+| [TurtleBot4](turtlebot4.md) | Standard/Lite, measured four-backend Drive/localization/2D/3D SLAM/export/navigation; other maps and vendor behavior remain |
+| [Native Panda](panda_arm.md) | MuJoCo joint/Hand controls, physical cube grasp and static-world MoveIt Plan/Execute; Servo/payload/other backends remain |
+| [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |
+| [Go2 policy](go2.md) | Bounded MuJoCo policy trials and their recorded failures; terrain/recovery/navigation remain unqualified |
 
-These seven drafts describe intended comparisons; they do not yet provide measured five-method results:
-
-1. **[Perception Algorithm Comparison: Obstacle Detection](./perception_comparison.md)**
-   - *Category: perception*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-1. **[Localization Algorithm Comparison: Pose Estimation](./localization_comparison.md)**
-   - *Category: localization*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-1. **[State Estimation Comparison: Filter Performance](./state_estimation_comparison.md)**
-   - *Category: state_estimation*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-1. **[Sensor Fusion Comparison: Multi-Sensor Integration](./sensor_fusion_comparison.md)**
-   - *Category: sensor_fusion*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-1. **[Global Planning Comparison: Path Optimization](./global_planning_comparison.md)**
-   - *Category: global_planning*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-1. **[Local Planning Comparison: Collision Avoidance](./local_planning_comparison.md)**
-   - *Category: local_planning*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-1. **[Control Algorithm Comparison: Motion Control](./control_comparison.md)**
-   - *Category: control*
-   - *Time: 75 minutes*
-   - *Audience: intermediate*
-
-### 📚 Additional Tutorials
-
-#### Comparison Guides
-
-- **[Perception Method Comparison](./comparison_perception.md)**
-- **[Localization Method Comparison](./comparison_localization.md)**
-- **[State Estimation Method Comparison](./comparison_state_estimation.md)**
-- **[Sensor Fusion Method Comparison](./comparison_sensor_fusion.md)**
-- **[Global Planning Method Comparison](./comparison_global_planning.md)**
-- **[Local Planning Method Comparison](./comparison_local_planning.md)**
-- **[Control Method Comparison](./comparison_control.md)**
-
-#### Robot/Backend Examples
-
-- **[PX4 X500 Flight in Gazebo Harmonic](./px4_x500.md)** — measured takeoff, hold, Drive, 3D goal and landing; available in GUI.
-
-- **[Bumperbot with gazebo Backend](./example_bumperbot_gazebo.md)**
-- **[Bumperbot with pybullet Backend](./example_bumperbot_pybullet.md)**
-- **[Bumperbot with mujoco Backend](./example_bumperbot_mujoco.md)**
-- **[Labbot with gazebo Backend](./example_labbot_gazebo.md)**
-- **[Go2 with mujoco Backend](./example_go2_mujoco.md)**
-- **[Berkeley Humanoid Lite with mujoco Backend](./example_berkeley_humanoid_lite_mujoco.md)**
-
-#### Failure Interpretation & Parameter Studies
-
-- **[Common Localization Failures](./failure_localization.md)**
-- **[Perception Limitations](./failure_perception.md)**
-- **[Planning Algorithm Failures](./failure_global_planning.md)**
-- **[Control System Instabilities](./failure_control.md)**
-- **[PID Tuning Parameter Study](./parameter_control.md)**
-- **[Localization Parameter Study](./parameter_localization.md)**
-- **[Planning Parameter Study](./parameter_global_planning.md)**
-
-## Qualification remaining
-
-Each comparison still needs exercised commands, measured results and plots,
-matched method/input/seed budgets, and shared GUI/CLI manifests. Existing
-metadata and generated scores do not satisfy those checks.
-
-## Getting Started
-
-1. **Prerequisites**: Ensure you have robot_lab installed and working
-2. **Beginner**: Start with the robot/backend examples
-3. **Intermediate**: Try the comparison tutorials for your area of interest
-4. **Advanced**: Explore failure interpretation and parameter studies
-
-## Method Coverage
-
-Each algorithm category has **5+ implemented methods**:
-
-- **Perception**: 5 methods
-- **Localization**: 5 methods
-- **State Estimation**: 5 methods
-- **Sensor Fusion**: 5 methods
-- **Global Planning**: 5 methods
-- **Local Planning**: 5 methods
-- **Control**: 5 methods
-
-## Results and Artifacts
-
-All tutorials generate:
-- ✅ Markdown documentation
-- ✅ Configuration files
-- ✅ Performance results (JSON/CSV)
-- ✅ Visualization plots
-- ✅ Comparison tables
-
-## Verification
-
-To verify all tutorials work:
+Use these commands from the existing workspace root:
 
 ```bash
-# Test all comparison tutorials
-python scripts/verify_tutorials.py
-
-# Run a specific tutorial
-python docs/tutorials/perception_comparison.md
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 run robot_lab_gui robot_lab_gui
 ```
 
-## Dependencies
+Reopen a GUI started before rebuilding. Drive, Arm, Hand and Drone pages are
+inside Launch's right-hand control column. Use the exact source variant and
+backend required by each guide; variants do not inherit controller support.
 
-R9.2 depends on:
-- ✅ R7.1 (Normalize numerical and ROS algorithm adapters)
-- ✅ R7.2-R7.8 (All algorithm categories with 5+ methods)
-- ✅ R3.4 (GUI composition)
+## Numerical learning material
 
-## Related Tasks
+The [learning index](index.md) explains the checked numerical APIs and their
+limits. [Perception](perception.md), [planning](planning.md),
+[localization](localization.md), [state estimation](state_estimation.md),
+[sensor fusion](sensor_fusion.md), [local planning](local_planning.md) and
+[control](control.md) contain educational material and implementation notes.
+Some examples are sketches or approximations; ROS node initialization and
+real input/output must be qualified separately.
 
-- [R9.1: Provenance and Licenses](../scripts/r9_1_provenance_framework.py)
-- [R9.3: Support Matrix Generation](r9_3_support_matrix.py)
-- [ROADMAP.md](../../ROADMAP.md)
+## Comparison drafts
 
----
+R7 breadth and R9.2 measured comparisons remain **partial**. The following
+pages describe planned experiments and artifact requirements. They do not
+provide five measured runnable methods per category or performance rankings.
 
-*Last updated: 2026-10-01
+| Category | Experiment draft | Comparison notes |
+|---|---|---|
+| Perception | [Obstacle detection](perception_comparison.md) | [Method comparison](comparison_perception.md) |
+| Localization | [Pose estimation](localization_comparison.md) | [Method comparison](comparison_localization.md) |
+| State estimation | [Filter performance](state_estimation_comparison.md) | [Method comparison](comparison_state_estimation.md) |
+| Sensor fusion | [Sensor integration](sensor_fusion_comparison.md) | [Method comparison](comparison_sensor_fusion.md) |
+| Global planning | [Path planning](global_planning_comparison.md) | [Method comparison](comparison_global_planning.md) |
+| Local planning | [Collision avoidance](local_planning_comparison.md) | [Method comparison](comparison_local_planning.md) |
+| Control | [Motion control](control_comparison.md) | [Method comparison](comparison_control.md) |
 
-*Status: R9.2 Implementation in Progress*
+Historical generated scores and placeholder commands were withdrawn by the
+[October 2 audit](../status/audit-2026-10-02.md). A fair comparison still needs
+actual executables/plugins, matched inputs/parameters/seed budgets, real
+recordings, independently checked metrics and reproducible plots.
 
+## Run documentation and source checks
 
-## Run
+```bash
+source scripts/ssd_env.sh
+bash scripts/test_tiers.sh fast
+```
 
-This page documents planned methods or configuration. Consult the
-[workflow](../WORKFLOW.md) and [completion audit](../status/audit-2026-10-02.md)
-for executable, scoped tests and remaining qualification. No measured comparison
-is established by this page alone.
+This checks source/numerical/configuration contracts. It does not execute
+Markdown as Python or produce the drafts' proposed robot comparisons. For
+ROS-dependent checks, source the workspace and follow [Testing](../TESTING.md).
+Use the [workflow](../WORKFLOW.md), [roadmap](../../ROADMAP.md) and
+[agent handoff](../AGENT_HANDOFF.md) to turn a draft into measured evidence.

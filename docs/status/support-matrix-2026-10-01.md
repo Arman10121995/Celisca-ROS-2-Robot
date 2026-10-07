@@ -1,5 +1,9 @@
 # Support Matrix
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
 > Superseded by the 2026-10-02 completion audit (`docs/status/audit-2026-10-02.md`).
 > This historical report contains metadata/demo completion claims that do not
 > establish full runtime qualification. Retain its data; use the current ledger
@@ -2199,9 +2203,9 @@ Based on the current support matrix and release gates:
 
 ## Related Files
 
-- [Provenance Report](../evidence/r9-1-provenance-licenses-2026-10-01.json)
-- [Tutorials Report](../evidence/r9-2-tutorials-2026-10-01.json)
-- [Platform Status](../platform-status.yaml)
+- [Provenance Report](evidence/r9-1-provenance-licenses-2026-10-01.json)
+- [Tutorials Report](evidence/r9-2-tutorials-2026-10-01.json)
+- [Platform Status](platform-status.yaml)
 - [ROADMAP](../../ROADMAP.md)
 
 ---

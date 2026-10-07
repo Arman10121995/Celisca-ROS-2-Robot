@@ -1,6 +1,10 @@
 # Local Planning Algorithms
 
-This tutorial covers the five local planning and trajectory generation algorithms implemented in `robot_lab_algorithms`. Local planners bridge the gap between global path planning and robot control by generating executable trajectories or velocity commands that consider robot dynamics, obstacles, and kinematic constraints.
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
+These are educational local-planning notes and numerical API sketches. A source class or method label does not establish a working Nav2 plugin or collision-safe robot mission. Use the active dispatch/profile and named measurements; R7.7 comparisons remain partial.
 
 ## Overview
 
@@ -561,7 +565,12 @@ def evaluate_local_planner(planner_class, scenarios, **kwargs):
     return results
 ```
 
-## Benchmarking Results
+## Historical illustrative benchmark tables
+
+These values have no linked executed trial, seed protocol, measured artifact
+or source/host manifest. They remain unmeasured placeholders and cannot rank
+methods or qualify R7/R9.2. Use [current status](../status/CURRENT_STATUS.md)
+for actual named robot evidence and the workflow for a real comparison.
 
 ### Computation Performance
 

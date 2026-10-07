@@ -1,5 +1,10 @@
 # Measured robot workflows and remaining gaps — October 2
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+
 This continues baseline `2a0aae2` on the Jetson/ROS Humble workspace. Source
 hashes and exact commands accompany the trial artifacts. The completion audit
 still applies: a catalog entry, launch option or passing source test does not

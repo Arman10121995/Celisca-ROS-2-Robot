@@ -1,81 +1,80 @@
-# Robots Package
+# Robot Lab robot descriptions and profiles
 
-This package stores robot descriptions and robot launch profiles. The simulator
-selects robots through:
+Updated October 7, 2026 against runtime checkpoint `091d388`. Read
+[current status](../../docs/status/CURRENT_STATUS.md),
+[the support matrix](../../docs/status/support-matrix.md) and
+[the extension guide](../../docs/ASSET_EXTENSION_GUIDE.md) for measured scope.
+Descriptions, structural tags and controller/mission support are separate.
 
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot
-```
-
-The physics backend is selected with `simulator:=gazebo|isaac|pybullet|mujoco`
-(default `gazebo`; the ISAAC/PyBullet/MuJoCo adapters mirror the Gazebo spawn
-interface — see P7.7 in the ROADMAP):
-
-Robot profiles are defined in:
-
-```text
-src/robot_lab_robots/config/robots.yaml
-```
-
-The GUI launcher reads the same profiles:
+## Select and inspect robots
 
 ```bash
-ros2 run robot_lab_bringup robot_lab_gui
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 run robot_lab_gui robot_lab_gui
 ```
 
-## Directory Layout
+In Launch, choose a category/type, complete parent family and exact
+**Model/source variant**. Commands and compatible algorithms fill automatically.
+Drive, Arm, Hand, Drone and their limits are in the right-hand control column.
+Registry retains nested parts and variants and opens native **Preview 3D**.
+A component may be inspected without being offered as a standalone robot.
 
-Robot files live directly under this package:
+The installed Jetson snapshot has 24 core and 113 extension profiles: 137 raw
+profiles, consolidated into 72 complete families/112 selectable variants;
+25 inspection components/reference profiles stay out of standalone Launch.
+This is an inventory, not 137 working robot missions.
 
-```text
-src/robot_lab_robots/
-  config/
-    robots.yaml
-  bumperbot/
-    urdf/
-    meshes/
-  berkeley_humanoid_lite/
-    urdf/
-    meshes/
-    mjcf/
-    usd/
-  unitree/
-    a1_description/
-    go2_description/
-    ...
-```
+## Profile and source ownership
 
-The original upstream checkouts are kept for provenance under:
+- Core profiles: [config/robots.yaml](config/robots.yaml).
+- Grouping: [asset_groups.yaml](../robot_lab_bringup/config/asset_groups.yaml).
+- Structural tags: [robot_taxonomy.yaml](../robot_lab_bringup/config/robot_taxonomy.yaml).
+- Exact measured extension guards: [asset-runtime-support.yaml](../../docs/status/asset-runtime-support.yaml).
+- Installed upstream sources/derivatives: SSD
+  `$ROBOT_LAB_RUNTIME_ROOT/external_assets/`; large checkouts remain outside Git.
+- Historical vendored sources: `_upstream/`, retained for provenance and excluded
+  from runtime installation; third-party licenses remain in force.
 
-```text
-src/robot_lab_robots/_upstream/
-```
+Core profiles include Bumperbot/Labbot, Ackermann/rear/anti-Ackermann, 4WS,
+mecanum, Berkeley/Unitree models, PX4 X500 and the legacy quadrotor fixture.
+Official TurtleBot3/TurtleBot4, Husky, native Menagerie and robot-assets entries
+come from the pinned SSD installation. Source alternatives retain their exact
+IDs, frames, sensors and backend/controller limits.
 
-That folder is excluded from installation. Use the cleaned robot folders above
-for runtime launch files.
+## Measured controller workflows
 
-## Add A New Robot
+| Models | Recorded scope | Next work |
+|---|---|---|
+| Bumperbot/Labbot and wheel bases | Named physical Drive, mapping/reset and Nav2 screens | Remaining map/mode/backend/pattern cells and repeats |
+| TurtleBot3 Burger/Waffle/Waffle Pi | Four-backend Display/Drive, localization, 2D SLAM/export and navigation | Other maps/routes, RGB rendering/vendor firmware; RGB-only 3D SLAM unavailable |
+| TurtleBot4 Standard/Lite | Four-backend Display/Drive, localization, 2D/3D SLAM/export and navigation | Other maps/routes, materials, docking and vendor behavior |
+| Native Menagerie Panda | MuJoCo joint/Hand/cube grasp and static-world MoveIt Plan/Execute | Servo, attached/dynamic scenes, other arms/hands/backends and mobile manipulation |
+| PX4 X500 | Gazebo Harmonic FCU flight in named worlds | Wider flight-world/clearance/planning/mapping matrix |
+| Go2/BHL | MuJoCo startup and bounded walks with model-specific policies | Sustained/terrain/recovery and further sensor/goal missions |
+| Other imported descriptions | Declared Display/import/preview paths | Individual rest pose, materials/license, actuation and missions |
 
-1. Create a folder:
+See [operator tutorials](../../docs/tutorials/README.md). Native MJCF profiles
+remain MuJoCo-specific. A URDF derivative or shared family label does not transfer
+native controls or a gait to another plant/backend.
 
-```bash
-mkdir -p src/robot_lab_robots/my_robot/urdf
-mkdir -p src/robot_lab_robots/my_robot/meshes
-```
+## Add a robot
 
-2. Add your URDF or Xacro:
+1. Claim the task in the ledger. Add a licensed URDF/Xacro/native model with
+   resolved geometry, authored inertias/collisions, joint limits and source pin.
+2. Add a core profile or use the pinned SSD provisioning workflow. Start with
+   Display and explicit available backends. Do not grant motion from asset import.
+3. Add reviewed grouping and structural tags. Preserve canonical profile IDs;
+   keep partial assemblies nested until their actual mounting topology is known.
+4. Declare sensors, frames, commands, state, stop/reset and controller limits.
+   Implement the matching backend/controller interface and measure actual body
+   response against simulator truth.
+5. Complete class-specific sensor/control and mission checks. Archive exact
+   commands, source/installed hashes, failures, metrics and owned cleanup before
+   enabling additional modes. Keep other maps/backends unqualified.
 
-```text
-src/robot_lab_robots/my_robot/urdf/my_robot.urdf.xacro
-```
-
-3. Use package-relative mesh paths that point back to this package:
-
-```xml
-<mesh filename="package://robot_lab_robots/my_robot/meshes/base_link.stl"/>
-```
-
-4. Register a profile in `src/robot_lab_robots/config/robots.yaml`:
+Example core profile:
 
 ```yaml
 robots:
@@ -88,86 +87,23 @@ robots:
     supports_room_vacuum: false
 ```
 
-5. Rebuild:
+Use package-relative geometry resources, for example
+`package://robot_lab_robots/my_robot/meshes/base_link.stl`. Build changed packages:
 
 ```bash
-colcon build --packages-select robots robot_lab_bringup
+source scripts/ssd_env.sh
+colcon build --packages-select robot_lab_robots robot_lab_bringup --symlink-install
 source install/setup.bash
 ```
 
-6. Run it:
+Example CLI inspection for an existing core robot, without a map:
 
 ```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display robot_model:=my_robot
+ros2 launch robot_lab_bringup simulated_robot.launch.py   robot_model:=unitree_go2 simulator:=mujoco mode:=display map_name:=none
 ```
 
-## Run Robots In The Modes
-
-The GUI disables modes that are not listed in a robot profile's
-`supported_modes`. Some modes also require robot `features`; for example,
-`3d_slam` requires `rgbd_camera`.
-
-Display any valid robot description:
-
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display robot_model:=unitree_go2
-```
-
-Localization with a robot that has the full simulation stack:
-
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc map_name:=small_house robot_model:=bumperbot
-```
-
-SLAM with a robot that has the full simulation stack:
-
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam map_name:=small_house robot_model:=bumperbot
-```
-
-3D RGB-D SLAM with a robot that has an RGB-D camera:
-
-```bash
-sudo apt-get install ros-humble-rtabmap-ros
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=3d_slam map_name:=small_house robot_model:=bumperbot
-```
-
-Navigation with a robot that has the full simulation stack:
-
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=small_house robot_model:=bumperbot
-```
-
-## Runtime Requirements
-
-`display` only needs a valid URDF/Xacro.
-
-`loc`, `slam`, `3d_slam`, and `nav` need more than a visual model:
-
-- a base frame compatible with the rest of the stack;
-- a simulated sensor publishing `/scan` for localization, SLAM, and Nav2;
-- odometry and TF from `odom` to the robot base;
-- a controller that accepts velocity commands or another robot-specific command bridge.
-- for `3d_slam`, an RGB-D camera publishing RGB image, depth image, camera info, and TF.
-
-The imported Unitree and Berkeley models are description assets. They can be
-selected by `robot_model`, but their locomotion, sensors, and control plugins
-may need robot-specific work before they can drive through Nav2 like bumperbot.
-
-## Current Robot Profiles
-
-- `bumperbot`
-- `berkeley_humanoid_lite`
-- `berkeley_humanoid_lite_biped`
-- `unitree_a1`
-- `unitree_aliengo`
-- `unitree_b1`
-- `unitree_b2`
-- `unitree_b2_mujoco`
-- `unitree_b2w`
-- `unitree_g1`
-- `unitree_g1_29dof`
-- `unitree_go1`
-- `unitree_go2`
-- `unitree_go2w`
-- `unitree_h1_2`
+Localization/mapping/navigation require compatible map/sensors/odometry/TF and
+an actual motion controller where movement is requested. `3d_slam` needs RGB,
+depth, camera information and their measured frame/time contract. Flight and
+manipulation have separate controllers and acceptance. The GUI/common resolver
+retain the reason for unsupported combinations.

@@ -1,6 +1,8 @@
 # Robot Lab done and remaining checklist
 
-Updated October 7, 2026. **The project is partial.** A checked item below
+Updated October 7, 2026. **The project is partial.** Runtime checkpoint: `091d388`;
+[current status](CURRENT_STATUS.md) links its exact successful CI and source
+proof. A checked item below
 describes an implemented feature or a named measured screen; it does not
 qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
@@ -60,9 +62,11 @@ the older roadmap. Existing stabilization fixes must remain working.
   Preserve exact source variants and keep limbs/grippers nested in Registry.
   Six R2/Valkyrie component topologies are measured inside full source assemblies.
 - [x] Add native embedded Registry 3D Preview with actual URDF/MJCF/SDF geometry,
-  orbit/pan/zoom/Fit and unchanged launch commands. Seven real rendered scenes
-  and live Burger/PyBullet preview plus physical Drive/Stop/watchdog pass.
-  Texture/GPU/actor and universal asset review remain separate.
+  orbit/pan/zoom/Fit and unchanged launch commands. Nine distinct source scenes
+  are rendered across the recorded stages; final control-column repeats cover
+  Celisca floor-2 furniture and static/dynamic Room2 geometry. A final live
+  Burger/PyBullet preview emits no movement commands and physical Drive/Stop/
+  watchdog passes. Texture/GPU/actor and universal asset review remain separate.
 - [x] Import all 14 dataset worlds and three Gazebo environment examples with
   real dependency resolution, derived MJCF and actual occupancy exports.
   Robot missions, actor behavior and full visual/backend parity remain separate.
@@ -106,7 +110,10 @@ the older roadmap. Existing stabilization fixes must remain working.
 - [x] Repair the latest extension CI tier failure. Exact `18ecdd2` passes
   build, fast, physics, integration and registry validation. `dc39922`'s three
   ROS-import failures remain recorded; the unchanged checks run in integration.
-  Later controller changes need their own CI. See [October 7 evidence](evidence/ci-extensions-2026-10-07/README.md).
+  Published `091d388` also passes the 25-package core build, 933 fast checks
+  (four skips/four deselections), 20 physics checks, 134 integration checks
+  (twelve skips) and registry validation. Later runtime changes need their own
+  CI. See [October 7 evidence](evidence/ci-extensions-2026-10-07/README.md).
 - [x] Replace invented support/release success with exact hashed measurements,
   retain negative results and block full-release claims on unfinished tasks.
   GUI Health, this checklist, the roadmap and agent guides expose those gaps

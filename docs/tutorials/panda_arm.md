@@ -1,10 +1,14 @@
 # Native Panda arm and hand controls
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Run
 
 Select `menagerie_franka_emika_panda`, MuJoCo and Display in Launch. Choose a
 map, then Run. The command includes `arm_control:=panda` and
-`arm_planning:=moveit` for the qualified profile without a grasp fixture. Open the **Arm** tab
+`arm_planning:=moveit` for the qualified profile without a grasp fixture. Open **Launch → Arm** in the right-hand control column
 to jog each joint, return Home, cancel a trajectory or Stop Arm. The displayed
 positions come from the simulator. The base Drive/WASD controls are disabled
 for this fixed arm. Other installed Panda/arm profiles remain Display imports.
@@ -12,7 +16,7 @@ for this fixed arm. Other installed Panda/arm profiles remain Display imports.
 The actual seven position actuators, gains and force limits come from the
 [pinned Menagerie Panda](https://github.com/google-deepmind/mujoco_menagerie/tree/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda).
 Targets advance through native MuJoCo dynamics; the controller does not write
-joint positions or robot poses. The **Hand** tab controls the original coupled
+joint positions or robot poses. The **Launch → Hand** page controls the original coupled
 finger actuator through a bounded-force opening command.
 
 ```bash
@@ -76,7 +80,7 @@ far redundant elbow solutions for small offsets. Checked joint edges are
 retimed at at most 0.35 rad/s and executed by the existing native action.
 Paths exceeding its 15 s contract are rejected; no path is truncated or
 executed automatically. Actual FK and independent physical TCP feedback
-are checked in the [Cartesian evidence](../status/evidence/panda-cartesian-2026-10-06/README.md).
+are checked in the [final control-column Cartesian evidence](../status/evidence/panda-cartesian-controls-column-2026-10-07/README.md).
 
 A cached plan expires after ten wall seconds or a joint/finger change above
 0.01 in the corresponding joint units. Jog/Home, Reset, Cancel, Stop,
@@ -127,3 +131,8 @@ state. External clients must send this heartbeat too. Cancel, `/gripper/stop`
 (`std_srvs/Trigger`) and 0.8 s heartbeat loss hold the measured opening.
 GUI Reset aborts an active action before restoring the source home state.
 See the [physical grasp and interruption evidence](../status/evidence/panda-gripper-2026-10-06/README.md).
+
+The final normal control-column repeat measures 0.00649/0.00639 m and
+0.780/0.765° TCP errors, preserves all original rejection/interruption/reset
+checks and closes each owned child cleanly. Its strict source certificate
+includes the shared workspace layout. Earlier repeats remain historical.

@@ -1,5 +1,12 @@
 # R7 Execution Summary - Algorithm Breadth Implementation
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+> Its original completion/implementation counts do not close R7 acceptance;
+> the [October 2 audit](audit-2026-10-02.md) keeps R7 and real comparisons partial.
+
 **Date**: 2026-10-01  
 **Start Time**: Following context compaction with R7.1 already implemented  
 **End Time**: Completed major R7.1-R7.8 foundation work  

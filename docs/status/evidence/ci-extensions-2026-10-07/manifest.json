@@ -97,6 +97,16 @@
       "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/18ecdd2-report.json",
       "bytes": 2526,
       "sha256": "c3bafe99ecf84f4a138f7460bb8c2a4e035be5b2d052860f27825aae26936ff7"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/091d388-report.json",
+      "bytes": 2596,
+      "sha256": "9113ee5d1b0b04fec4d7c9f23093379b7ea324d1d8733ddeba91c618de62cbf6"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/091d388.log",
+      "bytes": 2376423,
+      "sha256": "f501ca9abde748504b0d332fa525f54eb0b3a5bd852c8083958baef199824ee8"
     }
   ],
   "remote_ci": {
@@ -118,5 +128,29 @@
       "wall_seconds": 14.8
     },
     "scope": "Full build, all declared tiers and registry validation; no robot missions"
+  },
+  "remote_ci_controls_column": {
+    "revision": "091d38884ab22b5e42a789fd19030046461e0a2a",
+    "url": "https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37617835178",
+    "conclusion": "success",
+    "fast": {
+      "passed": 933,
+      "skipped": 4,
+      "deselected": 4,
+      "wall_seconds": 61.78
+    },
+    "physics": {
+      "passed": 20,
+      "skipped": 0,
+      "deselected": 0,
+      "wall_seconds": 1.42
+    },
+    "integration": {
+      "passed": 134,
+      "skipped": 12,
+      "deselected": 0,
+      "wall_seconds": 21.16
+    },
+    "scope": "Full core build (25 packages; optional orbslam3 skipped), required fast/physics/integration and registry checks. All skips retained. Local real-Tk checks and named simulator missions are separate evidence."
   }
 }

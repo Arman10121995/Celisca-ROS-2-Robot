@@ -1,5 +1,10 @@
 # Extension continuation — October 6, 2026
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+
 The platform remains **partial**. These results extend baseline `61335fe` on
 `master`; each trial retains source, installed-module and asset hashes. The
 [October 2 audit](audit-2026-10-02.md) and

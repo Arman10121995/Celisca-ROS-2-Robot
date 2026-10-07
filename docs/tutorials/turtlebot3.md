@@ -1,5 +1,9 @@
 # TurtleBot3 in Robot Lab
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Run
 
 The official Humble Burger, Waffle and Waffle Pi descriptions and their
@@ -7,7 +11,7 @@ simulation definitions are already downloaded on the workspace SSD. Select
 `asset_turtlebot3_burger`, `asset_turtlebot3_waffle` or
 `asset_turtlebot3_waffle_pi` in the normal **Launch** tab. Choose a simulator,
 `nav_empty` and Display. The command fills automatically; use **Run**, then
-open **Drive**. An already running GUI must be restarted after rebuilding.
+open **Launch → Drive & limits** in the right-hand control column. An already running GUI must be restarted after rebuilding.
 
 Enabling keyboard/joystick input sends no motion until operator input. Hold
 **W/S** for forward/reverse or **A/D** to rotate. GUI Drive buttons use the

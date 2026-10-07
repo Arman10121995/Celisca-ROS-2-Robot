@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-07. Extension checkpoint: `18ecdd2` plus recorded corrections. The
+Updated: 2026-10-07. Runtime checkpoint: `091d388` plus documentation follow-up. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
 but full mission qualification remains partial. Existing scoped live robot
@@ -14,7 +14,9 @@ ownership, dependencies and the next task. This file owns scope and acceptance
 criteria. Update both together. Start each session with
 [AGENT_HANDOFF](docs/AGENT_HANDOFF.md).
 Use the [done / remaining checklist](docs/status/CHECKLIST.md) for a compact
-view of implemented features and remaining acceptance.
+view of implemented features and remaining acceptance. The
+[current status overview](docs/status/CURRENT_STATUS.md) links the published
+GUI, installed inventory, measured robot scopes and exact successful CI.
 
 ## October 5 requested extensions
 
@@ -138,19 +140,19 @@ Catalog maturity labels remain catalog metadata and are not changed by this
 documentation update. R3.1 evidence gates and later exact-cell records prevent
 those labels from being treated as universal runtime claims.
 
-| Legacy phase | Audited state | Retained work / remaining obligation | Recovery |
+| Legacy phase | Current state | Retained work / remaining obligation | Tasks |
 |---|---|---|---|
-| P0 baseline | Partial; reverify | Hardware parsing/profile tests exist; installs, paths, topics and CI need repair | R1, R2, R9 |
-| P1 foundation | Partial | Catalog/schema/query code exists; compatibility checks insufficient | R3.1, R3.2 |
-| P2 composition | Partial | Selector/fragment classes exist; actual launch and applied choices incomplete | R3.3–R3.5 |
+| P0 baseline | Partial | Published core build/required CI and scoped installed/runtime checks pass; clean-host mission/license and hardware reproduction remain | R1, R2, R9 |
+| P1 foundation | Partial | Typed registry/resolver and exact source/numeric runtime gates exist; universal class/backend compatibility remains unqualified | R3.1, R3.2 |
+| P2 composition | Partial | Shared commands/algorithms, source variants and control-column GUI are measured; remaining model/task workflows and broader composition acceptance remain | R3.3–R3.6 |
 | P3 robots | Partial | BHL/Go2 bounded MuJoCo walks and native PX4 Flight are measured; robust legged terrain/recovery and the broader robot/mode matrix remain | R5 |
 | P3.4 humanoid | Partial, ledger owner `codex` | BHL effort control and diagnostics are implemented; the held-turn/walk stall is not solved by rate, filter or contact duplication tuning | R5.3 |
-| P4 environments | Assets/static checks implemented | Geometry/generators retained; runtime reset, actors and 3D traversal unqualified | R6 |
-| P5 algorithms | Partial | Counts/kernels exist; empty/broken ROS entry points and simplified methods | R7 |
-| P6 benchmarking | Partial | Reporting helpers exist; placeholder metrics and false-success paths | R4 |
-| P7 hardening | Partial | Scripts/CI/backend code exist; blanket qualification claims withdrawn | R1, R8, R9 |
+| P4 environments | Partial | Installed worlds, actual occupancy exports and named mapping/reset/contact screens; remaining actors, reviewed occupancy and terrain/world missions | R6 |
+| P5 algorithms | Partial | Kernels, adapters and selected real stack workflows exist; substantive method contracts and five-method fair comparisons remain | R7 |
+| P6 benchmarking | Partial | Real named mission producers/reporting retained; legacy generated metrics are excluded and fair repeated comparisons remain | R4, R7, R9 |
+| P7 hardening | Partial | Exact required CI passes; full backend/class, concurrency, provenance and clean-host qualification remain | R1, R8, R9 |
 | P7.5 hardware | Blocked | Equipment, safe setup and explicit operation authorization required | R9.4 |
-| P7.7/P7.8/P7.8b | Dispatch/runtime code exists | Historical startup reports are not current mission evidence | R2, R8 |
+| P7.7/P7.8/P7.8b | Partial measured runtime | Named four-backend mobile modes and native flight/manipulation screens; universal robot/map/backend parity remains open | R2, R8 |
 
 Old IDs remain valid for locating commits/tests. Historical narrative is available
 with `git show dff388f:ROADMAP.md`; do not copy its green counts or host-specific
@@ -172,7 +174,7 @@ smallest complete experiment over adding more catalogs or GUI controls.
   a named robot/backend/task; benchmarking additionally requires measured artifacts.
 - Read dependency acceptance before relying on a `done` label. If evidence fails,
   reopen the task and record it; do not silently weaken its tests.
-- No runtime implementation has been completed by the R0 documentation revision.
+- The original R0 documentation-only revision did not implement runtime work; later measured robot/GUI changes are recorded at their exact source stages.
 
 ## Ordered task specifications
 
@@ -219,8 +221,11 @@ Dependencies: `R0.2`.
 The October 7 correction moves three unchanged ROS-import checks into the
 explicit integration manifest after `dc39922` built but failed the unsourced
 fast tier. The exact correction `18ecdd2` passes the complete remote build,
-fast, physics, integration and registry checks. Later changes need their own
-CI observation. See
+fast, physics, integration and registry checks. The published `091d388`
+control-column/TurtleBot3/Registry revision also passes the full core build,
+933 fast checks (four skips/four deselections), 20 physics checks, 134 integration
+checks (twelve skips) and registry validation. Local GUI/mission evidence remains
+separate. Later runtime changes need their own CI observation. See
 [CI evidence](docs/status/evidence/ci-extensions-2026-10-07/README.md).
 
 ### R1.3 — Make CI bootstrap and doctor trustworthy
@@ -353,7 +358,7 @@ Dependencies: `R3.1`, `R3.4`.
 
 - October 7 continuation: official TurtleBot3 Burger/Waffle/Waffle Pi have twelve final normal GUI physical Drive/source LDS/joint/TF/Stop/watchdog screens across all four backends. Preserve pinned ROBOTIS sources, original 3.5 m LDS, named nav_empty spawn, explicit frame-inertia regularization and profile-local small-wheel MuJoCo/watchdog settings. Forty-eight actual localization/reset/resume, 2D SLAM/GUI-export and clear/obstacle Nav2 screens now pass; normal GUI mode/default/autofill checks and a fresh normal MuJoCo obstacle repeat pass. [Mode evidence](docs/status/evidence/turtlebot3-modes-2026-10-07/README.md) retains original Pi obstacle failures and measured 0.65 m inflation reruns. Source RGB-only cameras leave 3D SLAM pending. [Drive evidence](docs/status/evidence/turtlebot3-sensors-2026-10-07/README.md) retains both passing final runs and earlier failed stages. R3.6 remains partial beyond these exact cells.
 
-- October 7 catalog/inspection follow-up: reviewed robot/world parent families retain exact profiles and nested components; six R2/Valkyrie subassemblies are measured inside their complete source assemblies. The native Tk/OpenGL Registry preview renders seven actual scenes and passes orbit/pan/zoom/Fit, unchanged launch selection and clean closure. A live Burger/PyBullet preview sends no movement commands and retains physical Drive/Stop/watchdog control. [Evidence](docs/status/evidence/registry-3d-2026-10-07/README.md). Textures, huge-mesh GPU performance, actor animation and remaining model/backend missions remain; hospital remote source fixtures are flagged rather than silently repaired.
+- October 7 catalog/inspection follow-up: reviewed robot/world parent families retain exact profiles and nested components; six R2/Valkyrie subassemblies are measured inside their complete source assemblies. The native Tk/OpenGL Registry preview renders nine distinct source scenes across recorded stages, with final furnished-Celisca/static/dynamic Room2 repeats, and passes orbit/pan/zoom/Fit, unchanged launch selection and clean closure. A live Burger/PyBullet preview sends no movement commands and retains physical Drive/Stop/watchdog control. [Evidence](docs/status/evidence/registry-3d-2026-10-07/README.md). Textures, huge-mesh GPU performance, actor animation and remaining model/backend missions remain; hospital remote source fixtures are flagged rather than silently repaired.
 
 ## R4 — Measured reference experiment
 

@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-07",
+  "runtime_revision": "091d38884ab22b5e42a789fd19030046461e0a2a",
+  "scope": "Documentation/source metadata and existing contract verification only; no new simulator mission or reduced-scope release",
+  "audited_markdown_files": 58,
+  "relative_links": 557,
+  "files": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/audit_documentation.py",
+      "sha256": "7e3dca5998d35c133c9a344dc43b72872ffae655a8aece5e335f32828c956b52",
+      "bytes": 2599
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/links-and-consistency.json",
+      "sha256": "a366448710d217abe89e012c60738924c289d832f5272c67eaeb70d336797cfb",
+      "bytes": 6557
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/links-and-consistency.log",
+      "sha256": "c30488519a07da9d081e7e4431d1f71e7b8148ea7797742f7fca18ea752124fc",
+      "bytes": 319
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/initial-links-and-consistency.json",
+      "sha256": "590b666e1d0550b20b116c55b942f2be3d9bf8d2bd417a181dc3e5a7c371e544",
+      "bytes": 7006
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/initial-links-and-consistency.log",
+      "sha256": "f5411d3dbb41e8ea8be68ae12baf80145acf025af8bfd7870bef4784d384a57a",
+      "bytes": 768
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/contracts-and-support.log",
+      "sha256": "79d0059236333601c0358bb7b72aea5e067b9ee6edfb2a47b27c99e430a0fd8a",
+      "bytes": 99
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/final-documentation-contracts.log",
+      "sha256": "81bdf2a73124d8ee22bf0ffaa3f8a7a2d507ee13f7ae667804f29d5225a1c5e8",
+      "bytes": 99
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-cli-checks.json",
+      "sha256": "4b1c6dd6b108ed952a48bcde7c65bff756051102f52cb4e1534de9769850d070",
+      "bytes": 1483
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-summary.log",
+      "sha256": "3fef1e5762cca90ada61922b0e35f184038b8bfa86b7df3dfb516157ffa8150b",
+      "bytes": 426
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-validate.log",
+      "sha256": "e18292a58a3479edd685312fcbd1ba633069be537efd54ea61788bbdf780c016",
+      "bytes": 18
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-dry-launch.log",
+      "sha256": "63574651aca1f6e439fbf0411762376716aa33105e9b8ee9a8ae84cc01b84df0",
+      "bytes": 1764
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/installed-health-view.txt",
+      "sha256": "685161266bd7ad0220028d8837452174fa6e63429ed544f3fc6c56eee9e2d547",
+      "bytes": 13318
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/installed-inventory.json",
+      "sha256": "6c6147f1d9ac018625dbcd232483589586e8d952fac2e3af819228bc5b0279d9",
+      "bytes": 583
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/support-final.log",
+      "sha256": "f03d791fcf52728507afdea8fdf67186e932a1ba99a6a17c9d0b05d57cd4cd16",
+      "bytes": 203
+    }
+  ],
+  "ledger_sha256": "e87eb33e594bc62ea13b2ea947078da93591ef8519366a8262dd44937e20eafb",
+  "runtime_code_changes": []
+}

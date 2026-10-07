@@ -1,5 +1,10 @@
 # Measured continuation — October 5, 2026
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+
 Baseline `700b94e`, followed by the source changes in the containing commit,
 on Jetson AGX Orin / Ubuntu 22.04 / ROS Humble. The project remains **partial**.
 The [October 2 audit](audit-2026-10-02.md) still applies to demonstration reports;

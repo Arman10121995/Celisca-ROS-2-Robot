@@ -1,6 +1,10 @@
 # Planning Algorithms
 
-This tutorial covers the comprehensive suite of global and local planning algorithms implemented in `robot_lab_algorithms` and integrated with Nav2. It provides mathematical foundations, usage examples, and benchmarking guidance for both graph-based and sampling-based planners.
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
+These are educational planning notes and source API examples. Nav2 integration is declared per algorithm in the dispatch configuration; the listed numerical classes do not all become interchangeable ROS planners. Fair multi-method comparison remains R7/R9.2.
 
 ## Overview
 
@@ -601,7 +605,12 @@ def evaluate_planner(planner_class, maps, start_goals, **kwargs):
     return results
 ```
 
-## Benchmarking Results
+## Historical illustrative benchmark tables
+
+These values have no linked executed trial, seed protocol, measured artifact
+or source/host manifest. They remain unmeasured placeholders and cannot rank
+methods or qualify R7/R9.2. Use [current status](../status/CURRENT_STATUS.md)
+for actual named robot evidence and the workflow for a real comparison.
 
 ### Planning Success Rate and Time
 

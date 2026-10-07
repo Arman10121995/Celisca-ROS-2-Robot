@@ -1,5 +1,10 @@
 # Project goal and integration audit — 2026-09-15
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+
 The user wants a working robot laboratory for learning, exercising and comparing
 robots, maps and algorithms. Retain Bumperbot and Labbot, and deliver a humanoid,
 multirotor, quadruped and four-wheel robot with Ackermann and reverse Ackermann

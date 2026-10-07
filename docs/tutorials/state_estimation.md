@@ -1,6 +1,10 @@
 # State Estimation Algorithms
 
-This tutorial covers the eight state estimation algorithms implemented in `robot_lab_algorithms`, providing mathematical foundations, usage examples, and benchmarking guidance.
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
+These are educational state-estimation notes and numerical API sketches. Method labels and synthetic examples do not establish a working ROS estimator or measured comparison; R7.4 remains partial.
 
 ## Overview
 
@@ -393,7 +397,12 @@ initial_state: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 initial_covariance: [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
 ```
 
-## Benchmarking Results
+## Historical illustrative benchmark tables
+
+These values have no linked executed trial, seed protocol, measured artifact
+or source/host manifest. They remain unmeasured placeholders and cannot rank
+methods or qualify R7/R9.2. Use [current status](../status/CURRENT_STATUS.md)
+for actual named robot evidence and the workflow for a real comparison.
 
 ### Performance Comparison (Simulated Differential Drive Robot)
 

@@ -1,7 +1,8 @@
 # Robot Lab learning examples
 
-These tutorials demonstrate numerical APIs and one opt-in class-specific
-runtime workflow already present in the repository. They are not universal
+Updated October 7, 2026. [Current status](../status/CURRENT_STATUS.md) and
+[the operator index](README.md) collect the GUI and named robot workflows.
+These learning examples demonstrate numerical APIs and an opt-in Go2 workflow. They are not universal
 simulator benchmarks or evidence that five alternatives per category are
 working. The historical P7.4 tutorial delivery means these documents exist; it
 does not qualify the platform.
@@ -69,8 +70,8 @@ ros2 run robot_lab_registry robot-lab validate -c src/robot_lab/robot_lab_regist
 ```
 
 These are inventory checks, not experiment execution or complete compatibility
-qualification. Current validation has known gaps, component choices are not
-fully wired into launch, and benchmark outputs include placeholder behavior.
+qualification. Runtime compatibility remains exact-cell specific, and legacy demonstration
+benchmark outputs contain placeholder behavior.
 Do not publish their output as measured comparative results until the roadmap's
 execution and measurement acceptance criteria are met.
 
@@ -86,3 +87,6 @@ execution and measurement acceptance criteria are met.
 - [Native Panda Arm controls](panda_arm.md): actual MuJoCo joint/Home/Stop/
   Hand and MoveIt Plan/Execute, measured static-world TCP and physical cube
   grasp; Servo, attached-payload planning and other backends remain.
+
+- [PX4 X500 Flight](px4_x500.md): actual Gazebo Harmonic flight, altitude/Drive,
+  hold/goals/land and bounded command loss in the measured worlds.

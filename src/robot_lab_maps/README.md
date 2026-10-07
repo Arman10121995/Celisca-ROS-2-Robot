@@ -1,82 +1,98 @@
-# Maps Package
+# Robot Lab worlds and occupancy maps
 
-This package stores simulation worlds, Nav2 map files, and map-specific assets.
-The launch system reads map defaults from:
+Updated October 7, 2026 against runtime checkpoint `091d388`. Read
+[current status](../../docs/status/CURRENT_STATUS.md),
+[the extension guide](../../docs/ASSET_EXTENSION_GUIDE.md) and
+[the roadmap](../../ROADMAP.md) for exact world/backend mission acceptance.
 
-```text
-src/robot_lab_bringup/config/sim_maps.yaml
-```
-
-The GUI launcher reads the same map profiles:
+## Select and inspect maps
 
 ```bash
-ros2 run robot_lab_bringup robot_lab_gui
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 run robot_lab_gui robot_lab_gui
 ```
 
-## Directory Layout
+Launch uses a complete map family and exact **World variant**. Registry and
+Worlds/maps open native **Preview 3D** inside the GUI. Celisca shell, furniture
+and actors remain variants of their floor; Room2/3/4 static/dynamic worlds and
+hospital source variants retain exact IDs and files.
 
-Each map lives under `maps/<map_name>/`:
+The installed Jetson snapshot contains 26 core plus 17 extension world
+profiles under 33 map families. Fourteen dataset worlds and three Gazebo
+examples are installed on SSD. The remaining 97 example SDFs include plugin/
+robot fixtures requiring review. Loading or previewing a world does not qualify
+its collisions, spawn, actors or navigation/flight missions.
 
-```text
-src/robot_lab_maps/
-  maps/
-    my_map/
-      worlds/
-        my_map.world
-      maps/
-        map.yaml
-        map.pgm
-      meshes/
-        optional_mesh.stl
-```
+## Geometry and mode contracts
 
-Required files depend on the mode:
+Core definitions are in
+[sim_maps.yaml](../robot_lab_bringup/config/sim_maps.yaml); installed extension
+profiles live under `$ROBOT_LAB_RUNTIME_ROOT/external_assets/installed/`.
+Grouping is in [asset_groups.yaml](../robot_lab_bringup/config/asset_groups.yaml).
+Gazebo loads SDF directly; shared SDF/include/mesh conversion feeds PyBullet,
+MuJoCo and Isaac. Source scale/poses and physics collision geometry must agree.
+Native preview is a separate source-visual inspection path.
 
-- `display`: no map files required.
-- `slam`: requires `worlds/<map_name>.world`.
-- `3d_slam`: requires `worlds/<map_name>.world` and a robot with an RGB-D camera.
-- `loc`: requires `worlds/<map_name>.world` and `maps/map.yaml`.
-- `nav`: requires `worlds/<map_name>.world` and `maps/map.yaml`.
+| Mode | Required map data |
+|---|---|
+| `display` with a world | Valid resolved world; robot-only display uses `map_name:=none` |
+| `loc` / `nav` | World plus a reviewed 2D occupancy map with compatible origin/scale/spawn |
+| `slam` | World and compatible robot lidar/odometry/TF; existing occupancy is unnecessary |
+| `3d_slam` | World and compatible robot RGB-D/camera-info/state pipeline |
+| `flight` | Actual PX4 plant/world with spawn and floor/ceiling clearance; a 2D Nav2 map is unnecessary |
 
-Maps without a real 2D occupancy map should set `has_2d_map: false`.
-The GUI and launch file will then disable `loc` and `nav` for that map until
-you create and register a saved map.
+`has_2d_map: false` prevents known-map localization/navigation until a real map
+is created and registered. A generated connected height slice is not an
+all-floor occupancy map. Explicit launch spawns override named robot/map
+defaults; estimator initialization must use the same resolved frame and pose.
 
-## Add A New Map
+Celisca's 20% scaling, spawn alignment and furniture collision fixes have named
+measured trials. Remaining furnished/actor/map/backend cells are still open.
+The imported hospital has six extreme source-pose fixtures; preview Fit frames
+the building and flags remote objects but does not repair collision/navigation.
 
-1. Create the map folder:
+## Generate a 2D occupancy grid
+
+In **Worlds/maps**, select a world, resolution, height slice and fresh SSD
+output directory, then **Generate 2D Occupancy Grid**. Inspect the result before
+navigation registration. Stop Generation closes its owned generator/Gazebo
+process. The GUI uses the selected profile's spawn as its generation seed;
+CLI seed flags below allow an explicit alternative. Existing saved maps remain intact.
+
+Equivalent example:
 
 ```bash
-mkdir -p src/robot_lab_maps/maps/my_map/worlds
-mkdir -p src/robot_lab_maps/maps/my_map/maps
-mkdir -p src/robot_lab_maps/maps/my_map/meshes
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ROBOT_LAB_GRID_RUN_DIR=$(mktemp -d "$ROBOT_LAB_RUNTIME_ROOT/occupancy-XXXXXX")
+ros2 run robot_lab_maps generate_occupancy_map.py   --world "$PWD/src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world"   --output-dir "$ROBOT_LAB_GRID_RUN_DIR"   --resolution 0.1 --height 0.3 --seed-x -7 --seed-y -7
 ```
 
-2. Add the Gazebo world:
+The pinned UPO Fortress plugin and actual collision-mesh slice produce real
+PGM/YAML/report files. Check world/map metres, origin, composed poses, rotated
+geometry, seed-connected free regions and robot footprint. Record registration
+and actual Nav2 goals separately. Actors/dynamic obstacles and multilevel
+terrain need their own representation and mission checks.
 
-```text
-src/robot_lab_maps/maps/my_map/worlds/my_map.world
-```
+## Add a world
 
-3. Add the Nav2 occupancy map when using `loc` or `nav`:
+1. Claim the task and retain source/license/dependency pins on SSD. Resolve
+   includes, meshes/materials and backend plugin migrations without altering
+   the preserved upstream source.
+2. Add `maps/<id>/worlds/<id>.world`, its resources and a profile. Use free
+   spawn/goals measured from actual collision geometry.
+3. Supply or generate a reviewed occupancy map for localization/navigation.
+   `image:` should be relative to the YAML; resolution/origin must match world
+   geometry and estimator initialization.
+4. Generate/check backend representations and actual load/display/physics.
+   Then record class-specific movement, contacts, sensors, reset and mission
+   outcomes per advertised backend. Do not inherit support from another world.
+5. Add the family/variant, update exact evidence and rebuild changed packages.
 
-```text
-src/robot_lab_maps/maps/my_map/maps/map.yaml
-src/robot_lab_maps/maps/my_map/maps/map.pgm
-```
-
-The `image:` field inside `map.yaml` should usually be relative:
-
-```yaml
-image: map.pgm
-resolution: 0.05
-origin: [0.0, 0.0, 0.0]
-negate: 0
-occupied_thresh: 0.65
-free_thresh: 0.196
-```
-
-4. Register the map profile in `src/robot_lab_bringup/config/sim_maps.yaml`:
+Example core profile (replace the example with real installed files/poses):
 
 ```yaml
 maps:
@@ -100,91 +116,26 @@ maps:
       yaw: "0.0"
 ```
 
-The `simulator:=` launch argument selects the physics backend
-(`gazebo|isaac|pybullet|mujoco`, default `gazebo`); world files are
-Gazebo-format and are forwarded through the same spawn interface by the ISAAC,
-PyBullet, and MuJoCo adapters.
-
-`initial_pose` is the AMCL pose in the map frame. For maps generated from the
-same Gazebo world frame, set it to the same `x`, `y`, and `yaw` as `spawn`.
-
-5. Rebuild:
-
 ```bash
-colcon build --packages-select maps robot_lab_bringup
+source scripts/ssd_env.sh
+colcon build --packages-select robot_lab_maps robot_lab_bringup --symlink-install
 source install/setup.bash
 ```
 
-## Run The Four Modes
+## Existing arena and CLI examples
 
-Display robot only:
+Five deterministic navigation arenas have companion worlds/occupancy geometry:
+`nav_empty`, `nav_obstacle`, `nav_maze`, `nav_narrow_passage`, `nav_warehouse`.
+The generator and validator are in this package's `tools/`; regenerating assets
+is an agent/development change, separate from GUI operation.
 
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display robot_model:=bumperbot
-```
-
-Localization on a saved map:
-
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc map_name:=my_map
-```
-
-SLAM on a Gazebo world:
+World-only display and robot-only display use explicit choices:
 
 ```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam map_name:=my_map
+ros2 launch robot_lab_bringup simulated_robot.launch.py   robot_model:=none map_name:=nav_obstacle simulator:=gazebo mode:=display
 ```
 
-3D RGB-D SLAM on a Gazebo world:
-
-```bash
-sudo apt-get install ros-humble-rtabmap-ros
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=3d_slam map_name:=my_map
-```
-
-Navigation on a saved map:
-
-```bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=my_map
-```
-
-Room vacuum simulation is separate:
-
-```bash
-ros2 launch robot_lab_bringup simulated_room_vacuum.launch.py mode:=nav map_name:=my_map
-```
-
-## Current Map Profiles
-
-- `celisca_floor_1`
-- `celisca_floor_2`
-- `celisca_f1_actor`
-- `celisca_f2_actor`
-- `simple_box`
-- `small_house`
-- `small_warehouse`
-
-## P4.2 Deterministic Navigation Arenas
-
-Five deterministic navigation arenas (built entirely from static box
-primitives, with companion Nav2 occupancy maps rasterized from the exact same
-geometry) were added for path-planning validation:
-
-- `nav_empty` — 12x12m open floor with boundary fence and reference posts
-- `nav_obstacle` — 17x17m scattered box-obstacle field
-- `nav_maze` — 16x16m winding maze (west entrance, east goal)
-- `nav_narrow_passage` — 14x14m offset-gap barriers forcing zigzag navigation
-- `nav_warehouse` — 18x18m shelf aisles plus pallet boxes
-
-They are regenerated and validated from a single source of truth so the world
-geometry and the localization map always agree:
-
-```bash
-python3 src/robot_lab_maps/tools/gen_nav_arenas.py --out-dir src/robot_lab_maps/maps
-python3 src/robot_lab_maps/tools/validate_nav_arenas.py
-```
-
-Each arena is registered as `integrated` in
-`src/robot_lab/robot_lab_registry/config/environments.yaml` under the
-`nav_*` id and launchable in `src/robot_lab_bringup/config/sim_maps.yaml`.
-
+For measured robot/mapping/navigation or flight commands, use
+[the operator guides](../../docs/tutorials/README.md) and exact named source
+variants. Wider actor, terrain, imported-world and flight-map acceptance remains
+R6.5–R6.7/R5.10. Keep actual export/trial buffers and logs on SSD.

@@ -37,3 +37,15 @@ checks**, **134 integration checks**, and registry cross-reference validation.
 The report and complete log are retained and hashed. This closes this tier
 repair at that source revision; later robot/controller changes need their
 own CI observation.
+
+## Published control-column and extension revision
+
+Exact `091d38884ab22b5e42a789fd19030046461e0a2a` passes
+[Actions run 37617835178](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37617835178):
+25 core packages build (optional `orbslam3` excluded), **933 fast checks / four
+skips / four deselections**, **20 physics checks**, **134 integration checks /
+twelve skips**, and registry validation. The [job report](091d388-report.json)
+and hashed complete SSD log retain the actual result. Local 94-test real-GUI
+checks and source-matched physical Drive/Panda regressions remain separate
+from CI. Documentation follow-up keeps the published runtime files unchanged;
+a later runtime edit needs new relevant evidence and exact CI.

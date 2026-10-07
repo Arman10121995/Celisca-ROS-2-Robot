@@ -1,0 +1,26 @@
+{
+  "scope": "Maintained documentation local-link/schema/tutorial and recorded-evidence consistency checks; no new robot mission",
+  "markdown_files": 58,
+  "relative_links": 552,
+  "broken_links": [
+    {
+      "file": "docs/status/support-matrix-2026-10-01.md",
+      "line": 2206,
+      "target": "../evidence/r9-1-provenance-licenses-2026-10-01.json"
+    },
+    {
+      "file": "docs/status/support-matrix-2026-10-01.md",
+      "line": 2207,
+      "target": "../evidence/r9-2-tutorials-2026-10-01.json"
+    },
+    {
+      "file": "docs/status/support-matrix-2026-10-01.md",
+      "line": 2208,
+      "target": "../platform-status.yaml"
+    }
+  ],
+  "runtime_byte_parity_files": 12,
+  "overall_state": "partial",
+  "indexed_records": 122,
+  "measured_cells": 114
+}

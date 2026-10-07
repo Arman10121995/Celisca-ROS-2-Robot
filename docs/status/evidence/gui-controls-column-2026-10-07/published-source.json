@@ -1,0 +1,67 @@
+{
+  "published_revision": "091d38884ab22b5e42a789fd19030046461e0a2a",
+  "branch": "master",
+  "scope": "Byte equality of the actual pre-trial/source/installed GUI runtime artifacts against the published Git revision; physical acceptance remains in its named Drive and Panda reports",
+  "checked": [
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/launcher.py",
+      "git_blob_sha256": "92f1e6042477882e6a0e0c039cb29daf74b92bc9d7a144b4e4ae4774c6da5b0f",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/launcher.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/workspace_ui.py",
+      "git_blob_sha256": "766637d985c5ffbc13e76ee44e92c559067ac89aef84a2af4e74ed1609555763",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/workspace_ui.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/lab_tabs.py",
+      "git_blob_sha256": "423ef5e4dcd5adab709974bb71f11ac4abd611eff64bfcbd1722cccb0063b62e",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/lab_tabs.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/native_viewer.py",
+      "git_blob_sha256": "3945d14ec9631c0441a2a4d2ef17bca5a81435b38b87b775d89e7d3a1bddfac0",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/native_viewer.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/arm_tab.py",
+      "git_blob_sha256": "4b55a80c9e3c2156f1bcfe143d1b0918070570051dce2d7aa0ea6c60788da047",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/arm_tab.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/hand_tab.py",
+      "git_blob_sha256": "e77640e5436783bad60f21da1d385e5b26e9dea5d7dd742151d9aee8d5bf8edc",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/hand_tab.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/cartesian_controls.py",
+      "git_blob_sha256": "59ee6b56e3706572a9c0569ddd354e61d1846bf9a09f8c02b7f96fa527b11174",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/cartesian_controls.py"
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/themes/modern.py",
+      "git_blob_sha256": "08721d54267bf25c9936e3a35a42996086e895977607bb1fb44d9334377ebe80",
+      "installed": "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/themes/modern.py"
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/robot_taxonomy.py",
+      "git_blob_sha256": "70bee44bdf3d3f907bc769c870eb2573ed8bd3bb6c819799cbe2e95bead64698",
+      "installed": "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/robot_taxonomy.py"
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/asset_groups.py",
+      "git_blob_sha256": "b707af6d862099e33369ecc43e74396d621fb07fb013b8dc68558a044d27c116",
+      "installed": "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/asset_groups.py"
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/asset_preview.py",
+      "git_blob_sha256": "83e8258c09b1dc2f83df0274b6d5e231b2eb908e842a2b8b2608766525539f7c",
+      "installed": "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/asset_preview.py"
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/robot_spawn.py",
+      "git_blob_sha256": "b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e",
+      "installed": "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/robot_spawn.py"
+    }
+  ]
+}

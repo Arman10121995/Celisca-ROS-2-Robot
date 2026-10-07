@@ -1,5 +1,10 @@
 # Jetson storage: keep Robot Lab artifacts on the SSD
 
+This operating guide remains current for runtime checkpoint `091d388`
+(October 7, 2026). The relocation below is a completed historical operation;
+do not rerun it. See [current project status](status/CURRENT_STATUS.md) for
+published work and remaining tasks.
+
 The Jetson's internal eMMC is mounted at `/`; the 1 TB NVMe SSD is mounted at
 `/workspace`. Source, builds, models, trial outputs, bags and large logs belong
 on that SSD. `/tmp` is on the internal eMMC. A path under `/home/molar1` is

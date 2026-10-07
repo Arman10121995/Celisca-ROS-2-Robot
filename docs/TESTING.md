@@ -1,46 +1,65 @@
-# Robot Lab Test Tiers
+# Robot Lab test tiers and evidence
 
-Separation of test tiers (task **R1.2**). The authoritative runner and
-manifests live in `scripts/test_tiers.sh`; the fast PR suite is
-`scripts/test_fast.sh`. The current source snapshot is `d06a411` (2026-09-25);
-the dated 2026-09-07 audit remains historical evidence for its selected counts.
+Updated October 7, 2026. The runner and manifests live in
+`scripts/test_tiers.sh`; `scripts/test_fast.sh` adds source compilation and
+registry checks. [Current status](status/CURRENT_STATUS.md) records measured
+robot work separately from software checks.
 
-## Tier taxonomy
+## Tiers
 
-| Tier | Runs | Requires ROS 2? | Spawns subprocesses / physics? | Failure policy |
-|---|---|---|---|---|
-| `fast` | Unit, numerical, config/catalog checks | No — plain Python only | Never | Must pass everywhere, always |
-| `integration` | xacro expansion of robot models, launch-contract, robot qualification suites | Yes (sourced `ros2`, `xacro`) | Spawns `xacro` subprocesses | Explicit skip if `ros2` unavailable |
-| `physics` | Headless stepping of optional engines (PyBullet, MuJoCo, Isaac) | No (engines importable) | Real engine API, headless | Explicit `skip` when an engine is not installed |
-| `hardware` | In-flab HIL missions (task R9) | — | Real hardware | Not yet implemented |
+| Tier | Scope | Environment and limits |
+|---|---|---|
+| `fast` | Numerical, schema, configuration and source contracts | Plain Python; no shared ROS graph. ROS-import checks belong in integration. |
+| `integration` | Xacro, launch, ROS imports and adapter contracts | Source ROS and the installed workspace. Missing optional dependencies/assets have explicit skips. |
+| `physics` | Headless real-engine stepping and backend contracts | Optional engines must be installed; missing engines skip explicitly. This is separate from a robot mission. |
+| GUI | Actual Tk widgets, command/autofill, selection and layout | Requires a real display or Xvfb; native preview additionally needs OpenGL/GLX. |
+| Live mission | Named simulator/robot/world/controller outcome | Isolated ROS/transport, actual truth/sensors, artifacts and owned cleanup. Follow each task's producer. |
+| Hardware | Physical robot/device work | Full HIL qualification remains open; software skips are not hardware evidence. |
 
-## Why this matters (R1.2 acceptance)
+Three unchanged ROS-import contracts moved from fast into the sourced
+integration manifest after the recorded `dc39922` CI failure. The numerical
+assertions and required CI failure conditions remain. The current workflow
+builds the core workspace, excluding optional `orbslam3`, then runs all three
+required tiers and registry validation.
 
-- **The unit suite runs without accessing a shared ROS graph**: `fast` tests
-  never call `rclpy.init()`, never publish/subscribe, and never spawn
-  subprocesses. Algorithm logic is pure math (see `DeadReckoning` split into a
-  pure integrator + `DeadReckoningNode` ROS wrapper).
-- **Subprocess-bearing tests are kept out of the unit tier**: robot-profile
-  xacro expansion moved from `test_sim_profiles.py` to
-  `test_xacro_expansion.py` (integration tier), so the fast config tests stay
-  hermetic.
-- **Optional engines produce explicit skips**: `test_simulator_backends.py`
-  skips per-engine when `pybullet`/`mujoco`/`isaacsim` is absent.
-- **Numerical assertions remain strong**; tiering only moved which runner
-  executes what, not weakened any tolerance.
+## Run
 
-## Running
+From the workspace root:
 
 ```bash
-scripts/test_fast.sh          # fast tier + compile + registry cross-refs (default PR check)
-scripts/test_tiers.sh --list            # show every test file per tier
-scripts/test_tiers.sh fast              # unit tier only
-scripts/test_tiers.sh physics           # engine backends (skips per engine)
-bash -c 'source /opt/ros/humble/setup.bash && scripts/test_tiers.sh integration'
-scripts/test_tiers.sh all               # fast + physics + integration
+source scripts/ssd_env.sh
+bash scripts/test_fast.sh
+bash scripts/test_tiers.sh --list
+bash scripts/test_tiers.sh fast
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+bash scripts/test_tiers.sh physics
+bash scripts/test_tiers.sh integration
 ```
 
-The current recorded fast result is **466 passed, 1 skipped** at `d06a411`.
-The fast tier does not claim a clean build, all-backend mission matrix, GUI
-qualification or hardware operation. For live evidence, follow
-[`WORKFLOW.md`](WORKFLOW.md) and the task-specific tutorials.
+For actual GUI checks on this Jetson:
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 xvfb-run -a python3 -m pytest -q src/robot_lab_gui/test
+```
+
+Use the intended sourced/package environment and keep output under
+`$ROBOT_LAB_RUNTIME_ROOT`. Build changed packages and compare installed files
+with source before mission-producing trials. Run only checks appropriate to
+the change; retain failures and declared skips.
+
+## Latest recorded results
+
+| Stage | Result | Evidence |
+|---|---|---|
+| Final local GUI | 94 passed, two PyOpenGL deprecation warnings | [GUI evidence](status/evidence/gui-controls-column-2026-10-07/README.md) |
+| Final focused real-Tk layout | Five passed | Same evidence; compact setup access, wide restoration, controls/limits and neutral inputs |
+| Preceding local control-column stage | 936 fast passed, one skip/four deselections; 146 integration passed | Exact source stages and logs in the GUI manifest |
+| Published `091d388` CI | Core build: 25 packages; fast: 933 passed/four skips/four deselections; physics: 20 passed; integration: 134 passed/12 skips; registry validation passed | [Exact CI report/log hashes](status/evidence/ci-extensions-2026-10-07/README.md) |
+
+Counts differ by source stage and host availability. Keep local display checks,
+CI skips and real simulator missions separate. A green build or generic physics
+case does not close the full robot/map/mode/backend matrix. Historical test
+counts remain in their dated reports. Use [Workflow](WORKFLOW.md),
+[the checklist](status/CHECKLIST.md) and [the ledger](status/platform-status.yaml)
+for qualification and remaining acceptance.

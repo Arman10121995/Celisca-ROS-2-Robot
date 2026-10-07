@@ -1,5 +1,12 @@
 # Policy and PX4 candidates (2026-09-30)
 
+> Historical source-stage record. Use [current status](CURRENT_STATUS.md),
+> [the ledger](platform-status.yaml) and [the checklist](CHECKLIST.md) for the
+> published October 7 work and remaining qualification. Measurements and
+> original claims below retain their dates; later audited corrections apply.
+> The old PX4 installation/candidate statement is superseded by measured
+> [native X500 flight](../tutorials/px4_x500.md); policy mission gaps remain.
+
 This is a source audit, not a qualification claim. A locomotion checkpoint is
 only usable with the joint order, observation vector, action scaling, control
 rate, actuator law and robot mass/inertia it was trained against. Each candidate

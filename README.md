@@ -2,10 +2,11 @@
 
 Robot Lab aims to make robots, simulators, maps and algorithms independently selectable so that you can learn how they work and compare their performance under reproducible conditions.
 
-**Current state: a research prototype and integration foundation, not a fully interchangeable or production-grade platform.** The Bumperbot-oriented ROS 2 stack is the strongest implementation. Additional robot assets, simulator adapters, algorithm kernels, a desktop GUI and benchmark infrastructure exist, but important runtime connections and qualification tests remain incomplete.
+**Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-07**, against baseline `18ecdd2` and the recorded
-continuation source snapshots. The [completion audit](docs/status/audit-2026-10-02.md)
+Status updated on **2026-10-07**, against published runtime checkpoint **`091d388`** and the
+recorded source snapshots. [Current status](docs/status/CURRENT_STATUS.md)
+collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
 Scoped measured robot results remain in the [status ledger](docs/status/platform-status.yaml).
@@ -82,7 +83,8 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ## Start here
 
-- [Audit and evidence](docs/status/audit-2026-09-07.md): what was inspected/tested, confirmed defects and verification limits.
+- [Current status](docs/status/CURRENT_STATUS.md): published source, available GUI workflows, measured robot scopes and remaining work.
+- [Completion audit](docs/status/audit-2026-10-02.md): corrected claims and evidence boundaries; earlier audits remain historical.
 - [Implementation roadmap](ROADMAP.md): ordered work, dependencies and acceptance criteria toward the full platform.
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
 - [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
@@ -93,49 +95,36 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ## What exists, and what that means
 
-| Catalog inventory at the audited revision | Evidence and limitation |
+| Source/installed inventory on this Jetson, October 7 | Meaning |
 |---|---|
-| 26 discoverable ROS packages | Includes optional `orbslam3`; discovery is not a clean build result |
-| 20 registry robots across 5 classes | 5 labeled `integrated`, 15 `cataloged`; labels are not independent task qualification |
-| 17 main-launch robot profiles | Profile IDs and registry IDs are not fully aligned |
-| 26 environment entries | World/map assets include legacy worlds and deterministic arenas; not every robot/backend combination is qualified |
-| 43 algorithm entries | 39 labeled `integrated`, 4 `cataloged`; includes utilities, educational kernels and unfinished ROS adapters |
-| 18 scenarios and 15 experiments | Metadata and presets, not 33 successful recorded missions |
-| 4 simulator launch routes | Gazebo, PyBullet, MuJoCo and Isaac; this is not feature parity |
+| 26 discoverable ROS packages | Current CI builds 25; optional `orbslam3` is excluded |
+| 24 core + 113 installed extension launch profiles | 137 raw profiles, including components/source variants; availability depends on installed SSD assets |
+| 72 complete robot families / 112 selectable variants | Consolidated Launch choices; 25 inspection profiles stay nested/out of standalone Launch |
+| 26 core + 17 installed world profiles | 43 raw profiles under 33 map families |
+| 139 robot records / 48 algorithms / 23 scenarios / 21 experiments | Merged registry inventory; entries and labels are separate from mission qualification |
+| Four simulator routes | Gazebo, PyBullet, MuJoCo and Isaac; support is robot/task/backend-specific |
 
 ### Verification snapshot
 
-The October 7 [current continuation](docs/status/continuation-2026-10-07.md)
-records source-matched TurtleBot3 and fresh native Panda trials. Exact
-`18ecdd2` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
-passes build, fast, physics, integration and registry checks; later controller
-changes require their own CI. [October 6 evidence](docs/status/evidence/continuation-2026-10-06/README.md)
-retains TurtleBot4 and prior Panda checks. Older totals below describe their
-dated stages, not the current suite.
+The exact published `091d388` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
+passes a 25-package core build, **933 fast checks / four skips / four
+deselections**, **20 physics checks**, **134 integration checks / twelve
+skips**, and registry validation. The complete log and report are retained.
 
-The dated 2026-09-07 audit reported **485 passing, 1 failing, 9 deselected**
-source tests, plus **5 passing, 1 deselected** selected backend tests. That audit
-is retained as historical evidence at `dff388f`; it is not a current platform
-qualification badge.
+The final rebuilt GUI has **94 passing local GUI checks** and five additional
+real-Tk layout checks. The preceding control-column stage has **936 fast
+passes / one skip / four deselections** and **146 integration passes**; those
+source stages remain distinct. The final normal Burger/PyBullet Drive and
+native Panda physical Plan/Execute repeats pass against the actual published
+GUI files. Read [GUI evidence](docs/status/evidence/gui-controls-column-2026-10-07/README.md)
+and [the current continuation](docs/status/continuation-2026-10-07.md).
 
-The installed-extension checkpoint has **772 passing direct fast tests, two skipped,
-one integration case deselected**, that real xacro case passing separately,
-registry validation, **123 integration and 7 physics tests**, **35 earlier focused tests**, **43 passing Tk command/Drive tests** and
-scoped source, build and real simulator checks. Exact test totals, source
-stages, successful and failed robot trials are recorded in the
-[continuation evidence](docs/status/evidence/continuation-2026-10-05/README.md).
-The later Panda/TurtleBot4 stage passes **786 fast tests, one skip and one
-integration deselection**, plus **123 integration, 7 physics and 44 Tk command/Drive tests**.
-Exact `36f38b5` GitHub CI passes all tiers after the Trimesh compatibility repair;
-`0ff27e3` built but failed the required tutorial Run-section check. That guide
-contract is repaired. The physical TurtleBot4 Drive stage passes a six-package
-build, **793 fast tests, one skip/one integration deselection, 125 integration,
-7 physics and 44 Tk GUI checks**; its exact remote CI is recorded separately.
-See [Drive evidence](docs/status/evidence/turtlebot4-drive-2026-10-05/README.md).
-The former no-flight diagnosis is superseded by actual native PX4 flight;
-historical reports remain available for comparison. These checks do not
-establish all simulator missions, clean-host reproduction or hardware operation. See the
-[workflow](docs/WORKFLOW.md) for the evidence boundary and commands.
+The evidence index retains **122 records / 114 exact measured cells**.
+Unlisted cells are untested and full-release gates remain blocked. Historical
+CI failures, test totals and robot trials remain in their dated reports.
+Software checks, static previews, clean-host reproduction and actual robot
+missions are separate milestones. See [Testing](docs/TESTING.md) and
+[the support matrix](docs/status/support-matrix.md).
 
 ## How it currently works
 
@@ -210,27 +199,28 @@ Paths below are relative to `src/`; only the registry and benchmark packages liv
 ### Robots and environments
 
 - **Bumperbot:** reference differential-drive description, sensors, control, mapping, localization, navigation and cleaning workflows. R5.1 recorded bounded forward/turn/reverse/stop/watchdog and clear/obstacle Nav2 missions on MuJoCo, with a PyBullet Bumperbot drive pass; broader backend/map coverage remains open.
-- **Labbot:** lightweight differential-drive description and navigation-related configuration; needs independent end-to-end qualification.
+- **Labbot:** differential-drive description, sensors/control and named bounded Drive/navigation/Celisca screens; remaining map/backend/mode cells and longer avoidance routes need qualification.
 - **Go2:** the standard MuJoCo route has measured bounded stance, an opt-in flat-ground ONNX policy, forward/stop, turning, command-loss and direct foot-contact evidence. The opt-in inverse map passed four five-case flat-ground screening suites. The named stairs task still fails at the first ledge (`0.527 rad` peak tilt, `0.115 m` displacement). A nominal-pose re-stand attempt and a separate opt-in learned get-up actor both failed the measured 60 N collapse; the learned actor stays bounded and fails closed. Terrain traversal and navigation remain unqualified; fall recovery is now measured instead — the opt-in get-up ladder stands the robot from placed pitch collapses (4 of 4) but ends worse than leaving it off on every reachable perturbation, so it stays off by default. See the [Go2 tutorial](docs/tutorials/go2.md).
 - **Berkeley Humanoid Lite:** the standard MuJoCo route has measured stance/startup-bend evidence and an effort-policy path. The held-turn/walk stall is diagnosed as a policy fixed point; torque filtering, 2 kHz physics-only and fresh intra-interval PD A/B tests did not revive sustained motion. A duplicate generated-world ground contact was fixed, but contact duplication was not the stall remedy. Target-domain retraining or a new measured hypothesis is next; walking and terrain are not established.
-- **Quadrotor SITL:** description and MAVROS-related controller code exist; a complete flight/SITL mission is not established.
+- **PX4 X500:** actual Gazebo Harmonic/PX4 Flight, ROS2/GUI Drive, altitude, goals, takeoff/hold/land and command loss are measured in `nav_empty` and `nav_obstacle`; other worlds and aerial autonomy remain R5.10.
+- **Legacy quadrotor_sitl:** retained display fixture; the retired MAVROS example does not provide a working flight mission.
 - **Other cataloged robots:** imported descriptions span legged, humanoid and manipulator models. Asset availability is not locomotion/control support.
 
-The 26 environments comprise 14 legacy/general worlds, 5 deterministic navigation arenas, 3 terrain worlds, 2 aerial courses and 2 dynamic/occlusion variants. Arena generators and occupancy-map consistency checks are useful foundations. The rough-terrain registry ID is `outdoor_terrain`, not `terrain_rough`. `nav_sensor_degraded` supplies occluding geometry, not a general noise/dropout framework.
+The 26 core environments include legacy/general worlds, five navigation arenas, terrain, aerial and dynamic/occlusion entries. Seventeen installed extensions add fourteen dataset worlds and three Gazebo examples, consolidated under map families. Arena generators and occupancy-map consistency checks are useful foundations. The rough-terrain registry ID is `outdoor_terrain`, not `terrain_rough`. `nav_sensor_degraded` supplies occluding geometry, not a general noise/dropout framework.
 
 ### Algorithms and benchmarking
 
 | Registry category | Entries | Examples or current scope |
 |---|---:|---|
 | Perception | 8 | Scan/cloud conversion, obstacle detection, clustering and segmentation |
-| Localization | 6 | AMCL, RTAB-Map, dead reckoning and motion-model entries |
+| Localization | 7 | AMCL, RTAB-Map, dead reckoning and motion-model entries |
 | State estimation | 5 | Kalman/EKF and educational estimator kernels |
 | Sensor fusion | 5 | IMU processing and wheel/IMU/GPS fusion kernels |
-| Global planning | 5 | Dijkstra, A*, NavFn, RRT and Voronoi-style planning |
-| Local planning | 5 | TEB, DWB, pure pursuit, PD path following and follow-the-gap |
-| Control | 9 | Wheel/joint/standing/offboard control entries and application utilities |
+| Global planning | 7 | Dijkstra, A*, NavFn, RRT and Voronoi-style planning |
+| Local planning | 6 | TEB, DWB, pure pursuit, PD path following and follow-the-gap |
+| Control | 10 | Wheel/joint/standing/offboard control entries and application utilities |
 
-These counts do **not** establish five distinct, mathematically validated, ROS-connected alternatives per category. Several entry points only spin an empty ROS node; perception entry points also have object/node mismatches. Some named methods are simplified approximations. MPC, LQR and nonlinear-control breadth remains future work.
+The catalog includes utilities, educational approximations and partial adapter contracts. Each comparative method still needs verified mathematics, installed input/output, compatible dispatch and measured outcomes. Five distinct, ROS-connected and fairly compared alternatives in each requested category remain R7/R9.2.
 
 Benchmark code includes schemas, output/report generation, orchestration helpers and regression thresholds. Some measurements are fixed placeholders, and orchestration can report success without a successful mission. **Do not use its current results to rank algorithms.** Use the [operational workflow](docs/WORKFLOW.md) and the current evidence ledger to distinguish static checks, live trials and qualified scenarios.
 
@@ -238,13 +228,13 @@ Benchmark code includes schemas, output/report generation, orchestration helpers
 
 Gazebo is the reference integration route. PyBullet and MuJoCo have physics engines and ROS bridge code; Isaac uses a separate runtime subprocess and can fall back to offline behavior. A simulator process starting or an offline stub running is not qualification.
 
-Asset coverage across backends is no longer the limit: all 17 robot
-descriptions import into PyBullet and MuJoCo, and all 26 maps exist for both
-(MuJoCo worlds are generated from the same SDF sources by
-`robot_lab_maps/tools/gen_mjcf_worlds.py`; the PyBullet backend parses the SDF
-directly). Generated fallback planes are visual-only when an SDF ground
-collision exists, preventing duplicate MuJoCo contacts. Runtime contract
-qualification, not asset geometry, is the remaining limit.
+Legacy model/world import screens and the newer pinned extension imports are
+recorded separately. Source descriptions and generated geometry do not prove
+stable rest poses, texture parity, actuation or missions for every imported
+asset. Native MJCF profiles remain MuJoCo-specific; controller support is
+explicit. Generated fallback planes are visual-only when an SDF ground
+collision exists, preventing duplicate MuJoCo contacts. Remaining source-world,
+material and collision/spawn defects stay in R3.6/R6.6.
 
 The simulator clock, truth/odometry, command-watchdog, TF and readiness contracts
 have been repaired for the non-Gazebo bridges. This does not make the backends
@@ -260,7 +250,7 @@ The Tkinter GUI has launch profiles, process logs, registry browsing, drive/map 
 From the repository root, these commands use the source registry without a workspace build (Python 3 with PyYAML/jsonschema is required):
 
 ```bash
-export PYTHONPATH="$PWD/src/robot_lab/robot_lab_registry${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="$PWD/src/robot_lab/robot_lab_registry:$PWD/src/robot_lab_utils:$PWD/src/robot_lab_adapter${PYTHONPATH:+:$PYTHONPATH}"
 python3 -m robot_lab_registry.cli summary -c src/robot_lab/robot_lab_registry/config
 python3 -m robot_lab_registry.cli list robots -c src/robot_lab/robot_lab_registry/config
 python3 -m robot_lab_registry.cli list algorithms -c src/robot_lab/robot_lab_registry/config
@@ -283,23 +273,25 @@ python3 -m robot_lab_registry.cli launch \
   --composition '{"robot_id":"bumperbot","environment_id":"small_office","simulator":"gazebo","algorithm_ids":{"localization":"amcl"}}'
 ```
 
-For an already built ROS 2 Humble workspace, use the [operational workflow](docs/WORKFLOW.md)
-for isolated launch, readiness, recording and cleanup. A minimal display command
-is:
+For this built ROS 2 Humble workspace, start the updated GUI:
 
 ```bash
+source scripts/ssd_env.sh
 source /opt/ros/humble/setup.bash
 source install/setup.bash
-ros2 launch robot_lab_bringup simulated_robot.launch.py \
-  mode:=nav map_name:=small_office robot_model:=bumperbot simulator:=gazebo
 ros2 run robot_lab_gui robot_lab_gui
 ```
 
-Ubuntu 22.04 / ROS 2 Humble on arm64 is the historical development baseline, not a newly verified installation guarantee. Review `scripts/bootstrap.sh` before using it: it installs/builds dependencies and currently suppresses some failures. `scripts/test_fast.sh` and `scripts/doctor.sh` are partial checks, not acceptance gates; CI also has branch coverage and ignored-failure defects. Follow the roadmap's baseline-recovery tasks before trusting a fresh installation.
+Use the [GUI guide](docs/tutorials/gui-workspace.md) and
+[operational workflow](docs/WORKFLOW.md) for selection, isolated CLI launches,
+readiness, recording and cleanup. Ubuntu 22.04/ROS 2 Humble on this Jetson is
+the measured development host. Required CI build/test failures propagate;
+clean-host simulator missions and full dependency/license reproduction remain
+R9.1. Review host bootstrap commands separately from ordinary GUI operation.
 
 ## Path to the intended platform
 
-The [roadmap](ROADMAP.md) and [agent handoff](docs/AGENT_HANDOFF.md) are the implementation authority. The delivery order is: recover trustworthy build/test evidence; repair simulator contracts and fail-fast behavior; make composition selections executable and strictly validated; complete one measured mobile experiment; then qualify robot classes, algorithm alternatives, maps and remaining backends in bounded increments.
+The [roadmap](ROADMAP.md) and [agent handoff](docs/AGENT_HANDOFF.md) are the implementation authority. The current user priority is the new extensions: R3.6/R6.5–R6.7, R5.10 and R5.7–R5.9, while preserving completed fixes and exact task owners. Then resume the original wheeled/legged mission matrix, algorithm comparisons, concurrency and clean-host reproduction.
 
 Success means selectable mobile, legged, humanoid and aerial robots; 2D/3D environments; at least five genuinely distinct supported alternatives in each requested algorithm category; and reproducible comparisons with measured outcomes. Each supported combination needs explicit dependencies, contracts, launch configuration, numerical tests where applicable, a runtime smoke test, and evidence-backed maturity. A numerical kernel, a catalog row, a GUI selector and a completed mission are different milestones.
 

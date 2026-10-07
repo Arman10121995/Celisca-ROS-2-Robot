@@ -1,6 +1,10 @@
 # Sensor Fusion Algorithms
 
-This tutorial covers the seven sensor fusion algorithms implemented in `robot_lab_algorithms`, providing comprehensive guidance on attitude estimation, IMU fusion, and multi-sensor integration.
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
+These are educational sensor-fusion notes and numerical API sketches. Actual sensor/frame/covariance contracts and fair robot-method comparisons remain R7.5 qualification work.
 
 ## Overview
 
@@ -327,7 +331,12 @@ def evaluate_attitude_filter(filter_class, true_trajectory, imu_data_sequence, *
     }
 ```
 
-## Benchmarking Results
+## Historical illustrative benchmark tables
+
+These values have no linked executed trial, seed protocol, measured artifact
+or source/host manifest. They remain unmeasured placeholders and cannot rank
+methods or qualify R7/R9.2. Use [current status](../status/CURRENT_STATUS.md)
+for actual named robot evidence and the workflow for a real comparison.
 
 ### Attitude Estimation Comparison (Dynamic Motion Test)
 

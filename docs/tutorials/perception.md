@@ -1,8 +1,12 @@
 # Perception Pipelines Tutorial
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Overview
 
-This document describes the five perception pipelines implemented for R7.2, covering scan-based obstacle detection, point cloud clustering, ground removal, and segmentation.
+These are perception kernel and adapter notes for scan detection, clustering, ground removal and segmentation. R7.2 real input/output, robot missions and fair multi-method comparison remain partial.
 
 ## R7.2 Target Methods
 
@@ -151,7 +155,10 @@ euclidean_clusterer:
     markers_topic: "/perception/euclidean_clusters"
 ```
 
-## Performance Characteristics
+## Illustrative performance characteristics
+
+The qualitative timing/memory labels below are teaching estimates, not
+measured performance on a named host/input/robot. Actual comparisons remain R7/R9.2.
 
 | Algorithm | Complexity | Memory Usage | Real-time Performance | Best Use Case |
 |-----------|------------|---------------|----------------------|---------------|

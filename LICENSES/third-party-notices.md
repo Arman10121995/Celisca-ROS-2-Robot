@@ -1,5 +1,13 @@
 # Third-Party Notices
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+The installed robot/world extensions retain upstream sources and model-specific
+notices on SSD. See the [pinned source snapshot](../docs/status/asset-sources-2026-10-05.yaml),
+[extension guide](../docs/ASSET_EXTENSION_GUIDE.md) and
+[current status](../docs/status/CURRENT_STATUS.md). Remaining per-model terms,
+redistribution review and clean-host reproduction stay R9.1; installation or
+successful control does not establish blanket license compatibility.
+
 The top-level MIT license does not relicense third-party code, policies or
 assets. Attribution is restored after the 2026-10-02 audit found that a generated
 inventory had removed the robot asset notices. Dependency discovery is not a

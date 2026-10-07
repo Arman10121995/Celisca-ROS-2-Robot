@@ -1,0 +1,66 @@
+manifest_version: 1
+resolved_from:
+  robot_id: bumperbot
+  environment_id: nav_empty
+  simulator: mujoco
+  scenario_id: null
+  experiment_id: null
+  algorithm_ids:
+    localization: amcl
+  spawn: null
+  reset: true
+  parameters: {}
+  seed: null
+  namespace: ''
+  mode: null
+  gui: null
+  steering_mode: null
+aliases_applied: []
+robot_id: bumperbot
+environment_id: nav_empty
+simulator: mujoco
+scenario_id: null
+algorithm_ids:
+  localization: amcl
+plugins: {}
+reset:
+  enabled: true
+  service: /robot_lab/reset
+  service_type: std_srvs/srv/Trigger
+  request: {}
+  backend_service: /robot_lab/reset
+  backend_service_type: std_srvs/srv/Trigger
+  backend_request: {}
+parameters: {}
+seed: null
+namespace: ''
+launch:
+  package: robot_lab_bringup
+  file: simulated_robot.launch.py
+  arguments:
+    robot_model: bumperbot
+    simulator: mujoco
+    use_sim_time: 'true'
+    map_name: nav_empty
+    world_package: robot_lab_maps
+    world_name: nav_empty
+    world_path: maps/nav_empty/worlds/nav_empty.world
+    map_yaml: maps/nav_empty/maps/map.yaml
+    localization: amcl
+ros2_command:
+- ros2
+- launch
+- robot_lab_bringup
+- simulated_robot.launch.py
+- robot_model:=bumperbot
+- simulator:=mujoco
+- use_sim_time:=true
+- map_name:=nav_empty
+- world_package:=robot_lab_maps
+- world_name:=nav_empty
+- world_path:=maps/nav_empty/worlds/nav_empty.world
+- map_yaml:=maps/nav_empty/maps/map.yaml
+- localization:=amcl
+
+Dry-run complete; no processes started. Live execution command:
+  ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml localization:=amcl

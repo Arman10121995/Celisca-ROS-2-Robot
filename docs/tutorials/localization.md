@@ -1,8 +1,12 @@
 # Localization Methods Tutorial
 
+Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Read [current status](../status/CURRENT_STATUS.md) for available workflows and
+remaining qualification; evidence below retains its named source stages.
+
 ## Overview
 
-This document describes the five localization methods implemented for R7.3, covering wheel odometry, probabilistic methods, scan matching, and visual localization.
+These are localization kernel and adapter notes for odometry, probabilistic methods, scan matching and visual localization. R7.3 interchangeable real estimators and fair comparisons remain partial; named AMCL/SLAM robot screens have separate evidence.
 
 ## R7.3 Target Methods
 

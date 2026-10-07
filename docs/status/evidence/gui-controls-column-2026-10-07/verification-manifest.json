@@ -168,12 +168,34 @@
     {
       "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/build-grid-column.log",
       "sha256": "d40ed8dd6a9646c8444285bb0da946e46c99272a49a55f976ea52bc8a21f6c28"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/support-gui-delivery-index122.log",
+      "sha256": "97fc5363d900033738629ac0b531003c778bc8dfeef9e31ed80743bc4f275478"
     }
   ],
   "scope": "94 GUI tests after final layout; 936 fast and 146 integration from immediately preceding control-column stage, followed by final focused GUI checks; unchanged physics tier retained separately; screenshots and tests are not mission evidence",
   "support": {
     "indexed_records": 122,
     "measured_cells": 114,
-    "full_release": "blocked by remaining roadmap acceptance"
+    "full_release": "blocked by remaining roadmap acceptance",
+    "derivation": {
+      "revision": "091d38884ab22b5e42a789fd19030046461e0a2a",
+      "evidence_index_sha256": "8548f75095b13ba99731857a6d336882b2f5886731d4add32db23400bbd756e2",
+      "ledger_sha256_at_derivation": "4fe07a4e3d8a499b4321659ac7fd15b453ac2296b25d72a803e64c3bf2ca716c",
+      "generator_sha256": "1347892113c9a03d9e1b0bef63df4aea046078e2e0a38f827e3171fd8ffb219c",
+      "output": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/support-gui-delivery-index122",
+      "command": "python3 scripts/r9_3_support_matrix.py --out-directory /workspace/molar/robot_lab_runtime/extensions-2026-10-07/support-gui-delivery-index122",
+      "scope": "Revalidates all 122 indexed artifacts, including the final source-matched Drive repeat; no new mission execution or release waiver"
+    },
+    "documentation_followup": {
+      "runtime_revision": "091d38884ab22b5e42a789fd19030046461e0a2a",
+      "evidence_index_sha256": "8548f75095b13ba99731857a6d336882b2f5886731d4add32db23400bbd756e2",
+      "ledger_sha256": "e87eb33e594bc62ea13b2ea947078da93591ef8519366a8262dd44937e20eafb",
+      "generator_sha256": "1347892113c9a03d9e1b0bef63df4aea046078e2e0a38f827e3171fd8ffb219c",
+      "output": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/support-documentation-final",
+      "command": "python3 scripts/r9_3_support_matrix.py --out-directory /workspace/molar/robot_lab_runtime/extensions-2026-10-07/support-documentation-final",
+      "scope": "Revalidated the unchanged exact mission index against the reconciled final ledger; no new mission execution. Full release remains blocked."
+    }
   }
 }

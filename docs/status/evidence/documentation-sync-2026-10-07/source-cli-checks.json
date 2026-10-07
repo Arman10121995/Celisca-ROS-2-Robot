@@ -1,0 +1,48 @@
+{
+  "captured_utc": "2026-10-07T12:40:49.906397+00:00",
+  "scope": "Read-only source registry summary, cross-references and default dry launch; no simulator or motion",
+  "checks": [
+    {
+      "name": "source-summary",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "robot_lab_registry.cli",
+        "summary",
+        "-c",
+        "src/robot_lab/robot_lab_registry/config"
+      ],
+      "returncode": 0,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-summary.log"
+    },
+    {
+      "name": "source-validate",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "robot_lab_registry.cli",
+        "validate",
+        "-c",
+        "src/robot_lab/robot_lab_registry/config",
+        "--cross-references"
+      ],
+      "returncode": 0,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-validate.log"
+    },
+    {
+      "name": "source-dry-launch",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "robot_lab_registry.cli",
+        "launch",
+        "-c",
+        "src/robot_lab/robot_lab_registry/config",
+        "--composition",
+        "{\"robot_id\": \"bumperbot\", \"environment_id\": \"nav_empty\", \"simulator\": \"mujoco\", \"algorithm_ids\": {\"localization\": \"amcl\"}}"
+      ],
+      "returncode": 0,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/documentation/source-dry-launch.log"
+    }
+  ]
+}
