@@ -1,7 +1,7 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-06"
+updated: "2026-10-07"
 current_revision: "61335fe plus October 6 TurtleBot4 sensors/modes, Isaac pose-derived odometry, GUI/export/monitor cleanup and native Panda MoveIt Plan/Execute; see containing commit and pre-trial source/installed hashes"
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
@@ -331,22 +331,27 @@ tasks:
         next_action: "Completed: every advertised executable/plugin/launch in built packages resolves against the installed index; assets resolve via package shares; benchmark output remains configurable outside source/install."
       R1.2:
         title: "Separate and repair test tiers"
-        state: "done"
+        state: "active"
         owner: "codex"
         depends_on:
           - "R0.2"
-        active_scope: "2026-10-06 codex: exact published 531c542 passes every remote CI tier; tutorial Run-section repair verified without weakening the contract. Later extension source stages require their own CI."
-        result: "Exact 531c542 CI run 37364784938 passes full build, fast/physics/integration and registry checks. Both new tutorial Run-section contracts are repaired. Original 0ff27e3 tutorial and earlier dependency failures remain preserved. Runtime missions and later source-stage CI require separate evidence."
+        active_scope: "2026-10-07 codex: repair exact dc39922 CI failures without removing checks. Three ROS-import tests must run in the sourced integration tier; keep pure spring/navigation acceptance tests fast. Correct the unresolved Trimesh rosdep key. Preserve separate R6.5 occupancy-review work and all measured runtime source contracts."
+        result: "Exact dc39922 CI 37463485222 builds, then fails three ROS-dependent tests in the unsourced fast tier. Those unchanged checks now run explicitly in integration; local plain-Python fast 881 passed/2 skips/4 deselected and sourced integration 134 passed. Canonical python3-trimesh-pip rosdep resolution and maps rebuild pass. Earlier exact 531c542 CI is green; the new correction needs its own published result. Negative logs are preserved."
         scope_paths:
           - ".github/workflows/"
           - "docs/status/evidence/ci-extensions-2026-10-05/"
           - "scripts/test_tiers.sh"
+          - "src/robot_lab_bringup/test/test_urdf_springs.py"
+          - "src/robot_lab_bringup/test/test_wheel_navigation_contract.py"
+          - "src/robot_lab_maps/package.xml"
+          - "docs/status/evidence/ci-extensions-2026-10-07/"
           - "src/robot_lab/robot_lab_registry/test/"
           - "src/robot_lab_adapter/test/"
           - "src/robot_lab_bringup/test/"
           - "scripts/test_fast.sh"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/ci-extensions-2026-10-07/README.md: exact dc39922 negative CI, unchanged checks moved to the correct tier, unsourced fast/sourced integration measurements and canonical dependency resolution."
           - "docs/status/evidence/ci-extensions-2026-10-05/README.md: exact 36f38b5 remote build/all-tier/registry success, original negative dependency traceback and isolated NumPy 1.21.6 reproduction retained."
           - "docs/status/evidence/extensions-2026-10-05/xacro-final.log: all xacro robots expand; native PX4 explicitly validates its adapter instead of requiring an absent xacro. 26 focused integration checks pass. CI 46d9a0e failed that old assumption after passing build/fast/physics; exact next CI revision remains to be checked."
           - "docs/status/evidence/continuation-2026-10-05/direct-fast-final.log: direct runner with inherited source/package paths removed: 755 passed, 2 skipped, 1 integration case deselected; real mecanum xacro case passes separately with sourced install."
@@ -356,7 +361,7 @@ tasks:
           - "xacro subprocess test moved out of test_sim_profiles.py into test_xacro_expansion.py (integration tier); adapter.py top-level ROS launch imports made lazy; test_adapter_launch_generation skips explicitly without ROS launch"
           - "Isaac: removed host-specific paths (/workspace/isaac_env/bin/python,$/workspace/.tmp); isaac_python default now portable via ISAAC_PYTHON env; offline contract test made deterministic (6/6 physics passed in both plain-Python and ROS runs"
           - "Runs: fast 385 passed+1 explicit skip (no ROS); with ROS 386 passed; integration 106 passed; physics 6 passed (both modes); full all-tier 498 passed,  ​0 failed"
-        next_action: "Preserve explicit tier boundaries and compatible Trimesh pin; observe CI at each newly published source revision. Runtime and clean-host missions remain separate qualification."
+        next_action: "Publish the tier/dependency correction on master and observe its exact complete CI result. Preserve all assertions and the compatible Trimesh pin; runtime and clean-host missions remain separate qualification."
       R1.3:
         title: "Make CI bootstrap and doctor trustworthy"
         state: "done"
@@ -1042,11 +1047,11 @@ tasks:
         next_action: "Seven diverse-map metadata records exist in r6_diverse_maps.py, but they do not establish seven runnable generated worlds. Generate/install/register collision and map assets, then record one real class-specific mission per added map with reproducible reset."
       R6.5:
         title: "Generate 2D occupancy grids from selected 3D worlds in GUI"
-        state: "partial"
+        state: "active"
         owner: "codex"
         depends_on: ["R6.1", "R3.4"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/occupancy_slice.py", "src/robot_lab_gui/", "scripts/", "docs/ASSET_EXTENSION_GUIDE.md"]
-        active_scope: "2026-10-05 user requests robotics-upo 2D-map generator button. Pin the Fortress branch, keep generated maps/logs on SSD, preserve existing maps and report geometry limitations."
+        active_scope: "2026-10-06 codex: review generated occupancy previews against source worlds (origin/scale/height/seed, disconnected free regions, rotated geometry, obstacle alignment, artifact freshness), then register validated maps and measure an actual Nav2 route on one. Preserve existing maps and the October 5 GUI Generate/Stop evidence."
         acceptance_ref: "ROADMAP.md"
         next_action: "New-extension priority: GUI Generate/Stop passes with owned Gazebo child cleanup; finish multi-region/rotated/heightfield projection checks, review origin/scale/obstacle alignment, then register generated assets with actual Nav2 routes. Preserve existing maps."
         result: "Worlds GUI and pinned Fortress plugin export actual occupancy PGM/YAML. Primitive and both furnished Celisca mesh slices measured; outputs remain previews of seed-connected regions. Shared heightfield work is recorded separately in R6.7."

@@ -32,6 +32,7 @@ def test_absent_springs_preserve_legacy_models():
     assert joint_springs('') == {}
 
 
+@pytest.mark.integration
 def test_isaac_extracts_passive_physics_before_stripping_import_extensions():
     from robot_lab_isaac.isaac_spawner import _portable_description
     plugin = '<gazebo><plugin name="unwanted" filename="gazebo_only"/></gazebo>'
@@ -42,6 +43,7 @@ def test_isaac_extracts_passive_physics_before_stripping_import_extensions():
     assert springs['drop']['damping'] == 50.0
 
 
+@pytest.mark.integration
 def test_isaac_does_not_discard_malformed_physics_with_plugins():
     from robot_lab_isaac.isaac_spawner import _portable_description
     with pytest.raises(ValueError):

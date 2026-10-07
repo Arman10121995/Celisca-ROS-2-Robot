@@ -1,6 +1,6 @@
 # Robot Lab done and remaining checklist
 
-Updated October 6, 2026. **The project is partial.** A checked item below
+Updated October 7, 2026. **The project is partial.** A checked item below
 describes an implemented feature or a named measured screen; it does not
 qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
@@ -78,6 +78,9 @@ the older roadmap. Existing stabilization fixes must remain working.
   in MuJoCo/`nav_empty` (R5.7). Attached-object planning and Servo remain open.
 - [x] Repair Trimesh/NumPy CI compatibility; exact `36f38b5` remote CI passes
   build, fast, physics, integration and registry checks.
+- [ ] Observe complete CI for the latest extension correction. `dc39922`
+  built but failed three ROS imports in the fast tier; unchanged checks moved
+  to integration pass locally. See [October 7 evidence](evidence/ci-extensions-2026-10-07/README.md).
 - [x] Replace invented support/release success with exact hashed measurements,
   retain negative results and block full-release claims on unfinished tasks.
   GUI Health, this checklist, the roadmap and agent guides expose those gaps

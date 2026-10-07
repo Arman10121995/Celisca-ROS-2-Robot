@@ -32,6 +32,7 @@ def test_action_success_alone_cannot_pass_measured_acceptance(key, value):
     assert not navigation_acceptance(bad, 0.15, 5)['passed']
 
 
+@pytest.mark.integration
 def test_selected_urdf_root_reaches_nav2_servers_and_nested_costmaps():
     from launch import LaunchContext
     src = Path(__file__).resolve().parents[2]

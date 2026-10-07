@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-07",
+  "baseline_revision": "dc39922fe57071b4184a843c46606677805cc71a",
+  "host": "Jetson AGX Orin ARM64 / Ubuntu 22.04 / ROS 2 Humble",
+  "scope": "CI tier/dependency repair; no new robot mission claims",
+  "source_files": [
+    {
+      "path": "scripts/test_tiers.sh",
+      "sha256": "b8828ce7060fd57a2ad4854512b54984ab52b67cfb9c4426325e14bb157dc2db"
+    },
+    {
+      "path": "src/robot_lab_bringup/test/test_urdf_springs.py",
+      "sha256": "a1b46972aaa0e48dbff8a92726b3ac1b304b3df80160754f28faaa5f90a50e88"
+    },
+    {
+      "path": "src/robot_lab_bringup/test/test_wheel_navigation_contract.py",
+      "sha256": "a8580c75324dbca428b97b3a6359d79350c7a944ceb836de591575413811aa19"
+    },
+    {
+      "path": "src/robot_lab_maps/package.xml",
+      "sha256": "24e31949e249c1324273fc1165b8609e7c90ad613a2fea3e3330cb0518ffde8e"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "f2307a10a4fc55c5a4c99c60dd3b38a9a709f090e8ce640a1de1b16ab5f8c900"
+    }
+  ],
+  "checks": [
+    {
+      "name": "unsourced-fast",
+      "command": "bash scripts/test_tiers.sh fast",
+      "environment": "Remove PYTHONPATH, AMENT_PREFIX_PATH, COLCON_PREFIX_PATH, CMAKE_PREFIX_PATH, LD_LIBRARY_PATH; PATH=/usr/local/bin:/usr/bin:/bin; SSD TMPDIR/runtime",
+      "exit_code": 0,
+      "passed": 881,
+      "skipped": 2,
+      "deselected": 4,
+      "wall_seconds": 158.58,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/unsourced-fast.log"
+    },
+    {
+      "name": "sourced-integration",
+      "command": "source scripts/ssd_env.sh; source install/setup.bash; ROS_DOMAIN_ID=231 bash scripts/test_tiers.sh integration",
+      "exit_code": 0,
+      "passed": 134,
+      "wall_seconds": 39.82,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/integration.log"
+    },
+    {
+      "name": "maps-rebuild",
+      "command": "colcon --log-base /workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/maps-build build --packages-select robot_lab_maps --event-handlers console_direct+",
+      "exit_code": 0,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/maps-build.log"
+    },
+    {
+      "name": "rosdep-key",
+      "command": "rosdep resolve python3-trimesh-pip",
+      "exit_code": 0,
+      "log": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/trimesh-rosdep.log"
+    }
+  ],
+  "retained_ssd_artifacts": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/dc39922-failed.log",
+      "bytes": 2282727,
+      "sha256": "6040f9caf8bd7cd7e5e1206ccb8e64e6fc1ee563bd4e5c7242897ebcc4823049"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/integration.log",
+      "bytes": 254,
+      "sha256": "f758f88f1718a409b776c1adfe832bbe5bb3bbc5fb4eedec94449735e6d89c90"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/maps-build.log",
+      "bytes": 28986,
+      "sha256": "584037ccdd38ec316c345ac16da9b58c94dcf94b2099dcde06b3dec05d788bb5"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/trimesh-rosdep.log",
+      "bytes": 13,
+      "sha256": "0199ef8e62e0adbaff05ee43178fe3180a7a9ce3cf8e29d5cc759589c4ca6fc9"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/unsourced-fast.log",
+      "bytes": 1156,
+      "sha256": "4e0f3b574f440b20985b2782c21e5404100efbafb9f3d5c5d9e3a3e0fd6163d6"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-2026-10-07/ci/dc39922-failed-report.json",
+      "sha256": "dcfa9f4a85ebfb6331136e581ee0a2daddaf053258cf0e431753276215f187db"
+    }
+  ]
+}

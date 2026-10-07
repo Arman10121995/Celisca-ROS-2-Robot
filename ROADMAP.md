@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-05. Continuation baseline: `700b94e` plus recorded patches. The
+Updated: 2026-10-07. Extension checkpoint: `dc39922` plus recorded corrections. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
 but full mission qualification remains partial. Existing scoped live robot
@@ -215,6 +215,12 @@ Dependencies: `R0.2`.
 - Files: `src/robot_lab/robot_lab_registry/test/`, `src/robot_lab_adapter/test/`, `src/robot_lab_bringup/test/`, `scripts/test_fast.sh`.
 - Implement: Separate numerical, ROS-node, launch-contract, physics, mission and hardware tests. Fix the DeadReckoning initialization failure. Mock subprocesses in unit orchestration tests; replace count-only qualification progressively.
 - Acceptance: Unit suite runs without accessing a shared ROS graph; optional engines produce explicit skips; numerical assertions remain strong; ROS nodes initialize and tear down correctly.
+
+The October 7 correction moves three unchanged ROS-import checks into the
+explicit integration manifest after `dc39922` built but failed the unsourced
+fast tier. Local plain-Python fast and sourced integration pass; observe the
+correction's exact remote run before closing R1.2 again. See
+[CI evidence](docs/status/evidence/ci-extensions-2026-10-07/README.md).
 
 ### R1.3 — Make CI bootstrap and doctor trustworthy
 
