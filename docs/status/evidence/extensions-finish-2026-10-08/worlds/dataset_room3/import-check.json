@@ -1,0 +1,87 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/experiment_rooms/worlds/room3/world.model",
+  "source_sha256": "2664dd135e23b55ced4224042ed9ff8239bfd43158fc7042edd654204a90400e",
+  "derived_world_sha256": "f060178424ef5b9def174884721240810efc759205f4839c16edac66c838cf2d",
+  "resolved_include_count": 0,
+  "dependency_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/vendor/gazebo_classic/gazebo.material": "e6050d698bd8fb0f7479318ef6dccb2de1b3c484cf48c10b78b8b617026cc2e2"
+  },
+  "removed_classic_plugins": [],
+  "source_pose_repairs": [],
+  "static_container_repairs": [],
+  "static_snapshot": true,
+  "static_fixture_changes": [
+    {
+      "model": "unit_box_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    }
+  ],
+  "mesh_frame_repairs": [],
+  "dynamic_actors": [],
+  "shapes": 27,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    -14.200000000000001,
+    0.05
+  ],
+  "projected_spawn_clearance_m": 2.3000000000000003,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-114846-a64c4d/dataset_room3.generation.json"
+}

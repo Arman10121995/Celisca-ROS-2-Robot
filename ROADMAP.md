@@ -1,6 +1,7 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-07. Runtime checkpoint: `091d388` plus documentation follow-up. The
+Updated: 2026-10-08. See [the current extension checkpoint](docs/status/continuation-2026-10-08.md)
+for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
 but full mission qualification remains partial. Existing scoped live robot
@@ -18,6 +19,30 @@ view of implemented features and remaining acceptance. The
 [current status overview](docs/status/CURRENT_STATUS.md) links the published
 GUI, installed inventory, measured robot scopes and exact successful CI.
 
+## October 8 requested readiness order
+
+Use [the detailed agent execution guide](docs/AI_ROBOT_READINESS_GUIDE.md) for
+controller/policy reuse, physical probes and guarded promotion.
+
+The user requests every complete robot to become motion-ready first, then
+SLAM-ready, then navigation-ready across the installed maps. Continue the
+extensions in that order. A model import is only the starting point. Use
+class-appropriate motion: wheel driving, a balanced walking gait, controlled
+flight, arm trajectories and hand articulation. A stationary arm/hand does not
+receive ground-vehicle SLAM or navigation modes; a mobile manipulator needs
+its mobile base qualified separately.
+
+For each exact source variant and backend, finish real neutral startup,
+forward/reverse or class-equivalent motion, turning, measured joint feedback,
+Stop, command loss and reset before enabling a motion workflow. Next qualify
+mounted sensors, actual map growth and saved/reloaded 2D/3D maps. Finally
+qualify localization and physical navigation endpoints, obstacle clearance,
+cancellation and reset on each compatible installed map. Mark narrow evidence
+with its map and revision; neither one empty-world trial nor a parent-family
+tag establishes "any map" support. Preserve the already measured controllers
+while adding missing ones. Exact unfinished cells remain visible in the GUI
+and ledger, including unsuitable terrain, multi-floor and aerial tasks.
+
 ## October 5 requested extensions
 
 The user adds world-to-occupancy generation, external world/robot libraries,
@@ -29,11 +54,11 @@ asset listing is separate from an installed robot with working control.
 
 | Task | Scope | Current boundary |
 |---|---|---|
-| R3.6 | Robot-assets, URDFHub and broader robot/world source catalogs | Pinned SSD installation / normal Launch selectors; cross-backend display, licenses and control qualification remain |
+| R3.6 | Robot-assets, URDFHub and broader source catalogs | Source-pinned normal Launch; Husky/TurtleBot3/4 physical motion and named mapping/navigation, native Panda controls; other models/backends/maps/licenses remain |
 | R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Native Panda arm and bounded-force Hand controls measured on MuJoCo, including physical cube lift/hold/release and interruption/reset; MoveIt Cartesian/static-world screens measured; Servo, planned payloads, other hands/backends and mobile missions remain |
 | R5.10 | PX4 in every selected installed world | All world selections preserved; native `nav_empty` and `nav_obstacle` flight screens pass; full spawn/ceiling matrix remains |
-| R6.5 | Generate 2D grids for selected collision worlds | Actual primitive and both furnished Celisca exports; seed-connected projection checked; reviewed registration/Nav2 checks remain |
-| R6.6 | External worlds and packaged Gazebo examples | Catalog / resource / Classic-plugin migration and four-backend import work |
+| R6.5 | Generate 2D grids for selected collision worlds | Actual editable-seed Generate/Stop and refreshed dataset exports; separate rotated terrain slices; remaining regions/registration/routes remain |
+| R6.6 | External worlds and packaged Gazebo examples | 14 dataset/three example imports; pinned hospital pose/Collada/static-floor repairs and scoped real routes; actors/upper floors/other missions and licenses remain |
 | R6.7 | Terrain GUI and four-backend heightfield/mesh conversion | Active with shared conversion/contact screens; terrain GUI/provider workflow and Isaac runtime contact remain |
 
 See [the implementation guide](docs/ASSET_EXTENSION_GUIDE.md) and
@@ -788,6 +813,8 @@ Dependencies: `R3.6`, `R2.2`, `R3.4`.
 - Implement: Start with a licensed Panda/UR5 source; add bounded joint jogging, home, Stop, trajectory actions, actual joint state/TF and robot-specific gains. Add MoveIt 2 planning and Servo Cartesian jogging with a real planning scene, limits and cancellation. Robot GUI selections resolve to executable backend-specific controllers.
 - Acceptance: Actual arm motion tracks joint and Cartesian targets; limit/collision checks, cancel/Stop and publisher loss pass. Repeat reach and pick/place with measured object/arm state on Gazebo, MuJoCo, PyBullet and Isaac. A URDF view is not control.
 
+- October 8 operator follow-up: native Panda **Use current tool pose** and small X/Y/Z target buttons now expose measured metres in `native_world`, preserving orientation and separate Plan/Execute. Actual 1 cm targets pass on all three axes with submillimetre endpoint errors after bounded bias feedforward through unchanged native actuators. Normal GUI collision/reachability/invalidation/Cancel/Stop/loss/reset and the physical Hand cube repeat pass. Other arms/backends, Servo, attached payloads and full pick/place remain open; see [current evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md).
+
 - Partial evidence (2026-10-05/06): the native Menagerie Panda uses its actual seven MuJoCo actuators. GUI joint jogging/Home/Stop, real position-trajectory actions, model-limit/velocity/joint rejection, cancellation and 0.8 s heartbeat loss are measured in `dataset_room2`; Home error is below 0.009 rad. The October 6 `nav_empty` fixture adds a real coupled-finger cube lift/hold/release and reset. See [control evidence](docs/status/evidence/panda-turtlebot4-2026-10-05/README.md), [grasp evidence](docs/status/evidence/panda-gripper-2026-10-06/README.md) and [tutorial](docs/tutorials/panda_arm.md). Actual MoveIt KDL/OMPL/FCL Cartesian Plan/Execute now uses the native robot and selected-world collision geometry, seeded from measured joints. Two physical TCP offsets, floor/self-collision and unreachable rejection, joint/finger invalidation, Cancel/Stop/watchdog, reset and clean planner shutdown pass in static `nav_empty`; see [Cartesian evidence](docs/status/evidence/panda-cartesian-2026-10-06/README.md). Servo, attached-object scenes/arbitrary repeated pick/place, additional map missions and the other three arm backends remain open.
 
 ### R5.8 — Robot hands and grippers
@@ -811,6 +838,7 @@ Dependencies: `R5.1`, `R5.7`, `R5.8`.
 Dependencies: `R5.4`, `R6.1`.
 
 - Implement: Preserve selected maps through GUI/resolver; adapt real SDF resources and version-specific world plugins for native PX4/Harmonic. Resolve landing-gear support and takeoff/ceiling clearance per world; add useful altitude/goal controls. Keep Flight distinct from unimplemented aerial SLAM/obstacle-aware planning.
+- October 8 operator follow-up: all seven Drive buttons now appear directly in Drone, sharing input state and Stop with Drive. Manual yaw defaults to 0.3 rad/s with 0.05 rad/s increments per 0.1 s. The current normal owned native flight screen passes actual seven-button body motion, neutral enablement, release, Stop/loss and landing/disarm: 2 s yaw requests produce +0.601/-0.609 rad at the 0.3 rad/s cap, with 0.041 m command-loss drift. See the October 8 controls evidence. Full map qualification remains open.
 - Acceptance: Each existing map can be selected without silent substitution; per-world display, actual takeoff/hold/manual XYZ/land/disarm and reset/cancel artifacts exist. Terrain and multilevel floors use measured support heights. Report actor/plugin failures. Other aerial backends and obstacle avoidance need real FCU/plant/planner integration rather than metadata changes.
 
 ## R6 — Environment qualification

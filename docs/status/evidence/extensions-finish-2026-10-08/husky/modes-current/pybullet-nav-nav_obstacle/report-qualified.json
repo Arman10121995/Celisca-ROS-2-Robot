@@ -1,0 +1,125 @@
+{
+  "robot": "asset_husky",
+  "backend": "pybullet",
+  "mode": "nav",
+  "map": "nav_obstacle",
+  "passed": true,
+  "provider": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky-experimental-provider",
+  "experimental_provider": true,
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_obstacle world_package:=robot_lab_maps world_name:=nav_obstacle world_path:=maps/nav_obstacle/worlds/nav_obstacle.world map_yaml:=maps/nav_obstacle/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=false global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "algorithm_selection": {
+    "global_planner": "a_star_planner",
+    "local_planner": "pure_pursuit",
+    "controller": "simple_controller",
+    "localizer": "amcl",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion"
+  },
+  "owned_pid": 110746,
+  "check_command": [
+    "python3",
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/sim_nav_check.py",
+    "--base",
+    "base_link",
+    "--timeout",
+    "600",
+    "--via-topic",
+    "--max-position-error",
+    ".15",
+    "--max-yaw-error-deg",
+    "5",
+    "--trace-out",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-nav-nav_obstacle/navigation.trace.json",
+    "--robot-radius",
+    "0.62",
+    "--min-route-clearance",
+    ".02",
+    "--world-file",
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world",
+    "--offset-x",
+    "3.5",
+    "--offset-y",
+    "3.5",
+    "--goal-yaw-deg",
+    "0",
+    "--require-detour"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "stack_ready_wall_s": 6.2,
+    "start": [
+      -7.0,
+      -7.0
+    ],
+    "goal": [
+      -3.5,
+      -3.5
+    ],
+    "goal_yaw_deg": 0.0,
+    "outcome": "succeeded",
+    "wall_s": 259.4,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+      -3.533,
+      -3.424
+    ],
+    "final_error_estimate_m": 0.083,
+    "final_yaw_estimate_deg": 0.76,
+    "final_yaw_error_estimate_deg": 0.76,
+    "final_truth_xy": [
+      -3.535,
+      -3.392
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -1.24,
+    "final_error_truth_m": 0.113,
+    "final_yaw_error_truth_deg": -1.24,
+    "motion_source": "/odom/ground_truth",
+    "motion_forward_m": 8.228,
+    "motion_reverse_m": 0.643,
+    "motion_heading_travel_rad": 14.159,
+    "acceptance": {
+      "passed": true,
+      "checks": {
+        "goal_succeeded": true,
+        "truth_position": true,
+        "truth_heading": true,
+        "fresh_truth": true
+      },
+      "limits": {
+        "position_m": 0.15,
+        "yaw_deg": 5.0,
+        "truth_age_wall_s": 1.0
+      }
+    },
+    "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-nav-nav_obstacle/navigation.trace.json",
+    "truth_samples": 6102,
+    "route_acceptance": {
+      "passed": true,
+      "checks": {
+        "measured_trajectory": true,
+        "swept_footprint_clear": true,
+        "straight_route_blocked": true
+      },
+      "robot_radius_m": 0.62,
+      "min_clearance_limit_m": 0.02,
+      "min_swept_clearance_m": 0.1376183354978333,
+      "direct_route_clearance_m": -0.62,
+      "scope": "Static box obstacles with conservative circular robot footprint; not contact telemetry",
+      "world_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world"
+    },
+    "body_height": {
+      "expected_floor_m": 0.1,
+      "minimum_m": 0.1325124055147171,
+      "maximum_m": 0.1333361119031906,
+      "samples": 6102
+    }
+  },
+  "launch_returncode": 0,
+  "derived_from": {
+    "original_report_sha256": "9c11c0de0c6828d6509e7f4a6ab0b6e7ce4ab686ce6940a818cd5fb58c0df381",
+    "physical_trace_sha256": "3d894832d1964047da9133da75f0913c37636063fcc3690e1c5dae64d010dab0",
+    "physical_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-nav-nav_obstacle/navigation.trace.json"
+  }
+}

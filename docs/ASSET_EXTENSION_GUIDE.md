@@ -1,6 +1,7 @@
 # Worlds, robot assets and manipulation: continuation guide
 
-Updated October 7, 2026 against published runtime checkpoint `091d388`.
+Updated October 8, 2026. The latest physical extension work is recorded in
+[the October 8 checkpoint](status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](status/CURRENT_STATUS.md) and
 [the continuation](status/continuation-2026-10-07.md) for measured scopes and
 remaining owners; exact CI and real GUI/robot evidence are separate.
@@ -62,7 +63,10 @@ Robot-assets and official TurtleBot3/Husky/TurtleBot4 URDF imports resolve mesh 
 and retain source scales. Vendor Xacro runs against a source-backed SSD ament
 index, without installing vendor packages into the system. Husky's Display
 derivative disables its obsolete upstream control dependency and resolves its
-relative extras include; this does not provide a Husky driving controller.
+relative extras include. The October 8 lab derivative now adds separate
+physical four-wheel skid control, declared motor/solver settings and a named
+lidar/RGB-D/IMU kit; [the Husky guide](tutorials/husky.md) records its scope.
+Higher modes require exact backend-specific measured certificates.
 Fetch's obsolete Classic XML extensions and byte-identical duplicate nodes
 are repaired only in derived files. The malformed R2 gripper snapshot loses
 one dangling duplicate-parent joint referencing a missing ankle; the sensor,
@@ -80,6 +84,12 @@ MJCF and invokes the actual Fortress occupancy plugin. The generated grid
 uses a complete conservative static slice mask and the actual Fortress plugin;
 primitives are projected once to avoid repeated geometry queries per cell.
 It represents the selected seed-connected height slice, not every room or floor.
+The Worlds tab initializes editable Seed X/Y from the selected world's spawn.
+Choose another seed to inspect a disconnected component. The actual custom-seed
+Generate and Stop actions are measured in the October 8 checkpoint. Terrain
+projection clips each transformed triangle at the chosen height and rasterizes
+separate polygons, preserving gaps. Generation caches compare world, seed,
+recipe, output and every mesh-dependency hash before reusing an export.
 Robot navigation/flight missions and scripted actor behavior remain unqualified.
 
 The installation report records exact entries and repair reasons. Native import
@@ -470,11 +480,13 @@ describe the current implementation. Continue it as follows:
    truth and zero movement commands, then actual Drive/Stop/watchdog control.
    The archived Burger/PyBullet producer supplies this protocol. Static visual
    proof must never enable a controller, localization or navigation mode.
-9. Source pose defects remain source tasks. The hospital has six extreme
-   remote fixtures; default Fit reports and excludes their bounds from camera
-   framing while Whole scene includes their raw extent. Do not call this a
-   world repair. Review actual authored placements and repeat collision/spawn/
-   route checks before closing R6.6.
+9. Source pose defects remain source tasks. The October 8 hospital derivative
+   repairs only the exact reviewed fixture placements from a checksum-matched
+   source and records each change. Collada node transforms, metres, textures
+   and native Gazebo loading have separate checks; camera Fit is not a repair.
+   Furniture is explicitly fixed as a static snapshot in every engine. Retain
+   original sources, failed floor/route trials and exact successful screens;
+   wider collision/spawn/actor/multi-floor missions still keep R6.6 partial.
 10. Update the ledger, roadmap, checklist, tutorial and GUI status together.
     Run meaningful grouping/FK/missing-geometry tests and actual Tk/OpenGL
     tests. Shared launcher/planning changes need the source-matched physical

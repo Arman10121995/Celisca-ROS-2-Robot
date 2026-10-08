@@ -1,0 +1,431 @@
+{
+  "robot": "menagerie_franka_emika_panda",
+  "backend": "mujoco",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": false,
+  "checks": {
+    "selected_world_scene_acknowledged": true,
+    "collision_and_unreachable_rejection": true
+  },
+  "limits": {
+    "tcp_position_error_m": 0.02,
+    "orientation_error_deg": 5.0,
+    "hold_velocity_rad_s": 0.03,
+    "hold_drift_rad": 0.02,
+    "heartbeat_abort_wall_s": 1.3
+  },
+  "scope": "Actual Tk Plan/Execute, native Panda PD actuators and independent physical hand-body TF; static nav_empty only",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none arm_control:=panda arm_planning:=moveit",
+  "tcp_native_hand_offset_m": [
+    3.108614503911477e-17,
+    5.695739155396233e-19,
+    0.1028999999999998
+  ],
+  "owned_pid": 203301,
+  "scene": {
+    "ready": true,
+    "scope": "Static selected-world collision scene",
+    "geometry_count": 9,
+    "world_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+    "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d"
+  },
+  "initial_tcp": {
+    "sim": 2.479999999,
+    "position": [
+      0.054654709453291955,
+      -0.5000712264472762,
+      0.514879929043321
+    ],
+    "quaternion_wxyz": [
+      -0.0048438376215281026,
+      0.7071240173565703,
+      0.7070546983178008,
+      -0.005080836675680679
+    ],
+    "age_sim_s": 0.0
+  },
+  "measured_fk_error_m": 3.196227601274425e-12,
+  "floor_collision": {
+    "valid": false,
+    "contacts": [
+      {
+        "first": "native_body_6",
+        "second": "robot_lab_world_0"
+      },
+      {
+        "first": "native_body_7",
+        "second": "robot_lab_world_0"
+      }
+    ]
+  },
+  "self_collision": {
+    "valid": false,
+    "native_contacts": [
+      {
+        "first": 2,
+        "second": 10
+      },
+      {
+        "first": 2,
+        "second": 10
+      },
+      {
+        "first": 10,
+        "second": 2
+      },
+      {
+        "first": 10,
+        "second": 2
+      },
+      {
+        "first": 10,
+        "second": 2
+      },
+      {
+        "first": 10,
+        "second": 2
+      },
+      {
+        "first": 10,
+        "second": 2
+      },
+      {
+        "first": 10,
+        "second": 2
+      },
+      {
+        "first": 2,
+        "second": 11
+      },
+      {
+        "first": 2,
+        "second": 11
+      },
+      {
+        "first": 11,
+        "second": 2
+      },
+      {
+        "first": 11,
+        "second": 2
+      },
+      {
+        "first": 11,
+        "second": 2
+      }
+    ],
+    "planner_contacts": [
+      {
+        "first": "native_body_2",
+        "second": "native_body_10"
+      },
+      {
+        "first": "native_body_2",
+        "second": "native_body_11"
+      }
+    ]
+  },
+  "planning_negatives": [
+    {
+      "case": "floor_blocked",
+      "error_code": -27,
+      "waypoints": 0,
+      "physical_drift_rad": 1.9915527560421253e-12
+    },
+    {
+      "case": "unreachable",
+      "error_code": -27,
+      "waypoints": 0,
+      "physical_drift_rad": 3.4097377699104925e-12
+    }
+  ],
+  "intuitive_targets": [
+    {
+      "axis": "x",
+      "sign": -1,
+      "step_m": 0.01,
+      "pose_fk_error_m": 3.1963343896799344e-12,
+      "selection_joint_drift_rad": 3.676212112502242e-12,
+      "displayed_target": "Target XYZ: 0.045, -0.500, 0.515 m",
+      "motion": {
+        "offset_m": [
+          -0.01,
+          0.0,
+          0.0
+        ],
+        "duration_sim_s": 0.17519247060979834,
+        "waypoints": [
+          {
+            "time": 0.17519247060979834,
+            "positions": [
+              -0.0008616525545090253,
+              -0.02565788444507474,
+              -0.0006935289666735039,
+              -1.617981153558357,
+              0.000265126628710709,
+              1.5757929381925206,
+              -0.7853819384398354
+            ]
+          }
+        ],
+        "target_position": [
+          0.04465470945328869,
+          -0.5000712264504726,
+          0.5148799290433098
+        ],
+        "target_quaternion_wxyz": [
+          -0.004843837618076704,
+          0.7071240173564125,
+          0.7070546983179573,
+          -0.005080836679153389
+        ],
+        "actual": {
+          "sim": 11.16,
+          "position": [
+            0.04458246962677354,
+            -0.5008609378121492,
+            0.507344029625971
+          ],
+          "quaternion_wxyz": [
+            -0.01073745062203933,
+            0.7075780187936759,
+            0.7064716997124546,
+            -0.010760668174007186
+          ],
+          "age_sim_s": 0.0
+        },
+        "position_error_m": 0.007577509000690341,
+        "orientation_error_deg": 0.941755408655991,
+        "physical_displacement_m": 0.012604104061414476,
+        "joint_samples": 79,
+        "terminal_status": {
+          "controller": "panda_native",
+          "status": "target reached; holding target",
+          "joint_names": [
+            "joint1",
+            "joint2",
+            "joint3",
+            "joint4",
+            "joint5",
+            "joint6",
+            "joint7"
+          ],
+          "positions": [
+            -0.0008616522564551332,
+            -0.019246739890875157,
+            -0.0006884369978320961,
+            -1.6243169916507725,
+            -6.940872551838526e-05,
+            1.5746661887925943,
+            -0.7853818824566311
+          ],
+          "velocities": [
+            -3.0821315748204084e-09,
+            -1.2405854390631419e-07,
+            -1.4602738987613588e-09,
+            -1.973349341963298e-07,
+            3.164401421048494e-09,
+            3.583169064232301e-08,
+            -4.1290080942670596e-10
+          ],
+          "target": [
+            -0.0008616525545090253,
+            -0.02565788444507474,
+            -0.0006935289666735039,
+            -1.617981153558357,
+            0.00026512662871070895,
+            1.5757929381925206,
+            -0.7853819384398354
+          ],
+          "home": [
+            0.0,
+            0.0,
+            0.0,
+            -1.57079,
+            0.0,
+            1.57079,
+            -0.7853
+          ],
+          "limits": [
+            [
+              -2.8973,
+              2.8973
+            ],
+            [
+              -1.7628,
+              1.7628
+            ],
+            [
+              -2.8973,
+              2.8973
+            ],
+            [
+              -3.0718,
+              -0.0698
+            ],
+            [
+              -2.8973,
+              2.8973
+            ],
+            [
+              -0.0175,
+              3.7525
+            ],
+            [
+              -2.8973,
+              2.8973
+            ]
+          ],
+          "busy": false,
+          "contact_blocked": false,
+          "time": 11.14000000000039
+        }
+      }
+    },
+    {
+      "axis": "y",
+      "sign": 1,
+      "step_m": 0.01,
+      "pose_fk_error_m": 4.543459278593395e-09,
+      "selection_joint_drift_rad": 1.538699545555744e-08,
+      "displayed_target": "Target XYZ: 0.045, -0.491, 0.507 m",
+      "motion": {
+        "offset_m": [
+          0.0,
+          0.01,
+          0.0
+        ],
+        "duration_sim_s": 0.08071390116677822,
+        "waypoints": [
+          {
+            "time": 0.08071390116677822,
+            "positions": [
+              0.007075523389611691,
+              -0.01886430211354489,
+              0.008400464751905944,
+              -1.623502302763594,
+              0.0010413538851180477,
+              1.5751272943327155,
+              -0.7665486388911521
+            ]
+          }
+        ],
+        "target_position": [
+          0.04458246637428098,
+          -0.49086093794593766,
+          0.5073440279051455
+        ],
+        "target_quaternion_wxyz": [
+          -0.010737451734142337,
+          0.7075780188894277,
+          0.7064716995854999,
+          -0.01076066910301994
+        ],
+        "actual": {
+          "sim": 13.16,
+          "position": [
+            0.044740267683840436,
+            -0.4914013076262418,
+            0.5009761325815756
+          ],
+          "quaternion_wxyz": [
+            -0.015307684328908451,
+            0.7081371939994345,
+            0.7057407125009667,
+            -0.015408958229599102
+          ],
+          "age_sim_s": 0.0
+        },
+        "position_error_m": 0.006392729581065888,
+        "orientation_error_deg": 0.7543989163132974,
+        "physical_displacement_m": 0.011404367450349463,
+        "joint_samples": 72,
+        "terminal_status": {
+          "controller": "panda_native",
+          "status": "target reached; holding target",
+          "joint_names": [
+            "joint1",
+            "joint2",
+            "joint3",
+            "joint4",
+            "joint5",
+            "joint6",
+            "joint7"
+          ],
+          "positions": [
+            0.0070755199735874404,
+            -0.012397263040740155,
+            0.008404695868068692,
+            -1.6298483715568082,
+            0.0007067761777349951,
+            1.5740121761227723,
+            -0.7665485821854764
+          ],
+          "velocities": [
+            3.733885279187712e-08,
+            1.980957995731627e-08,
+            3.551906516757008e-08,
+            -1.1750940961075158e-08,
+            3.114790282190663e-09,
+            2.1618958999858938e-09,
+            2.1478849859544474e-07
+          ],
+          "target": [
+            0.007075523389611691,
+            -0.01886430211354489,
+            0.008400464751905944,
+            -1.623502302763594,
+            0.0010413538851180477,
+            1.5751272943327155,
+            -0.7665486388911521
+          ],
+          "home": [
+            0.0,
+            0.0,
+            0.0,
+            -1.57079,
+            0.0,
+            1.57079,
+            -0.7853
+          ],
+          "limits": [
+            [
+              -2.8973,
+              2.8973
+            ],
+            [
+              -1.7628,
+              1.7628
+            ],
+            [
+              -2.8973,
+              2.8973
+            ],
+            [
+              -3.0718,
+              -0.0698
+            ],
+            [
+              -2.8973,
+              2.8973
+            ],
+            [
+              -0.0175,
+              3.7525
+            ],
+            [
+              -2.8973,
+              2.8973
+            ]
+          ],
+          "busy": false,
+          "contact_blocked": false,
+          "time": 13.140000000001058
+        }
+      }
+    }
+  ],
+  "error": "AssertionError({'offset_m': [0.0, 0.0, 0.01], 'duration_sim_s': 0.13859746741700066, 'waypoints': [{'time': 0.13859746741700066, 'positions': [0.00759284744586985, -0.006179123836724687, 0.007953328079161395, -1.5975089635268906, 0.0012666426176321636, 1.5462177142906932, -0.765504122357573]}], 'target_position': [0.04474026779571705, -0.4914013047197119, 0.5109761314275235], 'target_quaternion_wxyz': [-0.015307684947832944, 0.7081371980853435, 0.7057407083691845, -0.015408959080311027], 'actual': {'sim': 15.16, 'position': [0.04453982127414755, -0.4913367529216477, 0.5038744223989141], 'quaternion_wxyz': [-0.0208452249503874, 0.7083344783273874, 0.7052587503472929, -0.020924590032073028], 'age_sim_s': 0.0}, 'position_error_m': 0.007104830530679459, 'orientation_error_deg': 0.8976114948381735, 'physical_displacement_m': 0.0029059312574761416, 'joint_samples': 72, 'terminal_status': {'controller': 'panda_native', 'status': 'target reached; holding target', 'joint_names': ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6', 'joint7'], 'positions': [0.0075928466956953055, 0.0003607743427198153, 0.007953206790630897, -1.6038288513673589, 0.0009316154171820848, 1.5451168651746607, -0.7655040171016317], 'velocities': [7.587217547189619e-09, 1.458232054462888e-07, -5.159386696300729e-09, 3.378637525720814e-07, 1.9349523497775903e-09, -3.7224936391526747e-07, 1.3410917558310306e-08], 'target': [0.00759284744586985, -0.006179123836724687, 0.007953328079161395, -1.5975089635268906, 0.0012666426176321636, 1.5462177142906932, -0.765504122357573], 'home': [0.0, 0.0, 0.0, -1.57079, 0.0, 1.57079, -0.7853], 'limits': [[-2.8973, 2.8973], [-1.7628, 1.7628], [-2.8973, 2.8973], [-3.0718, -0.0698], [-2.8973, 2.8973], [-0.0175, 3.7525], [-2.8973, 2.8973]], 'busy': False, 'contact_blocked': False, 'time': 15.160000000001732}})",
+  "launch_returncode": 0
+}

@@ -1,0 +1,61 @@
+{
+  "stack_ready_wall_s": 8.7,
+  "start": [
+    0.55,
+    12.45
+  ],
+  "goal": [
+    2.55,
+    12.45
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "succeeded",
+  "wall_s": 23.5,
+  "settled_sim_second": true,
+  "final_pose_estimate_xy": [
+    2.485,
+    12.428
+  ],
+  "final_error_estimate_m": 0.068,
+  "final_yaw_estimate_deg": 1.42,
+  "final_yaw_error_estimate_deg": 1.42,
+  "final_truth_xy": [
+    2.475,
+    12.467
+  ],
+  "truth_age_wall_s": 0.0,
+  "final_truth_yaw_deg": 2.75,
+  "final_error_truth_m": 0.077,
+  "final_yaw_error_truth_deg": 2.75,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 1.926,
+  "motion_reverse_m": 0.001,
+  "motion_heading_travel_rad": 0.407,
+  "acceptance": {
+    "passed": true,
+    "checks": {
+      "goal_succeeded": true,
+      "truth_position": true,
+      "truth_heading": true,
+      "fresh_truth": true
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/current-final/labbot-dataset_hospital-pybullet/body.trace.json",
+  "truth_samples": 568,
+  "robot": "labbot",
+  "backend": "pybullet",
+  "map": "dataset_hospital",
+  "scope": "Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent simulator body endpoint. Short static route, no complete mesh clearance or universal-map qualification.",
+  "gui_recording_completed": true,
+  "body_height": {
+    "expected_floor_m": 0.1,
+    "minimum_m": 0.0006817958201281726,
+    "maximum_m": 0.0011373478919267654,
+    "samples": 568
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "stack_ready_wall_s": 26.6,
+  "start": [
+    -7.01,
+    -7.0
+  ],
+  "goal": [
+    -3.51,
+    -3.5
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "succeeded",
+  "wall_s": 174.2,
+  "settled_sim_second": true,
+  "final_pose_estimate_xy": [
+    -3.566,
+    -3.7
+  ],
+  "final_error_estimate_m": 0.208,
+  "final_yaw_estimate_deg": 7.61,
+  "final_yaw_error_estimate_deg": 7.61,
+  "final_truth_xy": [
+    -3.628,
+    -3.509
+  ],
+  "truth_age_wall_s": 0.0,
+  "final_truth_yaw_deg": -0.07,
+  "final_error_truth_m": 0.123,
+  "final_yaw_error_truth_deg": -0.07,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 8.21,
+  "motion_reverse_m": 0.73,
+  "motion_heading_travel_rad": 14.137,
+  "acceptance": {
+    "passed": true,
+    "checks": {
+      "goal_succeeded": true,
+      "truth_position": true,
+      "truth_heading": true,
+      "fresh_truth": true
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-nav-nav_obstacle/navigation.trace.json",
+  "truth_samples": 8615,
+  "route_acceptance": {
+    "passed": true,
+    "checks": {
+      "measured_trajectory": true,
+      "swept_footprint_clear": true,
+      "straight_route_blocked": true
+    },
+    "robot_radius_m": 0.62,
+    "min_clearance_limit_m": 0.02,
+    "min_swept_clearance_m": 0.09957481809696844,
+    "direct_route_clearance_m": -0.62,
+    "scope": "Static box obstacles with conservative circular robot footprint; not contact telemetry",
+    "world_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world"
+  },
+  "robot": "asset_husky",
+  "backend": "isaac",
+  "map": "nav_obstacle",
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant. Experimental provider is declared in the original report.",
+  "gui_recording_completed": true,
+  "body_height": {
+    "expected_floor_m": 0.1,
+    "minimum_m": 0.13228148221969604,
+    "maximum_m": 0.13494092226028442,
+    "samples": 8615
+  },
+  "derived_from": {
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-nav-nav_obstacle/navigation.trace.json",
+      "sha256": "0f4db016781890e44b6d3fae4b2303838e1f958df57a1acdf10a06c0d4118dc8",
+      "bytes": 1105761
+    },
+    "original_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-nav-nav_obstacle/report.json",
+      "sha256": "2e4eec65e5f00cb9c258dedde9e3eb97763d2bb311f14b2ec89e2529ee2ced2e",
+      "bytes": 3981
+    }
+  }
+}

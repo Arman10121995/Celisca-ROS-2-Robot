@@ -3,7 +3,9 @@ import math
 
 import pytest
 
-from robot_lab_utils.occupancy_slice import primitive_slice_cells
+import numpy as np
+
+from robot_lab_utils.occupancy_slice import primitive_slice_cells, terrain_slice_polygons
 
 
 def box(position, size, yaw=0.):
@@ -34,3 +36,31 @@ def test_sphere_and_cylinder_use_real_dimensions():
 def test_unknown_geometry_cannot_silently_become_free():
     with pytest.raises(ValueError,match='Unsupported primitive'):
         primitive_slice_cells({'type':'mesh','size':[1,1,1]},[10,10],.1,.3)
+
+
+def test_terrain_slope_is_clipped_at_actual_height():
+    vertices = [[0,0,0], [2,0,2], [0,2,0]]
+    polygons = terrain_slice_polygons(vertices, [[0,1,2]], 1.)
+    assert len(polygons) == 1
+    assert {tuple(p) for p in polygons[0]} == {(1.,0.), (2.,0.), (1.,1.)}
+
+
+def test_disconnected_hills_do_not_create_a_barrier_between_them():
+    vertices = [[-3,0,2],[-2,0,2],[-3,1,2], [2,0,2],[3,0,2],[3,1,2]]
+    polygons = terrain_slice_polygons(vertices, [[0,1,2],[3,4,5]], 1.)
+    assert len(polygons) == 2
+    assert polygons[0][:,0].max() < -1
+    assert polygons[1][:,0].min() > 1
+    assert terrain_slice_polygons(vertices, [[0,1,2],[3,4,5]], 3.) == []
+
+
+def test_terrain_projection_uses_world_height_after_rotation():
+    # A rotated/translated triangle whose local elevation would all be zero.
+    vertices = np.array([[4,5,0], [4,7,2], [3,5,0.]])
+    polygon, = terrain_slice_polygons(vertices, [[0,1,2]], 1.)
+    assert {tuple(p) for p in polygon} == {(4.,6.),(4.,7.),(3.5,6.)}
+
+
+def test_invalid_terrain_cannot_silently_become_free():
+    with pytest.raises(ValueError, match='finite XYZ'):
+        terrain_slice_polygons([[0,0,float('nan')]], [[0,0,0]], .3)

@@ -1,6 +1,6 @@
 # Robot Lab operational workflow
 
-Updated October 7, 2026 against runtime checkpoint `091d388`.
+Updated October 8, 2026; exact source stages are in the current status and checkpoint.
 [Current status](status/CURRENT_STATUS.md) lists the measured scopes.
 This is the source/evidence workflow for the repository. It separates
 static checks, isolated runtime probes, scenario trials and promotion claims.

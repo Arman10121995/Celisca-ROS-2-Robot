@@ -11,19 +11,44 @@ class CartesianControls(ttk.LabelFrame):
         self.arm = arm
         self.grid(row=10, column=0, columnspan=5, sticky='ew', pady=8)
         self.status = tk.StringVar(value='Cartesian planning is not enabled for this profile.')
+        self.pose_display = tk.StringVar(value='Tool position: use the measured pose below.')
+        self.target_display = tk.StringVar(value='Target position: not yet measured.')
+        self.reference = None
+        self.reference_joints = {}
+        self.reading_pose = False
+        self.use_pose_button = ttk.Button(self, text='Use current tool pose', command=self.use_current_pose)
+        self.use_pose_button.grid(row=0, column=0, columnspan=4, sticky='ew', pady=(0, 4))
+        ttk.Label(self, textvariable=self.pose_display, wraplength=285).grid(
+            row=1, column=0, columnspan=4, sticky='w')
+        ttk.Label(self, textvariable=self.target_display, wraplength=285).grid(
+            row=2, column=0, columnspan=4, sticky='w', pady=(0, 6))
+        self.step = tk.DoubleVar(value=.01)
+        ttk.Label(self, text='Target step (m)').grid(row=3, column=0, sticky='w')
+        ttk.Spinbox(self, textvariable=self.step, from_=.001, to=.05, increment=.001,
+                    width=8).grid(row=3, column=1, sticky='w', padx=4)
         self.offset = []
+        self.target_buttons = []
         for i, axis in enumerate('xyz'):
-            ttk.Label(self, text='Δ'+axis+' (m)').grid(row=i, column=0)
-            value = tk.DoubleVar(value=.05 if axis == 'z' else 0.)
+            row = i+4
+            ttk.Label(self, text='Δ'+axis.upper()+' (m)').grid(row=row, column=0, sticky='w')
+            value = tk.DoubleVar(value=0.)
             self.offset.append(value)
             ttk.Spinbox(self, textvariable=value, from_=-.25, to=.25, increment=.01,
-                        width=8).grid(row=i, column=1, padx=4)
-            value.trace_add('write', lambda *_: self.invalidate())
+                        width=8).grid(row=row, column=1, padx=4)
+            value.trace_add('write', self.target_edited)
+            for column, sign, label in ((2, -1, '−'), (3, 1, '+')):
+                button = ttk.Button(self, text=label, width=2,
+                    command=lambda i=i, sign=sign: self.step_target(i, sign))
+                button.grid(row=row, column=column, padx=2)
+                self.target_buttons.append(button)
         self.plan_button = ttk.Button(self, text='Plan', command=self.plan)
         self.execute_button = ttk.Button(self, text='Execute Plan', command=self.execute)
-        self.plan_button.grid(row=3, column=0, sticky='ew', pady=8)
-        self.execute_button.grid(row=3, column=1, sticky='ew', padx=4)
-        ttk.Label(self, textvariable=self.status, wraplength=285).grid(row=4, column=0, columnspan=2, sticky='w')
+        self.plan_button.grid(row=7, column=0, sticky='ew', pady=8)
+        self.execute_button.grid(row=7, column=1, columnspan=3, sticky='ew', padx=4)
+        ttk.Label(self, text='X/Y/Z follow native_world axes, in metres. Tool orientation stays fixed.\n'
+                  'The ± buttons only edit the target. Review Plan, then Execute Plan to move.',
+                  wraplength=285, style='Muted.TLabel').grid(row=8, column=0, columnspan=4, sticky='w')
+        ttk.Label(self, textvariable=self.status, wraplength=285).grid(row=9, column=0, columnspan=4, sticky='w', pady=6)
         self.connected = False
         self.joints, self.received = {}, -math.inf
         self.scene, self.scene_received = {}, -math.inf
@@ -40,12 +65,105 @@ class CartesianControls(ttk.LabelFrame):
     def invalidate(self):
         self.generation += 1
         self.planning = False
+        self.reading_pose = False
         self.points = None
         self.execute_button.state(['disabled'])
 
     def refresh(self):
         self.invalidate()
+        self.clear_reference()
         self.plan_button.state(['disabled'])
+        for button in [self.use_pose_button]+self.target_buttons:
+            button.state(['disabled'])
+
+    def clear_reference(self):
+        self.reference = None
+        self.reference_joints = {}
+        self.pose_display.set('Tool position: fresh measured pose required.')
+        self.target_display.set('Target position: use current tool pose.')
+
+    def target_edited(self, *_):
+        self.invalidate()
+        self.update_target_display()
+
+    def update_target_display(self):
+        if self.reference is None:
+            return
+        try:
+            offset = [float(value.get()) for value in self.offset]
+            if not all(math.isfinite(value) and abs(value) <= .25 for value in offset):
+                raise ValueError
+            self.target_display.set('Target XYZ: '+', '.join('%.3f' % (p+d)
+                for p, d in zip(self.reference, offset))+' m')
+        except (ValueError, tk.TclError):
+            self.target_display.set('Target offset must be finite and within ±0.25 m.')
+
+    def step_target(self, index, sign):
+        if not self.ready() or self.planning or self.reading_pose:
+            self.status.set('Wait for fresh measured joints and an idle planning scene.')
+            return
+        try:
+            step = float(self.step.get())
+            target = float(self.offset[index].get())+sign*step
+            if not math.isfinite(step) or not .001 <= step <= .05 or not math.isfinite(target) or abs(target) > .25:
+                raise ValueError('Use a 1–50 mm step and keep the offset within ±0.25 m.')
+            self.offset[index].set(round(target, 6))
+            self.status.set('Target updated; Plan checks reachability and collisions before execution.')
+        except (ValueError, tk.TclError) as exc:
+            self.status.set(str(exc))
+
+    @staticmethod
+    def fk_request(joints):
+        from moveit_msgs.srv import GetPositionFK
+        request = GetPositionFK.Request()
+        request.header.frame_id = 'native_world'
+        request.fk_link_names = ['panda_tcp']
+        request.robot_state.joint_state.name = list(joints)
+        request.robot_state.joint_state.position = list(joints.values())
+        return request
+
+    def use_current_pose(self):
+        if not self.ready() or self.planning or self.reading_pose or not self.fk.service_is_ready():
+            self.status.set('Wait for fresh measured joints and the MoveIt FK service.')
+            return
+        self.invalidate()
+        self.clear_reference()
+        for value in self.offset:
+            value.set(0.)
+        snapshot = dict(self.joints)
+        generation = self.generation
+        self.reading_pose = True
+        self.pose_started = time.monotonic()
+        self.status.set('Reading the current tool pose; no motion is commanded.')
+        self.fk.call_async(self.fk_request(snapshot)).add_done_callback(
+            lambda future: self.got_current_pose(future, generation, snapshot))
+
+    def set_reference(self, pose, joints):
+        self.reference = tuple(getattr(pose.position, axis) for axis in 'xyz')
+        self.reference_joints = dict(joints)
+        self.pose_display.set('Tool XYZ: '+', '.join('%.3f' % p for p in self.reference)+' m')
+        self.update_target_display()
+
+    def got_current_pose(self, future, generation, snapshot):
+        if generation != self.generation:
+            return
+        self.reading_pose = False
+        if not self.ready() or not all(abs(self.joints.get(n, math.inf)-q) < .01 for n, q in snapshot.items()):
+            self.clear_reference()
+            self.status.set('Robot state changed; read the current tool pose again.')
+            return
+        try:
+            answer = future.result()
+            if answer.error_code.val != 1 or not answer.pose_stamped:
+                raise ValueError('MoveIt could not compute the measured tool pose.')
+            pose = answer.pose_stamped[0].pose
+            if not all(math.isfinite(getattr(pose.position, axis)) for axis in 'xyz'):
+                raise ValueError('MoveIt returned an invalid tool position.')
+            self.set_reference(pose, snapshot)
+            self.status.set('Current pose selected. Use small ± axis steps, then Plan and Execute Plan.')
+        except Exception as exc:
+            self.clear_reference()
+            self.status.set('Could not read current tool pose: '+str(exc))
 
     def connect(self):
         if self.connected:
@@ -96,6 +214,7 @@ class CartesianControls(ttk.LabelFrame):
         if self.was_owned and not owned:
             self.invalidate()
             self.joints, self.scene = {}, {}
+            self.clear_reference()
         if owned:
             self.connect()
             if not self.scene.get('ready'):
@@ -108,36 +227,40 @@ class CartesianControls(ttk.LabelFrame):
         if self.planning and time.monotonic()-self.planning_started > 8:
             self.invalidate()
             self.status.set('Planning timed out; plan again.')
+        if self.reading_pose and time.monotonic()-self.pose_started > 5:
+            self.invalidate()
+            self.status.set('Tool-pose request timed out; try again.')
         ready = self.ready()
+        if self.reference is not None and (not ready or not all(
+                abs(self.joints.get(n, math.inf)-q) < .01 for n, q in self.reference_joints.items())):
+            self.clear_reference()
         if self.points and (not ready or not self.unchanged() or time.monotonic()-self.planned_at > 10):
             self.invalidate()
             self.status.set('Plan expired or robot state changed; plan again.')
-        self.plan_button.state(['!disabled'] if ready and not self.planning else ['disabled'])
+        editable = ready and not self.planning and not self.reading_pose
+        self.plan_button.state(['!disabled'] if editable else ['disabled'])
+        for button in [self.use_pose_button]+self.target_buttons:
+            button.state(['!disabled'] if editable else ['disabled'])
         self.execute_button.state(['!disabled'] if ready and self.points and self.unchanged() else ['disabled'])
         self.was_owned = owned
 
     def plan(self):
-        if (not self.ready() or self.planning or not self.fk.service_is_ready()
+        if (not self.ready() or self.planning or self.reading_pose or not self.fk.service_is_ready()
                 or not self.ik.service_is_ready() or not self.planner.service_is_ready()):
             return
         try:
             offset = [float(v.get()) for v in self.offset]
             if not all(math.isfinite(v) and abs(v) <= .25 for v in offset) or max(abs(v) for v in offset) < .001:
-                raise ValueError('Set a finite offset within ±0.25 m and at least 1 mm.')
+                raise ValueError('Choose a small ± axis step (at least 1 mm, within ±0.25 m).')
         except (ValueError, tk.TclError) as exc:
             self.status.set(str(exc))
             return
-        from moveit_msgs.srv import GetPositionFK
         self.invalidate()
         generation = self.generation
         self.planning = True
         self.planning_started = time.monotonic()
         self.start = dict(self.joints)
-        request = GetPositionFK.Request()
-        request.header.frame_id = 'native_world'
-        request.fk_link_names = ['panda_tcp']
-        request.robot_state.joint_state.name = list(self.start)
-        request.robot_state.joint_state.position = list(self.start.values())
+        request = self.fk_request(self.start)
         self.status.set('Planning from measured joints with the selected-world collision scene…')
         self.fk.call_async(request).add_done_callback(lambda future: self.got_fk(future, generation, offset, request.robot_state))
 
@@ -148,7 +271,6 @@ class CartesianControls(ttk.LabelFrame):
             self.invalidate()
             self.status.set('Robot or scene state changed during planning; plan again.')
             return
-        from geometry_msgs.msg import Pose
         from moveit_msgs.srv import GetPositionIK
         answer = future.result()
         if answer.error_code.val != 1 or not answer.pose_stamped:
@@ -156,6 +278,7 @@ class CartesianControls(ttk.LabelFrame):
             self.status.set('MoveIt could not compute the current native TCP pose.')
             return
         pose = answer.pose_stamped[0].pose
+        self.set_reference(pose, self.start)
         for axis, delta in zip('xyz', offset):
             setattr(pose.position, axis, getattr(pose.position, axis)+delta)
         self.target = pose
@@ -184,7 +307,8 @@ class CartesianControls(ttk.LabelFrame):
         answer = future.result()
         if answer.error_code.val != 1:
             self.planning = False
-            self.status.set('No collision-free reachable target (MoveIt code %d).' % answer.error_code.val)
+            self.status.set('Target is unreachable or colliding with the current tool orientation '
+                '(MoveIt code %d). Try a smaller step or adjust a joint first.' % answer.error_code.val)
             return
         solution = dict(zip(answer.solution.joint_state.name, answer.solution.joint_state.position))
         names = self.arm.state['joint_names']

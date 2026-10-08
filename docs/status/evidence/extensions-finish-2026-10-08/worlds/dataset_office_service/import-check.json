@@ -1,0 +1,181 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/service.world",
+  "source_sha256": "e8aca13aee881bedf40df1145a74a95227134f54d366143ffa07eb697d4bd6c6",
+  "derived_world_sha256": "7f9bfa8f2a7a71445479c49cf4def5863fd0a7166c77c94e85afce502cb1d636",
+  "resolved_include_count": 153,
+  "dependency_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/bathroom.obj": "cc0838bbe64a7a154aeafd5ef5a10ecd69abeeddc662a77c1d354666a6194c46",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/tile.obj": "9bfc3c424814b10063ddbcf164c3f30f2341e072b5c0ce7822c8bc5b3a2044d7",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/door/meshes/door_frame.obj": "8211c1bf93658eb1510f67e4a53f1b9f92fdc139c20a4efb8c31de917132ac3f",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/door/meshes/door_door.obj": "d752b0e130ab4f94d7c3a0677737df6f1ba1d367c8a6f3ec15e47e5c51c81507",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/toilet/meshes/toilet.dae": "9b3bbe599257344305b408539db12b4f52cf3a2d07fba2d57956a325f45298da",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/toilet/model.sdf": "8844bbbc46e728df6b98105f3c4e14ddee77307cd024cd53cd9054516ab2fe4e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/wastebasket/meshes/wastebasket.dae": "e544027846647002ff089d7df5bf73dc67be77fcb69aee66582df5868381435c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/wastebasket/model.sdf": "dfc929b3b71bea8deebce6c80790f156a8e81a3478633076866047d74c8fe8f3",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/refreshment_area.obj": "328b3fa5a6b51b2173cfbbf650c94adc17cb1ea7460fc5ca91280cfc9b73bf89",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/cafe_counter/meshes/counter_no_sink.obj": "dc430665db3ae1a4f95f6adeef23018c413b7d5c7b2112d7ec9010ed67180bc4",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/cafe_counter/meshes/counter_sink.obj": "36bf8ba77d419476fedff8859e5ff80bfcffadcc684626ee21ac2aca9d2ed8d8",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/microwave/meshes/microwave.obj": "58f036a032ae9eb31d481f3ff204702919c2afb042f0347d76365222a97a65d1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/microwave/model.sdf": "d99ebd7d726c71ec3d2abef98250a23338a1dc63733be65ee6c2ae1d07351b02",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/coffee_maker/meshes/coffee_maker.obj": "ee2cc4533a6b9539cac8a6adf0f4fefca9911d894ed790814e14dd8304639ca6",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/coffee_maker/model.sdf": "d079b5ad545a61f62c2fd58d85cdae834bdbf6fe5676efa00cffc25b1fcc4913",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/dishwasher/meshes/dishwasher.obj": "71647526ce22e7dec8e78b20fab3b8d8afc2cf7a6ab803921be5ef933c3180b5",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/dishwasher/model.sdf": "903d55b6b9531baa826b62633eae3c1ecf470a1fde60e146ceddc82713039a85",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/refrigerator/meshes/refrigerator.obj": "71f776e3dc8e948acac3f21b3f2d48dbef11c18d961ef4a20134a39756d7aa2a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/refrigerator/model.sdf": "21f06b8c13cdc2076f6150981a7f359671e3def7186c0c312eee99c679c9b338",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/tv_stand/meshes/tv_stand.dae": "2da3641af56f7bf731df2ca078c2726124c4116a02c699430ab6a03f02a3533b",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/tv_stand/model.sdf": "290a7a577504c63f08962974afff2132ce4220a2655e79e8c8510df78dc2ba9a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_cafe_table/meshes/office_cafe_table.dae": "3fc2dc1afec6434c0e3eb00dd4519ed763edc47fdeeeab4ec53d9e5fc686c6ec",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_cafe_table/model.sdf": "3ef2fb635d2850fee1ac243210a49c0e601f72dd029c86069b2f41572422df8b",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/meeting_room_large.obj": "c983f221ec024d55c6f7340ba5a39a22a0f2dbdee3a6383a78ada59c4bec1e99",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/carpet.obj": "c653b4f30a51f8e0ee04a11a1f5041a9c0b10989eb7e488e72b42562034c9440",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/conference_table_large/meshes/conference_table_large.obj": "3b9b0a03184ce8fabe772c81512599724b02a66aceedca29dd8847272d0773f1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/conference_table_large/model.sdf": "bc1b3228aaaa155a5eb21ad0a83507eabbe05f22cf646977a72bee7a195fb308",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/desk_chair/meshes/desk_chair.obj": "0a6e001e23d3863acfb4aa9111bacad58255a3bf97f4185ba357d99780ef1e39",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/desk_chair/model.sdf": "64508d135440798ae2cd1fe61b10ff513404f105dc4ca2df288f75e5451d11b2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/whiteboard/meshes/whiteboard.obj": "4d3a648113e2acdae0b923c7ac3e0e7d0324279e06d510c4f37745c9a0d334be",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/whiteboard/model.sdf": "ae25410d3344c9ee39bc89bd270eebe41a4b7e1710ff8aa2956512c23415caba",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/meeting_room_small.obj": "ec3e19d0b0e1cc324ae301f4a23d69ec16c73fa9a20d6d19978eb369482a0036",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/conference_table_small/meshes/conference_table_small.obj": "59419cf2f87cd31f26054e77c9deb271f367cda065fcf59469adb2b299ecd16b",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/conference_table_small/model.sdf": "ddeddbcbb41b56778341cd14e2d2964d42c2e639831e95a903b8b7be4258960a",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/door/meshes/door.obj": "2ac8a29b8bfa48744601f8f57f3354aaebd51dd19fc3e3f8138a09ee641bc905",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/office_small.obj": "6824f777e07c86f95dbd5cc779b42a28065fb19529ef279b53a90981b30050f3",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/cubicle_corner/meshes/cubicle_corner.obj": "91ab9e49aee9113b35a8c3afe687059832f1efeccd029dffad95f380959417ad",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/computer/meshes/computer_monitor.obj": "86b358e6d8314aecd8831897e1c8ed89ae2950284e38937836ebda94caeab547",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/computer/meshes/computer_tower.obj": "6b68250372fd90f8115fe5619d69aa1c7ac0d642cd9b90f44e193c9159b7cd53",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/computer/model.sdf": "e3c0de490e6a8944fc5c890a3dad8a581fad9c24edae9be5db025e0df7692e4c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_chair/meshes/office_chair.dae": "5e10926ee8239f064a26fe58d4c4e36cf4bdad41745a5b319c4c3e4d89359aef",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_chair/model.sdf": "f229f46ee4fb525f5af80d64ba333f64c3022d65f0578b0ef7db696af5783b50",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_box/meshes/office_box.dae": "2a04de8dad3694d4ca4a2e15f5d2413cbb29bf954eb336990ee5b34178defe31",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_box/model.sdf": "68d87d0c6b2da8b84222aa705fd4505390598a089f4361be9fc98e08f7bc8df9",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/mini_fridge/meshes/mini_fridge.obj": "8560c7678c19e3aef8e4a72d5a3cd0b0c2c21248ef7cd3623139f7cc1b97986c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/mini_fridge/model.sdf": "9dcf1ac066096a18457d0cc110e16685932d2fbfc657feb3b4cc6e24d05efc37",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/media/meshes/office_large.obj": "269b33479c4afe9438c2fe1ae49f7b0b96f6167584c0c9ec69057b4d6655ad90",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/cubicle_island/meshes/cubicle_island.obj": "9c516a1b5c2a288b94ab77df1a060e3c87dde5957906641fcabed1928c723fc7",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/cubicle_wall/meshes/cubicle_closed.obj": "bdaea71e30b281765eaab9135b07ddb222407f3cea5e98d86c5ff7f1e00029b8",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/cubicle_wall/meshes/cubicle_wall.obj": "9c5d95d5681181d793c8482beccd34866fd7064e319914db2a1e450e6aa0f30c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/desk/meshes/desk.obj": "66bb085884a1ee853af9f89835f994215e383b9f595f60c5c18feda075bda543",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/desk/model.sdf": "adbfb464ff370cbfc1a34eb1af6baef4330c4d0cc2abccf05f140a56dd6d2674",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_table/meshes/office_table.dae": "901910dcf8478fe6679708b6dcdb454df3ed24ffa4e3a4d7f009592decf6dd96",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_table/model.sdf": "55ada6c21795818ed6572e72ca71150f42e282661a3b4196a9b84b90cdece54c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_couch/meshes/office_couch.dae": "f7b58a88ee42867cfc23431f26e00c66e30b79a41603876dc829ff32310291ab",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/office_couch/model.sdf": "38541fbb378bc3b1b309c266b3c10e89ed4f52ec7a6312045d522b749f9a2926",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/hangout_chair/meshes/hangout_chair.obj": "b5a92e541dc13b4104ac4b0460e6878b6687994900e080fe38c83171b23ff69a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/hangout_chair/model.sdf": "ef0ea90d0f8a78002a2463b57d0986acfadea9caa633d2c53c63238d427cbcce",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/reception_desk/meshes/reception_desk.obj": "f4657c75b12f357d28d1e544d9a010877d9c9d6e5fc5a15ad6a4ce67ea1b6b9e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/reception_desk/model.sdf": "71b656ec047fdc4e1e89ffef3a8947293c2256370eec721a93f682ddc278d46f",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/waffle_base.dae": "61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd/waffle_base.dae": "50d512ddab481c08e0dec3debb9f80d08d85efa629befdf2b7139c868ac32566",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/lds.dae": "a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462/lds.dae": "ef6038648e68dbafa7512800a638d611e560a1b2c6dee7afe54180b452077186",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/left_tire.dae": "d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c/left_tire.dae": "96c3f99cbe3af3a74525cd7d4508c3e43c46d75f2a547a72cc13074589e0233e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/right_tire.dae": "eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8/right_tire.dae": "6808a590ac36179b48665c614d00dbc85dde8a5892e04d70e02e040aee92e052",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle_pi/model.sdf": "eefc5550504f6db2e09456ccc33ad8a0b3ddc87afb010512b2f23c711b6d0385"
+  },
+  "removed_classic_plugins": [
+    {
+      "name": "turtlebot3_imu",
+      "filename": "libgazebo_ros_imu_sensor.so"
+    },
+    {
+      "name": "turtlebot3_laserscan",
+      "filename": "libgazebo_ros_ray_sensor.so"
+    },
+    {
+      "name": "camera_driver",
+      "filename": "libgazebo_ros_camera.so"
+    },
+    {
+      "name": "turtlebot3_diff_drive",
+      "filename": "libgazebo_ros_diff_drive.so"
+    },
+    {
+      "name": "turtlebot3_joint_state",
+      "filename": "libgazebo_ros_joint_state_publisher.so"
+    }
+  ],
+  "source_pose_repairs": [],
+  "static_container_repairs": [
+    {
+      "model": "table_and_chairs",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "table_and_chairs",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "table_and_chairs",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    }
+  ],
+  "static_snapshot": true,
+  "static_fixture_changes": [],
+  "mesh_frame_repairs": [
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/waffle_base.dae",
+      "source_sha256": "61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd/waffle_base.dae",
+      "derived_sha256": "50d512ddab481c08e0dec3debb9f80d08d85efa629befdf2b7139c868ac32566",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/lds.dae",
+      "source_sha256": "a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462/lds.dae",
+      "derived_sha256": "ef6038648e68dbafa7512800a638d611e560a1b2c6dee7afe54180b452077186",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/left_tire.dae",
+      "source_sha256": "d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c/left_tire.dae",
+      "derived_sha256": "96c3f99cbe3af3a74525cd7d4508c3e43c46d75f2a547a72cc13074589e0233e",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/right_tire.dae",
+      "source_sha256": "eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8/right_tire.dae",
+      "derived_sha256": "6808a590ac36179b48665c614d00dbc85dde8a5892e04d70e02e040aee92e052",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    }
+  ],
+  "dynamic_actors": [],
+  "shapes": 1076,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    0.35000000000000003,
+    2.15
+  ],
+  "projected_spawn_clearance_m": 2.1,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-114235-cf5dab/dataset_office_service.generation.json"
+}

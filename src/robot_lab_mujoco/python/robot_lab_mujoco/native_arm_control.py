@@ -33,6 +33,13 @@ class NativePandaControl:
             raise ValueError('Panda control requires the native Panda joint/actuator model')
         if not np.array_equal(self.model.actuator_trnid[self.actuators, 0], self.joints):
             raise ValueError('Panda actuator-to-joint mapping differs from the pinned model')
+        self.position_gains = self.model.actuator_gainprm[self.actuators, 0].copy()
+        if (not np.all(np.isfinite(self.position_gains)) or np.any(self.position_gains <= 0)
+                or not np.allclose(self.model.actuator_biasprm[self.actuators, 1], -self.position_gains)
+                or not np.allclose(self.model.actuator_gear[self.actuators, 0], 1.)
+                or not np.allclose(self.model.actuator_gear[self.actuators, 1:], 0.)):
+            raise ValueError('Panda feedforward requires the original unit-gear position actuators')
+        self.control_offset = np.zeros(7)
         if np.any(self.model.jnt_type[:node.robot_joints] == int(self.mj.mjtJoint.mjJNT_FREE)):
             raise ValueError('This controller requires a fixed-base Panda')
         self.qpos = self.model.jnt_qposadr[self.joints]
@@ -160,7 +167,15 @@ class NativePandaControl:
                 self.finish('aborted', -4, 'arm/environment contact; holding measured position')
             else:
                 self.target, _ = self.plan.sample(self.data.time-self.start)
-        self.data.ctrl[self.actuators] = np.clip(self.target,
+        # Feed model gravity/Coriolis bias through the original PD actuator:
+        # gain * (target + bias/gain - measured), with unchanged force limits.
+        # The bounded offset prevents gravity sag from consuming a 1 cm TCP
+        # step. No generalized/body force or joint position is written. Avoid
+        # double compensation if the model already supplies passive gravcomp.
+        bias = self.data.qfrc_bias[self.dofs]-self.data.qfrc_gravcomp[self.dofs]
+        self.control_offset = (np.clip(bias/self.position_gains, -.03, .03)
+                               if np.all(np.isfinite(bias)) else np.zeros(7))
+        self.data.ctrl[self.actuators] = np.clip(self.target+self.control_offset,
             self.model.actuator_ctrlrange[self.actuators, 0],
             self.model.actuator_ctrlrange[self.actuators, 1])
 
@@ -185,6 +200,7 @@ class NativePandaControl:
             'controller': 'panda_native', 'status': self.status, 'joint_names': self.names,
             'positions': actual.tolist(), 'velocities': velocity.tolist(),
             'target': self.target.tolist(), 'home': self.home.tolist(), 'limits': self.limits.tolist(),
+            'bias_compensation_rad': self.control_offset.tolist(),
             'busy': self.reserved, 'contact_blocked': self.contact_blocked(),
             'time': self.data.time})))
         if self.goal:

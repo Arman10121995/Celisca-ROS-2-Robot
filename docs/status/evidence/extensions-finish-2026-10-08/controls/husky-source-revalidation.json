@@ -1,0 +1,45 @@
+{
+  "changes": [
+    {
+      "path": "src/robot_lab_gui/robot_lab_gui/launcher.py",
+      "old_sha256": "92f1e6042477882e6a0e0c039cb29daf74b92bc9d7a144b4e4ae4774c6da5b0f",
+      "current_sha256": "8e3408a8d6cd364c7a205a756d0da1eff0196043b33f9e562c312c96b9c19110"
+    }
+  ],
+  "physical_witnesses": [
+    {
+      "backend": "gazebo",
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/drive-current-controls/asset_husky-gazebo/report.json",
+      "sha256": "08a2b4dff02e5b5d6a399fd0a92cd2f543707367fc1c50d8bd30ea29a9ed51e0",
+      "original_model_sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "consumed_expanded_urdf_sha256": "dcfcfb82d027ac63b587f4ad88e0b4f44d826a55c4fe1fce629ded9f1efabf68",
+      "verification": "Parsed tags/attributes/text/order match after normalizing file:// mesh URI spelling and whitespace. Original bytes retain the certificate SHA; expanded consumed bytes are pre-trial hashed."
+    },
+    {
+      "backend": "mujoco",
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/drive-current-controls/asset_husky-mujoco/report.json",
+      "sha256": "3faa22ac35c2495dbb256d4ac4fa0157752f5545e335ccb79fca821a3d9ad37b",
+      "original_model_sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "consumed_expanded_urdf_sha256": "dcfcfb82d027ac63b587f4ad88e0b4f44d826a55c4fe1fce629ded9f1efabf68",
+      "verification": "Parsed tags/attributes/text/order match after normalizing file:// mesh URI spelling and whitespace. Original bytes retain the certificate SHA; expanded consumed bytes are pre-trial hashed."
+    },
+    {
+      "backend": "pybullet",
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/drive-current-controls/asset_husky-pybullet/report.json",
+      "sha256": "4a582a94fd903ac4465f20f7465cfc4bda07d158fdceec81bc1bcfce5550bb01",
+      "original_model_sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "consumed_expanded_urdf_sha256": "dcfcfb82d027ac63b587f4ad88e0b4f44d826a55c4fe1fce629ded9f1efabf68",
+      "verification": "Parsed tags/attributes/text/order match after normalizing file:// mesh URI spelling and whitespace. Original bytes retain the certificate SHA; expanded consumed bytes are pre-trial hashed."
+    },
+    {
+      "backend": "isaac",
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/drive-current-controls/asset_husky-isaac/report.json",
+      "sha256": "43aa32518e880d6d2b9690d151b88c468a9542c75f21a00461b4b0aa8fb43e3e",
+      "original_model_sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "consumed_expanded_urdf_sha256": "dcfcfb82d027ac63b587f4ad88e0b4f44d826a55c4fe1fce629ded9f1efabf68",
+      "verification": "Parsed tags/attributes/text/order match after normalizing file:// mesh URI spelling and whitespace. Original bytes retain the certificate SHA; expanded consumed bytes are pre-trial hashed."
+    }
+  ],
+  "panda_planning": "docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/report.json",
+  "scope": "Common launcher adds Drone button mirrors and retains existing base input/autofill/ownership. Four actual current physical Drive/sensor/neutral/Stop/loss/relaunch repeats plus normal native Panda pass. Original twenty Husky higher-mode measurements retain their source stages; this UI regression does not rerun them."
+}

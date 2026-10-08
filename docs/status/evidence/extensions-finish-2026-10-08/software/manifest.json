@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-08",
+  "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus current working tree",
+  "qualification": "Software checks, not robot missions; final GUI/Health document links have later source compilation/build coverage. Body-frame supplemental test skipped because its PYTHONPATH override removed ROS imports; it is not a passed physics check.",
+  "artifacts": [
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-build.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-build.log",
+      "bytes": 22527,
+      "sha256": "eb047c41548c9a1fd3cc0eb5a1ffa1e98035908d736a3ea6f44b3e49fc39cda9"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-fast.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-fast.log",
+      "bytes": 2350,
+      "sha256": "ad068b2b4de2680a06ab09330efdb0ad996591a3b574488c20429c792e306e83"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-gui.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-gui.log",
+      "bytes": 724,
+      "sha256": "64a343e1ec9921d5392b88f949f601266137b904333ec16a6c9071f5e2c31b7a"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-integration.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-integration.log",
+      "bytes": 2069,
+      "sha256": "4368f91785c11239ec485e1ea2c8338dd75c178fa1dbb71b395e10ddef152dd8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-integration-xvfb.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-integration-xvfb.log",
+      "bytes": 876,
+      "sha256": "7b62fd20040402c5bab07808527227a9585d5a9a773e010f93f24b90300b07aa"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/compact-layout-focused.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/compact-layout-focused.log",
+      "bytes": 98,
+      "sha256": "338743c28809a8ea1a6b553211dd350d95af4e29c4f6afcb90584a4fabe5ef98"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-physics.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-physics.log",
+      "bytes": 163,
+      "sha256": "514dd11c22a690ef96a45c283d3c4b9f4c96838ab955bfe54ad226a36ff7912e"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-registry.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-registry.log",
+      "bytes": 42,
+      "sha256": "e48ec5882c7cfe533bdcf15188bf1d50cb229cc6f41101b7b7db50ac17d038cf"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/body-velocity-frame.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/body-velocity-frame.log",
+      "bytes": 99,
+      "sha256": "5b107ce922c504f0580a7457bfad5aa3baa3780a9772831a9a1a1863ba3a45a8"
+    }
+  ]
+}

@@ -62,6 +62,8 @@ FAST_TESTS=(
   "$BRG_TEST/test_asset_runtime_support.py"
   "$BRG_TEST/test_gazebo_physics_world.py"
   "$BRG_TEST/test_occupancy_slice.py"
+  "$BRG_TEST/test_external_world_repairs.py"
+  "$BRG_TEST/test_skid_steer.py"
   "$BRG_TEST/test_arm_trajectory.py"
   "$BRG_TEST/test_urdf_springs.py"
   "$BRG_TEST/test_sensor_config.py"
@@ -100,6 +102,8 @@ PHYSICS_TESTS=(
   "$BRG_TEST/test_backend_assets.py::MujocoSmallWheelServoTests"
   "src/robot_lab_mujoco/test/test_native_asset_display.py"
   "src/robot_lab_mujoco/test/test_native_gripper_control.py"
+  "src/robot_lab_mujoco/test/test_native_arm_bias.py"
+  "$BRG_TEST/test_mujoco_world_collision.py"
 )
 
 run_tier() {

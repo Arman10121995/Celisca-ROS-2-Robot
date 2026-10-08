@@ -1,0 +1,66 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_rl_gym",
+  "revision": "276801e46c5d433564f24658bac64f254b7d2d4b",
+  "downloaded_on": "2026-10-08",
+  "purpose": "Official upstream policy resources for later exact-model qualification; no robot mode grants or mission evidence",
+  "assets": [
+    {
+      "robot": "g1",
+      "checkpoint": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/pre_train/g1/motion.pt",
+      "checkpoint_exists": true,
+      "checkpoint_sha256": "cf668f75b90d1abf73d2b87612a6e76bccc61ff7e083b63582d3f6aaa3c1759d",
+      "config": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/deploy_mujoco/configs/g1.yaml",
+      "config_sha256": "73044e7d355c61915695c16d6e09eb3efef46eec1e3d708fd3eb9157dfe3bbbb",
+      "declared_policy_path": "{LEGGED_GYM_ROOT_DIR}/deploy/pre_train/g1/motion.pt",
+      "declared_xml_path": "{LEGGED_GYM_ROOT_DIR}/resources/robots/g1_description/scene.xml",
+      "num_actions": 12,
+      "num_obs": 47,
+      "control_period_s": 0.02,
+      "native_model_exists": true,
+      "native_model_sha256": "482d49902ca2b9fdc49d84ef5d8779fa69d66bc53ef440b4bf50079d1bac9995"
+    },
+    {
+      "robot": "h1",
+      "checkpoint": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/pre_train/h1/motion.pt",
+      "checkpoint_exists": true,
+      "checkpoint_sha256": "44a0fbceb81f3877833ae9a398d039bea1759cb0d3c8188181013885f70589eb",
+      "config": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/deploy_mujoco/configs/h1.yaml",
+      "config_sha256": "4e509fa63fda52e38d21d9f1924b7c0d6bf9dfd1c2d9b94450b7f6e7ca281329",
+      "declared_policy_path": "{LEGGED_GYM_ROOT_DIR}/deploy/pre_train/h1/motion.pt",
+      "declared_xml_path": "{LEGGED_GYM_ROOT_DIR}/resources/robots/h1/scene.xml",
+      "num_actions": 10,
+      "num_obs": 41,
+      "control_period_s": 0.02,
+      "native_model_exists": true,
+      "native_model_sha256": "88ffcccad2c5df71a7472b4b30ec7e4ea06e045efc6b4e11ccd8bebc2848f0b3"
+    },
+    {
+      "robot": "h1_2",
+      "checkpoint": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/pre_train/h1_2/motion.pt",
+      "checkpoint_exists": true,
+      "checkpoint_sha256": "ea3003268d5d2e4b5004eb26d0969fbfdedced265ceeec7bf0b335309259cc80",
+      "config": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/deploy_mujoco/configs/h1_2.yaml",
+      "config_sha256": "0a08fd46c4d12a35c74784441e682e94186348802f04659a293733239d301b14",
+      "declared_policy_path": "{LEGGED_GYM_ROOT_DIR}/deploy/pre_train/h1_2/motion.pt",
+      "declared_xml_path": "{LEGGED_GYM_ROOT_DIR}/resources/robots/h1_2/scene.xml",
+      "num_actions": 12,
+      "num_obs": 47,
+      "control_period_s": 0.02,
+      "native_model_exists": true,
+      "native_model_sha256": "40c8d9e5dca3ceb5942b9230f1de9aa36e0187c1907f2b5f6bd584fbc8f7b909"
+    },
+    {
+      "robot": "go2",
+      "checkpoint": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/pre_train/go2/motion.pt",
+      "checkpoint_exists": false,
+      "checkpoint_sha256": null,
+      "config": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/deploy/deploy_mujoco/configs/go2.yaml",
+      "config_sha256": null
+    }
+  ],
+  "license": {
+    "declared": "BSD-3-Clause",
+    "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/LICENSE",
+    "sha256": "aef6394ba1597725a68308167324e675f562e6606027404deb1b9da254c2b9c1"
+  }
+}

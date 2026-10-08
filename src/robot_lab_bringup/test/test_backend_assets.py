@@ -178,7 +178,8 @@ class MujocoSmallWheelServoTests(unittest.TestCase):
                   '<joint name="wheel" type="hinge"/>'
                   '<geom type="cylinder" size="0.033 0.009" mass="0.028"/>'
                   '</body></worldbody></mujoco>')
-        for parameters in ({}, dict(armature=.0002, velocity_gain=.1)):
+        for parameters in ({}, dict(armature=.0002, velocity_gain=.1),
+                           dict(armature=.02, velocity_gain=10.)):
             model = mujoco.MjModel.from_xml_string(_add_wheel_velocity_actuators(source, ['wheel'], **parameters))
             data = mujoco.MjData(model)
             for target in [0., 5., -5., 0.]:

@@ -1,0 +1,275 @@
+{
+  "robot": "asset_husky",
+  "backend": "isaac",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor feedback on this map only; no SLAM or navigation.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "drive_configuration": {
+    "configuration": {
+      "type": "skid_steer",
+      "left_wheel_joints": [
+        "front_left_wheel_joint",
+        "rear_left_wheel_joint"
+      ],
+      "right_wheel_joints": [
+        "front_right_wheel_joint",
+        "rear_right_wheel_joint"
+      ],
+      "left_wheel_joint": "front_left_wheel_joint",
+      "right_wheel_joint": "front_right_wheel_joint",
+      "wheel_radius": 0.1651,
+      "wheel_separation": 0.5708,
+      "max_speed": 0.4,
+      "max_accel": 0.5,
+      "max_angular_speed": 1.0,
+      "max_angular_accel": 1.5,
+      "wheel_force_limit": 50.0,
+      "mujoco_wheel_velocity_gain": 25.0,
+      "mujoco_wheel_armature": 0.05,
+      "pybullet_anisotropic_wheel_friction": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "pybullet_enable_cone_friction": false,
+      "skid_yaw_rate_feedback": {
+        "kp": 1.0,
+        "ki": 4.0,
+        "max_correction": 3.0,
+        "max_wheel_speed": 10.0,
+        "linear_kp": 1.0,
+        "linear_ki": 2.0,
+        "max_linear_correction": 0.5
+      }
+    },
+    "wheel_joints": [
+      "front_left_wheel_joint",
+      "rear_left_wheel_joint",
+      "front_right_wheel_joint",
+      "rear_right_wheel_joint"
+    ]
+  },
+  "owned_pid": 217335,
+  "phases": {
+    "armed_neutral": {
+      "dx": -0.0007616877555847168,
+      "dy": -3.0875205993652344e-05,
+      "yaw_change": -8.86198766735039e-05,
+      "tail_vx": -0.0007659431338734964,
+      "tail_wz": -0.00024256830610492564,
+      "max_tilt": 0.0019627958340611464,
+      "sim_s": 1.0
+    },
+    "forward": {
+      "dx": 1.2633480429649353,
+      "dy": -0.0016554594039916992,
+      "yaw_change": -0.0006039659796287753,
+      "tail_vx": 0.39755008799757513,
+      "tail_wz": -0.00016748463880287713,
+      "max_tilt": 0.0029459029809501807,
+      "sim_s": 3.516666667
+    },
+    "forward_stop": {
+      "dx": 0.06718194484710693,
+      "dy": 0.0001774430274963379,
+      "yaw_change": -0.00039154860884045063,
+      "tail_vx": -0.0010135667674175289,
+      "tail_wz": -4.385582604955654e-06,
+      "max_tilt": 0.0015243996191889174,
+      "sim_s": 2.500000000000001
+    },
+    "reverse": {
+      "dx": -1.2560157775878906,
+      "dy": 0.0010451674461364746,
+      "yaw_change": -0.0008030689622496748,
+      "tail_vx": -0.4016497474982074,
+      "tail_wz": -0.00026976270357790936,
+      "max_tilt": 0.001727806085068754,
+      "sim_s": 3.533333333
+    },
+    "reverse_stop": {
+      "dx": -0.10265204310417175,
+      "dy": -1.0609626770019531e-05,
+      "yaw_change": 0.0010806243424852612,
+      "tail_vx": -0.0007156566242570723,
+      "tail_wz": 0.0002693466388836214,
+      "max_tilt": 0.0022887457622777167,
+      "sim_s": 2.5999999999999996
+    },
+    "left_turn": {
+      "dx": 0.25248605012893677,
+      "dy": 0.16410577297210693,
+      "yaw_change": 2.7353652645086903,
+      "tail_vx": 0.04737994878632935,
+      "tail_wz": 1.0100692394640747,
+      "max_tilt": 0.00992378398987396,
+      "sim_s": 3.549999999999999
+    },
+    "left_turn_stop": {
+      "dx": -0.021143019199371338,
+      "dy": 0.022045880556106567,
+      "yaw_change": 0.09480494500629844,
+      "tail_vx": -0.001338386173332645,
+      "tail_wz": 4.657622844325233e-05,
+      "max_tilt": 0.0007980276049960536,
+      "sim_s": 2.6166666660000004
+    },
+    "right_turn": {
+      "dx": -0.006292253732681274,
+      "dy": -0.07682159543037415,
+      "yaw_change": -2.890118476038922,
+      "tail_vx": 0.010512452679244165,
+      "tail_wz": -0.9678117979190859,
+      "max_tilt": 0.004578871154030273,
+      "sim_s": 3.5333333330000016
+    },
+    "right_turn_stop": {
+      "dx": -0.037445664405822754,
+      "dy": -0.01319536566734314,
+      "yaw_change": -0.08990383483853742,
+      "tail_vx": -0.0016991253149358499,
+      "tail_wz": 0.0003581963354359196,
+      "max_tilt": 0.0026882000067359607,
+      "sim_s": 2.5333333340000017
+    },
+    "pre_loss": {
+      "dx": 0.6809133589267731,
+      "dy": -0.10680770874023438,
+      "yaw_change": -4.908860677604876e-05,
+      "tail_vx": 0.4168127804092111,
+      "tail_wz": -0.0007612079035673046,
+      "max_tilt": 0.003344642215649756,
+      "sim_s": 2.083333332999999
+    },
+    "publisher_loss": {
+      "dx": 0.11135098338127136,
+      "dy": -0.017708182334899902,
+      "yaw_change": 0.00047211013939094104,
+      "tail_vx": -0.0009340491598825968,
+      "tail_wz": -0.00012342217039312163,
+      "max_tilt": 0.0007186121466961715,
+      "sim_s": 3.0
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "body_height_m": {
+    "minimum": 0.1322803497314453,
+    "maximum": 0.136048823595047
+  },
+  "wheel_feedback": {
+    "front_left_wheel_joint": {
+      "minimum": -6.277772903442383,
+      "maximum": 6.24732780456543,
+      "samples": 2652
+    },
+    "rear_left_wheel_joint": {
+      "minimum": -6.23268461227417,
+      "maximum": 6.250451564788818,
+      "samples": 2652
+    },
+    "front_right_wheel_joint": {
+      "minimum": -6.264958381652832,
+      "maximum": 6.260128974914551,
+      "samples": 2652
+    },
+    "rear_right_wheel_joint": {
+      "minimum": -6.229935169219971,
+      "maximum": 6.268893718719482,
+      "samples": 2652
+    }
+  },
+  "sensors": {
+    "scan_messages": 162,
+    "depth_messages": 160,
+    "camera_info_messages": 160,
+    "last_scan": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "minimum": 0.10000000149011612,
+      "maximum": 12.0,
+      "finite": 360
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "finite_positive": 2303,
+      "minimum": 1.350205898284912,
+      "maximum": 5.795923233032227
+    },
+    "frames": {
+      "lab_laser_link": {
+        "position_m": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "expected_position_m": [
+          0.3,
+          0.0,
+          0.4
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position_m": [
+          0.35,
+          0.0,
+          0.45
+        ],
+        "expected_position_m": [
+          0.35,
+          0.0,
+          0.45
+        ]
+      }
+    },
+    "camera_info": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "k": [
+        277.12812920993167,
+        0.0,
+        160.0,
+        0.0,
+        277.12812920993167,
+        120.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "real_time_factor": 0.5985727368058987,
+  "first_launch_returncode": 0,
+  "relaunch_reset": {
+    "original_xy": [
+      -0.501776397228241,
+      -0.5000171065330505
+    ],
+    "restored_xy": [
+      -0.501712441444397,
+      -0.5000126957893372
+    ],
+    "error_m": 6.410769803389304e-05
+  },
+  "launch_returncode": 0,
+  "body_samples": 2818,
+  "joint_samples": 2819,
+  "max_body_tilt_rad": 0.00992378398987396,
+  "derived_from": {
+    "original_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/drive-current-controls/asset_husky-isaac/report.json",
+      "sha256": "43aa32518e880d6d2b9690d151b88c468a9542c75f21a00461b4b0aa8fb43e3e",
+      "bytes": 7055
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/drive-current-controls/asset_husky-isaac/trace.json",
+      "sha256": "c29793ed37351859b7c5dd6608db9581a411375b6378f02682e74b719599f295",
+      "bytes": 1486708
+    }
+  }
+}

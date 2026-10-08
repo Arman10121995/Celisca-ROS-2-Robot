@@ -1,0 +1,187 @@
+{
+  "robot": "asset_husky",
+  "backend": "isaac",
+  "mode": "loc",
+  "map": "nav_empty",
+  "passed": true,
+  "provider": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky-experimental-provider",
+  "experimental_provider": true,
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "algorithm_selection": {
+    "localizer": "amcl",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion"
+  },
+  "owned_pid": 113535,
+  "check_command": [
+    "python3",
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/sim_workflow_check.py",
+    "--mode",
+    "loc",
+    "--base-frame",
+    "base_link",
+    "--timeout",
+    "300",
+    "--out",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-loc-nav_empty/workflow.json"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "mode": "loc",
+    "base_frame": "base_link",
+    "command_topic": "/key_vel",
+    "phases": {
+      "forward": {
+        "completed": true,
+        "sim_s": 3.017,
+        "distance_m": 0.5783,
+        "yaw_change_rad": -0.0001,
+        "tail_speed_mps": 0.20117862931694652,
+        "tail_yaw_speed_rps": 4.598649164682713e-05,
+        "end": {
+          "x": 0.0752265527844429,
+          "y": -0.4996604919433594,
+          "z": 0.1323310285806656,
+          "yaw": -0.00013428904457677278
+        }
+      },
+      "reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.5739,
+        "yaw_change_rad": -0.0006,
+        "tail_speed_mps": 0.19967963448615259,
+        "tail_yaw_speed_rps": 5.3254578060303e-05,
+        "end": {
+          "x": -0.44804561138153076,
+          "y": -0.4998917877674103,
+          "z": 0.1323847472667694,
+          "yaw": -0.0004423983752858815
+        }
+      },
+      "turn": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0477,
+        "yaw_change_rad": 1.0047,
+        "tail_speed_mps": 0.04182883563186903,
+        "tail_yaw_speed_rps": 0.3615542996851677,
+        "end": {
+          "x": -0.46160152554512024,
+          "y": -0.48110711574554443,
+          "z": 0.1324208825826645,
+          "yaw": 1.003828132005886
+        }
+      },
+      "turn_reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.119,
+        "yaw_change_rad": -0.9647,
+        "tail_speed_mps": 0.06482446721804616,
+        "tail_yaw_speed_rps": 0.41582495217875154,
+        "end": {
+          "x": -0.4477149546146393,
+          "y": -0.6041566133499146,
+          "z": 0.13238400220870972,
+          "yaw": 0.08596538103091433
+        }
+      },
+      "publisher_loss": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0884,
+        "yaw_change_rad": 0.0011,
+        "tail_speed_mps": 0.0007808789000984235,
+        "tail_yaw_speed_rps": 0.0005435260150321586,
+        "end": {
+          "x": 0.015177450142800808,
+          "y": -0.6049700975418091,
+          "z": 0.13229964673519135,
+          "yaw": 0.025555885466776687
+        }
+      },
+      "post_reset_idle": {
+        "completed": true,
+        "sim_s": 2.133,
+        "distance_m": 0.0018,
+        "yaw_change_rad": 0.0001,
+        "tail_speed_mps": 0.0009089499704285402,
+        "tail_yaw_speed_rps": 6.558285238514091e-05,
+        "end": {
+          "x": -0.5018702149391174,
+          "y": -0.4999413788318634,
+          "z": 0.13229458034038544,
+          "yaw": 7.390150397307368e-05
+        }
+      },
+      "post_reset_drive": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.3692,
+        "yaw_change_rad": -0.0002,
+        "tail_speed_mps": 0.20589974550590526,
+        "tail_yaw_speed_rps": 0.0001474935714236,
+        "end": {
+          "x": -0.13271038234233856,
+          "y": -0.4995748996734619,
+          "z": 0.13231326639652252,
+          "yaw": -0.00013793006915459603
+        }
+      }
+    },
+    "checks": {
+      "ready": true,
+      "settled": true,
+      "forward": true,
+      "reverse": true,
+      "turn": true,
+      "turn_reverse": true,
+      "publisher_loss": true,
+      "localization": true,
+      "reset_service": true,
+      "reset_spawn": true,
+      "reset_stopped": true,
+      "reset_localization": true,
+      "reset_drive_resumes": true,
+      "reset_estimator_tracks_motion": true,
+      "monotonic_clock": true
+    },
+    "initial_truth": {
+      "x": -0.5030734539031982,
+      "y": -0.5001212954521179,
+      "z": 0.13235647976398468,
+      "yaw": -6.965115943995703e-05
+    },
+    "localization_error_m": 0.08301833027871486,
+    "sensor_messages_during_drive": {
+      "/scan": 106,
+      "/oakd/rgb/image_raw": 105,
+      "/oakd/depth/image_raw": 105
+    },
+    "reset_response": "Isaac physical reset acknowledged",
+    "post_reset_localization_error_m": 0.001034401952060918,
+    "post_reset_drive_localization_error_m": 0.013598064143474966,
+    "map_updates_after_reset": 0,
+    "cloud_updates_after_reset": 0,
+    "clock_backward_jumps": 0,
+    "truth_samples": 1747,
+    "sensor_counts": {
+      "/scan": 148,
+      "/oakd/rgb/image_raw": 146,
+      "/oakd/depth/image_raw": 146
+    },
+    "scan_geometry": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "finite": 360,
+      "min_m": 5.500396728515625,
+      "max_m": 8.801594734191895,
+      "range_min": 0.10000000149011612,
+      "range_max": 12.0
+    },
+    "passed": true
+  },
+  "launch_returncode": 0
+}

@@ -1,0 +1,28 @@
+=== Tier: integration (16 test files) ===
+..........F............................................................. [ 48%]
+........................................................................ [ 97%]
+...                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable ______
+
+app = <robot_lab_gui.launcher.SimulationLauncherGui object .>
+
+    def test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable(app):
+        app.geometry('1024x768'); settle(app)
+>       assert app.compact_setup.winfo_viewable()
+E       assert 0
+E        +  where 0 = <bound method Misc.winfo_viewable of <tkinter.ttk.Frame object .!notebook.!frame.!panedwindow.!frame.!frame>>()
+E        +    where <bound method Misc.winfo_viewable of <tkinter.ttk.Frame object .!notebook.!frame.!panedwindow.!frame.!frame>> = <tkinter.ttk.Frame object .!notebook.!frame.!panedwindow.!frame.!frame>.winfo_viewable
+E        +      where <tkinter.ttk.Frame object .!notebook.!frame.!panedwindow.!frame.!frame> = <robot_lab_gui.launcher.SimulationLauncherGui object .>.compact_setup
+
+src/robot_lab_gui/test/test_workspace_layout.py:70: AssertionError
+=============================== warnings summary ===============================
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+  /usr/lib/python3/dist-packages/OpenGL/images.py:142: DeprecationWarning: tostring() is deprecated. Use tobytes() instead.
+    return data.tostring()
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+=========================== short test summary info ============================
+FAILED src/robot_lab_gui/test/test_workspace_layout.py::test_narrow_window_keeps_run_and_copy_visible_and_limits_scrollable
+1 failed, 146 passed, 2 warnings in 113.13s (0:01:53)

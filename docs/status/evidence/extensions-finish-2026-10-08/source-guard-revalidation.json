@@ -1,0 +1,132 @@
+{
+  "scope": "Source guards retained and updated only after current physical differential-drive regressions for every affected named backend/profile. Historical 48 TurtleBot3 and 40 TurtleBot4 higher-mode reports stay immutable and revision-scoped.",
+  "source_revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus pre-trial source manifests",
+  "changes": [
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "path": "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py",
+      "previous_sha256": "0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0",
+      "current_sha256": "77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_standard/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_standard/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "path": "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py",
+      "previous_sha256": "0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0",
+      "current_sha256": "77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_lite/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_lite/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "gazebo",
+      "path": "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py",
+      "previous_sha256": "ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4",
+      "current_sha256": "37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-gazebo/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-gazebo/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "mujoco",
+      "path": "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py",
+      "previous_sha256": "fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535",
+      "current_sha256": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-mujoco/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-mujoco/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "pybullet",
+      "path": "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py",
+      "previous_sha256": "c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7",
+      "current_sha256": "92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-pybullet/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-pybullet/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "isaac",
+      "path": "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py",
+      "previous_sha256": "0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0",
+      "current_sha256": "77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-isaac/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-isaac/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle",
+      "backend": "gazebo",
+      "path": "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py",
+      "previous_sha256": "ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4",
+      "current_sha256": "37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-gazebo/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-gazebo/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle",
+      "backend": "mujoco",
+      "path": "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py",
+      "previous_sha256": "fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535",
+      "current_sha256": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-mujoco/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-mujoco/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle",
+      "backend": "pybullet",
+      "path": "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py",
+      "previous_sha256": "c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7",
+      "current_sha256": "92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-pybullet/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-pybullet/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle",
+      "backend": "isaac",
+      "path": "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py",
+      "previous_sha256": "0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0",
+      "current_sha256": "77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-isaac/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-isaac/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle_pi",
+      "backend": "gazebo",
+      "path": "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py",
+      "previous_sha256": "ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4",
+      "current_sha256": "37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-gazebo/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-gazebo/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle_pi",
+      "backend": "mujoco",
+      "path": "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py",
+      "previous_sha256": "fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535",
+      "current_sha256": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-mujoco/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-mujoco/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle_pi",
+      "backend": "pybullet",
+      "path": "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py",
+      "previous_sha256": "c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7",
+      "current_sha256": "92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-pybullet/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-pybullet/report-measured.json"
+    },
+    {
+      "robot": "asset_turtlebot3_waffle_pi",
+      "backend": "isaac",
+      "path": "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py",
+      "previous_sha256": "0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0",
+      "current_sha256": "77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480",
+      "regression_manifest": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-isaac/source-manifest.json",
+      "regression_report": "docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-isaac/report-measured.json"
+    }
+  ]
+}

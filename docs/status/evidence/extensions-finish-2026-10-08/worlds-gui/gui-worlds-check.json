@@ -1,0 +1,80 @@
+{
+  "checks": {
+    "actual_world_and_asset_tabs": true,
+    "stop_ends_owned_processes": true,
+    "generation_was_still_running": true,
+    "custom_seed_forwarded": true,
+    "completed_actual_export": true,
+    "actual_obstacles_and_free_region": true,
+    "launch_selection_unchanged": true
+  },
+  "source_sha256": {
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "92f1e6042477882e6a0e0c039cb29daf74b92bc9d7a144b4e4ae4774c6da5b0f",
+    "src/robot_lab_gui/robot_lab_gui/lab_tabs.py": "68da7b1e458ca66f1bbbd42cd4916f6d5115f636287f98f6f23b10ccefced172",
+    "src/robot_lab_maps/tools/generate_occupancy_map.py": "add3acd31e430bab29dda399d2fcf57f19176c4c4a8aa4d3aa0e4b96983d35e4"
+  },
+  "catalog_rows": 192,
+  "custom_seed": [
+    -6.75,
+    -6.75
+  ],
+  "cancel_command": [
+    "ros2",
+    "run",
+    "robot_lab_maps",
+    "generate_occupancy_map.py",
+    "--world",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world",
+    "--output-dir",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child",
+    "--resolution",
+    "0.015",
+    "--height",
+    "0.3",
+    "--seed-x",
+    "-6.75",
+    "--seed-y",
+    "-6.75"
+  ],
+  "observed_processes": {
+    "90643": "/usr/bin/python3 /opt/ros/humble/bin/ros2 run robot_lab_maps generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child --resolution 0.015 --height 0.3 --seed-x -6.75 --seed-y -6.75 ",
+    "90649": "python3 /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/lib/robot_lab_maps/generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child --resolution 0.015 --height 0.3 --seed-x -6.75 --seed-y -6.75 ",
+    "90694": "/usr/bin/python3 /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/tools/generate_occupancy_map.py --child 90649 ign gazebo -s -r /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child/nav_obstacle-20261008-124753-40c7d8/mapping.sdf ",
+    "90695": "ruby /usr/bin/ign service -s /gazebo_2Dmap_plugin/generate_map --reqtype ignition.msgs.Empty --reptype ignition.msgs.Empty --timeout 1000 --req  "
+  },
+  "cancel_processes": {
+    "90643": "/usr/bin/python3 /opt/ros/humble/bin/ros2 run robot_lab_maps generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child --resolution 0.015 --height 0.3 --seed-x -6.75 --seed-y -6.75 ",
+    "90694": "/usr/bin/python3 /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/tools/generate_occupancy_map.py --child 90649 ign gazebo -s -r /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child/nav_obstacle-20261008-124753-40c7d8/mapping.sdf ",
+    "90695": "ruby /usr/bin/ign service -s /gazebo_2Dmap_plugin/generate_map --reqtype ignition.msgs.Empty --reptype ignition.msgs.Empty --timeout 1000 --req  ",
+    "90649": "python3 /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/lib/robot_lab_maps/generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child --resolution 0.015 --height 0.3 --seed-x -6.75 --seed-y -6.75 "
+  },
+  "cancel_cli_exit_code": -15,
+  "cancel_completed_reports": 0,
+  "generate_command": [
+    "ros2",
+    "run",
+    "robot_lab_maps",
+    "generate_occupancy_map.py",
+    "--world",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world",
+    "--output-dir",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-complete-ps-child",
+    "--resolution",
+    "0.1",
+    "--height",
+    "0.3",
+    "--seed-x",
+    "-6.75",
+    "--seed-y",
+    "-6.75"
+  ],
+  "generation_report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-complete-ps-child/nav_obstacle-20261008-124758-418099/nav_obstacle.generation.json",
+  "generated_cells": {
+    "free_cells": 22948,
+    "occupied_cells": 1626,
+    "unknown_cells": 37926
+  },
+  "generation_report_sha256": "26e3d71a4446c1e8c22367aa86aff08dfd187a7fc18421167e8a3fac3e05042e",
+  "console": "$ ros2 run robot_lab_maps generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-cancel-ps-child --resolution 0.015 --height 0.3 --seed-x -6.75 --seed-y -6.75\n$ ros2 run robot_lab_maps generate_occupancy_map.py --world /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world --output-dir /workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-complete-ps-child --resolution 0.1 --height 0.3 --seed-x -6.75 --seed-y -6.75\n",
+  "passed": true
+}

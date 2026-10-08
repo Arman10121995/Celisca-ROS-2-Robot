@@ -93,6 +93,60 @@ def valid_position(value):
 
 def measured_result(report,kind):
     """Recompute declared screen checks; never accept a bare PASS marker."""
+    if kind == 'skid_drive_screen':
+        # The named Husky lab kit has a different motor/sensor envelope from
+        # TurtleBot3/4. Body turning must include a drift bound: a high yaw
+        # rate while crawling in a circle was a real failed Isaac trial.
+        phases, sensors = report.get('phases', {}), report.get('sensors', {})
+        def bounded(phase, key, lo, hi):
+            value = phases.get(phase, {}).get(key)
+            return finite(value) and lo < value < hi
+        def displacement(phase, limit):
+            values = [phases.get(phase, {}).get(key) for key in ('dx', 'dy')]
+            return all(finite(v) for v in values) and math.hypot(*values) < limit
+        height = report.get('body_height_m', {})
+        lo, hi = height.get('minimum'), height.get('maximum')
+        passed = (report.get('robot') == 'asset_husky'
+            and report.get('launch_returncode') == report.get('first_launch_returncode') == 0
+            and report.get('neutral_commands') == 0 and report.get('silence_commands') in (0, 1)
+            and report.get('body_samples', 0) > 50 and report.get('joint_samples', 0) > 30
+            and bounded('forward', 'tail_vx', .2, .56)
+            and bounded('reverse', 'tail_vx', -.56, -.2)
+            and bounded('left_turn', 'tail_wz', .5, 1.4)
+            and bounded('right_turn', 'tail_wz', -1.4, -.5)
+            and bounded('left_turn', 'tail_vx', -.12, .12)
+            and bounded('right_turn', 'tail_vx', -.12, .12)
+            and displacement('left_turn', .35) and displacement('right_turn', .35)
+            and displacement('armed_neutral', .02)
+            and bounded('armed_neutral', 'yaw_change', -.05, .05)
+            and finite(lo) and finite(hi) and -.25 <= lo <= hi <= .75 and hi-lo < .25
+            and finite(report.get('max_body_tilt_rad')) and 0 <= report['max_body_tilt_rad'] < .3
+            and finite(report.get('relaunch_reset', {}).get('error_m'))
+            and 0 <= report['relaunch_reset']['error_m'] < .04)
+        for label in ('forward_stop', 'reverse_stop', 'left_turn_stop', 'right_turn_stop', 'publisher_loss'):
+            passed = passed and bounded(label, 'tail_vx', -.025, .025) and bounded(label, 'tail_wz', -.05, .05)
+        for wheel in ('front_left_wheel_joint', 'rear_left_wheel_joint', 'front_right_wheel_joint', 'rear_right_wheel_joint'):
+            data = report.get('wheel_feedback', {}).get(wheel, {})
+            low, high = data.get('minimum'), data.get('maximum')
+            passed = passed and finite(low) and finite(high) and high-low > .1 and data.get('samples', 0) > 30
+        scan, depth, info = (sensors.get(key, {}) for key in ('last_scan', 'last_depth', 'camera_info'))
+        calibration = info.get('k', [])
+        fx = 160/math.tan(1.0471975512/2)
+        passed = (passed and all(sensors.get(key, 0) >= 5 for key in ('scan_messages', 'depth_messages', 'camera_info_messages'))
+            and scan.get('frame') == 'lab_laser_link' and scan.get('samples') == 360
+            and finite(scan.get('minimum')) and abs(scan['minimum']-.1) < 1e-5
+            and finite(scan.get('maximum')) and abs(scan['maximum']-12) < 1e-5
+            and scan.get('finite', 0) > 30
+            and depth.get('frame') == info.get('frame') == 'oakd_rgb_camera_optical_frame'
+            and depth.get('width') == info.get('width') == 320
+            and depth.get('height') == info.get('height') == 240
+            and depth.get('finite_positive', 0) > 100 and len(calibration) == 9
+            and finite(calibration[0]) and abs(calibration[0]-fx) < .01
+            and finite(calibration[4]) and abs(calibration[4]-fx) < .01)
+        for name, expected in (('lab_laser_link', [.3, 0., .4]), ('oakd_rgb_camera_optical_frame', [.35, 0., .45])):
+            actual = sensors.get('frames', {}).get(name, {}).get('position_m')
+            passed = passed and valid_position(actual) and math.dist(actual, expected) < 1e-5
+        return bool(passed)
     if kind == 'arm_cartesian_screen':
         sys.path.insert(0, str(ROOT/'src/robot_lab_utils'))
         from robot_lab_utils.asset_support import panda_planning_acceptance
@@ -172,6 +226,17 @@ def measured_result(report,kind):
                 route['min_swept_clearance_m']>=route['min_clearance_limit_m'])
             if 'straight_route_blocked' in route.get('checks',{}):
                 passed = passed and finite(route.get('direct_route_clearance_m')) and route['direct_route_clearance_m']<0
+        # New imported-world trials also check the vertical body trace. A
+        # valid XY endpoint while falling through a missing floor is a failure.
+        if 'body_height' in report:
+            height = report['body_height']
+            expected, low, high = (height.get(key) for key in
+                                  ('expected_floor_m', 'minimum_m', 'maximum_m'))
+            passed = (passed and all(finite(v) for v in (expected, low, high))
+                      and expected-.25 <= low <= high <= expected+.75
+                      and height.get('samples', 0) > 10)
+        if 'gui_recording_completed' in report:
+            passed = passed and report['gui_recording_completed'] is True
         return bool(passed)
     if kind == 'workflow_screen':
         checks,phases = report.get('checks',{}),report.get('phases',{})
@@ -182,6 +247,40 @@ def measured_result(report,kind):
                 and finite(phases.get('reverse',{}).get('distance_m'))
                 and phases['reverse']['distance_m']>.25
                 and finite(report.get('localization_error_m')) and report['localization_error_m']<.25)
+    if kind == 'flight_manual_screen':
+        try:
+            neutral, trace = report['neutral'], report['body_trace']
+            passed = (report.get('launch_returncode') == 0 and neutral['commands'] == 0
+                and neutral['armed'] is False and finite(neutral['displacement_m'])
+                and 0 <= neutral['displacement_m'] < .08
+                and finite(report['takeoff_height_m']) and abs(report['takeoff_height_m']-3.) < .35
+                and finite(report['publisher_loss_drift_m']) and 0 <= report['publisher_loss_drift_m'] < .2
+                and finite(report['landing_height_error_m']) and 0 <= report['landing_height_error_m'] < .1
+                and finite(report['rotor_max_rad_s']) and report['rotor_max_rad_s'] > 10
+                and trace['samples'] > 100 and all(finite(trace[k]) for k in ('initial_z', 'min_z', 'max_z'))
+                and trace['initial_z']-.1 <= trace['min_z'] <= trace['max_z'] <= trace['initial_z']+10.)
+            directions = report['directions']
+            if set(directions) != {'Forward', 'Reverse', 'Strafe L', 'Strafe R', 'Turn Left', 'Turn Right'}:
+                return False
+            for label, sign in (('Turn Left', 1), ('Turn Right', -1)):
+                item = directions[label]
+                passed = (passed and finite(item['yaw_rad']) and .25 < sign*item['yaw_rad'] < .85
+                    and finite(item['net_xy_m']) and 0 <= item['net_xy_m'] < .25
+                    and finite(item['command_max_yaw_rad_s']) and 0 < item['command_max_yaw_rad_s'] <= .300001)
+            for label, axis, sign in (('Forward', 0, 1), ('Reverse', 0, -1), ('Strafe L', 1, 1), ('Strafe R', 1, -1)):
+                travel = directions[label]['body_frame_travel_m']
+                passed = (passed and len(travel) == 2 and all(finite(v) for v in travel)
+                          and travel[axis]*sign > .3 and abs(travel[1-axis]) < .25)
+            for label, sign in (('up', 1), ('down', -1)):
+                height = report['altitude'][label]['height_change_m']
+                passed = passed and finite(height) and .3 < sign*height < 1.6
+            for item in list(directions.values())+list(report['altitude'].values()):
+                stop = item['stop']
+                passed = (passed and finite(stop['drift_m']) and 0 <= stop['drift_m'] < .2
+                          and finite(stop['yaw_drift_rad']) and 0 <= stop['yaw_drift_rad'] < .06)
+            return bool(passed)
+        except (KeyError, TypeError, IndexError):
+            return False
     if kind == 'flight_screen':
         phases = report.get('phases',{})
         idle,goal,drive = (phases.get(k,{}) for k in ('idle','goal','drive'))

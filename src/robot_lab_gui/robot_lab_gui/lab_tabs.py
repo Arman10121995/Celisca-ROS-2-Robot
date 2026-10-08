@@ -59,6 +59,10 @@ def format_platform_status(data):
     lines = [f"Platform Status — updated {data.get('updated', 'unknown')}",
              f"Overall: {data.get('overall_state', 'unknown')}",
              data.get('assessment', '')]
+    readiness = data.get('readiness_order', {})
+    if readiness:
+        lines.extend(['', 'Current robot priority: Motion → SLAM → Navigation',
+                      readiness.get('scope', ''), readiness.get('next_work', '')])
     audit = data.get('completion_audit', {})
     if audit:
         lines.extend(["", f"Completion audit: {audit.get('date', '?')}",
@@ -112,6 +116,10 @@ class WorldsTab(LabTab):
         self.world_family_var=tk.StringVar(value=app.map_groups.family(app.map_var.get()))
         self.resolution_var=tk.DoubleVar(value=.1)
         self.height_var=tk.DoubleVar(value=.3)
+        seed=app.map_profiles.get(self.world_var.get(),{}).get('spawn',{})
+        self.seed_x_var=tk.DoubleVar(value=float(seed.get('x',0)))
+        self.seed_y_var=tk.DoubleVar(value=float(seed.get('y',0)))
+        self.world_var.trace_add('write',self._world_seed)
         self.output_var=tk.StringVar(value=str(Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
             '/workspace/molar/robot_lab_runtime'))/'generated_maps'))
         controls=ttk.Frame(self);controls.grid(row=0,column=0,sticky='new')
@@ -125,19 +133,26 @@ class WorldsTab(LabTab):
             values=app.map_groups.members(self.world_family_var.get(),selectable=True),state='readonly')
         self.variant_combo.grid(row=1,column=1,sticky='ew')
         for row,label,var in [(2,'Resolution (m)',self.resolution_var),(3,'Slice height (m)',self.height_var),
-                              (4,'Output directory',self.output_var)]:
+                              (4,'Seed X (m)',self.seed_x_var),(5,'Seed Y (m)',self.seed_y_var),
+                              (6,'Output directory',self.output_var)]:
             ttk.Label(controls,text=label).grid(row=row,column=0,sticky='w')
             ttk.Entry(controls,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
         self.generate_button=ttk.Button(controls,text='Generate 2D Occupancy Grid',command=self.generate)
-        self.generate_button.grid(row=5,column=0,columnspan=2,sticky='ew',pady=6)
-        ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=6,column=0,sticky='ew')
-        ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=6,column=1,sticky='ew')
-        ttk.Button(controls,text='Preview 3D',command=lambda:app.preview_asset('maps',self.world_var.get())).grid(row=7,column=0,columnspan=2,sticky='ew',pady=6)
+        self.generate_button.grid(row=7,column=0,columnspan=2,sticky='ew',pady=6)
+        ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=8,column=0,sticky='ew')
+        ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=8,column=1,sticky='ew')
+        ttk.Button(controls,text='Preview 3D',command=lambda:app.preview_asset('maps',self.world_var.get())).grid(row=9,column=0,columnspan=2,sticky='ew',pady=6)
         ttk.Label(controls,text='Uses the pinned Fortress plugin in a separate headless world. Existing maps are preserved.\n'
-            'Mesh collisions use their actual scale and height slice; heightfields need the terrain converter.\n'
+            'The seed selects a connected free region; change X/Y to export another room.\n'
+            'Mesh collisions and terrain use their actual scale and height slice.\n'
             'Review the generated PGM/YAML and report before registering it for navigation.\n'
             'External world imports and terrain conversion are tracked as R6.6 / R6.7.',
-            wraplength=720,justify='left').grid(row=8,column=0,columnspan=2,sticky='w',pady=12)
+            wraplength=720,justify='left').grid(row=10,column=0,columnspan=2,sticky='w',pady=12)
+
+    def _world_seed(self,*_args):
+        seed=self.app.map_profiles.get(self.world_var.get(),{}).get('spawn',{})
+        self.seed_x_var.set(float(seed.get('x',0)))
+        self.seed_y_var.set(float(seed.get('y',0)))
 
     def _family_selected(self,_event=None):
         family=self.world_family_var.get()
@@ -154,11 +169,10 @@ class WorldsTab(LabTab):
         if package=='maps':package='robot_lab_maps'
         path=Path(config.get('world_path',''))
         if not path.is_absolute():path=Path(get_package_share_directory(package))/path
-        seed=profile.get('spawn',{})
         return ['ros2','run','robot_lab_maps','generate_occupancy_map.py','--world',str(path),
                 '--output-dir',self.output_var.get(),'--resolution',str(self.resolution_var.get()),
-                '--height',str(self.height_var.get()),'--seed-x',str(seed.get('x',0)),
-                '--seed-y',str(seed.get('y',0))]
+                '--height',str(self.height_var.get()),'--seed-x',str(self.seed_x_var.get()),
+                '--seed-y',str(self.seed_y_var.get())]
 
     def generate(self):
         try:self.app.start_bg_process(self.generation_command(),'world_maps')
@@ -1068,7 +1082,7 @@ class HealthTab(LabTab):
             WORKSPACE_ROOT / 'docs/tutorials/px4_x500.md')).grid(
                 row=4, column=0, sticky='ew', padx=(0, 4), pady=2)
         ttk.Button(frame, text="Verified Robot Trials", command=lambda: self._show_document(
-            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-07.md')).grid(
+            WORKSPACE_ROOT / 'docs/status/continuation-2026-10-08.md')).grid(
                 row=4, column=1, columnspan=2, sticky='ew', padx=(4, 0), pady=2)
         ttk.Button(frame, text="TurtleBot 4 Guide", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/tutorials/turtlebot4.md')).grid(
@@ -1079,6 +1093,12 @@ class HealthTab(LabTab):
         ttk.Button(frame, text="TurtleBot 3 Guide", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/tutorials/turtlebot3.md')).grid(
                 row=6, column=0, sticky='ew', padx=(0, 4), pady=2)
+        ttk.Button(frame, text="Husky Guide", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/husky.md')).grid(
+                row=6, column=1, sticky='ew', padx=4, pady=2)
+        ttk.Button(frame, text="Robot Readiness Guide", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/AI_ROBOT_READINESS_GUIDE.md')).grid(
+                row=6, column=2, sticky='ew', padx=(4, 0), pady=2)
         ttk.Button(frame, text="Done / Remaining", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
                 row=5, column=2, sticky='ew', padx=(4, 0), pady=2)

@@ -1,0 +1,1005 @@
+{
+  "raw_root": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07",
+  "baseline": "3e5cfae78a1a2811e332adcde85871ec60902254 plus pre-trial source hashes",
+  "artifacts": [
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mesh-parity/gazebo_mesh_probe.cc",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mesh-parity/gazebo_mesh_probe.cc",
+      "sha256": "d8018b1747aba7e04803a37c79ea819bad838c0bd5b1ed7e38ef2ad7b8ddd180",
+      "bytes": 605
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mesh-parity/native-original-and-derived.jsonl",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mesh-parity/native-original-and-derived.jsonl",
+      "sha256": "ca853419cf25e5ee574cee7bc8da5dd9c5cdc957509b0437e193665a39fe1624",
+      "bytes": 16046
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mesh-parity/native-original-and-derived.stderr",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mesh-parity/native-original-and-derived.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mesh-parity/report-native-derived.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mesh-parity/report-native-derived.json",
+      "sha256": "e8c718a5d5c896a42274369f0804a0cbe6b9552328e5296576723f317fb69c46",
+      "bytes": 19032
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mesh-parity/native-old-namespace-negative.txt",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mesh-parity/native-old-namespace-negative.txt",
+      "sha256": "f3334ed3229f3d63680c8b9948e5a9ff16f86802f373b8db2e4fa7b86b09f5e7",
+      "bytes": 396
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/before/disconnected-hills-20261007-152417-f9d5f9/disconnected-hills.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/before/disconnected-hills.yaml",
+      "sha256": "096c99d22fbe6cefaca3f15414748af40cd24bef53f7c2df3770077c84976d22",
+      "bytes": 124
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/before/disconnected-hills-20261007-152417-f9d5f9/disconnected-hills.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/before/disconnected-hills.pgm",
+      "sha256": "aacc6128ede4adc131fe357fe72b1f4026556bff617c0ed99c60d7603afd75e1",
+      "bytes": 26943
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/after/disconnected-hills-20261007-152421-fab5f6/disconnected-hills.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/after/disconnected-hills.yaml",
+      "sha256": "096c99d22fbe6cefaca3f15414748af40cd24bef53f7c2df3770077c84976d22",
+      "bytes": 124
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/after/disconnected-hills-20261007-152421-fab5f6/disconnected-hills.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/after/disconnected-hills.pgm",
+      "sha256": "3fbed77fa23924d90a1a553723b5a1f5fe2201248a9e2588afc5dcd9f201ef13",
+      "bytes": 26943
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/after/disconnected-hills-20261007-152421-fab5f6/disconnected-hills.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/after/disconnected-hills.generation.json",
+      "sha256": "d4806a114be2fe1d331f578826063101694c944e21eea7d6cab6803fe4773def",
+      "bytes": 1549
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/disconnected-hills.world",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/disconnected-hills.world",
+      "sha256": "7620ac5267d10e2deca571166d3a945e37a7097f045d5f569fe2b567cc619c75",
+      "bytes": 311
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/disconnected-hills.png",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/disconnected-hills.png",
+      "sha256": "8975d757c438277835650e1b75d59a299e833c940505b5128a2c2527ca1c328d",
+      "bytes": 97
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/before.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/before.log",
+      "sha256": "c89987722f41d0f28d9bc4bfc024c56f3ebe0c3ba4a13e5379044f523c4be313",
+      "bytes": 499
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/after.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/terrain-slice/after.log",
+      "sha256": "d4806a114be2fe1d331f578826063101694c944e21eea7d6cab6803fe4773def",
+      "bytes": 1549
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-pybullet/report.json",
+      "sha256": "ef642f621f61202158b0b9cb1dbd257f474f2d831ffb05ea1d84eb89a4ac40e7",
+      "bytes": 5183
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/pre-trial.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-pybullet/pre-trial.json",
+      "sha256": "2c557a8165b8079f9a1978096c6efbaa8375889e3636d25d35618de67aaa5178",
+      "bytes": 3457
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/live-gui-output.log",
+      "sha256": "250cd153b48648a87b0f806fe334c7b1f1172f5432ab76c64a1ee85f7bc8d844",
+      "bytes": 59112
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/producer.py",
+      "sha256": "d6b2b38afb2d3ec0b9d3d3bfc93d6b5c4ec0f0c095119424134b3329a6ed9388",
+      "bytes": 5823
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/pre-trial.json",
+      "sha256": "2c557a8165b8079f9a1978096c6efbaa8375889e3636d25d35618de67aaa5178",
+      "bytes": 3457
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/gui-output.log",
+      "sha256": "2da6870563b8a33361c27d84218741ff46a4f305a9c24d38db4ba706b1f43501",
+      "bytes": 70630
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/report.json",
+      "sha256": "ef642f621f61202158b0b9cb1dbd257f474f2d831ffb05ea1d84eb89a4ac40e7",
+      "bytes": 5183
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/check.log",
+      "sha256": "e71161a87139e4013e2d9d8eaa24d69a81bfb47e53b2c85e61c336059dc8bed6",
+      "bytes": 962
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-pybullet/body.trace.json",
+      "sha256": "07c19e7e1e9f853005fce290060f21633c7ff343b7641d0c74cdd2b3079656a6",
+      "bytes": 68150
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-gazebo/report.json",
+      "sha256": "5bdb705e69f7cce5d6bf7a0b2793c37bff24d5dcb5e22deb31987dd61dbfcaa8",
+      "bytes": 5854
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/pre-trial.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-gazebo/pre-trial.json",
+      "sha256": "5999d4d4b26c351bc77b183bc0bdc3cace8586accad7b76c386c68331bdbbee3",
+      "bytes": 3453
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/live-gui-output.log",
+      "sha256": "fbe57971b08cfd7201b33036592e2b19a810f657fb34daf18d428d69e2c9686b",
+      "bytes": 195048
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/producer.py",
+      "sha256": "d6b2b38afb2d3ec0b9d3d3bfc93d6b5c4ec0f0c095119424134b3329a6ed9388",
+      "bytes": 5823
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/pre-trial.json",
+      "sha256": "5999d4d4b26c351bc77b183bc0bdc3cace8586accad7b76c386c68331bdbbee3",
+      "bytes": 3453
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/gui-output.log",
+      "sha256": "15ea1773b3ceb5d08baa383fc7e035c689cd15fa47707194f131e78728d7646f",
+      "bytes": 195591
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/report.json",
+      "sha256": "5bdb705e69f7cce5d6bf7a0b2793c37bff24d5dcb5e22deb31987dd61dbfcaa8",
+      "bytes": 5854
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/check.log",
+      "sha256": "397b7184ae6eb04e8d81af3e0ec1cded16a31038a273b9e0314ce1701fd8ce17",
+      "bytes": 819
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/matched-dwb/hospital-gazebo/body.trace.json",
+      "sha256": "8ea387d0cafc09e02115304bbb6c6f80b9a5088dd064184dec24a70b8590bbc0",
+      "bytes": 16
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/physical-truth/hospital-gazebo/report.json",
+      "sha256": "7e019486bd5bc395d99f4711c8cab0b956670314d6bf82a17ed94d9874a50b61",
+      "bytes": 6177
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/pre-trial.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/physical-truth/hospital-gazebo/pre-trial.json",
+      "sha256": "82ff688622af2401b3335a3defda2f8e79ebb04d01009d536fee118ece6b5746",
+      "bytes": 3453
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/live-gui-output.log",
+      "sha256": "a6f6e3686362221b59a7a9f47fb1a9b30440981c9749c32d3e5d090d129eb526",
+      "bytes": 172812
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/producer.py",
+      "sha256": "d6b2b38afb2d3ec0b9d3d3bfc93d6b5c4ec0f0c095119424134b3329a6ed9388",
+      "bytes": 5823
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/pre-trial.json",
+      "sha256": "82ff688622af2401b3335a3defda2f8e79ebb04d01009d536fee118ece6b5746",
+      "bytes": 3453
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/gui-output.log",
+      "sha256": "c196bc7f06ed43aad2646208d95e17edfe7c8028b5a455551e6e88cd01a05837",
+      "bytes": 172841
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/report.json",
+      "sha256": "7e019486bd5bc395d99f4711c8cab0b956670314d6bf82a17ed94d9874a50b61",
+      "bytes": 6177
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/check.log",
+      "sha256": "d7efbd6215b0c17acf88d16b8974846800e1e02a763bbe7fe4f1876a1ed905e9",
+      "bytes": 962
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/body.trace.json",
+      "sha256": "9e07b8f5ea1f680b6fa5f47361e8e38fe208026f58371715b47844dda66a6de8",
+      "bytes": 62826
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/native-v2/hospital-gazebo/report.json",
+      "sha256": "10da697b9cf55075955081337fab23b100e7a212c7828ec8baba94e662eaa494",
+      "bytes": 4177
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/pre-trial.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/native-v2/hospital-gazebo/pre-trial.json",
+      "sha256": "dcca3674e6fe4660e2007bab62792a7131e3b69cf57d8e3b61fd1f4f294ff967",
+      "bytes": 3684
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/live-gui-output.log",
+      "sha256": "bdc48a2a16833194d9bb89b7bc5f02b43e3d1130c1524ee5b2589904add7f5c3",
+      "bytes": 114463
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/producer.py",
+      "sha256": "d6b2b38afb2d3ec0b9d3d3bfc93d6b5c4ec0f0c095119424134b3329a6ed9388",
+      "bytes": 5823
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/pre-trial.json",
+      "sha256": "dcca3674e6fe4660e2007bab62792a7131e3b69cf57d8e3b61fd1f4f294ff967",
+      "bytes": 3684
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/gui-output.log",
+      "sha256": "8b63ff782ef1b53fe521162cb47d83a4636020dd783af91b7b03bb34586b702f",
+      "bytes": 114492
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/report.json",
+      "sha256": "10da697b9cf55075955081337fab23b100e7a212c7828ec8baba94e662eaa494",
+      "bytes": 4177
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/native-v2/hospital-gazebo/check.log",
+      "sha256": "1195a045d31d2dad420417bdb8d5f5f02daebf6a16cbbc53c16c2b25b3b3b214",
+      "bytes": 1255
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/static-containers/hospital-gazebo/report.json",
+      "sha256": "80af968ffa6e098d5aeb78adea782f00224dd30933b5ac75926ce61fa91e774b",
+      "bytes": 4185
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/pre-trial.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/static-containers/hospital-gazebo/pre-trial.json",
+      "sha256": "e64096264ce7f0fef92e3bd38ed1c9499f4eac665ee050c9e54cf5b6d23bae95",
+      "bytes": 3684
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/live-gui-output.log",
+      "sha256": "431d2e7039e777e1ea2dd83800b2c34a0d2942c8189f4228cc4ffdb9938fbeb3",
+      "bytes": 118393
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/producer.py",
+      "sha256": "4c6fe4a8ec51d24d52b24142b9539b84f8e04496d49ecee0564a5415363908c1",
+      "bytes": 6477
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/pre-trial.json",
+      "sha256": "e64096264ce7f0fef92e3bd38ed1c9499f4eac665ee050c9e54cf5b6d23bae95",
+      "bytes": 3684
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/gui-output.log",
+      "sha256": "8325cfc0a86a43ada0133f23644f1a22e68078eda7ae74cef97d587ff51e8e59",
+      "bytes": 118936
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/report.json",
+      "sha256": "80af968ffa6e098d5aeb78adea782f00224dd30933b5ac75926ce61fa91e774b",
+      "bytes": 4185
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/check.log",
+      "sha256": "1195a045d31d2dad420417bdb8d5f5f02daebf6a16cbbc53c16c2b25b3b3b214",
+      "bytes": 1255
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/static-snapshot/hospital-gazebo/report.json",
+      "sha256": "10a4bee62de2366042cbebfe1b5e9a919b9c78ce5706b0e35307d11c6780cedf",
+      "bytes": 5625
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/pre-trial.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/static-snapshot/hospital-gazebo/pre-trial.json",
+      "sha256": "c3b72aeec5cbbf81be01d64f563e5565350841b5ad8693e433c4ea36122391e7",
+      "bytes": 3740
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/live-gui-output.log",
+      "sha256": "32d56121cbbe0454cb9bc70dc691772f0be12dccc931376f3774ad5969a4f5d4",
+      "bytes": 79742
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/producer.py",
+      "sha256": "4c6fe4a8ec51d24d52b24142b9539b84f8e04496d49ecee0564a5415363908c1",
+      "bytes": 6477
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/pre-trial.json",
+      "sha256": "c3b72aeec5cbbf81be01d64f563e5565350841b5ad8693e433c4ea36122391e7",
+      "bytes": 3740
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/gui-output.log",
+      "sha256": "dfa0069f4a5e4238f4a971944d3abd9368ffe1179a50189e9befbdda875e4375",
+      "bytes": 79771
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/report.json",
+      "sha256": "10a4bee62de2366042cbebfe1b5e9a919b9c78ce5706b0e35307d11c6780cedf",
+      "bytes": 5625
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/check.log",
+      "sha256": "66e5fa82b91d0687ab5572b4ee22be57876e286f9266226a3d71402a85a55bb5",
+      "bytes": 964
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-snapshot/hospital-gazebo/body.trace.json",
+      "sha256": "eb9d6e2b4e5a3fc673aa2d4597c92f0bca604567ace17069c1ecaad81ff49aa1",
+      "bytes": 67413
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/50nm-pybullet/report.json",
+      "sha256": "b156ba9b797bdc6069ec4ea356551e549ae961bd01a4bd0995ca06a80451f859",
+      "bytes": 2704
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/50nm-pybullet/source-manifest.json",
+      "sha256": "907b8c0a8f2b2eb3031ef1f834eae097753853a4960bb7a76b633525a530abfb",
+      "bytes": 26169
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/50nm-pybullet/producer.py",
+      "sha256": "d188dd24ce9d6a1650cda32278aa7a99257b6f1499aea5889eaad30bccd40a2f",
+      "bytes": 13793
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/live-gui-output.log",
+      "sha256": "26a00f9eaafef38ef30047a7e0594b7dd43c98ddc28cb44fa8afa7d022bfa20f",
+      "bytes": 6445
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/producer.py",
+      "sha256": "d188dd24ce9d6a1650cda32278aa7a99257b6f1499aea5889eaad30bccd40a2f",
+      "bytes": 13793
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/source-manifest.json",
+      "sha256": "907b8c0a8f2b2eb3031ef1f834eae097753853a4960bb7a76b633525a530abfb",
+      "bytes": 26169
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/gui-output.log",
+      "sha256": "15ed60ea13f4c8fa323e5e5eb2b99a33b79cd8be675744c0155964d6afa446f4",
+      "bytes": 7372
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/report.json",
+      "sha256": "b156ba9b797bdc6069ec4ea356551e549ae961bd01a4bd0995ca06a80451f859",
+      "bytes": 2704
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/trace.json",
+      "sha256": "56b0f1615e30ea7266400ebfb171e5b43a7c123b3e6598a79fde2c790f2d0108",
+      "bytes": 508600
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/50nm-pybullet/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/contact-diagnostic/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/contact-diagnostic/report.json",
+      "sha256": "4634afdd295de87647e45b1fb4b56a9ab1f7834424b825d08811dc32a6e4158c",
+      "bytes": 504330
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/contact-diagnostic/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/contact-diagnostic/producer.py",
+      "sha256": "ca5458791bb3fcae2870057a719067bb34517a835f92fd64ee958fa5677eb9d7",
+      "bytes": 2191
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/contact-diagnostic/producer.py",
+      "sha256": "ca5458791bb3fcae2870057a719067bb34517a835f92fd64ee958fa5677eb9d7",
+      "bytes": 2191
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/contact-diagnostic/report.json",
+      "sha256": "4634afdd295de87647e45b1fb4b56a9ab1f7834424b825d08811dc32a6e4158c",
+      "bytes": 504330
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/first-pybullet/report.json",
+      "sha256": "06556daf079f96999f0748f106aab2a1b1fa24e539f68c2ad8d39279d8a1cdd0",
+      "bytes": 2699
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/first-pybullet/source-manifest.json",
+      "sha256": "6873c6ba8d600c9e55acae57750f0afedcdee4142c71c9600b0c3ab011053df3",
+      "bytes": 26132
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/first-pybullet/producer.py",
+      "sha256": "d188dd24ce9d6a1650cda32278aa7a99257b6f1499aea5889eaad30bccd40a2f",
+      "bytes": 13793
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/live-gui-output.log",
+      "sha256": "9eb8709f3bad11503446f68ad91ea42bb29a55ed09fd4ae5d1617189c310fde0",
+      "bytes": 6445
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/producer.py",
+      "sha256": "d188dd24ce9d6a1650cda32278aa7a99257b6f1499aea5889eaad30bccd40a2f",
+      "bytes": 13793
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/source-manifest.json",
+      "sha256": "6873c6ba8d600c9e55acae57750f0afedcdee4142c71c9600b0c3ab011053df3",
+      "bytes": 26132
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/gui-output.log",
+      "sha256": "97310ed7728ff985626a551e7a24ee6bb84f165371585c9ad04698301e48c604",
+      "bytes": 7372
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/report.json",
+      "sha256": "06556daf079f96999f0748f106aab2a1b1fa24e539f68c2ad8d39279d8a1cdd0",
+      "bytes": 2699
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/trace.json",
+      "sha256": "2452f2f28b1306745bf91a46c69a1ba7dde7fb409dcdbed922a6c08cff25f95d",
+      "bytes": 507397
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/first-pybullet/executed.urdf",
+      "sha256": "a147604e7518eaa8fce11574d5e4efc5a2942fcd1e71e00b707fc064daf6ea8d",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/gazebo-final/report.json",
+      "sha256": "b89757ad6a7cf9f92182ebeb48575d0525118932d3527cd03872856210867cf7",
+      "bytes": 5464
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/gazebo-final/source-manifest.json",
+      "sha256": "75e1cc373c364ad4eca56759ffc31b95dcbc62b61cb9c1438da0ba397b289c9d",
+      "bytes": 26309
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/gazebo-final/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/live-gui-output.log",
+      "sha256": "c4a320655e91ad77287c9219403e663529315522380c810b077462cd0504696d",
+      "bytes": 44280
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/source-manifest.json",
+      "sha256": "75e1cc373c364ad4eca56759ffc31b95dcbc62b61cb9c1438da0ba397b289c9d",
+      "bytes": 26309
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/gui-output.log",
+      "sha256": "a86481e403973bf23b3311bb02c6d58b16439d741d0ecdc24d5f5a87cced980e",
+      "bytes": 55605
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/report.json",
+      "sha256": "b89757ad6a7cf9f92182ebeb48575d0525118932d3527cd03872856210867cf7",
+      "bytes": 5464
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/trace.json",
+      "sha256": "2b32dd96c7661d6294c35fa49353b79ed7114918eb5ba2918f8e3c90f52d4939",
+      "bytes": 1820520
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/gazebo-final/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/independent-friction-pybullet/report.json",
+      "sha256": "c50a2736a2e7b89493bf12b85fa7f6df1fb2aa6159e9d0db5fb43536f570fe06",
+      "bytes": 5861
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/independent-friction-pybullet/source-manifest.json",
+      "sha256": "75e1cc373c364ad4eca56759ffc31b95dcbc62b61cb9c1438da0ba397b289c9d",
+      "bytes": 26309
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/independent-friction-pybullet/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/live-gui-output.log",
+      "sha256": "7a493511c49ae9ccbba4402dcfb4c0d16853e805df94a051a842c9ba235237a8",
+      "bytes": 13816
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/source-manifest.json",
+      "sha256": "75e1cc373c364ad4eca56759ffc31b95dcbc62b61cb9c1438da0ba397b289c9d",
+      "bytes": 26309
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/gui-output.log",
+      "sha256": "07646b3c2db681943716ba1c8a0b770fb5f7f123b25aab516e88941a97ba7384",
+      "bytes": 14743
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/report.json",
+      "sha256": "c50a2736a2e7b89493bf12b85fa7f6df1fb2aa6159e9d0db5fb43536f570fe06",
+      "bytes": 5861
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/trace.json",
+      "sha256": "accd40af444e184209b224388d826ac77d791676ee70eaf47332e973c9b086ab",
+      "bytes": 935443
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/independent-friction-pybullet/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-final/report.json",
+      "sha256": "af44dac2160468eeb628380ee915c84ecaaa779dbd5b2a818e0076c7ca75ca82",
+      "bytes": 2666
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-final/source-manifest.json",
+      "sha256": "384ffc8009c7111fe4b7c31e7d78f7a59c98401dc3afe393b970c6410d1d39f6",
+      "bytes": 26455
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-final/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/live-gui-output.log",
+      "sha256": "4087eff035b7633ce144187492e8ed6b66849053edf0e6c48df0ba0d8701b0da",
+      "bytes": 6710
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/source-manifest.json",
+      "sha256": "384ffc8009c7111fe4b7c31e7d78f7a59c98401dc3afe393b970c6410d1d39f6",
+      "bytes": 26455
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/gui-output.log",
+      "sha256": "86eb81ebcdcc56f4a0ccb12d337551e4a4a8d0e25f4d7843d638b4ddb5a909f1",
+      "bytes": 8204
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/report.json",
+      "sha256": "af44dac2160468eeb628380ee915c84ecaaa779dbd5b2a818e0076c7ca75ca82",
+      "bytes": 2666
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/trace.json",
+      "sha256": "8f64699f8171e788cc9d9068378afb97dbd4db4e7ebb15a71092f924d9c1a6d2",
+      "bytes": 762427
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-final/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-yaw-feedback/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-yaw-feedback/source-manifest.json",
+      "sha256": "310fec569bcbd69d406947d43f853d776729c4dbfdaaf7e4e4bcfe3652f36404",
+      "bytes": 26453
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-yaw-feedback/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-yaw-feedback/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-yaw-feedback/live-gui-output.log",
+      "sha256": "0e49c4762a62ec03792b10b5a9ddc0d5e32db17c86e5a4973c34e36e56368691",
+      "bytes": 6710
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-yaw-feedback/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-yaw-feedback/source-manifest.json",
+      "sha256": "310fec569bcbd69d406947d43f853d776729c4dbfdaaf7e4e4bcfe3652f36404",
+      "bytes": 26453
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/isaac-yaw-feedback/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/motor-diagnostic/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/motor-diagnostic/report.json",
+      "sha256": "c5c63499300ea8d9b1d6f6fef19cb8c6dc4c059f8f0fd5cb5e1147ddfd09944e",
+      "bytes": 5547
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/motor-diagnostic/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/motor-diagnostic/producer.py",
+      "sha256": "1e23a172ff7d4d7b9fc2aa995a4dd1dfb1a7be3e24f0dfc380ffa15a5fef896f",
+      "bytes": 1675
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/motor-diagnostic/producer.py",
+      "sha256": "1e23a172ff7d4d7b9fc2aa995a4dd1dfb1a7be3e24f0dfc380ffa15a5fef896f",
+      "bytes": 1675
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/motor-diagnostic/report.json",
+      "sha256": "c5c63499300ea8d9b1d6f6fef19cb8c6dc4c059f8f0fd5cb5e1147ddfd09944e",
+      "bytes": 5547
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/motor-diagnostic/log.txt",
+      "sha256": "30e3fa078dff6b9a4a85319d29fa9910bf65d314f26b9aa2f739863a7321f4cf",
+      "bytes": 1055
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/mujoco-final/report.json",
+      "sha256": "231fa4ff76d71b6141d99f72b9a658718dfcceb0d061dc4478ccc65062266e83",
+      "bytes": 2696
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/mujoco-final/source-manifest.json",
+      "sha256": "75e1cc373c364ad4eca56759ffc31b95dcbc62b61cb9c1438da0ba397b289c9d",
+      "bytes": 26309
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/mujoco-final/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/live-gui-output.log",
+      "sha256": "9afea9d27c651835de12d10a02b0e315f1b9e51912e2324e2259293a05c31896",
+      "bytes": 5281
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/source-manifest.json",
+      "sha256": "75e1cc373c364ad4eca56759ffc31b95dcbc62b61cb9c1438da0ba397b289c9d",
+      "bytes": 26309
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/gui-output.log",
+      "sha256": "ea9f61a3f93a9505850b65e8fb41662ec3a723c697f33f7ab771881168627dae",
+      "bytes": 6202
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/report.json",
+      "sha256": "231fa4ff76d71b6141d99f72b9a658718dfcceb0d061dc4478ccc65062266e83",
+      "bytes": 2696
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/trace.json",
+      "sha256": "032c7d22f0d83ecc556aca196acdaef794a5ce56d4d32924884672e92c95f7f9",
+      "bytes": 482801
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-final/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/mujoco-yaw-feedback/report.json",
+      "sha256": "acf7de3d755d3b4e8c56470121b6601afa4f76dd0327e9c4966bfae554d94d9a",
+      "bytes": 5851
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/mujoco-yaw-feedback/source-manifest.json",
+      "sha256": "28f2f70958c5dd7bf7a8443de8c469ddeeba21a941663942317b1b0ae1f4d74a",
+      "bytes": 26455
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/mujoco-yaw-feedback/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/live-gui-output.log",
+      "sha256": "06c2565be35c37a5b6930861ddb79e020ca7f8609a405110abee9dbd4f6f090b",
+      "bytes": 11482
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/producer.py",
+      "sha256": "184ec14f625bf047eda1ab259a019d40fffde56bfb2786b098998a552eef20e8",
+      "bytes": 14203
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/source-manifest.json",
+      "sha256": "28f2f70958c5dd7bf7a8443de8c469ddeeba21a941663942317b1b0ae1f4d74a",
+      "bytes": 26455
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/gui-output.log",
+      "sha256": "cb33352b64cf3fbdaf8fa52987833386c226585201483d3f3d4c88406b578b19",
+      "bytes": 12403
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/report.json",
+      "sha256": "acf7de3d755d3b4e8c56470121b6601afa4f76dd0327e9c4966bfae554d94d9a",
+      "bytes": 5851
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/trace.json",
+      "sha256": "8993478c5370c893912a7cc1d78abbb3c3bcd2ed4a1669f75b03fc212c6b14db",
+      "bytes": 891059
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/mujoco-yaw-feedback/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/source-tires-pybullet/report.json",
+      "sha256": "0640742e4545ec54dc3d660fe8f018215a7f500e0d7a6b8ac33da7914309c25e",
+      "bytes": 3294
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/source-manifest.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/source-tires-pybullet/source-manifest.json",
+      "sha256": "5fe8e4cec93515b9260bffba76771b9127de3c5201de03c866862f096e856a88",
+      "bytes": 26263
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/producer.py",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/source-tires-pybullet/producer.py",
+      "sha256": "d188dd24ce9d6a1650cda32278aa7a99257b6f1499aea5889eaad30bccd40a2f",
+      "bytes": 13793
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/live-gui-output.log",
+      "sha256": "4b97afcb468ee1ffcfa3a50d08a075facca6eb3b613fe74b8bbe0ec2ae56d579",
+      "bytes": 6445
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/producer.py",
+      "sha256": "d188dd24ce9d6a1650cda32278aa7a99257b6f1499aea5889eaad30bccd40a2f",
+      "bytes": 13793
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/source-manifest.json",
+      "sha256": "5fe8e4cec93515b9260bffba76771b9127de3c5201de03c866862f096e856a88",
+      "bytes": 26263
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/gui-output.log",
+      "sha256": "7a2934399b8418db94555f1e72e34bfc7d9326ba20e448ef84e8373bc908309c",
+      "bytes": 7372
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/report.json",
+      "sha256": "0640742e4545ec54dc3d660fe8f018215a7f500e0d7a6b8ac33da7914309c25e",
+      "bytes": 3294
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/trace.json",
+      "sha256": "6e255318eed4baa8fcb80f54b28873bb8abb67c95e1bcc71811928c22eaad821",
+      "bytes": 665483
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/source-tires-pybullet/executed.urdf",
+      "sha256": "fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5",
+      "bytes": 15550
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/report.json",
+      "sha256": "f7015f6a11fa1fe711fbf0ad656539b694f5e8b3fede9cb95ca69c6d4448f1d0",
+      "bytes": 3618
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital/gui.png",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital/gui.png",
+      "sha256": "c537e65c540162189d7ee4751bef5d1fea1f0f4b902d34c625ef230ac1dc7f4f",
+      "bytes": 125522
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital/scene.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital/scene.json",
+      "sha256": "4361e3881fb757c4657c357cf57a6eb44ca226896357e51c73dad2891ea971a2",
+      "bytes": 187487
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital/viewport.png",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital/viewport.png",
+      "sha256": "3132912e000fc7c0e213f3cb7d3e2c97534d6090966bba1b4ce39de7fd71eb99",
+      "bytes": 8771
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital/request.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital/request.json",
+      "sha256": "fbc909fcfbb6005f4f85ffa00fb27fb1f99b2d652e9f334000c279bfaa5be860",
+      "bytes": 1564
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital_hospital_two_floors/gui.png",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital_hospital_two_floors/gui.png",
+      "sha256": "26690bf2fb968658bfa93ed5cde1a6e760e772368ccc98e4c1d7aeb603943654",
+      "bytes": 127512
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital_hospital_two_floors/scene.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital_hospital_two_floors/scene.json",
+      "sha256": "ff18f3d24c99c70022467c4e5ade208d895610a63b33ba3c95543f9cc1a07b5f",
+      "bytes": 373993
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital_hospital_two_floors/viewport.png",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital_hospital_two_floors/viewport.png",
+      "sha256": "a01283a1994eef1f2360397560115db0c4be8a648c025002d9e255b2d889b227",
+      "bytes": 10595
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/preview-hospital-native-fixed/dataset_hospital_hospital_two_floors/request.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/preview/dataset_hospital_hospital_two_floors/request.json",
+      "sha256": "2739d420814dc431f7d3d1e464ca129be0a78a600b7d449838fe36d2767ebcb4",
+      "bytes": 1715
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-114812-53ab19/dataset_bookstore.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_bookstore/generation.json",
+      "sha256": "f74749549d8f9e0ec277079fca963c9236f1ded65c91898f6d4c1f1828cd43b1",
+      "bytes": 8895
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-114235-cf5dab/dataset_office_service.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_office_service/generation.json",
+      "sha256": "fa5b66bccac13b8db2bcb8a6f8ac183c9845daff3ac77217a707d69291de049d",
+      "bytes": 2497
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-114828-b21a8a/dataset_small_house.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_small_house/generation.json",
+      "sha256": "88e3a2f66554001ad814e8d76b38fabaaae826d7f35a12835849b609f0dd6c89",
+      "bytes": 19760
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-114833-319661/dataset_dynamic_world.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_dynamic_world/generation.json",
+      "sha256": "4a2f1f847493bd5bfb47f84106f7221edd00c50b68114eaca0643e698633583b",
+      "bytes": 1473
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261007-152147-e011aa/dataset_room1.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room1/generation.json",
+      "sha256": "6d1ef2d267953fbd4478d5b5cb6cdec7a6a580f4f58e82a80b45068dca18d0d6",
+      "bytes": 1463
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-114837-c4b53b/dataset_room2.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room2/generation.json",
+      "sha256": "ef097dd14ca9ed3f1f26dddb2fa5a5aa95813ce2e16570c6d2040b6059ce6e4a",
+      "bytes": 1448
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-114842-f99f45/dataset_room2_world_dynamic.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room2_world_dynamic/generation.json",
+      "sha256": "2d9e2f4cdd308b403795994fd8090909016e9aff5e0f911d242fef27accb55ac",
+      "bytes": 1504
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-114846-a64c4d/dataset_room3.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room3/generation.json",
+      "sha256": "60cb3e1fbf1b05294ae70d37ac7a6ea8a7f08bdc4036990018230c57fd455fdc",
+      "bytes": 1448
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-114850-f0f4e4/dataset_room3_world_dynamic.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room3_world_dynamic/generation.json",
+      "sha256": "b5e9b1dcce198893c77dda9857ac47201b76b34b481eac73c5630d47152e35cf",
+      "bytes": 1503
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-114854-980d21/dataset_room4.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room4/generation.json",
+      "sha256": "1f3d1dfe84124788e17859f1070f0e166bc55819735246ed149f544f93883a5c",
+      "bytes": 1448
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-114859-fd2ff2/dataset_room4_world_dynamic.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_room4_world_dynamic/generation.json",
+      "sha256": "e7f39cc7ac5ed3888ccfc5c7a0bf212b1645cdda348dfaad74fcb4e1b482244f",
+      "bytes": 1503
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-114905-9d0bfc/dataset_factory.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_factory/generation.json",
+      "sha256": "d62538e0c98cabb250535277f9483f8c0a15bceca48b461a02d9fa72ee386a98",
+      "bytes": 3839
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114926-16f8b9/dataset_hospital.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_hospital/generation.json",
+      "sha256": "9e3c3ba8fa76ccc4ddeb3bb85784201dc377eb8bddf3a61b5b18d92d0cf79113",
+      "bytes": 19413
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-115009-6f3922/dataset_hospital_hospital_two_floors.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/worlds/dataset_hospital_hospital_two_floors/generation.json",
+      "sha256": "804e21745d066c0ae924d0825de4edcedbeabdc1f305def7503d27ecce0323cc",
+      "bytes": 19733
+    }
+  ]
+}

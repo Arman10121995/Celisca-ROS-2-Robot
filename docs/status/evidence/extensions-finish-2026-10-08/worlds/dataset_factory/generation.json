@@ -1,0 +1,47 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_factory.world",
+  "source_sha256": "d753000d45570f78b108f7975989acd631f18d0faf7f6e1464cc23e878d0416d",
+  "mesh_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/dumpster/meshes/dumpster.dae": "4e30960e97c80b3a9df5c697f876d91d213d27c1c0ddae887cd340ba245b6ff7",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/euro_pallet/meshes/pallet.dae": "a2a3791cf7765da3c69ae8382161b6e3fb46d88f527a7aef7e1601c2f12edb80",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/first_2015_trash_can/meshes/trash_can.dae": "0fafb8b6137b68804feec7f09ccf1a350efd01b136f8281297c67e7535d61a2c",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/cordless_drill/meshes/cordless_drill.stl": "c5a731aab8272ed1ddb5ed776a753826a708d8b74ee28c525ba71a35d759215a",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/construction_barrel/meshes/construction_barrel.dae": "c27bd4d4964b8c896f9a1810f9fbfc91eb13d2077df464fa5b7238ffaf770c97",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b1a447821f07a240191d2039cc155d6af448918fb03a169cca904a7ea57d2629/coke_can.dae": "9986ba1c0c5bbb37bb14f5414f8a39d87f63c801cb6f50c1b43748291d19febf",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/construction_cone/meshes/construction_cone.dae": "faebf94980808e3d36ce5bb4a7bd0f39b7f634d1c63fb16ec6c11c37fb65e6ca",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a245b42d8a228d158b6bf587ae55ca3da220b2cad9b2084c756d7e521e27909c/plastic_cup.dae": "05c8e96e240378e8c08d92c118ce3a18fb4a3c519a81b5edcce22d23fc39c2ec",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/tube_2_25cm/meshes/tube_2_25.dae": "2999fcb56d9e8ec752410bbf8f97d0642d0b6fbc93b011d73309feb020909fcb"
+  },
+  "mesh_slice_paths": 13,
+  "mesh_mask_cells": 25043,
+  "collision_count": 183,
+  "projection_recipe": "complete-static-height-slice-v3",
+  "terrain_slice_polygons": 0,
+  "heightfield_count": 0,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    30.75,
+    7.1000000000000005
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-114905-9d0bfc/dataset_factory.yaml",
+  "free_cells": 300229,
+  "occupied_cells": 4013,
+  "unknown_cells": 21118,
+  "shape": [
+    415,
+    784
+  ],
+  "origin": [
+    -39.2,
+    -20.75,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "9625ef3c578e74fa5527e7989614b3ad06ab82cf4bf21e7614d621a5ea1a942c",
+    ".pgm": "b0eab1f91693a45c89c8de437eb3d3b422b8e50c2e56c9f07b81f8cc390eba4c"
+  }
+}

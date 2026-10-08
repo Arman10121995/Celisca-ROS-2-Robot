@@ -862,6 +862,18 @@ class PyBulletSpawner(Node):
         self._lw = self._joint_idx.get(lw, -1)
         self._rw = self._joint_idx.get(rw, -1)
         self._drive = self._make_drive()
+        from robot_lab_utils.skid_steer import wheel_force_limit, wheel_friction_axes, bullet_contact_parameters
+        wheel_config = parse_drive_config(self.get_parameter('drive_config').value)
+        self._wheel_force_limit = wheel_force_limit(
+            wheel_config)
+        contact_parameters = bullet_contact_parameters(wheel_config)
+        if contact_parameters:
+            p.setPhysicsEngineParameter(**contact_parameters)
+        friction_axes = wheel_friction_axes(wheel_config)
+        if friction_axes is not None:
+            for wheel in self._drive.wheel_joints:
+                p.changeDynamics(self._robot_id,self._joint_idx[wheel],
+                                 anisotropicFriction=friction_axes)
         # Every joint the drive commands (a car's four wheels and steering).
         self._drive_idx = {self._joint_idx[j] for j in
                            list(self._drive.wheel_joints) + list(self._drive.steer_joints)
@@ -1014,18 +1026,18 @@ class PyBulletSpawner(Node):
                 if self._lw >= 0:
                     p.setJointMotorControl2(
                         self._robot_id, self._lw, p.VELOCITY_CONTROL,
-                        targetVelocity=max(-clamp, min(clamp, vl)), force=5.0)
+                        targetVelocity=max(-clamp, min(clamp, vl)), force=self._wheel_force_limit)
                 if self._rw >= 0:
                     p.setJointMotorControl2(
                         self._robot_id, self._rw, p.VELOCITY_CONTROL,
-                        targetVelocity=max(-clamp, min(clamp, vr)), force=5.0)
+                        targetVelocity=max(-clamp, min(clamp, vr)), force=self._wheel_force_limit)
             else:
                 for joint, rate in targets.velocity.items():
                     idx = self._joint_idx.get(joint, -1)
                     if idx >= 0:
                         p.setJointMotorControl2(
                             self._robot_id, idx, p.VELOCITY_CONTROL,
-                            targetVelocity=max(-clamp, min(clamp, rate)), force=5.0)
+                            targetVelocity=max(-clamp, min(clamp, rate)), force=self._wheel_force_limit)
                 for joint, angle in targets.position.items():
                     idx = self._joint_idx.get(joint, -1)
                     if idx >= 0:

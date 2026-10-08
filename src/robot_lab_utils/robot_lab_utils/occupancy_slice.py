@@ -25,3 +25,38 @@ def primitive_slice_cells(shape, sizes, resolution, height):
     first = np.ceil((lower[:2]+np.asarray(sizes)/2)/resolution-1).astype(int)
     last = np.floor((upper[:2]+np.asarray(sizes)/2)/resolution).astype(int)
     return tuple(int(v) for v in (*first,*last))
+
+
+def terrain_slice_polygons(vertices, faces, height):
+    """Project the solid part of each terrain triangle above a world z slice.
+
+    Vertices already have the composed world transform. Clip against z >=
+    height before projecting to XY: joining high samples in raster order
+    invents barriers between disconnected hills and omits their interiors.
+    Separate clipped triangles preserve both gaps and sloping intersections.
+    """
+    vertices = np.asarray(vertices, dtype=float)
+    faces = np.asarray(faces, dtype=int)
+    if (vertices.ndim != 2 or vertices.shape[1] != 3
+            or faces.ndim != 2 or faces.shape[1] != 3
+            or not np.isfinite(vertices).all() or not np.isfinite(height)
+            or (faces.size and (faces.min() < 0 or faces.max() >= len(vertices)))):
+        raise ValueError('Terrain requires finite XYZ vertices and triangle indices')
+    polygons = []
+    for triangle in vertices[faces]:
+        if triangle[:, 2].max() < height:
+            continue
+        clipped = []
+        previous = triangle[-1]
+        for current in triangle:
+            previous_inside = previous[2] >= height
+            current_inside = current[2] >= height
+            if previous_inside != current_inside:
+                fraction = (height - previous[2]) / (current[2] - previous[2])
+                clipped.append(previous + fraction * (current - previous))
+            if current_inside:
+                clipped.append(current)
+            previous = current
+        if len(clipped) >= 3:
+            polygons.append(np.asarray(clipped)[:, :2])
+    return polygons

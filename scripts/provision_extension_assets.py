@@ -566,6 +566,31 @@ def install_robots(store, download, selected_source=None):
                         profile['notes'] += (' Gazebo caps the selected world to a 2 ms physics '
                             'step for this base (measured wheel-odometry divergence in the stock '
                             '10 ms worlds); other backends launch the world unchanged.')
+                if source['id'] == 'husky_vendor':
+                    from extension_husky_control import husky_drive
+                    controlled, drive, controllers, sensor_config, control_source = husky_drive(derived,name)
+                    profile.update(xacro=str(controlled),drive=drive,drive_in_display=True,
+                        sensor_config=sensor_config,features=['velocity_base','lidar_2d','rgbd_camera'],
+                        controllers=['joint_state_broadcaster','robot_lab_controller'])
+                    profile['notes'] = ('Original Husky four-wheel geometry/inertia with separate physical '
+                        'skid-steer wheel targets and a declared lab lidar/RGB-D/IMU kit. '
+                        'Display controller integration; backend Drive/Stop/reset, sensors, SLAM/navigation '
+                        'need measured qualification. Vendor firmware is not used.')
+                    check.update(drive_urdf=str(controlled),drive_urdf_sha256=digest(controlled),
+                        drive_controllers_sha256=digest(controllers),control_source=control_source)
+                    from robot_lab_utils.asset_support import apply_recorded_modes
+                    support_path = ROOT/'docs/status/asset-runtime-support.yaml'
+                    support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
+                    profile = apply_recorded_modes(profile, source['revision'],
+                        (support or {}).get('robots', {}).get(name), ROOT)
+                    if profile.get('runtime_screens'):
+                        profile['notes'] = ('Original Husky geometry/inertia and separate physical four-wheel '
+                            'skid control, with declared lab lidar/RGB-D/IMU and motor/solver settings. '
+                            'Named localization/reset, saved SLAM and clear/obstacle Nav2 screens determine '
+                            'backend modes/defaults. Other worlds are experiments; payloads, outdoor '
+                            'traversal and vendor firmware/hardware remain unqualified. Gazebo uses '
+                            'encoder translation plus IMU yaw rate; other engines use reference body '
+                            'twist in the current EKF path, not a noisy encoder benchmark.')
                 if source['id'] == 'turtlebot3_vendor':
                     from extension_mobile_control import turtlebot3_drive
                     controlled, drive, controllers, sensor_config, control_source = turtlebot3_drive(

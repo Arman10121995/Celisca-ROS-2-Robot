@@ -1,0 +1,13 @@
+=== Tier: integration (16 test files) ===
+........................................................................ [ 48%]
+........................................................................ [ 97%]
+...                                                                      [100%]
+=============================== warnings summary ===============================
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+src/robot_lab_gui/test/test_registry_preview.py::test_native_viewport_renders_in_tk_and_changes_actual_framebuffer
+  /usr/lib/python3/dist-packages/OpenGL/images.py:142: DeprecationWarning: tostring() is deprecated. Use tobytes() instead.
+    return data.tostring()
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+147 passed, 2 warnings in 97.92s (0:01:37)
+=== Tier: integration PASS ===

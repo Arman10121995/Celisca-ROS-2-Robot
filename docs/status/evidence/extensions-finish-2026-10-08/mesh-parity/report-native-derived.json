@@ -1,0 +1,208 @@
+{
+  "scope": "Actual installed Gazebo ColladaLoader original and derived geometry plus shared indexed reader; no robot mission.",
+  "sdk": "ignition-common4-graphics",
+  "mesh_count": 22,
+  "meshes": [
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_floor_01_floor/meshes/aws_robomaker_hospital_floor_01_floor_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/4106e0ac636431290285b5db81aa2ba98a8b2e34a1586966622033148367d9f8/aws_robomaker_hospital_floor_01_floor_visual.dae",
+      "source_sha256": "4106e0ac636431290285b5db81aa2ba98a8b2e34a1586966622033148367d9f8",
+      "derived_sha256": "240b6af8f3618167449ec102eef076008cd8bdc801c5067d4a8bf537be4722c4",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.552713678800501e-15,
+      "native_vertices": 40
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_floor_01_floor/meshes/aws_robomaker_hospital_floor_01_floor_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b914dbb27d5a03f4175ff35b7b08f81f5ad851254fd179bd8af05285f0197fc7/aws_robomaker_hospital_floor_01_floor_collision.dae",
+      "source_sha256": "b914dbb27d5a03f4175ff35b7b08f81f5ad851254fd179bd8af05285f0197fc7",
+      "derived_sha256": "4ecf03005ffce431303e30384e73cb766bba0ca66dbf0f4509380cb11a7656e8",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.552713678800501e-15,
+      "native_vertices": 40
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_floor_01_walls/meshes/aws_robomaker_hospital_floor_01_walls_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/1f485b1ccf849d3c5ecfe3fa7d75d3246da1e3d4c4265240e828179537baa30f/aws_robomaker_hospital_floor_01_walls_visual.dae",
+      "source_sha256": "1f485b1ccf849d3c5ecfe3fa7d75d3246da1e3d4c4265240e828179537baa30f",
+      "derived_sha256": "010fa4136a47175e3213a2eb643441f3cd68171d97bc9549ea5beb6568956e1f",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 7.105427357601002e-15,
+      "native_vertices": 8387
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_floor_01_walls/meshes/aws_robomaker_hospital_floor_01_walls_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/233b75caa7eb94807427505d21e15522f3f5b15ce30f3b6a6f51b58eb901a523/aws_robomaker_hospital_floor_01_walls_collision.dae",
+      "source_sha256": "233b75caa7eb94807427505d21e15522f3f5b15ce30f3b6a6f51b58eb901a523",
+      "derived_sha256": "0ff9a7ff2f3c3303633aea3c88c25724aa1c7f41d90c2c9cdb46924f7ab56e7e",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 4.884981308350689e-15,
+      "native_vertices": 6698
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_nursesstation_01/meshes/aws_robomaker_hospital_nursesstation_01_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d3d806a3ea3d679b6f93fb1f08eb8992cdbc76e80d17895a37339c8e7f9d94f7/aws_robomaker_hospital_nursesstation_01_visual.dae",
+      "source_sha256": "d3d806a3ea3d679b6f93fb1f08eb8992cdbc76e80d17895a37339c8e7f9d94f7",
+      "derived_sha256": "c676e075176a09dee3a62fc3ec90b37ce519875c8ca0243035098ee8595d5d99",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 1.3322676295501878e-15,
+      "native_vertices": 38772
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_nursesstation_01/meshes/aws_robomaker_hospital_nursesstation_01_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b0506c0958cc308caef525f62570260723efe66aea9cfbbed711e6265352a7c1/aws_robomaker_hospital_nursesstation_01_collision.dae",
+      "source_sha256": "b0506c0958cc308caef525f62570260723efe66aea9cfbbed711e6265352a7c1",
+      "derived_sha256": "64c6c8569fc8caa33a9eb0b18c26d740242dcbea2370daf9f2a0adede28d69e5",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 6.661338147750939e-16,
+      "native_vertices": 2149
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_elevator_01_portal/meshes/aws_robomaker_hospital_elevator_01_portal_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/4bb289f4065545cef2c663daafe826a76ac706e9a592b0cb50aff7c2c156ea54/aws_robomaker_hospital_elevator_01_portal_visual.dae",
+      "source_sha256": "4bb289f4065545cef2c663daafe826a76ac706e9a592b0cb50aff7c2c156ea54",
+      "derived_sha256": "1aaf01bd1a071d5ba6429c15d0ab9bc0880aa44526d910ca2320cf30be85e244",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.774758283725532e-15,
+      "native_vertices": 433
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_elevator_01_portal/meshes/aws_robomaker_hospital_elevator_01_portal_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/3869546a2144504e8d98b252cb24ae7dac1e083e57cdc51e84621fe0599186d1/aws_robomaker_hospital_elevator_01_portal_collision.dae",
+      "source_sha256": "3869546a2144504e8d98b252cb24ae7dac1e083e57cdc51e84621fe0599186d1",
+      "derived_sha256": "0214b8c60ef5e0484d79d1f5e2593e39cb2355a66f0c0cc22ced9454d21258ce",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 2.220446049250313e-15,
+      "native_vertices": 8
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_elevator_01_car/meshes/aws_robomaker_hospital_elevator_01_car_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/f0f461a59383e4b6485f2153f3f9874ea84c66365f028074214c12f143fcab89/aws_robomaker_hospital_elevator_01_car_visual.dae",
+      "source_sha256": "f0f461a59383e4b6485f2153f3f9874ea84c66365f028074214c12f143fcab89",
+      "derived_sha256": "0013c3671fd14781e5477e281e945c5c7054bc76040473e269d30d39bf019eff",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 4.440892098500626e-15,
+      "native_vertices": 3742
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_elevator_01_car/meshes/aws_robomaker_hospital_elevator_01_car_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/9567dc096021ebed13c455e985e26b1e6749e048430cc1d5893e67100615fa66/aws_robomaker_hospital_elevator_01_car_collision.dae",
+      "source_sha256": "9567dc096021ebed13c455e985e26b1e6749e048430cc1d5893e67100615fa66",
+      "derived_sha256": "2d4aa4e25a525899d8b00bc357092dacbcfecc25dbb82af097093772afc600c4",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 16
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_elevator_01_door/meshes/aws_robomaker_hospital_elevator_01_door_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/305d38b7aa8ab2ed4963050c1382c9234f7f29ad9377c5214f31d7e2c24a9719/aws_robomaker_hospital_elevator_01_door_visual.dae",
+      "source_sha256": "305d38b7aa8ab2ed4963050c1382c9234f7f29ad9377c5214f31d7e2c24a9719",
+      "derived_sha256": "02cb8be76fa234fc9929debd942d120f0877cfe02a704b10eec05adbbe22a9ab",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.9968028886505635e-15,
+      "native_vertices": 637
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_elevator_01_door/meshes/aws_robomaker_hospital_elevator_01_door_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b9119a6e5571294de5a61d3a449c7b104887115ea90e23817b08d6248c934735/aws_robomaker_hospital_elevator_01_door_collision.dae",
+      "source_sha256": "b9119a6e5571294de5a61d3a449c7b104887115ea90e23817b08d6248c934735",
+      "derived_sha256": "537f9080c46739e18e1e5e0c640df9c4cd4e1ad8e3322ba2b9d0e766bfcbe012",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.9968028886505635e-15,
+      "native_vertices": 8
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_curtain_half_open_01/meshes/aws_robomaker_hospital_curtain_half_open_01_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/1483ffe18fd3bf635809c278d95f0da7bc4e1510842a597b4bc4406689833c50/aws_robomaker_hospital_curtain_half_open_01_visual.dae",
+      "source_sha256": "1483ffe18fd3bf635809c278d95f0da7bc4e1510842a597b4bc4406689833c50",
+      "derived_sha256": "355fc779983b28972e6070139305d08d0484ae82658abdd4f2f8ce45ff84ae6f",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 6104
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_curtain_half_open_01/meshes/aws_robomaker_hospital_curtain_half_open_01_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/284f52a3c4ee7b93bed81a7034b7bb255368c752101f74fe6cf99c91b319ad98/aws_robomaker_hospital_curtain_half_open_01_collision.dae",
+      "source_sha256": "284f52a3c4ee7b93bed81a7034b7bb255368c752101f74fe6cf99c91b319ad98",
+      "derived_sha256": "e42b331089e1e1193bbee3411a8abc4af113c279354f41e631fd585dfdf43ced",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 2211
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_curtain_closed_01/meshes/aws_robomaker_hospital_curtain_closed_01_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b61f5632497967d159ed5e5123544b79c5f81d31773f89488a20fa8a54b3e6c6/aws_robomaker_hospital_curtain_closed_01_visual.dae",
+      "source_sha256": "b61f5632497967d159ed5e5123544b79c5f81d31773f89488a20fa8a54b3e6c6",
+      "derived_sha256": "a1047355cf234985906bb2ce0de0baef617d40371a918fc8f8b4e07c7716b045",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 6333
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part1/aws_robomaker_hospital_curtain_closed_01/meshes/aws_robomaker_hospital_curtain_closed_01_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/333e7a6f7cb94c343ffd146efe6e7edacb41bcd2304b4f44ae1a1fb54ad57888/aws_robomaker_hospital_curtain_closed_01_collision.dae",
+      "source_sha256": "333e7a6f7cb94c343ffd146efe6e7edacb41bcd2304b4f44ae1a1fb54ad57888",
+      "derived_sha256": "2c73987aee3e87fdf28c03ff5fe714f417dedc4435b7271df9bbf9d58be28fb3",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 2211
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_floor_01_ceiling/meshes/aws_robomaker_hospital_floor_01_ceiling_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/3c6e8fc0728371a083c373d1d67ba73194ef2a3550ae1aeabe88509a71ff0edc/aws_robomaker_hospital_floor_01_ceiling_visual.dae",
+      "source_sha256": "3c6e8fc0728371a083c373d1d67ba73194ef2a3550ae1aeabe88509a71ff0edc",
+      "derived_sha256": "1a243d9f4f201181f05beab8d605b0ed3d3d5650c14de498ff6b3dc257888cc9",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 7.105427357601002e-15,
+      "native_vertices": 4
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_floor_01_ceiling/meshes/aws_robomaker_hospital_floor_01_ceiling_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/5d06ef3ff6d013d58d2011f1acbbf5ef68c528466bc645884943513b15cd2742/aws_robomaker_hospital_floor_01_ceiling_collision.dae",
+      "source_sha256": "5d06ef3ff6d013d58d2011f1acbbf5ef68c528466bc645884943513b15cd2742",
+      "derived_sha256": "9c01ae8a28cb5045e1d119affc8bcfb2f464fd5212dfd072acae53e817cd94c2",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 7.105427357601002e-15,
+      "native_vertices": 4
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_ramp_01/meshes/aws_robomaker_hospital_ramp_01_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/3ed3f86d9ea371f8fad1fe456e29087895a11bab6717e402e0f7f357f0bd0afc/aws_robomaker_hospital_ramp_01_visual.dae",
+      "source_sha256": "3ed3f86d9ea371f8fad1fe456e29087895a11bab6717e402e0f7f357f0bd0afc",
+      "derived_sha256": "4bdb7c3e7bccc4072c549ddb2c0ca088b19de9afdabc94a2a15282b621463140",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.0531133177191805e-16,
+      "native_vertices": 10
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_ramp_01/meshes/aws_robomaker_hospital_ramp_01_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/c6d1add1563ecc5fc3be8ce06b524254ccc8fe8bccde757754f4e251c9d63d56/aws_robomaker_hospital_ramp_01_collision.dae",
+      "source_sha256": "c6d1add1563ecc5fc3be8ce06b524254ccc8fe8bccde757754f4e251c9d63d56",
+      "derived_sha256": "f12d6ff7c4fbdecde8fd9b4df3e76ae215acfc525222842f147beb103175d726",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 3.0531133177191805e-16,
+      "native_vertices": 10
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_curtain_open_01/meshes/aws_robomaker_hospital_curtain_open_01_visual.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/7aa457be706deb6554e51aad3b5a813845651f9900c2d2e023f7fe4f2cf90b85/aws_robomaker_hospital_curtain_open_01_visual.dae",
+      "source_sha256": "7aa457be706deb6554e51aad3b5a813845651f9900c2d2e023f7fe4f2cf90b85",
+      "derived_sha256": "82bdd4d2d414256a54434b712facb08823ab79a261df9d03963255516046d4f9",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 7404
+    },
+    {
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/hospital/models_part3/aws_robomaker_hospital_curtain_open_01/meshes/aws_robomaker_hospital_curtain_open_01_collision.dae",
+      "derived": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/8b8dae060cc7d183a09b9ae330e1c81c94655776919df748549b6bccdd979a3c/aws_robomaker_hospital_curtain_open_01_collision.dae",
+      "source_sha256": "8b8dae060cc7d183a09b9ae330e1c81c94655776919df748549b6bccdd979a3c",
+      "derived_sha256": "37e7b751d9901f5e6c6c635f50014ab353a4d1459145ec3f4205dec93fa68ba5",
+      "native_bounds_error_m": 0.0,
+      "shared_bounds_error_m": 8.881784197001252e-16,
+      "native_vertices": 2553
+    }
+  ],
+  "probe_source_sha256": "d8018b1747aba7e04803a37c79ea819bad838c0bd5b1ed7e38ef2ad7b8ddd180",
+  "maximum_native_bounds_error_m": 0.0,
+  "maximum_shared_bounds_error_m": 7.105427357601002e-15
+}

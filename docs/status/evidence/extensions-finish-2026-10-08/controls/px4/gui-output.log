@@ -1,0 +1,29 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1791471092617037479-210363.log]
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-08-16-51-33-139473-molar1-210363
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python3-1]: process started with pid [210377]
+[python3-1] PX4 runtime and logs: /workspace/molar/robot_lab_runtime/px4/ros-flight-20261008-165134-09e0ed
+[python3-1] [INFO] [1791471094.651889340] [robot_state_publisher]: got segment base_link
+[python3-1] [INFO] [1791471094.652030590] [robot_state_publisher]: got segment rotor_0
+[python3-1] [INFO] [1791471094.652049407] [robot_state_publisher]: got segment rotor_1
+[python3-1] [INFO] [1791471094.652059039] [robot_state_publisher]: got segment rotor_2
+[python3-1] [INFO] [1791471094.652067007] [robot_state_publisher]: got segment rotor_3
+[python3-1] [INFO] [1791471095.227368419] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1791471095.227517125] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[python3-1] [INFO] [1791471095.849055617] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1791471106.608466287] [px4_offboard_controller]: Flight state: idle
+[python3-1] [INFO] [1791471109.662075633] [px4_offboard_controller]: Flight state: priming
+[python3-1] [INFO] [1791471111.692632355] [px4_offboard_controller]: Flight state: arming
+[python3-1] [INFO] [1791471113.762297956] [px4_offboard_controller]: Flight state: ascending
+[python3-1] [INFO] [1791471122.691528883] [px4_offboard_controller]: Flight state: flying
+[python3-1] [INFO] [1791471196.003717811] [px4_offboard_controller]: Flight state: landing
+[python3-1] [INFO] [1791471207.743172267] [px4_offboard_controller]: Flight state: idle
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python3-1]: sending signal 'SIGINT' to process[python3-1]
+[python3-1] [INFO] [1791471208.229513409] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[python3-1] [INFO] [1791471208.894752385] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [python3-1]: process has finished cleanly [pid 210377]
+
+[launch exited with code 0]
+

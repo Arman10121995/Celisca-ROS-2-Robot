@@ -1,0 +1,361 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/factory.model",
+  "source_sha256": "bf3dcc18e804213544b68f153de71681b665a02b8f9d73a907dffb20cede07a1",
+  "derived_world_sha256": "d753000d45570f78b108f7975989acd631f18d0faf7f6e1464cc23e878d0416d",
+  "resolved_include_count": 0,
+  "dependency_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/workcell/meshes/mesh.dae": "a0ed42aa5dc8896a1624343c00674623d7546164b8b408f5710329324c25661b",
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/vendor/gazebo_classic/gazebo.material": "e6050d698bd8fb0f7479318ef6dccb2de1b3c484cf48c10b78b8b617026cc2e2",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/shipping_container_ariac/meshes/ShippingContainer_Textured.obj": "2792904335bd82aa363bed6358180b31b80c9b79dfc1d4883198ff816a88a4d8",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/dumpster/meshes/dumpster.dae": "4e30960e97c80b3a9df5c697f876d91d213d27c1c0ddae887cd340ba245b6ff7",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/euro_pallet/meshes/pallet.dae": "a2a3791cf7765da3c69ae8382161b6e3fb46d88f527a7aef7e1601c2f12edb80",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/first_2015_trash_can/meshes/trash_can.dae": "0fafb8b6137b68804feec7f09ccf1a350efd01b136f8281297c67e7535d61a2c",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/cordless_drill/meshes/cordless_drill.stl": "c5a731aab8272ed1ddb5ed776a753826a708d8b74ee28c525ba71a35d759215a",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/cordless_drill/meshes/cordless_drill.dae": "c84b833fabefa5e6f233851f4a5cd9a2fd5d6939196704300f365dc62e52c686",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/c84b833fabefa5e6f233851f4a5cd9a2fd5d6939196704300f365dc62e52c686/cordless_drill.dae": "98263f8fd9c6db86dbce6b1f03508af2925f8b8e3d13ba77f7c4d6722760e4b5",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/construction_barrel/meshes/construction_barrel.dae": "c27bd4d4964b8c896f9a1810f9fbfc91eb13d2077df464fa5b7238ffaf770c97",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/disk_part_ariac/meshes/disk.dae": "39c7cb635ce321d9fa5f1722339a189045ad7cad538c36cd6e71cd7c10c17643",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_classic_models/8163eb4b5e7e21985c6591d1c0bfb56468c0093f/coke_can/meshes/coke_can.dae": "b1a447821f07a240191d2039cc155d6af448918fb03a169cca904a7ea57d2629",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b1a447821f07a240191d2039cc155d6af448918fb03a169cca904a7ea57d2629/coke_can.dae": "9986ba1c0c5bbb37bb14f5414f8a39d87f63c801cb6f50c1b43748291d19febf",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/construction_cone/meshes/construction_cone.dae": "faebf94980808e3d36ce5bb4a7bd0f39b7f634d1c63fb16ec6c11c37fb65e6ca",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/control_console/meshes/console.dae": "af1dd7a8110b2f49d1913d718e2baf88a2f39c72d838a33856ff9c835d581504",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/plastic_cup/meshes/plastic_cup.dae": "a245b42d8a228d158b6bf587ae55ca3da220b2cad9b2084c756d7e521e27909c",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a245b42d8a228d158b6bf587ae55ca3da220b2cad9b2084c756d7e521e27909c/plastic_cup.dae": "05c8e96e240378e8c08d92c118ce3a18fb4a3c519a81b5edcce22d23fc39c2ec",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/tube_2_25cm/meshes/tube_2_25.dae": "2999fcb56d9e8ec752410bbf8f97d0642d0b6fbc93b011d73309feb020909fcb"
+  },
+  "removed_classic_plugins": [
+    {
+      "name": "object_disposal_plugin",
+      "filename": "libObjectDisposalPlugin.so"
+    },
+    {
+      "name": "object_disposal_plugin",
+      "filename": "libObjectDisposalPlugin.so"
+    }
+  ],
+  "source_pose_repairs": [],
+  "static_container_repairs": [],
+  "static_snapshot": true,
+  "static_fixture_changes": [
+    {
+      "model": "unit_box",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Dumpster",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "euro_pallet",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "euro_pallet_clone_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "euro_pallet_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "euro_pallet_0_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "wooden_case",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "first_2015_trash_can",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "first_2015_trash_can_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "first_2015_trash_can_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "drill",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Construction Barrel",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "disk_part",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "coke_can",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "coke_can_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "coke_can_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "coke_can_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Construction Cone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Construction Cone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Construction Cone_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Construction Cone_clone_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "Construction Cone_clone_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "plastic_cup_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "plastic_cup_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "plastic_cup_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_2",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_3",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_4",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_5",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_6",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_7",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_8",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_9",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_10",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_11",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "wooden_case_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_5_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_7_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "tube_2_25cm_clone_7_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    }
+  ],
+  "mesh_frame_repairs": [
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/cordless_drill/meshes/cordless_drill.dae",
+      "source_sha256": "c84b833fabefa5e6f233851f4a5cd9a2fd5d6939196704300f365dc62e52c686",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/c84b833fabefa5e6f233851f4a5cd9a2fd5d6939196704300f365dc62e52c686/cordless_drill.dae",
+      "derived_sha256": "98263f8fd9c6db86dbce6b1f03508af2925f8b8e3d13ba77f7c4d6722760e4b5",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": false,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {
+        "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/cordless_drill/materials/textures/cordless_drill.png": "c5aa6547a351bfd122fae6de6597c523abaf79dfff26cc7ededd27eeed7131db"
+      },
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_classic_models/8163eb4b5e7e21985c6591d1c0bfb56468c0093f/coke_can/meshes/coke_can.dae",
+      "source_sha256": "b1a447821f07a240191d2039cc155d6af448918fb03a169cca904a7ea57d2629",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/b1a447821f07a240191d2039cc155d6af448918fb03a169cca904a7ea57d2629/coke_can.dae",
+      "derived_sha256": "9986ba1c0c5bbb37bb14f5414f8a39d87f63c801cb6f50c1b43748291d19febf",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": false,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {
+        "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_classic_models/8163eb4b5e7e21985c6591d1c0bfb56468c0093f/coke_can/materials/textures/coke_can.png": "bdf0d834b3dc56c80666872b1e2fc8228d185cb48b28dafdbb795eb5d78409b9"
+      },
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/factory/models/plastic_cup/meshes/plastic_cup.dae",
+      "source_sha256": "a245b42d8a228d158b6bf587ae55ca3da220b2cad9b2084c756d7e521e27909c",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a245b42d8a228d158b6bf587ae55ca3da220b2cad9b2084c756d7e521e27909c/plastic_cup.dae",
+      "derived_sha256": "05c8e96e240378e8c08d92c118ce3a18fb4a3c519a81b5edcce22d23fc39c2ec",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": false,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    }
+  ],
+  "dynamic_actors": [],
+  "shapes": 223,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    30.75,
+    7.1000000000000005
+  ],
+  "projected_spawn_clearance_m": 3.8000000000000003,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-114905-9d0bfc/dataset_factory.generation.json"
+}

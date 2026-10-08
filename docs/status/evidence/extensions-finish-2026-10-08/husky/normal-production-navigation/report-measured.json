@@ -1,0 +1,86 @@
+{
+  "stack_ready_wall_s": 7.2,
+  "start": [
+    -0.5,
+    -0.5
+  ],
+  "goal": [
+    1.5,
+    -0.5
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "succeeded",
+  "wall_s": 16.7,
+  "settled_sim_second": true,
+  "final_pose_estimate_xy": [
+    1.415,
+    -0.53
+  ],
+  "final_error_estimate_m": 0.09,
+  "final_yaw_estimate_deg": 0.95,
+  "final_yaw_error_estimate_deg": 0.95,
+  "final_truth_xy": [
+    1.407,
+    -0.509
+  ],
+  "truth_age_wall_s": 0.0,
+  "final_truth_yaw_deg": 0.92,
+  "final_error_truth_m": 0.093,
+  "final_yaw_error_truth_deg": 0.92,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 1.909,
+  "motion_reverse_m": 0.001,
+  "motion_heading_travel_rad": 0.123,
+  "acceptance": {
+    "passed": true,
+    "checks": {
+      "goal_succeeded": true,
+      "truth_position": true,
+      "truth_heading": true,
+      "fresh_truth": true
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/normal-production-navigation/navigation.trace.json",
+  "truth_samples": 756,
+  "route_acceptance": {
+    "passed": true,
+    "checks": {
+      "measured_trajectory": true,
+      "swept_footprint_clear": true
+    },
+    "robot_radius_m": 0.62,
+    "min_clearance_limit_m": 0.02,
+    "min_swept_clearance_m": 3.9712669459177903,
+    "direct_route_clearance_m": 3.88,
+    "scope": "Static box obstacles with conservative circular robot footprint; not contact telemetry",
+    "world_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world"
+  },
+  "robot": "asset_husky",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant.",
+  "gui_recording_completed": true,
+  "body_height": {
+    "expected_floor_m": 0.1,
+    "minimum_m": 0.13227991850431267,
+    "maximum_m": 0.13228002880088952,
+    "samples": 756
+  },
+  "derived_from": {
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/normal-production-navigation/navigation.trace.json",
+      "sha256": "92fd839872848da82b180a6181e1183a0f935080ad5c6de58ad02b0ada8d4432",
+      "bytes": 94956
+    },
+    "original_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/normal-production-navigation/report.json",
+      "sha256": "830d40c6d351d1169ca9a6090553c74175b51184a5ed6e704fee4c0f27ae9ff6",
+      "bytes": 3775
+    }
+  }
+}

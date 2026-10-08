@@ -217,9 +217,35 @@ def test_stale_cartesian_callback_cannot_replace_a_new_plan_after_stop(app):
         controls.got_plan(future, old)
         controls.got_fk(future, old, [0, 0, .05], None)
         controls.got_ik(future, old, None)
+        controls.got_current_pose(future, old, {})
         future.result.assert_not_called()
         assert controls.generation == current and controls.planning
         assert controls.points is None
+    finally:
+        arm.close()
+
+
+def test_cartesian_axis_target_edits_invalidate_execution_and_reject_large_steps(app):
+    from robot_lab_gui.arm_tab import ArmTab
+    arm = ArmTab(app.control_notebook, app)
+    try:
+        cart = arm.cartesian
+        cart.reference = (.4, .0, .5)
+        cart.points = [(1., [0.]*7)]
+        with patch.object(cart, 'ready', return_value=True), patch.object(cart, 'plan') as plan:
+            cart.step_target(0, 1)
+            assert cart.offset[0].get() == .01
+            assert '0.410' in cart.target_display.get()
+            assert cart.points is None and cart.execute_button.instate(['disabled'])
+            cart.step.set(.5)
+            cart.step_target(2, 1)
+            assert cart.offset[2].get() == 0.
+            assert '1–50 mm' in cart.status.get()
+            plan.assert_not_called()  # Target selection never starts an arm trajectory.
+        with patch.object(cart, 'ready', return_value=False):
+            cart.step.set(.01)
+            cart.step_target(0, 1)
+            assert cart.offset[0].get() == .01
     finally:
         arm.close()
 
@@ -321,6 +347,51 @@ def test_drone_altitude_buttons_ramp_both_directions_and_stop(app):
         assert up.instate(['disabled']) and down.instate(['disabled'])
         app._start_altitude(1.0)
         assert not app.drive_altitude_buttons
+
+
+def test_drone_seven_directions_share_drive_state_stop_and_gentle_yaw(app):
+    app.robot_var.set('px4_x500'); app.mode_var.set('flight')
+    app.simulator_var.set('gazebo'); app._update_from_selection()
+    pad = app.drone_drive_widgets
+    assert set(pad) == {'Forward', 'Reverse', 'Turn Left', 'Turn Right', 'Strafe L', 'Strafe R', 'Stop'}
+    assert all(button.instate(['!disabled']) for button in pad.values())
+    with patch.object(app, '_publish_drive') as publish, \
+            patch.object(app.drive_joystick, 'poll', return_value=(0., 0.)):
+        app.drive_input_checkbox.invoke()
+        app._repeat_drive()
+        publish.assert_not_called()
+        pad['Turn Left'].invoke()
+        app._repeat_drive()  # The neutral input poll already owns the scheduled tick.
+        assert app.current_drive[1] == .05
+        assert app.drive_button_widgets[(0., 1.)].instate(['pressed'])
+        for _ in range(20):
+            app._repeat_drive()
+        assert app.current_drive[1] == .3
+        app.drive_button_widgets[(0., 1.)].invoke()
+        assert pad['Turn Left'].instate(['!pressed'])
+        pad['Stop'].invoke()
+        for label, value in [('Forward', 1), ('Reverse', -1)]:
+            pad[label].invoke()
+            assert app.current_drive[0]*value > 0
+            pad['Stop'].invoke()
+        pad['Turn Right'].invoke()
+        assert app.current_drive[1] == -.05
+        pad['Stop'].invoke()
+        pad['Strafe L'].invoke()
+        assert app.current_lateral > 0
+        assert app.strafe_left_button.instate(['pressed'])
+        app.strafe_left_button.invoke()
+        assert pad['Strafe L'].instate(['!pressed'])
+        pad['Strafe R'].invoke()
+        for _ in range(3):
+            app._repeat_drive()  # Reverse input brakes before changing sign.
+        assert app.current_lateral < 0
+        pad['Stop'].invoke()
+        assert app.current_drive == (0., 0.) and app.current_lateral == 0.
+        assert all(button.instate(['!pressed']) for button in pad.values())
+        publish.assert_called_with(0., 0., 0.)
+    app.robot_var.set('bumperbot'); app._update_from_selection()
+    assert all(button.instate(['disabled']) for button in pad.values())
 
 
 def test_3d_save_uses_flushed_backup_and_installed_cloud_exporter(app, tmp_path):

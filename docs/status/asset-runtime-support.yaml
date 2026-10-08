@@ -1,4 +1,4 @@
-updated: '2026-10-07'
+updated: '2026-10-08'
 scope: Named measured simulation screens. Other maps, objects and vendor/hardware
   behavior require qualification.
 robots:
@@ -40,7 +40,7 @@ robots:
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
         sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
-        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+        sha256: 77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480
       - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
         sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
     configuration_files_by_mode: {}
@@ -133,6 +133,13 @@ robots:
         sha256: 2d1be654e58130c8262628e1dba2e136ad571f444c2b1952b39284ab4ba43e79
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_standard-isaac-nav-nav_obstacle/report.json
         sha256: e30f9d5b6083290df03a2989f86fc59882f12d8b2b52780d5586e853552c14f7
+    configuration_revalidations:
+    - date: '2026-10-08'
+      scope: Physical neutral/Drive/Stop/watchdog/source-frame regressions after Skid-only
+        branches and legacy-default wheel force handling; historical mode reports
+        retain their exact earlier source stages. Current proofs do not rerun the
+        full higher-mode matrix.
+      receipt: docs/status/evidence/extensions-finish-2026-10-08/source-guard-revalidation.json
   asset_turtlebot4_lite:
     source_revision: a6ee13b63cbd524500cc6a68cd20dbef69f326a9
     drive:
@@ -171,7 +178,7 @@ robots:
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
         sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
-        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+        sha256: 77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480
       - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
         sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
     configuration_files_by_mode: {}
@@ -264,6 +271,13 @@ robots:
         sha256: 9a5be1dfefcc769e3079641b5feed5d6273c9740dac2dd3dcce9c6330e9570fa
       - path: docs/status/evidence/turtlebot4-modes-2026-10-06/asset_turtlebot4_lite-isaac-nav-nav_obstacle/report.json
         sha256: d51ea7b6a4853701231540b3ead5a0d4c6941eaa4d9d3d707fac9183a88cd672
+    configuration_revalidations:
+    - date: '2026-10-08'
+      scope: Physical neutral/Drive/Stop/watchdog/source-frame regressions after Skid-only
+        branches and legacy-default wheel force handling; historical mode reports
+        retain their exact earlier source stages. Current proofs do not rerun the
+        full higher-mode matrix.
+      receipt: docs/status/evidence/extensions-finish-2026-10-08/source-guard-revalidation.json
   asset_turtlebot3_burger:
     source_revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
     drive:
@@ -299,7 +313,7 @@ robots:
     - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
       sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
     - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
-      sha256: ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4
+      sha256: 37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98
     - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
       sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
     - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
@@ -336,17 +350,17 @@ robots:
         sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
       mujoco:
       - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
-        sha256: fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535
+        sha256: 720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55
       - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
         sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
       pybullet:
       - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
-        sha256: c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7
+        sha256: 92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa
       - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
         sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
       isaac:
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
-        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+        sha256: 77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
         sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
       - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
@@ -477,6 +491,13 @@ robots:
         sha256: 478073544f57783fede59c2c9e5ec7b0236db0d58d26fbc63ce5efab15ceb0b0
       - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_burger-isaac-nav-nav_obstacle/report.json
         sha256: f6e2b2e816e906f17274c246d9ab8b9ad61d4fa2e44cc03ecdebd27137147ac2
+    configuration_revalidations:
+    - date: '2026-10-08'
+      scope: Physical neutral/Drive/Stop/watchdog/source-frame regressions after Skid-only
+        branches and legacy-default wheel force handling; historical mode reports
+        retain their exact earlier source stages. Current proofs do not rerun the
+        full higher-mode matrix.
+      receipt: docs/status/evidence/extensions-finish-2026-10-08/source-guard-revalidation.json
   asset_turtlebot3_waffle:
     source_revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
     drive:
@@ -512,7 +533,7 @@ robots:
     - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
       sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
     - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
-      sha256: ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4
+      sha256: 37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98
     - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
       sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
     - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
@@ -549,17 +570,17 @@ robots:
         sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
       mujoco:
       - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
-        sha256: fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535
+        sha256: 720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55
       - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
         sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
       pybullet:
       - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
-        sha256: c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7
+        sha256: 92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa
       - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
         sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
       isaac:
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
-        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+        sha256: 77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
         sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
       - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
@@ -690,6 +711,13 @@ robots:
         sha256: aa381537c38270b33b6fa87e30fdfed32f226aa012a9697c911c0fc8f1d90d1e
       - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle-isaac-nav-nav_obstacle/report.json
         sha256: c91a0e02bdeb6c573d5c3239bdf0ba9ec727ad861939855cc7f3f9bf02ec3ec8
+    configuration_revalidations:
+    - date: '2026-10-08'
+      scope: Physical neutral/Drive/Stop/watchdog/source-frame regressions after Skid-only
+        branches and legacy-default wheel force handling; historical mode reports
+        retain their exact earlier source stages. Current proofs do not rerun the
+        full higher-mode matrix.
+      receipt: docs/status/evidence/extensions-finish-2026-10-08/source-guard-revalidation.json
   asset_turtlebot3_waffle_pi:
     source_revision: 90a68bd2e3c61c12966779da89d8eeaec82730e9
     drive:
@@ -725,7 +753,7 @@ robots:
     - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
       sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
     - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
-      sha256: ecfe245402ecd71368f5c3944ba697a89c9c4d82c4f38d15460307d76a614ec4
+      sha256: 37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98
     - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
       sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
     - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
@@ -762,17 +790,17 @@ robots:
         sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
       mujoco:
       - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
-        sha256: fff17582d11dc487f5899fcc19062e0d7f8cdf635d0137bcd363ecb07d323535
+        sha256: 720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55
       - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
         sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
       pybullet:
       - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
-        sha256: c3d156f2ffcae688be1034ead3554afa4eb83355a7ca299f6dc3f49d6ad1abd7
+        sha256: 92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa
       - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
         sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
       isaac:
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
-        sha256: 0971a16214e0f126c8801b7084a0b18612aa77849d06ef5e7b4b302c11d969b0
+        sha256: 77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480
       - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
         sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
       - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
@@ -903,6 +931,230 @@ robots:
         sha256: 5a2e3b9351b9953f66e4cee30662fb821fbbdea2f2586f81694fcd9b2a4b2307
       - path: docs/status/evidence/turtlebot3-modes-2026-10-07/asset_turtlebot3_waffle_pi-isaac-nav-nav_obstacle/report.json
         sha256: 4377e961cbb81657ca24279e9abd2e75f31e842bf4e646f1de9b4aafe590eb6d
+    configuration_revalidations:
+    - date: '2026-10-08'
+      scope: Physical neutral/Drive/Stop/watchdog/source-frame regressions after Skid-only
+        branches and legacy-default wheel force handling; historical mode reports
+        retain their exact earlier source stages. Current proofs do not rerun the
+        full higher-mode matrix.
+      receipt: docs/status/evidence/extensions-finish-2026-10-08/source-guard-revalidation.json
+  asset_husky:
+    source_revision: 729f8aa45ccd86fa33a05e07ef698c52c451cd9c
+    drive:
+      type: skid_steer
+      left_wheel_joints:
+      - front_left_wheel_joint
+      - rear_left_wheel_joint
+      right_wheel_joints:
+      - front_right_wheel_joint
+      - rear_right_wheel_joint
+      left_wheel_joint: front_left_wheel_joint
+      right_wheel_joint: front_right_wheel_joint
+      wheel_radius: 0.1651
+      wheel_separation: 0.5708
+      max_speed: 0.4
+      max_accel: 0.5
+      max_angular_speed: 1.0
+      max_angular_accel: 1.5
+      wheel_force_limit: 50.0
+      mujoco_wheel_velocity_gain: 25.0
+      mujoco_wheel_armature: 0.05
+      pybullet_anisotropic_wheel_friction:
+      - 1.0
+      - 0.5
+      - 1.0
+      pybullet_enable_cone_friction: false
+      skid_yaw_rate_feedback:
+        kp: 1.0
+        ki: 4.0
+        max_correction: 3.0
+        max_wheel_speed: 10.0
+        linear_kp: 1.0
+        linear_ki: 2.0
+        max_linear_correction: 0.5
+    sensor_config:
+      laser_link_name: lab_laser_link
+      scan_rate: 5.0
+      scan_samples: 360
+      scan_range_min: 0.1
+      scan_range_max: 12.0
+      camera_link_name: oakd_rgb_camera_frame
+      camera_optical_frame: oakd_rgb_camera_optical_frame
+      camera_rate: 5.0
+      camera_width: 320
+      camera_height: 240
+      camera_horizontal_fov: 1.0471975512
+      camera_near: 0.05
+      camera_far: 12.0
+    executed_urdf_sha256: fe7a81a5cc9221a4c04ec38354612553dc98d2cc13f9ec893763177785c92fb5
+    generated_model_files:
+    - path: drive-controllers.yaml
+      sha256: 97bcb097eeef6419c3978a8025b87a6603cf7e5b16a3473ff2fa5d2cd1d6495b
+    configuration_files:
+    - path: scripts/extension_husky_control.py
+      sha256: 042d6e74fdbecc63da3d76d515f7c15448e2358ce25a4e9fda0d5feebeca0453
+    - path: src/robot_lab_utils/robot_lab_utils/skid_steer.py
+      sha256: 5a3e3255468cfeb5c7b2119f6e96352efbd06a395ee5a94482eff22f635007bf
+    - path: src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+      sha256: 37dfad4773acfde29e068e123b09d8583c5a16747acb1a8aba5da9592fdaaf98
+    - path: src/robot_lab_utils/robot_lab_utils/robot_spawn.py
+      sha256: b914c23c511f229e8ea46e1dc634afc1da1df62776df4afb0444d45d8d5c1b2e
+    - path: src/robot_lab_utils/robot_lab_utils/sensor_config.py
+      sha256: 552e2d7c939d78c345f19695cd241071a08afa6f84544fec54bd2551a6c9a018
+    - path: src/robot_lab_utils/robot_lab_utils/sim_frames.py
+      sha256: ffe65b2716bd43a226865a3d5ae4a87c3a47ceb7c58b750a38378f9990af3876
+    - path: src/robot_lab_gui/robot_lab_gui/drive_control.py
+      sha256: 34eb002f0630cc1b318aaafb59311f889d61a2bba8d267eba2cf1e18b4054cb1
+    - path: src/robot_lab_gui/robot_lab_gui/launcher.py
+      sha256: 8e3408a8d6cd364c7a205a756d0da1eff0196043b33f9e562c312c96b9c19110
+    - path: src/robot_lab_bringup/launch/simulated_robot.launch.py
+      sha256: 03c4bab819c1ef3510285c8bcafa5549daae7f55d8cbfd3beda2099cec1430c7
+    - path: src/robot_lab_navigation/config/robots/asset_husky.yaml
+      sha256: ff68c4d55f47766a7a92a800b7339073af558dceeeba3adff6c062a7ea16903a
+    - path: src/robot_lab_navigation/launch/navigation.launch.py
+      sha256: 140bc31babb339f88a9ae9c44e6c458854ce7e28f3d557e596427b208b24c0c4
+    - path: src/robot_lab_navigation/config/controller_server.yaml
+      sha256: 43b46d5931c3df601e767ea2ea604d3cbcaadde4bbab2c35e166bca408485802
+    - path: src/robot_lab_localization/config/robots/asset_husky.yaml
+      sha256: 6e0b6e094c81950a50af7d17c27505d5ae64cd5dee082cd7fff97f27a461981c
+    - path: src/robot_lab_localization/config/amcl.yaml
+      sha256: bcd02f19213db3c0443a2902ace59e77e1387015653f9886c5562898df1344df
+    - path: src/robot_lab_localization/config/ekf.yaml
+      sha256: 1f57ad1a4719f44c3881911d600476ca7860fb44482bb50255cf355df187ceb6
+    - path: src/robot_lab_localization/launch/local_localization.launch.py
+      sha256: 4660708a8f1fb0f914421fec81f6e5783bf84c8316b4509f81f8ec3fadaed016
+    - path: src/robot_lab_localization/launch/global_localization.launch.py
+      sha256: f9b48b5dd77fb5d50aa1857008be918561724a4db8ee0f3af845f01ce16a3403
+    - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+      sha256: 0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.yaml
+      sha256: 874a874fc47e2017989d91c4173c5ccdff03749f0e6904071103e81545528732
+    - path: src/robot_lab_maps/maps/nav_empty/maps/map.pgm
+      sha256: 3ef7289a9cfb0a3f9820eb3d565b4d5aab7e33848a32149d56b515eda40b1d78
+    - path: src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
+      sha256: 6d3e034f6efcce42fa682f9a5a3506ff7d900a1ce3877e72189d9a65cc3a3da4
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.yaml
+      sha256: 6722a10d051eb948ff516c5392ac5d19fec66b8e2091a02e0d573872acd0f9a6
+    - path: src/robot_lab_maps/maps/nav_obstacle/maps/map.pgm
+      sha256: f4ac118ad2c3a7bff3f94871088a6dbe2afb2948cb99da3dd54b04c22e19efc8
+    configuration_files_by_simulator:
+      gazebo:
+      - path: src/robot_lab_description/launch/gazebo.launch.py
+        sha256: c2d78c06a8ead5307cb983589e5c8843a8e0f53383b15d04b51d7f42fccb1761
+      - path: src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py
+        sha256: 090a9ee49522785ab446dbb641376a4a48be6a0ea81818f6b9838c36d918f8f1
+      mujoco:
+      - path: src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+        sha256: 720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55
+      - path: src/robot_lab_mujoco/launch/mujoco_simulator.launch.py
+        sha256: 09db24bc8d1be2ce5e9a6fd02e5b0bb599ea7d1b01ddb36e27d6fe8c606ad37d
+      pybullet:
+      - path: src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+        sha256: 92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa
+      - path: src/robot_lab_pybullet/launch/pybullet_simulator.launch.py
+        sha256: 8ffc8fa41876577f1d21ae2b3a3ce5f724b10a10dcda51a68146bcf6b14a13b4
+      isaac:
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+        sha256: 77894ce130c9a42150d41d37280f5308268d32239a6537ac331b9f5d15960480
+      - path: src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+        sha256: b100d48df12c9e68d3c230ae7d7fc7ae9289c6378ed65c917b3c89012753251d
+      - path: src/robot_lab_isaac/launch/isaac_simulator.launch.py
+        sha256: a705a51ce119d0bf01213a16d4bddf77c562a2c76bac03d567f68c2f005eb9fa
+    screens:
+    - backend: gazebo
+      mode: loc
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-loc-nav_empty/report-qualified.json
+        sha256: a6b9013a9f3ae00ec19b8f902875151736282030774e6638b32336708fb9a5d1
+    - backend: gazebo
+      mode: slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-slam-nav_empty/report-qualified.json
+        sha256: 4dcfdbd83c81d6788e32548d40987ecd8578a1d19ce8141841a42a1070cefc96
+    - backend: gazebo
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-3d_slam-nav_empty/report-qualified.json
+        sha256: a5cf5e5576654c052afa2818fbf8828c3f96cbf3d80b46e59a5107a9fe38020b
+    - backend: gazebo
+      mode: nav
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-nav-nav_empty/report-qualified.json
+        sha256: 61195c592a6d669b4079cd99fbdceb76092041a1577a4e9553257392382217bb
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-nav-nav_obstacle/report-qualified.json
+        sha256: bdfdee83965df2523ccb5e2ade1acd25904328faecd53e0f468516b94b92bef1
+    - backend: mujoco
+      mode: loc
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-loc-nav_empty/report-qualified.json
+        sha256: 9966d67975984a54047752b2f343ea5f286a625014df169d8a1122a0ec496bb8
+    - backend: mujoco
+      mode: slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-slam-nav_empty/report-qualified.json
+        sha256: 8d5d5681c9b0255bed662fd64c0cb55dbf9f3262981a00234027bddffd536f03
+    - backend: mujoco
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-3d_slam-nav_empty/report-qualified.json
+        sha256: 7e2746c3af5b0623e5c8a066eee3a89fc86940e16a56c5153b3b908eb903ee62
+    - backend: mujoco
+      mode: nav
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-nav-nav_empty/report-qualified.json
+        sha256: 3df1987e2e733afc31044b79ea59060989c9ff9b09a0a423f1082b558c179f29
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-nav-nav_obstacle/report-qualified.json
+        sha256: 4889c696a9d27c077cf84cbe99a041d36d7852995cdcbcf35bd8fb8876ec22de
+    - backend: pybullet
+      mode: loc
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-loc-nav_empty/report-qualified.json
+        sha256: b8874cac916db62a9009423b489b3ec5db67deb44777ee895814748928fb3aaf
+    - backend: pybullet
+      mode: slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-slam-nav_empty/report-qualified.json
+        sha256: 33531140e36d7c3207615536475082e89bac33b65e9dffb427fa6c3a4cbf28a4
+    - backend: pybullet
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-3d_slam-nav_empty/report-qualified.json
+        sha256: 0b8b82d1921175daadc0d820fe613faac0aecd31d0ff268f1d6dd0a639d3d16a
+    - backend: pybullet
+      mode: nav
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-nav-nav_empty/report-qualified.json
+        sha256: 8da60b5d3595deca84a2abb35d7b67c32133e2cb9c0b3cda5393cbef15b64380
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-nav-nav_obstacle/report-qualified.json
+        sha256: 5982f1c68061f91ed3c9351f816fbbf9ed35503b9f09b7153f0ca95d93ba434c
+    - backend: isaac
+      mode: loc
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-loc-nav_empty/report-qualified.json
+        sha256: e56e8ec5d84ddbda7051fc461441287e042bfb06e1c53ee3cd28d47e23eca155
+    - backend: isaac
+      mode: slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-slam-nav_empty/report-qualified.json
+        sha256: 194be47757e913eee475b58c04afe6928ab97bce87dd1d747f22ec796abbba75
+    - backend: isaac
+      mode: 3d_slam
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-3d_slam-nav_empty/report-qualified.json
+        sha256: cf6aca35bec4e3973435ca3abb0939344409340da0c6c41d97fdfc4c8dafa670
+    - backend: isaac
+      mode: nav
+      reports:
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-nav-nav_empty/report-qualified.json
+        sha256: 55ce16e522e40b8863890c7e11aee4415ce6a550bea202e98033bb69726c0c36
+      - path: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-nav-nav_obstacle/report-qualified.json
+        sha256: ea73936441dc5b02ae26d58eeceb05b97fa3285f3c5ae2b67d3ce470ca2d12e1
+    configuration_revalidations:
+    - date: '2026-10-08'
+      receipt: docs/status/evidence/extensions-finish-2026-10-08/controls/husky-source-revalidation.json
+      scope: Shared Drone/Drive GUI update physically revalidated on all four engines
+        with unchanged Husky actuation, geometry, sensors and navigation/localization
+        configs. Historical mode matrix not rerun.
 hands:
   menagerie_franka_emika_panda:
     source_revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
@@ -911,12 +1163,18 @@ hands:
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py
       sha256: dd33d3dc5f6905083530cb651f539cde676156d53d6aab07d178d578b76e7bef
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py
-      sha256: e59c3bfcd8447719ada88bd66020b0d60ca7bae4e8df11def09162d15c2f633a
+      sha256: ce8bc83db0e9552c777dc046e70fc70bb81d38e27055c303b6fa578bd2231692
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_gripper_control.py
       sha256: 84e24c692413e784e16a378e5ec5084782faf5ec322df660979ad990250f6ccc
     report:
-      path: docs/status/evidence/panda-gripper-2026-10-06/report.json
-      sha256: 368b122aa51c4ca0937afa37127b431b65e0338c74e217fab4cc8b11ef8840e1
+      path: docs/status/evidence/extensions-finish-2026-10-08/controls/panda-hand/report.json
+      sha256: 95ec0e848e9c81b1e618d31b2222383f96cc7672208416a1816e5eefbddd7c18
+    configuration_revalidations:
+    - date: '2026-10-08'
+      report: docs/status/evidence/extensions-finish-2026-10-08/controls/panda-hand/report.json
+      scope: Actual normal owned GUI control-column repeat after measured TCP/axis
+        target selection, shared Drone pad and native bias feedforward. Older reports
+        retain their original sources; native Panda/MuJoCo/static nav_empty only.
 arm_planning:
   menagerie_franka_emika_panda:
     source_revision: 4d038b3feae26ec82b46a4d586379114012a8ac7
@@ -934,9 +1192,9 @@ arm_planning:
     - path: src/robot_lab_gui/robot_lab_gui/arm_tab.py
       sha256: 4b55a80c9e3c2156f1bcfe143d1b0918070570051dce2d7aa0ea6c60788da047
     - path: src/robot_lab_gui/robot_lab_gui/cartesian_controls.py
-      sha256: 59ee6b56e3706572a9c0569ddd354e61d1846bf9a09f8c02b7f96fa527b11174
+      sha256: 9ef9d075595f880ac75c74cd96d87155ea5db1a0ed3b3104985cd199f8f62a99
     - path: src/robot_lab_gui/robot_lab_gui/launcher.py
-      sha256: 92f1e6042477882e6a0e0c039cb29daf74b92bc9d7a144b4e4ae4774c6da5b0f
+      sha256: 8e3408a8d6cd364c7a205a756d0da1eff0196043b33f9e562c312c96b9c19110
     - path: src/robot_lab_gui/robot_lab_gui/live_monitor.py
       sha256: c418d3362c6f5f963e60665ec664df2b3eec72727545537499c11769dbf41c3c
     - path: src/robot_lab_gui/robot_lab_gui/hand_tab.py
@@ -950,7 +1208,7 @@ arm_planning:
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py
       sha256: dd33d3dc5f6905083530cb651f539cde676156d53d6aab07d178d578b76e7bef
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py
-      sha256: e59c3bfcd8447719ada88bd66020b0d60ca7bae4e8df11def09162d15c2f633a
+      sha256: ce8bc83db0e9552c777dc046e70fc70bb81d38e27055c303b6fa578bd2231692
     - path: src/robot_lab_mujoco/python/robot_lab_mujoco/native_gripper_control.py
       sha256: 84e24c692413e784e16a378e5ec5084782faf5ec322df660979ad990250f6ccc
     - path: src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
@@ -960,8 +1218,8 @@ arm_planning:
     - path: src/robot_lab_gui/robot_lab_gui/workspace_ui.py
       sha256: 766637d985c5ffbc13e76ee44e92c559067ac89aef84a2af4e74ed1609555763
     report:
-      path: docs/status/evidence/panda-cartesian-controls-column-2026-10-07/final-responsive/report.json
-      sha256: 091f3c0f02ec1252575c8fcb2fcf841ab599a3aeb479fa1055058212a833d400
+      path: docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/report.json
+      sha256: 86f113c7dc70742b32d2fae37fc6ad96a278fb341b560f7e8c1a38f6cddd936e
     native_resource_files:
     - path: CHANGELOG.md
       sha256: 164a6ec704aa1714b1311f8b1538e20b4223b6ef08b7d3cb03edc26192892f67
@@ -1123,3 +1381,9 @@ arm_planning:
       sha256: d2faecedb304d0989040d082410378dc949dbbda23bd18c05134f08aae984db5
     - path: assets/link7.stl
       sha256: 92ac6afcf7574c034d3170d8a68e95ac9048ab9d0dd5bbd8311b86e551b9ab1c
+    configuration_revalidations:
+    - date: '2026-10-08'
+      report: docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/report.json
+      scope: Actual normal owned GUI control-column repeat after measured TCP/axis
+        target selection, shared Drone pad and native bias feedforward. Older reports
+        retain their original sources; native Panda/MuJoCo/static nav_empty only.

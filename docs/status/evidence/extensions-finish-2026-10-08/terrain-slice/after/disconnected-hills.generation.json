@@ -1,0 +1,39 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/disconnected-hills.world",
+  "source_sha256": "7620ac5267d10e2deca571166d3a945e37a7097f045d5f569fe2b567cc619c75",
+  "mesh_sha256": {
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/disconnected-hills.png": "8975d757c438277835650e1b75d59a299e833c940505b5128a2c2527ca1c328d"
+  },
+  "mesh_slice_paths": 0,
+  "mesh_mask_cells": 2194,
+  "collision_count": 0,
+  "projection_recipe": "complete-static-height-slice-v3",
+  "terrain_slice_polygons": 556,
+  "heightfield_count": 1,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.6,
+  "seed_xy": [
+    1.0,
+    -0.5
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/after/disconnected-hills-20261007-152421-fab5f6/disconnected-hills.yaml",
+  "free_cells": 24734,
+  "occupied_cells": 350,
+  "unknown_cells": 1844,
+  "shape": [
+    153,
+    176
+  ],
+  "origin": [
+    -8.8,
+    -7.65,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "096c99d22fbe6cefaca3f15414748af40cd24bef53f7c2df3770077c84976d22",
+    ".pgm": "3fbed77fa23924d90a1a553723b5a1f5fe2201248a9e2588afc5dcd9f201ef13"
+  }
+}

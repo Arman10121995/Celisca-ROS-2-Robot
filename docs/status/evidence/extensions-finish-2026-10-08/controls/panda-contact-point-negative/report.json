@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "scope": "Native Panda / MuJoCo / nav_empty / actual Tk Hand and Arm controls, physical cube and independent state; no other backend or dexterous-hand claim",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none arm_control:=panda grasp_fixture:=true arm_planning:=none",
+  "initial_object": [
+    0.05449947803226077,
+    -0.499999999987523,
+    0.5214946740676483
+  ],
+  "launch_returncode": 0
+}

@@ -1,6 +1,6 @@
 # Robot Lab robot descriptions and profiles
 
-Updated October 7, 2026 against runtime checkpoint `091d388`. Read
+Updated October 8, 2026; exact source stages are in the current status and checkpoint. Read
 [current status](../../docs/status/CURRENT_STATUS.md),
 [the support matrix](../../docs/status/support-matrix.md) and
 [the extension guide](../../docs/ASSET_EXTENSION_GUIDE.md) for measured scope.
@@ -50,6 +50,7 @@ IDs, frames, sensors and backend/controller limits.
 | Bumperbot/Labbot and wheel bases | Named physical Drive, mapping/reset and Nav2 screens | Remaining map/mode/backend/pattern cells and repeats |
 | TurtleBot3 Burger/Waffle/Waffle Pi | Four-backend Display/Drive, localization, 2D SLAM/export and navigation | Other maps/routes, RGB rendering/vendor firmware; RGB-only 3D SLAM unavailable |
 | TurtleBot4 Standard/Lite | Four-backend Display/Drive, localization, 2D/3D SLAM/export and navigation | Other maps/routes, materials, docking and vendor behavior |
+| Husky | Four-backend physical four-wheel Drive, localization, 2D/3D SLAM/export and clear/obstacle navigation with a declared lab kit | Other maps/routes, outdoor/payload/vendor hardware and broader estimator qualification |
 | Native Menagerie Panda | MuJoCo joint/Hand/cube grasp and static-world MoveIt Plan/Execute | Servo, attached/dynamic scenes, other arms/hands/backends and mobile manipulation |
 | PX4 X500 | Gazebo Harmonic FCU flight in named worlds | Wider flight-world/clearance/planning/mapping matrix |
 | Go2/BHL | MuJoCo startup and bounded walks with model-specific policies | Sustained/terrain/recovery and further sensor/goal missions |

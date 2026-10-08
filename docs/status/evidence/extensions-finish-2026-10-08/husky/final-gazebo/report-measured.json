@@ -1,0 +1,230 @@
+{
+  "robot": "asset_husky",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor feedback on this map only; no SLAM or navigation.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 67374,
+  "phases": {
+    "armed_neutral": {
+      "dx": 0.0,
+      "dy": 0.0,
+      "yaw_change": 0.0,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "max_tilt": 0.0,
+      "sim_s": 0.98
+    },
+    "forward": {
+      "dx": 1.2060002276375659,
+      "dy": -8.610980151146919e-09,
+      "yaw_change": -7.765656192323267e-09,
+      "tail_vx": 0.4000001116425822,
+      "tail_wz": -1.5189265915503749e-09,
+      "max_tilt": 0.0,
+      "sim_s": 3.48
+    },
+    "forward_stop": {
+      "dx": 0.1540500717735871,
+      "dy": -7.700023951784374e-10,
+      "yaw_change": 1.1880553364834667e-09,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "max_tilt": 0.0,
+      "sim_s": 2.4800000000000004
+    },
+    "reverse": {
+      "dx": -1.2100002002961519,
+      "dy": 1.766467083719192e-09,
+      "yaw_change": 4.809620653999912e-09,
+      "tail_vx": -0.4000000333398602,
+      "tail_wz": -6.788099254765174e-10,
+      "max_tilt": 0.0,
+      "sim_s": 3.4800000000000004
+    },
+    "reverse_stop": {
+      "dx": -0.1540501324263293,
+      "dy": 6.92864210449784e-10,
+      "yaw_change": -9.809734904688074e-09,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "max_tilt": 0.0,
+      "sim_s": 2.4800000000000004
+    },
+    "left_turn": {
+      "dx": 0.16613748925389166,
+      "dy": -0.004218411759909335,
+      "yaw_change": 3.0864013048777044,
+      "tail_vx": 0.0587767196733492,
+      "tail_wz": 0.9999971745044791,
+      "max_tilt": 0.0,
+      "sim_s": 3.4800000000000004
+    },
+    "left_turn_stop": {
+      "dx": -0.0277055226184304,
+      "dy": 0.0683219538064806,
+      "yaw_change": 0.3184985330500216,
+      "tail_vx": -0.0,
+      "tail_wz": 0.0,
+      "max_tilt": 0.0,
+      "sim_s": 2.4800000000000004
+    },
+    "right_turn": {
+      "dx": 0.1628878682887539,
+      "dy": 0.028506396132601863,
+      "yaw_change": -3.0969756538281508,
+      "tail_vx": -0.058960427428740435,
+      "tail_wz": -0.9999973032841423,
+      "max_tilt": 0.0,
+      "sim_s": 3.4800000000000004
+    },
+    "right_turn_stop": {
+      "dx": -0.006525627508729953,
+      "dy": -0.08058926988759985,
+      "yaw_change": -0.318498586268913,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "max_tilt": 0.0,
+      "sim_s": 2.4800000000000004
+    },
+    "pre_loss": {
+      "dx": 0.6139657651279633,
+      "dy": -0.00649257395100733,
+      "yaw_change": -8.101141079144836e-09,
+      "tail_vx": 0.4000001450798455,
+      "tail_wz": 6.654236478960864e-10,
+      "max_tilt": 0.0,
+      "sim_s": 1.9800000000000004
+    },
+    "publisher_loss": {
+      "dx": 0.3259818985331257,
+      "dy": -0.0034471992336612134,
+      "yaw_change": 1.0779632773211256e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "max_tilt": 0.0,
+      "sim_s": 2.9800000000000004
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "body_height_m": {
+    "minimum": 0.13212407582618302,
+    "maximum": 0.13228002990187587
+  },
+  "wheel_feedback": {
+    "front_left_wheel_joint": {
+      "minimum": -6.03992731490492,
+      "maximum": 8.285887340823027,
+      "samples": 3247
+    },
+    "rear_left_wheel_joint": {
+      "minimum": -6.0399273150101305,
+      "maximum": 8.285887340822725,
+      "samples": 3247
+    },
+    "front_right_wheel_joint": {
+      "minimum": -0.0415142339040428,
+      "maximum": 8.28588734082016,
+      "samples": 3247
+    },
+    "rear_right_wheel_joint": {
+      "minimum": -0.04151423404964211,
+      "maximum": 8.285887340820604,
+      "samples": 3247
+    }
+  },
+  "sensors": {
+    "scan_messages": 162,
+    "depth_messages": 163,
+    "camera_info_messages": 163,
+    "last_scan": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "minimum": 0.10000000149011612,
+      "maximum": 12.0,
+      "finite": 360
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "finite_positive": 2325,
+      "minimum": 1.3503447771072388,
+      "maximum": 4.94245719909668
+    },
+    "frames": {
+      "lab_laser_link": {
+        "position_m": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "expected_position_m": [
+          0.3,
+          0.0,
+          0.4
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position_m": [
+          0.35,
+          0.0,
+          0.45
+        ],
+        "expected_position_m": [
+          0.35,
+          0.0,
+          0.45
+        ]
+      }
+    },
+    "camera_info": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "k": [
+        277.12812920993167,
+        0.0,
+        160.0,
+        0.0,
+        277.12812920993167,
+        120.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "real_time_factor": 0.8450285189733784,
+  "first_launch_returncode": 0,
+  "relaunch_reset": {
+    "original_xy": [
+      -0.499999999928213,
+      -0.5000000004856012
+    ],
+    "restored_xy": [
+      -0.499999999928213,
+      -0.5000000004856012
+    ],
+    "error_m": 0.0
+  },
+  "launch_returncode": 0,
+  "body_samples": 1755,
+  "joint_samples": 4489,
+  "max_body_tilt_rad": 0.0,
+  "derived_from": {
+    "producer_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/final-gazebo/report.json",
+      "sha256": "d4829382a1c091ea6f414f5467521f1ab94eb8612209dcff676079921c49a1f1",
+      "bytes": 5351
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/final-gazebo/trace.json",
+      "sha256": "6721e98a3852f4fb99ac4a91fb6994e41045926c47bdc8be6ab6d9b6890fbda5",
+      "bytes": 1808827
+    }
+  }
+}

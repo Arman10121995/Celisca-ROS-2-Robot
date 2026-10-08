@@ -42,6 +42,32 @@ def test_cartesian_matrix_rechecks_the_same_physical_screen():
     assert not module.measured_result(report, 'arm_cartesian_screen')
 
 
+@pytest.mark.parametrize('failure', ['fast_yaw', 'wrong_yaw_sign', 'no_strafe', 'drifting_stop',
+                                  'moves_on_enable', 'loss_keeps_moving', 'missing_altitude', 'missing_body'])
+def test_manual_flight_screen_requires_actual_neutral_seven_direction_stop_and_body_results(failure):
+    root = Path(__file__).resolve().parents[1]
+    report = json.loads((root/'docs/status/evidence/extensions-finish-2026-10-08/controls/px4/report-measured.json').read_text())
+    assert module.measured_result(report, 'flight_manual_screen')
+    if failure == 'fast_yaw':
+        report['directions']['Turn Left']['command_max_yaw_rad_s'] = 1.
+    elif failure == 'wrong_yaw_sign':
+        report['directions']['Turn Right']['yaw_rad'] = .6
+    elif failure == 'no_strafe':
+        report['directions']['Strafe L']['body_frame_travel_m'] = [0., 0.]
+    elif failure == 'drifting_stop':
+        report['directions']['Forward']['stop']['drift_m'] = .8
+    elif failure == 'moves_on_enable':
+        report['neutral']['commands'] = 1
+    elif failure == 'loss_keeps_moving':
+        report['publisher_loss_drift_m'] = 1.
+    elif failure == 'missing_altitude':
+        report['altitude'].pop('down')
+    else:
+        report['body_trace']['samples'] = 0
+    report['passed'] = True
+    assert not module.measured_result(report, 'flight_manual_screen')
+
+
 def test_short_valid_screen_is_partial_and_cannot_transfer_to_other_maps(tmp_path):
     catalog = framework(tmp_path,measured_nav())
     cell = module.SupportCell('four_wheel_steer_car','nav_empty','isaac','navigation',steering_mode='crab')
@@ -69,6 +95,22 @@ def test_pass_marker_does_not_override_failed_measurements(tmp_path,change):
     cell = module.SupportCell('four_wheel_steer_car','nav_empty','isaac','navigation',steering_mode='crab')
     catalog._determine_support_level(cell)
     assert cell.support_level == module.SupportLevel.EXPERIMENTAL
+
+
+def test_imported_world_xy_success_is_not_navigation_while_falling():
+    report = measured_nav()
+    report['body_height'] = dict(expected_floor_m=0., minimum_m=0., maximum_m=.01, samples=100)
+    assert module.measured_result(report, 'navigation_screen')
+    report['body_height']['minimum_m'] = -13.
+    assert not module.measured_result(report, 'navigation_screen')
+
+
+def test_navigation_endpoint_does_not_override_failed_owned_gui_run():
+    report = dict(outcome='succeeded', settled_sim_second=True,
+        final_error_truth_m=.05, final_yaw_error_truth_deg=1., truth_age_wall_s=.01,
+        acceptance={'limits': {'position_m': .15, 'yaw_deg': 5.}},
+        gui_recording_completed=False)
+    assert not module.measured_result(report, 'navigation_screen')
 
 
 def test_missing_or_changed_artifact_is_unverified(tmp_path):
@@ -125,6 +167,37 @@ def test_turtlebot3_lidar_screen_rechecks_physical_trace_envelopes(failure):
     elif failure == 'tilt': report['max_body_tilt_rad'] = .42
     else: report['max_body_tilt_rad'] = float('nan')
     assert not module.measured_result(report, 'drive_lidar_screen')
+
+
+@pytest.mark.parametrize('backend', ['gazebo', 'mujoco', 'pybullet', 'isaac'])
+def test_husky_screen_uses_all_four_current_physical_trials(backend):
+    stage = 'isaac-body-feedback' if backend == 'isaac' else 'final-'+backend
+    report = json.loads((path.parent.parent/'docs/status/evidence/extensions-finish-2026-10-08/'
+                        'husky'/stage/'report-measured.json').read_text())
+    assert module.measured_result(report, 'skid_drive_screen')
+
+
+@pytest.mark.parametrize('failure', ['turn_crawl', 'turn_displacement', 'stuck_wheel',
+    'no_stop', 'neutral_command', 'wrong_mount', 'missing_depth', 'freefall', 'missing_tilt'])
+def test_husky_pass_marker_cannot_override_body_and_sensor_failures(failure):
+    report = json.loads((path.parent.parent/'docs/status/evidence/extensions-finish-2026-10-08/'
+                        'husky/final-mujoco/report-measured.json').read_text())
+    if failure == 'turn_crawl': report['phases']['left_turn']['tail_vx'] = .3
+    elif failure == 'turn_displacement': report['phases']['right_turn']['dx'] = .6
+    elif failure == 'stuck_wheel': report['wheel_feedback']['rear_left_wheel_joint']['maximum'] = report['wheel_feedback']['rear_left_wheel_joint']['minimum']
+    elif failure == 'no_stop': report['phases']['publisher_loss']['tail_wz'] = .3
+    elif failure == 'neutral_command': report['neutral_commands'] = 1
+    elif failure == 'wrong_mount': report['sensors']['frames']['lab_laser_link']['position_m'][2] += .2
+    elif failure == 'missing_depth': report['sensors']['last_depth']['finite_positive'] = 0
+    elif failure == 'freefall': report['body_height_m']['minimum'] = -13.
+    else: report.pop('max_body_tilt_rad')
+    assert not module.measured_result(report, 'skid_drive_screen')
+
+
+def test_earlier_isaac_yaw_only_success_marker_is_rejected_for_drift():
+    folder = path.parent.parent/'docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-yaw-feedback'
+    assert json.loads((folder/'report.json').read_text())['passed'] is True
+    assert not module.measured_result(json.loads((folder/'report-measured.json').read_text()), 'skid_drive_screen')
 
 
 def test_active_tasks_block_release_without_inventing_scope_approval(tmp_path):

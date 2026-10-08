@@ -1,6 +1,7 @@
 # Robot Lab GUI workspace
 
-Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Documentation reviewed October 8, 2026; current source stages are recorded in
+[extension evidence](../status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](../status/CURRENT_STATUS.md) for available workflows and
 remaining qualification; evidence below retains its named source stages.
 
@@ -45,13 +46,15 @@ visible on the right. Panels scroll to keep limits and options accessible.
      The resolved robot limits appear above override fields; unchecked
      overrides leave those fields disabled. Input enablement starts neutral.
    - **Arm:** joint feedback, native joint limits, jog increment, Home,
-     Cancel/Stop and qualified Cartesian Plan/Execute. Controls require the
+     Cancel/Stop, measured tool XYZ, small X/Y/Z target steps and qualified
+     Cartesian Plan/Execute. Target selection never executes motion. Controls require the
      selected, owned, running native Panda and fresh measured feedback.
    - **Hand:** opening, force limit, Open/Close/Set, Cancel/Stop and the
      optional grasp fixture for the next Run. The native Panda remains the
      measured hand integration; dexterous-hand imports do not gain it.
-   - **Drone & limits:** Takeoff, Hold, Land, Altitude Up/Down and manual
-     velocity limits. **Open XY/yaw Drive** switches to the motion pad.
+   - **Drone & limits:** all seven Drive directions, Takeoff, Hold, Land,
+     Altitude Up/Down and manual velocity limits. The pad shares its pressed
+     state with Drive; default yaw is capped at 0.3 rad/s with a gentle ramp.
      Use the [X500 guide](px4_x500.md) for the measured Flight workflow.
 
 **Stop motion** calls the existing Drive stop and Arm/Hand hold controls.

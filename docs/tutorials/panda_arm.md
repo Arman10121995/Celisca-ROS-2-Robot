@@ -1,6 +1,7 @@
 # Native Panda arm and hand controls
 
-Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Documentation reviewed October 8, 2026; current controls and exact source stages
+are in the [extension evidence](../status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](../status/CURRENT_STATUS.md) for available workflows and
 remaining qualification; evidence below retains its named source stages.
 
@@ -59,12 +60,31 @@ controls below predict collisions for their planned path.
 
 Select the native Panda, MuJoCo, Display and `nav_empty`, leave the Hand grasp
 fixture unchecked, and Run. In **Arm**, wait for the selected-world scene and
-measured joint state. Set the Cartesian offsets, for example Δz = 0.05 m with
-Δx = Δy = 0, then press **Plan**. Review the reported waypoints and duration;
-press **Execute Plan** to move. A subsequent Δy = 0.04 m was also measured.
+measured joint state. Press **Use current tool pose** to fill the measured XYZ
+readout and clear the target offsets. Use the **X/Y/Z −/+** buttons to select
+a small target from that position. The default step is **0.01 m (1 cm)**;
+the step field accepts 1–50 mm. The readout shows the resulting XYZ target.
+Press **Plan**, review the waypoints and duration, then **Execute Plan** to move.
+Reading a pose and editing targets never starts a trajectory. Existing manual
+offset fields remain available, for example Δz = 0.05 m or Δy = 0.04 m.
 Offsets are relative to the measured TCP in `native_world`; orientation is
 preserved. Each component is bounded to ±0.25 m; reachability and collision
 checks can reject a request within that input range.
+
+This is a position target with the current tool orientation held. A reachable
+point may require another orientation or elbow configuration. Start with a
+smaller step; use joint jogging to change the arm configuration if planning
+still rejects the target. Coordinates are metres in `native_world`, not pixels
+or the camera frame. This workflow currently applies to the qualified native
+Panda on MuJoCo; other imported arms need their own controller and planner.
+
+The October 8 normal GUI repeat measured 1 cm X/Y/Z movements and submillimetre
+TCP endpoint errors. Model gravity/Coriolis feedforward corrects the previous
+7 mm vertical sag through the original position actuators. Its command offset
+is bounded to ±0.03 rad and retains native control/force limits, gains and
+contact checks. It uses [MuJoCo's actuator and bias-force model](https://mujoco.readthedocs.io/en/stable/computation/index.html#actuation-model).
+The full collision, unreachable, cancellation, Stop, watchdog and reset checks
+also pass. A separate actual Hand repeat lifts the cube 7.81 cm and releases it.
 
 This reuses installed [MoveIt 2 planning scenes](https://moveit.picknik.ai/humble/doc/examples/planning_scene/planning_scene_tutorial.html),
 KDL inverse kinematics, OMPL RRTConnect and FCL collision checks. The planning

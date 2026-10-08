@@ -85,7 +85,7 @@ def model_resolver(resources, preferred):
     return resolve
 
 
-def convert_world(source, target, name, resources, preferred):
+def convert_world(source, target, name, resources, preferred, static_snapshot=False):
     resolve = model_resolver(resources, preferred)
     # Upstream Gazebo examples contain decorative '--' inside comments,
     # tolerated by SDFormat but rejected by Python's strict XML parser.
@@ -101,7 +101,10 @@ def convert_world(source, target, name, resources, preferred):
         world = ET.SubElement(root, 'world', name=name)
         world.append(model)
     root.set('version', '1.7'); world.set('name', name)
+    from external_world_repairs import repair_hospital_poses, gazebo_collada_copy
+    pose_repairs = repair_hospital_poses(source, root)
     removed, dependencies, include_count = [], {}, 0
+    mesh_repairs = {}
     standard = ET.parse(ROOT/'src/robot_lab_maps/maps/empty/worlds/empty.world').getroot().find('world')
 
     def walk(parent, base, depth=0):
@@ -158,10 +161,19 @@ def convert_world(source, target, name, resources, preferred):
                 continue
             if node.tag == 'uri' and node.text:
                 resource = resolve(node.text.strip(), base)
-                node.text = resource.as_uri()
                 if resource.is_file(): dependencies[str(resource)] = digest(resource)
+                if parent.tag == 'mesh' and resource.suffix.lower() == '.dae':
+                    resource, repair = gazebo_collada_copy(resource,target.parent.parent/'canonical-meshes',resolve)
+                    if repair:
+                        mesh_repairs[repair['source_mesh']] = repair
+                        dependencies[str(resource)] = digest(resource)
+                node.text = resource.as_uri()
             walk(node, base, depth)
     walk(world, source.parent)
+    from external_world_repairs import preserve_static_containers
+    static_containers = preserve_static_containers(world)
+    from external_world_repairs import static_fixture_snapshot
+    static_fixtures = static_fixture_snapshot(world) if static_snapshot else []
     for filename, system in [('physics', 'Physics'), ('user-commands', 'UserCommands'), ('scene-broadcaster', 'SceneBroadcaster')]:
         ET.SubElement(world, 'plugin', filename='ignition-gazebo-'+filename+'-system',
                       name='ignition::gazebo::systems::'+system)
@@ -177,6 +189,10 @@ def convert_world(source, target, name, resources, preferred):
     return {'source_world': str(source), 'source_sha256': digest(source), 'derived_world_sha256': digest(target),
             'resolved_include_count': include_count, 'dependency_sha256': dependencies,
             'removed_classic_plugins': removed,
+            'source_pose_repairs': pose_repairs,
+            'static_container_repairs': static_containers,
+            'static_snapshot': static_snapshot, 'static_fixture_changes': static_fixtures,
+            'mesh_frame_repairs': list(mesh_repairs.values()),
             'dynamic_actors': [actor.get('name') for actor in world.findall('actor')]}
 
 
@@ -203,12 +219,23 @@ def seed_for_world(world, output, resolution=.1, height=.3):
     shapes, skipped = mapping.extract_static_shapes(str(world), mapping.uri_resolver())
     for shape in shapes:
         kind = shape['type']
-        if kind in ('mesh', 'plane', 'heightmap'): continue
-        size = shape['size']
-        if kind == 'box': mesh = trimesh.creation.box(size)
+        if kind in ('plane', 'heightmap'): continue
+        size = shape.get('size')
+        if kind == 'mesh':
+            from robot_lab_utils.mesh_assets import _load_indexed_mesh
+            vertices,faces = _load_indexed_mesh(shape['mesh'])
+            mesh = trimesh.Trimesh(vertices=np.asarray(vertices)*shape['scale'],faces=faces,process=False)
+        elif kind == 'box': mesh = trimesh.creation.box(size)
         elif kind == 'sphere': mesh = trimesh.creation.icosphere(radius=size[0], subdivisions=2)
         else: mesh = trimesh.creation.cylinder(radius=size[0], height=size[1], sections=32)
         mesh.apply_transform(mapping.world_transform(shape))
+        if kind == 'mesh':
+            from external_world_repairs import floor_mesh_polygons
+            for polygon in floor_mesh_polygons(mesh):
+                support_draw.polygon([(x/resolution+width/2,y/resolution+rows/2)
+                                      for x,y in polygon],fill=255)
+            # The generator already projects the exact mesh slice into mask.
+            continue
         # Prefer a real floor footprint over free space outside a building.
         # The factory contains multiple disconnected floor slabs.
         if kind == 'box' and min(size[:2]) >= 2. and size[2] <= .3 and -.1 <= mesh.bounds[1,2] <= .05:
@@ -248,16 +275,12 @@ def seed_for_world(world, output, resolution=.1, height=.3):
 
 
 def generate_map(world, directory, seed):
+    from external_world_repairs import cached_occupancy_matches
     directory.mkdir(parents=True, exist_ok=True)
     previous = list(directory.rglob('*.generation.json'))
     for path in sorted(previous, key=lambda p: p.stat().st_mtime, reverse=True):
         report = json.loads(path.read_text())
-        if (report.get('source_sha256') == digest(world) and report.get('seed_xy') == seed
-                and report.get('projection_recipe') == 'complete-static-height-slice-v2'
-                and all(Path(report['output_yaml']).with_suffix(suffix).is_file()
-                        and digest(Path(report['output_yaml']).with_suffix(suffix)) == sha
-                        for suffix,sha in report.get('artifact_sha256',{}).items())
-                and {'.pgm','.yaml'} <= set(report.get('artifact_sha256',{}))):
+        if cached_occupancy_matches(report, digest(world), seed):
             return report, path
     log = directory/'generation.log'
     command = [sys.executable, str(ROOT/'src/robot_lab_maps/tools/generate_occupancy_map.py'),
@@ -313,7 +336,7 @@ def install_worlds(store, download, source_id='gazebo_world_dataset'):
         directory.mkdir(parents=True, exist_ok=True)
         try:
             preferred = original.parent
-            check = convert_world(original, target, name, resources, preferred)
+            check = convert_world(original, target, name, resources, preferred, static_snapshot=True)
             from robot_lab_utils.sdf_world import extract_static_shapes, uri_resolver
             shapes, skipped = extract_static_shapes(str(target), uri_resolver())
             unresolved = [item for item in skipped if not item.startswith('actor ')]
@@ -338,7 +361,11 @@ def install_worlds(store, download, source_id='gazebo_world_dataset'):
                 'map': {'has_2d_map': bool(occupancy)},
                 'spawn': {'x': str(seed[0]), 'y': str(seed[1]), 'z': '.1', 'yaw': '0.0'},
                 'initial_pose': {'x': str(seed[0]), 'y': str(seed[1]), 'yaw': '0.0'},
-                'notes': 'Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified.'}
+                'notes': 'Installed source-backed static environment snapshot; furniture fixed consistently across all four engines. Classic plugins removed; actor/dynamic behavior and robot missions remain unqualified.'}
+            if check.get('mesh_frame_repairs'):
+                profile['notes'] += ' Derived Collada assets preserve Gazebo node frames; originals and texture provenance remain on SSD.'
+            if check.get('source_pose_repairs'):
+                profile['notes'] += ' Reviewed escaped hospital fixtures restored to their authored 0/3 m floors; individual navigation routes still need qualification.'
             if occupancy:
                 profile['map'].update(package='robot_lab_maps', path=occupancy['output_yaml'])
             evidence = directory/'integration-check.json'; write_json(evidence, check)

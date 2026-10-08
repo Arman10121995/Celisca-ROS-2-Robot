@@ -1,7 +1,7 @@
 schema_version: 1
-date: '2026-10-07'
-scope: "Exact hashed October 5\u20137 named simulation screens; unlisted cells remain\
-  \ untested."
+date: '2026-10-08'
+scope: Exact hashed named simulation screens through October 8; unlisted cells remain
+  untested.
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
 - robot_id: four_wheel_steer_car
@@ -2671,3 +2671,1518 @@ records:
   - Stop/watchdog limits use a final window after 2.5 simulation seconds, not instantaneous
     physical braking
   - RTF is measured on this host/run, not a general performance guarantee
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-yaw-feedback/report-measured.json
+  sha256: 8292239b03697755fec0c6f189a276b0655ae66b5e340e2e5f0d9fc3dc222f63
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-yaw-feedback/source-manifest.json
+  source_hashes_sha256: 310fec569bcbd69d406947d43f853d776729c4dbfdaaf7e4e4bcfe3652f36404
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Named nav_empty GUI Drive/WASD screen; physical joystick and other maps untested
+  - Declared lab lidar/RGB-D/IMU kit and motor/solver/controller envelope; not vendor
+    firmware/hardware
+  - Stop/watchdog measured after a bounded settling window, not instantaneous braking
+  - Reset here is a full owned Stop/Run relaunch; robot-only reset and monotonic clock
+    require separate mode proof
+  - RTF is measured on this host/run only
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/final-gazebo/report-measured.json
+  sha256: 19c83ff12cfb2fd8720b8f7b47626c93b805b02bf9c4e32629edce45ab8d2800
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/final-gazebo/source-manifest.json
+  source_hashes_sha256: 57e73d656c3df9ededa1a8d1f7a6cbcceeee69b7ade0ba2611d4eac9072388bf
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Named nav_empty GUI Drive/WASD screen; physical joystick and other maps untested
+  - Declared lab lidar/RGB-D/IMU kit and motor/solver/controller envelope; not vendor
+    firmware/hardware
+  - Stop/watchdog measured after a bounded settling window, not instantaneous braking
+  - Reset here is a full owned Stop/Run relaunch; robot-only reset and monotonic clock
+    require separate mode proof
+  - RTF is measured on this host/run only
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/final-mujoco/report-measured.json
+  sha256: af39459dd2b48758511cf5d84cd4ca64c9d26923e1a9d0149b98f29d2a2668e8
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/final-mujoco/source-manifest.json
+  source_hashes_sha256: 6eec1518f12b74a99a440fcd70432e978dfcfe9ad54343e5d2d40cec3091361c
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Named nav_empty GUI Drive/WASD screen; physical joystick and other maps untested
+  - Declared lab lidar/RGB-D/IMU kit and motor/solver/controller envelope; not vendor
+    firmware/hardware
+  - Stop/watchdog measured after a bounded settling window, not instantaneous braking
+  - Reset here is a full owned Stop/Run relaunch; robot-only reset and monotonic clock
+    require separate mode proof
+  - RTF is measured on this host/run only
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/final-pybullet/report-measured.json
+  sha256: 3ae6d18465039e9355eb01e916b0afa02438971b98a8e9328f0b6bb32648cf82
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/final-pybullet/source-manifest.json
+  source_hashes_sha256: 6eec1518f12b74a99a440fcd70432e978dfcfe9ad54343e5d2d40cec3091361c
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Named nav_empty GUI Drive/WASD screen; physical joystick and other maps untested
+  - Declared lab lidar/RGB-D/IMU kit and motor/solver/controller envelope; not vendor
+    firmware/hardware
+  - Stop/watchdog measured after a bounded settling window, not instantaneous braking
+  - Reset here is a full owned Stop/Run relaunch; robot-only reset and monotonic clock
+    require separate mode proof
+  - RTF is measured on this host/run only
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-body-feedback/report-measured.json
+  sha256: fbab27c8ad3cf68d08e9080df66409fd65e89ef94419b9ac083e1d2494940d06
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/isaac-body-feedback/source-manifest.json
+  source_hashes_sha256: 57e73d656c3df9ededa1a8d1f7a6cbcceeee69b7ade0ba2611d4eac9072388bf
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Named nav_empty GUI Drive/WASD screen; physical joystick and other maps untested
+  - Declared lab lidar/RGB-D/IMU kit and motor/solver/controller envelope; not vendor
+    firmware/hardware
+  - Stop/watchdog measured after a bounded settling window, not instantaneous braking
+  - Reset here is a full owned Stop/Run relaunch; robot-only reset and monotonic clock
+    require separate mode proof
+  - RTF is measured on this host/run only
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-gazebo/report-measured.json
+  sha256: 1df80bf336ca3610f8a2d46665a0a5a714a7fe1aa3e5531bae2903b267a6aaf1
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-gazebo/source-manifest.json
+  source_hashes_sha256: 45978583eac8448f01902e03691687fa209658bc33b3da5958a39ee3848cba8d
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-mujoco/report-measured.json
+  sha256: 6636cbae3e4c10fbc00ea3b20c2e9f17ab4ccca35d39f10b9a3ed70973e5aaf0
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-mujoco/source-manifest.json
+  source_hashes_sha256: 45978583eac8448f01902e03691687fa209658bc33b3da5958a39ee3848cba8d
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-pybullet/report-measured.json
+  sha256: 551e921591800b010864aa5f344be5da2d2054859c3cef35f19c7e18c8c111b6
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-pybullet/source-manifest.json
+  source_hashes_sha256: 45978583eac8448f01902e03691687fa209658bc33b3da5958a39ee3848cba8d
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_burger
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-isaac/report-measured.json
+  sha256: b83cbcc19c560a3b1f5c5e27cab116073a34c23da592c2cfbc0fab8d713a7b62
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_burger-isaac/source-manifest.json
+  source_hashes_sha256: 45978583eac8448f01902e03691687fa209658bc33b3da5958a39ee3848cba8d
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-gazebo/report-measured.json
+  sha256: 9aafac760576a6bf93b7a85691102297dfe7704f6efa73cf8836c0b655f7b339
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-gazebo/source-manifest.json
+  source_hashes_sha256: f3959af59157fccd4a828df091900931db974169ad9229557faca34f439af47e
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-mujoco/report-measured.json
+  sha256: 91ad78fcd3dc368b20c27b92e879f291f83c8e408549c340f1bc8db257a8d405
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-mujoco/source-manifest.json
+  source_hashes_sha256: f3959af59157fccd4a828df091900931db974169ad9229557faca34f439af47e
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-pybullet/report-measured.json
+  sha256: 1fbe8e6e105a4459ff36b8626cb99985da6109bcfc04af3261629e61a96b7aec
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-pybullet/source-manifest.json
+  source_hashes_sha256: f3959af59157fccd4a828df091900931db974169ad9229557faca34f439af47e
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-isaac/report-measured.json
+  sha256: 465551ff709c0306fa16a8254acd6bf4426bc9a34f36acfa3fae55be5f2e350e
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle-isaac/source-manifest.json
+  source_hashes_sha256: f3959af59157fccd4a828df091900931db974169ad9229557faca34f439af47e
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-gazebo/report-measured.json
+  sha256: 22b1ee1687bf2f3aabd1a29afaab8f2c3d203533c5612c09e6a18bdad7c92d5a
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-gazebo/source-manifest.json
+  source_hashes_sha256: 0cf3c9fc2d38dfa262bb11c67d3909681558d4c6b66fdd4d9338a12936efc323
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-mujoco/report-measured.json
+  sha256: 5c93df2468f92b50a8c67bc2ffb8a023308bdcc1468a1aec6b9d6fd1f69042c3
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-mujoco/source-manifest.json
+  source_hashes_sha256: 0cf3c9fc2d38dfa262bb11c67d3909681558d4c6b66fdd4d9338a12936efc323
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-pybullet/report-measured.json
+  sha256: 176158948ce1f1c6ee8696f86f9e65710866735e40ab51888ed82f77d2f0e883
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-pybullet/source-manifest.json
+  source_hashes_sha256: 0cf3c9fc2d38dfa262bb11c67d3909681558d4c6b66fdd4d9338a12936efc323
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot3_waffle_pi
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-isaac/report-measured.json
+  sha256: 9c48263df067f004d6dc394f49c19b5a059e2f8d2c3dc46f896d961e2d5e05ae
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/turtlebot3/asset_turtlebot3_waffle_pi-isaac/source-manifest.json
+  source_hashes_sha256: 0cf3c9fc2d38dfa262bb11c67d3909681558d4c6b66fdd4d9338a12936efc323
+  report_kind: drive_lidar_screen
+  scope: Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current shared wheel/spawner regression; does not rerun all historical localization/mapping/navigation
+    cells
+  - Named nav_empty actual GUI Drive/Stop/watchdog and source LDS/IMU mounts; physical
+    joystick/other maps untested
+  - Source RGB-only cameras remain disabled; no borrowed RGB-D or 3D SLAM claim
+- robot_id: asset_turtlebot4_standard
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_standard/report-measured.json
+  sha256: 14b7d8764a90f45ac8a4a6edaa1babc0c4076933c65f50f584d6dd5f361fbae7
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_standard/source-manifest.json
+  source_hashes_sha256: eb25bf8791fe44caa0f6286d78c203d519eaee91f67512539516ee87bc1b2e84
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current Isaac physical Drive/lidar/RGB-D regression; historical higher-mode screens
+    retain their own revisions
+  - Other maps, physical joystick and vendor firmware/hazard/docking behavior unqualified
+- robot_id: asset_turtlebot4_lite
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_lite/report-measured.json
+  sha256: 1d965fc7d42b88d52c94333c8e70b9ccddf809cba8dad2e74315d52248dc7100
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/asset_turtlebot4_lite/source-manifest.json
+  source_hashes_sha256: 300d1cb8dd7da2fd7820bdf66413bf54123fa147617f0ef3df845c35de9bdb27
+  report_kind: drive_sensor_screen
+  scope: Actual source-mounted sensors plus GUI Drive/Stop/watchdog on nav_empty;
+    not mapping/navigation Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Current Isaac physical Drive/lidar/RGB-D regression; historical higher-mode screens
+    retain their own revisions
+  - Other maps, physical joystick and vendor firmware/hazard/docking behavior unqualified
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/regressions/panda-planning/report-measured.json
+  sha256: 13284c59d3708060daa1e6387950a6ee3334b36f68f5c21eb1a7c76d9cb1c1e5
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/regressions/panda-planning/source-manifest.json
+  source_hashes_sha256: f10bd106fded8efc4a6f482ecc313a1b4c1f3e973e136b52edefdfe6984110b1
+  report_kind: arm_cartesian_screen
+  scope: Actual Tk Plan/Execute, native Panda PD actuators and independent physical
+    hand-body TF; static nav_empty only Raw trace/log paths and hashes retained in
+    collection manifest.
+  limitations:
+  - Current native Panda MuJoCo/nav_empty physical MoveIt regression
+  - Servo, attached/dynamic objects, other arms/hands/backends and mobile manipulation
+    unqualified
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: 3d_slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-3d_slam-nav_empty/report-measured.json
+  sha256: 686737292278018b2c4cc01d2fbc46d37633169079814e05994f8682bff1253a
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 2eb8db1d4f4ec0e1cb59ce8de7d1ff364e17187dc7fa43354e4c988b2ce13278
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: localization
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-loc-nav_empty/report-measured.json
+  sha256: 75d6d3bbf02ecf44dbfe915f57ebd94503b434b5b631586d324f87479004d764
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 2eb8db1d4f4ec0e1cb59ce8de7d1ff364e17187dc7fa43354e4c988b2ce13278
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-nav-nav_empty/report-measured.json
+  sha256: c827c833daadf9b949e63bae1c9d8f6350840cec58893ceaaee83d7f26588e02
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 2eb8db1d4f4ec0e1cb59ce8de7d1ff364e17187dc7fa43354e4c988b2ce13278
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-nav-nav_obstacle/report-measured.json
+  sha256: 136eb232aadeeb9fa5e71907ff5b423590152ef07f9714bacb049bc69ffc919c
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 69fcb8c00fa3f3744980cbc374dbedd0a8d8887196cabbdfcc9d98b1e5dfd3a4
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-slam-nav_empty/report-measured.json
+  sha256: 971030652f028db3e4082c36bcdcab8dc86c5d9b20bbf568b231fe3c77df895b
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes/gazebo-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 2eb8db1d4f4ec0e1cb59ce8de7d1ff364e17187dc7fa43354e4c988b2ce13278
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: 3d_slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-3d_slam-nav_empty/report-measured.json
+  sha256: 271fb998c4249d0762c76d68891f18cc6caa94384e7dd5dcd6f002345568260a
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: localization
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-loc-nav_empty/report-measured.json
+  sha256: 2ef0860196eb303b9e4c6409c84bf411593908ea3217634e08437820efc3724d
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-nav-nav_empty/report-measured.json
+  sha256: 064f36c3ff5714c848afc1e92d7fb361083422d6c71bc5bdaa4378e90399d19a
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-nav-nav_obstacle/report-measured.json
+  sha256: 6ffcc5402035ba0b26cb60fb5e17343422d9228860c915afa690b86b9fabb500
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 7c7815e0180de56b88a53b020637bcd7b95b193605a52b42e2e5ea373e8f676d
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-slam-nav_empty/report-measured.json
+  sha256: dffb375041c5a23479877b4de1582b2e776c4e2de1fe18c4c5f8cea08dd6a964
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/gazebo-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: 3d_slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-3d_slam-nav_empty/report-measured.json
+  sha256: dfae800eed2bf4bac4964138b6f206e509810d259931d8413e7aa658a946712e
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: localization
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-loc-nav_empty/report-measured.json
+  sha256: 89a21833677f16dded5f02693b18c3da7782059b03644a0032f3964409ccb810
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-nav-nav_empty/report-measured.json
+  sha256: 8ff0b0a61a72705d736c6a064e6bf689bebcb28f60396aed8455d38672f5a115
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-nav-nav_obstacle/report-measured.json
+  sha256: 22b9e481b1762532497bc997ef31dc12433f2c822848516ab43ca4ca8b571ee2
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 6a866a8c63d0eac834adb639a05ac81ba67549045683064fab14ebae340f4426
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-slam-nav_empty/report-measured.json
+  sha256: 829730706e640f0b2111a275b69e9f906e5ac2a78cf4e246bc4b15831cd0c3a7
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/isaac-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: 3d_slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-3d_slam-nav_empty/report-measured.json
+  sha256: b993d8d1555c9efbb654dd42f81dbacd41a34d7d588f56a89ac2424ca030ade2
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: localization
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-loc-nav_empty/report-measured.json
+  sha256: d222653465dc2ccd91c211a60acf4e122fc76da5dacfac347f5c6d1495278b26
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-nav-nav_empty/report-measured.json
+  sha256: 8fb7ab26607dcfad46f65a216eab17484b772feae44065617b5f30a7f2d2f289
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-nav-nav_obstacle/report-measured.json
+  sha256: 15b6cd47f74099b1e6028e512d99822552190e4c9b691403d069e6232b52e872
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 7c7815e0180de56b88a53b020637bcd7b95b193605a52b42e2e5ea373e8f676d
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-slam-nav_empty/report-measured.json
+  sha256: c1c4ca633e3268a0c5a20073b62c043b0328ddc6a4bf3222109fbaf61c80ef06
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/mujoco-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: 3d_slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-3d_slam-nav_empty/report-measured.json
+  sha256: 76bf9ac13f8d9b4d1576a92f77d825d9f56f4189c9c603052a12ff6901359405
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-3d_slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: localization
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-loc-nav_empty/report-measured.json
+  sha256: c0c05d61c9b04d3b3072c2ac1888c0a4945957a005122335feff3faf4e4dc962
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-loc-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-nav-nav_empty/report-measured.json
+  sha256: 9b807b12d0faabc26ae522e8dcc7311094fec7f32385ab0316017254c4b874bb
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-nav-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-nav-nav_obstacle/report-measured.json
+  sha256: 49ada2e865f7879ca5ffde01d44445cc3b46e03247a91a8c0dcd05b8f301f939
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-nav-nav_obstacle/source-manifest.json
+  source_hashes_sha256: 7c7815e0180de56b88a53b020637bcd7b95b193605a52b42e2e5ea373e8f676d
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: slam
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-slam-nav_empty/report-measured.json
+  sha256: 9c6480eab23584f970d8ec7185d957f8f1809760c0973e3565cfd595a1da7b42
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/modes-current/pybullet-slam-nav_empty/source-manifest.json
+  source_hashes_sha256: 4a638134906ed555204c04b12df2fc57480fb143c76a494f551ca51c29ad9064
+  report_kind: workflow_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Experimental
+    provider is declared in the original report. Raw trace/log paths and hashes retained
+    in collection manifest.
+  limitations:
+  - Exact declared provider/source/map/backend trial; production modes are granted
+    separately by hashed certificates
+  - Short static workflow; no universal-map, long mission, contact telemetry or vendor
+    hardware claim
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/final/hospital-pybullet/report-measured.json
+  sha256: 8390ae28a936847b45ee3ab42c68c233df012b0b4a11fcd506615b18bc3a8ccd
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/final/hospital-pybullet/pre-trial.json
+  source_hashes_sha256: 94f0bbaffb3eb81533bf5be180fa12642a0a9e650131dc6dacea2c73afd8ba9c
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-pybullet/report-measured.json
+  sha256: a2e302b04a7dd9918324e6594073de8f13582444c7f11f1f4e47f7a9dcac3618
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-pybullet/pre-trial.json
+  source_hashes_sha256: 2c557a8165b8079f9a1978096c6efbaa8375889e3636d25d35618de67aaa5178
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-gazebo/report-measured.json
+  sha256: d4ddf4c2148588febd6ca282b69bae2473fd957c725e9c690c5938d944739709
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/matched-dwb/hospital-gazebo/pre-trial.json
+  source_hashes_sha256: 5999d4d4b26c351bc77b183bc0bdc3cace8586accad7b76c386c68331bdbbee3
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/physical-truth/hospital-gazebo/report-measured.json
+  sha256: 97de32f3cdb18878fe69c1f5ae618d6cc29c66f1d160728572f1b5ecaa5979e7
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/physical-truth/hospital-gazebo/pre-trial.json
+  source_hashes_sha256: 82ff688622af2401b3335a3defda2f8e79ebb04d01009d536fee118ece6b5746
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/native-v2/hospital-gazebo/report-measured.json
+  sha256: b1c530b32b1e941ecf960a51a514478f5b88827324031b36c0c62acd37c43f79
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/native-v2/hospital-gazebo/pre-trial.json
+  source_hashes_sha256: dcca3674e6fe4660e2007bab62792a7131e3b69cf57d8e3b61fd1f4f294ff967
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/static-containers/hospital-gazebo/report-measured.json
+  sha256: b1c530b32b1e941ecf960a51a514478f5b88827324031b36c0c62acd37c43f79
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/static-containers/hospital-gazebo/pre-trial.json
+  source_hashes_sha256: e64096264ce7f0fef92e3bd38ed1c9499f4eac665ee050c9e54cf5b6d23bae95
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 3e5cfae78a1a2811e332adcde85871ec60902254 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/static-snapshot/hospital-gazebo/report-measured.json
+  sha256: dec9caa3e13262189005982a72bbc9aafffac005b9200a82279818682cc9d349
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/static-snapshot/hospital-gazebo/pre-trial.json
+  source_hashes_sha256: c3b72aeec5cbbf81be01d64f563e5565350841b5ad8693e433c4ea36122391e7
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current/labbot-dataset_hospital-gazebo/report-measured.json
+  sha256: 04fc26563365d019dfce366d498c5cae30451b71bb514bd13433569831511bfe
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current/labbot-dataset_hospital-gazebo/pre-trial.json
+  source_hashes_sha256: b8d40e7bc58d87e2b571ef6e13dea3228ffa70dbc2ce62bbdfea7e09fb780e55
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current/labbot-dataset_hospital-pybullet/report-measured.json
+  sha256: e0d50160e205c08b61ade6dbb039a8d5abde3e68431c35303ede46fbd5d29d87
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current/labbot-dataset_hospital-pybullet/pre-trial.json
+  source_hashes_sha256: e734c4d4a000a241bbf919f0216406b0e20821e00894943a60b3fb36a5da4c79
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current/labbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 9a2b341a2138b9da8fb7ad2832b76fb21becd88d2c33a1c3b6b34101c83071a4
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current/labbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: a2c658bcd5c1cc271f7784c1bca3e5aa43ec24052beed904c4fefdc0a8ccb99c
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-shell/labbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 4d3ad802bbf1af4bdb0a9016b4c499b02d61300c3166163bf2d7d9e40be2d983
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-shell/labbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: c6c45b5c10e19adba3f30aeb2ce1d6c1da20e71eade08675de0ee0aefd6f961b
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/progress-checker/labbot-dataset_hospital-mujoco/report-measured.json
+  sha256: a65b3b18c744c3be8a337288830c3b169ed24eb7641884443d671184d7f81cb6
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/progress-checker/labbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: 2d1e1a1b13a010005ff3baecd0b448f43d4e2a8a7cee8aa0b262c4c319c67de7
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/wheel-servo/labbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 361fb2c636b87a24c25851c34a5b1a732e6f1b4cbdb276867fe8ea22d8f4245e
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/wheel-servo/labbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: 64fcc115351c778e37ee335751277d0fdf1838d1387a31a31f84065c710c7c75
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-gazebo/report-measured.json
+  sha256: 250609244194b7fc0b2ea1923673f4382281a1c08696ce96d912919af12ed1ba
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-gazebo/pre-trial.json
+  source_hashes_sha256: f2a5045f2db5093799a6c47ea0d059443ca1c4b4f47fd4a0975efe4e6b5c281d
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-pybullet/report-measured.json
+  sha256: cccb960939c0a95a1d47d5cf4e3893b4a84f5f315f46fc87b95e5cf3c9afd369
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-pybullet/pre-trial.json
+  source_hashes_sha256: ad27e0558bb022bbb72628003402d75e46ba255101a9b2e0c01c9dddae4f8dad
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-isaac/report-measured.json
+  sha256: 4659b9b3542f87e8ae63fcb88e1c7f9b7d8005de6fb5cc84bac82bf1441521b1
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-isaac/pre-trial.json
+  source_hashes_sha256: 57ea901a282b4b8b5935a0f67b50b1973aef680245a5afcd8d2ae225f18496dd
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-gazebo/report-measured.json
+  sha256: 25c64e18816ce015a220a1e08bd21726b10eface25b6fee6886ffa4d18b910be
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-gazebo/pre-trial.json
+  source_hashes_sha256: 7fec54da5ca819c781c7ae8365a9cb4645c299787762940e0ff6ddb47f1e3f3f
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-pybullet/report-measured.json
+  sha256: f2f8fab94e99d40cc8ee0f7d81bbca9a6511feb601e24fb3586a826869dcfd08
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-pybullet/pre-trial.json
+  source_hashes_sha256: 7d2b877f089c9e350ca53f3a096b3781a501f67243522c8c66093695760c24ec
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 89d10b285c53c19a85868265387df5c97c922b18d28359b77b53f80e2b4274f1
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: 5f8a2e8795f814fe8d98e4c10ff2d6ec7e23bfe1c2d7c3861d29d6085494c23a
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/rotor-matched/bumperbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 4469bb8b34be5b9ae1acdbc9b59d085831d40123cfef46be41eb5c079e6bb692
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/rotor-matched/bumperbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: d7e2ad98eb9329ad0133bae0567956da1ebe2d6fd204843f16603737a23c27f5
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/husky/normal-production-navigation/report-measured.json
+  sha256: f79f7eb5c32349dcd233acedf564da5c9e1b4c176f087e31cd7464567fb2871d
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/husky/normal-production-navigation/source-manifest.json
+  source_hashes_sha256: 9fa59e59e8dc13eb5a5e5b8351252c0c6801004b79efac1dd0f81f1bd320e6e1
+  report_kind: navigation_screen
+  scope: Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named
+    static route/map only; no universal-map, hardware or vendor firmware grant. Raw
+    trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: menagerie_franka_emika_panda
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: arm_cartesian
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/report-measured.json
+  sha256: 86f113c7dc70742b32d2fae37fc6ad96a278fb341b560f7e8c1a38f6cddd936e
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/source-manifest.json
+  source_hashes_sha256: 9649be2c797511e02dab9d479d95446e37ecb5876eadc1a014ba76ba924144ca
+  report_kind: arm_cartesian_screen
+  scope: Actual Tk Plan/Execute, native Panda PD actuators and independent physical
+    hand-body TF; static nav_empty only Raw trace/log paths and hashes retained in
+    collection manifest.
+  limitations:
+  - Exact current normal owned GUI control workflow and original trace/source hashes
+  - One static nav_empty screen; other robots/maps/backends, payload/Servo and aerial
+    obstacle planning remain unqualified
+- robot_id: px4_x500
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: flight
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/controls/px4/report-measured.json
+  sha256: 082edb30e27f92b1b5eab39a781ac571311cd517e4d3f4800972504e2b6bf40f
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/controls/px4/source-manifest.json
+  source_hashes_sha256: 00e7fe09f8357b4f0f49d121be112923e76eb372277a3e720605171eee13f9f6
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher
+    loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no
+    obstacle planner. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Exact current normal owned GUI control workflow and original trace/source hashes
+  - One static nav_empty screen; other robots/maps/backends, payload/Servo and aerial
+    obstacle planning remain unqualified
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-gazebo/report-measured.json
+  sha256: d2f3c4e7797fd95ad4f994c786e5d26cb7b43f7b1a7f92495cdea3e8ef7a0370
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-gazebo/source-manifest.json
+  source_hashes_sha256: 7912f28afd83b66595bed550ad028820472031783876265de21dd75a47634291
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Current shared Drone/Drive GUI regression with actual four-wheel/source-sensor/body
+    feedback
+  - Historical twenty higher-mode trials retain their source stages; this Drive repeat
+    does not rerun them
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-isaac/report-measured.json
+  sha256: 625c8582be23e39a5779cb125bc6087398c66694c6ab16d55087f5f70f91961e
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-isaac/source-manifest.json
+  source_hashes_sha256: 7912f28afd83b66595bed550ad028820472031783876265de21dd75a47634291
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Current shared Drone/Drive GUI regression with actual four-wheel/source-sensor/body
+    feedback
+  - Historical twenty higher-mode trials retain their source stages; this Drive repeat
+    does not rerun them
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-mujoco/report-measured.json
+  sha256: d5479eedf50b9a6b5fa7d8587f8d51129ff401eebe037f32d1d8a7b31502aff5
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-mujoco/source-manifest.json
+  source_hashes_sha256: 7912f28afd83b66595bed550ad028820472031783876265de21dd75a47634291
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Current shared Drone/Drive GUI regression with actual four-wheel/source-sensor/body
+    feedback
+  - Historical twenty higher-mode trials retain their source stages; this Drive repeat
+    does not rerun them
+- robot_id: asset_husky
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: teleoperation
+  date: '2026-10-08'
+  revision: 73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-pybullet/report-measured.json
+  sha256: df82630d38adf99ab71c7bbecfb082c9559409b29aa82e4befcc6d8d63623b45
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/controls/drive/asset_husky-pybullet/source-manifest.json
+  source_hashes_sha256: 7912f28afd83b66595bed550ad028820472031783876265de21dd75a47634291
+  report_kind: skid_drive_screen
+  scope: Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor
+    feedback on this map only; no SLAM or navigation. Raw trace/log paths and hashes
+    retained in collection manifest.
+  limitations:
+  - Current shared Drone/Drive GUI regression with actual four-wheel/source-sensor/body
+    feedback
+  - Historical twenty higher-mode trials retain their source stages; this Drive repeat
+    does not rerun them

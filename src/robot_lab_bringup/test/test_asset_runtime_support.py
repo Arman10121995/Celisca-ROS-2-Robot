@@ -100,6 +100,14 @@ def test_only_the_backend_with_recorded_body_goals_is_enabled(tmp_path):
     assert selected['default_algorithms']['global_planning'] == 'a_star_planner'
 
 
+def test_mode_certificate_rejects_xy_navigation_while_body_leaves_the_floor(tmp_path):
+    measured = measurement()
+    measured['body_height'] = dict(expected_floor_m=0., minimum_m=-13., maximum_m=.01, samples=100)
+    profile, data = support(tmp_path, measured)
+    with pytest.raises(ValueError, match='measurements'):
+        apply_recorded_modes(profile, 'fixed', data, tmp_path)
+
+
 @pytest.mark.parametrize('key,value', [('final_error_truth_m', .2),
     ('final_yaw_error_truth_deg', -18.), ('truth_age_wall_s', 2.),
     ('final_error_truth_m', float('nan')), ('outcome', 'aborted'), ('settled_sim_second', False)])
@@ -224,3 +232,23 @@ def test_panda_pass_label_cannot_override_physical_failures(tmp_path, failure):
         configuration_files=[], report=dict(path=proof.name, sha256=hashlib.sha256(proof.read_bytes()).hexdigest()))
     with pytest.raises(ValueError, match='measurements'):
         apply_recorded_panda_hand(profile, 'fixed', certificate, tmp_path)
+@pytest.mark.parametrize('failure', ['sag', 'no_motion', 'target_edit_moves', 'missing_axis', 'stale_pose'])
+def test_intuitive_cartesian_target_proof_rejects_false_small_step_claims(failure):
+    import json
+    from pathlib import Path
+    from robot_lab_utils.asset_support import panda_planning_acceptance
+    path = Path(__file__).resolve().parents[3]/'docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/report.json'
+    report = json.loads(path.read_text())
+    assert panda_planning_acceptance(report)
+    target = report['intuitive_targets'][2]
+    if failure == 'sag':
+        target['motion']['actual']['position'][2] -= .01
+    elif failure == 'no_motion':
+        target['motion']['physical_displacement_m'] = 0.
+    elif failure == 'target_edit_moves':
+        target['selection_joint_drift_rad'] = .05
+    elif failure == 'missing_axis':
+        report['intuitive_targets'].pop()
+    else:
+        target['pose_fk_error_m'] = .1
+    assert not panda_planning_acceptance(report)

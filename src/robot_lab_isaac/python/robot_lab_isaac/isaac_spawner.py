@@ -340,6 +340,8 @@ class IsaacSpawner(Node):
             self.get_logger().info(
                 "Drive: %s, wheels %s, steering %s"
                 % (drive.kind, drive.wheel_joints, list(drive.steer_joints)))
+        if drive.kind == "skid_steer":
+            self._skid_pose_twist = PoseTwist()
         return drive
 
     def _send_drive_targets(self):
@@ -357,13 +359,14 @@ class IsaacSpawner(Node):
         self._last_drive_time = now
         twist = self._twist
         stale = now - self._last_cmd_time > 0.5
-        if self._drive.kind == "diff":
+        if self._drive.kind in ("diff", "skid_steer"):
             # SDK physics can be much slower than wall time. Advancing a
             # 0.5 m/s^2 limiter on every wall tick accelerated the tall T4
             # in a few physics frames and tipped it. Use measured SDK time;
             # a frozen/not-ready clock must not accumulate fresh targets.
             with self._lock:
-                sim_time = (self._state or {}).get('t')
+                feedback_state = dict(self._state or {})
+                sim_time = feedback_state.get('t')
             if sim_time is None:
                 dt = 0.0
             else:
@@ -375,12 +378,23 @@ class IsaacSpawner(Node):
                 return
         if stale:
             twist = Twist()
-            if self._drive.kind == "diff":
+            if self._drive.kind in ("diff", "skid_steer"):
                 self._drive.reset()
+        skid_feedback = {}
+        if self._drive.kind == "skid_steer" and feedback_state:
+            # Fresh SDK body angular rate, transformed to the URDF root frame.
+            # A skid base must not mistake wheel encoder yaw for physical yaw.
+            body_pos, body_orn, _, _ = body_odometry(
+                feedback_state['pos'],feedback_state['orn'],
+                feedback_state['lin'],feedback_state['ang'],self._root_offset)
+            # Contact-solver rates have bias; use the same native pose samples
+            # as ideal odometry, with a separate derivative state for control.
+            body_linear,body_angular=self._skid_pose_twist.update(float(sim_time),body_pos,body_orn)
+            skid_feedback = {"measured_wz":body_angular[2],"measured_vx":body_linear[0]}
         targets = self._drive.targets(
             twist.linear.x, twist.angular.z, dt=dt,
             **({"vy": twist.linear.y}
-               if self._drive.kind in ("mecanum", "four_wheel_steer") else {}))
+               if self._drive.kind in ("mecanum", "four_wheel_steer") else skid_feedback))
         try:
             proc.stdin.write(json.dumps({"joint_targets": {
                 "velocity": targets.velocity,
@@ -746,6 +760,8 @@ class IsaacSpawner(Node):
                             with self._lock:
                                 self._state = None
                                 self._pose_twist.reset()
+                                if self._drive.kind == "skid_steer":
+                                    self._skid_pose_twist.reset()
                         self._reset_ack.set()
                     elif ev == "state":
                         with self._lock:

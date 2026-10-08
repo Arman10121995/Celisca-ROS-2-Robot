@@ -53,7 +53,21 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
-Published runtime checkpoint **`091d388`** passes required build/fast/physics/
+October 8 steering requests all complete robot variants **motion first, then
+SLAM, then navigation across compatible maps**. ROADMAP.md and the ledger's
+`readiness_order` own this staged acceptance. The active codex lane has repaired
+terrain slice connectivity and derived hospital fixture/Collada frames. Husky's
+four physical Drive/sensor screens and twenty higher-mode trials now pass,
+with normal GUI defaults/autofill and production navigation. Read
+[the October 8 checkpoint](status/continuation-2026-10-08.md) and
+[robot readiness guide](AI_ROBOT_READINESS_GUIDE.md). Preserve the independent
+untracked `scripts/review_occupancy_maps.py`. Exact publication checks are in
+the current checkpoint. Controllers are qualified within their named screens; retain failed
+hospital/Gazebo and Husky torque-envelope trials. Shared controller changes
+require current physical regression evidence before refreshing source guards.
+
+Published predecessor **`73fcc47`** passes required and scheduled CI after the
+shared-utilities import repair. Earlier **`091d388`** passes build/fast/physics/
 integration/registry CI. Final GUI and normal physical Drive/Panda acceptance
 have separate actual artifacts. The user additionally requests all maintained
 documentation to match this state: README, roadmap, status, tutorials, workflow,

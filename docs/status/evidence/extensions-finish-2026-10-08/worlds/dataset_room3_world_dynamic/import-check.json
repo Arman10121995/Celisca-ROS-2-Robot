@@ -1,0 +1,128 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/experiment_rooms/worlds/room3/world_dynamic.model",
+  "source_sha256": "2f913fabb41377566a2ffc4d2d8bbff9edac9fa6112db64b8d75b839bb275344",
+  "derived_world_sha256": "8e32e6630a7f06cc75e88fa4957d5634885a1c203a251e0302811e5023e6bb5e",
+  "resolved_include_count": 0,
+  "dependency_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/vendor/gazebo_classic/gazebo.material": "e6050d698bd8fb0f7479318ef6dccb2de1b3c484cf48c10b78b8b617026cc2e2"
+  },
+  "removed_classic_plugins": [
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    }
+  ],
+  "source_pose_repairs": [],
+  "static_container_repairs": [],
+  "static_snapshot": true,
+  "static_fixture_changes": [
+    {
+      "model": "unit_box_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone_0",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "unit_box_clone_clone_2_clone_clone_clone_1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle_clone_clone_clone",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    }
+  ],
+  "mesh_frame_repairs": [],
+  "dynamic_actors": [],
+  "shapes": 31,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    6.0,
+    -0.25
+  ],
+  "projected_spawn_clearance_m": 2.0,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-114850-f0f4e4/dataset_room3_world_dynamic.generation.json"
+}

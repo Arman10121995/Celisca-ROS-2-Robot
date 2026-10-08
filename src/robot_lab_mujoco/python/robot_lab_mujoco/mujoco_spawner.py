@@ -1356,8 +1356,10 @@ class MuJoCoSpawner(Node):
                 self._ramp_watchdog_stop = wheel_config.get('mujoco_ramp_watchdog_stop', False)
                 if not isinstance(self._ramp_watchdog_stop, bool):
                     raise ValueError('mujoco_ramp_watchdog_stop must be a boolean')
+                from robot_lab_utils.skid_steer import wheel_force_limit
                 robot_mjcf = _add_wheel_velocity_actuators(
                     robot_mjcf, self._drive.wheel_joints,
+                    force_limit=wheel_force_limit(wheel_config),
                     armature=wheel_config.get('mujoco_wheel_armature', .005),
                     velocity_gain=wheel_config.get('mujoco_wheel_velocity_gain', 1.))
                 robot_mjcf = _add_steer_position_actuators(
@@ -1858,7 +1860,8 @@ class MuJoCoSpawner(Node):
                 command.linear.x, command.angular.z, dt=self._dt,
                 **({"vy": command.linear.y}
                     if self._drive.kind in ("mecanum", "four_wheel_steer")
-                    else {}))
+                    else {"measured_wz": self._bang[2],"measured_vx": self._blin[0]}
+                    if self._drive.kind == "skid_steer" else {}))
             for joint, rate in targets.velocity.items():
                 self._set_actuator(joint, "_velocity", max(-50.0, min(50.0, rate)))
             for joint, angle in targets.position.items():

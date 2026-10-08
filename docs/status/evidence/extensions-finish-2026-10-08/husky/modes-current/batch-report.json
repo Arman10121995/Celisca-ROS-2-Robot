@@ -1,0 +1,222 @@
+[
+  {
+    "robot": "asset_husky",
+    "backend": "gazebo",
+    "mode": "loc",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 55.15808237300007,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-loc-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "gazebo",
+    "mode": "slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 58.17506173599941,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "gazebo",
+    "mode": "3d_slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 60.547780988999875,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-3d_slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "gazebo",
+    "mode": "nav",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 47.86608796800101,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-nav-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "gazebo",
+    "mode": "nav",
+    "map": "nav_obstacle",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 172.12648225599878,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-nav-nav_obstacle/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "mujoco",
+    "mode": "loc",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 89.83070844900067,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/mujoco-loc-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "mujoco",
+    "mode": "slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 91.74468956500095,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/mujoco-slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "mujoco",
+    "mode": "3d_slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 86.51474055200015,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/mujoco-3d_slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "mujoco",
+    "mode": "nav",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 72.5867783570011,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/mujoco-nav-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "mujoco",
+    "mode": "nav",
+    "map": "nav_obstacle",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 172.2531423579985,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/mujoco-nav-nav_obstacle/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "pybullet",
+    "mode": "loc",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 77.12154703099986,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-loc-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "pybullet",
+    "mode": "slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 81.64359443000103,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "pybullet",
+    "mode": "3d_slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 77.69191757799854,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-3d_slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "pybullet",
+    "mode": "nav",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 55.34127895100028,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-nav-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "pybullet",
+    "mode": "nav",
+    "map": "nav_obstacle",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 287.61933342299926,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-nav-nav_obstacle/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "isaac",
+    "mode": "loc",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 76.82272247199944,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-loc-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "isaac",
+    "mode": "slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 78.16683348700099,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "isaac",
+    "mode": "3d_slam",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 81.12117961900003,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-3d_slam-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "isaac",
+    "mode": "nav",
+    "map": "nav_empty",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 75.53524471700075,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-nav-nav_empty/report.json"
+  },
+  {
+    "robot": "asset_husky",
+    "backend": "isaac",
+    "mode": "nav",
+    "map": "nav_obstacle",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 224.77460892999989,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/isaac-nav-nav_obstacle/report.json"
+  }
+]

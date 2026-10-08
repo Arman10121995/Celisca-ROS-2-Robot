@@ -1,0 +1,1 @@
+<sdf version="1.7"><world name="disconnected_hills"><model name="terrain"><static>true</static><pose>1 -.5 .1 0 0 .3</pose><link name="terrain"><collision name="heightfield"><geometry><heightmap><uri>disconnected-hills.png</uri><size>10 8 2</size></heightmap></geometry></collision></link></model></world></sdf>

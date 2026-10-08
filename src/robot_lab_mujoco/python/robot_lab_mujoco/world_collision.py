@@ -51,6 +51,11 @@ def add_static_mesh_collisions(root):
         if geom.get('type') != 'mesh' or (geom.get('contype') == '0' and geom.get('conaffinity') == '0'):
             continue
         asset = assets[geom.get('mesh')]
+        # Fixed SDF surfaces need no solid-body mass inference. Hospital
+        # portals/floors can be open planar meshes; MuJoCo's default volume
+        # inference rejects them even after their contacts become rigid flexes.
+        # Shell inference preserves the source vertices and robot inertias.
+        asset.set('inertia', 'shell')
         # Shared vertices (STL is a triangle soup): a welded surface is a
         # sixth of the flex vertices.  No optional packages needed.
         vertices, faces = load_indexed_mesh(asset.get('file'))

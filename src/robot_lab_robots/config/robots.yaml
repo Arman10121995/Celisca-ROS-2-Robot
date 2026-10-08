@@ -11,6 +11,11 @@ robots:
       type: px4
       max_linear_velocity: 1.0
       max_angular_velocity: 1.0
+      # Manual GUI motion ramps; FCU command limits above remain unchanged.
+      max_speed: 0.5
+      max_accel: 1.0
+      max_angular_speed: 0.3
+      max_angular_accel: 0.5
     notes: "Real upstream X500 with PX4 v1.16.2 and Gazebo Harmonic. Explicit takeoff/land and 3D setpoints; no obstacle-aware planner or SLAM qualification."
   bumperbot:
     package: robot_lab_robots
@@ -18,7 +23,14 @@ robots:
     name: bumperbot
     supported_modes: [display, loc, slam, 3d_slam, nav]
     features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
+    drive_in_display: true
     drive:
+      # Lab MuJoCo velocity servo: small DWB heading commands must overcome
+      # caster/contact resistance on imported triangle floors. Torque stays capped.
+      mujoco_wheel_velocity_gain: 10.0
+      # Match this stronger servo with reflected rotor inertia at the 2 ms
+      # physics step (kv*dt/armature <= 1); keep the original 5 Nm force cap.
+      mujoco_wheel_armature: 0.02
       max_speed: 1.0
       max_accel: 2.0
       max_angular_speed: 2.0
@@ -31,11 +43,13 @@ robots:
     name: labbot
     supported_modes: [display, loc, slam, 3d_slam, nav]
     features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
+    drive_in_display: true
     drive:
       left_wheel_joint: labbot_left_wheel_joint
       right_wheel_joint: labbot_right_wheel_joint
       wheel_radius: 0.06
       wheel_separation: 0.30
+      mujoco_wheel_velocity_gain: 10.0
       max_speed: 0.8
       max_accel: 1.5
       max_angular_speed: 2.0

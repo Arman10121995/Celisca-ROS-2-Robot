@@ -1,0 +1,64 @@
+{
+  "robot": "labbot",
+  "backend": "gazebo",
+  "map": "dataset_hospital",
+  "mode": "nav",
+  "passed": false,
+  "scope": "Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent simulator body endpoint. Short static route, no complete mesh clearance or universal-map qualification.",
+  "source": {
+    "revision": "3e5cfae78a1a2811e332adcde85871ec60902254",
+    "hashes": {
+      "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world": "57828953f482862f00d2c5377ce06822b609fecee208d9347fceeddf047e6fba",
+      "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114310-f8d40e/dataset_hospital.yaml": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c",
+      "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114310-f8d40e/dataset_hospital.pgm": "24634da24262b60572b0adc427815ffd49517893d8db84e0486a2386cad694c8",
+      "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_navigation/config/robots/labbot.yaml": "35c679c557ca48a8026e998eaeb02c855dcd7e2b83d4a9b43edb96ac51bf063a",
+      "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/lab_tabs.py": "68da7b1e458ca66f1bbbd42cd4916f6d5115f636287f98f6f23b10ccefced172"
+    },
+    "profile": {
+      "source_id": "gazebo_world_dataset",
+      "source_entry": "worlds/hospital/hospital.world",
+      "gazebo": {
+        "world_package": "robot_lab_maps",
+        "world_name": "dataset_hospital",
+        "world_path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world"
+      },
+      "map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114310-f8d40e/dataset_hospital.yaml"
+      },
+      "spawn": {
+        "x": "0.55",
+        "y": "12.450000000000001",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "initial_pose": {
+        "x": "0.55",
+        "y": "12.450000000000001",
+        "yaw": "0.0"
+      },
+      "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified. Derived Collada assets preserve Gazebo node frames; originals and texture provenance remain on SSD. Reviewed escaped hospital fixtures restored to their authored 0/3 m floors; individual navigation routes still need qualification."
+    },
+    "domain": "219"
+  },
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=gazebo use_sim_time:=true map_name:=dataset_hospital world_package:=robot_lab_maps world_name:=dataset_hospital world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114310-f8d40e/dataset_hospital.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=false global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "owned_pid": 47153,
+  "check_command": [
+    "python3",
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/sim_nav_check.py",
+    "--timeout",
+    "240.0",
+    "--via-topic",
+    "--max-position-error",
+    ".15",
+    "--max-yaw-error-deg",
+    "5",
+    "--goal-yaw-deg",
+    "0",
+    "--trace-out",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/static-containers/hospital-gazebo/body.trace.json"
+  ],
+  "exception": "KeyboardInterrupt()",
+  "launch_returncode": 0
+}

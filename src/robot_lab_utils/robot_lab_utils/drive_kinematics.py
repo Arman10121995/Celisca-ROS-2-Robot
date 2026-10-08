@@ -569,6 +569,9 @@ def drive_from_config(config, left_wheel_joint="", right_wheel_joint="",
     """
     config = dict(config or {})
     kind = str(config.get("type", "diff")).lower()
+    if kind == 'skid_steer':
+        from .skid_steer import SkidSteerDrive
+        return SkidSteerDrive(config)
     if kind in ("ackermann", "car", "car_like"):
         for key, value in (("left_wheel_joint", left_wheel_joint),
                            ("right_wheel_joint", right_wheel_joint),

@@ -1,0 +1,202 @@
+{
+  "robot": "asset_turtlebot3_waffle",
+  "backend": "gazebo",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_waffle simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+  "owned_pid": 72948,
+  "phases": {
+    "armed_neutral": {
+      "dx": 0.0,
+      "dy": 0.0,
+      "yaw": 0.0,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.152867546929786e-06,
+      "max_tilt": 0.0026000265441005347,
+      "sim_duration": 1.0
+    },
+    "forward": {
+      "dx": 0.3932997869286057,
+      "dy": 9.987194959926171e-07,
+      "yaw": 5.245700679695942e-07,
+      "tail_vx": 0.17999997315197971,
+      "tail_wz": 2.16260997466855e-07,
+      "z": 7.206897526029683e-06,
+      "max_tilt": 0.002600249748638897,
+      "sim_duration": 2.4999999999999996
+    },
+    "forward_stop": {
+      "dx": 0.05310013410644698,
+      "dy": 1.4826686278723855e-07,
+      "yaw": 6.263728445132412e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206790217589577e-06,
+      "max_tilt": 0.002600246610761401,
+      "sim_duration": 2.499999999999999
+    },
+    "reverse": {
+      "dx": -0.3806997805247918,
+      "dy": -9.49589242793536e-07,
+      "yaw": -5.760626472700125e-07,
+      "tail_vx": -0.17999997312519603,
+      "tail_wz": -2.1851019079915006e-07,
+      "z": 7.206894931423401e-06,
+      "max_tilt": 0.002600246597568064,
+      "sim_duration": 2.4799999999999986
+    },
+    "reverse_stop": {
+      "dx": -0.053100135359838596,
+      "dy": -1.1881529315971306e-07,
+      "yaw": -4.0144691166556255e-08,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.207179374774698e-06,
+      "max_tilt": 0.002600249738775929,
+      "sim_duration": 2.5199999999999996
+    },
+    "left_turn": {
+      "dx": -0.00482031962689744,
+      "dy": -0.01660508489953605,
+      "yaw": 2.598000843114331,
+      "tail_vx": -0.010620095554953312,
+      "tail_wz": 1.2000000935195125,
+      "z": 7.206928696066535e-06,
+      "max_tilt": 0.002600249738775929,
+      "sim_duration": 2.4800000000000004
+    },
+    "left_turn_stop": {
+      "dx": 0.0029653928897710458,
+      "dy": -0.001092361069427561,
+      "yaw": 0.353999322671704,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206938308047353e-06,
+      "max_tilt": 0.002600247122611595,
+      "sim_duration": 2.5199999999999996
+    },
+    "right_turn": {
+      "dx": -0.0014699922437837465,
+      "dy": 0.017289393347963866,
+      "yaw": -2.6239985721755956,
+      "tail_vx": 0.010620339279716473,
+      "tail_wz": -1.2000006445860532,
+      "z": 7.206928882180509e-06,
+      "max_tilt": 0.00260024712581386,
+      "sim_duration": 2.5
+    },
+    "right_turn_stop": {
+      "dx": 0.003128299843351723,
+      "dy": 0.00044798055495753886,
+      "yaw": -0.354001663662715,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206919567945788e-06,
+      "max_tilt": 0.0026002470645011466,
+      "sim_duration": 2.4800000000000004
+    },
+    "pre_loss": {
+      "dx": 0.2995985290712766,
+      "dy": -0.007790752212053498,
+      "yaw": -3.305674511587531e-07,
+      "tail_vx": 0.179999976883334,
+      "tail_wz": -2.1838928678340107e-07,
+      "z": 7.2069044132312605e-06,
+      "max_tilt": 0.002600249752567006,
+      "sim_duration": 2.0
+    },
+    "publisher_loss": {
+      "dx": 0.141252374132387,
+      "dy": -0.003673156100688857,
+      "yaw": -3.0200197539964613e-07,
+      "tail_vx": 0.0,
+      "tail_wz": 0.0,
+      "z": 7.206790246089175e-06,
+      "max_tilt": 0.0026002466464986928,
+      "sim_duration": 2.5199999999999996
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "sensors": {
+    "scan_messages": 141,
+    "depth_messages": 0,
+    "camera_info_messages": 0,
+    "last_scan": {
+      "frame": "base_scan",
+      "samples": 360,
+      "range_min": 0.11999999731779099,
+      "range_max": 3.5,
+      "finite": 191,
+      "angle_min": 0.0,
+      "angle_increment": 0.01749303564429283
+    },
+    "max_finite_scan_points": 202,
+    "mounted_frames": {
+      "base_scan": {
+        "position": [
+          -0.064,
+          0.0,
+          0.132
+        ],
+        "expected_position": [
+          -0.064,
+          0.0,
+          0.132
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "imu_link": {
+        "position": [
+          0.0,
+          0.0,
+          0.078
+        ],
+        "expected_position": [
+          0.0,
+          0.0,
+          0.078
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "joint_names": [
+    "wheel_left_joint",
+    "wheel_right_joint"
+  ],
+  "body_samples": 1414,
+  "joint_samples": 2826,
+  "real_time_factor": 0.9076142965423198,
+  "launch_returncode": 0,
+  "max_body_tilt_rad": 0.002600249752567006,
+  "joint_position_ranges": {
+    "wheel_left_joint": 26.57236363600068,
+    "wheel_right_joint": 13.741090908499817
+  },
+  "derived_from": {
+    "producer_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle-gazebo/report.json",
+      "sha256": "49f8aacf5bd4699164035072f8fb8f75ecf60878a365f45a058904e01fc4c1ac",
+      "bytes": 5170
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle-gazebo/trace.json",
+      "sha256": "f4714964ba22b969ccc367850d2993c9d43c12dde75c46dc5435b34a16e1af77",
+      "bytes": 909002
+    }
+  }
+}

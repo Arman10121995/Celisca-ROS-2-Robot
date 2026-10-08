@@ -1,0 +1,671 @@
+{
+  "robot": "asset_husky",
+  "backend": "pybullet",
+  "mode": "slam",
+  "map": "nav_empty",
+  "passed": true,
+  "provider": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky-experimental-provider",
+  "experimental_provider": true,
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=false localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation",
+  "algorithm_selection": {
+    "slam_backend": "slam_toolbox",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion",
+    "map_visualizer": "costmap_2d_observation"
+  },
+  "owned_pid": 106732,
+  "check_command": [
+    "python3",
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/sim_workflow_check.py",
+    "--mode",
+    "slam",
+    "--base-frame",
+    "base_link",
+    "--timeout",
+    "300",
+    "--out",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-slam-nav_empty/workflow.json"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "mode": "slam",
+    "base_frame": "base_link",
+    "command_topic": "/key_vel",
+    "phases": {
+      "forward": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.562,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.20086877048405588,
+        "tail_yaw_speed_rps": 3.561974387179895e-07,
+        "end": {
+          "x": 0.061810802668333054,
+          "y": -0.4999984800815582,
+          "z": 0.1330334097146988,
+          "yaw": -6.977281982232741e-06
+        }
+      },
+      "reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.562,
+        "yaw_change_rad": 0.0,
+        "tail_speed_mps": 0.20086216926618042,
+        "tail_yaw_speed_rps": 1.3453182388857808e-06,
+        "end": {
+          "x": -0.4596601128578186,
+          "y": -0.4999997913837433,
+          "z": 0.13306023180484772,
+          "yaw": 2.525657695154705e-06
+        }
+      },
+      "turn": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0299,
+        "yaw_change_rad": 0.9158,
+        "tail_speed_mps": 0.005484249303880997,
+        "tail_yaw_speed_rps": 0.28389861546191025,
+        "end": {
+          "x": -0.5203213095664978,
+          "y": -0.5221654772758484,
+          "z": 0.13323886692523956,
+          "yaw": 0.9157818667511182
+        }
+      },
+      "turn_reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0186,
+        "yaw_change_rad": -0.8315,
+        "tail_speed_mps": 0.014093546790204817,
+        "tail_yaw_speed_rps": 0.31448209857114107,
+        "end": {
+          "x": -0.5371978878974915,
+          "y": -0.5070633292198181,
+          "z": 0.13255809247493744,
+          "yaw": 0.1182597703792111
+        }
+      },
+      "publisher_loss": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0873,
+        "yaw_change_rad": 0.0,
+        "tail_speed_mps": 4.492280722650895e-05,
+        "tail_yaw_speed_rps": 1.0036587006045926e-05,
+        "end": {
+          "x": -0.09177859872579575,
+          "y": -0.47589755058288574,
+          "z": 0.13309337198734283,
+          "yaw": 0.06500600855216472
+        }
+      },
+      "post_reset_idle": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.0001,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 4.4482679240393e-05,
+        "tail_yaw_speed_rps": 1.7320749066035435e-06,
+        "end": {
+          "x": -0.5000873804092407,
+          "y": -0.499997615814209,
+          "z": 0.1332700550556183,
+          "yaw": -3.397428599752898e-06
+        }
+      },
+      "post_reset_drive": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.3611,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.20087012648689462,
+        "tail_yaw_speed_rps": 3.032475410319775e-07,
+        "end": {
+          "x": -0.1389673501253128,
+          "y": -0.4999982416629791,
+          "z": 0.1332239955663681,
+          "yaw": -4.635539608517985e-06
+        }
+      }
+    },
+    "checks": {
+      "ready": true,
+      "settled": true,
+      "forward": true,
+      "reverse": true,
+      "turn": true,
+      "turn_reverse": true,
+      "publisher_loss": true,
+      "localization": true,
+      "live_2d_map": true,
+      "reset_service": true,
+      "reset_spawn": true,
+      "reset_stopped": true,
+      "reset_localization": true,
+      "reset_drive_resumes": true,
+      "reset_estimator_tracks_motion": true,
+      "reset_mapping_resumes": true,
+      "monotonic_clock": true
+    },
+    "initial_map_to_world": {
+      "yaw": -1.2789602080560537e-06,
+      "x": -0.5000141806923799,
+      "y": -0.49999959852229214
+    },
+    "initial_truth": {
+      "x": -0.5001734495162964,
+      "y": -0.49999526143074036,
+      "z": 0.13326998054981232,
+      "yaw": -6.603987458314128e-06
+    },
+    "localization_error_m": 0.0010241020972128767,
+    "sensor_messages_during_drive": {
+      "/oakd/rgb/image_raw": 104,
+      "/oakd/depth/image_raw": 104,
+      "/scan": 104
+    },
+    "map_updates": [
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 1.212499999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 1.820833333
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 2.225
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 2.833333333
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 3.241666666
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 3.645833333
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 4.254166666
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 4.654166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 5718,
+        "occupied": 176,
+        "stamp": 5.2625
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 18401,
+        "occupied": 319,
+        "stamp": 5.666666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 28203,
+        "occupied": 423,
+        "stamp": 6.075
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 28203,
+        "occupied": 423,
+        "stamp": 6.479166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 35555,
+        "occupied": 552,
+        "stamp": 7.091666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 41178,
+        "occupied": 624,
+        "stamp": 7.495833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 41178,
+        "occupied": 624,
+        "stamp": 7.904166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 41178,
+        "occupied": 624,
+        "stamp": 8.512499999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 44597,
+        "occupied": 665,
+        "stamp": 8.916666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 44597,
+        "occupied": 665,
+        "stamp": 9.320833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 47399,
+        "occupied": 696,
+        "stamp": 9.925
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 49235,
+        "occupied": 721,
+        "stamp": 10.537499999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 50606,
+        "occupied": 739,
+        "stamp": 10.941666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 11.349999999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 11.958333333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 12.3625
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 12.974999999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 13.383333333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 13.991666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 14.395833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 14.804166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 15.412499999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 15.820833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 16.429166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 16.837499999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 17.445833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 17.85
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 18.258333333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 18.866666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 19.274999999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 19.883333333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 20.491666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 51466,
+        "occupied": 830,
+        "stamp": 20.695833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 52609,
+        "occupied": 856,
+        "stamp": 21.304166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 53650,
+        "occupied": 876,
+        "stamp": 21.9125
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 54364,
+        "occupied": 883,
+        "stamp": 22.320833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 54364,
+        "occupied": 883,
+        "stamp": 22.929166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 54364,
+        "occupied": 883,
+        "stamp": 23.337499999
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 54364,
+        "occupied": 883,
+        "stamp": 23.945833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 54364,
+        "occupied": 883,
+        "stamp": 24.35
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 54364,
+        "occupied": 883,
+        "stamp": 24.758333333
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 25.774999999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 26.183333333
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 26.791666666
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 27.199999999
+      },
+      {
+        "width": 240,
+        "height": 240,
+        "known": 1433,
+        "occupied": 0,
+        "stamp": 27.604166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 5670,
+        "occupied": 167,
+        "stamp": 28.216666666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 18584,
+        "occupied": 296,
+        "stamp": 28.620833333
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 28074,
+        "occupied": 415,
+        "stamp": 29.229166666
+      },
+      {
+        "width": 241,
+        "height": 241,
+        "known": 28074,
+        "occupied": 415,
+        "stamp": 29.637499999
+      }
+    ],
+    "accepted_slam_poses": [
+      {
+        "x": -3.0193661886560812e-05,
+        "y": 8.179426035919997e-07
+      },
+      {
+        "x": 0.12176720828883078,
+        "y": 0.0010517796156943012
+      },
+      {
+        "x": 0.24402207427374084,
+        "y": 0.0006243617048118242
+      },
+      {
+        "x": 0.367074230831636,
+        "y": 0.00019470052381701623
+      },
+      {
+        "x": 0.48926174807185085,
+        "y": -0.00023263112718964872
+      },
+      {
+        "x": 0.5963164711884843,
+        "y": -0.000607360293179802
+      },
+      {
+        "x": 0.47170962112193826,
+        "y": -0.0001698028913778423
+      },
+      {
+        "x": 0.3503448345555431,
+        "y": 0.0002537980985704462
+      },
+      {
+        "x": 0.22815564967334426,
+        "y": 0.0006808907258456673
+      },
+      {
+        "x": 0.10596839142503324,
+        "y": 0.0011067737281850254
+      },
+      {
+        "x": 0.003196188654207155,
+        "y": 0.0004179078190327163
+      },
+      {
+        "x": 0.12667517843921372,
+        "y": 0.007629533977435296
+      },
+      {
+        "x": 0.24951646562948446,
+        "y": 0.015066314342930353
+      },
+      {
+        "x": 0.3712199207489519,
+        "y": 0.022359198800579922
+      }
+    ],
+    "reset_response": "Simulation reset successfully",
+    "post_reset_map_to_world": {
+      "yaw": -2.1862469964717789e-07,
+      "x": -1.5547234807534855e-06,
+      "y": -4.84465900174591e-08
+    },
+    "post_reset_localization_error_m": 0.0,
+    "post_reset_drive_localization_error_m": 0.00033597455124528337,
+    "map_updates_after_reset": 9,
+    "cloud_updates_after_reset": 0,
+    "clock_backward_jumps": 0,
+    "truth_samples": 1444,
+    "sensor_counts": {
+      "/oakd/rgb/image_raw": 148,
+      "/oakd/depth/image_raw": 148,
+      "/scan": 148
+    },
+    "scan_geometry": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "finite": 360,
+      "min_m": 5.500000476837158,
+      "max_m": 8.770499229431152,
+      "range_min": 0.10000000149011612,
+      "range_max": 12.0
+    },
+    "passed": true
+  },
+  "save_map": {
+    "yaml": "image: saved-map.pgm\nmode: trinary\nresolution: 0.05\norigin: [-6.02, -6.02, 0]\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.25",
+    "image_bytes": 58096
+  },
+  "map_exporter_exited": true,
+  "launch_returncode": 0
+}

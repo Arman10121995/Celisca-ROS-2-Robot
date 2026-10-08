@@ -1,0 +1,55 @@
+{
+  "stack_ready_wall_s": 27.7,
+  "start": [
+    0.55,
+    12.45
+  ],
+  "goal": [
+    2.55,
+    12.45
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "succeeded",
+  "wall_s": 95.7,
+  "settled_sim_second": true,
+  "final_pose_estimate_xy": [
+    2.484,
+    12.446
+  ],
+  "final_error_estimate_m": 0.066,
+  "final_yaw_estimate_deg": 0.29,
+  "final_yaw_error_estimate_deg": 0.29,
+  "final_truth_xy": [
+    0.626,
+    12.45
+  ],
+  "truth_age_wall_s": 0.0,
+  "final_truth_yaw_deg": -0.0,
+  "final_error_truth_m": 1.924,
+  "final_yaw_error_truth_deg": -0.0,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 0.076,
+  "motion_reverse_m": 0.0,
+  "motion_heading_travel_rad": 0.0,
+  "acceptance": {
+    "passed": false,
+    "checks": {
+      "goal_succeeded": true,
+      "truth_position": false,
+      "truth_heading": true,
+      "fresh_truth": true
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/physical-truth/hospital-gazebo/body.trace.json",
+  "truth_samples": 499,
+  "robot": "labbot",
+  "backend": "gazebo",
+  "map": "dataset_hospital",
+  "scope": "Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent simulator body endpoint. Short static route, no complete mesh clearance or universal-map qualification.",
+  "gui_recording_completed": false
+}

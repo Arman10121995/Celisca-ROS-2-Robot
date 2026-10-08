@@ -1,0 +1,34 @@
+[
+  {
+    "job": "asset_turtlebot4_standard",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 81.81615701200008,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/shared-regressions/asset_turtlebot4_standard-isaac/report.json"
+  },
+  {
+    "job": "asset_turtlebot4_lite",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 80.60641724800007,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/shared-regressions/asset_turtlebot4_lite-isaac/report.json"
+  },
+  {
+    "job": "panda-hand",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 36.647403705000215,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/panda-gripper/report.json"
+  },
+  {
+    "job": "panda-planning",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 44.79688776199964,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/shared-regressions/panda-planning/report.json"
+  }
+]

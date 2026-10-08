@@ -1,7 +1,7 @@
 # Robot Lab architecture: current implementation and target
 
-Documentation updated October 7, 2026 against published runtime checkpoint
-`091d388`. The [current status](../status/CURRENT_STATUS.md),
+Documentation updated October 8, 2026. Exact source stages and current checks
+are in the [extension checkpoint](../status/continuation-2026-10-08.md). The [current status](../status/CURRENT_STATUS.md),
 [ledger](../status/platform-status.yaml) and
 [support matrix](../status/support-matrix.md) distinguish implemented wiring,
 named measured missions and remaining qualification. Historical audits and

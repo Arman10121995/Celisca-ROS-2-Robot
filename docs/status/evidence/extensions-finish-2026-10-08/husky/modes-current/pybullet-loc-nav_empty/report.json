@@ -1,0 +1,187 @@
+{
+  "robot": "asset_husky",
+  "backend": "pybullet",
+  "mode": "loc",
+  "map": "nav_empty",
+  "passed": true,
+  "provider": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky-experimental-provider",
+  "experimental_provider": true,
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "algorithm_selection": {
+    "localizer": "amcl",
+    "state_estimator": "ekf_localization_node",
+    "sensor_fusion": "wheel_imu_fusion"
+  },
+  "owned_pid": 105800,
+  "check_command": [
+    "python3",
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/sim_workflow_check.py",
+    "--mode",
+    "loc",
+    "--base-frame",
+    "base_link",
+    "--timeout",
+    "300",
+    "--out",
+    "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/pybullet-loc-nav_empty/workflow.json"
+  ],
+  "check_returncode": 0,
+  "workflow": {
+    "mode": "loc",
+    "base_frame": "base_link",
+    "command_topic": "/key_vel",
+    "phases": {
+      "forward": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.562,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.2008683756036645,
+        "tail_yaw_speed_rps": 1.2508604829389205e-06,
+        "end": {
+          "x": 0.06183663383126259,
+          "y": -0.49999886751174927,
+          "z": 0.13303223252296448,
+          "yaw": -5.974154495375788e-06
+        }
+      },
+      "reverse": {
+        "completed": true,
+        "sim_s": 3.021,
+        "distance_m": 0.5662,
+        "yaw_change_rad": 0.0,
+        "tail_speed_mps": 0.20085871219833995,
+        "tail_yaw_speed_rps": 1.2548620588819543e-06,
+        "end": {
+          "x": -0.46378016471862793,
+          "y": -0.49999508261680603,
+          "z": 0.1331685185432434,
+          "yaw": -6.16233057948731e-06
+        }
+      },
+      "turn": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0519,
+        "yaw_change_rad": 0.8628,
+        "tail_speed_mps": 0.001416941704319611,
+        "tail_yaw_speed_rps": 0.27665379474410173,
+        "end": {
+          "x": -0.46547386050224304,
+          "y": -0.5352469086647034,
+          "z": 0.13321609795093536,
+          "yaw": 0.8627900211963997
+        }
+      },
+      "turn_reverse": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0153,
+        "yaw_change_rad": -0.9149,
+        "tail_speed_mps": 0.03552451471424167,
+        "tail_yaw_speed_rps": 0.38870954266,
+        "end": {
+          "x": -0.46907827258110046,
+          "y": -0.5149157643318176,
+          "z": 0.13277927041053772,
+          "yaw": -0.018059617667676487
+        }
+      },
+      "publisher_loss": {
+        "completed": true,
+        "sim_s": 3.0,
+        "distance_m": 0.0907,
+        "yaw_change_rad": 0.0,
+        "tail_speed_mps": 4.105899999151677e-05,
+        "tail_yaw_speed_rps": 2.194669841554253e-06,
+        "end": {
+          "x": -0.02126246504485607,
+          "y": -0.5347834825515747,
+          "z": 0.13308095932006836,
+          "yaw": -0.07169045820400569
+        }
+      },
+      "post_reset_idle": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.0001,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 4.44810419296003e-05,
+        "tail_yaw_speed_rps": 1.7319061953363085e-06,
+        "end": {
+          "x": -0.5000872015953064,
+          "y": -0.49999764561653137,
+          "z": 0.1332700550556183,
+          "yaw": -3.3901696951643956e-06
+        }
+      },
+      "post_reset_drive": {
+        "completed": true,
+        "sim_s": 2.0,
+        "distance_m": 0.3611,
+        "yaw_change_rad": -0.0,
+        "tail_speed_mps": 0.20087081193924836,
+        "tail_yaw_speed_rps": 4.0022012459763145e-07,
+        "end": {
+          "x": -0.13896681368350983,
+          "y": -0.49999791383743286,
+          "z": 0.13322345912456512,
+          "yaw": -4.675917754730796e-06
+        }
+      }
+    },
+    "checks": {
+      "ready": true,
+      "settled": true,
+      "forward": true,
+      "reverse": true,
+      "turn": true,
+      "turn_reverse": true,
+      "publisher_loss": true,
+      "localization": true,
+      "reset_service": true,
+      "reset_spawn": true,
+      "reset_stopped": true,
+      "reset_localization": true,
+      "reset_drive_resumes": true,
+      "reset_estimator_tracks_motion": true,
+      "monotonic_clock": true
+    },
+    "initial_truth": {
+      "x": -0.5001474618911743,
+      "y": -0.49999597668647766,
+      "z": 0.1332700103521347,
+      "yaw": -5.657520887357901e-06
+    },
+    "localization_error_m": 0.03928569053945344,
+    "sensor_messages_during_drive": {
+      "/oakd/rgb/image_raw": 104,
+      "/oakd/depth/image_raw": 104,
+      "/scan": 104
+    },
+    "reset_response": "Simulation reset successfully",
+    "post_reset_localization_error_m": 0.0017659074627814748,
+    "post_reset_drive_localization_error_m": 0.009189579583625547,
+    "map_updates_after_reset": 0,
+    "cloud_updates_after_reset": 0,
+    "clock_backward_jumps": 0,
+    "truth_samples": 1414,
+    "sensor_counts": {
+      "/oakd/rgb/image_raw": 145,
+      "/oakd/depth/image_raw": 145,
+      "/scan": 145
+    },
+    "scan_geometry": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "finite": 360,
+      "min_m": 5.499999523162842,
+      "max_m": 8.770537376403809,
+      "range_min": 0.10000000149011612,
+      "range_max": 12.0
+    },
+    "passed": true
+  },
+  "launch_returncode": 0
+}

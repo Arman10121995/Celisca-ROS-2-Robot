@@ -4,8 +4,9 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-07**, against published runtime checkpoint **`091d388`** and the
-recorded source snapshots. [Current status](docs/status/CURRENT_STATUS.md)
+Status updated on **2026-10-08**. The October 8 extension checkpoint has exact
+physical source manifests; its publication and software checks are recorded in
+[October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
@@ -27,7 +28,7 @@ with measured native flight in `nav_empty` and `nav_obstacle`. World selections
 persist and commands autofill. Four-wheel work adds measured body-pose checks,
 obstacle routes and selected localization/mapping/reset repairs. See the
 [done / remaining checklist](docs/status/CHECKLIST.md) and
-[current measured trials and remaining gaps](docs/status/continuation-2026-10-07.md)
+[current measured trials and remaining gaps](docs/status/continuation-2026-10-08.md)
 and [flight guide](docs/tutorials/px4_x500.md). Full platform qualification
 remains partial; these results apply to the named recorded cells.
 
@@ -37,6 +38,13 @@ category/type filters and structural tags distinguish wheel counts, leg counts,
 single/dual arms, mobile manipulators and drones. The sidebar opens the other
 workspaces; panels and dividers adapt to available space. See the
 [GUI workspace guide](docs/tutorials/gui-workspace.md).
+
+**Drone** now includes all seven Drive buttons beside altitude/flight actions,
+with gentler 0.3 rad/s yaw. **Arm** offers **Use current tool pose**, measured
+XYZ and small axis target buttons with separate Plan/Execute. Actual native
+X500 flight controls and native Panda 1 cm targets, interruption/rejection and
+physical grasp repeats pass in `nav_empty`. See
+[current controls evidence](docs/status/evidence/extensions-finish-2026-10-08/controls/README.md).
 
 **Registry → Preview 3D** now renders robots and worlds natively inside the
 GUI, with orbit, pan, zoom and Fit. Parent families collect source variants and
@@ -52,6 +60,10 @@ URDF variants/fragments, and six official TurtleBot3/Husky/TurtleBot4 descriptio
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
 [installation evidence](docs/status/evidence/extensions-integrated-2026-10-05/README.md).
+Worlds now exposes seed X/Y for selecting another connected room. Heightfields
+use separate transformed triangle slices; hospital imports retain originals
+and repair the pinned escaped fixtures and mesh frames in derived assets.
+Read [the current world checks](docs/status/evidence/extensions-finish-2026-10-08/README.md).
 TurtleBot 4 Standard/Lite expose Display, Localization, 2D/3D SLAM and
 Navigation in all four simulators, with compatible algorithms and commands
 filled in. Forty named mode trials and eight final sensor/Drive trials measure
@@ -65,6 +77,11 @@ lidar uses a named `nav_empty` spawn near geometry. Forty-eight real mode
 screens enable Localization, 2D SLAM and Navigation on all four engines, with
 actual map saves and clear/obstacle goals. RGB-only source cameras leave 3D
 SLAM pending. See the [TurtleBot3 guide](docs/tutorials/turtlebot3.md).
+**Husky** now drives four independent physical wheels in all four engines.
+Four Drive/sensor screens and twenty localization, 2D/3D mapping/export and
+clear/obstacle navigation screens enable its normal GUI modes, algorithms and
+commands. This uses a declared lab sensor and motor kit; other maps, hardware
+and outdoor missions require separate qualification. See [the Husky guide](docs/tutorials/husky.md).
 The new **Arm** tab
 controls native Panda joints on MuJoCo with measured Home, Stop, cancellation
 and heartbeat loss. **Hand** adds original coupled-finger opening/closing,
@@ -87,9 +104,10 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 - [Completion audit](docs/status/audit-2026-10-02.md): corrected claims and evidence boundaries; earlier audits remain historical.
 - [Implementation roadmap](ROADMAP.md): ordered work, dependencies and acceptance criteria toward the full platform.
 - [Agent handoff](docs/AGENT_HANDOFF.md): how to resume, claim work, avoid conflicts and record evidence.
+- [Robot readiness execution guide](docs/AI_ROBOT_READINESS_GUIDE.md): finish physical motion, saved mapping and navigation by exact model/backend/map; upstream reuse, probes and guarded promotion.
 - [Priority patch guide](docs/PATCH_EXECUTION_GUIDE.md): current fixes and detailed execution/acceptance steps before further expansion; also available in GUI Health.
 - [Worlds and robot extension guide](docs/ASSET_EXTENSION_GUIDE.md): source pins, occupancy generation and concrete terrain/manipulation implementation contracts.
-- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [latest measured trials](docs/status/continuation-2026-10-07.md): scoped state, evidence and release blockers.
+- [Done / remaining checklist](docs/status/CHECKLIST.md), [machine-readable status](docs/status/platform-status.yaml) and [latest measured trials](docs/status/continuation-2026-10-08.md): scoped state, evidence and release blockers.
 - [Operational workflow](docs/WORKFLOW.md): how to inspect, test, run, record and promote a simulation result.
 - [Architecture](docs/architecture/overview.md) and [tutorials](docs/tutorials/index.md): current wiring, target contracts and learning material.
 
@@ -106,7 +124,10 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ### Verification snapshot
 
-The exact published `091d388` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
+The predecessor `73fcc47` passes both required CI and Scheduled Full Test Suite
+after the shared-utilities import fix. Its [exact logs](docs/status/evidence/extensions-finish-2026-10-08/README.md)
+are separate from the newer runtime trials and final checkpoint checks.
+Earlier published `091d388` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
 passes a 25-package core build, **933 fast checks / four skips / four
 deselections**, **20 physics checks**, **134 integration checks / twelve
 skips**, and registry validation. The complete log and report are retained.
@@ -119,7 +140,9 @@ native Panda physical Plan/Execute repeats pass against the actual published
 GUI files. Read [GUI evidence](docs/status/evidence/gui-controls-column-2026-10-07/README.md)
 and [the current continuation](docs/status/continuation-2026-10-07.md).
 
-The evidence index retains **122 records / 114 exact measured cells**.
+The [evidence index](docs/status/runtime-evidence-index.yaml) retains individual
+hashed positive and negative trials; [the support matrix](docs/status/support-matrix.md)
+recomputes the latest result for each exact measured cell.
 Unlisted cells are untested and full-release gates remain blocked. Historical
 CI failures, test totals and robot trials remain in their dated reports.
 Software checks, static previews, clean-host reproduction and actual robot

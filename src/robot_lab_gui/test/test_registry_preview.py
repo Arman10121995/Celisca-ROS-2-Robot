@@ -5,11 +5,34 @@ import os
 import pytest
 
 from test_command_autofill import app, select, displayed_command  # noqa: F401
-from robot_lab_gui.lab_tabs import RegistryTab
+from robot_lab_gui.lab_tabs import RegistryTab, WorldsTab
 
 
 pytestmark = [pytest.mark.integration,
               pytest.mark.skipif(not os.environ.get('DISPLAY'), reason='Requires Xvfb or a display')]
+
+
+def test_world_generation_seed_is_editable_and_resets_to_each_selected_world(app):
+    tab=WorldsTab(app.notebook,app)
+    try:
+        before=displayed_command(app)
+        tab.world_var.set('nav_obstacle');app.update()
+        command=tab.generation_command()
+        seed=app.map_profiles['nav_obstacle']['spawn']
+        assert float(command[command.index('--seed-x')+1])==float(seed['x'])
+        assert float(command[command.index('--seed-y')+1])==float(seed['y'])
+        tab.seed_x_var.set(2.5);tab.seed_y_var.set(-1.25)
+        command=tab.generation_command()
+        assert command[command.index('--seed-x')+1]=='2.5'
+        assert command[command.index('--seed-y')+1]=='-1.25'
+        tab.world_var.set('celisca_floor_1_furniture');app.update()
+        command=tab.generation_command()
+        seed=app.map_profiles[tab.world_var.get()]['spawn']
+        assert float(command[command.index('--seed-x')+1])==float(seed['x'])
+        assert float(command[command.index('--seed-y')+1])==float(seed['y'])
+        assert app.ros_node is None and displayed_command(app)==before
+    finally:
+        tab.destroy()
 
 
 def test_native_viewport_renders_in_tk_and_changes_actual_framebuffer(tmp_path):

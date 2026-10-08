@@ -1,0 +1,201 @@
+{
+  "robot": "asset_husky",
+  "backend": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor feedback on this map only; no SLAM or navigation.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 51830,
+  "phases": {
+    "armed_neutral": {
+      "dx": -4.088878631591797e-05,
+      "dy": 1.1026859283447266e-06,
+      "yaw_change": -1.5082869140917085e-06,
+      "tail_vx": -4.1173858207002513e-05,
+      "tail_wz": -1.500877895541054e-06,
+      "max_tilt": 1.4901161193847656e-08,
+      "sim_s": 0.9791666660000002
+    },
+    "forward": {
+      "dx": 1.2110108137130737,
+      "dy": -8.821487426757812e-06,
+      "yaw_change": -4.685211820627817e-06,
+      "tail_vx": 0.4017164816616874,
+      "tail_wz": -5.442712627630822e-07,
+      "max_tilt": 0.00039181543541809427,
+      "sim_s": 3.4791666660000002
+    },
+    "forward_stop": {
+      "dx": 0.1517103910446167,
+      "dy": -1.7285346984863281e-06,
+      "yaw_change": -1.0647686117352371e-05,
+      "tail_vx": 4.44080543531811e-05,
+      "tail_wz": -4.402112529895727e-06,
+      "max_tilt": 1.8034714782725954e-06,
+      "sim_s": 2.5
+    },
+    "reverse": {
+      "dx": -1.2261009514331818,
+      "dy": 3.3229589462280273e-05,
+      "yaw_change": -6.91843707130348e-06,
+      "tail_vx": -0.40174885406277117,
+      "tail_wz": -1.6484977001872916e-06,
+      "max_tilt": 1.1855557132313998e-06,
+      "sim_s": 3.4791666669999994
+    },
+    "reverse_stop": {
+      "dx": -0.1532038450241089,
+      "dy": 3.4868717193603516e-06,
+      "yaw_change": -1.6796748429667342e-07,
+      "tail_vx": 4.129827297821786e-05,
+      "tail_wz": 8.024380334718726e-07,
+      "max_tilt": 1.0167790716429183e-06,
+      "sim_s": 2.4791666669999994
+    },
+    "left_turn": {
+      "dx": -0.01581507921218872,
+      "dy": -0.03833964467048645,
+      "yaw_change": 2.463131714037563,
+      "tail_vx": -0.03180597593853289,
+      "tail_wz": 0.6884569625582783,
+      "max_tilt": 0.0009438912548429786,
+      "sim_s": 3.4791666669999994
+    },
+    "left_turn_stop": {
+      "dx": 0.0026158690452575684,
+      "dy": -0.00828397274017334,
+      "yaw_change": 0.2109834417832097,
+      "tail_vx": -1.0010724252740206e-05,
+      "tail_wz": 8.740066997825572e-05,
+      "max_tilt": 0.001001435447691444,
+      "sim_s": 2.479166667000001
+    },
+    "right_turn": {
+      "dx": 0.00394207239151001,
+      "dy": 0.05881005525588989,
+      "yaw_change": -2.396110737076245,
+      "tail_vx": 0.022912679017787152,
+      "tail_wz": -0.7258973685270154,
+      "max_tilt": 0.0017393993860573265,
+      "sim_s": 3.479166667000001
+    },
+    "right_turn_stop": {
+      "dx": 0.0106315016746521,
+      "dy": -0.005031943321228027,
+      "yaw_change": -0.30463568425055626,
+      "tail_vx": -8.206740546429179e-05,
+      "tail_wz": 1.2849811172258828e-05,
+      "max_tilt": 0.0017062971060688994,
+      "sim_s": 2.479166667000001
+    },
+    "pre_loss": {
+      "dx": 0.6164290830492973,
+      "dy": -0.01953694224357605,
+      "yaw_change": -0.0002580827222597899,
+      "tail_vx": 0.4016028649055155,
+      "tail_wz": 1.8370309735437475e-05,
+      "max_tilt": 0.0023920032972991243,
+      "sim_s": 1.9791666670000012
+    },
+    "publisher_loss": {
+      "dx": 0.268371120095253,
+      "dy": -0.00834435224533081,
+      "yaw_change": 3.986984342135154e-05,
+      "tail_vx": 4.5004375886359085e-05,
+      "tail_wz": -8.783138612687699e-07,
+      "max_tilt": 0.0021183461281689547,
+      "sim_s": 2.979166667000001
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "body_height_m": {
+    "minimum": 0.13232889771461487,
+    "maximum": 0.13472601771354675
+  },
+  "wheel_feedback": {
+    "front_left_wheel_joint": {
+      "minimum": -6.049967617429579,
+      "maximum": 8.267035037344392,
+      "samples": 1563
+    },
+    "rear_left_wheel_joint": {
+      "minimum": -6.043049098566173,
+      "maximum": 8.267094245619973,
+      "samples": 1563
+    },
+    "front_right_wheel_joint": {
+      "minimum": -0.12369179546471855,
+      "maximum": 8.267073198317464,
+      "samples": 1563
+    },
+    "rear_right_wheel_joint": {
+      "minimum": -0.19742331606207592,
+      "maximum": 8.267060379554335,
+      "samples": 1563
+    }
+  },
+  "sensors": {
+    "scan_messages": 160,
+    "depth_messages": 160,
+    "camera_info_messages": 160,
+    "last_scan": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "minimum": 0.10000000149011612,
+      "maximum": 12.0,
+      "finite": 360
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "finite_positive": 2308,
+      "minimum": 1.349411129951477,
+      "maximum": 5.369640350341797
+    },
+    "frames": {
+      "lab_laser_link": {
+        "position_m": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "expected_position_m": [
+          0.3,
+          0.0,
+          0.4
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position_m": [
+          0.35,
+          0.0,
+          0.45
+        ],
+        "expected_position_m": [
+          0.35,
+          0.0,
+          0.45
+        ]
+      }
+    }
+  },
+  "real_time_factor": 0.5356372863461258,
+  "first_launch_returncode": 0,
+  "relaunch_reset": {
+    "original_xy": [
+      -0.5001108050346375,
+      -0.49999698996543884
+    ],
+    "restored_xy": [
+      -0.5001108050346375,
+      -0.49999698996543884
+    ],
+    "error_m": 0.0
+  },
+  "launch_returncode": 0,
+  "body_samples": 1688,
+  "joint_samples": 1688
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "robot": "asset_turtlebot3_burger",
+    "backend": "gazebo",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 53.34221477899973,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_burger-gazebo/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_burger",
+    "backend": "mujoco",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 54.15969180299999,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_burger-mujoco/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_burger",
+    "backend": "pybullet",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 44.617152017999615,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_burger-pybullet/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_burger",
+    "backend": "isaac",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 66.32962497399967,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_burger-isaac/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle",
+    "backend": "gazebo",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 54.26170721900053,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle-gazebo/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle",
+    "backend": "mujoco",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 54.96779436500037,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle-mujoco/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle",
+    "backend": "pybullet",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 45.107670429999416,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle-pybullet/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle",
+    "backend": "isaac",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 67.58971976099929,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle-isaac/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle_pi",
+    "backend": "gazebo",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 54.78671455900076,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle_pi-gazebo/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle_pi",
+    "backend": "mujoco",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 53.85907107799994,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle_pi-mujoco/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle_pi",
+    "backend": "pybullet",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 45.23969104600019,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle_pi-pybullet/report.json"
+  },
+  {
+    "robot": "asset_turtlebot3_waffle_pi",
+    "backend": "isaac",
+    "producer_returncode": 0,
+    "launch_returncode": 0,
+    "passed": true,
+    "wall_s": 68.11011468099969,
+    "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_waffle_pi-isaac/report.json"
+  }
+]

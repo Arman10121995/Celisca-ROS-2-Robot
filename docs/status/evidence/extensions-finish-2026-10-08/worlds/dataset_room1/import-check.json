@@ -1,0 +1,26 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/experiment_rooms/worlds/room1/world.model",
+  "source_sha256": "ea69c0b65156a93ade5021d3b31ea71f3597baa1fda69e24595cdd3f1d52c554",
+  "derived_world_sha256": "9be1a8b000594aaf8bf6e2b997b34c9563aa5d3363d679fef5135aba8fb877d6",
+  "resolved_include_count": 0,
+  "dependency_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/vendor/gazebo_classic/gazebo.material": "e6050d698bd8fb0f7479318ef6dccb2de1b3c484cf48c10b78b8b617026cc2e2"
+  },
+  "removed_classic_plugins": [],
+  "source_pose_repairs": [],
+  "static_container_repairs": [],
+  "static_snapshot": true,
+  "static_fixture_changes": [],
+  "mesh_frame_repairs": [],
+  "dynamic_actors": [],
+  "shapes": 17,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    -13.700000000000001,
+    -0.15000000000000002
+  ],
+  "projected_spawn_clearance_m": 2.3000000000000003,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261007-152147-e011aa/dataset_room1.generation.json"
+}

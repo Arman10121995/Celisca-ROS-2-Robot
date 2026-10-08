@@ -1,0 +1,270 @@
+[
+  {
+    "backend": "gazebo",
+    "mode": "display",
+    "selected": "display",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+    "algorithms": {
+      "visualizer": "\u2014 None \u2014"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "gazebo",
+    "mode": "loc",
+    "selected": "loc",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "gazebo",
+    "mode": "slam",
+    "selected": "slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation",
+    "algorithms": {
+      "slam_backend": "slam_toolbox",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion",
+      "map_visualizer": "costmap_2d_observation"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "gazebo",
+    "mode": "3d_slam",
+    "selected": "3d_slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter",
+    "algorithms": {
+      "slam_3d_backend": "rtabmap_localization",
+      "state_estimator": "ekf_3d_estimator",
+      "map_visualizer": "pointcloud_segmenter"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "gazebo",
+    "mode": "nav",
+    "selected": "nav",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "global_planner": "a_star_planner",
+      "local_planner": "pure_pursuit",
+      "controller": "simple_controller",
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "mujoco",
+    "mode": "display",
+    "selected": "display",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+    "algorithms": {
+      "visualizer": "\u2014 None \u2014"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "mujoco",
+    "mode": "loc",
+    "selected": "loc",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "mujoco",
+    "mode": "slam",
+    "selected": "slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation",
+    "algorithms": {
+      "slam_backend": "slam_toolbox",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion",
+      "map_visualizer": "costmap_2d_observation"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "mujoco",
+    "mode": "3d_slam",
+    "selected": "3d_slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter",
+    "algorithms": {
+      "slam_3d_backend": "rtabmap_localization",
+      "state_estimator": "ekf_3d_estimator",
+      "map_visualizer": "pointcloud_segmenter"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "mujoco",
+    "mode": "nav",
+    "selected": "nav",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "global_planner": "a_star_planner",
+      "local_planner": "pure_pursuit",
+      "controller": "simple_controller",
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "pybullet",
+    "mode": "display",
+    "selected": "display",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+    "algorithms": {
+      "visualizer": "\u2014 None \u2014"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "pybullet",
+    "mode": "loc",
+    "selected": "loc",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "pybullet",
+    "mode": "slam",
+    "selected": "slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation",
+    "algorithms": {
+      "slam_backend": "slam_toolbox",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion",
+      "map_visualizer": "costmap_2d_observation"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "pybullet",
+    "mode": "3d_slam",
+    "selected": "3d_slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter",
+    "algorithms": {
+      "slam_3d_backend": "rtabmap_localization",
+      "state_estimator": "ekf_3d_estimator",
+      "map_visualizer": "pointcloud_segmenter"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "pybullet",
+    "mode": "nav",
+    "selected": "nav",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "global_planner": "a_star_planner",
+      "local_planner": "pure_pursuit",
+      "controller": "simple_controller",
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "isaac",
+    "mode": "display",
+    "selected": "display",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+    "algorithms": {
+      "visualizer": "\u2014 None \u2014"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "isaac",
+    "mode": "loc",
+    "selected": "loc",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "isaac",
+    "mode": "slam",
+    "selected": "slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation",
+    "algorithms": {
+      "slam_backend": "slam_toolbox",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion",
+      "map_visualizer": "costmap_2d_observation"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "isaac",
+    "mode": "3d_slam",
+    "selected": "3d_slam",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter",
+    "algorithms": {
+      "slam_3d_backend": "rtabmap_localization",
+      "state_estimator": "ekf_3d_estimator",
+      "map_visualizer": "pointcloud_segmenter"
+    },
+    "validation": "Valid"
+  },
+  {
+    "backend": "isaac",
+    "mode": "nav",
+    "selected": "nav",
+    "ready": true,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+    "algorithms": {
+      "global_planner": "a_star_planner",
+      "local_planner": "pure_pursuit",
+      "controller": "simple_controller",
+      "localizer": "amcl",
+      "state_estimator": "ekf_localization_node",
+      "sensor_fusion": "wheel_imu_fusion"
+    },
+    "validation": "Valid"
+  }
+]

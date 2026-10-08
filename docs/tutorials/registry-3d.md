@@ -49,10 +49,13 @@ contains the loader details. The viewer uses Linux Tk/GLX, PyOpenGL and
 Trimesh; ROS package dependencies declare those libraries. The checked
 installation supports both native MJCF and downloaded URDF/SDF assets.
 
-The imported two-floor hospital has six fixtures with extreme source poses.
-Default Fit frames the main building and reports the remote geometry;
-**Whole scene** exposes the full raw extent. This does not repair that world's
-spawn, collision or navigation behavior. Those checks remain in R6.6.
+The October 8 hospital derivatives repair the exact reviewed extreme fixture
+poses and preserve Gazebo's Collada node frames. Original sources and failed
+trials remain on SSD. Both corrected hospital variants render in the native
+viewport; see [the repair evidence](../status/evidence/extensions-finish-2026-10-08/README.md).
+Fit remains a camera operation. Static furniture snapshots, floor/spawn and
+short navigation screens have separate evidence; actor, upper-floor and wider
+mission qualification remains in R6.6.
 
 [Actual rendered scenes, camera-input checks and live-plant regression](../status/evidence/registry-3d-2026-10-07/README.md)
 record the tested scope. Preview availability does not qualify a robot mission.

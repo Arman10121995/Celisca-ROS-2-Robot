@@ -1,0 +1,23 @@
+# Four fixed axles skid: encoder wheel-rate difference overstates body yaw.
+# Fuse measured IMU yaw rate and encoder forward/lateral velocity separately.
+# This lab overlay is model-specific; no ground-truth pose is added to Gazebo.
+ekf_filter_node:
+  ros__parameters:
+    base_link_frame: base_link
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true, true, false,
+                   false, false, false,
+                   false, false, false]
+amcl:
+  ros__parameters:
+    base_frame_id: base_link
+    scan_topic: scan
+    max_beams: 120
+    update_min_a: 0.03
+    update_min_d: 0.03
+    sigma_hit: 0.1
+    alpha1: 0.3
+    alpha2: 0.3
+    alpha3: 0.3
+    alpha4: 0.3

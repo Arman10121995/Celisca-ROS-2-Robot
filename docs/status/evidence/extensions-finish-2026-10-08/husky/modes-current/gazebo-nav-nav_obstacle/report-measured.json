@@ -1,0 +1,87 @@
+{
+  "stack_ready_wall_s": 6.7,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal": [
+    -3.5,
+    -3.5
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "succeeded",
+  "wall_s": 139.6,
+  "settled_sim_second": true,
+  "final_pose_estimate_xy": [
+    -3.568,
+    -3.536
+  ],
+  "final_error_estimate_m": 0.077,
+  "final_yaw_estimate_deg": 0.87,
+  "final_yaw_error_estimate_deg": 0.87,
+  "final_truth_xy": [
+    -3.545,
+    -3.408
+  ],
+  "truth_age_wall_s": 0.0,
+  "final_truth_yaw_deg": 0.49,
+  "final_error_truth_m": 0.102,
+  "final_yaw_error_truth_deg": 0.49,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 7.736,
+  "motion_reverse_m": 0.342,
+  "motion_heading_travel_rad": 17.061,
+  "acceptance": {
+    "passed": true,
+    "checks": {
+      "goal_succeeded": true,
+      "truth_position": true,
+      "truth_heading": true,
+      "fresh_truth": true
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-nav-nav_obstacle/navigation.trace.json",
+  "truth_samples": 6967,
+  "route_acceptance": {
+    "passed": true,
+    "checks": {
+      "measured_trajectory": true,
+      "swept_footprint_clear": true,
+      "straight_route_blocked": true
+    },
+    "robot_radius_m": 0.62,
+    "min_clearance_limit_m": 0.02,
+    "min_swept_clearance_m": 0.10883339320151986,
+    "direct_route_clearance_m": -0.62,
+    "scope": "Static box obstacles with conservative circular robot footprint; not contact telemetry",
+    "world_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world"
+  },
+  "robot": "asset_husky",
+  "backend": "gazebo",
+  "map": "nav_obstacle",
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant. Experimental provider is declared in the original report.",
+  "gui_recording_completed": true,
+  "body_height": {
+    "expected_floor_m": 0.1,
+    "minimum_m": 0.13227653560954766,
+    "maximum_m": 0.13227939433454164,
+    "samples": 6967
+  },
+  "derived_from": {
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-nav-nav_obstacle/navigation.trace.json",
+      "sha256": "49ccf7d80153f21478ad375a34c8818f885f270f93f50bac5b81c402f0379da7",
+      "bytes": 863848
+    },
+    "original_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/modes-current/gazebo-nav-nav_obstacle/report.json",
+      "sha256": "cf5882340c6cdc09314c9b66215873c67d77cfab589de8288c1579fd01a0baf2",
+      "bytes": 3983
+    }
+  }
+}

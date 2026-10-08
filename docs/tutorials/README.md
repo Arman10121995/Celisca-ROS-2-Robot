@@ -1,7 +1,7 @@
 # Robot Lab tutorials
 
-Updated October 7, 2026 against runtime checkpoint `091d388` and its named
-measurements. Start with [current status](../status/CURRENT_STATUS.md) and the
+Updated October 8, 2026 against the named measurements in the
+[extension checkpoint](../status/continuation-2026-10-08.md). Start with [current status](../status/CURRENT_STATUS.md) and the
 [done/remaining checklist](../status/CHECKLIST.md). The project remains partial;
 a guide, imported model or numerical example does not qualify every mission.
 
@@ -13,6 +13,7 @@ a guide, imported model or numerical example does not qualify every mission.
 | [Registry 3D](registry-3d.md) | Native embedded source geometry, grouped variants/components and camera controls; static inspection |
 | [TurtleBot3](turtlebot3.md) | Three official models, measured four-backend Drive/localization/2D SLAM/export/navigation; RGB-only 3D SLAM remains unavailable |
 | [TurtleBot4](turtlebot4.md) | Standard/Lite, measured four-backend Drive/localization/2D/3D SLAM/export/navigation; other maps and vendor behavior remain |
+| [Husky](husky.md) | Original four-wheel skid geometry, declared lab sensor/motor kit and evidence-gated modes; exact backend/map screens remain separate from wider readiness |
 | [Native Panda](panda_arm.md) | MuJoCo joint/Hand controls, physical cube grasp and static-world MoveIt Plan/Execute; Servo/payload/other backends remain |
 | [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |
 | [Go2 policy](go2.md) | Bounded MuJoCo policy trials and their recorded failures; terrain/recovery/navigation remain unqualified |

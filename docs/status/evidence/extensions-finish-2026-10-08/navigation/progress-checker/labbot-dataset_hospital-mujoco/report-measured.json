@@ -1,0 +1,61 @@
+{
+  "stack_ready_wall_s": 15.6,
+  "start": [
+    0.55,
+    12.45
+  ],
+  "goal": [
+    2.55,
+    12.45
+  ],
+  "goal_yaw_deg": 0.0,
+  "outcome": "canceled",
+  "wall_s": 518.7,
+  "final_pose_estimate_xy": [
+    2.532,
+    12.451
+  ],
+  "final_error_estimate_m": 0.018,
+  "final_yaw_estimate_deg": 9.25,
+  "final_yaw_error_estimate_deg": 9.25,
+  "final_truth_xy": [
+    2.545,
+    12.56
+  ],
+  "truth_age_wall_s": 0.598,
+  "final_truth_yaw_deg": 10.2,
+  "final_error_truth_m": 0.11,
+  "final_yaw_error_truth_deg": 10.2,
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 2.291,
+  "motion_reverse_m": 0.316,
+  "motion_heading_travel_rad": 4.023,
+  "acceptance": {
+    "passed": false,
+    "checks": {
+      "goal_succeeded": false,
+      "truth_position": true,
+      "truth_heading": false,
+      "fresh_truth": true,
+      "settled_sim_second": false
+    },
+    "limits": {
+      "position_m": 0.15,
+      "yaw_deg": 5.0,
+      "truth_age_wall_s": 1.0
+    }
+  },
+  "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/progress-checker/labbot-dataset_hospital-mujoco/body.trace.json",
+  "truth_samples": 2432,
+  "robot": "labbot",
+  "backend": "mujoco",
+  "map": "dataset_hospital",
+  "scope": "Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent simulator body endpoint. Short static route, no complete mesh clearance or universal-map qualification.",
+  "gui_recording_completed": false,
+  "body_height": {
+    "expected_floor_m": 0.1,
+    "minimum_m": 0.0008895965190171184,
+    "maximum_m": 0.0010207953176757528,
+    "samples": 2432
+  }
+}

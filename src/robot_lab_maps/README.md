@@ -1,6 +1,6 @@
 # Robot Lab worlds and occupancy maps
 
-Updated October 7, 2026 against runtime checkpoint `091d388`. Read
+Updated October 8, 2026; exact source stages are in the current status and checkpoint. Read
 [current status](../../docs/status/CURRENT_STATUS.md),
 [the extension guide](../../docs/ASSET_EXTENSION_GUIDE.md) and
 [the roadmap](../../ROADMAP.md) for exact world/backend mission acceptance.
@@ -50,16 +50,19 @@ defaults; estimator initialization must use the same resolved frame and pose.
 
 Celisca's 20% scaling, spawn alignment and furniture collision fixes have named
 measured trials. Remaining furnished/actor/map/backend cells are still open.
-The imported hospital has six extreme source-pose fixtures; preview Fit frames
-the building and flags remote objects but does not repair collision/navigation.
+Derived hospital variants repair six SHA-pinned escaped fixtures to their
+authored floors, preserve original sources and Gazebo Collada node frames, and
+freeze furniture consistently across engines. Spawn uses the reviewed lobby
+floor support. Read [current geometry and route evidence](../../docs/status/evidence/extensions-finish-2026-10-08/README.md);
+upper-floor travel, dynamic actors and complete contact/visual parity remain open.
 
 ## Generate a 2D occupancy grid
 
 In **Worlds/maps**, select a world, resolution, height slice and fresh SSD
 output directory, then **Generate 2D Occupancy Grid**. Inspect the result before
 navigation registration. Stop Generation closes its owned generator/Gazebo
-process. The GUI uses the selected profile's spawn as its generation seed;
-CLI seed flags below allow an explicit alternative. Existing saved maps remain intact.
+process. The GUI fills the selected profile's spawn as its generation seed;
+edit **Seed X/Y** to select another connected room. Existing saved maps remain intact.
 
 Equivalent example:
 

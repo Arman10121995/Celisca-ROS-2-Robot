@@ -1,0 +1,754 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/bookstore.world",
+  "source_sha256": "96946c361cad70759db782d33294931196d929e2c7150842b1c9fbf56ac4fdf4",
+  "derived_world_sha256": "7f3a8323eb59383b4e02262befb7ecf64197d769013257ef36f7c272d3c5e9d7",
+  "resolved_include_count": 140,
+  "dependency_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_AirConditionerC_01/meshes/aws_AirConditionerC_01_collision.DAE": "b8b6cabed9188465002071af7d2a719896ff03e2dd2ecc524dfdb5bbc52e344d",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_AirConditionerC_01/meshes/aws_AirConditionerC_01_visual.DAE": "e9053a09cf975dcf3759bf8eb18de1034758e65500694ec7a01b0a4f3035296f",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_AirConditionerC_01/model.sdf": "49173fdf71497e0e9971c4b3a457aedf385f1fe4fae6b6125bdd7d725481d74a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Bicycle_01/meshes/aws_Bicycle_01_collision.DAE": "640c417017210b60ab17ad91a5141b3f826aec61af22ee6e7b67719d82295a18",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Bicycle_01/meshes/aws_Bicycle_01_visual.DAE": "6c4f2f7749b8e295043008e40c8c91d97bead3e38503d819472b587935dccfc0",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Bicycle_01/model.sdf": "27b4564accf85fc75e8765094eb1f0b0a284af600470263751312946f99bbead",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookE_01/meshes/aws_BookE_01_collision.DAE": "bf098cd880d5c46438d137c96fb1b232eb80fdcf0581a04ac7257309015dc2eb",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookE_01/meshes/aws_BookE_01_visual.DAE": "10858ca7867e7290445b6a5f18776ee74be40181ebf8222ad0f1c41a41d0c9ea",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookE_01/model.sdf": "3b0b401e5ee6b73589273a575572f406970cc8deac1ea3fc9b4e8eaa02cc77c5",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookF_01/meshes/aws_BookF_01_collision.DAE": "9bf18e0cc67b50de9affc5e750ed35753458282c4f2ed9d4d9fadf9d7cf31cf2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookF_01/meshes/aws_BookF_01_visual.DAE": "c2d3c624dba1e6361228adca0f73cfe5f0090184841ee609726880615ca1e45c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookF_01/model.sdf": "4d9a13465c24b1d75d5c3181395f14acfed3c2cc8a6895b9f945d8651546d08a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookD_01/meshes/aws_BookD_01_collision.DAE": "56bbe619a3cab321ff3fe383f9b73706c7d93b552bd6fdcdd0ce847c4dd71280",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookD_01/meshes/aws_BookD_01_visual.DAE": "8a1bcfe0deb39e89a077d245d8d1c8c0e247bcc8cfabfed39a0135983d1e4d5c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookD_01/model.sdf": "a4d82cf73deede1579f7ba694d97b305c8ae3f0f980dee33544f0200f5d16306",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfA_01/meshes/aws_BookshelfA_01_collision.DAE": "22aa3a0558ce4df560338aec05e375bddf86d37d35e3576f17c62cca6dc1d5c2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfA_01/meshes/aws_BookshelfA_01_visual.DAE": "423bf39455dc35237a14311b195ecbf3bf7004d86032ef377d9e52af22eabf54",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfA_01/model.sdf": "79221cab745d5b8b53fb53a18c50f49e1b42276585e695d8e6cee5f1fa6eb78a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfB_01/meshes/aws_BookshelfB_01_collision.DAE": "7e4b32b63c9b26a27d27080404b17d4ebd66528a15c4807eb61cf0792cd8e88a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfB_01/meshes/aws_BookshelfB_01_visual.DAE": "d5393f1c766637d355fb07e2f86617c0959389a3bb275aa16c04fd92cf81c5db",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfB_01/model.sdf": "188fc8e3ed135516f3dd2f8f7f102e10d7568024b8feeaf309c478125fa83c91",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfC_01/meshes/aws_BookshelfC_01_collision.DAE": "d0584e6b04b8ad781d235ea1ce4861dadbdc16a33a3c597444ba6caf673e5591",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfC_01/meshes/aws_BookshelfC_01_visual.DAE": "68658964ae4791682dc79bf2fd060c17d9c069808ceded01724fe2b60ab2974e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfC_01/model.sdf": "56997aff1371acdfa25f3355e31e38036fdc9fe73f07484b97854fb5de8d37e1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ChairB_01/meshes/aws_ChairB_01_collision.DAE": "3717de407e54ced82d29c6bb0a58163eab692230593656aa6cf16d682a7269f1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ChairB_01/meshes/aws_ChairB_01_visual.DAE": "232400d6d482fb0e0c38ca441301a9a6c3fa99084a7c1a9b57a78c73778fc8fb",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ChairB_01/model.sdf": "d6ce909da53148eaaf384ae8d32fd1f7841e3ae874b738f4ff0e58bd70120abb",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ColumnB_01/meshes/aws_ColumnB_01_collision.DAE": "c9f600d15aa3ccde85dde824895be8baf0afb0c1b8a9c19e103f9d55168d0afa",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ColumnB_01/meshes/aws_ColumnB_01_visual.DAE": "13df8c6fef07978e3c177baa1a6e4dfd7b6f964c8b50949c1b3920f9ef1bf526",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ColumnB_01/model.sdf": "9ba4a93d8efc28c74a3c04538520b6f04ebde7424dc46b0a216ee8852769acc3",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Computer_01/meshes/aws_Computer_01_collision.DAE": "054d54332da5dd995d474c2441d2572dc35519b756981a92982c09b39ad03151",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Computer_01/meshes/aws_Computer_01_visual.DAE": "6c355777edc75847c6179a2e5e6e0b39a61e7c0fdcb304c8b7f4984f7b7e1a30",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Computer_01/model.sdf": "271022473f52dd0284ab08205bc31c148c9157b1a75bfdb4e7985a072c560117",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_SecurityCamera_01/meshes/aws_SecurityCamera_01_collision.DAE": "b1c1eab4ecd1c41824ef6b95224f5227bf2e30d73d04e2d7c271912dc143a900",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_SecurityCamera_01/meshes/aws_SecurityCamera_01_visual.DAE": "56a226314816db6159501d95cf02ed951649a40274e7360e72df420003b47b61",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_SecurityCamera_01/model.sdf": "d3331c42490135aa74e1ec594803d5f03f0726fa5f2893075fc5b6f8cd0d04d1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_InfoDesk_01/meshes/aws_InfoDesk_01_collision.DAE": "6863865c4be53e36c153d453186b49f5ce4cc7c3a6278f9d5c05c4b28c456578",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_InfoDesk_01/meshes/aws_InfoDesk_01_visual.DAE": "74364e8632b3bf771d82e15b73592f21601f6a5bf1700aeb218466b7b2f4dc42",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_InfoDesk_01/model.sdf": "d86ce4e41144450ce4c17baebce36db17108a4f80221ce894cf3a0b247f587bc",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskB_01/meshes/aws_DeskB_01_collision.DAE": "8e57789a7a94e0864960639451853128a46eb9b14c2aa1a8c77d420e8bcab74d",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskB_01/meshes/aws_DeskB_01_visual.DAE": "38774ed4953735e12dfedcbc55f933c9dfdb9c1f1260d94bac45e6c118008579",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskB_01/model.sdf": "084cb965f2b5a87c3207b3f3cc19347116de441ccd3c36ea601c6ef96761e311",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskA_01/meshes/aws_DeskA_01_collision.DAE": "2199a0f5275d3ba2d211f87d166ae00876fda57d03bcbbf9020fc7b3352399af",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskA_01/meshes/aws_DeskA_01_visual.DAE": "1ac3b743354767d3d968faf0acdfdd960ba984c662eb0ed01169e9f55462ecdc",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskA_01/model.sdf": "2bdf3302f6420019c6378c4c555fe59e34a76296716fdb759f8a53b06f2e4e7d",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DoorB_01/meshes/aws_DoorB_01_collision.DAE": "2ce41c9744db89ed2487c04b31a72d2632b1a277050a459d70fbffc3873b4a81",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DoorB_01/meshes/aws_DoorB_01_visual.DAE": "94454a612a9fa7bf36569d57c16bcc99daf3640b9dcfb5fc209539bf7b0044c7",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DoorB_01/model.sdf": "11d374508d80d923dbf6d3b1acc1f79e94ed18ffebdc6b9e3a688004a332d4be",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopFloor_01/meshes/aws_RetailShopFloor_01_collision.DAE": "e1b886174620819196e9954db8c8c69e2d65e34e719bd13b4a8f2d5ef3cbb1a2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopFloor_01/meshes/aws_RetailShopFloor_01_visual.DAE": "b83ac5540117cb278bc4db082e2c3dea4ac8d9fcd0c0d0b283e076ac2eb15b1c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopFloor_01/model.sdf": "32070e59b3e2187fd9dc85c1e8a13d853ae161b85ab861d31d10967c81f1c517",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_TabletB_01/meshes/aws_TabletB_01_collision.DAE": "40e1efd33ff167a17e112d2286c0094f4162b55198986ad52eac82721c89c04a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_TabletB_01/meshes/aws_TabletB_01_visual.DAE": "214fd04fa85cabc2f4ea4b820ef0b2029b9eb80e6ffd7fae43dfcef60f6b7c0a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_TabletB_01/model.sdf": "850cb4e7aca16d6142bb816878b74ef99b0cfeba8656d7201b6fb4650f022f03",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Tablet_01/meshes/aws_Tablet_01_collision.DAE": "02f6b5210a5cfa6c0c418c80a32b0b8c80089af6c2debf6b523b7acc12621cd2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Tablet_01/meshes/aws_Tablet_01_visual.DAE": "7093aadbce8f37c56335e469a5a67b3fbe2cd9da2c3d28e586db5a1aef3df46b",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Tablet_01/model.sdf": "c63378ba284d3238425ff3bea288fd36b94f08212b1bc329f6abe3451322bd03",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Holder_01/meshes/aws_Holder_01_collision.DAE": "0041738c4f2948bc74119346ff383b5fef670f5923d4a91cbef499f9128ed7ba",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Holder_01/meshes/aws_Holder_01_visual.DAE": "968432c4c30ef2f94ac266cf8e67a5da2ae6bd8428da8edfb7b9397aad563f75",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Holder_01/model.sdf": "ce9bfa1683f891e804112d59f3d211d98cc6f7883a388e1818349e36a91f7e27",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Horologe_01/meshes/aws_Horologe_01_collision.DAE": "bf739194bebd88617dd522fb42634d5aeaee1a24929b4c672c5d75fd2eabf35c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Horologe_01/meshes/aws_Horologe_01_visual.DAE": "33af4a6a916c63a472ad9308274dff8dac45b6da59cc4d92336279922c2bad07",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Horologe_01/model.sdf": "3bab829c9694b0130a624411bda24ee68a080d16b715265243c4f401fb82c32e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopWall_01/meshes/aws_RetailShopWall_01_collision.DAE": "7bab2fa9128fbe430f026348dd3e39be059ca33bcb5494b1c496b01a7a3298f4",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopWall_01/meshes/aws_RetailShopWall_01_visual.DAE": "4ac4b6bb2ee064006d80cf0548f0c3cb61b15f270b51e7ce8b576de2b4031979",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopWall_01/model.sdf": "8f866226e1eb3425a5c936bfca3de2ca0e5cd5ebe00044e74273399673686e98",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_LightA_01/meshes/aws_LightA_01_collision.DAE": "1d3c280384000155c214d407a694f36249c513cfecf7fc30830c4c8a83a58f8e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_LightA_01/meshes/aws_LightA_01_visual.DAE": "26b81c86cd69e00459e788d2461badfe774f2747445b6ce186161bb827ba6b71",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_LightA_01/model.sdf": "62302fe9960fbf6706f032969445f653fe2a8fcebb0c8a9e6530dd726ba52672",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_MagicCube_01/meshes/aws_MagicCube_01_collision.DAE": "2152e8967919267ce1b6f03d7bce23fb796be0e873001e90d1752f58e9595d58",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_MagicCube_01/meshes/aws_MagicCube_01_visual.DAE": "20937460a48149d6ff96239704f1fb34c0277f3f509b465c7834a27596034771",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_MagicCube_01/model.sdf": "a63336af6888d382438485d5f32161e402b7189291998418ebff3873bd7d0fa1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Spotlight_01/meshes/aws_spotlight_01_collision.DAE": "a957e19483d90464ec185e715d24c66ecf962f390fc39b4e0db9f32cadecc961",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Spotlight_01/meshes/aws_spotlight_01_visual.DAE": "11fd4d00dfcf084962dd01b17eff8007a8a9910ed3291db75565b428c868335c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Spotlight_01/model.sdf": "9ab4f4744c069eba397d2b5aa4dc290505eb21acfdedbf652b4c118879a5e97e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ShopWindow_01/meshes/aws_ShopWindow_01_collision.DAE": "c8ac71f9746fb7d8d1273eca2b51196f1a606cb4e03b6f2c3f24347d02ff2e29",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ShopWindow_01/meshes/aws_ShopWindow_01_visual.DAE": "79516177abfaf3331cc7451d57034839664b0ae08912b3f6a5bd9b40512ee0ea",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ShopWindow_01/model.sdf": "fb676a529753891b3665e84ee43748076d1d1f997345d42c9a30ede0f01301a5",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/waffle_base.dae": "61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd/waffle_base.dae": "50d512ddab481c08e0dec3debb9f80d08d85efa629befdf2b7139c868ac32566",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/lds.dae": "a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462/lds.dae": "ef6038648e68dbafa7512800a638d611e560a1b2c6dee7afe54180b452077186",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/left_tire.dae": "d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c/left_tire.dae": "96c3f99cbe3af3a74525cd7d4508c3e43c46d75f2a547a72cc13074589e0233e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/right_tire.dae": "eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8/right_tire.dae": "6808a590ac36179b48665c614d00dbc85dde8a5892e04d70e02e040aee92e052",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle_pi/model.sdf": "eefc5550504f6db2e09456ccc33ad8a0b3ddc87afb010512b2f23c711b6d0385"
+  },
+  "removed_classic_plugins": [
+    {
+      "name": "turtlebot3_imu",
+      "filename": "libgazebo_ros_imu_sensor.so"
+    },
+    {
+      "name": "turtlebot3_laserscan",
+      "filename": "libgazebo_ros_ray_sensor.so"
+    },
+    {
+      "name": "camera_driver",
+      "filename": "libgazebo_ros_camera.so"
+    },
+    {
+      "name": "turtlebot3_diff_drive",
+      "filename": "libgazebo_ros_diff_drive.so"
+    },
+    {
+      "name": "turtlebot3_joint_state",
+      "filename": "libgazebo_ros_joint_state_publisher.so"
+    }
+  ],
+  "source_pose_repairs": [],
+  "static_container_repairs": [
+    {
+      "model": "ShopWindow_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Spotlight_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "LightA_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "LightA_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "LightA_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "LightA_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "LightA_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "RetailShopWall_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Horologe_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_020",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_019",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_018",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_017",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_016",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_015",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_014",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_013",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_012",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_011",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_010",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_009",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_008",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_007",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_006",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Holder_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_008",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_007",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_006",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Tablet_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_012",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_011",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_010",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_009",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_008",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_007",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_006",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "TabletB_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "RetailShopFloor_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DoorB_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskA_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskA_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskA_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskA_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskA_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskB_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "DeskB_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "InfoDesk_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Computer_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ColumnB_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_016",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_015",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_014",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_013",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_012",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_011",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_010",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_009",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_008",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_007",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_006",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "ChairB_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfC_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfC_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfC_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfC_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_008",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_007",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_006",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfB_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfA_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfA_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfA_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookshelfA_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookF_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookD_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookF_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookD_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookF_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookD_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookF_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookD_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookF_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_030",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_029",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_028",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_027",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_026",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_025",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_024",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_023",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_022",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_021",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_020",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_019",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_018",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_017",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_016",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_015",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_014",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_013",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_012",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_011",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_010",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_009",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_008",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_007",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_006",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_005",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_004",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_003",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_002",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "BookE_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "Bicycle_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    },
+    {
+      "model": "AirConditionerC_01_001",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    }
+  ],
+  "static_snapshot": true,
+  "static_fixture_changes": [
+    {
+      "model": "SecurityCamera_01_001",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "SecurityCamera_01_002",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "MagicCube_01_001",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "MagicCube_01_002",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "MagicCube_01_003",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    }
+  ],
+  "mesh_frame_repairs": [
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/waffle_base.dae",
+      "source_sha256": "61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd/waffle_base.dae",
+      "derived_sha256": "50d512ddab481c08e0dec3debb9f80d08d85efa629befdf2b7139c868ac32566",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/lds.dae",
+      "source_sha256": "a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462/lds.dae",
+      "derived_sha256": "ef6038648e68dbafa7512800a638d611e560a1b2c6dee7afe54180b452077186",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/left_tire.dae",
+      "source_sha256": "d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c/left_tire.dae",
+      "derived_sha256": "96c3f99cbe3af3a74525cd7d4508c3e43c46d75f2a547a72cc13074589e0233e",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/right_tire.dae",
+      "source_sha256": "eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8/right_tire.dae",
+      "derived_sha256": "6808a590ac36179b48665c614d00dbc85dde8a5892e04d70e02e040aee92e052",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    }
+  ],
+  "dynamic_actors": [],
+  "shapes": 146,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    -2.7,
+    5.3500000000000005
+  ],
+  "projected_spawn_clearance_m": 1.7000000000000002,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-114812-53ab19/dataset_bookstore.generation.json"
+}

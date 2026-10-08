@@ -1,0 +1,156 @@
+{
+  "mode": "loc",
+  "base_frame": "base_link",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.563,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.20000007958154753,
+      "tail_yaw_speed_rps": 1.3880025587836776e-10,
+      "end": {
+        "x": 0.06300010133538073,
+        "y": -0.5000000030276229,
+        "z": 0.1322800214927768,
+        "yaw": -5.691865452867979e-09
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.559,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.20000007522121566,
+      "tail_yaw_speed_rps": 2.3090393940712065e-15,
+      "end": {
+        "x": -0.4529999540380673,
+        "y": -0.5000000007745182,
+        "z": 0.1322800256539292,
+        "yaw": -5.820030001485102e-09
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0569,
+      "yaw_change_rad": 1.114,
+      "tail_speed_mps": 0.026595535225860334,
+      "tail_yaw_speed_rps": 0.39526721413654076,
+      "end": {
+        "x": -0.4390807999082066,
+        "y": -0.5148833041753945,
+        "z": 0.13227997983641093,
+        "yaw": 1.1140235011549595
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.02,
+      "distance_m": 0.1049,
+      "yaw_change_rad": -1.1215,
+      "tail_speed_mps": 0.07234747235002913,
+      "tail_yaw_speed_rps": 0.3999973300955718,
+      "end": {
+        "x": -0.4388236751498809,
+        "y": -0.6240026830307553,
+        "z": 0.1322800282102829,
+        "yaw": 0.04788174408512003
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.139,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.0,
+      "tail_yaw_speed_rps": 0.0,
+      "end": {
+        "x": 0.056252305674284846,
+        "y": -0.6409821588486576,
+        "z": 0.1322800237124092,
+        "yaw": -0.007467632126477012
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.0,
+      "tail_yaw_speed_rps": 0.0,
+      "end": {
+        "x": -0.5000000000120691,
+        "y": -0.4999999999895348,
+        "z": 0.1322791765747199,
+        "yaw": 2.0484171681361318e-17
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.359,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.20000001917725896,
+      "tail_yaw_speed_rps": 3.564435880498865e-10,
+      "end": {
+        "x": -0.14099997617710758,
+        "y": -0.5000000006542495,
+        "z": 0.1322799930091092,
+        "yaw": 6.382292780237241e-10
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "monotonic_clock": true
+  },
+  "initial_truth": {
+    "x": -0.499999999928213,
+    "y": -0.5000000004856012,
+    "z": 0.13227991850431267,
+    "yaw": 1.0559024511607634e-17
+  },
+  "localization_error_m": 0.028973796777363888,
+  "sensor_messages_during_drive": {
+    "/oakd/depth/image_raw": 106,
+    "/oakd/rgb/image_raw": 106,
+    "/scan": 105
+  },
+  "reset_response": "Gazebo robot pose/control reset; world clock preserved",
+  "post_reset_localization_error_m": 0.0029716091314469623,
+  "post_reset_drive_localization_error_m": 0.016996011962999567,
+  "map_updates_after_reset": 0,
+  "cloud_updates_after_reset": 0,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1464,
+  "sensor_counts": {
+    "/oakd/depth/image_raw": 147,
+    "/oakd/rgb/image_raw": 147,
+    "/scan": 146
+  },
+  "scan_geometry": {
+    "frame": "lab_laser_link",
+    "samples": 360,
+    "finite": 360,
+    "min_m": 5.500336647033691,
+    "max_m": 8.80284595489502,
+    "range_min": 0.10000000149011612,
+    "range_max": 12.0
+  },
+  "passed": true
+}

@@ -446,8 +446,10 @@ class SimulationLauncherGui(tk.Tk):
         self.current_vertical = 0.0
         self.drive_buttons = set()
         self.drive_button_widgets = {}
+        self.drive_button_mirrors = {}
         self.drive_strafe_buttons = set()
         self.drive_strafe_widgets = {}
+        self.drive_strafe_mirrors = {}
         self.current_lateral = 0.0
         self.drive_keys = set()
         self.drive_stop_latched = False
@@ -917,7 +919,26 @@ class SimulationLauncherGui(tk.Tk):
         reverse_button.grid(row=2, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
-        ttk.Label(self.drone_actions_host, text='Take off, then use Drive for XY/yaw.\nAltitude controls change height; Hold stops travel.', wraplength=310).grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 8))
+        ttk.Label(self.drone_actions_host, text='Take off, then use the seven direction buttons below.\nClick once to move; click again to slow down. Stop halts all manual motion.', wraplength=310).grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 8))
+        drone_drive = ttk.Frame(self.drone_actions_host)
+        drone_drive.grid(row=1, column=0, columnspan=3, sticky='ew', pady=(0, 8))
+        self.drone_drive_widgets = {}
+        for column in range(3):
+            drone_drive.columnconfigure(column, weight=1)
+        for label, row, column, direction in (
+                ('Strafe L', 0, 0, 1.), ('Forward', 0, 1, (1., 0.)),
+                ('Strafe R', 0, 2, -1.), ('Turn Left', 1, 0, (0., 1.)),
+                ('Stop', 1, 1, None), ('Turn Right', 1, 2, (0., -1.)),
+                ('Reverse', 2, 1, (-1., 0.))):
+            button = ttk.Button(drone_drive, text=label, width=8)
+            button.grid(row=row, column=column, sticky='ew', padx=2, pady=2)
+            self.drone_drive_widgets[label] = button
+            if direction is None:
+                button.configure(command=self._stop_drive)
+            elif isinstance(direction, tuple):
+                self._bind_drive_button(button, *direction, mirror=True)
+            else:
+                self._bind_strafe_button(button, direction, mirror=True)
         self.flight_buttons = []
         for column, (label, action) in enumerate((('Takeoff', 'takeoff'), ('Hold', 'hold'), ('Land', 'land'))):
             button = ttk.Button(self.drone_actions_host, text=label, width=8,
@@ -974,21 +995,23 @@ class SimulationLauncherGui(tk.Tk):
 
         ttk.Label(self.drive_pad_host, text='Click once to latch; click again to release.\nWASD/joystick starts neutral. Space stops Drive.',
             wraplength=280, style='Muted.TLabel').grid(row=2, column=0, sticky='w', pady=8)
-        ttk.Button(self.drone_actions_host, text='Open XY/yaw Drive', command=lambda: self.show_tab('Drive')).grid(row=5, column=0, columnspan=3, sticky='ew', pady=8)
+        ttk.Label(self.drone_actions_host, text='Left/right rotate gently; strafe moves sideways.\nEnable WASD + joystick in Drive for keyboard input.', wraplength=305,
+                  style='Muted.TLabel').grid(row=5, column=0, columnspan=3, sticky='w', pady=8)
         ttk.Label(self.drone_limits_host, textvariable=self.drive_limits_var, wraplength=305).grid(row=0, column=0, columnspan=2, sticky='w')
         ttk.Checkbutton(self.drone_limits_host, text='Override manual velocity limits', variable=self.drive_override_var,
             command=self._update_drive_limits_label).grid(row=1, column=0, columnspan=2, sticky='w', pady=8)
         for row, (label, variable, ceiling) in enumerate((
             ('Max manual speed (m/s)', self.drive_max_linear_var, 5.),
             ('Max manual yaw (rad/s)', self.drive_max_angular_var, 10.),
-            ('Linear increment / 0.1 s', self.drive_linear_var, 1.)), start=2):
+            ('Linear increment / 0.1 s', self.drive_linear_var, 1.),
+            ('Yaw increment / 0.1 s', self.drive_angular_var, 2.)), start=2):
             ttk.Label(self.drone_limits_host, text=label).grid(row=row, column=0, sticky='w', pady=4)
             spin = ttk.Spinbox(self.drone_limits_host, textvariable=variable, from_=.001, to=ceiling, increment=.01,
                 width=8)
             spin.grid(row=row, column=1, sticky='w', padx=8)
             self.drive_limit_widgets.append(spin)
         ttk.Label(self.drone_limits_host, text='Overrides stay within robot-profile caps.\nAltitude uses the same bounded linear increment; PX4 enforces its flight limits.',
-            wraplength=305, style='Muted.TLabel').grid(row=5, column=0, columnspan=2, sticky='w', pady=10)
+            wraplength=305, style='Muted.TLabel').grid(row=6, column=0, columnspan=2, sticky='w', pady=10)
         command_header = ttk.Frame(output_frame)
         command_header.grid(row=0, column=0, sticky="ew", pady=(0, 4))
         ttk.Label(command_header, text="Run the selected experiment").grid(
@@ -2118,14 +2141,16 @@ class SimulationLauncherGui(tk.Tk):
             ["!disabled"] if self._bhl_policy_selectable() else ["disabled"])
         self.steering_mode_combo.configure(
             state="readonly" if self._four_wheel_steer_selectable() else "disabled")
-        for button in self.drive_strafe_widgets.values():
+        for button in self._strafe_widgets():
             button.state(
                 ["!disabled"] if self._lateral_drive_selectable() else ["disabled"])
         for button in self.flight_buttons:
             button.state(['!disabled'] if self._flight_selectable() else ['disabled'])
         drive_unavailable = self._extension_drive_unavailable()
-        for button in self.drive_button_widgets.values():
+        for button in self._drive_widgets():
             button.state(['disabled'] if drive_unavailable else ['!disabled'])
+        for button in self.drone_drive_widgets.values():
+            button.state(['!disabled'] if self._flight_selectable() else ['disabled'])
         self.drive_input_checkbox.state(['disabled'] if drive_unavailable else ['!disabled'])
         if drive_unavailable:
             if self.drive_input_enabled.get() or self.drive_repeat_job is not None:
@@ -2643,23 +2668,43 @@ class SimulationLauncherGui(tk.Tk):
         if lines > 10000:
             widget.delete('1.0', f'{lines-9999}.0')
 
-    def _bind_drive_button(self, button, linear_scale, angular_scale):
+    def _bind_drive_button(self, button, linear_scale, angular_scale, mirror=False):
         direction = (linear_scale, angular_scale)
-        self.drive_button_widgets[direction] = button
+        if mirror:
+            self.drive_button_mirrors.setdefault(direction, []).append(button)
+        else:
+            self.drive_button_widgets[direction] = button
         button.configure(command=lambda: self._start_drive(*direction))
 
-    def _bind_strafe_button(self, button, sign):
+    def _drive_widgets(self, direction=None):
+        directions = self.drive_button_widgets if direction is None else [direction]
+        return [button for key in directions for button in
+                ([self.drive_button_widgets[key]] if key in self.drive_button_widgets else [])
+                + self.drive_button_mirrors.get(key, [])]
+
+    def _strafe_widgets(self, sign=None):
+        directions = self.drive_strafe_widgets if sign is None else [sign]
+        return [button for key in directions for button in
+                ([self.drive_strafe_widgets[key]] if key in self.drive_strafe_widgets else [])
+                + self.drive_strafe_mirrors.get(key, [])]
+
+    def _bind_strafe_button(self, button, sign, mirror=False):
         """Latch a lateral command (mecanum); only enabled for that drive."""
-        self.drive_strafe_widgets[sign] = button
+        if mirror:
+            self.drive_strafe_mirrors.setdefault(sign, []).append(button)
+        else:
+            self.drive_strafe_widgets[sign] = button
         button.configure(command=lambda: self._start_strafe(sign))
 
     def _start_strafe(self, sign):
+        if not self._lateral_drive_selectable():
+            return
+        self.drive_stop_latched = False
         if sign in self.drive_strafe_buttons:
             self.drive_strafe_buttons.remove(sign)
         else:
             self.drive_strafe_buttons.add(sign)
-        button = self.drive_strafe_widgets.get(sign)
-        if button is not None:
+        for button in self._strafe_widgets(sign):
             button.state(["pressed"] if sign in self.drive_strafe_buttons
                          else ["!pressed"])
         self._schedule_drive()
@@ -2754,8 +2799,7 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_buttons.remove(direction)
         else:
             self.drive_buttons.add(direction)
-        button = self.drive_button_widgets.get(direction)
-        if button is not None:
+        for button in self._drive_widgets(direction):
             button.state(["pressed"] if direction in self.drive_buttons else ["!pressed"])
         self._schedule_drive()
 
@@ -2799,8 +2843,7 @@ class SimulationLauncherGui(tk.Tk):
     def _release_drive(self, linear_scale, angular_scale):
         direction = (linear_scale, angular_scale)
         self.drive_buttons.discard(direction)
-        button = self.drive_button_widgets.get(direction)
-        if button is not None:
+        for button in self._drive_widgets(direction):
             button.state(["!pressed"])
 
     def _repeat_drive(self):
@@ -2887,9 +2930,9 @@ class SimulationLauncherGui(tk.Tk):
         for button in self.drive_altitude_widgets.values():
             button.state(['!pressed'])
         self.drive_stop_latched = keep_input_enabled
-        for button in self.drive_button_widgets.values():
+        for button in self._drive_widgets():
             button.state(["!pressed"])
-        for button in self.drive_strafe_widgets.values():
+        for button in self._strafe_widgets():
             button.state(["!pressed"])
         self.drive_keys.clear()
         self.current_drive = self.drive_model.stop()

@@ -1,6 +1,6 @@
 # Robot Lab continuation
 
-Updated October 7, 2026. Runtime checkpoint: **`091d388` on `master`**, with
+Updated October 8, 2026. Read the [current checkpoint](docs/status/continuation-2026-10-08.md); work on `master`, with
 successful required CI and separate measured GUI/Drive/Panda artifacts. The
 project remains partial; start with [current status](docs/status/CURRENT_STATUS.md),
 [the checklist](docs/status/CHECKLIST.md) and [the roadmap](ROADMAP.md).

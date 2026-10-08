@@ -1,15 +1,15 @@
 # Robot Lab support matrix
 
-Updated October 7, 2026 against published runtime checkpoint `091d388` and
-its exact measured source stages. The platform is **partial**. This page
+Updated October 8, 2026 against the extension checkpoint and its exact
+pre-trial source manifests; see the publication receipt for the pushed source. The platform is **partial**. This page
 summarizes implementation and named evidence; the [ledger](platform-status.yaml)
 owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 ## Read support by exact composition
 
-The [generated measured matrix](evidence/gui-controls-column-2026-10-07/support-matrix-current.md)
-and [JSON report](evidence/gui-controls-column-2026-10-07/support-matrix-current.json)
-validate **122 indexed reports / 114 distinct measured cells**. The latest
+The [generated measured matrix](evidence/extensions-finish-2026-10-08/support-matrix-current.md)
+and [JSON report](evidence/extensions-finish-2026-10-08/support-matrix-current.json)
+validate **194 indexed reports / 146 distinct measured cells**. The latest
 measurement for an exact robot/map/backend/task/steering cell controls its
 record. Unlisted combinations are **not tested**. All full-release gates
 remain blocked by unfinished robot, world, algorithm, backend and reproduction
@@ -34,6 +34,7 @@ replace measured runtime evidence.
 | Bumperbot / Labbot | Named four-backend and Celisca/arena stages | Physical Drive, selected localization/mapping/reset and Nav2 goals; spawn/scale/furniture repairs | Complete furnished/actor/map/mode matrix, longer avoidance and repeated goals |
 | TurtleBot3 Burger/Waffle/Waffle Pi | All four engines; `nav_empty` and navigation `nav_obstacle` | Twelve source LDS/Drive screens; 48 localization/reset, 2D SLAM/export and clear/obstacle navigation screens; normal algorithms/autofill | Other maps/routes, vendor behavior and RGB rendering. RGB-only cameras do not enable 3D SLAM. |
 | TurtleBot4 Standard/Lite | All four engines; named `dataset_room2`, `nav_empty` and `nav_obstacle` stages | Display/state, eight final Drive/lidar/RGB-D screens and forty mode/reset/export/navigation screens; normal five-mode selection | Other maps/routes, materials, hazards/docking and vendor firmware |
+| Husky | All four engines; `nav_empty` / `nav_obstacle` | Four-wheel Drive/source sensors; twenty localization/reset, 2D/3D mapping/export and clear/obstacle navigation screens; normal defaults/autofill | Other maps/routes, vendor hardware/firmware and broader estimator qualification |
 | Ackermann/rear/anti-Ackermann | Named wheeled trials | Physical steering, watchdog and selected navigation evidence | Slalom/parking, full current-setting backend/map/mode and reset/contact matrix |
 | Four-wheel steering | Four engines; named clear/obstacle and mapping stages | Opposite-phase, in-phase/crab and pivot; all sixteen clear pattern/backend screens and tighter named crab/obstacle repeats | Repeat all final patterns/settings; final heading, contacts, reset, command loss and long mapping missions |
 | Mecanum | Four engines; named clear/obstacle and PyBullet mapping stages | Physical passive rollers/lateral travel, clear-map goals, actual 2D SLAM/reset and selected navigation | Remaining current-setting obstacle/map/mode/backends and repeat qualification |
@@ -43,7 +44,7 @@ replace measured runtime evidence.
 | Quadrotor SITL legacy fixture | Display fixture | Legacy description only; retired offboard example | Use the measured PX4 X500 Flight profile; no legacy flight mission claimed |
 | Remaining imported assets | Profile-declared Display backends; native MJCF restricted to MuJoCo | Installed source descriptions and inspection; exact controller gates | Per-model rest/material/license, actuation/sensor/reset and class mission qualification |
 
-[October 7 continuation](continuation-2026-10-07.md),
+[October 8 continuation](continuation-2026-10-08.md),
 [TurtleBot3](../tutorials/turtlebot3.md), [TurtleBot4](../tutorials/turtlebot4.md),
 [Panda](../tutorials/panda_arm.md), [PX4](../tutorials/px4_x500.md) and
 [Go2](../tutorials/go2.md) link exact commands and measurements. Localization

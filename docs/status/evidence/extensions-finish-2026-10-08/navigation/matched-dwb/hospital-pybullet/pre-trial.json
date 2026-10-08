@@ -1,0 +1,46 @@
+{
+  "robot": "labbot",
+  "backend": "pybullet",
+  "map": "dataset_hospital",
+  "mode": "nav",
+  "passed": false,
+  "scope": "Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent simulator body endpoint. Short static route, no complete mesh clearance or universal-map qualification.",
+  "source": {
+    "revision": "3e5cfae78a1a2811e332adcde85871ec60902254",
+    "hashes": {
+      "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world": "d6747417015f1b86dcb92fbe85004029711da06e17986e6109d8a23e2b0180c5",
+      "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261007-153852-6cc060/dataset_hospital.yaml": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c",
+      "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261007-153852-6cc060/dataset_hospital.pgm": "24634da24262b60572b0adc427815ffd49517893d8db84e0486a2386cad694c8",
+      "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_navigation/config/robots/labbot.yaml": "b4e302cc3f83968d6ee05ecb4d7d23a930bb2f9d95338ddf0d831bb36508e0e8",
+      "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/lab_tabs.py": "c78e39c226921aaf27f62d1552e79d016dabe6e540adaebf79991a514b6ac37b"
+    },
+    "profile": {
+      "source_id": "gazebo_world_dataset",
+      "source_entry": "worlds/hospital/hospital.world",
+      "gazebo": {
+        "world_package": "robot_lab_maps",
+        "world_name": "dataset_hospital",
+        "world_path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world"
+      },
+      "map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261007-153852-6cc060/dataset_hospital.yaml"
+      },
+      "spawn": {
+        "x": "0.55",
+        "y": "12.450000000000001",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "initial_pose": {
+        "x": "0.55",
+        "y": "12.450000000000001",
+        "yaw": "0.0"
+      },
+      "notes": "Installed upstream world with resolved static geometry. Classic plugins removed; dynamic behaviors and robot missions remain unqualified."
+    },
+    "domain": "220"
+  },
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=pybullet use_sim_time:=true map_name:=dataset_hospital world_package:=robot_lab_maps world_name:=dataset_hospital world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261007-153852-6cc060/dataset_hospital.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=false global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+}

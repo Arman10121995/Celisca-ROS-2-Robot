@@ -26,6 +26,7 @@ import rclpy
 from action_msgs.msg import GoalStatus
 from nav2_msgs.action import NavigateToPose
 from nav_msgs.msg import OccupancyGrid, Odometry
+from geometry_msgs.msg import Twist
 from rclpy.action import ActionClient
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
@@ -44,6 +45,7 @@ class Check(Node):
         self.truth = None
         self.truth_received = None
         self.trace = []
+        self.command_trace = []
         self.motion_source = None
         self.monitor_motion = False
         self.previous_odom_pose = None
@@ -52,11 +54,19 @@ class Check(Node):
         self.heading_travel_rad = 0.0
         self.create_subscription(OccupancyGrid, "/map", lambda m: setattr(self, "map", m), latched)
         self.create_subscription(Odometry, "/odom/ground_truth", self.on_truth, 10)
+        self.create_subscription(Twist, "/cmd_vel", self.on_command, 50)
         self.create_subscription(Odometry, "/robot_lab_controller/odom",
                                  lambda m: self.on_motion(m, "/robot_lab_controller/odom"), 10)
         self.tf = Buffer()
         self.listener = TransformListener(self.tf, self)
         self.action = ActionClient(self, NavigateToPose, "navigate_to_pose")
+
+    def on_command(self, message):
+        if self.monitor_motion:
+            self.command_trace.append(dict(wall_s=time.monotonic(),
+                stamp_s=(self.truth.header.stamp.sec+self.truth.header.stamp.nanosec*1e-9)
+                        if self.truth is not None else None,
+                vx=message.linear.x, vy=message.linear.y, wz=message.angular.z))
 
     def on_truth(self, message):
         self.truth = message
@@ -247,7 +257,8 @@ def main(argv=None):
                 result['acceptance']['passed'] = False
             passed = result['acceptance']['passed']
         if args.trace_out:
-            Path(args.trace_out).write_text(json.dumps({'samples': node.trace})+'\n')
+            Path(args.trace_out).write_text(json.dumps({'samples': node.trace,
+                'commands': node.command_trace})+'\n')
             result['truth_trace'] = args.trace_out
             result['truth_samples'] = len(node.trace)
         if args.world_file:

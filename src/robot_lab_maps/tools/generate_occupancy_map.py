@@ -78,7 +78,7 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     rejected=[s for s in skipped if not s.startswith('actor ')]
     if rejected:
         raise ValueError('World geometry cannot be projected: '+'; '.join(rejected))
-    projected=[];bounds=[];mesh_files={};mesh_paths=[]
+    projected=[];bounds=[];mesh_files={};mesh_paths=[];terrain_polygons=[]
     for shape in shapes:
         kind=shape['type']
         if kind=='plane':
@@ -99,14 +99,9 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
             section.apply_transform(world_transform(shape))
             bounds.extend(section.bounds)
             path=Path(shape['heightmap']);mesh_files[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
-            # A sample counts as solid at this slice when it is at or above the
-            # slice height; the epsilon absorbs the raster's own quantisation.
-            solid=section.vertices[section.vertices[:,2]>=height-_HEIGHT_EPS]
-            if len(solid):
-                # Contour of the solid samples, rasterised by the caller into
-                # the collision mask the map plugin consumes.
-                outline=solid[np.lexsort((solid[:,1],solid[:,0]))]
-                mesh_paths.append([[row[0],row[1]] for row in outline])
+            from robot_lab_utils.occupancy_slice import terrain_slice_polygons
+            terrain_polygons.extend(terrain_slice_polygons(
+                section.vertices, section.faces, height-_HEIGHT_EPS))
         else:
             projected.append(shape)
             size=shape['size']
@@ -123,6 +118,10 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     for path in mesh_paths:
         pixels=[((p[0]+sizes[0]/2)/resolution,(p[1]+sizes[1]/2)/resolution) for p in path]
         draw.line(pixels,fill=255,width=2)
+    for polygon in terrain_polygons:
+        pixels=[((p[0]+sizes[0]/2)/resolution,(p[1]+sizes[1]/2)/resolution) for p in polygon]
+        draw.polygon(pixels,fill=255)
+        draw.line(pixels+[pixels[0]],fill=255,width=2)
     # Compute conservative primitive bounds once rather than asking the
     # Gazebo ECM for every shape at every flood-fill cell in a large world.
     from robot_lab_utils.occupancy_slice import primitive_slice_cells
@@ -160,7 +159,8 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     return {'source_world':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
             'mesh_sha256':mesh_files,'mesh_slice_paths':len(mesh_paths),
             'mesh_mask_cells':int(np.sum(np.asarray(mask)>0)),'collision_count':len(projected),
-            'projection_recipe':'complete-static-height-slice-v2',
+            'projection_recipe':'complete-static-height-slice-v3',
+            'terrain_slice_polygons':len(terrain_polygons),
             'heightfield_count':sum(1 for s in shapes if s['type']=='heightmap'),
             'resolution_m':resolution,'slice_height_m':height,'seed_xy':seed,'skipped_dynamic_actors':skipped,
             'engine':'robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask',

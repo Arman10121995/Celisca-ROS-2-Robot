@@ -1,0 +1,47 @@
+# Source Husky collision envelope: base x +/-0.4937 m, wheels y
+# +/-0.34255 m. The 0.62 m circle encloses the 0.60090 m corner radius.
+# Lab skid controller and sensor kit; not Clearpath hardware qualification.
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      robot_base_frame: base_link
+      robot_radius: 0.62
+      inflation_layer:
+        inflation_radius: 0.85
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      robot_base_frame: base_link
+      robot_radius: 0.62
+      inflation_layer:
+        inflation_radius: 0.85
+controller_server:
+  ros__parameters:
+    progress_checker:
+      required_movement_radius: 0.2
+      movement_time_allowance: 60.0
+    general_goal_checker:
+      xy_goal_tolerance: 0.07
+      yaw_goal_tolerance: 0.03
+    FollowPath:
+      xy_goal_tolerance: 0.07
+      desired_linear_vel: 0.25
+      rotate_to_heading_angular_vel: 0.15
+      max_angular_accel: 1.5
+      min_approach_linear_velocity: 0.04
+      regulated_linear_scaling_min_speed: 0.1
+      max_vel_x: 0.4
+      max_speed_xy: 0.4
+      max_vel_theta: 1.0
+      acc_lim_x: 0.5
+      decel_lim_x: -0.5
+      acc_lim_theta: 1.5
+      decel_lim_theta: -1.5
+bt_navigator:
+  ros__parameters:
+    robot_base_frame: base_link
+behavior_server:
+  ros__parameters:
+    robot_base_frame: base_link
+    rotational_acc_lim: 1.5
+    max_rotational_vel: 1.0

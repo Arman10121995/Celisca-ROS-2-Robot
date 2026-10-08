@@ -1,0 +1,22 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_franka_emika_panda simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none arm_control:=panda grasp_fixture:=true arm_planning:=none
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1791471055488819814-209997.log]
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-10-08-16-50-56-017371-molar1-209997
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [native_asset_display-1]: process started with pid [210021]
+[INFO] [rviz2-2]: process started with pid [210023]
+[rviz2-2] [INFO] [1791471057.545877046] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1791471057.546026297] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[native_asset_display-1] [INFO] [1791471057.945560932] [native_asset_display]: Installed native MJCF: /workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml; 12 robot bodies / 9 joints; controlled Panda dynamics
+[rviz2-2] [INFO] [1791471058.201403215] [rviz2]: Stereo is NOT SUPPORTED
+[native_asset_display-1] [WARN] [1791471070.991880660] [native_asset_display]: Gripper goal rejected: busy, heartbeat, gap or force limit
+[native_asset_display-1] [WARN] [1791471071.021782464] [native_asset_display]: Gripper goal rejected: busy, heartbeat, gap or force limit
+[native_asset_display-1] [WARN] [1791471071.064650209] [native_asset_display]: Gripper goal rejected: busy, heartbeat, gap or force limit
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-2]: sending signal 'SIGINT' to process[rviz2-2]
+[INFO] [native_asset_display-1]: sending signal 'SIGINT' to process[native_asset_display-1]
+[rviz2-2] [INFO] [1791471082.008921474] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [rviz2-2]: process has finished cleanly [pid 210023]
+[INFO] [native_asset_display-1]: process has finished cleanly [pid 210021]
+
+[launch exited with code 0]
+

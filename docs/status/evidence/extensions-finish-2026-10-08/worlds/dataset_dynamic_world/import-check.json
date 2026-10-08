@@ -1,0 +1,207 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dynamic_world/world.model",
+  "source_sha256": "8fb7e9b2a522cdf19236957199cf23c9697d502d858428e887ec583c3b695e71",
+  "derived_world_sha256": "a286bf2e5361ac5578f1816da20769ccf24d81f734bd07e0c71fb89d50cec608",
+  "resolved_include_count": 13,
+  "dependency_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/vendor/gazebo_classic/gazebo.material": "e6050d698bd8fb0f7479318ef6dccb2de1b3c484cf48c10b78b8b617026cc2e2",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/empty_room/model.sdf": "b6961caf4751500af543daaca802421dea603bd6e20740efcc97199d91529c09",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dynamic_obstacle/model.sdf": "c911cdb513ed2fea224bec4ab5190c5c13ebdfd239edec0d0958f8b1ba4d6490",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/waffle_base.dae": "61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd/waffle_base.dae": "50d512ddab481c08e0dec3debb9f80d08d85efa629befdf2b7139c868ac32566",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/lds.dae": "a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462/lds.dae": "ef6038648e68dbafa7512800a638d611e560a1b2c6dee7afe54180b452077186",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/left_tire.dae": "d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c/left_tire.dae": "96c3f99cbe3af3a74525cd7d4508c3e43c46d75f2a547a72cc13074589e0233e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/right_tire.dae": "eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8/right_tire.dae": "6808a590ac36179b48665c614d00dbc85dde8a5892e04d70e02e040aee92e052",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle_pi/model.sdf": "eefc5550504f6db2e09456ccc33ad8a0b3ddc87afb010512b2f23c711b6d0385"
+  },
+  "removed_classic_plugins": [
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "random",
+      "filename": "libRandomVelocityPlugin.so"
+    },
+    {
+      "name": "turtlebot3_imu",
+      "filename": "libgazebo_ros_imu_sensor.so"
+    },
+    {
+      "name": "turtlebot3_laserscan",
+      "filename": "libgazebo_ros_ray_sensor.so"
+    },
+    {
+      "name": "camera_driver",
+      "filename": "libgazebo_ros_camera.so"
+    },
+    {
+      "name": "turtlebot3_diff_drive",
+      "filename": "libgazebo_ros_diff_drive.so"
+    },
+    {
+      "name": "turtlebot3_joint_state",
+      "filename": "libgazebo_ros_joint_state_publisher.so"
+    }
+  ],
+  "source_pose_repairs": [],
+  "static_container_repairs": [
+    {
+      "model": "EmptyRoom",
+      "reason": "Linkless pose wrapper contains only explicitly static fixtures"
+    }
+  ],
+  "static_snapshot": true,
+  "static_fixture_changes": [
+    {
+      "model": "DynamicObstacle1",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle2",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle3",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle4",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle5",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle6",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle7",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle8",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    },
+    {
+      "model": "DynamicObstacle9",
+      "source_static": null,
+      "derived_static": true,
+      "reason": "Static environment snapshot; dynamic fixtures are not implemented"
+    }
+  ],
+  "mesh_frame_repairs": [
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/waffle_base.dae",
+      "source_sha256": "61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/61bd00759309e59c55d0949b6c0869e8e7fe90ac138a53c5252b2db6874cb3dd/waffle_base.dae",
+      "derived_sha256": "50d512ddab481c08e0dec3debb9f80d08d85efa629befdf2b7139c868ac32566",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/lds.dae",
+      "source_sha256": "a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/a8c99a86e57f7fbf2bdfbf1cf21a643f5f6ea4024496658ad39a81a05f680462/lds.dae",
+      "derived_sha256": "ef6038648e68dbafa7512800a638d611e560a1b2c6dee7afe54180b452077186",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/left_tire.dae",
+      "source_sha256": "d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/d36fff9b30a54ea07af0a82d82242071460e2123eb69ef53d8da04f8d3a6e68c/left_tire.dae",
+      "derived_sha256": "96c3f99cbe3af3a74525cd7d4508c3e43c46d75f2a547a72cc13074589e0233e",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    },
+    {
+      "source_mesh": "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/turtlebot3_waffle/meshes/right_tire.dae",
+      "source_sha256": "eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8",
+      "derived_mesh": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/canonical-meshes/eb13623b0e0d84598f65e25e50c1a2bd19af307e838f319c8939d417317729e8/right_tire.dae",
+      "derived_sha256": "6808a590ac36179b48665c614d00dbc85dde8a5892e04d70e02e040aee92e052",
+      "original_up_axis": "Y_UP",
+      "derived_up_axis": "Z_UP",
+      "invalid_xml_comments_removed": false,
+      "invalid_xml_attribute_brackets_escaped": true,
+      "recipe": "gazebo-node-frame-v2",
+      "texture_sha256": {},
+      "unresolved_textures": []
+    }
+  ],
+  "dynamic_actors": [],
+  "shapes": 21,
+  "skipped_dynamic_geometry": [],
+  "mjcf_notes": [],
+  "spawn_xy": [
+    -2.0,
+    -2.0
+  ],
+  "projected_spawn_clearance_m": 2.5455844122715714,
+  "runtime_mission_qualified": false,
+  "occupancy_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-114833-319661/dataset_dynamic_world.generation.json"
+}

@@ -1,0 +1,230 @@
+{
+  "robot": "asset_husky",
+  "backend": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor feedback on this map only; no SLAM or navigation.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "owned_pid": 69653,
+  "phases": {
+    "armed_neutral": {
+      "dx": -4.088878631591797e-05,
+      "dy": 1.1026859283447266e-06,
+      "yaw_change": -1.5082869140917085e-06,
+      "tail_vx": -4.1173858207002513e-05,
+      "tail_wz": -1.500877895541054e-06,
+      "max_tilt": 1.4901161193847656e-08,
+      "sim_s": 0.9791666660000002
+    },
+    "forward": {
+      "dx": 1.2059816718101501,
+      "dy": -9.119510650634766e-06,
+      "yaw_change": -5.674432028085104e-06,
+      "tail_vx": 0.40171187915448675,
+      "tail_wz": -1.4317813507212324e-06,
+      "max_tilt": 0.00033140818452592335,
+      "sim_s": 3.4791666660000002
+    },
+    "forward_stop": {
+      "dx": 0.1566239595413208,
+      "dy": -1.9669532775878906e-06,
+      "yaw_change": -1.0928175543031972e-05,
+      "tail_vx": 4.4532446799560606e-05,
+      "tail_wz": -4.4338028053171255e-06,
+      "max_tilt": 2.0958259409188965e-06,
+      "sim_s": 2.5
+    },
+    "reverse": {
+      "dx": -1.232787936925888,
+      "dy": 3.49879264831543e-05,
+      "yaw_change": -6.999958688762431e-06,
+      "tail_vx": -0.40173063060311853,
+      "tail_wz": -1.4376441548950994e-06,
+      "max_tilt": 1.2700126023688285e-06,
+      "sim_s": 3.4791666669999994
+    },
+    "reverse_stop": {
+      "dx": -0.15154758095741272,
+      "dy": 3.1888484954833984e-06,
+      "yaw_change": 9.452522098218225e-07,
+      "tail_vx": 4.080070573146673e-05,
+      "tail_wz": 1.102037946378928e-06,
+      "max_tilt": 9.495910386058937e-07,
+      "sim_s": 2.4791666669999994
+    },
+    "left_turn": {
+      "dx": 0.025960147380828857,
+      "dy": -0.021063268184661865,
+      "yaw_change": 2.469767361671192,
+      "tail_vx": 0.010578709257512524,
+      "tail_wz": 0.6896592310192957,
+      "max_tilt": 0.0017157572358017655,
+      "sim_s": 3.4791666669999994
+    },
+    "left_turn_stop": {
+      "dx": -0.010980665683746338,
+      "dy": -0.004071831703186035,
+      "yaw_change": 0.21294502651911973,
+      "tail_vx": 8.533568502364177e-05,
+      "tail_wz": -9.762345342660346e-05,
+      "max_tilt": 0.00120138988953664,
+      "sim_s": 2.479166667000001
+    },
+    "right_turn": {
+      "dx": 0.019574284553527832,
+      "dy": 0.04257538914680481,
+      "yaw_change": -2.3686311279955454,
+      "tail_vx": 0.010431866946269821,
+      "tail_wz": -0.705232946400626,
+      "max_tilt": 0.0021763069734202166,
+      "sim_s": 3.479166667000001
+    },
+    "right_turn_stop": {
+      "dx": 0.008345365524291992,
+      "dy": -0.009063750505447388,
+      "yaw_change": -0.29543539852247086,
+      "tail_vx": -0.00011911312103777436,
+      "tail_wz": -1.0904873005436944e-05,
+      "max_tilt": 0.0018718037592447235,
+      "sim_s": 2.479166667000001
+    },
+    "pre_loss": {
+      "dx": 0.6217388063669205,
+      "dy": 0.00907108187675476,
+      "yaw_change": -4.242086889662614e-05,
+      "tail_vx": 0.4015367865825801,
+      "tail_wz": 6.867551718026968e-05,
+      "max_tilt": 0.0021106088986988635,
+      "sim_s": 1.9791666670000012
+    },
+    "publisher_loss": {
+      "dx": 0.23672136664390564,
+      "dy": 0.0035850703716278076,
+      "yaw_change": 0.00015408513398962667,
+      "tail_vx": 4.604843488781308e-05,
+      "tail_wz": -2.222075029004608e-06,
+      "max_tilt": 0.0021409295074163114,
+      "sim_s": 2.979166667000001
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "body_height_m": {
+    "minimum": 0.13231758773326874,
+    "maximum": 0.13472601771354675
+  },
+  "wheel_feedback": {
+    "front_left_wheel_joint": {
+      "minimum": -6.001137767562788,
+      "maximum": 8.267020075093152,
+      "samples": 1563
+    },
+    "rear_left_wheel_joint": {
+      "minimum": -6.0314653855600096,
+      "maximum": 8.26708433121376,
+      "samples": 1563
+    },
+    "front_right_wheel_joint": {
+      "minimum": -0.16720286232512072,
+      "maximum": 8.267060907263684,
+      "samples": 1563
+    },
+    "rear_right_wheel_joint": {
+      "minimum": -0.23662647114682367,
+      "maximum": 8.267048402083578,
+      "samples": 1563
+    }
+  },
+  "sensors": {
+    "scan_messages": 160,
+    "depth_messages": 160,
+    "camera_info_messages": 160,
+    "last_scan": {
+      "frame": "lab_laser_link",
+      "samples": 360,
+      "minimum": 0.10000000149011612,
+      "maximum": 12.0,
+      "finite": 360
+    },
+    "last_depth": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "finite_positive": 2308,
+      "minimum": 1.3487672805786133,
+      "maximum": 5.309062480926514
+    },
+    "frames": {
+      "lab_laser_link": {
+        "position_m": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "expected_position_m": [
+          0.3,
+          0.0,
+          0.4
+        ]
+      },
+      "oakd_rgb_camera_optical_frame": {
+        "position_m": [
+          0.35,
+          0.0,
+          0.45
+        ],
+        "expected_position_m": [
+          0.35,
+          0.0,
+          0.45
+        ]
+      }
+    },
+    "camera_info": {
+      "frame": "oakd_rgb_camera_optical_frame",
+      "width": 320,
+      "height": 240,
+      "k": [
+        277.12812920993167,
+        0.0,
+        160.0,
+        0.0,
+        277.12812920993167,
+        120.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "real_time_factor": 0.5393270916054554,
+  "first_launch_returncode": 0,
+  "relaunch_reset": {
+    "original_xy": [
+      -0.5001108050346375,
+      -0.49999698996543884
+    ],
+    "restored_xy": [
+      -0.5001108050346375,
+      -0.49999698996543884
+    ],
+    "error_m": 0.0
+  },
+  "launch_returncode": 0,
+  "body_samples": 1690,
+  "joint_samples": 1690,
+  "max_body_tilt_rad": 0.0021763069734202166,
+  "derived_from": {
+    "producer_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/final-pybullet/report.json",
+      "sha256": "c08fdf12a961a83563984d042973eb88953b16663b0855f3be4f7bd4b54960ad",
+      "bytes": 5870
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/final-pybullet/trace.json",
+      "sha256": "c9f95345606aca2ef834a090b58a5bca16d4b76bb8ee4e6eac7409a24e26d740",
+      "bytes": 935778
+    }
+  }
+}

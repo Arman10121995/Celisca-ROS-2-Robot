@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/panda-intuitive-controls-producer.py", line 249, in <module>
+    motion=execute_complete(None,.005)
+  File "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/panda-intuitive-controls-producer.py", line 90, in execute_complete
+    measured_plan = plan_required(offset)
+  File "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/panda-intuitive-controls-producer.py", line 84, in plan_required
+    return dict(offset_m=[v.get() for v in cart.offset] if offset is None else list(offset), duration_sim_s=points[-1][0],
+TypeError: 'NoneType' object is not iterable

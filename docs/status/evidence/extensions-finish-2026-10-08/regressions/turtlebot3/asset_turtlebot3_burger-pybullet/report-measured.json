@@ -1,0 +1,202 @@
+{
+  "robot": "asset_turtlebot3_burger",
+  "backend": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": true,
+  "scope": "Actual source-mounted LDS, joint/TF feedback and GUI Drive/Stop/watchdog; not mapping/navigation",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+  "owned_pid": 71751,
+  "phases": {
+    "armed_neutral": {
+      "dx": -9.775161743164062e-05,
+      "dy": 0.0,
+      "yaw": 0.0003356927530551183,
+      "tail_vx": -0.0001034943691042552,
+      "tail_wz": 0.00036389723139752404,
+      "z": 0.0009924483019858599,
+      "max_tilt": 0.015590678450109538,
+      "sim_duration": 1.0
+    },
+    "forward": {
+      "dx": 0.3939642906188965,
+      "dy": 8.225440979003906e-05,
+      "yaw": -0.0015679126877026952,
+      "tail_vx": 0.18494202936642917,
+      "tail_wz": -0.0008727746066129328,
+      "z": 0.0009599810000509024,
+      "max_tilt": 0.015840084206017326,
+      "sim_duration": 2.4999999999999996
+    },
+    "forward_stop": {
+      "dx": 0.052629947662353516,
+      "dy": -5.269050598144531e-05,
+      "yaw": -0.0017663294796425228,
+      "tail_vx": 4.975675761952275e-07,
+      "tail_wz": 1.0406311867820668e-05,
+      "z": 0.0008345088572241366,
+      "max_tilt": 0.015697564103066993,
+      "sim_duration": 2.499999999999999
+    },
+    "reverse": {
+      "dx": -0.40276670455932617,
+      "dy": 0.001870870590209961,
+      "yaw": -0.004153346974909858,
+      "tail_vx": -0.18507800019089263,
+      "tail_wz": -0.0017929675308491987,
+      "z": 0.000981620978564024,
+      "max_tilt": 0.016159830005816486,
+      "sim_duration": 2.4791666659999994
+    },
+    "reverse_stop": {
+      "dx": -0.049315452575683594,
+      "dy": 0.00034618377685546875,
+      "yaw": -0.0026053584662531232,
+      "tail_vx": 0.00024383076789475768,
+      "tail_wz": -0.001003955144957594,
+      "z": 0.0009815688244998455,
+      "max_tilt": 0.015610904390897799,
+      "sim_duration": 2.5
+    },
+    "left_turn": {
+      "dx": -0.004513263702392578,
+      "dy": -0.014190196990966797,
+      "yaw": 2.6454921445094115,
+      "tail_vx": -0.009546639818919886,
+      "tail_wz": 1.2222939591170812,
+      "z": 0.0008966227760538459,
+      "max_tilt": 0.015577938165225923,
+      "sim_duration": 2.4791666669999994
+    },
+    "left_turn_stop": {
+      "dx": 0.002349376678466797,
+      "dy": -0.0009450912475585938,
+      "yaw": 0.3231300343259993,
+      "tail_vx": 7.532564751230384e-05,
+      "tail_wz": -0.0019187775993579179,
+      "z": 0.0009128248784691095,
+      "max_tilt": 0.015543905183407333,
+      "sim_duration": 2.479166667000001
+    },
+    "right_turn": {
+      "dx": -0.00063323974609375,
+      "dy": 0.01491856575012207,
+      "yaw": -2.653722176204782,
+      "tail_vx": 0.009252175349261498,
+      "tail_wz": -1.223944434072577,
+      "z": 0.0009759117965586483,
+      "max_tilt": 0.015760946912024336,
+      "sim_duration": 2.5
+    },
+    "right_turn_stop": {
+      "dx": 0.0020236968994140625,
+      "dy": 0.00020623207092285156,
+      "yaw": -0.3443978097914167,
+      "tail_vx": -8.471650023927641e-05,
+      "tail_wz": -0.0009198453429081544,
+      "z": 0.0008830722654238343,
+      "max_tilt": 0.015490487644110837,
+      "sim_duration": 2.5
+    },
+    "pre_loss": {
+      "dx": 0.3105130195617676,
+      "dy": -0.01217198371887207,
+      "yaw": -7.329071149982797e-05,
+      "tail_vx": 0.18496959345358913,
+      "tail_wz": -0.00019718969739719396,
+      "z": 0.0009624717640690506,
+      "max_tilt": 0.015547519273012953,
+      "sim_duration": 1.9791666660000011
+    },
+    "publisher_loss": {
+      "dx": 0.07971405982971191,
+      "dy": -0.0031156539916992188,
+      "yaw": 0.0033009905350211144,
+      "tail_vx": -0.00010016086308366376,
+      "tail_wz": -0.0013632736990512196,
+      "z": 0.0008780902135185897,
+      "max_tilt": 0.015628729879510736,
+      "sim_duration": 2.479166666000001
+    }
+  },
+  "neutral_commands": 0,
+  "silence_commands": 0,
+  "sensors": {
+    "scan_messages": 139,
+    "depth_messages": 0,
+    "camera_info_messages": 0,
+    "last_scan": {
+      "frame": "base_scan",
+      "samples": 360,
+      "range_min": 0.11999999731779099,
+      "range_max": 3.5,
+      "finite": 193,
+      "angle_min": -3.1415927410125732,
+      "angle_increment": 0.01745329238474369
+    },
+    "max_finite_scan_points": 202,
+    "mounted_frames": {
+      "base_scan": {
+        "position": [
+          -0.032,
+          0.0,
+          0.182
+        ],
+        "expected_position": [
+          -0.032,
+          0.0,
+          0.182
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "imu_link": {
+        "position": [
+          -0.032,
+          0.0,
+          0.078
+        ],
+        "expected_position": [
+          -0.032,
+          0.0,
+          0.078
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "joint_names": [
+    "wheel_left_joint",
+    "wheel_right_joint"
+  ],
+  "body_samples": 1355,
+  "joint_samples": 1355,
+  "real_time_factor": 0.9028869097812561,
+  "launch_returncode": 0,
+  "max_body_tilt_rad": 0.016159830005816486,
+  "joint_position_ranges": {
+    "wheel_left_joint": 20.495661433833476,
+    "wheel_right_joint": 13.508110460460498
+  },
+  "derived_from": {
+    "producer_report": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_burger-pybullet/report.json",
+      "sha256": "c4515aedb6dc7e5f1ec9aee34a7877d2909341735dc0800f9b45af3d5ad20a8c",
+      "bytes": 5442
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/turtlebot3-current-drive/asset_turtlebot3_burger-pybullet/trace.json",
+      "sha256": "e28b8985cf20407e1035f0210e8b7dc1d09095835dc87faf32cc9ee8fca644bb",
+      "bytes": 584637
+    }
+  }
+}

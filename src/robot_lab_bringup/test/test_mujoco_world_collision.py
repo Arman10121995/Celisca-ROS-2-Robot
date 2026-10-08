@@ -32,3 +32,20 @@ def test_open_room_keeps_floor_and_wall_contacts(tmp_path):
         mujoco.mj_step(model, data); positions.append(data.qpos[0])
     assert 1.8 < max(positions) < 1.87
     assert np.isfinite(data.qpos).all()
+
+
+def test_open_planar_static_mesh_compiles_and_supports_a_body(tmp_path):
+    floor = trimesh.Trimesh(vertices=[[-2, -2, 0], [2, -2, 0],
+                                     [2, 2, 0], [-2, 2, 0]],
+                           faces=[[0, 1, 2], [0, 2, 3]], process=False)
+    path = tmp_path/'open-floor.stl'; floor.export(path)
+    root = ET.fromstring(f'''<mujoco><asset><mesh name="floor" file="{path}"/></asset>
+      <worldbody><geom type="mesh" mesh="floor"/>
+      <body pos="0 0 1"><freejoint/><geom type="sphere" size=".1" mass="1"/></body>
+      </worldbody></mujoco>''')
+    assert add_static_mesh_collisions(root) == 1
+    model = mujoco.MjModel.from_xml_string(ET.tostring(root, encoding='unicode'))
+    data = mujoco.MjData(model)
+    for _ in range(1500): mujoco.mj_step(model, data)
+    assert data.qpos[2] == pytest.approx(.101, abs=.003)
+    assert np.isfinite(data.qpos).all()

@@ -1,0 +1,42 @@
+[
+  {
+    "section": "arm_planning",
+    "changes": [
+      {
+        "path": "src/robot_lab_gui/robot_lab_gui/cartesian_controls.py",
+        "old_sha256": "59ee6b56e3706572a9c0569ddd354e61d1846bf9a09f8c02b7f96fa527b11174",
+        "current_sha256": "9ef9d075595f880ac75c74cd96d87155ea5db1a0ed3b3104985cd199f8f62a99"
+      },
+      {
+        "path": "src/robot_lab_gui/robot_lab_gui/launcher.py",
+        "old_sha256": "92f1e6042477882e6a0e0c039cb29daf74b92bc9d7a144b4e4ae4774c6da5b0f",
+        "current_sha256": "8e3408a8d6cd364c7a205a756d0da1eff0196043b33f9e562c312c96b9c19110"
+      },
+      {
+        "path": "src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py",
+        "old_sha256": "e59c3bfcd8447719ada88bd66020b0d60ca7bae4e8df11def09162d15c2f633a",
+        "current_sha256": "ce8bc83db0e9552c777dc046e70fc70bb81d38e27055c303b6fa578bd2231692"
+      }
+    ],
+    "report": {
+      "path": "docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/report.json",
+      "sha256": "86f113c7dc70742b32d2fae37fc6ad96a278fb341b560f7e8c1a38f6cddd936e"
+    },
+    "source_manifest": "docs/status/evidence/extensions-finish-2026-10-08/controls/panda-normal/source-manifest.json"
+  },
+  {
+    "section": "hands",
+    "changes": [
+      {
+        "path": "src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py",
+        "old_sha256": "e59c3bfcd8447719ada88bd66020b0d60ca7bae4e8df11def09162d15c2f633a",
+        "current_sha256": "ce8bc83db0e9552c777dc046e70fc70bb81d38e27055c303b6fa578bd2231692"
+      }
+    ],
+    "report": {
+      "path": "docs/status/evidence/extensions-finish-2026-10-08/controls/panda-hand/report.json",
+      "sha256": "95ec0e848e9c81b1e618d31b2222383f96cc7672208416a1816e5eefbddd7c18"
+    },
+    "source_manifest": "docs/status/evidence/extensions-finish-2026-10-08/controls/panda-hand/source-manifest.json"
+  }
+]

@@ -1,0 +1,465 @@
+Starting >>> robot_lab_utils
+Starting >>> robot_lab_models
+Starting >>> robot_lab_robots
+Starting >>> robot_lab_planning
+Starting >>> robot_lab_firmware
+Starting >>> robot_lab_localization
+Starting >>> robot_lab_mapping
+Starting >>> robot_lab_msgs
+Starting >>> robot_lab_algorithms
+Starting >>> robot_lab_benchmark
+Starting >>> robot_lab_motion
+Starting >>> robot_lab_vacuum_cleaning
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+Finished <<< robot_lab_models [2.51s]
+Finished <<< robot_lab_robots [2.69s]
+Finished <<< robot_lab_mapping [3.42s]
+Finished <<< robot_lab_firmware [3.49s]
+Finished <<< robot_lab_utils [3.57s]
+Finished <<< robot_lab_localization [3.55s]
+Starting >>> robot_lab_description
+Starting >>> robot_lab_controller
+Starting >>> robot_lab_maps
+Starting >>> robot_lab_registry
+Starting >>> robot_lab_isaac
+Finished <<< robot_lab_planning [3.68s]
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'install-scripts' in 'install' (setup.cfg), please use the underscore name 'install_scripts' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'install-scripts' will not be supported in future
+        versions. Please use the underscore name 'install_scripts' instead.
+
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+        (Affected: robot_lab_isaac).
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'install-scripts' in 'install' (setup.cfg), please use the underscore name 'install_scripts' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'install-scripts' will not be supported in future
+        versions. Please use the underscore name 'install_scripts' instead.
+        (Affected: robot_lab_isaac).
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+Finished <<< robot_lab_motion [5.06s]
+Finished <<< robot_lab_description [1.60s]
+Finished <<< robot_lab_msgs [5.17s]
+Starting >>> robot_lab_cpp_examples
+Starting >>> robot_lab_py_examples
+Starting >>> robot_lab_mujoco
+Starting >>> robot_lab_pybullet
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'install-scripts' in 'install' (setup.cfg), please use the underscore name 'install_scripts' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'install-scripts' will not be supported in future
+        versions. Please use the underscore name 'install_scripts' instead.
+
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+        (Affected: robot_lab_mujoco).
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'install-scripts' in 'install' (setup.cfg), please use the underscore name 'install_scripts' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'install-scripts' will not be supported in future
+        versions. Please use the underscore name 'install_scripts' instead.
+        (Affected: robot_lab_mujoco).
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+Finished <<< robot_lab_benchmark [6.56s]
+Finished <<< robot_lab_vacuum_cleaning [6.54s]
+--- stderr: robot_lab_algorithms
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+---
+Finished <<< robot_lab_algorithms [6.60s]
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+Finished <<< robot_lab_cpp_examples [2.43s]
+--- stderr: robot_lab_controller
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:69 (ament_add_pytest_test)
+
+
+---
+Finished <<< robot_lab_controller [4.93s]
+Starting >>> robot_lab_navigation
+--- stderr: robot_lab_maps
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:54 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:55 (ament_add_pytest_test)
+
+
+---
+Finished <<< robot_lab_maps [5.39s]
+--- stderr: robot_lab_registry
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+---
+Finished <<< robot_lab_registry [5.41s]
+--- stderr: robot_lab_isaac
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+        (Affected: robot_lab_isaac).
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+---
+Finished <<< robot_lab_isaac [5.41s]
+--- stderr: robot_lab_mujoco
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/dist.py:599: SetuptoolsDeprecationWarning: Invalid dash-separated key 'script-dir' in 'develop' (setup.cfg), please use the underscore name 'script_dir' instead.
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+        (Affected: robot_lab_mujoco).
+
+        Available configuration options are listed in:
+        https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/discussions/5011 for details.
+        ********************************************************************************
+
+!!
+  opt = self._enforce_underscore(opt, section)
+---
+Finished <<< robot_lab_mujoco [4.87s]
+--- stderr: robot_lab_pybullet
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+---
+Finished <<< robot_lab_pybullet [4.87s]
+--- stderr: robot_lab_py_examples
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+---
+Finished <<< robot_lab_py_examples [4.92s]
+Finished <<< robot_lab_navigation [1.81s]
+Starting >>> robot_lab_bringup
+--- stderr: robot_lab_bringup
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:22 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:23 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:24 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:25 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:26 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:27 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:28 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:29 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:30 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:31 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:32 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:33 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:34 (ament_add_pytest_test)
+
+
+CMake Warning at /opt/ros/humble/share/ament_cmake_pytest/cmake/ament_add_pytest_test.cmake:79 (message):
+  The Python module 'pytest' was not found, pytests cannot be run.  On Linux,
+  install the 'python3-pytest' package.  On other platforms, install 'pytest'
+  using pip.
+Call Stack (most recent call first):
+  CMakeLists.txt:35 (ament_add_pytest_test)
+
+
+---
+Finished <<< robot_lab_bringup [18.2s]
+Starting >>> robot_lab_adapter
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+--- stderr: robot_lab_adapter
+/home/molar1/.local/lib/python3.10/site-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+---
+Finished <<< robot_lab_adapter [3.36s]
+Starting >>> robot_lab_gui
+Finished <<< robot_lab_gui [3.36s]
+
+Summary: 25 packages finished [36.3s]
+  10 packages had stderr output: robot_lab_adapter robot_lab_algorithms robot_lab_bringup robot_lab_controller robot_lab_isaac robot_lab_maps robot_lab_mujoco robot_lab_py_examples robot_lab_pybullet robot_lab_registry

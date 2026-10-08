@@ -1,0 +1,64 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_bookstore.world",
+  "source_sha256": "7f3a8323eb59383b4e02262befb7ecf64197d769013257ef36f7c272d3c5e9d7",
+  "mesh_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_AirConditionerC_01/meshes/aws_AirConditionerC_01_collision.DAE": "b8b6cabed9188465002071af7d2a719896ff03e2dd2ecc524dfdb5bbc52e344d",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Bicycle_01/meshes/aws_Bicycle_01_collision.DAE": "640c417017210b60ab17ad91a5141b3f826aec61af22ee6e7b67719d82295a18",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookE_01/meshes/aws_BookE_01_collision.DAE": "bf098cd880d5c46438d137c96fb1b232eb80fdcf0581a04ac7257309015dc2eb",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookF_01/meshes/aws_BookF_01_collision.DAE": "9bf18e0cc67b50de9affc5e750ed35753458282c4f2ed9d4d9fadf9d7cf31cf2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookD_01/meshes/aws_BookD_01_collision.DAE": "56bbe619a3cab321ff3fe383f9b73706c7d93b552bd6fdcdd0ce847c4dd71280",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfA_01/meshes/aws_BookshelfA_01_collision.DAE": "22aa3a0558ce4df560338aec05e375bddf86d37d35e3576f17c62cca6dc1d5c2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfB_01/meshes/aws_BookshelfB_01_collision.DAE": "7e4b32b63c9b26a27d27080404b17d4ebd66528a15c4807eb61cf0792cd8e88a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_BookshelfC_01/meshes/aws_BookshelfC_01_collision.DAE": "d0584e6b04b8ad781d235ea1ce4861dadbdc16a33a3c597444ba6caf673e5591",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ChairB_01/meshes/aws_ChairB_01_collision.DAE": "3717de407e54ced82d29c6bb0a58163eab692230593656aa6cf16d682a7269f1",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ColumnB_01/meshes/aws_ColumnB_01_collision.DAE": "c9f600d15aa3ccde85dde824895be8baf0afb0c1b8a9c19e103f9d55168d0afa",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Computer_01/meshes/aws_Computer_01_collision.DAE": "054d54332da5dd995d474c2441d2572dc35519b756981a92982c09b39ad03151",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_SecurityCamera_01/meshes/aws_SecurityCamera_01_collision.DAE": "b1c1eab4ecd1c41824ef6b95224f5227bf2e30d73d04e2d7c271912dc143a900",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_InfoDesk_01/meshes/aws_InfoDesk_01_collision.DAE": "6863865c4be53e36c153d453186b49f5ce4cc7c3a6278f9d5c05c4b28c456578",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskB_01/meshes/aws_DeskB_01_collision.DAE": "8e57789a7a94e0864960639451853128a46eb9b14c2aa1a8c77d420e8bcab74d",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DeskA_01/meshes/aws_DeskA_01_collision.DAE": "2199a0f5275d3ba2d211f87d166ae00876fda57d03bcbbf9020fc7b3352399af",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_DoorB_01/meshes/aws_DoorB_01_collision.DAE": "2ce41c9744db89ed2487c04b31a72d2632b1a277050a459d70fbffc3873b4a81",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopFloor_01/meshes/aws_RetailShopFloor_01_collision.DAE": "e1b886174620819196e9954db8c8c69e2d65e34e719bd13b4a8f2d5ef3cbb1a2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_TabletB_01/meshes/aws_TabletB_01_collision.DAE": "40e1efd33ff167a17e112d2286c0094f4162b55198986ad52eac82721c89c04a",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Tablet_01/meshes/aws_Tablet_01_collision.DAE": "02f6b5210a5cfa6c0c418c80a32b0b8c80089af6c2debf6b523b7acc12621cd2",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Holder_01/meshes/aws_Holder_01_collision.DAE": "0041738c4f2948bc74119346ff383b5fef670f5923d4a91cbef499f9128ed7ba",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Horologe_01/meshes/aws_Horologe_01_collision.DAE": "bf739194bebd88617dd522fb42634d5aeaee1a24929b4c672c5d75fd2eabf35c",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_RetailShopWall_01/meshes/aws_RetailShopWall_01_collision.DAE": "7bab2fa9128fbe430f026348dd3e39be059ca33bcb5494b1c496b01a7a3298f4",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_LightA_01/meshes/aws_LightA_01_collision.DAE": "1d3c280384000155c214d407a694f36249c513cfecf7fc30830c4c8a83a58f8e",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_MagicCube_01/meshes/aws_MagicCube_01_collision.DAE": "2152e8967919267ce1b6f03d7bce23fb796be0e873001e90d1752f58e9595d58",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_Spotlight_01/meshes/aws_spotlight_01_collision.DAE": "a957e19483d90464ec185e715d24c66ecf962f390fc39b4e0db9f32cadecc961",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/bookstore/models/aws_robomaker_retail_ShopWindow_01/meshes/aws_ShopWindow_01_collision.DAE": "c8ac71f9746fb7d8d1273eca2b51196f1a606cb4e03b6f2c3f24347d02ff2e29"
+  },
+  "mesh_slice_paths": 91,
+  "mesh_mask_cells": 4747,
+  "collision_count": 7,
+  "projection_recipe": "complete-static-height-slice-v3",
+  "terrain_slice_polygons": 0,
+  "heightfield_count": 0,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    -2.7,
+    5.3500000000000005
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-114812-53ab19/dataset_bookstore.yaml",
+  "free_cells": 14691,
+  "occupied_cells": 1877,
+  "unknown_cells": 20446,
+  "shape": [
+    186,
+    199
+  ],
+  "origin": [
+    -9.95,
+    -9.35,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "91fdd48e2706a31980a56c7671df66f4a737a52c00360348bb2cabe0a0658416",
+    ".pgm": "ad5c84b10dd551a47c003c4e6c87c8fccac81478cbbf754f5fa46f0992593c83"
+  }
+}

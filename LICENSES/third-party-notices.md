@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
+Documentation reviewed October 8, 2026; exact source stages are in the current checkpoint.
 The installed robot/world extensions retain upstream sources and model-specific
 notices on SSD. See the [pinned source snapshot](../docs/status/asset-sources-2026-10-05.yaml),
 [extension guide](../docs/ASSET_EXTENSION_GUIDE.md) and
@@ -23,6 +23,8 @@ complete license verification; the October 1 report records 152 pending entries.
 | legacy_humanoid_import | `src/robot_lab_robots/_upstream/legacy_humanoid_import/LICENSE` | Original provenance/license unresolved; this descriptive file does not establish redistribution permission |
 | FUJI mecanum roller/hub meshes | [DaiGuard/fuji_mecanum](https://github.com/DaiGuard/fuji_mecanum), revision `646431a5e107448e0e2bdeeba4575db9aa3665ff` | MIT; copyright 2022 DaiGuard, license and unmodified meshes in `src/robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum/` |
 | PX4 FCU and upstream X500 simulation assets | [PX4-Autopilot v1.16.2](https://github.com/PX4/PX4-Autopilot/tree/v1.16.2), revision `54f0455ffcd755534539a7cf33a09a20bf71d29d` | BSD 3-Clause; copyright 2012–2023 PX4 Development Team. The SSD checkout retains its LICENSE and submodule notices; the runtime reads upstream X500 assets from that checkout. |
+| Official Clearpath Husky description | [upstream pin](https://github.com/husky/husky/tree/729f8aa45ccd86fa33a05e07ef698c52c451cd9c) | Original source/models retained on SSD; package metadata declares BSD. The 50 N·m simulation envelope and added lab sensors/controllers are Robot Lab derivatives, not vendor hardware specifications. Complete per-asset redistribution review remains open. |
+| Unitree RL Gym G1/H1/H1_2 policy research inputs | [upstream pin](https://github.com/unitreerobotics/unitree_rl_gym/tree/276801e46c5d433564f24658bac64f254b7d2d4b) | Repository BSD-3-Clause LICENSE retained with checkpoint/config/model hashes on SSD. Model-specific asset terms remain separate; downloads do not establish locomotion or blanket redistribution permission. |
 | pymavlink 2.4.50 | [ArduPilot/pymavlink](https://github.com/ArduPilot/pymavlink) | Installed dependency metadata specifies LGPLv3; installed in the SSD venv. Dependency terms are separate from Robot Lab adapter code. |
 
 Additional checkpoints and assets have model-specific provenance in their own

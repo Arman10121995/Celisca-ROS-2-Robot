@@ -1,6 +1,6 @@
 # Robot Lab test tiers and evidence
 
-Updated October 7, 2026. The runner and manifests live in
+Updated October 8, 2026. The runner and manifests live in
 `scripts/test_tiers.sh`; `scripts/test_fast.sh` adds source compilation and
 registry checks. [Current status](status/CURRENT_STATUS.md) records measured
 robot work separately from software checks.
@@ -52,7 +52,10 @@ the change; retain failures and declared skips.
 
 | Stage | Result | Evidence |
 |---|---|---|
-| Final local GUI | 94 passed, two PyOpenGL deprecation warnings | [GUI evidence](status/evidence/gui-controls-column-2026-10-07/README.md) |
+| October 8 current fast | 1005 passed, one skip/four integration deselections | October 8 checkpoint publication receipt; software only |
+| October 8 current GUI | 104 passed, two PyOpenGL deprecation warnings | Drone mirrored controls, target editing and complete existing GUI suite |
+| October 8 core build / physics / integration | 25 packages; 27 physics passed; 147 integration passed under dedicated Xvfb | Desktop integration initially failed compact layout; isolated and full Xvfb repeats pass, original failure retained |
+| October 7 local GUI | 94 passed, two PyOpenGL deprecation warnings | [GUI evidence](status/evidence/gui-controls-column-2026-10-07/README.md) |
 | Final focused real-Tk layout | Five passed | Same evidence; compact setup access, wide restoration, controls/limits and neutral inputs |
 | Preceding local control-column stage | 936 fast passed, one skip/four deselections; 146 integration passed | Exact source stages and logs in the GUI manifest |
 | Published `091d388` CI | Core build: 25 packages; fast: 933 passed/four skips/four deselections; physics: 20 passed; integration: 134 passed/12 skips; registry validation passed | [Exact CI report/log hashes](status/evidence/ci-extensions-2026-10-07/README.md) |

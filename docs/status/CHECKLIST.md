@@ -1,18 +1,24 @@
 # Robot Lab done and remaining checklist
 
-Updated October 7, 2026. **The project is partial.** Runtime checkpoint: `091d388`;
-[current status](CURRENT_STATUS.md) links its exact successful CI and source
-proof. A checked item below
+Updated October 8, 2026. **The project is partial.** [Current status](CURRENT_STATUS.md)
+and [the checkpoint](continuation-2026-10-08.md) link exact physical source stages,
+publication and software checks. A checked item below
 describes an implemented feature or a named measured screen; it does not
 qualify every robot, map, mode or simulator. The
 [task ledger](platform-status.yaml) owns task state, the
 [roadmap](../../ROADMAP.md) owns acceptance, and the
-[latest measurements](continuation-2026-10-07.md) give exact scopes and limits.
+[latest measurements](continuation-2026-10-08.md) give exact scopes and limits.
 The latest user instruction prioritizes the new extensions before resuming
 the older roadmap. Existing stabilization fixes must remain working.
 
 ## Implemented and measured
 
+- [x] Put all seven directional controls in Drone, share latched state with
+  Drive, and reduce default yaw to 0.3 rad/s. Actual owned `nav_empty` flight
+  covers neutral input, directions, altitude, release/Stop/loss and landing.
+- [x] Add measured Panda tool/target XYZ, **Use current tool pose** and small
+  axis target steps with separate Plan/Execute. Actual normal 1 cm X/Y/Z
+  targets, rejection/interruption/reset and Hand cube lift/release pass.
 - [x] Keep this repository on `master`; preserve existing work. Large sources,
   builds, models and trial output use the workspace SSD. The verified PX4
   relocation reclaimed 15.79 GiB with compatibility symlinks (storage audit).
@@ -114,6 +120,26 @@ the older roadmap. Existing stabilization fixes must remain working.
   (four skips/four deselections), 20 physics checks, 134 integration checks
   (twelve skips) and registry validation. Later runtime changes need their own
   CI. See [October 7 evidence](evidence/ci-extensions-2026-10-07/README.md).
+- [x] Add Husky physical four-wheel skid control and a declared lab sensor/motor
+  kit. Four Drive/sensor and twenty localization/reset, 2D/3D SLAM/save and
+  clear/obstacle Nav2 screens pass across all engines. Normal twenty GUI mode
+  defaults/commands and a production navigation repeat pass. Other maps,
+  payloads, vendor hardware and complete estimator/contact qualification remain.
+- [x] Repeat twelve TurtleBot3 physical Drive/source-LDS, both TurtleBot4 Isaac
+  Drive/lidar/RGB-D and native Panda Hand/MoveIt after shared controller changes,
+  before guarded source refresh. Historical higher-mode matrices retain their
+  own source stages; these regressions do not rerun every mission.
+- [x] Make Worlds seed X/Y editable; measure actual Generate/Stop/custom seed
+  and unchanged Launch selections. Fix disconnected terrain triangle slicing;
+  the rotated two-hill fixture now exports finite free/occupied cells.
+- [x] Repair exactly six pinned escaped hospital fixtures in derived files,
+  preserve source/texture/frame provenance, verify native Gazebo mesh bounds,
+  fix furniture consistently as a static snapshot and move spawn onto reviewed
+  lobby support. Current short routes and retained freefall/import failures are
+  recorded separately from remaining world/actor/upper-floor qualification.
+- [x] Repair Scheduled Full Test Suite registry imports; exact CI-only `73fcc47`
+  passes required and scheduled workflows. New runtime source has separate
+  final checks/publication in the October 8 archive.
 - [x] Replace invented support/release success with exact hashed measurements,
   retain negative results and block full-release claims on unfinished tasks.
   GUI Health, this checklist, the roadmap and agent guides expose those gaps
@@ -160,14 +186,14 @@ the older roadmap. Existing stabilization fixes must remain working.
   hardware/vendor firmware control requires separate integration.
 - [ ] **R6.5:** Review generated occupancy origin, mesh scale, height and
   seed; cover disconnected free regions, test rotated geometry and navigation
-  alignment, then register validated maps. The new shared heightfield converter
-  extends projection; its occupancy/terrain missions still need qualification.
+  alignment, then register validated maps. Editable seeds and actual rotated
+  triangle exports now pass; complete map/terrain missions remain open.
 - [ ] **R6.6:** Qualify visual/collision/spawn and robot routes across all
   imported worlds/backends. All 100 Fortress example SDFs are downloaded;
   three environment examples are installed, while 97 plugin/robot fixtures
-  require behavior/resource review. Repair the two-floor hospital
-  source fixtures around z=-754,989,000 m with reviewed authored placement;
-  preview camera Fit only flags this defect. Preserve original actors/plugins, audit
+  require behavior/resource review. The six pinned hospital source fixtures
+  are repaired in derived variants; qualify remaining physical routes, upper
+  floors, textures and actors. Preserve original actors/plugins, audit
   licenses and include remaining licensed Fuel environments.
 - [ ] **R6.7:** Implement a terrain-generation GUI with SSD output and shared
   provider/attribution manifest. Shared four-backend heightfield conversion
@@ -199,8 +225,11 @@ the older roadmap. Existing stabilization fixes must remain working.
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
   and explicit hardware-operation authorization. Simulation work is separate.
 
-Follow [PATCH_EXECUTION_GUIDE](../PATCH_EXECUTION_GUIDE.md) for stabilization
+Follow [the AI readiness guide](../AI_ROBOT_READINESS_GUIDE.md),
+[PATCH_EXECUTION_GUIDE](../PATCH_EXECUTION_GUIDE.md) for stabilization
 and [ASSET_EXTENSION_GUIDE](../ASSET_EXTENSION_GUIDE.md) for pinned upstreams,
 implementation order and acceptance. Claim ownership in the ledger before
 changing shared files; record the exact robot/map/backend/task/source and
-measured artifacts when checking an item off.
+measured artifacts when checking an item off. The Bumperbot/MuJoCo hospital heading failure is retained; its matched-servo
+repeat improves heading but times out, so the route and remaining two-base/
+two-hospital/backend cells stay open; Nav2 success alone remains insufficient.

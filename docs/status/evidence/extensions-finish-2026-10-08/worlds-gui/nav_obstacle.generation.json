@@ -1,0 +1,37 @@
+{
+  "source_world": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world",
+  "source_sha256": "6d3e034f6efcce42fa682f9a5a3506ff7d900a1ce3877e72189d9a65cc3a3da4",
+  "mesh_sha256": {},
+  "mesh_slice_paths": 0,
+  "mesh_mask_cells": 7328,
+  "collision_count": 17,
+  "projection_recipe": "complete-static-height-slice-v3",
+  "terrain_slice_polygons": 0,
+  "heightfield_count": 0,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    -6.75,
+    -6.75
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/worlds-gui/gui-world-complete-ps-child/nav_obstacle-20261008-124758-418099/nav_obstacle.yaml",
+  "free_cells": 22948,
+  "occupied_cells": 1626,
+  "unknown_cells": 37926,
+  "shape": [
+    250,
+    250
+  ],
+  "origin": [
+    -12.5,
+    -12.5,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "dcb2f13ece074e7f468ee664e78b1b5e87efa86dfb19e2dad150e067e79774dd",
+    ".pgm": "f3e22554c979a5d22af1b96bd51d6aa728df61b1f9a1f805d0b6d89ce4937ea1"
+  }
+}

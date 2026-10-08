@@ -1,0 +1,109 @@
+{
+  "cases": [
+    {
+      "kind": "maps",
+      "asset_id": "dataset_hospital",
+      "embedded_widget": ".!notebook.!registrytab.!panedwindow.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        642,
+        673,
+        3
+      ],
+      "colors": 37,
+      "orbit_changed_pixel_fraction": 0.37431549809519843,
+      "max_ui_gap_s": 0.42480087599960825,
+      "preparation_wall_s": 11.00982268899952,
+      "geometry_count": 174,
+      "triangles": 373105,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world",
+      "source_sha256": "b46626db296c935c6e0de0441469ecf92d4aef7ac1d1ae2faba0899ffbc5629e",
+      "bounds": {
+        "min_xyz": [
+          -12.572123018310547,
+          -35.07148411083984,
+          -2.999729871749878
+        ],
+        "max_xyz": [
+          12.57742582448666,
+          21.9787100315094,
+          3.0153799057006836
+        ],
+        "center_xyz": [
+          0.0026514030880564476,
+          -6.54638703966522,
+          0.007825016975402832
+        ],
+        "span_m": 62.637097668320834,
+        "raw_min_xyz": [
+          -12.572123018310547,
+          -35.07148411083984,
+          -2.999729871749878
+        ],
+        "raw_max_xyz": [
+          12.57742582448666,
+          21.9787100315094,
+          3.0153799057006836
+        ],
+        "remote_geometry_count": 0
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/10009ab385e745139ee96e06ee6e1003",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    },
+    {
+      "kind": "maps",
+      "asset_id": "dataset_hospital_hospital_two_floors",
+      "embedded_widget": ".!notebook.!registrytab.!panedwindow.!notebook.!nativepreviewpane.!nativescene",
+      "renderer": "llvmpipe (LLVM 15.0.7, 128 bits)",
+      "dimensions": [
+        642,
+        673,
+        3
+      ],
+      "colors": 49,
+      "orbit_changed_pixel_fraction": 0.41316372961538284,
+      "max_ui_gap_s": 0.27556135099985113,
+      "preparation_wall_s": 12.109023056999831,
+      "geometry_count": 346,
+      "triangles": 736646,
+      "source": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital_hospital_two_floors.world",
+      "source_sha256": "2d852bbdd60123952817f165701ed0ed0b791fe28f390239c36342b16c3c2575",
+      "bounds": {
+        "min_xyz": [
+          -12.572123018310547,
+          -35.07148411083984,
+          -2.999729871749878
+        ],
+        "max_xyz": [
+          12.57742582448666,
+          21.9787100315094,
+          6.015379905700684
+        ],
+        "center_xyz": [
+          0.0026514030880564476,
+          -6.54638703966522,
+          1.5078250169754028
+        ],
+        "span_m": 62.99600513505175,
+        "raw_min_xyz": [
+          -12.572123018310547,
+          -35.07148411083984,
+          -2.999729871749878
+        ],
+        "raw_max_xyz": [
+          12.57742582448666,
+          21.9787100315094,
+          6.015379905700684
+        ],
+        "remote_geometry_count": 0
+      },
+      "preview_directory": "/workspace/molar/robot_lab_runtime/registry_previews/87c6914abca14f689670b39e5ce93797",
+      "launch_selection_unchanged": true,
+      "loader_returncode": 0
+    }
+  ],
+  "scope": "Actual embedded Tk/OpenGL geometry and input; no physics or mission qualification",
+  "baseline": "3e5cfae78a1a2811e332adcde85871ec60902254",
+  "closed": true
+}

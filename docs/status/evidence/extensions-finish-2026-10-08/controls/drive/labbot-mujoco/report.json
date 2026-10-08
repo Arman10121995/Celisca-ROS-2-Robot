@@ -1,0 +1,50 @@
+{
+  "robot": "labbot",
+  "backend": "mujoco",
+  "map": "nav_empty",
+  "mode": "display",
+  "passed": false,
+  "scope": "Normal GUI neutral/WASD/Stop/publisher loss/owned relaunch and measured wheel/TF/sensor feedback on this map only; no SLAM or navigation.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "drive_configuration": {
+    "configuration": {
+      "left_wheel_joint": "labbot_left_wheel_joint",
+      "right_wheel_joint": "labbot_right_wheel_joint",
+      "wheel_radius": 0.06,
+      "wheel_separation": 0.3,
+      "mujoco_wheel_velocity_gain": 10.0,
+      "max_speed": 0.8,
+      "max_accel": 1.5,
+      "max_angular_speed": 2.0,
+      "max_angular_accel": 4.0
+    },
+    "wheel_joints": [
+      "labbot_left_wheel_joint",
+      "labbot_right_wheel_joint"
+    ]
+  },
+  "owned_pid": 219231,
+  "phases": {
+    "armed_neutral": {
+      "dx": -2.3048906117040246e-09,
+      "dy": -3.470002063465927e-13,
+      "yaw_change": 3.4294131798175056e-08,
+      "tail_vx": -2.351965631642036e-09,
+      "tail_wz": 3.498885276132312e-08,
+      "max_tilt": 8.695181882915269e-07,
+      "sim_s": 0.98
+    },
+    "forward": {
+      "dx": -8.231483605847245e-09,
+      "dy": -1.2411183192284625e-12,
+      "yaw_change": 1.2251835520853854e-07,
+      "tail_vx": -2.3518337927371996e-09,
+      "tail_wz": 3.500793840341806e-08,
+      "max_tilt": 8.695181882915269e-07,
+      "sim_s": 3.5
+    }
+  },
+  "neutral_commands": 0,
+  "exception": "AssertionError({'dx': -8.231483605847245e-09, 'dy': -1.2411183192284625e-12, 'yaw_change': 1.2251835520853854e-07, 'tail_vx': -2.3518337927371996e-09, 'tail_wz': 3.500793840341806e-08, 'max_tilt': 8.695181882915269e-07, 'sim_s': 3.5})",
+  "launch_returncode": 0
+}

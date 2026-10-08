@@ -59,7 +59,16 @@ def _navigation_passes(measured, world):
     route = measured.get('route_acceptance', {})
     clearance = route.get('min_swept_clearance_m')
     direct = route.get('direct_route_clearance_m')
-    return (navigation_acceptance(measured, .15, 5)['passed']
+    height_ok = True
+    if 'body_height' in measured:
+        height = measured['body_height']
+        expected, low, high = (height.get(key) for key in
+                              ('expected_floor_m', 'minimum_m', 'maximum_m'))
+        height_ok = (all(isinstance(v, (int, float)) and not isinstance(v, bool)
+                         and math.isfinite(v) for v in (expected, low, high))
+                     and expected-.25 <= low <= high <= expected+.75
+                     and height.get('samples', 0) > 10)
+    return (height_ok and navigation_acceptance(measured, .15, 5)['passed']
             and measured.get('settled_sim_second') is True
             and measured.get('truth_samples', 0) >= 20
             and route.get('passed') is True
@@ -252,6 +261,24 @@ def panda_planning_acceptance(report):
                     and motion['terminal_status']['busy'] is False
                     and motion['terminal_status']['contact_blocked'] is False):
                 return False
+        if 'intuitive_targets' in report:
+            targets = report['intuitive_targets']
+            if len(targets) != 3 or {item['axis'] for item in targets} != {'x', 'y', 'z'}:
+                return False
+            for item in targets:
+                motion = item['motion']
+                actual, target = motion['actual']['position'], motion['target_position']
+                step = item['step_m']
+                if not (bounded(step, .001, .050001) and item['sign'] in (-1, 1)
+                        and bounded(item['pose_fk_error_m'], 0, .003)
+                        and bounded(item['selection_joint_drift_rad'], 0, .003)
+                        and vector(actual, 3) and vector(target, 3)
+                        and math.dist(actual, target) < .002
+                        and bounded(motion['physical_displacement_m'], step*.5, step*1.5)
+                        and motion['joint_samples'] > 20
+                        and motion['terminal_status']['busy'] is False
+                        and motion['terminal_status']['contact_blocked'] is False):
+                    return False
         floor, self_contact = report['floor_collision'], report['self_collision']
         if not (floor['valid'] is False and self_contact['valid'] is False
                 and any(c['second'].startswith('robot_lab_world_') for c in floor['contacts'])

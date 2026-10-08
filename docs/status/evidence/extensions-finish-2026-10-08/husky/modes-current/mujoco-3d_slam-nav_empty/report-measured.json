@@ -1,0 +1,213 @@
+{
+  "mode": "3d_slam",
+  "base_frame": "base_link",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5625,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.20006653209993458,
+      "tail_yaw_speed_rps": 1.6378567219496892e-06,
+      "end": {
+        "x": 0.06245909580885184,
+        "y": -0.4999919137583648,
+        "z": 0.13223872657370384,
+        "yaw": 9.914651104139961e-06
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5625,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.2000706892422662,
+      "tail_yaw_speed_rps": 2.361963206098751e-06,
+      "end": {
+        "x": -0.46068384336388585,
+        "y": -0.4999917499217034,
+        "z": 0.13222610071527616,
+        "yaw": 8.904473954769753e-07
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.004,
+      "distance_m": 0.0073,
+      "yaw_change_rad": 0.9082,
+      "tail_speed_mps": 0.0045670014204715415,
+      "tail_yaw_speed_rps": 0.3216950423425145,
+      "end": {
+        "x": -0.4989340044816964,
+        "y": -0.492802076156563,
+        "z": 0.13243083122922913,
+        "yaw": 0.908224921607921
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0004,
+      "yaw_change_rad": -1.0109,
+      "tail_speed_mps": 8.149160070044088e-05,
+      "tail_yaw_speed_rps": 0.4320927602907861,
+      "end": {
+        "x": -0.49998014211553826,
+        "y": -0.4948749152209601,
+        "z": 0.13225388449587966,
+        "yaw": -0.08515459872156891
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.069,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 2.757308324089914e-06,
+      "tail_yaw_speed_rps": 1.3458461583897106e-06,
+      "end": {
+        "x": -0.07140851313369642,
+        "y": -0.5424762489434508,
+        "z": 0.13223308887655622,
+        "yaw": -0.10897923037423803
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.036,
+      "distance_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 1.4246648513594118e-05,
+      "tail_yaw_speed_rps": 3.1029654247710026e-06,
+      "end": {
+        "x": -0.5000289288640088,
+        "y": -0.4999996417224031,
+        "z": 0.13222866156055108,
+        "yaw": 6.405952081810688e-06
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3624,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.20019847969098611,
+      "tail_yaw_speed_rps": 2.386397594678132e-06,
+      "end": {
+        "x": -0.13762900156999563,
+        "y": -0.4999953221067438,
+        "z": 0.13223333681878027,
+        "yaw": 9.993983963942443e-06
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_3d_cloud": true,
+    "3d_geometry": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true,
+    "gui_recording_completed": true
+  },
+  "initial_map_to_world": {
+    "yaw": 1.215079552141169e-06,
+    "x": -0.5000000992596593,
+    "y": -0.5000127989120892
+  },
+  "initial_truth": {
+    "x": -0.5000358874600829,
+    "y": -0.49999954102123495,
+    "z": 0.1322287023665605,
+    "yaw": 7.907312105148389e-06
+  },
+  "localization_error_m": 0.0037762337520100904,
+  "sensor_messages_during_drive": {
+    "/scan": 105,
+    "/oakd/rgb/image_raw": 105,
+    "/oakd/depth/image_raw": 105,
+    "/cloud_map": 14
+  },
+  "cloud_message_points": [
+    0,
+    0,
+    0,
+    2329,
+    2329,
+    2458,
+    2458,
+    2484,
+    2538,
+    2607,
+    2924,
+    2959,
+    3358,
+    3358,
+    3412,
+    3814,
+    0,
+    0,
+    0,
+    2502,
+    2502
+  ],
+  "cloud_geometry": {
+    "frame": "map",
+    "sampled_points": 3814,
+    "min_xyz": [
+      0.9800760746002197,
+      -3.402231454849243,
+      -0.08887016773223877
+    ],
+    "max_xyz": [
+      6.510838508605957,
+      6.526656150817871,
+      0.7778913974761963
+    ]
+  },
+  "reset_response": "Simulation reset successfully",
+  "post_reset_map_to_world": {
+    "yaw": 3.133996676831431e-07,
+    "x": -1.2254721320054607e-06,
+    "y": -1.1489708169276636e-05
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 0.0003811611243083761,
+  "map_updates_after_reset": 3,
+  "cloud_updates_after_reset": 5,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1286,
+  "sensor_counts": {
+    "/scan": 144,
+    "/oakd/rgb/image_raw": 144,
+    "/oakd/depth/image_raw": 144,
+    "/cloud_map": 21
+  },
+  "scan_geometry": {
+    "frame": "lab_laser_link",
+    "samples": 360,
+    "finite": 360,
+    "min_m": 5.500009059906006,
+    "max_m": 8.770485877990723,
+    "range_min": 0.10000000149011612,
+    "range_max": 12.0
+  },
+  "passed": true,
+  "robot": "asset_husky",
+  "backend": "mujoco",
+  "map": "nav_empty",
+  "scope": "Actual Tk selection/autofill/Run/Save/Stop and independent body truth. Named static route/map only; no universal-map, hardware or vendor firmware grant. Experimental provider is declared in the original report."
+}

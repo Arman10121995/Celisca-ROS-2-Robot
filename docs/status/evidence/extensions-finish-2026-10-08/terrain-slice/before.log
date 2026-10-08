@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/generator-before.py", line 232, in <module>
+    raise SystemExit(main())
+  File "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/terrain-slice/generator-before.py", line 216, in main
+    if report['free_cells']<10:raise RuntimeError('Seed is blocked or the generated map has no free region')
+RuntimeError: Seed is blocked or the generated map has no free region
