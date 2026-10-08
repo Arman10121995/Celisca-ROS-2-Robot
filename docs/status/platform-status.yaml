@@ -24,7 +24,7 @@ priority_patches:
     title: "Celisca scale, spawn and furnished-map navigation"
     state: partial
     owner: codex
-    result: "20% Celisca scale/collision and historical furnished goals retained. Single-floor hospital: Labbot four engines and Bumperbot Gazebo/PyBullet pass short routes. Bumperbot MuJoCo original -110.79 degree heading failure retained. Profile-local matched gain/inertia fixes idle creep and passes normal Display Drive/Stop/loss/relaunch. Hospital repeat heading is 1.42 degrees, but times out after 360 s at 0.174 m body error; extended-budget repeat pending. Remaining map/backend/obstacle cells stay open."
+    result: "20% Celisca scale/collision and historical furnished goals retained. Current single-floor hospital: Labbot four engines and Bumperbot Gazebo/PyBullet pass short routes. Bumperbot matched motor inertia passes Display Drive/Stop/loss/relaunch and repairs the original heading failure. Extended hospital run reaches Nav2 success at 0.82 degrees heading but fails the unchanged 0.15 m body gate at 0.175 m. The tighter 0.03 m goal experiment times out at 0.233 m/152.21 degrees and is reverted to the tested 0.07 m profile; original reports and root-zero cleanup are retained. Remaining map/backend/obstacle cells stay open."
     evidence: "docs/status/evidence/r61-furniture-collision-2026-09-30/README.md"
   P4:
     title: "MuJoCo performance with correct control timing"
@@ -85,7 +85,7 @@ current_verification:
   documentation: "October 8 maintained README/roadmap/status/tutorial/agent guides now describe current Husky, native Panda intuitive XYZ/Hand, seven-button PX4 controls and static world repairs, with exact scoped evidence and remaining acceptance. 318 reviewed relative documentation links resolve. Dated historical reports remain unchanged."
   gui_workspace: "Current full GUI suite: 104 passed. Drone mirrors all seven Drive directions with gentler yaw; native Panda current-pose/XYZ steps retain separate Plan/Execute and all safety gates. A desktop integration compact-window failure is retained; isolated layout and full dedicated-display integration repeats pass. Health opens current October 8 trials and readiness/Husky guides."
   installed_extensions: "113 raw extension profiles and 17 worlds remain installed on SSD; GUI consolidates complete parent families with exact variants/components. Native embedded Registry viewport renders seven source scenes and passes neutral live-plant/Drive checks. T3 four modes and T4 five modes on all four engines have separate named measured screens; imports/previews do not qualify other robot missions."
-  extension_software_checks: "Current local source: 25 core packages built (optional ORB-SLAM3 excluded), 1005 fast passed/one skip/four deselections, 104 GUI passed, 27 physics passed, 147 integration passed under dedicated Xvfb, registry passed. 89 installed/runtime Python files match source. Prior desktop layout failure, supplemental ROS-import skip and build warnings retained. Published predecessor 73fcc47 CI passes; current runtime publication CI pending."
+  extension_software_checks: "Current local source: 25 core packages built (optional ORB-SLAM3 excluded), 1005 fast passed/one skip/four deselections, 104 GUI passed, 27 physics passed, 147 integration passed under dedicated Xvfb, registry passed. 89 installed/runtime Python files match source. Prior desktop layout failure, supplemental ROS-import skip and build warnings retained. Published cbf98cb fails required/scheduled physics CI because MuJoCo 3.15 removed flex/contact internal. The compatible importer passes all 27 actual physics checks separately on host 3.12 and isolated 3.15; replacement exact-revision CI is pending. Predecessor 73fcc47 CI passes."
   turtlebot4_drive: "Historical October 5 Display Drive source stage retained separately. October 6 final Standard/Lite/nav_empty GUI neutral enable, WASD both directions/turns, Space Stop and command loss pass on all four engines with independent body/joint/sensor feedback, normal producer Close, zero root exits and no orphan plant. See turtlebot4-sensors-2026-10-06; vendor firmware and physical joystick remain unqualified."
   native_arm: "Normal installed Panda/MuJoCo/nav_empty: 1 cm XYZ target steps yield physical endpoint errors 0.366/0.490/0.640 mm through bounded bias feedforward and unchanged original actuators. Full original collision/unreachable/invalidation/Cancel/Stop/watchdog/reset/monitor/planner cleanup pass. Current real cube lift 78.1 mm and release/watchdog pass. Other arms/backends/Servo/payload missions remain open."
   mujoco_localization_regression: "2026-09-30 working tree: GUI/CLI preserve map/robot spawn defaults; effort catch-up disabled. Sequential Celisca floor-1 trials: BHL 1.242 m x travel / 0.195 rad peak tilt, Go2 velocity policy 2.780 m net x / 0.099 rad peak tilt / nominal / no fall. Evidence: docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/. Headless scoped trials; heavy-map real-time factor, physical joystick and universal mission qualification remain open."
@@ -1426,10 +1426,12 @@ tasks:
           - "R8.3"
           - "R9.1"
           - "R9.2"
-        active_scope: "2026-10-07 codex continuation: repair the observed scheduled Full Test Suite registry PYTHONPATH failure (run 37623882232), preserve failed logs, verify the corrected command and exact published CI; update extension status and real evidence without extrapolating full release support."
+        active_scope: "2026-10-08 codex continuation: repair MuJoCo 3.15 removed flex internal XML attribute in failed required/scheduled CI runs 37832825040/37832873789 at cbf98cb; preserve failures, physically verify floor/wall collisions, publish exact-source passing CI and update measured extension status without extrapolating release support."
         scope_paths:
           - "scripts/r9_3_support_matrix.py"
           - "scripts/test_support_evidence.py"
+          - "src/robot_lab_mujoco/python/robot_lab_mujoco/world_collision.py"
+          - "src/robot_lab_bringup/test/test_mujoco_world_collision.py"
           - "docs/status/"
           - "docs/"
           - "README.md"

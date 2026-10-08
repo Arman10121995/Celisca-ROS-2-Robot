@@ -73,7 +73,13 @@ def add_static_mesh_collisions(root):
             deformable = ET.SubElement(root, 'deformable')
         contact = {'contype': geom.get('contype', '1'),
                    'conaffinity': geom.get('conaffinity', '1'),
-                   'selfcollide': 'none', 'internal': 'false'}
+                   'selfcollide': 'none'}
+        # MuJoCo 3.3.1 made internal flex contacts disabled by default;
+        # 3.15 removed the XML attribute. Older engines still need the
+        # explicit opt-out. Preserve rigid surface contact semantics on both.
+        version = tuple(int(part) for part in mujoco.__version__.split('.')[:3])
+        if version < (3, 3, 1):
+            contact['internal'] = 'false'
         if geom.get('friction'):
             contact['friction'] = geom.get('friction')
         for piece, (piece_vertices, piece_faces) in enumerate(_spatial_chunks(vertices, faces)):
