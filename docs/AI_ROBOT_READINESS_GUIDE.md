@@ -175,13 +175,16 @@ behavior, wider world missions, flight-world qualification and clean-host
 reproduction. Continue those stages before older comparisons/performance
 work; retain the explicit gaps in [the checklist](status/CHECKLIST.md).
 
-## Diagnose the remaining Bumperbot hospital endpoint
+## Preserve the hospital repair and diagnose other map endpoints
 
 The matched MuJoCo motor gain/inertia repairs neutral/braking and the original
-large heading error. The extended normal GUI route still fails physical position
-at 0.175 m even though Nav2 returns success. The 0.03 m estimator-goal experiment
-times out at 0.233 m / 152.21°; restore the tested 0.07 m profile. Preserve both
-originals and keep the physical 0.15 m / 5° gate unchanged.
+large heading error. Earlier 0.175 m endpoint and tighter-goal failures exposed
+a second issue: `Path.discrete` dropped open wall sheets from occupancy. V4
+uses every triangle/plane intersection segment; all 17 installed grids are
+regenerated, and eight normal hospital routes now meet the unchanged physical
+0.15 m / 5° gate. Keep the tested 0.07 m profile and original negative reports.
+[Current original outcomes](status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md)
+do not qualify two-floor-building, upper-floor or longer obstacle missions.
 
 Use `scripts/diagnose_scan_map_alignment.py` under Xvfb with sourced SSD/ROS
 environments, an isolated domain and one owned plant. It selects normal GUI

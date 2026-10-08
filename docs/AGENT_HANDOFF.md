@@ -66,11 +66,13 @@ the current checkpoint. Controllers are qualified within their named screens; re
 hospital/Gazebo and Husky torque-envelope trials. Shared controller changes
 require current physical regression evidence before refreshing source guards.
 
-Published **`4fe611a`** passes required and scheduled CI after the MuJoCo 3.15
-flex-contact XML repair. Predecessor **`73fcc47`** passes after the
-shared-utilities import repair. The active occupancy-v4 lane fixes discarded
-open mesh wall chains; current hospital navigation is under verification.
-Do not reuse v3 grids as complete occupancy. Preserve the separate independent
+Published **`ca65f35`** occupancy-v4 source passes required and scheduled CI;
+preceding **`4fe611a`** passes after the MuJoCo 3.15 flex-contact XML repair. Predecessor **`73fcc47`** passes after the
+shared-utilities import repair. The occupancy-v4 lane fixes discarded open mesh wall chains. All 17 installed
+extension grids have actual new exports with unchanged worlds/spawns and GUI
+paths. Both bases pass eight short single-floor hospital routes across all four
+engines; other worlds/two-floor missions remain open. MuJoCo speed remains P4
+(one matched Labbot window: 0.1305× real time). Do not reuse v3 grids as complete occupancy. Preserve the separate independent
 review script; its mesh checks also need open-chain review by its owner. Earlier **`091d388`** passes build/fast/physics/
 integration/registry CI. Final GUI and normal physical Drive/Panda acceptance
 have separate actual artifacts. The user additionally requests all maintained

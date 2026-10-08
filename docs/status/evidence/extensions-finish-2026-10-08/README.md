@@ -159,5 +159,33 @@ actual sensor/body trace, median endpoint distance improves from 0.804 to
 0.071 m; endpoints within two 0.1 m cells increase from 31.4% to 82.0%.
 [The exact comparison](scan-map-alignment/endpoint-comparison.json) retains both
 PGM/trace hashes. Unknown regions, slice-height differences and floor travel
-still matter. The corrected hospital grid is installed; the unchanged normal
-GUI navigation repeat is active. Other v3 exports need regeneration/review.
+still matter. All 17 installed extension grids have actual v4 exports, with
+originals, source worlds and measured spawn/initial-pose fields preserved.
+[Export/provenance receipt](occupancy-v4-refresh/report.json),
+[preservation check](occupancy-v4-refresh/verification.json) and
+[34 actual Tk selections/autofilled commands](occupancy-v4-refresh/gui-after-v4-refresh.json)
+are separate from robot missions. The repeatable
+[refresh utility](../../../../scripts/refresh_installed_occupancy_maps.py)
+updates installed map paths without choosing new spawns.
+
+[Eight normal GUI hospital routes](navigation/open-wall-backends/README.md)
+now pass the unchanged physical endpoint/floor/freshness/settle gates on every
+engine for Bumperbot and Labbot. Original failed stages remain. The
+[actual matched Labbot/MuJoCo clock window](mujoco-hospital-performance/report.json)
+measures 0.1305 real-time factor; speed optimization remains open.
+
+Published `ca65f35` passes [required CI 37838538779](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37838538779)
+and [scheduled CI 37838539175](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37838539175):
+25 packages, 27 physics, 134 integration / 13 skips and registry; fast required
+1002 / five skips, scheduled 1004 / three skips, both four deselections.
+[Complete logs and hashes](ci/manifest.json) and
+[89 installed runtime modules plus publication scope](publication.json) are retained.
+The [actual installed occupancy generator](occupancy-v4-refresh/published-generator.json)
+also matches that published source. Software checks and named routes leave
+two-floor/other-world missions, actors, full contacts and release acceptance open.
+
+[Reproducible figure producer](scan-map-alignment/figure-producer.py) verifies
+its actual input hashes. Its isolated distribution plotting environment does
+not change ROS/controller/test dependencies.
+
+![Actual stationary lidar over the original and corrected hospital grids](scan-map-alignment/before-after.png)

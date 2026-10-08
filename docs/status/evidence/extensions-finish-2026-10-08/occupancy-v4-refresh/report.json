@@ -1,0 +1,508 @@
+{
+  "scope": "Actual occupancy exports/cache reuse only; no motion/navigation qualification.",
+  "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5",
+  "source_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/refresh_installed_occupancy_maps.py": "0449d4b1cad6de1e38209c9398478d19df34c369b83002e3c5aa0a2c47293a6c",
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/external_world_repairs.py": "1fb23c278f396370a5d06a086502f7052c72f95d5700478a2025dbb803f89b3c",
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/tools/generate_occupancy_map.py": "459a97f69e7ff3cfab103c6d22facf352747455e5dc9f0ab8dd858ed89b62c74"
+  },
+  "records": [
+    {
+      "map": "dataset_bookstore",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_bookstore.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-114812-53ab19/dataset_bookstore.yaml"
+      },
+      "spawn": {
+        "x": "-2.7",
+        "y": "5.3500000000000005",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.generation.json",
+      "generation_report_sha256": "e4dec2cca0b8dae8ad3fb788914b6c0fe5354f19abb46fb6cee29b19742fcbee",
+      "world_sha256": "7f3a8323eb59383b4e02262befb7ecf64197d769013257ef36f7c272d3c5e9d7",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.yaml",
+      "free_cells": 14740,
+      "occupied_cells": 1891,
+      "unknown_cells": 20383,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_bookstore-generation.log",
+        "sha256": "e4dec2cca0b8dae8ad3fb788914b6c0fe5354f19abb46fb6cee29b19742fcbee"
+      },
+      "wall_s": 4.502
+    },
+    {
+      "map": "dataset_office_service",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_office_service.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-114235-cf5dab/dataset_office_service.yaml"
+      },
+      "spawn": {
+        "x": "0.35000000000000003",
+        "y": "2.15",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.generation.json",
+      "generation_report_sha256": "6f54130346f8760f9a20dbbd5d0e51b1620bab31955727638e618ca4c9ed6953",
+      "world_sha256": "7f9bfa8f2a7a71445479c49cf4def5863fd0a7166c77c94e85afce502cb1d636",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml",
+      "free_cells": 59441,
+      "occupied_cells": 7453,
+      "unknown_cells": 224370,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_office_service-generation.log",
+        "sha256": "6f54130346f8760f9a20dbbd5d0e51b1620bab31955727638e618ca4c9ed6953"
+      },
+      "wall_s": 5.415
+    },
+    {
+      "map": "dataset_small_house",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_small_house.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-114828-b21a8a/dataset_small_house.yaml"
+      },
+      "spawn": {
+        "x": "4.65",
+        "y": "-2.0",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.generation.json",
+      "generation_report_sha256": "feaaab149662b4eaa11742104ff220021612aae1c76564578b35baeb97729495",
+      "world_sha256": "b9f2b99b5c927748b7dfb06477c15e188d10a05b9f78abbbcf83c3a24878285a",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.yaml",
+      "free_cells": 14287,
+      "occupied_cells": 1547,
+      "unknown_cells": 19816,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_small_house-generation.log",
+        "sha256": "feaaab149662b4eaa11742104ff220021612aae1c76564578b35baeb97729495"
+      },
+      "wall_s": 4.307
+    },
+    {
+      "map": "dataset_dynamic_world",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_dynamic_world.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-114833-319661/dataset_dynamic_world.yaml"
+      },
+      "spawn": {
+        "x": "-2.0",
+        "y": "-2.0",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.generation.json",
+      "generation_report_sha256": "cf052da5cf44363bde499e2320028f2a3219f3dc48f6c3a73a560221fae3ee6f",
+      "world_sha256": "a286bf2e5361ac5578f1816da20769ccf24d81f734bd07e0c71fb89d50cec608",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.yaml",
+      "free_cells": 8829,
+      "occupied_cells": 516,
+      "unknown_cells": 14484,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_dynamic_world-generation.log",
+        "sha256": "cf052da5cf44363bde499e2320028f2a3219f3dc48f6c3a73a560221fae3ee6f"
+      },
+      "wall_s": 4.106
+    },
+    {
+      "map": "dataset_room1",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room1.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261007-152147-e011aa/dataset_room1.yaml"
+      },
+      "spawn": {
+        "x": "-13.700000000000001",
+        "y": "-0.15000000000000002",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.generation.json",
+      "generation_report_sha256": "1e79b4b9660b51b6149790db25e80d3dc6e3072b7bbc0cf583bc967988d107ba",
+      "world_sha256": "9be1a8b000594aaf8bf6e2b997b34c9563aa5d3363d679fef5135aba8fb877d6",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.yaml",
+      "free_cells": 13136,
+      "occupied_cells": 848,
+      "unknown_cells": 19412,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room1-generation.log",
+        "sha256": "1e79b4b9660b51b6149790db25e80d3dc6e3072b7bbc0cf583bc967988d107ba"
+      },
+      "wall_s": 4.072
+    },
+    {
+      "map": "dataset_room2",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-114837-c4b53b/dataset_room2.yaml"
+      },
+      "spawn": {
+        "x": "-14.200000000000001",
+        "y": "0.05",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.generation.json",
+      "generation_report_sha256": "e0fdf6368563832d19924074024b42197224abd0a2d05972c77077c93f11f476",
+      "world_sha256": "32a0e770d025b8e04d2df7b643a05574333515543a7b9744815ab6ce3b5be021",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.yaml",
+      "free_cells": 12281,
+      "occupied_cells": 1102,
+      "unknown_cells": 20933,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2-generation.log",
+        "sha256": "e0fdf6368563832d19924074024b42197224abd0a2d05972c77077c93f11f476"
+      },
+      "wall_s": 4.135
+    },
+    {
+      "map": "dataset_room2_world_dynamic",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-114842-f99f45/dataset_room2_world_dynamic.yaml"
+      },
+      "spawn": {
+        "x": "-14.3",
+        "y": "0.25",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.generation.json",
+      "generation_report_sha256": "eec798ff453e0d0b6a081cb0aa3e362fda4e34cf595839c384389460e6b10560",
+      "world_sha256": "d7c6fafac0907f3c9f0802b220c01ad34a64228fc6adb4ee6a5be5f5772394dc",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml",
+      "free_cells": 12233,
+      "occupied_cells": 1138,
+      "unknown_cells": 20945,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2_world_dynamic-generation.log",
+        "sha256": "eec798ff453e0d0b6a081cb0aa3e362fda4e34cf595839c384389460e6b10560"
+      },
+      "wall_s": 4.131
+    },
+    {
+      "map": "dataset_room3",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-114846-a64c4d/dataset_room3.yaml"
+      },
+      "spawn": {
+        "x": "-14.200000000000001",
+        "y": "0.05",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.generation.json",
+      "generation_report_sha256": "f4dc8a7f66728f78b011a605dd1b4f1a280fb85ce0bfb479e68caa34613faebf",
+      "world_sha256": "f060178424ef5b9def174884721240810efc759205f4839c16edac66c838cf2d",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.yaml",
+      "free_cells": 12226,
+      "occupied_cells": 1130,
+      "unknown_cells": 20960,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3-generation.log",
+        "sha256": "f4dc8a7f66728f78b011a605dd1b4f1a280fb85ce0bfb479e68caa34613faebf"
+      },
+      "wall_s": 4.139
+    },
+    {
+      "map": "dataset_room3_world_dynamic",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3_world_dynamic.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-114850-f0f4e4/dataset_room3_world_dynamic.yaml"
+      },
+      "spawn": {
+        "x": "6.0",
+        "y": "-0.25",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.generation.json",
+      "generation_report_sha256": "d1679adbabd9c759cc9ffc32a544e580fe9cfd1d5b46c8e77a1e61b50d5e52ca",
+      "world_sha256": "8e32e6630a7f06cc75e88fa4957d5634885a1c203a251e0302811e5023e6bb5e",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.yaml",
+      "free_cells": 12162,
+      "occupied_cells": 1178,
+      "unknown_cells": 20976,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3_world_dynamic-generation.log",
+        "sha256": "d1679adbabd9c759cc9ffc32a544e580fe9cfd1d5b46c8e77a1e61b50d5e52ca"
+      },
+      "wall_s": 4.076
+    },
+    {
+      "map": "dataset_room4",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-114854-980d21/dataset_room4.yaml"
+      },
+      "spawn": {
+        "x": "-14.200000000000001",
+        "y": "0.05",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.generation.json",
+      "generation_report_sha256": "a3929ccb0410f605642a4a7eae1ea5c1b576f7c806d4b3b39eda9842f8a8b601",
+      "world_sha256": "dbccb740bf96a7fe04bcf716e3fd2e36932cc0a0f5a48333e7c0c22d365b35ad",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.yaml",
+      "free_cells": 12057,
+      "occupied_cells": 1196,
+      "unknown_cells": 21063,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4-generation.log",
+        "sha256": "a3929ccb0410f605642a4a7eae1ea5c1b576f7c806d4b3b39eda9842f8a8b601"
+      },
+      "wall_s": 4.181
+    },
+    {
+      "map": "dataset_room4_world_dynamic",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4_world_dynamic.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-114859-fd2ff2/dataset_room4_world_dynamic.yaml"
+      },
+      "spawn": {
+        "x": "6.0",
+        "y": "-0.25",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.generation.json",
+      "generation_report_sha256": "0b78c75a3a0ceff8be9f78dd0d3df90275a96ba8da4fd116c563ed753a96da86",
+      "world_sha256": "f7774ec713b9593964b546848dbc042e0ea342ab3d26ca22ca52f87134bbe694",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.yaml",
+      "free_cells": 11945,
+      "occupied_cells": 1272,
+      "unknown_cells": 21099,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4_world_dynamic-generation.log",
+        "sha256": "0b78c75a3a0ceff8be9f78dd0d3df90275a96ba8da4fd116c563ed753a96da86"
+      },
+      "wall_s": 4.133
+    },
+    {
+      "map": "dataset_factory",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_factory.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-114905-9d0bfc/dataset_factory.yaml"
+      },
+      "spawn": {
+        "x": "30.75",
+        "y": "7.1000000000000005",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.generation.json",
+      "generation_report_sha256": "7b745902576bb8c26b81a88715f76e6e49b3b2d287b4d7ef3496f9dc7396b8ad",
+      "world_sha256": "d753000d45570f78b108f7975989acd631f18d0faf7f6e1464cc23e878d0416d",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.yaml",
+      "free_cells": 300232,
+      "occupied_cells": 4017,
+      "unknown_cells": 21111,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_factory-generation.log",
+        "sha256": "7b745902576bb8c26b81a88715f76e6e49b3b2d287b4d7ef3496f9dc7396b8ad"
+      },
+      "wall_s": 5.037
+    },
+    {
+      "map": "dataset_hospital",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.yaml"
+      },
+      "spawn": {
+        "x": "0.55",
+        "y": "12.450000000000001",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.generation.json",
+      "generation_report_sha256": "8093b78a6f031d30b18b511ef5b499b74c78ad7dd52b90a414d9a5df18f9e3c8",
+      "world_sha256": "b46626db296c935c6e0de0441469ecf92d4aef7ac1d1ae2faba0899ffbc5629e",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml",
+      "free_cells": 108552,
+      "occupied_cells": 13108,
+      "unknown_cells": 95004,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital-generation.log",
+        "sha256": "8093b78a6f031d30b18b511ef5b499b74c78ad7dd52b90a414d9a5df18f9e3c8"
+      },
+      "wall_s": 11.912
+    },
+    {
+      "map": "dataset_hospital_hospital_two_floors",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital_hospital_two_floors.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-115009-6f3922/dataset_hospital_hospital_two_floors.yaml"
+      },
+      "spawn": {
+        "x": "0.55",
+        "y": "12.450000000000001",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.generation.json",
+      "generation_report_sha256": "0599fb46f1575b85b5a15edd5b4045a7334d6ab04381d6775150d8ec41eb468d",
+      "world_sha256": "2d852bbdd60123952817f165701ed0ed0b791fe28f390239c36342b16c3c2575",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.yaml",
+      "free_cells": 107606,
+      "occupied_cells": 13000,
+      "unknown_cells": 96058,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital_hospital_two_floors-generation.log",
+        "sha256": "0599fb46f1575b85b5a15edd5b4045a7334d6ab04381d6775150d8ec41eb468d"
+      },
+      "wall_s": 18.967
+    },
+    {
+      "map": "gazebo_example_default",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_default.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261005-171442-c891a6/gazebo_example_default.yaml"
+      },
+      "spawn": {
+        "x": "-0.05",
+        "y": "-0.05",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.generation.json",
+      "generation_report_sha256": "8305c61e2a7af50be5b54050ab8ddbb9a7bfbcdf0d0663a9178bb5cc181739f8",
+      "world_sha256": "d2e8fad937b3928edcda78297324a57e4ff937f1a0597a401d8a4c88437027fd",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.yaml",
+      "free_cells": 40000,
+      "occupied_cells": 0,
+      "unknown_cells": 0,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_default-generation.log",
+        "sha256": "8305c61e2a7af50be5b54050ab8ddbb9a7bfbcdf0d0663a9178bb5cc181739f8"
+      },
+      "wall_s": 4.084
+    },
+    {
+      "map": "gazebo_example_empty",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_empty.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261005-171446-83e3ce/gazebo_example_empty.yaml"
+      },
+      "spawn": {
+        "x": "-0.05",
+        "y": "-0.05",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.generation.json",
+      "generation_report_sha256": "ab4d88f0d1aa618c7c6aa720fcbad10f30ceb0d6a6a7f0577141c73612c31879",
+      "world_sha256": "a68d5b4f48711693cae9f5aa1168f913a39034a9736a182f6b70e9cf9af58323",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml",
+      "free_cells": 40000,
+      "occupied_cells": 0,
+      "unknown_cells": 0,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_empty-generation.log",
+        "sha256": "ab4d88f0d1aa618c7c6aa720fcbad10f30ceb0d6a6a7f0577141c73612c31879"
+      },
+      "wall_s": 4.087
+    },
+    {
+      "map": "gazebo_example_shapes",
+      "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_shapes.world",
+      "previous_map": {
+        "has_2d_map": true,
+        "package": "robot_lab_maps",
+        "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261005-171651-8226a9/gazebo_example_shapes.yaml"
+      },
+      "spawn": {
+        "x": "-2.45",
+        "y": "-3.95",
+        "z": ".1",
+        "yaw": "0.0"
+      },
+      "outcome": "exported",
+      "generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.generation.json",
+      "generation_report_sha256": "b8cf52d4fad40fe9f8cc205636faede07b8ddea8f7e49354dac1e52a720bf47f",
+      "world_sha256": "b5c1229aaa9e594c1a3024a3f3b8814feed973db6f846b7f2b2543d1e170429b",
+      "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.yaml",
+      "free_cells": 3568,
+      "occupied_cells": 132,
+      "unknown_cells": 300,
+      "recipe": "complete-static-height-slice-v4",
+      "generation_log": {
+        "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_shapes-generation.log",
+        "sha256": "b8cf52d4fad40fe9f8cc205636faede07b8ddea8f7e49354dac1e52a720bf47f"
+      },
+      "wall_s": 4.089
+    }
+  ],
+  "profile_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/installed/maps.yaml": "d42b11c9a852441133b28bbe0ae506ea4cb82cccc25209a234cc02d1890fb9d3",
+    "/workspace/molar/robot_lab_runtime/external_assets/installed/registry_maps.yaml": "1ca54d71d3f3420eb78854a8a5954c0537eef475e77cbf91cb7e7bfce2270900"
+  }
+}

@@ -95,8 +95,8 @@ Furniture is explicitly fixed in these imported static snapshots across all
 four backends. The hospital spawn is (0.55, 12.45) on reviewed ground-floor
 support rather than an isolated 306-cell pocket. Actual body height is checked:
 Nav2 success while the robot falls through a missing floor remains a failure.
-Current single-floor lobby routes pass for Labbot on Gazebo/PyBullet/Isaac and
-Bumperbot on Gazebo/PyBullet. MuJoCo's thin elevator mesh failed volume-inertia
+The final occupancy-v4 single-floor lobby routes pass for both bases on all
+four backends. Earlier stages below retain their original source and failures. MuJoCo's thin elevator mesh failed volume-inertia
 compilation; static collision meshes now use shell inertia. A real open-surface
 floor regression supports a falling body. The Labbot/MuJoCo route then exposed
 weak small-yaw response: −0.053 rad/s commands produced about −0.0017 rad/s
@@ -109,9 +109,10 @@ numerical braking/idle creep. Matching Bumperbot's wheel gain 10 with lab rotor
 inertia 0.02 kg·m² (unchanged 5 N·m cap) passes full normal Drive/Stop/loss/relaunch.
 The same hospital route then holds physical heading within 1.42°, agreeing
 with its 1.23° estimate, but times out after 360 s at 0.174 m position error.
-The extended-budget repeat reaches Nav2 success at 0.82° heading, but its physical endpoint is 0.175 m from the goal and fails the unchanged 0.15 m body gate. The tighter 0.03 m estimator goal experiment times out after 900 s at 0.233 m / 152.21°. It is retained as a negative result, and the normal profile is restored to 0.07 m. Position/map-estimator alignment remains open. Current
-Labbot and Bumperbot Display now route GUI input through the existing mux.
-Remaining base/backend/two-floor routes are pending; upper-floor travel and
+The extended-budget repeat reaches Nav2 success at 0.82° heading, but its physical endpoint is 0.175 m from the goal and fails the unchanged 0.15 m body gate. The tighter 0.03 m estimator goal experiment times out after 900 s at 0.233 m / 152.21°. It is retained as a negative result, and the normal profile is restored to 0.07 m. The later stationary scan diagnostic identifies discarded open wall chains;
+the v4 repair below resolves this named route without changing its endpoint
+gates. Current Labbot and Bumperbot Display route GUI input through the existing
+mux. The two-floor building and longer/obstacle routes remain pending; upper-floor travel and
 actors remain unqualified. Failures and original traces are preserved.
 
 Worlds exposes editable **Seed X/Y**, filled from the selected map. Actual
@@ -121,7 +122,9 @@ selection. A custom (-6.75, -6.75) seed exports a real grid with 22,948 free,
 originally produced only unknown cells; separate transformed triangle slices
 now produce 24,734 free / 350 occupied / 1,844 unknown cells. Geometry/dependency,
 world/seed/recipe and output-byte guards invalidate stale occupancy caches.
-Fourteen earlier dataset grids were refreshed at v3; the new v4 repair requires regeneration/review because open wall chains were omitted. A seed-connected slice does not cover an
+All 17 installed extension grids now have actual v4 exports; original grids,
+source worlds and measured spawn/initial-pose fields are preserved. Registry
+checks and 34 actual Tk robot/map selections confirm the new autofilled paths. A seed-connected slice does not cover an
 entire multilevel building or qualify robot missions. The separate R6.7 terrain
 conversion/provider lane remains with its existing owner.
 
@@ -165,15 +168,24 @@ sources/negative artifacts and work directly on `master`.
 
 ## Current CI and occupancy follow-up
 
-`4fe611a` passes required and scheduled remote CI after MuJoCo 3.15 removed
-the old flex-contact attribute. Both runs build 25 packages and pass 27 physics,
-134 integration (13 skips) and registry; fast results retain their exact
-1002/four-skip and 1003/three-skip stages.
+Published occupancy-v4 revision `ca65f35` passes both required and scheduled
+CI: 25 packages, 27 physics checks, 134 integration checks (13 skips) and
+registry validation. Required fast: 1002 passed / five skips; scheduled fast:
+1004 passed / three skips; both four deselections. The preceding MuJoCo 3.15
+compatibility stage `4fe611a` and original failures retain separate full logs.
 
 A real stationary hospital lidar/map comparison exposes discarded open mesh
 wall chains. Occupancy v4 keeps all triangle/plane segments, rejects v3 caches
 and passes 24 sourced regression checks. The same 6,462 measured endpoints
 improve median grid distance 0.804 → 0.071 m with the actual regenerated map.
-The corrected hospital grid is installed and its unchanged normal GUI navigation
-repeat is active; other generated grids need regeneration/review. Original
-failures and byte/source hashes are in [the archive](evidence/extensions-finish-2026-10-08/README.md).
+Both bases now pass the short normal GUI hospital route on all four engines:
+physical position errors 0.043–0.092 m, absolute heading errors 1.21–2.21°,
+with the unchanged 0.15 m / 5° gates, fresh truth, supported floor and one
+simulated second settling. See [all eight original results](evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md).
+All 17 installed extension worlds have actual v4 exports, with unchanged
+world/spawn fields and [actual normal GUI paths](evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gui-after-v4-refresh.json).
+This does not qualify every world or upper floor. A read-only Labbot/MuJoCo
+hospital window measures 1.892 simulated seconds in 14.499 wall seconds
+(0.1305× real time), nine scans and ten depth frames. Performance optimization
+remains P4; Bumperbot/Labbot action wall times are 473.5/98.4 s.
+Original failures and byte/source hashes remain in [the archive](evidence/extensions-finish-2026-10-08/README.md).

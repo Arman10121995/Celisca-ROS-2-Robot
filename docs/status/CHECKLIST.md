@@ -137,6 +137,12 @@ the older roadmap. Existing stabilization fixes must remain working.
   fix furniture consistently as a static snapshot and move spawn onto reviewed
   lobby support. Current short routes and retained freefall/import failures are
   recorded separately from remaining world/actor/upper-floor qualification.
+- [x] Restore open wall sheets in real occupancy generation and reject v3
+  caches. Regenerate all 17 installed extension grids, preserving source worlds
+  and measured spawns; registry and 34 actual GUI selections/autofilled paths pass.
+- [x] Repeat the short single-floor hospital route for Bumperbot/Labbot on all
+  four engines after the v4 repair. All eight pass unchanged physical
+  position/heading/floor/freshness/settle gates; original failures remain.
 - [x] Repair Scheduled Full Test Suite registry imports; exact CI-only `73fcc47`
   passes required and scheduled workflows. New runtime source has separate
   final checks/publication in the October 8 archive.
@@ -153,8 +159,10 @@ the older roadmap. Existing stabilization fixes must remain working.
   furnished and actor map/backend/mode cell. Include a multi-turn obstacle
   route, furniture-adjacent goal, cancellation and second goal. Review
   furniture-aware occupancy alignment instead of replacing maps automatically.
-- [ ] **P4:** Measure and improve MuJoCo real-time factor on large maps without
-  compromising effort-control timing, collision fidelity or sensing.
+- [ ] **P4:** Profile and improve MuJoCo speed without compromising control,
+  collision fidelity or sensing. One actual matched Labbot/hospital window is
+  0.1305× real time; Bumperbot/Labbot action wall times are 473.5/98.4 s. This
+  measurement does not establish a cause or an optimization.
 - [ ] **R5.5:** Complete Ackermann, rear-steer and anti-Ackermann obstacle/
   slalom, mapping, localization and navigation qualification. Retain each
   drive model's turning constraints and independent body/contact evidence.
@@ -230,5 +238,8 @@ Follow [the AI readiness guide](../AI_ROBOT_READINESS_GUIDE.md),
 and [ASSET_EXTENSION_GUIDE](../ASSET_EXTENSION_GUIDE.md) for pinned upstreams,
 implementation order and acceptance. Claim ownership in the ledger before
 changing shared files; record the exact robot/map/backend/task/source and
-measured artifacts when checking an item off. The Bumperbot/MuJoCo hospital heading failure is retained; its matched-servo
-repeat reaches Nav2 success at 0.175 m / 0.82°, outside the unchanged 0.15 m body gate. Tightening the estimator goal to 0.03 m times out at 0.233 m / 152.21° and is reverted. This route and the remaining two-base/two-hospital/backend cells stay open; Nav2 success alone remains insufficient.
+measured artifacts when checking an item off. The original Bumperbot/MuJoCo
+hospital heading/0.175 m endpoint failures and reverted 0.03 m experiment remain
+negative. After the open-wall occupancy repair, all eight short single-floor
+hospital routes pass. Two-floor-building, obstacle and other-world missions
+remain open; Nav2 success alone remains insufficient.

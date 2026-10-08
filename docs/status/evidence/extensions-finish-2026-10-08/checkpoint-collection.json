@@ -3461,6 +3461,334 @@
       ]
     },
     {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/body.trace.json",
+          "sha256": "3b87023a63e72b19bcb0da7af353d7ab7647bbf41bc6366e3b16b5070f66a0e5",
+          "bytes": 1311015
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/check.log",
+          "sha256": "5fb676de2b5637783fb451580fd9508abb8767b1a890db43dcc21907b804a333",
+          "bytes": 985
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/gui-output.log",
+          "sha256": "eeb0de0f1223d5f40f203745706af13e9813b45e51259513a62a5f9e41047518",
+          "bytes": 98782
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/live-gui-output.log",
+          "sha256": "031044babc9a5f2a480613b01ca43613508195fdb7b6b72ff032159c600facad",
+          "bytes": 98238
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/pre-trial.json",
+          "sha256": "c57963495675f7f9e7b6a50b350113de4489e70f15da92621bd11f744df63b81",
+          "bytes": 101487
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/report.json",
+          "sha256": "c25917965ad1d914a0ab7685ce9918d5bba60526618f9eba61d4364de418bfe2",
+          "bytes": 103408
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/body.trace.json",
+          "sha256": "bf66902e815bda014a0be0eb9bf34ef6581289ecbf6de7bf958750c2849f1a92",
+          "bytes": 151462
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/check.log",
+          "sha256": "05b6257812c9d0628973c013182581c65d2e9ed70d57ababa4fa5853407126af",
+          "bytes": 985
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/gui-output.log",
+          "sha256": "8c61941dd558f23f3be5b56a8cface231cbfbfebd714f90366cdbb9d8331d8ec",
+          "bytes": 80596
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/live-gui-output.log",
+          "sha256": "9a27d3a7c2d9947078db087a4e8b389adec2a0ce119b65a8efde9817bd040b76",
+          "bytes": 80567
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/pre-trial.json",
+          "sha256": "6a4953e3c4b23de24bb5b0ea783e23da3bdba5ad028c673328a507a2a63f490f",
+          "bytes": 101487
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/report.json",
+          "sha256": "69aa5a7c6757c034264672dc45714308201b0dc0b30c3af8788579183c75c8ea",
+          "bytes": 103414
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/body.trace.json",
+          "sha256": "fe0dc42a635c8ad95e762a2e3b628e63746d203eec4e925740547d57ea50b6e5",
+          "bytes": 132647
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/check.log",
+          "sha256": "f986da7b1a904291cfd88bed28bae7b27a7e5ff650295ed0c66e51ffe566d849",
+          "bytes": 987
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/gui-output.log",
+          "sha256": "ac9370a06117980005344ebf1cd680c00b598b16ace2a07ac510692c52ce22d6",
+          "bytes": 72419
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/live-gui-output.log",
+          "sha256": "0d1dd0560e47f11acbbdaca79a56a7c00a7b85f773aff40541a53e94ad325f94",
+          "bytes": 72390
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/pre-trial.json",
+          "sha256": "b42980551989f0e2657b098ebe4c10a1fad488ee4e6aa1bf39d9f1fa0c57a2aa",
+          "bytes": 101491
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/report.json",
+          "sha256": "1bceaf794cbcead3552f0353c1e6353da89038f1ef83f98c785302d32feb07d0",
+          "bytes": 103421
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/body.trace.json",
+          "sha256": "dad9d50564f23acce104134aa7724293ec889c48f4189a5f05955dc479221834",
+          "bytes": 177843
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/check.log",
+          "sha256": "b365c6878261733b26dbe459a267398624e6eb70caaff70bb99531548970de28",
+          "bytes": 989
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/gui-output.log",
+          "sha256": "cf322a36aa6855c83bd22293555d89735444ad2d409771a458911ca4bd04228b",
+          "bytes": 46775
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/live-gui-output.log",
+          "sha256": "1b2a59c2b74d670b17ed39728255d72b86bedfb858f2fc4a7a0508c7d60cacda",
+          "bytes": 44565
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/pre-trial.json",
+          "sha256": "8afba8eb52a7f65b106bc01be9f5d4bb9245c14b0877de01c0041a89e6450856",
+          "bytes": 101485
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/report.json",
+          "sha256": "bbc5e311287ce1f348708cc5f8e559f3f8426dab9f7f390693e25b3600b6f3a6",
+          "bytes": 103416
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-gazebo",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/body.trace.json",
+          "sha256": "543267ef7999fa6a01c9b1abfded3939bfdd0d6262f8097ded70410dbe11eb32",
+          "bytes": 159432
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/check.log",
+          "sha256": "879225adca2a1d1b57ec87a9bdc7935708ddbf784b68af1bb6be08c3769bf917",
+          "bytes": 982
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/gui-output.log",
+          "sha256": "45f90ecd5813c5a3dde14ca89565760be50bf0c7f44bdb70a9f5ed7be0f86c31",
+          "bytes": 79412
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/live-gui-output.log",
+          "sha256": "17a72246965e4fb97b2c65b1f7e147ec8a1fad45fd5ec2edb6ec6f7e33a348ca",
+          "bytes": 78868
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/pre-trial.json",
+          "sha256": "040f6baff8f31fa22895ee012d532586bf10be8e900c6a561ac49a9603c95bc2",
+          "bytes": 101609
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/report.json",
+          "sha256": "1da55fa67fd56487a743c44d706725b93d9ae8950928c3b0844f57f2d90ecc81",
+          "bytes": 103531
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-pybullet",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/body.trace.json",
+          "sha256": "a98dd4f90b8aeb1e5fefb8c65c55e96cc785b0d147627a78780a6c9d8e8942da",
+          "bytes": 146477
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/check.log",
+          "sha256": "3474a284cb6b576c218a86c4096fd87e07b066466908cbef27707396755834db",
+          "bytes": 983
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/gui-output.log",
+          "sha256": "3d18d9afb09489cf3db3604abcb22dcfec56306f2a37b965b2685c55fa311ca1",
+          "bytes": 71291
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/live-gui-output.log",
+          "sha256": "8f3d5f488335f297a1fd406ff22a0ee75e2c03d84315c6084ae4184c5d3d6966",
+          "bytes": 58923
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/pre-trial.json",
+          "sha256": "c8304d8c1d057cbc9bdf9ec454c4a85a04b8196139b1b129dafddc0c78d8bf2b",
+          "bytes": 101613
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/report.json",
+          "sha256": "54b70b24a6c632a3a8a02041b7255b3990199d86fd709f8be5eb85de84286873",
+          "bytes": 103534
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/body.trace.json",
+          "sha256": "aeaa3a66967b7caac0399e8820287ea412cbcd80997becd0fcc0ac1264ee00f4",
+          "bytes": 269551
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/check.log",
+          "sha256": "81df01f1a7e320ae8c29794e76d2333044ba69d0af33e8cf43c4b1be38dece50",
+          "bytes": 985
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/gui-output.log",
+          "sha256": "d5441617be6332862132640dcf4287904cd8e208a20f5f1e93a7fae165349d6c",
+          "bytes": 56767
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/live-gui-output.log",
+          "sha256": "2f9d3a00aeaccd3821e89bd57ca5ebaca04968241f36e16467820fa723cb9abe",
+          "bytes": 56411
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/pre-trial.json",
+          "sha256": "265c0a3f398d4739775ce3901399035281d3f13161f9fd5041ff2cdcbcaa3dc8",
+          "bytes": 101609
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/report.json",
+          "sha256": "15aa0f6ea50e4662968649f4eb0c2047fec6c322e7a5136841ff7c9624e98845",
+          "bytes": 103530
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-isaac",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/body.trace.json",
+          "sha256": "e953cf0e3e2d6b4ed673c8d3d874d815ee95dfbaa09cff5b8deecc263261ac3f",
+          "bytes": 190939
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/check.log",
+          "sha256": "b0f34131259247a41847414fbc30bd3213d57afd85c79f4de9df896663270833",
+          "bytes": 980
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/gui-output.log",
+          "sha256": "f9dacc70343587535e3acfc360a19239d469aede93889ad99f261bf46b61abf5",
+          "bytes": 46293
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/live-gui-output.log",
+          "sha256": "432c1d730c4c0bc3fb724dba9000d626b9c4b6682337280454763ae83b5d4baa",
+          "bytes": 33073
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/pre-trial.json",
+          "sha256": "6cf1f83e1b164cfbe78a5da6e4f1c40ab95bf9bf563c8620604fd2f0c03e5f8c",
+          "bytes": 101607
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/report.json",
+          "sha256": "e8acd5660bcd47f18274776da54e7ea624855aad0073283450eae7c5d90f13ef",
+          "bytes": 103524
+        }
+      ]
+    },
+    {
       "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/normal-production-navigation",
       "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/normal-production-navigation",
       "artifacts": [
@@ -4137,5 +4465,5 @@
       ]
     }
   ],
-  "indexed_records": 74
+  "indexed_records": 82
 }

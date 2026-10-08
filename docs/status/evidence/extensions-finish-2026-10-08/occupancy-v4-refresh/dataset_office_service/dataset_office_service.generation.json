@@ -1,0 +1,42 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_office_service.world",
+  "source_sha256": "7f9bfa8f2a7a71445479c49cf4def5863fd0a7166c77c94e85afce502cb1d636",
+  "mesh_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/door/meshes/door_frame.obj": "8211c1bf93658eb1510f67e4a53f1b9f92fdc139c20a4efb8c31de917132ac3f",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/door/meshes/door_door.obj": "d752b0e130ab4f94d7c3a0677737df6f1ba1d367c8a6f3ec15e47e5c51c81507",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039/servicesim_competition/models/door/meshes/door.obj": "2ac8a29b8bfa48744601f8f57f3354aaebd51dd19fc3e3f8138a09ee641bc905",
+    "/workspace/molar/robot_lab_runtime/external_assets/extracted/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/office/models/reception_desk/meshes/reception_desk.obj": "f4657c75b12f357d28d1e544d9a010877d9c9d6e5fc5a15ad6a4ce67ea1b6b9e"
+  },
+  "mesh_slice_paths": 1236,
+  "mesh_mask_cells": 51114,
+  "collision_count": 392,
+  "projection_recipe": "complete-static-height-slice-v4",
+  "terrain_slice_polygons": 0,
+  "heightfield_count": 0,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    0.35000000000000003,
+    2.15
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml",
+  "free_cells": 59441,
+  "occupied_cells": 7453,
+  "unknown_cells": 224370,
+  "shape": [
+    492,
+    592
+  ],
+  "origin": [
+    -29.6,
+    -24.6,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "1aba0cb5080c80fcd003324bc23f6acfd3e5e6968ff2c126246b06facc92a97c",
+    ".pgm": "86403ac396da4b47d13652f6761daa7ff54660009f17f06169621de0f40eee9a"
+  }
+}

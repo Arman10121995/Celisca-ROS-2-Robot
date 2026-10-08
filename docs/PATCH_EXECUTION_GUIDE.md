@@ -120,6 +120,14 @@ named map, with and without viewers. Profile collision, scan raycasts, camera
 rendering and publication cost. The repaired effort path can run slowly on a
 large mesh; this is an explicit open item.
 
+The current read-only Labbot/MuJoCo/hospital-v4 navigation observation measures
+1.892 simulated seconds over 14.499 monotonic wall seconds: 0.1305× real time,
+with nine scans and ten depth frames. Its
+[actual samples and producer](status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/report.json)
+are retained. This single window establishes neither the cause nor a speed
+improvement. Use matched baseline/viewer/sensing conditions before optimizing;
+retain the new eight hospital route passes and the unchanged endpoint gates.
+
 Prefer reducing validated collision geometry or moving expensive sensing off
 the feedback loop. Preserve visual assets and sensor obstacle fidelity. If
 control is moved into a simulator-synchronous callback, document its observation,

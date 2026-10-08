@@ -1,0 +1,742 @@
+- id: dataset_bookstore
+  version: 1.0.0
+  name: Dataset Bookstore
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_bookstore.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -2.7
+      y: 5.3500000000000005
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-114812-53ab19/dataset_bookstore.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-114812-53ab19/dataset_bookstore.pgm
+- id: dataset_office_service
+  version: 1.0.0
+  name: Dataset Office Service
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_office_service.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 0.35000000000000003
+      y: 2.15
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-114235-cf5dab/dataset_office_service.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-114235-cf5dab/dataset_office_service.pgm
+- id: dataset_small_house
+  version: 1.0.0
+  name: Dataset Small House
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_small_house.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 4.65
+      y: -2.0
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-114828-b21a8a/dataset_small_house.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-114828-b21a8a/dataset_small_house.pgm
+- id: dataset_dynamic_world
+  version: 1.0.0
+  name: Dataset Dynamic World
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_dynamic_world.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -2.0
+      y: -2.0
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-114833-319661/dataset_dynamic_world.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-114833-319661/dataset_dynamic_world.pgm
+- id: dataset_room1
+  version: 1.0.0
+  name: Dataset Room1
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room1.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -13.700000000000001
+      y: -0.15000000000000002
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261007-152147-e011aa/dataset_room1.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261007-152147-e011aa/dataset_room1.pgm
+- id: dataset_room2
+  version: 1.0.0
+  name: Dataset Room2
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -14.200000000000001
+      y: 0.05
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-114837-c4b53b/dataset_room2.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-114837-c4b53b/dataset_room2.pgm
+- id: dataset_room2_world_dynamic
+  version: 1.0.0
+  name: Dataset Room2 World Dynamic
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -14.3
+      y: 0.25
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-114842-f99f45/dataset_room2_world_dynamic.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-114842-f99f45/dataset_room2_world_dynamic.pgm
+- id: dataset_room3
+  version: 1.0.0
+  name: Dataset Room3
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -14.200000000000001
+      y: 0.05
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-114846-a64c4d/dataset_room3.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-114846-a64c4d/dataset_room3.pgm
+- id: dataset_room3_world_dynamic
+  version: 1.0.0
+  name: Dataset Room3 World Dynamic
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3_world_dynamic.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 6.0
+      y: -0.25
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-114850-f0f4e4/dataset_room3_world_dynamic.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-114850-f0f4e4/dataset_room3_world_dynamic.pgm
+- id: dataset_room4
+  version: 1.0.0
+  name: Dataset Room4
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -14.200000000000001
+      y: 0.05
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-114854-980d21/dataset_room4.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-114854-980d21/dataset_room4.pgm
+- id: dataset_room4_world_dynamic
+  version: 1.0.0
+  name: Dataset Room4 World Dynamic
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4_world_dynamic.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 6.0
+      y: -0.25
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-114859-fd2ff2/dataset_room4_world_dynamic.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-114859-fd2ff2/dataset_room4_world_dynamic.pgm
+- id: dataset_factory
+  version: 1.0.0
+  name: Dataset Factory
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_factory.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 30.75
+      y: 7.1000000000000005
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-114905-9d0bfc/dataset_factory.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-114905-9d0bfc/dataset_factory.pgm
+- id: dataset_hospital
+  version: 1.0.0
+  name: Dataset Hospital
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 0.55
+      y: 12.450000000000001
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD. Reviewed escaped
+    hospital fixtures restored to their authored 0/3 m floors; individual navigation
+    routes still need qualification.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.pgm
+- id: dataset_hospital_hospital_two_floors
+  version: 1.0.0
+  name: Dataset Hospital Hospital Two Floors
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital_hospital_two_floors.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: 0.55
+      y: 12.450000000000001
+      z: 0.1
+  source:
+    repository: https://github.com/mlherd/Dataset-of-Gazebo-Worlds-Models-and-Maps
+    revision: 9d26e1f41cd7979bbee66ed852e7ef316e22b19f
+    license: Per-asset audit required; no root license found
+  description: Installed source-backed static environment snapshot; furniture fixed
+    consistently across all four engines. Classic plugins removed; actor/dynamic behavior
+    and robot missions remain unqualified. Derived Collada assets preserve Gazebo
+    node frames; originals and texture provenance remain on SSD. Reviewed escaped
+    hospital fixtures restored to their authored 0/3 m floors; individual navigation
+    routes still need qualification.
+  tags:
+  - extension
+  - gazebo_world_dataset
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-115009-6f3922/dataset_hospital_hospital_two_floors.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-115009-6f3922/dataset_hospital_hospital_two_floors.pgm
+- id: gazebo_example_default
+  version: 1.0.0
+  name: Gazebo Example Default
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_default.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -0.05
+      y: -0.05
+      z: 0.1
+  source:
+    repository: https://github.com/gazebosim/gz-sim
+    revision: b90cd2c41a193102d6951857c2d83e13f59bb64b
+    license: Apache-2.0; Fortress 6.18.0 source examples. Plugin demonstrations require
+      behavior-specific adaptation.
+  description: Installed upstream world with resolved static geometry. Classic plugins
+    removed; dynamic behaviors and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_examples
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261005-171442-c891a6/gazebo_example_default.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261005-171442-c891a6/gazebo_example_default.pgm
+- id: gazebo_example_empty
+  version: 1.0.0
+  name: Gazebo Example Empty
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_empty.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -0.05
+      y: -0.05
+      z: 0.1
+  source:
+    repository: https://github.com/gazebosim/gz-sim
+    revision: b90cd2c41a193102d6951857c2d83e13f59bb64b
+    license: Apache-2.0; Fortress 6.18.0 source examples. Plugin demonstrations require
+      behavior-specific adaptation.
+  description: Installed upstream world with resolved static geometry. Classic plugins
+    removed; dynamic behaviors and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_examples
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261005-171446-83e3ce/gazebo_example_empty.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261005-171446-83e3ce/gazebo_example_empty.pgm
+- id: gazebo_example_shapes
+  version: 1.0.0
+  name: Gazebo Example Shapes
+  status: available
+  dimension: 2D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - pybullet
+  - mujoco
+  - isaac
+  world_file: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_shapes.world
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  - manipulator
+  - hybrid
+  spawn_zones:
+  - id: default
+    pose:
+      x: -2.45
+      y: -3.95
+      z: 0.1
+  source:
+    repository: https://github.com/gazebosim/gz-sim
+    revision: b90cd2c41a193102d6951857c2d83e13f59bb64b
+    license: Apache-2.0; Fortress 6.18.0 source examples. Plugin demonstrations require
+      behavior-specific adaptation.
+  description: Installed upstream world with resolved static geometry. Classic plugins
+    removed; dynamic behaviors and robot missions remain unqualified.
+  tags:
+  - extension
+  - gazebo_examples
+  evidence:
+  - kind: integration_test
+    reference: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/integration-check.json
+    description: World dependency/conversion and named actual occupancy generation;
+      no backend mission qualification
+    date: '2026-10-05'
+  occupancy_yaml: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261005-171651-8226a9/gazebo_example_shapes.yaml
+  occupancy_map: /workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261005-171651-8226a9/gazebo_example_shapes.pgm

@@ -1,0 +1,37 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_empty.world",
+  "source_sha256": "a68d5b4f48711693cae9f5aa1168f913a39034a9736a182f6b70e9cf9af58323",
+  "mesh_sha256": {},
+  "mesh_slice_paths": 0,
+  "mesh_mask_cells": 0,
+  "collision_count": 0,
+  "projection_recipe": "complete-static-height-slice-v4",
+  "terrain_slice_polygons": 0,
+  "heightfield_count": 0,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    -0.05,
+    -0.05
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml",
+  "free_cells": 40000,
+  "occupied_cells": 0,
+  "unknown_cells": 0,
+  "shape": [
+    200,
+    200
+  ],
+  "origin": [
+    -10,
+    -10,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "cc3d98c01834cf87257b8fa52b8b116951a77ab15a30c3e367a6f57b643418b0",
+    ".pgm": "53f83558db2bf256d84a658c0b9eecc8be5385929928278a184d2cf9dee889cb"
+  }
+}

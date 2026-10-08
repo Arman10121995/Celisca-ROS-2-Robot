@@ -1,0 +1,25 @@
+{
+  "scope": "Actual final 34 installed map selections/autofill and Health display with no launch; not a robot mission.",
+  "producer": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gui-producer.py",
+  "producer_sha256": "6a335144873f13365f885eeb79cf18eeb12e7153c38ad751452cc80d7dce7983",
+  "artifacts": [
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/gui-occupancy-v4-final/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gui-final-report.json",
+      "bytes": 42125,
+      "sha256": "387613396f4ee2bd1b1d4d1f88eddc9d83e3e12d7fa51c70654dd3e8652da9a4"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/gui-occupancy-v4-final/health-visible.txt",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gui-final-health-visible.txt",
+      "bytes": 15279,
+      "sha256": "c70090bf699b5eb32d85c03e236e83a1326fe524e322fd8da9a1bb2b9aa864eb"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/gui-occupancy-v4-final.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gui-final.log",
+      "bytes": 48,
+      "sha256": "d3a398d6a045bea8182ac9dd92785c4451cdaaa94cdf0a9535d569bd2f265f41"
+    }
+  ]
+}

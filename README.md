@@ -124,11 +124,12 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ### Verification snapshot
 
-Published `4fe611a` passes required CI and Scheduled Full Test Suite after the
-MuJoCo 3.15 world-contact compatibility fix: 25 core packages, 27 physics and
+Published occupancy-v4 `ca65f35` passes required CI and Scheduled Full Test Suite:
+25 core packages, 27 physics and
 134 integration checks (13 skips), plus registry validation. Required fast:
-1002 pass / four skips; scheduled fast: 1003 pass / three skips; both four
-deselections. The predecessor `73fcc47` also passes after the shared-utilities import fix. Its [exact logs](docs/status/evidence/extensions-finish-2026-10-08/README.md)
+1002 pass / five skips; scheduled fast: 1004 pass / three skips; both four
+deselections. The preceding MuJoCo 3.15 compatibility repair also passes at
+`4fe611a`. The predecessor `73fcc47` also passes after the shared-utilities import fix. Its [exact logs](docs/status/evidence/extensions-finish-2026-10-08/README.md)
 are separate from the newer runtime trials and final checkpoint checks.
 Earlier published `091d388` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
 passes a 25-package core build, **933 fast checks / four skips / four
@@ -144,7 +145,11 @@ GUI files. Read [GUI evidence](docs/status/evidence/gui-controls-column-2026-10-
 and [the current continuation](docs/status/continuation-2026-10-08.md).
 The October 8 local stage records 1005 fast, 104 GUI, 27 physics and 147
 dedicated-display integration passes. Occupancy v4 repairs omitted open wall
-chains; the current hospital map/navigation repeat is tracked in that checkpoint.
+chains; all 17 installed extension grids have real refreshed exports with
+unchanged spawns and correct GUI paths. Both Bumperbot and Labbot pass
+[the short hospital route on all four engines](docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md).
+Other world missions remain open. One matched Labbot/MuJoCo hospital window
+measures 0.1305× real time; speed optimization remains P4.
 
 The [evidence index](docs/status/runtime-evidence-index.yaml) retains individual
 hashed positive and negative trials; [the support matrix](docs/status/support-matrix.md)

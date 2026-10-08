@@ -1,0 +1,532 @@
+{
+  "scope": "17 actual v4 exports; source world and spawn fields preserved. No navigation qualification.",
+  "preserved_fields": [
+    "spawn",
+    "initial_pose",
+    "gazebo"
+  ],
+  "unchanged": true,
+  "artifacts": [
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_bookstore/dataset_bookstore.generation.json",
+      "bytes": 8897,
+      "sha256": "e4dec2cca0b8dae8ad3fb788914b6c0fe5354f19abb46fb6cee29b19742fcbee"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_bookstore/dataset_bookstore.yaml",
+      "bytes": 124,
+      "sha256": "91fdd48e2706a31980a56c7671df66f4a737a52c00360348bb2cabe0a0658416"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_bookstore/dataset_bookstore.pgm",
+      "bytes": 37029,
+      "sha256": "7c72eb1cb04422ae3fb8a7f888977396302f7be57c7cf59001f08d434dea1d27"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_bookstore-previous-generation.log",
+      "bytes": 8895,
+      "sha256": "f74749549d8f9e0ec277079fca963c9236f1ded65c91898f6d4c1f1828cd43b1"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_bookstore-generation.log",
+      "bytes": 8897,
+      "sha256": "e4dec2cca0b8dae8ad3fb788914b6c0fe5354f19abb46fb6cee29b19742fcbee"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_office_service/dataset_office_service.generation.json",
+      "bytes": 2499,
+      "sha256": "6f54130346f8760f9a20dbbd5d0e51b1620bab31955727638e618ca4c9ed6953"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_office_service/dataset_office_service.yaml",
+      "bytes": 129,
+      "sha256": "1aba0cb5080c80fcd003324bc23f6acfd3e5e6968ff2c126246b06facc92a97c"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_office_service/dataset_office_service.pgm",
+      "bytes": 291279,
+      "sha256": "86403ac396da4b47d13652f6761daa7ff54660009f17f06169621de0f40eee9a"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_office_service-previous-generation.log",
+      "bytes": 2497,
+      "sha256": "fa5b66bccac13b8db2bcb8a6f8ac183c9845daff3ac77217a707d69291de049d"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_office_service-generation.log",
+      "bytes": 2499,
+      "sha256": "6f54130346f8760f9a20dbbd5d0e51b1620bab31955727638e618ca4c9ed6953"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_small_house/dataset_small_house.generation.json",
+      "bytes": 19762,
+      "sha256": "feaaab149662b4eaa11742104ff220021612aae1c76564578b35baeb97729495"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_small_house/dataset_small_house.yaml",
+      "bytes": 126,
+      "sha256": "fa1cfe4e36ee2257fb4bb3403f299336a9990e546561bf1a0ee10c2590131378"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_small_house/dataset_small_house.pgm",
+      "bytes": 35665,
+      "sha256": "d23bee1b67d1843415c79b1be1799f36d150a534311408130ebb142ebd3aa432"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_small_house-generation.log",
+      "bytes": 19762,
+      "sha256": "feaaab149662b4eaa11742104ff220021612aae1c76564578b35baeb97729495"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_small_house-previous-generation.log",
+      "bytes": 19760,
+      "sha256": "88e3a2f66554001ad814e8d76b38fabaaae826d7f35a12835849b609f0dd6c89"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_dynamic_world/dataset_dynamic_world.generation.json",
+      "bytes": 1473,
+      "sha256": "cf052da5cf44363bde499e2320028f2a3219f3dc48f6c3a73a560221fae3ee6f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_dynamic_world/dataset_dynamic_world.yaml",
+      "bytes": 128,
+      "sha256": "d777a96ecb5736d457c29345fa5ddd081eba24e56719361004133c1b9285b1e3"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_dynamic_world/dataset_dynamic_world.pgm",
+      "bytes": 23844,
+      "sha256": "15181e9ecaaa68daeea6927f416973bae28ab346198b70c08d1acf4471b79af0"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_dynamic_world-previous-generation.log",
+      "bytes": 1473,
+      "sha256": "4a2f1f847493bd5bfb47f84106f7221edd00c50b68114eaca0643e698633583b"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_dynamic_world-generation.log",
+      "bytes": 1473,
+      "sha256": "cf052da5cf44363bde499e2320028f2a3219f3dc48f6c3a73a560221fae3ee6f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room1/dataset_room1.generation.json",
+      "bytes": 1463,
+      "sha256": "1e79b4b9660b51b6149790db25e80d3dc6e3072b7bbc0cf583bc967988d107ba"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room1/dataset_room1.yaml",
+      "bytes": 119,
+      "sha256": "51e10e7b6a65ab5d074459fd1ce0ca2a27ff2e2a95a0ea9423f950045a8fe9fe"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room1/dataset_room1.pgm",
+      "bytes": 33410,
+      "sha256": "5ec5c258d68135ac51008b5f3d0485db80b6d5dae88f4d07a3ac6b15224403ae"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room1-previous-generation.log",
+      "bytes": 1463,
+      "sha256": "6d1ef2d267953fbd4478d5b5cb6cdec7a6a580f4f58e82a80b45068dca18d0d6"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room1-generation.log",
+      "bytes": 1463,
+      "sha256": "1e79b4b9660b51b6149790db25e80d3dc6e3072b7bbc0cf583bc967988d107ba"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room2/dataset_room2.generation.json",
+      "bytes": 1448,
+      "sha256": "e0fdf6368563832d19924074024b42197224abd0a2d05972c77077c93f11f476"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room2/dataset_room2.yaml",
+      "bytes": 119,
+      "sha256": "dfcdfef1397b16735a95b531beef3f93fb16f114cc85e1cb9af3afdb1348d5bb"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room2/dataset_room2.pgm",
+      "bytes": 34330,
+      "sha256": "7aee4fcb8f04102aff337214de73e02e952383b39a31bd9a5481da7a792e7c67"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2_world_dynamic-previous-generation.log",
+      "bytes": 1504,
+      "sha256": "2d9e2f4cdd308b403795994fd8090909016e9aff5e0f911d242fef27accb55ac"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2-previous-generation.log",
+      "bytes": 1448,
+      "sha256": "ef097dd14ca9ed3f1f26dddb2fa5a5aa95813ce2e16570c6d2040b6059ce6e4a"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2_world_dynamic-generation.log",
+      "bytes": 1504,
+      "sha256": "eec798ff453e0d0b6a081cb0aa3e362fda4e34cf595839c384389460e6b10560"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2-generation.log",
+      "bytes": 1448,
+      "sha256": "e0fdf6368563832d19924074024b42197224abd0a2d05972c77077c93f11f476"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room2_world_dynamic/dataset_room2_world_dynamic.generation.json",
+      "bytes": 1504,
+      "sha256": "eec798ff453e0d0b6a081cb0aa3e362fda4e34cf595839c384389460e6b10560"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room2_world_dynamic/dataset_room2_world_dynamic.yaml",
+      "bytes": 133,
+      "sha256": "79a618c25c115ee148dd9607f7c41fadf28a975f29fb429a03b570d7a80e1525"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room2_world_dynamic/dataset_room2_world_dynamic.pgm",
+      "bytes": 34330,
+      "sha256": "f426effb26808d17dc34d7d08d25265ed7bd51eb77bb66cac3f33f77e9650997"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2_world_dynamic-previous-generation.log",
+      "bytes": 1504,
+      "sha256": "2d9e2f4cdd308b403795994fd8090909016e9aff5e0f911d242fef27accb55ac"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room2_world_dynamic-generation.log",
+      "bytes": 1504,
+      "sha256": "eec798ff453e0d0b6a081cb0aa3e362fda4e34cf595839c384389460e6b10560"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room3/dataset_room3.generation.json",
+      "bytes": 1448,
+      "sha256": "f4dc8a7f66728f78b011a605dd1b4f1a280fb85ce0bfb479e68caa34613faebf"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room3/dataset_room3.yaml",
+      "bytes": 119,
+      "sha256": "95456be97df8d8d5b5cdac0b9fc1a1354d81eea716298f677161d941257a66d5"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room3/dataset_room3.pgm",
+      "bytes": 34330,
+      "sha256": "d86cf780d574bc109da7802469dbb417534d5b60c17ecb8a7926130dab3b93cf"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3-previous-generation.log",
+      "bytes": 1448,
+      "sha256": "60cb3e1fbf1b05294ae70d37ac7a6ea8a7f08bdc4036990018230c57fd455fdc"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3-generation.log",
+      "bytes": 1448,
+      "sha256": "f4dc8a7f66728f78b011a605dd1b4f1a280fb85ce0bfb479e68caa34613faebf"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3_world_dynamic-previous-generation.log",
+      "bytes": 1503,
+      "sha256": "b5e9b1dcce198893c77dda9857ac47201b76b34b481eac73c5630d47152e35cf"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3_world_dynamic-generation.log",
+      "bytes": 1503,
+      "sha256": "d1679adbabd9c759cc9ffc32a544e580fe9cfd1d5b46c8e77a1e61b50d5e52ca"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room3_world_dynamic/dataset_room3_world_dynamic.generation.json",
+      "bytes": 1503,
+      "sha256": "d1679adbabd9c759cc9ffc32a544e580fe9cfd1d5b46c8e77a1e61b50d5e52ca"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room3_world_dynamic/dataset_room3_world_dynamic.yaml",
+      "bytes": 133,
+      "sha256": "9245f18e1c336274d53f3fe9b8a0d6b9d9f83d743c75bde130895851128e66c9"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room3_world_dynamic/dataset_room3_world_dynamic.pgm",
+      "bytes": 34330,
+      "sha256": "bfd163801bc7cdf5d17ed6283512d3f8cb6d4c13fa0275ea93ccf7e0df0d4d5f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3_world_dynamic-previous-generation.log",
+      "bytes": 1503,
+      "sha256": "b5e9b1dcce198893c77dda9857ac47201b76b34b481eac73c5630d47152e35cf"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room3_world_dynamic-generation.log",
+      "bytes": 1503,
+      "sha256": "d1679adbabd9c759cc9ffc32a544e580fe9cfd1d5b46c8e77a1e61b50d5e52ca"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room4/dataset_room4.generation.json",
+      "bytes": 1448,
+      "sha256": "a3929ccb0410f605642a4a7eae1ea5c1b576f7c806d4b3b39eda9842f8a8b601"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room4/dataset_room4.yaml",
+      "bytes": 119,
+      "sha256": "3579bc9a63b6621c12c773a3aa7e63251ef1b48ae27599721bcded9397d7aa69"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room4/dataset_room4.pgm",
+      "bytes": 34330,
+      "sha256": "e18957bd862c961df8d62648424e20addabff90cc5930102189a67ef34ed9f33"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4-generation.log",
+      "bytes": 1448,
+      "sha256": "a3929ccb0410f605642a4a7eae1ea5c1b576f7c806d4b3b39eda9842f8a8b601"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4-previous-generation.log",
+      "bytes": 1448,
+      "sha256": "1f3d1dfe84124788e17859f1070f0e166bc55819735246ed149f544f93883a5c"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4_world_dynamic-generation.log",
+      "bytes": 1503,
+      "sha256": "0b78c75a3a0ceff8be9f78dd0d3df90275a96ba8da4fd116c563ed753a96da86"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4_world_dynamic-previous-generation.log",
+      "bytes": 1503,
+      "sha256": "e7f39cc7ac5ed3888ccfc5c7a0bf212b1645cdda348dfaad74fcb4e1b482244f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room4_world_dynamic/dataset_room4_world_dynamic.generation.json",
+      "bytes": 1503,
+      "sha256": "0b78c75a3a0ceff8be9f78dd0d3df90275a96ba8da4fd116c563ed753a96da86"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room4_world_dynamic/dataset_room4_world_dynamic.yaml",
+      "bytes": 133,
+      "sha256": "e04c0822424928ef185204a255c5006a2566431dfbd5feaf95dbebe695619217"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_room4_world_dynamic/dataset_room4_world_dynamic.pgm",
+      "bytes": 34330,
+      "sha256": "854805ca7a29b32bf4b74f61facba8f3a39f4bd4fd32d7536867be1672b28910"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4_world_dynamic-generation.log",
+      "bytes": 1503,
+      "sha256": "0b78c75a3a0ceff8be9f78dd0d3df90275a96ba8da4fd116c563ed753a96da86"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_room4_world_dynamic-previous-generation.log",
+      "bytes": 1503,
+      "sha256": "e7f39cc7ac5ed3888ccfc5c7a0bf212b1645cdda348dfaad74fcb4e1b482244f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_factory/dataset_factory.generation.json",
+      "bytes": 3840,
+      "sha256": "7b745902576bb8c26b81a88715f76e6e49b3b2d287b4d7ef3496f9dc7396b8ad"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_factory/dataset_factory.yaml",
+      "bytes": 123,
+      "sha256": "9625ef3c578e74fa5527e7989614b3ad06ab82cf4bf21e7614d621a5ea1a942c"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_factory/dataset_factory.pgm",
+      "bytes": 325375,
+      "sha256": "ef5b6679461c079a46447812979c3145179f0ce7866dda428328e14e44daaee3"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_factory-generation.log",
+      "bytes": 3840,
+      "sha256": "7b745902576bb8c26b81a88715f76e6e49b3b2d287b4d7ef3496f9dc7396b8ad"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_factory-previous-generation.log",
+      "bytes": 3839,
+      "sha256": "d62538e0c98cabb250535277f9483f8c0a15bceca48b461a02d9fa72ee386a98"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_hospital/dataset_hospital.generation.json",
+      "bytes": 19418,
+      "sha256": "8093b78a6f031d30b18b511ef5b499b74c78ad7dd52b90a414d9a5df18f9e3c8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_hospital/dataset_hospital.yaml",
+      "bytes": 123,
+      "sha256": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_hospital/dataset_hospital.pgm",
+      "bytes": 216679,
+      "sha256": "98ddc00ae69cbd8bedf2d274ff193fac2a5385ce507461b762a28dee9f150087"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital_hospital_two_floors-previous-generation.log",
+      "bytes": 19733,
+      "sha256": "804e21745d066c0ae924d0825de4edcedbeabdc1f305def7503d27ecce0323cc"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital-previous-generation.log",
+      "bytes": 19413,
+      "sha256": "9e3c3ba8fa76ccc4ddeb3bb85784201dc377eb8bddf3a61b5b18d92d0cf79113"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital-generation.log",
+      "bytes": 19418,
+      "sha256": "8093b78a6f031d30b18b511ef5b499b74c78ad7dd52b90a414d9a5df18f9e3c8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital_hospital_two_floors-generation.log",
+      "bytes": 19738,
+      "sha256": "0599fb46f1575b85b5a15edd5b4045a7334d6ab04381d6775150d8ec41eb468d"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_hospital_hospital_two_floors/dataset_hospital_hospital_two_floors.generation.json",
+      "bytes": 19738,
+      "sha256": "0599fb46f1575b85b5a15edd5b4045a7334d6ab04381d6775150d8ec41eb468d"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_hospital_hospital_two_floors/dataset_hospital_hospital_two_floors.yaml",
+      "bytes": 143,
+      "sha256": "4993c206fa078f8921549a7678cc50da698a8600a46882df9bff94b9b9b8f8e8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/dataset_hospital_hospital_two_floors/dataset_hospital_hospital_two_floors.pgm",
+      "bytes": 216679,
+      "sha256": "680da45ab1c082cc14311478b2d4e7ee8ed415d8bb1a9cc88940274ce33c0b57"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital_hospital_two_floors-previous-generation.log",
+      "bytes": 19733,
+      "sha256": "804e21745d066c0ae924d0825de4edcedbeabdc1f305def7503d27ecce0323cc"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/dataset_hospital_hospital_two_floors-generation.log",
+      "bytes": 19738,
+      "sha256": "0599fb46f1575b85b5a15edd5b4045a7334d6ab04381d6775150d8ec41eb468d"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_default/gazebo_example_default.generation.json",
+      "bytes": 1467,
+      "sha256": "8305c61e2a7af50be5b54050ab8ddbb9a7bfbcdf0d0663a9178bb5cc181739f8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_default/gazebo_example_default.yaml",
+      "bytes": 125,
+      "sha256": "2e3a90130383ba95da509b04c2ee4cbcff013e67b131a2e586cd1d26b1a3e5f2"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_default/gazebo_example_default.pgm",
+      "bytes": 40015,
+      "sha256": "53f83558db2bf256d84a658c0b9eecc8be5385929928278a184d2cf9dee889cb"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_default-generation.log",
+      "bytes": 1467,
+      "sha256": "8305c61e2a7af50be5b54050ab8ddbb9a7bfbcdf0d0663a9178bb5cc181739f8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_default-previous-generation.log",
+      "bytes": 1436,
+      "sha256": "d59ca61ccd8f6500030b108614713e5ab2241afd19a34923e28cee2fd0f0a104"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_empty/gazebo_example_empty.generation.json",
+      "bytes": 1457,
+      "sha256": "ab4d88f0d1aa618c7c6aa720fcbad10f30ceb0d6a6a7f0577141c73612c31879"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_empty/gazebo_example_empty.yaml",
+      "bytes": 123,
+      "sha256": "cc3d98c01834cf87257b8fa52b8b116951a77ab15a30c3e367a6f57b643418b0"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_empty/gazebo_example_empty.pgm",
+      "bytes": 40015,
+      "sha256": "53f83558db2bf256d84a658c0b9eecc8be5385929928278a184d2cf9dee889cb"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_empty-previous-generation.log",
+      "bytes": 1426,
+      "sha256": "1c1f14af158d870962719aabba0a3d4d5bf7d33383d3b0ef1dd6b3a058436773"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_empty-generation.log",
+      "bytes": 1457,
+      "sha256": "ab4d88f0d1aa618c7c6aa720fcbad10f30ceb0d6a6a7f0577141c73612c31879"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.generation.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_shapes/gazebo_example_shapes.generation.json",
+      "bytes": 1465,
+      "sha256": "b8cf52d4fad40fe9f8cc205636faede07b8ddea8f7e49354dac1e52a720bf47f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.yaml",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_shapes/gazebo_example_shapes.yaml",
+      "bytes": 124,
+      "sha256": "d32eb9449abbc15d32761781d2f3eb286c691bce0805f6e6fb2da80359e7c4d6"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.pgm",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gazebo_example_shapes/gazebo_example_shapes.pgm",
+      "bytes": 4013,
+      "sha256": "30cc29c5d90cda3c460c0bab62f681b2dfa4a1d142d602821f3a24ceb30d5643"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_shapes-previous-generation.log",
+      "bytes": 1434,
+      "sha256": "c7d97b73016dd03603f18f3ce3d76b3407f94101705d19afc102acf91fb8ff28"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/occupancy-v4-refresh/gazebo_example_shapes-generation.log",
+      "bytes": 1465,
+      "sha256": "b8cf52d4fad40fe9f8cc205636faede07b8ddea8f7e49354dac1e52a720bf47f"
+    }
+  ],
+  "hospital_grid_after_refresh": {
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.pgm",
+    "sha256": "98ddc00ae69cbd8bedf2d274ff193fac2a5385ce507461b762a28dee9f150087",
+    "byte_identical_to_actual_passed_navigation_grid": true
+  }
+}

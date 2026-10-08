@@ -1,0 +1,37 @@
+{
+  "source_world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world",
+  "source_sha256": "d7c6fafac0907f3c9f0802b220c01ad34a64228fc6adb4ee6a5be5f5772394dc",
+  "mesh_sha256": {},
+  "mesh_slice_paths": 0,
+  "mesh_mask_cells": 3048,
+  "collision_count": 27,
+  "projection_recipe": "complete-static-height-slice-v4",
+  "terrain_slice_polygons": 0,
+  "heightfield_count": 0,
+  "resolution_m": 0.1,
+  "slice_height_m": 0.3,
+  "seed_xy": [
+    -14.3,
+    0.25
+  ],
+  "skipped_dynamic_actors": [],
+  "engine": "robotics-upo Fortress 317a17d4dc8004e14299d767278f0ecbcb857819 + Robot Lab mesh collision mask",
+  "limits": "Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification",
+  "output_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml",
+  "free_cells": 12233,
+  "occupied_cells": 1138,
+  "unknown_cells": 20945,
+  "shape": [
+    92,
+    373
+  ],
+  "origin": [
+    -18.7,
+    -4.6,
+    0.0
+  ],
+  "artifact_sha256": {
+    ".yaml": "79a618c25c115ee148dd9607f7c41fadf28a975f29fb429a03b570d7a80e1525",
+    ".pgm": "f426effb26808d17dc34d7d08d25265ed7bd51eb77bb66cac3f33f77e9650997"
+  }
+}

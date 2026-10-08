@@ -150,7 +150,8 @@ Unlisted combinations are untested. No row establishes full mission support.
 | labbot | dataset_hospital | isaac | navigation /  | passed_screen |
 | bumperbot | dataset_hospital | gazebo | navigation /  | passed_screen |
 | bumperbot | dataset_hospital | pybullet | navigation /  | passed_screen |
-| bumperbot | dataset_hospital | mujoco | navigation /  | failed_screen |
+| bumperbot | dataset_hospital | mujoco | navigation /  | passed_screen |
+| bumperbot | dataset_hospital | isaac | navigation /  | passed_screen |
 | px4_x500 | nav_empty | gazebo | flight /  | passed_screen |
 
 Full release blockers:

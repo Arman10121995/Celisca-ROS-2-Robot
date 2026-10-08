@@ -4090,6 +4090,182 @@ records:
     remains separate
   - Owned launch root cleanup is recorded; individual child shutdown errors remain
     in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: 4fe611aee7471782cf424fd030a3e85ccae2c85b plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 6d80af691a8dda49588235ec47274e909296d3e08d1236e815936e700a4681f7
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: c57963495675f7f9e7b6a50b350113de4489e70f15da92621bd11f744df63b81
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/report-measured.json
+  sha256: 70c77af80600107339e895f7e0582a7fbc8bf22369cecda37c9fa42b5e06e405
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/pre-trial.json
+  source_hashes_sha256: 6a4953e3c4b23de24bb5b0ea783e23da3bdba5ad028c673328a507a2a63f490f
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/report-measured.json
+  sha256: 8a17b4076338577729a12a945083c2e2dfe1987f44803f26d7e07fba7360c9b7
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/pre-trial.json
+  source_hashes_sha256: b42980551989f0e2657b098ebe4c10a1fad488ee4e6aa1bf39d9f1fa0c57a2aa
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: bumperbot
+  environment_id: dataset_hospital
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/report-measured.json
+  sha256: bb591ce056fb2ce26c20e5afdd6bcd0c46408c4ac55bff94a00205f3a04044d4
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/pre-trial.json
+  source_hashes_sha256: 8afba8eb52a7f65b106bc01be9f5d4bb9245c14b0877de01c0041a89e6450856
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: gazebo
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/report-measured.json
+  sha256: c213013d09c43a65e41e9dd79a9b902b9999268e0e339b48945997ce346e5759
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/pre-trial.json
+  source_hashes_sha256: 040f6baff8f31fa22895ee012d532586bf10be8e900c6a561ac49a9603c95bc2
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: pybullet
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/report-measured.json
+  sha256: c613885d78e984dee26d8b5b8040a81791a005eb7823d7df1d9bcdff9664a966
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/pre-trial.json
+  source_hashes_sha256: c8304d8c1d057cbc9bdf9ec454c4a85a04b8196139b1b129dafddc0c78d8bf2b
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 0b518e9fa1fa927622ebe65ad8dc7efad919436457a8e3a2b774857429243364
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: 265c0a3f398d4739775ce3901399035281d3f13161f9fd5041ff2cdcbcaa3dc8
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: isaac
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-isaac/report-measured.json
+  sha256: 62dd5f9e22a0384fe0b00835c27456aff434ec3ebff7a8f516c8fd70921fc243
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-isaac/pre-trial.json
+  source_hashes_sha256: 6cf1f83e1b164cfbe78a5da6e4f1c40ab95bf9bf563c8620604fd2f0c03e5f8c
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
 - robot_id: asset_husky
   environment_id: nav_empty
   simulator: gazebo

@@ -1,7 +1,7 @@
 {
-  "runtime_revision": "4fe611aee7471782cf424fd030a3e85ccae2c85b",
+  "runtime_revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5",
   "branch": "master",
-  "qualification": "Published 4fe611a compatibility repair and 89 rebuilt listed installed Python modules match. Exact required/scheduled CI passes. Original physical/software trials retain their own source stages; occupancy v4 is a later working-tree stage under actual navigation verification.",
+  "qualification": "Published ca65f35 occupancy v4 source and 89 listed installed runtime Python modules match source. Exact required/scheduled CI passes. All original physical/software trials retain their exact pre-trial source stages. Later 17-map refresh utility execution is a separate hashed working-tree stage; no new controller source change.",
   "installed_python": [
     {
       "path": "src/robot_lab_gui/robot_lab_gui/hand_tab.py",
@@ -451,14 +451,14 @@
   ],
   "remote_ci": [
     {
-      "run": "37835509680",
+      "run": "37838538779",
       "conclusion": "success",
-      "revision": "4fe611aee7471782cf424fd030a3e85ccae2c85b"
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5"
     },
     {
-      "run": "37835509978",
+      "run": "37838539175",
       "conclusion": "success",
-      "revision": "4fe611aee7471782cf424fd030a3e85ccae2c85b"
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5"
     }
   ]
 }

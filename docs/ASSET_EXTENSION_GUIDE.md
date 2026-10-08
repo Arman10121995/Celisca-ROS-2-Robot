@@ -3,7 +3,7 @@
 Updated October 8, 2026. The latest physical extension work is recorded in
 [the October 8 checkpoint](status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](status/CURRENT_STATUS.md) and
-[the continuation](status/continuation-2026-10-07.md) for measured scopes and
+[the continuation](status/continuation-2026-10-08.md) for measured scopes and
 remaining owners; exact CI and real GUI/robot evidence are separate.
 
 The October 5 user request extends the existing robot/map/algorithm project.
@@ -90,7 +90,36 @@ Generate and Stop actions are measured in the October 8 checkpoint. Terrain
 projection clips each transformed triangle at the chosen height and rasterizes
 separate polygons, preserving gaps. Generation caches compare world, seed,
 recipe, output and every mesh-dependency hash before reusing an export.
-Robot navigation/flight missions and scripted actor behavior remain unqualified.
+Occupancy v4 preserves every triangle/plane intersection, including open wall
+sheets omitted by the old closed-path projection. All 17 installed extension
+worlds have actual v4 grids with unchanged source worlds and measured spawns.
+The [eight short hospital routes](status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md)
+pass for Bumperbot/Labbot across all four engines. Other world missions,
+upper-floor travel, flight and scripted actor behavior remain unqualified.
+
+### Refresh installed grids without moving robots
+
+Stop any owned simulator first. The agent refresh command retains existing
+world/spawn/initial-pose fields, preserves old maps and profile snapshots, and
+updates the installed Launch/Registry map paths. It serializes against asset
+provisioning and rejects output on internal storage. A fresh output directory
+is required. Reopen the GUI after registration and inspect the generated grid.
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ROBOT_LAB_REFRESH_RUN_DIR=$(mktemp -d "$ROBOT_LAB_RUNTIME_ROOT/occupancy-refresh-XXXXXX")
+python3 scripts/refresh_installed_occupancy_maps.py \
+  --output "$ROBOT_LAB_REFRESH_RUN_DIR/run"
+# For a later single-world refresh, use a different fresh output path:
+# python3 scripts/refresh_installed_occupancy_maps.py --map dataset_hospital --output "$ROBOT_LAB_REFRESH_RUN_DIR/hospital"
+```
+
+The real [export and preservation receipts](status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/verification.json)
+and actual GUI selections establish registration. Qualify new robot routes
+separately with fresh body/floor/heading evidence. A cache hit or export count
+does not establish navigation.
 
 The installation report records exact entries and repair reasons. Native import
 checks and source counts never imply control or mission acceptance. URDFHub

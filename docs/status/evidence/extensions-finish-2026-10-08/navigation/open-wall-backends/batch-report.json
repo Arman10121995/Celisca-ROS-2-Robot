@@ -1,0 +1,523 @@
+{
+  "scope": "Normal GUI short ground-floor hospital navigation on occupancy v4, serial independent physical endpoints; no obstacle/all-map qualification.",
+  "records": [
+    {
+      "robot": "bumperbot",
+      "backend": "gazebo",
+      "returncode": 0,
+      "wall_s": 84.47,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "bumperbot",
+        "--backend",
+        "gazebo",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo",
+        "--timeout",
+        "600"
+      ],
+      "domain": "211",
+      "navigation": {
+        "stack_ready_wall_s": 18.6,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 35.7,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.489,
+          12.424
+        ],
+        "final_error_estimate_m": 0.067,
+        "final_yaw_estimate_deg": 1.45,
+        "final_yaw_error_estimate_deg": 1.45,
+        "final_truth_xy": [
+          2.466,
+          12.411
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": 1.22,
+        "final_error_truth_m": 0.092,
+        "final_yaw_error_truth_deg": 1.22,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.917,
+        "motion_reverse_m": 0.0,
+        "motion_heading_travel_rad": 0.363,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/body.trace.json",
+        "truth_samples": 642
+      }
+    },
+    {
+      "robot": "bumperbot",
+      "backend": "pybullet",
+      "returncode": 0,
+      "wall_s": 64.398,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "bumperbot",
+        "--backend",
+        "pybullet",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet",
+        "--timeout",
+        "600"
+      ],
+      "domain": "212",
+      "navigation": {
+        "stack_ready_wall_s": 11.7,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 31.5,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.482,
+          12.451
+        ],
+        "final_error_estimate_m": 0.068,
+        "final_yaw_estimate_deg": 1.44,
+        "final_yaw_error_estimate_deg": 1.44,
+        "final_truth_xy": [
+          2.507,
+          12.452
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": 1.84,
+        "final_error_truth_m": 0.043,
+        "final_yaw_error_truth_deg": 1.84,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.958,
+        "motion_reverse_m": 0.0,
+        "motion_heading_travel_rad": 0.254,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/body.trace.json",
+        "truth_samples": 497
+      }
+    },
+    {
+      "robot": "bumperbot",
+      "backend": "isaac",
+      "returncode": 0,
+      "wall_s": 77.449,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "bumperbot",
+        "--backend",
+        "isaac",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac",
+        "--timeout",
+        "600"
+      ],
+      "domain": "213",
+      "navigation": {
+        "stack_ready_wall_s": 36.3,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 19.6,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.481,
+          12.451
+        ],
+        "final_error_estimate_m": 0.069,
+        "final_yaw_estimate_deg": -1.23,
+        "final_yaw_error_estimate_deg": -1.23,
+        "final_truth_xy": [
+          2.467,
+          12.449
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": -1.64,
+        "final_error_truth_m": 0.083,
+        "final_yaw_error_truth_deg": -1.64,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.917,
+        "motion_reverse_m": 0.0,
+        "motion_heading_travel_rad": 0.181,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/body.trace.json",
+        "truth_samples": 1046
+      }
+    },
+    {
+      "robot": "labbot",
+      "backend": "gazebo",
+      "returncode": 0,
+      "wall_s": 78.98,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "labbot",
+        "--backend",
+        "gazebo",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo",
+        "--timeout",
+        "600"
+      ],
+      "domain": "214",
+      "navigation": {
+        "stack_ready_wall_s": 16.5,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 32.6,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.488,
+          12.423
+        ],
+        "final_error_estimate_m": 0.067,
+        "final_yaw_estimate_deg": 1.47,
+        "final_yaw_error_estimate_deg": 1.47,
+        "final_truth_xy": [
+          2.511,
+          12.414
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": 1.79,
+        "final_error_truth_m": 0.053,
+        "final_yaw_error_truth_deg": 1.79,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.962,
+        "motion_reverse_m": 0.0,
+        "motion_heading_travel_rad": 0.541,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/body.trace.json",
+        "truth_samples": 748
+      }
+    },
+    {
+      "robot": "labbot",
+      "backend": "pybullet",
+      "returncode": 0,
+      "wall_s": 57.528,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "labbot",
+        "--backend",
+        "pybullet",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet",
+        "--timeout",
+        "600"
+      ],
+      "domain": "215",
+      "navigation": {
+        "stack_ready_wall_s": 9.1,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 28.2,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.488,
+          12.419
+        ],
+        "final_error_estimate_m": 0.069,
+        "final_yaw_estimate_deg": 1.58,
+        "final_yaw_error_estimate_deg": 1.58,
+        "final_truth_xy": [
+          2.49,
+          12.42
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": 1.32,
+        "final_error_truth_m": 0.067,
+        "final_yaw_error_truth_deg": 1.32,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.944,
+        "motion_reverse_m": 0.003,
+        "motion_heading_travel_rad": 0.654,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/body.trace.json",
+        "truth_samples": 655
+      }
+    },
+    {
+      "robot": "labbot",
+      "backend": "mujoco",
+      "returncode": 0,
+      "wall_s": 139.766,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "labbot",
+        "--backend",
+        "mujoco",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco",
+        "--timeout",
+        "600"
+      ],
+      "domain": "216",
+      "navigation": {
+        "stack_ready_wall_s": 15.6,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 98.4,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.482,
+          12.437
+        ],
+        "final_error_estimate_m": 0.07,
+        "final_yaw_estimate_deg": -1.66,
+        "final_yaw_error_estimate_deg": -1.66,
+        "final_truth_xy": [
+          2.469,
+          12.432
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": -1.21,
+        "final_error_truth_m": 0.083,
+        "final_yaw_error_truth_deg": -1.21,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.919,
+        "motion_reverse_m": 0.0,
+        "motion_heading_travel_rad": 0.702,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/body.trace.json",
+        "truth_samples": 489
+      }
+    },
+    {
+      "robot": "labbot",
+      "backend": "isaac",
+      "returncode": 0,
+      "wall_s": 78.636,
+      "report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/report.json",
+      "command": [
+        "xvfb-run",
+        "-a",
+        "python3",
+        "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_world_navigation_gui.py",
+        "--robot",
+        "labbot",
+        "--backend",
+        "isaac",
+        "--map",
+        "dataset_hospital",
+        "--output",
+        "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac",
+        "--timeout",
+        "600"
+      ],
+      "domain": "217",
+      "navigation": {
+        "stack_ready_wall_s": 36.1,
+        "start": [
+          0.55,
+          12.45
+        ],
+        "goal": [
+          2.55,
+          12.45
+        ],
+        "goal_yaw_deg": 0.0,
+        "outcome": "succeeded",
+        "wall_s": 21.1,
+        "settled_sim_second": true,
+        "final_pose_estimate_xy": [
+          2.487,
+          12.436
+        ],
+        "final_error_estimate_m": 0.061,
+        "final_yaw_estimate_deg": 1.0,
+        "final_yaw_error_estimate_deg": 1.0,
+        "final_truth_xy": [
+          2.473,
+          12.423
+        ],
+        "truth_age_wall_s": 0.0,
+        "final_truth_yaw_deg": 1.29,
+        "final_error_truth_m": 0.078,
+        "final_yaw_error_truth_deg": 1.29,
+        "motion_source": "/odom/ground_truth",
+        "motion_forward_m": 1.928,
+        "motion_reverse_m": 0.0,
+        "motion_heading_travel_rad": 0.131,
+        "acceptance": {
+          "passed": true,
+          "checks": {
+            "goal_succeeded": true,
+            "truth_position": true,
+            "truth_heading": true,
+            "fresh_truth": true
+          },
+          "limits": {
+            "position_m": 0.15,
+            "yaw_deg": 5.0,
+            "truth_age_wall_s": 1.0
+          }
+        },
+        "truth_trace": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/open-wall-backends/labbot-dataset_hospital-isaac/body.trace.json",
+        "truth_samples": 1126
+      }
+    }
+  ]
+}

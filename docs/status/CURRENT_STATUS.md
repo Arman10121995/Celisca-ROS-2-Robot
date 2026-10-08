@@ -33,7 +33,12 @@ tool XYZ and 1 cm target buttons with separate Plan/Execute. The normal native
 Panda/MuJoCo repeat passes submillimetre TCP errors, collision/reach rejection,
 interruptions/reset and physical cube lift/release. Read the updated
 [Panda](../tutorials/panda_arm.md) and [Drone](../tutorials/px4_x500.md) guides.
-Bumperbot/MuJoCo hospital navigation retains failed body endpoints and the reverted 0.03 m goal experiment. The stationary lidar diagnostic identifies omitted open wall chains; corrected occupancy v4 improves measured grid alignment, and the unchanged normal navigation repeat is active.
+Occupancy v4 restores omitted open mesh walls. All 17 installed extension
+worlds have real refreshed grids and unchanged spawns; 34 GUI selections
+autofill their new map paths. Both bases now pass the short hospital route on
+all four engines with unchanged physical endpoint/floor gates. Earlier failed
+endpoints and the reverted 0.03 m experiment remain. MuJoCo performance stays
+open: one matched Labbot hospital window measures 0.1305× real time.
 
 ## Measured work and its limits
 
@@ -47,7 +52,7 @@ Bumperbot/MuJoCo hospital navigation retains failed body endpoints and the rever
 | Go2 and Berkeley Humanoid Lite | Repaired MuJoCo startup and bounded upright walks on the recorded Celisca path | BHL sustained-turn/low-speed stalls; Go2 terrain/recovery; remaining humanoid/quadruped policies and mission cells |
 | Native Menagerie Panda | MuJoCo joint/Home/Stop, Hand, physical cube lift/release and MoveIt KDL/OMPL/FCL Plan/Execute in named static worlds | Servo, attached/dynamic objects, repeated pick/place, other arms/hands/backends and mobile manipulation |
 | PX4 X500 | Real Gazebo Harmonic takeoff, hover, goals, Drive, altitude controls, landing/disarming and bounded command loss in `nav_empty`/`nav_obstacle` | Other installed worlds' spawn/ceiling/flight cells, obstacle-aware aerial planning/mapping and other backends |
-| Worlds and occupancy generation | Fourteen dataset worlds/three examples; editable GUI seeds, actual refreshed dependency-guarded exports, separate terrain triangle slices and derived hospital pose/frame/static-snapshot repairs | Remaining reviewed routes/registration, disconnected regions, collision/contact/actor parity, upper hospital floors and 97 example fixtures |
+| Worlds and occupancy generation | Fourteen dataset worlds/three examples; all 17 actual occupancy-v4 exports with unchanged world/spawn fields and GUI paths; eight short hospital routes; editable seeds, terrain slices and derived hospital pose/frame/static-snapshot repairs | Remaining reviewed routes/registration, disconnected regions, collision/contact/actor parity, upper hospital floors and 97 example fixtures |
 | Terrain | Shared heightfield conversion and recorded Gazebo/MuJoCo/PyBullet geometry/contact screens | Separately owned GUI/provider workflow, Isaac terrain contacts and traversal missions |
 
 Exact commands, source fingerprints, numeric outcomes and retained negatives
@@ -80,7 +85,10 @@ previews, catalog counts and unit tests are separate from mission evidence.
 | Remote CI at `091d388` | 25-package core build; 933 fast passed/four skips/four deselections; 20 physics passed; 134 integration passed/12 skips; registry validation passed | Exact published source on the CI host, optional `orbslam3` excluded; no robot mission qualification |
 | Installed/published parity | Twelve GUI/runtime files match the published revision | [Actual hashes](evidence/gui-controls-column-2026-10-07/published-source.json) |
 
-Published `4fe611a` passes required/scheduled CI (25 packages; required fast 1002/four skips, scheduled fast 1003/three skips; 27 physics; 134 integration/13 skips; registry) after the MuJoCo 3.15 repair. The predecessor `73fcc47` also passes required CI and Scheduled Full Test Suite
+Published occupancy-v4 `ca65f35` passes required/scheduled CI (25 packages;
+required fast 1002/five skips, scheduled fast 1004/three skips; 27 physics;
+134 integration/13 skips; registry). Preceding MuJoCo 3.15 repair `4fe611a`
+retains its separate successful CI stage. The predecessor `73fcc47` also passes required CI and Scheduled Full Test Suite
 after the shared-utilities import fix. [October 8 evidence](evidence/extensions-finish-2026-10-08/README.md)
 retains those exact complete logs separately from the final runtime checks. Local tests, remote CI and simulator trials keep
 separate source stages and skip/failure records. Clean-host mission reproduction,

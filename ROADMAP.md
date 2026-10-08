@@ -58,7 +58,7 @@ asset listing is separate from an installed robot with working control.
 | R5.7 / R5.8 / R5.9 | Arms, hands/grippers, mobile manipulators | Native Panda arm and bounded-force Hand controls measured on MuJoCo, including physical cube lift/hold/release and interruption/reset; MoveIt Cartesian/static-world screens measured; Servo, planned payloads, other hands/backends and mobile missions remain |
 | R5.10 | PX4 in every selected installed world | All world selections preserved; native `nav_empty` and `nav_obstacle` flight screens pass; full spawn/ceiling matrix remains |
 | R6.5 | Generate 2D grids for selected collision worlds | Actual editable-seed Generate/Stop and refreshed dataset exports; separate rotated terrain slices; remaining regions/registration/routes remain |
-| R6.6 | External worlds and packaged Gazebo examples | 14 dataset/three example imports; pinned hospital pose/Collada/static-floor repairs and scoped real routes; actors/upper floors/other missions and licenses remain |
+| R6.6 | External worlds and packaged Gazebo examples | 14 dataset/three example imports; all 17 real v4 grids, unchanged spawns/GUI paths and eight short hospital routes; pinned pose/Collada/static-floor repairs; other missions/actors/upper floors/licenses remain |
 | R6.7 | Terrain GUI and four-backend heightfield/mesh conversion | Active with shared conversion/contact screens; terrain GUI/provider workflow and Isaac runtime contact remain |
 
 See [the implementation guide](docs/ASSET_EXTENSION_GUIDE.md) and
@@ -252,9 +252,12 @@ control-column/TurtleBot3/Registry revision also passes the full core build,
 checks (twelve skips) and registry validation. Local GUI/mission evidence remains
 separate. The October 8 published `4fe611a` compatibility repair passes both workflows
 with 27 real physics and 134 integration checks (13 skips). The occupancy-v4
-follow-up repairs omitted open mesh wall chains, invalidates old caches, and
-requires actual regenerated-grid/normal navigation validation. Later runtime
-changes need their own CI observation. See
+source `ca65f35` also passes both exact workflows: required fast 1002/five
+skips, scheduled fast 1004/three skips, 27 physics and 134 integration/13 skips.
+All 17 installed grids have real v4 exports with unchanged worlds/spawns and
+GUI paths; eight short normal hospital routes pass physical gates. Other-world
+missions and measured MuJoCo performance remain open. Later runtime changes
+need their own CI observation. See
 [CI evidence](docs/status/evidence/ci-extensions-2026-10-07/README.md).
 
 ### R1.3 — Make CI bootstrap and doctor trustworthy

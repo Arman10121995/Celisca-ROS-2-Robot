@@ -1,0 +1,2939 @@
+{
+  "scope": "Maintained/current Markdown target existence only; no network/anchor or runtime qualification.",
+  "documents": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "ROADMAP.md",
+    "docs/AGENT_HANDOFF.md",
+    "docs/AI_ROBOT_READINESS_GUIDE.md",
+    "docs/ASSET_EXTENSION_GUIDE.md",
+    "docs/PATCH_EXECUTION_GUIDE.md",
+    "docs/STORAGE.md",
+    "docs/TESTING.md",
+    "docs/WORKFLOW.md",
+    "docs/status/CHECKLIST.md",
+    "docs/status/CURRENT_STATUS.md",
+    "docs/status/continuation-2026-10-08.md",
+    "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+    "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+    "docs/status/evidence/extensions-finish-2026-10-08/support-matrix-current.md",
+    "docs/status/support-matrix.md",
+    "docs/tutorials/README.md",
+    "docs/tutorials/comparison_control.md",
+    "docs/tutorials/comparison_global_planning.md",
+    "docs/tutorials/comparison_local_planning.md",
+    "docs/tutorials/comparison_localization.md",
+    "docs/tutorials/comparison_perception.md",
+    "docs/tutorials/comparison_sensor_fusion.md",
+    "docs/tutorials/comparison_state_estimation.md",
+    "docs/tutorials/control.md",
+    "docs/tutorials/control_comparison.md",
+    "docs/tutorials/global_planning_comparison.md",
+    "docs/tutorials/go2.md",
+    "docs/tutorials/gui-workspace.md",
+    "docs/tutorials/husky.md",
+    "docs/tutorials/index.md",
+    "docs/tutorials/local_planning.md",
+    "docs/tutorials/local_planning_comparison.md",
+    "docs/tutorials/localization.md",
+    "docs/tutorials/localization_comparison.md",
+    "docs/tutorials/panda_arm.md",
+    "docs/tutorials/perception.md",
+    "docs/tutorials/perception_comparison.md",
+    "docs/tutorials/planning.md",
+    "docs/tutorials/px4_x500.md",
+    "docs/tutorials/registry-3d.md",
+    "docs/tutorials/sensor_fusion.md",
+    "docs/tutorials/sensor_fusion_comparison.md",
+    "docs/tutorials/state_estimation.md",
+    "docs/tutorials/state_estimation_comparison.md",
+    "docs/tutorials/turtlebot3.md",
+    "docs/tutorials/turtlebot4.md",
+    "src/robot_lab_maps/README.md",
+    "src/robot_lab_robots/README.md"
+  ],
+  "checks": [
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "AGENTS.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "CLAUDE.md",
+      "target": "docs/STORAGE.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/STORAGE.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/registry-3d-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-integrated-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/turtlebot4.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/turtlebot3.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/husky.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/panda-gripper-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/panda-cartesian-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/architecture/overview.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/index.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/gui-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/runtime-evidence-index.yaml",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/support-matrix.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/TESTING.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/status/support-matrix.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "src/robot_lab_bringup/config/algorithm_dispatch.yaml",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/go2.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "docs/AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "document": "README.md",
+      "target": "LICENSES/third-party-notices.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/STORAGE.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/asset-sources-2026-10-05.yaml",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/project-goal-2026-09-15.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/gui-command-autofill-2026-09-11.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/turtlebot4-modes-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/turtlebot4-sensors-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/turtlebot3-modes-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/turtlebot3-sensors-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/registry-3d-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r52-go2-2026-09-25/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r52-go2-support-transfer-2026-10-01/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r52-go2-terrain-2026-10-01/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/tutorials/go2.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r53-mujoco-effort-2026-09-22/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r53-bhl-gui-drive-2026-09-24/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r53-bhl-gui-drive-2026-09-24/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r54-flight-2026-10-02/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/tutorials/px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/continuation-2026-10-05.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r55-car-watchdog-2026-10-01/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/continuation-2026-10-05.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/continuation-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r56-holonomic-measure-2026-10-01/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r55-holonomic-audit-2026-09-30/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/panda-turtlebot4-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/panda-gripper-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/tutorials/panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/panda-cartesian-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/panda-gripper-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/r6-7-heightfield-probe-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/audit-2026-09-07.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/continuation-2026-10-07.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "STORAGE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "tutorials/px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/continuation-2026-10-07.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/extensions-integrated-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/turtlebot4-modes-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/turtlebot4-sensors-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "tutorials/turtlebot3.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/turtlebot3-sensors-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/panda-cartesian-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "tutorials/registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/registry-3d-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "tutorials/go2.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/policy-sources/source-review.json",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/asset-sources-2026-10-05.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "tutorials/husky.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/verification.json",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "tutorials/panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/panda-gripper-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/panda-cartesian-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/extensions-integrated-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/panda-turtlebot4-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/turtlebot4-drive-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "tutorials/turtlebot4.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/turtlebot4-modes-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/turtlebot4-sensors-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "tutorials/turtlebot3.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/turtlebot3-sensors-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/panda-cartesian-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "tutorials/registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "status/evidence/registry-3d-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/ASSET_EXTENSION_GUIDE.md",
+      "target": "tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "STORAGE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/continuation-2026-10-07.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/continuation-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/continuation-2026-10-05.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "tutorials/px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/STORAGE.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/STORAGE.md",
+      "target": "status/evidence/storage-and-status-audit-2026-10-02/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/TESTING.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/TESTING.md",
+      "target": "status/evidence/gui-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/TESTING.md",
+      "target": "status/evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/TESTING.md",
+      "target": "WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/TESTING.md",
+      "target": "status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/TESTING.md",
+      "target": "status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/WORKFLOW.md",
+      "target": "status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/WORKFLOW.md",
+      "target": "status/platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/WORKFLOW.md",
+      "target": "../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/WORKFLOW.md",
+      "target": "TESTING.md",
+      "exists": true
+    },
+    {
+      "document": "docs/WORKFLOW.md",
+      "target": "status/evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "evidence/gui-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "../AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "../PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CHECKLIST.md",
+      "target": "../ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../tutorials/gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../tutorials/registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../tutorials/panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../tutorials/px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "support-matrix.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "runtime-evidence-index.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "evidence/gui-controls-column-2026-10-07/published-source.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../PATCH_EXECUTION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "../tutorials/husky.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "evidence/extensions-finish-2026-10-08/controls/",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "../AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "evidence/extensions-finish-2026-10-08/occupancy-v4-refresh/gui-after-v4-refresh.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "checkpoint-collection.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/modes-current/batch-report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/certificate-producer.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/modes-current/map-source-verification.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/final-gazebo/report-measured.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/final-mujoco/report-measured.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/final-pybullet/report-measured.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/isaac-body-feedback/report-measured.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/normal-gui-defaults.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "husky/normal-production-navigation/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "../../continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "worlds/registration-review.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "mesh-parity/report-native-derived.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "mesh-parity/gazebo_mesh_probe.cc",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "preview/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "terrain-slice/before/",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "terrain-slice/after/",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "worlds-gui/producer.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "worlds-gui/gui-worlds-check.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "regressions/turtlebot3/batch-report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "regressions/batch-report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "source-guard-revalidation.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "ci/manifest.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "policy-sources/source-review.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "../../../AI_ROBOT_READINESS_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "../../CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "../../platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "controls/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "software/ci-schema-physics-local.log",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "software/ci-schema-physics-315.log",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "software/ci-runtime-physics-failure.log",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "ci/manifest.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "navigation/precise-goal/bumperbot-dataset_hospital-mujoco/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "scan-map-alignment/bumperbot-hospital-mujoco-resolved/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "scan-map-alignment/open-wall-cache-final-tests.log",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "scan-map-alignment/corrected-grid/dataset_hospital.generation.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "scan-map-alignment/endpoint-comparison.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "occupancy-v4-refresh/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "occupancy-v4-refresh/verification.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "occupancy-v4-refresh/gui-after-v4-refresh.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "../../../../scripts/refresh_installed_occupancy_maps.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "navigation/open-wall-backends/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "mujoco-hospital-performance/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "ci/manifest.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "publication.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "occupancy-v4-refresh/published-generator.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "scan-map-alignment/figure-producer.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "scan-map-alignment/before-after.png",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "bumperbot-dataset_hospital-gazebo/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "bumperbot-dataset_hospital-isaac/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "../open-wall-map/bumperbot-dataset_hospital-mujoco/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "bumperbot-dataset_hospital-pybullet/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "labbot-dataset_hospital-gazebo/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "labbot-dataset_hospital-isaac/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "labbot-dataset_hospital-mujoco/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "labbot-dataset_hospital-pybullet/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "../../checkpoint-collection.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "batch-producer.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "batch-report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "../../occupancy-v4-refresh/verification.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "target": "../../mujoco-hospital-performance/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "platform-status.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "evidence/extensions-finish-2026-10-08/support-matrix-current.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "evidence/extensions-finish-2026-10-08/support-matrix-current.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "runtime-evidence-index.yaml",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../tutorials/turtlebot3.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../tutorials/turtlebot4.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../tutorials/panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../tutorials/px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../tutorials/go2.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "evidence/gui-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../TESTING.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "support-matrix-2026-10-01.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/support-matrix.md",
+      "target": "../AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../status/continuation-2026-10-08.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "turtlebot3.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "turtlebot4.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "husky.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "go2.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "index.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "perception.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "localization.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "state_estimation.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "sensor_fusion.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "local_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "control.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "perception_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_perception.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "localization_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_localization.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "state_estimation_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_state_estimation.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "sensor_fusion_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_sensor_fusion.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "global_planning_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_global_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "local_planning_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_local_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "control_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "comparison_control.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../TESTING.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/README.md",
+      "target": "../AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "control.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "control_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_control.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "global_planning_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_global_planning.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "local_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "local_planning_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_local_planning.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "localization.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "localization_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_localization.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "perception.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "perception_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_perception.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "sensor_fusion.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "sensor_fusion_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_sensor_fusion.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "state_estimation.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "state_estimation_comparison.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/comparison_state_estimation.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "control.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "comparison_control.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/control_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "comparison_global_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/global_planning_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925/summary.json",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/flat_ground_suite_20260925_repeat/summary.json",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/terrain_stairs_inverse_20260925.json",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/fall_ladder_20260928T60N/probe.json",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/fall_ladder_20260928T45N/probe.json",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/ladder_sweep.json",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-policy-2026-09-25/analyze_tuck_forces.py",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-go2-support-transfer-2026-10-01/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/go2.md",
+      "target": "../status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/gui-workspace.md",
+      "target": "../status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/gui-workspace.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/gui-workspace.md",
+      "target": "../status/evidence/gui-controls-column-2026-10-07/launch-drive.png",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/gui-workspace.md",
+      "target": "px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/gui-workspace.md",
+      "target": "registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/gui-workspace.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/husky.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/husky.md",
+      "target": "../status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "../AGENT_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "../../README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "perception.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "localization.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "state_estimation.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "sensor_fusion.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "go2.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "turtlebot4.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "registry-3d.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "gui-workspace.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "turtlebot3.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "panda_arm.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/index.md",
+      "target": "px4_x500.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "local_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "comparison_local_planning.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/local_planning_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "localization.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "comparison_localization.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/localization_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/panda_arm.md",
+      "target": "../status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/panda_arm.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/panda_arm.md",
+      "target": "../status/evidence/panda-cartesian-controls-column-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/panda_arm.md",
+      "target": "../status/evidence/panda-gripper-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "perception.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "comparison_perception.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/perception_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/planning.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/planning.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/planning.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/planning.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/px4_x500.md",
+      "target": "../status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/px4_x500.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/px4_x500.md",
+      "target": "../status/evidence/r54-flight-2026-10-02/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/px4_x500.md",
+      "target": "../status/continuation-2026-10-05.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/registry-3d.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/registry-3d.md",
+      "target": "../status/evidence/registry-3d-2026-10-07/controls-column-final/celisca_floor_2_furniture/gui.png",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/registry-3d.md",
+      "target": "../status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/registry-3d.md",
+      "target": "../status/evidence/registry-3d-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "sensor_fusion.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "comparison_sensor_fusion.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/sensor_fusion_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "../status/audit-2026-10-02.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "state_estimation.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "comparison_state_estimation.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "../WORKFLOW.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "../status/CHECKLIST.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/state_estimation_comparison.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot3.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot3.md",
+      "target": "../status/evidence/turtlebot3-modes-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot3.md",
+      "target": "../status/evidence/turtlebot3-sensors-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot3.md",
+      "target": "../ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot4.md",
+      "target": "../status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot4.md",
+      "target": "../status/evidence/turtlebot4-drive-2026-10-05/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot4.md",
+      "target": "../status/evidence/turtlebot4-modes-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/tutorials/turtlebot4.md",
+      "target": "../status/evidence/turtlebot4-sensors-2026-10-06/README.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../../docs/status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../../docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../../ROADMAP.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../robot_lab_bringup/config/sim_maps.yaml",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../robot_lab_bringup/config/asset_groups.yaml",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../../docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../../docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_maps/README.md",
+      "target": "../../docs/tutorials/README.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../../docs/status/CURRENT_STATUS.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../../docs/status/support-matrix.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../../docs/ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "config/robots.yaml",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../robot_lab_bringup/config/asset_groups.yaml",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../robot_lab_bringup/config/robot_taxonomy.yaml",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../../docs/status/asset-runtime-support.yaml",
+      "exists": true
+    },
+    {
+      "document": "src/robot_lab_robots/README.md",
+      "target": "../../docs/tutorials/README.md",
+      "exists": true
+    }
+  ],
+  "missing": []
+}

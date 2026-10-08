@@ -1,0 +1,277 @@
+{
+  "scope": "Actual Tk selection/autofill only; no robot mission qualification",
+  "records": [
+    {
+      "map": "dataset_bookstore",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_bookstore world_package:=robot_lab_maps world_name:=dataset_bookstore world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_bookstore.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.yaml",
+      "map_yaml_sha256": "91fdd48e2706a31980a56c7671df66f4a737a52c00360348bb2cabe0a0658416"
+    },
+    {
+      "map": "dataset_bookstore",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_bookstore world_package:=robot_lab_maps world_name:=dataset_bookstore world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_bookstore.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_bookstore/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_bookstore-20261008-222437-34258f/dataset_bookstore.yaml",
+      "map_yaml_sha256": "91fdd48e2706a31980a56c7671df66f4a737a52c00360348bb2cabe0a0658416"
+    },
+    {
+      "map": "dataset_office_service",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_office_service world_package:=robot_lab_maps world_name:=dataset_office_service world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_office_service.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml",
+      "map_yaml_sha256": "1aba0cb5080c80fcd003324bc23f6acfd3e5e6968ff2c126246b06facc92a97c"
+    },
+    {
+      "map": "dataset_office_service",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_office_service world_package:=robot_lab_maps world_name:=dataset_office_service world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_office_service.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_office_service/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_office_service-20261008-222441-ce596f/dataset_office_service.yaml",
+      "map_yaml_sha256": "1aba0cb5080c80fcd003324bc23f6acfd3e5e6968ff2c126246b06facc92a97c"
+    },
+    {
+      "map": "dataset_small_house",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_small_house world_package:=robot_lab_maps world_name:=dataset_small_house world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_small_house.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.yaml",
+      "map_yaml_sha256": "fa1cfe4e36ee2257fb4bb3403f299336a9990e546561bf1a0ee10c2590131378"
+    },
+    {
+      "map": "dataset_small_house",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_small_house world_package:=robot_lab_maps world_name:=dataset_small_house world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_small_house.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_small_house/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_small_house-20261008-222447-063e7d/dataset_small_house.yaml",
+      "map_yaml_sha256": "fa1cfe4e36ee2257fb4bb3403f299336a9990e546561bf1a0ee10c2590131378"
+    },
+    {
+      "map": "dataset_dynamic_world",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_dynamic_world world_package:=robot_lab_maps world_name:=dataset_dynamic_world world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_dynamic_world.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.yaml",
+      "map_yaml_sha256": "d777a96ecb5736d457c29345fa5ddd081eba24e56719361004133c1b9285b1e3"
+    },
+    {
+      "map": "dataset_dynamic_world",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_dynamic_world world_package:=robot_lab_maps world_name:=dataset_dynamic_world world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_dynamic_world.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_dynamic_world/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_dynamic_world-20261008-222451-3cc338/dataset_dynamic_world.yaml",
+      "map_yaml_sha256": "d777a96ecb5736d457c29345fa5ddd081eba24e56719361004133c1b9285b1e3"
+    },
+    {
+      "map": "dataset_room1",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room1 world_package:=robot_lab_maps world_name:=dataset_room1 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room1.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.yaml",
+      "map_yaml_sha256": "51e10e7b6a65ab5d074459fd1ce0ca2a27ff2e2a95a0ea9423f950045a8fe9fe"
+    },
+    {
+      "map": "dataset_room1",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room1 world_package:=robot_lab_maps world_name:=dataset_room1 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room1.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room1/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room1-20261008-222455-008ff8/dataset_room1.yaml",
+      "map_yaml_sha256": "51e10e7b6a65ab5d074459fd1ce0ca2a27ff2e2a95a0ea9423f950045a8fe9fe"
+    },
+    {
+      "map": "dataset_room2",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.yaml",
+      "map_yaml_sha256": "dfcdfef1397b16735a95b531beef3f93fb16f114cc85e1cb9af3afdb1348d5bb"
+    },
+    {
+      "map": "dataset_room2",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room2 world_package:=robot_lab_maps world_name:=dataset_room2 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2-20261008-222459-935b8c/dataset_room2.yaml",
+      "map_yaml_sha256": "dfcdfef1397b16735a95b531beef3f93fb16f114cc85e1cb9af3afdb1348d5bb"
+    },
+    {
+      "map": "dataset_room2_world_dynamic",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room2_world_dynamic world_package:=robot_lab_maps world_name:=dataset_room2_world_dynamic world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml",
+      "map_yaml_sha256": "79a618c25c115ee148dd9607f7c41fadf28a975f29fb429a03b570d7a80e1525"
+    },
+    {
+      "map": "dataset_room2_world_dynamic",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room2_world_dynamic world_package:=robot_lab_maps world_name:=dataset_room2_world_dynamic world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room2_world_dynamic.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room2_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room2_world_dynamic-20261008-222503-4c5106/dataset_room2_world_dynamic.yaml",
+      "map_yaml_sha256": "79a618c25c115ee148dd9607f7c41fadf28a975f29fb429a03b570d7a80e1525"
+    },
+    {
+      "map": "dataset_room3",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room3 world_package:=robot_lab_maps world_name:=dataset_room3 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.yaml",
+      "map_yaml_sha256": "95456be97df8d8d5b5cdac0b9fc1a1354d81eea716298f677161d941257a66d5"
+    },
+    {
+      "map": "dataset_room3",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room3 world_package:=robot_lab_maps world_name:=dataset_room3 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3-20261008-222507-e84d8d/dataset_room3.yaml",
+      "map_yaml_sha256": "95456be97df8d8d5b5cdac0b9fc1a1354d81eea716298f677161d941257a66d5"
+    },
+    {
+      "map": "dataset_room3_world_dynamic",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room3_world_dynamic world_package:=robot_lab_maps world_name:=dataset_room3_world_dynamic world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3_world_dynamic.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.yaml",
+      "map_yaml_sha256": "9245f18e1c336274d53f3fe9b8a0d6b9d9f83d743c75bde130895851128e66c9"
+    },
+    {
+      "map": "dataset_room3_world_dynamic",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room3_world_dynamic world_package:=robot_lab_maps world_name:=dataset_room3_world_dynamic world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room3_world_dynamic.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room3_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room3_world_dynamic-20261008-222511-ff9198/dataset_room3_world_dynamic.yaml",
+      "map_yaml_sha256": "9245f18e1c336274d53f3fe9b8a0d6b9d9f83d743c75bde130895851128e66c9"
+    },
+    {
+      "map": "dataset_room4",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room4 world_package:=robot_lab_maps world_name:=dataset_room4 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.yaml",
+      "map_yaml_sha256": "3579bc9a63b6621c12c773a3aa7e63251ef1b48ae27599721bcded9397d7aa69"
+    },
+    {
+      "map": "dataset_room4",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room4 world_package:=robot_lab_maps world_name:=dataset_room4 world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4-20261008-222516-457c5d/dataset_room4.yaml",
+      "map_yaml_sha256": "3579bc9a63b6621c12c773a3aa7e63251ef1b48ae27599721bcded9397d7aa69"
+    },
+    {
+      "map": "dataset_room4_world_dynamic",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room4_world_dynamic world_package:=robot_lab_maps world_name:=dataset_room4_world_dynamic world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4_world_dynamic.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.yaml",
+      "map_yaml_sha256": "e04c0822424928ef185204a255c5006a2566431dfbd5feaf95dbebe695619217"
+    },
+    {
+      "map": "dataset_room4_world_dynamic",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_room4_world_dynamic world_package:=robot_lab_maps world_name:=dataset_room4_world_dynamic world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_room4_world_dynamic.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_room4_world_dynamic/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_room4_world_dynamic-20261008-222520-814aee/dataset_room4_world_dynamic.yaml",
+      "map_yaml_sha256": "e04c0822424928ef185204a255c5006a2566431dfbd5feaf95dbebe695619217"
+    },
+    {
+      "map": "dataset_factory",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_factory world_package:=robot_lab_maps world_name:=dataset_factory world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_factory.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.yaml",
+      "map_yaml_sha256": "9625ef3c578e74fa5527e7989614b3ad06ab82cf4bf21e7614d621a5ea1a942c"
+    },
+    {
+      "map": "dataset_factory",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_factory world_package:=robot_lab_maps world_name:=dataset_factory world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_factory.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_factory/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_factory-20261008-222524-b0d05e/dataset_factory.yaml",
+      "map_yaml_sha256": "9625ef3c578e74fa5527e7989614b3ad06ab82cf4bf21e7614d621a5ea1a942c"
+    },
+    {
+      "map": "dataset_hospital",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_hospital world_package:=robot_lab_maps world_name:=dataset_hospital world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml",
+      "map_yaml_sha256": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c"
+    },
+    {
+      "map": "dataset_hospital",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_hospital world_package:=robot_lab_maps world_name:=dataset_hospital world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml",
+      "map_yaml_sha256": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c"
+    },
+    {
+      "map": "dataset_hospital_hospital_two_floors",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_hospital_hospital_two_floors world_package:=robot_lab_maps world_name:=dataset_hospital_hospital_two_floors world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital_hospital_two_floors.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.yaml",
+      "map_yaml_sha256": "4993c206fa078f8921549a7678cc50da698a8600a46882df9bff94b9b9b8f8e8"
+    },
+    {
+      "map": "dataset_hospital_hospital_two_floors",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_hospital_hospital_two_floors world_package:=robot_lab_maps world_name:=dataset_hospital_hospital_two_floors world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital_hospital_two_floors.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital_hospital_two_floors/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital_hospital_two_floors-20261008-222541-5313d5/dataset_hospital_hospital_two_floors.yaml",
+      "map_yaml_sha256": "4993c206fa078f8921549a7678cc50da698a8600a46882df9bff94b9b9b8f8e8"
+    },
+    {
+      "map": "gazebo_example_default",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=gazebo_example_default world_package:=robot_lab_maps world_name:=gazebo_example_default world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_default.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.yaml",
+      "map_yaml_sha256": "2e3a90130383ba95da509b04c2ee4cbcff013e67b131a2e586cd1d26b1a3e5f2"
+    },
+    {
+      "map": "gazebo_example_default",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=gazebo_example_default world_package:=robot_lab_maps world_name:=gazebo_example_default world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_default.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_default/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_default-20261008-222600-b3460d/gazebo_example_default.yaml",
+      "map_yaml_sha256": "2e3a90130383ba95da509b04c2ee4cbcff013e67b131a2e586cd1d26b1a3e5f2"
+    },
+    {
+      "map": "gazebo_example_empty",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=gazebo_example_empty world_package:=robot_lab_maps world_name:=gazebo_example_empty world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_empty.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml",
+      "map_yaml_sha256": "cc3d98c01834cf87257b8fa52b8b116951a77ab15a30c3e367a6f57b643418b0"
+    },
+    {
+      "map": "gazebo_example_empty",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=gazebo_example_empty world_package:=robot_lab_maps world_name:=gazebo_example_empty world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_empty.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_empty/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_empty-20261008-222604-197d93/gazebo_example_empty.yaml",
+      "map_yaml_sha256": "cc3d98c01834cf87257b8fa52b8b116951a77ab15a30c3e367a6f57b643418b0"
+    },
+    {
+      "map": "gazebo_example_shapes",
+      "robot": "bumperbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=gazebo_example_shapes world_package:=robot_lab_maps world_name:=gazebo_example_shapes world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_shapes.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.yaml",
+      "map_yaml_sha256": "d32eb9449abbc15d32761781d2f3eb286c691bce0805f6e6fb2da80359e7c4d6"
+    },
+    {
+      "map": "gazebo_example_shapes",
+      "robot": "labbot",
+      "backend": "mujoco",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=gazebo_example_shapes world_package:=robot_lab_maps world_name:=gazebo_example_shapes world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/worlds/gazebo_example_shapes.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=dwb_core::DWBLocalPlanner mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+      "map_yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/gazebo_example_shapes/b90cd2c41a193102d6951857c2d83e13f59bb64b/maps/gazebo_example_shapes-20261008-222608-24f78d/gazebo_example_shapes.yaml",
+      "map_yaml_sha256": "d32eb9449abbc15d32761781d2f3eb286c691bce0805f6e6fb2da80359e7c4d6"
+    }
+  ]
+}

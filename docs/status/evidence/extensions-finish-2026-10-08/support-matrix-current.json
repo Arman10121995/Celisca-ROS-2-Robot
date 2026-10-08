@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-08T19:58:01.824525+00:00",
+  "generated_utc": "2026-10-08T20:41:47.773632+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -3292,11 +3292,11 @@
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-pybullet/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-pybullet/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-pybullet/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
@@ -3315,11 +3315,11 @@
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-gazebo/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-gazebo/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-gazebo/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
@@ -3338,11 +3338,11 @@
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/wheel-servo/labbot-dataset_hospital-mujoco/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/wheel-servo/labbot-dataset_hospital-mujoco/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
@@ -3361,11 +3361,11 @@
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-isaac/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/labbot-dataset_hospital-isaac/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-isaac/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-isaac/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
@@ -3384,11 +3384,11 @@
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-gazebo/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-gazebo/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-gazebo/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
@@ -3407,11 +3407,11 @@
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-pybullet/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/current-final/bumperbot-dataset_hospital-pybullet/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-pybullet/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
@@ -3427,14 +3427,37 @@
       "environment_id": "dataset_hospital",
       "simulator": "mujoco",
       "task_type": "navigation",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "cbf98cb9ffdcd924b36fe0c991670c91101a744c plus exact pre-trial working-tree source manifest",
-      "test_result": "failed_screen",
+      "revision": "4fe611aee7471782cf424fd030a3e85ccae2c85b plus exact pre-trial working-tree source manifest",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-map/bumperbot-dataset_hospital-mujoco/pre-trial.json"
+      ],
+      "limitations": [
+        "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",
+        "Independent body position/heading/floor checks; complete mesh/contact clearance remains separate",
+        "Owned launch root cleanup is recorded; individual child shutdown errors remain in raw logs",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent simulator body endpoint. Short static route, no complete mesh clearance or universal-map qualification. Raw trace/log paths and hashes retained in collection manifest.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "bumperbot",
+      "environment_id": "dataset_hospital",
+      "simulator": "isaac",
+      "task_type": "navigation",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-08",
+      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/bumperbot-dataset_hospital-isaac/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",

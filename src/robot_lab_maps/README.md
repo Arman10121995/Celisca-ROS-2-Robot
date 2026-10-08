@@ -64,6 +64,16 @@ navigation registration. Stop Generation closes its owned generator/Gazebo
 process. The GUI fills the selected profile's spawn as its generation seed;
 edit **Seed X/Y** to select another connected room. Existing saved maps remain intact.
 
+All 17 installed extension worlds now have actual occupancy-v4 exports, which
+preserve open wall sheets and reject incomplete v3 caches. Their source worlds,
+spawn and initial-pose fields are unchanged. Reopen the GUI to load refreshed
+registered paths; algorithms and commands autofill from the normal selectors.
+Agents can use `scripts/refresh_installed_occupancy_maps.py` from the workspace
+root for another serial refresh. See the
+[refresh instructions and actual evidence](../../docs/ASSET_EXTENSION_GUIDE.md#refresh-installed-grids-without-moving-robots).
+Only the eight named short hospital routes are measured here; other maps,
+upper floors, actors and contact/obstacle missions remain separate.
+
 Equivalent example:
 
 ```bash
