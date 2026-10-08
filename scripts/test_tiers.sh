@@ -85,6 +85,7 @@ INTEGRATION_TESTS=(
   "$BRG_TEST/test_urdf_springs.py::test_isaac_does_not_discard_malformed_physics_with_plugins"
   "$BRG_TEST/test_wheel_navigation_contract.py::test_selected_urdf_root_reaches_nav2_servers_and_nested_costmaps"
   "$BRG_TEST/test_pointcloud_export.py"
+  "$BRG_TEST/test_camera_msgs.py"
   "$BRG_TEST/test_isaac_drive_watchdog.py"
   "$BRG_TEST/test_isaac_odometry.py"
   "$BRG_TEST/test_xacro_expansion.py"

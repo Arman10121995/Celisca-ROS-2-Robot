@@ -579,3 +579,9 @@ terminal-state and actor gain/slew parity tests, and the tuck-entry and
 tuck-force attribution tests to the CI fast tier; the latest map suite is 35
 passed. These are scoped checks, not a platform-wide qualification. Start with
 [`docs/WORKFLOW.md`](WORKFLOW.md) and the [Go2 tutorial](tutorials/go2.md).
+
+The later P4 camera helper uses ROS typed byte arrays with identical serialized
+RGB/depth. Four wire cases, 151 sourced integration checks and a new physical
+Labbot hospital route pass. Native-step profiling is retained; actual clock
+windows stay about 0.13×, so broader MuJoCo optimization remains open. See
+[the exact timing/source stages](status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

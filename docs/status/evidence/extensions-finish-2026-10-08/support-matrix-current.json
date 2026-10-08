@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-08T20:41:47.773632+00:00",
+  "generated_utc": "2026-10-08T21:04:17.292878+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -3341,8 +3341,8 @@
       "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree source manifest",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/labbot-dataset_hospital-mujoco/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/camera-packing/labbot-dataset_hospital-mujoco/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/camera-packing/labbot-dataset_hospital-mujoco/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",

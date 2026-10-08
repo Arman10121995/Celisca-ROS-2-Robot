@@ -1,0 +1,463 @@
+{
+  "scope": "Actual normal Tk mode/command selections and Health only; no Run or robot mission.",
+  "completed": true,
+  "selections": [
+    {
+      "robot": "asset_husky",
+      "backend": "gazebo",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "gazebo",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "gazebo",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "gazebo",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "gazebo",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "mujoco",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "mujoco",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "mujoco",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "mujoco",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "mujoco",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "pybullet",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "pybullet",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "pybullet",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "pybullet",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "pybullet",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "isaac",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "isaac",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "isaac",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "isaac",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_husky",
+      "backend": "isaac",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_husky simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "gazebo",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "gazebo",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "gazebo",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "gazebo",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "mujoco",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "mujoco",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "mujoco",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "mujoco",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "pybullet",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "pybullet",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "pybullet",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "pybullet",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "isaac",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "isaac",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "isaac",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot3_burger",
+      "backend": "isaac",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot3_burger simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "gazebo",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "mujoco",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "pybullet",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_standard",
+      "backend": "isaac",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_standard simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "gazebo",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "mujoco",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "pybullet",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "mode": "loc",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=loc gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "mode": "slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=slam gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "mode": "3d_slam",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=3d_slam gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter"
+    },
+    {
+      "robot": "asset_turtlebot4_lite",
+      "backend": "isaac",
+      "mode": "nav",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_turtlebot4_lite simulator:=isaac use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion"
+    }
+  ],
+  "status_sha256": "f6aa13c8888557a82eee6b544db1e443a5004cef4c20baf532421b552cfa3c93"
+}

@@ -4266,6 +4266,28 @@ records:
     remains separate
   - Owned launch root cleanup is recorded; individual child shutdown errors remain
     in raw logs
+- robot_id: labbot
+  environment_id: dataset_hospital
+  simulator: mujoco
+  task_type: navigation
+  date: '2026-10-08'
+  revision: ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5 plus exact pre-trial working-tree
+    source manifest
+  report: docs/status/evidence/extensions-finish-2026-10-08/navigation/camera-packing/labbot-dataset_hospital-mujoco/report-measured.json
+  sha256: 58d6e5d95faeefbd586cc4e48d9dec4b74160dd305b00fa515f9c186f92fd0e0
+  source_hashes: docs/status/evidence/extensions-finish-2026-10-08/navigation/camera-packing/labbot-dataset_hospital-mujoco/pre-trial.json
+  source_hashes_sha256: 5397db46e9a9af641dd30df7936d477dca0438c98f683a10124c8561a352942c
+  report_kind: navigation_screen
+  scope: Normal Tk selection/autofill/Run/Stop; actual RViz-style topic goal; independent
+    simulator body endpoint. Short static route, no complete mesh clearance or universal-map
+    qualification. Raw trace/log paths and hashes retained in collection manifest.
+  limitations:
+  - Short named static ground-floor route; no upper-floor, actor or universal-map
+    qualification
+  - Independent body position/heading/floor checks; complete mesh/contact clearance
+    remains separate
+  - Owned launch root cleanup is recorded; individual child shutdown errors remain
+    in raw logs
 - robot_id: asset_husky
   environment_id: nav_empty
   simulator: gazebo

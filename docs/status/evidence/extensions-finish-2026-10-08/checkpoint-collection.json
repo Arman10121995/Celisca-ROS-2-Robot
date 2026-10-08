@@ -3789,6 +3789,47 @@
       ]
     },
     {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/camera-packing/labbot-dataset_hospital-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/body.trace.json",
+          "sha256": "d942db8e0431a43a642ef586d85abcac1c0c3da2f3f0c131c65b862022d0b557",
+          "bytes": 236789
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/check.log",
+          "sha256": "72115e99f264952da5926df99f5e3f11ccc904c69ee3174b2f8ad0bd9b1a345e",
+          "bytes": 978
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/gui-output.log",
+          "sha256": "900718f81d91d3b95dd8a0f5d445b859fd0a0c31bd72830c8efe7d7340beaebd",
+          "bytes": 55136
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/live-gui-output.log",
+          "sha256": "e1807e2fb4acc67d8852ff0cfeddc058baedeff885620e313dfc3528b6436030",
+          "bytes": 42774
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/pre-trial.json",
+          "sha256": "5397db46e9a9af641dd30df7936d477dca0438c98f683a10124c8561a352942c",
+          "bytes": 101770
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/camera-packing/labbot-dataset_hospital-mujoco/report.json",
+          "sha256": "1aa5921b2be66c6c3496fe2ff63e0fa57146eb6784e71674ab18a6045c28d892",
+          "bytes": 103681
+        }
+      ]
+    },
+    {
       "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/normal-production-navigation",
       "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/normal-production-navigation",
       "artifacts": [
@@ -4465,5 +4506,5 @@
       ]
     }
   ],
-  "indexed_records": 82
+  "indexed_records": 83
 }

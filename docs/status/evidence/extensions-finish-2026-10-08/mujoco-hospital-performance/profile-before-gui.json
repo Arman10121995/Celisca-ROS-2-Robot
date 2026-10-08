@@ -1,0 +1,93 @@
+{
+  "robot": "labbot",
+  "backend": "mujoco",
+  "map": "dataset_hospital",
+  "scope": "Read-only stationary normal-GUI localization diagnostic; no navigation or motion qualification.",
+  "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5",
+  "domain": "220",
+  "completed": true,
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=labbot simulator:=mujoco use_sim_time:=true map_name:=dataset_hospital world_package:=robot_lab_maps world_name:=dataset_hospital world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml mode:=loc gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "laser_mount": [
+    [
+      0.0,
+      0.0,
+      0.2
+    ],
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "map_files": {
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.yaml": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-222529-b54b63/dataset_hospital.pgm": "98ddc00ae69cbd8bedf2d274ff193fac2a5385ce507461b762a28dee9f150087"
+  },
+  "source_files": {
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/diagnose_scan_map_alignment.py": "d4298be6ad43323643a038124852c30c3c83165d1532b9d3a7fb2c82000531f1",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+    "src/robot_lab_localization/config/robots/labbot.yaml": "c472f20d0d7ed680dbe787ff1f16de41ec6a3d47e18a588b662e728d2e2eb5bf"
+  },
+  "owned_pid": 276528,
+  "endpoint_distance_to_occupied_cell_m": {
+    "truth": {
+      "samples": 6460,
+      "median": 0.060559552990651244,
+      "p90": 0.10515458684297162,
+      "within_two_cells": 0.9969040247678018
+    },
+    "amcl": {
+      "samples": 6460,
+      "median": 0.060608317229879666,
+      "p90": 0.10535040434517262,
+      "within_two_cells": 0.9969040247678018
+    }
+  },
+  "last_poses": {
+    "truth": {
+      "stamp_s": 4.363999999,
+      "position": [
+        0.5500595566270476,
+        12.450000114927045,
+        0.0009986697900802686
+      ],
+      "quaternion": [
+        0.9999999999743246,
+        -4.866498865502702e-07,
+        3.04649741441262e-08,
+        7.149269235456605e-06
+      ]
+    },
+    "filtered": {
+      "stamp_s": 4.339999999,
+      "position": [
+        1.3444271795513956e-06,
+        2.3316063797296296e-07,
+        0.0
+      ],
+      "quaternion": [
+        0.9999999999824263,
+        0.0,
+        0.0,
+        -5.928519411800525e-06
+      ]
+    },
+    "amcl": {
+      "stamp_s": 0.20400000000000001,
+      "position": [
+        0.5500000000000556,
+        12.450000000000951,
+        0.0
+      ],
+      "quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "keyboard_commands_before_stop": [],
+  "launch_returncode": 0
+}

@@ -143,6 +143,9 @@ the older roadmap. Existing stabilization fixes must remain working.
 - [x] Repeat the short single-floor hospital route for Bumperbot/Labbot on all
   four engines after the v4 repair. All eight pass unchanged physical
   position/heading/floor/freshness/settle gates; original failures remain.
+- [x] Remove per-byte camera packing overhead with byte-identical ROS wire
+  messages. Four serialization cases and a new native Labbot hospital route
+  pass; actual clock windows remain about 0.13×, so P4 is still partial.
 - [x] Repair Scheduled Full Test Suite registry imports; exact CI-only `73fcc47`
   passes required and scheduled workflows. New runtime source has separate
   final checks/publication in the October 8 archive.
@@ -160,9 +163,9 @@ the older roadmap. Existing stabilization fixes must remain working.
   route, furniture-adjacent goal, cancellation and second goal. Review
   furniture-aware occupancy alignment instead of replacing maps automatically.
 - [ ] **P4:** Profile and improve MuJoCo speed without compromising control,
-  collision fidelity or sensing. One actual matched Labbot/hospital window is
-  0.1305× real time; Bumperbot/Labbot action wall times are 473.5/98.4 s. This
-  measurement does not establish a cause or an optimization.
+  collision fidelity or sensing. Before/after actual Labbot/hospital windows remain about 0.13× real time.
+  Camera byte packing is lossless and faster; native stepping remains the
+  largest profiled cost. Finer native profiling and validated speed gains remain.
 - [ ] **R5.5:** Complete Ackermann, rear-steer and anti-Ackermann obstacle/
   slalom, mapping, localization and navigation qualification. Retain each
   drive model's turning constraints and independent body/contact evidence.

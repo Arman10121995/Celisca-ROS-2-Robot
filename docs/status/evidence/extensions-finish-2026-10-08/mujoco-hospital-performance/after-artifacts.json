@@ -1,0 +1,96 @@
+{
+  "scope": "Original after-packing stationary instrumented profile, wire tests/build and actual clock/depth observation; original navigation source/body report archived separately by collector.",
+  "artifacts": [
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/profile.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/profile-after.json",
+      "bytes": 82460,
+      "sha256": "96d915bc42fb9ccda961206e6aee5f16a3326b72f818fa248f375f80b172c1a2"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/gui/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/profile-after-gui.json",
+      "bytes": 3371,
+      "sha256": "45f6ffc74b9bbb49ad2cd618342679dc16d9363077095871ae94d3a78c7b8578"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile/image-packing-after.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/image-packing-after.json",
+      "bytes": 2386,
+      "sha256": "2f1ced7fd854c24b1981558bda40687a34e8ddafb38ee0f3f911af9d59c8f9e8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-clock-after/report.json",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/clock-after.json",
+      "bytes": 4718,
+      "sha256": "17948345a61c1e0be9d903da68f94efa673dbd2b34576efb4c6c83685c850e9e"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile/image-wire-tests.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/image-wire-tests.log",
+      "bytes": 98,
+      "sha256": "852b0f07d9df3d3c0087fe9db0b1431ab1ce1c3a16dcce79f358a32312370db1"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile/utils-build.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/utils-build.log",
+      "bytes": 987,
+      "sha256": "0438e33ab8bc5be51674429587b0d8a12268bf186e3e33945cf54ac27e147e7b"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/__pycache__/sitecustomize.cpython-310.pyc",
+      "bytes": 3320,
+      "sha256": "942b429694a5e45dd1e6f3948737025c785cdc049c1d6dbf23425e93bad3db0a"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/gui/gui-output.log",
+      "bytes": 17249,
+      "sha256": "30f96afb4af7fef31d0baa46c4ebd0be38170d2e959a32c9101499519952dff0"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/gui/pre-trial.json",
+      "bytes": 2064,
+      "sha256": "21cfe391691500c1eed62ee6ed8482146341f12cb7ad81f5812aabfa8e6f263a"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/gui/producer.py",
+      "bytes": 8690,
+      "sha256": "d4298be6ad43323643a038124852c30c3c83165d1532b9d3a7fb2c82000531f1"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/gui/report.json",
+      "bytes": 3371,
+      "sha256": "45f6ffc74b9bbb49ad2cd618342679dc16d9363077095871ae94d3a78c7b8578"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/gui/scan-pose-trace.json",
+      "bytes": 194444,
+      "sha256": "213e6d80246b5c78181d968c5cd39629b088c3769a1437685d3cf8fddbaf3d3f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/observed-scene.xml",
+      "bytes": 5270545,
+      "sha256": "ade2f390c05a06f0527ee76f64d5726e345701312767ed97a2d9dc2e26b1323f"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/physics-loop.pstats",
+      "bytes": 45246,
+      "sha256": "5f42e1e249496cbdfd6a0c6742c3746d1316db6605fc9effecdee00bd9a75016"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/producer.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/profile.json",
+      "bytes": 82460,
+      "sha256": "96d915bc42fb9ccda961206e6aee5f16a3326b72f818fa248f375f80b172c1a2"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/sitecustomize.py",
+      "bytes": 3154,
+      "sha256": "8d43e2f309da42bd0f191e286657f73b5bf33d5c40a77d623e784f337145c86b"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "Actual before/after navigation source/profile comparison: only shared runtime camera byte packing changed; other additions are tests. No model/rate/actuator/controller/geometry changes.",
+  "runtime_changed": [
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/camera_msgs.py"
+  ],
+  "source_added": [
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/test/test_camera_msgs.py"
+  ],
+  "source_removed": [],
+  "identical_map_profile": true,
+  "identical_robot_profile": true,
+  "integration_log": {
+    "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile/integration-after.log",
+    "bytes": 876,
+    "sha256": "a3daf6baeb7a45665a06370af872b93b628d6dd6b1453d630a0d906305306abb"
+  },
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/camera_msgs.py": "2e1da33b1c2c3f9e5e92936323fc75b75ae0a9df459c955fb3aaae80547a3127",
+    "src/robot_lab_bringup/test/test_camera_msgs.py": "bcae193c99c05170397896047f4ebe3295a4b084430670814781e70cc041973b",
+    "scripts/test_tiers.sh": "c7b339f1175f944c0629b37da16c108508459a7fbc2a17eb3e2a0c43da45b850"
+  }
+}

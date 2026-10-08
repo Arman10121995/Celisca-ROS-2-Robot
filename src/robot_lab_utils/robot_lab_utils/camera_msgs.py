@@ -4,6 +4,8 @@ Used by the PyBullet and MuJoCo bridges so both publish the same encodings
 as the Gazebo route: ``rgb8`` colour, ``32FC1`` depth in metres and an
 undistorted pinhole ``CameraInfo`` from ``camera_model``.
 """
+from array import array as typed_array
+
 import numpy as np
 from sensor_msgs.msg import CameraInfo, Image
 
@@ -20,7 +22,9 @@ def image_msg(stamp, frame_id, array, encoding):
     msg.is_bigendian = 0
     channels = array.shape[2] if array.ndim == 3 else 1
     msg.step = int(array.shape[1] * channels * array.itemsize)
-    msg.data = np.ascontiguousarray(array).tobytes()
+    # ROS accepts a uint8 array directly. A bytes value makes its generated
+    # setter validate every byte twice in Python for each RGB/depth frame.
+    msg.data = typed_array('B', np.ascontiguousarray(array).tobytes())
     return msg
 
 

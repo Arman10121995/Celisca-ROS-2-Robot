@@ -189,3 +189,8 @@ hospital window measures 1.892 simulated seconds in 14.499 wall seconds
 (0.1305× real time), nine scans and ten depth frames. Performance optimization
 remains P4; Bumperbot/Labbot action wall times are 473.5/98.4 s.
 Original failures and byte/source hashes remain in [the archive](evidence/extensions-finish-2026-10-08/README.md).
+
+The later P4 camera-packing change preserves identical ROS wire messages and
+passes four serialization cases plus a new physical Labbot hospital route
+(0.046 m / +1.97°). Actual before/after clock windows remain about 0.13× real
+time; large-map physics optimization remains open. See [the measured timing stages](evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

@@ -260,6 +260,12 @@ missions and measured MuJoCo performance remain open. Later runtime changes
 need their own CI observation. See
 [CI evidence](docs/status/evidence/ci-extensions-2026-10-07/README.md).
 
+The later P4 typed-array camera helper preserves identical serialized frames
+and passes four ROS wire cases plus a new physical Labbot hospital route.
+Its construction overhead is reduced, but actual clock windows remain about
+0.13× real time. Native-step performance and the full release remain open.
+[Timing evidence](docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).
+
 ### R1.3 — Make CI bootstrap and doctor trustworthy
 
 Dependencies: `R1.1`, `R1.2`.

@@ -270,3 +270,9 @@ R6.5–R6.7. Catalogs and generated occupancy previews are available in GUI.
 All-map flight selection, imports, terrain conversion and manipulation
 acceptance remain distinct. New source listings must not close existing
 stabilization, measured comparison or clean-host tasks.
+
+The later P4 camera helper uses ROS typed byte arrays with identical serialized
+RGB/depth. Four wire cases, 151 sourced integration checks and a new physical
+Labbot hospital route pass. Native-step profiling is retained; actual clock
+windows stay about 0.13×, so broader MuJoCo optimization remains open. See
+[the exact timing/source stages](status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

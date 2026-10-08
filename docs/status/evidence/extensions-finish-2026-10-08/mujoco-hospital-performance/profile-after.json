@@ -1,0 +1,2625 @@
+{
+  "scope": "Instrumented stationary normal GUI Labbot/MuJoCo/hospital v4 physics loop; profiling overhead retained. No speed fix or navigation mission.",
+  "argv": [
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner",
+    "--ros-args",
+    "-r",
+    "__node:=mujoco_spawner",
+    "--params-file",
+    "/workspace/molar/robot_lab_runtime/tmp/launch_params_z9uwetog"
+  ],
+  "source_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+  "source_sha256": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+  "hook_sha256": "8d43e2f309da42bd0f191e286657f73b5bf33d5c40a77d623e784f337145c86b",
+  "engine_version": "3.12.0",
+  "timestep": 0.002,
+  "model_counts": {
+    "nbody": 4,
+    "ngeom": 191,
+    "nmesh": 64,
+    "nflex": 200
+  },
+  "scene": {
+    "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/mujoco-hospital-profile-after/observed-scene.xml",
+    "bytes": 5270545,
+    "sha256": "ade2f390c05a06f0527ee76f64d5726e345701312767ed97a2d9dc2e26b1323f"
+  },
+  "sensor_parameters": {
+    "publish_rate": 50.0,
+    "scan_rate": 5.0,
+    "scan_samples": 360,
+    "camera_rate": 5.0,
+    "camera_width": 320,
+    "camera_height": 240
+  },
+  "viewer_present": false,
+  "start_sim_s": 0.0,
+  "wall_s": 31.246296638004424,
+  "end_sim_s": 4.327999999999745,
+  "timings": [
+    {
+      "filename": "/usr/lib/python3.10/threading.py",
+      "line": 942,
+      "function": "run",
+      "calls": 1,
+      "self_s": 1.5743e-05,
+      "cumulative_s": 31.246264447
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1739,
+      "function": "_loop",
+      "calls": 1,
+      "self_s": 0.011709201,
+      "cumulative_s": 31.246248704000003
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1849,
+      "function": "_step_physics",
+      "calls": 1082,
+      "self_s": 0.091627524,
+      "cumulative_s": 23.949972192
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._functions.mj_step>",
+      "calls": 2164,
+      "self_s": 23.403680071,
+      "cumulative_s": 23.403680071
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1821,
+      "function": "_catch_up",
+      "calls": 174,
+      "self_s": 0.015532054000000002,
+      "cumulative_s": 20.124124031
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2171,
+      "function": "_pub_camera",
+      "calls": 22,
+      "self_s": 0.003749928,
+      "cumulative_s": 6.320378379
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py",
+      "line": 132,
+      "function": "render",
+      "calls": 44,
+      "self_s": 0.01710192,
+      "cumulative_s": 5.573539814
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._render.mjr_render>",
+      "calls": 44,
+      "self_s": 4.795174918000001,
+      "cumulative_s": 4.795174918000001
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._render.mjr_readPixels>",
+      "calls": 44,
+      "self_s": 0.751525463,
+      "cumulative_s": 0.751525463
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2086,
+      "function": "_pub_scan",
+      "calls": 22,
+      "self_s": 0.031649715,
+      "cumulative_s": 0.5477525870000001
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py",
+      "line": 255,
+      "function": "update_scene",
+      "calls": 44,
+      "self_s": 0.003809471,
+      "cumulative_s": 0.515104553
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._functions.mjv_updateScene>",
+      "calls": 44,
+      "self_s": 0.510507891,
+      "cumulative_s": 0.510507891
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 974,
+      "function": "_ray_skipping_robot",
+      "calls": 7920,
+      "self_s": 0.09242201200000001,
+      "cumulative_s": 0.47373850100000003
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._functions.mj_ray>",
+      "calls": 20196,
+      "self_s": 0.37337847100000005,
+      "cumulative_s": 0.37337847100000005
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py",
+      "line": 60,
+      "function": "publish",
+      "calls": 786,
+      "self_s": 0.25280207800000004,
+      "cumulative_s": 0.25858245700000004
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1888,
+      "function": "_read_physics_state",
+      "calls": 1082,
+      "self_s": 0.081449459,
+      "cumulative_s": 0.18655280000000002
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py",
+      "line": 29,
+      "function": "__init__",
+      "calls": 1,
+      "self_s": 0.102679402,
+      "cumulative_s": 0.175046205
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1879,
+      "function": "_apply_perturbation",
+      "calls": 2164,
+      "self_s": 0.083031464,
+      "cumulative_s": 0.134529019
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2081,
+      "function": "_pub_clock",
+      "calls": 175,
+      "self_s": 0.0016945990000000002,
+      "cumulative_s": 0.112342863
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2011,
+      "function": "_pub_odom",
+      "calls": 175,
+      "self_s": 0.0059448700000000005,
+      "cumulative_s": 0.103972666
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2001,
+      "function": "_pub_joint_states",
+      "calls": 175,
+      "self_s": 0.004320789,
+      "cumulative_s": 0.09525770700000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist.py",
+      "line": 76,
+      "function": "__init__",
+      "calls": 1257,
+      "self_s": 0.028564773,
+      "cumulative_s": 0.08369704600000001
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2022,
+      "function": "_pub_imu",
+      "calls": 175,
+      "self_s": 0.0045967130000000005,
+      "cumulative_s": 0.07864890100000001
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/glfw/__init__.py",
+      "line": 23,
+      "function": "__init__",
+      "calls": 1,
+      "self_s": 2.3069000000000002e-05,
+      "cumulative_s": 0.07216278200000001
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 880,
+      "function": "_body_frame_velocity",
+      "calls": 1082,
+      "self_s": 0.0204035,
+      "cumulative_s": 0.07169894
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/glfw/__init__.py",
+      "line": 1262,
+      "function": "create_window",
+      "calls": 1,
+      "self_s": 0.062441487000000004,
+      "cumulative_s": 0.062455726
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py",
+      "line": 576,
+      "function": "get_parameter",
+      "calls": 6604,
+      "self_s": 0.035481446,
+      "cumulative_s": 0.048489112
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 90,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.005216991000000001,
+      "cumulative_s": 0.041919812
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 77,
+      "function": "__init__",
+      "calls": 3564,
+      "self_s": 0.0199917,
+      "cumulative_s": 0.040803099
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._functions.mj_objectVelocity>",
+      "calls": 1082,
+      "self_s": 0.036409750000000005,
+      "cumulative_s": 0.036409750000000005
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.all>",
+      "calls": 12006,
+      "self_s": 0.015875385000000002,
+      "cumulative_s": 0.035199457
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/drive_kinematics.py",
+      "line": 113,
+      "function": "targets",
+      "calls": 1082,
+      "self_s": 0.021039076,
+      "cumulative_s": 0.032058901
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 92,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.007380854,
+      "cumulative_s": 0.028621364000000003
+    },
+    {
+      "filename": "<frozen importlib._bootstrap>",
+      "line": 1053,
+      "function": "_handle_fromlist",
+      "calls": 16037,
+      "self_s": 0.017775799000000002,
+      "cumulative_s": 0.025020332000000003
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method numpy.array>",
+      "calls": 16450,
+      "self_s": 0.023480880000000003,
+      "cumulative_s": 0.023480880000000003
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 27,
+      "function": "xyzw_from_wxyz",
+      "calls": 1082,
+      "self_s": 0.016801461,
+      "cumulative_s": 0.021901357
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 106,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.005456170000000001,
+      "cumulative_s": 0.019468036
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose_with_covariance.py",
+      "line": 81,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.002350886,
+      "cumulative_s": 0.018351461
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/std_msgs/msg/_header.py",
+      "line": 76,
+      "function": "__init__",
+      "calls": 611,
+      "self_s": 0.006221193000000001,
+      "cumulative_s": 0.017829391
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.isinstance>",
+      "calls": 66487,
+      "self_s": 0.010014444,
+      "cumulative_s": 0.015394398
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/builtin_interfaces/msg/_time.py",
+      "line": 72,
+      "function": "__init__",
+      "calls": 1530,
+      "self_s": 0.0067454690000000005,
+      "cumulative_s": 0.015179555
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1965,
+      "function": "_set_actuator",
+      "calls": 2164,
+      "self_s": 0.012576939,
+      "cumulative_s": 0.014397459000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py",
+      "line": 80,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.002247832,
+      "cumulative_s": 0.011923032
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method numpy.zeros>",
+      "calls": 2042,
+      "self_s": 0.011555763,
+      "cumulative_s": 0.011555763
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist_with_covariance.py",
+      "line": 81,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.0018288750000000002,
+      "cumulative_s": 0.011233613
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1996,
+      "function": "_stamp",
+      "calls": 744,
+      "self_s": 0.004024535,
+      "cumulative_s": 0.011156051
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 104,
+      "function": "__init__",
+      "calls": 700,
+      "self_s": 0.0057598350000000005,
+      "cumulative_s": 0.011109125000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 214,
+      "function": "orientation_covariance",
+      "calls": 350,
+      "self_s": 0.004195904,
+      "cumulative_s": 0.010808634000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 168,
+      "function": "name",
+      "calls": 350,
+      "self_s": 0.0054282060000000005,
+      "cumulative_s": 0.010693307
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/glfw/__init__.py",
+      "line": 805,
+      "function": "init",
+      "calls": 1,
+      "self_s": 0.00846392,
+      "cumulative_s": 0.009657652000000001
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/camera_msgs.py",
+      "line": 31,
+      "function": "camera_info_msg",
+      "calls": 21,
+      "self_s": 0.00046084100000000003,
+      "cumulative_s": 0.008146563
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/camera_msgs.py",
+      "line": 15,
+      "function": "image_msg",
+      "calls": 43,
+      "self_s": 0.0019818870000000003,
+      "cumulative_s": 0.007613821000000001
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1895,
+      "function": "<listcomp>",
+      "calls": 1082,
+      "self_s": 0.007499138000000001,
+      "cumulative_s": 0.007499138000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 302,
+      "function": "ranges",
+      "calls": 44,
+      "self_s": 0.001017544,
+      "cumulative_s": 0.007465670000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py",
+      "line": 49,
+      "function": "ok",
+      "calls": 176,
+      "self_s": 0.0011391090000000001,
+      "cumulative_s": 0.007138449000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py",
+      "line": 522,
+      "function": "has_parameter",
+      "calls": 6604,
+      "self_s": 0.007111656,
+      "cumulative_s": 0.007111656
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 132,
+      "function": "x",
+      "calls": 3564,
+      "self_s": 0.005953791,
+      "cumulative_s": 0.0063903020000000005
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist.py",
+      "line": 130,
+      "function": "linear",
+      "calls": 1432,
+      "self_s": 0.0043322180000000005,
+      "cumulative_s": 0.006187959000000001
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'astype' of 'numpy.ndarray' objects>",
+      "calls": 66,
+      "self_s": 0.0061336030000000005,
+      "cumulative_s": 0.0061336030000000005
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'get' of 'dict' objects>",
+      "calls": 27446,
+      "self_s": 0.006078137,
+      "cumulative_s": 0.006078137
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/parameter.py",
+      "line": 146,
+      "function": "type_",
+      "calls": 6604,
+      "self_s": 0.00589601,
+      "cumulative_s": 0.00589601
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 77,
+      "function": "__init__",
+      "calls": 350,
+      "self_s": 0.002410094,
+      "cumulative_s": 0.005535334
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/drive_kinematics.py",
+      "line": 68,
+      "function": "__init__",
+      "calls": 1082,
+      "self_s": 0.00547334,
+      "cumulative_s": 0.00547334
+    },
+    {
+      "filename": "/usr/lib/python3.10/abc.py",
+      "line": 117,
+      "function": "__instancecheck__",
+      "calls": 3012,
+      "self_s": 0.001560036,
+      "cumulative_s": 0.005379954
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 259,
+      "function": "angular_velocity_covariance",
+      "calls": 350,
+      "self_s": 0.0020740940000000003,
+      "cumulative_s": 0.0053697630000000005
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.max>",
+      "calls": 13804,
+      "self_s": 0.005266504,
+      "cumulative_s": 0.005266504
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 29,
+      "function": "<genexpr>",
+      "calls": 5410,
+      "self_s": 0.0050998960000000005,
+      "cumulative_s": 0.0050998960000000005
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.hasattr>",
+      "calls": 16037,
+      "self_s": 0.004906764,
+      "cumulative_s": 0.004906764
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 304,
+      "function": "linear_acceleration_covariance",
+      "calls": 350,
+      "self_s": 0.001783162,
+      "cumulative_s": 0.004840965
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rosgraph_msgs/msg/_clock.py",
+      "line": 73,
+      "function": "__init__",
+      "calls": 175,
+      "self_s": 0.001949533,
+      "cumulative_s": 0.004810349
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py",
+      "line": 82,
+      "function": "ok",
+      "calls": 176,
+      "self_s": 0.004606518,
+      "cumulative_s": 0.004648917000000001
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 892,
+      "function": "<listcomp>",
+      "calls": 1082,
+      "self_s": 0.004621582,
+      "cumulative_s": 0.004621582
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist.py",
+      "line": 144,
+      "function": "angular",
+      "calls": 1432,
+      "self_s": 0.002883412,
+      "cumulative_s": 0.004499806
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 191,
+      "function": "position",
+      "calls": 350,
+      "self_s": 0.0026947720000000002,
+      "cumulative_s": 0.004467226
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.min>",
+      "calls": 6666,
+      "self_s": 0.004414675,
+      "cumulative_s": 0.004414675
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/std_msgs/msg/_header.py",
+      "line": 129,
+      "function": "stamp",
+      "calls": 1222,
+      "self_s": 0.002470075,
+      "cumulative_s": 0.0040878450000000005
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 1897,
+      "function": "<listcomp>",
+      "calls": 1082,
+      "self_s": 0.004003906000000001,
+      "cumulative_s": 0.004003906000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/parameter.py",
+      "line": 150,
+      "function": "value",
+      "calls": 6604,
+      "self_s": 0.003941483,
+      "cumulative_s": 0.003941483
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 94,
+      "function": "__init__",
+      "calls": 43,
+      "self_s": 0.0015371380000000002,
+      "cumulative_s": 0.0038564090000000003
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method _abc._abc_instancecheck>",
+      "calls": 3012,
+      "self_s": 0.0038199180000000003,
+      "cumulative_s": 0.0038199180000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 147,
+      "function": "y",
+      "calls": 3564,
+      "self_s": 0.003427308,
+      "cumulative_s": 0.0037746570000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 117,
+      "function": "__init__",
+      "calls": 21,
+      "self_s": 0.0011393050000000002,
+      "cumulative_s": 0.0035627930000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 162,
+      "function": "z",
+      "calls": 3564,
+      "self_s": 0.0030401200000000003,
+      "cumulative_s": 0.003376931
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 247,
+      "function": "effort",
+      "calls": 350,
+      "self_s": 0.0016589340000000001,
+      "cumulative_s": 0.003272253
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 219,
+      "function": "velocity",
+      "calls": 350,
+      "self_s": 0.0016162350000000002,
+      "cumulative_s": 0.0032663640000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 106,
+      "function": "__init__",
+      "calls": 22,
+      "self_s": 0.0012347150000000002,
+      "cumulative_s": 0.0032144580000000003
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'keys' of 'dict' objects>",
+      "calls": 9344,
+      "self_s": 0.0030477940000000004,
+      "cumulative_s": 0.0030477940000000004
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/drive_kinematics.py",
+      "line": 104,
+      "function": "reset",
+      "calls": 1082,
+      "self_s": 0.0030469610000000004,
+      "cumulative_s": 0.0030469610000000004
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method math.cos>",
+      "calls": 7920,
+      "self_s": 0.002585528,
+      "cumulative_s": 0.002585528
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 320,
+      "function": "<genexpr>",
+      "calls": 7942,
+      "self_s": 0.0019562850000000003,
+      "cumulative_s": 0.0025745580000000002
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method '__exit__' of '_thread.RLock' objects>",
+      "calls": 1082,
+      "self_s": 0.002396661,
+      "cumulative_s": 0.002396661
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/builtin_interfaces/msg/_time.py",
+      "line": 73,
+      "function": "<genexpr>",
+      "calls": 3018,
+      "self_s": 0.00236587,
+      "cumulative_s": 0.00236587
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 78,
+      "function": "<genexpr>",
+      "calls": 5664,
+      "self_s": 0.002313833,
+      "cumulative_s": 0.002313833
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/glfw/__init__.py",
+      "line": 30,
+      "function": "make_current",
+      "calls": 45,
+      "self_s": 0.00030372900000000003,
+      "cumulative_s": 0.002258511
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/builtin_interfaces/msg/_time.py",
+      "line": 124,
+      "function": "sec",
+      "calls": 1530,
+      "self_s": 0.002050423,
+      "cumulative_s": 0.002252816
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'append' of 'list' objects>",
+      "calls": 7920,
+      "self_s": 0.0020302130000000003,
+      "cumulative_s": 0.0020302130000000003
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/glfw/__init__.py",
+      "line": 2350,
+      "function": "make_context_current",
+      "calls": 45,
+      "self_s": 0.0018626580000000001,
+      "cumulative_s": 0.001954782
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 893,
+      "function": "<listcomp>",
+      "calls": 1082,
+      "self_s": 0.00189766,
+      "cumulative_s": 0.00189766
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.getattr>",
+      "calls": 2361,
+      "self_s": 0.001743228,
+      "cumulative_s": 0.001743228
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 321,
+      "function": "<genexpr>",
+      "calls": 7942,
+      "self_s": 0.001580535,
+      "cumulative_s": 0.0016847250000000002
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method math.sin>",
+      "calls": 7920,
+      "self_s": 0.001516107,
+      "cumulative_s": 0.001516107
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 264,
+      "function": "d",
+      "calls": 42,
+      "self_s": 0.000750336,
+      "cumulative_s": 0.001413336
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist.py",
+      "line": 77,
+      "function": "<genexpr>",
+      "calls": 1257,
+      "self_s": 0.001374124,
+      "cumulative_s": 0.001374124
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/builtin_interfaces/msg/_time.py",
+      "line": 139,
+      "function": "nanosec",
+      "calls": 1530,
+      "self_s": 0.001221675,
+      "cumulative_s": 0.001373667
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py",
+      "line": 28,
+      "function": "get_default_context",
+      "calls": 176,
+      "self_s": 0.001296857,
+      "cumulative_s": 0.0013504230000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose_with_covariance.py",
+      "line": 151,
+      "function": "covariance",
+      "calls": 175,
+      "self_s": 0.001327751,
+      "cumulative_s": 0.001349127
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist.py",
+      "line": 125,
+      "function": "linear",
+      "calls": 1257,
+      "self_s": 0.001328283,
+      "cumulative_s": 0.001328283
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rosgraph_msgs/msg/_clock.py",
+      "line": 123,
+      "function": "clock",
+      "calls": 350,
+      "self_s": 0.0008663570000000001,
+      "cumulative_s": 0.001285272
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'tobytes' of 'numpy.ndarray' objects>",
+      "calls": 43,
+      "self_s": 0.001265024,
+      "cumulative_s": 0.001265024
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method math.isfinite>",
+      "calls": 2164,
+      "self_s": 0.001247518,
+      "cumulative_s": 0.001247518
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/mujoco_spawner.py",
+      "line": 2007,
+      "function": "<listcomp>",
+      "calls": 175,
+      "self_s": 0.001228313,
+      "cumulative_s": 0.001228313
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method time.monotonic>",
+      "calls": 1605,
+      "self_s": 0.001203875,
+      "cumulative_s": 0.001203875
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py",
+      "line": 134,
+      "function": "position",
+      "calls": 350,
+      "self_s": 0.000789113,
+      "cumulative_s": 0.0012011020000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 245,
+      "function": "angular_velocity",
+      "calls": 350,
+      "self_s": 0.0007708820000000001,
+      "cumulative_s": 0.0012009450000000001
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method posix.getcwd>",
+      "calls": 1,
+      "self_s": 0.0011766440000000001,
+      "cumulative_s": 0.0011766440000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 200,
+      "function": "orientation",
+      "calls": 350,
+      "self_s": 0.000698977,
+      "cumulative_s": 0.001096077
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py",
+      "line": 148,
+      "function": "orientation",
+      "calls": 350,
+      "self_s": 0.000693089,
+      "cumulative_s": 0.0010932650000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 292,
+      "function": "k",
+      "calls": 42,
+      "self_s": 0.00042256600000000003,
+      "cumulative_s": 0.001092103
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 132,
+      "function": "x",
+      "calls": 350,
+      "self_s": 0.000987976,
+      "cumulative_s": 0.00107127
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 290,
+      "function": "linear_acceleration",
+      "calls": 350,
+      "self_s": 0.000670496,
+      "cumulative_s": 0.0010609970000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/std_msgs/msg/_header.py",
+      "line": 143,
+      "function": "frame_id",
+      "calls": 1047,
+      "self_s": 0.0008992560000000001,
+      "cumulative_s": 0.001001463
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'items' of 'dict' objects>",
+      "calls": 2164,
+      "self_s": 0.0009395650000000001,
+      "cumulative_s": 0.0009395650000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 127,
+      "function": "x",
+      "calls": 1782,
+      "self_s": 0.0009137800000000001,
+      "cumulative_s": 0.0009137800000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 105,
+      "function": "<genexpr>",
+      "calls": 2100,
+      "self_s": 0.000911034,
+      "cumulative_s": 0.000911034
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 154,
+      "function": "header",
+      "calls": 175,
+      "self_s": 0.00066,
+      "cumulative_s": 0.0008690140000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 166,
+      "function": "x",
+      "calls": 700,
+      "self_s": 0.0007852390000000001,
+      "cumulative_s": 0.000861877
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 235,
+      "function": "<genexpr>",
+      "calls": 1750,
+      "self_s": 0.000717119,
+      "cumulative_s": 0.000860629
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 280,
+      "function": "<genexpr>",
+      "calls": 1750,
+      "self_s": 0.000601738,
+      "cumulative_s": 0.000745124
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 186,
+      "function": "header",
+      "calls": 175,
+      "self_s": 0.0005405490000000001,
+      "cumulative_s": 0.0007276460000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py",
+      "line": 86,
+      "function": "handle",
+      "calls": 786,
+      "self_s": 0.000723703,
+      "cumulative_s": 0.000723703
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 157,
+      "function": "z",
+      "calls": 1782,
+      "self_s": 0.000713727,
+      "cumulative_s": 0.000713727
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 325,
+      "function": "<genexpr>",
+      "calls": 1750,
+      "self_s": 0.0005682570000000001,
+      "cumulative_s": 0.0007097560000000001
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'copy' of 'numpy.ndarray' objects>",
+      "calls": 44,
+      "self_s": 0.0006906820000000001,
+      "cumulative_s": 0.0006906820000000001
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 230,
+      "function": "mounted_pose",
+      "calls": 22,
+      "self_s": 0.00023931,
+      "cumulative_s": 0.0006832940000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist_with_covariance.py",
+      "line": 137,
+      "function": "twist",
+      "calls": 175,
+      "self_s": 0.000481704,
+      "cumulative_s": 0.0006623320000000001
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/numpy/lib/_twodim_base_impl.py",
+      "line": 105,
+      "function": "flipud",
+      "calls": 44,
+      "self_s": 0.0005946860000000001,
+      "cumulative_s": 0.0006617880000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose_with_covariance.py",
+      "line": 137,
+      "function": "pose",
+      "calls": 175,
+      "self_s": 0.000462668,
+      "cumulative_s": 0.0006517830000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 178,
+      "function": "pose",
+      "calls": 175,
+      "self_s": 0.000431406,
+      "cumulative_s": 0.0006509430000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 192,
+      "function": "twist",
+      "calls": 175,
+      "self_s": 0.00045952700000000005,
+      "cumulative_s": 0.0006485410000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 354,
+      "function": "p",
+      "calls": 42,
+      "self_s": 0.00021019700000000002,
+      "cumulative_s": 0.000642016
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 151,
+      "function": "header",
+      "calls": 175,
+      "self_s": 0.00044894000000000005,
+      "cumulative_s": 0.0006377010000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 323,
+      "function": "r",
+      "calls": 42,
+      "self_s": 0.00024072200000000002,
+      "cumulative_s": 0.000634689
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 81,
+      "function": "__init__",
+      "calls": 21,
+      "self_s": 0.00035454100000000005,
+      "cumulative_s": 0.000627362
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._functions.mj_name2id>",
+      "calls": 46,
+      "self_s": 0.000608005,
+      "cumulative_s": 0.000608005
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 211,
+      "function": "w",
+      "calls": 700,
+      "self_s": 0.0005337250000000001,
+      "cumulative_s": 0.000601114
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method numpy.empty>",
+      "calls": 44,
+      "self_s": 0.000600803,
+      "cumulative_s": 0.000600803
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 78,
+      "function": "<genexpr>",
+      "calls": 875,
+      "self_s": 0.0005889350000000001,
+      "cumulative_s": 0.0005889350000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 181,
+      "function": "y",
+      "calls": 700,
+      "self_s": 0.0005046790000000001,
+      "cumulative_s": 0.000571492
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 196,
+      "function": "z",
+      "calls": 700,
+      "self_s": 0.000498211,
+      "cumulative_s": 0.000564734
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 236,
+      "function": "<genexpr>",
+      "calls": 1750,
+      "self_s": 0.0005285180000000001,
+      "cumulative_s": 0.0005285180000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist.py",
+      "line": 139,
+      "function": "angular",
+      "calls": 1257,
+      "self_s": 0.000514378,
+      "cumulative_s": 0.000514378
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/camera_model.py",
+      "line": 47,
+      "function": "camera_info_fields",
+      "calls": 21,
+      "self_s": 0.000277206,
+      "cumulative_s": 0.000514343
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 147,
+      "function": "y",
+      "calls": 350,
+      "self_s": 0.000430973,
+      "cumulative_s": 0.00047494000000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 165,
+      "function": "child_frame_id",
+      "calls": 350,
+      "self_s": 0.00043242400000000005,
+      "cumulative_s": 0.000463911
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 162,
+      "function": "z",
+      "calls": 350,
+      "self_s": 0.00041044400000000004,
+      "cumulative_s": 0.00044986600000000005
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 181,
+      "function": "<genexpr>",
+      "calls": 700,
+      "self_s": 0.00040662900000000004,
+      "cumulative_s": 0.00044307700000000005
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist_with_covariance.py",
+      "line": 151,
+      "function": "covariance",
+      "calls": 175,
+      "self_s": 0.00041717,
+      "cumulative_s": 0.00043640100000000005
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method '__exit__' of '_thread.lock' objects>",
+      "calls": 1434,
+      "self_s": 0.000398866,
+      "cumulative_s": 0.000398866
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 326,
+      "function": "<genexpr>",
+      "calls": 1750,
+      "self_s": 0.00039559700000000003,
+      "cumulative_s": 0.00039559700000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 281,
+      "function": "<genexpr>",
+      "calls": 1750,
+      "self_s": 0.000382348,
+      "cumulative_s": 0.000382348
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sdf_world.py",
+      "line": 103,
+      "function": "compose",
+      "calls": 22,
+      "self_s": 0.00019368800000000002,
+      "cumulative_s": 0.00036395400000000005
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/builtin_interfaces/msg/_time.py",
+      "line": 119,
+      "function": "sec",
+      "calls": 786,
+      "self_s": 0.00032743700000000003,
+      "cumulative_s": 0.00032743700000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/std_msgs/msg/_header.py",
+      "line": 124,
+      "function": "stamp",
+      "calls": 611,
+      "self_s": 0.00032593600000000003,
+      "cumulative_s": 0.00032593600000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 210,
+      "function": "<genexpr>",
+      "calls": 525,
+      "self_s": 0.000297679,
+      "cumulative_s": 0.000297679
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/std_msgs/msg/_header.py",
+      "line": 77,
+      "function": "<genexpr>",
+      "calls": 611,
+      "self_s": 0.000295571,
+      "cumulative_s": 0.000295571
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 149,
+      "function": "header",
+      "calls": 350,
+      "self_s": 0.000294352,
+      "cumulative_s": 0.000294352
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 146,
+      "function": "header",
+      "calls": 525,
+      "self_s": 0.00028633900000000004,
+      "cumulative_s": 0.00028633900000000004
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 209,
+      "function": "<genexpr>",
+      "calls": 525,
+      "self_s": 0.00024603900000000003,
+      "cumulative_s": 0.00028261400000000004
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 33,
+      "function": "wxyz_from_xyzw",
+      "calls": 22,
+      "self_s": 0.000209752,
+      "cumulative_s": 0.000282449
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 181,
+      "function": "header",
+      "calls": 525,
+      "self_s": 0.000276339,
+      "cumulative_s": 0.000276339
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 249,
+      "function": "data",
+      "calls": 86,
+      "self_s": 0.000256525,
+      "cumulative_s": 0.000268941
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 59,
+      "function": "X__DEFAULT",
+      "calls": 700,
+      "self_s": 0.00026510600000000003,
+      "cumulative_s": 0.00026510600000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 237,
+      "function": "<genexpr>",
+      "calls": 525,
+      "self_s": 0.000217488,
+      "cumulative_s": 0.00025563100000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 265,
+      "function": "<genexpr>",
+      "calls": 525,
+      "self_s": 0.000216917,
+      "cumulative_s": 0.000253236
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/std_msgs/msg/_header.py",
+      "line": 138,
+      "function": "frame_id",
+      "calls": 611,
+      "self_s": 0.00024341,
+      "cumulative_s": 0.00024341
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist_with_covariance.py",
+      "line": 132,
+      "function": "twist",
+      "calls": 525,
+      "self_s": 0.00024001500000000003,
+      "cumulative_s": 0.00024001500000000003
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/builtin_interfaces/msg/_time.py",
+      "line": 134,
+      "function": "nanosec",
+      "calls": 786,
+      "self_s": 0.00023733,
+      "cumulative_s": 0.00023733
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/camera_model.py",
+      "line": 41,
+      "function": "intrinsics",
+      "calls": 21,
+      "self_s": 0.000171993,
+      "cumulative_s": 0.000237137
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 93,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.000220241,
+      "cumulative_s": 0.000220241
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose_with_covariance.py",
+      "line": 132,
+      "function": "pose",
+      "calls": 525,
+      "self_s": 0.00020232600000000001,
+      "cumulative_s": 0.00020232600000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 74,
+      "function": "W__DEFAULT",
+      "calls": 700,
+      "self_s": 0.00019794200000000002,
+      "cumulative_s": 0.00019794200000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 161,
+      "function": "x",
+      "calls": 350,
+      "self_s": 0.00019058400000000002,
+      "cumulative_s": 0.00019058400000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_vector3.py",
+      "line": 142,
+      "function": "y",
+      "calls": 700,
+      "self_s": 0.00018722,
+      "cumulative_s": 0.00018722
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 162,
+      "function": "header",
+      "calls": 43,
+      "self_s": 0.00012182000000000001,
+      "cumulative_s": 0.00017778700000000002
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method builtins.len>",
+      "calls": 589,
+      "self_s": 0.000177302,
+      "cumulative_s": 0.000177302
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rosgraph_msgs/msg/_clock.py",
+      "line": 118,
+      "function": "clock",
+      "calls": 175,
+      "self_s": 0.00016946500000000002,
+      "cumulative_s": 0.00016946500000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 107,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.00016872800000000001,
+      "cumulative_s": 0.00016872800000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 91,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.000165884,
+      "cumulative_s": 0.000165884
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 187,
+      "function": "twist",
+      "calls": 525,
+      "self_s": 0.00016559700000000002,
+      "cumulative_s": 0.00016559700000000002
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 139,
+      "function": "yaw_of",
+      "calls": 22,
+      "self_s": 8.290700000000001e-05,
+      "cumulative_s": 0.000158612
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 69,
+      "function": "Z__DEFAULT",
+      "calls": 700,
+      "self_s": 0.000157371,
+      "cumulative_s": 0.000157371
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 64,
+      "function": "Y__DEFAULT",
+      "calls": 700,
+      "self_s": 0.00015637000000000002,
+      "cumulative_s": 0.00015637000000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/rosgraph_msgs/msg/_clock.py",
+      "line": 74,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.00014886,
+      "cumulative_s": 0.00014886
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 266,
+      "function": "<genexpr>",
+      "calls": 525,
+      "self_s": 0.000148121,
+      "cumulative_s": 0.000148121
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 238,
+      "function": "<genexpr>",
+      "calls": 525,
+      "self_s": 0.000146715,
+      "cumulative_s": 0.000146715
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 127,
+      "function": "x",
+      "calls": 175,
+      "self_s": 0.00013826500000000002,
+      "cumulative_s": 0.00013826500000000002
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 206,
+      "function": "w",
+      "calls": 350,
+      "self_s": 0.000131478,
+      "cumulative_s": 0.000131478
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 173,
+      "function": "pose",
+      "calls": 525,
+      "self_s": 0.000131036,
+      "cumulative_s": 0.000131036
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 191,
+      "function": "z",
+      "calls": 350,
+      "self_s": 0.000122809,
+      "cumulative_s": 0.000122809
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_quaternion.py",
+      "line": 176,
+      "function": "y",
+      "calls": 350,
+      "self_s": 0.000121149,
+      "cumulative_s": 0.000121149
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose_with_covariance.py",
+      "line": 82,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.000113819,
+      "cumulative_s": 0.000113819
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py",
+      "line": 81,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.00011228,
+      "cumulative_s": 0.00011228
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist_with_covariance.py",
+      "line": 82,
+      "function": "<genexpr>",
+      "calls": 175,
+      "self_s": 0.00011212300000000001,
+      "cumulative_s": 0.00011212300000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 375,
+      "function": "<genexpr>",
+      "calls": 273,
+      "self_s": 8.7292e-05,
+      "cumulative_s": 0.00011177200000000001
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 176,
+      "function": "height",
+      "calls": 86,
+      "self_s": 0.00010226500000000001,
+      "cumulative_s": 0.000110617
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method math.isinf>",
+      "calls": 807,
+      "self_s": 0.00010419,
+      "cumulative_s": 0.00010419
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/glfw/__init__.py",
+      "line": 687,
+      "function": "errcheck",
+      "calls": 48,
+      "self_s": 0.000101884,
+      "cumulative_s": 0.000101884
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/numpy/lib/_version.py",
+      "line": 55,
+      "function": "__init__",
+      "calls": 1,
+      "self_s": 3.5037000000000004e-05,
+      "cumulative_s": 0.000100507
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 183,
+      "function": "header",
+      "calls": 22,
+      "self_s": 6.9213e-05,
+      "cumulative_s": 9.545200000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 313,
+      "function": "<genexpr>",
+      "calls": 210,
+      "self_s": 7.536000000000001e-05,
+      "cumulative_s": 9.4176e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 344,
+      "function": "<genexpr>",
+      "calls": 210,
+      "self_s": 7.2155e-05,
+      "cumulative_s": 9.0939e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 207,
+      "function": "header",
+      "calls": 21,
+      "self_s": 6.281300000000001e-05,
+      "cumulative_s": 8.8155e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 285,
+      "function": "linear_acceleration",
+      "calls": 175,
+      "self_s": 8.5981e-05,
+      "cumulative_s": 8.5981e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 219,
+      "function": "is_bigendian",
+      "calls": 86,
+      "self_s": 7.8204e-05,
+      "cumulative_s": 8.575500000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 282,
+      "function": "<genexpr>",
+      "calls": 126,
+      "self_s": 7.401e-05,
+      "cumulative_s": 8.5176e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 234,
+      "function": "step",
+      "calls": 86,
+      "self_s": 7.6605e-05,
+      "cumulative_s": 8.4765e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 195,
+      "function": "orientation",
+      "calls": 175,
+      "self_s": 8.459900000000001e-05,
+      "cumulative_s": 8.459900000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 163,
+      "function": "name",
+      "calls": 175,
+      "self_s": 8.4509e-05,
+      "cumulative_s": 8.4509e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py",
+      "line": 129,
+      "function": "position",
+      "calls": 175,
+      "self_s": 8.2111e-05,
+      "cumulative_s": 8.2111e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 191,
+      "function": "width",
+      "calls": 86,
+      "self_s": 7.4139e-05,
+      "cumulative_s": 8.1883e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/nav_msgs/msg/_odometry.py",
+      "line": 160,
+      "function": "child_frame_id",
+      "calls": 175,
+      "self_s": 8.159500000000001e-05,
+      "cumulative_s": 8.159500000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 209,
+      "function": "orientation_covariance",
+      "calls": 175,
+      "self_s": 8.0924e-05,
+      "cumulative_s": 8.0924e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 186,
+      "function": "position",
+      "calls": 175,
+      "self_s": 8.034800000000001e-05,
+      "cumulative_s": 8.034800000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 197,
+      "function": "angle_min",
+      "calls": 44,
+      "self_s": 7.6158e-05,
+      "cumulative_s": 8.028600000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 206,
+      "function": "encoding",
+      "calls": 86,
+      "self_s": 7.1709e-05,
+      "cumulative_s": 7.9388e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose.py",
+      "line": 143,
+      "function": "orientation",
+      "calls": 175,
+      "self_s": 7.9002e-05,
+      "cumulative_s": 7.9002e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 142,
+      "function": "y",
+      "calls": 175,
+      "self_s": 7.843e-05,
+      "cumulative_s": 7.843e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 254,
+      "function": "angular_velocity_covariance",
+      "calls": 175,
+      "self_s": 7.839500000000001e-05,
+      "cumulative_s": 7.839500000000001e-05
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sdf_world.py",
+      "line": 83,
+      "function": "_rotate",
+      "calls": 22,
+      "self_s": 7.8075e-05,
+      "cumulative_s": 7.8075e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 415,
+      "function": "roi",
+      "calls": 21,
+      "self_s": 4.8698e-05,
+      "cumulative_s": 7.6826e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 157,
+      "function": "header",
+      "calls": 129,
+      "self_s": 7.6637e-05,
+      "cumulative_s": 7.6637e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 214,
+      "function": "velocity",
+      "calls": 175,
+      "self_s": 7.606300000000001e-05,
+      "cumulative_s": 7.606300000000001e-05
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method math.atan2>",
+      "calls": 22,
+      "self_s": 7.570500000000001e-05,
+      "cumulative_s": 7.570500000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_joint_state.py",
+      "line": 242,
+      "function": "effort",
+      "calls": 175,
+      "self_s": 7.420300000000001e-05,
+      "cumulative_s": 7.420300000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 142,
+      "function": "x_offset",
+      "calls": 21,
+      "self_s": 7.0364e-05,
+      "cumulative_s": 7.2892e-05
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 35,
+      "function": "<genexpr>",
+      "calls": 110,
+      "self_s": 7.2697e-05,
+      "cumulative_s": 7.2697e-05
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py",
+      "line": 118,
+      "function": "enable_depth_rendering",
+      "calls": 22,
+      "self_s": 6.9817e-05,
+      "cumulative_s": 6.9817e-05
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/numpy/lib/_twodim_base_impl.py",
+      "line": 45,
+      "function": "_flip_dispatcher",
+      "calls": 44,
+      "self_s": 6.7612e-05,
+      "cumulative_s": 6.7612e-05
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method numpy.asanyarray>",
+      "calls": 44,
+      "self_s": 6.710200000000001e-05,
+      "cumulative_s": 6.710200000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_twist_with_covariance.py",
+      "line": 146,
+      "function": "covariance",
+      "calls": 175,
+      "self_s": 6.5819e-05,
+      "cumulative_s": 6.5819e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 221,
+      "function": "height",
+      "calls": 42,
+      "self_s": 6.188600000000001e-05,
+      "cumulative_s": 6.5694e-05
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method math.tan>",
+      "calls": 21,
+      "self_s": 6.5144e-05,
+      "cumulative_s": 6.5144e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 376,
+      "function": "<genexpr>",
+      "calls": 273,
+      "self_s": 6.2523e-05,
+      "cumulative_s": 6.2523e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 299,
+      "function": "linear_acceleration_covariance",
+      "calls": 175,
+      "self_s": 5.9004000000000006e-05,
+      "cumulative_s": 5.9004000000000006e-05
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/mujoco/rendering/classic/renderer.py",
+      "line": 122,
+      "function": "disable_depth_rendering",
+      "calls": 22,
+      "self_s": 5.8301e-05,
+      "cumulative_s": 5.8301e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_pose_with_covariance.py",
+      "line": 146,
+      "function": "covariance",
+      "calls": 175,
+      "self_s": 5.766300000000001e-05,
+      "cumulative_s": 5.766300000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 227,
+      "function": "angle_increment",
+      "calls": 44,
+      "self_s": 5.2704e-05,
+      "cumulative_s": 5.7088000000000006e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 257,
+      "function": "scan_time",
+      "calls": 44,
+      "self_s": 5.2733000000000005e-05,
+      "cumulative_s": 5.6925e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_imu.py",
+      "line": 240,
+      "function": "angular_velocity",
+      "calls": 175,
+      "self_s": 5.4942000000000004e-05,
+      "cumulative_s": 5.4942000000000004e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 212,
+      "function": "angle_max",
+      "calls": 44,
+      "self_s": 4.9886e-05,
+      "cumulative_s": 5.4462e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 272,
+      "function": "range_min",
+      "calls": 44,
+      "self_s": 4.9086000000000004e-05,
+      "cumulative_s": 5.3534000000000006e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 287,
+      "function": "range_max",
+      "calls": 44,
+      "self_s": 4.9181e-05,
+      "cumulative_s": 5.3469000000000006e-05
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 232,
+      "function": "<genexpr>",
+      "calls": 88,
+      "self_s": 5.2288000000000005e-05,
+      "cumulative_s": 5.2288000000000005e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 314,
+      "function": "<genexpr>",
+      "calls": 210,
+      "self_s": 5.2154e-05,
+      "cumulative_s": 5.2154e-05
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sdf_world.py",
+      "line": 94,
+      "function": "_multiply",
+      "calls": 22,
+      "self_s": 5.2128000000000006e-05,
+      "cumulative_s": 5.2128000000000006e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 283,
+      "function": "<genexpr>",
+      "calls": 126,
+      "self_s": 5.0686e-05,
+      "cumulative_s": 5.0686e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 251,
+      "function": "distortion_model",
+      "calls": 42,
+      "self_s": 4.5853e-05,
+      "cumulative_s": 4.9789e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 345,
+      "function": "<genexpr>",
+      "calls": 210,
+      "self_s": 4.9021000000000004e-05,
+      "cumulative_s": 4.9021000000000004e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 236,
+      "function": "width",
+      "calls": 42,
+      "self_s": 4.304e-05,
+      "cumulative_s": 4.6783e-05
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/numpy/_core/multiarray.py",
+      "line": 1098,
+      "function": "copyto",
+      "calls": 22,
+      "self_s": 4.5821e-05,
+      "cumulative_s": 4.5821e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 178,
+      "function": "header",
+      "calls": 66,
+      "self_s": 4.4959e-05,
+      "cumulative_s": 4.4959e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 385,
+      "function": "binning_x",
+      "calls": 21,
+      "self_s": 4.1375e-05,
+      "cumulative_s": 4.3551000000000004e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 95,
+      "function": "<genexpr>",
+      "calls": 43,
+      "self_s": 4.3006e-05,
+      "cumulative_s": 4.3006e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 107,
+      "function": "<genexpr>",
+      "calls": 22,
+      "self_s": 4.1951000000000005e-05,
+      "cumulative_s": 4.1951000000000005e-05
+    },
+    {
+      "filename": "/usr/lib/python3.10/re.py",
+      "line": 187,
+      "function": "match",
+      "calls": 1,
+      "self_s": 1.3567e-05,
+      "cumulative_s": 4.1534000000000006e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/geometry_msgs/msg/_point.py",
+      "line": 157,
+      "function": "z",
+      "calls": 175,
+      "self_s": 4.0543e-05,
+      "cumulative_s": 4.0543e-05
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sdf_world.py",
+      "line": 106,
+      "function": "<genexpr>",
+      "calls": 88,
+      "self_s": 4.0063e-05,
+      "cumulative_s": 4.0063e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 242,
+      "function": "time_increment",
+      "calls": 22,
+      "self_s": 3.4750000000000004e-05,
+      "cumulative_s": 3.6798e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 330,
+      "function": "intensities",
+      "calls": 22,
+      "self_s": 3.2543e-05,
+      "cumulative_s": 3.4911000000000005e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 157,
+      "function": "y_offset",
+      "calls": 21,
+      "self_s": 3.1902e-05,
+      "cumulative_s": 3.4301e-05
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method numpy.ascontiguousarray>",
+      "calls": 43,
+      "self_s": 3.3405e-05,
+      "cumulative_s": 3.3405e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 202,
+      "function": "header",
+      "calls": 63,
+      "self_s": 3.12e-05,
+      "cumulative_s": 3.12e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 202,
+      "function": "do_rectify",
+      "calls": 21,
+      "self_s": 2.8736e-05,
+      "cumulative_s": 3.1103000000000004e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 400,
+      "function": "binning_y",
+      "calls": 21,
+      "self_s": 2.8095e-05,
+      "cumulative_s": 3.0142e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 172,
+      "function": "height",
+      "calls": 21,
+      "self_s": 2.6975000000000002e-05,
+      "cumulative_s": 2.8991e-05
+    },
+    {
+      "filename": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py",
+      "line": 233,
+      "function": "<genexpr>",
+      "calls": 110,
+      "self_s": 2.7742000000000003e-05,
+      "cumulative_s": 2.7742000000000003e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 187,
+      "function": "width",
+      "calls": 21,
+      "self_s": 2.5663e-05,
+      "cumulative_s": 2.7711000000000003e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 118,
+      "function": "<genexpr>",
+      "calls": 21,
+      "self_s": 2.6846e-05,
+      "cumulative_s": 2.6846e-05
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/glfw/__init__.py",
+      "line": 1232,
+      "function": "window_hint",
+      "calls": 1,
+      "self_s": 2.5823e-05,
+      "cumulative_s": 2.6335e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 171,
+      "function": "height",
+      "calls": 43,
+      "self_s": 2.3168000000000002e-05,
+      "cumulative_s": 2.3168000000000002e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 186,
+      "function": "width",
+      "calls": 43,
+      "self_s": 2.0959e-05,
+      "cumulative_s": 2.0959e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 201,
+      "function": "encoding",
+      "calls": 43,
+      "self_s": 1.7504e-05,
+      "cumulative_s": 1.7504e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 244,
+      "function": "data",
+      "calls": 43,
+      "self_s": 1.7502e-05,
+      "cumulative_s": 1.7502e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 137,
+      "function": "x_offset",
+      "calls": 21,
+      "self_s": 1.6831000000000002e-05,
+      "cumulative_s": 1.6831000000000002e-05
+    },
+    {
+      "filename": "/usr/lib/python3.10/re.py",
+      "line": 288,
+      "function": "_compile",
+      "calls": 2,
+      "self_s": 1.0272000000000001e-05,
+      "cumulative_s": 1.6704e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 229,
+      "function": "step",
+      "calls": 43,
+      "self_s": 1.6576000000000002e-05,
+      "cumulative_s": 1.6576000000000002e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 82,
+      "function": "<genexpr>",
+      "calls": 21,
+      "self_s": 1.6192e-05,
+      "cumulative_s": 1.6192e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_image.py",
+      "line": 214,
+      "function": "is_bigendian",
+      "calls": 43,
+      "self_s": 1.5231e-05,
+      "cumulative_s": 1.5231e-05
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'match' of 're.Pattern' objects>",
+      "calls": 1,
+      "self_s": 1.4399e-05,
+      "cumulative_s": 1.4399e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 216,
+      "function": "height",
+      "calls": 21,
+      "self_s": 1.4144e-05,
+      "cumulative_s": 1.4144e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 152,
+      "function": "y_offset",
+      "calls": 21,
+      "self_s": 1.2927e-05,
+      "cumulative_s": 1.2927e-05
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method posix.chdir>",
+      "calls": 1,
+      "self_s": 1.2736000000000001e-05,
+      "cumulative_s": 1.2736000000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 237,
+      "function": "time_increment",
+      "calls": 22,
+      "self_s": 1.2287000000000001e-05,
+      "cumulative_s": 1.2287000000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 207,
+      "function": "angle_max",
+      "calls": 22,
+      "self_s": 1.216e-05,
+      "cumulative_s": 1.216e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 380,
+      "function": "binning_x",
+      "calls": 21,
+      "self_s": 1.1904000000000002e-05,
+      "cumulative_s": 1.1904000000000002e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 167,
+      "function": "height",
+      "calls": 21,
+      "self_s": 1.0943e-05,
+      "cumulative_s": 1.0943e-05
+    },
+    {
+      "filename": "/usr/lib/python3.10/re.py",
+      "line": 197,
+      "function": "search",
+      "calls": 1,
+      "self_s": 4.128e-06,
+      "cumulative_s": 1.0368000000000001e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 222,
+      "function": "angle_increment",
+      "calls": 22,
+      "self_s": 1.0271e-05,
+      "cumulative_s": 1.0271e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 192,
+      "function": "angle_min",
+      "calls": 22,
+      "self_s": 1.0016e-05,
+      "cumulative_s": 1.0016e-05
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 325,
+      "function": "intensities",
+      "calls": 22,
+      "self_s": 9.662e-06,
+      "cumulative_s": 9.662e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 231,
+      "function": "width",
+      "calls": 21,
+      "self_s": 9.632e-06,
+      "cumulative_s": 9.632e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 246,
+      "function": "distortion_model",
+      "calls": 21,
+      "self_s": 9.504e-06,
+      "cumulative_s": 9.504e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 197,
+      "function": "do_rectify",
+      "calls": 21,
+      "self_s": 9.440000000000001e-06,
+      "cumulative_s": 9.440000000000001e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 287,
+      "function": "k",
+      "calls": 21,
+      "self_s": 9.343e-06,
+      "cumulative_s": 9.343e-06
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/glfw/__init__.py",
+      "line": 68,
+      "function": "<lambda>",
+      "calls": 1,
+      "self_s": 7.839e-06,
+      "cumulative_s": 9.343e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 259,
+      "function": "d",
+      "calls": 21,
+      "self_s": 9.248e-06,
+      "cumulative_s": 9.248e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 318,
+      "function": "r",
+      "calls": 21,
+      "self_s": 9.215e-06,
+      "cumulative_s": 9.215e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 395,
+      "function": "binning_y",
+      "calls": 21,
+      "self_s": 9.119e-06,
+      "cumulative_s": 9.119e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<built-in method mujoco._render.mjr_setBuffer>",
+      "calls": 1,
+      "self_s": 8.959e-06,
+      "cumulative_s": 8.959e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 349,
+      "function": "p",
+      "calls": 21,
+      "self_s": 8.959e-06,
+      "cumulative_s": 8.959e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 252,
+      "function": "scan_time",
+      "calls": 22,
+      "self_s": 8.798000000000001e-06,
+      "cumulative_s": 8.798000000000001e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_camera_info.py",
+      "line": 410,
+      "function": "roi",
+      "calls": 21,
+      "self_s": 7.904000000000001e-06,
+      "cumulative_s": 7.904000000000001e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_region_of_interest.py",
+      "line": 182,
+      "function": "width",
+      "calls": 21,
+      "self_s": 7.4870000000000005e-06,
+      "cumulative_s": 7.4870000000000005e-06
+    },
+    {
+      "filename": "/home/molar1/.local/lib/python3.10/site-packages/numpy/lib/_version.py",
+      "line": 62,
+      "function": "<listcomp>",
+      "calls": 1,
+      "self_s": 7.104e-06,
+      "cumulative_s": 7.104e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 267,
+      "function": "range_min",
+      "calls": 22,
+      "self_s": 5.951e-06,
+      "cumulative_s": 5.951e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 282,
+      "function": "range_max",
+      "calls": 22,
+      "self_s": 4.768e-06,
+      "cumulative_s": 4.768e-06
+    },
+    {
+      "filename": "/opt/ros/humble/local/lib/python3.10/dist-packages/sensor_msgs/msg/_laser_scan.py",
+      "line": 297,
+      "function": "ranges",
+      "calls": 22,
+      "self_s": 4.512e-06,
+      "cumulative_s": 4.512e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'search' of 're.Pattern' objects>",
+      "calls": 1,
+      "self_s": 3.1040000000000003e-06,
+      "cumulative_s": 3.1040000000000003e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'split' of 'str' objects>",
+      "calls": 1,
+      "self_s": 2.1120000000000003e-06,
+      "cumulative_s": 2.1120000000000003e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'group' of 're.Match' objects>",
+      "calls": 1,
+      "self_s": 1.952e-06,
+      "cumulative_s": 1.952e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'encode' of 'str' objects>",
+      "calls": 1,
+      "self_s": 1.5040000000000001e-06,
+      "cumulative_s": 1.5040000000000001e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'disable' of '_lsprof.Profiler' objects>",
+      "calls": 1,
+      "self_s": 1.0560000000000001e-06,
+      "cumulative_s": 1.0560000000000001e-06
+    },
+    {
+      "filename": "~",
+      "line": 0,
+      "function": "<method 'end' of 're.Match' objects>",
+      "calls": 1,
+      "self_s": 9.92e-07,
+      "cumulative_s": 9.92e-07
+    }
+  ]
+}

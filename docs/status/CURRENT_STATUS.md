@@ -114,3 +114,8 @@ Use the [agent handoff](../AGENT_HANDOFF.md),
 [patch guide](../PATCH_EXECUTION_GUIDE.md) and
 [workflow](../WORKFLOW.md). Work directly on `master`, preserve other agents'
 edits and keep large artifacts on the mounted workspace SSD.
+
+The later P4 camera-packing change preserves identical ROS wire messages and
+passes four serialization cases plus a new physical Labbot hospital route
+(0.046 m / +1.97°). Actual before/after clock windows remain about 0.13× real
+time; large-map physics optimization remains open. See [the measured timing stages](evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

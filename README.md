@@ -334,3 +334,8 @@ Before implementing, read the handoff, claim one task, preserve other agents' wo
 ## License
 
 See [LICENSE](LICENSE) for repository licensing and [third-party notices](LICENSES/third-party-notices.md) for imported assets and libraries. Third-party components retain their own terms; a top-level license does not relicense vendored code, meshes or optional integrations.
+
+The later P4 camera-packing change preserves identical ROS wire messages and
+passes four serialization cases plus a new physical Labbot hospital route
+(0.046 m / +1.97°). Actual before/after clock windows remain about 0.13× real
+time; large-map physics optimization remains open. See [the measured timing stages](docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

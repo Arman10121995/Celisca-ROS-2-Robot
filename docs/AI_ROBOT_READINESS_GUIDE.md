@@ -195,3 +195,9 @@ selected map's slice height, source lidar mount, observed map/odom/body transfor
 pose/twist integration and command/sensor cadence before tuning AMCL or DWB.
 Any accepted controller/localization change needs named normal-GUI body endpoint,
 heading, floor and cleanup repeats on the affected backend/map cells.
+
+The later P4 camera helper uses ROS typed byte arrays with identical serialized
+RGB/depth. Four wire cases, 151 sourced integration checks and a new physical
+Labbot hospital route pass. Native-step profiling is retained; actual clock
+windows stay about 0.13×, so broader MuJoCo optimization remains open. See
+[the exact timing/source stages](status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

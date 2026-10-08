@@ -189,3 +189,11 @@ its actual input hashes. Its isolated distribution plotting environment does
 not change ROS/controller/test dependencies.
 
 ![Actual stationary lidar over the original and corrected hospital grids](scan-map-alignment/before-after.png)
+
+## Later camera source stage
+
+[Actual timing, wire checks and post-change native navigation](mujoco-hospital-performance/README.md)
+record typed-array camera packing without changing images, rates, controls or
+geometry. The eight original hospital routes keep their pre-trial source
+stages; the new Labbot repeat is indexed separately. Whole-simulator speed
+remains about 0.13× and P4 stays partial.
