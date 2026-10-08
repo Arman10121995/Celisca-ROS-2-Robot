@@ -109,7 +109,7 @@ numerical braking/idle creep. Matching Bumperbot's wheel gain 10 with lab rotor
 inertia 0.02 kg·m² (unchanged 5 N·m cap) passes full normal Drive/Stop/loss/relaunch.
 The same hospital route then holds physical heading within 1.42°, agreeing
 with its 1.23° estimate, but times out after 360 s at 0.174 m position error.
-This remains a failed route; an extended-budget repeat is pending. Current
+The extended-budget repeat reaches Nav2 success at 0.82° heading, but its physical endpoint is 0.175 m from the goal and fails the unchanged 0.15 m body gate. The tighter 0.03 m estimator goal experiment times out after 900 s at 0.233 m / 152.21°. It is retained as a negative result, and the normal profile is restored to 0.07 m. Position/map-estimator alignment remains open. Current
 Labbot and Bumperbot Display now route GUI input through the existing mux.
 Remaining base/backend/two-floor routes are pending; upper-floor travel and
 actors remain unqualified. Failures and original traces are preserved.
@@ -121,7 +121,7 @@ selection. A custom (-6.75, -6.75) seed exports a real grid with 22,948 free,
 originally produced only unknown cells; separate transformed triangle slices
 now produce 24,734 free / 350 occupied / 1,844 unknown cells. Geometry/dependency,
 world/seed/recipe and output-byte guards invalidate stale occupancy caches.
-Fourteen dataset grids are refreshed; a seed-connected slice does not cover an
+Fourteen earlier dataset grids were refreshed at v3; the new v4 repair requires regeneration/review because open wall chains were omitted. A seed-connected slice does not cover an
 entire multilevel building or qualify robot missions. The separate R6.7 terrain
 conversion/provider lane remains with its existing owner.
 
@@ -162,3 +162,18 @@ Follow [the detailed AI execution guide](../AI_ROBOT_READINESS_GUIDE.md),
 [ledger](platform-status.yaml), [checklist](CHECKLIST.md) and
 [roadmap](../../ROADMAP.md). Keep large outputs on SSD, preserve original
 sources/negative artifacts and work directly on `master`.
+
+## Current CI and occupancy follow-up
+
+`4fe611a` passes required and scheduled remote CI after MuJoCo 3.15 removed
+the old flex-contact attribute. Both runs build 25 packages and pass 27 physics,
+134 integration (13 skips) and registry; fast results retain their exact
+1002/four-skip and 1003/three-skip stages.
+
+A real stationary hospital lidar/map comparison exposes discarded open mesh
+wall chains. Occupancy v4 keeps all triangle/plane segments, rejects v3 caches
+and passes 24 sourced regression checks. The same 6,462 measured endpoints
+improve median grid distance 0.804 → 0.071 m with the actual regenerated map.
+The corrected hospital grid is installed and its unchanged normal GUI navigation
+repeat is active; other generated grids need regeneration/review. Original
+failures and byte/source hashes are in [the archive](evidence/extensions-finish-2026-10-08/README.md).

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-08T19:30:52.808385+00:00",
+  "generated_utc": "2026-10-08T19:58:01.824525+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -3430,11 +3430,11 @@
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
       "last_tested": "2026-10-08",
-      "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus exact pre-trial working-tree source manifest",
+      "revision": "cbf98cb9ffdcd924b36fe0c991670c91101a744c plus exact pre-trial working-tree source manifest",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/rotor-matched/bumperbot-dataset_hospital-mujoco/report-measured.json",
-        "docs/status/evidence/extensions-finish-2026-10-08/navigation/rotor-matched/bumperbot-dataset_hospital-mujoco/pre-trial.json"
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/report-measured.json",
+        "docs/status/evidence/extensions-finish-2026-10-08/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/pre-trial.json"
       ],
       "limitations": [
         "Short named static ground-floor route; no upper-floor, actor or universal-map qualification",

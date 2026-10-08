@@ -1,5 +1,7 @@
 """Conservative rasterization preserves actual slice height, pose and cell overlap."""
 import math
+import importlib.util
+from pathlib import Path
 
 import pytest
 
@@ -64,3 +66,27 @@ def test_terrain_projection_uses_world_height_after_rotation():
 def test_invalid_terrain_cannot_silently_become_free():
     with pytest.raises(ValueError, match='finite XYZ'):
         terrain_slice_polygons([[0,0,float('nan')]], [[0,0,0]], .3)
+
+
+def test_open_mesh_wall_remains_an_occupancy_barrier(tmp_path):
+    """A non-watertight source wall must block the slice, including its ends."""
+    pytest.importorskip('ament_index_python', reason='Generate Map tool needs sourced ROS package paths')
+    trimesh = pytest.importorskip('trimesh')
+    spec = importlib.util.spec_from_file_location('map_generator',
+        Path(__file__).resolve().parents[2]/'robot_lab_maps/tools/generate_occupancy_map.py')
+    generator = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(generator)
+    mesh = trimesh.Trimesh(vertices=[[-2,0,0],[2,0,0],[2,0,1],[-2,0,1]],
+        faces=[[0,1,2],[0,2,3]], process=False)
+    path = tmp_path/'open-wall.stl'
+    mesh.export(path)
+    shape = dict(type='mesh', mesh=str(path), scale=[1,1,1],
+        position=[3,4,0], orientation=[math.sqrt(.5),0,0,math.sqrt(.5)])
+    segments, bounds = generator.slice_mesh(shape, .3, .1)
+    points = np.concatenate(segments)
+    assert points[:,0] == pytest.approx(np.full(len(points),3.))
+    assert points[:,1].min() == pytest.approx(2.)
+    assert points[:,1].max() == pytest.approx(6.)
+    assert points[:,2] == pytest.approx(np.full(len(points),.3))
+    assert np.sum([np.linalg.norm(s[1]-s[0]) for s in segments]) == pytest.approx(4.)
+    assert generator.slice_mesh(shape, 1.5, .1)[0] == []

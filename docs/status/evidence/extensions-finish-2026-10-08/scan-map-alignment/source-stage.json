@@ -1,0 +1,15 @@
+{
+  "revision": "4fe611aee7471782cf424fd030a3e85ccae2c85b",
+  "scope": "Actual open-wall source stage after current-map build; independent original scan producer is preserved.",
+  "source_sha256": {
+    "src/robot_lab_maps/tools/generate_occupancy_map.py": "459a97f69e7ff3cfab103c6d22facf352747455e5dc9f0ab8dd858ed89b62c74",
+    "scripts/external_world_repairs.py": "1fb23c278f396370a5d06a086502f7052c72f95d5700478a2025dbb803f89b3c",
+    "src/robot_lab_bringup/test/test_occupancy_slice.py": "39f92b2b2d6f146f29dffed44fd4d76e584ae7e393f56a1560a7b7c27dfaf15d",
+    "src/robot_lab_bringup/test/test_external_world_repairs.py": "08b3dc3ddb3dd0e64584ec1d5ab2f4794b244ed2dfdd231b13e3b1e47916916b",
+    "scripts/diagnose_scan_map_alignment.py": "d4298be6ad43323643a038124852c30c3c83165d1532b9d3a7fb2c82000531f1"
+  },
+  "installed_generator": {
+    "path": "install/robot_lab_maps/lib/robot_lab_maps/generate_occupancy_map.py",
+    "sha256": "459a97f69e7ff3cfab103c6d22facf352747455e5dc9f0ab8dd858ed89b62c74"
+  }
+}

@@ -62,6 +62,38 @@ real scans/depth and TF mounts, and retains the exact generated command and
 pre-trial source hashes. Extend a probe for the model's actual joint topology;
 do not borrow another robot's wheel names or sensor proof.
 
+## Next humanoid policy adapters
+
+The pinned [October 8 Unitree source review](status/evidence/extensions-finish-2026-10-08/policy-sources/source-review.json)
+records real checkpoint/configuration/native-model hashes at
+`276801e46c5d433564f24658bac64f254b7d2d4b`. Start with these exact native
+models and the upstream `deploy/deploy_mujoco/deploy_mujoco.py` contract.
+
+| Model | Actions / observations | Physics / decision period | Checkpoint |
+|---|---|---|---|
+| G1 | 12 / 47 | 2 ms / 20 ms | `deploy/pre_train/g1/motion.pt` |
+| H1 | 10 / 41 | 2 ms / 20 ms | `deploy/pre_train/h1/motion.pt` |
+| H1_2 | 12 / 47 | 2 ms / 20 ms | `deploy/pre_train/h1_2/motion.pt` |
+
+These are lower-body policy contracts, not arbitrary full-body URDF controllers.
+Read XML actuator/joint order and each configuration's gains, damping, nominal
+angles, action scale and command/observation normalization. The upstream
+example initializes forward velocity to 0.5 m/s; a Robot Lab adapter must
+initialize command to zero and use fresh operator input, bounded startup,
+watchdog and explicit fall handling. The existing
+`humanoid_policy_controller.py` wraps Berkeley Humanoid Lite, not every
+humanoid. Preserve that robot's working controller while adding a separate
+model-matched adapter. Do not replace its checkpoint or gains with Unitree's.
+
+The reviewed RL Gym snapshot lacks its configured Go2 checkpoint; do not
+manufacture one from another robot. Existing Robot Lab Go2/BHL policies and
+recorded limitations remain the baseline. The official
+[Unitree MuJoCo learning repository](https://github.com/unitreerobotics/unitree_rl_mjlab)
+and [MuJoCo Playground locomotion registry](https://github.com/google-deepmind/mujoco_playground/blob/main/mujoco_playground/_src/locomotion/__init__.py)
+provide further model-specific training/deployment candidates. They still
+need pinned files, checkpoint/license review and actual controller/physics
+acceptance before any GUI mode promotion.
+
 ## Stage 2: sensors and saved mapping
 
 Verify sensor mount transforms against the executed model, usable obstacle
@@ -142,3 +174,21 @@ model-matched legged policies, mobile manipulation, terrain/provider/actor
 behavior, wider world missions, flight-world qualification and clean-host
 reproduction. Continue those stages before older comparisons/performance
 work; retain the explicit gaps in [the checklist](status/CHECKLIST.md).
+
+## Diagnose the remaining Bumperbot hospital endpoint
+
+The matched MuJoCo motor gain/inertia repairs neutral/braking and the original
+large heading error. The extended normal GUI route still fails physical position
+at 0.175 m even though Nav2 returns success. The 0.03 m estimator-goal experiment
+times out at 0.233 m / 152.21°; restore the tested 0.07 m profile. Preserve both
+originals and keep the physical 0.15 m / 5° gate unchanged.
+
+Use `scripts/diagnose_scan_map_alignment.py` under Xvfb with sourced SSD/ROS
+environments, an isolated domain and one owned plant. It selects normal GUI
+Localization, sends no velocity/goal, collects synchronized real scan/body/AMCL
+poses and measures endpoint distance to the selected grid's occupied cells.
+This is a stationary diagnostic, not a navigation qualification. Check the
+selected map's slice height, source lidar mount, observed map/odom/body transforms,
+pose/twist integration and command/sensor cadence before tuning AMCL or DWB.
+Any accepted controller/localization change needs named normal-GUI body endpoint,
+heading, floor and cleanup repeats on the affected backend/map cells.

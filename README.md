@@ -124,21 +124,27 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ### Verification snapshot
 
-The predecessor `73fcc47` passes both required CI and Scheduled Full Test Suite
-after the shared-utilities import fix. Its [exact logs](docs/status/evidence/extensions-finish-2026-10-08/README.md)
+Published `4fe611a` passes required CI and Scheduled Full Test Suite after the
+MuJoCo 3.15 world-contact compatibility fix: 25 core packages, 27 physics and
+134 integration checks (13 skips), plus registry validation. Required fast:
+1002 pass / four skips; scheduled fast: 1003 pass / three skips; both four
+deselections. The predecessor `73fcc47` also passes after the shared-utilities import fix. Its [exact logs](docs/status/evidence/extensions-finish-2026-10-08/README.md)
 are separate from the newer runtime trials and final checkpoint checks.
 Earlier published `091d388` [remote CI](docs/status/evidence/ci-extensions-2026-10-07/README.md)
 passes a 25-package core build, **933 fast checks / four skips / four
 deselections**, **20 physics checks**, **134 integration checks / twelve
 skips**, and registry validation. The complete log and report are retained.
 
-The final rebuilt GUI has **94 passing local GUI checks** and five additional
+The October 7 rebuilt GUI has **94 passing local GUI checks** and five additional
 real-Tk layout checks. The preceding control-column stage has **936 fast
 passes / one skip / four deselections** and **146 integration passes**; those
 source stages remain distinct. The final normal Burger/PyBullet Drive and
 native Panda physical Plan/Execute repeats pass against the actual published
 GUI files. Read [GUI evidence](docs/status/evidence/gui-controls-column-2026-10-07/README.md)
-and [the current continuation](docs/status/continuation-2026-10-07.md).
+and [the current continuation](docs/status/continuation-2026-10-08.md).
+The October 8 local stage records 1005 fast, 104 GUI, 27 physics and 147
+dedicated-display integration passes. Occupancy v4 repairs omitted open wall
+chains; the current hospital map/navigation repeat is tracked in that checkpoint.
 
 The [evidence index](docs/status/runtime-evidence-index.yaml) retains individual
 hashed positive and negative trials; [the support matrix](docs/status/support-matrix.md)

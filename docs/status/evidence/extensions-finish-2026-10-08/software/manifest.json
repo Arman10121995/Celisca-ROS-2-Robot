@@ -1,7 +1,7 @@
 {
   "date": "2026-10-08",
   "revision": "73fcc47d40b8bf03f7ad2fe725da72283f97708c plus current working tree",
-  "qualification": "Software checks, not robot missions; final GUI/Health document links have later source compilation/build coverage. Body-frame supplemental test skipped because its PYTHONPATH override removed ROS imports; it is not a passed physics check.",
+  "qualification": "Software checks, not robot missions; final GUI/Health document links have later source compilation/build coverage. Supplemental body-frame fixture initially skipped with an incorrect PYTHONPATH override; corrected sourced repeat passes.",
   "artifacts": [
     {
       "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-build.log",
@@ -56,6 +56,48 @@
       "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/body-velocity-frame.log",
       "bytes": 99,
       "sha256": "5b107ce922c504f0580a7457bfad5aa3baa3780a9772831a9a1a1863ba3a45a8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/body-velocity-frame-sourced.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/body-velocity-frame-sourced.log",
+      "bytes": 98,
+      "sha256": "ad53ab05d354fd1d9cc8ec829a12b33f0faaa880da385e693f5830972392f9f5"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/ci-schema-build.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/ci-schema-build.log",
+      "bytes": 7369,
+      "sha256": "f8a3efac1abe3f97ddb1d38b144857fd3da47a2b5335aaad5def32a130bb6589"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/ci-schema-physics-local.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/ci-schema-physics-local.log",
+      "bytes": 163,
+      "sha256": "25103a15e94b34d21bafd6defad39d1849c57272f2a4d90c72c52298ec9ebf43"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/ci-schema-physics-315.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/ci-schema-physics-315.log",
+      "bytes": 163,
+      "sha256": "5e22573341dda092fd607e6c42e8603de2c64080e0701f09829d1e3fae7bbff0"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/ci-schema-mujoco315-install.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/ci-schema-mujoco315-install.log",
+      "bytes": 586,
+      "sha256": "7d97eaf0de378d45355892ca1710644ce0e5c00d1c6c57f0b3692d28de81b7ed"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/ci-runtime-physics-failure.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/ci-runtime-physics-failure.log",
+      "bytes": 8658,
+      "sha256": "a3bb2788234ec1e5cb252b957468b8565e1b690394b8a875214d3ec8409f28e8"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/final-entry-points.log",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/software/final-entry-points.log",
+      "bytes": 467,
+      "sha256": "fab949a9fd873704bb3b76daf840ea1e4082287da9607e62f8d4f5ced8235e2d"
     }
   ]
 }

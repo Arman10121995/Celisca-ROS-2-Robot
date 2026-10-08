@@ -3374,6 +3374,93 @@
       ]
     },
     {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/body.trace.json",
+          "sha256": "88853de2c017e3af7c093badde37019a92d4aa6939c6877fcbc8a39dd7499759",
+          "bytes": 1085310
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/check.log",
+          "sha256": "f65c809d659a0348a91a641516c84e98c9c187a8162d632060082a005c3c87d8",
+          "bytes": 983
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/gui-output.log",
+          "sha256": "576acaa3030ba0cfb282dbc9d96cd075d7793dd9cd80d880614e23fe517a2539",
+          "bytes": 93134
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/live-gui-output.log",
+          "sha256": "dab350c7f4a3fed78dbced5c3e1bc79848135fcdf13bae82ae9207ee0878170b",
+          "bytes": 92709
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/pre-trial.json",
+          "sha256": "c9022bb51a2af6e25c1d1a3e8daa009be7fa303457032b6bd9adabdf0c03d55a",
+          "bytes": 101386
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/rotor-extended/bumperbot-dataset_hospital-mujoco/report.json",
+          "sha256": "9083fe518df8977bce40cd81cb4ddb3544f8ec5667293c03b8873e0f5ddc1672",
+          "bytes": 104324
+        }
+      ]
+    },
+    {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco",
+      "archive": "docs/status/evidence/extensions-finish-2026-10-08/navigation/precise-goal/bumperbot-dataset_hospital-mujoco",
+      "artifacts": [
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/body.trace.json",
+          "sha256": "592dad376e8567f332d3aa730a61dee21e5354123989a411e164d14588b3f790",
+          "bytes": 2152722
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/check.log",
+          "sha256": "314ad62679d357b40a0e99e89c1138eb3f96282f8bb496ff7bffaf5c687e7b40",
+          "bytes": 995
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/gui-output.log",
+          "sha256": "20216600db286a5be3baa3e0f0e3da36a727dd74fb2a7442aeb0e342c1c7dbdd",
+          "bytes": 136696
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/live-gui-output.log",
+          "sha256": "bb86f5f44cffa95880159ec7a9fc69ea2f4e6338e3f84499c9c4b9f368c811cf",
+          "bytes": 136340
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/pre-trial.json",
+          "sha256": "ac329cc6e15a49818a802d209cc1680743ef9168f9e818d4ea3b0176159a090f",
+          "bytes": 101386
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/producer.py",
+          "sha256": "5ff2df95bf6df7385ef20436bff2aaa8ed2e1fab8129d1a2a888127f493c75e0",
+          "bytes": 7248
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/report.json",
+          "sha256": "001417112ceb2811563fd7453d1e1fd729b8a364f10a3a0cf780ca700724c655",
+          "bytes": 104349
+        },
+        {
+          "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/navigation/precise-goal/bumperbot-dataset_hospital-mujoco/running-goal-parameters.json",
+          "sha256": "46f0d3394967ef97adc7c8937f2550fa68809d3c9bbe7d20d49c1862a44c39a9",
+          "bytes": 304
+        }
+      ]
+    },
+    {
       "raw_directory": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/husky/normal-production-navigation",
       "archive": "docs/status/evidence/extensions-finish-2026-10-08/husky/normal-production-navigation",
       "artifacts": [
@@ -4050,5 +4137,5 @@
       ]
     }
   ],
-  "indexed_records": 72
+  "indexed_records": 74
 }

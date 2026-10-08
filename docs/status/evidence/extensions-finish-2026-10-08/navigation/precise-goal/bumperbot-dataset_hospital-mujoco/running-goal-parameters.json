@@ -1,0 +1,9 @@
+{
+  "scope": "Read-only parameter service on the current owned plant; unchanged physical endpoint gate.",
+  "domain": 224,
+  "controller_parameters": {
+    "general_goal_checker.xy_goal_tolerance": 0.03,
+    "FollowPath.xy_goal_tolerance": 0.03,
+    "general_goal_checker.yaw_goal_tolerance": 0.03
+  }
+}

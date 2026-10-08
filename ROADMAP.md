@@ -250,7 +250,11 @@ fast, physics, integration and registry checks. The published `091d388`
 control-column/TurtleBot3/Registry revision also passes the full core build,
 933 fast checks (four skips/four deselections), 20 physics checks, 134 integration
 checks (twelve skips) and registry validation. Local GUI/mission evidence remains
-separate. Later runtime changes need their own CI observation. See
+separate. The October 8 published `4fe611a` compatibility repair passes both workflows
+with 27 real physics and 134 integration checks (13 skips). The occupancy-v4
+follow-up repairs omitted open mesh wall chains, invalidates old caches, and
+requires actual regenerated-grid/normal navigation validation. Later runtime
+changes need their own CI observation. See
 [CI evidence](docs/status/evidence/ci-extensions-2026-10-07/README.md).
 
 ### R1.3 — Make CI bootstrap and doctor trustworthy

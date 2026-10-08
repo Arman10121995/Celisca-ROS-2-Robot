@@ -1,0 +1,110 @@
+{
+  "scope": "Real stationary lidar/map diagnostic and real corrected export; no navigation qualification. Raw traces/masks retained on SSD.",
+  "artifacts": [
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco/gui-output.log",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco/producer.py",
+      "bytes": 8421,
+      "sha256": "9af5697f7fad1b9b1e7a8b2d42c5faa7aefb97539678b89394e5b49507486ea0"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco/report.json",
+      "bytes": 1088,
+      "sha256": "248d4f1ec60ad689bac9885b380199458fd552c1ba1336f07b2cbd5b7d30b4b3"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco/scan-pose-trace.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/gui-output.log",
+      "bytes": 17155,
+      "sha256": "01257bfde510b40a391e62c5f5abe6ed1ef5a0407d1af9b051b68217c70660d2"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/pre-trial.json",
+      "bytes": 2123,
+      "sha256": "d24d650cfea7af961135ee4844acb968364a96cce1e85593963dc39276fbe7e3"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/producer.py",
+      "bytes": 8626,
+      "sha256": "1d90f07adf3da35e56e80cbaded80101ad2108246761d5063522bccddadb5996"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/report.json",
+      "bytes": 3488,
+      "sha256": "99e6ac94aa807ec011c6a7f21ca9a6d5a36bbc781241908658e5310e99af21bb"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/scan-pose-trace.json",
+      "bytes": 194000,
+      "sha256": "a13a7cfef544a1ef8975d4cb32d50a090cb8a982f2489f02f5d8c37db887b637"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/slice-0.1423/mapping.collision-mask",
+      "bytes": 216672,
+      "sha256": "82b2a89f3ce20af9d64c91ab7a6148711613f636dd3bf318b7bfa4ef37b94437"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/slice-0.1423/mapping.sdf",
+      "bytes": 1211,
+      "sha256": "b80a085d89ec374c104b0f13957a63688bfe79f314af12d9411941ad234b2fb4"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/slice-0.3/mapping.collision-mask",
+      "bytes": 216672,
+      "sha256": "4e7b2378152010913f2b004585fef8d40feff94b40dbc036c48a684df7b918d5"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/slice-0.3/mapping.sdf",
+      "bytes": 1189,
+      "sha256": "d47a460610e6e3ec5eeb561bc3864d613da833dbbe75bdd5bef1d5dee633f19d"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/slice-comparison.json",
+      "bytes": 38862,
+      "sha256": "e70cd2eeef358a01dedf63b0b21e837cd26c4e41350e9c25e356822e97507a41"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/world-only-ray-hits.json",
+      "bytes": 6410,
+      "sha256": "d3c6b611866be744635537f3bb7536459c2a4e9b0bdc1397e9aa374d33752056"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/mapping.sdf",
+      "bytes": 1196,
+      "sha256": "a1d34243ee249d53ce47fc4a66b4f4989d504170accd1037add26ccf77e9c58c"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.pgm",
+      "bytes": 216679,
+      "sha256": "98ddc00ae69cbd8bedf2d274ff193fac2a5385ce507461b762a28dee9f150087"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/gazebo.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/mapping.collision-mask",
+      "bytes": 216672,
+      "sha256": "f4b123b6dd5f1a12991e8b1bf4859f52f77804cefb33ec7da75381dcdb7f42a5"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.generation.json",
+      "bytes": 19369,
+      "sha256": "e87f94b68a84a7f29129349957f7d2bd2c358e0a2d87bfaafd02d4159af875af"
+    },
+    {
+      "raw": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.yaml",
+      "bytes": 123,
+      "sha256": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c"
+    }
+  ]
+}

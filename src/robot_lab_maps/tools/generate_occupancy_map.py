@@ -65,10 +65,12 @@ def slice_mesh(shape,height,resolution):
     mesh=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
     mesh.apply_scale(shape['scale'])
     mesh.apply_transform(world_transform(shape))
-    section=mesh.section(plane_origin=[0,0,height],plane_normal=[0,0,1])
-    if section is None:
-        return [],mesh.bounds
-    return list(section.discrete),mesh.bounds
+    # Path.discrete contains closed paths only. Open wall sheets and
+    # nonmanifold junctions therefore disappeared from imported floor plans.
+    # Rasterize every real triangle/plane segment, including open chains.
+    segments=trimesh.intersections.mesh_plane(mesh,plane_origin=[0,0,height],
+                                            plane_normal=[0,0,1])
+    return list(segments),mesh.bounds
 
 
 def prepare_mapping_world(source,destination,output,resolution,height,seed):
@@ -159,7 +161,7 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
     return {'source_world':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
             'mesh_sha256':mesh_files,'mesh_slice_paths':len(mesh_paths),
             'mesh_mask_cells':int(np.sum(np.asarray(mask)>0)),'collision_count':len(projected),
-            'projection_recipe':'complete-static-height-slice-v3',
+            'projection_recipe':'complete-static-height-slice-v4',
             'terrain_slice_polygons':len(terrain_polygons),
             'heightfield_count':sum(1 for s in shapes if s['type']=='heightmap'),
             'resolution_m':resolution,'slice_height_m':height,'seed_xy':seed,'skipped_dynamic_actors':skipped,

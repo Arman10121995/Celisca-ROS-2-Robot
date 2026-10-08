@@ -9,7 +9,7 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 The [generated measured matrix](evidence/extensions-finish-2026-10-08/support-matrix-current.md)
 and [JSON report](evidence/extensions-finish-2026-10-08/support-matrix-current.json)
-validate **194 indexed reports / 146 distinct measured cells**. The latest
+validate **196 indexed reports / 146 distinct measured cells**. The latest
 measurement for an exact robot/map/backend/task/steering cell controls its
 record. Unlisted combinations are **not tested**. All full-release gates
 remain blocked by unfinished robot, world, algorithm, backend and reproduction

@@ -15,7 +15,7 @@ def cached_occupancy_matches(report, source_sha256, seed):
     """Invalidate a real export when any referenced geometry changes in place."""
     try:
         if (report.get('source_sha256') != source_sha256 or report.get('seed_xy') != seed
-                or report.get('projection_recipe') != 'complete-static-height-slice-v3'):
+                or report.get('projection_recipe') != 'complete-static-height-slice-v4'):
             return False
         artifacts = report.get('artifact_sha256', {})
         if not {'.pgm','.yaml'} <= set(artifacts):

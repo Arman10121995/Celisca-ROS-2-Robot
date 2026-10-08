@@ -1,0 +1,104 @@
+{
+  "robot": "bumperbot",
+  "backend": "mujoco",
+  "map": "dataset_hospital",
+  "scope": "Read-only stationary normal-GUI localization diagnostic; no navigation or motion qualification.",
+  "revision": "4fe611aee7471782cf424fd030a3e85ccae2c85b",
+  "domain": "222",
+  "completed": true,
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot simulator:=mujoco use_sim_time:=true map_name:=dataset_hospital world_package:=robot_lab_maps world_name:=dataset_hospital world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/worlds/dataset_hospital.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114926-16f8b9/dataset_hospital.yaml mode:=loc gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "laser_mount": [
+    [
+      -0.0050526,
+      -0.0023221,
+      0.1538
+    ],
+    [
+      0.0007963267107332633,
+      0.0,
+      0.0,
+      0.9999996829318346
+    ]
+  ],
+  "map_files": {
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114926-16f8b9/dataset_hospital.yaml": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c",
+    "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114926-16f8b9/dataset_hospital.pgm": "24634da24262b60572b0adc427815ffd49517893d8db84e0486a2386cad694c8"
+  },
+  "source_files": {
+    "/workspace/molar/ros_ws/bumperbot_ws/scripts/diagnose_scan_map_alignment.py": "1d90f07adf3da35e56e80cbaded80101ad2108246761d5063522bccddadb5996",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+    "src/robot_lab_localization/config/robots/bumperbot.yaml": "8b83266b30f65801a8cd931ab0555b81277e5dc6a39ef599c13263b1cd92dc20"
+  },
+  "owned_pid": 255943,
+  "endpoint_distance_to_occupied_cell_m": {
+    "truth": {
+      "samples": 6462,
+      "median": 0.8038185297178424,
+      "p90": 3.9061628834249467,
+      "within_two_cells": 0.3136799752398638
+    },
+    "amcl": {
+      "samples": 6462,
+      "median": 0.7925712025565904,
+      "p90": 3.912231463646063,
+      "within_two_cells": 0.3031569173630455
+    }
+  },
+  "last_poses": {
+    "truth": {
+      "stamp_s": 4.495999999,
+      "position": [
+        0.55010275951286,
+        12.450018107915941,
+        -0.01145173607304704
+      ],
+      "quaternion": [
+        0.9999988194472736,
+        -0.0001132757458647144,
+        3.165365131997183e-07,
+        0.0015324074407116381
+      ]
+    },
+    "filtered": {
+      "stamp_s": 4.471999999,
+      "position": [
+        0.00010408352037181388,
+        -0.00024232079933999618,
+        0.0
+      ],
+      "quaternion": [
+        0.9999987723833933,
+        0.0,
+        0.0,
+        0.001566917900332116
+      ]
+    },
+    "amcl": {
+      "stamp_s": 0.224,
+      "position": [
+        0.5500000000000556,
+        12.450000000000951,
+        0.0
+      ],
+      "quaternion": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "keyboard_commands": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "launch_returncode": 0
+}

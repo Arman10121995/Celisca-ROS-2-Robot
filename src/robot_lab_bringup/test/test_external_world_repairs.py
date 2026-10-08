@@ -77,9 +77,11 @@ def test_occupancy_cache_rejects_changed_geometry_and_missing_artifact(tmp_path)
     image = output.with_suffix('.pgm');image.write_bytes(b'P5\n1 1\n255\n\xff')
     sha = lambda path: repairs.hashlib.sha256(path.read_bytes()).hexdigest()
     report = dict(source_sha256='world-sha',seed_xy=[1,2],output_yaml=str(output),
-        projection_recipe='complete-static-height-slice-v3',mesh_sha256={str(mesh):sha(mesh)},
+        projection_recipe='complete-static-height-slice-v4',mesh_sha256={str(mesh):sha(mesh)},
         artifact_sha256={'.yaml':sha(output),'.pgm':sha(image)})
     assert repairs.cached_occupancy_matches(report,'world-sha',[1,2])
+    assert not repairs.cached_occupancy_matches(
+        dict(report, projection_recipe='complete-static-height-slice-v3'),'world-sha',[1,2])
     mesh.write_text('changed geometry at the same URI')
     assert not repairs.cached_occupancy_matches(report,'world-sha',[1,2])
     report['mesh_sha256'][str(mesh)] = sha(mesh)

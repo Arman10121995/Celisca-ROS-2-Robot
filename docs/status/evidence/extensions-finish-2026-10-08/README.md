@@ -125,3 +125,39 @@ The earlier desktop compact-window failure, isolated pass and dedicated-display
 repeat remain distinct stages. CMake reports missing pytest discovery on this
 host; the recorded direct tier commands actually execute pytest. These checks
 are separate from mission proof and CI of the forthcoming published revision.
+
+## MuJoCo 3.15 CI compatibility repair
+
+Published `cbf98cb` failed both required CI `37832825040` and scheduled CI
+`37832873789`: two real floor/wall collision cases rejected the deprecated
+`flex/contact internal` attribute. [MuJoCo 3.15 removed that option](https://mujoco.readthedocs.io/en/stable/changelog.html#version-3-15-0-october-5-2026).
+The compatible importer omits it on engines whose internal contacts already
+default to disabled, retaining the explicit opt-out before 3.3.1. The original
+contacts and geometry remain. All **27 physics checks pass** separately on host
+3.12 and an isolated SSD installation of 3.15.
+
+[Build/local physics](software/ci-schema-physics-local.log),
+[3.15 physics](software/ci-schema-physics-315.log) and
+[original required failure](software/ci-runtime-physics-failure.log) are retained.
+The fix is published as `4fe611a`; both [required CI 37835509680](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37835509680) and [scheduled CI 37835509978](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37835509978) pass. Complete logs, counts and failures are retained in [the CI manifest](ci/manifest.json).
+The reverted tighter hospital-goal experiment remains
+[an original failed trial](navigation/precise-goal/bumperbot-dataset_hospital-mujoco/report.json).
+
+## Open mesh walls in generated occupancy
+
+[The actual stationary scan diagnostic](scan-map-alignment/bumperbot-hospital-mujoco-resolved/report.json)
+records 20 synchronized scans / 6,462 finite endpoints with no initial keyboard
+commands and a zero owned launch exit. Its first failed path-resolution probe
+never starts a plant and is preserved. Open wall chains were discarded by
+`Path.discrete`, which contains closed paths; the corrected generator uses all
+triangle/plane intersection segments. [24 actual slice/cache checks](scan-map-alignment/open-wall-cache-final-tests.log)
+pass, including the rotated open wall and rejection of old v3 cache metadata.
+
+[The real v4 export](scan-map-alignment/corrected-grid/dataset_hospital.generation.json)
+contains 108,552 free / 13,108 occupied / 95,004 unknown cells. Against the same
+actual sensor/body trace, median endpoint distance improves from 0.804 to
+0.071 m; endpoints within two 0.1 m cells increase from 31.4% to 82.0%.
+[The exact comparison](scan-map-alignment/endpoint-comparison.json) retains both
+PGM/trace hashes. Unknown regions, slice-height differences and floor travel
+still matter. The corrected hospital grid is installed; the unchanged normal
+GUI navigation repeat is active. Other v3 exports need regeneration/review.

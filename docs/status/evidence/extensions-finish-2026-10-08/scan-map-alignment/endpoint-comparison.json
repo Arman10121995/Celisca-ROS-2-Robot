@@ -1,0 +1,43 @@
+{
+  "closed-path-v3": {
+    "yaml": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-114926-16f8b9/dataset_hospital.yaml",
+    "image_sha256": "24634da24262b60572b0adc427815ffd49517893d8db84e0486a2386cad694c8",
+    "samples": 6462,
+    "median_m": 0.8038185297178424,
+    "p90_m": 3.9061628834249467,
+    "within_two_cells": 0.3136799752398638,
+    "endpoint_cell_counts": {
+      "0": 1426,
+      "205": 251,
+      "254": 4785
+    },
+    "grid_cells": {
+      "0": 5199,
+      "205": 5574,
+      "254": 205891
+    }
+  },
+  "all-segments-v4": {
+    "yaml": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.yaml",
+    "image_sha256": "98ddc00ae69cbd8bedf2d274ff193fac2a5385ce507461b762a28dee9f150087",
+    "samples": 6462,
+    "median_m": 0.07122467787234782,
+    "p90_m": 1.4412721299179996,
+    "within_two_cells": 0.8204890126895698,
+    "endpoint_cell_counts": {
+      "0": 2352,
+      "205": 2718,
+      "254": 1392
+    },
+    "grid_cells": {
+      "0": 13108,
+      "205": 95004,
+      "254": 108552
+    }
+  },
+  "scope": "Same 20 actual stationary body/scan samples compared offline with old and actual regenerated grids. No navigation claim.",
+  "trace": {
+    "path": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/scan-map-alignment/bumperbot-hospital-mujoco-resolved/scan-pose-trace.json",
+    "sha256": "a13a7cfef544a1ef8975d4cb32d50a090cb8a982f2489f02f5d8c37db887b637"
+  }
+}

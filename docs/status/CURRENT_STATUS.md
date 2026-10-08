@@ -33,7 +33,7 @@ tool XYZ and 1 cm target buttons with separate Plan/Execute. The normal native
 Panda/MuJoCo repeat passes submillimetre TCP errors, collision/reach rejection,
 interruptions/reset and physical cube lift/release. Read the updated
 [Panda](../tutorials/panda_arm.md) and [Drone](../tutorials/px4_x500.md) guides.
-Bumperbot/MuJoCo hospital navigation retains an earlier heading failure; the matched-servo repeat improves heading but times out, so route qualification remains open.
+Bumperbot/MuJoCo hospital navigation retains failed body endpoints and the reverted 0.03 m goal experiment. The stationary lidar diagnostic identifies omitted open wall chains; corrected occupancy v4 improves measured grid alignment, and the unchanged normal navigation repeat is active.
 
 ## Measured work and its limits
 
@@ -80,7 +80,7 @@ previews, catalog counts and unit tests are separate from mission evidence.
 | Remote CI at `091d388` | 25-package core build; 933 fast passed/four skips/four deselections; 20 physics passed; 134 integration passed/12 skips; registry validation passed | Exact published source on the CI host, optional `orbslam3` excluded; no robot mission qualification |
 | Installed/published parity | Twelve GUI/runtime files match the published revision | [Actual hashes](evidence/gui-controls-column-2026-10-07/published-source.json) |
 
-The predecessor `73fcc47` also passes required CI and Scheduled Full Test Suite
+Published `4fe611a` passes required/scheduled CI (25 packages; required fast 1002/four skips, scheduled fast 1003/three skips; 27 physics; 134 integration/13 skips; registry) after the MuJoCo 3.15 repair. The predecessor `73fcc47` also passes required CI and Scheduled Full Test Suite
 after the shared-utilities import fix. [October 8 evidence](evidence/extensions-finish-2026-10-08/README.md)
 retains those exact complete logs separately from the final runtime checks. Local tests, remote CI and simulator trials keep
 separate source stages and skip/failure records. Clean-host mission reproduction,

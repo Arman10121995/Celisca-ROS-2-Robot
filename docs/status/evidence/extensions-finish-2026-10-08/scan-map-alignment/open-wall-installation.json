@@ -1,0 +1,20 @@
+{
+  "original_generation_report": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/open-wall-generation/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.generation.json",
+  "installed_generation_report": "/workspace/molar/robot_lab_runtime/external_assets/worlds/dataset_hospital/9d26e1f41cd7979bbee66ed852e7ef316e22b19f/maps/dataset_hospital-20261008-221150-9eccfa/dataset_hospital.generation.json",
+  "grid_sha256": {
+    ".yaml": "270aaf6b7765f5fcbdb2ebfa7a7894f96694322efea907c9c1c1c308a7d5a25c",
+    ".pgm": "98ddc00ae69cbd8bedf2d274ff193fac2a5385ce507461b762a28dee9f150087"
+  },
+  "updated_profiles": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/installed/maps.yaml",
+      "before_sha256": "d1dc94dd9e18a94ca2337ffaa67ee9a2543d1f5ac828da5f5d3b10a5494f161c",
+      "after_sha256": "e4ad90263125dcce6d8caeb51b16ed54ec550e5a43102d63c0f42edf4e17118b"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/installed/registry_maps.yaml",
+      "before_sha256": "924fdb590fe305acf123a2eeafd05db5d6b644d6c54c6ffa783d7a91cd963e8c",
+      "after_sha256": "0b059c14254231811e5d6a2f3b7303154ab63f4fd8f678aa5fcea542ca9d95d3"
+    }
+  ]
+}

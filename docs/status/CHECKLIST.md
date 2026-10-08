@@ -231,5 +231,4 @@ and [ASSET_EXTENSION_GUIDE](../ASSET_EXTENSION_GUIDE.md) for pinned upstreams,
 implementation order and acceptance. Claim ownership in the ledger before
 changing shared files; record the exact robot/map/backend/task/source and
 measured artifacts when checking an item off. The Bumperbot/MuJoCo hospital heading failure is retained; its matched-servo
-repeat improves heading but times out, so the route and remaining two-base/
-two-hospital/backend cells stay open; Nav2 success alone remains insufficient.
+repeat reaches Nav2 success at 0.175 m / 0.82°, outside the unchanged 0.15 m body gate. Tightening the estimator goal to 0.03 m times out at 0.233 m / 152.21° and is reverted. This route and the remaining two-base/two-hospital/backend cells stay open; Nav2 success alone remains insufficient.

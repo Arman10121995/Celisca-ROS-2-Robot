@@ -1,0 +1,54 @@
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	﻿2026-10-08T19:46:07.7663398Z ##[group]Run source /opt/ros/humble/setup.bash
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7663713Z ^[[36;1msource /opt/ros/humble/setup.bash^[[0m
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7663955Z ^[[36;1msource install/setup.bash^[[0m
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7664195Z ^[[36;1mbash scripts/test_tiers.sh physics^[[0m
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7733434Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7733726Z env:
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7733897Z   LANG: en_US.UTF-8
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:07.7734067Z ##[endgroup]
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:08.1094776Z === Tier: physics (6 test files) ===
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1781613Z .........................FF                                              [100%]
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1782237Z =================================== FAILURES ===================================
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1782875Z _________________ test_open_room_keeps_floor_and_wall_contacts _________________
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1783110Z 
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1783321Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-1/test_open_room_keeps_floor_and0')
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1783647Z 
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1783780Z     def test_open_room_keeps_floor_and_wall_contacts(tmp_path):
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1784064Z         walls = trimesh.util.concatenate([
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1784757Z             trimesh.creation.box([.1, 4, 1], transform=trimesh.transformations.translation_matrix([x, 0, .5]))
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1785163Z             for x in [-2, 2]])
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1785389Z         mesh = tmp_path / 'walls.stl'; walls.export(mesh)
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1785735Z         root = ET.fromstring(f'''<mujoco><asset><mesh name="walls" file="{mesh}"/></asset>
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1786130Z           <worldbody><geom type="plane" size="5 5 .1"/><geom type="mesh" mesh="walls"/>
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1786517Z           <body pos="0 0 1"><freejoint/><geom type="sphere" size=".1" mass="1"/></body>
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1786827Z           </worldbody></mujoco>''')
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1787060Z         assert add_static_mesh_collisions(root) == 1
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1787382Z >       model = mujoco.MjModel.from_xml_string(ET.tostring(root, encoding='unicode'))
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1787785Z E       ValueError: XML Error: Schema violation: unrecognized attribute: 'internal'
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1788091Z E       Element 'contact', line 4
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1788223Z 
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1788375Z src/robot_lab_bringup/test/test_mujoco_world_collision.py:24: ValueError
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1788753Z __________ test_open_planar_static_mesh_compiles_and_supports_a_body ___________
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1788982Z 
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1789165Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-1/test_open_planar_static_mesh_c0')
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1789408Z 
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1789561Z     def test_open_planar_static_mesh_compiles_and_supports_a_body(tmp_path):
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1789912Z         floor = trimesh.Trimesh(vertices=[[-2, -2, 0], [2, -2, 0],
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1790187Z                                          [2, 2, 0], [-2, 2, 0]],
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1790451Z                                faces=[[0, 1, 2], [0, 2, 3]], process=False)
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1790747Z         path = tmp_path/'open-floor.stl'; floor.export(path)
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1791092Z         root = ET.fromstring(f'''<mujoco><asset><mesh name="floor" file="{path}"/></asset>
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1791425Z           <worldbody><geom type="mesh" mesh="floor"/>
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1791727Z           <body pos="0 0 1"><freejoint/><geom type="sphere" size=".1" mass="1"/></body>
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1792023Z           </worldbody></mujoco>''')
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1792252Z         assert add_static_mesh_collisions(root) == 1
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1792570Z >       model = mujoco.MjModel.from_xml_string(ET.tostring(root, encoding='unicode'))
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1792971Z E       ValueError: XML Error: Schema violation: unrecognized attribute: 'internal'
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1793295Z E       Element 'contact', line 4
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1793432Z 
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1793581Z src/robot_lab_bringup/test/test_mujoco_world_collision.py:47: ValueError
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1794174Z =========================== short test summary info ============================
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1795132Z FAILED src/robot_lab_bringup/test/test_mujoco_world_collision.py::test_open_room_keeps_floor_and_wall_contacts
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1795976Z FAILED src/robot_lab_bringup/test/test_mujoco_world_collision.py::test_open_planar_static_mesh_compiles_and_supports_a_body
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.1796570Z 2 failed, 25 passed in 0.93s
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-10-08T19:46:09.4197964Z ##[error]Process completed with exit code 1.
