@@ -168,8 +168,8 @@ sources/negative artifacts and work directly on `master`.
 
 ## Current CI and occupancy follow-up
 
-Published occupancy-v4 revision `ca65f35` passes both required and scheduled
-CI: 25 packages, 27 physics checks, 134 integration checks (13 skips) and
+Published runtime revision `f74b53f` passes both required and scheduled
+CI: 25 packages, 27 physics checks, 138 integration checks (13 skips) and
 registry validation. Required fast: 1002 passed / five skips; scheduled fast:
 1004 passed / three skips; both four deselections. The preceding MuJoCo 3.15
 compatibility stage `4fe611a` and original failures retain separate full logs.

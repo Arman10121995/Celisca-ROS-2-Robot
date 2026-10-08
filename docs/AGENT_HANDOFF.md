@@ -66,7 +66,8 @@ the current checkpoint. Controllers are qualified within their named screens; re
 hospital/Gazebo and Husky torque-envelope trials. Shared controller changes
 require current physical regression evidence before refreshing source guards.
 
-Published **`ca65f35`** occupancy-v4 source passes required and scheduled CI;
+Published **`f74b53f`** map/camera runtime source passes required and scheduled CI;
+prior **`ca65f35`** occupancy-v4 passes separately;
 preceding **`4fe611a`** passes after the MuJoCo 3.15 flex-contact XML repair. Predecessor **`73fcc47`** passes after the
 shared-utilities import repair. The occupancy-v4 lane fixes discarded open mesh wall chains. All 17 installed
 extension grids have actual new exports with unchanged worlds/spawns and GUI

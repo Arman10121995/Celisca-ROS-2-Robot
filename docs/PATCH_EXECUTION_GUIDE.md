@@ -135,6 +135,35 @@ inference and PD cadence and repeat P1's matched trials. Require both improved
 real-time factor and unchanged safety/motion acceptance. CPU utilization alone
 is not a speed result.
 
+The October 8 packing optimization is lossless: four ROS wire cases and the
+full 151-case local integration tier pass; actual Labbot navigation meets the
+unchanged physical endpoint gates. Whole-simulator clock windows remain about
+0.13×. The actual native stage counters average 10.794 ms per step, including
+9.353 ms kinematics, 1.234 ms collision and 0.016 ms constraints. All 200 rigid
+world flexes contain 109,918 world-bound vertices. Static-world update is the
+leading candidate inferred from those measurements. The isolated 3.15 trial
+shows no speed gain; keep the default 3.12 environment.
+
+For the next P4 patch:
+
+1. Reproduce the real initialized `(0.55, 12.45, 0.1)` launch and retained
+   [native-timer hook](status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/native-loop/sitecustomize.py).
+   Saved model XML alone loses the runtime spawn; preserve the earlier offline
+   default-pose result as a separate diagnostic.
+2. Inspect the rigid-world kinematic/flex update or lossless collision-mesh
+   simplification. Preserve original visual/sensor surfaces and compare actual
+   floor, wall and furniture contacts. Do not skip dynamic body kinematics,
+   alter actuator/solver limits or reduce sensing merely to raise a rate.
+3. Measure repeated matched clock windows and native stages, with identical
+   map, robot, engine, viewer, camera/scan rates and background workload.
+   Record callback/profiling overhead separately from ordinary operation.
+4. Require both a reproducible real-time-factor improvement and unchanged
+   normal GUI forward/reverse/turn/Stop/loss/reset, independent body/floor,
+   sensor calibration and short/obstacle navigation gates. If shared effort
+   timing or engine behavior changes, repeat P1's BHL/Go2 hold/walk/stop checks.
+   Retain every failed candidate; one successful static timing probe cannot
+   qualify a robot mission or the full roadmap.
+
 ## P5: four-wheel steering
 
 Existing code is in `robot_lab_utils/drive_kinematics.py`,

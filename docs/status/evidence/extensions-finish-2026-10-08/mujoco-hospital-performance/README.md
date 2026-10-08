@@ -70,3 +70,30 @@ The [source/profile comparison](source-stage.json) verifies that only
 [76 actual normal GUI selections](gui-report.json) preserve measured
 Husky/TurtleBot3/4 modes and autofilled commands, and Health displays P4 as
 partial with the real measurements. No robot is launched by that GUI check.
+
+## Native stages with the actual launch pose
+
+The [normal GUI native-timer observation](native-loop/report.json) starts at
+the real (0.55, 12.45, 0.1) pose and receives 20 stationary scans with zero
+root exit. Its [hook](native-loop/sitecustomize.py) uses the documented
+[MuJoCo timing callback](https://mujoco.readthedocs.io/en/stable/APIreference/APIglobals.html#mjcb-time)
+with seconds as the explicit unit; no cProfile runs in this stage.
+2,268 actual steps average 10.794 ms: kinematics 9.353 ms, collision 1.234 ms,
+constraint solve 0.016 ms. These nested counters are not additive.
+All 200 world flexes are rigid, with 109,918 world-bound vertices / 193,876
+elements. The large rigid-world update is the leading optimization candidate;
+that attribution is an inference from the timed stage and model counts, not
+a validated engine repair. Physical geometry/control fidelity must remain.
+
+The retained [earlier offline replay](offline-native-timers.json) also measures
+real native steps, but starts at the compiled model’s default pose near the
+origin. Saved MJCF does not retain the launch’s runtime spawn state. It is
+not the normal launch or a robot/navigation/RTF qualification; use the real
+launch observation above for the current diagnosis.
+
+The separately [isolated MuJoCo 3.15 trial](native-loop-315/report.json) uses
+the same source, real initialization and geometry/sensor settings, receives
+20 stationary scans and exits with root zero. It averages 11.687 ms per native
+step, including 9.409 ms kinematics and 2.072 ms collision. No speed benefit is
+observed in this named comparison. The default engine remains 3.12; no new
+3.15 walk/navigation/default capability is granted.

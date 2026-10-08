@@ -146,6 +146,9 @@ the older roadmap. Existing stabilization fixes must remain working.
 - [x] Remove per-byte camera packing overhead with byte-identical ROS wire
   messages. Four serialization cases and a new native Labbot hospital route
   pass; actual clock windows remain about 0.13×, so P4 is still partial.
+- [x] Publish map/camera source `f74b53f` on master with both exact CI runs
+  passing: 25 packages, 27 physics, 138 integration / 13 skips and registry;
+  89 listed installed Python modules match. Historical failures remain.
 - [x] Repair Scheduled Full Test Suite registry imports; exact CI-only `73fcc47`
   passes required and scheduled workflows. New runtime source has separate
   final checks/publication in the October 8 archive.

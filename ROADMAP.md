@@ -265,6 +265,10 @@ and passes four ROS wire cases plus a new physical Labbot hospital route.
 Its construction overhead is reduced, but actual clock windows remain about
 0.13× real time. Native-step performance and the full release remain open.
 [Timing evidence](docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).
+The complete map/camera source `f74b53f` passes both exact workflows with
+25 packages, 27 physics, 138 integration / 13 skips and registry; fast
+1002/five skips required and 1004/three skips scheduled. Named missions and
+all full-release gaps remain separate.
 
 ### R1.3 — Make CI bootstrap and doctor trustworthy
 

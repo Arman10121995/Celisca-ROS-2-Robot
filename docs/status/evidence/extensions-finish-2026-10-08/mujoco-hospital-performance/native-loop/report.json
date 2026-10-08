@@ -1,0 +1,155 @@
+{
+  "scope": "Native timers on actual normal GUI Labbot/MuJoCo/hospital v4 stationary loop. Real launch initialization and unchanged sensing/physics/controllers; timing callback overhead retained. No mission or whole-RTF qualification.",
+  "engine_version": "3.12.0",
+  "timer_unit": "seconds",
+  "timer_callback": "time.perf_counter",
+  "source_sha256": "720262398129dc76c4def50d7b4674abaae05ccb93198eb59a0416cb3b984f55",
+  "hook_sha256": "9665b5e88307a7d5d2be6bdd1ad1062ac1f1c6f455ce867738290c34f9cb4928",
+  "argv": [
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco/mujoco_spawner",
+    "--ros-args",
+    "-r",
+    "__node:=mujoco_spawner",
+    "--params-file",
+    "/workspace/molar/robot_lab_runtime/tmp/launch_params_68hskpm0"
+  ],
+  "model_counts": {
+    "nbody": 4,
+    "ngeom": 191,
+    "nmesh": 64,
+    "nflex": 200,
+    "nflexvert": 109918,
+    "nflexelem": 193876
+  },
+  "flex_rigid_count": 200,
+  "world_bound_flex_vertices": 109918,
+  "initial_state": {
+    "qpos": [
+      0.55,
+      12.450000000000001,
+      0.1,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "qvel": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ctrl": [
+      0.0,
+      0.0
+    ]
+  },
+  "spawn_parameters": {
+    "spawn_x": 0.55,
+    "spawn_y": 12.450000000000001,
+    "spawn_z": 0.1,
+    "spawn_yaw": 0.0
+  },
+  "sensor_parameters": {
+    "scan_rate": 5.0,
+    "scan_samples": 360,
+    "camera_rate": 5.0,
+    "camera_width": 320,
+    "camera_height": 240
+  },
+  "start_sim_s": 0.0,
+  "viewer_present": false,
+  "wall_s": 32.265695620997576,
+  "end_sim_s": 4.5359999999997225,
+  "timers": {
+    "mjTIMER_STEP": {
+      "total_s": 24.480638398053998,
+      "calls": 2268,
+      "mean_ms": 10.79393227427425
+    },
+    "mjTIMER_FORWARD": {
+      "total_s": 24.433104641342652,
+      "calls": 2268,
+      "mean_ms": 10.772973827752493
+    },
+    "mjTIMER_INVERSE": {
+      "total_s": 0.0,
+      "calls": 0,
+      "mean_ms": null
+    },
+    "mjTIMER_POSITION": {
+      "total_s": 24.100146128977944,
+      "calls": 2268,
+      "mean_ms": 10.626166723535249
+    },
+    "mjTIMER_VELOCITY": {
+      "total_s": 0.2417169920518063,
+      "calls": 2268,
+      "mean_ms": 0.10657715698933258
+    },
+    "mjTIMER_ACTUATION": {
+      "total_s": 0.009695172069768887,
+      "calls": 2268,
+      "mean_ms": 0.004274767226529492
+    },
+    "mjTIMER_CONSTRAINT": {
+      "total_s": 0.035996838079881854,
+      "calls": 2268,
+      "mean_ms": 0.015871621728342968
+    },
+    "mjTIMER_ADVANCE": {
+      "total_s": 0.008741825986362528,
+      "calls": 2268,
+      "mean_ms": 0.0038544206289076403
+    },
+    "mjTIMER_POS_KINEMATICS": {
+      "total_s": 21.211553956833086,
+      "calls": 2268,
+      "mean_ms": 9.352537018004005
+    },
+    "mjTIMER_POS_INERTIA": {
+      "total_s": 0.010946436232188717,
+      "calls": 2268,
+      "mean_ms": 0.0048264710018468765
+    },
+    "mjTIMER_POS_COLLISION": {
+      "total_s": 2.7984944300696952,
+      "calls": 2268,
+      "mean_ms": 1.2339040696956327
+    },
+    "mjTIMER_POS_MAKE": {
+      "total_s": 0.05242412608640734,
+      "calls": 2268,
+      "mean_ms": 0.023114694041625812
+    },
+    "mjTIMER_POS_PROJECT": {
+      "total_s": 0.0014960648404667154,
+      "calls": 2268,
+      "mean_ms": 0.0006596405822163648
+    },
+    "mjTIMER_COL_BROAD": {
+      "total_s": 2.700032809865661,
+      "calls": 2268,
+      "mean_ms": 1.190490656907258
+    },
+    "mjTIMER_COL_NARROW": {
+      "total_s": 0.09335099494637689,
+      "calls": 2268,
+      "mean_ms": 0.041160050681824024
+    }
+  },
+  "final_body": {
+    "name": "labbot_base",
+    "position": [
+      0.5500595571252551,
+      12.450000114927045,
+      0.0009986697900802824
+    ]
+  }
+}

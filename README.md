@@ -124,9 +124,9 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ### Verification snapshot
 
-Published occupancy-v4 `ca65f35` passes required CI and Scheduled Full Test Suite:
+Published runtime `f74b53f` passes required CI and Scheduled Full Test Suite:
 25 core packages, 27 physics and
-134 integration checks (13 skips), plus registry validation. Required fast:
+138 integration checks (13 skips), plus registry validation. Required fast:
 1002 pass / five skips; scheduled fast: 1004 pass / three skips; both four
 deselections. The preceding MuJoCo 3.15 compatibility repair also passes at
 `4fe611a`. The predecessor `73fcc47` also passes after the shared-utilities import fix. Its [exact logs](docs/status/evidence/extensions-finish-2026-10-08/README.md)

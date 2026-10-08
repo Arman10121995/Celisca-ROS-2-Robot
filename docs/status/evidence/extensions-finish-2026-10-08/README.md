@@ -197,3 +197,15 @@ record typed-array camera packing without changing images, rates, controls or
 geometry. The eight original hospital routes keep their pre-trial source
 stages; the new Labbot repeat is indexed separately. Whole-simulator speed
 remains about 0.13× and P4 stays partial.
+
+## Exact published map/camera CI
+
+`f74b53f` passes [required CI 37844504746](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37844504746)
+and [scheduled CI 37844504871](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/37844504871):
+25 packages, 27 physics, 138 integration / 13 skips and registry. Required
+fast: 1002 / five skips; scheduled fast: 1004 / three skips; both four
+deselections. Complete original logs and hashes are in [the CI manifest](ci/manifest.json).
+[Published/installed parity](publication.json) verifies all 89 listed Python
+modules; the earlier [ca65f35 receipt](publication-ca65f35.json) is preserved.
+Later native-timer observations are separate diagnostics, with no controller
+or full-release promotion.

@@ -1,5 +1,5 @@
 {
-  "scope": "Maintained/current Markdown target existence only; no network/anchor or runtime qualification.",
+  "scope": "Current/maintained Markdown target existence only; anchors/network/historical documents not globally audited.",
   "documents": [
     "AGENTS.md",
     "CLAUDE.md",
@@ -16,8 +16,9 @@
     "docs/status/CURRENT_STATUS.md",
     "docs/status/continuation-2026-10-08.md",
     "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+    "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+    "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
     "docs/status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
-    "docs/status/evidence/extensions-finish-2026-10-08/support-matrix-current.md",
     "docs/status/support-matrix.md",
     "docs/tutorials/README.md",
     "docs/tutorials/comparison_control.md",
@@ -370,6 +371,11 @@
       "exists": true
     },
     {
+      "document": "README.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "exists": true
+    },
+    {
       "document": "ROADMAP.md",
       "target": "docs/status/continuation-2026-10-08.md",
       "exists": true
@@ -432,6 +438,11 @@
     {
       "document": "ROADMAP.md",
       "target": "docs/status/evidence/ci-extensions-2026-10-07/README.md",
+      "exists": true
+    },
+    {
+      "document": "ROADMAP.md",
+      "target": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
       "exists": true
     },
     {
@@ -750,6 +761,11 @@
       "exists": true
     },
     {
+      "document": "docs/AGENT_HANDOFF.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "exists": true
+    },
+    {
       "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
       "target": "AGENT_HANDOFF.md",
       "exists": true
@@ -782,6 +798,11 @@
     {
       "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
       "target": "status/evidence/extensions-finish-2026-10-08/navigation/open-wall-backends/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/AI_ROBOT_READINESS_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
       "exists": true
     },
     {
@@ -951,6 +972,11 @@
     },
     {
       "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/native-loop/sitecustomize.py",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
       "target": "status/continuation-2026-10-02.md",
       "exists": true
     },
@@ -977,6 +1003,11 @@
     {
       "document": "docs/PATCH_EXECUTION_GUIDE.md",
       "target": "ASSET_EXTENSION_GUIDE.md",
+      "exists": true
+    },
+    {
+      "document": "docs/PATCH_EXECUTION_GUIDE.md",
+      "target": "status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
       "exists": true
     },
     {
@@ -1185,6 +1216,11 @@
       "exists": true
     },
     {
+      "document": "docs/status/CURRENT_STATUS.md",
+      "target": "evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "exists": true
+    },
+    {
       "document": "docs/status/continuation-2026-10-08.md",
       "target": "evidence/extensions-finish-2026-10-08/README.md",
       "exists": true
@@ -1232,6 +1268,11 @@
     {
       "document": "docs/status/continuation-2026-10-08.md",
       "target": "evidence/extensions-finish-2026-10-08/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/continuation-2026-10-08.md",
+      "target": "evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
       "exists": true
     },
     {
@@ -1472,6 +1513,166 @@
     {
       "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
       "target": "scan-map-alignment/before-after.png",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "mujoco-hospital-performance/README.md",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "ci/manifest.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "publication.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/README.md",
+      "target": "publication-ca65f35.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "panda-normal/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "panda-hand/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "panda-sag-negative/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "panda-producer-error/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "panda-contact-point-negative/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "panda-source-revalidation.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "px4/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md",
+      "target": "husky-source-revalidation.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "clock-after.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "after-producer.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "after-artifacts.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "image-packing-producer.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "image-packing-before.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "image-packing-after.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "image-wire-tests.log",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "sitecustomize.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "profile-before.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "profile-after.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "../navigation/camera-packing/labbot-dataset_hospital-mujoco/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "profile-before-artifacts.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "integration-after.log",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "source-stage.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "gui-report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "native-loop/report.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "native-loop/sitecustomize.py",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "offline-native-timers.json",
+      "exists": true
+    },
+    {
+      "document": "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md",
+      "target": "native-loop-315/report.json",
       "exists": true
     },
     {

@@ -1,7 +1,7 @@
 {
-  "runtime_revision": "3ed3e780c9dfb9310d457134ed3506f601072739 plus exact P4 camera helper working-tree hashes",
+  "runtime_revision": "f74b53f1fe64895b44b917d742d6082900e18be7",
   "branch": "master",
-  "qualification": "89 listed installed Python modules match local source; the later P4 typed-array camera change passes four lossless wire cases, 151 integration checks and actual Labbot hospital navigation. Exact remote ca65f35 CI remains a separate original source stage; latest camera-source CI is checked after publication.",
+  "qualification": "All 89 listed installed/runtime Python modules match published f74b53f. Exact required and scheduled CI passes; original physical/source stages, negatives, prior ca65f35 parity and later native-timer-only observations remain separate.",
   "installed_python": [
     {
       "path": "src/robot_lab_gui/robot_lab_gui/hand_tab.py",
@@ -451,14 +451,14 @@
   ],
   "remote_ci": [
     {
-      "run": "37838538779",
-      "conclusion": "success",
-      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5"
+      "run": "37844504746",
+      "revision": "f74b53f1fe64895b44b917d742d6082900e18be7",
+      "conclusion": "success"
     },
     {
-      "run": "37838539175",
-      "conclusion": "success",
-      "revision": "ca65f35d69ef8845565b07a65b1a0ac3d0f9f8d5"
+      "run": "37844504871",
+      "revision": "f74b53f1fe64895b44b917d742d6082900e18be7",
+      "conclusion": "success"
     }
   ]
 }
