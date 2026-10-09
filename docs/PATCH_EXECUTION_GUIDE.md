@@ -1,6 +1,6 @@
 # Stabilization and remaining work: agent execution guide
 
-Updated 2026-10-08. This guide implements the user's requested patch queue
+Updated 2026-10-09. This guide implements the user's requested patch queue
 and preserves its remaining acceptance. The latest user instruction prioritizes
 the new extensions first, then resumes this older queue; follow
 [ASSET_EXTENSION_GUIDE](ASSET_EXTENSION_GUIDE.md) and the live handoff/task owners.
@@ -8,6 +8,14 @@ Read `docs/AGENT_HANDOFF.md`,
 `docs/status/platform-status.yaml`, and `ROADMAP.md` first. The user includes
 drone integration; retain the measured PX4 Flight path. Existing Bumperbot/Labbot workflows and assets
 must remain available.
+
+The latest user steering prioritizes **initial implementation of everything
+remaining**, then testing/validation. Follow the ledger's `implementation_first`
+queue: missing reusable controllers and operator workflows precede repeated
+qualification sweeps. The checks below define the later validation handoff;
+do not run every campaign after each feature. Keep necessary build diagnostics,
+source limits, Stop/watchdog implementation and truthful experimental status.
+See [current implementation work](status/implementation-2026-10-09.md).
 
 ## Establish the actual baseline
 

@@ -1,0 +1,13 @@
+# Simulator-state odometry/IMU bootstrap; not independent encoder accuracy.
+ekf_filter_node:
+  ros__parameters:
+    base_link_frame: native_body_1
+amcl:
+  ros__parameters:
+    base_frame_id: native_body_1
+    scan_topic: scan
+    max_beams: 120
+    update_min_a: 0.03
+    update_min_d: 0.03
+    laser_min_range: 0.08
+    laser_max_range: 15.0

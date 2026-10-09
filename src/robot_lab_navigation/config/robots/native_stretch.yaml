@@ -1,0 +1,48 @@
+# Experimental native Stretch family; actual full-body footprint published
+# from current model collision bounds, including arm extension. Lab caps.
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      robot_base_frame: native_body_1
+      robot_radius: 0.45
+      footprint_padding: 0.01
+      inflation_layer:
+        inflation_radius: 0.6
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      robot_base_frame: native_body_1
+      robot_radius: 0.45
+      footprint_padding: 0.01
+      inflation_layer:
+        inflation_radius: 0.6
+controller_server:
+  ros__parameters:
+    progress_checker:
+      required_movement_radius: 0.1
+      movement_time_allowance: 30.0
+    general_goal_checker:
+      xy_goal_tolerance: 0.07
+      yaw_goal_tolerance: 0.06
+    FollowPath:
+      desired_linear_vel: 0.08
+      regulated_linear_scaling_min_speed: 0.03
+      min_approach_linear_velocity: 0.02
+      rotate_to_heading_angular_vel: 0.25
+      max_angular_accel: 0.5
+      max_vel_x: 0.09
+      max_speed_xy: 0.09
+      max_vel_theta: 0.3
+      acc_lim_x: 0.2
+      decel_lim_x: -0.2
+      acc_lim_theta: 0.5
+      decel_lim_theta: -0.5
+bt_navigator:
+  ros__parameters:
+    robot_base_frame: native_body_1
+behavior_server:
+  ros__parameters:
+    robot_base_frame: native_body_1
+    rotational_acc_lim: 0.5
+    max_rotational_vel: 0.3
+    min_rotational_vel: 0.05

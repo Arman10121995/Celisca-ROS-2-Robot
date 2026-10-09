@@ -41,6 +41,7 @@ class PX4Controller(Node):
         self.last_manual = -math.inf
         self.manual = (0.0, 0.0, 0.0, 0.0)
         self.configured = False
+        self.route, self.route_status = [], 'idle'
         self.odom_pub = self.create_publisher(Odometry, '/px4/odometry', 10)
         self.status_pub = self.create_publisher(String, '/px4/status', 10)
         self.tf = TransformBroadcaster(self)
@@ -62,6 +63,8 @@ class PX4Controller(Node):
         return self.flight.state is not None and self.flight.position_ok() and time.monotonic()-self.flight.last_position_time < 1.0
 
     def transition(self, phase):
+        if phase != 'flying':
+            self.clear_path('flight phase '+phase)
         self.phase, self.phase_since = phase, time.monotonic()
         self.get_logger().info('Flight state: '+phase)
 
@@ -87,6 +90,7 @@ class PX4Controller(Node):
         response.success = self.enabled and self.ready() and self.flight.armed()
         response.message = 'Landing requested.' if response.success else 'No armed Flight vehicle with fresh telemetry.'
         if response.success:
+            self.clear_path('landing')
             self.command_mode(4, 6)
             self.transition('landing')
         return response
@@ -95,6 +99,7 @@ class PX4Controller(Node):
         response.success = self.phase in ('flying', 'ascending') and self.ready()
         response.message = 'Holding current position.' if response.success else 'Vehicle is not flying in Offboard.'
         if response.success:
+            self.clear_path('Hold requested')
             self.target = self.position()
             self.last_manual = -math.inf
             self.transition('flying')
@@ -106,10 +111,12 @@ class PX4Controller(Node):
         values = (msg.linear.x, msg.linear.y, msg.linear.z, msg.angular.z)
         if not all(math.isfinite(v) for v in values):
             return
+        was_tracking = bool(self.route)
+        self.clear_path('manual override/Stop')
         # A released GUI button publishes zero. Capture the current position
         # once when manual input ceases; keep streaming that hold thereafter.
         if not any(abs(v) > 1e-4 for v in values):
-            if any(self.manual):
+            if any(self.manual) or was_tracking:
                 self.target = self.position()
             self.manual = (0.0, 0.0, 0.0, 0.0)
         else:
@@ -130,11 +137,31 @@ class PX4Controller(Node):
             self.get_logger().warning('Rejected invalid 3D goal/altitude (0.5 to 10 m above origin).')
             return
         self.target = [p.x, p.y, p.z]
+        self.clear_path('direct 3D goal override')
         self.manual = (0.0, 0.0, 0.0, 0.0)
         self.last_manual = -math.inf
         q = msg.pose.orientation
         if sum(v*v for v in (q.x, q.y, q.z, q.w)) > 0.5:
             self.target_yaw = math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z))
+
+    def clear_path(self, reason):
+        if self.route:
+            self.route_status = reason
+        self.route = []
+
+    def set_path(self, route):
+        if self.phase != 'flying' or not self.ready():
+            raise ValueError('Waypoints require fresh airborne FCU state')
+        if not route or len(route) > 2048 or any(len(point) != 3 or not all(map(math.isfinite, point))
+                or not self.ground_z+.5 <= point[2] <= self.ground_z+10 for point in route):
+            raise ValueError('Invalid bounded 3D route/altitude')
+        self.route = [list(point) for point in route[1:]]
+        self.target = self.position()
+        self.manual = (0., 0., 0., 0.)
+        self.last_manual = -math.inf
+        self.route_status = 'tracking static waypoints'
+        self.route_progress = time.monotonic()
+        self.route_best_distance = math.inf
 
     def tick(self):
         f = self.flight
@@ -143,6 +170,7 @@ class PX4Controller(Node):
         now = time.monotonic()
         dt, self.last_tick = min(0.1, now-self.last_tick), now
         if not self.ready():
+            self.clear_path('FCU telemetry lost')
             # Do not keep flying on stale state. Stop setpoints; FCU Land.
             if self.phase not in ('waiting_for_fcu', 'idle', 'landing', 'telemetry_lost'):
                 self.transition('telemetry_lost')
@@ -197,6 +225,25 @@ class PX4Controller(Node):
             elif any(self.manual):
                 self.target = self.position()
                 self.manual = (0.0, 0.0, 0.0, 0.0)
+            elif self.route:
+                distance = math.dist(self.position(), self.route[0])
+                if distance < self.route_best_distance-.02:
+                    self.route_best_distance, self.route_progress = distance, now
+                if distance <= .05:
+                    self.target = self.route.pop(0)
+                    self.route_best_distance, self.route_progress = math.inf, now
+                    if not self.route:
+                        self.route_status = 'FCU waypoint setpoints reached; mission/contact validation separate'
+                elif now-self.route_progress > 60:
+                    self.clear_path('waypoint progress timeout')
+                    self.target = self.position()
+                else:
+                    # Advance the position setpoint along the checked segment
+                    # instead of making a full distant-position jump.
+                    delta = [goal-current for goal, current in zip(self.route[0], self.target)]
+                    length = math.sqrt(sum(v*v for v in delta))
+                    scale = min(1., .4*dt/length) if length else 0.
+                    self.target = [current+v*scale for current, v in zip(self.target, delta)]
         if self.phase in ('priming', 'arming', 'ascending', 'flying'):
             xyz = enu_to_ned(*(a-b for a, b in zip(self.target, self.origin)))
             f.send_setpoint(*xyz, math.pi/2-self.target_yaw)
@@ -228,7 +275,8 @@ class PX4Controller(Node):
     def status(self):
         self.status_pub.publish(String(data=json.dumps({
             'phase': self.phase, 'armed': self.flight.armed(), 'position_ready': self.ready(),
-            'flight_enabled': self.enabled, 'position_enu': self.position(), 'target_enu': self.target})))
+            'flight_enabled': self.enabled, 'position_enu': self.position(), 'target_enu': self.target,
+            'route_waypoints_remaining': len(self.route), 'route_status': self.route_status})))
 
 
 def main(args=None):

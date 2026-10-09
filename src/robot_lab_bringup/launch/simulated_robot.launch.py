@@ -616,6 +616,9 @@ def _build_simulation_actions(context):
 
     requested_mode = _launch_value(context, "mode")
     mode_name, mode_config = _resolve_mode_config(mode_configs, requested_mode)
+    if mode_name != 'display' and any(_as_bool(_launch_value(context, option))
+            for option in ('enable_native_locomotion', 'enable_native_articulation', 'enable_native_mobile')):
+        raise ValueError('Experimental native policy/articulation controllers currently require Display mode')
 
     # A map-free run is only meaningful in display mode: the robot is shown
     # in an empty world of the selected simulator.  Every other mode needs a
@@ -834,7 +837,18 @@ def _build_simulation_actions(context):
         if rviz_frame:
             rviz_arguments += ["-f", rviz_frame]
 
-        if not robot_free and robot_config.get('drive_in_display'):
+        native_locomotion = _as_bool(_launch_value(context, 'enable_native_locomotion'))
+        native_articulation = _as_bool(_launch_value(context, 'enable_native_articulation'))
+        native_mobile = _as_bool(_launch_value(context, 'enable_native_mobile'))
+        if native_mobile and (simulator != 'mujoco' or not robot_config.get('mobile_control_config')):
+            raise ValueError('Native mobile control requires an installed exact-source Stretch on MuJoCo Display')
+        if sum((native_mobile, native_articulation, native_locomotion)) > 1:
+            raise ValueError('Choose one native controller to own this robot')
+        if native_articulation and (simulator != 'mujoco' or not robot_config.get('native_articulation')):
+            raise ValueError('Native articulation requires a supported fixed-base native position-actuator model')
+        if native_locomotion and (simulator != 'mujoco' or not robot_config.get('locomotion_policy_config')):
+            raise ValueError('Native locomotion requires an installed exact-policy model on MuJoCo Display')
+        if not robot_free and (robot_config.get('drive_in_display') or native_locomotion or native_mobile):
             # Imported mobile descriptions with a measured base controller
             # also accept the GUI /key_vel in Display. Retain the same input
             # priorities as normal modes; the actual controller owns timeout.
@@ -948,6 +962,13 @@ def _build_simulation_actions(context):
         display_args.update(drive_args)
         if robot_config.get('native_mjcf'):
             display_args['native_mjcf'] = robot_config['native_mjcf']
+            if native_locomotion:
+                display_args['locomotion_policy_config'] = robot_config['locomotion_policy_config']
+            if native_mobile:
+                display_args['mobile_control_config'] = robot_config['mobile_control_config']
+                display_args['native_task'] = _launch_value(context, 'native_task')
+            if native_articulation:
+                display_args['articulation_control'] = 'true'
             arm = _launch_value(context, 'arm_control').strip().lower()
             if arm == 'auto':
                 arm = robot_config.get('arm_control', 'none')
@@ -968,23 +989,35 @@ def _build_simulation_actions(context):
         planning = _launch_value(context, 'arm_planning').strip().lower()
         if planning == 'auto':
             planning = robot_config.get('arm_planning', 'none')
-            if _as_bool(display_args.get('grasp_fixture', 'false')):
-                planning = 'none'
         if planning != 'none':
             if (planning != 'moveit' or simulator != 'mujoco'
                     or robot_model != 'menagerie_franka_emika_panda'
                     or display_args.get('arm_control') != 'panda'):
                 raise ValueError('MoveIt planning requires native Panda control on MuJoCo Display')
-            if _as_bool(display_args.get('grasp_fixture', 'false')):
-                raise ValueError('The optional grasp fixture needs a dynamic object planning scene; use arm_planning:=none')
             actions.append(IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(bringup_share, 'panda_planning.launch.py')),
                 launch_arguments={
                     'native_mjcf': robot_config['native_mjcf'], 'world_path': world_path,
                     'use_sim_time': use_sim_time,
+                    'grasp_fixture': display_args.get('grasp_fixture', 'false'),
                     **{'spawn_'+axis: display_args['spawn_'+axis] for axis in ('x', 'y', 'z', 'yaw')},
                 }.items()))
-        if start_rviz and rviz_config and not robot_free:
+        native_task = _launch_value(context, 'native_task')
+        if native_task != 'display':
+            if not native_mobile or map_free:
+                raise ValueError('Native workflow requires enabled native mobile control and a selected world')
+            actions.append(IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(_launch_file(bringup_share, 'native_mobile_workflow.launch.py')),
+                launch_arguments=dict(native_task=native_task, robot_model=robot_model,
+                    map_yaml=map_yaml, map_name=map_name, spawn_x=spawn_x, spawn_y=spawn_y,
+                    spawn_yaw=spawn_yaw).items()))
+            if start_rviz:
+                native_config = _resolve_rviz_config(mode_configs['modes'][native_task], 'auto')
+                if native_config:
+                    actions.append(Node(package='rviz2', executable='rviz2',
+                        arguments=['-d', native_config, '-f', 'map'],
+                        parameters=[{'use_sim_time': _as_bool(use_sim_time, True)}], output='screen'))
+        elif start_rviz and rviz_config and not robot_free:
             actions.append(
                 Node(
                     package="rviz2",
@@ -1204,7 +1237,8 @@ def _build_simulation_actions(context):
             )
         )
 
-    if _section_enabled(mode_config.get("joystick")):
+    if (_section_enabled(mode_config.get("joystick"))
+            and _as_bool(LaunchConfiguration('enable_joystick').perform(context), True)):
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(controller_share, "joystick_teleop.launch.py")),
@@ -1400,6 +1434,16 @@ def generate_launch_description():
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
     return LaunchDescription([
+        DeclareLaunchArgument('enable_joystick', default_value='true',
+            description='Start the mode joystick node. Disable for isolated automated experiments.'),
+        DeclareLaunchArgument('enable_native_locomotion', default_value='false',
+            description='Explicitly enable an installed exact-model experimental native policy in MuJoCo Display; default passive display remains.'),
+        DeclareLaunchArgument('enable_native_articulation', default_value='false',
+            description='Explicitly enable bounded authored native position actuators in MuJoCo Display.'),
+        DeclareLaunchArgument('enable_native_mobile', default_value='false',
+            description='Explicitly enable native Stretch base and articulation controls in MuJoCo Display.'),
+        DeclareLaunchArgument('native_task', default_value='display',
+            description='Explicit experimental native mobile workflow: display/loc/slam/3d_slam/nav; mode stays display to distinguish unqualified candidates.'),
         DeclareLaunchArgument(
             "bhl_enable_policy", default_value="true",
             description="Start the BHL ONNX walking-policy controller in "

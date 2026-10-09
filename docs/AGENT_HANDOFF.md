@@ -26,6 +26,15 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 - **Work the declared order.** Default sequence R0 → R1 → R2 → R3 → R4 → R5/R6 →
   R7 → R8 → R9. `next_task` in the ledger names the current front of the queue.
   Parallel-ready tasks are listed under `parallel_ready_after_R0`.
+- **Implementation first (October 9 user priority).** Build missing reusable
+  features and integrations before broad validation. Codex/Claude implement;
+  validation is a separate, currently unassigned follow-up lane. Avoid repeated
+  full-suite or map/backend campaigns during initial implementation. Source
+  limits, Stop and watchdog are functional requirements, not deferred features.
+  Record implemented candidates and validation pending separately; preserve
+  historical acceptance/source certificates. Read the ledger's
+  `implementation_first` queue and
+  [implementation checkpoint](status/implementation-2026-10-09.md).
 - **Respect scope paths.** Keep changes inside the task's `scope_paths`. If you
   need to touch something else, note it in the task and coordinate with its owner.
 - **Evidence or it did not happen.** A task moves to `done` only when its
@@ -53,6 +62,16 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 9 current implementation:** three Unitree exact-model variants,
+28 fixed native articulation candidates, Cartesian Servo/teach-replay, measured
+Panda attachment scenes, two native Stretch base/sensor/higher-task candidates,
+static aerial planning, coplanar collision reduction and actual concurrent
+experiments. Nine affected packages built. See
+[the implementation checkpoint](status/implementation-2026-10-09.md) for source
+files, installation, remaining initial features and deferred qualification.
+These candidates do not inherit October 8 physical certificates. Read the
+native and concurrent tutorials before adding another controller or runner.
+
 October 8 steering requests all complete robot variants **motion first, then
 SLAM, then navigation across compatible maps**. ROADMAP.md and the ledger's
 `readiness_order` own this staged acceptance. The active codex lane has repaired
@@ -64,7 +83,7 @@ with normal GUI defaults/autofill and production navigation. Read
 untracked `scripts/review_occupancy_maps.py`. Exact publication checks are in
 the current checkpoint. Controllers are qualified within their named screens; retain failed
 hospital/Gazebo and Husky torque-envelope trials. Shared controller changes
-require current physical regression evidence before refreshing source guards.
+must not refresh measured source guards without later physical evidence.
 
 Published **`f74b53f`** map/camera runtime source passes required and scheduled CI;
 prior **`ca65f35`** occupancy-v4 passes separately;

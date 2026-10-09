@@ -1,8 +1,9 @@
 """Display installed native MJCF robots in the normal Robot Lab launch.
 
 Native model geometry, joint state and body transforms come from MuJoCo. A
-passive display keeps the model's authored starting pose; hold=false runs its
-unmodified dynamics. This node does not claim walking or manipulation control.
+passive display keeps the model's authored starting pose; optional explicit
+controllers run native actuators. Experimental locomotion is separate from
+measured walking support.
 """
 import json
 import math
@@ -17,7 +18,7 @@ from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
 from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, DurabilityPolicy
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import TransformStamped, Twist
 from rosgraph_msgs.msg import Clock as ClockMsg
 from sensor_msgs.msg import JointState
 from std_msgs.msg import String
@@ -33,7 +34,10 @@ class NativeAssetDisplay(Node):
         super().__init__('native_asset_display')
         for name, value in [('native_mjcf', ''), ('model', ''), ('world_xml', ''),
                             ('gui', True), ('hold_position', True), ('arm_control', 'none'),
-                            ('grasp_fixture', False), ('spawn_x', 0.),
+                            ('grasp_fixture', False), ('locomotion_policy_config', ''),
+                            ('mobile_control_config', ''),
+                            ('native_task', 'display'),
+                            ('articulation_control', False), ('spawn_x', 0.),
                             ('spawn_y', 0.), ('spawn_z', 0.), ('spawn_yaw', 0.)]:
             self.declare_parameter(name, value)
         # EGL avoids the Jetson GLX passive viewer's shutdown crash.
@@ -64,6 +68,9 @@ class NativeAssetDisplay(Node):
             world_text = _stage_world_meshes(world_text, logger=self.get_logger())
             world = mujoco.MjSpec.from_string(world_text)
             spec.attach(world, frame=spec.worldbody.add_frame(), prefix='environment_')
+        elif not any(int(g.type) == int(mujoco.mjtGeom.mjGEOM_PLANE) for g in spec.worldbody.geoms):
+            spec.worldbody.add_geom(name='environment_ground', type=mujoco.mjtGeom.mjGEOM_PLANE,
+                size=[50., 50., .1], rgba=[.3, .33, .35, 1.], friction=[1., .005, .0001])
         if self.get_parameter('grasp_fixture').value:
             if self.get_parameter('arm_control').value != 'panda':
                 raise ValueError('The grasp fixture requires native Panda control')
@@ -111,12 +118,54 @@ class NativeAssetDisplay(Node):
                     mujoco.mju_mulQuat(result, yaw_quat, self.data.qpos[address+3:address+7])
                     self.data.qpos[address+3:address+7] = result
         mujoco.mj_forward(self.model, self.data)
-        self.initial_qpos, self.initial_ctrl = self.data.qpos.copy(), self.data.ctrl.copy()
         self.object_body = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, 'manipulation_object')
         self.hold = self.get_parameter('hold_position').value
         self.arm = None
         self.gripper = None
+        self.locomotion = None
+        self.articulation = None
+        self.mobile = None
+        self.sensors = None
         controller = self.get_parameter('arm_control').value
+        policy_config = self.get_parameter('locomotion_policy_config').value
+        mobile_config = self.get_parameter('mobile_control_config').value
+        if mobile_config:
+            if controller != 'none' or policy_config or self.get_parameter('grasp_fixture').value:
+                raise ValueError('Native mobile control requires exclusive actuator ownership')
+            from robot_lab_mujoco.native_mobile_control import NativeStretchControl
+            self.mobile = NativeStretchControl(self, mobile_config)
+            from robot_lab_mujoco.native_articulation_control import NativeArticulationControl
+            self.articulation = NativeArticulationControl(self)
+            from robot_lab_mujoco.native_mobile_sensors import NativeMobileSensors
+            self.sensors = NativeMobileSensors(self, self.get_parameter('native_task').value)
+            self._odom_pub = self.sensors.odom_pub
+            from robot_lab_utils.reset_notifications import ResetNotifications
+            self.reset_notifications = ResetNotifications(self)
+            self.create_service(Trigger, '/robot_lab/reset', self.reset)
+            self.hold = False
+        if self.get_parameter('articulation_control').value:
+            if mobile_config:
+                raise ValueError('Native mobile control already owns articulation')
+            if controller != 'none' or policy_config or self.get_parameter('grasp_fixture').value:
+                raise ValueError('Generic articulation requires exclusive actuator ownership')
+            from robot_lab_mujoco.native_articulation_control import NativeArticulationControl
+            self.articulation = NativeArticulationControl(self)
+            self.create_service(Trigger, '/robot_lab/reset', self.reset)
+            self.hold = False
+        if policy_config:
+            if controller != 'none' or self.get_parameter('grasp_fixture').value:
+                raise ValueError('Locomotion and native arm/fixture controllers cannot share actuators')
+            from robot_lab_mujoco.unitree_policy import NativeUnitreePolicy
+            self.locomotion = NativeUnitreePolicy(self.model, self.data, policy_config,
+                self.get_parameter('native_mjcf').value)
+            # Initial/reset pose only: subsequent movement is motor torque.
+            self.data.qpos[self.locomotion.qpos] = self.locomotion.nominal
+            mujoco.mj_forward(self.model, self.data)
+            self.create_subscription(Twist, '/robot_lab_controller/cmd_vel_unstamped',
+                lambda msg: self.locomotion.receive(msg.linear.x, msg.linear.y, msg.angular.z), 1)
+            self.create_service(Trigger, '/robot_lab/reset', self.reset)
+            self.locomotion_pub = self.create_publisher(String, '/robot_lab/locomotion/state', 10)
+            self.hold = False
         if controller == 'panda':
             from robot_lab_mujoco.native_arm_control import NativePandaControl
             self.arm = NativePandaControl(self)
@@ -126,6 +175,7 @@ class NativeAssetDisplay(Node):
             self.hold = False
         elif controller != 'none':
             raise ValueError('Unknown native arm controller: '+controller)
+        self.initial_qpos, self.initial_ctrl = self.data.qpos.copy(), self.data.ctrl.copy()
         self.clock_pub = self.create_publisher(ClockMsg, '/clock', 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
         self.object_pub = self.create_publisher(String, '/manipulation/object_state', 10)
@@ -138,6 +188,8 @@ class NativeAssetDisplay(Node):
         self.create_timer(self.dt, self.tick, clock=Clock(clock_type=ClockType.SYSTEM_TIME))
         self.get_logger().info('Installed native MJCF: %s; %d robot bodies / %d joints; %s' %
             (self.get_parameter('native_mjcf').value, self.robot_bodies, self.robot_joints,
+             'experimental position articulation' if self.articulation else
+             'experimental Unitree policy dynamics' if self.locomotion else
              'controlled Panda dynamics' if self.arm else
              ('passive authored-pose display' if self.hold else 'native dynamics')))
 
@@ -148,7 +200,23 @@ class NativeAssetDisplay(Node):
             mj.mj_forward(self.model, self.data)
         else:
             steps = max(1, round(self.dt / self.model.opt.timestep))
-            if self.arm:
+            if self.articulation:
+                for _ in range(steps):
+                    if self.mobile:
+                        self.mobile.before_step()
+                    self.articulation.before_step()
+                    mj.mj_step(self.model, self.data)
+                    self.articulation.after_step()
+                self.articulation.publish()
+                if self.mobile:
+                    self.mobile.publish()
+            elif self.locomotion:
+                for _ in range(steps):
+                    self.locomotion.before_step()
+                    mj.mj_step(self.model, self.data)
+                    self.locomotion.after_step()
+                self.locomotion_pub.publish(String(data=json.dumps(self.locomotion.state())))
+            elif self.arm:
                 for _ in range(steps):
                     self.arm.before_step()
                     self.gripper.before_step()
@@ -162,6 +230,13 @@ class NativeAssetDisplay(Node):
         if self.object_body >= 0:
             body = self.object_body
             self.object_pub.publish(String(data=json.dumps(dict(time=self.data.time,
+                id='manipulation_object', frame='native_world', size=[.03, .03, .03],
+                finger_links=['native_body_'+str(int(b)) for b in self.gripper.finger_bodies],
+                pedestal=dict(type='box', size=(2*self.model.geom_size[mj.mj_name2id(self.model,
+                        mj.mjtObj.mjOBJ_GEOM, 'manipulation_pedestal_geom')]).tolist(),
+                    position=self.data.xpos[mj.mj_name2id(self.model,
+                        mj.mjtObj.mjOBJ_BODY, 'manipulation_pedestal')].tolist(),
+                    orientation=[1., 0., 0., 0.]),
                 position=self.data.xpos[body].tolist(), orientation_wxyz=self.data.xquat[body].tolist(),
                 spatial_velocity=self.data.cvel[body].tolist()))))
         if not np.all(np.isfinite(self.data.qpos)):
@@ -170,6 +245,8 @@ class NativeAssetDisplay(Node):
         clock.clock.sec = int(self.data.time)
         clock.clock.nanosec = int((self.data.time - int(self.data.time)) * 1e9)
         self.clock_pub.publish(clock)
+        if self.sensors:
+            self.sensors.publish(clock.clock)
         state = JointState()
         state.header.stamp = clock.clock
         for joint in range(self.robot_joints):
@@ -182,6 +259,8 @@ class NativeAssetDisplay(Node):
         self.joint_pub.publish(state)
         transforms = []
         for body in range(1, self.robot_bodies):
+            if self.sensors and self.sensors.task != 'display' and body == self.sensors.base:
+                continue  # The estimator exclusively owns odom -> base TF.
             parent = int(self.model.body_parentid[body])
             inverse = self.data.xquat[parent] * np.array([1., -1., -1., -1.])
             position, quat = np.zeros(3), np.zeros(4)
@@ -200,16 +279,25 @@ class NativeAssetDisplay(Node):
             self.last_description = self.data.time
 
     def reset(self, _request, response):
-        self.arm.finish('aborted', -4, 'reset; holding source home position')
-        self.gripper.finish('aborted', 'reset; holding source home gap')
+        if self.arm:
+            self.arm.finish('aborted', -4, 'reset; holding source home position')
+            self.gripper.finish('aborted', 'reset; holding source home gap')
         sim_time = self.data.time
         self.mujoco.mj_resetData(self.model, self.data)
         self.data.qpos[:] = self.initial_qpos
         self.data.ctrl[:] = self.initial_ctrl
         self.data.time = sim_time
         self.mujoco.mj_forward(self.model, self.data)
-        self.arm.target = self.data.qpos[self.arm.qpos].copy()
-        self.gripper.target = self.gripper.commanded = self.gripper.opening()
+        if self.arm:
+            self.arm.target = self.data.qpos[self.arm.qpos].copy()
+            self.gripper.target = self.gripper.commanded = self.gripper.opening()
+        if self.locomotion:
+            self.locomotion.reset()
+        if self.articulation:
+            self.articulation.reset()
+        if self.mobile:
+            self.mobile.reset()
+            self.reset_notifications.notify()
         response.success, response.message = True, 'Native robot/object reset; simulation clock preserved'
         return response
 
@@ -276,6 +364,8 @@ def main(args=None):
     finally:
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         if node:
+            if node.sensors:
+                node.sensors.close()
             node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()

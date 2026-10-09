@@ -64,6 +64,8 @@ def add_static_mesh_collisions(root):
         faces = faces[valid]
         if not len(faces):
             raise ValueError('world collision mesh has no nondegenerate triangles: ' + asset.get('file'))
+        from robot_lab_utils.planar_mesh import cached_retriangulation
+        vertices, faces = cached_retriangulation(vertices, faces)
         vertices = vertices * np.fromstring(asset.get('scale', '1 1 1'), sep=' ')
         rotation = np.empty(9)
         mujoco.mju_quat2Mat(rotation, np.fromstring(geom.get('quat', '1 0 0 0'), sep=' '))

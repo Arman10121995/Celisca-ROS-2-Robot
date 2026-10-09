@@ -1,0 +1,190 @@
+{
+  "date": "2026-10-09",
+  "scope": "Initial implementation/installation; no runtime/test qualification",
+  "base_revision": "c6e438d6ada1e16990c3ee6f18a0f889afafc48a",
+  "physical_missions_run": false,
+  "test_campaigns_run": false,
+  "ci_result": null,
+  "build": {
+    "packages": [
+      "robot_lab_utils",
+      "robot_lab_mujoco",
+      "robot_lab_bringup",
+      "robot_lab_gui",
+      "robot_lab_adapter",
+      "robot_lab_navigation",
+      "robot_lab_localization",
+      "robot_lab_mapping",
+      "robot_lab_benchmark"
+    ],
+    "result": "9 packages finished",
+    "final_elapsed_s": 11.3,
+    "log_directory": "/workspace/molar/ros_ws/bumperbot_ws/log/build_2026-10-09_12-58-35",
+    "warnings": [
+      "Colcon overlay warning",
+      "setuptools deprecations/tests_require",
+      "Earlier CMake pytest discovery warnings"
+    ],
+    "last_copy_refresh": {
+      "packages": [
+        "robot_lab_utils",
+        "robot_lab_mujoco"
+      ],
+      "elapsed_s": 5.43,
+      "result": "2 packages finished",
+      "reason": "MuJoCo uses a copied module despite symlink install; refreshed final Servo source",
+      "log_directory": "/workspace/molar/ros_ws/bumperbot_ws/log/build_2026-10-09_13-08-42"
+    }
+  },
+  "source_sha256": {
+    "scripts/provision_extension_assets.py": "2c099957346922ad76315d381e3771abc8a2523648b0492e69bc9833212c0299",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/executor.py": "52bffdfde7d7e39024e02eda0a52040b78c88c9e04e648b03a2dff8c851ed18c",
+    "src/robot_lab/robot_lab_benchmark/setup.py": "56671d5386efd0baa9f859d306985e11b5a1d49c1889c299610a8f0e0d71028e",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py": "03b95e3415a2d807baf51c7a0a10d6c2ab7ac52b0ea0cd159de627bf4d1389d5",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py": "45951d621909d74333eb94eb037e95a22c467164771eb1b5b41f47ef20c5e43a",
+    "src/robot_lab_bringup/launch/panda_planning.launch.py": "1a198a2f47b7c2362bac83af175417b88b770ae97c0ad9158c0d5473d0b15dc5",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "9432e69e82dad99ae638c32303dbc7d9da185c358c0c4084ccea3a9ab9ea12c4",
+    "src/robot_lab_bringup/scripts/native_arm_scene.py": "c7f80e6f877e6a61bb5120320cca4c738d7b291edf92729483fa63d64dede0f1",
+    "src/robot_lab_gui/robot_lab_gui/arm_tab.py": "58fd06d42e4af1bea4e6dc46772b58316a759ad31b695bf7a6488a0f1fafd05c",
+    "src/robot_lab_gui/robot_lab_gui/cartesian_controls.py": "0c9dfc0dc1eab2fc8ff72ff0df295ec28de382dfaa41b579cd28910a631666d0",
+    "src/robot_lab_gui/robot_lab_gui/hand_tab.py": "4ab4d2842a78acc8a5c1734827962bed44b5a02d99bcbfffb7c3f8d27f987c55",
+    "src/robot_lab_gui/robot_lab_gui/lab_tabs.py": "f7feee097e277e7140d52423eb5d5a0ce56891873be9179d0d4384ce00570b17",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "5bbfe4d4385fa21438f24a92e0bfd3a749f866b8e8445cdb96946d6214254c89",
+    "src/robot_lab_mapping/launch/rtabmap.launch.py": "f311f3a1bf7fe7b6706ae180dbec0d8ea6825d5bab591295eb476328f655f9d7",
+    "src/robot_lab_mujoco/launch/mujoco_simulator.launch.py": "dd93a64642b44e75d204d1ffab652628f1ef30464b8b1295a50368330c9a1af6",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_arm_control.py": "e2ff49b54dbd53b10eab77518d5298634fddcaa86654537f687d0e0a9a3c2942",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py": "022b289953e80cb64148ae8db35337fb182ddfc6ddd86135d13968f5208ac506",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/world_collision.py": "5a0468d06eb602d8eec7bacbe4f0a9724c381fb32e574ce06c31935d74ff32e7",
+    "scripts/configure_native_articulation.py": "94ed21a3086ba023a6dc59a8589e148394ed9ebbb8646b008a52620b3a2663cf",
+    "scripts/configure_native_mobile.py": "779a0d7e21c5d36c3c9c9af33c5f5dfa4e280cdf3521c685ad3818cc5d016f4b",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/concurrent_runner.py": "4efc9b105e4ab80e2e10805fe4e7b8dd66974b1df523fe0f46ed203a4472b1b3",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/telemetry_recorder.py": "414f9692e992150b053acbbf4cc00e000cae2b009461f945b867e3e13612901f",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_planning.py": "1783718e9eabd22ba4960c3e2f0a8e8ff53bf886217cb7d2ea005cc6240e5ac6",
+    "src/robot_lab_bringup/launch/native_mobile_workflow.launch.py": "2f324ca25b0eeeb7e2000ecc89dbd1b1d5027d7d4cac06dea8d17dd8e81fcabe",
+    "src/robot_lab_bringup/scripts/native_scene_objects.py": "8121e08a8e186f4fbdf913bc9678d485c22c85b9ed3810389b6540702e826804",
+    "src/robot_lab_bringup/scripts/wait_native_sensors.py": "0869684cc118af0815a2555a19344e8c457099d09f156683e7c70bf1be05b8e0",
+    "src/robot_lab_gui/robot_lab_gui/articulation_controls.py": "35c1ee3034207a0ae6fee5495f9deb84ba67a40fe0d2ccbc35e179e07caa22de",
+    "src/robot_lab_gui/robot_lab_gui/articulation_sequences.py": "9cb1f2dc273fcafb16db18319aa2c5b5716cbbd3ea6ad904a758d5bcb6a73a9d",
+    "src/robot_lab_gui/robot_lab_gui/drone_planning_controls.py": "221236322e62f6287523653af4325ab09eb46dc6a8c702993ffdd60539bcd68a",
+    "src/robot_lab_gui/robot_lab_gui/experiment_queue.py": "f5f370422337c1ad06d0baf535756de48605a2a9bb3eec8e65007c7e61b09f7f",
+    "src/robot_lab_gui/robot_lab_gui/servo_controls.py": "c95def20f9994dff0b40c298dc79ca6795552ff169f1448752e7c6b59c03efa0",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_articulation_control.py": "1bfded6f0c85d64cad4f0ae4ef84b6660e42c2bfcb95494f42b674a88b96229a",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_cartesian_servo.py": "d34a1f6ba48124ca74a0cfe47990bf65c8a17e0c650cbb4662af9ce745cc1e1b",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_control.py": "2f99e06362ed4292e4cc89314c97f1e93f2eff5f5afd7729ff59da3706465522",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_sensors.py": "7d7b49c4b384d68b79096694d0c803db7327fc6f9c21f1fea972bfdb544d1e18",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/unitree_policy.py": "01e2ae795694dbe2104b6f2935a9e70e043c17926c817ce96ad6c0cd003d4545",
+    "src/robot_lab_utils/robot_lab_utils/aerial_planning.py": "c1f7a68bc14b9583bf63b56cfba6808b571c20173d08e1e49ec4aaa877a18286",
+    "src/robot_lab_utils/robot_lab_utils/native_actuation.py": "027b3b5c776fc574fb7fcd6ea85e8fe513fa418cc3c157df6e563f19aeccef35",
+    "src/robot_lab_utils/robot_lab_utils/planar_mesh.py": "cb54f1f471002802ddae8046d6d553e20ea45890a926003f34f6e561805abc15"
+  },
+  "installed_modules": {
+    "robot_lab_utils.native_actuation": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/native_actuation.py",
+      "sha256": "027b3b5c776fc574fb7fcd6ea85e8fe513fa418cc3c157df6e563f19aeccef35",
+      "source_match": true
+    },
+    "robot_lab_utils.aerial_planning": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/aerial_planning.py",
+      "sha256": "c1f7a68bc14b9583bf63b56cfba6808b571c20173d08e1e49ec4aaa877a18286",
+      "source_match": true
+    },
+    "robot_lab_utils.planar_mesh": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/planar_mesh.py",
+      "sha256": "cb54f1f471002802ddae8046d6d553e20ea45890a926003f34f6e561805abc15",
+      "source_match": true
+    },
+    "robot_lab_mujoco.unitree_policy": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/unitree_policy.py",
+      "sha256": "01e2ae795694dbe2104b6f2935a9e70e043c17926c817ce96ad6c0cd003d4545",
+      "source_match": true
+    },
+    "robot_lab_mujoco.native_articulation_control": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_articulation_control.py",
+      "sha256": "1bfded6f0c85d64cad4f0ae4ef84b6660e42c2bfcb95494f42b674a88b96229a",
+      "source_match": true
+    },
+    "robot_lab_mujoco.native_cartesian_servo": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_cartesian_servo.py",
+      "sha256": "d34a1f6ba48124ca74a0cfe47990bf65c8a17e0c650cbb4662af9ce745cc1e1b",
+      "source_match": true
+    },
+    "robot_lab_mujoco.native_mobile_control": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_mobile_control.py",
+      "sha256": "2f99e06362ed4292e4cc89314c97f1e93f2eff5f5afd7729ff59da3706465522",
+      "source_match": true
+    },
+    "robot_lab_mujoco.native_mobile_sensors": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_mobile_sensors.py",
+      "sha256": "7d7b49c4b384d68b79096694d0c803db7327fc6f9c21f1fea972bfdb544d1e18",
+      "source_match": true
+    },
+    "robot_lab_mujoco.native_asset_display": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_asset_display.py",
+      "sha256": "022b289953e80cb64148ae8db35337fb182ddfc6ddd86135d13968f5208ac506",
+      "source_match": true
+    },
+    "robot_lab_adapter.px4_planning": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_planning.py",
+      "sha256": "1783718e9eabd22ba4960c3e2f0a8e8ff53bf886217cb7d2ea005cc6240e5ac6",
+      "source_match": true
+    },
+    "robot_lab_adapter.px4_ros_controller": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_ros_controller.py",
+      "sha256": "03b95e3415a2d807baf51c7a0a10d6c2ab7ac52b0ea0cd159de627bf4d1389d5",
+      "source_match": true
+    },
+    "robot_lab_adapter.px4_sitl_runtime": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_sitl_runtime.py",
+      "sha256": "45951d621909d74333eb94eb037e95a22c467164771eb1b5b41f47ef20c5e43a",
+      "source_match": true
+    },
+    "robot_lab_gui.articulation_controls": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/articulation_controls.py",
+      "sha256": "35c1ee3034207a0ae6fee5495f9deb84ba67a40fe0d2ccbc35e179e07caa22de",
+      "source_match": true
+    },
+    "robot_lab_gui.articulation_sequences": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/articulation_sequences.py",
+      "sha256": "9cb1f2dc273fcafb16db18319aa2c5b5716cbbd3ea6ad904a758d5bcb6a73a9d",
+      "source_match": true
+    },
+    "robot_lab_gui.drone_planning_controls": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/drone_planning_controls.py",
+      "sha256": "221236322e62f6287523653af4325ab09eb46dc6a8c702993ffdd60539bcd68a",
+      "source_match": true
+    },
+    "robot_lab_gui.experiment_queue": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/experiment_queue.py",
+      "sha256": "f5f370422337c1ad06d0baf535756de48605a2a9bb3eec8e65007c7e61b09f7f",
+      "source_match": true
+    },
+    "robot_lab_gui.servo_controls": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/servo_controls.py",
+      "sha256": "c95def20f9994dff0b40c298dc79ca6795552ff169f1448752e7c6b59c03efa0",
+      "source_match": true
+    },
+    "robot_lab_benchmark.concurrent_runner": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/concurrent_runner.py",
+      "sha256": "4efc9b105e4ab80e2e10805fe4e7b8dd66974b1df523fe0f46ed203a4472b1b3",
+      "source_match": true
+    },
+    "robot_lab_benchmark.telemetry_recorder": {
+      "path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/telemetry_recorder.py",
+      "sha256": "414f9692e992150b053acbbf4cc00e000cae2b009461f945b867e3e13612901f",
+      "source_match": true
+    }
+  },
+  "geometry_dependencies": {
+    "target": "/workspace/molar/robot_lab_runtime/python_deps/geometry",
+    "installer": "scripts/install_geometry_dependencies.sh",
+    "interpreter": "/workspace/molar/robot_lab_runtime/px4/venv/bin/python3",
+    "versions": {
+      "rtree": "1.4.1",
+      "shapely": "2.1.2",
+      "numpy": "2.2.6"
+    },
+    "rtree_path": "/workspace/molar/robot_lab_runtime/python_deps/geometry/rtree/__init__.py",
+    "shapely_path": "/workspace/molar/robot_lab_runtime/python_deps/geometry/shapely/__init__.py",
+    "scope": "Actual dependency installation/import; not a robot mission"
+  }
+}

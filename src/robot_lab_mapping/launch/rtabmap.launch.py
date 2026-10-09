@@ -18,7 +18,8 @@ def _safe_name(value):
 
 
 def _auto_database_path(map_name, robot_name):
-    base_dir = os.environ.get("BUMPERBOT_RTABMAP_DIR", os.path.join(os.getcwd(), "log", "rtabmap"))
+    base_dir = os.environ.get("ROBOT_LAB_RTABMAP_DIR") or os.environ.get(
+        "BUMPERBOT_RTABMAP_DIR", os.path.join(os.getcwd(), "log", "rtabmap"))
     Path(base_dir).mkdir(parents=True, exist_ok=True)
     return os.path.join(base_dir, f"{_safe_name(map_name)}_{_safe_name(robot_name)}.db")
 

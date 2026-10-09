@@ -1,11 +1,11 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-08"
-current_revision: "October 8 map-refresh 3ed3e78 and lossless camera source f74b53f published on master. Exact f74b53f required/scheduled CI passes and 89 installed/runtime Python modules match. All 17 extension worlds have real v4 grids with unchanged spawns; eight short hospital routes plus the later Labbot camera-stage repeat pass. Native timing and isolated 3.15 comparison retain source/scope/negatives; project remains partial."
+updated: "2026-10-09"
+current_revision: "October 9 implementation-first checkpoint on master based on c6e438d: three exact-model Unitree policy variants, 28 fixed native actuator profiles, Stretch/Stretch 3 controls and sensor-gated mapping/Nav2 composition, Cartesian Servo and measured Panda object attachments, static PX4 3D Plan/Execute, cached coplanar collision reduction and real isolated experiment queue. Nine changed packages built; physical/test campaigns deferred. Historical f74b53f CI and 3ed3e78 map measurements retain their exact source scopes. Project remains partial."
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
-assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. October 8 priority: complete robot motion first, then real SLAM saves/reloads, then compatible-map navigation. Imported-world and controller repairs are active; historical demonstration reports do not qualify missions and full release remains blocked."
+assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. Latest October 9 steering: implementation first, prioritizing reusable controllers and missing end-to-end workflows over repeated qualification sweeps. Motion -> SLAM -> navigation remains the feature dependency order. Broad validation is a separate follow-up lane; historical measurements remain scoped and full release remains blocked."
 audit_revision: "dff388f"
 documentation_only_revision: false
 priority_patches:
@@ -32,7 +32,7 @@ priority_patches:
     owner: codex
     result: "Wheel/effort feedback timing, geometry and 5 Hz 320x240 sensors remain unchanged. Real native physics-thread profiles identify mj_step as the largest cost. Shared typed-array image packing preserves identical ROS wire data and reduces measured construction medians from 30.051/40.019 ms to 0.060/0.070 ms. Four actual ROS serialization cases pass; normal Labbot/MuJoCo/hospital navigation repeat passes 0.046 m/+1.97 degrees, fresh body/floor/settle gates and zero root exit. Actual 15-second clock windows are 0.130493 before and 0.130892 after, not meaningful whole-simulator speed improvement. Actual normal initialization at (0.55,12.45,0.1): 2268 native steps average 10.794 ms, kinematics 9.353 ms, collision 1.234 ms and constraints 0.016 ms; 109918 world-bound vertices across 200 rigid flexes. Static-world update is an inferred optimization candidate requiring validation. Isolated 3.15 averages 11.687 ms with no observed speed gain; default 3.12 preserved. Geometry/contact-preserving optimization and matched motion/RTF acceptance remain."
     evidence: "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md"
-    active_scope: "2026-10-08 codex: lossless camera packing and its physical/sourced checks are complete scoped work; original and actual-initialization native timers identify a rigid-world kinematic update candidate. Isolated 3.15 shows no gain; default engine remains unchanged. Next: geometry/contact-preserving optimization with matched RTF and motion acceptance, without lowering sensor fidelity or changing effort timing."
+    active_scope: "2026-10-09 codex: implement cached coplanar collision-surface retriangulation to reduce static rigid-flex vertices while retaining the selected world's surfaces, holes, radius and visible mesh. Unsupported/non-equivalent patches fall back to source triangles. Default MuJoCo, robot controllers and sensors remain unchanged. Matched geometry/contact/motion/RTF validation follows implementation."
   P5:
     title: "Four-wheel steering across crab, opposite-phase and pivot modes"
     state: "partial"
@@ -84,6 +84,7 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
+  implementation_october_9: "Three policy variants, 28 fixed position-actuator models and two Stretch controller registrations installed on SSD; inventory is 116 profiles, not mission acceptance. Nine affected packages built successfully, including the final 11.3 s installation repeat. Syntax/configuration parsed. New physical missions, GUI campaigns, test suites and CI were deferred. Overlay/setuptools and CMake pytest-discovery warnings recorded; no qualified support matrix was promoted."
   documentation: "October 8 maintained README/roadmap/status/tutorial/agent guides record intuitive controls, eight hospital screens plus the later camera-stage repeat, 17 actual v4 exports, exact f74b53f passing CI and native performance limits. Detailed P4 continuation preserves real spawn, sensor/contact/control fidelity, matched clocks and motion gates. 616 relative targets in 52 maintained/current documents resolve; historical reports/negatives remain unchanged."
   gui_workspace: "Current full GUI suite: 104 passed. Drone mirrors all seven Drive directions with gentler yaw; native Panda current-pose/XYZ steps retain separate Plan/Execute and all safety gates. A desktop integration compact-window failure is retained; isolated layout and full dedicated-display integration repeats pass. Health opens current October 8 trials and readiness/Husky guides."
   installed_extensions: "113 raw extension profiles and 17 worlds remain installed on SSD; GUI consolidates complete parent families with exact variants/components. Native embedded Registry viewport renders seven source scenes and passes neutral live-plant/Drive checks. T3 four modes and T4 five modes on all four engines have separate named measured screens; imports/previews do not qualify other robot missions."
@@ -588,12 +589,12 @@ tasks:
         state: "active"
         owner: "codex"
         depends_on: ["R3.1", "R3.4"]
-        scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/camera_msgs.py", "src/robot_lab_utils/robot_lab_utils/robot_spawn.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/asset_groups.py", "src/robot_lab_utils/robot_lab_utils/asset_preview.py", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py", "src/robot_lab_utils/robot_lab_utils/skid_steer.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md", "src/robot_lab_localization/config/robots/asset_husky.yaml"]
-        active_scope: "2026-10-08 codex: preserve measured Husky/TurtleBot3/4/native Panda/PX4 controls, completed Husky estimator overlay and scoped higher modes, 17 installed v4 grids and named hospital routes. Continue complete-model motion controllers/policy contracts first, then real saved/reloaded SLAM and compatible-map navigation. No gait/mode promotion from downloaded checkpoints or catalog counts. Preserve independent review source and cline-agent terrain ownership."
+        scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/camera_msgs.py", "src/robot_lab_utils/robot_lab_utils/robot_spawn.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/asset_groups.py", "src/robot_lab_utils/robot_lab_utils/asset_preview.py", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py", "src/robot_lab_utils/robot_lab_utils/skid_steer.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md", "src/robot_lab_localization/config/robots/asset_husky.yaml"]
+        active_scope: "2026-10-09 codex: install and expose exact-model policies and reusable native controllers in the normal registry/GUI, preserving measured prior robots and independent terrain/review ownership. Initial implementation precedes testing."
         current_work: "Complete-parent Launch/Worlds/Installed Extensions selectors and nested registry components are implemented, preserving exact runtime IDs and controller/backend gates. Native embedded Tk/OpenGL inspection renders nine distinct source scenes across recorded stages, with final control-column Celisca/static/dynamic Room2 repeats with camera input and unchanged launch selections; a live Burger/PyBullet preview sends no movement commands and retains physical Drive/Stop/watchdog. TurtleBot3 12 source LDS/Drive screens and all 48 localization/SLAM/export/Nav2 screens pass; normal 48 defaults/autofill and a current MuJoCo obstacle repeat pass. Initial Pi costmap failures and all reruns remain preserved."
         result: "113 installed profiles / 17 worlds retained. Husky now has four physical Drive/sensor screens and twenty localization, reset/resume, actual 2D/3D Save Map and clear/obstacle Nav2 screens across all four engines. All normal twenty GUI defaults/commands and a production Gazebo route pass. Original four independent motors/geometry retained; bounded skid feedback and source tire solver parameters declared as lab settings. Twelve current TurtleBot3 Drive/source-LDS repeats, two TurtleBot4 Isaac Drive/lidar/RGB-D repeats and native Panda Hand/MoveIt physical regressions pass before guarded source refresh. Historical T3 48/T4 40 mode matrices keep their original revisions; they were not repeated wholesale at this new stage. Other controllers/maps/licenses/materials remain open."
         acceptance_ref: "ROADMAP.md"
-        next_action: "Preserve the proven Husky/TurtleBot3/4/Panda controls and guards. Follow Motion -> actual SLAM save/reload -> physical obstacle navigation for each remaining complete model and compatible map. Implement further vendor/mobile-manipulator bases and exact model-matched legged policies; retain BHL turn and Go2 terrain negatives. Unitree upstream G1/H1/H1_2 checkpoints and deployment models are pinned/downloaded but not integrated or motion-qualified. Continue reviewed imported-world routes, separately owned terrain, flight-world and manipulation lanes before the older comparisons."
+        next_action: "Continue missing complete bases and model-matched legged policies, source sensing and cross-backend controller adapters. Do not reuse a mismatched checkpoint; RL Gym Go2 checkpoint is absent. Qualify new candidates after initial implementation, preserving BHL turning and Go2 terrain negatives."
         evidence:
           - "docs/status/evidence/registry-3d-2026-10-07/README.md: nine distinct actual embedded rendered source scenes across stages, including final control-column furnished-Celisca/static/dynamic Room2 repeats, camera controls, six source component topology checks, neutral live Burger/PyBullet preview and retained Drive/Stop/watchdog; static inspection does not qualify missions."
           - "docs/status/evidence/turtlebot3-modes-2026-10-07/README.md: 48 real mode screens and 12 clean map saves, exact source guards, normal GUI 48 defaults/autofill and current normal obstacle navigation, preserved initial failures."
@@ -605,6 +606,8 @@ tasks:
           - "docs/status/evidence/extensions-integrated-2026-10-05/README.md: actual imports, GUI reports, source pins, tests and preserved failures; no mission qualification from counts."
           - "docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed and passing screens; full project remains partial."
 
+        implementation_summary: "Three SSD-installed RL Gym G1/H1/H1_2 exact-model TorchScript policy variants; grouped experimental GUI walking controls. Compatible 28 fixed native models gain authored articulation; two Stretch profiles gain explicit mobile/sensor workflows."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R4:
     title: "Measured reference experiment"
     state: "partial"
@@ -911,7 +914,7 @@ tasks:
         owner: "codex"
         depends_on: ["R3.6", "R2.2", "R3.4"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/arm_trajectory.py", "src/robot_lab_utils/robot_lab_utils/native_arm_description.py", "scripts/provision_extension_assets.py", "scripts/test_tiers.sh", "docs/", "README.md", "ROADMAP.md"]
-        active_scope: "2026-10-08 codex: preserve KDL/OMPL/FCL and native Panda actuators. Add measured current TCP readout, Use current tool pose and small X/Y/Z target steps with clear frame/orientation guidance; retain fresh-state, collision, plan expiration and Plan/Execute gates. Qualify the actual updated controls and retain negative reachability and interruption results. Servo/payload/other-backend missions remain open."
+        active_scope: "2026-10-09 codex: generic native articulation/teach-replay, Cartesian Servo, measured fixture scenes and GUI attachment workflow are implemented. Preserve original Panda actuator/planning contracts; runtime validation deferred."
         acceptance_ref: "ROADMAP.md"
         result: "Normal installed Panda / MuJoCo / nav_empty: current-pose reference and 1 cm XYZ targets have physical endpoint errors 0.366/0.490/0.640 mm. Bounded gravity/Coriolis bias uses original native PD actuators with unchanged gains/control/force limits and no pose/generalized-force writes. Full original Plan/Execute, collision/unreachable negatives, invalidation, Cancel/Stop/watchdog, reset, Live Monitor and clean planner shutdown pass. Gravity-sag negative retained. Servo, attached/dynamic objects, repeated pick/place and other arms/backends remain open."
         evidence:
@@ -919,7 +922,9 @@ tasks:
           - "docs/status/evidence/panda-cartesian-2026-10-06/README.md: real MoveIt service and Tk Plan/Execute with independent physical TCP/joints, normal installed profile, SDK/native asset/source hashes, collision negatives, interruptions/reset/monitor, child cleanup and retained failed runs."
           - "docs/status/evidence/panda-turtlebot4-2026-10-05/README.md: scoped independent state trace, actual action and GUI measurements, negative producer correction, source hashes and software checks."
           - "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md"
-        next_action: "Preserve native Panda joint/hand/Cartesian source contracts. Implement Servo, moving/attached-object planning scenes and repeated arbitrary pick/place; qualify additional static maps and real arm controllers/missions on the other three backends. Keep optional cube-fixture planning gated and independent physical/contact evidence mandatory."
+        next_action: "Implement additional full arm planning adapters, arbitrary-object repeated pick/place and non-MuJoCo plants. Validate new Servo/attachment code and original Panda missions after initial implementation; actual contact and object motion remain mandatory mission evidence."
+        implementation_summary: "Native position-actuator controls on 28 fixed source models; joint/hand jogging and measured source-matched taught sequence replay, local Cartesian Servo using authored sites or actual terminal body origins. Panda measured moving-cube/pedestal scene and acknowledged attach/detach collision diffs with plan invalidation; no physical object welding."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
       R5.8:
         title: "Robot hand and gripper actuation"
         state: "active"
@@ -933,28 +938,35 @@ tasks:
           - "docs/status/evidence/panda-gripper-2026-10-06/README.md: actual Tk producer, physical measurements, independent joint/object trace hashes, source and installed-module hashes, retained stale-module negative."
           - "docs/status/asset-runtime-support.yaml: checked model/controller/report contracts enable only the native Panda hand and named measured screens."
           - "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md"
-        next_action: "Preserve the native Panda grasp/Cancel/Stop/reset/watchdog proof and source transmission. Qualify other objects, repeated pick/place and model-specific Robotiq/dexterous hands; port actual controllers and contact missions to the other backends. Do not infer grasp support from joint motion."
+        next_action: "Implement dexterous hand-specific torque/tendon synergy controls and object manipulation for incompatible models; position-channel jogging alone does not establish dexterous grasp readiness."
+        implementation_summary: "Generic Hand/Arm panel preserves native coupled-position tendons, bounds and units; original Panda gripper remains separate. Cartesian tool-origin jogging extends compatible direct joint controllers."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
       R5.9:
         title: "Mobile manipulator missions and combined control"
-        state: "queued"
-        owner: "unassigned"
+        state: "active"
+        owner: "codex"
+        active_scope: "2026-10-09 codex: two SSD-installed Stretch base/arm/hand candidates and experimental AMCL, slam_toolbox, RTAB-Map and Smac2D/RPP workflows are implemented on native MuJoCo. Controls enforce stopped base, retracted arm and watchdog; truth-bootstrap estimator scope explicit. Mission validation deferred."
         depends_on: ["R5.1", "R5.7", "R5.8"]
-        scope_paths: ["src/robot_lab_robots/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "src/robot_lab_bringup/"]
+        scope_paths: ["src/robot_lab_robots/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/", "scripts/", "docs/", "src/robot_lab_localization/", "src/robot_lab_mapping/"]
         acceptance_ref: "ROADMAP.md"
-        next_action: "Use a licensed Fetch/PR2/TIAGo source; verify base/arm frames, stability, enlarged footprint and a measured navigate-reach-grasp sequence."
+        next_action: "Implement coordinated navigate/reach/grasp task execution and Fetch/PR2/TIAGo plus other backend control adapters. Validate Stretch motion, source sensors, dynamic footprint, saved/reloaded mapping and obstacle Nav2 after initial implementation."
+        implementation_summary: "Exact-source Stretch and Stretch 3 wheel/tendon motor control plus exclusive base/articulation ownership. Authored camera RGB-D, source laser mount, simulator-state odometry/IMU and full-body footprint; explicit native_task loc/slam/3d_slam/nav stack with actual sensor readiness gate, selected-map save/reload paths and estimator/mapper reset notifications."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
       R5.10:
         title: "PX4 Flight selection and qualification across all installed worlds"
         state: "partial"
         owner: "codex"
         depends_on: ["R5.4", "R6.1"]
-        scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "docs/tutorials/px4_x500.md"]
-        active_scope: "2026-10-08 codex: user requests all seven XY/yaw Drive buttons directly in Drone with less reactive left/right yaw. Preserve measured altitude/PX4 flight path and all-map selection. Qualify the updated actual UI flight, neutral input, left/right yaw, Stop/loss and cleanup; remaining map/ceiling/aerial mapping missions stay open."
+        scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "docs/tutorials/px4_x500.md", "src/robot_lab_utils/", "docs/status/", "LICENSES/third-party-notices.md", "scripts/ssd_env.sh", "scripts/install_geometry_dependencies.sh", "scripts/requirements-geometry.txt"]
+        active_scope: "2026-10-09 codex: implement selected-world static 3D collision planning, GUI measured-pose target selection, Plan/Execute and bounded FCU waypoint tracking with Stop/manual override/loss. Preserve existing manual/takeoff/land defaults and physical source stages. Aerial mapping, other backends and mission validation remain separate."
         acceptance_ref: "ROADMAP.md"
-        next_action: "New-extension priority: verify resources, safe spawn, floor and ceiling for every selected world, then actual native Flight. Implement aerial obstacle planning/mapping and additional backends as separate measured integrations."
+        next_action: "Implement world-specific takeoff corridor/ceiling guards, aerial sensing/saved 3D mapping, dynamic avoidance and additional backends. Validate actual route tracking/contact clearance and remaining world flight after initial implementation; static planning is not a flight guarantee."
         result: "Current normal PX4 / Gazebo Harmonic / nav_empty seven-button Drone screen passes physical forward/reverse/strafe/left/right/Stop, neutral enablement, altitude up/down, release, publisher loss and landing/disarm. 2017 independent body samples; 2 s yaw requests produce +0.601/-0.609 rad at 0.3 rad/s command cap; loss drift 0.041 m. All installed selections retained; other world spawn/ceiling/flight and aerial mapping/planning remain open."
         evidence:
           - "docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed and passing screens; full project remains partial."
           - "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md"
+        implementation_summary: "PX4 experimental selected-world static 3D A* and continuously checked segments over actual canonical primitives, mesh surfaces and terrain; measured FCU target GUI, separate Plan/Execute, resource/pose/target invalidation and bounded FCU route tracking. Manual/Stop/Hold/Land interrupt routes. Single-instance MAVLink lease, SSD bounded logs and startup cleanup added."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R6:
     title: "Environment qualification"
     state: "partial"
@@ -1331,6 +1343,7 @@ tasks:
         title: "Resource-bounded concurrent experiments"
         state: "partial"
         owner: "codex"
+        active_scope: "2026-10-09 codex: replace the demo-only concurrency path with real resource-bounded subprocess launches, leased ROS domains/partitions, owned cancellation/reset, actual telemetry/logs and a GUI queue. Initial implementation now; concurrent-plant qualification and overload campaigns deferred."
         depends_on:
           - "R3.5"
           - "R4.3"
@@ -1339,6 +1352,8 @@ tasks:
           - "src/robot_lab/robot_lab_benchmark/"
           - "src/robot_lab_gui/"
           - "src/robot_lab_adapter/"
+          - "scripts/"
+          - "docs/"
           - "src/robot_lab_benchmark/tools/r8_resource_bounded_experiments.py"
           - "src/robot_lab_benchmark/tools/verify_r8_3_experiments.py"
         acceptance_ref: "ROADMAP.md"
@@ -1351,7 +1366,9 @@ tasks:
           - "Acceptance criteria verified: isolated clocks/seeds/results maintained, overload reported, stop/reset scoped, scheduling preserves algorithm budgets."
           - "Evidence reports generated: docs/status/evidence/r8-3-resource-bounded-experiments-2026-10-01.json and docs/status/evidence/r8-3-verification-2026-10-01.json"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Queue/resource-monitor demonstration exists, but run_simulated_experiment sleeps and invents clocks/trajectories/artifact paths; it does not launch concurrent simulators. Implement real subprocess isolation and demonstrate two runs, overload, scoped cancellation/reset and independent saved results."
+        next_action: "Add explicit workload mission/result and simulator-seed contracts and fair algorithm input capture. Validate two simultaneous plants, overload, scoped cancel/reset and failure cleanup after initial implementation. PX4 instance 0 remains serial; the old sleep-generated demonstration is not acceptance."
+        implementation_summary: "Real subprocess coordinator and GUI queue with leased ROS domains/partitions, startup/capture/RSS/CPU/artifact budgets, actual clock or FCU readiness, physical topic traces and owned cancellation/reset/cleanup. Actual captures and process results remain separate from mission success; legacy executor no longer invents metrics."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R9:
     title: "Reproducibility, learning and release"
     state: "partial"
@@ -1429,7 +1446,7 @@ tasks:
           - "R8.3"
           - "R9.1"
           - "R9.2"
-        active_scope: "2026-10-08 codex: preserve original failing CI and exact passing f74b53f required/scheduled CI, installed/source parity, 17 actual exports, hospital route stages, lossless camera checks and native timer comparisons. Update roadmap/GUI status from exact measured scopes; full release, clean-host missions, concurrency and universal robot/map support remain unqualified."
+        active_scope: "2026-10-09 codex: synchronize initial implementation, installed candidate flags, GUI status, guides, roadmap and ledger. Keep historical reports/source certificates intact and full release partial."
         scope_paths:
           - "scripts/r9_3_support_matrix.py"
           - "scripts/test_support_evidence.py"
@@ -1451,8 +1468,10 @@ tasks:
           - "docs/status/evidence/r9-3-support-matrix-2026-10-01.json"
           - "docs/status/support-matrix-2026-10-01.md"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Update exact per-cell measurements as remaining R3/R5/R6/R7/R8/R9 acceptance passes. Keep historical demo reports separate and full release blocked; no blanket map/backend extrapolation."
+        next_action: "Keep documenting new feature scope and missing implementations separately from later measured support; validation remains unassigned. Do not mark roadmap acceptance complete from a build or profile count."
         result: "Measured skid-drive gates now reject the retained Isaac yaw-only report despite its original producer PASS because the body crawled in a circle. Independent floor-height checks reject successful Nav2 XY endpoints during freefall. Exact report/source hashes and new scope-specific records retain historical failures. CI-only published 73fcc47 passes both required CI and Scheduled Full Test Suite after the shared-utilities PYTHONPATH repair; new runtime source still needs final tiers and exact CI. Full release remains blocked."
+        implementation_summary: "October 9 implementation checkpoint, operator tutorials, remaining initial feature queue and separate validation handoff. GUI Health shows per-task implemented scope and pending validation while historical measurements remain unchanged."
+        implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
       R9.4:
         title: "Optional physical Bumperbot HIL"
         state: "blocked"
@@ -1515,7 +1534,7 @@ handoff:
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "Extensions first: preserve measured Husky/TurtleBot3/4/native Panda/PX4. Complete Motion -> saved/reloaded SLAM -> physical navigation by exact variant/backend/compatible map. Imported hospital/terrain occupancy repairs and current routes precede additional model-matched controllers, remaining R6.5/6.6 world/license/material work, separately owned R6.7 terrain, R5.10 flight worlds and R5.7/5.8 manipulation; then R5.9 mobile missions and original R5.6/comparison/reproduction acceptance. Follow docs/AI_ROBOT_READINESS_GUIDE.md and retain exact source stages, negatives and SSD output."
+  next_action: "Implementation first: preserve working robots and build missing reusable controllers/policy adapters, arm/hand workflows, mobile manipulation and family-level sensor/SLAM/navigation integration. Reuse pinned upstream code rather than create replacements. Keep focused checks and bounded smoke runs proportional to the change; hand off broad map/backend/pattern sweeps to a separate validation lane. See implementation_first and docs/AI_ROBOT_READINESS_GUIDE.md. Do not block unrelated feature delivery on unfinished qualification; do not mark unmeasured mission support passed. Preserve independent terrain/review ownership and SSD output."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-10-02.md"
@@ -1542,7 +1561,7 @@ handoff:
     - "2026-09-11 display mode: robot_model:=none and map_name:=none are valid in display mode, so a world can be shown with no robot and a robot with no world; the Gazebo display path now starts gz-sim with the selected world instead of ignoring the map; registered environments declare every backend they run in, which previously made three of the four backends unusable for every map."
     - "R2.3 completed: all three spawners (PyBullet/MuJoCo/Isaac) now declare /robot_lab/ready, /robot_lab/health, and /robot_lab/reset contracts. Debug print removed from pybullet_spawner.py. Packages rebuilt with --symlink-install. Full bringup test suite: 219 tests pass."
     - "R3.1 completed: structured evidence field added to registry schemas; 5 integrated robots and 13 P5 algorithms now carry evidence entries referencing their smoke experiments and pure-Python logic tests; qualification tests (BHL/go2/quadrotor/safety-limits/algorithm-breadth) gate on evidence instead of bare status labels. Registry suite 267 passed; fast-tier 385 passed + 1 skip; cross-reference validation PASS."
-execution_priority: "extensions_motion_then_slam_then_navigation_then_existing_roadmap"
+execution_priority: "implementation_first_extensions_motion_slam_navigation_then_existing_roadmap"
 readiness_order:
   requested: '2026-10-08'
   owner: codex
@@ -1551,4 +1570,77 @@ readiness_order:
   - measured_sensors_and_saved_slam
   - localized_obstacle_navigation
   scope: Every complete source variant; exact backend/map/revision qualification. Arms/hands use articulation, legged robots walking, drones flight. All-map support requires individual compatible-map results; do not fabricate readiness or enable missing controllers.
-  next_work: "Preserve normal Panda intuitive XYZ/Hand, seven-button PX4 flight, Husky/TurtleBot3/4 measured controls, repaired core Display Drive/braking, 17 occupancy v4 exports and eight Bumperbot/Labbot single-floor hospital routes. Continue two-floor/furniture-adjacent/multi-turn world missions and measured MuJoCo performance, then missing model-matched motion controllers, saved/reloaded SLAM and navigation. Downloads/catalog counts do not establish gait or all-map qualification."
+  next_work: "Initial implementations now include Unitree policy variants, generic native articulation/Servo, measured Panda attachment scenes, Stretch sensor-gated higher workflows, static PX4 aerial planning, coplanar collision reduction and actual concurrent experiments. Continue missing source-specific controllers, broader arm/hand/mobile tasks, cross-backend sensors/navigation, aerial mapping/dynamic flight guards and real algorithm input/result contracts. Broad validation follows initial implementation; preserve source scope and independent terrain/review ownership."
+implementation_first:
+  requested: "2026-10-09"
+  owner: codex
+  policy: "Deliver the most useful missing functionality first; prefer reusable implementations that unlock several exact robot variants. Broad validation follows feature delivery."
+  implementation_roles: "Codex and Claude: implementation, integration and fixes."
+  validation_roles: "Separate follow-up agents chosen by the user; currently unassigned."
+  essential_checks: "Initial implementation first; defer test campaigns and physical validation until the initial feature batches are in place. Necessary syntax/build diagnostics are implementation work. Stop, limits and command-loss handling belong in the implementation. Do not substitute repeated tests, catalog counts or documentation for missing functional code."
+  status_boundary: "Record feature implementation separately from measured runtime qualification. Existing partial/active task states and release gates remain; implemented-but-unvalidated is not a passed robot mission. Missing controllers stay unavailable and candidate workflows remain explicitly experimental."
+  queue:
+  - title: Reusable model-matched motion controllers and policies
+    tasks:
+    - R3.6
+    - R5.2
+    - R5.3
+    - P7
+    outcome: Integrate the already pinned G1/H1/H1_2 native models/checkpoints through
+      a shared contract-aware adapter; extend other complete bases/legged variants using
+      maintained upstream controllers.
+    implemented: Exact G1/H1/H1_2 model/config/checkpoint adapter, installed variants
+      and neutral GUI command path.
+    validation: pending
+  - title: Reusable arm and hand controls
+    tasks:
+    - R5.7
+    - R5.8
+    outcome: Add intuitive joint/Cartesian jogging, Servo and object/attached-object
+      planning; extend existing Panda control contracts to compatible source models.
+    implemented: 28 fixed native position-channel models, coupled-hand panel, Panda/generic
+      Servo, source-matched measured teach/replay and fixture attach/detach scene workflow.
+    validation: pending
+  - title: Mobile manipulation and family-level SLAM/navigation integration
+    tasks:
+    - R5.9
+    - R3.6
+    - R5.6
+    outcome: Connect compatible bases, sensors, planners and arms into operator workflows
+      with selected-map commands, saved-map reload and appropriate footprints.
+    implemented: Stretch/Stretch 3 native base/articulation, actual lidar/RGB-D, truth-bootstrap
+      EKF and explicit AMCL/SLAM/RTAB-Map/Nav2 candidates.
+    validation: pending
+  - title: World, terrain and drone functionality
+    tasks:
+    - R6.5
+    - R6.6
+    - R6.7
+    - R5.10
+    outcome: Complete missing provider/resource/spawn tooling and aerial mapping/planning
+      interfaces; coordinate with the existing terrain owner.
+    implemented: Static selected-world 3D aerial Plan/Execute and FCU waypoint control;
+      provider terrain lane remains owned by cline-agent.
+    validation: pending
+  - title: Measured bottleneck fixes
+    tasks:
+    - P4
+    outcome: Implement a geometry/contact-preserving reduction of expensive static-world
+      MuJoCo updates; retain exact effort timing and sensor fidelity.
+    implemented: Cached equivalent-surface coplanar mesh retriangulation implemented;
+      speed/contact measurements pending.
+    validation: pending
+  - title: Substantive algorithm adapters and real experiment execution
+    tasks:
+    - R4.3
+    - R7
+    - R8.3
+    outcome: Replace remaining placeholders with runnable upstream algorithms and real
+      isolated concurrent subprocess orchestration before comparison campaigns.
+    implemented: Actual resource-bounded isolated subprocess queue, telemetry and cancellation/reset;
+      placeholder executor metrics removed.
+    validation: pending
+  deferred_validation:
+    owner: null
+    scope: "Full robot/map/backend/mode/pattern matrices, longer/multiple-goal routes, flight-world and manipulation repetitions, physical joystick, terrain traversal, fair algorithm comparisons, clean-host reproduction and release qualification."
+    handoff: "Use existing real producers and exact source/model/config/asset paths; report commands, hashes, raw artifacts and failures. Return concrete defects to implementation; never promote catalog counts, synthetic scores or unchecked support cells."

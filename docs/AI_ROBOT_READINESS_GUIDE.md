@@ -1,12 +1,29 @@
-# Finish robot readiness with reproducible physical evidence
+# Implement robot readiness and hand off validation
 
-Updated October 8, 2026. The user's order is **motion → SLAM → navigation**
+Updated October 9, 2026. Initial implementation takes priority over test
+campaigns. The feature dependency order is **motion → SLAM → navigation**
 for every complete, compatible source variant. This guide supplements
 [the handoff](AGENT_HANDOFF.md), [patch guide](PATCH_EXECUTION_GUIDE.md),
 [extension guide](ASSET_EXTENSION_GUIDE.md) and
 [task ledger](status/platform-status.yaml). Work on the existing `master`.
 Read the current ledger before editing; preserve other agents' files and
 claim the exact scope. R6.7 terrain remains separately owned.
+
+## Current division of work
+
+Codex/Claude implement the missing reusable adapters and operator workflows.
+Follow-up agents perform broad testing after the initial feature batches.
+Use the ledger's `implementation_first` queue and
+[implementation checkpoint](status/implementation-2026-10-09.md). Build/import
+diagnostics needed for installable code belong to implementation; broad tests,
+mission repetitions and full simulator matrices are deferred. Keep controller
+limits, neutral input, interruption and command-loss behavior in the actual code.
+Record implemented-but-unvalidated candidates separately from measured support.
+
+The physical probes and promotion steps below are the **validation handoff**,
+not a requirement to repeat all missions before implementing the next feature.
+Validation agents report concrete failures to the implementation owner and
+retain exact source/model/configuration paths and original artifacts.
 
 ## Start from the actual installed state
 
@@ -62,7 +79,24 @@ real scans/depth and TF mounts, and retains the exact generated command and
 pre-trial source hashes. Extend a probe for the model's actual joint topology;
 do not borrow another robot's wheel names or sensor proof.
 
-## Next humanoid policy adapters
+## Native adapters implemented October 9
+
+The shared `robot_lab_mujoco.unitree_policy` adapter and SSD installer now use
+three exact-model RL Gym variants below. GUI exposure is an explicit MuJoCo
+Display experimental toggle; no higher-mode support certificate is promoted.
+Generic native position controls cover 28 fixed models; Stretch/Stretch 3 add
+original wheel actuation, actual sensor publishers and explicit `native_task`
+stack composition. Panda/generic Servo and taught measured configurations are
+implemented separately from global MoveIt planning. Read
+[native controls](tutorials/native-controls.md) and the
+[implementation handoff](status/implementation-2026-10-09.md).
+
+Continue missing source-specific models, cross-backend controllers, object/task
+planners, aerial sensing/mapping and algorithm workload contracts before broad
+validation. Do not repeat the already implemented source import/adapter as if
+it were still missing. Qualification acceptance below remains deferred.
+
+## Model-matched policy contracts
 
 The pinned [October 8 Unitree source review](status/evidence/extensions-finish-2026-10-08/policy-sources/source-review.json)
 records real checkpoint/configuration/native-model hashes at

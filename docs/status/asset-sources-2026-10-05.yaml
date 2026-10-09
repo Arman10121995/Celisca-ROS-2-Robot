@@ -2,6 +2,17 @@ updated: '2026-10-05'
 qualification: Pinned sources; installation and exact model/world import checks are
   recorded separately from runtime missions.
 sources:
+- id: unitree_rl_gym
+  kind: robot
+  repository: https://github.com/unitreerobotics/unitree_rl_gym
+  revision: 276801e46c5d433564f24658bac64f254b7d2d4b
+  status: integration_implemented
+  license_note: BSD-3-Clause root license retained; exact model/config/checkpoint contracts, native torque control; experimental implementation, runtime validation pending
+  entries:
+  - resources/robots/g1_description
+  - resources/robots/h1
+  - resources/robots/h1_2
+  - deploy
 - id: turtlebot3_simulation_vendor
   kind: robot_dependency
   repository: https://github.com/ROBOTIS-GIT/turtlebot3_simulations

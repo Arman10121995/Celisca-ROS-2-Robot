@@ -59,6 +59,17 @@ def format_platform_status(data):
     lines = [f"Platform Status — updated {data.get('updated', 'unknown')}",
              f"Overall: {data.get('overall_state', 'unknown')}",
              data.get('assessment', '')]
+    delivery = data.get('implementation_first', {})
+    if delivery:
+        lines.extend(['', 'Implementation first', delivery.get('policy', ''),
+                      delivery.get('implementation_roles', ''), delivery.get('validation_roles', ''),
+                      delivery.get('essential_checks', ''), delivery.get('status_boundary', '')])
+        for number, item in enumerate(delivery.get('queue', []), 1):
+            lines.append(f"{number}. {item['title']}: {item.get('outcome', '')}")
+            if item.get('implemented'):
+                lines.append('  Implemented: '+item['implemented'])
+                lines.append('  Validation: '+item.get('validation', 'pending'))
+        lines.extend(['', 'Deferred validation', delivery.get('deferred_validation', {}).get('scope', '')])
     readiness = data.get('readiness_order', {})
     if readiness:
         lines.extend(['', 'Current robot priority: Motion → SLAM → Navigation',
@@ -88,6 +99,9 @@ def format_platform_status(data):
                 continue
             lines.append(f"{'  ' * depth}{task_id}: {task.get('state', '?')} — "
                          f"{task.get('title', '')}")
+            if task.get('implementation_summary'):
+                lines.append(f"{'  ' * (depth + 1)}Implementation: {task['implementation_summary']}")
+                lines.append(f"{'  ' * (depth + 1)}Validation: {task.get('implementation_validation', 'pending')}")
             append_tasks(task.get('tasks', {}), depth + 1)
 
     append_tasks(data.get('tasks', {}))
@@ -816,13 +830,16 @@ class BenchmarkTab(LabTab):
         ).grid(row=0, column=2, sticky="ew", padx=(4, 0))
 
         results_frame = ttk.LabelFrame(self, text="Latest Run Summary", padding=6)
-        results_frame.grid(row=2, column=0, sticky="nsew", pady=(10, 0))
+        results_frame.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
         results_frame.columnconfigure(0, weight=1)
         results_frame.rowconfigure(0, weight=1)
         self.results = scrolledtext.ScrolledText(results_frame, wrap="word", height=14)
         self.results.grid(row=0, column=0, sticky="nsew")
         self.results.configure(state="disabled")
-        self.rowconfigure(2, weight=1)
+        self.rowconfigure(3, weight=1)
+        from .experiment_queue import ExperimentQueue
+        self.experiment_queue = ExperimentQueue(self, self.app, self.outdir_var)
+        self.experiment_queue.grid(row=2, column=0, sticky='ew', pady=(10, 0))
 
     def _load_choices(self):
         def ids(filename):
@@ -940,6 +957,7 @@ class BenchmarkTab(LabTab):
             self.app.log(f"[regression] failed: {exc}\n")
 
     def _stop_all(self):
+        self.experiment_queue.cancel()
         self.app.stop_all_bg()
         self.app.set_status("Background processes stopped")
 
@@ -1099,6 +1117,15 @@ class HealthTab(LabTab):
         ttk.Button(frame, text="Robot Readiness Guide", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/AI_ROBOT_READINESS_GUIDE.md')).grid(
                 row=6, column=2, sticky='ew', padx=(4, 0), pady=2)
+        ttk.Button(frame, text='Implementation / Validation Handoff', command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/status/implementation-2026-10-09.md')).grid(
+                row=8, column=0, columnspan=3, sticky='ew', pady=2)
+        ttk.Button(frame, text='Native Controls / Stretch', command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/native-controls.md')).grid(
+                row=9, column=0, columnspan=2, sticky='ew', pady=2)
+        ttk.Button(frame, text='Experiment Queue', command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/tutorials/concurrent-experiments.md')).grid(
+                row=9, column=2, sticky='ew', pady=2)
         ttk.Button(frame, text="Done / Remaining", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
                 row=5, column=2, sticky='ew', padx=(4, 0), pady=2)

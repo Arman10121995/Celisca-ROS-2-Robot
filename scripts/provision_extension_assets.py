@@ -427,10 +427,107 @@ def checkpoint_robots(store, profiles, entities, records):
     write_json(path, previous)
 
 
+def install_unitree_policies(store, download):
+    """Install three exact lower-body deployment variants, not generic gaits."""
+    import mujoco
+    from robot_lab_utils.native_mjcf_assets import export_display_urdf
+
+    source = load_source('unitree_rl_gym')
+    root = source_checkout(source, store, download)
+    profiles, entities, records = {}, [], []
+    for robot, urdf_entry in (
+            ('g1', 'resources/robots/g1_description/g1_12dof.urdf'),
+            ('h1', 'resources/robots/h1/urdf/h1.urdf'),
+            ('h1_2', 'resources/robots/h1_2/h1_2_12dof.urdf')):
+        config_path = root/'deploy/deploy_mujoco/configs'/f'{robot}.yaml'
+        config = yaml.safe_load(config_path.read_text())
+        scene = root/config['xml_path'].replace('{LEGGED_GYM_ROOT_DIR}/', '')
+        # The scene includes an infinite floor. Use the exact robot include
+        # so the selected Robot Lab world owns floor/contact geometry.
+        includes = ET.parse(scene).getroot().findall('include')
+        if len(includes) != 1:
+            raise ValueError('Expected one upstream robot include: '+str(scene))
+        native = scene.parent/includes[0].get('file')
+        checkpoint = root/config['policy_path'].replace('{LEGGED_GYM_ROOT_DIR}/', '')
+        urdf = root/urdf_entry
+        model = mujoco.MjModel.from_xml_path(str(native))
+        if model.nu != int(config['num_actions']) or model.nq != 7 + model.nu:
+            raise ValueError('Policy/model action dimensions differ: '+robot)
+        actuator_names = [mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_ACTUATOR, a)
+                          for a in range(model.nu)]
+        joint_names = [mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT,
+                        int(model.actuator_trnid[a, 0])) for a in range(model.nu)]
+        authored = {joint.get('name'): joint for joint in ET.parse(urdf).getroot().findall('joint')}
+        effort_limits = [float(authored[name].find('limit').get('effort')) for name in joint_names]
+        name = 'policy_unitree_'+robot
+        output = store/'models'/name/source['revision']
+        output.mkdir(parents=True, exist_ok=True)
+        description = output/'display.urdf'
+        geometry = export_display_urdf(model, description)
+        manifest = output/'locomotion.yaml'
+        resources = [native, config_path, checkpoint, urdf, root/'LICENSE']
+        for resource in resources:
+            if not resource.is_file():
+                raise ValueError('Missing required policy resource: '+str(resource))
+        # Include actual mesh bytes in the contract; a same-named edited mesh
+        # changes the plant even when the top-level XML remains identical.
+        resources.extend(sorted(set(native.parent.glob('meshes/*'))))
+        resources = [path.resolve() for path in resources if path.is_file()]
+        contract = dict(schema_version=1, robot=robot, repository=source['repository'],
+            revision=source['revision'], native_model=str(native.resolve()),
+            upstream_config=str(config_path.resolve()), checkpoint=str(checkpoint.resolve()),
+            joint_names=joint_names, actuator_names=actuator_names, effort_limits=effort_limits,
+            command_limits=[.4, .2, .6], command_timeout_s=.5, max_tilt_rad=.9,
+            resources=[dict(path=str(path), sha256=digest(path)) for path in resources],
+            lab_changes=['zero startup command instead of upstream cmd_init',
+                         'operator command watchdog; source URDF effort caps; native joint target limits',
+                         'latched finite-state/fall stop; explicit reset',
+                         'selected world owns floor; nominal pose only at initialization/reset'],
+            qualification='implemented experimental controller; physical walking/SLAM/navigation validation pending')
+        write_yaml(manifest, contract)
+        profile = dict(package='robot_lab_robots', xacro=str(description),
+            native_mjcf=str(native.resolve()), name=name, source_id=source['id'],
+            source_entry=str(native.relative_to(root)), supported_simulators=['mujoco'],
+            supported_modes=['display'], supported_modes_by_simulator={'mujoco': ['display']},
+            default_mode='display', spawn={'z': '0.0'}, features=['native_locomotion'],
+            locomotion_policy_config=str(manifest),
+            locomotion_drive_limits=dict(max_speed=.4, max_angular_speed=.6,
+                max_accel=.5, max_angular_accel=.8),
+            implementation_state='implemented', validation_state='pending',
+            notes='Exact upstream '+robot.upper()+' lower-body policy/model. MuJoCo Display remains passive '
+                  'until Native walking policy is enabled before Run. Physical motor control, Drive/WASD, '
+                  'Stop, command watchdog and Reset are implemented; full walking, terrain, sensors, '
+                  'SLAM and navigation validation is deferred.')
+        evidence = store/'installed/checks'/f'{name}.json'
+        check = dict(source_id=source['id'], revision=source['revision'],
+            geometry=geometry, native_model_sha256=digest(native),
+            contract=str(manifest), contract_sha256=digest(manifest),
+            checkpoint_sha256=digest(checkpoint), controller='robot_lab_mujoco.unitree_policy',
+            implementation_state='implemented', runtime_mission_qualified=False)
+        write_json(evidence, check)
+        profiles[name] = profile
+        entities.append(robot_entity(name, profile, source, profile['source_entry'], evidence))
+        records.append(dict(source_id=source['id'], revision=source['revision'], entry=robot,
+            status='installed', check=str(evidence), profiles=[dict(id=name, kind='robot',
+                support='MuJoCo Display; explicit experimental locomotion', notes=profile['notes'])]))
+        checkpoint_robots(store, profiles, entities, records)
+        print(source['id'], robot, 'implemented; validation pending', flush=True)
+    return profiles, entities, records
+
+
 def install_robots(store, download, selected_source=None):
     from robot_lab_utils.native_mjcf_assets import export_display_urdf
     import mujoco
     profiles, entities, records = {}, [], []
+    if selected_source in (None, 'unitree_rl_gym'):
+        try:
+            profiles, entities, records = install_unitree_policies(store, download)
+        except Exception as exc:
+            if selected_source == 'unitree_rl_gym':
+                raise
+            records.append(dict(source_id='unitree_rl_gym', entry='deployment variants',
+                status='needs integration repair', reason=str(exc), profiles=[]))
+            print('unitree_rl_gym', str(exc), flush=True)
     for source in yaml.safe_load(CATALOG.read_text())['sources']:
         if source['id'] not in ('robot_assets', 'mujoco_menagerie','turtlebot3_vendor','husky_vendor',
                                'turtlebot4_vendor') or selected_source and source['id'] != selected_source:
@@ -465,6 +562,12 @@ def install_robots(store, download, selected_source=None):
                                'supported_simulators': ['mujoco'], 'spawn': {'z': '0.0'}}
                     if name == 'menagerie_franka_emika_panda':
                         profile['arm_control'] = 'panda'
+                    else:
+                        from robot_lab_utils.native_actuation import position_channels
+                        channels = position_channels(model)
+                        if channels:
+                            profile['native_articulation'] = {'channels': channels,
+                                'implementation_state': 'implemented', 'validation_state': 'pending'}
                     del model
                 else:
                     if source['id'] in ('turtlebot3_vendor','husky_vendor','turtlebot4_vendor'):
@@ -534,6 +637,14 @@ def install_robots(store, download, selected_source=None):
                         profile['notes'] += (' Hand tab: original coupled fingers, bounded-force opening/closing, '
                             'Cancel/Stop and reset. Physical cube lift/hold/release recorded on MuJoCo/nav_empty; '
                             'other objects, planned grasping and dexterous hands require separate qualification.')
+                if profile.get('native_articulation'):
+                    profile['features'].append('articulation_position_control')
+                    profile['notes'] += (' Source-bounded fixed-base native position-actuator jogging '
+                        'is implemented in Arm; explicitly enable Native joint controls before Run. '
+                        'Physical motion/grasp validation remains pending.')
+                if name in ('menagerie_hello_robot_stretch', 'menagerie_hello_robot_stretch_3'):
+                    from configure_native_mobile import configure_profile
+                    profile = configure_profile(store, name, profile)
                 if source['id'] == 'turtlebot4_vendor':
                     controlled, drive, controllers, sensor_config = turtlebot4_drive(derived, name)
                     profile.update(xacro=str(controlled), drive=drive, drive_in_display=True,

@@ -1,6 +1,10 @@
 # Worlds, robot assets and manipulation: continuation guide
 
-Updated October 8, 2026. The latest physical extension work is recorded in
+Updated October 9, 2026. New [initial implementations](status/implementation-2026-10-09.md)
+include exact-model Unitree policies, generic native actuator/Servo/teach-replay,
+measured Panda object scenes, Stretch sensor/navigation candidates, static
+PX4 planning and a real isolated experiment queue. Physical qualification
+follows initial implementation. The latest historical physical work is recorded in
 [the October 8 checkpoint](status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](status/CURRENT_STATUS.md) and
 [the continuation](status/continuation-2026-10-08.md) for measured scopes and
@@ -34,6 +38,8 @@ It has no download controls.
 source scripts/ssd_env.sh
 source /opt/ros/humble/setup.bash
 source install/setup.bash
+bash scripts/install_geometry_dependencies.sh
+source scripts/ssd_env.sh
 python3 scripts/provision_extension_assets.py --kind all
 # Recheck existing pinned SSD sources without downloading:
 python3 scripts/provision_extension_assets.py --kind all --no-download
@@ -54,7 +60,13 @@ hinge/slide states reach RViz. Display holds the authored pose passively;
 `display_hold:=false` runs native dynamics without a locomotion controller.
 The native Panda is the measured exception: `arm_control:=auto` selects its
 real joint controller and the Arm tab; use `arm_control:=none` for passive
-Display. Other native imports do not gain walking/trajectory/grasp control. Native MJCF
+Display. Compatible native fixed models now expose explicitly enabled joint,
+coupled-hand, Servo and teach/replay controls; two Stretch profiles add native
+base/sensors and experimental higher tasks. Three source-matched Unitree policy
+variants are installed under existing families. Read
+[native controls](tutorials/native-controls.md). Installed control metadata
+records implementation and pending validation separately. Other native imports
+retain their prior workflows. Native MJCF
 profiles are limited to MuJoCo; enabling another backend requires an actual
 plant and control adapter. Textures/skins and complete visual parity remain
 separate from rigid geometry checks.

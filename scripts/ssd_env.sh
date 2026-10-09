@@ -23,6 +23,12 @@ _robot_lab_ssd_env() {
     export TMPDIR="$lab_storage_base/tmp"
     export TMP="$TMPDIR" TEMP="$TMPDIR"
     export ROS_LOG_DIR="$lab_storage_base/ros/log"
+    # Shared optional geometry wheels serve both sourced ROS Python and the
+    # PX4 venv without moving dependencies onto internal storage.
+    if [[ -d "$lab_storage_base/python_deps/geometry" &&
+          ":${PYTHONPATH:-}:" != *":$lab_storage_base/python_deps/geometry:"* ]]; then
+        export PYTHONPATH="$lab_storage_base/python_deps/geometry${PYTHONPATH:+:$PYTHONPATH}"
+    fi
     printf 'Robot Lab runtime: %s\n' "$ROBOT_LAB_RUNTIME_ROOT"
 }
 _robot_lab_ssd_env

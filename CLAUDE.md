@@ -1,9 +1,17 @@
 # Robot Lab continuation
 
-Updated October 8, 2026. Read the [current checkpoint](docs/status/continuation-2026-10-08.md); work on `master`, with
+Updated October 9, 2026. Read the [implementation checkpoint](docs/status/implementation-2026-10-09.md); work on `master`. Earlier runtime source has
 successful required CI and separate measured GUI/Drive/Panda artifacts. The
 project remains partial; start with [current status](docs/status/CURRENT_STATUS.md),
 [the checklist](docs/status/CHECKLIST.md) and [the roadmap](ROADMAP.md).
+
+The user's latest priority is **implement everything remaining first, test and
+validate afterward**. Codex/Claude should deliver reusable controllers and
+complete operator workflows rather than repeatedly run mission matrices.
+Follow `implementation_first` in the ledger. Keep necessary build diagnostics
+and actual Stop/limits/watchdog code. Mark new integrations implemented and
+experimental, preserving historical measured source certificates until later
+validation. Follow-up validation owners are currently unassigned.
 
 Follow [AGENTS.md](AGENTS.md) and [the handoff](docs/AGENT_HANDOFF.md). Read the
 ledger, October 2 audit and execution guides before changing shared files;

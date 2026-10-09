@@ -1,6 +1,6 @@
 # Native Panda arm and hand controls
 
-Documentation reviewed October 8, 2026; current controls and exact source stages
+Documentation reviewed October 9, 2026; current controls and exact source stages
 are in the [extension evidence](../status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](../status/CURRENT_STATUS.md) for available workflows and
 remaining qualification; evidence below retains its named source stages.
@@ -9,10 +9,14 @@ remaining qualification; evidence below retains its named source stages.
 
 Select `menagerie_franka_emika_panda`, MuJoCo and Display in Launch. Choose a
 map, then Run. The command includes `arm_control:=panda` and
-`arm_planning:=moveit` for the qualified profile without a grasp fixture. Open **Launch → Arm** in the right-hand control column
+`arm_planning:=moveit` for the existing profile. Fixture planning is now
+implemented experimentally with measured object geometry and attach/detach;
+its new mission validation is pending. Open **Launch → Arm** in the right-hand control column
 to jog each joint, return Home, cancel a trajectory or Stop Arm. The displayed
 positions come from the simulator. The base Drive/WASD controls are disabled
-for this fixed arm. Other installed Panda/arm profiles remain Display imports.
+for this fixed arm. Compatible fixed native arms/hands have separate explicitly
+enabled actuator/Servo/teach-replay controls; see [native controls](native-controls.md).
+Other models keep their existing availability.
 
 The actual seven position actuators, gains and force limits come from the
 [pinned Menagerie Panda](https://github.com/google-deepmind/mujoco_menagerie/tree/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda).
@@ -110,11 +114,21 @@ measured position. Live Monitor may remain connected during these controls.
 
 The measured mission covers two targets and rejection/interruption/reset in
 static `nav_empty`. Other static maps are operator experiments; actor/heightmap
-scenes fail explicitly. The optional grasp fixture sets `arm_planning:=none`
-because its free cube and pedestal are not yet represented as planning-scene
-objects. Use the proven joint/Hand controls for that fixture. Attached payload
-planning, Servo Cartesian jogging, arbitrary repeated pick/place and the
-other arm backends remain R5.7–R5.9.
+scenes fail explicitly. October 9 adds experimental local **Cartesian jog**
+and measured fixture planning. The free cube and pedestal enter the MoveIt
+scene from actual native state; scene revisions invalidate saved plans. After
+an idle measured grasp, **Attach grasped object** requires fresh joints, FK
+and contact on both source fingers. The collision attachment uses actual
+finger links and tool-relative geometry; it never welds the physical cube.
+**Detach object** restores measured world geometry. Losing grasp contact
+removes the planning attachment and interrupts an executing arm path.
+
+Wait for scene acknowledgement before planning. Source/pose/contact changes
+and pending scene updates disable execution. These new Servo/attachment
+workflows await physical validation; historical static plans and joint cube
+lifts remain scoped to their original sources. Arbitrary repeated pick/place,
+other arm planning adapters/backends and coordinated mobile manipulation are
+still missing initial tasks in R5.7–R5.9.
 
 ## Hand and physical grasp
 

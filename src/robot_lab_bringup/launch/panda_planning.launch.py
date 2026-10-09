@@ -82,7 +82,7 @@ def _setup(context):
         Node(package='robot_lab_bringup', executable='native_arm_scene.py', name='native_arm_scene',
              output='screen', parameters=[{'use_sim_time': use_sim,
                 'world_path': LaunchConfiguration('world_path').perform(context),
-                'spawn_z': spawn[2]}]),
+                'spawn_z': spawn[2], 'grasp_fixture': LaunchConfiguration('grasp_fixture').perform(context).lower() == 'true'}]),
     ]
 
 
@@ -91,6 +91,7 @@ def generate_launch_description():
         DeclareLaunchArgument('native_mjcf'),
         DeclareLaunchArgument('world_path', default_value=''),
         DeclareLaunchArgument('use_sim_time', default_value='true'),
+        DeclareLaunchArgument('grasp_fixture', default_value='false'),
         *[DeclareLaunchArgument('spawn_'+axis, default_value='0.0') for axis in ('x', 'y', 'z', 'yaw')],
         OpaqueFunction(function=_setup),
     ])

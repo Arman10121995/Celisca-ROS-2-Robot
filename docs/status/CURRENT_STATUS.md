@@ -1,6 +1,12 @@
 # Current Robot Lab status
 
-Updated October 8, 2026. The current extension checkpoint stays on **`master`**;
+Updated October 9, 2026. New [implementation-first work](implementation-2026-10-09.md)
+adds experimental Unitree policies, native joint/hand/Cartesian teach-replay
+controls, measured Panda object scenes, Stretch sensor-gated mapping/Nav2,
+static PX4 3D Plan/Execute, coplanar collision reduction and real concurrent
+experiments. Nine changed packages built; these implementations have pending
+physical/test qualification. Testing/validation is deferred until the initial
+implementation batches. The previous measured extension checkpoint stays on **`master`**;
 [its evidence](evidence/extensions-finish-2026-10-08/README.md) records exact runtime
 source stages, publication and checks. The project is
 **partial**. The [ledger](platform-status.yaml) records owners and task states;

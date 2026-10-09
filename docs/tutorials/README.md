@@ -1,6 +1,8 @@
 # Robot Lab tutorials
 
-Updated October 8, 2026 against the named measurements in the
+Updated October 9, 2026. New controls/workflows have an
+[implementation checkpoint](../status/implementation-2026-10-09.md), with
+physical validation deferred. Earlier named measurements remain in the
 [extension checkpoint](../status/continuation-2026-10-08.md). Start with [current status](../status/CURRENT_STATUS.md) and the
 [done/remaining checklist](../status/CHECKLIST.md). The project remains partial;
 a guide, imported model or numerical example does not qualify every mission.
@@ -14,7 +16,9 @@ a guide, imported model or numerical example does not qualify every mission.
 | [TurtleBot3](turtlebot3.md) | Three official models, measured four-backend Drive/localization/2D SLAM/export/navigation; RGB-only 3D SLAM remains unavailable |
 | [TurtleBot4](turtlebot4.md) | Standard/Lite, measured four-backend Drive/localization/2D/3D SLAM/export/navigation; other maps and vendor behavior remain |
 | [Husky](husky.md) | Original four-wheel skid geometry, declared lab sensor/motor kit and evidence-gated modes; exact backend/map screens remain separate from wider readiness |
-| [Native Panda](panda_arm.md) | MuJoCo joint/Hand controls, physical cube grasp and static-world MoveIt Plan/Execute; Servo/payload/other backends remain |
+| [Native Panda](panda_arm.md) | Measured prior joint/Hand/static planning; new experimental Servo and measured object attach/detach await validation |
+| [Native controls and Stretch](native-controls.md) | Unitree exact-model policies; 28 fixed actuator candidates, Cartesian/teach-replay; Stretch base/sensors and explicit higher workflows |
+| [Concurrent experiments](concurrent-experiments.md) | Real bounded subprocess queue, actual telemetry and owned cancel/reset; mission qualification remains separate |
 | [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |
 | [Go2 policy](go2.md) | Bounded MuJoCo policy trials and their recorded failures; terrain/recovery/navigation remain unqualified |
 

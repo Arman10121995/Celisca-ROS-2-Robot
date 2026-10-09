@@ -1,6 +1,6 @@
 # Robot Lab architecture: current implementation and target
 
-Documentation updated October 8, 2026. Exact source stages and current checks
+Documentation updated October 9, 2026. Exact source stages and current checks
 are in the [extension checkpoint](../status/continuation-2026-10-08.md). The [current status](../status/CURRENT_STATUS.md),
 [ledger](../status/platform-status.yaml) and
 [support matrix](../status/support-matrix.md) distinguish implemented wiring,
@@ -28,6 +28,30 @@ The current user priority is R3.6 and R6.5–R6.7, then R5.10 and R5.7–R5.9,
 before the older wheel/legged/comparison roadmap. Follow actual owners and
 [AGENT_HANDOFF](../AGENT_HANDOFF.md); preserve separately owned terrain and
 occupancy work.
+
+## October 9 implementation additions
+
+New candidate controls preserve native source plants: exact-model Unitree
+TorchScript observations/PD torques, generic authored position channels,
+local Jacobian Servo and taught measured articulation sequences. Measured
+Panda object state feeds acknowledged MoveIt collision attachment diffs;
+physical grasp remains native contact dynamics. Stretch has separate wheel
+transmission control and base/articulation ownership, source-mounted sensor
+publishers and explicit sensor-gated mapping/Nav2 composition. Truth-bootstrap
+EKF inputs are not independent state-estimation accuracy claims.
+
+Static aerial geometry planning runs asynchronously so FCU setpoints remain
+responsive. PX4 executes bounded waypoint setpoints from actual FCU state and
+retains manual/Stop/Hold/Land overrides. The benchmark coordinator launches
+actual owned subprocesses with domain/partition isolation and real telemetry;
+process/trace results remain separate from mission success. Cached coplanar
+collision reduction preserves validated planar unions and source visual/raycast
+assets; physical speed/contact measurements remain pending.
+
+Read [the implementation checkpoint](../status/implementation-2026-10-09.md)
+for exact files/commands, still-missing initial features and deferred validation.
+These new integrations have not inherited historical source certificates or
+full robot/map/backend qualification.
 
 ## Actual source-tree and package map
 

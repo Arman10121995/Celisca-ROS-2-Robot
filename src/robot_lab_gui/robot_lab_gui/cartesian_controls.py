@@ -56,7 +56,27 @@ class CartesianControls(ttk.LabelFrame):
         self.points = None
         self.start = None
         self.was_owned = False
+        object_actions = ttk.Frame(self)
+        object_actions.grid(row=10, column=0, columnspan=4, sticky='ew')
+        self.attach_button = ttk.Button(object_actions, text='Attach grasped object (planning)',
+            command=lambda: self.object_command('attach'))
+        self.detach_button = ttk.Button(object_actions, text='Detach object (planning)',
+            command=lambda: self.object_command('detach'))
+        self.attach_button.grid(row=0, column=0, sticky='ew', padx=2)
+        self.detach_button.grid(row=1, column=0, sticky='ew', padx=2, pady=4)
+        ttk.Label(self, text='Attachment requires measured contact on both fingers. '
+            'It changes collision planning; source contact physics still carries the object.',
+            wraplength=285).grid(row=11, column=0, columnspan=4, sticky='w')
         self.refresh()
+
+    def object_command(self, operation):
+        if not self.owned() or not self.connected or not self.arm.ready() or self.arm.state.get('busy'):
+            return
+        import json
+        from std_msgs.msg import String
+        self.invalidate()
+        self.object_pub.publish(String(data=json.dumps(dict(operation=operation))))
+        self.status.set('Requested '+operation+'; waiting for the measured scene acknowledgement.')
 
     def owned(self):
         process = self.arm.app.process
@@ -181,6 +201,7 @@ class CartesianControls(ttk.LabelFrame):
         self.planner = node.create_client(GetMotionPlan, '/plan_kinematic_path')
         self.joint_subscription = node.create_subscription(JointState, '/joint_states', self.receive_joints, 10)
         self.scene_subscription = node.create_subscription(String, '/arm/planning_scene_status', self.receive_scene, 10)
+        self.object_pub = node.create_publisher(String, '/arm/planning_scene_command', 1)
         self.connected = True
         return True
 
@@ -193,7 +214,10 @@ class CartesianControls(ttk.LabelFrame):
     def receive_scene(self, message):
         import json
         try:
-            self.scene = json.loads(message.data)
+            scene = json.loads(message.data)
+            if scene.get('scene_revision', 0) != self.scene.get('scene_revision', 0):
+                self.invalidate()
+            self.scene = scene
             self.scene_received = time.monotonic()
         except (ValueError, TypeError):
             return
@@ -221,9 +245,7 @@ class CartesianControls(ttk.LabelFrame):
                 self.status.set(self.scene.get('error', 'Waiting for the selected-world collision scene…'))
         else:
             process = self.arm.app.process
-            self.status.set('Cartesian planning is unavailable with the optional grasp fixture; use joint and hand controls.'
-                if process and 'grasp_fixture:=true' in process.args else
-                'Select a qualified Panda planning profile and Run from Launch.')
+            self.status.set('Select a Panda planning profile and Run from Launch.')
         if self.planning and time.monotonic()-self.planning_started > 8:
             self.invalidate()
             self.status.set('Planning timed out; plan again.')
@@ -231,6 +253,11 @@ class CartesianControls(ttk.LabelFrame):
             self.invalidate()
             self.status.set('Tool-pose request timed out; try again.')
         ready = self.ready()
+        fixture = bool(self.arm.app.process and 'grasp_fixture:=true' in self.arm.app.process.args)
+        idle = self.owned() and self.arm.ready() and not self.arm.state.get('busy') and self.connected
+        self.attach_button.state(['!disabled'] if idle and fixture and not self.scene.get('object_attached')
+            and self.scene.get('grasp_contacts_ready') else ['disabled'])
+        self.detach_button.state(['!disabled'] if idle and fixture and self.scene.get('object_attached') else ['disabled'])
         if self.reference is not None and (not ready or not all(
                 abs(self.joints.get(n, math.inf)-q) < .01 for n, q in self.reference_joints.items())):
             self.clear_reference()

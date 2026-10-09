@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 import time
 from pathlib import Path
@@ -91,8 +92,13 @@ class BenchmarkExecutor(Node):
         bag_path: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Execute a single benchmark run with measurement."""
-        start_time = time.time()
+        if not math.isfinite(duration_sec) or not 0 < duration_sec <= 3600:
+            raise ValueError('Use a bounded finite capture duration within one hour')
+        start_time = time.monotonic()
         bag_proc = None
+        subscription = None
+        positions, distance = [], 0.
+        invalid_truth = False
 
         try:
             # Reset simulator
@@ -100,9 +106,9 @@ class BenchmarkExecutor(Node):
                 return {
                     'success': False,
                     'elapsed_seconds': 0.0,
-                    'path_length_m': 0.0,
-                    'collision_count': 0,
-                    'min_clearance_m': 0.0,
+                    'path_length_m': None,
+                    'collision_count': None,
+                    'min_clearance_m': None,
                     'error': 'reset_failed',
                 }
 
@@ -110,22 +116,39 @@ class BenchmarkExecutor(Node):
             if bag_capture and bag_path:
                 bag_proc = self.record_rosbag(bag_path, duration_sec=duration_sec)
 
-            # Wait for experiment duration
-            time.sleep(duration_sec)
+            from nav_msgs.msg import Odometry
+            from rclpy.qos import qos_profile_sensor_data
+            def receive(message):
+                nonlocal distance, invalid_truth
+                point = message.pose.pose.position
+                value = [point.x, point.y, point.z]
+                if not all(map(math.isfinite, value)):
+                    invalid_truth = True
+                    return
+                if positions:
+                    distance += math.dist(positions[-1], value)
+                positions.append(value)
+                positions[:] = positions[-2:]
+            subscription = self.create_subscription(Odometry, '/odom/ground_truth', receive, qos_profile_sensor_data)
+            deadline = time.monotonic()+duration_sec
+            while rclpy.ok() and time.monotonic() < deadline:
+                rclpy.spin_once(self, timeout_sec=min(.1, max(0., deadline-time.monotonic())))
 
             # Stop rosbag
             if bag_proc:
                 self.stop_rosbag(bag_proc)
 
-            elapsed = time.time() - start_time
+            elapsed = time.monotonic() - start_time
 
-            # Collect results from simulator (placeholder)
             return {
-                'success': True,
+                'success': False,
+                'capture_completed': True,
+                'mission_outcome': 'unassessed',
                 'elapsed_seconds': elapsed,
-                'path_length_m': 25.0,  # Placeholder
-                'collision_count': 0,  # Placeholder
-                'min_clearance_m': 0.5,  # Placeholder
+                'path_length_m': distance if len(positions) >= 2 and not invalid_truth else None,
+                'collision_count': None,
+                'min_clearance_m': None,
+                'measurement_scope': 'Actual ground-truth odometry capture; no scenario evaluator, contact or footprint-clearance source',
             }
         except Exception as e:
             self.get_logger().error(f"Experiment failed: {e}")
@@ -134,12 +157,15 @@ class BenchmarkExecutor(Node):
 
             return {
                 'success': False,
-                'elapsed_seconds': time.time() - start_time,
-                'path_length_m': 0.0,
-                'collision_count': 0,
-                'min_clearance_m': 0.0,
+                'elapsed_seconds': time.monotonic() - start_time,
+                'path_length_m': None,
+                'collision_count': None,
+                'min_clearance_m': None,
                 'error': str(e),
             }
+        finally:
+            if subscription is not None:
+                self.destroy_subscription(subscription)
 
     def shutdown(self) -> None:
         """Clean up ROS 2 resources."""

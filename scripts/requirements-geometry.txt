@@ -1,0 +1,4 @@
+# Shared SSD geometry dependencies; keep the existing NumPy/ROS ABI.
+# Upstream release metadata and wheel notices are retained by pip.
+rtree==1.4.1
+shapely==2.1.2

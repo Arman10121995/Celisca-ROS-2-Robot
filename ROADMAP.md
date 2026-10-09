@@ -1,6 +1,6 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-08. See [the current extension checkpoint](docs/status/continuation-2026-10-08.md)
+Updated: 2026-10-09. See [the current extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
@@ -19,7 +19,48 @@ view of implemented features and remaining acceptance. The
 [current status overview](docs/status/CURRENT_STATUS.md) links the published
 GUI, installed inventory, measured robot scopes and exact successful CI.
 
-## October 8 requested readiness order
+## October 9 implementation-first priority
+
+The latest user instruction is to **implement all remaining functionality
+before broad testing and validation**. Codex/Claude should prioritize reusable
+controllers and complete operator workflows. Follow-up validation agents can
+exercise the existing producers after the initial implementation batches.
+Do not spend the implementation lane repeating long robot/map/backend sweeps.
+Build diagnostics needed to make the feature installable remain implementation
+work; Stop, source limits and command-loss behavior are part of the feature.
+
+Order by outcomes: reusable motion/policy adapters; arm/hand jogging, Servo
+and object planning; mobile manipulation and family-level SLAM/navigation;
+world/terrain/drone tools; measured bottleneck repairs; real algorithm adapters
+and concurrent experiment execution. Reuse pinned upstream code and existing
+working integrations. Coordinate separately owned terrain work.
+
+Record **implementation state** separately from **validation state**. An
+implemented candidate can be exposed explicitly as experimental when its
+controller exists. Full acceptance below remains the later release boundary;
+unfinished qualification does not block unrelated implementation. Do not
+refresh historical measured certificates or invent support results for new code.
+See [the implementation checkpoint](docs/status/implementation-2026-10-09.md).
+
+## October 9 delivered implementation and remainder
+
+New code/installation includes exact G1/H1/H1_2 policies, 28 fixed native
+position controllers with Cartesian Servo and taught sequence replay, measured
+Panda object attachments, two native Stretch base/sensor/higher-mode workflows,
+static aerial Plan/Execute, cached coplanar collision reduction and a real
+isolated experiment queue. Nine affected packages built; physical/test
+qualification is deferred. The detailed [implementation checkpoint](docs/status/implementation-2026-10-09.md)
+links operators, source/install commands and validation responsibilities.
+
+Initial features still missing: other source-specific robot/back-end controllers,
+dexterous hands/full arbitrary-object and coordinated mobile tasks, aerial
+sensing/mapping/dynamic avoidance/takeoff guards, remaining world/provider
+functionality and substantive algorithm/seed/mission/comparison contracts.
+The R6.7 terrain/provider lane remains separately owned. Acceptance states
+below stay partial/active until their actual later criteria pass; these new
+implementations do not establish all-map/all-backend readiness.
+
+## Robot readiness dependency order
 
 Use [the detailed agent execution guide](docs/AI_ROBOT_READINESS_GUIDE.md) for
 controller/policy reuse, physical probes and guarded promotion.
@@ -32,7 +73,7 @@ flight, arm trajectories and hand articulation. A stationary arm/hand does not
 receive ground-vehicle SLAM or navigation modes; a mobile manipulator needs
 its mobile base qualified separately.
 
-For each exact source variant and backend, finish real neutral startup,
+For later validation of each exact source variant and backend, check real neutral startup,
 forward/reverse or class-equivalent motion, turning, measured joint feedback,
 Stop, command loss and reset before enabling a motion workflow. Next qualify
 mounted sensors, actual map growth and saved/reloaded 2D/3D maps. Finally

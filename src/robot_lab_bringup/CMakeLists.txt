@@ -14,8 +14,10 @@ install(
 
 install(
   PROGRAMS scripts/export_3d_map.py scripts/native_arm_scene.py
+    scripts/wait_native_sensors.py
   DESTINATION lib/${PROJECT_NAME}
 )
+install(FILES scripts/native_scene_objects.py DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)

@@ -1,8 +1,10 @@
 """Run upstream PX4/Harmonic X500 and its ROS adapter on the workspace SSD."""
 import argparse
+import fcntl
 from collections import deque
 import copy
 import json
+import math
 import os
 from pathlib import Path
 import signal
@@ -203,17 +205,30 @@ def main():
     parser.add_argument('--spawn-y', type=float, default=0.0)
     parser.add_argument('--spawn-z', type=float, default=0.0)
     parser.add_argument('--rviz', default='false', choices=('true', 'false'))
+    parser.add_argument('--log-limit-mb', type=float, default=256.)
     args = parser.parse_args()
+    if not math.isfinite(args.log_limit_mb) or args.log_limit_mb <= 0:
+        parser.error('PX4 log limit must be positive and finite')
     root = Path(args.px4_root).resolve()
     build = root/'build/px4_sitl_default'
     upstream = root/'Tools/simulation/gz'
     runtime = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))
-    run = runtime/'px4'/('ros-flight-'+time.strftime('%Y%m%d-%H%M%S')+'-'+uuid.uuid4().hex[:6])
+    output = os.environ.get('ROBOT_LAB_EXPERIMENT_OUTPUT')
+    run = (Path(output)/'px4_native' if output else runtime/'px4'/
+        ('ros-flight-'+time.strftime('%Y%m%d-%H%M%S')+'-'+uuid.uuid4().hex[:6]))
     if not (build/'bin/px4').is_file():
         raise RuntimeError('PX4 SITL is not built at '+str(build)+'; see docs/tutorials/px4_x500.md')
     run.mkdir(parents=True)
     if run.stat().st_dev != Path('/workspace').stat().st_dev:
         raise RuntimeError('PX4 runtime must be on the mounted workspace SSD.')
+    (runtime/'px4').mkdir(parents=True, exist_ok=True)
+    if runtime.stat().st_dev != Path('/workspace').stat().st_dev:
+        raise RuntimeError('PX4 instance lease must stay on the mounted workspace SSD.')
+    instance_lease = (runtime/'px4/instance-0.lock').open('a')
+    try:
+        fcntl.flock(instance_lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError as exc:
+        raise RuntimeError('Another Robot Lab PX4 instance owns MAVLink port 14580; stop it before this launch.') from exc
     for folder in ('rootfs', 'worlds', 'models'):
         (run/folder).mkdir()
     prepare_world(args.world, run/'worlds/robot_lab_flight.sdf', upstream)
@@ -246,40 +261,57 @@ def main():
     processes = []
     log = (run/'px4.log').open('w')
     print('PX4 runtime and logs: '+str(run), flush=True)
-    fcu = subprocess.Popen([str(build/'bin/px4'), '-d', str(build/'etc'), '-w', str(run/'rootfs')],
-                           env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
-    processes.append(fcu)
-    rsp = subprocess.Popen(['ros2', 'run', 'robot_state_publisher', 'robot_state_publisher', '--ros-args',
-                            '--params-file', str(run/'description.yaml')], start_new_session=True)
-    processes.append(rsp)
-    if args.rviz == 'true':
-        config = Path(get_package_share_directory('robot_lab_bringup'))/'config/px4_x500.rviz'
-        processes.append(subprocess.Popen(['rviz2', '-d', str(config)], start_new_session=True))
-    rclpy.init(args=['--ros-args', '-p', 'flight_enabled:='+args.flight_enabled,
-                    '-p', f'origin_x:={args.spawn_x}', '-p', f'origin_y:={args.spawn_y}',
-                    '-p', f'origin_z:={args.spawn_z+0.24}'])
-    controller = PX4Controller()
-    relay = NativeStateRelay(environment)
-    executor = SingleThreadedExecutor()
-    executor.add_node(controller)
-    executor.add_node(relay)
+    controller = relay = planner = None
     try:
+        fcu = subprocess.Popen([str(build/'bin/px4'), '-d', str(build/'etc'), '-w', str(run/'rootfs')],
+                               env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+        processes.append(fcu)
+        rsp = subprocess.Popen(['ros2', 'run', 'robot_state_publisher', 'robot_state_publisher', '--ros-args',
+                                '--params-file', str(run/'description.yaml')], start_new_session=True)
+        processes.append(rsp)
+        if args.rviz == 'true':
+            config = Path(get_package_share_directory('robot_lab_bringup'))/'config/px4_x500.rviz'
+            processes.append(subprocess.Popen(['rviz2', '-d', str(config)], start_new_session=True))
+        rclpy.init(args=['--ros-args', '-p', 'flight_enabled:='+args.flight_enabled,
+                        '-p', f'origin_x:={args.spawn_x}', '-p', f'origin_y:={args.spawn_y}',
+                        '-p', f'origin_z:={args.spawn_z+0.24}'])
+        controller = PX4Controller()
+        relay = NativeStateRelay(environment)
+        executor = SingleThreadedExecutor()
+        executor.add_node(controller)
+        executor.add_node(relay)
+        from .px4_planning import PX4Planning
+        planner = PX4Planning(controller, args.world or str(upstream/'worlds/default.sdf'))
+        executor.add_node(planner)
         while rclpy.ok() and fcu.poll() is None:
             executor.spin_once(timeout_sec=0.05)
+            if (run/'px4.log').stat().st_size > args.log_limit_mb*1024**2:
+                raise RuntimeError('PX4 log budget exceeded; closing the owned flight runtime')
     except KeyboardInterrupt:
         pass
     finally:
-        if controller.flight.armed():
-            controller.command_mode(4, 6)
-        relay.close()
-        controller.flight.master.close()
-        controller.destroy_node()
-        relay.destroy_node()
+        if controller and controller.flight.armed():
+            try:
+                controller.command_mode(4, 6)
+            except Exception as exc:
+                print('PX4 landing request during cleanup failed: '+str(exc), flush=True)
+        cleanup = []
+        if relay:
+            cleanup.extend([relay.close, relay.destroy_node])
+        if planner:
+            cleanup.extend([planner.close, planner.destroy_node])
+        if controller:
+            cleanup.extend([controller.flight.master.close, controller.destroy_node])
         if rclpy.ok():
-            rclpy.shutdown()
-        for proc in reversed(processes):
-            stop_group(proc)
-        log.close()
+            cleanup.append(rclpy.shutdown)
+        cleanup.extend(lambda proc=proc: stop_group(proc) for proc in reversed(processes))
+        cleanup.extend([log.close, instance_lease.close])
+        for action in cleanup:
+            try:
+                action()
+            except Exception as exc:
+                print('PX4 cleanup: '+str(exc), flush=True)
+
 
 
 if __name__ == '__main__':

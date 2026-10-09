@@ -4,13 +4,24 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-08**. The October 8 extension checkpoint has exact
+Status updated on **2026-10-09**. The October 8 extension checkpoint has exact
 physical source manifests; its publication and software checks are recorded in
 [October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
 reopens unsupported R6/R7/R8/R9 completion claims. Generated metadata, simulated
 success and invented performance scores do not establish working missions.
 Scoped measured robot results remain in the [status ledger](docs/status/platform-status.yaml).
+
+**October 9 priority: implement remaining features first, validate afterward.**
+New experimental integrations add model-matched G1/H1/H1_2 policy variants,
+reusable joint/coupled-hand controls on compatible native fixed-base models,
+Cartesian jogging and teach/replay, measured Panda object attachments,
+Stretch base/arm plus sensor-gated mapping/Nav2 workflows, static drone 3D
+Plan/Execute and a real isolated experiment queue. Heavy MuJoCo worlds gain
+cached coplanar collision reduction; its speed/contact validation remains open.
+These are separate from the historical
+measured support below. Read [implementation status](docs/status/implementation-2026-10-09.md)
+and [native controls](docs/tutorials/native-controls.md).
 
 PX4 trial logs were moved to the workspace SSD with verified content and
 compatibility links, freeing **15.79 GiB** on internal storage. Use the

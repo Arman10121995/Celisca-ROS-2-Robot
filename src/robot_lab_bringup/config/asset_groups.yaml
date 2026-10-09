@@ -30,6 +30,7 @@ robots:
       - {id: unitree_g1, label: ROS description, registry_ids: [g1]}
       - {id: unitree_g1_29dof, label: 29 DOF description}
       - {id: menagerie_unitree_g1, label: Native MuJoCo description, role: source_alternative}
+      - {id: policy_unitree_g1, label: RL Gym 12 DOF policy model (experimental), role: source_alternative}
   - id: unitree_b2
     name: Unitree B2
     members:
@@ -40,6 +41,8 @@ robots:
     members:
       - {id: menagerie_unitree_h1, label: H1 source model, registry_ids: [h1]}
       - {id: unitree_h1_2, label: H1 v2 source model, registry_ids: [h1_2]}
+      - {id: policy_unitree_h1, label: RL Gym H1 policy model (experimental), role: source_alternative}
+      - {id: policy_unitree_h1_2, label: RL Gym H1 v2 policy model (experimental), role: source_alternative}
   - id: unitree_z1
     name: Unitree Z1
     members:

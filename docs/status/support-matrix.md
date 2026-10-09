@@ -1,6 +1,6 @@
 # Robot Lab support matrix
 
-Updated October 8, 2026 against the extension checkpoint and its exact
+Updated October 9, 2026. Historical measurements retain the October 8 checkpoint and exact
 pre-trial source manifests; see the publication receipt for the pushed source. The platform is **partial**. This page
 summarizes implementation and named evidence; the [ledger](platform-status.yaml)
 owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
@@ -27,6 +27,22 @@ hashes and repeats; static previews do not become mission records.
 Historical registry maturity labels and generated demonstration scores do not
 replace measured runtime evidence.
 
+## New implemented candidates — validation pending
+
+[October 9 implementation](implementation-2026-10-09.md) adds explicit candidates;
+the measured matrix and support certificates below remain source-scoped.
+
+| Candidate | Implemented interface | Backend / boundary |
+|---|---|---|
+| RL Gym G1/H1/H1_2 | Exact-model native policy, Drive, watchdog/fall/reset | MuJoCo Display explicit walking toggle; no mapped mission claim |
+| 28 fixed native source models | Actuator/hand targets, Cartesian jog, taught measured sequence save/load/replay | MuJoCo explicit joint controls; compatible transmissions only |
+| Native Panda additions | Local Servo and measured fixture collision attach/detach, plan invalidation | MuJoCo/MoveIt; physical object remains contact-driven |
+| Stretch / Stretch 3 | Native base/articulation, real lidar/RGB-D and explicit loc/slam/3d_slam/nav stack | MuJoCo explicit `native_task`; truth-bootstrap EKF and dynamic footprint |
+| PX4 static route planning | Actual world geometry, bounded 3D Plan/Execute and interrupted FCU waypoints | Gazebo Harmonic; no dynamic avoidance or flight-clearance certificate |
+| Concurrent experiments | Actual isolated subprocesses, telemetry/resources, cancel/reset/cleanup | Implemented coordinator; concurrent-plant/overload qualification pending |
+| Coplanar collision reduction | Cached equivalent planar surfaces, retained holes/source visuals | MuJoCo; performance/contact qualification pending |
+
+## Current robot workflows
 ## Current robot workflows
 
 | Robot/plant | Backend and measured worlds | Available scope | Remaining work |

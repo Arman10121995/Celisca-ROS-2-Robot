@@ -53,6 +53,9 @@ class NativePandaControl:
         self.reserved = False
         self.last_heartbeat = -float('inf')
         self.status = 'holding'
+        from robot_lab_mujoco.native_cartesian_servo import NativeCartesianServo
+        self.servo = NativeCartesianServo(node, self.joints, self.limits, np.full(7, .35))
+        node.create_subscription(String, '/arm/servo_command', self.servo_command, 1)
         self.status_pub = node.create_publisher(String, '/arm/status', 10)
         node.create_subscription(Empty, '/arm/heartbeat', self.heartbeat, 10)
         node.create_service(Trigger, '/arm/stop', self.stop)
@@ -63,6 +66,15 @@ class NativePandaControl:
 
     def heartbeat(self, _message):
         self.last_heartbeat = time.monotonic()
+
+    def servo_command(self, message):
+        if (self.reserved or getattr(getattr(self.node, 'gripper', None), 'reserved', False)
+                or time.monotonic()-self.last_heartbeat > .8 or self.contact_blocked()):
+            self.servo.clear()
+            return
+        self.servo.receive(message)
+        if not self.servo.active():
+            self.target = self.data.qpos[self.qpos].copy()
 
     def contact_blocked(self):
         for contact in self.data.contact[:self.data.ncon]:
@@ -114,7 +126,7 @@ class NativePandaControl:
         return plan, path, goal, grace or 1.
 
     def accept(self, request):
-        if (self.reserved or getattr(getattr(self.node, 'gripper', None), 'reserved', False)
+        if (self.reserved or self.servo.active() or getattr(getattr(self.node, 'gripper', None), 'reserved', False)
                 or time.monotonic()-self.last_heartbeat > .8 or self.contact_blocked()):
             self.node.get_logger().warn('Arm goal rejected: busy, missing heartbeat or arm/environment contact')
             return GoalResponse.REJECT
@@ -139,6 +151,7 @@ class NativePandaControl:
         return await goal._arm_future
 
     def finish(self, outcome, code, message):
+        self.servo.clear()
         if outcome != 'succeeded':
             self.target = self.data.qpos[self.qpos].copy()
         self.status = message
@@ -158,6 +171,21 @@ class NativePandaControl:
         return response
 
     def before_step(self):
+        if not self.goal:
+            if time.monotonic()-self.last_heartbeat > .8 or self.contact_blocked():
+                if self.servo.active() or self.status == 'experimental Cartesian servo':
+                    self.target = self.data.qpos[self.qpos].copy()
+                    self.status = 'Servo stopped; holding measured position'
+                self.servo.clear()
+            else:
+                target = self.servo.target(.02)
+                if target is not None:
+                    self.target = target
+                    self.status = 'experimental Cartesian servo'
+                elif self.status == 'experimental Cartesian servo':
+                    self.target = self.data.qpos[self.qpos].copy()
+                    self.status = self.servo.error or 'Servo command expired; holding measured position'
+                    self.servo.clear()
         if self.goal:
             if self.goal.is_cancel_requested:
                 self.finish('canceled', 0, 'canceled; holding measured position')
@@ -201,7 +229,8 @@ class NativePandaControl:
             'positions': actual.tolist(), 'velocities': velocity.tolist(),
             'target': self.target.tolist(), 'home': self.home.tolist(), 'limits': self.limits.tolist(),
             'bias_compensation_rad': self.control_offset.tolist(),
-            'busy': self.reserved, 'contact_blocked': self.contact_blocked(),
+            'servo': self.servo.state(),
+            'busy': bool(self.reserved or self.servo.active()), 'contact_blocked': self.contact_blocked(),
             'time': self.data.time})))
         if self.goal:
             feedback = FollowJointTrajectory.Feedback()

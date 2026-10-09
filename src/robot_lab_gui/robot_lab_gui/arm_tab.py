@@ -65,6 +65,11 @@ class ArmTab(ttk.Frame):
         self.closed = False
         from .cartesian_controls import CartesianControls
         self.cartesian = CartesianControls(self)
+        from .articulation_controls import ArticulationControls
+        self.articulation = ArticulationControls(body, app)
+        from .servo_controls import ServoControls
+        self.servo_controls = ServoControls(body, self, '/arm/servo_command')
+        self.servo_controls.grid(row=13, column=0, columnspan=5, sticky='ew', pady=8)
         self.refresh_selection()
         self.job = self.after(100, self.poll)
 
@@ -85,6 +90,15 @@ class ArmTab(ttk.Frame):
 
     def refresh_selection(self):
         self.cartesian.refresh()
+        generic = self.articulation.selected()
+        for widget in self.body.winfo_children():
+            if widget is self.articulation:
+                continue
+            widget.grid_remove() if generic else widget.grid()
+        if generic:
+            self.articulation.grid(row=0, column=0, columnspan=5, sticky='nsew')
+        else:
+            self.articulation.grid_remove()
         if not self.selected():
             self.status_var.set('Select menagerie_franka_emika_panda, MuJoCo, Display in Launch.')
         for button in self.buttons+[self.cancel_button, self.stop_button]:
@@ -122,6 +136,10 @@ class ArmTab(ttk.Frame):
     def poll(self):
         if self.closed:
             return
+        if self.articulation.selected():
+            self.articulation.poll()
+            self.job = self.after(100, self.poll)
+            return
         owned = self.owned()
         if self.was_owned and not owned:
             self.stop()
@@ -152,6 +170,7 @@ class ArmTab(ttk.Frame):
         self.stop_button.state(['!disabled'] if ready else ['disabled'])
         self.was_owned = owned
         self.cartesian.poll()
+        self.servo_controls.poll()
         self.job = self.after(100, self.poll)
 
     def send_positions(self, target):
@@ -221,6 +240,8 @@ class ArmTab(ttk.Frame):
 
     def stop(self):
         self.cartesian.invalidate()
+        self.articulation.stop()
+        self.servo_controls.stop()
         if self.node and self.stop_client.service_is_ready():
             from std_srvs.srv import Trigger
             self.stop_client.call_async(Trigger.Request())

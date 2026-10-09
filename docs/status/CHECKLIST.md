@@ -1,6 +1,7 @@
 # Robot Lab done and remaining checklist
 
-Updated October 8, 2026. **The project is partial.** [Current status](CURRENT_STATUS.md)
+Updated October 9, 2026. **The project is partial.** The user prioritizes
+initial implementation before testing/validation. [Current status](CURRENT_STATUS.md)
 and [the checkpoint](continuation-2026-10-08.md) link exact physical source stages,
 publication and software checks. A checked item below
 describes an implemented feature or a named measured screen; it does not
@@ -10,6 +11,38 @@ qualify every robot, map, mode or simulator. The
 [latest measurements](continuation-2026-10-08.md) give exact scopes and limits.
 The latest user instruction prioritizes the new extensions before resuming
 the older roadmap. Existing stabilization fixes must remain working.
+
+## New implementation; validation deferred
+
+- [x] Shared exact-model G1/H1/H1_2 native policy controller, provisioning,
+  grouped GUI variants, explicit toggle and Drive command integration.
+- [x] Generic source-bounded native position-actuator/coupled-tendon controls,
+  GUI joint jogging, measured feedback, Stop/watchdog/reset and SSD registration.
+- [x] Native Cartesian press-and-hold jogging on Panda and compatible generic
+  position controllers, with authored sites, joint limits and contact prediction.
+- [x] Teach measured native arm/hand configurations, save/load source-matched
+  sequences and replay with actual settling, bounds, deadlines and interruption.
+- [x] Measured Panda cube/pedestal planning scene, acknowledged attach/detach,
+  fresh FK/contact requirements and scene-change invalidation.
+- [x] Stretch/Stretch 3 native wheels, base/articulation ownership, actual
+  source-mounted lidar/RGB-D, truth-bootstrap odometry/IMU and changing footprint.
+- [x] Explicit experimental Stretch AMCL, 2D/3D SLAM and Smac2D/RPP Nav2
+  stack composition with actual sensor readiness and selected-map save paths.
+- [x] Static selected-world 3D aerial Plan/Execute, measured FCU targets,
+  continuously checked geometry segments and bounded interrupted waypoint tracking.
+- [x] Cached equivalent planar collision reduction for heavy MuJoCo scenes;
+  P4 speed/contact measurements remain pending.
+- [x] Actual isolated resource-bounded subprocess queue and telemetry, real
+  cancel/reset and owned cleanup; remove invented legacy benchmark metrics.
+- [x] PX4 single-instance lease, SSD log budget and startup-error cleanup.
+- [ ] Complete source-specific controllers for remaining robots/backends,
+  dexterous hands, arbitrary-object/mobile tasks, aerial sensors/mapping/dynamic
+  avoidance, independently owned terrain/provider work and substantive algorithm
+  adapters plus seed/mission/result comparison contracts.
+- [ ] Run the focused and broad validation handoff after those implementations.
+
+See [implementation scope](implementation-2026-10-09.md); checks here record
+code delivery, not a passed mission or universal support.
 
 ## Implemented and measured
 

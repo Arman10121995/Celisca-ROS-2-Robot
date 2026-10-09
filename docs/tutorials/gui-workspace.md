@@ -1,6 +1,6 @@
 # Robot Lab GUI workspace
 
-Documentation reviewed October 8, 2026; current source stages are recorded in
+Documentation reviewed October 9, 2026; current source stages are recorded in
 [extension evidence](../status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](../status/CURRENT_STATUS.md) for available workflows and
 remaining qualification; evidence below retains its named source stages.
@@ -56,6 +56,24 @@ visible on the right. Panels scroll to keep limits and options accessible.
      Altitude Up/Down and manual velocity limits. The pad shares its pressed
      state with Drive; default yaw is capped at 0.3 rad/s with a gentle ramp.
      Use the [X500 guide](px4_x500.md) for the measured Flight workflow.
+
+October 9 adds explicit experimental options under Launch's advanced setup:
+**Native walking policy**, **Native joint controls** and **Native mobile
+controls / Native workflow**. The run command autofills their controller flags.
+They expose implemented candidates with pending validation; they do not
+promote measured support or enable a robot without a compatible controller.
+Compatible native Arm/Hand panels show source actuator selection, measured
+feedback, Cartesian press-and-hold and **Teach / replay** with saved source-
+matched configurations. Panda additionally has measured fixture attachment
+planning. Stretch combines stopped-base articulation with low-speed Drive and
+sensor-gated mapping/navigation tasks. Read [native controls](native-controls.md).
+
+Drone adds measured FCU XYZ targets and separate experimental static-world
+**Plan route / Execute route / Cancel Hold**. Editing a target requires a new
+plan. Manual controls/Space/Hold/Land interrupt tracking. Read
+[the drone guide](px4_x500.md) for geometry/flight limits. Benchmark adds the
+[real experiment queue](concurrent-experiments.md); Health shows implemented
+scope separately from validation and opens these current guides.
 
 **Stop motion** calls the existing Drive stop and Arm/Hand hold controls.
 Use **Land** for a flying drone and **Stop** beside Run to stop the launch.

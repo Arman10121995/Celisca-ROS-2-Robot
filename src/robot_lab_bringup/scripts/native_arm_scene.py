@@ -3,7 +3,8 @@
 
 An incomplete/unsupported world stays unready; the GUI must wait for the
 ApplyPlanningScene acknowledgement before planning. This is a static scene,
-not an implementation of dynamic-obstacle prediction or object attachment.
+Dynamic fixture updates and planning attachment require measured object and
+finger contact state. This does not implement future obstacle prediction.
 """
 import hashlib
 import json
@@ -63,12 +64,16 @@ class NativeArmScene(Node):
         super().__init__('native_arm_scene')
         self.declare_parameter('world_path', '')
         self.declare_parameter('spawn_z', 0.)
+        self.declare_parameter('grasp_fixture', False)
         self.publisher = self.create_publisher(String, '/arm/planning_scene_status', 10)
         self.client = self.create_client(ApplyPlanningScene, '/apply_planning_scene')
         self.read_client = self.create_client(GetPlanningScene, '/get_planning_scene')
         self.status = dict(ready=False, scope='Static selected-world collision scene', geometry_count=0)
         self.future = None
         self.matrix_loaded = False
+        self.static_complete = False
+        from native_scene_objects import MeasuredObjects
+        self.objects = MeasuredObjects(self, collision_object, self.get_parameter('grasp_fixture').value)
         self.request = ApplyPlanningScene.Request()
         self.request.scene = PlanningScene(is_diff=True)
         self.request.scene.robot_state.is_diff = True
@@ -100,7 +105,7 @@ class NativeArmScene(Node):
         self.create_timer(.5, self.poll, clock=Clock(clock_type=ClockType.SYSTEM_TIME))
 
     def poll(self):
-        if 'error' not in self.status and not self.status['ready']:
+        if 'error' not in self.status and not self.static_complete:
             if not self.matrix_loaded and self.future is None and self.read_client.service_is_ready():
                 request = GetPlanningScene.Request()
                 request.components.components = PlanningSceneComponents.ALLOWED_COLLISION_MATRIX
@@ -126,10 +131,13 @@ class NativeArmScene(Node):
                 self.future = self.client.call_async(self.request)
             elif self.future is not None and self.future.done():
                 self.status['ready'] = bool(self.future.result().success)
+                self.static_complete = self.status['ready']
                 if not self.status['ready']:
                     self.status['error'] = 'MoveIt rejected the selected-world collision scene'
             elif time.monotonic()-self.start > 20:
                 self.status['error'] = 'MoveIt planning-scene acknowledgement timed out'
+        if self.static_complete:
+            self.objects.poll(self.status)
         self.publisher.publish(String(data=json.dumps(self.status)))
 
 

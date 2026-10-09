@@ -1,9 +1,20 @@
 # Robot Lab test tiers and evidence
 
-Updated October 8, 2026. The runner and manifests live in
+Updated October 9, 2026. The runner and manifests live in
 `scripts/test_tiers.sh`; `scripts/test_fast.sh` adds source compilation and
 registry checks. [Current status](status/CURRENT_STATUS.md) records measured
 robot work separately from software checks.
+
+## Implementation-first handoff
+
+The current user priority defers test campaigns and physical validation until
+initial implementation is in place. Nine changed packages built for the
+[October 9 candidates](status/implementation-2026-10-09.md); no new mission,
+GUI suite or CI pass is claimed. Validate policy contracts, native Servo/
+sequence/object interactions, Stretch sensor/map/Nav2 composition, actual
+static drone route tracking, coplanar collision/speed fidelity and two real
+concurrent plants after initial implementation. Keep earlier source-specific
+results separate and preserve all existing tiers/acceptance requirements.
 
 ## Tiers
 

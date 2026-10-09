@@ -1,12 +1,24 @@
 # Robot Lab operational workflow
 
-Updated October 8, 2026; exact source stages are in the current status and checkpoint.
+Updated October 9, 2026; exact source stages are in the current status and checkpoint.
 [Current status](status/CURRENT_STATUS.md) lists the measured scopes.
 This is the source/evidence workflow for the repository. It separates
 static checks, isolated runtime probes, scenario trials and promotion claims.
 The machine-readable [status ledger](status/platform-status.yaml) is authoritative
 for task state and ownership; [ROADMAP.md](../ROADMAP.md) is authoritative for
 acceptance criteria.
+
+## Current implementation priority
+
+The user requests initial feature implementation before testing/validation.
+[The October 9 checkpoint](status/implementation-2026-10-09.md) records new
+native controls, taught sequences, measured object scenes, Stretch higher
+workflows, static drone planning and actual concurrent experiments. Necessary
+build/syntax diagnostics completed; their physical qualification is pending.
+The steps below define the later validation lane, not a requirement to repeat
+every campaign while unrelated initial features remain missing. The new
+[experiment queue](tutorials/concurrent-experiments.md) runs actual isolated
+plants and records real telemetry; it does not infer mission success.
 
 ## 1. Establish the revision and scope
 

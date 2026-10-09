@@ -52,6 +52,10 @@ class HandTab(ttk.Frame):
         self.sending = False
         self.was_owned = False
         self.closed = False
+        from .articulation_controls import ArticulationControls
+        self.generic_controls = ArticulationControls(body, app)
+        self.generic_controls.grid(row=9, column=0, columnspan=4, sticky='ew')
+        self.generic_controls.grid_remove()
         self.refresh_selection()
         self.job = self.after(100, self.poll)
 
@@ -63,6 +67,11 @@ class HandTab(ttk.Frame):
         return self.selected() and self.app.arm_tab.owned()
 
     def refresh_selection(self):
+        generic = self.generic_controls.selected()
+        for child in self.body.winfo_children():
+            if child is not self.generic_controls:
+                child.grid_remove() if generic else child.grid()
+        self.generic_controls.grid() if generic else self.generic_controls.grid_remove()
         for button in (self.open_button, self.close_button, self.set_button, self.cancel_button, self.stop_button):
             button.state(['disabled'])
         self.fixture_button.state(['!disabled'] if self.selected() and not self.app._launch_running else ['disabled'])
@@ -99,6 +108,10 @@ class HandTab(ttk.Frame):
 
     def poll(self):
         if self.closed:
+            return
+        if self.generic_controls.selected():
+            self.generic_controls.poll()
+            self.job = self.after(100, self.poll)
             return
         owned = self.owned()
         if self.was_owned and not owned:
@@ -173,6 +186,8 @@ class HandTab(ttk.Frame):
             self.handle.cancel_goal_async()
 
     def stop(self):
+        self.generic_controls.servo_controls.stop()
+        self.generic_controls.stop()
         if self.node and self.stop_client.service_is_ready():
             from std_srvs.srv import Trigger
             self.stop_client.call_async(Trigger.Request())

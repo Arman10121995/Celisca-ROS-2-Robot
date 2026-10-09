@@ -83,3 +83,13 @@ Move inactive directories by copy → content/metadata verification → symlink
 replacement → removal of the verified old copy. Do not relocate active Unix
 sockets, system libraries, drivers or package-managed system directories as
 part of a Robot Lab artifact cleanup.
+
+## Shared geometry dependencies
+
+`scripts/install_geometry_dependencies.sh` installs only the pinned Rtree and
+Shapely wheels under `$ROBOT_LAB_RUNTIME_ROOT/python_deps/geometry`, with pip
+cache and temporary files on SSD. It leaves existing NumPy/ROS packages alone.
+After installation, re-source `scripts/ssd_env.sh`; its `PYTHONPATH` exposes the
+same geometry libraries to sourced ROS Python and the PX4 venv. Dependency
+notices stay with the SSD wheels. Do not relocate the completed PX4 archives
+again or install these wheels into internal storage.

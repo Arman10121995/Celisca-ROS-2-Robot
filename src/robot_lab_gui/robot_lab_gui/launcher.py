@@ -166,7 +166,7 @@ MODE_TOOLTIPS = {
     "slam": "SLAM: build a 2D map while localizing.",
     "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",
     "nav": "Navigation: plan and follow paths (2D map required).",
-    "flight": "PX4 X500: explicit takeoff, manual flight and 3D waypoint control. No obstacle avoidance.",
+    "flight": "PX4 X500: takeoff, manual flight and experimental static-world 3D Plan/Execute. Moving obstacles remain unsupported.",
 }
 MODE_LABELS = {
     "display": "Display",
@@ -489,6 +489,10 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
         self.bhl_policy_var = tk.BooleanVar(value=True)
+        self.native_policy_var = tk.BooleanVar(value=False)
+        self.native_articulation_var = tk.BooleanVar(value=False)
+        self.native_mobile_var = tk.BooleanVar(value=False)
+        self.native_task_var = tk.StringVar(value='display')
         self.steering_mode_var = tk.StringVar(value="")
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
@@ -870,6 +874,36 @@ class SimulationLauncherGui(tk.Tk):
                     "unqualified. Uncheck for the passive spawn stance with no "
                     "policy node.")
 
+        self.native_policy_checkbox = ttk.Checkbutton(advanced,
+            text='Native walking policy (experimental)', variable=self.native_policy_var,
+            command=self._update_from_selection)
+        self.native_policy_checkbox.grid(row=24, column=0, sticky='w', pady=(6, 0))
+        add_tooltip(self.native_policy_checkbox,
+            'Exact-model Unitree G1/H1/H1_2 checkpoints on MuJoCo Display. '
+            'Enable before Run; Drive/WASD commands the physical torque controller. '
+            'Broader walking, terrain, SLAM and navigation validation is pending.')
+        self.native_articulation_checkbox = ttk.Checkbutton(advanced,
+            text='Native joint controls (experimental)', variable=self.native_articulation_var,
+            command=self._update_from_selection)
+        self.native_articulation_checkbox.grid(row=25, column=0, sticky='w', pady=(6, 0))
+        add_tooltip(self.native_articulation_checkbox,
+            'Enable before Run to jog compatible fixed-base native position actuators in Arm. '
+            'Supports source-bounded joints and coupled tendons; validation pending.')
+        self.native_mobile_checkbox = ttk.Checkbutton(advanced,
+            text='Native mobile controls (experimental)', variable=self.native_mobile_var,
+            command=self._update_from_selection)
+        self.native_mobile_checkbox.grid(row=26, column=0, sticky='w', pady=(6, 0))
+        add_tooltip(self.native_mobile_checkbox,
+            'Stretch base plus original arm/hand actuators on MuJoCo Display. '
+            'Stop the base before articulation; retract the arm before driving. Validation pending.')
+        ttk.Label(advanced, text='Native workflow (experimental)').grid(row=27, column=0, sticky='w', pady=(6, 0))
+        self.native_task_combo = ttk.Combobox(advanced, textvariable=self.native_task_var,
+            values=('display', 'loc', 'slam', '3d_slam', 'nav'), state='disabled')
+        self.native_task_combo.grid(row=28, column=0, sticky='ew')
+        self.native_task_combo.bind('<<ComboboxSelected>>', lambda _: self._update_from_selection())
+        self.native_algorithms_var = tk.StringVar()
+        ttk.Label(advanced, textvariable=self.native_algorithms_var, wraplength=350).grid(row=29, column=0, sticky='w')
+
         steering_frame = self.steering_frame = ttk.Frame(self.drive_pad_host)
         steering_frame.grid(row=0, column=0, sticky="ew", pady=(8, 0))
         ttk.Label(steering_frame, text="4WS pattern").pack(side="left")
@@ -997,6 +1031,9 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=280, style='Muted.TLabel').grid(row=2, column=0, sticky='w', pady=8)
         ttk.Label(self.drone_actions_host, text='Left/right rotate gently; strafe moves sideways.\nEnable WASD + joystick in Drive for keyboard input.', wraplength=305,
                   style='Muted.TLabel').grid(row=5, column=0, columnspan=3, sticky='w', pady=8)
+        from .drone_planning_controls import DronePlanningControls
+        self.drone_planning_controls = DronePlanningControls(self.drone_actions_host, self)
+        self.drone_planning_controls.grid(row=6, column=0, columnspan=3, sticky='ew', pady=8)
         ttk.Label(self.drone_limits_host, textvariable=self.drive_limits_var, wraplength=305).grid(row=0, column=0, columnspan=2, sticky='w')
         ttk.Checkbutton(self.drone_limits_host, text='Override manual velocity limits', variable=self.drive_override_var,
             command=self._update_drive_limits_label).grid(row=1, column=0, columnspan=2, sticky='w', pady=8)
@@ -1981,9 +2018,34 @@ class SimulationLauncherGui(tk.Tk):
         profile = self.robot_profiles.get(self.robot_var.get(), {})
         return str(profile.get("drive", {}).get("type", "diff"))
 
+    def _native_policy_selectable(self):
+        return (bool(self._robot_config().get('locomotion_policy_config'))
+                and self.simulator_var.get() == 'mujoco'
+                and self.mode_var.get() == 'display'
+                and self.launch_kind_var.get() == 'simulation')
+
+    def _native_articulation_selectable(self):
+        return (bool(self._robot_config().get('native_articulation'))
+                and not self._robot_config().get('mobile_control_config')
+                and self.simulator_var.get() == 'mujoco'
+                and self.mode_var.get() == 'display'
+                and self.launch_kind_var.get() == 'simulation')
+
+    def _native_mobile_selectable(self):
+        return (bool(self._robot_config().get('mobile_control_config'))
+                and self.simulator_var.get() == 'mujoco' and self.mode_var.get() == 'display'
+                and self.launch_kind_var.get() == 'simulation')
+
     def _extension_drive_unavailable(self):
         profile = self._robot_config()
-        return bool(profile.get('source_id') and not profile.get('drive'))
+        return bool(profile.get('source_id') and not profile.get('drive')
+                    and not (self._native_policy_selectable() and self.native_policy_var.get())
+                    and not (self._native_mobile_selectable() and self.native_mobile_var.get()))
+
+    def _effective_control_mode(self):
+        if self._native_mobile_selectable() and self.native_mobile_var.get():
+            return self.native_task_var.get()
+        return self.mode_var.get()
 
     def _four_wheel_steer_selectable(self):
         """The steering-pattern override is only meaningful for this drive."""
@@ -1997,6 +2059,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _lateral_drive_selectable(self):
         return (self._flight_selectable() or self._mecanum_selectable() or
+                (self._native_policy_selectable() and self.native_policy_var.get()) or
                 (self._four_wheel_steer_selectable() and
                  self.steering_mode_var.get() in ("crab", "in_phase")))
 
@@ -2016,10 +2079,13 @@ class SimulationLauncherGui(tk.Tk):
         profile = self.robot_profiles.get(self.robot_var.get(), {})
         native_arm = (profile.get('arm_control') == 'panda' and self.simulator_var.get() == 'mujoco'
                       and self.mode_var.get() == 'display')
+        native_policy = self._native_policy_selectable() and self.native_policy_var.get()
+        native_articulation = self._native_articulation_selectable() and self.native_articulation_var.get()
+        native_mobile = self._native_mobile_selectable() and self.native_mobile_var.get()
         enabled = (self._launch_running and self.launch_kind_var.get() == 'simulation'
-                   and self.mode_var.get() in ('display', 'loc', 'slam', '3d_slam')
+                   and self._effective_control_mode() in ('display', 'loc', 'slam', '3d_slam')
                    and bool(self.robot_var.get()) and self.robot_var.get() != 'none'
-                   and (native_arm or (bool(profile.get('drive'))
+                   and (native_arm or native_policy or native_articulation or native_mobile or (bool(profile.get('drive'))
                    and self._drive_type() in ('diff', 'ackermann', 'four_wheel_steer', 'mecanum'))))
         self.reset_robot_button.state(['!disabled'] if enabled else ['disabled'])
 
@@ -2052,6 +2118,17 @@ class SimulationLauncherGui(tk.Tk):
             command.append(
                 "bhl_enable_policy:=%s"
                 % ("true" if self.bhl_policy_var.get() else "false"))
+        if command and self._native_policy_selectable():
+            command = [part for part in command if not part.startswith('enable_native_locomotion:=')]
+            command.append('enable_native_locomotion:=' + ('true' if self.native_policy_var.get() else 'false'))
+        if command and self._native_articulation_selectable():
+            command = [part for part in command if not part.startswith('enable_native_articulation:=')]
+            command.append('enable_native_articulation:=' + ('true' if self.native_articulation_var.get() else 'false'))
+        if command and self._native_mobile_selectable():
+            command = [part for part in command if not part.startswith('enable_native_mobile:=')]
+            command.append('enable_native_mobile:=' + ('true' if self.native_mobile_var.get() else 'false'))
+            command = [part for part in command if not part.startswith('native_task:=')]
+            command.append('native_task:='+ (self.native_task_var.get() if self.native_mobile_var.get() else 'display'))
         if command and self._four_wheel_steer_selectable() \
                 and self.steering_mode_var.get():
             command = [part for part in command
@@ -2067,7 +2144,7 @@ class SimulationLauncherGui(tk.Tk):
                 command.append('grasp_fixture:=true')
             if self._robot_config().get('arm_planning') == 'moveit':
                 command = [part for part in command if not part.startswith('arm_planning:=')]
-                command.append('arm_planning:='+('none' if fixture else 'moveit'))
+                command.append('arm_planning:=moveit')
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -2134,11 +2211,24 @@ class SimulationLauncherGui(tk.Tk):
         if not supports_vacuum and self.launch_kind_var.get() == "vacuum":
             self.launch_kind_var.set("simulation")
         self.vacuum_radio.state(["!disabled"] if supports_vacuum else ["disabled"])
-        self.save_map_button.state(["!disabled"] if self.mode_var.get() in ("slam", "3d_slam") else ["disabled"])
+        self.save_map_button.state(["!disabled"] if self._effective_control_mode() in ("slam", "3d_slam") else ["disabled"])
         self.go2_policy_checkbox.state(
             ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
         self.bhl_policy_checkbox.state(
             ["!disabled"] if self._bhl_policy_selectable() else ["disabled"])
+        self.native_policy_checkbox.state(
+            ['!disabled'] if self._native_policy_selectable() else ['disabled'])
+        self.native_articulation_checkbox.state(
+            ['!disabled'] if self._native_articulation_selectable() else ['disabled'])
+        self.native_mobile_checkbox.state(['!disabled'] if self._native_mobile_selectable() else ['disabled'])
+        self.native_task_combo.configure(state='readonly' if self._native_mobile_selectable()
+            and self.native_mobile_var.get() else 'disabled')
+        algorithms = {'display': 'Native Drive / Arm / Hand with lidar and RGB-D',
+            'loc': 'AMCL + robot_localization EKF', 'slam': 'slam_toolbox + robot_localization EKF',
+            '3d_slam': 'RTAB-Map RGB-D + robot_localization EKF',
+            'nav': 'AMCL + EKF + Smac2D + Regulated Pure Pursuit'}
+        self.native_algorithms_var.set('Native workflow algorithms: '+algorithms.get(self.native_task_var.get(), '')
+            if self._native_mobile_selectable() and self.native_mobile_var.get() else '')
         self.steering_mode_combo.configure(
             state="readonly" if self._four_wheel_steer_selectable() else "disabled")
         for button in self._strafe_widgets():
@@ -2205,7 +2295,7 @@ class SimulationLauncherGui(tk.Tk):
             lines.append('PX4 Flight: Takeoff first; WASD/Drive controls XY and yaw, Strafe controls lateral flight. '
                          'Altitude Up/Down climb or descend; click again to slow to a hover. '
                          'Hold or Space stops manual travel; Land returns to the ground. '
-                         '3D goals use /px4/goal; no obstacle avoidance. Health contains the flight guide and measured results.')
+                         'Drone includes experimental static-world Plan/Execute; direct /px4/goal and manual input remain unchecked paths. Health contains the flight guide and measured results.')
         if config.get('arm_control') == 'panda':
             lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
                          'See Hand for qualified gripper controls; other arm backends remain pending.')
@@ -2228,6 +2318,10 @@ class SimulationLauncherGui(tk.Tk):
             else:
                 lines.append('Original sensor configuration is installed; mapping/navigation screens '
                              'for this backend remain pending.')
+        if config.get('locomotion_policy_config'):
+            lines.append('Native walking policy: implemented, experimental; choose MuJoCo Display '
+                         'and enable the policy before Run. Drive/WASD, Stop, watchdog and Reset '
+                         'are connected. Full walking/terrain/SLAM/navigation validation is deferred.')
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):
@@ -2377,6 +2471,11 @@ class SimulationLauncherGui(tk.Tk):
                 ok, manifest = resolve_selection(
                     self.composition_registry, selection)
                 if ok:
+                    manifest['gui_options'] = {
+                        'enable_native_locomotion': bool(self.native_policy_var.get()),
+                        'enable_native_mobile': bool(self.native_mobile_var.get()),
+                        'native_task': self.native_task_var.get(),
+                        'enable_native_articulation': bool(self.native_articulation_var.get())}
                     save_manifest(name, manifest)
                     self.status_var.set(f"Profile '{name}' saved (manifest)")
                     self.after(3000, lambda: self.status_var.set("Idle"))
@@ -2391,6 +2490,10 @@ class SimulationLauncherGui(tk.Tk):
             "map_name": self.map_var.get(),
             "gui": self.gui_var.get(),
             "algorithm": self._primary_algorithm_id(),
+            'enable_native_locomotion': bool(self.native_policy_var.get()),
+            'enable_native_mobile': bool(self.native_mobile_var.get()),
+            'native_task': self.native_task_var.get(),
+            'enable_native_articulation': bool(self.native_articulation_var.get()),
         }
         save_profile(name, config)
         self.status_var.set(f"Profile '{name}' saved")
@@ -2409,6 +2512,11 @@ class SimulationLauncherGui(tk.Tk):
         self._pending_manifest_algos = manifest.get("algorithm_ids") or {}
         # Restore the applied mode and simulator-GUI choice (R3.4+).
         resolved_from = manifest.get("resolved_from") or {}
+        options = manifest.get('gui_options', {})
+        self.native_policy_var.set(bool(options.get('enable_native_locomotion', False)))
+        self.native_mobile_var.set(bool(options.get('enable_native_mobile', False)))
+        self.native_task_var.set(options.get('native_task', 'display'))
+        self.native_articulation_var.set(bool(options.get('enable_native_articulation', False)))
         mode = resolved_from.get("mode") or manifest.get("mode")
         if mode and mode in self.mode_profiles:
             self.mode_var.set(mode)
@@ -2454,6 +2562,10 @@ class SimulationLauncherGui(tk.Tk):
                         self.slot_vars[slot].set(value)
             self.robot_var.set(selection.robot_id or self.robot_var.get())
             self.simulator_var.set(selection.simulator or self.simulator_var.get())
+            self.native_policy_var.set(bool(cfg.get('enable_native_locomotion', False)))
+            self.native_mobile_var.set(bool(cfg.get('enable_native_mobile', False)))
+            self.native_task_var.set(cfg.get('native_task', 'display'))
+            self.native_articulation_var.set(bool(cfg.get('enable_native_articulation', False)))
 
         self._update_from_selection()
 
@@ -2805,7 +2917,8 @@ class SimulationLauncherGui(tk.Tk):
 
     def _resolved_drive_limits(self):
         robot = self.robot_var.get()
-        profile = self.robot_profiles.get(robot, {}).get("drive", {})
+        robot_profile = self.robot_profiles.get(robot, {})
+        profile = robot_profile.get('locomotion_drive_limits', robot_profile.get('drive', {}))
         max_linear, max_angular, linear_step, angular_step = limits_from_drive(profile)
         min_linear, min_angular = -max_linear, -max_angular
         linear_brake, angular_brake = linear_step, angular_step
@@ -2953,9 +3066,9 @@ class SimulationLauncherGui(tk.Tk):
         return str(package_maps)
 
     def _save_map(self):
-        if self.mode_var.get() == "slam":
+        if self._effective_control_mode() == "slam":
             self._save_2d_map()
-        elif self.mode_var.get() == "3d_slam":
+        elif self._effective_control_mode() == "3d_slam":
             self._save_3d_map()
         else:
             messagebox.showinfo("Save map", "Start a SLAM mode launch before saving a map.")
