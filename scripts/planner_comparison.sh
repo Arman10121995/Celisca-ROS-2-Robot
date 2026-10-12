@@ -13,10 +13,20 @@ source "$HERE/ssd_env.sh" || exit 2
 source /opt/ros/humble/setup.bash
 source "$HERE/../install/setup.bash"
 mkdir -p "$DIR"
+# Every trial draws its goal sequence from the map's configured spawn.
+START=$(python3 - "$MAP" <<'PY'
+import sys, yaml
+from ament_index_python.packages import get_package_share_directory
+maps = yaml.safe_load(open(get_package_share_directory('robot_lab_bringup')+'/config/sim_maps.yaml'))
+entry = (maps.get('maps') or maps)[sys.argv[1]]
+pose = entry.get('initial_pose') or entry.get('spawn') or {}
+print(float(pose.get('x', 0.0)), float(pose.get('y', 0.0)))
+PY
+)
 cat > "$DIR/manifest.json" <<JSON
 {"simulator": "$SIM", "robot": "$ROBOT", "map": "$MAP", "category": "$CATEGORY",
  "planners": "$PLANNERS", "seeds": "$SEEDS", "launch_args": "$*",
- "goals_per_seed": "${GOALS:-3}", "revision": "$(git -C "$HERE/.." rev-parse HEAD)",
+ "goals_per_seed": "${GOALS:-3}", "sequence_start": "$START", "revision": "$(git -C "$HERE/.." rev-parse HEAD)",
  "started": "$(date -Iseconds)"}
 JSON
 for planner in $PLANNERS; do
@@ -34,7 +44,7 @@ for planner in $PLANNERS; do
       /navigate_to_pose/_action/status /amcl_pose > "$run.bag.log" 2>&1 &
     BAG=$!
     timeout "${TRIAL_TIMEOUT:-2400}" python3 "$HERE/sim_nav_goals.py" --seed "$seed" \
-      --goals "${GOALS:-3}" --robot-radius "${ROBOT_RADIUS:-0.2}" \
+      --goals "${GOALS:-3}" --robot-radius "${ROBOT_RADIUS:-0.2}" --start $START \
       --trace-out "$run.trace.json" > "$run.json" 2> "$run.err"
     kill -INT "$BAG" 2>/dev/null; wait "$BAG" 2>/dev/null
     kill -INT "$LAUNCH" 2>/dev/null

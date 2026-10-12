@@ -2,10 +2,14 @@
 """Seeded multi-goal navigation trial with measured metrics (planner comparisons).
 
 On a running nav launch, picks ``--goals`` reachable goals from the
-published /map with a seeded generator (the same seed gives the same goals
-on the same map, whatever planner runs), sends them one after another
-through NavigateToPose, and measures each against independent simulator
-truth (/odom/ground_truth):
+published /map with a seeded generator and sends them one after another
+through NavigateToPose.  The sequence depends only on the seed, the map and
+the start: each goal is drawn from the previous *goal* (the first from
+``--start``, the map's spawn), never from where the robot happened to stop,
+so every planner gets exactly the same goals.  (Drawing from the measured
+stop made only 3 of 6 tuning goals identical across planners on
+2026-10-12.)  Each goal is measured against independent simulator truth
+(/odom/ground_truth):
 
 * outcome (Nav2 terminal status), simulated duration;
 * travelled path length and mean speed from the truth trace;
@@ -76,6 +80,9 @@ def main(argv=None):
     parser.add_argument('--robot-radius', type=float, default=0.2)
     parser.add_argument('--goal-timeout', type=float, default=300.0)
     parser.add_argument('--timeout', type=float, default=600.0)
+    parser.add_argument('--start', type=float, nargs=2, metavar=('X', 'Y'),
+                        help='map-frame start the goal sequence is drawn from '
+                             '(default: the localized pose at the start)')
     parser.add_argument('--trace-out')
     args = parser.parse_args(argv)
     rclpy.init()
@@ -96,13 +103,16 @@ def main(argv=None):
     clearance = clearance_map(data, resolution)
     grid_meta = (resolution, ox, oy, data.shape[0], data.shape[1])
     node.monitor_motion = True
+    anchor = list(args.start) if args.start else list(node.pose(args.base)[:2])
+    report['sequence_start'] = [round(v, 3) for v in anchor]
     for index in range(args.goals):
         start = node.pose(args.base)
-        goal = pick_goal(node.map, start, rng, args.robot_radius, args.min_path, args.max_path)
+        goal = pick_goal(node.map, anchor, rng, args.robot_radius, args.min_path, args.max_path)
         if goal is None:
             report['goals'].append(dict(index=index, outcome='no_goal', start=start))
             break
-        yaw = math.atan2(goal['y']-start[1], goal['x']-start[0])
+        yaw = math.atan2(goal['y']-anchor[1], goal['x']-anchor[0])
+        anchor = [goal['x'], goal['y']]
         first_sample = len(node.trace)
         sent = time.monotonic()
         handle = node.send(goal['x'], goal['y'], yaw)

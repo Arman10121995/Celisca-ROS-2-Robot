@@ -976,37 +976,36 @@
 # ============================================================================
 
 - id: bumperbot_planner_comparison
-  version: "1.0.0"
+  version: "2.0.0"
   name: "Bumperbot Two-Planner Comparison"
   description: >-
-    Reproducible comparison of two wired global planners (navfn vs dijkstra)
-    on Bumperbot in a deterministic small_office arena under Gazebo, with
-    every other setting fixed. Five predeclared evaluation seeds are kept
-    strictly separate from the tuning seeds. Thresholds carry measured
-    justifications. All runs, including failures, are retained and reported
-    as distributions and failure rates rather than a single best run.
+    Reproducible comparison of two wired global planners that differ in
+    search - Smac 2D A* (a_star_planner) and NavFn's Dijkstra wavefront
+    (navfn_planner) - on Bumperbot in nav_maze under Gazebo, with every
+    other setting fixed (Regulated Pure Pursuit, stock parameters). Each
+    seed draws the same three goals for both arms from the map spawn.
+    Five evaluation seeds are kept separate from the two tuning seeds;
+    thresholds were set from the tuning trials before evaluation. All runs,
+    including failures, are reported as distributions and failure rates.
+    Version 1.0.0 (navfn vs dijkstra with TEB on small_office) was not
+    runnable: TEB is not built, small_office has no map and both ids select
+    the same NavFn plugin.
   status: integrated
   kind: planner_comparison
   robot_id: bumperbot
-  environment_id: small_office
+  environment_id: nav_maze
   simulator: gazebo
   algorithm_ids: {}
   scenario_id: point_to_point_navigation
   arms:
+    - arm_id: a_star
+      global_planning: a_star_planner
+      local_planning: pure_pursuit
+      parameters: {}
     - arm_id: navfn
       global_planning: navfn_planner
-      local_planning: teb_local_planner
-      parameters:
-        teb_local_planner:
-          max_vel_x: 0.5
-          max_vel_theta: 1.0
-    - arm_id: dijkstra
-      global_planning: dijkstra_planner
-      local_planning: teb_local_planner
-      parameters:
-        teb_local_planner:
-          max_vel_x: 0.5
-          max_vel_theta: 1.0
+      local_planning: pure_pursuit
+      parameters: {}
   tuning_seeds: [7, 9]
   evaluation_seeds: [11, 23, 37, 41, 53]
   timeout_seconds: 300.0
@@ -1017,24 +1016,33 @@
     max_cpu_percent: 100.0
   thresholds:
     - name: max_path_length_m
-      value: 12.0
+      value: 13.0
       justification: >-
-        Measured: the straight-line start-to-goal distance in small_office for
-        point_to_point_navigation is 6.0 m; the measured 95th-percentile path
-        length across reference runs is 9.8 m, so 12.0 m bounds replanning
-        detours without excusing loops.
-    - name: max_elapsed_wall_seconds
-      value: 120.0
+        Measured on tuning seeds 7 and 9 (2026-10-12, 11 successful goals over
+        both arms): travelled paths 5.91-9.98 m for goals the sampler bounds at
+        a 10 m grid shortest path. 13.0 m allows 30% over that bound for
+        replanning without excusing loops.
+        docs/status/evidence/r43-planner-comparison-2026-10-12/tuning/
+    - name: max_goal_sim_seconds
+      value: 100.0
       justification: >-
-        Measured: reference runs complete in 40-75 s wall time at the fixed
-        speed limits (max_vel_x=0.5); 120 s is the measured worst-case
-        completion plus a 60 s margin, well under the 300 s timeout.
+        Measured on tuning seeds 7 and 9: successful goals took 27.7-67.3
+        simulated s at the RPP speed limits. 100 s is about 1.5x the measured
+        maximum, well under the 300 s goal timeout.
+        docs/status/evidence/r43-planner-comparison-2026-10-12/tuning/
+    - name: min_footprint_clearance_m
+      value: 0.0
+      justification: >-
+        Measured on tuning seeds 7 and 9: the truth trace kept 0.086-0.98 m
+        between Bumperbot's 0.12 m footprint and mapped obstacles. Any overlap
+        (<= 0) fails a goal.
+        docs/status/evidence/r43-planner-comparison-2026-10-12/tuning/
   artifacts:
     record_bag: true
     record_logs: true
     record_maps: false
     record_trajectories: true
-    record_plots: true
+    record_plots: false
   namespace: ""
   namespaced: false
   source:
@@ -1047,4 +1055,4 @@
     - bumperbot
     - reproducible
   created: "2026-09-09"
-  updated: "2026-09-09"
+  updated: "2026-10-12"

@@ -518,33 +518,42 @@ def write_comparison_report(result: ComparisonResult, path) -> Path:
 # ----------------------------------------------------------------------
 
 
+TUNING_EVIDENCE = "docs/status/evidence/r43-planner-comparison-2026-10-12/tuning/"
+
+
 def make_bumperbot_comparison() -> ComparisonSpec:
     """The canonical Bumperbot two-planner comparison.
 
-    Two wired global planners (navfn vs dijkstra) with every other
-    setting fixed: same robot, arena, scenario, local planner, and
-    parameters. Five predeclared evaluation seeds are kept separate from
-    two tuning seeds. Thresholds carry their measured justifications.
+    Two wired global planners that differ in search - Smac 2D A*
+    (``a_star_planner``) and NavFn's Dijkstra wavefront (``navfn_planner``) -
+    with every other setting fixed: Bumperbot, nav_maze, Gazebo and the
+    robot's Regulated Pure Pursuit controller with its stock parameters.
+    Each seed draws the same three goals for both arms from the map's spawn
+    (scripts/sim_nav_goals.py).  The five evaluation seeds are separate from
+    the two tuning seeds; thresholds were set from the tuning trials before
+    any evaluation trial ran.
+    (Declared 2026-09-09 as navfn vs dijkstra with TEB on small_office; that
+    was not runnable - TEB is not built, small_office has no map, and both
+    planner ids select the same NavFn plugin.)
     """
-    shared_local = "teb_local_planner"
-    shared_params = {shared_local: {"max_vel_x": 0.5, "max_vel_theta": 1.0}}
+    shared_local = "pure_pursuit"
     return ComparisonSpec(
         experiment_id="bumperbot_planner_comparison",
         robot_id="bumperbot",
-        environment_id="small_office",
+        environment_id="nav_maze",
         scenario_id="point_to_point_navigation",
         simulator="gazebo",
         arm_a=ComparisonArm(
+            arm_id="a_star",
+            global_planning="a_star_planner",
+            local_planning=shared_local,
+            parameters={},
+        ),
+        arm_b=ComparisonArm(
             arm_id="navfn",
             global_planning="navfn_planner",
             local_planning=shared_local,
-            parameters=dict(shared_params),
-        ),
-        arm_b=ComparisonArm(
-            arm_id="dijkstra",
-            global_planning="dijkstra_planner",
-            local_planning=shared_local,
-            parameters=dict(shared_params),
+            parameters={},
         ),
         evaluation_seeds=(11, 23, 37, 41, 53),
         tuning_seeds=(7, 9),
@@ -558,23 +567,33 @@ def make_bumperbot_comparison() -> ComparisonSpec:
         thresholds=(
             ThresholdSpec(
                 name="max_path_length_m",
-                value=12.0,
+                value=13.0,
                 justification=(
-                    "Measured: the straight-line start-to-goal distance in "
-                    "small_office for point_to_point_navigation is 6.0 m; the "
-                    "measured 95th-percentile path length across reference "
-                    "runs is 9.8 m, so 12.0 m bounds replanning detours "
-                    "without excusing loops."
+                    "Measured on tuning seeds 7 and 9 (2026-10-12, 11 "
+                    "successful goals over both arms): travelled paths "
+                    "5.91-9.98 m for goals the sampler bounds at a 10 m grid "
+                    "shortest path. 13.0 m allows 30% over that bound for "
+                    "replanning without excusing loops. " + TUNING_EVIDENCE
                 ),
             ),
             ThresholdSpec(
-                name="max_elapsed_wall_seconds",
-                value=120.0,
+                name="max_goal_sim_seconds",
+                value=100.0,
                 justification=(
-                    "Measured: reference runs complete in 40-75 s wall time "
-                    "at the fixed speed limits (max_vel_x=0.5); 120 s is the "
-                    "measured worst-case completion plus a 60 s margin, well "
-                    "under the 300 s timeout."
+                    "Measured on tuning seeds 7 and 9: successful goals took "
+                    "27.7-67.3 simulated s at the RPP speed limits. 100 s "
+                    "is about 1.5x the measured maximum, well under the "
+                    "300 s goal timeout. " + TUNING_EVIDENCE
+                ),
+            ),
+            ThresholdSpec(
+                name="min_footprint_clearance_m",
+                value=0.0,
+                justification=(
+                    "Measured on tuning seeds 7 and 9: the truth trace kept "
+                    "0.086-0.98 m between Bumperbot's 0.12 m footprint and "
+                    "mapped obstacles. Any overlap (<= 0) fails a goal. "
+                    + TUNING_EVIDENCE
                 ),
             ),
         ),

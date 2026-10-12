@@ -1,0 +1,146 @@
+{
+ "planners": {
+  "a_star_planner": {
+   "seeds": [
+    7,
+    9
+   ],
+   "trial_errors": [],
+   "goals": 6,
+   "succeeded": 6,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 6
+   },
+   "duration_sim_s": {
+    "n": 6,
+    "median": 46.95,
+    "mean": 47.87,
+    "std": 11.415,
+    "min": 27.74,
+    "max": 64.86
+   },
+   "path_length_m": {
+    "n": 6,
+    "median": 8.898,
+    "mean": 8.506,
+    "std": 1.38,
+    "min": 5.911,
+    "max": 9.926
+   },
+   "mean_speed_mps": {
+    "n": 6,
+    "median": 0.19,
+    "mean": 0.183,
+    "std": 0.029,
+    "min": 0.13,
+    "max": 0.213
+   },
+   "final_error_truth_m": {
+    "n": 6,
+    "median": 0.058,
+    "mean": 0.06,
+    "std": 0.026,
+    "min": 0.016,
+    "max": 0.095
+   },
+   "min_footprint_clearance_m": {
+    "n": 6,
+    "median": 0.276,
+    "mean": 0.255,
+    "std": 0.082,
+    "min": 0.086,
+    "max": 0.327
+   }
+  },
+  "navfn_planner": {
+   "seeds": [
+    7,
+    9
+   ],
+   "trial_errors": [],
+   "goals": 6,
+   "succeeded": 5,
+   "success_rate": 0.833,
+   "outcomes": {
+    "succeeded": 5,
+    "aborted": 1
+   },
+   "duration_sim_s": {
+    "n": 5,
+    "median": 48.28,
+    "mean": 47.968,
+    "std": 11.816,
+    "min": 30.68,
+    "max": 67.28
+   },
+   "path_length_m": {
+    "n": 5,
+    "median": 9.32,
+    "mean": 8.595,
+    "std": 1.531,
+    "min": 5.966,
+    "max": 9.983
+   },
+   "mean_speed_mps": {
+    "n": 5,
+    "median": 0.194,
+    "mean": 0.183,
+    "std": 0.025,
+    "min": 0.148,
+    "max": 0.215
+   },
+   "final_error_truth_m": {
+    "n": 5,
+    "median": 0.056,
+    "mean": 0.045,
+    "std": 0.027,
+    "min": 0.003,
+    "max": 0.082
+   },
+   "min_footprint_clearance_m": {
+    "n": 6,
+    "median": 0.373,
+    "mean": 0.448,
+    "std": 0.246,
+    "min": 0.215,
+    "max": 0.98
+   }
+  }
+ },
+ "paired": {
+  "a_star_planner vs navfn_planner": {
+   "goals_both_succeeded": 5,
+   "identical_goal_positions": 5,
+   "time_ratio": {
+    "n": 5,
+    "median": 0.948,
+    "mean": 0.934,
+    "std": 0.061,
+    "min": 0.838,
+    "max": 1.022
+   },
+   "path_ratio": {
+    "n": 5,
+    "median": 0.991,
+    "mean": 0.991,
+    "std": 0.009,
+    "min": 0.976,
+    "max": 1.003
+   }
+  }
+ },
+ "manifest": {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "nav_maze",
+  "category": "global_planning",
+  "planners": "a_star_planner navfn_planner",
+  "seeds": "7 9",
+  "launch_args": "local_planning:=pure_pursuit",
+  "goals_per_seed": "3",
+  "sequence_start": "-7.0 -7.0",
+  "revision": "285964138f169ec4d132249c76180f593aacfa59",
+  "started": "2026-10-12T19:52:39+02:00"
+ }
+}
