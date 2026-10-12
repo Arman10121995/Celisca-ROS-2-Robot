@@ -117,7 +117,8 @@ class MethodSubrecord:
             'equations': self.equations,
             'source_references': self.source_references,
             'applicable_robots': self.applicable_robots,
-            'input_strata': [str(s) for s in self.input_strata],
+            # Enum values, not 'InputStratum.X' reprs: load_state() parses them back.
+            'input_strata': [getattr(s, 'value', s) for s in self.input_strata],
             'output_types': self.output_types,
             'parameters': self.parameters,
             'assumptions': self.assumptions,
@@ -149,7 +150,7 @@ class BenchmarkExperiment:
             'experiment_id': self.experiment_id,
             'method_id': self.method_id,
             'category': self.category,
-            'input_stratum': str(self.input_stratum),
+            'input_stratum': getattr(self.input_stratum, 'value', self.input_stratum),
             'robot_class': self.robot_class,
             'environment': self.environment,
             'simulator': self.simulator,

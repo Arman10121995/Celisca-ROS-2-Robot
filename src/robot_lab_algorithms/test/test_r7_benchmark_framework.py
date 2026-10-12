@@ -71,7 +71,8 @@ class TestR7BenchmarkFramework(unittest.TestCase):
             method_id="test_method",
             category="test_category",
             display_name="Test Method",
-            implementation_ref="test.module.TestClass"
+            implementation_ref="test.module.TestClass",
+            mathematical_foundation="test fixture"
         )
         self.framework.register_method(method)
         
@@ -121,19 +122,22 @@ class TestR7BenchmarkFramework(unittest.TestCase):
             method_id="method1",
             category="category1",
             display_name="Method 1",
-            implementation_ref="module1.Method1"
+            implementation_ref="module1.Method1",
+            mathematical_foundation="test fixture"
         )
         method2 = MethodSubrecord(
             method_id="method2", 
             category="category1",
             display_name="Method 2",
-            implementation_ref="module1.Method2"
+            implementation_ref="module1.Method2",
+            mathematical_foundation="test fixture"
         )
         method3 = MethodSubrecord(
             method_id="method3",
             category="category2",
             display_name="Method 3",
-            implementation_ref="module2.Method3"
+            implementation_ref="module2.Method3",
+            mathematical_foundation="test fixture"
         )
         
         self.framework.register_method(method1)
@@ -152,7 +156,8 @@ class TestR7BenchmarkFramework(unittest.TestCase):
             method_id="test_method",
             category="test_category",
             display_name="Test Method",
-            implementation_ref="test.module.TestClass"
+            implementation_ref="test.module.TestClass",
+            mathematical_foundation="test fixture"
         )
         experiment = BenchmarkExperiment(
             experiment_id="test_exp",
@@ -271,6 +276,7 @@ class TestMethodSubrecord(unittest.TestCase):
             category="test_category",
             display_name="Test Method",
             implementation_ref="test.module.TestClass",
+            mathematical_foundation="test fixture",
             input_strata=[InputStratum.PERCEPTION_LIDAR_2D_SPARSE]
         )
         
@@ -448,7 +454,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="perception",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
@@ -468,7 +475,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="localization",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
@@ -489,7 +497,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="state_estimation",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
@@ -510,7 +519,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="sensor_fusion",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
@@ -530,7 +540,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="global_planning",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
@@ -550,7 +561,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="local_planning",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
@@ -570,7 +582,8 @@ class TestAllCategoriesCoverage(unittest.TestCase):
                 method_id=method_id,
                 category="control",
                 display_name=f"{method_id.replace('_', ' ').title()}",
-                implementation_ref=f"robot_lab_algorithms.{method_id}"
+                implementation_ref=f"robot_lab_algorithms.{method_id}",
+                mathematical_foundation="test fixture"
             )
             framework.register_method(method)
         
