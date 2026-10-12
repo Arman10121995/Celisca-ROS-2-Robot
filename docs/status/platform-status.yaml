@@ -23,16 +23,16 @@ priority_patches:
     result: "GUI no longer publishes when merely armed; Flight command/backend/neutral-input checks join the passing command/Drive suite. Physical joystick validation remains."
   P3:
     title: "Celisca scale, spawn and furnished-map navigation"
-    state: partial
+    state: done
     owner: "claude"
-    result: "20% Celisca scale/collision and historical furnished goals retained. Current occupancy v4 preserves open mesh walls and invalidates v3 caches; all 17 installed extension grids are regenerated with world/spawn fields unchanged. Same 6462 measured hospital lidar endpoints improve median grid distance 0.804 to 0.071 m. Normal GUI Bumperbot and Labbot short single-floor hospital navigation passes on Gazebo, MuJoCo, PyBullet and Isaac with fresh physical truth, floor support, 1 simulated second settling, unchanged 0.15 m/5 degree gates and zero root exits. Position errors are 0.043-0.092 m and absolute heading errors 1.21-2.21 degrees. Original 0.175 m failure and reverted 0.03 m goal experiment remain negative. Remaining Celisca/two-floor/obstacle/backend cells stay open."
-    evidence: "docs/status/evidence/r61-furniture-collision-2026-09-30/README.md"
+    result: "2026-10-12 claude: 32/32 Celisca missions pass (MuJoCo, PyBullet, Gazebo, Isaac x Labbot, Bumperbot x plain/furnished floors 1-2): detour goal, cancel/stop <= 0.40 sim s, resume, near-obstacle goal; truth error median 0.069/0.054 m, max 0.139 m, heading <= 3.0 deg. Causes fixed: furnished maps lacked furniture (furnish_occupancy_map.py, scan endpoints within one cell), floor-1 furnished start 0.23 m from furniture, Bumperbot radius 0.10 < 0.118 m, DWB stopping at a wall end (recorded /evaluation; Labbot/Bumperbot now default to Regulated Pure Pursuit with 0.55 m inflation, DWB selectable), Harmonic discovery spam in Gazebo runs. Earlier 20% scale, spawns and hospital results retained. One seeded mission per cell; repeats and other maps continue under R6."
+    evidence: "docs/status/evidence/p3-celisca-missions-2026-10-12/README.md"
   P4:
     title: "MuJoCo performance with correct control timing"
     state: partial
     owner: "claude"
-    result: "Wheel/effort feedback timing, geometry and 5 Hz 320x240 sensors remain unchanged. Real native physics-thread profiles identify mj_step as the largest cost. Shared typed-array image packing preserves identical ROS wire data and reduces measured construction medians from 30.051/40.019 ms to 0.060/0.070 ms. Four actual ROS serialization cases pass; normal Labbot/MuJoCo/hospital navigation repeat passes 0.046 m/+1.97 degrees, fresh body/floor/settle gates and zero root exit. Actual 15-second clock windows are 0.130493 before and 0.130892 after, not meaningful whole-simulator speed improvement. Actual normal initialization at (0.55,12.45,0.1): 2268 native steps average 10.794 ms, kinematics 9.353 ms, collision 1.234 ms and constraints 0.016 ms; 109918 world-bound vertices across 200 rigid flexes. Static-world update is an inferred optimization candidate requiring validation. Isolated 3.15 averages 11.687 ms with no observed speed gain; default 3.12 preserved. Geometry/contact-preserving optimization and matched motion/RTF acceptance remain."
-    evidence: "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md"
+    result: "2026-10-12 claude: static-world midphase disabled above 5000 flex elements (identical contacts), 1000-triangle flex pieces, 200-triangle ray proxies and one mj_multiRay per scan. Captured hospital step 10.55 -> 4.73 ms; live nav RTF Labbot celisca_floor_1 0.31 -> 0.675, hospital 0.13 -> 0.344, nav_obstacle Bumperbot 0.877. Still below real time on large worlds (remaining: flex vertex update, scan, camera, Nav2 CPU); 4 ms wheel step rejected (Labbot drift). Earlier image-packing and profile results retained."
+    evidence: "docs/status/evidence/p4-mujoco-step-2026-10-12/README.md"
     active_scope: "2026-10-09 codex: implement cached coplanar collision-surface retriangulation to reduce static rigid-flex vertices while retaining the selected world's surfaces, holes, radius and visible mesh. Unsupported/non-equivalent patches fall back to source triangles. Default MuJoCo, robot controllers and sensors remain unchanged. Matched geometry/contact/motion/RTF validation follows implementation."
   P5:
     title: "Four-wheel steering across crab, opposite-phase and pivot modes"
@@ -50,8 +50,8 @@ priority_patches:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
     state: partial
     owner: "claude"
-    result: "Primary upstream candidates audited; BHL/Go2 bounded MuJoCo walks exist. Other models need policy contracts, actuation and live tests; unsupported modes stay gated."
-    evidence: "docs/status/policy-px4-candidates-2026-09-30.md"
+    result: "2026-10-12 claude: four model-matched rl_sar policies (go2_himloco, a1_legged_gym, b2_robot_lab, go2w_robot_lab, pinned 376d42c9) walk on /cmd_vel in MuJoCo loc through the in-step PD bridge: straight 0.26-0.36 of 0.4 m/s, arcs/reverse/stop tracked; Go2 himloco does not spin in place, B2 does not strafe. Isaac loc now runs the robot's policy on PhysX drives with its gains at 200 Hz and offers loc for these profiles (implemented, unmeasured). Gazebo actuation, BHL outside MuJoCo, mapping/navigation for legged robots remain gated."
+    evidence: "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md"
   P8:
     title: "PX4 X500 drone integration"
     state: done

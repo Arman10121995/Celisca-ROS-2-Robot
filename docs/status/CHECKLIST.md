@@ -209,14 +209,15 @@ code delivery, not a passed mission or universal support.
 
 - [ ] **P2:** Record an actual physical joystick trial: untouched enable,
   independent axes, neutral return, unplug, Space, selection change and close.
-- [ ] **P3/R5.1/R6.1:** Complete Bumperbot and Labbot on every Celisca plain,
-  furnished and actor map/backend/mode cell. Include a multi-turn obstacle
-  route, furniture-adjacent goal, cancellation and second goal. Review
-  furniture-aware occupancy alignment instead of replacing maps automatically.
-- [ ] **P4:** Profile and improve MuJoCo speed without compromising control,
-  collision fidelity or sensing. Before/after actual Labbot/hospital windows remain about 0.13× real time.
-  Camera byte packing is lossless and faster; native stepping remains the
-  largest profiled cost. Finer native profiling and validated speed gains remain.
+- [x] **P3:** Bumperbot and Labbot pass the Celisca mission (detour, cancel,
+  resume, near-obstacle goal) on plain and furnished floors 1-2 in all four
+  backends, 32/32 (2026-10-12, [evidence](evidence/p3-celisca-missions-2026-10-12/README.md)).
+- [ ] **R5.1/R6.1:** Repeat those missions over seeds, add the actor maps and
+  the slam/3D modes; one seeded mission per cell is not a repeat study.
+- [ ] **P4:** MuJoCo large-world steps are about 2x faster with identical
+  contacts (Labbot celisca_floor_1 RTF 0.31 -> 0.675, hospital 0.13 -> 0.344;
+  [evidence](evidence/p4-mujoco-step-2026-10-12/README.md)). Real time on large
+  worlds still needs the flex vertex update, scan and camera costs reduced.
 - [ ] **R5.5:** Complete Ackermann, rear-steer and anti-Ackermann obstacle/
   slalom, mapping, localization and navigation qualification. Retain each
   drive model's turning constraints and independent body/contact evidence.
@@ -228,6 +229,10 @@ code delivery, not a passed mission or universal support.
 - [ ] **R5.2:** Resolve Go2 stair/terrain traversal and roll-axis recovery;
   existing failed get-up trials remain negative evidence. Qualify robust
   walking/turning and sensor/goal missions before broader mode enablement.
+- [ ] **P7 (rl_sar):** Go2/A1/B2/Go2W policies walk on `/cmd_vel` in MuJoCo
+  ([evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)); measure the
+  new Isaac PD path, add a Gazebo actuation path and gate mapping/navigation on
+  measured turning (Go2 himloco does not spin in place).
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live

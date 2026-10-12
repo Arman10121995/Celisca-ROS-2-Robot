@@ -1,5 +1,28 @@
 # Current Robot Lab status
 
+October 12 (later): measured on master.
+
+- **Celisca navigation.** The Celisca mission passes in all 32 cells (4
+  simulators x Labbot/Bumperbot x plain/furnished floors 1-2). Each
+  mission is a detour goal, cancel/stop, resume and near-obstacle goal.
+  Final error vs truth is at most 0.139 m.
+  - The furnished maps now contain their furniture.
+  - Labbot and Bumperbot now default to Regulated Pure Pursuit with 0.55 m
+    inflation, because DWB stops at a furnished wall end (recorded); DWB
+    stays selectable.
+  - [Evidence](evidence/p3-celisca-missions-2026-10-12/README.md).
+- **MuJoCo speed.** Large-world MuJoCo steps are about twice as fast, with
+  identical contacts. Labbot on celisca_floor_1 runs at RTF 0.675 (was
+  0.31). [Evidence](evidence/p4-mujoco-step-2026-10-12/README.md).
+- **Legged policies.** Four model-matched rl_sar policies (Go2, A1, B2,
+  Go2W) walk on `/cmd_vel` in MuJoCo localization.
+  [Evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md).
+  - Isaac localization now runs the same policies on PhysX drives;
+    implemented, not yet measured.
+- **PX4 cleanup.** PX4 flights get a run id, a reaper and their own
+  Harmonic discovery ports. A leftover flight had flooded every Gazebo run
+  with ~6,500 log lines/s. Measurement scripts isolate Gazebo discovery.
+
 October 12: the PX4 X500 gains an experimental RGB-D variant (upstream
 `x500_depth`) and RTAB-Map 3D mapping with a saved, reloadable database and
 exported cloud, selectable in the GUI; one mapping and one localization
