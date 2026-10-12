@@ -18,7 +18,6 @@ setup(
     maintainer_email="robot@example.com",
     description="MuJoCo simulator adapter for Robot Lab simulations.",
     license="MIT",
-    tests_require=["pytest"],
     entry_points={
         "console_scripts": [
             "native_asset_display = robot_lab_mujoco.native_asset_display:main",

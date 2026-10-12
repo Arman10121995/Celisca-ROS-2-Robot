@@ -17,7 +17,6 @@ setup(
     maintainer_email='antonio.brandi@outlook.it',
     description='ROS 2 Code Examples',
     license='Apache 2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'simple_publisher = robot_lab_py_examples.simple_publisher:main',

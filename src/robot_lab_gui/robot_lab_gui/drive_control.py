@@ -80,23 +80,42 @@ class RampDrive:
         return 0.0, 0.0
 
 
+def _gamepad_devices():
+    try:
+        from robot_lab_utils.input_devices import joystick_devices
+    except ImportError:  # GUI without the utils package: refuse unknown devices
+        return [dict(path=path, gamepad=False, reason="robot_lab_utils unavailable")
+                for path in sorted(glob.glob("/dev/input/js*"))]
+    return joystick_devices()
+
+
 class LinuxJoystick:
     """Nonblocking Linux joystick axes; requires no optional Python package."""
 
     _EVENT = struct.Struct("IhBB")
 
-    def __init__(self):
+    def __init__(self, find_devices=None):
         self.fd = None
         self.path = ""
+        self.name = ""
         self.axes = {0: 0.0, 1: 0.0}
         self.centres = {}
+        # Only real gamepads: the kernel joystick interface also exposes
+        # touchscreens and mice (this host's js0 is its touch panel, whose
+        # touch position read as a stick drove the robot).
+        self._find_devices = find_devices or _gamepad_devices
+        self.ignored = []
 
     def poll(self):
         if self.fd is None:
-            for path in sorted(glob.glob("/dev/input/js*")):
+            devices = self._find_devices()
+            self.ignored = [device for device in devices if not device.get("gamepad")]
+            for device in devices:
+                if not device.get("gamepad"):
+                    continue
                 try:
-                    self.fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
-                    self.path = path
+                    self.fd = os.open(device["path"], os.O_RDONLY | os.O_NONBLOCK)
+                    self.path, self.name = device["path"], device.get("name", "")
                     break
                 except OSError:
                     continue
@@ -151,5 +170,6 @@ class LinuxJoystick:
                 pass
         self.fd = None
         self.path = ""
+        self.name = ""
         self.axes = {0: 0.0, 1: 0.0}
         self.centres = {}

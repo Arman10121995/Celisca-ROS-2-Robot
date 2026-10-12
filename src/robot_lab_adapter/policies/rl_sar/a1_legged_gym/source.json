@@ -1,0 +1,13 @@
+{
+  "robot": "a1",
+  "variant": "legged_gym",
+  "profile": "unitree_a1",
+  "upstream": "https://github.com/fan-ziqi/rl_sar",
+  "revision": "376d42c9b128f963ab08579762d5a216a976ce39",
+  "license": "Apache-2.0",
+  "torchscript": "policy/a1/legged_gym/model.pt",
+  "torchscript_sha256": "b0045ccca07d13fec36e4dc4981df1d7e4495dd81d0c6b9c4909699520ec0cf6",
+  "onnx_sha256": "02d0495f79674d8f7dc54c53ecb8247dbbcbc254a41c2f5ae6e3316b52e77184",
+  "input_width": 270,
+  "max_onnx_torch_difference": 1.0967254638671875e-05
+}

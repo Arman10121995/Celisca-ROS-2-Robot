@@ -576,10 +576,13 @@ def _stage_world_meshes(mjcf_text, logger=None):
         # A detailed convex hull adds cost but cannot represent an open room.
         mesh.set("maxhullvert", "4")
 
-    from robot_lab_mujoco.world_collision import add_static_mesh_collisions
+    from robot_lab_mujoco.world_collision import add_ray_proxies, add_static_mesh_collisions
     collision_meshes = add_static_mesh_collisions(root)
     if collision_meshes:
         _emit_log(logger, "info", "MuJoCo static triangle collision: %d mesh(es)." % collision_meshes)
+    proxies = add_ray_proxies(root)
+    if proxies:
+        _emit_log(logger, "info", "MuJoCo range-sensor proxies: %d world mesh piece(s)." % proxies)
 
     return ET.tostring(root, encoding="unicode")
 
@@ -971,6 +974,12 @@ def _foot_world_contact_forces(model, data, foot_geom_ids):
     return _world_contact_forces(model, data, foot_geom_ids)
 
 
+# Range sensors see everything but the world's visual meshes, whose exact
+# triangles are cast through the split ray proxies (world_collision).
+from robot_lab_mujoco.world_collision import RANGE_SENSOR_GEOMGROUP as _RANGE_GROUPS  # noqa: E402
+_RANGE_GEOMGROUP = np.array(_RANGE_GROUPS, dtype=np.uint8)
+
+
 def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
                         geomid):
     """Distance along a ray to the first geom not belonging to the robot.
@@ -983,7 +992,7 @@ def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
     start = np.array(origin, dtype=np.float64)
     travelled = 0.0
     for _ in range(16):
-        dist = mujoco.mj_ray(model, data, start, direction, None, 1, -1, geomid)
+        dist = mujoco.mj_ray(model, data, start, direction, _RANGE_GEOMGROUP, 1, -1, geomid)
         if dist < 0.0 or geomid[0] < 0:
             return -1.0
         if model.body_rootid[model.geom_bodyid[geomid[0]]] != robot_root:
@@ -994,6 +1003,32 @@ def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
             return -1.0
         start = start + direction * step
     return -1.0
+
+
+def _scan_ranges(model, data, origin, angles, robot_root, range_min, range_max):
+    """Planar range readings (inf for no return) for rays at *angles*.
+
+    All rays go through one native mj_multiRay call that skips the robot's
+    root body; the few that still hit another robot body (a wheel, a mast)
+    are stepped past one by one with _ray_skipping_robot, so the result
+    equals casting each ray with it.
+    """
+    count = len(angles)
+    directions = np.zeros((count, 3))
+    directions[:, 0], directions[:, 1] = np.cos(angles), np.sin(angles)
+    hit_geoms = np.empty(count, dtype=np.int32)
+    distances = np.empty(count)
+    mujoco.mj_multiRay(model, data, np.asarray(origin, dtype=np.float64),
+                       directions.ravel(), _RANGE_GEOMGROUP, 1, int(robot_root),
+                       hit_geoms, distances, None, count, float(range_max))
+    hit_bodies = model.geom_bodyid[np.maximum(hit_geoms, 0)]
+    own = (hit_geoms >= 0) & (model.body_rootid[hit_bodies] == robot_root)
+    geomid = np.zeros(1, dtype=np.int32)
+    for i in np.flatnonzero(own):
+        distances[i] = _ray_skipping_robot(
+            model, data, origin, directions[i], robot_root, range_max, geomid)
+    valid = (distances > 0.0) & (distances < range_max)
+    return np.where(valid, np.maximum(range_min, distances), np.inf)
 
 
 def _spawn_attitude_quaternion(yaw: float, pitch: float, roll: float) -> list:
@@ -1074,6 +1109,19 @@ class MuJoCoSpawner(Node):
         # The robot's whole drive block as JSON (drive_kinematics); empty
         # for the differential-drive parameters above.
         self.declare_parameter("drive_config", "")
+        # 'auto' disables MuJoCo's collision midphase for large static
+        # flex worlds (world_collision.configure_world_midphase); 'on'
+        # keeps it, 'off' always disables it.
+        self.declare_parameter("world_midphase", "auto")
+        # Per-joint PD targets applied in the physics step (JSON, see
+        # robot_lab_mujoco.joint_pd); used by learned legged policies.
+        self.declare_parameter("joint_pd_config", "")
+        self.declare_parameter("pd_joint_armature", 0.01)
+        # Optional coarser model timestep for robots that only drive wheels
+        # (no effort stream, no explicit physics_timestep).  Off by default:
+        # at 4 ms Bumperbot tracked unchanged but Labbot drifted (straight
+        # yaw -0.047 rad/s, residual motion after Stop) on 2026-10-12.
+        self.declare_parameter("wheel_physics_timestep", 0.0)
         self.declare_parameter("laser_link_name", "laser_link")
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
@@ -1119,6 +1167,8 @@ class MuJoCoSpawner(Node):
         self._actuator_ids = {}
         self._effort_command = None
         self._effort_actuators = []
+        self._pd_command = None
+        self._pd_actuators = []
         self._go2_foot_ids = []
         self._go2_trunk_ids = []
         self._go2_support_ids = []
@@ -1202,6 +1252,26 @@ class MuJoCoSpawner(Node):
         )
         self._thread = None
 
+    def _apply_wheel_timestep(self, explicit_timestep):
+        """Coarser model step for wheel-driven robots (see the parameter).
+
+        Only when the robot has drive wheels in the model, no joint-effort
+        input and no explicit physics_timestep.  Legged and humanoid
+        controllers keep the world step they were tuned on.
+        """
+        wheel_step = float(self.get_parameter("wheel_physics_timestep").value)
+        if (explicit_timestep or wheel_step <= 0 or not math.isfinite(wheel_step)
+                or self._effort_command is not None or getattr(self, "_robot_free", False)):
+            return
+        wheels = [joint for joint in self._drive.wheel_joints if joint in self._joint_name2id]
+        if not wheels or wheel_step <= float(self._model.opt.timestep):
+            return
+        self._model.opt.timestep = wheel_step
+        self._substeps = _physics_substeps(self._dt, wheel_step)
+        self.get_logger().info(
+            "MuJoCo wheel-drive timestep: %.4f s (%d substep(s) per %.4f s tick)"
+            % (wheel_step, self._substeps, self._dt))
+
     def _make_drive(self):
         """Wheel/steering model for /cmd_vel (differential unless configured)."""
         args = (self.get_parameter("left_wheel_joint").value,
@@ -1233,6 +1303,14 @@ class MuJoCoSpawner(Node):
         with self._twist_lock:
             self._twist = msg
             self._last_cmd_time = self._last_mux_cmd_time
+
+    def _on_joint_pd(self, msg):
+        with self._twist_lock:
+            valid = self._pd_command.receive(msg.data, time.monotonic())
+        if not valid:
+            self.get_logger().warning(
+                "Rejected joint PD targets: expected %d finite values"
+                % len(self._pd_command.names), throttle_duration_sec=2.0)
 
     def _on_joint_effort(self, msg):
         with self._twist_lock:
@@ -1352,6 +1430,12 @@ class MuJoCoSpawner(Node):
                                   "from the robot's own MJCF (%s)." % path)
                     robot_mjcf = self._effort_command.add_actuators(
                         robot_mjcf, native)
+                pd_config = self.get_parameter("joint_pd_config").value
+                if pd_config and self._effort_command is None:
+                    from robot_lab_mujoco.joint_pd import JointPDCommand
+                    self._pd_command = JointPDCommand(pd_config)
+                    robot_mjcf = self._pd_command.add_actuators(
+                        robot_mjcf, float(self.get_parameter("pd_joint_armature").value))
                 wheel_config = parse_drive_config(self.get_parameter('drive_config').value)
                 self._ramp_watchdog_stop = wheel_config.get('mujoco_ramp_watchdog_stop', False)
                 if not isinstance(self._ramp_watchdog_stop, bool):
@@ -1405,12 +1489,18 @@ class MuJoCoSpawner(Node):
         if physics_timestep:
             self._model.opt.timestep = physics_timestep
             self.get_logger().info("MuJoCo physics timestep: %.4f s" % physics_timestep)
+        from robot_lab_mujoco.world_collision import configure_world_midphase
+        if configure_world_midphase(self._model, self.get_parameter("world_midphase").value):
+            self.get_logger().info(
+                "MuJoCo midphase disabled for %d static world flex elements "
+                "(same contacts, cheaper step)" % self._model.nflexelem)
         self._data = mujoco.MjData(self._model)
         self._substeps = _physics_substeps(self._dt, self._model.opt.timestep)
         self._camera = self._camera_setup()
 
         # --- find the root body that contains the free joint ---
         self._find_body_and_joints()
+        self._apply_wheel_timestep(physics_timestep)
         if self.get_parameter("robot_name").value == "unitree_go2":
             self._go2_foot_ids = [mujoco.mj_name2id(
                 self._model, mujoco.mjtObj.mjOBJ_GEOM,
@@ -1482,7 +1572,22 @@ class MuJoCoSpawner(Node):
         # pinned the base every tick, so the published joints never changed.
         # 'auto' holds robots without drive wheels, 'true' holds every
         # robot, 'false' leaves all joints free.
+        if self._pd_command is not None:
+            self._pd_actuators = [mujoco.mj_name2id(
+                self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, name + "_pd")
+                for name in self._pd_command.names]
+            if min(self._pd_actuators) < 0:
+                raise ValueError("configured PD actuator is missing")
+            # Velocity-dependent actuator forces are integrated implicitly.
+            self._model.opt.integrator = int(mujoco.mjtIntegrator.mjINT_IMPLICITFAST)
+            self.create_subscription(Float64MultiArray, self._pd_command.topic,
+                                     self._on_joint_pd, 1)
+            self.get_logger().info(
+                "Joint PD input: %s (%d joints, in-step PD, implicitfast)"
+                % (self._pd_command.topic, len(self._pd_actuators)))
         hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
+        if self._pd_command is not None:
+            hold_mode = "false"  # the PD actuators own every listed joint
         has_drive = (getattr(self, "_lw_qpos_adr", -1) >= 0
                      or getattr(self, "_rw_qpos_adr", -1) >= 0
                      or any(joint in self._joint_name2id
@@ -1870,6 +1975,10 @@ class MuJoCoSpawner(Node):
             with self._twist_lock:
                 values = self._effort_command.command(time.monotonic(), self._watchdog_timeout)
             self._data.ctrl[self._effort_actuators] = values
+        if self._pd_command is not None:
+            with self._twist_lock:
+                values = self._pd_command.command(time.monotonic())
+            self._data.ctrl[self._pd_actuators] = values
         for _ in range(self._substeps):
             self._apply_perturbation()
             mujoco.mj_step(self._model, self._data)
@@ -1932,6 +2041,8 @@ class MuJoCoSpawner(Node):
             self._last_cmd_time = 0.0
             if self._effort_command is not None:
                 self._effort_command.clear()
+            if self._pd_command is not None:
+                self._pd_command.clear()
         self._sim_step = 0
         # Physics episode time restarts; ROS time continues from the offset.
         # Discard accumulated wall debt from the previous physical episode.
@@ -2102,19 +2213,9 @@ class MuJoCoSpawner(Node):
         # backwards, so the base heading is not the scan heading.
         byaw = yaw_of(laser_q)
 
-        geomid = np.zeros(1, dtype=np.int32)
-        ranges = []
-        for i in range(n):
-            angle = byaw - math.pi + i * ai
-            vec = np.array([
-                math.cos(angle), math.sin(angle), 0.0
-            ], dtype=np.float64)
-            dist = _ray_skipping_robot(
-                self._model, self._data, lp, vec, self._body_id, ax, geomid)
-            if 0.0 < dist < ax:
-                ranges.append(max(am, float(dist)))
-            else:
-                ranges.append(float("inf"))
+        angles = byaw - math.pi + np.arange(n) * ai
+        ranges = _scan_ranges(self._model, self._data, lp, angles,
+                              self._body_id, am, ax).tolist()
 
         msg = LaserScan()
         msg.header.stamp = self._stamp()

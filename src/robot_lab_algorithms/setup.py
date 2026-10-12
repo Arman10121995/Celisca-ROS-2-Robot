@@ -17,7 +17,6 @@ setup(
     maintainer_email='robot-lab@example.com',
     description='Bumperbot algorithm breadth: perception, localization, state estimation, sensor fusion, planning (P5)',
     license='Apache-2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             # Perception

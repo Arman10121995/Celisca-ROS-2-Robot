@@ -18,38 +18,38 @@ priority_patches:
   P2:
     title: "Keep GUI keyboard/joystick neutral until operator input"
     state: partial
-    owner: codex
+    owner: "claude"
     active_scope: "2026-10-09 codex: user requests Drone buttons to stay visibly latched after a click like Drive; preserve shared toggle inputs and Stop/Space, and render persistent selected state after pointer release/leave. Physical validation deferred."
     result: "GUI no longer publishes when merely armed; Flight command/backend/neutral-input checks join the passing command/Drive suite. Physical joystick validation remains."
   P3:
     title: "Celisca scale, spawn and furnished-map navigation"
     state: partial
-    owner: codex
+    owner: "claude"
     result: "20% Celisca scale/collision and historical furnished goals retained. Current occupancy v4 preserves open mesh walls and invalidates v3 caches; all 17 installed extension grids are regenerated with world/spawn fields unchanged. Same 6462 measured hospital lidar endpoints improve median grid distance 0.804 to 0.071 m. Normal GUI Bumperbot and Labbot short single-floor hospital navigation passes on Gazebo, MuJoCo, PyBullet and Isaac with fresh physical truth, floor support, 1 simulated second settling, unchanged 0.15 m/5 degree gates and zero root exits. Position errors are 0.043-0.092 m and absolute heading errors 1.21-2.21 degrees. Original 0.175 m failure and reverted 0.03 m goal experiment remain negative. Remaining Celisca/two-floor/obstacle/backend cells stay open."
     evidence: "docs/status/evidence/r61-furniture-collision-2026-09-30/README.md"
   P4:
     title: "MuJoCo performance with correct control timing"
     state: partial
-    owner: codex
+    owner: "claude"
     result: "Wheel/effort feedback timing, geometry and 5 Hz 320x240 sensors remain unchanged. Real native physics-thread profiles identify mj_step as the largest cost. Shared typed-array image packing preserves identical ROS wire data and reduces measured construction medians from 30.051/40.019 ms to 0.060/0.070 ms. Four actual ROS serialization cases pass; normal Labbot/MuJoCo/hospital navigation repeat passes 0.046 m/+1.97 degrees, fresh body/floor/settle gates and zero root exit. Actual 15-second clock windows are 0.130493 before and 0.130892 after, not meaningful whole-simulator speed improvement. Actual normal initialization at (0.55,12.45,0.1): 2268 native steps average 10.794 ms, kinematics 9.353 ms, collision 1.234 ms and constraints 0.016 ms; 109918 world-bound vertices across 200 rigid flexes. Static-world update is an inferred optimization candidate requiring validation. Isolated 3.15 averages 11.687 ms with no observed speed gain; default 3.12 preserved. Geometry/contact-preserving optimization and matched motion/RTF acceptance remain."
     evidence: "docs/status/evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md"
     active_scope: "2026-10-09 codex: implement cached coplanar collision-surface retriangulation to reduce static rigid-flex vertices while retaining the selected world's surfaces, holes, radius and visible mesh. Unsupported/non-equivalent patches fall back to source triangles. Default MuJoCo, robot controllers and sensors remain unchanged. Matched geometry/contact/motion/RTF validation follows implementation."
   P5:
     title: "Four-wheel steering across crab, opposite-phase and pivot modes"
     state: "partial"
-    owner: codex
+    owner: "claude"
     result: "Verified crab body goals meet 0.15 m/5 deg on named cells. Final native Isaac nav_obstacle repeat: 0.074 m/-4.21 deg, 0.255 m swept clearance. Selected localization/Drive/watchdog/reset/RGB-D SLAM and actual GUI save pass; current-setting full pattern/map/mode repeats, contacts and cancellation remain."
     evidence: "docs/status/continuation-2026-10-05.md"
   P6:
     title: "Physical mecanum lateral drive and mapping/navigation"
     state: "partial"
-    owner: codex
+    owner: "claude"
     result: "Physical roller drives and selected lateral body measurements preserved. PyBullet mecanum real 2D SLAM counts accepted poses/occupied cells, acknowledges graph restart and resumes tracking within 0.0095 m. Remaining backend/map/mode and obstacle missions stay open."
     evidence: "docs/status/continuation-2026-10-05.md"
   P7:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
     state: partial
-    owner: codex
+    owner: "claude"
     result: "Primary upstream candidates audited; BHL/Go2 bounded MuJoCo walks exist. Other models need policy contracts, actuation and live tests; unsupported modes stay gated."
     evidence: "docs/status/policy-px4-candidates-2026-09-30.md"
   P8:
@@ -228,7 +228,7 @@ legacy_phases:
       - "R5"
   P3.4:
     state: "partial"
-    owner: null
+    owner: "claude"
     replaced_by:
       - "R5.3"
     note: "Do not assume the earlier agent is still active; inspect ownership and worktree before resuming."
@@ -314,7 +314,7 @@ tasks:
   R1:
     title: "Trustworthy development baseline"
     state: "partial"
-    owner: null
+    owner: "claude"
     tasks:
       R1.1:
         title: "Repair installed entry points and portable paths"
@@ -468,7 +468,7 @@ tasks:
   R3:
     title: "Strict composition and execution"
     state: "partial"
-    owner: "cline-agent"
+    owner: "claude"
     next_task: "R5.1"
     tasks:
       R3.1:
@@ -543,7 +543,7 @@ tasks:
       R3.4:
         title: "Connect GUI to the common resolver"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R3.3"
         scope_paths:
@@ -590,7 +590,7 @@ tasks:
       R3.6:
         title: "Install external assets into normal Launch selectors"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on: ["R3.1", "R3.4"]
         scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/camera_msgs.py", "src/robot_lab_utils/robot_lab_utils/robot_spawn.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/asset_groups.py", "src/robot_lab_utils/robot_lab_utils/asset_preview.py", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py", "src/robot_lab_utils/robot_lab_utils/skid_steer.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md", "src/robot_lab_localization/config/robots/asset_husky.yaml"]
         active_scope: "2026-10-09 codex: install and expose exact-model policies and reusable native controllers in the normal registry/GUI, preserving measured prior robots and independent terrain/review ownership. Initial implementation precedes testing."
@@ -614,7 +614,7 @@ tasks:
   R4:
     title: "Measured reference experiment"
     state: "partial"
-    owner: null
+    owner: "claude"
     tasks:
       R4.1:
         title: "Implement scenario lifecycle and truthful outcomes"
@@ -648,7 +648,7 @@ tasks:
       R4.3:
         title: "Publish first reproducible planner comparison"
         state: "partial"
-        owner: "cline-agent"
+        owner: "claude"
         depends_on:
           - "R4.2"
         scope_paths:
@@ -665,7 +665,7 @@ tasks:
   R5:
     title: "Robot-class qualification"
     state: "active"
-    owner: "cline-agent"
+    owner: "claude"
     tasks:
       R5.1:
         title: "Qualify Bumperbot and Labbot mobile tasks"
@@ -687,7 +687,7 @@ tasks:
       R5.2:
         title: "Qualify Go2 locomotion"
         state: "active"
-        owner: github-copilot
+        owner: "claude"
         depends_on:
           - "R5.1"
         scope_paths:
@@ -750,7 +750,7 @@ tasks:
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
         state: "partial"
-        owner: codex
+        owner: "claude"
         depends_on:
           - "R5.1"
         scope_paths:
@@ -838,7 +838,7 @@ tasks:
       R5.5:
         title: "Integrate four-wheel Ackermann and reverse Ackermann workflows"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R5.1"
           - "R3.3"
@@ -860,7 +860,7 @@ tasks:
       R5.6:
         title: "Qualify four-wheel steering patterns and physical mecanum travel"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R5.1"
           - "R3.3"
@@ -914,7 +914,7 @@ tasks:
       R5.7:
         title: "Manipulator control and GUI motion planning"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on: ["R3.6", "R2.2", "R3.4"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/arm_trajectory.py", "src/robot_lab_utils/robot_lab_utils/native_arm_description.py", "scripts/provision_extension_assets.py", "scripts/test_tiers.sh", "docs/", "README.md", "ROADMAP.md"]
         active_scope: "2026-10-09 codex: generic native articulation/teach-replay, Cartesian Servo, measured fixture scenes and GUI attachment workflow are implemented. Preserve original Panda actuator/planning contracts; runtime validation deferred."
@@ -931,7 +931,7 @@ tasks:
       R5.8:
         title: "Robot hand and gripper actuation"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on: ["R3.6", "R5.7"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_utils/", "scripts/", "docs/", "README.md", "ROADMAP.md"]
         acceptance_ref: "ROADMAP.md"
@@ -947,7 +947,7 @@ tasks:
       R5.9:
         title: "Mobile manipulator missions and combined control"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         active_scope: "2026-10-09 codex continuation: implement coordinated selected-map Nav2 goals and source-matched taught arm/hand sequences for both native Stretch variants, with measured settling, explicit task ownership, manual intervention, cancellation and heartbeat loss. Initial implementation precedes mission validation."
         depends_on: ["R5.1", "R5.7", "R5.8"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/", "src/robot_lab_adapter/", "scripts/", "docs/", "src/robot_lab_localization/", "src/robot_lab_mapping/"]
@@ -974,12 +974,12 @@ tasks:
   R6:
     title: "Environment qualification"
     state: "partial"
-    owner: "molar1"
+    owner: "claude"
     tasks:
       R6.1:
         title: "Qualify geometry map alignment and resets"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R2.3"
           - "R3.1"
@@ -1026,7 +1026,7 @@ tasks:
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R6.1"
           - "R4.2"
@@ -1047,7 +1047,7 @@ tasks:
       R6.3:
         title: "Qualify 3D terrain and aerial representations"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R6.1"
           - "R5.2"
@@ -1068,7 +1068,7 @@ tasks:
       R6.4:
         title: "Expand diverse maps for ground, legged and aerial tasks"
         state: "partial"
-        owner: null
+        owner: "claude"
         depends_on:
           - "R6.1"
         scope_paths:
@@ -1082,7 +1082,7 @@ tasks:
       R6.5:
         title: "Generate 2D occupancy grids from selected 3D worlds in GUI"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on: ["R6.1", "R3.4"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/occupancy_slice.py", "src/robot_lab_gui/", "scripts/", "docs/ASSET_EXTENSION_GUIDE.md"]
         active_scope: "2026-10-07 codex: repair terrain slice projection so separate elevated regions are not joined by an invented outline; measure fresh primitive/rotated/terrain and hospital exports, then actual navigation. Preserve independent scripts/review_occupancy_maps.py unchanged and the separately owned shared heightfield converter."
@@ -1094,7 +1094,7 @@ tasks:
       R6.6:
         title: "External world library and Gazebo example imports"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on: ["R3.6", "R6.5"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_bringup/config/sim_maps.yaml", "src/robot_lab/robot_lab_registry/config/environments.yaml", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "scripts/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "docs/status/", "docs/ASSET_EXTENSION_GUIDE.md"]
         acceptance_ref: "ROADMAP.md"
@@ -1107,7 +1107,7 @@ tasks:
       R6.7:
         title: "GUI terrain generation with four-backend conversion"
         state: "active"
-        owner: "cline-agent"
+        owner: "claude"
         depends_on: ["R6.3", "R6.6"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/", "src/robot_lab_gui/", "docs/ASSET_EXTENSION_GUIDE.md"]
         active_scope: "2026-10-05: shared heightfield conversion for Gazebo/MuJoCo/PyBullet/Isaac. The SDF reader no longer drops <heightmap>; the layout is measured against the installed Gazebo rather than assumed. The terrain generator workflow, provider manifest and terrain missions remain outside this claim."
@@ -1121,12 +1121,12 @@ tasks:
   R7:
     title: "Algorithm breadth"
     state: "partial"
-    owner: "molar1"
+    owner: "claude"
     tasks:
       R7.1:
         title: "Normalize numerical and ROS algorithm adapters"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R4.3"
           - "R3.2"
@@ -1151,7 +1151,7 @@ tasks:
       R7.2:
         title: "Five perception pipelines"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1171,7 +1171,7 @@ tasks:
       R7.3:
         title: "Five localization methods"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R7.1"
         active_scope: "2026-10-02 codex: repair algorithm dispatch overrides and the standalone AMCL callback failure found in Gazebo; verify actual Nav2 algorithm selection. Full localization comparison remains open."
@@ -1195,7 +1195,7 @@ tasks:
       R7.4:
         title: "Five state-estimation methods"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1214,7 +1214,7 @@ tasks:
       R7.5:
         title: "Five sensor-fusion methods"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1233,7 +1233,7 @@ tasks:
       R7.6:
         title: "Five global planners"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1253,7 +1253,7 @@ tasks:
       R7.7:
         title: "Five local planners"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1273,7 +1273,7 @@ tasks:
       R7.8:
         title: "Five low-level or model-based controllers"
         state: "partial"
-        owner: "molar1"
+        owner: "claude"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1293,12 +1293,12 @@ tasks:
   R8:
     title: "Backend qualification and scaling"
     state: "partial"
-    owner: null
+    owner: "claude"
     tasks:
       R8.1:
         title: "Qualify PyBullet and MuJoCo combinations"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R5.1"
           - "R6.1"
@@ -1346,7 +1346,7 @@ tasks:
       R8.3:
         title: "Resource-bounded concurrent experiments"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         active_scope: "2026-10-09 codex continuation: add a built-in Nav2 multi-goal workload to the real isolated experiment queue, using action results, fresh independent body truth, measured settling, raw artifacts and an explicit source-bound result contract. Expose workload and deterministic requested seeds in GUI. Concurrent-plant/mission qualification remains deferred."
         depends_on:
           - "R3.5"
@@ -1376,12 +1376,12 @@ tasks:
   R9:
     title: "Reproducibility, learning and release"
     state: "partial"
-    owner: null
+    owner: "claude"
     tasks:
       R9.1:
         title: "Provenance licenses and clean-host reproduction"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R4.3"
           - "R1.3"
@@ -1400,7 +1400,7 @@ tasks:
       R9.2:
         title: "Seven real comparison tutorials"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R7.2"
           - "R7.3"
@@ -1437,7 +1437,7 @@ tasks:
       R9.3:
         title: "Evidence-generated support matrix and release gate"
         state: "active"
-        owner: "codex"
+        owner: "claude"
         depends_on:
           - "R5.1"
           - "R5.2"
@@ -1479,7 +1479,7 @@ tasks:
       R9.4:
         title: "Optional physical Bumperbot HIL"
         state: "blocked"
-        owner: null
+        owner: "claude"
         depends_on:
           - "R5.1"
           - "R9.1"
@@ -1579,7 +1579,7 @@ implementation_first:
   requested: "2026-10-09"
   owner: codex
   policy: "Deliver the most useful missing functionality first; prefer reusable implementations that unlock several exact robot variants. Broad validation follows feature delivery."
-  implementation_roles: "Codex and Claude: implementation, integration and fixes."
+  implementation_roles: "2026-10-12: the user assigned every open task to claude (sole active agent); earlier owners codex, cline-agent, github-copilot and molar1 are recorded in task history."
   validation_roles: "Separate follow-up agents chosen by the user; currently unassigned."
   essential_checks: "Initial implementation first; defer test campaigns and physical validation until the initial feature batches are in place. Necessary syntax/build diagnostics are implementation work. Stop, limits and command-loss handling belong in the implementation. Do not substitute repeated tests, catalog counts or documentation for missing functional code."
   status_boundary: "Record feature implementation separately from measured runtime qualification. Existing partial/active task states and release gates remain; implemented-but-unvalidated is not a passed robot mission. Missing controllers stay unavailable and candidate workflows remain explicitly experimental."

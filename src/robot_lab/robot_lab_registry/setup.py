@@ -18,7 +18,6 @@ setup(
     maintainer_email='vibe@mistral.ai',
     description='Robot Lab Registry: canonical catalogs, schemas, and validation CLI for the unified multi-robot simulation and benchmarking platform',
     license='Apache-2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'robot-lab = robot_lab_registry.cli:main',

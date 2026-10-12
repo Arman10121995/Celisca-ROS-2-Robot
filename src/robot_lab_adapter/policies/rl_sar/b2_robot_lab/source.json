@@ -1,0 +1,13 @@
+{
+  "robot": "b2",
+  "variant": "robot_lab",
+  "profile": "unitree_b2",
+  "upstream": "https://github.com/fan-ziqi/rl_sar",
+  "revision": "376d42c9b128f963ab08579762d5a216a976ce39",
+  "license": "Apache-2.0",
+  "torchscript": "policy/b2/robot_lab/policy.pt",
+  "torchscript_sha256": "d4aeb84894acda40f64feadaaad25d2be2ed3b8593b695b148e28673dff21e44",
+  "onnx_sha256": "76b8f4f1afc72cbe6d1e548482caa66d5b4968224e8277588c5213b098f88c30",
+  "input_width": 45,
+  "max_onnx_torch_difference": 2.6702880859375e-05
+}

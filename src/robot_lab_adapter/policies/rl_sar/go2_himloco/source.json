@@ -1,0 +1,13 @@
+{
+  "robot": "go2",
+  "variant": "himloco",
+  "profile": "unitree_go2",
+  "upstream": "https://github.com/fan-ziqi/rl_sar",
+  "revision": "376d42c9b128f963ab08579762d5a216a976ce39",
+  "license": "Apache-2.0",
+  "torchscript": "policy/go2/himloco/himloco.pt",
+  "torchscript_sha256": "d9945f85a39944aaf241a67f7d2b25a15326a0222d0e503aeb05a7f188430509",
+  "onnx_sha256": "7963c4bd13f7ef140fbfcff640f0cdb7f24eb441ee53e98bfffab4a3cdc4e8ef",
+  "input_width": 270,
+  "max_onnx_torch_difference": 3.933906555175781e-06
+}

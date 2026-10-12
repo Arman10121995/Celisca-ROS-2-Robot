@@ -18,7 +18,6 @@ setup(
     maintainer_email="robot@example.com",
     description="PyBullet simulator adapter for Robot Lab simulations.",
     license="MIT",
-    tests_require=["pytest"],
     entry_points={
         "console_scripts": [
             "pybullet_spawner = robot_lab_pybullet.pybullet_spawner:main",

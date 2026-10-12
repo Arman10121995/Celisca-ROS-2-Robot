@@ -18,6 +18,16 @@ setup(
             'policies/go2_velocity_flat/deploy.yaml',
             'policies/go2_velocity_flat/SOURCE.md',
         ]),
+        ('share/' + package_name + '/policies/rl_sar', [
+            'policies/rl_sar/LICENSE',
+            'policies/rl_sar/SOURCE.md',
+        ]),
+    ] + [
+        ('share/' + package_name + '/policies/rl_sar/' + name,
+         ['policies/rl_sar/%s/%s' % (name, item)
+          for item in ('base.yaml', 'config.yaml', 'policy.onnx', 'source.json')])
+        for name in ('a1_legged_gym', 'b2_robot_lab', 'go2w_robot_lab', 'go2_himloco')
+    ] + [
         ('share/' + package_name + '/policies/go2_recovery_nju', [
             'policies/go2_recovery_nju/policy.onnx',
             'policies/go2_recovery_nju/SOURCE.md',
@@ -30,7 +40,6 @@ setup(
     maintainer_email='robot-lab@example.com',
     description='Unified bringup package for Robot Lab platform',
     license='Apache-2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'robot-lab-select = robot_lab_adapter.selectors:main',
@@ -40,6 +49,7 @@ setup(
             'go2-stance-gait-controller = robot_lab_adapter.go2_stance_gait_controller:main',
             'mavros-offboard-controller = robot_lab_adapter.mavros_offboard_controller:main',
             'px4-ros-controller = robot_lab_adapter.px4_ros_controller:main',
+            'legged-policy-controller = robot_lab_adapter.legged_policy_controller:main',
         ],
     },
 )

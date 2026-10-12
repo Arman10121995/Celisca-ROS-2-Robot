@@ -43,8 +43,11 @@ def test_robot_profile_sets_speed_acceleration_and_car_yaw():
     assert drive.step(0, 0, 0.2, 0.4, 0.05, 0.1) == pytest.approx((0.15, 0.3))
 
 
+_PAD = [dict(path="/dev/input/js0", name="Test pad", gamepad=True, reason="udev joystick")]
+
+
 def test_joystick_axis_deadzone_direction_and_disconnect():
-    reader = LinuxJoystick()
+    reader = LinuxJoystick(find_devices=lambda: _PAD)
     event = struct.Struct("IhBB")
     samples = [event.pack(0, 0, 0x82, 0), event.pack(0, 0, 0x82, 1),
                event.pack(0, 10000, 2, 0), event.pack(0, -20000, 2, 1)]
@@ -66,7 +69,7 @@ def test_joystick_axis_deadzone_direction_and_disconnect():
 
 def _poll_raw(raw_values):
     """One poll() over (value, axis[, is_initial]) joystick events."""
-    reader = LinuxJoystick()
+    reader = LinuxJoystick(find_devices=lambda: _PAD)
     samples = [LinuxJoystick._EVENT.pack(0, sample[0],
                0x82 if len(sample) > 2 and sample[2] else 2, sample[1])
                for sample in raw_values]
@@ -154,3 +157,29 @@ def test_four_wheel_and_mecanum_bases_get_their_own_yaw_limits():
 
     # A mecanum base with no declared yaw limit falls back rather than failing.
     assert limits_from_drive({"type": "mecanum", "max_speed": 1.0})[1] == 1.0
+
+
+def test_touchscreens_and_mice_are_never_read_as_joysticks():
+    """This host's js0 is its ILITEK touch panel (udev ID_INPUT_MOUSE).
+
+    Its axes are the touch position, so treating it as a stick drove the
+    robot whenever the screen was touched.  Only udev joysticks count.
+    """
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "robot_lab_utils"))
+    from robot_lab_utils.input_devices import classify
+    assert classify("ILITEK ILITEK-TP Mouse", 2, 5, {"ID_INPUT": "1", "ID_INPUT_MOUSE": "1"}) == (
+        False, "pointer device (ID_INPUT_MOUSE)")
+    assert classify("Logitech Gamepad F310", 8, 11, {"ID_INPUT_JOYSTICK": "1"})[0]
+    assert not classify("Wacom Tablet Pen", 6, 2, {"ID_INPUT_JOYSTICK": "1", "ID_INPUT_TABLET": "1"})[0]
+    assert not classify("ILITEK ILITEK-TP Mouse", 2, 5, None)[0]   # no udev: name rule
+    assert classify("Xbox Wireless Controller", 8, 11, None)[0]
+
+    touch = [dict(path="/dev/input/js0", name="ILITEK ILITEK-TP Mouse", gamepad=False,
+                  reason="pointer device (ID_INPUT_MOUSE)")]
+    reader = LinuxJoystick(find_devices=lambda: touch)
+    with patch("os.open") as opened:
+        assert reader.poll() == (0.0, 0.0)
+        opened.assert_not_called()
+    assert reader.path == "" and reader.ignored == touch

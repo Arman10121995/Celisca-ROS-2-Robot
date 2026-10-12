@@ -3103,7 +3103,12 @@ class SimulationLauncherGui(tk.Tk):
             linear_input += joy_linear
             angular_input += joy_angular
             if self.drive_joystick.path:
-                self.drive_status_var.set(f"WASD + {self.drive_joystick.path}")
+                self.drive_status_var.set(f"WASD + {self.drive_joystick.name or self.drive_joystick.path}")
+            elif self.drive_joystick.ignored:
+                self.drive_status_var.set(
+                    "WASD only; ignored non-gamepad " + ", ".join(
+                        "%s (%s)" % (device.get("name") or device["path"], device["reason"])
+                        for device in self.drive_joystick.ignored))
         if self.drive_stop_latched:
             if not self.drive_buttons and not self.drive_strafe_buttons and not self.drive_altitude_buttons \
                     and not self.drive_keys and \

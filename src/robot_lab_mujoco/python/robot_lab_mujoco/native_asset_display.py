@@ -106,6 +106,10 @@ class NativeAssetDisplay(Node):
             for key in spec.keys:
                 key.qpos = np.concatenate((key.qpos, center, [1., 0., 0., 0.]))
         self.model = spec.compile()
+        from robot_lab_mujoco.world_collision import configure_world_midphase
+        if configure_world_midphase(self.model):
+            self.get_logger().info('MuJoCo midphase disabled for %d static world flex elements'
+                                   % self.model.nflexelem)
         self.data = mujoco.MjData(self.model)
         if self.model.nkey:
             home = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_KEY, 'home')

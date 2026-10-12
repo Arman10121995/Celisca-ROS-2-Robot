@@ -1,0 +1,13 @@
+{
+  "robot": "go2w",
+  "variant": "robot_lab",
+  "profile": "unitree_go2w",
+  "upstream": "https://github.com/fan-ziqi/rl_sar",
+  "revision": "376d42c9b128f963ab08579762d5a216a976ce39",
+  "license": "Apache-2.0",
+  "torchscript": "policy/go2w/robot_lab/policy.pt",
+  "torchscript_sha256": "eda0c490dfc75428fb6706d50924ebe2a91fca40ef21fae8747565699c81a2ac",
+  "onnx_sha256": "ef3aa742ae4c7b2bee34855fb5d0767f4148b284352cfa4a3592adce0555a887",
+  "input_width": 57,
+  "max_onnx_torch_difference": 2.09808349609375e-05
+}
