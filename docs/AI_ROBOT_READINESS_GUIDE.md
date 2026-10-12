@@ -1,5 +1,12 @@
 # Implement robot readiness and hand off validation
 
+Continue from [the October 9 task/takeoff/workload batch](status/implementation-continuation-2026-10-09.md).
+Coordinated native Stretch tasks and guarded X500 takeoff are implemented
+candidates. Use the real Nav2 queue workload for later endpoint validation;
+do not substitute capture exit codes or claim contacts/applied seeds. Remaining
+initial work includes other model/backend controllers, full object/grasp/arm
+planning, aerial sensors/maps/dynamic guards and substantive comparisons.
+
 Updated October 9, 2026. Initial implementation takes priority over test
 campaigns. The feature dependency order is **motion → SLAM → navigation**
 for every complete, compatible source variant. This guide supplements

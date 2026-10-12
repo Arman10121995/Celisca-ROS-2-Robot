@@ -675,6 +675,19 @@ def _build_simulation_actions(context):
                        '--gui', _launch_value(context, 'gui'),
                        '--flight-enabled', 'true' if mode_name == 'flight' else 'false',
                        '--rviz', 'true' if _auto_bool(context, 'start_rviz', True) else 'false']
+            # RGB-D variant and RTAB-Map 3D mapping (R5.10, experimental).
+            vehicle = _launch_value(context, 'px4_vehicle') or 'x500'
+            mapping = _launch_value(context, 'aerial_mapping') or 'none'
+            database = _launch_value(context, 'aerial_map_database')
+            if vehicle not in ('x500', 'x500_depth') or mapping not in ('none', 'rtabmap'):
+                raise RuntimeError('px4_vehicle must be x500 or x500_depth; aerial_mapping none or rtabmap')
+            if mapping != 'none' and (vehicle != 'x500_depth' or mode_name != 'flight'):
+                raise RuntimeError('aerial_mapping:=rtabmap needs px4_vehicle:=x500_depth in mode:=flight')
+            if database and (mapping == 'none' or not Path(database).is_file()):
+                raise RuntimeError('aerial_map_database needs aerial_mapping:=rtabmap and an existing file: '+database)
+            command += ['--vehicle', vehicle, '--mapping', mapping]
+            if database:
+                command += ['--map-database', database]
             for axis in ('x', 'y', 'z'):
                 # Upstream X500 already places its landing gear on the floor.
                 # Wheeled map defaults (often z=0.5) must not be added to it.
@@ -1532,6 +1545,12 @@ def generate_launch_description():
                         "0.0 (the default) means no splay on that pair."),
         DeclareLaunchArgument('arm_control', default_value='auto',
                               description='Native arm controller: auto, none or panda'),
+        DeclareLaunchArgument('px4_vehicle', default_value='x500',
+                              description="PX4 airframe: x500 or x500_depth (upstream OakD-Lite RGB-D variant)"),
+        DeclareLaunchArgument('aerial_mapping', default_value='none',
+                              description="Drone 3D mapping in mode:=flight: none or rtabmap (needs x500_depth)"),
+        DeclareLaunchArgument('aerial_map_database', default_value='',
+                              description="Saved aerial RTAB-Map database to localize in; empty starts a new map"),
         DeclareLaunchArgument('arm_planning', default_value='auto',
                               description='Native Panda collision planning: auto, none or moveit'),
         DeclareLaunchArgument('grasp_fixture', default_value='false',

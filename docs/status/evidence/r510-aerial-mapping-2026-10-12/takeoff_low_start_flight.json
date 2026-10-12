@@ -1,0 +1,97 @@
+{
+ "steps": [
+  [
+   "fcu ready",
+   "ok",
+   3964.0
+  ],
+  [
+   "/px4/takeoff_check",
+   true,
+   "Checking the selected world asynchronously; press Takeoff after a fresh clear result."
+  ],
+  [
+   "takeoff check",
+   "ok",
+   3965.0
+  ],
+  [
+   "/px4/takeoff",
+   true,
+   "Takeoff requested; priming the Offboard stream."
+  ],
+  [
+   "airborne",
+   "ok",
+   3979.5
+  ],
+  [
+   "/px4/land",
+   true,
+   "Landing requested."
+  ],
+  [
+   "landed",
+   "ok",
+   4036.5
+  ]
+ ],
+ "takeoff": {
+  "state": "clear",
+  "start_enu": [
+   -6.997446758672595,
+   -6.997055167332292,
+   0.21811965644359588
+  ],
+  "target_enu": [
+   -6.997446758672595,
+   -6.997055167332292,
+   3.218119656443596
+  ],
+  "rise_m": 3.0,
+  "requested_rise_m": 3.0,
+  "ceiling_limited": false,
+  "envelope": {
+   "lower": [
+    -0.5038814167808732,
+    -0.5038814167808732,
+    -0.227
+   ],
+   "upper": [
+    0.5038814167808732,
+    0.5038814167808732,
+    0.12042307692307691
+   ],
+   "horizontal_margin_m": 0.06,
+   "top_margin_m": 0.06,
+   "bottom_margin_m": 0.0,
+   "rotor_sweep": true,
+   "source_sha256": "43d3cb8289c8740ecad12c5e8a591a8b1f520266db0edd5cf591f4e52a048baf"
+  },
+  "unchecked_support_band_m": 0.05,
+  "geometry_scope": "Static selected-world vertical envelope; support, actors and flight tracking require physical validation",
+  "error": ""
+ },
+ "final_status": {
+  "phase": "idle",
+  "armed": false,
+  "position_ready": true,
+  "flight_enabled": true,
+  "position_enu": [
+   -6.636707156896591,
+   -9.417296808212996,
+   0.24596870481967925
+  ],
+  "target_enu": [
+   -6.675974279642105,
+   -9.423794906586409,
+   3.226396506428719
+  ],
+  "takeoff_ready": true,
+  "takeoff_target_z": 3.218119656443596,
+  "route_waypoints_remaining": 0,
+  "route_status": "idle"
+ },
+ "rtabmap_nodes": 0,
+ "cloud_points": 0
+}

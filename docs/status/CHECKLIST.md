@@ -1,5 +1,20 @@
 # Robot Lab done and remaining checklist
 
+Latest [initial implementation continuation](implementation-continuation-2026-10-09.md):
+
+- [x] Persistent highlighted Drone/Drive direction and altitude click latches;
+  click again releases/brakes, Stop/Space clears all shared mirrors.
+- [x] Source/scene-bound Stretch navigate + taught arm/hand GUI task editor,
+  actual Nav2/body settling, ownership/cancel/loss and SSD event journals.
+- [x] Selected-world native X500 swept-envelope takeoff check, ceiling-adjusted
+  rise and fresh landed/pose/resource gate before explicit Takeoff.
+- [x] Built-in real Nav2 multi-goal queue workload, raw body/action traces and
+  source-bound measured result; reset invalidation and requested seed UI.
+- [ ] Physical qualification of these new tasks/controls/flight/workloads.
+- [ ] Remaining model/backend controllers, global arm/dexterous/object/grasp
+  adapters, aerial sensing/mapping/dynamic avoidance, world/provider work,
+  simulator-applied seeds and fair algorithm comparisons.
+
 Updated October 9, 2026. **The project is partial.** The user prioritizes
 initial implementation before testing/validation. [Current status](CURRENT_STATUS.md)
 and [the checkpoint](continuation-2026-10-08.md) link exact physical source stages,

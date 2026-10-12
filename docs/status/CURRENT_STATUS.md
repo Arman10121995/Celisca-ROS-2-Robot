@@ -1,5 +1,19 @@
 # Current Robot Lab status
 
+October 12: the PX4 X500 gains an experimental RGB-D variant (upstream
+`x500_depth`) and RTAB-Map 3D mapping with a saved, reloadable database and
+exported cloud, selectable in the GUI; one mapping and one localization
+flight on nav_obstacle are recorded as implementation diagnostics
+([evidence](evidence/r510-aerial-mapping-2026-10-12/README.md),
+[guide](../tutorials/px4_x500.md)). The October 9 continuation below was
+completed (built, installed, takeoff support-band fix, control-column layout).
+
+The [latest October 9 continuation](implementation-continuation-2026-10-09.md)
+adds persistent Drone/Drive click highlights, native Stretch coordinated
+navigate/articulate tasks, selected-world takeoff corridor/ceiling checks and
+actual measured Nav2 queue workloads. These implementations await physical
+qualification; historical robot/CI certificates retain their source scopes.
+
 Updated October 9, 2026. New [implementation-first work](implementation-2026-10-09.md)
 adds experimental Unitree policies, native joint/hand/Cartesian teach-replay
 controls, measured Panda object scenes, Stretch sensor-gated mapping/Nav2,

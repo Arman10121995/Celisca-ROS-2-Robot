@@ -10,6 +10,13 @@ acceptance criteria.
 
 ## Current implementation priority
 
+The [same-day continuation](status/implementation-continuation-2026-10-09.md)
+adds coordinated mobile tasks, checked takeoff, measured Nav2 workloads and
+persistent click highlights. Reopen the rebuilt GUI. Before native Takeoff,
+request and inspect **Check takeoff clearance**; before a queued goal mission,
+choose **Nav2 point goals** with independent selected-world body truth. Actual
+workload/cleanup/resource state and broader mission acceptance stay separate.
+
 The user requests initial feature implementation before testing/validation.
 [The October 9 checkpoint](status/implementation-2026-10-09.md) records new
 native controls, taught sequences, measured object scenes, Stretch higher

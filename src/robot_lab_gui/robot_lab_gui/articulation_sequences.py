@@ -14,20 +14,22 @@ class ArticulationSequences(ttk.LabelFrame):
         self.status = tk.StringVar(value='Jog to a configuration, then Teach current.')
         self.points = []
         self.listing = tk.Listbox(self, height=4, exportselection=False)
-        self.listing.grid(row=0, column=0, columnspan=3, sticky='ew')
+        self.listing.grid(row=0, column=0, columnspan=2, sticky='ew')
         self.buttons = []
+        # Two buttons per row keep the frame inside the control column.
         for row, column, label, callback in (
                 (1, 0, 'Teach current', self.teach), (1, 1, 'Remove point', self.remove),
-                (1, 2, 'Replay', self.replay), (2, 0, 'Save sequence', self.save),
-                (2, 1, 'Load sequence', self.load), (2, 2, 'Stop replay', controller.stop)):
+                (2, 0, 'Replay', self.replay), (2, 1, 'Stop replay', controller.stop),
+                (3, 0, 'Save sequence', self.save), (3, 1, 'Load sequence', self.load)):
             button = ttk.Button(self, text=label, command=callback)
             button.grid(row=row, column=column, sticky='ew', padx=2, pady=3)
             self.buttons.append(button)
-        ttk.Label(self, textvariable=self.status, wraplength=300).grid(row=3, column=0, columnspan=3, sticky='w')
+        self.columnconfigure((0, 1), weight=1)
+        ttk.Label(self, textvariable=self.status, wraplength=300).grid(row=4, column=0, columnspan=2, sticky='w')
         ttk.Label(self, text='Replay follows measured actuator configurations. '
             'It does not plan a collision-free path or assess grasp success. '
             'Each step must settle; Stop/input loss interrupts replay.',
-            wraplength=300).grid(row=4, column=0, columnspan=3, sticky='w', pady=4)
+            wraplength=300).grid(row=5, column=0, columnspan=2, sticky='w', pady=4)
 
     def sync_source(self):
         source = (self.control.state or {}).get('source_sha256')
@@ -44,7 +46,8 @@ class ArticulationSequences(ttk.LabelFrame):
     def idle(self):
         state = self.control.state or {}
         channels = state.get('channels', [])
-        return bool(self.control.ready() and not state.get('mobile_state', {}).get('moving')
+        return bool(self.control.ready() and not (state.get('mobile_state') or {}).get('moving')
+            and not (state.get('mobile_state') or {}).get('task_active')
             and state.get('sequence', {}).get('state') != 'executing'
             and not (state.get('servo') or {}).get('active') and channels and all(
                 abs(channel.get('measured_rate', math.inf)) < .05*channel['max_rate'] for channel in channels))

@@ -6,6 +6,26 @@ Historical generated R8 demonstration reports are separate.
 
 ## Use the GUI
 
+Choose **Nav2 point goals** to run the selected navigation stack and actual
+goals, rather than stationary capture. Enter selected-world
+`X Y heading_deg; X Y heading_deg` destinations. Launch must use Navigation
+or the explicit native Stretch nav workflow. The GUI raises the capture
+budget to 600 s when this workload is selected; adjust it for the plant's
+speed and world. Queue different Launch algorithm selections to compare
+their actual traces. No comparison score is synthesized.
+
+The workload waits for real Nav2 and fresh `/odom/ground_truth` in the
+selected-world coordinates. It records action UUIDs/results and actual body
+pose/velocity, requiring 0.15 m / 5 degrees and one simulated second stopped
+at each goal. Output is `workload.json`, `mission-trace.jsonl`, and
+`mission-result.json`; the parent checks run/domain/source/spec/trace identity
+and successful endpoint errors. Reset invalidates workload results. Resource,
+cleanup and mission states remain separate; contacts and swept clearance are
+unassessed. Requested seeds are exposed, not claimed simulator-applied.
+
+Choose **Capture only** for telemetry or **External task** for a literal task
+command. Only the built-in producer has this measured Nav2 result contract.
+
 Choose an exact robot/map/backend/mode and options in Launch, then open
 **Benchmark → Concurrent experiments**. Set capture duration, per-job RSS,
 CPU and artifact budgets. **Queue Launch selection** snapshots the current

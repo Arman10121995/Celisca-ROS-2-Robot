@@ -32,6 +32,7 @@ class RunSpec:
     seed: int = 42
     record_bag: bool = False
     readiness_topic: str = '/clock'
+    workload: dict = field(default_factory=dict)
 
     def validate(self):
         for name in ('command', 'task_command'):
@@ -40,6 +41,15 @@ class RunSpec:
                 raise ValueError(name+' must be a list of literal executable arguments')
         if not self.command:
             raise ValueError('A real launch command is required')
+        if not isinstance(self.seed, int) or isinstance(self.seed, bool) or not 0 <= self.seed < 2**31:
+            raise ValueError('Requested seed must be an integer within 0–2147483647.')
+        if self.workload:
+            from .workload_contract import validate_workload
+            self.workload = validate_workload(self.workload)
+            if self.task_command:
+                raise ValueError('Choose the built-in Nav2 workload or an external task command.')
+            if not any(flag in self.command for flag in ('mode:=nav', 'native_task:=nav')):
+                raise ValueError('The built-in Nav2 workload requires the actual navigation launch workflow.')
         if self.readiness_topic not in ('/clock', '/px4/odometry'):
             raise ValueError('Readiness uses actual /clock or PX4 FCU /px4/odometry messages')
         for name in ('duration_s', 'startup_timeout_s', 'max_rss_mb', 'max_cpu_percent', 'max_log_mb'):
@@ -60,7 +70,8 @@ def write_json(path, value):
 def source_provenance():
     here = Path(__file__).resolve()
     record = dict(module_sha256={str(path): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in (here, here.with_name('telemetry_recorder.py'))}, scope='Coordinator and recorder source; workload source remains separate')
+        for path in (here, here.with_name('telemetry_recorder.py'), here.with_name('nav2_workload.py'),
+                     here.with_name('workload_contract.py'))}, scope='Coordinator, recorder and built-in Nav2 workload; external workload sources remain separate')
     repository = next((parent for parent in here.parents if (parent/'.git').exists()), None)
     if repository:
         try:
@@ -109,6 +120,7 @@ class ConcurrentRunner:
                 raise ValueError('Reset requires a ready owned run')
             environment = job['environment'].copy()
             directory = job['directory']
+            job['workload_invalidated'] = True
         process = subprocess.Popen(['ros2', 'service', 'call', '/robot_lab/reset',
             'std_srvs/srv/Trigger', '{}'], env=environment, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, text=True, start_new_session=True)
@@ -167,6 +179,7 @@ class ConcurrentRunner:
             ROBOT_LAB_EXPERIMENT_OUTPUT=str(directory))
         result = dict(id=identifier, state='starting', ros_domain_id=domain, partition=partition,
             command=specification.command, task_command=specification.task_command,
+            workload=specification.workload or None,
             selection=specification.selection, seed_requested=specification.seed,
             readiness_topic=specification.readiness_topic,
             source=self.provenance, requested_budgets=dict(duration_s=specification.duration_s,
@@ -198,6 +211,9 @@ class ConcurrentRunner:
         task = None
         try:
             write_json(directory/'run.json', result)
+            if specification.workload:
+                write_json(directory/'workload.json', dict(specification.workload,
+                    selection=specification.selection, launch_command=specification.command))
             if self.cancel_all.is_set():
                 result['state'] = 'canceled'
                 return result
@@ -241,6 +257,11 @@ class ConcurrentRunner:
                     result['state'] = 'capturing'
                     if specification.task_command:
                         task = launch(specification.task_command, 'task')
+                    elif specification.workload:
+                        workload_command = [sys.executable, '-m', 'robot_lab_benchmark.nav2_workload',
+                            '--spec', str(directory/'workload.json')]
+                        result['executed_task_command'] = workload_command
+                        task = launch(workload_command, 'task')
                     write_json(directory/'run.json', result)
                     self.notify(dict(result))
                 if cancel.is_set() or self.cancel_all.is_set():
@@ -310,7 +331,14 @@ class ConcurrentRunner:
                 result['telemetry'], result['telemetry_error'] = None, str(exc)
             result['observed_surviving_pids'] = surviving()
             result['cleanup_complete'] = not result['observed_surviving_pids'] and all(p.poll() is not None for p in processes)
-            result['mission_result'] = None  # Workload result contracts are explicit, never inferred from exit zero.
+            result['mission_result'] = None
+            if specification.workload:
+                try:
+                    from .workload_contract import read_result
+                    result['mission_result'], result['mission_result_error'] = read_result(directory,
+                        identifier, domain, specification.workload, job.get('workload_invalidated', False))
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    result['mission_result_error'] = str(exc)
             write_json(directory/'run.json', result)
             resources.close()
             for handle in handles:
@@ -336,9 +364,15 @@ def main():
     signal.signal(signal.SIGINT, stop)
     signal.signal(signal.SIGTERM, stop)
     results = runner.run(specifications)
-    raise SystemExit(0 if all(r['state'] == 'capture_completed' or
-        (r['state'] == 'task_process_completed' and r.get('task_returncode') == 0)
-        for r in results) else 1)
+    def completed(result):
+        if not result.get('cleanup_complete'):
+            return False
+        if result.get('workload'):
+            return (result['state'] == 'task_process_completed'
+                and bool((result.get('mission_result') or {}).get('success')))
+        return result['state'] == 'capture_completed' or (
+            result['state'] == 'task_process_completed' and result.get('task_returncode') == 0)
+    raise SystemExit(0 if all(map(completed, results)) else 1)
 
 
 if __name__ == '__main__':

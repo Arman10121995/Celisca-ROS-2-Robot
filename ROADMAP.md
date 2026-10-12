@@ -44,6 +44,12 @@ See [the implementation checkpoint](docs/status/implementation-2026-10-09.md).
 
 ## October 9 delivered implementation and remainder
 
+The [same-day continuation](docs/status/implementation-continuation-2026-10-09.md)
+adds Stretch navigate/articulate task editing/execution, selected-world X500
+takeoff corridor/ceiling checks, measured Nav2 multi-goal workloads/result
+contracts and persistent Drive/Drone latches after pointer release/leave.
+These initial implementations await physical validation.
+
 New code/installation includes exact G1/H1/H1_2 policies, 28 fixed native
 position controllers with Cartesian Servo and taught sequence replay, measured
 Panda object attachments, two native Stretch base/sensor/higher-mode workflows,
@@ -53,9 +59,9 @@ qualification is deferred. The detailed [implementation checkpoint](docs/status/
 links operators, source/install commands and validation responsibilities.
 
 Initial features still missing: other source-specific robot/back-end controllers,
-dexterous hands/full arbitrary-object and coordinated mobile tasks, aerial
-sensing/mapping/dynamic avoidance/takeoff guards, remaining world/provider
-functionality and substantive algorithm/seed/mission/comparison contracts.
+dexterous hands/full arbitrary-object/grasp outcomes and other mobile platforms,
+aerial sensing/mapping/dynamic avoidance and other backends, remaining world/provider
+functionality and substantive algorithm/applied-seed/other-mission/comparison contracts.
 The R6.7 terrain/provider lane remains separately owned. Acceptance states
 below stay partial/active until their actual later criteria pass; these new
 implementations do not establish all-map/all-backend readiness.
@@ -888,7 +894,7 @@ Dependencies: `R3.6`, `R5.7`.
 
 Dependencies: `R5.1`, `R5.7`, `R5.8`.
 
-- Implement: Start with Fetch/PR2/TIAGo from the maintained upstream source. Add base/arm/hand ownership, full TF, payload/stability and changing navigation footprint, with coordinated Nav2 and MoveIt goals in GUI.
+- Implement: Extend the native Stretch/Stretch 3 source-bound Nav2/taught-articulation candidate to full object/planning missions and maintained Fetch/PR2/TIAGo sources. Retain base/arm/hand ownership, full TF, payload/stability and changing navigation footprint, with coordinated Nav2 and MoveIt goals in GUI.
 - Acceptance: A measured navigate → stop → reach → grasp → transport → release mission with object pose and stability; base and arm commands cannot interfere. Reset/cancel/watchdog and obstacles verified per backend/map.
 
 ### R5.10 — PX4 Flight in all installed worlds

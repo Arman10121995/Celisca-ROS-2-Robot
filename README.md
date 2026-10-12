@@ -1,5 +1,10 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 9 continuation adds **persistent click-to-latch Drone/Drive buttons**,
+**Stretch navigate + arm/hand tasks**, **selected-world drone takeoff clearance**,
+and **measured Nav2 workloads in the experiment queue**. These implementations
+await physical validation. Read the [continuation and remaining work](docs/status/implementation-continuation-2026-10-09.md).
+
 Robot Lab aims to make robots, simulators, maps and algorithms independently selectable so that you can learn how they work and compare their performance under reproducible conditions.
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.

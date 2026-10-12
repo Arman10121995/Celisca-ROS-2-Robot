@@ -1,5 +1,11 @@
 # Stabilization and remaining work: agent execution guide
 
+Latest implementation continuation: [October 9 tasks, takeoff and workload
+contracts](status/implementation-continuation-2026-10-09.md). Preserve shared
+Drone/Drive click latches, source/scene-bound mobile tasks and actual Nav2
+workload result identities. Native Takeoff requires a fresh selected-world
+clearance check. These are new candidates; physical acceptance stays open.
+
 Updated 2026-10-09. This guide implements the user's requested patch queue
 and preserves its remaining acceptance. The latest user instruction prioritizes
 the new extensions first, then resumes this older queue; follow

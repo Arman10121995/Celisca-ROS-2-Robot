@@ -1,8 +1,8 @@
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-09"
-current_revision: "October 9 implementation-first checkpoint on master based on c6e438d: three exact-model Unitree policy variants, 28 fixed native actuator profiles, Stretch/Stretch 3 controls and sensor-gated mapping/Nav2 composition, Cartesian Servo and measured Panda object attachments, static PX4 3D Plan/Execute, cached coplanar collision reduction and real isolated experiment queue. Nine changed packages built; physical/test campaigns deferred. Historical f74b53f CI and 3ed3e78 map measurements retain their exact source scopes. Project remains partial."
+updated: "2026-10-12"
+current_revision: "October 9 continuation on master based on bf4b9ba: native Stretch navigate/articulate task editor and executor, selected-world X500 takeoff corridor/ceiling checks, explicit measured Nav2 multi-goal queue workload/result contract, and persistent Drone/Drive click latches. Initial implementations, physical mission campaigns deferred. Previous nine-package installation and historical f74b53f CI/3ed3e78 map measurements retain their exact source scopes. Project remains partial."
 goal: "unified_multi_robot_algorithm_lab"
 overall_state: "partial"
 assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. Latest October 9 steering: implementation first, prioritizing reusable controllers and missing end-to-end workflows over repeated qualification sweeps. Motion -> SLAM -> navigation remains the feature dependency order. Broad validation is a separate follow-up lane; historical measurements remain scoped and full release remains blocked."
@@ -19,6 +19,7 @@ priority_patches:
     title: "Keep GUI keyboard/joystick neutral until operator input"
     state: partial
     owner: codex
+    active_scope: "2026-10-09 codex: user requests Drone buttons to stay visibly latched after a click like Drive; preserve shared toggle inputs and Stop/Space, and render persistent selected state after pointer release/leave. Physical validation deferred."
     result: "GUI no longer publishes when merely armed; Flight command/backend/neutral-input checks join the passing command/Drive suite. Physical joystick validation remains."
   P3:
     title: "Celisca scale, spawn and furnished-map navigation"
@@ -84,6 +85,8 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
+  aerial_mapping_october_12: "R5.10 aerial RGB-D/RTAB-Map path built and exercised once each for mapping and saved-map localization on nav_obstacle (implementation diagnostics, see docs/status/evidence/r510-aerial-mapping-2026-10-12/). Software suites on the final tree: GUI 105 passed (Xvfb), adapter 389, benchmark 248 (3 skipped), bringup contract subset 349. No CI run, no qualification."
+  implementation_continuation_october_9: "Coordinated mobile tasks, native-geometry takeoff checks, measured Nav2 workloads and persistent selected-state Drive/Drone buttons implemented. Completed 2026-10-12 by claude: five packages built (11.2 s), installed modules import and match source; takeoff sweep no longer rejects on its own support floor (0.05 m unchecked support band); Arm/Drone controls fit the control column. Software checks only: GUI 104 passed under Xvfb, new task/takeoff 15 and workload-contract 8 unit tests pass; compact-window test still fails on the shared desktop display only. See docs/status/implementation-continuation-receipt-2026-10-09.json. No new physical mission, concurrent-plant qualification or CI result."
   implementation_october_9: "Three policy variants, 28 fixed position-actuator models and two Stretch controller registrations installed on SSD; inventory is 116 profiles, not mission acceptance. Nine affected packages built successfully, including the final 11.3 s installation repeat. Syntax/configuration parsed. New physical missions, GUI campaigns, test suites and CI were deferred. Overlay/setuptools and CMake pytest-discovery warnings recorded; no qualified support matrix was promoted."
   documentation: "October 8 maintained README/roadmap/status/tutorial/agent guides record intuitive controls, eight hospital screens plus the later camera-stage repeat, 17 actual v4 exports, exact f74b53f passing CI and native performance limits. Detailed P4 continuation preserves real spawn, sensor/contact/control fidelity, matched clocks and motion gates. 616 relative targets in 52 maintained/current documents resolve; historical reports/negatives remain unchanged."
   gui_workspace: "Current full GUI suite: 104 passed. Drone mirrors all seven Drive directions with gentler yaw; native Panda current-pose/XYZ steps retain separate Plan/Execute and all safety gates. A desktop integration compact-window failure is retained; isolated layout and full dedicated-display integration repeats pass. Health opens current October 8 trials and readiness/Husky guides."
@@ -945,27 +948,28 @@ tasks:
         title: "Mobile manipulator missions and combined control"
         state: "active"
         owner: "codex"
-        active_scope: "2026-10-09 codex: two SSD-installed Stretch base/arm/hand candidates and experimental AMCL, slam_toolbox, RTAB-Map and Smac2D/RPP workflows are implemented on native MuJoCo. Controls enforce stopped base, retracted arm and watchdog; truth-bootstrap estimator scope explicit. Mission validation deferred."
+        active_scope: "2026-10-09 codex continuation: implement coordinated selected-map Nav2 goals and source-matched taught arm/hand sequences for both native Stretch variants, with measured settling, explicit task ownership, manual intervention, cancellation and heartbeat loss. Initial implementation precedes mission validation."
         depends_on: ["R5.1", "R5.7", "R5.8"]
-        scope_paths: ["src/robot_lab_robots/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/", "scripts/", "docs/", "src/robot_lab_localization/", "src/robot_lab_mapping/"]
+        scope_paths: ["src/robot_lab_robots/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/", "src/robot_lab_adapter/", "scripts/", "docs/", "src/robot_lab_localization/", "src/robot_lab_mapping/"]
         acceptance_ref: "ROADMAP.md"
-        next_action: "Implement coordinated navigate/reach/grasp task execution and Fetch/PR2/TIAGo plus other backend control adapters. Validate Stretch motion, source sensors, dynamic footprint, saved/reloaded mapping and obstacle Nav2 after initial implementation."
-        implementation_summary: "Exact-source Stretch and Stretch 3 wheel/tendon motor control plus exclusive base/articulation ownership. Authored camera RGB-D, source laser mount, simulator-state odometry/IMU and full-body footprint; explicit native_task loc/slam/3d_slam/nav stack with actual sensor readiness gate, selected-map save/reload paths and estimator/mapper reset notifications."
+        next_action: "Extend source-specific Fetch/PR2/TIAGo and other backend adapters, full arm planning and object/grasp mission contracts. Validate native Stretch coordinated tasks, sensors, dynamic footprint, saved/reloaded mapping and obstacle Nav2 after initial implementation."
+        implementation_summary: "Exact-source Stretch/Stretch 3 base/articulation and sensor-gated AMCL/SLAM/RTAB-Map/Nav2 candidates. New GUI builds/saves/loads source-and-scene-bound navigation plus taught arm/hand tasks; plant executor uses real Nav2 actions, simulation-stamped goals, independent physical pose/settling, stopped/retracted-base ownership, manual/Stop/loss cancellation and actual SSD event journals. Object/grasp outcomes remain unassessed."
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
       R5.10:
         title: "PX4 Flight selection and qualification across all installed worlds"
         state: "partial"
-        owner: "codex"
+        owner: "claude"
         depends_on: ["R5.4", "R6.1"]
         scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "docs/tutorials/px4_x500.md", "src/robot_lab_utils/", "docs/status/", "LICENSES/third-party-notices.md", "scripts/ssd_env.sh", "scripts/install_geometry_dependencies.sh", "scripts/requirements-geometry.txt"]
-        active_scope: "2026-10-09 codex: implement selected-world static 3D collision planning, GUI measured-pose target selection, Plan/Execute and bounded FCU waypoint tracking with Stop/manual override/loss. Preserve existing manual/takeoff/land defaults and physical source stages. Aerial mapping, other backends and mission validation remain separate."
+        active_scope: "2026-10-12 claude (continuing codex, user request): aerial sensing and saved 3D mapping - the upstream PX4 x500_depth airframe (OakD-Lite) as a GUI-selectable RGB-D X500 variant, a Harmonic-native camera bridge to ROS, RTAB-Map 3D mapping on FCU odometry with a saved/reloadable database and exported cloud. Prior codex takeoff-check and flight work retained; physical validation stays pending."
         acceptance_ref: "ROADMAP.md"
-        next_action: "Implement world-specific takeoff corridor/ceiling guards, aerial sensing/saved 3D mapping, dynamic avoidance and additional backends. Validate actual route tracking/contact clearance and remaining world flight after initial implementation; static planning is not a flight guarantee."
+        next_action: "Qualify aerial RGB-D mapping (map accuracy vs world, more worlds, repeats, GUI desktop path); feed mapped obstacles into planning; implement dynamic avoidance and additional backends. Qualify new native-geometry takeoff/ceiling checks and actual route tracking/contact clearance on remaining worlds after initial implementation. Actor/unknown collision scenes reject guarded flight; static checking is not a flight guarantee."
         result: "Current normal PX4 / Gazebo Harmonic / nav_empty seven-button Drone screen passes physical forward/reverse/strafe/left/right/Stop, neutral enablement, altitude up/down, release, publisher loss and landing/disarm. 2017 independent body samples; 2 s yaw requests produce +0.601/-0.609 rad at 0.3 rad/s command cap; loss drift 0.041 m. All installed selections retained; other world spawn/ceiling/flight and aerial mapping/planning remain open."
         evidence:
           - "docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed and passing screens; full project remains partial."
           - "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md"
-        implementation_summary: "PX4 experimental selected-world static 3D A* and continuously checked segments over actual canonical primitives, mesh surfaces and terrain; measured FCU target GUI, separate Plan/Execute, resource/pose/target invalidation and bounded FCU route tracking. Manual/Stop/Hold/Land interrupt routes. Single-instance MAVLink lease, SSD bounded logs and startup cleanup added."
+          - "docs/status/evidence/r510-aerial-mapping-2026-10-12/README.md: implementation diagnostics only - one nav_obstacle mapping flight (67 RTAB-Map nodes, saved 3.5 MB database, exported 3456-point PLY) and one localization flight in it (66 localization poses, 14 closures, saved file unchanged)."
+        implementation_summary: "2026-10-12 claude: GUI-selectable upstream x500_depth RGB-D airframe (one registered 320x240 5 Hz rgbd_camera on the OakD-Lite body, inside the takeoff envelope), Harmonic-native camera bridge (system protobuf), RTAB-Map 3D mapping on the FCU odometry (aerial_map -> map correction), database saved and PLY exported on Stop, localization in a copy of a saved database; launch args px4_vehicle/aerial_mapping/aerial_map_database. Earlier: PX4 experimental static 3D Plan/Execute, bounded interrupted FCU route control, instance lease and SSD log/cleanup guards. New Check takeoff clearance derives the actual installed X500 box/rotating-propeller envelope and checks a continuous selected-world vertical sweep against primitives, open/solid meshes and terrain. Low ceilings reduce the requested rise; blocked 0.8 m corridor rejects. Takeoff consumes a fresh <=30 s, <=5 cm, unchanged-resource, landed/level FCU check; manual/direct airborne commands remain unchecked."
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R6:
     title: "Environment qualification"
@@ -1343,7 +1347,7 @@ tasks:
         title: "Resource-bounded concurrent experiments"
         state: "partial"
         owner: "codex"
-        active_scope: "2026-10-09 codex: replace the demo-only concurrency path with real resource-bounded subprocess launches, leased ROS domains/partitions, owned cancellation/reset, actual telemetry/logs and a GUI queue. Initial implementation now; concurrent-plant qualification and overload campaigns deferred."
+        active_scope: "2026-10-09 codex continuation: add a built-in Nav2 multi-goal workload to the real isolated experiment queue, using action results, fresh independent body truth, measured settling, raw artifacts and an explicit source-bound result contract. Expose workload and deterministic requested seeds in GUI. Concurrent-plant/mission qualification remains deferred."
         depends_on:
           - "R3.5"
           - "R4.3"
@@ -1366,8 +1370,8 @@ tasks:
           - "Acceptance criteria verified: isolated clocks/seeds/results maintained, overload reported, stop/reset scoped, scheduling preserves algorithm budgets."
           - "Evidence reports generated: docs/status/evidence/r8-3-resource-bounded-experiments-2026-10-01.json and docs/status/evidence/r8-3-verification-2026-10-01.json"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Add explicit workload mission/result and simulator-seed contracts and fair algorithm input capture. Validate two simultaneous plants, overload, scoped cancel/reset and failure cleanup after initial implementation. PX4 instance 0 remains serial; the old sleep-generated demonstration is not acceptance."
-        implementation_summary: "Real subprocess coordinator and GUI queue with leased ROS domains/partitions, startup/capture/RSS/CPU/artifact budgets, actual clock or FCU readiness, physical topic traces and owned cancellation/reset/cleanup. Actual captures and process results remain separate from mission success; legacy executor no longer invents metrics."
+        next_action: "Add simulator-applied seed contracts, contact/swept-clearance and non-Nav2 workload adapters plus fair matched algorithm inputs/comparisons. Validate two simultaneous plants, overload, Nav2 goal outcomes, scoped cancel/reset and failure cleanup after initial implementation. PX4 instance 0 remains serial."
+        implementation_summary: "Real resource-bounded isolated subprocess coordinator and GUI queue. New built-in Nav2 point-goal workload uses actual asynchronous actions, fresh independent selected-world body truth, 0.15 m/5 degree endpoints and 1 sim-second settling, bounded startup/goals/loss/cancel, raw traces and source/run/spec/trace-bound results. Queue distinguishes capture, external tasks and measured goals; reset invalidates workload results. Requested seeds are exposed but simulator application/contacts remain unassessed."
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R9:
     title: "Reproducibility, learning and release"
@@ -1609,7 +1613,8 @@ implementation_first:
     outcome: Connect compatible bases, sensors, planners and arms into operator workflows
       with selected-map commands, saved-map reload and appropriate footprints.
     implemented: Stretch/Stretch 3 native base/articulation, actual lidar/RGB-D, truth-bootstrap
-      EKF and explicit AMCL/SLAM/RTAB-Map/Nav2 candidates.
+      EKF and explicit AMCL/SLAM/RTAB-Map/Nav2 candidates; source/scene-bound coordinated
+      navigation plus taught arm/hand task editing/execution, actual settling and journals.
     validation: pending
   - title: World, terrain and drone functionality
     tasks:
@@ -1620,7 +1625,8 @@ implementation_first:
     outcome: Complete missing provider/resource/spawn tooling and aerial mapping/planning
       interfaces; coordinate with the existing terrain owner.
     implemented: Static selected-world 3D aerial Plan/Execute and FCU waypoint control;
-      provider terrain lane remains owned by cline-agent.
+      native X500 envelope-based takeoff corridor/ceiling checks and fresh single-use
+      FCU/resource gate. Provider terrain lane remains owned by cline-agent.
     validation: pending
   - title: Measured bottleneck fixes
     tasks:
@@ -1638,7 +1644,8 @@ implementation_first:
     outcome: Replace remaining placeholders with runnable upstream algorithms and real
       isolated concurrent subprocess orchestration before comparison campaigns.
     implemented: Actual resource-bounded isolated subprocess queue, telemetry and cancellation/reset;
-      placeholder executor metrics removed.
+      built-in measured Nav2 multi-goal workload and source/run/spec/trace result contract,
+      reset invalidation and requested seeds. Placeholder executor metrics removed.
     validation: pending
   deferred_validation:
     owner: null

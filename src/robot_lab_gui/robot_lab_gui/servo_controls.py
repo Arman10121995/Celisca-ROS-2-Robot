@@ -21,25 +21,28 @@ class ServoControls(ttk.LabelFrame):
         self.combo = ttk.Combobox(self, textvariable=self.site, state='readonly', width=28)
         self.combo.grid(row=1, column=0, columnspan=4, sticky='ew', pady=4)
         self.combo.bind('<<ComboboxSelected>>', lambda _: self.stop())
-        ttk.Label(self, text='Translation m/s').grid(row=2, column=0, sticky='w')
-        ttk.Spinbox(self, textvariable=self.linear, from_=.005, to=.04, increment=.005, width=7).grid(row=2, column=1)
-        ttk.Label(self, text='Rotation rad/s').grid(row=2, column=2, sticky='w')
-        ttk.Spinbox(self, textvariable=self.angular, from_=.02, to=.2, increment=.02, width=7).grid(row=2, column=3)
+        # One rate per row: side by side they overflowed the control column.
+        ttk.Label(self, text='Translation m/s').grid(row=2, column=0, columnspan=2, sticky='w')
+        ttk.Spinbox(self, textvariable=self.linear, from_=.005, to=.04, increment=.005, width=7).grid(
+            row=2, column=2, columnspan=2, sticky='w')
+        ttk.Label(self, text='Rotation rad/s').grid(row=3, column=0, columnspan=2, sticky='w')
+        ttk.Spinbox(self, textvariable=self.angular, from_=.02, to=.2, increment=.02, width=7).grid(
+            row=3, column=2, columnspan=2, sticky='w')
         self.buttons = []
         for axis, label in enumerate(('X', 'Y', 'Z', 'Roll', 'Pitch', 'Yaw')):
-            row, column = 3+axis//2, (axis % 2)*2
+            row, column = 4+axis//2, (axis % 2)*2
             for offset, sign, suffix in ((0, -1, '−'), (1, 1, '+')):
-                button = ttk.Button(self, text=label+suffix, width=7)
+                button = ttk.Button(self, text=label+suffix, width=6)
                 button.grid(row=row, column=column+offset, sticky='ew', padx=2, pady=2)
                 button.bind('<ButtonPress-1>', lambda _, a=axis, s=sign: self.start(a, s))
                 button.bind('<ButtonRelease-1>', lambda _: self.stop())
                 button.bind('<Leave>', lambda _: self.stop())
                 self.buttons.append(button)
-        ttk.Button(self, text='Stop Cartesian jog', command=self.stop).grid(row=6, column=0, columnspan=4, sticky='ew', pady=4)
-        ttk.Label(self, textvariable=self.status, wraplength=305).grid(row=7, column=0, columnspan=4, sticky='w')
+        ttk.Button(self, text='Stop Cartesian jog', command=self.stop).grid(row=7, column=0, columnspan=4, sticky='ew', pady=4)
+        ttk.Label(self, textvariable=self.status, wraplength=305).grid(row=8, column=0, columnspan=4, sticky='w')
         ttk.Label(self, text='Axes use native_world. Native Jacobian and predicted contacts bound '
             'each target. Release stops the jog; global obstacle planning remains Plan/Execute. '
-            'Validation of this new servo is pending.', wraplength=305).grid(row=8, column=0, columnspan=4, sticky='w', pady=4)
+            'Validation of this new servo is pending.', wraplength=305).grid(row=9, column=0, columnspan=4, sticky='w', pady=4)
 
     def poll(self):
         servo = (self.controller.state or {}).get('servo') or {}

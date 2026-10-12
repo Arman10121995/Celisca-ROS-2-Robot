@@ -89,4 +89,8 @@ execution and measurement acceptance criteria are met.
   grasp; Servo, attached-payload planning and other backends remain.
 
 - [PX4 X500 Flight](px4_x500.md): actual Gazebo Harmonic flight, altitude/Drive,
-  hold/goals/land and bounded command loss in the measured worlds.
+  hold/goals/land and bounded command loss in the measured worlds; new native
+  geometry takeoff/ceiling checks and static routes await physical validation.
+- [October 9 coordinated task/workload continuation](../status/implementation-continuation-2026-10-09.md):
+  Stretch navigation plus taught arm/hand tasks, real measured Nav2 queue goals
+  and persistent shared Drive/Drone click highlights.

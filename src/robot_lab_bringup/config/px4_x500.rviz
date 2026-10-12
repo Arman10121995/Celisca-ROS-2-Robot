@@ -32,6 +32,20 @@ Visualization Manager:
       Topic:
         Value: /px4/odometry_truth
       Keep: 50
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Aerial 3D map (RTAB-Map)
+      Enabled: true
+      Topic:
+        Value: /rtabmap/cloud_map
+        Durability Policy: Transient Local
+      Size (m): 0.05
+      Style: Boxes
+      Color Transformer: RGB8
+    - Class: rviz_default_plugins/Image
+      Name: Drone RGB-D colour
+      Enabled: true
+      Topic:
+        Value: /x500/camera/rgb/image_raw
   Views:
     Current:
       Class: rviz_default_plugins/Orbit

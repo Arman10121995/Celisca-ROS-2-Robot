@@ -1,5 +1,11 @@
 # Robot Lab continuation
 
+Read the [latest October 9 continuation](docs/status/implementation-continuation-2026-10-09.md)
+for mobile tasks, takeoff clearance, measured Nav2 workloads and persistent
+Drone/Drive click latches. Preserve explicit source/scene/result identities;
+physical qualification is pending. Do not bypass the new takeoff-check gate
+or infer a mission from a queued process exit.
+
 Updated October 9, 2026. Read the [implementation checkpoint](docs/status/implementation-2026-10-09.md); work on `master`. Earlier runtime source has
 successful required CI and separate measured GUI/Drive/Panda artifacts. The
 project remains partial; start with [current status](docs/status/CURRENT_STATUS.md),

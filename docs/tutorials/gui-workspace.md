@@ -68,12 +68,23 @@ matched configurations. Panda additionally has measured fixture attachment
 planning. Stretch combines stopped-base articulation with low-speed Drive and
 sensor-gated mapping/navigation tasks. Read [native controls](native-controls.md).
 
+Stretch Arm/Hand now includes **Mobile task: navigate + arm / hand** to build,
+save/load and run source-bound Nav2 destinations plus taught configurations.
+Editing/loading does not move the robot. Completion records measured base/
+actuator steps; grasp outcomes remain unassessed.
+
 Drone adds measured FCU XYZ targets and separate experimental static-world
 **Plan route / Execute route / Cancel Hold**. Editing a target requires a new
 plan. Manual controls/Space/Hold/Land interrupt tracking. Read
 [the drone guide](px4_x500.md) for geometry/flight limits. Benchmark adds the
 [real experiment queue](concurrent-experiments.md); Health shows implemented
 scope separately from validation and opens these current guides.
+
+Drone direction/altitude buttons stay visibly highlighted after a click,
+including when the pointer leaves. Click again to release/brake; Stop/Space
+clears all latches. Before Takeoff, press **Check takeoff clearance**, inspect
+the selected-world result, then consume it within 30 s. Benchmark's queue
+also offers **Nav2 point goals** with actual source-bound body/action results.
 
 **Stop motion** calls the existing Drive stop and Arm/Hand hold controls.
 Use **Land** for a flying drone and **Stop** beside Run to stop the launch.

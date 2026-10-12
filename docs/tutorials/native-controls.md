@@ -1,5 +1,32 @@
 # Native walking, joint and Cartesian controls
 
+The [same-day continuation](../status/implementation-continuation-2026-10-09.md)
+adds coordinated native mobile tasks described below. All new physical task
+qualification is pending.
+
+## Coordinate navigation and taught arm/hand movement
+
+Select Stretch/Stretch 3, MuJoCo, Display and **Native mobile controls**.
+Choose **Native workflow nav** and a selected occupancy map for base goals;
+articulation-only tasks also work with the display workflow. Run the generated
+command. In Arm/Hand, jog to the required configurations and **Teach current**
+while the measured base/articulation is stopped. Teach the hand targets as
+part of the same full-source configurations.
+
+In **Mobile task: navigate + arm / hand**, enter map X/Y/heading or **Use
+measured base**; add navigation destinations and copies of the taught sequence.
+Reorder steps, save/load a source-and-scene-matched task, then explicitly
+**Run task**. Loading and editing request no motion. Navigation requires a
+retracted arm; teach a retract configuration before another navigation step.
+The executor awaits real Nav2 success, independent body endpoint/settling,
+then stopped-base measured articulation replay. Stop/Space/Drive, arm/Servo
+input, RViz goals, reset, fault or task heartbeat loss interrupts it. Base
+velocity remains blocked until owned Nav2 cancellation finishes.
+
+Actual step journals live on SSD under `$ROBOT_LAB_RUNTIME_ROOT/mobile-tasks/`.
+Completion means measured navigation/actuator steps reached; object/grasp
+success and globally collision-free manipulation remain unassessed.
+
 October 9 integrations are implemented experimental controls. Physical
 testing follows initial implementation. Existing measured variants remain
 separate from the new policy models.

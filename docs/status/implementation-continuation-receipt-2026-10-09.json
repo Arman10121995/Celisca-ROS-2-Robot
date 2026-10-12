@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-09",
+  "completed": "2026-10-12",
+  "completed_by": "claude (continuing the codex October 9 continuation batch)",
+  "scope": "Initial implementation/installation of the October 9 continuation; no runtime/physical mission qualification",
+  "base_revision": "bf4b9bab62fc0c03750e850872bbdb0387cc8a3b",
+  "physical_missions_run": false,
+  "ci_result": null,
+  "build": {
+    "packages": [
+      "robot_lab_utils",
+      "robot_lab_mujoco",
+      "robot_lab_adapter",
+      "robot_lab_gui",
+      "robot_lab_benchmark"
+    ],
+    "result": "5 packages finished",
+    "final_elapsed_s": 11.2,
+    "log_directory": "/workspace/molar/ros_ws/bumperbot_ws/log/build_2026-10-12_09-54-18",
+    "follow_up": {
+      "packages": [
+        "robot_lab_utils",
+        "robot_lab_gui",
+        "robot_lab_bringup",
+        "robot_lab_benchmark"
+      ],
+      "result": "4 packages finished",
+      "elapsed_s": 24.2,
+      "reason": "takeoff support band, control-column re-grid and new unit tests",
+      "log_directory": "/workspace/molar/ros_ws/bumperbot_ws/log/build_2026-10-12_10-15-43"
+    },
+    "installed_copy_check": "robot_lab_gui and robot_lab_mujoco install copies, not symlinks; installed SHA-256 matched source for every edited module after the follow-up build",
+    "import_check": "15 touched modules import from the install under the sourced overlay"
+  },
+  "software_checks": {
+    "gui_suite_xvfb": "104 passed (xvfb-run, 1920x1080)",
+    "gui_suite_desktop_display": "compact-window layout test still fails on the shared desktop display :1, as recorded before this batch; passes under Xvfb",
+    "new_unit_tests": {
+      "src/robot_lab_bringup/test/test_mobile_task_and_takeoff.py": "15 passed",
+      "src/robot_lab/robot_lab_benchmark/test/test_workload_contract.py": "8 passed"
+    },
+    "pre_existing_failures_fixed": [
+      "test_command_autofill::test_qualified_panda_planning_autofill_and_fixture_fallback expected arm_planning:=none with a fixture; bf4b9ba intentionally keeps MoveIt with the fixture in the planning scene. Assertion updated.",
+      "test_workspace_layout: Arm page overflowed the control column (xview 0.918 at bf4b9ba) and, with this batch, Drone (0.823). Cartesian jog rates, teach/replay, mobile-task, native joint and drone Plan/Execute rows re-gridded to two half-width columns; every control page now fits (widest 364 px in a 390 px canvas)."
+    ],
+    "final_suites_2026_10_12": {
+      "gui_xvfb": "105 passed",
+      "adapter": "389 passed",
+      "benchmark": "248 passed, 3 skipped",
+      "bringup_subset": "349 passed (mode_capability, algorithm_dispatch, sim_profiles, xacro_expansion, mobile_task_and_takeoff)"
+    }
+  },
+  "defects_fixed": [
+    "aerial_takeoff: the landed vehicle's own support floor rejected the check. FCU z is aligned once at spawn+0.24 m and the X500 feet are 0.227 m below base_link (13 mm nominal clearance); the sweep's inclusive touching test then blocks on estimator noise/contact sink. The lowest 0.05 m of the starting envelope (SUPPORT_BAND_M) is no longer swept; taller obstacles under the vehicle still reject. Result reports unchecked_support_band_m."
+  ],
+  "source_sha256": {
+    "scripts/aerial_mapping_smoke.py": "9b071d779bf74786dec7b37ef50d3e78c90b252d1c625a40e6e198674135d490",
+    "scripts/review_occupancy_maps.py": "21b24b837042dfa06e9e89be5fa04596a4bd73df8aac75db219c5f5baef1f2c8",
+    "src/robot_lab/robot_lab_benchmark/package.xml": "7e3e3f5989de4708ce9d4da519d20221586387e1e3eeed962f9ffc90c4aa4ba3",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/concurrent_runner.py": "ee5591d28d3df06f164bfce2ce04d355d017b572b874506a9ada6b058821332d",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/nav2_workload.py": "cdab9928da6ddb4aee262ce63d58832c7c156b20afa4ead7e4eff6fabc270aa4",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/workload_contract.py": "418196eca8d8ba0be9bc7201de327f88e15da2888de18d11d40e19e3eaf7c055",
+    "src/robot_lab/robot_lab_benchmark/setup.py": "0156dcd3241bce6937030b03b2b8b254052645d2f8552431f2b71975b9094c70",
+    "src/robot_lab/robot_lab_benchmark/test/test_workload_contract.py": "ccfb16c7c3dcba715e862b84f8d497d95f6a2d303355c81cde77e55296072148",
+    "src/robot_lab_adapter/robot_lab_adapter/gz_camera_bridge.py": "99dd03afbfabcdf2f79f57fc85a4d227f71664209f58c70fdf89daa6ffe64e31",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_planning.py": "94b88c040043f5e70f5fd8fac94fec25ce4dc2f6ae26730309ae2f9739f98ce7",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py": "38b5ef4afa854504016b02bc34f9a7aaecbe8d3abf3a83093ff85b94fccf12be",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py": "e16c88a76592d992f22f995186a032781ab35a601e34fba470ad4d3bfe8fb077",
+    "src/robot_lab_adapter/test/test_gz_camera_bridge.py": "8d1c1b6f67793facef58fa53e3602c7cbe7ceb81047020ba5c8079a22ada97de",
+    "src/robot_lab_bringup/CMakeLists.txt": "9b6cea1e9bd0c26559b30ebbe5b172eef511bc2bbf8cb250435a46a06d203265",
+    "src/robot_lab_bringup/config/px4_x500.rviz": "6e04ed2f21768980dbe97f4390f2c5dae011c0ecd92eb5eb1b40fbec6c434475",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "b6764363a9e0ce2a8420a13163568e05772f1bfa0fab92a7fdc313082e4ef0d0",
+    "src/robot_lab_bringup/test/test_mobile_task_and_takeoff.py": "19a98a16609891f8b0a646c8b282a409a51c54a6870bf172cac2963efeef3d0c",
+    "src/robot_lab_gui/robot_lab_gui/articulation_controls.py": "6e30980209f63b3dc5314339e1480d62bc08bacd06582b3db37ade9ddffc1793",
+    "src/robot_lab_gui/robot_lab_gui/articulation_sequences.py": "3a2170665081f69a39866fc58dd928e2788b999b42b10e81cee04705149c735e",
+    "src/robot_lab_gui/robot_lab_gui/drone_planning_controls.py": "644f049c0ae47e42293fc7de3f8bebd0f7a74219a0fb95a5e355ace079e978e7",
+    "src/robot_lab_gui/robot_lab_gui/experiment_queue.py": "17f55f53e263e4617af7f53698545ef1e8d1417485f9fb7c6849c6ab4c7a6d48",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "fd54b56dfa4a64a251a655462c3232238a24ecc36c9831b383cff1bb8476b68a",
+    "src/robot_lab_gui/robot_lab_gui/mobile_task_controls.py": "3ef3d1b8995aed02ef35557b770d308433428e3be8da6e188c0553ae7e38b53b",
+    "src/robot_lab_gui/robot_lab_gui/servo_controls.py": "3644374ed41754176c1811708afb323e204361b0b4b2fe7a5f50655ae7616f01",
+    "src/robot_lab_gui/robot_lab_gui/themes/modern.py": "c75240d8b133e673accb86685c35ac5b483f33f8930b5d06372a3c2f810b6bf5",
+    "src/robot_lab_gui/test/test_command_autofill.py": "f837b7d378bc2842c2e0c8dbd01971153bc521dea4dc9011525e0ed4ce9769ba",
+    "src/robot_lab_mujoco/package.xml": "40c89538b13cbebab93be070891d8d84bb5189206702b38bb48264c5c7ac648f",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_articulation_control.py": "37a63e60793d80d6ddf0e952561c3a1f86e9b656e8805bc5de4696b78595b042",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py": "70c23382366dcbc9457704a62b699c734855204debfa6a84ce4e41e563f5917f",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_control.py": "1bffe43f2962ae246fb1de1b3e88712e25a301e498e9948765fd11a090c2d29f",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_tasks.py": "c0db880254ba545d522ec41a628f6ed07d65ffa09c22847f1726010109318dcb",
+    "src/robot_lab_utils/robot_lab_utils/aerial_takeoff.py": "0a1ad0b7060b48d2f9abc93a2e08446ddffb7c14fe95b0f5b98a6961579f4f36",
+    "src/robot_lab_utils/robot_lab_utils/mobile_task.py": "84fd911d463414a6175b79ee72edded2a70b768ef54986b119d1ee3fe4765509"
+  },
+  "note": "source_sha256 covers the final working tree on 2026-10-12, including the R5.10 aerial-mapping additions built and tested in the same session (docs/status/evidence/r510-aerial-mapping-2026-10-12/)."
+}

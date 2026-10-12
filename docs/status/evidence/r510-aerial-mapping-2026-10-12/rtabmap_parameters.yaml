@@ -1,0 +1,24 @@
+/**:
+  ros__parameters:
+    Grid/3D: 'true'
+    Grid/CellSize: '0.1'
+    Grid/RangeMax: '8.0'
+    Grid/RayTracing: 'true'
+    Mem/IncrementalMemory: 'true'
+    Mem/InitWMWithAllNodes: 'false'
+    RGBD/AngularUpdate: '0.1'
+    RGBD/LinearUpdate: '0.1'
+    Reg/Force3DoF: 'false'
+    Rtabmap/DetectionRate: '1'
+    approx_sync: true
+    approx_sync_max_interval: 0.1
+    database_path: /workspace/molar/robot_lab_runtime/px4/ros-flight-20261012-103350-b038f4/aerial_map.db
+    frame_id: base_link
+    map_frame_id: aerial_map
+    odom_frame_id: map
+    publish_tf: true
+    subscribe_depth: true
+    subscribe_rgb: true
+    sync_queue_size: 10
+    use_sim_time: false
+    wait_for_transform: 0.3

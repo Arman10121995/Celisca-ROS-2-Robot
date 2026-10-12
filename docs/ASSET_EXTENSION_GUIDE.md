@@ -1,5 +1,11 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+The [October 9 continuation](status/implementation-continuation-2026-10-09.md)
+connects native Stretch Nav2/taught-articulation tasks, X500 world-specific
+takeoff checks and real Nav2 queue workloads. Candidates remain experimental;
+other model/backend control, arbitrary-object/dexterous/grasp and aerial map
+adapters plus physical qualification remain.
+
 Updated October 9, 2026. New [initial implementations](status/implementation-2026-10-09.md)
 include exact-model Unitree policies, generic native actuator/Servo/teach-replay,
 measured Panda object scenes, Stretch sensor/navigation candidates, static

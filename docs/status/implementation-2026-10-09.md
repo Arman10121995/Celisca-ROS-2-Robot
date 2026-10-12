@@ -6,6 +6,11 @@ implement; follow-up validation agents are unassigned. Historical October 8
 measurements keep their original source stages. This checkpoint records code
 and installation; it does not certify new robot missions.
 
+The [same-day continuation](implementation-continuation-2026-10-09.md), based
+on published `bf4b9ba`, adds coordinated native mobile tasks, floor/ceiling-aware
+takeoff checks, measured Nav2 workloads and persistent Drive/Drone highlights.
+Those items supersede the remainder below. The original receipt stays historical.
+
 ## Delivered implementation
 
 | Feature | New implementation | Validation |
@@ -109,9 +114,9 @@ back to original geometry when Shapely is unavailable.
    existing Go2/BHL controllers and failure histories remain separate.
 2. **Manipulation:** full planning adapters for additional arms/backends,
    dexterous hand-specific controllers, arbitrary object scenes, repeated
-   pick/place and coordinated navigate/reach/grasp task execution. Generic
+   pick/place and full grasp/object outcomes for coordinated mobile tasks. Generic
    position jogging alone does not solve these tasks.
-3. **Aerial workflows:** safe takeoff/floor/ceiling corridor selection, aerial
+3. **Aerial workflows:** physical takeoff/floor/ceiling qualification, aerial
    sensor/3D-map save/reload, moving-obstacle avoidance and other flight backends.
    Current 0.7 m spherical static planning is deliberately conservative; narrow
    indoor routes can be rejected and manual/direct goals remain unchecked.

@@ -22,6 +22,7 @@ setup(
             'robot-lab-live-mission = robot_lab_benchmark.live_mission:main',
             'robot-lab-concurrent = robot_lab_benchmark.concurrent_runner:main',
             'robot-lab-telemetry-recorder = robot_lab_benchmark.telemetry_recorder:main',
+            'robot-lab-nav2-workload = robot_lab_benchmark.nav2_workload:main',
         ],
     },
 )

@@ -77,7 +77,10 @@ class NativeStretchControl:
         extend = self.mj.mj_name2id(self.model, self.mj.mjtObj.mjOBJ_TENDON, 'extend')
         return extend >= 0 and self.data.ten_length[extend] <= self.limits['max_drive_extension_m']
 
-    def receive(self, message):
+    def receive(self, message, task_command=False):
+        tasks = self.node.mobile_tasks
+        if tasks and tasks.blocks_mux() and not task_command:
+            return
         values = np.array([message.linear.x, message.angular.z])
         if not np.all(np.isfinite(values)):
             self.command[:] = 0
@@ -146,4 +149,5 @@ class NativeStretchControl:
             command=self.ramped.tolist(), measured_wheel_rates=self.data.qvel[self.dofs].tolist(),
             arm_stowed=bool(self.stowed()), articulation_busy=self.manipulator_busy(), fault=self.fault,
             axle_m=self.axle, wheel_radii_m=self.radii.tolist(), limits=self.limits,
+            task_active=bool(self.node.mobile_tasks and self.node.mobile_tasks.active()),
             qualification='implemented native mobile manipulation; runtime validation pending'))))

@@ -1,5 +1,9 @@
 # Robot Lab support matrix
 
+The [October 9 continuation](implementation-continuation-2026-10-09.md) adds
+mobile tasks, guarded takeoff, measured workloads and click-latch rendering.
+No physical support cells are promoted from these implementations.
+
 Updated October 9, 2026. Historical measurements retain the October 8 checkpoint and exact
 pre-trial source manifests; see the publication receipt for the pushed source. The platform is **partial**. This page
 summarizes implementation and named evidence; the [ledger](platform-status.yaml)

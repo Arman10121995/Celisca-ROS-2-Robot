@@ -62,6 +62,17 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**Latest October 9 continuation from `bf4b9ba`:** persistent Drone/Drive
+click highlights survive pointer leave/release; native Stretch navigation and
+taught arm/hand task editing/execution; native-X500 selected-world takeoff
+corridor/ceiling checks; actual Nav2 multi-goal queue workloads and explicit
+measured results. Read [the continuation](status/implementation-continuation-2026-10-09.md)
+and its receipt before changing these paths. Takeoff now requires **Check
+takeoff clearance** first; later validation clients must request/check it,
+without weakening the existing flight/body/contact acceptance. Broad physical
+validation remains deferred. The initial implementation remainder below is
+superseded for coordinated tasks/takeoff/point-goal result contracts only.
+
 **October 9 current implementation:** three Unitree exact-model variants,
 28 fixed native articulation candidates, Cartesian Servo/teach-replay, measured
 Panda attachment scenes, two native Stretch base/sensor/higher-task candidates,

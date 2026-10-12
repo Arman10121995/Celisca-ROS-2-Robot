@@ -16,7 +16,7 @@ robots:
       max_accel: 1.0
       max_angular_speed: 0.3
       max_angular_accel: 0.5
-    notes: "Real upstream X500 with PX4 v1.16.2 and Gazebo Harmonic. Explicit takeoff/land and 3D setpoints; no obstacle-aware planner or SLAM qualification."
+    notes: "Real upstream X500 with PX4 v1.16.2 and Gazebo Harmonic. Explicit takeoff/land and 3D setpoints. Optional upstream x500_depth RGB-D variant (px4_vehicle:=x500_depth) with experimental RTAB-Map 3D mapping in Flight (aerial_mapping:=rtabmap); no obstacle-aware planner from the map and no mapping qualification."
   bumperbot:
     package: robot_lab_robots
     xacro: bumperbot/urdf/bumperbot.urdf.xacro

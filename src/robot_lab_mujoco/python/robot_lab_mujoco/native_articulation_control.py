@@ -69,6 +69,8 @@ class NativeArticulationControl:
             request = json.loads(message.data)
             if not isinstance(request, dict) or request.get('plant_id') != self.plant_id:
                 return
+            if self.node.mobile_tasks and self.node.mobile_tasks.active():
+                self.node.mobile_tasks.cancel('Manual Cartesian jog interrupted task')
             if self.sequence is not None:
                 self.hold('Cartesian jog interrupted replay')
             self.servo.receive(message)
@@ -90,6 +92,8 @@ class NativeArticulationControl:
                 raise ValueError('Native command must be a JSON object')
             if request.get('plant_id') != self.plant_id:
                 raise ValueError('Command belongs to another simulator instance')
+            if self.node.mobile_tasks and self.node.mobile_tasks.active():
+                self.node.mobile_tasks.cancel('Manual articulation command interrupted task')
             if self.node.mobile and self.node.mobile.moving():
                 raise ValueError('Stop the mobile base before articulation control')
             if self.fault or time.monotonic() - self.last_heartbeat > .8:
@@ -158,6 +162,7 @@ class NativeArticulationControl:
         self.sequence, self.sequence_index = sequence, 0
         self.sequence_started_wall = time.monotonic()
         self.sequence_state = dict(state='executing', index=1, total=len(sequence),
+            sequence_id=str(request.get('sequence_id', uuid.uuid4().hex))[:100],
             completion_scope='Measured actuator-coordinate settling; grasp/object mission unassessed')
         self.begin_waypoint()
 
@@ -205,6 +210,8 @@ class NativeArticulationControl:
             self.status = 'Replay measured actuator waypoints reached; inspect object outcome'
 
     def stop(self, _request, response):
+        if self.node.mobile_tasks:
+            self.node.mobile_tasks.cancel('Articulation Stop interrupted mobile task')
         self.hold()
         response.success, response.message = True, self.status
         return response
@@ -270,5 +277,6 @@ class NativeArticulationControl:
             status=self.status, fault=self.fault, time=float(self.data.time),
             servo=self.servo.state() if self.servo else None,
             mobile_state=dict(moving=self.node.mobile.moving(), arm_stowed=bool(self.node.mobile.stowed()),
-                status=self.node.mobile.status) if self.node.mobile else None,
+                status=self.node.mobile.status,
+                task_active=bool(self.node.mobile_tasks and self.node.mobile_tasks.active())) if self.node.mobile else None,
             qualification='implemented experimental position controls; validation pending'))))

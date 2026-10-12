@@ -132,6 +132,16 @@ def apply(root):
               foreground=[("disabled", FG_DISABLED)],
               bordercolor=[("focus", BORDER_FOCUS)])
 
+    # selected persists after the native ttk mouse/keyboard release bindings
+    # clear pressed. All Drive and Drone mirrors share the same latch state.
+    style.configure('LatchedDrive.TButton', padding=(8, 6))
+    style.map('LatchedDrive.TButton',
+        background=[('disabled', BG_CARD), ('selected', ACCENT_ACTIVE),
+                    ('pressed', ACCENT_ACTIVE), ('active', BG_CARD_LIGHT)],
+        foreground=[('disabled', FG_DISABLED), ('selected', BG_DARK)],
+        bordercolor=[('selected', ACCENT), ('focus', BORDER_FOCUS)],
+        relief=[('selected', 'sunken'), ('pressed', 'sunken')])
+
     style.configure("Accent.TButton", background=ACCENT, foreground=BG_DARK,
                     bordercolor=ACCENT, darkcolor=ACCENT, lightcolor=ACCENT,
                     font=fonts["body_bold"])

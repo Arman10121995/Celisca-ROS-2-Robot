@@ -25,35 +25,43 @@ class ArticulationControls(ttk.Frame):
         self.selector.grid(row=2, column=0, columnspan=4, sticky='ew')
         self.selector.bind('<<ComboboxSelected>>', lambda _: self.select_channel())
         ttk.Label(self, textvariable=self.feedback, wraplength=305).grid(row=3, column=0, columnspan=4, sticky='w', pady=5)
-        ttk.Label(self, text='Target (source units)').grid(row=4, column=0, sticky='w')
+        # Pairs of half-width cells (two columns each) keep every row inside
+        # the control column; four buttons side by side overflowed it.
+        ttk.Label(self, text='Target (source units)').grid(row=4, column=0, columnspan=2, sticky='w')
         self.entry = ttk.Entry(self, textvariable=self.target, width=10)
-        self.entry.grid(row=4, column=1, sticky='w')
+        self.entry.grid(row=4, column=2, columnspan=2, sticky='w')
         self.scale = ttk.Scale(self, variable=self.target, from_=0., to=1.)
         self.scale.grid(row=5, column=0, columnspan=4, sticky='ew', pady=5)
-        ttk.Label(self, text='Jog fraction of range').grid(row=6, column=0, sticky='w')
-        ttk.Spinbox(self, textvariable=self.step, from_=.001, to=.1, increment=.005, width=8).grid(row=6, column=1)
+        ttk.Label(self, text='Jog fraction of range').grid(row=6, column=0, columnspan=2, sticky='w')
+        ttk.Spinbox(self, textvariable=self.step, from_=.001, to=.1, increment=.005, width=8).grid(
+            row=6, column=2, columnspan=2, sticky='w')
         self.buttons = []
-        for column, label, callback in (
-                (0, '− Jog', lambda: self.jog(-1)), (1, '+ Jog', lambda: self.jog(1)),
-                (2, 'Apply target', self.apply), (3, 'Use measured', self.select_channel)):
+        for row, column, label, callback in (
+                (7, 0, '− Jog', lambda: self.jog(-1)), (7, 2, '+ Jog', lambda: self.jog(1)),
+                (8, 0, 'Apply target', self.apply), (8, 2, 'Use measured', self.select_channel)):
             button = ttk.Button(self, text=label, command=callback)
-            button.grid(row=7, column=column, sticky='ew', padx=2, pady=6)
+            button.grid(row=row, column=column, columnspan=2, sticky='ew', padx=2, pady=3)
             self.buttons.append(button)
+        self.columnconfigure((0, 1, 2, 3), weight=1)
         self.home_button = ttk.Button(self, text='Source home', command=self.home)
-        self.home_button.grid(row=8, column=0, columnspan=2, sticky='ew', padx=2)
+        self.home_button.grid(row=9, column=0, columnspan=2, sticky='ew', padx=2)
         self.stop_button = ttk.Button(self, text='Stop / hold', command=self.stop)
-        self.stop_button.grid(row=8, column=2, columnspan=2, sticky='ew', padx=2)
+        self.stop_button.grid(row=9, column=2, columnspan=2, sticky='ew', padx=2)
         ttk.Label(self, text='Targets use the source position actuators, including coupled tendons. '
             'Measured value, units and limits come from the running model. '
             'Dragging the target does not move the robot until Apply target. '
             'Heartbeat loss holds the measured articulation. Physical validation is pending.',
-            wraplength=305).grid(row=9, column=0, columnspan=4, sticky='w', pady=8)
+            wraplength=305).grid(row=10, column=0, columnspan=4, sticky='w', pady=8)
         from .servo_controls import ServoControls
         self.servo_controls = ServoControls(self, self, '/articulation/servo_command')
-        self.servo_controls.grid(row=10, column=0, columnspan=4, sticky='ew', pady=8)
+        self.servo_controls.grid(row=11, column=0, columnspan=4, sticky='ew', pady=8)
         from .articulation_sequences import ArticulationSequences
         self.sequences = ArticulationSequences(self, self)
-        self.sequences.grid(row=11, column=0, columnspan=4, sticky='ew', pady=8)
+        self.sequences.grid(row=12, column=0, columnspan=4, sticky='ew', pady=8)
+        from .mobile_task_controls import MobileTaskControls
+        self.mobile_tasks = MobileTaskControls(self, self)
+        self.mobile_tasks.grid(row=13, column=0, columnspan=4, sticky='ew', pady=8)
+        self.mobile_tasks.grid_remove()
 
     def selected(self):
         return (bool(self.app._robot_config().get('native_articulation'))
@@ -137,6 +145,7 @@ class ArticulationControls(ttk.Frame):
             button.state(['!disabled'] if self.ready() else ['disabled'])
         self.servo_controls.poll()
         self.sequences.poll()
+        self.mobile_tasks.poll()
 
     def send(self, targets):
         if not self.ready():

@@ -126,6 +126,7 @@ class NativeAssetDisplay(Node):
         self.articulation = None
         self.mobile = None
         self.sensors = None
+        self.mobile_tasks = None
         controller = self.get_parameter('arm_control').value
         policy_config = self.get_parameter('locomotion_policy_config').value
         mobile_config = self.get_parameter('mobile_control_config').value
@@ -138,6 +139,8 @@ class NativeAssetDisplay(Node):
             self.articulation = NativeArticulationControl(self)
             from robot_lab_mujoco.native_mobile_sensors import NativeMobileSensors
             self.sensors = NativeMobileSensors(self, self.get_parameter('native_task').value)
+            from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
+            self.mobile_tasks = NativeMobileTasks(self)
             self._odom_pub = self.sensors.odom_pub
             from robot_lab_utils.reset_notifications import ResetNotifications
             self.reset_notifications = ResetNotifications(self)
@@ -279,6 +282,8 @@ class NativeAssetDisplay(Node):
             self.last_description = self.data.time
 
     def reset(self, _request, response):
+        if self.mobile_tasks:
+            self.mobile_tasks.cancel('Native plant reset')
         if self.arm:
             self.arm.finish('aborted', -4, 'reset; holding source home position')
             self.gripper.finish('aborted', 'reset; holding source home gap')
@@ -364,6 +369,8 @@ def main(args=None):
     finally:
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         if node:
+            if node.mobile_tasks:
+                node.mobile_tasks.cancel('Native plant runtime closing')
             if node.sensors:
                 node.sensors.close()
             node.destroy_node()

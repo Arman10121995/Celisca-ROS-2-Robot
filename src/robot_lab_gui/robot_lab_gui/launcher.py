@@ -493,6 +493,9 @@ class SimulationLauncherGui(tk.Tk):
         self.native_articulation_var = tk.BooleanVar(value=False)
         self.native_mobile_var = tk.BooleanVar(value=False)
         self.native_task_var = tk.StringVar(value='display')
+        self.px4_camera_var = tk.BooleanVar(value=False)
+        self.aerial_mapping_var = tk.BooleanVar(value=False)
+        self.aerial_map_database_var = tk.StringVar(value='')
         self.steering_mode_var = tk.StringVar(value="")
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
@@ -904,6 +907,33 @@ class SimulationLauncherGui(tk.Tk):
         self.native_algorithms_var = tk.StringVar()
         ttk.Label(advanced, textvariable=self.native_algorithms_var, wraplength=350).grid(row=29, column=0, sticky='w')
 
+        # PX4 X500 sensing: the upstream x500_depth OakD-Lite variant and
+        # RTAB-Map 3D mapping on the FCU odometry (experimental).
+        self.px4_camera_checkbox = ttk.Checkbutton(advanced,
+            text='Drone RGB-D camera (OakD-Lite, experimental)', variable=self.px4_camera_var,
+            command=self._px4_sensing_changed)
+        self.px4_camera_checkbox.grid(row=30, column=0, sticky='w', pady=(10, 0))
+        add_tooltip(self.px4_camera_checkbox,
+            'Flies the upstream PX4 x500_depth airframe: one registered 320x240 5 Hz '
+            'RGB-D sensor on /x500/camera. Gazebo only.')
+        self.aerial_mapping_checkbox = ttk.Checkbutton(advanced,
+            text='Drone 3D mapping: RTAB-Map (experimental)', variable=self.aerial_mapping_var,
+            command=self._px4_sensing_changed)
+        self.aerial_mapping_checkbox.grid(row=31, column=0, sticky='w', pady=(4, 0))
+        add_tooltip(self.aerial_mapping_checkbox,
+            'Builds a 3D RTAB-Map database from the RGB-D camera and FCU odometry while you fly. '
+            'Stop saves it (and an exported PLY cloud) in the PX4 run directory. '
+            'Choose a saved database to localize in it instead. Validation pending.')
+        saved_map = ttk.Frame(advanced)
+        saved_map.grid(row=32, column=0, sticky='ew')
+        ttk.Label(saved_map, text='Saved map').pack(side='left')
+        self.aerial_map_entry = ttk.Entry(saved_map, textvariable=self.aerial_map_database_var, width=22)
+        self.aerial_map_entry.pack(side='left', fill='x', expand=True, padx=4)
+        self.aerial_map_entry.bind('<FocusOut>', lambda _: self._update_from_selection())
+        self.aerial_map_browse = ttk.Button(saved_map, text='Browse', command=self._browse_aerial_map)
+        self.aerial_map_browse.pack(side='left')
+        add_tooltip(self.aerial_map_entry, 'Empty: start a new map. A saved .db: localize in it (read-only).')
+
         steering_frame = self.steering_frame = ttk.Frame(self.drive_pad_host)
         steering_frame.grid(row=0, column=0, sticky="ew", pady=(8, 0))
         ttk.Label(steering_frame, text="4WS pattern").pack(side="left")
@@ -953,7 +983,7 @@ class SimulationLauncherGui(tk.Tk):
         reverse_button.grid(row=2, column=1, sticky="ew", padx=2, pady=2)
         self._bind_drive_button(reverse_button, -1.0, 0.0)
 
-        ttk.Label(self.drone_actions_host, text='Take off, then use the seven direction buttons below.\nClick once to move; click again to slow down. Stop halts all manual motion.', wraplength=310).grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 8))
+        ttk.Label(self.drone_actions_host, text='Check takeoff clearance, then Takeoff.\nClick a direction to latch it on; click again to release and slow to a hold. The button stays highlighted. Stop/Space clears every direction.', wraplength=310).grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 8))
         drone_drive = ttk.Frame(self.drone_actions_host)
         drone_drive.grid(row=1, column=0, columnspan=3, sticky='ew', pady=(0, 8))
         self.drone_drive_widgets = {}
@@ -979,6 +1009,8 @@ class SimulationLauncherGui(tk.Tk):
                                 command=lambda action=action: self._flight_action(action))
             button.grid(row=3, column=column, sticky='ew', padx=2, pady=2)
             self.flight_buttons.append(button)
+            if action == 'takeoff':
+                add_tooltip(button, 'First press Check takeoff clearance in the Drone panel. Takeoff consumes a fresh selected-world check.')
         altitude = ttk.Frame(self.drone_actions_host)
         altitude.grid(row=4, column=0, columnspan=3, sticky='ew')
         for column, (label, sign) in enumerate((('Altitude Up',1.0),('Altitude Down',-1.0))):
@@ -986,6 +1018,7 @@ class SimulationLauncherGui(tk.Tk):
                                 command=lambda sign=sign:self._start_altitude(sign))
             button.grid(row=0,column=column,sticky='ew',padx=2,pady=2)
             self.drive_altitude_widgets[sign] = button
+            self._configure_latch_button(button)
             self.flight_buttons.append(button)
             add_tooltip(button,'Click to climb or descend; click again to slow to a hover. Stop/Space stops altitude changes.')
 
@@ -2063,6 +2096,26 @@ class SimulationLauncherGui(tk.Tk):
                 (self._four_wheel_steer_selectable() and
                  self.steering_mode_var.get() in ("crab", "in_phase")))
 
+    def _px4_sensing_selectable(self):
+        return (self.robot_var.get() == 'px4_x500' and self.simulator_var.get() == 'gazebo'
+                and self.launch_kind_var.get() == 'simulation')
+
+    def _px4_sensing_changed(self):
+        # Mapping needs the camera; dropping the camera drops mapping.
+        if self.aerial_mapping_var.get() and not self.px4_camera_var.get():
+            self.px4_camera_var.set(True)
+        self._update_from_selection()
+
+    def _browse_aerial_map(self):
+        from tkinter import filedialog
+        runtime = os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')
+        path = filedialog.askopenfilename(
+            title='Saved aerial RTAB-Map database', initialdir=os.path.join(runtime, 'px4'),
+            filetypes=[('RTAB-Map database', '*.db'), ('All files', '*')])
+        if path:
+            self.aerial_map_database_var.set(path)
+            self._update_from_selection()
+
     def _flight_selectable(self):
         return (self.robot_var.get() == 'px4_x500' and self.mode_var.get() == 'flight'
                 and self.simulator_var.get() == 'gazebo'
@@ -2134,6 +2187,17 @@ class SimulationLauncherGui(tk.Tk):
             command = [part for part in command
                        if not part.startswith("steering_mode:=")]
             command.append("steering_mode:=%s" % self.steering_mode_var.get())
+        if command and self._px4_sensing_selectable():
+            command = [part for part in command if not part.startswith(
+                ('px4_vehicle:=', 'aerial_mapping:=', 'aerial_map_database:='))]
+            if self.px4_camera_var.get():
+                command.append('px4_vehicle:=x500_depth')
+            if self.px4_camera_var.get() and self.aerial_mapping_var.get() \
+                    and self.mode_var.get() == 'flight':
+                command.append('aerial_mapping:=rtabmap')
+                database = self.aerial_map_database_var.get().strip()
+                if database:
+                    command.append('aerial_map_database:='+database)
         if command and self._robot_config().get('arm_control') == 'panda' \
                 and self.simulator_var.get() == 'mujoco' and self.mode_var.get() == 'display':
             command = [part for part in command if not part.startswith('arm_control:=')]
@@ -2229,6 +2293,12 @@ class SimulationLauncherGui(tk.Tk):
             'nav': 'AMCL + EKF + Smac2D + Regulated Pure Pursuit'}
         self.native_algorithms_var.set('Native workflow algorithms: '+algorithms.get(self.native_task_var.get(), '')
             if self._native_mobile_selectable() and self.native_mobile_var.get() else '')
+        px4 = self._px4_sensing_selectable()
+        self.px4_camera_checkbox.state(['!disabled'] if px4 else ['disabled'])
+        mapping = px4 and self.mode_var.get() == 'flight'
+        self.aerial_mapping_checkbox.state(['!disabled'] if mapping else ['disabled'])
+        for widget in (self.aerial_map_entry, self.aerial_map_browse):
+            widget.state(['!disabled'] if mapping and self.aerial_mapping_var.get() else ['disabled'])
         self.steering_mode_combo.configure(
             state="readonly" if self._four_wheel_steer_selectable() else "disabled")
         for button in self._strafe_widgets():
@@ -2296,6 +2366,8 @@ class SimulationLauncherGui(tk.Tk):
                          'Altitude Up/Down climb or descend; click again to slow to a hover. '
                          'Hold or Space stops manual travel; Land returns to the ground. '
                          'Drone includes experimental static-world Plan/Execute; direct /px4/goal and manual input remain unchecked paths. Health contains the flight guide and measured results.')
+            lines.append('Optional RGB-D camera and RTAB-Map 3D mapping (advanced options, experimental): '
+                         'Stop saves aerial_map.db and a PLY cloud in the PX4 run directory; Saved map localizes in a copy.')
         if config.get('arm_control') == 'panda':
             lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
                          'See Hand for qualified gripper controls; other arm backends remain pending.')
@@ -2475,7 +2547,10 @@ class SimulationLauncherGui(tk.Tk):
                         'enable_native_locomotion': bool(self.native_policy_var.get()),
                         'enable_native_mobile': bool(self.native_mobile_var.get()),
                         'native_task': self.native_task_var.get(),
-                        'enable_native_articulation': bool(self.native_articulation_var.get())}
+                        'enable_native_articulation': bool(self.native_articulation_var.get()),
+                        'px4_camera': bool(self.px4_camera_var.get()),
+                        'aerial_mapping': bool(self.aerial_mapping_var.get()),
+                        'aerial_map_database': self.aerial_map_database_var.get()}
                     save_manifest(name, manifest)
                     self.status_var.set(f"Profile '{name}' saved (manifest)")
                     self.after(3000, lambda: self.status_var.set("Idle"))
@@ -2494,6 +2569,9 @@ class SimulationLauncherGui(tk.Tk):
             'enable_native_mobile': bool(self.native_mobile_var.get()),
             'native_task': self.native_task_var.get(),
             'enable_native_articulation': bool(self.native_articulation_var.get()),
+            'px4_camera': bool(self.px4_camera_var.get()),
+            'aerial_mapping': bool(self.aerial_mapping_var.get()),
+            'aerial_map_database': self.aerial_map_database_var.get(),
         }
         save_profile(name, config)
         self.status_var.set(f"Profile '{name}' saved")
@@ -2517,6 +2595,9 @@ class SimulationLauncherGui(tk.Tk):
         self.native_mobile_var.set(bool(options.get('enable_native_mobile', False)))
         self.native_task_var.set(options.get('native_task', 'display'))
         self.native_articulation_var.set(bool(options.get('enable_native_articulation', False)))
+        self.px4_camera_var.set(bool(options.get('px4_camera', False)))
+        self.aerial_mapping_var.set(bool(options.get('aerial_mapping', False)))
+        self.aerial_map_database_var.set(options.get('aerial_map_database', ''))
         mode = resolved_from.get("mode") or manifest.get("mode")
         if mode and mode in self.mode_profiles:
             self.mode_var.set(mode)
@@ -2566,6 +2647,9 @@ class SimulationLauncherGui(tk.Tk):
             self.native_mobile_var.set(bool(cfg.get('enable_native_mobile', False)))
             self.native_task_var.set(cfg.get('native_task', 'display'))
             self.native_articulation_var.set(bool(cfg.get('enable_native_articulation', False)))
+            self.px4_camera_var.set(bool(cfg.get('px4_camera', False)))
+            self.aerial_mapping_var.set(bool(cfg.get('aerial_mapping', False)))
+            self.aerial_map_database_var.set(cfg.get('aerial_map_database', ''))
 
         self._update_from_selection()
 
@@ -2787,6 +2871,28 @@ class SimulationLauncherGui(tk.Tk):
         else:
             self.drive_button_widgets[direction] = button
         button.configure(command=lambda: self._start_drive(*direction))
+        self._configure_latch_button(button)
+
+    def _configure_latch_button(self, button):
+        button.configure(style='LatchedDrive.TButton')
+        if not THEME_AVAILABLE:
+            ttk.Style(button).map('LatchedDrive.TButton',
+                background=[('selected', '#8ab4f8')],
+                relief=[('selected', 'sunken')])
+        for event in ('<ButtonRelease-1>', '<Leave>', '<Enter>', '<KeyRelease>', '<FocusOut>'):
+            button.bind(event, lambda _event: self.after_idle(self._sync_latched_buttons), add='+')
+
+    def _sync_latched_buttons(self):
+        for direction in self.drive_button_widgets:
+            active = direction in self.drive_buttons
+            for button in self._drive_widgets(direction):
+                button.state(['selected', 'pressed'] if active else ['!selected', '!pressed'])
+        for direction in self.drive_strafe_widgets:
+            active = direction in self.drive_strafe_buttons
+            for button in self._strafe_widgets(direction):
+                button.state(['selected', 'pressed'] if active else ['!selected', '!pressed'])
+        for direction, button in self.drive_altitude_widgets.items():
+            button.state(['selected', 'pressed'] if direction in self.drive_altitude_buttons else ['!selected', '!pressed'])
 
     def _drive_widgets(self, direction=None):
         directions = self.drive_button_widgets if direction is None else [direction]
@@ -2807,6 +2913,7 @@ class SimulationLauncherGui(tk.Tk):
         else:
             self.drive_strafe_widgets[sign] = button
         button.configure(command=lambda: self._start_strafe(sign))
+        self._configure_latch_button(button)
 
     def _start_strafe(self, sign):
         if not self._lateral_drive_selectable():
@@ -2819,6 +2926,7 @@ class SimulationLauncherGui(tk.Tk):
         for button in self._strafe_widgets(sign):
             button.state(["pressed"] if sign in self.drive_strafe_buttons
                          else ["!pressed"])
+        self._sync_latched_buttons()
         self._schedule_drive()
 
     def _start_altitude(self, sign):
@@ -2832,6 +2940,7 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_altitude_buttons.add(sign)
         for direction,button in self.drive_altitude_widgets.items():
             button.state(['pressed'] if direction in self.drive_altitude_buttons else ['!pressed'])
+        self._sync_latched_buttons()
         self._schedule_drive()
 
     def _toggle_drive_input(self):
@@ -2913,6 +3022,7 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_buttons.add(direction)
         for button in self._drive_widgets(direction):
             button.state(["pressed"] if direction in self.drive_buttons else ["!pressed"])
+        self._sync_latched_buttons()
         self._schedule_drive()
 
     def _resolved_drive_limits(self):
@@ -2958,6 +3068,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_buttons.discard(direction)
         for button in self._drive_widgets(direction):
             button.state(["!pressed"])
+        self._sync_latched_buttons()
 
     def _repeat_drive(self):
         self.drive_repeat_job = None
@@ -3040,6 +3151,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_buttons.clear()
         self.drive_strafe_buttons.clear()
         self.drive_altitude_buttons.clear()
+        self._sync_latched_buttons()
         for button in self.drive_altitude_widgets.values():
             button.state(['!pressed'])
         self.drive_stop_latched = keep_input_enabled

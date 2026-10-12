@@ -42,6 +42,7 @@ class PX4Controller(Node):
         self.manual = (0.0, 0.0, 0.0, 0.0)
         self.configured = False
         self.route, self.route_status = [], 'idle'
+        self.takeoff_guard = None
         self.odom_pub = self.create_publisher(Odometry, '/px4/odometry', 10)
         self.status_pub = self.create_publisher(String, '/px4/status', 10)
         self.tf = TransformBroadcaster(self)
@@ -68,14 +69,27 @@ class PX4Controller(Node):
         self.phase, self.phase_since = phase, time.monotonic()
         self.get_logger().info('Flight state: '+phase)
 
+    def takeoff_ready(self):
+        attitude, landed = self.flight.attitude, self.flight.ext_sys
+        return bool(self.enabled and self.ready() and self.phase == 'idle' and not self.flight.armed()
+            and landed and landed.landed_state == 1 and attitude
+            and abs(attitude.roll) <= .1 and abs(attitude.pitch) <= .1)
+
     def takeoff(self, _request, response):
-        if not self.enabled or not self.ready() or self.phase != 'idle' or self.flight.armed():
+        if not self.takeoff_ready():
             response.success = False
-            response.message = 'Takeoff requires Flight mode, a fresh FCU position and an idle, disarmed vehicle.'
+            response.message = 'Takeoff requires Flight mode, fresh FCU position, landed/level and idle/disarmed state.'
+            return response
+        try:
+            if self.takeoff_guard is None:
+                raise ValueError('Selected-world takeoff checker is unavailable; launch the native PX4 runtime.')
+            takeoff_z = self.takeoff_guard.consume_takeoff()
+        except (ValueError, OSError) as exc:
+            response.success, response.message = False, str(exc)
             return response
         self.target = self.position()
         self.target_yaw = yaw_enu(self.flight.attitude.yaw) if self.flight.attitude else 0.0
-        self.takeoff_z = self.target[2]+self.get_parameter('takeoff_alt').value
+        self.takeoff_z = takeoff_z
         self.last_manual = -math.inf
         self.transition('priming')
         response.success, response.message = True, 'Takeoff requested; priming the Offboard stream.'
@@ -276,6 +290,7 @@ class PX4Controller(Node):
         self.status_pub.publish(String(data=json.dumps({
             'phase': self.phase, 'armed': self.flight.armed(), 'position_ready': self.ready(),
             'flight_enabled': self.enabled, 'position_enu': self.position(), 'target_enu': self.target,
+            'takeoff_ready': self.takeoff_ready(), 'takeoff_target_z': self.takeoff_z,
             'route_waypoints_remaining': len(self.route), 'route_status': self.route_status})))
 
 

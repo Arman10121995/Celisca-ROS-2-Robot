@@ -1,5 +1,13 @@
 # Robot Lab test tiers and evidence
 
+The [October 9 continuation](status/implementation-continuation-2026-10-09.md)
+delivers mobile-task, checked-takeoff and measured-workload candidates plus
+click-latch rendering. Installation and focused GUI diagnostics are separate
+from physical mission qualification. Later flight clients must call
+`/px4/takeoff_check` and await a clear result before `/px4/takeoff`; retain the
+existing independent body/flight gates. Nav2 workload contacts/applied seeds
+remain unassessed; raw source-bound endpoint results do not qualify all maps.
+
 Updated October 9, 2026. The runner and manifests live in
 `scripts/test_tiers.sh`; `scripts/test_fast.sh` adds source compilation and
 registry checks. [Current status](status/CURRENT_STATUS.md) records measured

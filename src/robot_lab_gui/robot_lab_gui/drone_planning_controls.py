@@ -11,7 +11,9 @@ class DronePlanningControls(ttk.LabelFrame):
         super().__init__(parent, text='3D target / static-world planning (experimental)', padding=8)
         self.app, self.node, self.state, self.position = app, None, {}, None
         self.received, self.pose_received = -math.inf, -math.inf
-        self.status = tk.StringVar(value='Take off, use the measured position, edit target, then Plan and Execute.')
+        self.flight_state, self.flight_received = {}, -math.inf
+        self.status = tk.StringVar(value='Check takeoff clearance, then Takeoff. Once airborne, edit a measured target and Plan / Execute.')
+        self.takeoff_status = tk.StringVar(value='Takeoff clearance has not been checked.')
         self.target = [tk.DoubleVar(value=0.) for _ in range(3)]
         ttk.Button(self, text='Use current FCU position', command=self.use_measured).grid(row=0, column=0, columnspan=4, sticky='ew')
         for row, (axis, variable) in enumerate(zip('XYZ', self.target), 1):
@@ -23,13 +25,23 @@ class DronePlanningControls(ttk.LabelFrame):
         self.plan_button = ttk.Button(self, text='Plan route', command=self.plan)
         self.execute_button = ttk.Button(self, text='Execute route', command=lambda: self.service('execute'))
         self.stop_button = ttk.Button(self, text='Cancel / Hold', command=lambda: self.service('cancel'))
-        for column, button in enumerate((self.plan_button, self.execute_button, self.stop_button)):
-            button.grid(row=4, column=column, sticky='ew', padx=2, pady=6)
-        ttk.Label(self, textvariable=self.status, wraplength=305).grid(row=5, column=0, columnspan=4, sticky='w')
-        ttk.Label(self, text='± changes a target by 0.25 m; no motion until Execute. '
+        # Cancel gets its own row: three buttons side by side overflowed the
+        # control column.
+        self.plan_button.grid(row=4, column=0, sticky='ew', padx=2, pady=(6, 2))
+        self.execute_button.grid(row=4, column=1, columnspan=3, sticky='ew', padx=2, pady=(6, 2))
+        self.stop_button.grid(row=5, column=0, columnspan=4, sticky='ew', padx=2, pady=(2, 6))
+        ttk.Label(self, textvariable=self.status, wraplength=305).grid(row=6, column=0, columnspan=4, sticky='w')
+        self.check_button = ttk.Button(self, text='Check takeoff clearance', command=lambda: self.service('takeoff_check'))
+        self.check_button.grid(row=7, column=0, columnspan=4, sticky='ew', pady=4)
+        ttk.Label(self, textvariable=self.takeoff_status, wraplength=305).grid(row=8, column=0, columnspan=4, sticky='w')
+        ttk.Label(self, text='Check the landed vehicle before Takeoff. The selected-world '
+            'check retains the native feet (above a 5 cm support band the vehicle rises away from), '
+            'rotating propeller bounds and side/top margins. '
+            'A low ceiling can reduce the requested climb; a blocked corridor is rejected. '
+            '± changes a target by 0.25 m; no motion until Execute. '
             'The static planner uses a conservative 0.7 m spherical envelope. '
             'Moving actors, flight tracking and contact validation remain separate.',
-            wraplength=305).grid(row=6, column=0, columnspan=4, sticky='w', pady=6)
+            wraplength=305).grid(row=9, column=0, columnspan=4, sticky='w', pady=6)
         self.after(200, self.poll)
 
     def owned(self):
@@ -49,8 +61,10 @@ class DronePlanningControls(ttk.LabelFrame):
         self.node = self.app.ros_node
         self.goal_pub = self.node.create_publisher(PoseStamped, '/px4/plan_goal', 1)
         self.node.create_subscription(String, '/px4/planning/status', self.receive, 10)
+        self.node.create_subscription(String, '/px4/status', self.receive_flight, 10)
         self.node.create_subscription(Odometry, '/px4/odometry', self.receive_pose, 10)
         self.clients = {name: self.node.create_client(Trigger, '/px4/plan_'+name) for name in ('execute', 'cancel')}
+        self.clients['takeoff_check'] = self.node.create_client(Trigger, '/px4/takeoff_check')
         return True
 
     def receive(self, message):
@@ -65,6 +79,13 @@ class DronePlanningControls(ttk.LabelFrame):
         values = [p.x, p.y, p.z]
         if self.owned() and all(map(math.isfinite, values)):
             self.position, self.pose_received = values, time.monotonic()
+
+    def receive_flight(self, message):
+        try:
+            if self.owned():
+                self.flight_state, self.flight_received = json.loads(message.data), time.monotonic()
+        except (TypeError, ValueError):
+            pass
 
     def ready(self):
         return bool(self.owned() and self.position is not None and self.state.get('plant_id')
@@ -128,8 +149,19 @@ class DronePlanningControls(ttk.LabelFrame):
                 self.status.set(self.state.get('error') or 'Planner: '+self.state.get('state', '')+
                     ' · '+str(self.state.get('waypoints', 0))+' waypoints')
         else:
-            self.state, self.position = {}, None
-        self.plan_button.state(['!disabled'] if self.ready() and self.state.get('state') != 'planning' else ['disabled'])
+            self.state, self.position, self.flight_state = {}, None, {}
+        takeoff = self.state.get('takeoff', {})
+        takeoff_message = 'Takeoff: '+takeoff.get('state', 'unchecked')
+        if takeoff.get('error'):
+            takeoff_message += ' · '+takeoff['error']
+        if takeoff.get('rise_m') is not None:
+            takeoff_message += ' · climb %.2f m%s' % (takeoff['rise_m'], ' (ceiling limited)' if takeoff.get('ceiling_limited') else '')
+        self.takeoff_status.set(takeoff_message)
+        fresh_flight = self.ready() and time.monotonic()-self.flight_received < 1.5
+        self.check_button.state(['!disabled'] if fresh_flight and self.flight_state.get('takeoff_ready')
+            and takeoff.get('state') != 'checking' and self.state.get('state') != 'planning' else ['disabled'])
+        self.plan_button.state(['!disabled'] if fresh_flight and self.flight_state.get('phase') == 'flying'
+            and self.state.get('state') != 'planning' else ['disabled'])
         self.execute_button.state(['!disabled'] if self.ready() and self.state.get('state') == 'planned'
             and self.target_matches_plan() else ['disabled'])
         self.stop_button.state(['!disabled'] if self.owned() else ['disabled'])

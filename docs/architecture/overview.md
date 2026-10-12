@@ -1,5 +1,13 @@
 # Robot Lab architecture: current implementation and target
 
+October 9 continuation places source-bound native mobile-task arbitration
+inside the MuJoCo plant, with asynchronous Nav2 actions and independent body
+settling. PX4's asynchronous selected-world checker supplies a single-use
+landed/pose/resource-bound takeoff target. The isolated queue now has an actual
+Nav2 workload and source/run/spec/trace-bound result interface. Drive/Drone
+share logical latches and persistent selected-state rendering. These new
+interfaces await physical qualification; see [the implementation scope](../status/implementation-continuation-2026-10-09.md).
+
 Documentation updated October 9, 2026. Exact source stages and current checks
 are in the [extension checkpoint](../status/continuation-2026-10-08.md). The [current status](../status/CURRENT_STATUS.md),
 [ledger](../status/platform-status.yaml) and

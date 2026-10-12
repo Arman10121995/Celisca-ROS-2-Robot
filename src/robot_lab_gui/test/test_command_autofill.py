@@ -197,7 +197,9 @@ def test_qualified_panda_planning_autofill_and_fixture_fallback(app):
         assert app.arm_tab.cartesian.plan_button.instate(['disabled'])  # No owned/fresh state.
         app.hand_tab.fixture_button.invoke(); app.update()
         assert 'grasp_fixture:=true' in displayed_command(app)
-        assert 'arm_planning:=none' in displayed_command(app)
+        # Since bf4b9ba the planning scene carries the fixture (measured
+        # attach/detach), so MoveIt stays selected with it.
+        assert 'arm_planning:=moveit' in displayed_command(app)
         app.robot_var.set('bumperbot'); app._update_from_selection(); app.update()
         assert not any(part.startswith('arm_planning:=') for part in displayed_command(app))
     finally:
@@ -972,6 +974,40 @@ def test_px4_flight_autofill_services_and_backend_correction(app):
     select(app, app.robot_combo, 'bumperbot')
     assert not app._flight_selectable()
     assert all(button.instate(['disabled']) for button in app.flight_buttons)
+
+
+def test_px4_rgbd_camera_and_aerial_mapping_autofill(app, tmp_path):
+    select(app, app.map_combo, 'nav_obstacle')
+    select(app, app.robot_combo, 'px4_x500')
+    app.mode_var.set('flight')
+    app.simulator_var.set('gazebo')
+    app._update_from_selection()
+    command = app.command_var.get()
+    assert 'px4_vehicle:=' not in command and 'aerial_mapping:=' not in command
+    assert app.px4_camera_checkbox.instate(['!disabled'])
+    assert app.aerial_mapping_checkbox.instate(['!disabled'])
+    assert app.aerial_map_entry.instate(['disabled'])
+    # Mapping implies the camera.
+    app.aerial_mapping_var.set(True)
+    app._px4_sensing_changed()
+    assert app.px4_camera_var.get()
+    command = app.command_var.get()
+    assert 'px4_vehicle:=x500_depth' in command and 'aerial_mapping:=rtabmap' in command
+    assert 'aerial_map_database:=' not in command
+    database = tmp_path/'aerial_map.db'
+    database.write_bytes(b'')
+    app.aerial_map_database_var.set(str(database))
+    app._update_from_selection()
+    assert 'aerial_map_database:='+str(database) in app.command_var.get()
+    # Display keeps the camera but never maps.
+    app.mode_var.set('display')
+    app._update_from_selection()
+    command = app.command_var.get()
+    assert 'px4_vehicle:=x500_depth' in command and 'aerial_mapping:=' not in command
+    assert app.aerial_mapping_checkbox.instate(['disabled'])
+    select(app, app.robot_combo, 'bumperbot')
+    assert 'px4_vehicle:=' not in app.command_var.get()
+    assert app.px4_camera_checkbox.instate(['disabled'])
 
 
 def test_px4_preserves_every_installed_world_and_autofills_flight(app):
