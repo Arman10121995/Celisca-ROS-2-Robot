@@ -1,0 +1,161 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phase_clock": "sim",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.401,
+    "vy": 0.0,
+    "wz": -0.001,
+    "distance": 1.196,
+    "measured_sim_s": 2.983,
+    "wall_s": 5.543,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.0001,
+     "front_right_steer_joint": -0.0004,
+     "rear_left_steer_joint": -0.0002,
+     "rear_right_steer_joint": -0.0001
+    }
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.337,
+    "vy": 0.001,
+    "wz": 0.493,
+    "distance": 1.341,
+    "measured_sim_s": 3.983,
+    "wall_s": 6.742,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.2443,
+     "front_right_steer_joint": 0.1648,
+     "rear_left_steer_joint": -0.2452,
+     "rear_right_steer_joint": -0.1661
+    }
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.336,
+    "vy": -0.001,
+    "wz": -0.492,
+    "distance": 1.338,
+    "measured_sim_s": 3.983,
+    "wall_s": 7.044,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.1641,
+     "front_right_steer_joint": -0.2448,
+     "rear_left_steer_joint": 0.1654,
+     "rear_right_steer_joint": 0.246
+    }
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.288,
+    "vy": -0.001,
+    "wz": 0.296,
+    "distance": 0.865,
+    "measured_sim_s": 3.0,
+    "wall_s": 5.341,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.1382,
+     "front_right_steer_joint": -0.1882,
+     "rear_left_steer_joint": 0.137,
+     "rear_right_steer_joint": 0.1871
+    }
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.111,
+    "vy": 0.003,
+    "wz": 1.443,
+    "distance": 0.332,
+    "measured_sim_s": 3.0,
+    "wall_s": 5.649,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 1.3256,
+     "front_right_steer_joint": 0.4172,
+     "rear_left_steer_joint": -1.3267,
+     "rear_right_steer_joint": -0.4186
+    }
+   }
+  },
+  {
+   "phase": "spin_in_place",
+   "command": [
+    0.0,
+    1.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.0,
+    "vy": -0.0,
+    "wz": 0.96,
+    "distance": 0.0,
+    "measured_sim_s": 2.0,
+    "wall_s": 4.333,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.7861,
+     "front_right_steer_joint": 0.785,
+     "rear_left_steer_joint": 0.785,
+     "rear_right_steer_joint": -0.7861
+    }
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.0,
+    "vy": -0.0,
+    "wz": -0.0,
+    "distance": 0.0,
+    "measured_sim_s": 1.0,
+    "wall_s": 2.918,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.7854,
+     "front_right_steer_joint": 0.7854,
+     "rear_left_steer_joint": 0.7854,
+     "rear_right_steer_joint": -0.7853
+    }
+   }
+  }
+ ]
+}

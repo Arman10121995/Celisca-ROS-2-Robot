@@ -38,14 +38,14 @@ priority_patches:
     title: "Four-wheel steering across crab, opposite-phase and pivot modes"
     state: "partial"
     owner: "claude"
-    result: "Verified crab body goals meet 0.15 m/5 deg on named cells. Final native Isaac nav_obstacle repeat: 0.074 m/-4.21 deg, 0.255 m swept clearance. Selected localization/Drive/watchdog/reset/RGB-D SLAM and actual GUI save pass; current-setting full pattern/map/mode repeats, contacts and cancellation remain."
-    evidence: "docs/status/continuation-2026-10-05.md"
+    result: "2026-10-12 claude: every 4WS steering pattern (ackermann/opposite-phase, in_phase, crab, pivot) drives in MuJoCo, PyBullet, Gazebo and Isaac with truth-measured phases: straight 0.398-0.407 of 0.4 m/s, opposite-phase arcs 0.49-0.51 of 0.5 rad/s, in-phase converts turn commands to sideways drift without yaw, crab strafes 0.268-0.300 of 0.3 m/s, pure rotation pivots in place 0.93-0.99 rad/s, all stop at zero. Earlier crab/pose evidence retained; obstacle routes, mapping/navigation per pattern and contacts remain (R5.6)."
+    evidence: "docs/status/evidence/p56-drive-patterns-2026-10-12/README.md"
   P6:
     title: "Physical mecanum lateral drive and mapping/navigation"
     state: "partial"
     owner: "claude"
-    result: "Physical roller drives and selected lateral body measurements preserved. PyBullet mecanum real 2D SLAM counts accepted poses/occupied cells, acknowledges graph restart and resumes tracking within 0.0095 m. Remaining backend/map/mode and obstacle missions stay open."
-    evidence: "docs/status/continuation-2026-10-05.md"
+    result: "2026-10-12 claude: mecanum drives, arcs, spins and strafes in all four backends (strafe 0.254-0.282 of 0.3 m/s in MuJoCo/PyBullet/Gazebo, 0.142 in Isaac where roller grip is lower). Earlier PyBullet SLAM/lateral evidence retained; obstacle missions and the Isaac lateral shortfall remain."
+    evidence: "docs/status/evidence/p56-drive-patterns-2026-10-12/README.md"
   P7:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
     state: partial
