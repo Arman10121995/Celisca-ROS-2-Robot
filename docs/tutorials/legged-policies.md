@@ -1,9 +1,11 @@
 # Model-matched legged policies (rl_sar): implementation and limits
 
-Documentation written October 12, 2026 against master. Read
-[current status](../status/CURRENT_STATUS.md) first: this tutorial describes
-an **implemented, experimental** operator path. No per-robot walking,
-terrain or navigation qualification is claimed for these policies yet.
+Documentation updated October 13, 2026 against master. Read
+[current status](../status/CURRENT_STATUS.md) first. This tutorial
+describes an **experimental** operator path. Flat-ground walks on
+`/cmd_vel` are measured for each robot and backend listed below
+([evidence](../status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)).
+Terrain, push recovery, mapping and navigation are not qualified.
 
 The lab runs selected locomotion policies from
 [rl_sar](https://github.com/fan-ziqi/rl_sar)
@@ -11,9 +13,14 @@ revision `376d42c9` (Apache-2.0, license and per-policy provenance kept under
 `src/robot_lab_adapter/policies/rl_sar/`) on the lab's own robot models.
 `robot_lab_adapter/legged_policy.py` reproduces rl_sar's exact observation,
 history, scaling, action and PD contract (`ComputeObservation`,
-`ObservationBuffer`, `ComputeOutput` at the pinned revision), and
-`robot_lab_mujoco/joint_pd.py` applies each policy's trained PD law inside
-MuJoCo at every physics step instead of over ROS.
+`ObservationBuffer`, `ComputeOutput` at the pinned revision). Each
+backend applies the policy's trained PD law at the physics rate, not over
+ROS:
+
+- **MuJoCo:** general actuators (`robot_lab_mujoco/joint_pd.py`).
+- **Isaac:** PhysX joint drives carrying the gains, at the policy's 200 Hz.
+- **Gazebo:** an effort `joint_trajectory_controller` in the description's
+  ros2_control (Go2).
 
 ## Provisioned policies
 
@@ -23,6 +30,20 @@ MuJoCo at every physics step instead of over ROS.
 | `go2w_robot_lab` | `unitree_go2w` | 16 (4 wheel) | 57 | Legs position, wheels velocity |
 | `a1_legged_gym` | `unitree_a1` | 12 | 270 | Flat-ground velocity policy |
 | `b2_robot_lab` | `unitree_b2` | 12 | 45 | Flat-ground velocity policy |
+| `g1_robomimic_locomotion` | `unitree_g1_29dof` | 29 | 96 + LSTM state | Humanoid; recurrent actor exported with its LSTM state as explicit inputs |
+
+## Measured walks (2026-10-12)
+
+Each cell is the forward speed for a 0.4 m/s command, then the yaw rate
+for a 1.0 rad/s turn on the spot. Simulator truth, flat map.
+
+| Robot / policy | MuJoCo | Isaac | Gazebo |
+|---|---|---|---|
+| Go2 / go2_himloco | 0.355; no spin (0.014) | 0.385; 0.43 | 0.374; no spin (0.020) |
+| A1 / a1_legged_gym | 0.359; 0.93 | 0.386; 0.91 | not available |
+| B2 / b2_robot_lab | 0.258; 0.89 | **0.651, still drifting 0.16 m/s after stop** | not available |
+| Go2W / go2w_robot_lab | 0.292; 0.90 | 0.280; 0.88 | not available |
+| G1 / g1_robomimic_locomotion | 0.386; 0.98 | 0.376; 0.93 | not available |
 
 Each directory keeps the upstream `base.yaml`/`config.yaml` unchanged and a
 `source.json` recording the upstream revision, TorchScript hash, ONNX hash
@@ -34,7 +55,7 @@ only ever paired with that model: `legged_policy:=` for a different
 
 ## Run
 
-MuJoCo localization mode only, simulation only:
+Localization mode, simulation only. MuJoCo (opt-in):
 
 ```bash
 source /opt/ros/humble/setup.bash && source install/setup.bash
@@ -44,9 +65,23 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
     robot_model:=unitree_go2 legged_policy:=go2_himloco gui:=false
 ```
 
-In the GUI, select the robot, MuJoCo and the `loc` mode, then enable
-"Model-matched legged policy (rl_sar, experimental)" in the Launch column;
-the command preview shows that robot's exact `legged_policy:=` value.
+In Isaac (all five robots) and Gazebo (Go2), the robot's policy is
+selected automatically, because nothing else keeps it upright there.
+`legged_policy:=none` turns it off:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=loc simulator:=isaac map_name:=nav_empty robot_model:=unitree_g1_29dof gui:=false
+```
+
+In the GUI:
+
+1. Select the robot and the `loc` mode.
+2. In MuJoCo, enable "Model-matched legged policy (rl_sar, experimental)"
+   in the Launch column. In Isaac/Gazebo the policy is always on and the
+   checkbox is disabled.
+
+The command preview shows the exact `legged_policy:=` value.
 
 What the launch does:
 
@@ -80,14 +115,21 @@ Drive pad works; `(vx, vy, wz)` is clamped to the controller's limits
 
 ## Limits (read before trusting it)
 
-These are experimental controllers validated as *software*, not as robot
-missions. Walking/turning quality, terrain, falls, recovery, localization
-coupling and navigation on each robot remain unqualified; per-robot
-measurement campaigns are a separate follow-up lane (see the task ledger,
-R5.2 and R3.6). MuJoCo is the only backend with the in-step PD bridge;
-Gazebo/Isaac/PyBullet and hardware have no actuation path for these
-policies and the launch rejects them explicitly. A passing contract test
-is not a walking robot.
+The measurements above are flat-ground velocity screens, not missions.
+These remain unqualified (task ledger R5.2 and R3.6):
+
+- terrain, falls and recovery;
+- localization coupling;
+- mapping and navigation.
+
+Known limits:
+
+- Go2 himloco does not turn on the spot in MuJoCo or Gazebo. A
+  navigation stack that needs in-place rotation would stall there.
+- B2 overshoots and drifts in Isaac.
+- Only Go2's description has the ros2_control block Gazebo needs.
+- PyBullet and hardware have no actuation path for these policies; the
+  launch rejects them.
 
 Pure-logic contracts live in
 `src/robot_lab_adapter/test/test_r5_2_legged_policy.py` (fast tier): policy

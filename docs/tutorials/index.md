@@ -46,9 +46,12 @@ pure numerical examples. For workspace setup, follow the current root
 | State Estimation | [Diagonal filter](state_estimation.md) | Constant-velocity prediction plus independent scalar corrections |
 | Sensor Fusion | [Complementary tilt filter](sensor_fusion.md) | The current filter's numerical response and axis-convention caveat |
 | Locomotion policy | [Go2 flat-ground policy](go2.md) | Opt-in MuJoCo stance, command-loss stop, forward/turn and reverse dead-zone evidence; not terrain/navigation qualification |
-| Locomotion policy | [Model-matched legged policies (rl_sar)](legged-policies.md) | Exact-model rl_sar checkpoints on Go2/Go2W/A1/B2 through the MuJoCo in-step PD bridge; software contracts only, walking validation pending |
+| Locomotion policy | [Model-matched legged policies (rl_sar)](legged-policies.md) | Exact-model rl_sar checkpoints on Go2/Go2W/A1/B2 and the G1 humanoid; measured walks on /cmd_vel in MuJoCo, Isaac and (Go2) Gazebo, 2026-10-12 |
 
-There are no completed tutorial comparisons for local planning or control.
+[Local planning](local_planning_comparison.md) is a measured comparison
+(2026-10-12): five controllers, the same 15 seeded goals in Gazebo, and
+truth metrics with every failure kept. There is no completed comparison
+for control yet.
 The Go2 tutorial is a bounded runtime evidence walkthrough, not a replacement
 for a fair algorithm comparison. These documents do not constitute five
 algorithms in any category.

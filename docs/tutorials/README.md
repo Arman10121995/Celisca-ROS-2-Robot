@@ -47,9 +47,12 @@ real input/output must be qualified separately.
 
 ## Comparison drafts
 
-R7 breadth and R9.2 measured comparisons remain **partial**. The following
-pages describe planned experiments and artifact requirements. They do not
-provide five measured runnable methods per category or performance rankings.
+R7 breadth and R9.2 measured comparisons remain **partial**. **Local
+planning** is now a measured comparison: five runnable controllers on the
+same seeded goals, with per-goal truth metrics and failures (2026-10-12).
+The other pages describe planned experiments and artifact requirements.
+They do not provide five measured runnable methods per category or
+performance rankings.
 
 | Category | Experiment draft | Comparison notes |
 |---|---|---|
@@ -58,7 +61,7 @@ provide five measured runnable methods per category or performance rankings.
 | State estimation | [Filter performance](state_estimation_comparison.md) | [Method comparison](comparison_state_estimation.md) |
 | Sensor fusion | [Sensor integration](sensor_fusion_comparison.md) | [Method comparison](comparison_sensor_fusion.md) |
 | Global planning | [Path planning](global_planning_comparison.md) | [Method comparison](comparison_global_planning.md) |
-| Local planning | [Collision avoidance](local_planning_comparison.md) | [Method comparison](comparison_local_planning.md) |
+| Local planning | [**Measured: five controllers on nav_maze**](local_planning_comparison.md) | [Method comparison](comparison_local_planning.md) |
 | Control | [Motion control](control_comparison.md) | [Method comparison](comparison_control.md) |
 
 Historical generated scores and placeholder commands were withdrawn by the
