@@ -1842,58 +1842,18 @@ class MuJoCoSpawner(Node):
         )
 
     def _loop(self):
-        pub_dt = 1.0 / max(self.get_parameter("publish_rate").value, 1.0)
-        scan_dt = 1.0 / max(self.get_parameter("scan_rate").value, 0.1)
-        camera_dt = 1.0 / max(self._camera["rate"], 0.1) if self._camera else 0.0
-        last_pub = 0.0
-        last_scan = 0.0
-        last_camera = 0.0
+        self._sensor_periods = (
+            1.0 / max(self.get_parameter("publish_rate").value, 1.0),
+            1.0 / max(self.get_parameter("scan_rate").value, 0.1),
+            1.0 / max(self._camera["rate"], 0.1) if self._camera else 0.0)
+        self._last_sensor = [0.0, 0.0, 0.0]
         while self._running and rclpy.ok():
             now = time.monotonic()
 
             with self._physics_lock:
                 self._step_physics()
-                # Sensor rates describe simulated time. Scheduling the camera
-                # by wall time made a slow render immediately trigger another
-                # render, starving physics of all but one step per frame.
-                sim_time = self._sim_t
-                if self._sim_step == 1:
-                    # Publish immediately after spawn or a clock-reset service.
-                    last_pub = sim_time - pub_dt
-                    last_scan = sim_time - scan_dt
-                    last_camera = sim_time - camera_dt
                 try:
-                    if sim_time - last_pub + 1e-9 >= pub_dt:
-                        last_pub = sim_time
-                        if not getattr(self, "_robot_free", False):
-                            self._pub_joint_states()
-                            if self._go2_contact_pub is not None:
-                                forces = Float64MultiArray()
-                                forces.data = _foot_world_contact_forces(
-                                    self._model, self._data, self._go2_foot_ids)
-                                self._go2_contact_pub.publish(forces)
-                            if self._go2_trunk_pub is not None:
-                                trunk = Float64MultiArray()
-                                trunk.data = [_world_normal_contact_force(
-                                    self._model, self._data, self._go2_trunk_ids)]
-                                self._go2_trunk_pub.publish(trunk)
-                            if self._go2_support_pub is not None:
-                                support = Float64MultiArray()
-                                support.data = _world_contact_forces(
-                                    self._model, self._data, self._go2_support_ids)
-                                self._go2_support_pub.publish(support)
-                            self._pub_odom()
-                            self._pub_imu()
-                        self._pub_clock()
-
-                    if sim_time - last_scan + 1e-9 >= scan_dt:
-                        last_scan = sim_time
-                        if not getattr(self, "_robot_free", False):
-                            self._pub_scan()
-
-                    if self._camera is not None and sim_time - last_camera + 1e-9 >= camera_dt:
-                        last_camera = sim_time
-                        self._pub_camera()
+                    self._publish_due()
                 except Exception:
                     # Launch's SIGINT can shut ROS down before this thread.
                     if not rclpy.ok():
@@ -1923,6 +1883,54 @@ class MuJoCoSpawner(Node):
                 # and the watchdog on their original cadence.
                 self._catch_up(now)
 
+    def _publish_due(self):
+        """Publish every sensor whose simulated-time period has elapsed.
+
+        Runs after each physics tick, including the catch-up ticks, so
+        sensor and state rates follow simulated time exactly; checking only
+        once per loop let a catch-up burst delay a camera frame by up to the
+        burst length (0.216 s frame spacing for a 0.2 s camera) and skip
+        joint-state/clock publications in between.
+        """
+        pub_dt, scan_dt, camera_dt = self._sensor_periods
+        last = self._last_sensor
+        # Sensor rates describe simulated time. Scheduling the camera by wall
+        # time made a slow render immediately trigger another render,
+        # starving physics of all but one step per frame.
+        sim_time = self._sim_t
+        if self._sim_step == 1:
+            # Publish immediately after spawn or a clock-reset service.
+            last[:] = [sim_time - pub_dt, sim_time - scan_dt, sim_time - camera_dt]
+        if sim_time - last[0] + 1e-9 >= pub_dt:
+            last[0] = sim_time
+            if not getattr(self, "_robot_free", False):
+                self._pub_joint_states()
+                if self._go2_contact_pub is not None:
+                    forces = Float64MultiArray()
+                    forces.data = _foot_world_contact_forces(
+                        self._model, self._data, self._go2_foot_ids)
+                    self._go2_contact_pub.publish(forces)
+                if self._go2_trunk_pub is not None:
+                    trunk = Float64MultiArray()
+                    trunk.data = [_world_normal_contact_force(
+                        self._model, self._data, self._go2_trunk_ids)]
+                    self._go2_trunk_pub.publish(trunk)
+                if self._go2_support_pub is not None:
+                    support = Float64MultiArray()
+                    support.data = _world_contact_forces(
+                        self._model, self._data, self._go2_support_ids)
+                    self._go2_support_pub.publish(support)
+                self._pub_odom()
+                self._pub_imu()
+            self._pub_clock()
+        if sim_time - last[1] + 1e-9 >= scan_dt:
+            last[1] = sim_time
+            if not getattr(self, "_robot_free", False):
+                self._pub_scan()
+        if self._camera is not None and sim_time - last[2] + 1e-9 >= camera_dt:
+            last[2] = sim_time
+            self._pub_camera()
+
     def _catch_up(self, tick_start):
         """Run the whole ticks that elapsed wall time is owed, bounded.
 
@@ -1948,6 +1956,12 @@ class MuJoCoSpawner(Node):
         for _ in range(owed):
             with self._physics_lock:
                 self._step_physics()
+                try:
+                    self._publish_due()
+                except Exception:
+                    if not rclpy.ok():
+                        return
+                    raise
                 if self._viewer is not None and self._viewer.is_running():
                     self._viewer.sync()
 

@@ -45,7 +45,7 @@ def _catch_up_method():
                         body=[item], decorator_list=[])
                     module = ast.Module(body=[wrapper], type_ignores=[])
                     ast.fix_missing_locations(module)
-                    namespace = {"time": time}
+                    namespace = {"time": time, "rclpy": __import__("types").SimpleNamespace(ok=lambda: True)}
                     exec(compile(module, str(SPAWNER), "exec"), namespace)
                     return namespace["_Extracted"]._catch_up
     raise AssertionError("_catch_up is missing from %s" % SPAWNER)
@@ -63,8 +63,12 @@ def _spawner(max_catch_up_ticks, dt=TICK):
     spawner._physics_lock = threading.RLock()
     spawner._viewer = None
     spawner.steps = 0
+    spawner.published = 0
     spawner._step_physics = lambda: setattr(spawner, "steps",
                                             spawner.steps + 1)
+    # Sensors are scheduled after every tick, catch-up ticks included.
+    spawner._publish_due = lambda: setattr(spawner, "published",
+                                           spawner.published + 1)
     spawner._catch_up = types.MethodType(CATCH_UP, spawner)
     return spawner
 
@@ -83,6 +87,7 @@ def test_catch_up_replays_the_ticks_the_wall_clock_paid_for():
     # 8.4 ms of work is two whole ticks, one of which already ran.
     spawner._catch_up(_spin(2.5 * TICK))
     assert spawner.steps == 1, "a whole owed tick was not replayed"
+    assert spawner.published == spawner.steps, "a replayed tick skipped its sensor schedule"
 
     # A tick that finished inside its budget owes nothing.
     spawner = _spawner(max_catch_up_ticks=8)

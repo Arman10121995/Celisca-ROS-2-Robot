@@ -1,0 +1,25 @@
+{
+  "base_map": "src/robot_lab_maps/maps/celisca_floor_2/maps/map.yaml",
+  "base_sha256": "7f97fe0a382e424684d771f2b3444104b028ebdf7f21c3882263279f9355e0c8",
+  "world": "src/robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world",
+  "world_sha256": "2c7061d96e32afbf2491ba904bb8429d245dc44fce27eebe8627cc80fcf7b4ca",
+  "heights_m": [
+    0.1,
+    0.15,
+    0.2,
+    0.25
+  ],
+  "segments_per_height": {
+    "0.100": 19299,
+    "0.150": 19423,
+    "0.200": 19518,
+    "0.250": 19625
+  },
+  "skipped": [],
+  "occupied_cells": 47634,
+  "base_wall_cells": 32047,
+  "base_walls_confirmed": 0.1014,
+  "base_free_kept": 0.9737,
+  "method": "collision geometry (walls and furniture) sliced at each height and rasterized on the base grid as occupied; unconfirmed base wall pixels set to the base background value 205; all other pixels and origin/resolution unchanged",
+  "generator": "src/robot_lab_maps/tools/furnish_occupancy_map.py"
+}

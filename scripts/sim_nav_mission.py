@@ -184,6 +184,7 @@ def main(argv=None):
     parser.add_argument('--max-yaw-error-deg', type=float, default=15.0,
                         help='0 skips the heading check (position goals, e.g. cars)')
     parser.add_argument('--seed', type=int, default=1)
+    parser.add_argument('--trace-out', help='save the truth and /cmd_vel traces')
     parser.add_argument('--drive-node', default='mujoco_spawner')
     parser.add_argument('--expected-steering-mode', choices=('ackermann', 'crab', 'in_phase', 'pivot'))
     args = parser.parse_args(argv)
@@ -270,6 +271,9 @@ def main(argv=None):
         report['steps']['near_obstacle_b'] = dict(passed=False, note=problem)
     report.update(node.motion_report())
     report['passed'] = all(step.get('passed') for step in report['steps'].values())
+    if args.trace_out:
+        Path(args.trace_out).write_text(json.dumps(dict(samples=node.trace, commands=node.command_trace))+'\n')
+        report['trace'] = args.trace_out
     print(json.dumps(report))
     node.destroy_node()
     rclpy.shutdown()

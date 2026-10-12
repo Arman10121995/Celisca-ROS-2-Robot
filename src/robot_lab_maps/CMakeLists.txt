@@ -58,6 +58,7 @@ if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(mjcf_worlds test/test_mjcf_worlds.py TIMEOUT 180 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(arena_clearance test/test_arena_clearance.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
+  ament_add_pytest_test(furnish_occupancy_map test/test_furnish_occupancy_map.py TIMEOUT 120 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
 endif()
 
 ament_package()

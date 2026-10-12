@@ -1,14 +1,18 @@
 # Per-robot navigation overlay for 'bumperbot' (merged over controller_server.yaml / planner_server.yaml)
+# robot_radius 0.12: the description's collision geometry reaches 0.118 m
+# from base_footprint (the wheels).  With 0.1 Nav2 planned through gaps the
+# wheels could not pass; the robot wedged against furnished-Celisca
+# furniture 0.14 m from its centre on 2026-10-12.
 global_costmap:
   global_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
-      robot_radius: 0.1
+      robot_radius: 0.12
 local_costmap:
   local_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
-      robot_radius: 0.1
+      robot_radius: 0.12
 controller_server:
   ros__parameters:
     progress_checker:

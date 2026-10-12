@@ -39,7 +39,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
-python3 "$HERE/sim_nav_mission.py" --timeout "${TIMEOUT:-600}" "${mode_check[@]}" ${CHECK_ARGS:-} > "$OUT" 2> "$OUT.err"
+python3 "$HERE/sim_nav_mission.py" --timeout "${TIMEOUT:-600}" --trace-out "$OUT.trace.json" "${mode_check[@]}" ${CHECK_ARGS:-} > "$OUT" 2> "$OUT.err"
 CHECK_RESULT=$?
 [ -s "$OUT" ] || echo '{"error": "checker produced no output"}' > "$OUT"
 exit "$CHECK_RESULT"
