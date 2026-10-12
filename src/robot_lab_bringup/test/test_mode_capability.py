@@ -5,6 +5,9 @@ reach Nav2 goals in all four backends; every legged and humanoid profile
 localizes where it stands in PyBullet and MuJoCo (the bridges cast its scan
 and hold its joints), not in Isaac, whose hold does not keep them upright;
 none of them walks on /cmd_vel, so none can map by moving or navigate.
+Since 2026-10-12 a profile with a provisioned learned policy
+(``legged_policy``) also localizes in Isaac, where the policy's PD drives
+hold the stance (experimental; walking validation per backend pending).
 """
 import os
 import sys
@@ -39,8 +42,20 @@ def test_wheeled_bases_run_every_mode_everywhere(robot, simulator):
 def test_legged_and_humanoid_robots_localize_where_the_bridges_hold_them(robot):
     assert runnable(robot, "pybullet") == {"display", "loc"}
     assert runnable(robot, "mujoco") == {"display", "loc"}
-    assert runnable(robot, "isaac") == {"display"}
+    policy = "legged_policy" in PROFILES[robot].get("features", [])
+    assert runnable(robot, "isaac") == ({"display", "loc"} if policy else {"display"})
     assert runnable(robot, "gazebo") == {"display"}
+
+
+def test_provisioned_policies_are_the_profiles_marked_legged_policy():
+    sys.path.insert(0, os.path.join(_SRC, "robot_lab_adapter"))
+    try:
+        from robot_lab_adapter.legged_policy import POLICY_PROFILES
+    except ImportError as exc:  # pragma: no cover - numpy/onnx missing
+        pytest.skip(str(exc))
+    marked = {name for name, profile in PROFILES.items()
+              if "legged_policy" in profile.get("features", [])}
+    assert marked == set(POLICY_PROFILES.values())
 
 
 def test_the_quadrotor_does_not_claim_flight():
