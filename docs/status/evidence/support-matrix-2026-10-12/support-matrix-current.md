@@ -211,6 +211,12 @@ Unlisted combinations are untested. No row establishes full mission support.
 | unitree_go2 | nav_empty | mujoco | legged_policy_drive /  | passed_screen |
 | unitree_go2w | nav_empty | mujoco | legged_policy_drive /  | passed_screen |
 | unitree_go2 | nav_empty | isaac | legged_policy_drive /  | passed_screen |
+| unitree_go2 | nav_empty | gazebo | legged_policy_drive /  | passed_screen |
+| unitree_g1_29dof | nav_empty | mujoco | legged_policy_drive /  | passed_screen |
+| unitree_g1_29dof | nav_empty | isaac | legged_policy_drive /  | passed_screen |
+| unitree_a1 | nav_empty | isaac | legged_policy_drive /  | passed_screen |
+| unitree_b2 | nav_empty | isaac | legged_policy_drive /  | failed_screen |
+| unitree_go2w | nav_empty | isaac | legged_policy_drive /  | passed_screen |
 
 Full release blockers:
 

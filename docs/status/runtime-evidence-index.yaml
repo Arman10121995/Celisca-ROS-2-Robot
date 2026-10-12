@@ -5451,3 +5451,99 @@ records:
     /cmd_vel phases.
   limitations:
   - Flat-map velocity screen; RTF ~0.15
+- robot_id: unitree_go2
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 10f1e51 (HEAD when the second legged batch ran at 21:19)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/gazebo_unitree_go2.json
+  sha256: 3d7c776efbf97310ff7cfee7ff6ec966c4e9ee7d30a342297f639060ee699e23
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json
+  source_hashes_sha256: 2f79abbf504d84344c9d8ec2146801a3a6860a898531a48af38cbbd0a59d56db
+  report_kind: drive_screen
+  scope: 'Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac:
+    PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_g1_29dof
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 10f1e51 (HEAD when the second legged batch ran at 21:19)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/mujoco_unitree_g1_29dof.json
+  sha256: 820ae6443a355294ad53d687eea3a7b66111d948a783c048ecee0e49c8c670b5
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json
+  source_hashes_sha256: 2f79abbf504d84344c9d8ec2146801a3a6860a898531a48af38cbbd0a59d56db
+  report_kind: drive_screen
+  scope: 'Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac:
+    PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_g1_29dof
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 10f1e51 (HEAD when the second legged batch ran at 21:19)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_g1_29dof.json
+  sha256: ee15fef2984391e9656e0083028847e82c3b6a176d8ee7170de2ea7d5f1cf1aa
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json
+  source_hashes_sha256: 2f79abbf504d84344c9d8ec2146801a3a6860a898531a48af38cbbd0a59d56db
+  report_kind: drive_screen
+  scope: 'Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac:
+    PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_a1
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 10f1e51 (HEAD when the second legged batch ran at 21:19)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_a1.json
+  sha256: 973d1dec0ce0cf2183fd5b9d726405456f94fd7a17c0c97b9f329824f7ca9b44
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json
+  source_hashes_sha256: 2f79abbf504d84344c9d8ec2146801a3a6860a898531a48af38cbbd0a59d56db
+  report_kind: drive_screen
+  scope: 'Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac:
+    PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_b2
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 10f1e51 (HEAD when the second legged batch ran at 21:19)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_b2.json
+  sha256: 720e44b0ea65791d443d93962467e80354d8db39fcfd299a5e8f5c47a31f7705
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json
+  source_hashes_sha256: 2f79abbf504d84344c9d8ec2146801a3a6860a898531a48af38cbbd0a59d56db
+  report_kind: drive_screen
+  scope: 'Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac:
+    PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_go2w
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 10f1e51 (HEAD when the second legged batch ran at 21:19)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_go2w.json
+  sha256: 2561c075ca48b8fa1368054b72e75ca7f49b182d8e882bdb7af4e4507a907b03
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json
+  source_hashes_sha256: 2f79abbf504d84344c9d8ec2146801a3a6860a898531a48af38cbbd0a59d56db
+  report_kind: drive_screen
+  scope: 'Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac:
+    PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission

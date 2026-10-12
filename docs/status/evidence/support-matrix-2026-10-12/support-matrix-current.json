@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-12T18:57:24.669969+00:00",
+  "generated_utc": "2026-10-12T22:55:37.174950+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -4734,6 +4734,132 @@
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "go2_himloco on PhysX drives with the policy gains at 200 Hz physics, loc mode on nav_empty; truth-measured /cmd_vel phases.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "unitree_go2",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "legged_policy_drive",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-12",
+      "revision": "10f1e51 (HEAD when the second legged batch ran at 21:19)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/gazebo_unitree_go2.json",
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json"
+      ],
+      "limitations": [
+        "Flat-map velocity screen; no terrain, push or mission",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac: PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "unitree_g1_29dof",
+      "environment_id": "nav_empty",
+      "simulator": "mujoco",
+      "task_type": "legged_policy_drive",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-12",
+      "revision": "10f1e51 (HEAD when the second legged batch ran at 21:19)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/mujoco_unitree_g1_29dof.json",
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json"
+      ],
+      "limitations": [
+        "Flat-map velocity screen; no terrain, push or mission",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac: PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "unitree_g1_29dof",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "legged_policy_drive",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-12",
+      "revision": "10f1e51 (HEAD when the second legged batch ran at 21:19)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_g1_29dof.json",
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json"
+      ],
+      "limitations": [
+        "Flat-map velocity screen; no terrain, push or mission",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac: PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "unitree_a1",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "legged_policy_drive",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-12",
+      "revision": "10f1e51 (HEAD when the second legged batch ran at 21:19)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_a1.json",
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json"
+      ],
+      "limitations": [
+        "Flat-map velocity screen; no terrain, push or mission",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac: PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "unitree_b2",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "legged_policy_drive",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-12",
+      "revision": "10f1e51 (HEAD when the second legged batch ran at 21:19)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_b2.json",
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json"
+      ],
+      "limitations": [
+        "Flat-map velocity screen; no terrain, push or mission",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac: PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "unitree_go2w",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "legged_policy_drive",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-12",
+      "revision": "10f1e51 (HEAD when the second legged batch ran at 21:19)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/batch2/isaac_unitree_go2w.json",
+        "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-batch2.json"
+      ],
+      "limitations": [
+        "Flat-map velocity screen; no terrain, push or mission",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Model-matched rl_sar policy (Gazebo: effort trajectory controller with the policy gains; Isaac: PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.",
       "steering_mode": ""
     }
   ],

@@ -1,4 +1,4 @@
-# P7 / R5.2: model-matched rl_sar policies walking in MuJoCo (2026-10-12)
+# P7 / R5.2: model-matched rl_sar policies walking in MuJoCo, Isaac and Gazebo (2026-10-12)
 
 Four upstream quadruped policies from [rl_sar](https://github.com/fan-ziqi/rl_sar)
 at revision `376d42c9` (provisioning notes: `src/robot_lab_adapter/policies/rl_sar/SOURCE.md`):
@@ -83,10 +83,53 @@ spot at 0.43 rad/s, which it does not do in MuJoCo.
 Isaac ran at about 0.13-0.20x real time: 3 simulated seconds took about
 22 s of wall time. A1, B2 and Go2W are not yet run in Isaac.
 
-## Gazebo (implemented the same day, trial queued)
+## Second batch (same evening, revision 10f1e51): Gazebo Go2, G1 humanoid, Isaac A1/B2/Go2W
 
-Go2 gains a head LiDAR in its sim description. In Gazebo localization the
-policy runs through an effort `joint_trajectory_controller` that carries
-the policy gains (`legged_policy.ros2_control_pd_parameters`). The native
-Gazebo trial is pending. Mapping and navigation on these robots stay
-gated.
+These are files in [batch2/](batch2/). Gazebo runs the policy through an
+effort `joint_trajectory_controller` that carries the policy's gains
+(ign_ros2_control, 500 Hz). Isaac runs it on PhysX drives at 200 Hz. The
+humanoid is `g1_robomimic_locomotion`, a recurrent LSTM actor exported
+with its state as explicit inputs.
+
+| Phase (command vx, wz) | Gazebo Go2 | MuJoCo G1 | Isaac G1 | Isaac A1 | Isaac B2 | Isaac Go2W |
+|---|---|---|---|---|---|---|
+| straight (0.4, 0) | 0.374, 0.072 | 0.386, 0.002 | 0.376, -0.005 | 0.386, -0.032 | **0.651**, 0.051 | 0.280, -0.013 |
+| left arc (0.4, 0.5) | 0.348, 0.376 | 0.326, 0.484 | 0.326, 0.443 | 0.352, 0.475 | 0.431, 0.627 | 0.229, 0.461 |
+| right arc (0.4, -0.5) | 0.348, -0.341 | 0.333, -0.492 | 0.333, -0.447 | 0.299, -0.492 | 0.567, -0.383 | 0.224, -0.536 |
+| reverse left (-0.3, 0.3) | -0.237, 0.179 | -0.273, 0.291 | -0.295, 0.281 | -0.224, 0.224 | -0.173, 0.285 | -0.148, 0.295 |
+| tight left (0.3, 1.0 clamped) | 0.239, 0.635 | 0.183, 0.974 | 0.197, 0.914 | 0.212, 0.979 | 0.275, 1.025 | 0.138, 0.851 |
+| spin in place (0, 1.0) | wz **0.020** | wz 0.979 | wz 0.927 | wz 0.908 | wz 1.042 | wz 0.877 |
+| strafe (vy 0.3) | vy 0.120 | vy 0.256 | vy 0.262 | vy 0.199 | vy 0.159 | vy 0.268 |
+| stop: vx, vy, wz | 0.001, -0.025, -0.062 | 0.007, 0.003, 0.005 | -0.004, -0.005, -0.006 | 0.046, 0.009, -0.032 | **0.160**, -0.028, -0.030 | 0.012, 0.013, -0.002 |
+
+### Gazebo Go2
+
+- It walks, turns on arcs, reverses and stops through the ros2_control
+  path.
+- As in MuJoCo, it does not turn on the spot (0.020 rad/s).
+- The first attempt
+  ([batch2/gazebo_unitree_go2_first_attempt_no_truth.json](batch2/gazebo_unitree_go2_first_attempt_no_truth.json))
+  had the controllers active and the policy running. It could not
+  measure anything because the Go2 description had no ground-truth
+  publisher; that was fixed in `fb636cb`.
+
+### G1 29-DoF humanoid
+
+The G1 walks, turns, spins in place, strafes and stops in both MuJoCo
+and Isaac. This is the first humanoid walking on `/cmd_vel` from a
+downloaded model-matched policy here.
+
+### Isaac quadrupeds
+
+- **A1** and **Go2W** track all phases.
+- **B2** overshoots straight commands (0.651 of 0.4 m/s) and keeps
+  drifting at 0.16 m/s after the stop. It fails the drive screen in
+  Isaac, but passed it in MuJoCo.
+
+Remaining:
+
+- Mapping/navigation for legged robots stays gated, because turning
+  ability differs by robot and backend.
+- BHL still runs only in MuJoCo.
+- B2's Isaac overshoot needs a look at the actuator, friction or
+  mass model.

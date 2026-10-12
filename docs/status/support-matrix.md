@@ -13,9 +13,10 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 The [generated measured matrix](evidence/support-matrix-2026-10-12/support-matrix-current.md)
 and [JSON report](evidence/support-matrix-2026-10-12/support-matrix-current.json)
-validate **263 indexed reports / 205 distinct measured cells** (October 12 adds
-57 cells: the 32-cell Celisca missions, the 20-cell 4WS/mecanum drive matrix and
-five legged-policy walks; the earlier
+validate **269 indexed reports / 211 distinct measured cells** (October 12 adds
+63 cells: the 32-cell Celisca missions, the 20-cell 4WS/mecanum drive matrix and
+11 legged-policy walks across MuJoCo, Isaac and Gazebo, one of them the failing
+Isaac B2 stop; the earlier
 [October 8 matrix](evidence/extensions-finish-2026-10-08/support-matrix-current.md)
 is kept). The latest
 measurement for an exact robot/map/backend/task/steering cell controls its

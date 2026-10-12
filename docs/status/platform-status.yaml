@@ -50,7 +50,7 @@ priority_patches:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
     state: partial
     owner: "claude"
-    result: "2026-10-12 claude: four model-matched rl_sar policies (go2_himloco, a1_legged_gym, b2_robot_lab, go2w_robot_lab, pinned 376d42c9) walk on /cmd_vel in MuJoCo loc through the in-step PD bridge: straight 0.26-0.36 of 0.4 m/s, arcs/reverse/stop tracked; Go2 himloco does not spin in place there, B2 does not strafe. Isaac loc runs the robot's policy on PhysX drives with its gains at 200 Hz and offers loc for these profiles: Go2 measured straight 0.385 m/s, arcs, reverse, spin 0.43 rad/s, stop (RTF ~0.15). Gazebo Go2 path (head LiDAR, effort trajectory controller with the policy gains) implemented, trial queued. A1/B2/Go2W in Isaac, BHL outside MuJoCo and legged mapping/navigation remain."
+    result: "2026-10-12 claude: model-matched rl_sar policies walk on /cmd_vel through in-step PD paths in all three physics backends that can run them: MuJoCo (go2_himloco, a1_legged_gym, b2_robot_lab, go2w_robot_lab, g1_robomimic_locomotion), Isaac PhysX drives at 200 Hz (Go2, A1, Go2W and the G1 humanoid track all phases; B2 overshoots to 0.65 m/s and drifts 0.16 m/s after stop) and Gazebo ign_ros2_control effort trajectory controller (Go2, with a new head LiDAR and ground truth). The Unitree G1 29-DoF humanoid (recurrent LSTM actor exported with explicit state) walks 0.38-0.39 m/s, spins and strafes in MuJoCo and Isaac. Go2 himloco does not spin in place in MuJoCo/Gazebo. Legged mapping/navigation, BHL outside MuJoCo and B2-in-Isaac remain."
     evidence: "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md"
   P8:
     title: "PX4 X500 drone integration"
@@ -649,7 +649,7 @@ tasks:
         next_action: "Complete — R4.2 done (metrics.py: MeasuredMetrics/DerivedMetrics/RunMetrics schema distinguishing measured vs derived; trajectory_distance over pose sequences; contact_events counting distinct below-threshold episodes — one contact is one event, not one per scan; footprint_clearance = min range minus footprint radius; timestamp_aligned_error with linear time interpolation for max/mean/RMSE truth-vs-estimation error; compute_rtf; effort_proxy; validate_metric_value rejecting non-finite/negative/non-numeric values. Truthful None-on-missing semantics everywhere: missing/NaN/stale data invalidate metrics instead of becoming zero. 83 unit tests pass; full suite 197 green with R4.1+P6.) Advance to R4.3 (first reproducible planner comparison with manifests, predeclared seeds/budgets, and bag artifacts)."
       R4.3:
         title: "Publish first reproducible planner comparison"
-        state: "partial"
+        state: done
         owner: "claude"
         depends_on:
           - "R4.2"
@@ -659,11 +659,12 @@ tasks:
           - "docs/"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/r43-planner-comparison-2026-10-12/README.md"
           - "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/comparison.py"
           - "src/robot_lab/robot_lab_benchmark/test/test_r4_3_planner_comparison.py"
           - "src/robot_lab/robot_lab_registry/config/experiments.yaml"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Comparison/provenance code and unit tests exist; execute and publish the declared two-planner comparison with five evaluation seeds, recorded traces/bags and failure statistics. Unit fixtures alone do not complete a measured comparison."
+        next_action: "Done 2026-10-12 claude: v2.0.0 A* (Smac 2D) vs NavFn on Bumperbot/nav_maze/Gazebo with predeclared thresholds from tuning seeds 7/9 committed before evaluation seeds 11/23/37/41/53; identical seeded goal sequences; A* 14/15, NavFn 15/15, paired time ratio 0.978 and path ratio 0.991; the A* failure is a stale planner_server TF pose (documented). Bags/traces on the SSD, per-goal reports in the evidence."
   R5:
     title: "Robot-class qualification"
     state: "active"
