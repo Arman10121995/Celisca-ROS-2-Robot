@@ -1,0 +1,2026 @@
+[
+ {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.002,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.38,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 81.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.011,
+     -3.247
+    ],
+    "final_error_estimate_m": 0.066,
+    "final_yaw_estimate_deg": -120.93,
+    "final_yaw_error_estimate_deg": 1.9,
+    "final_truth_xy": [
+     -2.999,
+     -3.302
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -121.01,
+    "final_error_truth_m": 0.078,
+    "final_yaw_error_truth_deg": 1.82,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 65.7,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -0.454,
+     -1.257
+    ],
+    "final_error_estimate_m": 0.036,
+    "final_yaw_estimate_deg": 35.28,
+    "final_yaw_error_estimate_deg": -1.98,
+    "final_truth_xy": [
+     -0.421,
+     -1.299
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 34.68,
+    "final_error_truth_m": 0.018,
+    "final_yaw_error_truth_deg": -2.58,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9452501087099314,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.433115659081056,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -0.4273501223534346,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 4.760523306092436,
+   "clearance_m": 0.32668333113801734
+  }
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.001,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.38,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "aborted",
+    "wall_s": 133.8,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.597,
+     -1.692
+    ],
+    "final_error_estimate_m": 1.544,
+    "final_yaw_estimate_deg": -54.68,
+    "final_yaw_error_estimate_deg": 97.17,
+    "final_truth_xy": [
+     -3.537,
+     -1.693
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -54.7,
+    "final_error_truth_m": 1.605,
+    "final_yaw_error_truth_deg": 97.15,
+    "passed": false
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 35.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.158,
+     -0.706
+    ],
+    "final_error_estimate_m": 0.063,
+    "final_yaw_estimate_deg": 70.13,
+    "final_yaw_error_estimate_deg": 1.19,
+    "final_truth_xy": [
+     -3.162,
+     -0.711
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 71.24,
+    "final_error_truth_m": 0.065,
+    "final_yaw_error_truth_deg": 2.3,
+    "passed": true
+   }
+  },
+  "start": [
+   0.35,
+   1.17
+  ],
+  "goal_a": {
+   "x": -5.139750096818805,
+   "y": -1.767150091198527,
+   "path_m": 9.151728279619814,
+   "straight_m": 6.22609081075166,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.199350107333064,
+   "y": -0.6583500972066751,
+   "path_from_a_m": 3.600879978447543,
+   "clearance_m": 0.5045116125933913
+  }
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.002,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.38,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 71.8,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.82,
+     -3.201
+    ],
+    "final_error_estimate_m": 0.029,
+    "final_yaw_estimate_deg": -135.35,
+    "final_yaw_error_estimate_deg": 1.46,
+    "final_truth_xy": [
+     -4.864,
+     -3.135
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -134.67,
+    "final_error_truth_m": 0.091,
+    "final_yaw_error_truth_deg": 2.14,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 33.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.622,
+     -1.069
+    ],
+    "final_error_estimate_m": 0.071,
+    "final_yaw_estimate_deg": 59.7,
+    "final_yaw_error_estimate_deg": -1.07,
+    "final_truth_xy": [
+     -3.67,
+     -1.033
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 59.08,
+    "final_error_truth_m": 0.083,
+    "final_yaw_error_truth_deg": -1.7,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.839450098446012,
+   "y": -3.2224500833128324,
+   "path_m": 8.569303283413458,
+   "straight_m": 6.637328529968884,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.5920501052051783,
+   "y": -1.0048500953291288,
+   "path_from_a_m": 2.734289982888161,
+   "clearance_m": 0.4556032130598666
+  }
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2_furniture",
+  "passed": false,
+  "error": "unreadable result",
+  "steps": null,
+  "start": null,
+  "goal_a": null,
+  "goal_b": null
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "labbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.0,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.18,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 102.7,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -2.915,
+     -3.307
+    ],
+    "final_error_estimate_m": 0.068,
+    "final_yaw_estimate_deg": -124.22,
+    "final_yaw_error_estimate_deg": -1.39,
+    "final_truth_xy": [
+     -2.908,
+     -3.326
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -125.29,
+    "final_error_truth_m": 0.088,
+    "final_yaw_error_truth_deg": -2.46,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 51.7,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -0.454,
+     -1.251
+    ],
+    "final_error_estimate_m": 0.041,
+    "final_yaw_estimate_deg": 37.77,
+    "final_yaw_error_estimate_deg": -1.37,
+    "final_truth_xy": [
+     -0.441,
+     -1.286
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 38.54,
+    "final_error_truth_m": 0.015,
+    "final_yaw_error_truth_deg": -0.6,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9452501087099314,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.433115659081056,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -0.4273501223534346,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 4.760523306092436,
+   "clearance_m": 0.32668333113801734
+  }
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "labbot",
+  "map": "celisca_floor_1_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.001,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.18,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "aborted",
+    "wall_s": 143.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.598,
+     -1.67
+    ],
+    "final_error_estimate_m": 1.544,
+    "final_yaw_estimate_deg": -52.87,
+    "final_yaw_error_estimate_deg": 98.98,
+    "final_truth_xy": [
+     -3.608,
+     -1.679
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -51.77,
+    "final_error_truth_m": 1.534,
+    "final_yaw_error_truth_deg": 100.09,
+    "passed": false
+   },
+   "near_obstacle_b": {
+    "outcome": "aborted",
+    "wall_s": 0.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.598,
+     -1.67
+    ],
+    "final_error_estimate_m": 1.087,
+    "final_yaw_estimate_deg": -44.42,
+    "final_yaw_error_estimate_deg": -112.89,
+    "final_truth_xy": [
+     -3.608,
+     -1.679
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -43.68,
+    "final_error_truth_m": 1.1,
+    "final_yaw_error_truth_deg": -112.14,
+    "passed": false
+   }
+  },
+  "start": [
+   0.35,
+   1.17
+  ],
+  "goal_a": {
+   "x": -5.139750096818805,
+   "y": -1.767150091198527,
+   "path_m": 9.151728279619814,
+   "straight_m": 6.226090810753561,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.199350107333064,
+   "y": -0.6583500972066751,
+   "path_from_a_m": 3.600879978447543,
+   "clearance_m": 0.5045116125933913
+  }
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "labbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.003,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.18,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 56.9,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.818,
+     -3.187
+    ],
+    "final_error_estimate_m": 0.042,
+    "final_yaw_estimate_deg": -135.76,
+    "final_yaw_error_estimate_deg": 1.05,
+    "final_truth_xy": [
+     -4.902,
+     -3.169
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -136.55,
+    "final_error_truth_m": 0.082,
+    "final_yaw_error_truth_deg": 0.26,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 31.3,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.604,
+     -1.065
+    ],
+    "final_error_estimate_m": 0.062,
+    "final_yaw_estimate_deg": 62.42,
+    "final_yaw_error_estimate_deg": 1.76,
+    "final_truth_xy": [
+     -3.656,
+     -1.001
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 62.95,
+    "final_error_truth_m": 0.064,
+    "final_yaw_error_truth_deg": 2.29,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.839450098446012,
+   "y": -3.2224500833128324,
+   "path_m": 8.569303283413458,
+   "straight_m": 6.637328529968884,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.5920501052051783,
+   "y": -1.0048500953291288,
+   "path_from_a_m": 2.734289982888161,
+   "clearance_m": 0.4556032130598666
+  }
+ },
+ {
+  "simulator": "gazebo",
+  "robot": "labbot",
+  "map": "celisca_floor_2_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.002,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.16,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 77.6,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.534,
+     -3.152
+    ],
+    "final_error_estimate_m": 0.057,
+    "final_yaw_estimate_deg": -126.26,
+    "final_yaw_error_estimate_deg": 1.6,
+    "final_truth_xy": [
+     -3.541,
+     -3.115
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -124.84,
+    "final_error_truth_m": 0.075,
+    "final_yaw_error_truth_deg": 3.01,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "aborted",
+    "wall_s": 20.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.814,
+     -2.978
+    ],
+    "final_error_estimate_m": 4.909,
+    "final_yaw_estimate_deg": -32.21,
+    "final_yaw_error_estimate_deg": 175.08,
+    "final_truth_xy": [
+     -3.815,
+     -2.965
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -30.72,
+    "final_error_truth_m": 4.902,
+    "final_yaw_error_truth_deg": 176.56,
+    "passed": false
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -3.476550105831027,
+   "y": -3.1531500836883417,
+   "path_m": 8.579551617158923,
+   "straight_m": 5.665286604361315,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -8.188950080296397,
+   "y": -0.7507500967059961,
+   "path_from_a_m": 7.848559953390325,
+   "clearance_m": 0.5081999972462654
+  }
+ },
+ {
+  "simulator": "isaac",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.001,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.183,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 60.6,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.015,
+     -3.195
+    ],
+    "final_error_estimate_m": 0.069,
+    "final_yaw_estimate_deg": -121.64,
+    "final_yaw_error_estimate_deg": 1.39,
+    "final_truth_xy": [
+     -3.003,
+     -3.259
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -122.38,
+    "final_error_truth_m": 0.037,
+    "final_yaw_error_truth_deg": 0.65,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 48.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.744,
+     -1.312
+    ],
+    "final_error_estimate_m": 0.061,
+    "final_yaw_estimate_deg": 24.81,
+    "final_yaw_error_estimate_deg": -1.83,
+    "final_truth_xy": [
+     0.791,
+     -1.367
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 23.82,
+    "final_error_truth_m": 0.085,
+    "final_yaw_error_truth_deg": -2.82,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9683501085847617,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.445673887371003,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.7969498710125684,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 6.07093829860918,
+   "clearance_m": 0.36959999799728394
+  }
+ },
+ {
+  "simulator": "isaac",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.004,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.15,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 71.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.207,
+     -3.183
+    ],
+    "final_error_estimate_m": 0.042,
+    "final_yaw_estimate_deg": -131.25,
+    "final_yaw_error_estimate_deg": 1.45,
+    "final_truth_xy": [
+     -4.289,
+     -3.186
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -134.47,
+    "final_error_truth_m": 0.103,
+    "final_yaw_error_truth_deg": -1.77,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 73.9,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.004,
+     -0.998
+    ],
+    "final_error_estimate_m": 0.066,
+    "final_yaw_estimate_deg": 26.11,
+    "final_yaw_error_estimate_deg": -1.43,
+    "final_truth_xy": [
+     -0.013,
+     -0.963
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 25.11,
+    "final_error_truth_m": 0.071,
+    "final_yaw_error_truth_deg": -2.43,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.192650101950765,
+   "y": -3.2224500833128324,
+   "path_m": 8.310958285961226,
+   "straight_m": 6.181596413151664,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.05774987501800055,
+   "y": -0.9586500955794683,
+   "path_from_a_m": 6.08446996524504,
+   "clearance_m": 0.4625771370064458
+  }
+ },
+ {
+  "simulator": "isaac",
+  "robot": "labbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.004,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.2,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 73.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.007,
+     -3.231
+    ],
+    "final_error_estimate_m": 0.064,
+    "final_yaw_estimate_deg": -121.41,
+    "final_yaw_error_estimate_deg": 1.41,
+    "final_truth_xy": [
+     -3.0,
+     -3.313
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -121.94,
+    "final_error_truth_m": 0.087,
+    "final_yaw_error_truth_deg": 0.89,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 50.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -0.483,
+     -1.27
+    ],
+    "final_error_estimate_m": 0.057,
+    "final_yaw_estimate_deg": 35.54,
+    "final_yaw_error_estimate_deg": -1.53,
+    "final_truth_xy": [
+     -0.426,
+     -1.306
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 35.49,
+    "final_error_truth_m": 0.024,
+    "final_yaw_error_truth_deg": -1.57,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9452501087099314,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.433119244325644,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -0.4273501223534346,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 4.760523306092436,
+   "clearance_m": 0.32668333113801734
+  }
+ },
+ {
+  "simulator": "isaac",
+  "robot": "labbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.004,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.2,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 79.7,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.194,
+     -3.166
+    ],
+    "final_error_estimate_m": 0.057,
+    "final_yaw_estimate_deg": -131.66,
+    "final_yaw_error_estimate_deg": 1.04,
+    "final_truth_xy": [
+     -4.289,
+     -3.11
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -133.31,
+    "final_error_truth_m": 0.148,
+    "final_yaw_error_truth_deg": -0.6,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 53.4,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.01,
+     -1.007
+    ],
+    "final_error_estimate_m": 0.068,
+    "final_yaw_estimate_deg": 25.84,
+    "final_yaw_error_estimate_deg": -1.59,
+    "final_truth_xy": [
+     -0.003,
+     -0.977
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 25.32,
+    "final_error_truth_m": 0.063,
+    "final_yaw_error_truth_deg": -2.11,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.192650101950765,
+   "y": -3.2224500833128324,
+   "path_m": 8.310958285961226,
+   "straight_m": 6.181597465242497,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.05774987501800055,
+   "y": -0.9586500955794683,
+   "path_from_a_m": 6.08446996524504,
+   "clearance_m": 0.4625771370064458
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.008,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.16,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 55.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.001,
+     -3.214
+    ],
+    "final_error_estimate_m": 0.045,
+    "final_yaw_estimate_deg": -121.22,
+    "final_yaw_error_estimate_deg": 1.81,
+    "final_truth_xy": [
+     -3.016,
+     -3.264
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -122.67,
+    "final_error_truth_m": 0.051,
+    "final_yaw_error_truth_deg": 0.36,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 45.3,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.73,
+     -1.299
+    ],
+    "final_error_estimate_m": 0.07,
+    "final_yaw_estimate_deg": 25.52,
+    "final_yaw_error_estimate_deg": -1.44,
+    "final_truth_xy": [
+     0.766,
+     -1.325
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 25.93,
+    "final_error_truth_m": 0.053,
+    "final_yaw_error_truth_deg": -1.03,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9683501085847617,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.445669712269645,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.7969498710125684,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 6.07093829860918,
+   "clearance_m": 0.36959999799728394
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.002,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.124,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "aborted",
+    "wall_s": 122.6,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.853,
+     -2.14
+    ],
+    "final_error_estimate_m": 1.857,
+    "final_yaw_estimate_deg": -178.06,
+    "final_yaw_error_estimate_deg": -22.79,
+    "final_truth_xy": [
+     -3.854,
+     -2.204
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -177.61,
+    "final_error_truth_m": 1.877,
+    "final_yaw_error_truth_deg": -22.34,
+    "passed": false
+   },
+   "near_obstacle_b": {
+    "outcome": "aborted",
+    "wall_s": 0.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.846,
+     -2.14
+    ],
+    "final_error_estimate_m": 1.712,
+    "final_yaw_estimate_deg": -162.21,
+    "final_yaw_error_estimate_deg": 126.9,
+    "final_truth_xy": [
+     -3.854,
+     -2.204
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -161.3,
+    "final_error_truth_m": 1.775,
+    "final_yaw_error_truth_deg": 127.82,
+    "passed": false
+   }
+  },
+  "start": [
+   0.35,
+   1.17
+  ],
+  "goal_a": {
+   "x": -5.62485009419024,
+   "y": -1.582350092199885,
+   "path_m": 9.713374942903027,
+   "straight_m": 6.578311202284035,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.291750106832385,
+   "y": -0.5197500979576937,
+   "path_from_a_m": 4.262853308023845,
+   "clearance_m": 0.40342415425484
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.002,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.14,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 46.6,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.194,
+     -3.161
+    ],
+    "final_error_estimate_m": 0.062,
+    "final_yaw_estimate_deg": -131.03,
+    "final_yaw_error_estimate_deg": 1.68,
+    "final_truth_xy": [
+     -4.251,
+     -3.104
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -131.89,
+    "final_error_truth_m": 0.132,
+    "final_yaw_error_truth_deg": 0.82,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 36.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.016,
+     -1.014
+    ],
+    "final_error_estimate_m": 0.069,
+    "final_yaw_estimate_deg": 30.11,
+    "final_yaw_error_estimate_deg": 2.72,
+    "final_truth_xy": [
+     0.018,
+     -0.989
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 28.88,
+    "final_error_truth_m": 0.05,
+    "final_yaw_error_truth_deg": 1.49,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.192650101950765,
+   "y": -3.2224500833128324,
+   "path_m": 8.310958285961226,
+   "straight_m": 6.181594404740502,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.05774987501800055,
+   "y": -0.9586500955794683,
+   "path_from_a_m": 6.08446996524504,
+   "clearance_m": 0.4625771370064458
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2_furniture",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.006,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.14,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 50.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.233,
+     -2.836
+    ],
+    "final_error_estimate_m": 0.057,
+    "final_yaw_estimate_deg": -126.1,
+    "final_yaw_error_estimate_deg": 1.33,
+    "final_truth_xy": [
+     -3.247,
+     -2.89
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -127.0,
+    "final_error_truth_m": 0.093,
+    "final_yaw_error_truth_deg": 0.43,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 27.3,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -2.712,
+     -0.717
+    ],
+    "final_error_estimate_m": 0.024,
+    "final_yaw_estimate_deg": 74.38,
+    "final_yaw_error_estimate_deg": -1.21,
+    "final_truth_xy": [
+     -2.759,
+     -0.713
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 75.91,
+    "final_error_truth_m": 0.069,
+    "final_yaw_error_truth_deg": 0.32,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -3.176250107458234,
+   "y": -2.8297500854407183,
+   "path_m": 8.000409953842958,
+   "straight_m": 5.225797277722131,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -2.6911501100867987,
+   "y": -0.7276500968311659,
+   "path_from_a_m": 3.440821645768927,
+   "clearance_m": 0.5129032337089118
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "labbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.003,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.176,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 66.3,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -2.968,
+     -3.186
+    ],
+    "final_error_estimate_m": 0.064,
+    "final_yaw_estimate_deg": -121.12,
+    "final_yaw_error_estimate_deg": 1.7,
+    "final_truth_xy": [
+     -2.982,
+     -3.289
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -122.45,
+    "final_error_truth_m": 0.057,
+    "final_yaw_error_truth_deg": 0.38,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 46.9,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -0.454,
+     -1.257
+    ],
+    "final_error_estimate_m": 0.036,
+    "final_yaw_estimate_deg": 35.16,
+    "final_yaw_error_estimate_deg": -1.68,
+    "final_truth_xy": [
+     -0.401,
+     -1.293
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 34.35,
+    "final_error_truth_m": 0.029,
+    "final_yaw_error_truth_deg": -2.49,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9452501087099314,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.433115924376028,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -0.4273501223534346,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 4.760523306092436,
+   "clearance_m": 0.32668333113801734
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "labbot",
+  "map": "celisca_floor_1_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.006,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.212,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 47.3,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.916,
+     -0.527
+    ],
+    "final_error_estimate_m": 0.07,
+    "final_yaw_estimate_deg": -157.57,
+    "final_yaw_error_estimate_deg": -1.93,
+    "final_truth_xy": [
+     -3.947,
+     -0.524
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -157.77,
+    "final_error_truth_m": 0.052,
+    "final_yaw_error_truth_deg": -2.13,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "aborted",
+    "wall_s": 32.8,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -7.923,
+     -1.073
+    ],
+    "final_error_estimate_m": 0.524,
+    "final_yaw_estimate_deg": -71.98,
+    "final_yaw_error_estimate_deg": 101.99,
+    "final_truth_xy": [
+     -7.953,
+     -1.118
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -72.09,
+    "final_error_truth_m": 0.503,
+    "final_yaw_error_truth_deg": 101.88,
+    "passed": false
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -3.9616501032024622,
+   "y": -0.4735500982080332,
+   "path_m": 7.8898349538043995,
+   "straight_m": 4.348734703691741,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -8.44305007891953,
+   "y": -1.0048500953291288,
+   "path_from_a_m": 5.130404969521923,
+   "clearance_m": 0.3926999978721142
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "labbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.01,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.204,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 52.2,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.227,
+     -3.165
+    ],
+    "final_error_estimate_m": 0.067,
+    "final_yaw_estimate_deg": -131.16,
+    "final_yaw_error_estimate_deg": 1.55,
+    "final_truth_xy": [
+     -4.257,
+     -3.122
+    ],
+    "truth_age_wall_s": 0.002,
+    "final_truth_yaw_deg": -132.4,
+    "final_error_truth_m": 0.119,
+    "final_yaw_error_truth_deg": 0.31,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 38.1,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.001,
+     -0.997
+    ],
+    "final_error_estimate_m": 0.069,
+    "final_yaw_estimate_deg": 25.38,
+    "final_yaw_error_estimate_deg": -1.87,
+    "final_truth_xy": [
+     -0.016,
+     -0.958
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 24.57,
+    "final_error_truth_m": 0.074,
+    "final_yaw_error_truth_deg": -2.68,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.192650101950765,
+   "y": -3.2224500833128324,
+   "path_m": 8.310958285961226,
+   "straight_m": 6.181567067430505,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.05774987501800055,
+   "y": -0.9586500955794683,
+   "path_from_a_m": 6.08446996524504,
+   "clearance_m": 0.4625771370064458
+  }
+ },
+ {
+  "simulator": "mujoco",
+  "robot": "labbot",
+  "map": "celisca_floor_2_furniture",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.002,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.18,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 44.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.695,
+     -2.78
+    ],
+    "final_error_estimate_m": 0.052,
+    "final_yaw_estimate_deg": -136.85,
+    "final_yaw_error_estimate_deg": 1.57,
+    "final_truth_xy": [
+     -4.681,
+     -2.813
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": -137.57,
+    "final_error_truth_m": 0.017,
+    "final_yaw_error_truth_deg": 0.85,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 53.9,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -8.584,
+     -0.624
+    ],
+    "final_error_estimate_m": 0.045,
+    "final_yaw_estimate_deg": 152.98,
+    "final_yaw_error_estimate_deg": 1.59,
+    "final_truth_xy": [
+     -8.602,
+     -0.616
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 151.44,
+    "final_error_truth_m": 0.032,
+    "final_yaw_error_truth_deg": 0.05,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.6777500993222,
+   "y": -2.8297500854407183,
+   "path_m": 7.981273287365015,
+   "straight_m": 6.253141043046234,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -8.627850077918172,
+   "y": -0.6352500973318449,
+   "path_from_a_m": 7.549901621462729,
+   "clearance_m": 0.3081924382113455
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.005,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.125,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 100.8,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.004,
+     -3.199
+    ],
+    "final_error_estimate_m": 0.059,
+    "final_yaw_estimate_deg": -121.87,
+    "final_yaw_error_estimate_deg": 1.16,
+    "final_truth_xy": [
+     -3.002,
+     -3.289
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -122.84,
+    "final_error_truth_m": 0.055,
+    "final_yaw_error_truth_deg": 0.19,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 76.0,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.727,
+     -1.322
+    ],
+    "final_error_estimate_m": 0.08,
+    "final_yaw_estimate_deg": 25.35,
+    "final_yaw_error_estimate_deg": -1.42,
+    "final_truth_xy": [
+     0.799,
+     -1.342
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 25.57,
+    "final_error_truth_m": 0.06,
+    "final_yaw_error_truth_deg": -1.19,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9683501085847617,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.445662990551806,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.7969498710125684,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 6.07093829860918,
+   "clearance_m": 0.36959999799728394
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "bumperbot",
+  "map": "celisca_floor_1_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.003,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.125,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "aborted",
+    "wall_s": 213.3,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.595,
+     -1.833
+    ],
+    "final_error_estimate_m": 1.546,
+    "final_yaw_estimate_deg": -136.94,
+    "final_yaw_error_estimate_deg": 14.91,
+    "final_truth_xy": [
+     -3.567,
+     -1.849
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -137.23,
+    "final_error_truth_m": 1.575,
+    "final_yaw_error_truth_deg": 14.62,
+    "passed": false
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 36.9,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.207,
+     -0.702
+    ],
+    "final_error_estimate_m": 0.044,
+    "final_yaw_estimate_deg": 72.64,
+    "final_yaw_error_estimate_deg": 1.24,
+    "final_truth_xy": [
+     -3.189,
+     -0.738
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 72.69,
+    "final_error_truth_m": 0.08,
+    "final_yaw_error_truth_deg": 1.29,
+    "passed": true
+   }
+  },
+  "start": [
+   0.35,
+   1.17
+  ],
+  "goal_a": {
+   "x": -5.139750096818805,
+   "y": -1.767150091198527,
+   "path_m": 9.151728279619814,
+   "straight_m": 6.226072706814177,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.199350107333064,
+   "y": -0.6583500972066751,
+   "path_from_a_m": 3.600879978447543,
+   "clearance_m": 0.5045116125933913
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.001,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.146,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 94.4,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.209,
+     -3.169
+    ],
+    "final_error_estimate_m": 0.056,
+    "final_yaw_estimate_deg": -131.36,
+    "final_yaw_error_estimate_deg": 1.34,
+    "final_truth_xy": [
+     -4.25,
+     -3.12
+    ],
+    "truth_age_wall_s": 0.002,
+    "final_truth_yaw_deg": -132.37,
+    "final_error_truth_m": 0.117,
+    "final_yaw_error_truth_deg": 0.34,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 75.1,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     0.007,
+     -0.997
+    ],
+    "final_error_estimate_m": 0.064,
+    "final_yaw_estimate_deg": 26.4,
+    "final_yaw_error_estimate_deg": -0.98,
+    "final_truth_xy": [
+     -0.01,
+     -0.991
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 25.18,
+    "final_error_truth_m": 0.075,
+    "final_yaw_error_truth_deg": -2.21,
+    "passed": true
+   }
+  },
+  "start": [
+   -0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.192650101950765,
+   "y": -3.2224500833128324,
+   "path_m": 8.310958285961226,
+   "straight_m": 6.181588355762949,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.05774987501800055,
+   "y": -0.9586500955794683,
+   "path_from_a_m": 6.08446996524504,
+   "clearance_m": 0.4625771370064458
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "bumperbot",
+  "map": "celisca_floor_2_furniture",
+  "passed": false,
+  "error": "checker produced no output",
+  "steps": null,
+  "start": null,
+  "goal_a": null,
+  "goal_b": null
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "labbot",
+  "map": "celisca_floor_1",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.004,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.188,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 67.4,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -2.972,
+     -3.197
+    ],
+    "final_error_estimate_m": 0.055,
+    "final_yaw_estimate_deg": -120.86,
+    "final_yaw_error_estimate_deg": 1.97,
+    "final_truth_xy": [
+     -2.971,
+     -3.27
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -120.72,
+    "final_error_truth_m": 0.036,
+    "final_yaw_error_truth_deg": 2.11,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 45.0,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -0.491,
+     -1.29
+    ],
+    "final_error_estimate_m": 0.064,
+    "final_yaw_estimate_deg": 35.74,
+    "final_yaw_error_estimate_deg": -1.23,
+    "final_truth_xy": [
+     -0.437,
+     -1.306
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 35.27,
+    "final_error_truth_m": 0.026,
+    "final_yaw_error_truth_deg": -1.7,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -2.9452501087099314,
+   "y": -3.2455500831876627,
+   "path_m": 8.938223280904248,
+   "straight_m": 5.4332463646272755,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -0.4273501223534346,
+   "y": -1.2820500938270918,
+   "path_from_a_m": 4.760523306092436,
+   "clearance_m": 0.32668333113801734
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "labbot",
+  "map": "celisca_floor_1_furniture",
+  "passed": false,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.001,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.188,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "aborted",
+    "wall_s": 190.5,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.337,
+     -1.932
+    ],
+    "final_error_estimate_m": 1.834,
+    "final_yaw_estimate_deg": -150.28,
+    "final_yaw_error_estimate_deg": 1.67,
+    "final_truth_xy": [
+     -3.317,
+     -1.998
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -150.73,
+    "final_error_truth_m": 1.86,
+    "final_yaw_error_truth_deg": 1.23,
+    "passed": false
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 55.0,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     1.005,
+     -0.639
+    ],
+    "final_error_estimate_m": 0.03,
+    "final_yaw_estimate_deg": 17.69,
+    "final_yaw_error_estimate_deg": 1.25,
+    "final_truth_xy": [
+     0.997,
+     -0.69
+    ],
+    "truth_age_wall_s": 0.0,
+    "final_truth_yaw_deg": 17.17,
+    "final_error_truth_m": 0.035,
+    "final_yaw_error_truth_deg": 0.73,
+    "passed": true
+   }
+  },
+  "start": [
+   0.35,
+   1.17
+  ],
+  "goal_a": {
+   "x": -5.162850096693635,
+   "y": -1.767150091198527,
+   "path_m": 9.174828279494644,
+   "straight_m": 6.2467494916316575,
+   "detour": true
+  },
+  "goal_b": {
+   "x": 0.9817498700112104,
+   "y": -0.6583500972066751,
+   "path_from_a_m": 7.302086623188176,
+   "clearance_m": 0.31419396704929603
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "labbot",
+  "map": "celisca_floor_2",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.003,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.188,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 63.7,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -4.772,
+     -3.171
+    ],
+    "final_error_estimate_m": 0.051,
+    "final_yaw_estimate_deg": -135.65,
+    "final_yaw_error_estimate_deg": 0.75,
+    "final_truth_xy": [
+     -4.829,
+     -3.139
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -135.5,
+    "final_error_truth_m": 0.102,
+    "final_yaw_error_truth_deg": 0.9,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 29.6,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.526,
+     -1.065
+    ],
+    "final_error_estimate_m": 0.066,
+    "final_yaw_estimate_deg": 60.63,
+    "final_yaw_error_estimate_deg": 1.05,
+    "final_truth_xy": [
+     -3.601,
+     -1.024
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 62.29,
+    "final_error_truth_m": 0.103,
+    "final_yaw_error_truth_deg": 2.71,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -4.770150098821521,
+   "y": -3.2224500833128324,
+   "path_m": 8.540598283696543,
+   "straight_m": 6.587128495255048,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -3.4996501057058573,
+   "y": -1.0048500953291288,
+   "path_from_a_m": 2.7438583161271324,
+   "clearance_m": 0.41644117005956094
+  }
+ },
+ {
+  "simulator": "pybullet",
+  "robot": "labbot",
+  "map": "celisca_floor_2_furniture",
+  "passed": true,
+  "error": null,
+  "steps": {
+   "cancel_a": {
+    "sent": true,
+    "travelled_before_cancel_m": 1.001,
+    "finished_before_cancel": false,
+    "outcome": "canceled",
+    "stopped": true,
+    "stop_sim_s": 0.167,
+    "passed": true
+   },
+   "resume_a": {
+    "outcome": "succeeded",
+    "wall_s": 50.7,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -3.423,
+     -3.091
+    ],
+    "final_error_estimate_m": 0.062,
+    "final_yaw_estimate_deg": -125.16,
+    "final_yaw_error_estimate_deg": 2.32,
+    "final_truth_xy": [
+     -3.455,
+     -3.142
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": -125.76,
+    "final_error_truth_m": 0.027,
+    "final_yaw_error_truth_deg": 1.73,
+    "passed": true
+   },
+   "near_obstacle_b": {
+    "outcome": "succeeded",
+    "wall_s": 49.6,
+    "settled_sim_second": true,
+    "final_pose_estimate_xy": [
+     -0.233,
+     -0.795
+    ],
+    "final_error_estimate_m": 0.063,
+    "final_yaw_estimate_deg": 33.94,
+    "final_yaw_error_estimate_deg": -1.55,
+    "final_truth_xy": [
+     -0.225,
+     -0.807
+    ],
+    "truth_age_wall_s": 0.001,
+    "final_truth_yaw_deg": 33.69,
+    "final_error_truth_m": 0.061,
+    "final_yaw_error_truth_deg": -1.79,
+    "passed": true
+   }
+  },
+  "start": [
+   0.0,
+   1.32
+  ],
+  "goal_a": {
+   "x": -3.4303501060813666,
+   "y": -3.1531500836883417,
+   "path_m": 8.598688283636868,
+   "straight_m": 5.637253983969862,
+   "detour": true
+  },
+  "goal_b": {
+   "x": -0.1732501237303019,
+   "y": -0.7738500965808264,
+   "path_from_a_m": 6.420041629115532,
+   "clearance_m": 0.44852086664933255
+  }
+ }
+]
