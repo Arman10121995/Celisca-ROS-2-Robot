@@ -238,6 +238,33 @@ def measured_result(report,kind):
         if 'gui_recording_completed' in report:
             passed = passed and report['gui_recording_completed'] is True
         return bool(passed)
+    if kind == 'mission_screen':
+        # scripts/sim_nav_mission.py: detour goal, cancel/stop, resume and a
+        # near-obstacle goal, each judged against simulator truth.
+        steps = report.get('steps', {})
+        needed = ('cancel_a', 'resume_a', 'near_obstacle_b')
+        if report.get('error') or not all(key in steps for key in needed):
+            return False
+        passed = report.get('passed') is True and all(steps[key].get('passed') is True for key in needed)
+        for key in ('resume_a', 'near_obstacle_b'):
+            error = steps[key].get('final_error_truth_m')
+            passed = (passed and steps[key].get('outcome') == 'succeeded'
+                      and finite(error) and 0 <= error <= .25)
+        stop = steps['cancel_a'].get('stop_sim_s')
+        return bool(passed and finite(stop) and 0 <= stop < 1.0)
+    if kind == 'drive_screen':
+        # scripts/sim_drive_check.py: truth-measured /cmd_vel phases.  The
+        # screen passes when the robot moves forward at least half the
+        # commanded speed and comes to rest; per-phase tracking is in the report.
+        phases = {item.get('phase'): item for item in report.get('phases', [])}
+        if report.get('error') or 'straight' not in phases or 'stop' not in phases:
+            return False
+        command = phases['straight'].get('command') or [0.0]
+        straight, stop = phases['straight'].get('measured', {}), phases['stop'].get('measured', {})
+        return bool(finite(straight.get('vx')) and finite(command[0]) and command[0] > 0
+                    and straight['vx'] >= .5*command[0]
+                    and all(finite(stop.get(key)) and abs(stop[key]) < .05 for key in ('vx', 'vy'))
+                    and finite(stop.get('wz')) and abs(stop['wz']) < .1)
     if kind == 'workflow_screen':
         checks,phases = report.get('checks',{}),report.get('phases',{})
         return (bool(checks) and all(value is True for value in checks.values())

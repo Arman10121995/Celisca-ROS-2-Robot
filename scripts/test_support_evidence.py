@@ -11,6 +11,7 @@ import yaml
 path = Path(__file__).with_name('r9_3_support_matrix.py')
 spec = importlib.util.spec_from_file_location('support_matrix',path)
 module = importlib.util.module_from_spec(spec)
+ROOT = Path(__file__).resolve().parent.parent
 sys.modules[spec.name] = module
 spec.loader.exec_module(module)
 
@@ -236,3 +237,32 @@ def test_flight_requires_measured_lift_and_disarm_even_with_pass_flag():
     report['phases']['hover_truth']=[0,0,3.2]
     report['phases']['land_state']['armed']=True
     assert not module.measured_result(report,'flight_screen')
+
+
+def test_mission_screen_needs_every_step_and_truth_within_tolerance():
+    report = json.loads((ROOT/'docs/status/evidence/p3-celisca-missions-2026-10-12/cells/'
+                         'mujoco_labbot_celisca_floor_1_furniture.json').read_text())
+    assert module.measured_result(report, 'mission_screen')
+    far = json.loads(json.dumps(report))
+    far['steps']['near_obstacle_b']['final_error_truth_m'] = .4
+    assert not module.measured_result(far, 'mission_screen')
+    aborted = json.loads(json.dumps(report))
+    aborted['steps']['resume_a']['outcome'] = 'aborted'
+    assert not module.measured_result(aborted, 'mission_screen')
+    missing = json.loads(json.dumps(report))
+    del missing['steps']['cancel_a']
+    assert not module.measured_result(missing, 'mission_screen')
+
+
+def test_drive_screen_needs_forward_motion_and_a_stop():
+    report = json.loads((ROOT/'docs/status/evidence/p56-drive-patterns-2026-10-12/'
+                         'gazebo_crab.json').read_text())
+    assert module.measured_result(report, 'drive_screen')
+    slow = json.loads(json.dumps(report))
+    slow['phases'][0]['measured']['vx'] = .1
+    assert not module.measured_result(slow, 'drive_screen')
+    drifting = json.loads(json.dumps(report))
+    drifting['phases'][-1]['measured']['vx'] = .2
+    assert not module.measured_result(drifting, 'drive_screen')
+    assert not module.measured_result({'error': 'no odometry on /odom/ground_truth', 'phases': []},
+                                      'drive_screen')

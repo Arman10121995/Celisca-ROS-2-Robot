@@ -1,5 +1,5 @@
 schema_version: 1
-date: '2026-10-08'
+date: '2026-10-12'
 scope: Exact hashed named simulation screens through October 8; unlisted cells remain
   untested.
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
@@ -4443,3 +4443,1011 @@ records:
   limitations:
   - Bounded live smoke only; fast-tier PASS (1017 passed, 4 deselected) is recorded in the ledger as validation, not as a gait/terrain acceptance
   - Artifacts are outside the repository on the mounted SSD; the index's relative-path convention does not apply
+- robot_id: bumperbot
+  environment_id: celisca_floor_1
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_bumperbot_celisca_floor_1.json
+  sha256: 2c2fc8252bb8c930f19cc1edb4e1421753150c4a14d24755efb5388ed7ef6059
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_bumperbot_celisca_floor_1_furniture.json
+  sha256: 7b2456f54fa6f3322ab3050d2317c15249c75ec511f8f8a18c8011fa7091089e
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_bumperbot_celisca_floor_2.json
+  sha256: e51dbc3875d900fa39209f9d75686bbec71e5368ac7f177184220f998f53ffe4
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2_furniture
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_bumperbot_celisca_floor_2_furniture.json
+  sha256: 904fffcfae9594bcc233814ae50b6fea01a5d05cdf7e8b874d12189f646a5730
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_labbot_celisca_floor_1.json
+  sha256: bb9438da5d1c99ed2f030f9d4841beb2d5be1923cbb16f141612954418b58de1
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_labbot_celisca_floor_1_furniture.json
+  sha256: 18da78f962d7910e276fb94038172a0becf393b7fb2824fe88aa78a0bc50acab
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_labbot_celisca_floor_2.json
+  sha256: bd6cec3b7623167a1f1ac8ab11678a31a5632b239547bc30b4cabb38da019c4c
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2_furniture
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/gazebo_labbot_celisca_floor_2_furniture.json
+  sha256: 540e72d1bd1134b9e130257760a9122e7895b028af16264149ecc28f64fbe0be
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_bumperbot_celisca_floor_1.json
+  sha256: 49084f36b1ef3c4fe5969b77e1fd1cbb72d0a8e779aa4ce15b08293f2f3414b3
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1_furniture
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_bumperbot_celisca_floor_1_furniture.json
+  sha256: 76c1892ebac41f88d03e27c54dfc6778ef1124e5756b0b3e757de561bbea0226
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_bumperbot_celisca_floor_2.json
+  sha256: 8030cc4742eb25f779f72bb376e6c2ccad39610674f7e98ecd08f7bfcdf39b26
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2_furniture
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_bumperbot_celisca_floor_2_furniture.json
+  sha256: a8386fcb6bfb71a3728024b05a74696ce2455caf3ae32c35fd9c02f421f277ce
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_labbot_celisca_floor_1.json
+  sha256: f978f9627b8b81b1e3cbf020d7100a058d3c949a36b24ffe4211e3218b1dd6f0
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1_furniture
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_labbot_celisca_floor_1_furniture.json
+  sha256: a0cf97e20032b44dd82ff81dedf9ba0ef784e456b6a6c165ddb5b93b7cd41bbc
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_labbot_celisca_floor_2.json
+  sha256: 98065daec0c7c2839be5ec391b94ed6a349b16e4f9528322c388d1cf4a8dcaf8
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2_furniture
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/isaac_labbot_celisca_floor_2_furniture.json
+  sha256: 2d5d0fceca2b60a970cc8f0a2e9432660b7c1d794c1b8577833ed990427e4e3d
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_bumperbot_celisca_floor_1.json
+  sha256: 220db67b10f0f4f79128d59d189c2c7a73808837fe1b7e830bb7152e45546115
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1_furniture
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_bumperbot_celisca_floor_1_furniture.json
+  sha256: d97b71dde630fbfeb043ce2276cdfe6c84bf7b3ce4c2c3b0fc7206962cbb50cf
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_bumperbot_celisca_floor_2.json
+  sha256: d5ed1c049427ff923d157471ef06c066cae0848e433c9f5498fbae0b2606b05b
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2_furniture
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_bumperbot_celisca_floor_2_furniture.json
+  sha256: ae5d29bac1b9126f395770a8395a7a2392fd37ba04eb54d925fcfeecbf76cff3
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_labbot_celisca_floor_1.json
+  sha256: e34d6e3519ffade3ff521633b2a52ffb1fa596f04ffdad57da343ed6ec26f861
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1_furniture
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_labbot_celisca_floor_1_furniture.json
+  sha256: 236e9ca74df3e49d40354def21f014864071aef6af514ab239749d105527f011
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_labbot_celisca_floor_2.json
+  sha256: 4d13508843b7ddf56531a43209976586a7c7d9bac7c82de04ef7158c49bc64e6
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2_furniture
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/mujoco_labbot_celisca_floor_2_furniture.json
+  sha256: 75dc1a21dd5e743db0df20344737bbce4f4603d9c4af43243e3566ecea5bf283
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_bumperbot_celisca_floor_1.json
+  sha256: 0d6a3e476d26be1cd6e5b917071ff9f7691385aafbc3974414fcc0e0894048b4
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_1_furniture
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_bumperbot_celisca_floor_1_furniture.json
+  sha256: f8b0cfec8f089e38d40b2a6fabdfc9f1536217e3ce48faba2d5c69aac3d44eb5
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_bumperbot_celisca_floor_2.json
+  sha256: c7d9d7051a44187c3fea33c618241c785e767ae2ae599f15d1dd9e1a1f8f174a
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: bumperbot
+  environment_id: celisca_floor_2_furniture
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_bumperbot_celisca_floor_2_furniture.json
+  sha256: fb61e89f2b2b678e4477e14fdba33ec61c23a31a6d819097780da8915e27c3dd
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_labbot_celisca_floor_1.json
+  sha256: 0912e16f745f40d998f9f1f8e46128fb92f676cfd6fd076067bfe185030f8af6
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_1_furniture
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_labbot_celisca_floor_1_furniture.json
+  sha256: 23896b4003780f3f17bda674329e7eed4796ddc2b50cdf814da7ea7160fbea06
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_labbot_celisca_floor_2.json
+  sha256: 4e3ce305b77402931ff07f426d5e1ce525c002a14c26a5d599f25c2b4a082436
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: labbot
+  environment_id: celisca_floor_2_furniture
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: ff8dd23 (matrix started 16:02 on cc3010a with the navigation default/inflation working tree
+    committed unchanged as ff8dd23)
+  report: docs/status/evidence/p3-celisca-missions-2026-10-12/cells/pybullet_labbot_celisca_floor_2_furniture.json
+  sha256: aac01f38f18a1d5fa48b11fe4ddb0a8533a5d474f584491e63b0440eb084b62e
+  source_hashes: docs/status/evidence/p3-celisca-missions-2026-10-12/source-hashes.json
+  source_hashes_sha256: 36349aaaff6991d719b64a9f35a42815a04ed0ff2a6dd9f7bcdde46b54796cab
+  report_kind: mission_screen
+  scope: 'Celisca mission: detour goal, cancel after 1 m with stop check, resume, near-obstacle goal;
+    truth-measured final pose after a settled simulated second (Regulated Pure Pursuit default, 0.55 m
+    inflation).'
+  limitations:
+  - One seeded mission per cell; not a repeat study
+  - Orphaned PX4 SITL (~2.2 cores) ran in the background
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: drive
+  steering_mode: ackermann
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/gazebo_ackermann.json
+  sha256: 0d385d3bcab7e6f6689d5bcf0c987b319a29a1ada6fc01a2d29c9519ebc1ee02
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: drive
+  steering_mode: crab
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/gazebo_crab.json
+  sha256: 8c24da35ca97d83c20f75aaa8b773d18570df282357f4a28725f1195e3f1d72f
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: drive
+  steering_mode: in_phase
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/gazebo_in_phase.json
+  sha256: cc35316a4cb87ac691d9b35f902e412da7a2f5f8c95aaa0d1dd0ae554970475e
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: mecanum_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/gazebo_mecanum.json
+  sha256: 811596a3170c724bf86024e71e4eeae3a1b36e63cfa85d55246781918f7384b1
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: drive
+  steering_mode: pivot
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/gazebo_pivot.json
+  sha256: 123e0fd9177d8302c32368b2dbdc17c4e9a444bdad3254d3504b44aee3ce5e41
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: drive
+  steering_mode: ackermann
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_ackermann.json
+  sha256: 278645bcd0c5fea2493ec62c66a492fac9dba0ac86c0bfb2489fdd0a042df99c
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: drive
+  steering_mode: crab
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_crab.json
+  sha256: 084068a6817115e7104efd6f722b9c5d87b3f0ff3bf3542aaccac2e6b809999c
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: drive
+  steering_mode: in_phase
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_in_phase.json
+  sha256: c894ce3ed9626e00100237d4edb8d5d5e087cc9e0d841ac136e60c8c69da44bc
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: mecanum_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_mecanum.json
+  sha256: a9065ed762ec5a436896c8b226928b27dea7003e3f0c99185247fc3b04f456dd
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: drive
+  steering_mode: pivot
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_pivot.json
+  sha256: 3e5206a4a6247f3345f286f89f03a916bd2347c94a426c1740f814b0fa7c911e
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: drive
+  steering_mode: ackermann
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/mujoco_ackermann.json
+  sha256: fc88fba461844e65d780b995ba9634a3f9368f59e73f747ee8f6e5fe0e3fb73c
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: drive
+  steering_mode: crab
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/mujoco_crab.json
+  sha256: 1b354e468ce248c9f2906b3d877622a5610e24633659c8c50e11d038c678bc0e
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: drive
+  steering_mode: in_phase
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/mujoco_in_phase.json
+  sha256: 4994bd9c25ef4ab41ca81bdf34a378151cfd661d958473471633693f033def82
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: mecanum_car
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/mujoco_mecanum.json
+  sha256: d0cc269374179f9d79b457d5a5582ec5abe0438bead1c1dd07b35bfbd62fa5c4
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: drive
+  steering_mode: pivot
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/mujoco_pivot.json
+  sha256: 910a88cc1517a318bcde6d9f5a97f5400747d0e3b1e9dbea6b2ef18c8fdc9ca1
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: drive
+  steering_mode: ackermann
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/pybullet_ackermann.json
+  sha256: 861a3b7c1089163d213379998cc36d4da751082b60daadce6fbded322b98eed2
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: drive
+  steering_mode: crab
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/pybullet_crab.json
+  sha256: 4f981fdca5e535fbc54dd59e2717824ed0609958222b76cb61c9b1be76e4a9bc
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: drive
+  steering_mode: in_phase
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/pybullet_in_phase.json
+  sha256: 1dc4776a0ff60c4acecafdbf75f221f2accbe9c6610f801243eab67488ef7983
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: mecanum_car
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/pybullet_mecanum.json
+  sha256: 45133027e4a77be3b9fd497cfebdd587f3de32188e3768642d51bba91f1d89d2
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: four_wheel_steer_car
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: drive
+  steering_mode: pivot
+  date: '2026-10-12'
+  revision: daf02c5 (HEAD when the 20-cell drive matrix started at 20:10)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/pybullet_pivot.json
+  sha256: d933292762e9d2ae2c3c8d68ead17ca9d84a2f77749b32b08a6098c783417634
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes.json
+  source_hashes_sha256: 47ad5a186ecb72b8536b4023e35f1c989a4037541575662eb6ceac895ed594d1
+  report_kind: drive_screen
+  scope: 'Truth-measured /cmd_vel phases in loc mode on nav_empty: straight, arcs, reverse, tight turn,
+    spin, strafe (crab/mecanum) and stop.'
+  limitations:
+  - Open-loop drive screen on a flat map; no obstacle route or mission
+- robot_id: unitree_a1
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 2859641 (HEAD when the MuJoCo legged checks ran at 17:41)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/unitree_a1.json
+  sha256: a9690b2b0c9ec7ed35a6d51b6fa445b2d50248d1ee98ea21b47d5260f77d800a
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-mujoco.json
+  source_hashes_sha256: 84a2f28cbda28d09de510350a557c002e64d2de883467bcbf6e067d0c4826db8
+  report_kind: drive_screen
+  scope: Model-matched rl_sar policy through the in-step PD bridge, loc mode on nav_empty; truth-measured
+    /cmd_vel phases.
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_b2
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 2859641 (HEAD when the MuJoCo legged checks ran at 17:41)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/unitree_b2.json
+  sha256: ac562f27ea2cd566b200ee8b1ab759ec2699e67e62cd90b9b4905ee33809f349
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-mujoco.json
+  source_hashes_sha256: 84a2f28cbda28d09de510350a557c002e64d2de883467bcbf6e067d0c4826db8
+  report_kind: drive_screen
+  scope: Model-matched rl_sar policy through the in-step PD bridge, loc mode on nav_empty; truth-measured
+    /cmd_vel phases.
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_go2
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 2859641 (HEAD when the MuJoCo legged checks ran at 17:41)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/unitree_go2.json
+  sha256: 6820691ef288d82d8469bb56bb6ff658e2d3c57f308033e642095c6e42f5fd82
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-mujoco.json
+  source_hashes_sha256: 84a2f28cbda28d09de510350a557c002e64d2de883467bcbf6e067d0c4826db8
+  report_kind: drive_screen
+  scope: Model-matched rl_sar policy through the in-step PD bridge, loc mode on nav_empty; truth-measured
+    /cmd_vel phases.
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_go2w
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 2859641 (HEAD when the MuJoCo legged checks ran at 17:41)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/unitree_go2w.json
+  sha256: c1d6b262ee8a1a1c841308afb2f19e255b88914549456fe5fedebfffef8968c6
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-mujoco.json
+  source_hashes_sha256: 84a2f28cbda28d09de510350a557c002e64d2de883467bcbf6e067d0c4826db8
+  report_kind: drive_screen
+  scope: Model-matched rl_sar policy through the in-step PD bridge, loc mode on nav_empty; truth-measured
+    /cmd_vel phases.
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_go2
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-12'
+  revision: 6b44871 (HEAD when the Isaac Go2 check ran at 20:05)
+  report: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/isaac/unitree_go2.json
+  sha256: 7098978075468bd31ffb6c4501431b7eaffad95ab5750e9e60b7b847bc8db378
+  source_hashes: docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/source-hashes-isaac.json
+  source_hashes_sha256: aaece10c6e985be86a3a9ef0498ccab48002ee7d3e6c991704b94c6fd7fafd35
+  report_kind: drive_screen
+  scope: go2_himloco on PhysX drives with the policy gains at 200 Hz physics, loc mode on nav_empty; truth-measured
+    /cmd_vel phases.
+  limitations:
+  - Flat-map velocity screen; RTF ~0.15
