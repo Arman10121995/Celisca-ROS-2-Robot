@@ -37,14 +37,15 @@ import numpy as np
 # Installed rl_sar policy directories (robot_lab_adapter/setup.py installs
 # exactly these; scripts/provision_rl_sar_policies.py produced them).
 PROVISIONED_POLICIES = ('a1_legged_gym', 'b2_robot_lab', 'go2_himloco',
-                        'go2w_robot_lab')
+                        'go2w_robot_lab', 'g1_robomimic_locomotion')
 
 # Lab robot profile each provisioned policy was trained for.  A policy is
 # only ever paired with its own model: the observation/PD contract is
 # exact-model, not a family default (each source.json carries the same
 # binding as 'profile').
 POLICY_PROFILES = {'a1_legged_gym': 'unitree_a1', 'b2_robot_lab': 'unitree_b2',
-                   'go2_himloco': 'unitree_go2', 'go2w_robot_lab': 'unitree_go2w'}
+                   'go2_himloco': 'unitree_go2', 'go2w_robot_lab': 'unitree_go2w',
+                   'g1_robomimic_locomotion': 'unitree_g1_29dof'}
 
 _TERMS_WITH_DOFS = ("dof_pos", "dof_vel", "actions")
 
@@ -202,7 +203,14 @@ class LeggedPolicy:
             import onnxruntime
             session = onnxruntime.InferenceSession(str(model_path), providers=['CPUExecutionProvider'])
         self.session = session
-        self.input_name = session.get_inputs()[0].name
+        inputs = session.get_inputs()
+        self.input_name = inputs[0].name
+        # Recurrent actors (rl_sar g1 robomimic) are exported with their LSTM
+        # state as explicit inputs/outputs (scripts/provision_rl_sar_policies.py);
+        # the state is carried here between steps and zeroed by reset().
+        self._state_inputs = [i for i in inputs if i.name in ('h_in', 'c_in')]
+        self._state = {}
+        self.reset_state()
         self.names = contract.training_joint_names()
         self.actions = np.zeros(contract.num_dofs)
         self.history_length = (max(contract.history) + 1) if contract.history else 0
@@ -211,9 +219,18 @@ class LeggedPolicy:
         self._wheels = np.zeros(contract.num_dofs, dtype=bool)
         self._wheels[contract.wheel_indices] = True
 
+    def reset_state(self):
+        self._state = {i.name: np.zeros([d if isinstance(d, int) else 1 for d in i.shape], np.float32)
+                       for i in self._state_inputs}
+
+    @property
+    def recurrent(self):
+        return bool(self._state_inputs)
+
     def reset(self):
         self.actions[:] = 0.0
         self._history = []
+        self.reset_state()
 
     def _terms(self, state: LeggedState, command):
         c = self.contract
@@ -263,7 +280,12 @@ class LeggedPolicy:
     def step(self, state: LeggedState, command) -> JointTargets:
         c = self.contract
         observation = self.observation(state, command).astype(np.float32)[None, :]
-        raw = np.asarray(self.session.run(None, {self.input_name: observation})[0], dtype=np.float64).ravel()
+        feeds = {self.input_name: observation}
+        feeds.update(self._state)
+        outputs = self.session.run(None, feeds)
+        raw = np.asarray(outputs[0], dtype=np.float64).ravel()
+        if self._state_inputs:
+            self._state = {'h_in': np.asarray(outputs[1], np.float32), 'c_in': np.asarray(outputs[2], np.float32)}
         if raw.size != c.num_dofs or not np.all(np.isfinite(raw)):
             raise ValueError('policy returned %d values (expected %d finite)' % (raw.size, c.num_dofs))
         self.actions = np.clip(raw, c.clip_actions_lower, c.clip_actions_upper)

@@ -374,6 +374,7 @@ LEGGED_POLICY_PROFILES = {
     'unitree_b2': 'b2_robot_lab',
     'unitree_go2': 'go2_himloco',
     'unitree_go2w': 'go2w_robot_lab',
+    'unitree_g1_29dof': 'g1_robomimic_locomotion',
 }
 # Robots whose Gazebo description carries the ros2_control block the
 # policy's effort PD controller needs (robots.yaml features).

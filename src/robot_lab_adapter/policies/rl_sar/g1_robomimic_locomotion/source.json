@@ -1,0 +1,18 @@
+{
+  "robot": "g1",
+  "variant": "robomimic/locomotion",
+  "profile": "unitree_g1_29dof",
+  "upstream": "https://github.com/fan-ziqi/rl_sar",
+  "revision": "376d42c9b128f963ab08579762d5a216a976ce39",
+  "license": "Apache-2.0",
+  "torchscript": "policy/g1/robomimic/locomotion/policy_29dof.pt",
+  "torchscript_sha256": "d1d91b0201beeb649a4624ba40052d10fe4aebe98bf6f4847decf75dd1fee2da",
+  "onnx_sha256": "8a0745405cabc1d0e25c352c5a8ab809f0eba25a131bd0c586674de19806d546",
+  "input_width": 96,
+  "max_onnx_torch_difference": 1.7881393432617188e-06,
+  "recurrent_state": [
+    1,
+    1,
+    256
+  ]
+}

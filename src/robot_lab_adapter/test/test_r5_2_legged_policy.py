@@ -74,7 +74,8 @@ def _state(contract, offset=0.05):
 
 def test_every_provisioned_policy_loads_and_matches_its_profile():
     assert set(PROVISIONED_POLICIES) == set(POLICY_PROFILES) == {
-        'a1_legged_gym', 'b2_robot_lab', 'go2_himloco', 'go2w_robot_lab'}
+        'a1_legged_gym', 'b2_robot_lab', 'go2_himloco', 'go2w_robot_lab',
+        'g1_robomimic_locomotion'}
     for name in PROVISIONED_POLICIES:
         directory = POLICY_ROOT / name
         source = json.loads((directory / 'source.json').read_text())
@@ -96,6 +97,24 @@ def test_every_provisioned_policy_loads_and_matches_its_profile():
         frame = sum(_TERM_WIDTH.get(term, dofs) for term in contract.observations)
         width = frame * (max(contract.history) + 1 if contract.history else 1)
         assert width == source['input_width'], name
+
+
+def test_recurrent_g1_policy_carries_and_resets_its_lstm_state():
+    """g1/robomimic keeps an LSTM state; the export makes it explicit I/O."""
+    name = 'g1_robomimic_locomotion'
+    source = json.loads((POLICY_ROOT / name / 'source.json').read_text())
+    assert source['recurrent_state'] == [1, 1, 256]
+    assert source['max_onnx_torch_difference'] < 1e-4
+    contract = _load(name)
+    policy = LeggedPolicy(contract, model_path=str(POLICY_ROOT / name / 'policy.onnx'))
+    assert policy.recurrent and contract.num_dofs == 29
+    state = LeggedState({n: float(v) for n, v in zip(policy.names, contract.default_dof_pos)},
+                        {n: 0.0 for n in policy.names}, (1.0, 0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
+    first = policy.step(state, [0.3, 0.0, 0.0]).position
+    second = policy.step(state, [0.3, 0.0, 0.0]).position
+    assert not np.allclose(first, second)      # same input, evolved state
+    policy.reset()
+    np.testing.assert_allclose(policy.step(state, [0.3, 0.0, 0.0]).position, first, atol=1e-6)
 
 
 def test_himloco_observation_order_and_history():

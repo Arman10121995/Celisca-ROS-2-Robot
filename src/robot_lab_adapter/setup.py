@@ -26,7 +26,8 @@ setup(
         ('share/' + package_name + '/policies/rl_sar/' + name,
          ['policies/rl_sar/%s/%s' % (name, item)
           for item in ('base.yaml', 'config.yaml', 'policy.onnx', 'source.json')])
-        for name in ('a1_legged_gym', 'b2_robot_lab', 'go2w_robot_lab', 'go2_himloco')
+        for name in ('a1_legged_gym', 'b2_robot_lab', 'go2w_robot_lab', 'go2_himloco',
+                     'g1_robomimic_locomotion')
     ] + [
         ('share/' + package_name + '/policies/go2_recovery_nju', [
             'policies/go2_recovery_nju/policy.onnx',

@@ -393,6 +393,10 @@ robots:
     xacro: unitree/g1_description/g1_29dof.urdf
     name: unitree_g1_29dof
     supported_modes: [display, loc]
+    # rl_sar g1/robomimic locomotion (recurrent LSTM actor, exported with its
+    # state as explicit inputs), run by the MuJoCo/Isaac in-step PD bridges in
+    # localization; experimental, walking validation pending.
+    features: [legged_policy]
     supports_room_vacuum: false
 
   unitree_go1:
