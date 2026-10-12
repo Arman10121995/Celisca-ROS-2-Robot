@@ -42,9 +42,13 @@ def test_wheeled_bases_run_every_mode_everywhere(robot, simulator):
 def test_legged_and_humanoid_robots_localize_where_the_bridges_hold_them(robot):
     assert runnable(robot, "pybullet") == {"display", "loc"}
     assert runnable(robot, "mujoco") == {"display", "loc"}
-    policy = "legged_policy" in PROFILES[robot].get("features", [])
+    features = PROFILES[robot].get("features", [])
+    policy = "legged_policy" in features
     assert runnable(robot, "isaac") == ({"display", "loc"} if policy else {"display"})
-    assert runnable(robot, "gazebo") == {"display"}
+    # Gazebo: the description's LiDAR and a ros2_control block for the
+    # policy's effort PD controller (Go2 only so far).
+    gazebo_policy = policy and {"ros2_control", "lidar_2d"} <= set(features)
+    assert runnable(robot, "gazebo") == ({"display", "loc"} if gazebo_policy else {"display"})
 
 
 def test_provisioned_policies_are_the_profiles_marked_legged_policy():

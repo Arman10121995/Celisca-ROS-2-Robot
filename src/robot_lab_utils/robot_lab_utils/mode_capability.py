@@ -23,8 +23,9 @@ follows /cmd_vel:
 * ``legged_policy`` - a model-matched learned locomotion policy is
   provisioned (robot_lab_adapter.legged_policy).  Its PD law runs inside
   the MuJoCo and Isaac physics steps, so in Isaac it provides the stance
-  the pose hold cannot (implemented 2026-10-12; validation per robot/map
-  pending).
+  the pose hold cannot; in Gazebo an effort joint_trajectory_controller
+  carries it for descriptions with a ``ros2_control`` block (implemented
+  2026-10-12; validation per robot/backend pending).
 
 Robot features come from robot_lab_robots/config/robots.yaml.
 """
@@ -72,7 +73,9 @@ def robot_features(robot_config, simulator=None):
         features.add("stands")  # a wheeled base rests on its wheels
     if simulator:
         features.update(BRIDGE_FEATURES.get(simulator, ()))
-        if "legged_policy" in features and simulator in POLICY_STANCE_SIMULATORS:
+        if "legged_policy" in features and (
+                simulator in POLICY_STANCE_SIMULATORS
+                or (simulator == "gazebo" and "ros2_control" in features)):
             features.add("stands")
     return features
 

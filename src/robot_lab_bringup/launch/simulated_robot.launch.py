@@ -1063,6 +1063,7 @@ def _build_simulation_actions(context):
     for note in algorithm_notes:
         print("[robot_lab] algorithm %s" % note)
 
+    legged_active = False  # a learned legged policy owns the joints (below)
     gazebo_enabled = _auto_bool(
         context,
         "start_gazebo",
@@ -1110,12 +1111,15 @@ def _build_simulation_actions(context):
         # simulator at every physics step - MuJoCo general actuators
         # (robot_lab_mujoco/joint_pd.py) or PhysX joint drives carrying its
         # gains (robot_lab_isaac) - so it replaces the passive hold and any
-        # effort controller on the same joints.  MuJoCo: opt-in via
-        # legged_policy:=<name|path>.  Isaac has no other stance for a dog
-        # (its pose hold let them drift and tip, 2026-09-23), so there the
-        # robot's provisioned policy is selected unless legged_policy:=none.
+        # effort controller on the same joints.  In Gazebo an effort
+        # joint_trajectory_controller (ign_ros2_control) carries the same
+        # gains, for descriptions with a ros2_control block.  MuJoCo: opt-in
+        # via legged_policy:=<name|path>.  Isaac and Gazebo have no other
+        # stance for a dog (Isaac's pose hold let them drift and tip,
+        # 2026-09-23), so there the robot's provisioned policy is selected
+        # unless legged_policy:=none.
         legged_policy_name = _launch_value(context, "legged_policy").strip()
-        if not legged_policy_name and simulator == "isaac" and mode_name == "loc":
+        if not legged_policy_name and simulator in ("isaac", "gazebo") and mode_name == "loc":
             from robot_lab_adapter.legged_policy import default_policy_for
             legged_policy_name = default_policy_for(robot_model)
         if _is_none(legged_policy_name) or legged_policy_name.lower() == "none":
@@ -1124,14 +1128,20 @@ def _build_simulation_actions(context):
         legged_pd_config = ""
         legged_initial_positions = ""
         legged_physics_rate = ""
+        legged_controller_params = ""
         legged_active = False
         if legged_policy_name:
-            if simulator not in ("mujoco", "isaac") or mode_name != "loc":
+            if simulator not in ("mujoco", "isaac", "gazebo") or mode_name != "loc":
                 raise RuntimeError(
-                    "legged_policy:=%s needs mode:=loc in MuJoCo or Isaac; the "
-                    "rl_sar contract runs through their in-step PD bridges "
-                    "only. Other backends/modes have no actuation path for it."
-                    % legged_policy_name)
+                    "legged_policy:=%s needs mode:=loc in MuJoCo, Isaac or "
+                    "Gazebo; the rl_sar contract runs through their in-step "
+                    "PD paths only. Other backends/modes have no actuation "
+                    "path for it." % legged_policy_name)
+            if simulator == "gazebo" and not _description_has_ros2_control(model_path):
+                raise RuntimeError(
+                    "legged_policy:=%s in Gazebo needs a ros2_control block in "
+                    "the %s description for its effort PD controller."
+                    % (legged_policy_name, robot_model))
             from robot_lab_adapter.legged_policy import (
                 PolicyContract, mujoco_pd_config,
             )
@@ -1161,6 +1171,14 @@ def _build_simulation_actions(context):
                                        legged_contract.default_dof_pos)})
             legged_physics_rate = "%g" % (1.0/legged_contract.dt)
             legged_active = True
+            if simulator == "gazebo":
+                import tempfile
+                import yaml as _yaml
+                from robot_lab_adapter.legged_policy import ros2_control_pd_parameters
+                handle, legged_controller_params = tempfile.mkstemp(
+                    prefix="legged_pd_controller_", suffix=".yaml")
+                with os.fdopen(handle, "w") as stream:
+                    _yaml.safe_dump(ros2_control_pd_parameters(legged_contract), stream)
             if simulator == "isaac":
                 # Isaac spawns where it is told; keep the straight-legged
                 # rest pose above the floor before the PD drives fold it
@@ -1254,6 +1272,8 @@ def _build_simulation_actions(context):
                 parameters=[{
                     "use_sim_time": _as_bool(use_sim_time, True),
                     "policy": legged_policy_dir,
+                    "trajectory_topic": ("/legged_pd_controller/joint_trajectory"
+                                         if simulator == "gazebo" else ""),
                     "fall_tilt_rad": _as_float(
                         _launch_value(context, "legged_policy_fall_tilt_rad"),
                         1.0),
@@ -1324,6 +1344,19 @@ def _build_simulation_actions(context):
                 }.items(),
             )
         )
+        if legged_active and simulator == "gazebo":
+            # The description's ros2_control plugin owns the joints; the
+            # policy's PD runs in an effort trajectory controller loaded
+            # with the policy gains.
+            for spawner_arguments in (
+                    ["joint_state_broadcaster"],
+                    ["legged_pd_controller", "-t",
+                     "joint_trajectory_controller/JointTrajectoryController",
+                     "-p", legged_controller_params]):
+                actions.append(Node(
+                    package="controller_manager", executable="spawner",
+                    arguments=spawner_arguments + ["--controller-manager-timeout", "120"],
+                    output="screen"))
 
     controller_config = mode_config.get("controller", {})
     # ros2_control (controller_manager + robot_lab_controller + joint_state_broadcaster)
@@ -1334,7 +1367,9 @@ def _build_simulation_actions(context):
     # /controller_manager.  In display mode the Gazebo controller layer is
     # likewise skipped — there is nothing to drive yet.
     _sim_for_controller = _launch_value(context, "simulator")
-    if _section_enabled(controller_config) and _sim_for_controller == "gazebo":
+    # A legged policy's own PD controller replaces the wheeled controller layer.
+    if (_section_enabled(controller_config) and _sim_for_controller == "gazebo"
+            and not legged_active):
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(controller_share, "controller.launch.py")),

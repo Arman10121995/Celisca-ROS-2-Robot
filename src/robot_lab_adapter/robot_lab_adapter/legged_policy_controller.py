@@ -4,8 +4,11 @@
 Runs one provisioned rl_sar policy (robot_lab_adapter/legged_policy.py) at
 its trained period (dt x decimation, in simulation time) from the
 simulator's /joint_states and /imu/out, and publishes joint targets that
-the MuJoCo bridge tracks with the policy's own PD law at every physics
-step (robot_lab_mujoco/joint_pd.py).
+the simulator tracks with the policy's own PD law: the MuJoCo and Isaac
+bridges take ``targets_topic`` (robot_lab_mujoco/joint_pd.py, PhysX
+drives); Gazebo takes the same targets as a one-point JointTrajectory on
+``trajectory_topic`` for an effort joint_trajectory_controller carrying the
+policy gains (legged_policy.ros2_control_pd_parameters).
 
 Safety: commands are clamped to the policy's command range and expire
 after ``command_timeout_s`` (zero velocity: the policy stands); stale
@@ -25,6 +28,7 @@ from rclpy.node import Node
 from sensor_msgs.msg import Imu, JointState
 from std_msgs.msg import Float64MultiArray, String
 from std_srvs.srv import Trigger
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from robot_lab_adapter.legged_policy import (
     LeggedPolicy, LeggedState, PolicyContract, clamp_command, mujoco_pd_config,
@@ -44,11 +48,28 @@ def policy_directory(name):
 pd_config = mujoco_pd_config
 
 
+def trajectory_message(names, positions, velocities, velocity_joint):
+    """One-point JointTrajectory for an effort joint_trajectory_controller.
+
+    Position joints carry their target position and zero velocity (the
+    policy's ``kd (0 - dq)`` term); velocity joints (wheels, controller
+    gain p = 0) carry their target velocity.  An unstamped header and
+    time_from_start 0 make the controller apply it immediately.
+    """
+    point = JointTrajectoryPoint()
+    point.positions = [0.0 if wheel else float(p) for p, wheel in zip(positions, velocity_joint)]
+    point.velocities = [float(v) if wheel else 0.0 for v, wheel in zip(velocities, velocity_joint)]
+    message = JointTrajectory(joint_names=list(names))
+    message.points = [point]
+    return message
+
+
 class LeggedPolicyController(Node):
     def __init__(self):
         super().__init__('legged_policy_controller')
         self.declare_parameter('policy', '')
         self.declare_parameter('targets_topic', '/legged_policy/joint_targets')
+        self.declare_parameter('trajectory_topic', '')
         self.declare_parameter('command_topics', ['/robot_lab_controller/cmd_vel_unstamped', '/cmd_vel'])
         self.declare_parameter('command_limits', [0.8, 0.4, 1.0])
         self.declare_parameter('command_timeout_s', 0.5)
@@ -66,6 +87,9 @@ class LeggedPolicyController(Node):
         self.targets_pub = self.create_publisher(
             Float64MultiArray, self.get_parameter('targets_topic').value, 1)
         self.status_pub = self.create_publisher(String, '/legged_policy/status', 1)
+        trajectory_topic = str(self.get_parameter('trajectory_topic').value or '')
+        self.trajectory_pub = (self.create_publisher(JointTrajectory, trajectory_topic, 1)
+                               if trajectory_topic else None)
         self.create_subscription(JointState, '/joint_states', self.on_joints, 5)
         self.create_subscription(Imu, '/imu/out', self.on_imu, 5)
         for topic in self.get_parameter('command_topics').value:
@@ -106,8 +130,12 @@ class LeggedPolicyController(Node):
         return response
 
     def publish(self, targets):
-        values = np.where([m == 'velocity' for m in self._modes()], targets.velocity, targets.position)
+        velocity_joint = [m == 'velocity' for m in self._modes()]
+        values = np.where(velocity_joint, targets.velocity, targets.position)
         self.targets_pub.publish(Float64MultiArray(data=[float(v) for v in values]))
+        if self.trajectory_pub is not None:
+            self.trajectory_pub.publish(trajectory_message(
+                self.policy.names, targets.position, targets.velocity, velocity_joint))
 
     def _modes(self):
         wheels = set(self.contract.wheel_indices)

@@ -408,9 +408,10 @@ robots:
     name: unitree_go2
     supported_modes: [display, loc]
     # Provisioned rl_sar policy (robot_lab_adapter/policies/rl_sar), run by
-    # the MuJoCo/Isaac in-step PD bridges in localization; experimental,
-    # walking validation per backend pending.
-    features: [legged_policy]
+    # the MuJoCo/Isaac in-step PD bridges and, through the description's
+    # ros2_control block, a Gazebo effort PD controller in localization; the
+    # description carries a head LiDAR (go2_sim.xacro).  Experimental.
+    features: [legged_policy, ros2_control, lidar_2d]
     supports_room_vacuum: false
 
   unitree_go2w:

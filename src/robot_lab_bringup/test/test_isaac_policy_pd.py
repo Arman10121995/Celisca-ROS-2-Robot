@@ -78,7 +78,8 @@ def _launch_actions(**overrides):
     context.launch_configurations.update(dict(
         robot_model='unitree_go2', simulator='isaac', mode='loc', map_name='nav_empty',
         gui='false', start_rviz='false'), **overrides)
-    with mock.patch('subprocess.Popen'):
+    # No run-id reaper process from a test; xacro still runs for real.
+    with mock.patch.object(module, '_run_id_actions', lambda: []):
         return context, module._build_simulation_actions(context)
 
 
@@ -119,3 +120,28 @@ def test_isaac_policy_can_be_turned_off():
     arguments = _simulator_arguments(context, actions)
     assert 'joint_pd_config' not in arguments
     assert not _policy_nodes(actions)
+
+
+@pytest.mark.integration
+def test_gazebo_localization_runs_the_policy_through_an_effort_pd_controller():
+    import yaml
+    context, actions = _launch_actions(simulator='gazebo')
+    nodes = _policy_nodes(actions)
+    assert len(nodes) == 1
+    from launch_ros.actions import Node
+    spawners = [a for a in actions if isinstance(a, Node)
+                and getattr(a, '_Node__node_executable', '') == 'spawner']
+    arguments = [[''.join(p.perform(context) for p in argument) if not isinstance(argument, str) else argument
+                  for argument in spawner._Node__arguments] for spawner in spawners]
+    controller = [a for a in arguments if a[0] == 'legged_pd_controller']
+    assert [a[0] for a in arguments] == ['joint_state_broadcaster', 'legged_pd_controller']
+    assert controller[0][controller[0].index('-t')+1] == \
+        'joint_trajectory_controller/JointTrajectoryController'
+    params = yaml.safe_load(open(controller[0][controller[0].index('-p')+1]))
+    gains = params['legged_pd_controller']['ros__parameters']['gains']
+    assert len(gains) == 12 and all(g['p'] > 0 and g['d'] > 0 for g in gains.values())
+    # The wheeled controller layer is not started for a policy-driven dog.
+    from launch.actions import IncludeLaunchDescription
+    includes = [a for a in actions if isinstance(a, IncludeLaunchDescription)]
+    assert not any('controller.launch.py' in str(a.launch_description_source.location)
+                   for a in includes)

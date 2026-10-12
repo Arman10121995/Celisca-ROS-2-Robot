@@ -296,6 +296,38 @@ def default_policy_for(robot_model):
     return ''
 
 
+LEGGED_PD_CONTROLLER = 'legged_pd_controller'
+
+
+def ros2_control_pd_parameters(contract, controller=LEGGED_PD_CONTROLLER):
+    """ros2_control joint_trajectory_controller parameters with this policy's PD law.
+
+    For Gazebo (ign_ros2_control): the controller commands joint efforts
+    from ``p (q* - q) + d (dq* - dq)`` at the controller manager's rate,
+    using measured joint velocity (no differentiated position error), which
+    is the policy's ``tau = kp (q* - q) + kd (dq* - dq)``.  Wheel joints
+    track only their target velocity (p = 0).  Torques are capped by the
+    description's effort command limits.  Every message on
+    ``/<controller>/joint_trajectory`` is a single point with the targets.
+    """
+    names = contract.training_joint_names()
+    wheels = set(contract.wheel_indices)
+    gains = {name: {'p': 0.0 if i in wheels else float(contract.rl_kp[i]),
+                    'd': float(contract.rl_kd[i]), 'i': 0.0, 'i_clamp': 0.0,
+                    'ff_velocity_scale': 0.0}
+             for i, name in enumerate(names)}
+    return {controller: {'ros__parameters': {
+        'joints': list(names),
+        'command_interfaces': ['effort'],
+        'state_interfaces': ['position', 'velocity'],
+        'gains': gains,
+        'allow_partial_joints_goal': False,
+        'open_loop_control': False,
+        'allow_nonzero_velocity_at_trajectory_end': True,
+        'constraints': {'stopped_velocity_tolerance': 0.0, 'goal_time': 0.0},
+    }}}
+
+
 def mujoco_pd_config(contract, topic='/legged_policy/joint_targets',
                      timeout_s=0.5):
     """The MuJoCo bridge ``joint_pd_config`` for this policy (robot_lab_mujoco/joint_pd.py).

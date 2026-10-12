@@ -29,6 +29,7 @@ from robot_lab_adapter.legged_policy import (
     clamp_command,
     default_policy_for,
     mujoco_pd_config,
+    ros2_control_pd_parameters,
 )
 
 POLICY_ROOT = pkg / 'policies' / 'rl_sar'
@@ -251,6 +252,35 @@ def test_mujoco_pd_config_and_bridge_contract():
         np.testing.assert_allclose(bridge.command(1.1 + bridge.timeout + 0.1),
                                    bridge.default)
         assert bridge.stale(1.1 + bridge.timeout + 0.1) is True
+
+
+def test_gazebo_effort_controller_carries_the_policy_pd_law():
+    for name in PROVISIONED_POLICIES:
+        contract = _load(name)
+        params = ros2_control_pd_parameters(contract)['legged_pd_controller']['ros__parameters']
+        wheels = set(contract.wheel_indices)
+        assert params['joints'] == contract.training_joint_names()
+        assert params['command_interfaces'] == ['effort']
+        assert params['state_interfaces'] == ['position', 'velocity']
+        for index, joint in enumerate(params['joints']):
+            gains = params['gains'][joint]
+            # Velocity error from measured joint velocity, no integral,
+            # no feed-forward: tau = kp (q* - q) + kd (dq* - dq).
+            assert gains['p'] == (0.0 if index in wheels else float(contract.rl_kp[index]))
+            assert gains['d'] == float(contract.rl_kd[index])
+            assert gains['i'] == 0.0 and gains['ff_velocity_scale'] == 0.0
+
+
+def test_trajectory_message_carries_positions_and_wheel_velocities():
+    pytest.importorskip('trajectory_msgs')
+    from robot_lab_adapter.legged_policy_controller import trajectory_message
+    message = trajectory_message(['hip', 'wheel'], [0.3, 9.0], [0.0, 4.0], [False, True])
+    assert message.joint_names == ['hip', 'wheel']
+    (point,) = message.points
+    assert list(point.positions) == [0.3, 0.0]
+    assert list(point.velocities) == [0.0, 4.0]
+    assert point.time_from_start.sec == 0 and point.time_from_start.nanosec == 0
+    assert message.header.stamp.sec == 0
 
 
 def test_joint_pd_actuators_are_added_once_per_joint():
