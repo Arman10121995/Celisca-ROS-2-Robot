@@ -34,4 +34,8 @@ controller_server:
     FollowPath:
       xy_goal_tolerance: 0.07
       desired_linear_vel: 0.3
+      # MPPI's own speed cap (Nav2 default 0.5 m/s), matched to the other
+      # controllers so comparisons share one limit (2026-10-12 comparison
+      # ran MPPI at 0.5 while the others drove at 0.3).
+      vx_max: 0.3
       rotate_to_heading_angular_vel: 0.15
