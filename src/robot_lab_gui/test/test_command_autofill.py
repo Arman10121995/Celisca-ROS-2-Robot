@@ -643,8 +643,8 @@ def test_go2_policy_opt_in_autofills_only_its_supported_launch(app):
 
 
 def test_legged_policy_opt_in_autofills_per_robot(app):
-    """The rl_sar legged policy follows the same contract as the Go2 flat
-    policy: selectable only on MuJoCo loc for its four bound robots, and
+    """The rl_sar legged policy is an opt-in on MuJoCo loc for its four bound
+    robots, always on in Isaac/Gazebo loc where it is the only stance, and
     the command carries that robot's exact policy name."""
     from robot_lab_gui.launcher import LEGGED_POLICY_PROFILES
     select(app, app.robot_combo, "unitree_go2")
@@ -659,10 +659,17 @@ def test_legged_policy_opt_in_autofills_per_robot(app):
     # Unbound robots and non-MuJoCo/loc launches never carry the flag.
     select(app, app.robot_combo, "bumperbot")
     assert "legged_policy" not in displayed_command(app)
+    # Isaac (and Gazebo for Go2) have no other stance: the policy always
+    # runs there, so the option is not a choice but the command says so.
     select(app, app.robot_combo, "unitree_go2")
-    select(app, app.simulator_combo, "gazebo")
+    select(app, app.simulator_combo, "isaac")
     assert app.legged_policy_checkbox.instate(["disabled"])
+    assert "legged_policy:=go2_himloco" in displayed_command(app)
+    select(app, app.simulator_combo, "gazebo")
+    assert "legged_policy:=go2_himloco" in displayed_command(app)
+    select(app, app.robot_combo, "unitree_a1")
     assert "legged_policy" not in displayed_command(app)
+    select(app, app.robot_combo, "unitree_go2")
     select(app, app.simulator_combo, "mujoco")
     app.mode_buttons["display"].invoke()
     assert app.legged_policy_checkbox.instate(["disabled"])

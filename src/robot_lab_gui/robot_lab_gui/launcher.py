@@ -364,16 +364,20 @@ def subprocess_env():
     return env
 
 
-# Model-matched rl_sar legged policies surfaced in Launch (MuJoCo loc
-# only).  Mirrors robot_lab_adapter/legged_policy.POLICY_PROFILES; a fast
-# test pins the two mappings equal because the GUI runs without the
-# adapter package importable.
+# Model-matched rl_sar legged policies surfaced in Launch (loc mode).
+# Mirrors robot_lab_adapter/legged_policy.POLICY_PROFILES; a fast test pins
+# the two mappings equal because the GUI runs without the adapter package
+# importable.  MuJoCo: opt-in.  Isaac, and Gazebo for descriptions with a
+# ros2_control block, have no other stance, so there the policy always runs.
 LEGGED_POLICY_PROFILES = {
     'unitree_a1': 'a1_legged_gym',
     'unitree_b2': 'b2_robot_lab',
     'unitree_go2': 'go2_himloco',
     'unitree_go2w': 'go2w_robot_lab',
 }
+# Robots whose Gazebo description carries the ros2_control block the
+# policy's effort PD controller needs (robots.yaml features).
+LEGGED_POLICY_GAZEBO = {'unitree_go2'}
 
 
 class SimulationLauncherGui(tk.Tk):
@@ -947,7 +951,7 @@ class SimulationLauncherGui(tk.Tk):
         self.aerial_map_browse.pack(side='left')
         add_tooltip(self.aerial_map_entry, 'Empty: start a new map. A saved .db: localize in it (read-only).')
 
-        # Model-matched rl_sar legged policy (go2/a1/b2/go2w on MuJoCo loc).
+        # Model-matched rl_sar legged policy (go2/a1/b2/go2w, loc mode).
         self.legged_policy_checkbox = ttk.Checkbutton(
             advanced,
             text="Model-matched legged policy (rl_sar, experimental)",
@@ -956,10 +960,12 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.legged_policy_checkbox.grid(row=33, column=0, sticky="w", pady=(10, 0))
         add_tooltip(self.legged_policy_checkbox,
-                    "MuJoCo localization only, for Go2/A1/B2/Go2W. Runs the "
-                    "policy's own PD law inside the simulator and replaces the "
-                    "Go2 stance controller and the passive hold. Per-robot "
-                    "walk validation is pending; Stop/neutral still applies.")
+                    "Localization, for Go2/A1/B2/Go2W. Runs the policy's own "
+                    "PD law inside the simulator. MuJoCo: optional, replaces "
+                    "the Go2 stance controller and the passive hold. Isaac "
+                    "(and Gazebo for Go2): always on, it is the stance. "
+                    "Measured walks: MuJoCo all four, Isaac Go2; Stop/neutral "
+                    "still applies.")
 
         steering_frame = self.steering_frame = ttk.Frame(self.drive_pad_host)
         steering_frame.grid(row=0, column=0, sticky="ew", pady=(8, 0))
@@ -2069,8 +2075,19 @@ class SimulationLauncherGui(tk.Tk):
                 and self.launch_kind_var.get() == "simulation")
 
     def _legged_policy_selectable(self):
+        """MuJoCo loc: the operator may switch the policy on."""
         return (self.robot_var.get() in LEGGED_POLICY_PROFILES
                 and self.simulator_var.get() == "mujoco"
+                and self.mode_var.get() == "loc"
+                and self.launch_kind_var.get() == "simulation")
+
+    def _legged_policy_required(self):
+        """Isaac/Gazebo loc: the policy is the robot's only stance there."""
+        simulator = self.simulator_var.get()
+        robot = self.robot_var.get()
+        return (robot in LEGGED_POLICY_PROFILES
+                and (simulator == "isaac"
+                     or (simulator == "gazebo" and robot in LEGGED_POLICY_GAZEBO))
                 and self.mode_var.get() == "loc"
                 and self.launch_kind_var.get() == "simulation")
 
@@ -2196,7 +2213,8 @@ class SimulationLauncherGui(tk.Tk):
             command = [part for part in command
                        if not part.startswith("go2_policy_path:=")]
             command.append("go2_policy_path:=auto")
-        if command and self.legged_policy_var.get() and self._legged_policy_selectable():
+        if command and ((self.legged_policy_var.get() and self._legged_policy_selectable())
+                        or self._legged_policy_required()):
             command = [part for part in command
                        if not part.startswith("legged_policy:=")]
             command.append("legged_policy:=" + LEGGED_POLICY_PROFILES[self.robot_var.get()])
