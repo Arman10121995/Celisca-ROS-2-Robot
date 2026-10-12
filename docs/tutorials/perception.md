@@ -120,7 +120,34 @@ obstacles = {p ∈ P | p_z > ground_threshold}
    - Dynamic obstacles (moving targets)
    - Occluded scenarios (partial visibility)
 
-## Usage Examples
+## Run
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+
+# Run obstacle detector
+ros2 run robot_lab_algorithms obstacle_detector
+
+# Run Euclidean clustering
+ros2 run robot_lab_algorithms euclidean_clusterer
+
+# Run DBSCAN clustering
+ros2 run robot_lab_algorithms dbscan_clusterer
+
+# Run RANSAC ground removal
+ros2 run robot_lab_algorithms ransac_ground_removal
+
+# Run point cloud segmenter
+ros2 run robot_lab_algorithms pointcloud_segmenter
+```
+
+All pipelines subscribe to a 3D point-cloud topic (for example
+`/oakd/points` or `/cloud_in`) and publish their structured results on a
+named topic per pipeline. Point-cloud availability is the shared input
+stratum; run the pipelines in the config files that match the sensor
+geometry before comparing their output topics.
 
 ### Running Individual Pipelines
 

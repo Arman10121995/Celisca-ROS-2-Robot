@@ -88,6 +88,38 @@ source install/setup.bash
 ros2 run robot_lab_benchmark robot-lab-concurrent \
   /workspace/molar/robot_lab_runtime/experiments/jobs.json \
   --output /workspace/molar/robot_lab_runtime/experiments/run-001 --parallel 1
+
+## Run
+
+Open **Run / Command & algorithms** and queue a stationary capture from
+the GUI or the CLI.
+
+**GUI path:** in Launch, choose an exact robot/map/backend/mode and
+options, open **Benchmark → Concurrent experiments**, set capture
+duration, per-job RSS, CPU and artifact budgets, then **Queue Launch
+selection** and **Run queue**. Startup is bounded and capture begins
+only after two actual `/clock` messages, or FCU `/px4/odometry` for
+PX4 jobs. Optional task commands run in that job's ROS domain after
+readiness; a task exit zero means process completion, not physical
+success.
+
+**CLI path:** the same selection as a JSON array (see CLI
+specification above); run with
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 run robot_lab_benchmark robot-lab-concurrent \
+  /workspace/molar/robot_lab_runtime/experiments/jobs.json \
+  --output /workspace/molar/robot_lab_runtime/experiments/run-001 \
+  --parallel 1
+```
+
+Expected outputs are `workload.json`, `mission-trace.jsonl` and
+`mission-result.json`, plus per-job logs and telemetry (only
+`/odom/ground_truth` if Nav2 is used; stationary captures contain no
+robot motion).
 ```
 
 Use `readiness_topic: /px4/odometry` for PX4. Duration is limited to 3600 s,

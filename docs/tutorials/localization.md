@@ -232,7 +232,34 @@ S(p) = exp(-½·(p - μ)ᵀ·Σ⁻¹·(p - μ))
    convergence_time = first_time_error_below_threshold(estimated_pose, ground_truth, threshold=0.1)
    ```
 
-## Usage Examples
+## Run
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+
+# Run wheel dead reckoning
+ros2 run robot_lab_algorithms dead_reckoning
+
+# Run AMCL particle filter
+ros2 run robot_lab_algorithms amcl
+
+# Run ICP scan matching
+ros2 run robot_lab_algorithms icp_localization
+
+# Run NDT registration
+ros2 run robot_lab_algorithms ndt_localization
+
+# Run RGB-D SLAM localization
+ros2 run robot_lab_algorithms rgbd_slam_localization
+```
+
+The selected robot must publish `/odom/ground_truth` and, for the
+sensor-based methods, `/scan` must exist. Wheel odometry must be live
+before the particle filter begins. After the launch settles, capture a
+fresh `/odom/ground_truth` sample to verify the map and sensor geometry
+agree with the selected world.
 
 ### Running Individual Localization Methods
 

@@ -9,6 +9,11 @@ standard MuJoCo ROS route. It is a controlled evidence walkthrough, not a
 claim that Go2 terrain traversal, navigation or the GUI velocity-base mode is
 qualified.
 
+The newer model-matched rl_sar policies (`legged_policy:=go2_himloco` and the
+Go2W/A1/B2 variants) are a separate experimental path; see
+[legged-policies](legged-policies.md). They do not replace the measured
+evidence below.
+
 The recorded evidence is under
 [`docs/status/evidence/r52-go2-policy-2026-09-25/`](../status/evidence/r52-go2-policy-2026-09-25/README.md).
 At the recorded September source stage, the policy produced measured forward

@@ -54,6 +54,7 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_tuck_forces.py"
   "$ADP_TEST/test_r5_2_go2_entry_phase.py"
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
+  "$ADP_TEST/test_r5_2_legged_policy.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
   "$BRG_TEST/test_asset_groups.py"

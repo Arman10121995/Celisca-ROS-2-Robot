@@ -116,7 +116,27 @@ base commands. The robot's changing collision bounds produce a conservative
 convex full-body footprint, including arm extension. These stability/ownership
 rules are implemented; physical stability and mission validation remain pending.
 
-## Experimental native mapping and navigation
+## Run
+
+Enable **Native mobile controls** in the GUI before Run: Select the
+normal complete Stretch family and exact original/Stretch 3 variant →
+MuJoCo → Display → enable **Native mobile controls**. Drive/WASD uses
+actual source wheel cylinders, axes, axle and transmissions (original
+Stretch uses forward/turn tendon motors; Stretch 3 retains original
+wheel velocity servos). Stop the base before jogging/Servo/replay, and
+retract the arm tendon below 0.15 m before Drive — active articulation
+motion and active sequences block base commands. Navigation and taught
+replay run through the same executor as the other native tasks; the
+measured base/articulation must be stopped before a navigation destination
+is added, and after each navigation step the stopped-base measured
+articulation is replayed.
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=stretch simulator:=mujoco map_name:=nav_empty mode:=display gui:=false start_rviz:=false enable_joystick:=false
+```
 
 Keep Launch's outer **Display** mode and explicit **Native mobile controls**.
 Choose the separate **Native workflow** display/loc/slam/3d_slam/nav below it.

@@ -46,6 +46,7 @@ pure numerical examples. For workspace setup, follow the current root
 | State Estimation | [Diagonal filter](state_estimation.md) | Constant-velocity prediction plus independent scalar corrections |
 | Sensor Fusion | [Complementary tilt filter](sensor_fusion.md) | The current filter's numerical response and axis-convention caveat |
 | Locomotion policy | [Go2 flat-ground policy](go2.md) | Opt-in MuJoCo stance, command-loss stop, forward/turn and reverse dead-zone evidence; not terrain/navigation qualification |
+| Locomotion policy | [Model-matched legged policies (rl_sar)](legged-policies.md) | Exact-model rl_sar checkpoints on Go2/Go2W/A1/B2 through the MuJoCo in-step PD bridge; software contracts only, walking validation pending |
 
 There are no completed tutorial comparisons for local planning or control.
 The Go2 tutorial is a bounded runtime evidence walkthrough, not a replacement
