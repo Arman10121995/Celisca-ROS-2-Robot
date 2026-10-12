@@ -121,19 +121,22 @@ algorithms:
       plugin: nav2_navfn_planner/NavfnPlanner
     rrt_planner:
       # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
-      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: rrt_planner}}
+      # blocked_at 80 keeps sampled paths ~7 cm inside the inflation band:
+      # at the inscribed boundary (99) RRT/RRT* paths grazed walls and the
+      # controller's collision check stopped on them (2026-10-12: 8/15, 9/15).
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: rrt_planner, blocked_at: 80}}
       serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
     voronoi_planner:
       # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
-      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: voronoi_planner}}
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: voronoi_planner, blocked_at: 80}}
       serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
     prm_planner:
       # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
-      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: prm_planner}}
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: prm_planner, blocked_at: 80}}
       serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
     rrt_star_planner:
       # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
-      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: rrt_star_planner}}
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: rrt_star_planner, blocked_at: 80}}
       serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
 
   local_planning:

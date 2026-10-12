@@ -213,6 +213,13 @@ def _make_global_planner_node():
             self.declare_parameter('robot_frame', 'base_footprint')
             self.declare_parameter('seed', 0)
             self.declare_parameter('path_spacing', 0.05)
+            # OccupancyGrid value from which a cell is blocked.  99 is the
+            # inscribed radius; sampled paths then graze it and the
+            # controller's collision check stops on them (2026-10-12
+            # comparison: RRT 8/15, RRT* 9/15).  Lower values keep a margin
+            # inside the inflation band (80 ~ 0.07 m beyond the footprint
+            # at Bumperbot's 0.55 m / factor 3 inflation).
+            self.declare_parameter('blocked_at', 99)
             self.name = str(self.get_parameter('planner').value)
             if self.name not in grid_planners.PLANNERS:
                 raise ValueError('unknown planner %r; choose from %s'
@@ -263,7 +270,8 @@ def _make_global_planner_node():
                 goal_handle.abort()
                 return result
             goal = (request.goal.pose.position.x, request.goal.pose.position.y)
-            view = grid_planners.GridView.from_msg(costmap)
+            view = grid_planners.GridView.from_msg(
+                costmap, blocked_at=int(self.get_parameter('blocked_at').value))
             entry = nearest_free(view, start)
             if entry is None or not view.is_free(*goal):
                 self.get_logger().warn('%s: start or goal blocked in the costmap' % self.name)

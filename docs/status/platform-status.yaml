@@ -1252,7 +1252,7 @@ tasks:
           - "docs/tutorials/planning.md: comprehensive documentation with path cost metrics"
           - "verify_r7_complete.py: all requirements satisfied"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
+        next_action: "2026-10-12/13 claude: eight runnable global planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals): A* 15/15, NavFn 15/15, PRM 15/15, Voronoi roadmap 14/15 (most clearance, 16% longer), Lattice 13/15 and Hybrid-A* 7/15 (arrival loops on a differential base), RRT* 9/15 and RRT 8/15 (paths on the inscribed boundary stopped by RPP's collision check). The robot_lab RRT/RRT*/PRM/Voronoi now serve Nav2 ComputePathToPose with correct algorithms (grid_planners.py); default clearance margin blocked_at 80 with a rerun queued. Remaining: rerun results, other robots/maps."
       R7.7:
         title: "Five local planners"
         state: "partial"
@@ -1437,7 +1437,7 @@ tasks:
           - "docs/tutorials/state_estimation_comparison.md"
           - "docs/status/evidence/r9-2-tutorials-2026-10-01.json"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "2026-10-12 claude: local planning is a measured comparison tutorial (docs/tutorials/local_planning_comparison.md) with per-goal truth metrics, paired ratios and every failure explained; the R4.3 two-planner global comparison is recorded and an eight-planner global comparison is running. Remaining categories (perception, localization, state estimation, sensor fusion, control) stay drafts until exercised the same way."
+        next_action: "2026-10-12 claude: local planning is a measured comparison tutorial (docs/tutorials/local_planning_comparison.md) with per-goal truth metrics, paired ratios and every failure explained; global planning is a measured eight-planner tutorial (docs/tutorials/global_planning_comparison.md) after the R4.3 predeclared pair. Remaining categories (perception, localization, state estimation, sensor fusion, control) stay drafts until exercised the same way."
       R9.3:
         title: "Evidence-generated support matrix and release gate"
         state: "active"

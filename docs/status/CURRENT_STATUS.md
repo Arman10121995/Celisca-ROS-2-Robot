@@ -14,13 +14,37 @@ October 12 (later): measured on master.
 - **MuJoCo speed.** Large-world MuJoCo steps are about twice as fast, with
   identical contacts. Labbot on celisca_floor_1 runs at RTF 0.675 (was
   0.31). [Evidence](evidence/p4-mujoco-step-2026-10-12/README.md).
-- **Legged policies.** Four model-matched rl_sar policies (Go2, A1, B2,
-  Go2W) walk on `/cmd_vel` in MuJoCo localization.
-  [Evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md).
-  - Isaac localization now runs the same policies on PhysX drives. Go2
-    walks there too (0.385 m/s straight), and turns on the spot, which it
-    does not do in MuJoCo.
-  - The Go2 Gazebo path is implemented; its trial is queued.
+- **Legged policies.** Model-matched rl_sar policies walk on `/cmd_vel`
+  through each backend's in-step PD path.
+  [Evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md),
+  [tutorial](../tutorials/legged-policies.md).
+  - MuJoCo: Go2, A1, B2, Go2W and the Unitree G1 29-DoF humanoid.
+  - Isaac (PhysX drives at 200 Hz): Go2, A1, Go2W and G1. B2 overshoots
+    and drifts there.
+  - Gazebo (effort trajectory controller with the policy gains): Go2.
+  - G1 is the first humanoid walking here from a downloaded policy: a
+    recurrent LSTM actor, exported with its state as explicit inputs.
+    It does 0.38-0.39 m/s straight, spins and strafes in MuJoCo and Isaac.
+  - Isaac and Gazebo offer localization for these robots; mapping and
+    navigation stay gated.
+- **Planner comparisons.** These run on Bumperbot in nav_maze under
+  Gazebo, with identical seeded goals for every planner.
+  - The R4.3 predeclared A* vs NavFn comparison is done: 14/15 against
+    15/15, time ratio 0.98
+    ([evidence](evidence/r43-planner-comparison-2026-10-12/README.md)).
+  - The five-controller local planning comparison is the first measured
+    R9.2 tutorial ([tutorial](../tutorials/local_planning_comparison.md)).
+  - The robot_lab RRT/RRT*/PRM/Voronoi planners and the pure-pursuit and
+    follow-the-gap controllers now serve Nav2's actions. Selecting them
+    therefore really plans and drives.
+- **Drive patterns.** All 4WS steering patterns and mecanum drive in all
+  four backends
+  ([evidence](evidence/p56-drive-patterns-2026-10-12/README.md)).
+- **Licenses.** 118 of 125 declared dependencies are resolved from
+  installed metadata
+  ([evidence](evidence/r91-license-inventory-2026-10-12/README.md)).
+- **Support matrix.** It is regenerated from hashed reports: 211
+  measured cells ([matrix](support-matrix.md)).
 - **PX4 cleanup.** PX4 flights get a run id, a reaper and their own
   Harmonic discovery ports. A leftover flight had flooded every Gazebo run
   with ~6,500 log lines/s. Measurement scripts isolate Gazebo discovery.

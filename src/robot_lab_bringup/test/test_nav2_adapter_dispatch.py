@@ -34,7 +34,10 @@ def test_node_planners_serve_a_nav2_action(category, action, executable, ids):
     for algorithm in ids:
         entry = DISPATCH[category][algorithm]
         assert entry['node']['executable'] == executable
-        assert entry['node']['parameters'] == {'planner': algorithm}
+        assert entry['node']['parameters']['planner'] == algorithm
+        if category == 'global_planning':
+            # A clearance margin inside the inflation band (see the dispatch note).
+            assert 0 < entry['node']['parameters']['blocked_at'] < 99
         assert entry['serves'][action].startswith('/robot_lab/')
 
 
