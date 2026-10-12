@@ -162,6 +162,17 @@ def _build_mujoco_actions(context):
     # The whole drive block as JSON (a car's steering joints and limits).
     spawner_params["drive_config"] = ParameterValue(
         LaunchConfiguration("drive_config"), value_type=str)
+    # In-step joint PD for a model-matched legged policy (robot_lab_mujoco/
+    # joint_pd.py); built and validated by the parent launch from the
+    # policy's own contract.  Empty keeps the passive/effort plant.
+    joint_pd_config = LaunchConfiguration("joint_pd_config").perform(context).strip()
+    if joint_pd_config:
+        spawner_params["joint_pd_config"] = joint_pd_config
+        spawner_params["pd_joint_armature"] = ParameterValue(
+            LaunchConfiguration("pd_joint_armature"), value_type=float)
+    # Static-world collision midphase (world_collision.py): 'auto' disables
+    # it above the measured flex-element crossover, 'on'/'off' force it.
+    spawner_params["world_midphase"] = LaunchConfiguration("world_midphase").perform(context)
     from robot_lab_utils.sensor_config import sensor_parameters
     spawner_params.update(sensor_parameters(
         LaunchConfiguration('sensor_config').perform(context),
@@ -215,6 +226,20 @@ def generate_launch_description():
                         "time at real time instead of slow motion; 0 "
                         "disables catch-up."),
         DeclareLaunchArgument("effort_joint_armature", default_value="0.0"),
+        DeclareLaunchArgument(
+            "joint_pd_config", default_value="",
+            description="JSON in-step joint PD config (robot_lab_mujoco/"
+                        "joint_pd.py) for a model-matched legged policy; "
+                        "empty keeps the passive/effort plant."),
+        DeclareLaunchArgument(
+            "pd_joint_armature", default_value="0.01",
+            description="Joint armature added for in-step PD joints that "
+                        "have none in the model."),
+        DeclareLaunchArgument(
+            "world_midphase", default_value="auto",
+            description="Static-flex collision midphase: 'auto' disables it "
+                        "above the measured element crossover, 'on'/'off' "
+                        "force it."),
         DeclareLaunchArgument("perturbation_force_n", default_value="0.0"),
         DeclareLaunchArgument("perturbation_start_s", default_value="0.0"),
         DeclareLaunchArgument("perturbation_duration_s", default_value="0.0"),

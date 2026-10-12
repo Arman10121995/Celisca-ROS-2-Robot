@@ -97,11 +97,12 @@ class JointPDCommand:
             if armature > 0 and not joints[name].get('armature'):
                 joints[name].set('armature', '%g' % armature)
             if mode == 'position':
-                gain, bias = kp, '0 %r %r' % (-kp, -kd)
+                gain, bias = kp, '0 %g %g' % (float(-kp), float(-kd))
             else:
-                gain, bias = kd, '0 0 %r' % (-kd)
+                gain, bias = kd, '0 0 %g' % float(-kd)
             ET.SubElement(actuator, 'general', name=name + '_pd', joint=name,
-                          gaintype='fixed', gainprm='%r' % gain,
+                          gaintype='fixed', gainprm='%g' % float(gain),
                           biastype='affine', biasprm=bias,
-                          forcelimited='true', forcerange='%r %r' % (-limit, limit))
+                          forcelimited='true',
+                          forcerange='%g %g' % (float(-limit), float(limit)))
         return ET.tostring(root, encoding='unicode')

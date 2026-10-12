@@ -34,6 +34,18 @@ from typing import Dict, List, Optional, Sequence
 
 import numpy as np
 
+# Installed rl_sar policy directories (robot_lab_adapter/setup.py installs
+# exactly these; scripts/provision_rl_sar_policies.py produced them).
+PROVISIONED_POLICIES = ('a1_legged_gym', 'b2_robot_lab', 'go2_himloco',
+                        'go2w_robot_lab')
+
+# Lab robot profile each provisioned policy was trained for.  A policy is
+# only ever paired with its own model: the observation/PD contract is
+# exact-model, not a family default (each source.json carries the same
+# binding as 'profile').
+POLICY_PROFILES = {'a1_legged_gym': 'unitree_a1', 'b2_robot_lab': 'unitree_b2',
+                   'go2_himloco': 'unitree_go2', 'go2w_robot_lab': 'unitree_go2w'}
+
 _TERMS_WITH_DOFS = ("dof_pos", "dof_vel", "actions")
 
 
@@ -274,3 +286,29 @@ def clamp_command(command, limits):
         value = float(value)
         out.append(0.0 if not math.isfinite(value) else max(-limit, min(limit, value)))
     return out
+
+
+def default_policy_for(robot_model):
+    """Provisioned policy name for a lab robot profile, or '' if there is none."""
+    for name, profile in POLICY_PROFILES.items():
+        if profile == robot_model:
+            return name
+    return ''
+
+
+def mujoco_pd_config(contract, topic='/legged_policy/joint_targets',
+                     timeout_s=0.5):
+    """The MuJoCo bridge ``joint_pd_config`` for this policy (robot_lab_mujoco/joint_pd.py).
+
+    Leg joints track their target position and wheel joints their target
+    velocity, both with the policy's own kp/kd and torque limits, in
+    training joint order.
+    """
+    names = contract.training_joint_names()
+    wheels = set(contract.wheel_indices)
+    return dict(topic=topic, timeout_s=timeout_s, joints=names,
+                mode=['velocity' if i in wheels else 'position' for i in range(len(names))],
+                kp=[float(v) for v in contract.rl_kp], kd=[float(v) for v in contract.rl_kd],
+                torque_limit=[float(v) for v in contract.torque_limits],
+                default=[0.0 if i in wheels else float(v)
+                         for i, v in enumerate(contract.default_dof_pos)])

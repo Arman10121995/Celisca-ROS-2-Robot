@@ -1093,9 +1093,55 @@ def _build_simulation_actions(context):
             and simulator == "mujoco" and mode_name == "loc"
             and _as_bool(_launch_value(context, "bhl_enable_policy"), True)
         )
+        # Model-matched rl_sar legged policy (robot_lab_adapter/legged_policy).
+        # opt-in via legged_policy:=<name|path>; MuJoCo localization only.
+        # The policy's own PD law runs inside the simulator at every physics
+        # step (robot_lab_mujoco/joint_pd.py), so it replaces the passive
+        # hold and any effort controller on the same joints.
+        legged_policy_name = _launch_value(context, "legged_policy").strip()
+        legged_policy_dir = ""
+        legged_pd_config = ""
+        legged_initial_positions = ""
+        legged_active = False
+        if legged_policy_name:
+            if simulator != "mujoco" or mode_name != "loc":
+                raise RuntimeError(
+                    "legged_policy:=%s needs simulator:=mujoco mode:=loc; the "
+                    "rl_sar contract runs through the MuJoCo in-step PD bridge "
+                    "only. Other backends/modes have no actuation path for it."
+                    % legged_policy_name)
+            from robot_lab_adapter.legged_policy import (
+                PolicyContract, mujoco_pd_config,
+            )
+            policy_dir = legged_policy_name
+            if not os.path.isdir(policy_dir):
+                policy_dir = os.path.join(
+                    get_package_share_directory("robot_lab_adapter"), "policies",
+                    "rl_sar", legged_policy_name)
+            try:
+                legged_contract = PolicyContract.load(policy_dir)
+            except (OSError, ValueError, KeyError) as exc:
+                raise RuntimeError(
+                    "legged_policy:=%s is not a provisioned rl_sar policy "
+                    "directory: %s" % (legged_policy_name, exc))
+            bound_model = str(legged_contract.source.get("profile", ""))
+            if bound_model != robot_model:
+                raise RuntimeError(
+                    "legged_policy:=%s was trained for %s, not robot_model:=%s; "
+                    "a model-matched checkpoint is never reused across robots."
+                    % (legged_policy_name, bound_model or "<unrecorded>",
+                       robot_model))
+            legged_policy_dir = policy_dir
+            legged_pd_config = json.dumps(mujoco_pd_config(legged_contract))
+            legged_initial_positions = json.dumps({
+                name: float(value)
+                for name, value in zip(legged_contract.training_joint_names(),
+                                       legged_contract.default_dof_pos)})
+            legged_active = True
         go2_controller_active = (
             robot_model == "unitree_go2"
             and simulator == "mujoco" and mode_name == "loc"
+            and not legged_active
         )
         go2_mujoco = robot_model == "unitree_go2" and simulator == "mujoco"
         go2_policy_path = _launch_value(context, "go2_policy_path") if go2_controller_active else ""
@@ -1170,6 +1216,19 @@ def _build_simulation_actions(context):
                                       "fall_recovery_roll_free_hip_rad"), 0.0),
                 }],
             ))
+        if legged_active:
+            actions.append(Node(
+                package="robot_lab_adapter",
+                executable="legged-policy-controller",
+                output="screen",
+                parameters=[{
+                    "use_sim_time": _as_bool(use_sim_time, True),
+                    "policy": legged_policy_dir,
+                    "fall_tilt_rad": _as_float(
+                        _launch_value(context, "legged_policy_fall_tilt_rad"),
+                        1.0),
+                }],
+            ))
 
         actions.append(
             IncludeLaunchDescription(
@@ -1196,14 +1255,23 @@ def _build_simulation_actions(context):
                     # loc) stands on the same joint hold as in display mode;
                     # otherwise it collapses and scans the floor.  Wheeled
                     # robots are never held ('auto' in the spawners).
-                    "hold_position": ("false" if bhl_policy_active or go2_controller_active else
+                    "hold_position": ("false" if (bhl_policy_active or go2_controller_active
+                                                 or legged_active) else
                                       _launch_value(context, "display_hold")),
                     **({"effort_controller_config": os.path.join(
                         get_package_share_directory("robot_lab_robots"),
                         "unitree", "go2_description", "config", "go2_controllers.yaml")}
                        if go2_controller_active else {}),
-                    **({"initial_joint_positions": go2_initial_positions}
-                       if go2_mujoco else {}),
+                    # The legged policy's own default pose is the spawn pose;
+                    # otherwise the Go2 go2_policy_path-aware JSON applies.
+                    **({"initial_joint_positions": (legged_initial_positions
+                                                    if legged_active
+                                                    else go2_initial_positions)}
+                       if (go2_mujoco or legged_active) else {}),
+                    **({"joint_pd_config": legged_pd_config,
+                        "pd_joint_armature": _launch_value(
+                            context, "legged_policy_pd_armature")}
+                       if legged_active else {}),
                     **({"physics_timestep": "0.001"}
                        if go2_controller_active else {}),
                     **({"effort_joint_armature": "0.01"}
@@ -1543,6 +1611,24 @@ def generate_launch_description():
             description="Opt-in lateral hip target [rad] for the roll phase's "
                         "*other* pair, to separate the support from the moment. "
                         "0.0 (the default) means no splay on that pair."),
+        DeclareLaunchArgument(
+            "legged_policy", default_value="",
+            description="Model-matched rl_sar legged policy (MuJoCo loc "
+                        "only): a provisioned policy name under "
+                        "robot_lab_adapter/policies/rl_sar (a1_legged_gym, "
+                        "b2_robot_lab, go2_himloco, go2w_robot_lab) or an "
+                        "absolute policy directory. Empty keeps the robot's "
+                        "default controller. The policy must match "
+                        "robot_model; it replaces the passive hold and any "
+                        "effort controller on the same joints."),
+        DeclareLaunchArgument(
+            "legged_policy_fall_tilt_rad", default_value="1.0",
+            description="Trunk tilt [rad] beyond which the legged policy "
+                        "controller latches safe-stop and stands."),
+        DeclareLaunchArgument(
+            "legged_policy_pd_armature", default_value="0.01",
+            description="Joint armature added for the legged policy's PD "
+                        "joints that have none in the model."),
         DeclareLaunchArgument('arm_control', default_value='auto',
                               description='Native arm controller: auto, none or panda'),
         DeclareLaunchArgument('px4_vehicle', default_value='x500',

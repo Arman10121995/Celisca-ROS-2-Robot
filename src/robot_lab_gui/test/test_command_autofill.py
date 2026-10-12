@@ -642,6 +642,35 @@ def test_go2_policy_opt_in_autofills_only_its_supported_launch(app):
     assert "go2_policy_path:=auto" in displayed_command(app)
 
 
+def test_legged_policy_opt_in_autofills_per_robot(app):
+    """The rl_sar legged policy follows the same contract as the Go2 flat
+    policy: selectable only on MuJoCo loc for its four bound robots, and
+    the command carries that robot's exact policy name."""
+    from robot_lab_gui.launcher import LEGGED_POLICY_PROFILES
+    select(app, app.robot_combo, "unitree_go2")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["loc"].invoke()
+    assert app.legged_policy_checkbox.instate(["!disabled"])
+    app.legged_policy_checkbox.invoke()
+    assert "legged_policy:=go2_himloco" in displayed_command(app)
+    # Another bound robot carries its own exact-model policy.
+    select(app, app.robot_combo, "unitree_go2w")
+    assert "legged_policy:=go2w_robot_lab" in displayed_command(app)
+    # Unbound robots and non-MuJoCo/loc launches never carry the flag.
+    select(app, app.robot_combo, "bumperbot")
+    assert "legged_policy" not in displayed_command(app)
+    select(app, app.robot_combo, "unitree_go2")
+    select(app, app.simulator_combo, "gazebo")
+    assert app.legged_policy_checkbox.instate(["disabled"])
+    assert "legged_policy" not in displayed_command(app)
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["display"].invoke()
+    assert app.legged_policy_checkbox.instate(["disabled"])
+    assert "legged_policy" not in displayed_command(app)
+    assert set(LEGGED_POLICY_PROFILES) >= {
+        "unitree_a1", "unitree_b2", "unitree_go2", "unitree_go2w"}
+
+
 def test_bhl_policy_toggle_autofills_only_its_supported_launch(app):
     """The BHL walking policy is surfaced like the Go2 one: explicit in the
     command whenever the toggle is selectable, absent otherwise. It defaults

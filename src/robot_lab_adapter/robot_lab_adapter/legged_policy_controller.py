@@ -26,7 +26,9 @@ from sensor_msgs.msg import Imu, JointState
 from std_msgs.msg import Float64MultiArray, String
 from std_srvs.srv import Trigger
 
-from robot_lab_adapter.legged_policy import LeggedPolicy, LeggedState, PolicyContract, clamp_command
+from robot_lab_adapter.legged_policy import (
+    LeggedPolicy, LeggedState, PolicyContract, clamp_command, mujoco_pd_config,
+)
 
 
 def policy_directory(name):
@@ -37,15 +39,9 @@ def policy_directory(name):
     return os.path.join(get_package_share_directory('robot_lab_adapter'), 'policies', 'rl_sar', name)
 
 
-def pd_config(contract, topic, timeout_s=0.5):
-    """The MuJoCo bridge joint_pd_config for this policy (training joint order)."""
-    names = contract.training_joint_names()
-    wheels = set(contract.wheel_indices)
-    return dict(topic=topic, timeout_s=timeout_s, joints=names,
-                mode=['velocity' if i in wheels else 'position' for i in range(len(names))],
-                kp=[float(v) for v in contract.rl_kp], kd=[float(v) for v in contract.rl_kd],
-                torque_limit=[float(v) for v in contract.torque_limits],
-                default=[0.0 if i in wheels else float(v) for i, v in enumerate(contract.default_dof_pos)])
+# The bridge config lives with the pure contract module; kept under the
+# old name so existing callers of this node module keep working.
+pd_config = mujoco_pd_config
 
 
 class LeggedPolicyController(Node):

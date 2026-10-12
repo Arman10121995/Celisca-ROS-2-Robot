@@ -364,6 +364,18 @@ def subprocess_env():
     return env
 
 
+# Model-matched rl_sar legged policies surfaced in Launch (MuJoCo loc
+# only).  Mirrors robot_lab_adapter/legged_policy.POLICY_PROFILES; a fast
+# test pins the two mappings equal because the GUI runs without the
+# adapter package importable.
+LEGGED_POLICY_PROFILES = {
+    'unitree_a1': 'a1_legged_gym',
+    'unitree_b2': 'b2_robot_lab',
+    'unitree_go2': 'go2_himloco',
+    'unitree_go2w': 'go2w_robot_lab',
+}
+
+
 class SimulationLauncherGui(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -488,6 +500,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_limits_var = tk.StringVar(value="")
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
+        self.legged_policy_var = tk.BooleanVar(value=False)
         self.bhl_policy_var = tk.BooleanVar(value=True)
         self.native_policy_var = tk.BooleanVar(value=False)
         self.native_articulation_var = tk.BooleanVar(value=False)
@@ -933,6 +946,20 @@ class SimulationLauncherGui(tk.Tk):
         self.aerial_map_browse = ttk.Button(saved_map, text='Browse', command=self._browse_aerial_map)
         self.aerial_map_browse.pack(side='left')
         add_tooltip(self.aerial_map_entry, 'Empty: start a new map. A saved .db: localize in it (read-only).')
+
+        # Model-matched rl_sar legged policy (go2/a1/b2/go2w on MuJoCo loc).
+        self.legged_policy_checkbox = ttk.Checkbutton(
+            advanced,
+            text="Model-matched legged policy (rl_sar, experimental)",
+            variable=self.legged_policy_var,
+            command=self._update_validation_and_command,
+        )
+        self.legged_policy_checkbox.grid(row=33, column=0, sticky="w", pady=(10, 0))
+        add_tooltip(self.legged_policy_checkbox,
+                    "MuJoCo localization only, for Go2/A1/B2/Go2W. Runs the "
+                    "policy's own PD law inside the simulator and replaces the "
+                    "Go2 stance controller and the passive hold. Per-robot "
+                    "walk validation is pending; Stop/neutral still applies.")
 
         steering_frame = self.steering_frame = ttk.Frame(self.drive_pad_host)
         steering_frame.grid(row=0, column=0, sticky="ew", pady=(8, 0))
@@ -2041,6 +2068,12 @@ class SimulationLauncherGui(tk.Tk):
                 and self.mode_var.get() == "loc"
                 and self.launch_kind_var.get() == "simulation")
 
+    def _legged_policy_selectable(self):
+        return (self.robot_var.get() in LEGGED_POLICY_PROFILES
+                and self.simulator_var.get() == "mujoco"
+                and self.mode_var.get() == "loc"
+                and self.launch_kind_var.get() == "simulation")
+
     def _bhl_policy_selectable(self):
         return (self.robot_var.get() == "berkeley_humanoid_lite_sim"
                 and self.simulator_var.get() == "mujoco"
@@ -2163,6 +2196,10 @@ class SimulationLauncherGui(tk.Tk):
             command = [part for part in command
                        if not part.startswith("go2_policy_path:=")]
             command.append("go2_policy_path:=auto")
+        if command and self.legged_policy_var.get() and self._legged_policy_selectable():
+            command = [part for part in command
+                       if not part.startswith("legged_policy:=")]
+            command.append("legged_policy:=" + LEGGED_POLICY_PROFILES[self.robot_var.get()])
         if command and self._bhl_policy_selectable():
             # The BHL policy defaults on, so the toggle is always written
             # explicitly: the preview says which policy path will run.
@@ -2278,6 +2315,8 @@ class SimulationLauncherGui(tk.Tk):
         self.save_map_button.state(["!disabled"] if self._effective_control_mode() in ("slam", "3d_slam") else ["disabled"])
         self.go2_policy_checkbox.state(
             ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
+        self.legged_policy_checkbox.state(
+            ["!disabled"] if self._legged_policy_selectable() else ["disabled"])
         self.bhl_policy_checkbox.state(
             ["!disabled"] if self._bhl_policy_selectable() else ["disabled"])
         self.native_policy_checkbox.state(
