@@ -585,33 +585,20 @@ Last updated: """ + time.strftime("%Y-%m-%d")
         return notices_file
     
     def run_clean_host_test(self):
-        """Run clean host build test (simulated for now)."""
-        print("\n🧪 RUNNING CLEAN HOST TESTS")
+        """Record the clean-host tests as not run.
+
+        This used to report three passing container/bare-metal tests that
+        were never executed (2026-10-02 audit).  No clean host is
+        available here, so each test is recorded as not run until a real
+        clean-host build/test/mission log exists.
+        """
+        print("\n🧪 CLEAN HOST TESTS")
         print("=" * 60)
-        
-        # Simulate different test environments
         test_cases = [
-            {
-                'test_type': 'build',
-                'environment': 'container',
-                'success': True,
-                'golden_comparison': True,
-                'notes': 'Docker container build test'
-            },
-            {
-                'test_type': 'test', 
-                'environment': 'container',
-                'success': True,
-                'golden_comparison': True,
-                'notes': 'Containerized test suite'
-            },
-            {
-                'test_type': 'mission',
-                'environment': 'bare_metal',
-                'success': True,
-                'golden_comparison': True,
-                'notes': 'Bare metal mission test'
-            }
+            {'test_type': kind, 'environment': environment, 'success': False,
+             'golden_comparison': False, 'notes': 'not run - no clean host'}
+            for kind, environment in (('build', 'container'), ('test', 'container'),
+                                      ('mission', 'bare_metal'))
         ]
         
         for i, test_case in enumerate(test_cases):
@@ -621,17 +608,15 @@ Last updated: """ + time.strftime("%Y-%m-%d")
                 start_time=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 end_time=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 success=test_case['success'],
-                log_file=f"/tmp/{test_case['test_type']}_{test_case['environment']}_test.log",
+                log_file="",
+                error_message=test_case['notes'],
                 golden_comparison=test_case['golden_comparison']
             )
             
             self.clean_host_results.append(result)
-            
-            status = "✅ PASSED" if result.success else "❌ FAILED"
-            golden = "✅ Golden" if result.golden_comparison else "❌ Not Golden"
-            print(f"   {status} {result.test_type} in {result.environment} {golden}")
+            print(f"   NOT RUN {result.test_type} in {result.environment}")
         
-        print(f"\n✅ Ran {len(self.clean_host_results)} clean host tests")
+        print(f"\n{len(self.clean_host_results)} clean-host tests recorded as not run")
         
         all_passed = all(r.success for r in self.clean_host_results)
         all_golden = all(r.golden_comparison for r in self.clean_host_results)

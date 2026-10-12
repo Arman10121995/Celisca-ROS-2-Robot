@@ -1394,11 +1394,12 @@ tasks:
           - "src/robot_lab/robot_lab_registry/config/"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/r91-license-inventory-2026-10-12/README.md"
           - "scripts/r9_1_provenance_framework.py"
           - "LICENSES/third-party-notices.md"
           - "docs/status/evidence/r9-1-provenance-licenses-2026-10-01.json"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Dependency inventory exists; the report itself records 152 pending licenses. Restore complete asset attribution, verify actual pinned licenses, and perform a real clean-host build/test/mission with logs; hard-coded clean-host success is not qualification."
+        next_action: "2026-10-12 claude: scripts/license_inventory.py resolves 118 of 125 declared dependencies from installed metadata (package.xml, Debian copyright, Python metadata); 5 are ROS 1 keys in vendored Unitree manifests and 2 (shapely, rtree) are declared but not installed. Copyleft: eigen MPL/LGPL parts, nav2_amcl and slam_toolbox LGPL, and the orbslam3 wrapper links GPL-3.0 ORB_SLAM3. Workspace manifests normalized to SPDX Apache-2.0. The provenance framework no longer reports clean-host tests it never ran. Remaining: install or drop shapely/rtree, asset (mesh/world/policy) attribution audit, and a real clean-host build/test/mission with logs."
       R9.2:
         title: "Seven real comparison tutorials"
         state: "partial"
