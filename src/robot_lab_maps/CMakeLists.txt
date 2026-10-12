@@ -50,9 +50,14 @@ install(
 )
 
 if(BUILD_TESTING)
+  # This host's user site carries an anyio pytest plugin that needs a newer
+  # pytest than Humble's, so `python3 -m pytest --version` failed and ament
+  # silently registered none of these tests.  None of them uses an
+  # autoloaded plugin, so autoload is off for the check and for each run.
+  set(ENV{PYTEST_DISABLE_PLUGIN_AUTOLOAD} 1)
   find_package(ament_cmake_pytest REQUIRED)
-  ament_add_pytest_test(mjcf_worlds test/test_mjcf_worlds.py TIMEOUT 180)
-  ament_add_pytest_test(arena_clearance test/test_arena_clearance.py TIMEOUT 60)
+  ament_add_pytest_test(mjcf_worlds test/test_mjcf_worlds.py TIMEOUT 180 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
+  ament_add_pytest_test(arena_clearance test/test_arena_clearance.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
 endif()
 
 ament_package()

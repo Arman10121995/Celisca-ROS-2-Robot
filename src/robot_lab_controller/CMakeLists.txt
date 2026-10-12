@@ -65,8 +65,13 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(parallel_steering_critic_test test/test_parallel_steering_critic.cpp)
   ament_target_dependencies(parallel_steering_critic_test dwb_core dwb_msgs pluginlib)
+  # This host's user site carries an anyio pytest plugin that needs a newer
+  # pytest than Humble's, so `python3 -m pytest --version` failed and ament
+  # silently registered none of these tests.  None of them uses an
+  # autoloaded plugin, so autoload is off for the check and for each run.
+  set(ENV{PYTEST_DISABLE_PLUGIN_AUTOLOAD} 1)
   find_package(ament_cmake_pytest REQUIRED)
-  ament_add_pytest_test(map_saver test/test_map_saver.py TIMEOUT 60)
+  ament_add_pytest_test(map_saver test/test_map_saver.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
 endif()
 
 ament_package()
