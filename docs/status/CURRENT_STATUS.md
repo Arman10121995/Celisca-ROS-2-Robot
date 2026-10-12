@@ -17,8 +17,10 @@ October 12 (later): measured on master.
 - **Legged policies.** Four model-matched rl_sar policies (Go2, A1, B2,
   Go2W) walk on `/cmd_vel` in MuJoCo localization.
   [Evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md).
-  - Isaac localization now runs the same policies on PhysX drives;
-    implemented, not yet measured.
+  - Isaac localization now runs the same policies on PhysX drives. Go2
+    walks there too (0.385 m/s straight), and turns on the spot, which it
+    does not do in MuJoCo.
+  - The Go2 Gazebo path is implemented; its trial is queued.
 - **PX4 cleanup.** PX4 flights get a run id, a reaper and their own
   Harmonic discovery ports. A leftover flight had flooded every Gazebo run
   with ~6,500 log lines/s. Measurement scripts isolate Gazebo discovery.

@@ -55,13 +55,38 @@ These are open-loop velocity tracking screens on a flat map. They do not
 qualify terrain, push recovery, localization accuracy, mapping or
 navigation.
 
-## Follow-up implemented the same day (not yet measured)
+## Isaac Sim 6.0.1: Go2 + go2_himloco through PhysX drives (same day)
 
-- **Isaac.** `legged_policy:=` is accepted in Isaac localization. The
-  robot's provisioned policy is selected by default there; `none` turns it
-  off. The policy's kp/kd/torque limits become PhysX joint drives at the
-  policy's own physics rate (200 Hz). The robot starts in the policy's
-  default pose. Robots with a provisioned policy now offer localization in
-  Isaac (`legged_policy` feature, `robot_lab_utils/mode_capability.py`).
-- **Not done.** Gazebo has no actuation path for these policies yet. Mapping
-  and navigation on these robots stay gated.
+In Isaac localization the robot's provisioned policy is selected by
+default (`legged_policy:=none` turns it off). The policy's kp/kd/torque
+limits become PhysX joint drives (gains per degree). Physics runs at the
+policy's own 200 Hz. The robot starts in the policy's default pose,
+spawned at z 0.448 m to clear its straight-legged rest pose.
+
+Command: `MODE=loc WARMUP=10 CHECK_ARGS=--strafe scripts/sim_drive_check.sh isaac unitree_go2 nav_empty ...`
+Result: [isaac/unitree_go2.json](isaac/unitree_go2.json).
+
+| Phase (command vx, wz) | Isaac Go2 himloco | MuJoCo Go2 himloco |
+|---|---|---|
+| straight (0.4, 0) | 0.385, 0.035 | 0.355, 0.071 |
+| left arc (0.4, 0.5) | 0.360, 0.372 | 0.310, 0.435 |
+| right arc (0.4, -0.5) | 0.357, -0.376 | 0.344, -0.335 |
+| reverse left (-0.3, 0.3) | -0.248, 0.201 | -0.228, 0.219 |
+| tight left (0.3, 1.5; clamped to 1.0) | 0.254, 0.672 | 0.227, 0.740 |
+| spin in place (0, 1.0) | 0.003, **0.429** | 0.009, 0.014 |
+| strafe (vy 0.3) | vy 0.096 | vy 0.113 |
+| stop | 0.006, -0.079 | 0.002, -0.062 |
+
+Go2 walks in Isaac, closer to its training simulator. It also turns on the
+spot at 0.43 rad/s, which it does not do in MuJoCo.
+
+Isaac ran at about 0.13-0.20x real time: 3 simulated seconds took about
+22 s of wall time. A1, B2 and Go2W are not yet run in Isaac.
+
+## Gazebo (implemented the same day, trial queued)
+
+Go2 gains a head LiDAR in its sim description. In Gazebo localization the
+policy runs through an effort `joint_trajectory_controller` that carries
+the policy gains (`legged_policy.ros2_control_pd_parameters`). The native
+Gazebo trial is pending. Mapping and navigation on these robots stay
+gated.

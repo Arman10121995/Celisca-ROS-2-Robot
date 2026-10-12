@@ -50,7 +50,7 @@ priority_patches:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
     state: partial
     owner: "claude"
-    result: "2026-10-12 claude: four model-matched rl_sar policies (go2_himloco, a1_legged_gym, b2_robot_lab, go2w_robot_lab, pinned 376d42c9) walk on /cmd_vel in MuJoCo loc through the in-step PD bridge: straight 0.26-0.36 of 0.4 m/s, arcs/reverse/stop tracked; Go2 himloco does not spin in place, B2 does not strafe. Isaac loc now runs the robot's policy on PhysX drives with its gains at 200 Hz and offers loc for these profiles (implemented, unmeasured). Gazebo actuation, BHL outside MuJoCo, mapping/navigation for legged robots remain gated."
+    result: "2026-10-12 claude: four model-matched rl_sar policies (go2_himloco, a1_legged_gym, b2_robot_lab, go2w_robot_lab, pinned 376d42c9) walk on /cmd_vel in MuJoCo loc through the in-step PD bridge: straight 0.26-0.36 of 0.4 m/s, arcs/reverse/stop tracked; Go2 himloco does not spin in place there, B2 does not strafe. Isaac loc runs the robot's policy on PhysX drives with its gains at 200 Hz and offers loc for these profiles: Go2 measured straight 0.385 m/s, arcs, reverse, spin 0.43 rad/s, stop (RTF ~0.15). Gazebo Go2 path (head LiDAR, effort trajectory controller with the policy gains) implemented, trial queued. A1/B2/Go2W in Isaac, BHL outside MuJoCo and legged mapping/navigation remain."
     evidence: "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md"
   P8:
     title: "PX4 X500 drone integration"
