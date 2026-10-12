@@ -142,6 +142,9 @@ def test_gazebo_localization_runs_the_policy_through_an_effort_pd_controller():
     assert len(gains) == 12 and all(g['p'] > 0 and g['d'] > 0 for g in gains.values())
     # The wheeled controller layer is not started for a policy-driven dog.
     from launch.actions import IncludeLaunchDescription
-    includes = [a for a in actions if isinstance(a, IncludeLaunchDescription)]
-    assert not any('controller.launch.py' in str(a.launch_description_source.location)
-                   for a in includes)
+    from launch.utilities import normalize_to_list_of_substitutions, perform_substitutions
+    locations = [perform_substitutions(context, normalize_to_list_of_substitutions(
+                     a.launch_description_source._LaunchDescriptionSource__location))
+                 for a in actions if isinstance(a, IncludeLaunchDescription)]
+    assert any(path.endswith('gazebo.launch.py') for path in locations)
+    assert not any(path.endswith('controller.launch.py') for path in locations)

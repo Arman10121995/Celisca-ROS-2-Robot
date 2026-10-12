@@ -433,10 +433,13 @@ class TestPerceptionEdgeCases(unittest.TestCase):
         """Test handling of negative coordinates."""
         detector = ObstacleDetector()
         
-        points = [(-1.0, -1.0), (-0.5, -0.5)]
+        # 0.42 m apart, inside the default 0.5 m cluster distance.  (The
+        # original pair was 0.71 m apart, which correctly gives two clusters.)
+        points = [(-1.0, -1.0), (-0.7, -0.7)]
         result = detector.detect(points)
         
         self.assertEqual(len(result), 1, "Should cluster negative coordinates")
+        self.assertEqual(len(detector.detect([(-1.0, -1.0), (-0.5, -0.5)])), 2)
 
 
 if __name__ == '__main__':

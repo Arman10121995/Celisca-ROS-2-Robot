@@ -235,12 +235,18 @@ class DBSCANClusterer:
         noise = []
         labels = [-1] * len(points_xyz)  # -1 means unclassified
         
+        # Ester et al. (1996): a core point has at least min_samples points,
+        # itself included, within eps; clusters grow only through core points
+        # (border points join but do not extend the cluster).
+        def is_core(index):
+            return len(neighbors[index]) + 1 >= self.min_samples
+
         for i in range(len(points_xyz)):
             if labels[i] != -1:  # Already classified
                 continue
             
             # Check if this is a core point
-            if len(neighbors[i]) >= self.min_samples:
+            if is_core(i):
                 # Start a new cluster
                 cluster = []
                 queue = [i]
@@ -249,13 +255,12 @@ class DBSCANClusterer:
                 while queue:
                     current_idx = queue.pop(0)
                     cluster.append(points_xyz[current_idx])
+                    if not is_core(current_idx):
+                        continue  # border point
                     
                     # Expand to all density-reachable points
                     for neighbor_idx in neighbors[current_idx]:
-                        if labels[neighbor_idx] == -1:  # Unclassified
-                            labels[neighbor_idx] = cluster_id
-                            queue.append(neighbor_idx)
-                        elif labels[neighbor_idx] == -2:  # Noise point that becomes border point
+                        if labels[neighbor_idx] in (-1, -2):  # unclassified, or noise turned border
                             labels[neighbor_idx] = cluster_id
                             queue.append(neighbor_idx)
                 

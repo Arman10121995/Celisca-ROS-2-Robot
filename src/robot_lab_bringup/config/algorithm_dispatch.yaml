@@ -120,13 +120,21 @@ algorithms:
     dijkstra_planner:
       plugin: nav2_navfn_planner/NavfnPlanner
     rrt_planner:
-      node: {package: robot_lab_algorithms, executable: rrt_planner}
+      # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: rrt_planner}}
+      serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
     voronoi_planner:
-      node: {package: robot_lab_algorithms, executable: voronoi_planner}
+      # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: voronoi_planner}}
+      serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
     prm_planner:
-      node: {package: robot_lab_algorithms, executable: prm_planner}
+      # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: prm_planner}}
+      serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
     rrt_star_planner:
-      node: {package: robot_lab_algorithms, executable: rrt_star_planner}
+      # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
+      node: {package: robot_lab_algorithms, executable: nav2_global_planner, parameters: {planner: rrt_star_planner}}
+      serves: {compute_path_to_pose: /robot_lab/compute_path_to_pose}
 
   local_planning:
     dwb_local_planner:
@@ -142,11 +150,15 @@ algorithms:
     pd_motion_planner:
       node: {package: robot_lab_motion, executable: pd_motion_planner.py}
     follow_the_gap:
-      node: {package: robot_lab_algorithms, executable: follow_the_gap}
+      # Serves Nav2 FollowPath and publishes /cmd_vel; the navigator's tree calls it.
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: follow_the_gap}}
+      serves: {follow_path: /robot_lab/follow_path}
     regulated_pure_pursuit:
-      node: {package: robot_lab_algorithms, executable: regulated_pure_pursuit}
+      # Serves Nav2 FollowPath and publishes /cmd_vel; the navigator's tree calls it.
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: regulated_pure_pursuit}}
+      serves: {follow_path: /robot_lab/follow_path}
     mppi_local_planner:
-      node: {package: robot_lab_algorithms, executable: mppi_local_planner}
+      unavailable: "placeholder - it scores random velocities by a constant goal distance, with no horizon rollout or obstacle cost; use mppi_controller (Nav2 MPPI)"
 
   control:
     simple_controller:

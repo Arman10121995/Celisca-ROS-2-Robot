@@ -1518,6 +1518,18 @@ def _build_simulation_actions(context):
             "local_planner_plugin": local_plugin,
             "motion_model": motion_model,
         }
+        # A node planner that serves a Nav2 action replaces the plugin
+        # server's in the navigator's tree (robot_lab_algorithms.nav2_adapters);
+        # selecting it used to start a side node while the plugin drove.
+        for category, action, argument in (
+                ("global_planning", "compute_path_to_pose", "compute_path_server"),
+                ("local_planning", "follow_path", "follow_path_server")):
+            entry = (dispatch.get(category) or {}).get(algorithm_selection.get(category) or "") or {}
+            server = (entry.get("serves") or {}).get(action)
+            if server:
+                nav_args[argument] = server
+                print("[robot_lab] navigator %s -> %s (%s)"
+                      % (action, server, algorithm_selection[category]))
         gated_actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(navigation_share, "navigation.launch.py")),

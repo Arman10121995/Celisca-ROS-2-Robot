@@ -252,6 +252,32 @@ def _planner_parameter_overrides(exec_name, global_planner_plugin, local_planner
     return []
 
 
+def _tree_with_action_servers(bt_xml, compute_path_server="", follow_path_server=""):
+    """The behavior tree with its planning/following actions sent to other servers.
+
+    The robot_lab node planners serve Nav2's ComputePathToPose/FollowPath
+    under their own names (robot_lab_algorithms.nav2_adapters); BT action
+    nodes take the server through their standard ``server_name`` port.
+    Returns a temporary tree file, or ``bt_xml`` unchanged.
+    """
+    import re
+    import tempfile
+    if not (compute_path_server or follow_path_server):
+        return bt_xml
+    text = open(bt_xml, encoding="utf-8").read()
+    for tag, server in (("ComputePathToPose", compute_path_server),
+                        ("FollowPath", follow_path_server)):
+        if server:
+            text, count = re.subn(r"<%s(?![^>]*server_name)" % tag,
+                                  '<%s server_name="%s"' % (tag, server), text)
+            if not count:
+                raise RuntimeError("%s has no %s node for %s" % (bt_xml, tag, server))
+    handle, path = tempfile.mkstemp(prefix="robot_lab_bt_", suffix=".xml")
+    with os.fdopen(handle, "w", encoding="utf-8") as stream:
+        stream.write(text)
+    return path
+
+
 def _with_base_frame(path, base_frame):
     """Use the selected URDF root for servers and their nested costmap nodes."""
     return RewrittenYaml(source_file=path,
@@ -267,6 +293,8 @@ def _setup(context, *args, **kwargs):
     global_planner_plugin = LaunchConfiguration("global_planner_plugin").perform(context)
     local_planner_plugin = LaunchConfiguration("local_planner_plugin").perform(context)
     motion_model = LaunchConfiguration("motion_model").perform(context).strip().lower()
+    compute_path_server = LaunchConfiguration("compute_path_server").perform(context).strip()
+    follow_path_server = LaunchConfiguration("follow_path_server").perform(context).strip()
     requested_plugins = (global_planner_plugin, local_planner_plugin)
     global_planner_plugin, local_planner_plugin = _compatible_planners(
         motion_model, global_planner_plugin, local_planner_plugin)
@@ -297,7 +325,8 @@ def _setup(context, *args, **kwargs):
             bt_xml = os.path.join(
                 pkg, "behavior_tree", tree_name)
             if os.path.isfile(bt_xml):
-                parameters.append({"default_nav_to_pose_bt_xml": bt_xml})
+                parameters.append({"default_nav_to_pose_bt_xml": _tree_with_action_servers(
+                    bt_xml, compute_path_server, follow_path_server)})
         return Node(
             package="nav2_controller" if exec_name == "controller_server"
             else "nav2_planner" if exec_name == "planner_server"
@@ -379,5 +408,13 @@ def generate_launch_description():
             description="'diff', 'omni' (lateral travel) or 'ackermann' (a car: "
                         "turning-radius-aware planning, no rotation in place)",
         ),
+        DeclareLaunchArgument(
+            "compute_path_server", default_value="",
+            description="ComputePathToPose action the navigator calls instead of "
+                        "planner_server's (a robot_lab node planner); empty: Nav2's"),
+        DeclareLaunchArgument(
+            "follow_path_server", default_value="",
+            description="FollowPath action the navigator calls instead of "
+                        "controller_server's (a robot_lab node controller); empty: Nav2's"),
         OpaqueFunction(function=_setup),
     ])

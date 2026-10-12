@@ -48,6 +48,8 @@ setup(
             'madgwick_filter = robot_lab_algorithms.sensor_fusion:madgwick_filter_main',
             'wheel_imu_gnss_ukf = robot_lab_algorithms.sensor_fusion:wheel_imu_gnss_ukf_main',
             # Global planning
+            'nav2_global_planner = robot_lab_algorithms.nav2_adapters:global_planner_main',
+            'nav2_local_planner = robot_lab_algorithms.nav2_adapters:local_planner_main',
             'rrt_planner = robot_lab_algorithms.global_planning:rrt_planner_main',
             'voronoi_planner = robot_lab_algorithms.global_planning:voronoi_planner_main',
             'dijkstra_planner = robot_lab_algorithms.global_planning:dijkstra_planner_main',
