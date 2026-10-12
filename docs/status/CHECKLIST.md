@@ -280,13 +280,24 @@ code delivery, not a passed mission or universal support.
 
 - [ ] **R6.2/R6.3/R6.4:** Qualify dynamic actors, sensor disturbances, diverse
   indoor/outdoor/elevation worlds and 3D ground/aerial representations.
-- [ ] **R4.3/R7.1–R7.8:** Run reproducible matched-input algorithm comparisons
-  with actual adapters, recordings, failures and metrics; complete the required
-  five methods per category. Numerical kernels or generated scores do not count.
+- [x] **R4.3:** Predeclared A* vs NavFn comparison: thresholds from tuning
+  seeds, five evaluation seeds, identical goals, failures explained
+  ([evidence](evidence/r43-planner-comparison-2026-10-12/README.md)).
+- [ ] **R7.1–R7.8:** Global planning (eight planners) and local planning (five
+  controllers) are measured on identical seeded goals
+  ([global](../tutorials/global_planning_comparison.md),
+  [local](../tutorials/local_planning_comparison.md)). Perception,
+  localization, state estimation, sensor fusion and control still need the
+  same matched-input runs. Numerical kernels or generated scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
-- [ ] **R9.1/R9.2:** Verify dependency/model licenses, clean-host installation
-  and seven tutorials whose commands and plots reproduce real comparisons.
+- [ ] **R9.1/R9.2:**
+  - Declared dependency licenses are resolved from installed metadata
+    (118/125;
+    [evidence](evidence/r91-license-inventory-2026-10-12/README.md)).
+  - Two of the seven comparison tutorials are measured.
+  - Model/asset attribution, a real clean-host installation and the other
+    five tutorials remain.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
