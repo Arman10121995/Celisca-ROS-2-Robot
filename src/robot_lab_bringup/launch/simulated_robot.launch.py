@@ -594,7 +594,30 @@ def _resolve_algorithm_selection(context, mode_config, dispatch, robot_config=No
     return selection, plugins, nodes, notes
 
 
-def _algorithm_nodes(nodes, use_sim_time):
+def _robot_tracking_parameters(robot_model):
+    """Footprint radius and speed for the robot_lab FollowPath adapter.
+
+    Read from the robot's navigation overlay (local costmap robot_radius,
+    FollowPath desired_linear_vel), so the adapter keeps the same clearance
+    and speed as the Nav2 controller it replaces.  Empty when unknown.
+    """
+    try:
+        overlay = os.path.join(get_package_share_directory("robot_lab_navigation"),
+                               "config", "robots", "%s.yaml" % robot_model)
+        data = _load_yaml(overlay) if os.path.isfile(overlay) else {}
+    except Exception:
+        return {}
+    params = {}
+    local = ((data.get("local_costmap") or {}).get("local_costmap") or {}).get("ros__parameters") or {}
+    if isinstance(local.get("robot_radius"), (int, float)):
+        params["robot_radius"] = float(local["robot_radius"])
+    follow = ((data.get("controller_server") or {}).get("ros__parameters") or {}).get("FollowPath") or {}
+    if isinstance(follow.get("desired_linear_vel"), (int, float)):
+        params["max_linear"] = float(follow["desired_linear_vel"])
+    return params
+
+
+def _algorithm_nodes(nodes, use_sim_time, robot_model=""):
     """Node actions for every selection that runs as its own process."""
     actions = []
     for category, algorithm_id, spec in nodes:
@@ -603,6 +626,10 @@ def _algorithm_nodes(nodes, use_sim_time):
         if not package or not executable:
             continue
         parameters = [{"use_sim_time": _as_bool(use_sim_time, True)}]
+        if executable == "nav2_local_planner" and robot_model:
+            tracking = _robot_tracking_parameters(robot_model)
+            if tracking:
+                parameters.append(tracking)
         extra = spec.get("parameters")
         if isinstance(extra, dict) and extra:
             parameters.append(dict(extra))
@@ -1539,7 +1566,7 @@ def _build_simulation_actions(context):
 
     # Selections that run as their own process (planners, estimators,
     # perception pipelines and controllers that are not stack plugins).
-    gated_actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time))
+    gated_actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time, robot_model))
 
     if gated_actions and _launch_value(context, "simulator") != "gazebo":
         # Gate: the sections above start once the simulator has published its
