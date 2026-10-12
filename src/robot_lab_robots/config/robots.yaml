@@ -336,6 +336,10 @@ robots:
     xacro: unitree/a1_description/xacro/robot.xacro
     name: unitree_a1
     supported_modes: [display, loc]
+    # Provisioned rl_sar policy (robot_lab_adapter/policies/rl_sar), run by
+    # the MuJoCo/Isaac in-step PD bridges in localization; experimental,
+    # walking validation per backend pending.
+    features: [legged_policy]
     supports_room_vacuum: false
 
   unitree_aliengo:
@@ -357,6 +361,10 @@ robots:
     xacro: unitree/b2_description/xacro/robot.xacro
     name: unitree_b2
     supported_modes: [display, loc]
+    # Provisioned rl_sar policy (robot_lab_adapter/policies/rl_sar), run by
+    # the MuJoCo/Isaac in-step PD bridges in localization; experimental,
+    # walking validation per backend pending.
+    features: [legged_policy]
     supports_room_vacuum: false
 
   unitree_b2_mujoco:
@@ -399,6 +407,10 @@ robots:
     xacro: unitree/go2_description/xacro/go2_sim.xacro
     name: unitree_go2
     supported_modes: [display, loc]
+    # Provisioned rl_sar policy (robot_lab_adapter/policies/rl_sar), run by
+    # the MuJoCo/Isaac in-step PD bridges in localization; experimental,
+    # walking validation per backend pending.
+    features: [legged_policy]
     supports_room_vacuum: false
 
   unitree_go2w:
@@ -406,6 +418,10 @@ robots:
     xacro: unitree/go2w_description/urdf/go2w_description.urdf
     name: unitree_go2w
     supported_modes: [display, loc]
+    # Provisioned rl_sar policy (robot_lab_adapter/policies/rl_sar), run by
+    # the MuJoCo/Isaac in-step PD bridges in localization; experimental,
+    # walking validation per backend pending.
+    features: [legged_policy]
     supports_room_vacuum: false
 
   unitree_h1_2:

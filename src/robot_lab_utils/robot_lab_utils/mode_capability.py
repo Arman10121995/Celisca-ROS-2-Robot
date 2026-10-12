@@ -18,7 +18,13 @@ follows /cmd_vel:
   do; the PyBullet and MuJoCo bridges hold a legged or humanoid robot's
   joints at its spawn pose.  Isaac's hold does not keep them in place
   (measured 2026-09-23: dogs drifted up to 1.9 m, one robot was thrown
-  across the map, H1-2 produced NaN poses), so there they are display-only.
+  across the map, H1-2 produced NaN poses), so there they are display-only
+  unless they have a learned policy.
+* ``legged_policy`` - a model-matched learned locomotion policy is
+  provisioned (robot_lab_adapter.legged_policy).  Its PD law runs inside
+  the MuJoCo and Isaac physics steps, so in Isaac it provides the stance
+  the pose hold cannot (implemented 2026-10-12; validation per robot/map
+  pending).
 
 Robot features come from robot_lab_robots/config/robots.yaml.
 """
@@ -30,6 +36,10 @@ BRIDGE_FEATURES = {
     "mujoco": ("lidar_2d", "stands"),
     "isaac": ("lidar_2d",),
 }
+
+# Backends whose in-step PD bridge runs a robot's learned policy; there a
+# robot with ``legged_policy`` stands on it.
+POLICY_STANCE_SIMULATORS = ("mujoco", "isaac")
 
 # What each mode needs from the robot (sim_modes.yaml may add more).
 MODE_ROBOT_FEATURES = {
@@ -51,6 +61,7 @@ FEATURE_LABELS = {
     "car_steering": "a car-like base that cannot turn on the spot",
     "holonomic_base": "a base that translates sideways as well as forward",
     "flight_controller": "a live PX4 flight controller",
+    "legged_policy": "a provisioned model-matched learned locomotion policy",
 }
 
 
@@ -61,6 +72,8 @@ def robot_features(robot_config, simulator=None):
         features.add("stands")  # a wheeled base rests on its wheels
     if simulator:
         features.update(BRIDGE_FEATURES.get(simulator, ()))
+        if "legged_policy" in features and simulator in POLICY_STANCE_SIMULATORS:
+            features.add("stands")
     return features
 
 

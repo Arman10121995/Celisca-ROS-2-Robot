@@ -149,6 +149,11 @@ def _build_isaac_actions(context):
             spawner_params["hold_position"] = ParameterValue(hold_position, value_type=str)
         except Exception:
             pass
+    # Learned-policy PD bridge (legged_policy:=..., see simulated_robot.launch.py).
+    spawner_params["joint_pd_config"] = ParameterValue(
+        LaunchConfiguration("joint_pd_config"), value_type=str)
+    spawner_params["physics_rate"] = ParameterValue(
+        LaunchConfiguration("physics_rate"), value_type=float)
     # Start the Isaac Sim core (carb/kit-based).  When isaacsim is not
     # installed the node exits gracefully with a clear log message.
     actions.append(
@@ -205,6 +210,14 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "hold_position", default_value="false",
             description="Display-mode joint hold forwarded to the runtime.",
+        ),
+        DeclareLaunchArgument(
+            "joint_pd_config", default_value="",
+            description="Learned-policy PD bridge config (JSON); empty: none.",
+        ),
+        DeclareLaunchArgument(
+            "physics_rate", default_value="60.0",
+            description="Isaac physics rate in Hz (legged policies use their training rate).",
         ),
         OpaqueFunction(function=_build_isaac_actions),
     ])

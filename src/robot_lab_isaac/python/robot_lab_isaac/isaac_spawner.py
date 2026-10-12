@@ -275,6 +275,11 @@ class IsaacSpawner(Node):
         self.declare_parameter("spawn_yaw", 0.0)
         self.declare_parameter("gui", True)
         self.declare_parameter("hold_position", "false")
+        # Learned-policy PD bridge (robot_lab_adapter.legged_policy): JSON
+        # config, empty when the robot has no policy.  Legged policies need
+        # their training physics rate rather than the wheeled 60 Hz.
+        self.declare_parameter("joint_pd_config", "")
+        self.declare_parameter("physics_rate", 60.0)
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
@@ -345,6 +350,19 @@ class IsaacSpawner(Node):
         self.create_subscription(Twist, "/robot_lab_controller/cmd_vel_unstamped",
                                  self._on_mux_cmd, 10)
         self._drive = self._make_drive()
+        self._policy_targets = None
+        pd_config = str(self.get_parameter("joint_pd_config").value or "").strip()
+        if pd_config:
+            self._policy_targets = PolicyTargets(pd_config)
+            from std_msgs.msg import Float64MultiArray
+            self.create_subscription(
+                Float64MultiArray, self._policy_targets.config.get(
+                    'topic', '/legged_policy/joint_targets'),
+                self._on_policy_targets, 5)
+            self.get_logger().info(
+                "Policy PD bridge: %d joints at %.0f Hz physics"
+                % (len(self._policy_targets.names),
+                   float(self.get_parameter("physics_rate").value)))
         self._last_cmd_time = 0.0
         self._last_drive_time = None
         self._last_diff_sim_time = None
@@ -401,6 +419,18 @@ class IsaacSpawner(Node):
         proc = self._proc
         if proc is None or proc.stdin is None:
             return
+        if self._policy_targets is not None:
+            # A legged policy owns every joint it was trained on; /cmd_vel
+            # reaches it through the policy controller, not a wheel model.
+            with self._lock:
+                sim_time = (self._state or {}).get('t')
+            try:
+                proc.stdin.write(json.dumps({"joint_targets": self._policy_targets.targets(
+                    None if sim_time is None else float(sim_time))}) + "\n")
+                proc.stdin.flush()
+            except Exception:
+                pass
+            return
         now = time.monotonic()
         dt = 1.0 / _DRIVE_RATE if self._last_drive_time is None \
             else min(now - self._last_drive_time, 0.2)
@@ -450,6 +480,12 @@ class IsaacSpawner(Node):
             proc.stdin.flush()
         except Exception:
             pass
+
+    def _on_policy_targets(self, msg):
+        with self._lock:
+            sim_time = (self._state or {}).get('t')
+        if sim_time is not None:
+            self._policy_targets.receive(msg.data, float(sim_time))
 
     def _on_cmd(self, msg):
         if time.monotonic() - getattr(self, "_last_mux_cmd_time", 0.0) < 1.0:
@@ -551,7 +587,8 @@ class IsaacSpawner(Node):
             "spawn_z": float(self.get_parameter("spawn_z").value),
             "spawn_yaw": float(self.get_parameter("spawn_yaw").value),
             "gui": bool(gui and os.environ.get("DISPLAY")),
-            "physics_rate": 60.0,
+            "physics_rate": float(self.get_parameter("physics_rate").value),
+            "joint_pd": self._policy_targets.config if self._policy_targets else None,
             # Display hold forwarded to the runtime: freeze joints at spawn.
             "hold_position": str(self.get_parameter("hold_position").value or "auto"),
             "left_wheel_joint": self.get_parameter("left_wheel_joint").value,

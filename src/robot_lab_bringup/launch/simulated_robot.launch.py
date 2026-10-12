@@ -1105,21 +1105,31 @@ def _build_simulation_actions(context):
             and simulator == "mujoco" and mode_name == "loc"
             and _as_bool(_launch_value(context, "bhl_enable_policy"), True)
         )
-        # Model-matched rl_sar legged policy (robot_lab_adapter/legged_policy).
-        # opt-in via legged_policy:=<name|path>; MuJoCo localization only.
-        # The policy's own PD law runs inside the simulator at every physics
-        # step (robot_lab_mujoco/joint_pd.py), so it replaces the passive
-        # hold and any effort controller on the same joints.
+        # Model-matched rl_sar legged policy (robot_lab_adapter/legged_policy)
+        # in localization mode.  The policy's own PD law runs inside the
+        # simulator at every physics step - MuJoCo general actuators
+        # (robot_lab_mujoco/joint_pd.py) or PhysX joint drives carrying its
+        # gains (robot_lab_isaac) - so it replaces the passive hold and any
+        # effort controller on the same joints.  MuJoCo: opt-in via
+        # legged_policy:=<name|path>.  Isaac has no other stance for a dog
+        # (its pose hold let them drift and tip, 2026-09-23), so there the
+        # robot's provisioned policy is selected unless legged_policy:=none.
         legged_policy_name = _launch_value(context, "legged_policy").strip()
+        if not legged_policy_name and simulator == "isaac" and mode_name == "loc":
+            from robot_lab_adapter.legged_policy import default_policy_for
+            legged_policy_name = default_policy_for(robot_model)
+        if _is_none(legged_policy_name) or legged_policy_name.lower() == "none":
+            legged_policy_name = ""
         legged_policy_dir = ""
         legged_pd_config = ""
         legged_initial_positions = ""
+        legged_physics_rate = ""
         legged_active = False
         if legged_policy_name:
-            if simulator != "mujoco" or mode_name != "loc":
+            if simulator not in ("mujoco", "isaac") or mode_name != "loc":
                 raise RuntimeError(
-                    "legged_policy:=%s needs simulator:=mujoco mode:=loc; the "
-                    "rl_sar contract runs through the MuJoCo in-step PD bridge "
+                    "legged_policy:=%s needs mode:=loc in MuJoCo or Isaac; the "
+                    "rl_sar contract runs through their in-step PD bridges "
                     "only. Other backends/modes have no actuation path for it."
                     % legged_policy_name)
             from robot_lab_adapter.legged_policy import (
@@ -1149,7 +1159,15 @@ def _build_simulation_actions(context):
                 name: float(value)
                 for name, value in zip(legged_contract.training_joint_names(),
                                        legged_contract.default_dof_pos)})
+            legged_physics_rate = "%g" % (1.0/legged_contract.dt)
             legged_active = True
+            if simulator == "isaac":
+                # Isaac spawns where it is told; keep the straight-legged
+                # rest pose above the floor before the PD drives fold it
+                # into the policy's standing pose.
+                cleared = _clear_spawn_height(model_path, float(spawn_z))
+                if cleared > float(spawn_z) + 1e-4:
+                    spawn_z = str(cleared)
         go2_controller_active = (
             robot_model == "unitree_go2"
             and simulator == "mujoco" and mode_name == "loc"
@@ -1284,6 +1302,8 @@ def _build_simulation_actions(context):
                         "pd_joint_armature": _launch_value(
                             context, "legged_policy_pd_armature")}
                        if legged_active else {}),
+                    **({"physics_rate": legged_physics_rate}
+                       if legged_active and simulator == "isaac" else {}),
                     **({"physics_timestep": "0.001"}
                        if go2_controller_active else {}),
                     **({"effort_joint_armature": "0.01"}
@@ -1625,14 +1645,16 @@ def generate_launch_description():
                         "0.0 (the default) means no splay on that pair."),
         DeclareLaunchArgument(
             "legged_policy", default_value="",
-            description="Model-matched rl_sar legged policy (MuJoCo loc "
-                        "only): a provisioned policy name under "
+            description="Model-matched rl_sar legged policy (loc mode, "
+                        "MuJoCo or Isaac): a provisioned policy name under "
                         "robot_lab_adapter/policies/rl_sar (a1_legged_gym, "
                         "b2_robot_lab, go2_himloco, go2w_robot_lab) or an "
                         "absolute policy directory. Empty keeps the robot's "
-                        "default controller. The policy must match "
-                        "robot_model; it replaces the passive hold and any "
-                        "effort controller on the same joints."),
+                        "default controller in MuJoCo and selects the "
+                        "robot's provisioned policy in Isaac; 'none' turns "
+                        "it off. The policy must match robot_model; it "
+                        "replaces the passive hold and any effort controller "
+                        "on the same joints."),
         DeclareLaunchArgument(
             "legged_policy_fall_tilt_rad", default_value="1.0",
             description="Trunk tilt [rad] beyond which the legged policy "
