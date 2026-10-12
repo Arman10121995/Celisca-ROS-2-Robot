@@ -7,7 +7,7 @@ source "$HERE/ssd_env.sh" || exit 2
 source /opt/ros/humble/setup.bash
 source "$HERE/../install/setup.bash"
 export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-163}
-export IGN_PARTITION=workflow_$$ GZ_PARTITION=workflow_$$
+source "$HERE/gazebo_isolation.sh"; robot_lab_isolate_gazebo workflow_$$
 mode_check=()
 for launch_arg in "$@"; do
   if [[ "$launch_arg" == four_wheel_steer_mode:=* ]]; then

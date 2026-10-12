@@ -9,7 +9,7 @@ set -m
 SIM=$1; ROBOT=$2; MAP=$3; OUT=$4; shift 4
 HERE=$(cd "$(dirname "$0")" && pwd)
 export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-93}
-export IGN_PARTITION=drive_check_$$ GZ_PARTITION=drive_check_$$
+source "$HERE/gazebo_isolation.sh"; robot_lab_isolate_gazebo drive_check_$$
 source /opt/ros/humble/setup.bash
 source "$HERE/../install/setup.bash"
 MODE=${MODE:-display}

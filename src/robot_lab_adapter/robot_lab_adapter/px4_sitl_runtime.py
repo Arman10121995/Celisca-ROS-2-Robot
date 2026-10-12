@@ -75,6 +75,15 @@ CAMERA_MOUNT = (0.12, 0.03, 0.002)
 CAMERA_SENSOR = (0.01233, -0.03, 0.01878)   # sensor pose in camera_link (upstream)
 CAMERA_COLLISION = ((0.00358, -0.03, 0.014), (0.0175, 0.091, 0.028))
 
+# Harmonic (gz-transport13) and the Fortress ground-robot stack
+# (ign-transport11) share the default discovery ports.  Fortress cannot parse
+# Harmonic's discovery messages: with one flight running, every Fortress
+# process logged "Unknown message type" ~6,500 times per second (2026-10-12,
+# ~1M launch-log lines per Gazebo mission).  The partition does not help (it
+# is checked after parsing), so the flight gets its own ports; Fortress reads
+# only IGN_DISCOVERY_*, Harmonic only GZ_DISCOVERY_*.
+HARMONIC_DISCOVERY_PORTS = {'GZ_DISCOVERY_MSG_PORT': '10417', 'GZ_DISCOVERY_SRV_PORT': '10418'}
+
 
 def _copy_config(source, destination, name):
     config = ET.parse(source).getroot()
@@ -336,6 +345,10 @@ class NativeStateRelay(Node):
                 proc.kill()
 
 
+def _interrupt(signum, frame):
+    raise KeyboardInterrupt
+
+
 def stop_group(process):
     for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGKILL):
         try:
@@ -404,6 +417,9 @@ def main():
         fcntl.flock(instance_lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError as exc:
         raise RuntimeError('Another Robot Lab PX4 instance owns MAVLink port 14580; stop it before this launch.') from exc
+    # ros2 launch escalates to SIGTERM; run the same landing and process
+    # cleanup as for SIGINT instead of dying with PX4 and Gazebo still up.
+    signal.signal(signal.SIGTERM, _interrupt)
     for folder in ('rootfs', 'worlds', 'models'):
         (run/folder).mkdir()
     prepare_world(args.world, run/'worlds/robot_lab_flight.sdf', upstream)
@@ -420,6 +436,7 @@ def main():
         GZ_PARTITION='robot_lab_px4_'+uuid.uuid4().hex,
         PATH=str(build/'bin')+os.pathsep+os.environ['PATH'],
         PX4_GZ_MODEL_POSE=f'{args.spawn_x},{args.spawn_y},{args.spawn_z}')
+    environment.update(HARMONIC_DISCOVERY_PORTS)
     if args.gui == 'false' or (args.gui == 'auto' and not environment.get('DISPLAY')):
         environment['HEADLESS'] = '1'
     else:
@@ -442,8 +459,12 @@ def main():
     print('PX4 runtime and logs: '+str(run), flush=True)
     controller = relay = planner = database = None
     try:
+        # PX4 (and the Gazebo server it starts) inherit the lease, so a PX4
+        # that outlives this runtime still blocks a second instance on the
+        # same MAVLink port instead of silently sharing it.
         fcu = subprocess.Popen([str(build/'bin/px4'), '-d', str(build/'etc'), '-w', str(run/'rootfs')],
-                               env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+                               env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True,
+                               pass_fds=(instance_lease.fileno(),))
         processes.append(fcu)
         rsp = subprocess.Popen(['ros2', 'run', 'robot_state_publisher', 'robot_state_publisher', '--ros-args',
                                 '--params-file', str(run/'description.yaml')], start_new_session=True)

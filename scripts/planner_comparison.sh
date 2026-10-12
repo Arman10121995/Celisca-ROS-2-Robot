@@ -24,7 +24,7 @@ for planner in $PLANNERS; do
     run="$DIR/${planner}_seed${seed}"
     [ -s "$run.json" ] && continue
     export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-96}
-    export IGN_PARTITION=planner_cmp_$$ GZ_PARTITION=planner_cmp_$$
+    source "$HERE/gazebo_isolation.sh"; robot_lab_isolate_gazebo planner_cmp_$$
     ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav \
       simulator:="$SIM" robot_model:="$ROBOT" map_name:="$MAP" gui:=false \
       start_rviz:=false "$CATEGORY:=$planner" "$@" > "$run.launch.log" 2>&1 &

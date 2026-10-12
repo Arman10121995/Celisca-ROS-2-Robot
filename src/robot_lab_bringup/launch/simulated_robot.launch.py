@@ -294,6 +294,26 @@ def _launch_file(package_share, *path_parts):
     return os.path.join(package_share, "launch", *path_parts)
 
 
+def _run_id_actions():
+    """Give this run an id and start the watcher that stops its leftovers.
+
+    Every process this launch starts carries the run id, and a detached
+    watcher stops whatever still carries it once the launch has exited (see
+    robot_lab_utils.partition_reaper): Gazebo servers, state publishers, Nav2
+    or a PX4 SITL left behind by a killed launch otherwise keep running and
+    publishing into the next run's ROS graph.
+    """
+    import subprocess
+    import sys
+    run_id = "robot_lab_run_" + uuid.uuid4().hex
+    subprocess.Popen(
+        [sys.executable, "-m", "robot_lab_utils.partition_reaper",
+         str(os.getpid()), "ROBOT_LAB_RUN_ID=" + run_id],
+        start_new_session=True, stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return [SetEnvironmentVariable("ROBOT_LAB_RUN_ID", run_id)]
+
+
 def _launch_value(context, name):
     return LaunchConfiguration(name).perform(context)
 
@@ -693,7 +713,13 @@ def _build_simulation_actions(context):
                 # Wheeled map defaults (often z=0.5) must not be added to it.
                 default = '0.0' if axis == 'z' else spawn.get(axis, '0.0')
                 command.extend(['--spawn-'+axis, _config_value(context, 'spawn_'+axis, default)])
-            return [ExecuteProcess(cmd=command, output='screen')]
+            # The runtime lands the vehicle and stops PX4/Gazebo on SIGINT;
+            # give that cleanup time before launch escalates.  This branch
+            # used to return before the run id was set: on 12 October a
+            # flight's PX4 and Harmonic server outlived their launch for
+            # hours.  The run id lets the reaper stop such leftovers.
+            return _run_id_actions() + [ExecuteProcess(cmd=command, output='screen',
+                                                       sigterm_timeout='30')]
         robot_package = _config_value(context, "robot_package", robot_config.get("package", "robot_lab_robots"))
         robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
         robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
@@ -787,21 +813,7 @@ def _build_simulation_actions(context):
     initial_pose_y = str(float(_config_value(context, "initial_pose_y", spawn_y)))
     initial_pose_yaw = str(float(_config_value(context, "initial_pose_yaw", spawn_yaw)))
 
-    actions = []
-    # Every process this launch starts carries a run id, and a detached
-    # watcher stops whatever still carries it once the launch has exited
-    # (see robot_lab_utils.partition_reaper): Gazebo servers, state
-    # publishers or Nav2 left behind by a killed launch otherwise keep
-    # publishing into the next run's ROS graph.
-    run_id = "robot_lab_run_" + uuid.uuid4().hex
-    actions.append(SetEnvironmentVariable("ROBOT_LAB_RUN_ID", run_id))
-    import subprocess
-    import sys
-    subprocess.Popen(
-        [sys.executable, "-m", "robot_lab_utils.partition_reaper",
-         str(os.getpid()), "ROBOT_LAB_RUN_ID=" + run_id],
-        start_new_session=True, stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    actions = _run_id_actions()
     if _launch_value(context, "simulator") == "gazebo":
         # GUI/server/bridges must share a transport partition, but must not
         # discover a previous launch's world. Respect explicitly supplied IDs.

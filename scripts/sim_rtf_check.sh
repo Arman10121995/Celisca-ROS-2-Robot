@@ -5,7 +5,7 @@ set -m
 SIM=$1; ROBOT=$2; MAP=$3; MODE=$4; OUT=$5; shift 5
 HERE=$(cd "$(dirname "$0")" && pwd)
 export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-94}
-export IGN_PARTITION=rtf_check_$$ GZ_PARTITION=rtf_check_$$
+source "$HERE/gazebo_isolation.sh"; robot_lab_isolate_gazebo rtf_check_$$
 source /opt/ros/humble/setup.bash
 source "$HERE/../install/setup.bash"
 ros2 launch robot_lab_bringup simulated_robot.launch.py mode:="$MODE" \
