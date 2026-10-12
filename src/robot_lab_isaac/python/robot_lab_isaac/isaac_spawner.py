@@ -80,6 +80,54 @@ def _default_isaac_python():
 _DEFAULT_ISAAC_PY = _default_isaac_python()
 
 
+class PolicyTargets:
+    """Latest learned-policy joint targets, falling back to the default pose.
+
+    ``config`` is the PD bridge config (robot_lab_adapter.legged_policy
+    .mujoco_pd_config): joint names, per-joint position/velocity mode, gains,
+    torque limits, the default targets and a command timeout in simulated
+    seconds.  The Isaac runtime applies the targets through PhysX drives that
+    carry the policy's own gains.
+    """
+
+    def __init__(self, config):
+        if isinstance(config, str):
+            config = json.loads(config)
+        self.config = config
+        self.names = list(config['joints'])
+        self.mode = list(config.get('mode', ['position'] * len(self.names)))
+        self.default = [float(v) for v in config['default']]
+        self.timeout = float(config.get('timeout_s', 0.5))
+        count = len(self.names)
+        for key in ('kp', 'kd', 'torque_limit', 'default'):
+            values = config.get(key)
+            if values is None or len(values) != count or not all(math.isfinite(float(v)) for v in values):
+                raise ValueError('joint_pd_config %s must have %d finite values' % (key, count))
+        if not count or len(set(self.names)) != count or len(self.mode) != count \
+                or any(m not in ('position', 'velocity') for m in self.mode):
+            raise ValueError('joint_pd_config needs unique joints with a position/velocity mode each')
+        if not (self.timeout > 0 and math.isfinite(self.timeout)):
+            raise ValueError('joint_pd_config timeout_s must be positive')
+        self.values, self.stamp = None, None
+
+    def receive(self, values, sim_time):
+        values = [float(v) for v in values]
+        if len(values) != len(self.names) or not all(math.isfinite(v) for v in values):
+            return False
+        self.values, self.stamp = values, sim_time
+        return True
+
+    def targets(self, sim_time):
+        """Runtime joint_targets: the latest command, else the default pose."""
+        fresh = (self.values is not None and self.stamp is not None and sim_time is not None
+                 and sim_time - self.stamp <= self.timeout)
+        values = self.values if fresh else self.default
+        targets = {'position': {}, 'velocity': {}}
+        for name, mode, value in zip(self.names, self.mode, values):
+            targets[mode][name] = value
+        return targets
+
+
 def _xacro_to_urdf(xacro_path):
     result = subprocess.run(
         ["xacro", xacro_path], capture_output=True, text=True, timeout=30,

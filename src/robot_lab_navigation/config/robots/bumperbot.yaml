@@ -3,16 +3,26 @@
 # from base_footprint (the wheels).  With 0.1 Nav2 planned through gaps the
 # wheels could not pass; the robot wedged against furnished-Celisca
 # furniture 0.14 m from its centre on 2026-10-12.
+# inflation_radius 0.55 (base 0.3) in both costmaps: on furnished
+# celisca_floor_1 (2026-10-12) Bumperbot, like Labbot, stopped at the end of
+# a wall it had to round, rotating in place until the progress checker
+# failed.  Labbot's recorded DWB evaluation there shows the cause: the 0.3 m
+# band put the path just outside the inscribed zone and ended in a cost
+# cliff that outweighed short forward progress (see labbot.yaml).
 global_costmap:
   global_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       robot_radius: 0.12
+      inflation_layer:
+        inflation_radius: 0.55
 local_costmap:
   local_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       robot_radius: 0.12
+      inflation_layer:
+        inflation_radius: 0.55
 controller_server:
   ros__parameters:
     progress_checker:

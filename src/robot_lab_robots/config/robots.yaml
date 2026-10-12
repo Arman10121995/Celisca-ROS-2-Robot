@@ -23,6 +23,12 @@ robots:
     name: bumperbot
     supported_modes: [display, loc, slam, 3d_slam, nav]
     features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
+    # Navigation default: Nav2 Regulated Pure Pursuit instead of the mode's
+    # DWB (still selectable).  With DWB, Bumperbot stopped at the same
+    # furnished celisca_floor_1 wall end as Labbot in MuJoCo and PyBullet
+    # (2026-10-12); see the Labbot entry for the recorded cause.
+    default_algorithms:
+      local_planning: pure_pursuit
     drive_in_display: true
     drive:
       # Lab MuJoCo velocity servo: small DWB heading commands must overcome
@@ -43,6 +49,16 @@ robots:
     name: labbot
     supported_modes: [display, loc, slam, 3d_slam, nav]
     features: [ros2_control, lidar_2d, rgbd_camera, velocity_base]
+    # Navigation default: Nav2 Regulated Pure Pursuit instead of the mode's
+    # DWB (still selectable).  On furnished celisca_floor_1 (2026-10-12) DWB
+    # stopped three times out of three where the route rounds a wall end:
+    # its GoalDist/GoalAlign scores barely change for the slow samples it
+    # can reach from rest while BaseObstacle and the oscillation guard rule
+    # out the rest, so it rotated in place until the progress checker
+    # failed.  RPP (0.046 m from the goal) and MPPI (0.097 m) completed the
+    # same route; the Celisca mission matrix uses this default.
+    default_algorithms:
+      local_planning: pure_pursuit
     drive_in_display: true
     drive:
       left_wheel_joint: labbot_left_wheel_joint

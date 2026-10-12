@@ -1,14 +1,27 @@
 # Per-robot navigation overlay for 'labbot' (merged over controller_server.yaml / planner_server.yaml)
+# inflation_radius 0.55 (base 0.3) in both costmaps, measured 2026-10-12 on
+# furnished celisca_floor_1: with 0.3 the planned path rounded a wall end
+# 0.27 m from its tip, only 0.09 m outside the inscribed radius, and the
+# inflation band ended in a cliff (cost ~176 -> 0).  DWB stopped at the
+# band's edge: every short forward trajectory scored the cliff (BaseObstacle
+# raw 196-205) against ~1 point of progress, faster ones touched the
+# inscribed zone, so it rotated in place until the progress checker failed
+# (recorded /evaluation).  A wider band lets the planner keep its margin
+# where there is room and moves the cliff away from the path.
 global_costmap:
   global_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       robot_radius: 0.18
+      inflation_layer:
+        inflation_radius: 0.55
 local_costmap:
   local_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       robot_radius: 0.18
+      inflation_layer:
+        inflation_radius: 0.55
 controller_server:
   ros__parameters:
     progress_checker:

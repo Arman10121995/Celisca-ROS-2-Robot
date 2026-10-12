@@ -408,6 +408,76 @@ def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
     return sorted(driven)
 
 
+def _author_joint_pd_drives(stage, joint_pd):
+    """PhysX drives with a learned policy's own PD law on its joints.
+
+    ``joint_pd`` is the bridge config the MuJoCo spawner also takes
+    (robot_lab_adapter.legged_policy.mujoco_pd_config): per joint a mode,
+    kp, kd and torque limit in training order.  A PhysX drive applies
+    ``stiffness (q* - q) + damping (dq* - dq)`` implicitly at every physics
+    step, capped at maxForce - the law the policy was trained with:
+
+    * position joints (legs): stiffness kp, damping kd, target = default pose;
+    * velocity joints (wheels): stiffness 0, damping kd, target velocity 0.
+
+    USD angular gains are per degree, so radian gains are scaled by pi/180.
+    Returns the driven joint names; a configured joint missing from the
+    stage is an error rather than a robot that silently collapses.
+    """
+    from pxr import PhysxSchema, Usd, UsdPhysics
+
+    config = {name: index for index, name in enumerate(joint_pd['joints'])}
+    driven = set()
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        if name not in config or prim.IsInstanceProxy() or not prim.IsA(UsdPhysics.RevoluteJoint):
+            continue
+        i = config[name]
+        position = joint_pd['mode'][i] == 'position'
+        drive = UsdPhysics.DriveAPI.Apply(prim, 'angular')
+        (drive.GetTypeAttr() or drive.CreateTypeAttr()).Set('force')
+        per_degree = math.pi / 180.0
+        (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(
+            float(joint_pd['kp'][i]) * per_degree if position else 0.0)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(joint_pd['kd'][i]) * per_degree)
+        (drive.GetMaxForceAttr() or drive.CreateMaxForceAttr()).Set(float(joint_pd['torque_limit'][i]))
+        (drive.GetTargetPositionAttr() or drive.CreateTargetPositionAttr()).Set(
+            math.degrees(float(joint_pd['default'][i])) if position else 0.0)
+        (drive.GetTargetVelocityAttr() or drive.CreateTargetVelocityAttr()).Set(0.0)
+        PhysxSchema.PhysxJointAPI.Apply(prim)
+        driven.add(name)
+    missing = set(config) - driven
+    if missing:
+        raise ValueError('Policy PD joints missing from the imported robot: %s' % sorted(missing))
+    return sorted(driven)
+
+
+def joint_pd_targets(joint_pd, values=None):
+    """Runtime ``joint_targets`` message for PD values (defaults when None)."""
+    values = joint_pd['default'] if values is None else values
+    targets = {'position': {}, 'velocity': {}}
+    for name, mode, value in zip(joint_pd['joints'], joint_pd['mode'], values):
+        targets[mode][name] = float(value)
+    return targets
+
+
+def _place_joint_pd_defaults(robot, dof_names, joint_pd):
+    """Start (and reset) the robot in the policy's default pose."""
+    import numpy as np
+    from isaacsim.core.utils.types import ArticulationAction
+    positions = np.array([float(v) for v in robot.get_joint_positions()])
+    for name, mode, value in zip(joint_pd['joints'], joint_pd['mode'], joint_pd['default']):
+        if mode == 'position':
+            positions[dof_names.index(name)] = float(value)
+    robot.set_joint_positions(positions)
+    robot.set_joint_velocities(np.zeros_like(positions))
+    try:
+        robot.set_joints_default_state(positions=positions)
+    except Exception:
+        pass
+    robot.apply_action(ArticulationAction(joint_positions=positions))
+
+
 def _load_stl(path):
     """Return (vertices, triangles) for a binary or ASCII STL file."""
     with open(path, "rb") as fh:
@@ -823,6 +893,11 @@ def _run_stage(app, reader, cfg, state):
             stage_obj, cfg.get("drive_steer_joints", []))
         if steered:
             _emit({"event": "log", "msg": "Steering position drives: %s" % steered})
+        joint_pd = cfg.get("joint_pd") or None
+        if joint_pd:
+            pd_joints = _author_joint_pd_drives(stage_obj, joint_pd)
+            _emit({"event": "log", "msg": "Policy PD drives (physics %.0f Hz): %s"
+                   % (1.0 / dt, pd_joints)})
 
         from isaacsim.core.api.robots import Robot
         syaw = float(cfg.get("spawn_yaw", 0.0))
@@ -860,7 +935,11 @@ def _run_stage(app, reader, cfg, state):
         robot.set_default_state(position=spawn_position, orientation=spawn_orientation)
         robot.set_linear_velocity([0.0, 0.0, 0.0])
         robot.set_angular_velocity([0.0, 0.0, 0.0])
+        if joint_pd:
+            _place_joint_pd_defaults(robot, dof_names, joint_pd)
+            reader.joint_targets = joint_pd_targets(joint_pd)
     else:
+        joint_pd = None
         # Robot-free display: still step the world so the map renders; there
         # is simply no articulation to drive or report joints for.
         world.reset()
@@ -904,6 +983,10 @@ def _run_stage(app, reader, cfg, state):
     # holds only when there are no drive joints (the display case).
     hold_mode = str(cfg.get("hold_position", "auto") or "auto").lower()
     hold_joints = (hold_mode == "true") or (hold_mode == "auto" and lw_idx < 0 and rw_idx < 0)
+    if joint_pd:
+        # The policy's PD drives hold the stance; a pose hold would override
+        # every target it sends.
+        hold_joints = False
     hold_pose = None
     if hold_joints and not robot_free and robot is not None:
         try:
@@ -924,7 +1007,11 @@ def _run_stage(app, reader, cfg, state):
                 _emit({'event': 'reset_done', 'error': str(exc)})
             else:
                 reader.cmd = (0.0, 0.0)
-                if reader.joint_targets is not None:
+                if joint_pd and robot is not None:
+                    # Back to the policy's standing pose, not zero angles.
+                    _place_joint_pd_defaults(robot, dof_names, joint_pd)
+                    reader.joint_targets = joint_pd_targets(joint_pd)
+                elif reader.joint_targets is not None:
                     reader.joint_targets = {kind: {name: 0.0 for name in values}
                         for kind, values in reader.joint_targets.items()}
                 # The step counter keeps running so /clock never goes back.
