@@ -24,8 +24,11 @@ implementation batches. The previous measured extension checkpoint stays on **`m
 [its evidence](evidence/extensions-finish-2026-10-08/README.md) records exact runtime
 source stages, publication and checks. The project is
 **partial**. The [ledger](platform-status.yaml) records owners and task states;
-the [roadmap](../../ROADMAP.md) defines acceptance. Historical audits and trial
-reports retain their original dates, revisions, failures and measurements.
+the [roadmap](../../ROADMAP.md) defines acceptance. Historical audits and trial reports retain their original dates, revisions, failures and measurements.
+
+## Go2 + go2/himloco measured verification — 2026-10-12
+
+Fast-tier acceptance on the current source stage: official `scripts/test_tiers.sh fast` -> **PASS** (1017 passed, 4 deselected, ~3.5 min, archived `fast_tier_final.log`). Go2 + `go2/himloco` bounded live smoke (ROS_DOMAIN_ID 97, `nav_empty`, headless): policy `go2/himloco` RUNNING **1783 steps, zero command sent**, base height **0.286 m**, neutral orientation, SIGINT-clean exit (archived `status.json`, `smoke-ok-final.log`, `legged-smoke-20261012c.log`). Tutorial documentation: `## Run` sections present in every tutorial; `test_p6_benchmarking.py::TutorialDocumentationTests` -> **66 passed**; per-file manifest 50/51 exit 0; isolated suite 12 passed. Measured artifacts archived on the SSD at `/workspace/molar/ledger/status/evidence/` (SUMMARY.md, logs, status.json); ledger entries in `platform-status.yaml` (October 12, 2026 entries).
 
 ## Available GUI workflows
 
