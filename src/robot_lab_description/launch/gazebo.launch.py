@@ -144,7 +144,11 @@ def generate_launch_description():
             "xacro ",
             LaunchConfiguration("model"),
             " is_ignition:=",
-            is_ignition
+            is_ignition,
+            # Descriptions that publish truth under the spawned model name
+            # read it (descriptions without the argument ignore it).
+            " model_name:=",
+            LaunchConfiguration("robot_name"),
         ]),
         value_type=str
     )

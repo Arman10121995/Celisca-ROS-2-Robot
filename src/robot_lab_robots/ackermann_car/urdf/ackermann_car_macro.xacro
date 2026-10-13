@@ -272,6 +272,29 @@
     </ros2_control>
 
     <gazebo>
+      <!-- Independent model pose for /odom/ground_truth (the Gazebo bridge
+           reads /model/<spawned name>/odometry_truth); never wheel odometry.
+           Missing until 2026-10-13, so Gazebo car missions had no truth. -->
+      <xacro:if value="$(arg is_ignition)">
+        <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+          <odom_frame>world</odom_frame>
+          <robot_base_frame>base_footprint</robot_base_frame>
+          <odom_topic>/model/$(arg model_name)/odometry_truth</odom_topic>
+          <tf_topic>/model/$(arg model_name)/truth_pose</tf_topic>
+          <dimensions>3</dimensions>
+          <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+          <odom_frame>world</odom_frame>
+          <robot_base_frame>base_footprint</robot_base_frame>
+          <odom_topic>/model/$(arg model_name)/odometry_truth</odom_topic>
+          <tf_topic>/model/$(arg model_name)/truth_pose</tf_topic>
+          <dimensions>3</dimensions>
+          <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+      </xacro:unless>
       <xacro:if value="$(arg is_ignition)">
         <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
           <parameters>$(find robot_lab_robots)/ackermann_car/config/${steer_axle}_steer_controllers.yaml</parameters>
