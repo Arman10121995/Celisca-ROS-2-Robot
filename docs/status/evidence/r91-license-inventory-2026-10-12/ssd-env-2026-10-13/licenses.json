@@ -1,0 +1,1824 @@
+{
+ "summary": {
+  "dependencies": 125,
+  "resolved": 120,
+  "unresolved": 0,
+  "ros1_vendored_unused": 5,
+  "by_source": {
+   "ros": 87,
+   "ros1-vendored": 5,
+   "debian": 10,
+   "python": 7,
+   "workspace": 16
+  },
+  "copyleft": [
+   "eigen",
+   "nav2_amcl",
+   "slam_toolbox"
+  ],
+  "workspace_packages": 40
+ },
+ "dependencies": [
+  {
+   "name": "action_msgs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_benchmark",
+    "robot_lab_mujoco"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/action_msgs/package.xml"
+  },
+  {
+   "name": "ament_cmake",
+   "kinds": [
+    "buildtool_depend"
+   ],
+   "used_by": [
+    "orbslam3",
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_description",
+    "robot_lab_firmware",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_maps",
+    "robot_lab_models",
+    "robot_lab_motion",
+    "robot_lab_msgs",
+    "robot_lab_navigation",
+    "robot_lab_planning",
+    "robot_lab_robots",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_cmake/package.xml"
+  },
+  {
+   "name": "ament_cmake_gtest",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller",
+    "robot_lab_firmware"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_cmake_gtest/package.xml"
+  },
+  {
+   "name": "ament_cmake_pytest",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_maps",
+    "robot_lab_registry"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_cmake_pytest/package.xml"
+  },
+  {
+   "name": "ament_cmake_python",
+   "kinds": [
+    "buildtool_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller",
+    "robot_lab_firmware",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_navigation",
+    "robot_lab_planning",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_cmake_python/package.xml"
+  },
+  {
+   "name": "ament_copyright",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_py_examples"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_copyright/package.xml"
+  },
+  {
+   "name": "ament_flake8",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_isaac",
+    "robot_lab_mujoco",
+    "robot_lab_py_examples",
+    "robot_lab_pybullet"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_flake8/package.xml"
+  },
+  {
+   "name": "ament_index_python",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_mapping"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_index_python/package.xml"
+  },
+  {
+   "name": "ament_lint_auto",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_description",
+    "robot_lab_firmware",
+    "robot_lab_isaac",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_models",
+    "robot_lab_motion",
+    "robot_lab_msgs",
+    "robot_lab_mujoco",
+    "robot_lab_navigation",
+    "robot_lab_planning",
+    "robot_lab_pybullet",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_lint_auto/package.xml"
+  },
+  {
+   "name": "ament_lint_common",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_description",
+    "robot_lab_firmware",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_models",
+    "robot_lab_motion",
+    "robot_lab_msgs",
+    "robot_lab_navigation",
+    "robot_lab_planning",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ament_lint_common/package.xml"
+  },
+  {
+   "name": "ament_pep257",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_py_examples"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0 AND MIT",
+   "evidence": "/opt/ros/humble/share/ament_pep257/package.xml"
+  },
+  {
+   "name": "builtin_interfaces",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_mujoco"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/builtin_interfaces/package.xml"
+  },
+  {
+   "name": "catkin",
+   "kinds": [
+    "buildtool_depend"
+   ],
+   "used_by": [
+    "a1_description",
+    "aliengoZ1_description",
+    "aliengo_description",
+    "assem12ros_29",
+    "b1_description",
+    "b2_description",
+    "b2w_description",
+    "g1_description",
+    "go1_description",
+    "go2_description",
+    "go2w_description",
+    "h1_description",
+    "laikago_description",
+    "z1_description"
+   ],
+   "source": "ros1-vendored",
+   "license": null,
+   "evidence": "ROS 1 key in a vendored description manifest; not built or run here"
+  },
+  {
+   "name": "control_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_gui",
+    "robot_lab_mujoco"
+   ],
+   "source": "ros",
+   "license": "BSD-3-Clause",
+   "evidence": "/opt/ros/humble/share/control_msgs/package.xml"
+  },
+  {
+   "name": "controller_manager",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/controller_manager/package.xml"
+  },
+  {
+   "name": "cv_bridge",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "orbslam3"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0 AND BSD",
+   "evidence": "/opt/ros/humble/share/cv_bridge/package.xml"
+  },
+  {
+   "name": "dwb_core",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "BSD-3-Clause",
+   "evidence": "/opt/ros/humble/share/dwb_core/package.xml"
+  },
+  {
+   "name": "dwb_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "BSD-3-Clause",
+   "evidence": "/opt/ros/humble/share/dwb_msgs/package.xml"
+  },
+  {
+   "name": "eigen",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "debian",
+   "license": "MPL-2 AND BSD-3-clause AND LGPL-2.1+ or MPL-2",
+   "evidence": "/usr/share/doc/libeigen3-dev/copyright"
+  },
+  {
+   "name": "gazebo",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "assem12ros_29",
+    "b2_description",
+    "b2w_description",
+    "go2_description",
+    "go2w_description",
+    "h1_description"
+   ],
+   "source": "ros1-vendored",
+   "license": null,
+   "evidence": "ROS 1 key in a vendored description manifest; not built or run here"
+  },
+  {
+   "name": "geometry_msgs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_algorithms",
+    "robot_lab_benchmark",
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_description",
+    "robot_lab_gui",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_msgs",
+    "robot_lab_mujoco",
+    "robot_lab_navigation",
+    "robot_lab_planning",
+    "robot_lab_py_examples",
+    "robot_lab_utils",
+    "robot_lab_vacuum_cleaning"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/geometry_msgs/package.xml"
+  },
+  {
+   "name": "gz_ros2_control",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "Apache 2",
+   "evidence": "/opt/ros/humble/share/gz_ros2_control/package.xml"
+  },
+  {
+   "name": "hardware_interface",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_firmware"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/hardware_interface/package.xml"
+  },
+  {
+   "name": "ign_ros2_control",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "Apache 2",
+   "evidence": "/opt/ros/humble/share/ign_ros2_control/package.xml"
+  },
+  {
+   "name": "joint_state_publisher_gui",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "assem12ros_29",
+    "b2_description",
+    "b2w_description",
+    "g1_description",
+    "go2_description",
+    "go2w_description",
+    "h1_description",
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/joint_state_publisher_gui/package.xml"
+  },
+  {
+   "name": "joint_trajectory_controller",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/joint_trajectory_controller/package.xml"
+  },
+  {
+   "name": "joy",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/joy/package.xml"
+  },
+  {
+   "name": "joy_teleop",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/joy_teleop/package.xml"
+  },
+  {
+   "name": "launch_ros",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_isaac",
+    "robot_lab_mujoco",
+    "robot_lab_pybullet"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/launch_ros/package.xml"
+  },
+  {
+   "name": "libserial-dev",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_firmware"
+   ],
+   "source": "debian",
+   "license": "BSD-3-clause",
+   "evidence": "/usr/share/doc/libserial-dev/copyright"
+  },
+  {
+   "name": "message_filters",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "orbslam3"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/message_filters/package.xml"
+  },
+  {
+   "name": "moveit_kinematics",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/moveit_kinematics/package.xml"
+  },
+  {
+   "name": "moveit_msgs",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_gui"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/moveit_msgs/package.xml"
+  },
+  {
+   "name": "moveit_planners_ompl",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/moveit_planners_ompl/package.xml"
+  },
+  {
+   "name": "moveit_ros_move_group",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/moveit_ros_move_group/package.xml"
+  },
+  {
+   "name": "moveit_ros_planning",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/moveit_ros_planning/package.xml"
+  },
+  {
+   "name": "moveit_simple_controller_manager",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/moveit_simple_controller_manager/package.xml"
+  },
+  {
+   "name": "nav2_amcl",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_localization"
+   ],
+   "source": "ros",
+   "license": "LGPL-2.1-or-later",
+   "evidence": "/opt/ros/humble/share/nav2_amcl/package.xml"
+  },
+  {
+   "name": "nav2_behaviors",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_behaviors/package.xml"
+  },
+  {
+   "name": "nav2_bt_navigator",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_bt_navigator/package.xml"
+  },
+  {
+   "name": "nav2_common",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_common/package.xml"
+  },
+  {
+   "name": "nav2_controller",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_controller/package.xml"
+  },
+  {
+   "name": "nav2_core",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_motion",
+    "robot_lab_planning"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_core/package.xml"
+  },
+  {
+   "name": "nav2_costmap_2d",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_motion",
+    "robot_lab_planning"
+   ],
+   "source": "ros",
+   "license": "BSD-3-Clause AND Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_costmap_2d/package.xml"
+  },
+  {
+   "name": "nav2_lifecycle_manager",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_lifecycle_manager/package.xml"
+  },
+  {
+   "name": "nav2_map_server",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_localization",
+    "robot_lab_mapping"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0 AND BSD-3-Clause",
+   "evidence": "/opt/ros/humble/share/nav2_map_server/package.xml"
+  },
+  {
+   "name": "nav2_msgs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_algorithms",
+    "robot_lab_benchmark",
+    "robot_lab_mujoco",
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_msgs/package.xml"
+  },
+  {
+   "name": "nav2_planner",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_planner/package.xml"
+  },
+  {
+   "name": "nav2_smoother",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0",
+   "evidence": "/opt/ros/humble/share/nav2_smoother/package.xml"
+  },
+  {
+   "name": "nav2_util",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_motion",
+    "robot_lab_planning"
+   ],
+   "source": "ros",
+   "license": "Apache-2.0 AND BSD-3-Clause",
+   "evidence": "/opt/ros/humble/share/nav2_util/package.xml"
+  },
+  {
+   "name": "nav_msgs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_algorithms",
+    "robot_lab_benchmark",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_mujoco",
+    "robot_lab_planning",
+    "robot_lab_utils",
+    "robot_lab_vacuum_cleaning"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/nav_msgs/package.xml"
+  },
+  {
+   "name": "pluginlib",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_controller",
+    "robot_lab_firmware",
+    "robot_lab_motion",
+    "robot_lab_planning"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/pluginlib/package.xml"
+  },
+  {
+   "name": "python3",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_benchmark",
+    "robot_lab_registry"
+   ],
+   "source": "debian",
+   "license": "PSF-2.0",
+   "evidence": "/usr/lib/python3.10/LICENSE.txt"
+  },
+  {
+   "name": "python3-jsonschema",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_benchmark",
+    "robot_lab_registry"
+   ],
+   "source": "python",
+   "license": "MIT",
+   "evidence": "python metadata jsonschema"
+  },
+  {
+   "name": "python3-numpy",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_algorithms",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_localization",
+    "robot_lab_maps",
+    "robot_lab_py_examples",
+    "robot_lab_utils"
+   ],
+   "source": "debian",
+   "license": "MIT AND BSD-3-Clause AND Redistribution and use in source and binary forms, with or without",
+   "evidence": "/usr/share/doc/python3-numpy/copyright"
+  },
+  {
+   "name": "python3-opengl",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_gui"
+   ],
+   "source": "debian",
+   "license": "OpenGL-ctypes License",
+   "evidence": "/usr/share/doc/python3-opengl/copyright"
+  },
+  {
+   "name": "python3-pil",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_maps"
+   ],
+   "source": "python",
+   "license": "MIT-CMU",
+   "evidence": "python metadata Pillow"
+  },
+  {
+   "name": "python3-psutil",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_benchmark"
+   ],
+   "source": "debian",
+   "license": "BSD-3-clause",
+   "evidence": "/usr/share/doc/python3-psutil/copyright"
+  },
+  {
+   "name": "python3-pytest",
+   "kinds": [
+    "test_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_isaac",
+    "robot_lab_mujoco",
+    "robot_lab_py_examples",
+    "robot_lab_pybullet",
+    "robot_lab_registry"
+   ],
+   "source": "debian",
+   "license": "Expat",
+   "evidence": "/usr/share/doc/python3-pytest/copyright"
+  },
+  {
+   "name": "python3-rtree",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_utils"
+   ],
+   "source": "python",
+   "license": "MIT",
+   "evidence": "python metadata Rtree"
+  },
+  {
+   "name": "python3-scipy",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_algorithms"
+   ],
+   "source": "debian",
+   "license": "BSD-3-clause AND Expat AND Apache-2.0",
+   "evidence": "/usr/share/doc/python3-scipy/copyright"
+  },
+  {
+   "name": "python3-serial",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_firmware"
+   ],
+   "source": "python",
+   "license": "BSD License",
+   "evidence": "python metadata pyserial"
+  },
+  {
+   "name": "python3-shapely",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_utils"
+   ],
+   "source": "python",
+   "license": "BSD License",
+   "evidence": "python metadata shapely"
+  },
+  {
+   "name": "python3-tk",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "debian",
+   "license": "The following text includes the Python license and licenses and",
+   "evidence": "/usr/share/doc/python3-tk/copyright"
+  },
+  {
+   "name": "python3-trimesh",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_utils"
+   ],
+   "source": "python",
+   "license": "MIT License",
+   "evidence": "python metadata trimesh"
+  },
+  {
+   "name": "python3-trimesh-pip",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_gui",
+    "robot_lab_maps"
+   ],
+   "source": "python",
+   "license": "MIT License",
+   "evidence": "python metadata trimesh"
+  },
+  {
+   "name": "python3-yaml",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_maps",
+    "robot_lab_mujoco",
+    "robot_lab_registry",
+    "robot_lab_utils"
+   ],
+   "source": "debian",
+   "license": "Permission is hereby granted, free of charge, to any person obtaining a copy of",
+   "evidence": "/usr/share/doc/python3-yaml/copyright"
+  },
+  {
+   "name": "rcl_interfaces",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_cpp_examples",
+    "robot_lab_py_examples",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rcl_interfaces/package.xml"
+  },
+  {
+   "name": "rclcpp",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "orbslam3",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_firmware",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_planning",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rclcpp/package.xml"
+  },
+  {
+   "name": "rclcpp_action",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_cpp_examples",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rclcpp_action/package.xml"
+  },
+  {
+   "name": "rclcpp_components",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_cpp_examples"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rclcpp_components/package.xml"
+  },
+  {
+   "name": "rclcpp_lifecycle",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_cpp_examples",
+    "robot_lab_firmware"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rclcpp_lifecycle/package.xml"
+  },
+  {
+   "name": "rclpy",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_algorithms",
+    "robot_lab_benchmark",
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_firmware",
+    "robot_lab_gui",
+    "robot_lab_isaac",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_mujoco",
+    "robot_lab_navigation",
+    "robot_lab_planning",
+    "robot_lab_py_examples",
+    "robot_lab_pybullet",
+    "robot_lab_utils",
+    "robot_lab_vacuum_cleaning"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rclpy/package.xml"
+  },
+  {
+   "name": "robot_lab_adapter",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_gui"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_adapter/package.xml"
+  },
+  {
+   "name": "robot_lab_benchmark",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_gui"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab/robot_lab_benchmark/package.xml"
+  },
+  {
+   "name": "robot_lab_bringup",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_bringup/package.xml"
+  },
+  {
+   "name": "robot_lab_controller",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_navigation"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_controller/package.xml"
+  },
+  {
+   "name": "robot_lab_description",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_mujoco",
+    "robot_lab_pybullet"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_description/package.xml"
+  },
+  {
+   "name": "robot_lab_firmware",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_firmware/package.xml"
+  },
+  {
+   "name": "robot_lab_localization",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_localization/package.xml"
+  },
+  {
+   "name": "robot_lab_mapping",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_mapping/package.xml"
+  },
+  {
+   "name": "robot_lab_maps",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0 AND MIT",
+   "evidence": "src/robot_lab_maps/package.xml"
+  },
+  {
+   "name": "robot_lab_models",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_description"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_models/package.xml"
+  },
+  {
+   "name": "robot_lab_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_cpp_examples",
+    "robot_lab_py_examples"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_msgs/package.xml"
+  },
+  {
+   "name": "robot_lab_navigation",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_navigation/package.xml"
+  },
+  {
+   "name": "robot_lab_planning",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_navigation"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_planning/package.xml"
+  },
+  {
+   "name": "robot_lab_registry",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab/robot_lab_registry/package.xml"
+  },
+  {
+   "name": "robot_lab_robots",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_description"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_robots/package.xml"
+  },
+  {
+   "name": "robot_lab_utils",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_gui",
+    "robot_lab_isaac",
+    "robot_lab_maps",
+    "robot_lab_mujoco",
+    "robot_lab_navigation",
+    "robot_lab_pybullet",
+    "robot_lab_registry"
+   ],
+   "source": "workspace",
+   "license": "Apache-2.0",
+   "evidence": "src/robot_lab_utils/package.xml"
+  },
+  {
+   "name": "robot_localization",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_localization"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/robot_localization/package.xml"
+  },
+  {
+   "name": "robot_state_publisher",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "assem12ros_29",
+    "b2_description",
+    "b2w_description",
+    "g1_description",
+    "go2_description",
+    "go2w_description",
+    "h1_description",
+    "robot_lab_controller",
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/robot_state_publisher/package.xml"
+  },
+  {
+   "name": "ros2_control",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ros2_control/package.xml"
+  },
+  {
+   "name": "ros2_controllers",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ros2_controllers/package.xml"
+  },
+  {
+   "name": "ros2launch",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_navigation"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/ros2launch/package.xml"
+  },
+  {
+   "name": "ros_gz_bridge",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "Apache 2.0",
+   "evidence": "/opt/ros/humble/share/ros_gz_bridge/package.xml"
+  },
+  {
+   "name": "ros_gz_interfaces",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "Apache 2.0",
+   "evidence": "/opt/ros/humble/share/ros_gz_interfaces/package.xml"
+  },
+  {
+   "name": "ros_gz_sim",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "Apache 2.0",
+   "evidence": "/opt/ros/humble/share/ros_gz_sim/package.xml"
+  },
+  {
+   "name": "roscpp",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "a1_description",
+    "aliengo_description",
+    "b1_description",
+    "go1_description",
+    "laikago_description"
+   ],
+   "source": "ros1-vendored",
+   "license": null,
+   "evidence": "ROS 1 key in a vendored description manifest; not built or run here"
+  },
+  {
+   "name": "rosgraph_msgs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_benchmark",
+    "robot_lab_mujoco",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rosgraph_msgs/package.xml"
+  },
+  {
+   "name": "rosidl_default_generators",
+   "kinds": [
+    "build_depend"
+   ],
+   "used_by": [
+    "robot_lab_msgs"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rosidl_default_generators/package.xml"
+  },
+  {
+   "name": "rosidl_default_runtime",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_msgs"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/rosidl_default_runtime/package.xml"
+  },
+  {
+   "name": "roslaunch",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "assem12ros_29",
+    "b2_description",
+    "b2w_description",
+    "g1_description",
+    "go2_description",
+    "go2w_description",
+    "h1_description"
+   ],
+   "source": "ros1-vendored",
+   "license": null,
+   "evidence": "ROS 1 key in a vendored description manifest; not built or run here"
+  },
+  {
+   "name": "rplidar_ros",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/rplidar_ros/package.xml"
+  },
+  {
+   "name": "rtabmap_odom",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_mapping"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/rtabmap_odom/package.xml"
+  },
+  {
+   "name": "rtabmap_slam",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_mapping"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/rtabmap_slam/package.xml"
+  },
+  {
+   "name": "rtabmap_viz",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_mapping"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/rtabmap_viz/package.xml"
+  },
+  {
+   "name": "rviz",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "assem12ros_29",
+    "b2_description",
+    "b2w_description",
+    "g1_description",
+    "go2_description",
+    "go2w_description",
+    "h1_description"
+   ],
+   "source": "ros1-vendored",
+   "license": null,
+   "evidence": "ROS 1 key in a vendored description manifest; not built or run here"
+  },
+  {
+   "name": "rviz2",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_description"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/rviz2/package.xml"
+  },
+  {
+   "name": "sensor_msgs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "orbslam3",
+    "robot_lab_adapter",
+    "robot_lab_algorithms",
+    "robot_lab_benchmark",
+    "robot_lab_bringup",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_mujoco",
+    "robot_lab_py_examples",
+    "robot_lab_utils",
+    "robot_lab_vacuum_cleaning"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/sensor_msgs/package.xml"
+  },
+  {
+   "name": "sensor_msgs_py",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/sensor_msgs_py/package.xml"
+  },
+  {
+   "name": "shape_msgs",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_bringup",
+    "robot_lab_gui"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/shape_msgs/package.xml"
+  },
+  {
+   "name": "slam_toolbox",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_mapping"
+   ],
+   "source": "ros",
+   "license": "LGPL",
+   "evidence": "/opt/ros/humble/share/slam_toolbox/package.xml"
+  },
+  {
+   "name": "std_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "a1_description",
+    "aliengo_description",
+    "b1_description",
+    "go1_description",
+    "laikago_description",
+    "robot_lab_adapter",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_firmware",
+    "robot_lab_gui",
+    "robot_lab_mujoco",
+    "robot_lab_py_examples",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/std_msgs/package.xml"
+  },
+  {
+   "name": "std_srvs",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_gui",
+    "robot_lab_mapping",
+    "robot_lab_mujoco",
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/std_srvs/package.xml"
+  },
+  {
+   "name": "tf2",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/workspace/molar/ros_ws/bumperbot_ws/install/tf2/share/tf2/package.xml"
+  },
+  {
+   "name": "tf2_geometry_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_motion"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/tf2_geometry_msgs/package.xml"
+  },
+  {
+   "name": "tf2_ros",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_algorithms",
+    "robot_lab_controller",
+    "robot_lab_cpp_examples",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_mujoco",
+    "robot_lab_planning",
+    "robot_lab_py_examples"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/workspace/molar/ros_ws/bumperbot_ws/install/tf2_ros/share/tf2_ros/package.xml"
+  },
+  {
+   "name": "tf_transformations",
+   "kinds": [
+    "depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller",
+    "robot_lab_localization",
+    "robot_lab_mapping",
+    "robot_lab_motion",
+    "robot_lab_py_examples"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/tf_transformations/package.xml"
+  },
+  {
+   "name": "trajectory_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_adapter",
+    "robot_lab_gui",
+    "robot_lab_mujoco"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/trajectory_msgs/package.xml"
+  },
+  {
+   "name": "turtlesim",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_cpp_examples",
+    "robot_lab_py_examples"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/turtlesim/package.xml"
+  },
+  {
+   "name": "twist_mux",
+   "kinds": [
+    "exec_depend"
+   ],
+   "used_by": [
+    "robot_lab_controller"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/twist_mux/package.xml"
+  },
+  {
+   "name": "twist_mux_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/twist_mux_msgs/package.xml"
+  },
+  {
+   "name": "urdf",
+   "kinds": [
+    "build_depend",
+    "build_export_depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "aliengoZ1_description",
+    "robot_lab_description",
+    "z1_description"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/urdf/package.xml"
+  },
+  {
+   "name": "visualization_msgs",
+   "kinds": [
+    "depend"
+   ],
+   "used_by": [
+    "robot_lab_utils"
+   ],
+   "source": "ros",
+   "license": "Apache License 2.0",
+   "evidence": "/opt/ros/humble/share/visualization_msgs/package.xml"
+  },
+  {
+   "name": "xacro",
+   "kinds": [
+    "build_depend",
+    "build_export_depend",
+    "exec_depend"
+   ],
+   "used_by": [
+    "aliengoZ1_description",
+    "robot_lab_controller",
+    "robot_lab_description",
+    "robot_lab_gui",
+    "robot_lab_robots",
+    "z1_description"
+   ],
+   "source": "ros",
+   "license": "BSD",
+   "evidence": "/opt/ros/humble/share/xacro/package.xml"
+  }
+ ]
+}

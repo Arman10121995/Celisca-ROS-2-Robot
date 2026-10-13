@@ -46,9 +46,16 @@ identifier `Apache-2.0`.
   zang09 ROS 2 wrapper) declares MIT. It links the ORB_SLAM3 library at
   `/workspace/molar/ORB_SLAM3`, which is GPL-3.0 (its `LICENSE`), so the
   built wrapper is distributable only under GPL-3.0.
-- **Missing installs.** `shapely` (planar_mesh, native mobile sensors) and
-  `rtree` are declared but not installed. The code paths that import them
-  must fall back or fail; installing them is a host setup step.
+- **Missing installs (corrected 2026-10-13).** `shapely` (planar_mesh,
+  native mobile sensors) and `rtree` were reported as not installed. They
+  are installed: `scripts/install_geometry_dependencies.sh` puts the
+  pinned wheels (`scripts/requirements-geometry.txt`) under
+  `robot_lab_runtime/python_deps/geometry`, and `scripts/ssd_env.sh` adds
+  that to `PYTHONPATH`. The inventory above ran without sourcing it. Run
+  with the SSD environment sourced
+  ([ssd-env-2026-10-13/](ssd-env-2026-10-13/licenses.md)), **120 of 125**
+  resolve: shapely 2.1.2 ("BSD License" classifier) and Rtree 1.4.1 (MIT). The 5 left
+  are the unused ROS 1 keys.
 
 ## Clean-host reproduction
 

@@ -311,7 +311,8 @@ code delivery, not a passed mission or universal support.
   concurrent experiments with resource limits, cleanup and repeatable results.
 - [ ] **R9.1/R9.2:**
   - Declared dependency licenses are resolved from installed metadata
-    (118/125;
+    (120/125 with the SSD environment sourced; the other 5 are unused
+    ROS 1 keys;
     [evidence](evidence/r91-license-inventory-2026-10-12/README.md)).
   - Three of the seven comparison tutorials are measured in Gazebo
     (global, local, control). The other four (perception, localization,
