@@ -1760,7 +1760,7 @@
   evidence:
     - kind: benchmark
       reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
-      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth (offline), and replayed on the real AMCL fixes the R7.3 simulator runs recorded (live)"
       date: "2026-10-13"
 - id: motion_model_estimator
   version: 2.0.0
@@ -1802,7 +1802,7 @@
   evidence:
     - kind: benchmark
       reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
-      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth (offline), and replayed on the real AMCL fixes the R7.3 simulator runs recorded (live)"
       date: "2026-10-13"
 - id: pose_graph_estimator
   version: 2.0.0
@@ -1845,7 +1845,7 @@
   evidence:
     - kind: benchmark
       reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
-      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth (offline), and replayed on the real AMCL fixes the R7.3 simulator runs recorded (live)"
       date: "2026-10-13"
 - id: linear_kalman_filter
   version: 2.0.0
@@ -1887,7 +1887,7 @@
   evidence:
     - kind: benchmark
       reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
-      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth (offline), and replayed on the real AMCL fixes the R7.3 simulator runs recorded (live)"
       date: "2026-10-13"
 - id: ukf_estimator
   version: 2.0.0
@@ -1930,7 +1930,7 @@
   evidence:
     - kind: benchmark
       reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
-      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth (offline), and replayed on the real AMCL fixes the R7.3 simulator runs recorded (live)"
       date: "2026-10-13"
 - id: particle_filter
   version: 2.0.0
@@ -1973,7 +1973,7 @@
   evidence:
     - kind: benchmark
       reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
-      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth (offline), and replayed on the real AMCL fixes the R7.3 simulator runs recorded (live)"
       date: "2026-10-13"
 - id: wheel_imu_fusion
   version: 2.0.0

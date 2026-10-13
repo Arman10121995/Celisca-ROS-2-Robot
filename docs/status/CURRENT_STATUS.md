@@ -29,8 +29,8 @@ October 13: implemented on master, experimental.
     [tutorial](../tutorials/sensor_fusion_comparison.md).
 - **Perception, localization, state estimation (R7.2-R7.4).** The ids now
   run real methods, each measured offline with known truth; localization
-  is also measured on recorded simulator scans. Perception and state
-  estimation on simulator data are pending.
+  and state estimation are also measured on recorded simulator scans and
+  AMCL fixes. Perception on simulator data is pending.
   - Perception: KD-tree clustering, adaptive scan breakpoints and a refined
     RANSAC. RANSAC finds all of a 2° floor where a height threshold finds
     43% ([evidence](evidence/r72-perception-benchmark-2026-10-13/README.md),
@@ -44,7 +44,11 @@ October 13: implemented on master, experimental.
   - State estimation: CV Kalman, CTRV EKF/UKF, particle filter, IMM and a
     window smoother on noisy position fixes: 0.16-0.19 m from 0.43 m raw
     fixes ([evidence](evidence/r74-state-estimation-benchmark-2026-10-13/README.md),
-    [tutorial](../tutorials/state_estimation_comparison.md)).
+    [tutorial](../tutorials/state_estimation_comparison.md)). On the real
+    ~1.6 Hz AMCL fixes the R7.3 runs recorded they do not beat the raw
+    fixes (0.08-0.12 m vs 0.08-0.09 m); a good, correlated localizer leaves
+    a white-noise filter nothing to remove
+    ([live evidence](evidence/r74-state-estimation-benchmark-2026-10-13/live/README.md)).
 - **Walking robots navigate (P7).** Leg kinematic odometry feeds the EKF,
   and slam/nav modes select each robot's policy. The obstacle mission
   passes in every MuJoCo and Isaac cell run: Go2, A1 and G1 in both, B2

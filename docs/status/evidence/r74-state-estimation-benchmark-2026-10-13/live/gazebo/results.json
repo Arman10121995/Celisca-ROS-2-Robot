@@ -1,0 +1,362 @@
+{
+ "revision": "681939ca9203e5089f5f7256b140a8584dd859e1",
+ "host": "molar1 aarch64",
+ "python": "3.10.12",
+ "numpy": "2.2.6",
+ "note": "State estimators on the real AMCL fixes recorded in the R7.3 simulator runs.",
+ "warmup_s": 10.0,
+ "measurement_std_m": 0.3,
+ "accel_std": 0.5,
+ "runs": {
+  "a_star_planner_seed23": {
+   "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-gazebo/a_star_planner_seed23.bag",
+   "amcl_fixes": 215,
+   "fixes_scored": 207,
+   "duration_s": 130.0,
+   "fix_rate_hz": 1.65,
+   "gap_min_s": 0.2,
+   "gap_median_s": 0.4,
+   "gap_max_s": 2.4,
+   "warmup_s": 10.0,
+   "measurement_std_m": 0.3,
+   "accel_std": 0.5
+  },
+  "a_star_planner_seed37": {
+   "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-gazebo/a_star_planner_seed37.bag",
+   "amcl_fixes": 181,
+   "fixes_scored": 173,
+   "duration_s": 112.8,
+   "fix_rate_hz": 1.61,
+   "gap_min_s": 0.2,
+   "gap_median_s": 0.4,
+   "gap_max_s": 2.2,
+   "warmup_s": 10.0,
+   "measurement_std_m": 0.3,
+   "accel_std": 0.5
+  },
+  "a_star_planner_seed53": {
+   "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-gazebo/a_star_planner_seed53.bag",
+   "amcl_fixes": 226,
+   "fixes_scored": 218,
+   "duration_s": 155.2,
+   "fix_rate_hz": 1.46,
+   "gap_min_s": 0.2,
+   "gap_median_s": 0.6,
+   "gap_max_s": 7.8,
+   "warmup_s": 10.0,
+   "measurement_std_m": 0.3,
+   "accel_std": 0.5
+  }
+ },
+ "summary": {
+  "amcl_raw": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.0799,
+   "position_p95_m": 0.115,
+   "max_error_m": 0.1411,
+   "mean_offset_m": -0.0385
+  },
+  "cv_kalman": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.0827,
+   "position_p95_m": 0.1192,
+   "max_error_m": 0.1436,
+   "mean_gap_s": 0.6157,
+   "compute_ms": {
+    "p50": 0.0519,
+    "p99": 0.0732
+   }
+  },
+  "ctrv_ekf": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.0839,
+   "position_p95_m": 0.1268,
+   "max_error_m": 0.1584,
+   "mean_gap_s": 0.6157,
+   "compute_ms": {
+    "p50": 0.0949,
+    "p99": 0.1231
+   }
+  },
+  "ctrv_ukf": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.1128,
+   "position_p95_m": 0.1866,
+   "max_error_m": 0.2892,
+   "mean_gap_s": 0.6157,
+   "compute_ms": {
+    "p50": 0.1214,
+    "p99": 0.2161
+   }
+  },
+  "particle_filter": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.2843,
+   "position_p95_m": 0.6822,
+   "max_error_m": 0.9726,
+   "mean_gap_s": 0.6157,
+   "compute_ms": {
+    "p50": 0.1153,
+    "p99": 0.2261
+   }
+  },
+  "imm": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.0862,
+   "position_p95_m": 0.1312,
+   "max_error_m": 0.1712,
+   "mean_gap_s": 0.6157,
+   "compute_ms": {
+    "p50": 0.211,
+    "p99": 0.2539
+   }
+  },
+  "window_smoother": {
+   "fixes_scored": 199.3333,
+   "position_rmse_m": 0.0831,
+   "position_p95_m": 0.1191,
+   "max_error_m": 0.1543,
+   "mean_gap_s": 0.6157,
+   "compute_ms": {
+    "p50": 0.223,
+    "p99": 0.2557
+   }
+  }
+ },
+ "per_run": {
+  "a_star_planner_seed23": {
+   "amcl_raw": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.0842,
+    "position_p95_m": 0.1171,
+    "max_error_m": 0.1289,
+    "mean_offset_m": [
+     -0.0076,
+     -0.0748
+    ]
+   },
+   "cv_kalman": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.0869,
+    "position_p95_m": 0.1197,
+    "max_error_m": 0.1382,
+    "mean_gap_s": 0.582,
+    "compute_ms": {
+     "p50": 0.0528,
+     "p99": 0.0753
+    }
+   },
+   "ctrv_ekf": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.0866,
+    "position_p95_m": 0.1246,
+    "max_error_m": 0.1378,
+    "mean_gap_s": 0.582,
+    "compute_ms": {
+     "p50": 0.0956,
+     "p99": 0.1256
+    }
+   },
+   "ctrv_ukf": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.1242,
+    "position_p95_m": 0.1953,
+    "max_error_m": 0.4205,
+    "mean_gap_s": 0.582,
+    "compute_ms": {
+     "p50": 0.1229,
+     "p99": 0.2211
+    }
+   },
+   "particle_filter": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.3126,
+    "position_p95_m": 0.7183,
+    "max_error_m": 0.9808,
+    "mean_gap_s": 0.582,
+    "compute_ms": {
+     "p50": 0.1458,
+     "p99": 0.2348
+    }
+   },
+   "imm": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.0898,
+    "position_p95_m": 0.1323,
+    "max_error_m": 0.1441,
+    "mean_gap_s": 0.582,
+    "compute_ms": {
+     "p50": 0.2108,
+     "p99": 0.2467
+    }
+   },
+   "window_smoother": {
+    "fixes_scored": 207,
+    "position_rmse_m": 0.0876,
+    "position_p95_m": 0.1204,
+    "max_error_m": 0.138,
+    "mean_gap_s": 0.582,
+    "compute_ms": {
+     "p50": 0.2256,
+     "p99": 0.2602
+    }
+   }
+  },
+  "a_star_planner_seed37": {
+   "amcl_raw": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.0792,
+    "position_p95_m": 0.1101,
+    "max_error_m": 0.127,
+    "mean_offset_m": [
+     -0.0053,
+     -0.0712
+    ]
+   },
+   "cv_kalman": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.0814,
+    "position_p95_m": 0.1086,
+    "max_error_m": 0.1289,
+    "mean_gap_s": 0.597,
+    "compute_ms": {
+     "p50": 0.0508,
+     "p99": 0.0705
+    }
+   },
+   "ctrv_ekf": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.0852,
+    "position_p95_m": 0.1213,
+    "max_error_m": 0.1317,
+    "mean_gap_s": 0.597,
+    "compute_ms": {
+     "p50": 0.0959,
+     "p99": 0.123
+    }
+   },
+   "ctrv_ukf": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.1044,
+    "position_p95_m": 0.1725,
+    "max_error_m": 0.2057,
+    "mean_gap_s": 0.597,
+    "compute_ms": {
+     "p50": 0.121,
+     "p99": 0.2108
+    }
+   },
+   "particle_filter": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.2461,
+    "position_p95_m": 0.586,
+    "max_error_m": 0.9211,
+    "mean_gap_s": 0.597,
+    "compute_ms": {
+     "p50": 0.0985,
+     "p99": 0.2181
+    }
+   },
+   "imm": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.0864,
+    "position_p95_m": 0.1237,
+    "max_error_m": 0.1801,
+    "mean_gap_s": 0.597,
+    "compute_ms": {
+     "p50": 0.2122,
+     "p99": 0.2508
+    }
+   },
+   "window_smoother": {
+    "fixes_scored": 173,
+    "position_rmse_m": 0.0808,
+    "position_p95_m": 0.1049,
+    "max_error_m": 0.1562,
+    "mean_gap_s": 0.597,
+    "compute_ms": {
+     "p50": 0.2209,
+     "p99": 0.255
+    }
+   }
+  },
+  "a_star_planner_seed53": {
+   "amcl_raw": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.0763,
+    "position_p95_m": 0.1177,
+    "max_error_m": 0.1675,
+    "mean_offset_m": [
+     -0.0114,
+     -0.0607
+    ]
+   },
+   "cv_kalman": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.0799,
+    "position_p95_m": 0.1293,
+    "max_error_m": 0.1637,
+    "mean_gap_s": 0.668,
+    "compute_ms": {
+     "p50": 0.0521,
+     "p99": 0.0739
+    }
+   },
+   "ctrv_ekf": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.0798,
+    "position_p95_m": 0.1346,
+    "max_error_m": 0.2058,
+    "mean_gap_s": 0.668,
+    "compute_ms": {
+     "p50": 0.0933,
+     "p99": 0.1207
+    }
+   },
+   "ctrv_ukf": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.1097,
+    "position_p95_m": 0.1921,
+    "max_error_m": 0.2415,
+    "mean_gap_s": 0.668,
+    "compute_ms": {
+     "p50": 0.1202,
+     "p99": 0.2164
+    }
+   },
+   "particle_filter": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.2942,
+    "position_p95_m": 0.7422,
+    "max_error_m": 1.016,
+    "mean_gap_s": 0.668,
+    "compute_ms": {
+     "p50": 0.1015,
+     "p99": 0.2254
+    }
+   },
+   "imm": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.0825,
+    "position_p95_m": 0.1375,
+    "max_error_m": 0.1893,
+    "mean_gap_s": 0.668,
+    "compute_ms": {
+     "p50": 0.2099,
+     "p99": 0.2641
+    }
+   },
+   "window_smoother": {
+    "fixes_scored": 218,
+    "position_rmse_m": 0.081,
+    "position_p95_m": 0.1319,
+    "max_error_m": 0.1687,
+    "mean_gap_s": 0.668,
+    "compute_ms": {
+     "p50": 0.2224,
+     "p99": 0.2518
+    }
+   }
+  }
+ }
+}

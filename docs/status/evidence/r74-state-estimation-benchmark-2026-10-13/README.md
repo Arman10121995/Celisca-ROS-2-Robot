@@ -1,8 +1,8 @@
 # R7.4: state estimators on noisy position fixes (2026-10-13)
 
 Status: **implemented, experimental**. The estimators are measured on a
-modelled trajectory and sensor with known truth. Runs on simulator data
-are pending.
+modelled trajectory and sensor with known truth, and on the real AMCL
+fixes the R7.3 simulator runs recorded ([live](live/README.md)).
 
 ## What was built
 
@@ -96,7 +96,7 @@ Position RMSE per seed varies by at most 0.017 m.
   window smooth through the turns.
 - **Limits.** The sensor noise is white and Gaussian, with no outliers,
   delays or multipath. AMCL fixes are correlated over time. A run on
-  simulator AMCL output is the next step.
+  simulator AMCL output is in [live](live/README.md).
 
 ## Reproduce
 
