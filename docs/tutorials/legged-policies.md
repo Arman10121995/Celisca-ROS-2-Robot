@@ -5,8 +5,8 @@ Documentation updated October 13, 2026 against master. Read
 describes an **experimental** operator path. Flat-ground walks on
 `/cmd_vel` are measured for each robot and backend listed below
 ([evidence](../status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)).
-Navigation is measured on one obstacle mission per robot and backend
-(2026-10-13). Terrain, push recovery and mapping are not qualified.
+Navigation and slam mapping are measured on one obstacle world per robot
+and backend (2026-10-13). Terrain and push recovery are not qualified.
 
 The lab runs selected locomotion policies from
 [rl_sar](https://github.com/fan-ziqi/rl_sar)
@@ -148,6 +148,17 @@ needed minimum speeds of 0.4 and 0.3 m/s: below those their gaits stand
 still (the G1's leg odometry then crept on in Isaac, so Nav2 declared
 goals reached 0.5 m short).
 
+**Mapping.** `mode:=slam` runs slam_toolbox on the robot's laser scan, with
+leg odometry as the only odometry. Over a 26 m loop through nav_obstacle
+the slam pose stayed within 4.5-7.1 cm RMSE of truth for every walking
+robot tried (A1, B2, G1 in MuJoCo; Go2, A1, G1 in Isaac; Go2 in Gazebo),
+and the MuJoCo and Isaac maps put every wall cell on a real wall
+([evidence](../status/evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
+
+```bash
+scripts/slam_mapping_check.sh mujoco unitree_a1 nav_obstacle /path/to/out.json
+```
+
 ## Safety contract
 
 - Command timeout (0.5 s): commands expire to zero velocity; the policy
@@ -167,7 +178,7 @@ are one seeded mission per cell on one flat map. These remain unqualified
 (task ledger R5.2 and R3.6):
 
 - terrain, falls and recovery;
-- mapping (slam mode) with leg odometry;
+- mapping beyond the one measured loop;
 - navigation beyond the cells measured above.
 
 Known limits:

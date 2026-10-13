@@ -1,0 +1,26 @@
+{
+ "world": "nav_obstacle",
+ "base": "base",
+ "route_points": 126,
+ "route_m": 26.26,
+ "completed_route": false,
+ "drive_wall_s": 900.0,
+ "trajectory": {
+  "samples": 1774,
+  "driven_m": 20.45,
+  "rmse_m": 0.095,
+  "max_m": 0.246,
+  "final_m": 0.052,
+  "heading_rmse_deg": 0.7
+ },
+ "map": {
+  "slam_occupied_cells": 2614,
+  "slam_free_cells": 56040,
+  "precision_0p10": 1.0,
+  "mean_wall_distance_m": 0.022,
+  "p95_wall_distance_m": 0.036,
+  "reference_walls_near_path": 8422,
+  "recall_0p10": 0.353,
+  "resolution_m": 0.05
+ }
+}

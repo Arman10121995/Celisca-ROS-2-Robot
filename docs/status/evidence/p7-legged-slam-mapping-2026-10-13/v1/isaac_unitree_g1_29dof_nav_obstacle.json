@@ -1,0 +1,47 @@
+{
+ "world": "nav_obstacle",
+ "base": "pelvis",
+ "waypoints": [
+  [
+   -3.2,
+   -3.8
+  ],
+  [
+   3.48,
+   -3.62
+  ],
+  [
+   -7.03,
+   -7.0
+  ]
+ ],
+ "route_points": 132,
+ "route_m": 27.08,
+ "backoffs": 0,
+ "skipped_points": 0,
+ "completed_route": true,
+ "drive_wall_s": 320.5,
+ "trajectory": {
+  "samples": 628,
+  "driven_m": 26.68,
+  "rmse_m": 0.071,
+  "max_m": 0.112,
+  "final_m": 0.08,
+  "heading_rmse_deg": 0.4
+ },
+ "world_from_map": [
+  -7.0898,
+  -6.9955,
+  -0.0054
+ ],
+ "map": {
+  "slam_occupied_cells": 2074,
+  "precision_0p10": 1.0,
+  "mean_surface_distance_m": 0.07,
+  "p95_surface_distance_m": 0.138,
+  "reference_walls_near_path": 1443,
+  "recall_0p10": 0.509,
+  "slam_free_cells": 56558,
+  "resolution_m": 0.05
+ }
+}

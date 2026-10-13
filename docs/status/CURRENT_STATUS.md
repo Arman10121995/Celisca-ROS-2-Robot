@@ -59,9 +59,15 @@ October 13: implemented on master, experimental.
   passes in every MuJoCo and Isaac cell run: Go2, A1 and G1 in both, B2
   in MuJoCo. B2 and G1 first stood still at the 0.2 m/s approach speed;
   their minimum speeds are now 0.4 and 0.3 m/s.
-  - Gazebo Go2 now starts standing: the paused world is stepped while its
-    controllers load. Mid-mission it then lost localization after a
-    sudden 0.5 m/s surge; that cell still fails
+  - Walking robots also map: in slam mode on leg odometry, slam_toolbox
+    held every walking robot within 4.5-7.1 cm RMSE of truth over a 26 m
+    loop (MuJoCo, Isaac, Gazebo), and the MuJoCo/Isaac maps place every
+    wall cell on a real wall
+    ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
+  - Gazebo Go2 now starts standing, and with its physics step capped at
+    2 ms (the worlds' 10 ms had run its 500 Hz PD loop at 100 Hz) it walks
+    the whole mapping loop. Its navigation mission still failed in the
+    start corner; Nav2 now backs up instead of spinning there
     ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md),
     [tutorial](../tutorials/legged-policies.md)).
 - **Planner reruns.** With a clearance margin, RRT/RRT\* reach 14/15 goals

@@ -239,7 +239,10 @@ code delivery, not a passed mission or universal support.
   (Go2) Gazebo. Walking robots now navigate with leg odometry: the obstacle
   mission passes for Go2, A1 and G1 in MuJoCo and Isaac and for B2 in
   MuJoCo ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md)).
-  Gazebo Go2 navigation, slam-mode mapping and repeats remain.
+  Slam-mode mapping on leg odometry holds 4.5-7.1 cm over a 26 m loop
+  in all three backends
+  ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
+  Gazebo Go2 navigation and repeats remain.
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live
