@@ -145,8 +145,15 @@ visual).
 | Capsule rollers ([json](isaac_mecanum_rollers_capsules_2026-10-13.json)) | **0.293 m/s** | 0.002 m/s | 70.2-79.6 rad/s (104-118% of ideal) |
 
 With capsules, Isaac strafes at 98% of the command: better than MuJoCo
-(0.251 m/s), with no forward drift. The full drive check and the obstacle
-mission are being rerun with this change.
+(0.251 m/s), with no forward drift.
+
+The full drive check with capsules
+([json](isaac_mecanum_drive_capsules_2026-10-13.json)) strafes at **0.290
+m/s**, and every other phase matches the earlier Isaac runs: straight
+0.399, arcs 0.335/0.334 at ±0.49 rad/s, spin 0.993 rad/s, stop at zero.
+The obstacle mission passes at 0.08 m and 0.04 m from truth
+([json](isaac_mecanum_nav_obstacle_capsules_2026-10-13.json)). **The Isaac
+mecanum shortfall is closed.**
 
 ## Not covered here
 

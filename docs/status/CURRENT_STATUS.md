@@ -91,8 +91,8 @@ October 13: implemented on master, experimental.
   description too.
 - **Isaac mecanum strafe fixed.** PhysX rolled each roller's 12-sided
   convex collision facet by facet, so the rollers turned at half speed.
-  With capsule collisions the car strafes at 0.293 of 0.3 m/s with no
-  drift; the full drive check and mission rerun are queued
+  With capsule collisions the car strafes at 0.290-0.293 of 0.3 m/s with
+  no drift, and the obstacle mission passes
   ([evidence](evidence/p56-drive-patterns-2026-10-12/README.md)).
 - **Stale transforms.** In 9 of about 90 recent Nav2 trials (R4.3, the
   planner comparisons and the car missions), a Nav2 server's whole TF view
