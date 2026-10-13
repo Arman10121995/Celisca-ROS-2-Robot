@@ -1150,7 +1150,7 @@ tasks:
           - "verify_r7_algorithms.py: verification script confirms ≥5 implementations per category"
           - "test_algorithm_dispatch.py: all entry points resolve correctly"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Preserve the real ROS wrappers and numerical cores. Verify installed useful input/output, oracle accuracy, replay and failure contracts per category; counting dispatch entries, conversions and stack aliases does not prove five substantive algorithms."
+        next_action: "Preserve the real ROS wrappers and numerical cores. Verify installed useful input/output, oracle accuracy, replay and failure contracts per category; counting dispatch entries, conversions and stack aliases does not prove five substantive algorithms. 2026-10-13 claude: every category's node ids now run real methods with measured comparisons (R7.2-R7.8): perception 6 lab kernels, localization 4 scan matchers + dead reckoning beside Nav2 AMCL/slam_toolbox/RTAB-Map, state estimation 6 filters, sensor fusion 4 attitude + 3 pose filters + upstream imu_tools, global planning 8 planners, local planning 5 controllers, control 6 FollowPath trackers. Ids whose old nodes were stand-ins are retired with a reason in algorithm_dispatch.yaml (rgbd_slam_localization, error_state_ekf); cataloged-only entries say so. Remaining per category: runs on simulator sensor data where the comparison is offline (R7.2-R7.5)."
       R7.2:
         title: "Five perception pipelines"
         state: "partial"
