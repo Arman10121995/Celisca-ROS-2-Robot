@@ -13,8 +13,9 @@ Scores, all against simulator truth and the reference map:
   the two frames at the start (RMSE, maximum, final);
 * map precision: the share of the slam map's occupied cells that lie within
   0.10 m (two cells) of a reference wall, after the same alignment;
-* map recall: the share of reference wall cells within 3 m of the driven
-  path that have a slam occupied cell within 0.10 m;
+* map recall: the share of reference wall-surface cells (occupied cells
+  touching free space) within 3 m of the driven path that have a slam
+  occupied cell within 0.10 m;
 * the mean distance from slam occupied cells to the nearest reference wall.
 
 Prints one JSON object; ``--map-out`` also saves the final slam map as PGM.
@@ -70,7 +71,14 @@ class ReferenceMap:
         self.free = np.flipud(occ < meta['free_thresh'])
         self.resolution = float(meta['resolution'])
         self.origin = np.array(meta['origin'][:2], dtype=float)
-        rows, cols = np.nonzero(self.occupied)
+        # Wall surfaces only (occupied cells touching free space): the interior
+        # of a thick wall is never seen, so it must not count against recall.
+        touches_free = np.zeros_like(self.occupied)
+        touches_free[1:, :] |= self.free[:-1, :]
+        touches_free[:-1, :] |= self.free[1:, :]
+        touches_free[:, 1:] |= self.free[:, :-1]
+        touches_free[:, :-1] |= self.free[:, 1:]
+        rows, cols = np.nonzero(self.occupied & touches_free)
         self.wall_points = np.column_stack([cols, rows]) * self.resolution + self.origin + self.resolution / 2
         self.tree = cKDTree(self.wall_points)
 
@@ -305,6 +313,7 @@ def main():
     ref_dist_to_path, _ = near_path.query(reference.wall_points)
     seen_walls = reference.wall_points[ref_dist_to_path < 3.0]
     recall_hits = (cKDTree(world).query(seen_walls)[0] <= 0.10) if len(world) and len(seen_walls) else np.zeros(0)
+    report['world_from_map'] = [round(v, 4) for v in world_from_map]
     report['map'] = {
         'slam_occupied_cells': int(len(world)), 'slam_free_cells': int(np.sum((data >= 0) & (data < 25))),
         'precision_0p10': round(float(np.mean(near_ref <= 0.10)), 3) if len(world) else None,
