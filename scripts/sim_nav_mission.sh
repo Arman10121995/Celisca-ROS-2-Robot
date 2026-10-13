@@ -28,7 +28,17 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav \
   simulator:="$SIM" robot_model:="$ROBOT" map_name:="$MAP" gui:=false \
   start_rviz:=false "$@" > "$OUT.launch.log" 2>&1 &
 LAUNCH=$!
+# Diagnosis of stale map->odom transforms in Nav2 servers: /tf bag and a
+# one-shot probe on the launch log (scripts/tf_freeze_probe.sh).
+rm -rf "$OUT.tf.bag"
+ros2 bag record -o "$OUT.tf.bag" /tf /tf_static /amcl_pose > /dev/null 2>&1 &
+TF_BAG=$!
+"$HERE/tf_freeze_probe.sh" "$OUT.launch.log" "$OUT.tf_freeze.txt" &
+TF_PROBE=$!
 cleanup() {
+  kill -INT "$TF_BAG" 2>/dev/null || true
+  kill "$TF_PROBE" 2>/dev/null || true
+  wait "$TF_BAG" 2>/dev/null || true
   kill -INT "$LAUNCH" 2>/dev/null || true
   for ((i=0;i<30;i++)); do kill -0 "$LAUNCH" 2>/dev/null || break; sleep 1; done
   # The launch parent may exit while a simulator descendant is still alive.
