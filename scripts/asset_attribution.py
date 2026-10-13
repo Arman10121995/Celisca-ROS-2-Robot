@@ -39,6 +39,7 @@ PATTERNS = [
     ('MIT', r'Permission is hereby granted, free of charge'),
     ('BSD-3-Clause', r'Neither the name of'),
     ('BSD-2-Clause', r'Redistribution and use in source and binary forms'),
+    ('CC-BY-SA-4.0', r'Attribution-ShareAlike 4\.0 International'),
     ('CC-BY-4.0', r'Creative Commons Attribution 4\.0'),
 ]
 

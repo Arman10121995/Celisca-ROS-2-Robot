@@ -17,7 +17,7 @@
  {
   "kind": "robot",
   "id": "assem12ros_29",
-  "declared": "MIT",
+  "declared": "BSD-3-Clause",
   "repository": "https://github.com/Arthur-Azevedo/Awesome-URDFs",
   "assets": 1,
   "assets_found": 1,
@@ -31,7 +31,7 @@
    "BSD"
   ],
   "basis": "license file",
-  "agrees": false
+  "agrees": true
  },
  {
   "kind": "robot",
@@ -55,17 +55,21 @@
  {
   "kind": "robot",
   "id": "berkeley_humanoid_lite",
-  "declared": "BSD-3-Clause",
-  "repository": "https://github.com/berkeley-automation/Humanoid-Benchmark",
+  "declared": "CC-BY-SA-4.0",
+  "repository": "https://github.com/HybridRobotics/Berkeley-Humanoid-Lite-Assets",
   "assets": 2,
   "assets_found": 2,
-  "license_files": [],
-  "detected": [],
+  "license_files": [
+   "src/robot_lab_robots/berkeley_humanoid_lite/LICENCE"
+  ],
+  "detected": [
+   "CC-BY-SA-4.0"
+  ],
   "package_manifest_licenses": [
    "Apache-2.0"
   ],
-  "basis": "package manifest",
-  "agrees": false
+  "basis": "license file",
+  "agrees": true
  },
  {
   "kind": "robot",
@@ -244,12 +248,18 @@
   "declared": "BSD-3-Clause",
   "repository": "https://github.com/unitreerobotics/ros2_h1",
   "assets": 1,
-  "assets_found": 0,
-  "license_files": [],
-  "detected": [],
-  "package_manifest_licenses": [],
-  "basis": "none found",
-  "agrees": null
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
  },
  {
   "kind": "robot",
@@ -330,7 +340,7 @@
  {
   "kind": "robot",
   "id": "quadrotor_sitl",
-  "declared": "GPL-3.0",
+  "declared": "Apache-2.0",
   "repository": "https://github.com/ArduPilot/ardupilot",
   "assets": 2,
   "assets_found": 2,
@@ -340,7 +350,7 @@
    "Apache-2.0"
   ],
   "basis": "package manifest",
-  "agrees": false
+  "agrees": true
  },
  {
   "kind": "robot",

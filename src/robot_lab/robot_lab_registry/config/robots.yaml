@@ -129,7 +129,7 @@
   maturity: prototype
   source:
     repository: "https://github.com/Arthur-Azevedo/Awesome-URDFs"
-    license: "MIT"
+    license: "BSD-3-Clause"  # its package.xml says BSD (exporter template, author TODO); the collection's only license file is BSD-3-Clause (_upstream/Awesome-URDFs/LICENSE); original author unknown (2026-10-13)
     maintainer: "Arthur Azevedo"
   supported_simulators:
     - gazebo
@@ -210,8 +210,8 @@
   robot_class: humanoid
   maturity: simulated
   source:
-    repository: "https://github.com/berkeley-automation/Humanoid-Benchmark"
-    license: "BSD-3-Clause"
+    repository: "https://github.com/HybridRobotics/Berkeley-Humanoid-Lite-Assets"
+    license: "CC-BY-SA-4.0"  # meshes/URDF/MJCF/USD are identical to Berkeley-Humanoid-Lite-Assets (LICENCE vendored in robot_lab_robots/berkeley_humanoid_lite/); its software is MIT (2026-10-13)
     maintainer: "Berkeley Automation Lab"
   supported_simulators:
     - gazebo
@@ -861,7 +861,7 @@
     - balancing
     - manipulation
   assets:
-    urdf: robot_lab_robots/unitree/h1_description/h1.urdf
+    urdf: robot_lab_robots/_upstream/Awesome-URDFs/unitree/robots/h1_description/urdf/h1.urdf
   tags:
     - imported
     - humanoid
@@ -1068,7 +1068,7 @@
   maturity: simulated
   source:
     repository: "https://github.com/ArduPilot/ardupilot"
-    license: "GPL-3.0"
+    license: "Apache-2.0"  # first-party mesh-free description (robot_lab_robots); the ArduPilot SITL it connects to is GPL-3.0 and runs as a separate process (2026-10-13)
     maintainer: "ArduPilot Team"
   supported_simulators:
     - gazebo
@@ -1739,7 +1739,7 @@
   maturity: simulated
   source:
     repository: "https://github.com/PX4/PX4-Autopilot"
-    license: "BSD-3-Clause"
+    license: "BSD-3-Clause"  # PX4 provides the X500 model at runtime from its checkout: /workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz/LICENSE (BSD 3-Clause, PX4), outside the workspace (2026-10-13)
     maintainer: "PX4 / Robot Lab adapter"
   supported_simulators: [gazebo]
   locomotion: {type: multirotor, dof: 6, max_velocity: 1.0, max_acceleration: 1.0}

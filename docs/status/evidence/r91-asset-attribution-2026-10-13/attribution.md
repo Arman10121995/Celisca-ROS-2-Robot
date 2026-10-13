@@ -2,16 +2,16 @@
 
 | Kind | Agrees | Differs | Unverified |
 |---|---:|---:|---:|
-| robot | 21 | 3 | 2 |
+| robot | 25 | 0 | 1 |
 | environment | 26 | 0 | 0 |
 | policy | 0 | 0 | 3 |
 
 | Kind | Id | Declared | Found (basis) | Agrees | Assets found | License files |
 |---|---|---|---|---|---|---|
 | robot | bumperbot | Apache-2.0 | Apache-2.0 (package manifest) | yes | 5/5 | - |
-| robot | assem12ros_29 | MIT | BSD-3-Clause (license file) | **no** | 1/1 | src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE |
+| robot | assem12ros_29 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 1/1 | src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE |
 | robot | aliengo_z1 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 1/1 | src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE |
-| robot | berkeley_humanoid_lite | BSD-3-Clause | Apache-2.0 (package manifest) | **no** | 2/2 | - |
+| robot | berkeley_humanoid_lite | CC-BY-SA-4.0 | CC-BY-SA-4.0 (license file) | yes | 2/2 | src/robot_lab_robots/berkeley_humanoid_lite/LICENCE |
 | robot | a1 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 2/2 | src/robot_lab_robots/unitree/LICENSE |
 | robot | aliengo | BSD-3-Clause | BSD-3-Clause (license file) | yes | 2/2 | src/robot_lab_robots/unitree/LICENSE |
 | robot | b1 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 2/2 | src/robot_lab_robots/unitree/LICENSE |
@@ -21,12 +21,12 @@
 | robot | go1 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 2/2 | src/robot_lab_robots/unitree/LICENSE |
 | robot | go2 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 2/2 | src/robot_lab_robots/unitree/LICENSE |
 | robot | go2w | BSD-3-Clause | BSD-3-Clause (license file) | yes | 1/2 | src/robot_lab_robots/unitree/LICENSE |
-| robot | h1 | BSD-3-Clause | - (none found) | - | 0/1 | - |
+| robot | h1 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 1/1 | src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE |
 | robot | h1_2 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 1/1 | src/robot_lab_robots/unitree/LICENSE |
 | robot | laikago | BSD-3-Clause | BSD-3-Clause (license file) | yes | 2/2 | src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE |
 | robot | z1 | BSD-3-Clause | BSD-3-Clause (license file) | yes | 1/2 | src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE |
 | robot | legacy_humanoid | Apache-2.0 | unrecognised (package manifest) | yes | 1/1 | src/robot_lab_robots/_upstream/legacy_humanoid_import/LICENSE |
-| robot | quadrotor_sitl | GPL-3.0 | Apache-2.0 (package manifest) | **no** | 2/2 | - |
+| robot | quadrotor_sitl | Apache-2.0 | Apache-2.0 (package manifest) | yes | 2/2 | - |
 | robot | labbot | Apache-2.0 | Apache-2.0 (package manifest) | yes | 2/2 | - |
 | robot | ackermann_car | Apache-2.0 | Apache-2.0 (package manifest) | yes | 2/2 | - |
 | robot | rear_steer_car | Apache-2.0 | Apache-2.0 (package manifest) | yes | 2/2 | - |

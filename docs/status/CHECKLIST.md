@@ -321,8 +321,9 @@ code delivery, not a passed mission or universal support.
   - Model/asset attribution is checked against the nearest LICENSE or
     package manifest (`scripts/asset_attribution.py`,
     [evidence](evidence/r91-asset-attribution-2026-10-13/README.md));
-    five registry entries remain open. A real clean-host installation
-    remains.
+    all robot entries agree except px4_x500, whose license is checked
+    against the PX4 checkout outside the workspace. A real clean-host
+    installation remains.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
