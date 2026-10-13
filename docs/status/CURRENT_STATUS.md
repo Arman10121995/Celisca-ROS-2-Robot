@@ -99,10 +99,12 @@ October 13: implemented on master, experimental.
   - So the server's subscription stops, not the publisher.
   - **Cause:** an ABBA deadlock in the installed tf2/tf2_ros 0.25.23
     ([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)),
-    fixed upstream in 0.25.24. Apt still has 0.25.23.
-  - `scripts/build_tf2_deadlock_fix.sh` overlays 0.25.24 (ABI-identical
-    headers). Since then: the R4.3 protocol passes 30/30 goals, and 33
-    Nav2 launches show no freeze, where about 3 were expected
+    fixed upstream in 0.25.24.
+  - 0.25.24 ran first as a workspace overlay
+    (`scripts/build_tf2_deadlock_fix.sh`, 06:52). Apt then upgraded the
+    system packages to 0.25.24 (10:32), and the overlay was removed.
+  - With 0.25.24, the R4.3 protocol passes 30/30 goals, and 46 Nav2
+    launches show no freeze, where about 4-5 were expected
     ([evidence](evidence/r43-planner-comparison-2026-10-12/tf2-0.25.24-2026-10-13/README.md)).
 
 October 12 (later): measured on master.

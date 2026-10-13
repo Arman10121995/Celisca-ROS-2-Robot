@@ -13,7 +13,9 @@
 # LD_LIBRARY_PATH once install/setup.bash is sourced.
 #
 # Remove this overlay (rm -rf build/tf2 build/tf2_ros install/tf2 install/tf2_ros)
-# once apt ships ros-humble-tf2-ros >= 0.25.24.
+# once apt ships ros-humble-tf2-ros >= 0.25.24.  Apt ships 0.25.24 since
+# September 2026; this host was upgraded on 2026-10-13 and the overlay
+# removed.  Only a host that cannot upgrade still needs this script.
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
 WS=$(cd "$HERE/.." && pwd)

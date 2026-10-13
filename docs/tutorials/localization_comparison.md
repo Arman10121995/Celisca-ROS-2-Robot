@@ -116,8 +116,12 @@ own scans and odometry, with the AMCL that ran live as a reference
 - The ray-cast benchmark matches against the same map it scans. The
   recorded runs add real simulator scans, but both use one robot on one
   flat map.
-- The localizers start at the true pose; global localization and
-  recovery from a wrong pose are not tested.
+- These matchers are local trackers. Seeded wrongly, point-to-point ICP and correlative
+  matching recover from shifts of up to about 2 m along a corridor, and
+  all four from 15-30° turns. They
+  do not recover from 90° or 180°, so use AMCL after a kidnap or an
+  unknown start
+  ([evidence](../status/evidence/r73-localization-benchmark-2026-10-13/live/README.md)).
 - slam_toolbox's localization mode is not compared yet.
 
 ## Related tutorials

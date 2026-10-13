@@ -92,8 +92,13 @@ replayed through the same matchers:
 - with the benchmark's biased odometry they change by less than 1 mm,
   while the odometry alone drifts to 0.33-0.38 m.
 
-Global localization (no known start) and slam_toolbox on the same data are
-not covered.
+Seeded at a wrong pose, point-to-point ICP and correlative matching recover
+from shifts of up to 2 m along the corridor (point-to-line ICP reliably up to
+1 m), and all four from 15-30° turns. NDT stops 0.26-0.29 m
+off. Only correlative matching recovers from a 1.5 m shift across the
+corridor (2/3). None recovers from 90° or 180°: these are local trackers,
+and global localization stays AMCL's job (live/README.md, "Recovery").
+slam_toolbox on the same data is not covered.
 
 ## Reproduce
 

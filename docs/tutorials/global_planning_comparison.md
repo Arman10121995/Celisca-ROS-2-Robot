@@ -170,12 +170,13 @@ It happens in Gazebo, MuJoCo and Isaac.
 
 When the two meet, the listener thread blocks forever and the server's
 transforms freeze. The bug came with 0.25.23 (#974) and is fixed in 0.25.24
-(#990, 2026-09-15). Apt still offers 0.25.23 here.
+(#990, 2026-09-15), which apt now ships: check with
+`apt-cache policy ros-humble-tf2-ros`.
 
 `scripts/build_tf2_deadlock_fix.sh` builds tf2 and tf2_ros 0.25.24 into the
-workspace overlay. The headers are identical to 0.25.23, so Nav2 loads the
-fixed libraries. With it, the R4.3 protocol passed 30/30 goals, and the 33
-Nav2 launches since the overlay show no freeze, where about 3 would be
+workspace for a host still on 0.25.23. The headers are identical, so Nav2
+loads the fixed libraries. With 0.25.24, the R4.3 protocol passed 30/30
+goals, and 46 Nav2 launches show no freeze, where about 4-5 would be
 expected at the earlier rate
 ([evidence](../status/evidence/r43-planner-comparison-2026-10-12/tf2-0.25.24-2026-10-13/README.md)).
 The failures above stay as measured.

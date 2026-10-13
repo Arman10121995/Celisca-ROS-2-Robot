@@ -60,10 +60,47 @@ the `results.json` files.
   only 3.4 cm over about 20 m on this flat floor. In MuJoCo the odometry
   is the simulator's truth by default (`odometry_source:=truth`; the
   `wheels` option exists), hence 0.7 cm.
-- **Limits.** One robot and one map. The localizers start at the true
-  pose, so global localization and recovery are not tested. The replay
+- **Limits.** One robot and one map. The table above starts every
+  localizer at the true pose; recovery from a wrong start is below. The replay
   runs offline: the live nodes publish the same estimates, but their
   timing in a running stack is not measured here.
+
+## Recovery from a wrong start ([recovery-gazebo](recovery-gazebo/report.md), [recovery-mujoco](recovery-mujoco/report.md))
+
+`scripts/r7_3_recovery_replay.py` seeds each matcher at a wrong pose and
+replays the same runs at 2 scans/s:
+
+- shifted 0.3-2.0 m along x, or 0.7 m and 1.5 m along y;
+- or turned 15°, 30°, 90° or 180°.
+
+A seed counts as recovered once the estimate comes within 0.25 m and 10°
+of truth. In every recovered cell it then stayed within 0.5 m. The
+replay ran with the shipped 0.5 m correction gate and with a 5 m gate.
+
+| Matcher | x shift 0.3-2.0 m | y shift 0.7 m | y shift 1.5 m | 15°, 30° | 90°, 180° |
+|---|---|---|---|---|---|
+| ICP, point to point | all 6 shifts, 3/3 runs | 3/3 | 0/3 | 3/3 | 0/3 |
+| ICP, point to line | up to 1.0 m 3/3; 1.5-2.0 m 1-2/3 | 3/3 | 0/3 | 3/3 | 0/3 |
+| NDT | 0/3 (stops 0.26-0.29 m off up to 0.7 m) | 3/3 | 0/3 | 3/3 | 0/3 |
+| Correlative | all 6 shifts, 3/3 runs | 3/3 | 2/3 | 3/3 | 0/3 |
+| Odometry alone | 0/3 | 0/3 | 0/3 | 0/3 | 0/3 |
+
+Gazebo and MuJoCo agree, except that point-to-line ICP recovered from
+1.5-2.0 m in 2 of 3 Gazebo runs and 1 of 3 MuJoCo runs.
+
+- **All four are local trackers.** None recovers from 90° or 180°. Large
+  y shifts across the start corridor's walls also defeat everything except
+  correlative matching, which searches ±0.3 m and ±10° at every scan.
+- **The 0.5 m gate hardly limits recovery.** Each scan's correction is
+  small, so a 2 m error closes over several scans. The 5 m gate changes one
+  cell: point-to-line ICP from a 1.5 m shift in Gazebo, 3/3 instead of 2/3.
+- **NDT has the smallest basin along the start corridor.** The 0.5 m cells
+  smooth the walls along x, and it settles 0.26-0.29 m off. That is just
+  outside the 0.25 m test, but it stays there.
+- **Global localization is AMCL's job.** It is the selection to use after a
+  kidnap or an unknown start; it is not replayed here.
+- The first version of this test counted the 15° heading seeds against a
+  15° limit, so odometry alone "recovered". The limit is now 10°.
 
 ## Reproduce
 
@@ -72,6 +109,7 @@ EXTRA_BAG_TOPICS=/scan GOALS=3 ROBOT_RADIUS=0.12 scripts/planner_comparison.sh <
   global_planning a_star_planner "23 37 53" local_planning:=pure_pursuit
 python3 scripts/r7_3_live_scan_replay.py --map nav_maze --out <out> <dir>/*.bag
 python3 scripts/r7_3_live_scan_replay.py --map nav_maze --odom-bias --out <out-biased> <dir>/*.bag
+python3 scripts/r7_3_recovery_replay.py --map nav_maze --out <out-recovery> <dir>/*.bag
 ```
 
 The bags stay on the SSD in `robot_lab_runtime/claude-r73-live-{gazebo,mujoco}/`.

@@ -124,9 +124,10 @@ Diagnosed 2026-10-13: an ABBA deadlock in the installed tf2/tf2_ros 0.25.23
 ([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)). A
 costmap MessageFilter and the TransformListener thread lock the same two
 mutexes in opposite order, so the listener thread blocks forever. Upstream
-fixed it in 0.25.24. `scripts/build_tf2_deadlock_fix.sh` overlays the fix;
+fixed it in 0.25.24, which apt installed here on 2026-10-13 (a workspace
+overlay, `scripts/build_tf2_deadlock_fix.sh`, carried it until then);
 see the [global planning tutorial](../../../tutorials/global_planning_comparison.md).
-The protocol rerun with the overlay passed 30/30 goals with no stale-transform
+The protocol rerun with 0.25.24 passed 30/30 goals with no stale-transform
 signature ([tf2-0.25.24-2026-10-13/](tf2-0.25.24-2026-10-13/README.md)).
 
 ## Reproduce

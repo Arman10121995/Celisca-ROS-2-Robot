@@ -94,13 +94,14 @@ same geometry libraries to sourced ROS Python and the PX4 venv. Dependency
 notices stay with the SSD wheels. Do not relocate the completed PX4 archives
 again or install these wheels into internal storage.
 
-## tf2 0.25.24 overlay (until apt ships it)
+## tf2 version (0.25.24 or newer)
 
-Humble's apt `ros-humble-tf2-ros` 0.25.23 has an ABBA deadlock
+Humble's `ros-humble-tf2-ros` 0.25.23 has an ABBA deadlock
 ([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)) that
-freezes a Nav2 server's transforms mid-mission. On a new host, run
-`scripts/build_tf2_deadlock_fix.sh` once after the first workspace build.
-It clones geometry2 0.25.24 to `/workspace/molar/third_party/` and builds
-`tf2`/`tf2_ros` into this workspace's `install/`; the apt Nav2 binaries load
-them once `install/setup.bash` is sourced. Remove `build/tf2*` and
-`install/tf2*` when apt reaches 0.25.24.
+freezes a Nav2 server's transforms mid-mission. Apt ships the fix,
+0.25.24; this host was upgraded on 2026-10-13 and the workspace overlay was
+removed. Check with `apt-cache policy ros-humble-tf2-ros`. A host still on
+0.25.23 should upgrade (`sudo apt install --only-upgrade ros-humble-tf2
+ros-humble-tf2-ros`). If it cannot, `scripts/build_tf2_deadlock_fix.sh`
+builds 0.25.24 into this workspace's `install/`; remove `build/tf2*` and
+`install/tf2*` again once apt is upgraded.

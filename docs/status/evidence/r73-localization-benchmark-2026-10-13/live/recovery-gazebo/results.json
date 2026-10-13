@@ -1,0 +1,7986 @@
+{
+ "revision": "10cb62cb9d9da908cea210ffc45c983484540dcc",
+ "host": "molar1 aarch64",
+ "label": "gazebo",
+ "map": "nav_maze",
+ "rate_hz": 2.0,
+ "recover_pos_m": 0.25,
+ "recover_head_deg": 10.0,
+ "lost_m": 0.5,
+ "gates": [
+  0.5,
+  5.0
+ ],
+ "runs": {
+  "a_star_planner_seed23.bag": {
+   "meta": {
+    "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-gazebo/a_star_planner_seed23.bag",
+    "scans_used": 220,
+    "beams": 360,
+    "duration_s": 131.4,
+    "travelled_m": 19.57,
+    "truth_start": [
+     -7.0,
+     -7.0,
+     0.0
+    ]
+   },
+   "cells": {
+    "dead_reckoning": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.312,
+       "min_pos_m": 0.265,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.512,
+       "min_pos_m": 0.465,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.301,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.711,
+       "min_pos_m": 0.665,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.011,
+       "min_pos_m": 0.965,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.511,
+       "min_pos_m": 1.464,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 2.011,
+       "min_pos_m": 1.964,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.663,
+       "min_pos_m": 0.662,
+       "min_head_deg": 0.76,
+       "scan_at_min": 190,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.463,
+       "min_pos_m": 1.462,
+       "min_head_deg": 0.88,
+       "scan_at_min": 182,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 1.282,
+       "min_pos_m": 0.0,
+       "min_head_deg": 15.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.904,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 2.578,
+       "min_pos_m": 0.0,
+       "min_head_deg": 30.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.927,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 7.116,
+       "min_pos_m": 0.0,
+       "min_head_deg": 90.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 10.101,
+       "min_pos_m": 0.0,
+       "min_head_deg": 180.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.945,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.312,
+       "min_pos_m": 0.265,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.512,
+       "min_pos_m": 0.465,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.301,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.711,
+       "min_pos_m": 0.665,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.011,
+       "min_pos_m": 0.965,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.511,
+       "min_pos_m": 1.464,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 2.011,
+       "min_pos_m": 1.964,
+       "min_head_deg": 0.46,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.663,
+       "min_pos_m": 0.662,
+       "min_head_deg": 0.76,
+       "scan_at_min": 190,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.463,
+       "min_pos_m": 1.462,
+       "min_head_deg": 0.88,
+       "scan_at_min": 182,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 1.282,
+       "min_pos_m": 0.0,
+       "min_head_deg": 15.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.904,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 2.578,
+       "min_pos_m": 0.0,
+       "min_head_deg": 30.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.927,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 7.116,
+       "min_pos_m": 0.0,
+       "min_head_deg": 90.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 10.101,
+       "min_pos_m": 0.0,
+       "min_head_deg": 180.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.945,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "icp_point_to_point": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.009,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.015,
+       "min_head_deg": 0.01,
+       "scan_at_min": 204,
+       "recovered": true,
+       "scan_recovered": 95,
+       "held": true,
+       "lost_fraction": 0.114,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.015,
+       "min_head_deg": 0.01,
+       "scan_at_min": 204,
+       "recovered": true,
+       "scan_recovered": 95,
+       "held": true,
+       "lost_fraction": 0.119,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.015,
+       "min_head_deg": 0.01,
+       "scan_at_min": 204,
+       "recovered": true,
+       "scan_recovered": 95,
+       "held": true,
+       "lost_fraction": 0.128,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.794,
+       "min_pos_m": 1.576,
+       "min_head_deg": 1.83,
+       "scan_at_min": 90,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 5.498,
+       "min_pos_m": 0.029,
+       "min_head_deg": 90.5,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 14,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 7.931,
+       "min_pos_m": 0.126,
+       "min_head_deg": 179.16,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.009,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.015,
+       "min_head_deg": 0.01,
+       "scan_at_min": 204,
+       "recovered": true,
+       "scan_recovered": 95,
+       "held": true,
+       "lost_fraction": 0.114,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.015,
+       "min_head_deg": 0.01,
+       "scan_at_min": 204,
+       "recovered": true,
+       "scan_recovered": 95,
+       "held": true,
+       "lost_fraction": 0.119,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.015,
+       "min_head_deg": 0.01,
+       "scan_at_min": 204,
+       "recovered": true,
+       "scan_recovered": 95,
+       "held": true,
+       "lost_fraction": 0.128,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.794,
+       "min_pos_m": 1.576,
+       "min_head_deg": 1.83,
+       "scan_at_min": 90,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.019,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.63,
+       "scan_at_min": 48,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 5.208,
+       "min_pos_m": 0.029,
+       "min_head_deg": 90.5,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 7.931,
+       "min_pos_m": 0.126,
+       "min_head_deg": 179.16,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "icp_point_to_line": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.013,
+       "min_head_deg": 0.94,
+       "scan_at_min": 176,
+       "recovered": true,
+       "scan_recovered": 107,
+       "held": true,
+       "lost_fraction": 0.05,
+       "rejected_matches": 11,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.013,
+       "min_head_deg": 0.94,
+       "scan_at_min": 176,
+       "recovered": true,
+       "scan_recovered": 107,
+       "held": true,
+       "lost_fraction": 0.055,
+       "rejected_matches": 3,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.013,
+       "min_head_deg": 0.94,
+       "scan_at_min": 176,
+       "recovered": true,
+       "scan_recovered": 107,
+       "held": true,
+       "lost_fraction": 0.055,
+       "rejected_matches": 3,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.013,
+       "min_head_deg": 0.94,
+       "scan_at_min": 176,
+       "recovered": true,
+       "scan_recovered": 107,
+       "held": true,
+       "lost_fraction": 0.068,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.816,
+       "min_pos_m": 1.557,
+       "min_head_deg": 1.11,
+       "scan_at_min": 68,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 6.803,
+       "min_pos_m": 0.032,
+       "min_head_deg": 90.47,
+       "scan_at_min": 2,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 2,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 8.776,
+       "min_pos_m": 0.192,
+       "min_head_deg": 179.77,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.982,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 9,
+       "held": true,
+       "lost_fraction": 0.041,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 9,
+       "held": true,
+       "lost_fraction": 0.041,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.013,
+       "min_head_deg": 0.94,
+       "scan_at_min": 176,
+       "recovered": true,
+       "scan_recovered": 107,
+       "held": true,
+       "lost_fraction": 0.068,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.816,
+       "min_pos_m": 1.557,
+       "min_head_deg": 1.11,
+       "scan_at_min": 68,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.021,
+       "min_pos_m": 0.011,
+       "min_head_deg": 0.75,
+       "scan_at_min": 82,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 5.207,
+       "min_pos_m": 0.032,
+       "min_head_deg": 90.47,
+       "scan_at_min": 2,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 1,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 8.776,
+       "min_pos_m": 0.192,
+       "min_head_deg": 179.77,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.982,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "ndt": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.258,
+       "min_head_deg": 0.65,
+       "scan_at_min": 5,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.267,
+       "min_head_deg": 0.1,
+       "scan_at_min": 150,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.142,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.267,
+       "min_head_deg": 0.1,
+       "scan_at_min": 150,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.142,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.267,
+       "min_head_deg": 0.1,
+       "scan_at_min": 150,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.196,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 2.298,
+       "min_pos_m": 1.605,
+       "min_head_deg": 0.33,
+       "scan_at_min": 22,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 2.298,
+       "min_pos_m": 2.083,
+       "min_head_deg": 0.42,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.022,
+       "min_pos_m": 0.007,
+       "min_head_deg": 0.79,
+       "scan_at_min": 181,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.788,
+       "min_pos_m": 1.579,
+       "min_head_deg": 0.4,
+       "scan_at_min": 154,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.022,
+       "min_pos_m": 0.007,
+       "min_head_deg": 0.79,
+       "scan_at_min": 181,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.022,
+       "min_pos_m": 0.007,
+       "min_head_deg": 0.79,
+       "scan_at_min": 181,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 7.447,
+       "min_pos_m": 0.029,
+       "min_head_deg": 90.63,
+       "scan_at_min": 6,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 6,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 9.023,
+       "min_pos_m": 0.117,
+       "min_head_deg": 179.12,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.258,
+       "min_head_deg": 0.65,
+       "scan_at_min": 5,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.267,
+       "min_head_deg": 0.1,
+       "scan_at_min": 150,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.142,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.267,
+       "min_head_deg": 0.1,
+       "scan_at_min": 150,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.142,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.274,
+       "min_pos_m": 0.267,
+       "min_head_deg": 0.1,
+       "scan_at_min": 150,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.196,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 2.298,
+       "min_pos_m": 1.605,
+       "min_head_deg": 0.33,
+       "scan_at_min": 22,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 2.298,
+       "min_pos_m": 2.083,
+       "min_head_deg": 0.42,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.022,
+       "min_pos_m": 0.007,
+       "min_head_deg": 0.79,
+       "scan_at_min": 181,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 1.788,
+       "min_pos_m": 1.579,
+       "min_head_deg": 0.4,
+       "scan_at_min": 154,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.022,
+       "min_pos_m": 0.007,
+       "min_head_deg": 0.79,
+       "scan_at_min": 181,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.022,
+       "min_pos_m": 0.007,
+       "min_head_deg": 0.79,
+       "scan_at_min": 181,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 5.005,
+       "min_pos_m": 0.029,
+       "min_head_deg": 90.63,
+       "scan_at_min": 6,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 9.023,
+       "min_pos_m": 0.117,
+       "min_head_deg": 179.12,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.941,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "correlative": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.005,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.009,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.014,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.077,
+       "min_pos_m": 0.008,
+       "min_head_deg": 0.61,
+       "scan_at_min": 192,
+       "recovered": true,
+       "scan_recovered": 54,
+       "held": true,
+       "lost_fraction": 0.242,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 4.256,
+       "min_pos_m": 0.331,
+       "min_head_deg": 89.03,
+       "scan_at_min": 11,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.945,
+       "rejected_matches": 2,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 5.393,
+       "min_pos_m": 0.196,
+       "min_head_deg": 178.41,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.986,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.005,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.009,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.014,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 219,
+       "final_pos_m": 0.077,
+       "min_pos_m": 0.008,
+       "min_head_deg": 0.61,
+       "scan_at_min": 192,
+       "recovered": true,
+       "scan_recovered": 54,
+       "held": true,
+       "lost_fraction": 0.242,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 219,
+       "final_pos_m": 0.07,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 219,
+       "final_pos_m": 4.272,
+       "min_pos_m": 0.331,
+       "min_head_deg": 89.03,
+       "scan_at_min": 11,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.945,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 219,
+       "final_pos_m": 5.393,
+       "min_pos_m": 0.196,
+       "min_head_deg": 178.41,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.986,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    }
+   }
+  },
+  "a_star_planner_seed37.bag": {
+   "meta": {
+    "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-gazebo/a_star_planner_seed37.bag",
+    "scans_used": 190,
+    "beams": 360,
+    "duration_s": 113.4,
+    "travelled_m": 17.8,
+    "truth_start": [
+     -7.0,
+     -7.0,
+     0.0
+    ]
+   },
+   "cells": {
+    "dead_reckoning": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.298,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.498,
+       "min_pos_m": 0.459,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.132,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.697,
+       "min_pos_m": 0.659,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.997,
+       "min_pos_m": 0.959,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.497,
+       "min_pos_m": 1.459,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.997,
+       "min_pos_m": 1.959,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.668,
+       "min_pos_m": 0.668,
+       "min_head_deg": 0.91,
+       "scan_at_min": 185,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.468,
+       "min_pos_m": 1.468,
+       "min_head_deg": 0.91,
+       "scan_at_min": 185,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 2.046,
+       "min_pos_m": 0.0,
+       "min_head_deg": 15.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.884,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 4.08,
+       "min_pos_m": 0.0,
+       "min_head_deg": 30.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.915,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 11.193,
+       "min_pos_m": 0.0,
+       "min_head_deg": 90.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 15.854,
+       "min_pos_m": 0.0,
+       "min_head_deg": 180.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.937,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.298,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.498,
+       "min_pos_m": 0.459,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.132,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.697,
+       "min_pos_m": 0.659,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.997,
+       "min_pos_m": 0.959,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.497,
+       "min_pos_m": 1.459,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.997,
+       "min_pos_m": 1.959,
+       "min_head_deg": 0.31,
+       "scan_at_min": 108,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.668,
+       "min_pos_m": 0.668,
+       "min_head_deg": 0.91,
+       "scan_at_min": 185,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.468,
+       "min_pos_m": 1.468,
+       "min_head_deg": 0.91,
+       "scan_at_min": 185,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 2.046,
+       "min_pos_m": 0.0,
+       "min_head_deg": 15.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.884,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 4.08,
+       "min_pos_m": 0.0,
+       "min_head_deg": 30.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.915,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 11.193,
+       "min_pos_m": 0.0,
+       "min_head_deg": 90.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 15.854,
+       "min_pos_m": 0.0,
+       "min_head_deg": 180.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.937,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "icp_point_to_point": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.016,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.022,
+       "min_head_deg": 0.77,
+       "scan_at_min": 151,
+       "recovered": true,
+       "scan_recovered": 46,
+       "held": true,
+       "lost_fraction": 0.132,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.022,
+       "min_head_deg": 0.77,
+       "scan_at_min": 151,
+       "recovered": true,
+       "scan_recovered": 46,
+       "held": true,
+       "lost_fraction": 0.138,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.022,
+       "min_head_deg": 0.77,
+       "scan_at_min": 151,
+       "recovered": true,
+       "scan_recovered": 46,
+       "held": true,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.684,
+       "min_pos_m": 1.565,
+       "min_head_deg": 1.88,
+       "scan_at_min": 81,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 9.322,
+       "min_pos_m": 0.03,
+       "min_head_deg": 90.48,
+       "scan_at_min": 1,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 15,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 14.546,
+       "min_pos_m": 0.127,
+       "min_head_deg": 179.31,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.926,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.016,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.022,
+       "min_head_deg": 0.77,
+       "scan_at_min": 151,
+       "recovered": true,
+       "scan_recovered": 46,
+       "held": true,
+       "lost_fraction": 0.132,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.022,
+       "min_head_deg": 0.77,
+       "scan_at_min": 151,
+       "recovered": true,
+       "scan_recovered": 46,
+       "held": true,
+       "lost_fraction": 0.138,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.022,
+       "min_head_deg": 0.77,
+       "scan_at_min": 151,
+       "recovered": true,
+       "scan_recovered": 46,
+       "held": true,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.684,
+       "min_pos_m": 1.565,
+       "min_head_deg": 1.88,
+       "scan_at_min": 81,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.72,
+       "scan_at_min": 57,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 7.535,
+       "min_pos_m": 0.03,
+       "min_head_deg": 90.48,
+       "scan_at_min": 1,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 14.546,
+       "min_pos_m": 0.127,
+       "min_head_deg": 179.31,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.926,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "icp_point_to_line": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 12,
+       "held": true,
+       "lost_fraction": 0.058,
+       "rejected_matches": 11,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 101,
+       "held": true,
+       "lost_fraction": 0.069,
+       "rejected_matches": 5,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 101,
+       "held": true,
+       "lost_fraction": 0.069,
+       "rejected_matches": 5,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 101,
+       "held": true,
+       "lost_fraction": 0.079,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.652,
+       "min_pos_m": 1.588,
+       "min_head_deg": 1.22,
+       "scan_at_min": 136,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 9.866,
+       "min_pos_m": 0.031,
+       "min_head_deg": 90.53,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 1,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 14.588,
+       "min_pos_m": 0.091,
+       "min_head_deg": 178.84,
+       "scan_at_min": 15,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.979,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 8,
+       "held": true,
+       "lost_fraction": 0.042,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 8,
+       "held": true,
+       "lost_fraction": 0.042,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 101,
+       "held": true,
+       "lost_fraction": 0.079,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.652,
+       "min_pos_m": 1.588,
+       "min_head_deg": 1.22,
+       "scan_at_min": 136,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.1,
+       "scan_at_min": 149,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 12.125,
+       "min_pos_m": 0.031,
+       "min_head_deg": 90.53,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 14.588,
+       "min_pos_m": 0.091,
+       "min_head_deg": 178.84,
+       "scan_at_min": 15,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.979,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "ndt": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.279,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.22,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.279,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.22,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.201,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.279,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.22,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.201,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 2.1,
+       "min_pos_m": 1.128,
+       "min_head_deg": 0.7,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 2.4,
+       "min_pos_m": 1.615,
+       "min_head_deg": 0.57,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 2.627,
+       "min_pos_m": 2.097,
+       "min_head_deg": 0.41,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.17,
+       "scan_at_min": 150,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.651,
+       "min_pos_m": 1.599,
+       "min_head_deg": 0.21,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.17,
+       "scan_at_min": 150,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.17,
+       "scan_at_min": 150,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 9.835,
+       "min_pos_m": 0.029,
+       "min_head_deg": 90.62,
+       "scan_at_min": 9,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 6,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 14.807,
+       "min_pos_m": 0.118,
+       "min_head_deg": 179.29,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.279,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.22,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.279,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.22,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.201,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.279,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.22,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.201,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 2.1,
+       "min_pos_m": 1.128,
+       "min_head_deg": 0.7,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 2.4,
+       "min_pos_m": 1.615,
+       "min_head_deg": 0.57,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 2.627,
+       "min_pos_m": 2.097,
+       "min_head_deg": 0.41,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.17,
+       "scan_at_min": 150,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 1.651,
+       "min_pos_m": 1.599,
+       "min_head_deg": 0.21,
+       "scan_at_min": 166,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.17,
+       "scan_at_min": 150,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.008,
+       "min_head_deg": 1.17,
+       "scan_at_min": 150,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 9.614,
+       "min_pos_m": 0.029,
+       "min_head_deg": 90.62,
+       "scan_at_min": 9,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 14.807,
+       "min_pos_m": 0.118,
+       "min_head_deg": 179.29,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.931,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "correlative": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.005,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 3,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.011,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.0,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.016,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.065,
+       "min_pos_m": 0.017,
+       "min_head_deg": 0.33,
+       "scan_at_min": 73,
+       "recovered": true,
+       "scan_recovered": 50,
+       "held": true,
+       "lost_fraction": 0.265,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 5.229,
+       "min_pos_m": 0.355,
+       "min_head_deg": 89.5,
+       "scan_at_min": 9,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.937,
+       "rejected_matches": 1,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 8.875,
+       "min_pos_m": 0.179,
+       "min_head_deg": 178.92,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.984,
+       "rejected_matches": 2,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.005,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 3,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.011,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.0,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.016,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 189,
+       "final_pos_m": 0.065,
+       "min_pos_m": 0.017,
+       "min_head_deg": 0.33,
+       "scan_at_min": 73,
+       "recovered": true,
+       "scan_recovered": 50,
+       "held": true,
+       "lost_fraction": 0.265,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 1,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 189,
+       "final_pos_m": 0.052,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 189,
+       "final_pos_m": 5.229,
+       "min_pos_m": 0.355,
+       "min_head_deg": 89.5,
+       "scan_at_min": 9,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.937,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 189,
+       "final_pos_m": 8.894,
+       "min_pos_m": 0.179,
+       "min_head_deg": 178.92,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.984,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    }
+   }
+  },
+  "a_star_planner_seed53.bag": {
+   "meta": {
+    "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-gazebo/a_star_planner_seed53.bag",
+    "scans_used": 245,
+    "beams": 360,
+    "duration_s": 156.2,
+    "travelled_m": 25.15,
+    "truth_start": [
+     -7.0,
+     -7.0,
+     0.0
+    ]
+   },
+   "cells": {
+    "dead_reckoning": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.262,
+       "min_pos_m": 0.252,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.459,
+       "min_pos_m": 0.45,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.041,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.658,
+       "min_pos_m": 0.649,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.957,
+       "min_pos_m": 0.949,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.457,
+       "min_pos_m": 1.448,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.956,
+       "min_pos_m": 1.948,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.762,
+       "min_pos_m": 0.7,
+       "min_head_deg": 0.0,
+       "scan_at_min": 2,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.561,
+       "min_pos_m": 1.5,
+       "min_head_deg": 0.03,
+       "scan_at_min": 11,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 2.241,
+       "min_pos_m": 0.0,
+       "min_head_deg": 15.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.697,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 4.368,
+       "min_pos_m": 0.0,
+       "min_head_deg": 30.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.779,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 11.791,
+       "min_pos_m": 0.0,
+       "min_head_deg": 90.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 16.6,
+       "min_pos_m": 0.0,
+       "min_head_deg": 180.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.951,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.262,
+       "min_pos_m": 0.252,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.459,
+       "min_pos_m": 0.45,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.041,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.658,
+       "min_pos_m": 0.649,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.957,
+       "min_pos_m": 0.949,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.457,
+       "min_pos_m": 1.448,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.956,
+       "min_pos_m": 1.948,
+       "min_head_deg": 0.12,
+       "scan_at_min": 225,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.762,
+       "min_pos_m": 0.7,
+       "min_head_deg": 0.0,
+       "scan_at_min": 2,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.561,
+       "min_pos_m": 1.5,
+       "min_head_deg": 0.03,
+       "scan_at_min": 11,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 2.241,
+       "min_pos_m": 0.0,
+       "min_head_deg": 15.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.697,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 4.368,
+       "min_pos_m": 0.0,
+       "min_head_deg": 30.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.779,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 11.791,
+       "min_pos_m": 0.0,
+       "min_head_deg": 90.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 16.6,
+       "min_pos_m": 0.0,
+       "min_head_deg": 180.0,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.951,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "icp_point_to_point": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.008,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 34,
+       "held": true,
+       "lost_fraction": 0.102,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 34,
+       "held": true,
+       "lost_fraction": 0.107,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 34,
+       "held": true,
+       "lost_fraction": 0.115,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.669,
+       "min_pos_m": 1.669,
+       "min_head_deg": 0.91,
+       "scan_at_min": 243,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 9.954,
+       "min_pos_m": 0.03,
+       "min_head_deg": 90.49,
+       "scan_at_min": 6,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 11.658,
+       "min_pos_m": 0.125,
+       "min_head_deg": 179.48,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.943,
+       "rejected_matches": 5,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.008,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 34,
+       "held": true,
+       "lost_fraction": 0.102,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 34,
+       "held": true,
+       "lost_fraction": 0.107,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 34,
+       "held": true,
+       "lost_fraction": 0.115,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.669,
+       "min_pos_m": 1.669,
+       "min_head_deg": 0.91,
+       "scan_at_min": 243,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.048,
+       "min_pos_m": 0.012,
+       "min_head_deg": 0.05,
+       "scan_at_min": 131,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 9.954,
+       "min_pos_m": 0.03,
+       "min_head_deg": 90.49,
+       "scan_at_min": 6,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 11.658,
+       "min_pos_m": 0.125,
+       "min_head_deg": 179.48,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.943,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "icp_point_to_line": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 12,
+       "held": true,
+       "lost_fraction": 0.045,
+       "rejected_matches": 11,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 12,
+       "held": true,
+       "lost_fraction": 0.045,
+       "rejected_matches": 8,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.298,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.09,
+       "scan_at_min": 34,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.053,
+       "rejected_matches": 2,
+       "wrong_stable": true
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.298,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.09,
+       "scan_at_min": 34,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.074,
+       "rejected_matches": 1,
+       "wrong_stable": true
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.624,
+       "min_pos_m": 1.614,
+       "min_head_deg": 0.48,
+       "scan_at_min": 104,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 11.834,
+       "min_pos_m": 0.031,
+       "min_head_deg": 90.49,
+       "scan_at_min": 3,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 1,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 15.049,
+       "min_pos_m": 0.214,
+       "min_head_deg": 179.9,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.988,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.008,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 10,
+       "held": true,
+       "lost_fraction": 0.037,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.298,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.09,
+       "scan_at_min": 34,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.057,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.624,
+       "min_pos_m": 1.614,
+       "min_head_deg": 0.48,
+       "scan_at_min": 104,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.062,
+       "min_pos_m": 0.001,
+       "min_head_deg": 0.53,
+       "scan_at_min": 133,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 11.834,
+       "min_pos_m": 0.031,
+       "min_head_deg": 90.49,
+       "scan_at_min": 3,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 1,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 15.049,
+       "min_pos_m": 0.214,
+       "min_head_deg": 179.9,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.988,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "ndt": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.176,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 2.372,
+       "min_pos_m": 2.098,
+       "min_head_deg": 0.33,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.239,
+       "min_pos_m": 0.208,
+       "min_head_deg": 0.07,
+       "scan_at_min": 127,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.63,
+       "min_pos_m": 1.61,
+       "min_head_deg": 0.86,
+       "scan_at_min": 241,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.93,
+       "scan_at_min": 122,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.93,
+       "scan_at_min": 122,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 13.313,
+       "min_pos_m": 0.028,
+       "min_head_deg": 90.65,
+       "scan_at_min": 3,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 15.556,
+       "min_pos_m": 0.118,
+       "min_head_deg": 178.99,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 1,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.148,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.306,
+       "min_pos_m": 0.259,
+       "min_head_deg": 0.02,
+       "scan_at_min": 165,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.176,
+       "rejected_matches": 0,
+       "wrong_stable": true
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 2.372,
+       "min_pos_m": 2.098,
+       "min_head_deg": 0.33,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.239,
+       "min_pos_m": 0.208,
+       "min_head_deg": 0.07,
+       "scan_at_min": 127,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.63,
+       "min_pos_m": 1.61,
+       "min_head_deg": 0.86,
+       "scan_at_min": 241,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.93,
+       "scan_at_min": 122,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.06,
+       "min_pos_m": 0.002,
+       "min_head_deg": 0.93,
+       "scan_at_min": 122,
+       "recovered": true,
+       "scan_recovered": 2,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 13.313,
+       "min_pos_m": 0.028,
+       "min_head_deg": 90.65,
+       "scan_at_min": 3,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 15.556,
+       "min_pos_m": 0.118,
+       "min_head_deg": 178.99,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.947,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    },
+    "correlative": {
+     "max_correction_0.5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.004,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.0,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.008,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.0,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.012,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.625,
+       "min_pos_m": 1.499,
+       "min_head_deg": 2.68,
+       "scan_at_min": 238,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 9.278,
+       "min_pos_m": 0.318,
+       "min_head_deg": 89.5,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.951,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 12.002,
+       "min_pos_m": 0.191,
+       "min_head_deg": 179.58,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.988,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     },
+     "max_correction_5": {
+      "x+0.3_y+0.0": {
+       "offset_label": "x+0.3_y+0.0",
+       "wrong_start": [
+        -6.7,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.5_y+0.0": {
+       "offset_label": "x+0.5_y+0.0",
+       "wrong_start": [
+        -6.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.7_y+0.0": {
+       "offset_label": "x+0.7_y+0.0",
+       "wrong_start": [
+        -6.3,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.0_y+0.0": {
+       "offset_label": "x+1.0_y+0.0",
+       "wrong_start": [
+        -6.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.004,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+1.5_y+0.0": {
+       "offset_label": "x+1.5_y+0.0",
+       "wrong_start": [
+        -5.5,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.0,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 3,
+       "held": true,
+       "lost_fraction": 0.008,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+2.0_y+0.0": {
+       "offset_label": "x+2.0_y+0.0",
+       "wrong_start": [
+        -5.0,
+        -7.0,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.0,
+       "scan_at_min": 4,
+       "recovered": true,
+       "scan_recovered": 4,
+       "held": true,
+       "lost_fraction": 0.012,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+0.7": {
+       "offset_label": "x+0.0_y+0.7",
+       "wrong_start": [
+        -7.0,
+        -6.3,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "x+0.0_y+1.5": {
+       "offset_label": "x+0.0_y+1.5",
+       "wrong_start": [
+        -7.0,
+        -5.5,
+        0.0
+       ],
+       "scans": 244,
+       "final_pos_m": 1.625,
+       "min_pos_m": 1.499,
+       "min_head_deg": 2.68,
+       "scan_at_min": 238,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 1.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+15": {
+       "offset_label": "yaw+15",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.262
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 0,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+30": {
+       "offset_label": "yaw+30",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        0.524
+       ],
+       "scans": 244,
+       "final_pos_m": 0.057,
+       "min_pos_m": 0.0,
+       "min_head_deg": 2.5,
+       "scan_at_min": 2,
+       "recovered": true,
+       "scan_recovered": 1,
+       "held": true,
+       "lost_fraction": 0.0,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+90": {
+       "offset_label": "yaw+90",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        1.571
+       ],
+       "scans": 244,
+       "final_pos_m": 9.278,
+       "min_pos_m": 0.318,
+       "min_head_deg": 89.5,
+       "scan_at_min": 0,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.951,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      },
+      "yaw+180": {
+       "offset_label": "yaw+180",
+       "wrong_start": [
+        -7.0,
+        -7.0,
+        -3.142
+       ],
+       "scans": 244,
+       "final_pos_m": 12.002,
+       "min_pos_m": 0.191,
+       "min_head_deg": 179.58,
+       "scan_at_min": 14,
+       "recovered": false,
+       "scan_recovered": null,
+       "held": false,
+       "lost_fraction": 0.988,
+       "rejected_matches": 0,
+       "wrong_stable": false
+      }
+     }
+    }
+   }
+  }
+ },
+ "aggregate": {
+  "dead_reckoning": {
+   "max_correction_0.5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.291,
+     "mean_min_pos_m": 0.259,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.49,
+     "mean_min_pos_m": 0.458,
+     "wrong_stable_fraction": 0.667
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.689,
+     "mean_min_pos_m": 0.658,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.988,
+     "mean_min_pos_m": 0.958,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.488,
+     "mean_min_pos_m": 1.457,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.988,
+     "mean_min_pos_m": 1.957,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.698,
+     "mean_min_pos_m": 0.677,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.497,
+     "mean_min_pos_m": 1.477,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.856,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 3.675,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 10.033,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 14.185,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    }
+   },
+   "max_correction_5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.291,
+     "mean_min_pos_m": 0.259,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.49,
+     "mean_min_pos_m": 0.458,
+     "wrong_stable_fraction": 0.667
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.689,
+     "mean_min_pos_m": 0.658,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.988,
+     "mean_min_pos_m": 0.958,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.488,
+     "mean_min_pos_m": 1.457,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.988,
+     "mean_min_pos_m": 1.957,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.698,
+     "mean_min_pos_m": 0.677,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.497,
+     "mean_min_pos_m": 1.477,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.856,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 3.675,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 10.033,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 14.185,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    }
+   }
+  },
+  "icp_point_to_point": {
+   "max_correction_0.5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.016,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.016,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.016,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.716,
+     "mean_min_pos_m": 1.603,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 8.258,
+     "mean_min_pos_m": 0.03,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 11.378,
+     "mean_min_pos_m": 0.126,
+     "wrong_stable_fraction": 0.0
+    }
+   },
+   "max_correction_5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.016,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.016,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.016,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.716,
+     "mean_min_pos_m": 1.603,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.04,
+     "mean_min_pos_m": 0.005,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 7.566,
+     "mean_min_pos_m": 0.03,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 11.378,
+     "mean_min_pos_m": 0.126,
+     "wrong_stable_fraction": 0.0
+    }
+   }
+  },
+  "icp_point_to_line": {
+   "max_correction_0.5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.667,
+     "held_fraction": 0.667,
+     "mean_final_pos_m": 0.126,
+     "mean_min_pos_m": 0.093,
+     "wrong_stable_fraction": 0.333
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.667,
+     "held_fraction": 0.667,
+     "mean_final_pos_m": 0.126,
+     "mean_min_pos_m": 0.093,
+     "wrong_stable_fraction": 0.333
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.697,
+     "mean_min_pos_m": 1.586,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 9.501,
+     "mean_min_pos_m": 0.031,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 12.804,
+     "mean_min_pos_m": 0.166,
+     "wrong_stable_fraction": 0.0
+    }
+   },
+   "max_correction_5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.667,
+     "held_fraction": 0.667,
+     "mean_final_pos_m": 0.126,
+     "mean_min_pos_m": 0.093,
+     "wrong_stable_fraction": 0.333
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.697,
+     "mean_min_pos_m": 1.586,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.048,
+     "mean_min_pos_m": 0.007,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 9.722,
+     "mean_min_pos_m": 0.031,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 12.804,
+     "mean_min_pos_m": 0.166,
+     "wrong_stable_fraction": 0.0
+    }
+   }
+  },
+  "ndt": {
+   "max_correction_0.5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.286,
+     "mean_min_pos_m": 0.259,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.286,
+     "mean_min_pos_m": 0.262,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.286,
+     "mean_min_pos_m": 0.262,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.893,
+     "mean_min_pos_m": 0.551,
+     "wrong_stable_fraction": 0.667
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.668,
+     "mean_min_pos_m": 1.16,
+     "wrong_stable_fraction": 0.333
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 2.432,
+     "mean_min_pos_m": 2.093,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.107,
+     "mean_min_pos_m": 0.074,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.69,
+     "mean_min_pos_m": 1.596,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.047,
+     "mean_min_pos_m": 0.006,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.047,
+     "mean_min_pos_m": 0.006,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 10.198,
+     "mean_min_pos_m": 0.029,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 13.129,
+     "mean_min_pos_m": 0.118,
+     "wrong_stable_fraction": 0.0
+    }
+   },
+   "max_correction_5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.286,
+     "mean_min_pos_m": 0.259,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.286,
+     "mean_min_pos_m": 0.262,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.286,
+     "mean_min_pos_m": 0.262,
+     "wrong_stable_fraction": 1.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 0.893,
+     "mean_min_pos_m": 0.551,
+     "wrong_stable_fraction": 0.667
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.668,
+     "mean_min_pos_m": 1.16,
+     "wrong_stable_fraction": 0.333
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 2.432,
+     "mean_min_pos_m": 2.093,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.107,
+     "mean_min_pos_m": 0.074,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 1.69,
+     "mean_min_pos_m": 1.596,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.047,
+     "mean_min_pos_m": 0.006,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.047,
+     "mean_min_pos_m": 0.006,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 9.311,
+     "mean_min_pos_m": 0.029,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 13.129,
+     "mean_min_pos_m": 0.118,
+     "wrong_stable_fraction": 0.0
+    }
+   }
+  },
+  "correlative": {
+   "max_correction_0.5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.667,
+     "held_fraction": 0.667,
+     "mean_final_pos_m": 0.589,
+     "mean_min_pos_m": 0.508,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 6.254,
+     "mean_min_pos_m": 0.335,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 8.757,
+     "mean_min_pos_m": 0.189,
+     "wrong_stable_fraction": 0.0
+    }
+   },
+   "max_correction_5": {
+    "x+0.3_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.7_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+1.5_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+2.0_y+0.0": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+0.7": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "x+0.0_y+1.5": {
+     "runs": 3,
+     "recovered_fraction": 0.667,
+     "held_fraction": 0.667,
+     "mean_final_pos_m": 0.589,
+     "mean_min_pos_m": 0.508,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+15": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+30": {
+     "runs": 3,
+     "recovered_fraction": 1.0,
+     "held_fraction": 1.0,
+     "mean_final_pos_m": 0.06,
+     "mean_min_pos_m": 0.0,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+90": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 6.26,
+     "mean_min_pos_m": 0.335,
+     "wrong_stable_fraction": 0.0
+    },
+    "yaw+180": {
+     "runs": 3,
+     "recovered_fraction": 0.0,
+     "held_fraction": 0.0,
+     "mean_final_pos_m": 8.763,
+     "mean_min_pos_m": 0.189,
+     "wrong_stable_fraction": 0.0
+    }
+   }
+  }
+ }
+}
