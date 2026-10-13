@@ -1,0 +1,407 @@
+{
+ "revision": "63319f100a135ff3162f38e3c744dc908f4dbf65",
+ "host": "molar1 aarch64",
+ "label": "MuJoCo, odometry as recorded",
+ "map": "nav_maze",
+ "rate_hz": 5.0,
+ "odom_bias": false,
+ "seed": 1,
+ "runs": {
+  "a_star_planner_seed23.bag": {
+   "meta": {
+    "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-mujoco/a_star_planner_seed23.bag",
+    "scans_used": 470,
+    "scan_frame": "laser_link",
+    "sensor_offset": [
+     -0.0051,
+     -0.0023,
+     3.14
+    ],
+    "beams": 360,
+    "duration_s": 133.0,
+    "travelled_m": 19.48
+   },
+   "results": {
+    "dead_reckoning": {
+     "scans": 469,
+     "position_rmse_m": 0.003,
+     "mean_offset_m": [
+      0.0002,
+      -0.0001
+     ],
+     "position_p95_m": 0.0059,
+     "max_error_m": 0.0074,
+     "heading_rmse_deg": 0.091,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 0.015,
+      "p99": 0.029
+     },
+     "rejected_matches": 0
+    },
+    "icp_point_to_point": {
+     "scans": 469,
+     "position_rmse_m": 0.0343,
+     "mean_offset_m": [
+      0.0248,
+      -0.0116
+     ],
+     "position_p95_m": 0.0603,
+     "max_error_m": 0.0606,
+     "heading_rmse_deg": 0.545,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 1.756,
+      "p99": 7.354
+     },
+     "rejected_matches": 0
+    },
+    "icp_point_to_line": {
+     "scans": 469,
+     "position_rmse_m": 0.0455,
+     "mean_offset_m": [
+      0.0245,
+      0.0007
+     ],
+     "position_p95_m": 0.0784,
+     "max_error_m": 0.0818,
+     "heading_rmse_deg": 0.693,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 1.455,
+      "p99": 6.731
+     },
+     "rejected_matches": 0
+    },
+    "ndt": {
+     "scans": 469,
+     "position_rmse_m": 0.0476,
+     "mean_offset_m": [
+      0.023,
+      0.0009
+     ],
+     "position_p95_m": 0.0858,
+     "max_error_m": 0.0886,
+     "heading_rmse_deg": 0.747,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 3.741,
+      "p99": 10.468
+     },
+     "rejected_matches": 0
+    },
+    "correlative": {
+     "scans": 469,
+     "position_rmse_m": 0.06,
+     "mean_offset_m": [
+      -0.0121,
+      -0.0507
+     ],
+     "position_p95_m": 0.0746,
+     "max_error_m": 0.0955,
+     "heading_rmse_deg": 0.943,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 7.114,
+      "p99": 8.732
+     },
+     "rejected_matches": 0
+    },
+    "amcl_live": {
+     "scans": 469,
+     "position_rmse_m": 0.0974,
+     "mean_offset_m": [
+      -0.0019,
+      -0.0808
+     ],
+     "position_p95_m": 0.1296,
+     "max_error_m": 0.1374,
+     "heading_rmse_deg": 1.274,
+     "lost_fraction": 0.0
+    }
+   }
+  },
+  "a_star_planner_seed37.bag": {
+   "meta": {
+    "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-mujoco/a_star_planner_seed37.bag",
+    "scans_used": 385,
+    "scan_frame": "laser_link",
+    "sensor_offset": [
+     -0.0051,
+     -0.0023,
+     3.14
+    ],
+    "beams": 360,
+    "duration_s": 110.2,
+    "travelled_m": 17.9
+   },
+   "results": {
+    "dead_reckoning": {
+     "scans": 384,
+     "position_rmse_m": 0.0077,
+     "mean_offset_m": [
+      -0.0038,
+      0.0035
+     ],
+     "position_p95_m": 0.0123,
+     "max_error_m": 0.0124,
+     "heading_rmse_deg": 0.072,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 0.015,
+      "p99": 0.062
+     },
+     "rejected_matches": 0
+    },
+    "icp_point_to_point": {
+     "scans": 384,
+     "position_rmse_m": 0.034,
+     "mean_offset_m": [
+      0.0248,
+      -0.0162
+     ],
+     "position_p95_m": 0.0605,
+     "max_error_m": 0.0617,
+     "heading_rmse_deg": 0.6,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 1.966,
+      "p99": 6.593
+     },
+     "rejected_matches": 0
+    },
+    "icp_point_to_line": {
+     "scans": 384,
+     "position_rmse_m": 0.042,
+     "mean_offset_m": [
+      0.0238,
+      -0.0105
+     ],
+     "position_p95_m": 0.0802,
+     "max_error_m": 0.0818,
+     "heading_rmse_deg": 0.909,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 1.52,
+      "p99": 7.03
+     },
+     "rejected_matches": 0
+    },
+    "ndt": {
+     "scans": 384,
+     "position_rmse_m": 0.0432,
+     "mean_offset_m": [
+      0.0222,
+      -0.0105
+     ],
+     "position_p95_m": 0.0882,
+     "max_error_m": 0.0886,
+     "heading_rmse_deg": 0.996,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 3.797,
+      "p99": 13.042
+     },
+     "rejected_matches": 0
+    },
+    "correlative": {
+     "scans": 384,
+     "position_rmse_m": 0.056,
+     "mean_offset_m": [
+      -0.0117,
+      -0.0499
+     ],
+     "position_p95_m": 0.0704,
+     "max_error_m": 0.1016,
+     "heading_rmse_deg": 1.278,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 7.293,
+      "p99": 18.963
+     },
+     "rejected_matches": 0
+    },
+    "amcl_live": {
+     "scans": 384,
+     "position_rmse_m": 0.0891,
+     "mean_offset_m": [
+      0.0041,
+      -0.0748
+     ],
+     "position_p95_m": 0.1452,
+     "max_error_m": 0.1482,
+     "heading_rmse_deg": 1.615,
+     "lost_fraction": 0.0
+    }
+   }
+  },
+  "a_star_planner_seed53.bag": {
+   "meta": {
+    "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-mujoco/a_star_planner_seed53.bag",
+    "scans_used": 515,
+    "scan_frame": "laser_link",
+    "sensor_offset": [
+     -0.0051,
+     -0.0023,
+     3.14
+    ],
+    "beams": 360,
+    "duration_s": 148.0,
+    "travelled_m": 25.33
+   },
+   "results": {
+    "dead_reckoning": {
+     "scans": 514,
+     "position_rmse_m": 0.0095,
+     "mean_offset_m": [
+      0.0061,
+      -0.0058
+     ],
+     "position_p95_m": 0.0132,
+     "max_error_m": 0.0137,
+     "heading_rmse_deg": 0.079,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 0.014,
+      "p99": 0.032
+     },
+     "rejected_matches": 0
+    },
+    "icp_point_to_point": {
+     "scans": 514,
+     "position_rmse_m": 0.0407,
+     "mean_offset_m": [
+      0.031,
+      -0.0212
+     ],
+     "position_p95_m": 0.0605,
+     "max_error_m": 0.0643,
+     "heading_rmse_deg": 0.669,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 1.822,
+      "p99": 7.872
+     },
+     "rejected_matches": 0
+    },
+    "icp_point_to_line": {
+     "scans": 514,
+     "position_rmse_m": 0.0487,
+     "mean_offset_m": [
+      0.0344,
+      -0.0156
+     ],
+     "position_p95_m": 0.0768,
+     "max_error_m": 0.0818,
+     "heading_rmse_deg": 0.872,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 2.094,
+      "p99": 7.009
+     },
+     "rejected_matches": 0
+    },
+    "ndt": {
+     "scans": 514,
+     "position_rmse_m": 0.0477,
+     "mean_offset_m": [
+      0.0309,
+      -0.0133
+     ],
+     "position_p95_m": 0.0839,
+     "max_error_m": 0.0886,
+     "heading_rmse_deg": 0.892,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 4.047,
+      "p99": 12.72
+     },
+     "rejected_matches": 0
+    },
+    "correlative": {
+     "scans": 514,
+     "position_rmse_m": 0.0433,
+     "mean_offset_m": [
+      -0.0171,
+      -0.0336
+     ],
+     "position_p95_m": 0.0589,
+     "max_error_m": 0.07,
+     "heading_rmse_deg": 1.169,
+     "lost_fraction": 0.0,
+     "compute_ms": {
+      "p50": 7.281,
+      "p99": 7.761
+     },
+     "rejected_matches": 0
+    },
+    "amcl_live": {
+     "scans": 514,
+     "position_rmse_m": 0.0775,
+     "mean_offset_m": [
+      -0.0069,
+      -0.0571
+     ],
+     "position_p95_m": 0.1323,
+     "max_error_m": 0.1828,
+     "heading_rmse_deg": 1.843,
+     "lost_fraction": 0.0
+    }
+   }
+  }
+ },
+ "mean": {
+  "dead_reckoning": {
+   "position_rmse_m": 0.0067,
+   "position_p95_m": 0.0105,
+   "max_error_m": 0.0112,
+   "heading_rmse_deg": 0.0807,
+   "lost_fraction": 0.0,
+   "compute_ms_p50": 0.015,
+   "compute_ms_p99_max": 0.062
+  },
+  "icp_point_to_point": {
+   "position_rmse_m": 0.0363,
+   "position_p95_m": 0.0604,
+   "max_error_m": 0.0622,
+   "heading_rmse_deg": 0.6047,
+   "lost_fraction": 0.0,
+   "compute_ms_p50": 1.848,
+   "compute_ms_p99_max": 7.872
+  },
+  "icp_point_to_line": {
+   "position_rmse_m": 0.0454,
+   "position_p95_m": 0.0785,
+   "max_error_m": 0.0818,
+   "heading_rmse_deg": 0.8247,
+   "lost_fraction": 0.0,
+   "compute_ms_p50": 1.69,
+   "compute_ms_p99_max": 7.03
+  },
+  "ndt": {
+   "position_rmse_m": 0.0462,
+   "position_p95_m": 0.086,
+   "max_error_m": 0.0886,
+   "heading_rmse_deg": 0.8783,
+   "lost_fraction": 0.0,
+   "compute_ms_p50": 3.862,
+   "compute_ms_p99_max": 13.042
+  },
+  "correlative": {
+   "position_rmse_m": 0.0531,
+   "position_p95_m": 0.068,
+   "max_error_m": 0.089,
+   "heading_rmse_deg": 1.13,
+   "lost_fraction": 0.0,
+   "compute_ms_p50": 7.229,
+   "compute_ms_p99_max": 18.963
+  },
+  "amcl_live": {
+   "position_rmse_m": 0.088,
+   "position_p95_m": 0.1357,
+   "max_error_m": 0.1561,
+   "heading_rmse_deg": 1.5773,
+   "lost_fraction": 0.0
+  }
+ }
+}
