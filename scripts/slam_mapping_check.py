@@ -80,6 +80,16 @@ class ReferenceMap:
     def point(self, row, col):
         return (self.origin[0] + (col + 0.5) * self.resolution, self.origin[1] + (row + 0.5) * self.resolution)
 
+    def open_point(self, x, y, clearance):
+        """The nearest point at least ``clearance`` from any wall."""
+        free = ndimage.distance_transform_edt(~self.occupied) * self.resolution
+        r, c = self.cell(x, y)
+        if free[r, c] >= clearance:
+            return (x, y)
+        rows, cols = np.nonzero((free >= clearance) & self.free)
+        k = int(np.argmin((rows - r) ** 2 + (cols - c) ** 2))
+        return self.point(rows[k], cols[k])
+
     def route(self, start, goal, radius):
         """A* over cells farther than ``radius`` from any wall (8-connected)."""
         clearance = ndimage.distance_transform_edt(~self.occupied) * self.resolution
@@ -191,8 +201,12 @@ def main():
     # World <- slam map, fixed at the start (both frames see the same pose).
     world_from_map = compose(start_truth, inverse(start_slam))
 
-    targets = [tuple(float(v) for v in w.split(',')) for w in args.waypoints.split(';') if w.strip()]
+    # Waypoints move into open space: a mapping drive has no reason to brush
+    # obstacles (the first Go2 drive got wedged 0.16 m from one).
+    targets = [reference.open_point(*(float(v) for v in w.split(',')), args.radius + 0.35)
+               for w in args.waypoints.split(';') if w.strip()]
     targets.append(start_truth[:2])
+    report['waypoints'] = [[round(v, 2) for v in t] for t in targets]
     route, here = [], start_truth[:2]
     for target in targets:
         route += reference.route(here, target, args.radius)
@@ -203,9 +217,33 @@ def main():
     samples, index = [], 0
     end = time.monotonic() + args.timeout
     last_sample = 0.0
+    progress = (time.monotonic(), truth_pose())
+    report['backoffs'] = report['skipped_points'] = 0
+    stuck_here = 0
     while rclpy.ok() and index < len(route) and time.monotonic() < end:
         rclpy.spin_once(node, timeout_sec=0.02)
         pose = truth_pose()
+        # Stuck (pressed against something, or orbiting in place): back off
+        # straight; after three tries at the same carrot, skip ahead.
+        if time.monotonic() - progress[0] > 6.0:
+            if (math.dist(pose[:2], progress[1][:2]) < 0.15
+                    and abs(wrap(pose[2] - progress[1][2])) < math.radians(30)):
+                stuck_here += 1
+                report['backoffs'] += 1
+                back = Twist()
+                back.linear.x = -0.2
+                for _ in range(40):
+                    cmd.publish(back)
+                    spin(0.05)
+                if stuck_here >= 3:
+                    skip = min(10, len(route) - 1 - index)
+                    index += skip
+                    report['skipped_points'] += skip
+                    stuck_here = 0
+                pose = truth_pose()
+            else:
+                stuck_here = 0
+            progress = (time.monotonic(), pose)
         # Advance to the first route point at least 0.6 m ahead (pure pursuit carrot).
         while index < len(route) - 1 and math.dist(pose[:2], route[index]) < 0.6:
             index += 1
