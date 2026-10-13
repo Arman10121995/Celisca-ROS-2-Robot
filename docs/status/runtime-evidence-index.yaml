@@ -4435,9 +4435,9 @@ records:
   date: "2026-10-12"
   revision: "7f8c4b0 (adapter go2/himloco: policy profiles, default policy lookup, joint_pd config); run logged 2026-10-12 13:59"
   report: /workspace/molar/ledger/status/evidence/status.json
-  sha256: e84172afd916251d51b28278681e5c73ac9874d84e6955bd91a6d2b16dd316b4
+  sha256: bd32bef240ca2617add2b41af5edd7831fdc3dc29b6ce9df13caf5d835b4c6b2
   source_hashes: /workspace/molar/ledger/status/evidence/status.json, /workspace/molar/ledger/status/evidence/smoke-ok-final.log, /workspace/molar/ledger/status/evidence/legged-smoke-20261012c.log
-  source_hashes_sha256: e84172afd916251d51b28278681e5c73ac9874d84e6955bd91a6d2b16dd316b4, 990bf7ce05bd7b58284598e2407fc752f085a0362ffbea4a5778ad7a6be62f27, ba8bd74b95f7c3e53ad55a82a3db6375e99f82eda4733215cd181fbda38187fc
+  source_hashes_sha256: bd32bef240ca2617add2b41af5edd7831fdc3dc29b6ce9df13caf5d835b4c6b2, 990bf7ce05bd7b58284598e2407fc752f085a0362ffbea4a5778ad7a6be62f27, ba8bd74b95f7c3e53ad55a82a3db6375e99f82eda4733215cd181fbda38187fc
   report_kind: go2_himloco_bounded_live_smoke_2026-10-12
   scope: MuJoCo loc mode, ROS_DOMAIN_ID 97, headless, policy go2/himloco RUNNING 1783 steps, zero command sent, base height 0.286 m, neutral orientation, SIGINT-clean exit (status.json, smoke-ok-final.log, legged-smoke-20261012c.log). Artifacts archived on the mounted SSD at /workspace/molar/ledger/status/evidence/; ledger entries in platform-status.yaml (go2_himloco_bounded_live_smoke_2026_10_12, fast_tier_tutorial_suite_2026_10_12); fast-tier PASS (1017 passed, 4 deselected) per fast_tier_final.log.
   limitations:
