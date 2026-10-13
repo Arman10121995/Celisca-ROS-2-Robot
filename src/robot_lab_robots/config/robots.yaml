@@ -442,6 +442,9 @@ robots:
     # 0.6-0.7 m/s on a 0.4 m/s command and lost localization, while it walks
     # cleanly in nav_empty (2 ms).  Coarser worlds launch as a capped copy.
     gazebo_max_physics_step_s: 0.002
+    # go2_himloco turns on the spot in Isaac (0.43 rad/s) but not in MuJoCo
+    # (0.014) or Gazebo (0.020): Nav2 backs up there instead of spinning.
+    no_spin_in_place: [mujoco, gazebo]
 
   unitree_go2w:
     package: robot_lab_robots

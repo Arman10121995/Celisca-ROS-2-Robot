@@ -140,7 +140,23 @@ walking speeds): 3 of 4 pass.
     one candidate; another is that the leg odometry's velocity gate
     rejected stance feet during a sudden speed change.
 
-## Files
+**Round 5** (`v5/`, 16:3x, `e0e496e`): Gazebo Go2 with 2 ms physics.
+
+- The R4.3-style worlds step physics at 10 ms, so the Go2's 500 Hz PD
+  loop had run at 100 Hz. That matches the lurching in round 4, while the
+  Go2 walks cleanly in nav_empty (2 ms). The Go2 profile now declares
+  `gazebo_max_physics_step_s: 0.002`, and coarser worlds launch as a
+  capped copy.
+- The gait no longer surged, and localization stayed within 0.1 m all run.
+- The mission still failed, in the start corner:
+  - after the cancel, the Go2 faced the west wall;
+  - RPP stopped 23 times for "collision ahead";
+  - the recovery spins could not turn it, because himloco does not turn
+    on the spot in Gazebo.
+- Next for this cell: no spin recovery for robots that cannot turn in
+  place, and a less cramped start.
+
+
 
 - `v1/`: round 1 missions and leg odometry screens.
 - `v2/`: round 2.

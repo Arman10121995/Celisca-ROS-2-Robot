@@ -293,6 +293,8 @@ def _setup(context, *args, **kwargs):
     global_planner_plugin = LaunchConfiguration("global_planner_plugin").perform(context)
     local_planner_plugin = LaunchConfiguration("local_planner_plugin").perform(context)
     motion_model = LaunchConfiguration("motion_model").perform(context).strip().lower()
+    spin_recovery = LaunchConfiguration("spin_recovery").perform(context).strip().lower() not in (
+        "false", "0", "no")
     compute_path_server = LaunchConfiguration("compute_path_server").perform(context).strip()
     follow_path_server = LaunchConfiguration("follow_path_server").perform(context).strip()
     requested_plugins = (global_planner_plugin, local_planner_plugin)
@@ -319,8 +321,12 @@ def _setup(context, *args, **kwargs):
         if exec_name == "bt_navigator":
             # Resolve the default behavior tree from the installed package
             # share (portable) instead of an absolute source path.
+            # The car tree backs up instead of spinning.  A robot that
+            # cannot turn on the spot (Go2 himloco in MuJoCo and Gazebo)
+            # uses it too: its Spin recovery never turned the Go2 out of the
+            # nav_obstacle start corner (Gazebo, 2026-10-13).
             tree_name = ("car_navigation_w_replanning_and_recovery.xml"
-                         if motion_model == "ackermann" else
+                         if motion_model == "ackermann" or not spin_recovery else
                          "simple_navigation_w_replanning_and_recovery.xml")
             bt_xml = os.path.join(
                 pkg, "behavior_tree", tree_name)
@@ -408,6 +414,10 @@ def generate_launch_description():
             description="'diff', 'omni' (lateral travel) or 'ackermann' (a car: "
                         "turning-radius-aware planning, no rotation in place)",
         ),
+        DeclareLaunchArgument(
+            "spin_recovery", default_value="true",
+            description="'false': the recovery tree backs up instead of spinning "
+                        "(for robots that cannot turn on the spot)"),
         DeclareLaunchArgument(
             "compute_path_server", default_value="",
             description="ComputePathToPose action the navigator calls instead of "

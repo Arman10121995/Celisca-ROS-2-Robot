@@ -118,3 +118,18 @@ def test_wheeled_robots_keep_their_odometry():
             'local_localization.launch.py')]
     arguments = {_text(context, k): _text(context, v) for k, v in local[0].launch_arguments}
     assert arguments['odom0'] == '/odom/ground_truth'
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize('robot,simulator,spin', [
+    ('unitree_go2', 'mujoco', 'false'), ('unitree_go2', 'gazebo', 'false'),
+    ('unitree_go2', 'isaac', 'true'), ('bumperbot', 'mujoco', 'true')])
+def test_robots_that_cannot_spin_back_up_instead(robot, simulator, spin):
+    from launch.actions import IncludeLaunchDescription
+    context, actions = _build(robot_model=robot, simulator=simulator, mode='nav',
+                              map_name='nav_obstacle')
+    navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
+        context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
+            'navigation.launch.py')]
+    arguments = {_text(context, k): _text(context, v) for k, v in navigation[0].launch_arguments}
+    assert arguments['spin_recovery'] == spin

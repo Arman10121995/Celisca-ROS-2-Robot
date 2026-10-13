@@ -1599,6 +1599,10 @@ def _build_simulation_actions(context):
             "global_planner_plugin": global_plugin,
             "local_planner_plugin": local_plugin,
             "motion_model": motion_model,
+            # A robot that cannot turn on the spot in this backend backs up
+            # instead of running Nav2's Spin recovery.
+            "spin_recovery": "false" if _launch_value(context, "simulator") in (
+                robot_config.get("no_spin_in_place") or []) else "true",
         }
         # A node planner that serves a Nav2 action replaces the plugin
         # server's in the navigator's tree (robot_lab_algorithms.nav2_adapters);
