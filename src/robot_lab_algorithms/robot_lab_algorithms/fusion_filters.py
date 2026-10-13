@@ -92,6 +92,14 @@ def skew(v):
 def wrap(angle):
     return (angle + math.pi) % (2.0 * math.pi) - math.pi
 
+def nearest_pd(P, floor=1e-9):
+    """Symmetric matrix with eigenvalues clipped at ``floor`` (keeps a UKF going
+    when round-off makes its covariance indefinite)."""
+    P = 0.5 * (P + P.T)
+    values, vectors = np.linalg.eigh(P)
+    return (vectors * np.maximum(values, floor)) @ vectors.T
+
+
 
 # ---------------------------------------------------------------------------
 # Attitude filters
@@ -378,6 +386,7 @@ class WheelImuGnssUkf:
         try:
             root = np.linalg.cholesky(self.c * self.P)
         except np.linalg.LinAlgError:
+            self.P = nearest_pd(self.P)
             root = np.linalg.cholesky(self.c * (self.P + np.eye(self.n) * 1e-9))
         points = [self.state]
         for i in range(self.n):

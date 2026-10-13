@@ -32,6 +32,14 @@ import numpy as np
 def wrap(angle):
     return (angle + math.pi) % (2.0 * math.pi) - math.pi
 
+def nearest_pd(P, floor=1e-9):
+    """Symmetric matrix with eigenvalues clipped at ``floor`` (keeps a UKF going
+    when round-off makes its covariance indefinite)."""
+    P = 0.5 * (P + P.T)
+    values, vectors = np.linalg.eigh(P)
+    return (vectors * np.maximum(values, floor)) @ vectors.T
+
+
 
 def canonical(state):
     """(x, y, theta, v, w) with v >= 0: the CTRV model cannot tell (v, theta)
@@ -166,7 +174,8 @@ class CtrvUkf:
         try:
             root = np.linalg.cholesky(self.c * self.P)
         except np.linalg.LinAlgError:
-            root = np.linalg.cholesky(self.c * (self.P + np.eye(5) * 1e-6))
+            self.P = nearest_pd(self.P)
+            root = np.linalg.cholesky(self.c * (self.P + np.eye(5) * 1e-9))
         return np.array([self.x] + [self.x + root[:, i] for i in range(5)] + [self.x - root[:, i] for i in range(5)])
 
     def predict(self, dt):
