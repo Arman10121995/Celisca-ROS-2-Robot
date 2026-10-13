@@ -19,7 +19,8 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:="$MODE" \
   simulator:="$SIM" robot_model:="$ROBOT" map_name:="$MAP" gui:=false \
   start_rviz:=false "$@" > "$OUT.launch.log" 2>&1 &
 LAUNCH=$!
-python3 "$HERE/sim_drive_check.py" --odom "$ODOM" --timeout "${TIMEOUT:-300}" \
+# CHECKER: another checker taking the same --odom/--timeout/--warmup options.
+python3 "${CHECKER:-$HERE/sim_drive_check.py}" --odom "$ODOM" --timeout "${TIMEOUT:-300}" \
   --warmup "${WARMUP:-3}" ${CHECK_ARGS:-} > "$OUT" 2> "$OUT.err"
 CHECK_RESULT=$?
 kill -INT "$LAUNCH" 2>/dev/null

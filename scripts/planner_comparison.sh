@@ -41,8 +41,9 @@ for planner in $PLANNERS; do
     LAUNCH=$!
     rm -rf "$run.bag"
     # /tf is kept to diagnose stale map->odom transforms seen by Nav2 servers.
+    # EXTRA_BAG_TOPICS (e.g. "/scan") adds sensor topics for offline replays.
     ros2 bag record -o "$run.bag" /odom/ground_truth /cmd_vel /plan /goal_pose \
-      /navigate_to_pose/_action/status /amcl_pose /tf /tf_static > "$run.bag.log" 2>&1 &
+      /navigate_to_pose/_action/status /amcl_pose /tf /tf_static ${EXTRA_BAG_TOPICS:-} > "$run.bag.log" 2>&1 &
     BAG=$!
     "$HERE/tf_freeze_probe.sh" "$run.launch.log" "$run.tf_freeze.txt" &
     PROBE=$!
