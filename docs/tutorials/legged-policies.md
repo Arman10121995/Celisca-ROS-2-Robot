@@ -138,12 +138,15 @@ goal; [evidence](../status/evidence/p7-legged-navigation-2026-10-13/README.md)):
 
 | Robot | MuJoCo | Isaac | Gazebo |
 |---|---|---|---|
-| Go2 | **pass** | **pass** | fail: the paused start deadlocked its controller spawners (fixed, rerun pending) |
+| Go2 | **pass** | **pass** | fail: walks, but lost localization mid-mission |
 | A1 | **pass** | **pass** | not available |
-| B2 | fail: stands still below about 0.35 m/s (speeds raised, rerun pending) | not run (drifts) | not available |
-| G1 | **pass** | fail: stood still at 0.2 m/s while its odometry crept on (speeds raised, rerun pending) | not available |
+| B2 | **pass** | not run (drifts) | not available |
+| G1 | **pass** | **pass** | not available |
 
-Latest round per cell. Passing goals end 0.01-0.22 m from truth.
+Latest round per cell. Passing goals end 0.01-0.22 m from truth. B2 and G1
+needed minimum speeds of 0.4 and 0.3 m/s: below those their gaits stand
+still (the G1's leg odometry then crept on in Isaac, so Nav2 declared
+goals reached 0.5 m short).
 
 ## Safety contract
 

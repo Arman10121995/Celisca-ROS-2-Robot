@@ -2,8 +2,9 @@
 
 Status: **implemented, experimental**. Quadrupeds and the G1 humanoid walk
 Nav2 missions on their rl_sar policies, localized from leg kinematic
-odometry, in MuJoCo and Isaac. Gazebo (Go2), B2 and the G1 in Isaac do
-not pass yet. One seeded mission per cell.
+odometry: **every MuJoCo and Isaac cell passes** (Go2, A1, B2, G1). The
+Go2 in Gazebo now stands and walks but does not pass the mission. One
+seeded mission per cell.
 
 ## What was built
 
@@ -56,16 +57,16 @@ how far the leg odometry and the EKF end from truth.
 
 ## Rounds
 
-| Robot | Simulator | Round 1 | Round 2 | Round 3 |
-|---|---|---|---|---|
-| Go2 | MuJoCo | fail | **pass** | **pass** (0.14 / 0.13 m) |
-| Go2 | Isaac | fail | **pass** (0.06 / 0.16 m) | - |
-| Go2 | Gazebo | fail | fail (fell at spawn) | fail (no controller) |
-| A1 | MuJoCo | fail | fail (stalled turning) | **pass** (0.11 / 0.01 m) |
-| A1 | Isaac | - | - | **pass** (0.22 / 0.02 m) |
-| B2 | MuJoCo | - | fail (stalled turning) | fail (stalled at 0.2 m/s) |
-| G1 | MuJoCo | fail | **pass** (0.16 / 0.11 m) | **pass** (0.10 / 0.10 m) |
-| G1 | Isaac | - | - | fail (stood still, 0.49 / 0.58 m) |
+| Robot | Simulator | Round 1 | Round 2 | Round 3 | Round 4 |
+|---|---|---|---|---|---|
+| Go2 | MuJoCo | fail | **pass** | **pass** (0.14 / 0.13 m) | - |
+| Go2 | Isaac | fail | **pass** (0.06 / 0.16 m) | - | - |
+| Go2 | Gazebo | fail | fail (fell at spawn) | fail (no controller) | fail (walks; lost localization) |
+| A1 | MuJoCo | fail | fail (stalled turning) | **pass** (0.11 / 0.01 m) | - |
+| A1 | Isaac | - | - | **pass** (0.22 / 0.02 m) | - |
+| B2 | MuJoCo | - | fail (stalled turning) | fail (stalled at 0.2 m/s) | **pass** (0.13 / 0.02 m) |
+| G1 | MuJoCo | fail | **pass** (0.16 / 0.11 m) | **pass** (0.10 / 0.10 m) | **pass** (0.18 / 0.03 m) |
+| G1 | Isaac | - | - | fail (stood still, 0.49 / 0.58 m) | **pass** (0.14 / 0.07 m) |
 
 The pairs are the final truth errors of the resumed detour goal and the
 near-obstacle goal. "-" means not run in that round.
@@ -118,14 +119,33 @@ Gazebo start): 4 of 7 pass. The A1 now passes in MuJoCo and Isaac.
 - G1's minimum speeds are now 0.3 m/s, where it walks 0.29 m/s; B2 is
   commanded at 0.5 m/s and never below 0.4 (`336dc46`).
 
-Round 4 reruns the Gazebo Go2, the B2 and both G1 cells with these
-fixes.
+**Round 4** (`v4/`, from 11:55 at `59c6ca6`; stepped paused start,
+walking speeds): 3 of 4 pass.
+
+- **B2 and G1** pass in MuJoCo, and the G1 in Isaac. They are also
+  faster: G1 MuJoCo reached its goals in 25 s and 12 s instead of 60 s
+  and 47 s. In Isaac the G1's estimate ended 0.07-0.09 m from truth,
+  against 0.27-0.35 m in round 3.
+- **Gazebo Go2: the start works.** The unpause node stepped the paused
+  world 20 iterations (20 ms of simulated time). Both controllers were
+  active before it unpaused, and the Go2 stood and walked 6.6 m.
+- **Gazebo Go2: the mission still fails.**
+  - The localization error stayed within 0.16 m for 22 s.
+  - Then the Go2 surged to about 0.5 m/s, faster than its 0.32-0.40 m/s
+    command, and its estimate fell 0.63 m behind truth. Two seconds
+    earlier it had walked 0.27-0.30 m from the west wall.
+  - The planner then found the estimated start "in lethal space" and gave
+    up on both goals.
+  - The cause of the surge is not established. A brush with the wall is
+    one candidate; another is that the leg odometry's velocity gate
+    rejected stance feet during a sudden speed change.
 
 ## Files
 
 - `v1/`: round 1 missions and leg odometry screens.
 - `v2/`: round 2.
 - `v3/`: round 3 missions.
+- `v4/`: round 4 missions.
 - `diagnosis/`: the MuJoCo Go2 walk and mission that exposed the slow
   leg odometry, before the velocity gate.
 

@@ -45,12 +45,14 @@ October 13: implemented on master, experimental.
     [tutorial](../tutorials/state_estimation_comparison.md)).
 - **Walking robots navigate (P7).** Leg kinematic odometry feeds the EKF,
   and slam/nav modes select each robot's policy. The obstacle mission
-  passes for Go2 (MuJoCo, Isaac), A1 (MuJoCo, Isaac) and G1 (MuJoCo).
-  Gazebo Go2, B2 and the G1 in Isaac failed on fixable causes (a paused
-  start that deadlocked the controller spawners; gaits that stand still
-  at the 0.2-0.3 m/s approach speed); fixed, reruns pending
-  ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md),
-  [tutorial](../tutorials/legged-policies.md)).
+  passes in every MuJoCo and Isaac cell run: Go2, A1 and G1 in both, B2
+  in MuJoCo. B2 and G1 first stood still at the 0.2 m/s approach speed;
+  their minimum speeds are now 0.4 and 0.3 m/s.
+  - Gazebo Go2 now starts standing: the paused world is stepped while its
+    controllers load. Mid-mission it then lost localization after a
+    sudden 0.5 m/s surge; that cell still fails
+    ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md),
+    [tutorial](../tutorials/legged-policies.md)).
 - **Planner reruns.** With a clearance margin, RRT/RRT\* reach 14/15 goals
   (were 8 and 9) and Voronoi 15/15. MPPI capped at 0.3 m/s still reaches
   7/15: it gets within 0.05-0.19 m but does not settle into Bumperbot's

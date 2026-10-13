@@ -237,9 +237,9 @@ code delivery, not a passed mission or universal support.
 - [ ] **P7 (rl_sar):** Go2/A1/B2/Go2W policies walk on `/cmd_vel` in MuJoCo
   ([evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)), Isaac and
   (Go2) Gazebo. Walking robots now navigate with leg odometry: the obstacle
-  mission passes for Go2 and A1 in MuJoCo and Isaac and for the G1 in
+  mission passes for Go2, A1 and G1 in MuJoCo and Isaac and for B2 in
   MuJoCo ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md)).
-  Gazebo Go2, B2 and Isaac G1 reruns, slam-mode mapping and repeats remain.
+  Gazebo Go2 navigation, slam-mode mapping and repeats remain.
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live
