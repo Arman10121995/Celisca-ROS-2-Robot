@@ -1,0 +1,16 @@
+mujoco ackermann_car exit=0
+mujoco rear_steer_car exit=1
+mujoco anti_ackermann_car exit=0
+pybullet ackermann_car exit=0
+pybullet rear_steer_car exit=0
+pybullet anti_ackermann_car exit=0
+gazebo ackermann_car exit=1
+gazebo rear_steer_car exit=1
+gazebo anti_ackermann_car exit=1
+isaac ackermann_car exit=0
+isaac rear_steer_car exit=0
+isaac anti_ackermann_car exit=0
+ALLDONE
+gazebo ackermann_car exit=1 (rerun)
+gazebo rear_steer_car exit=0 (rerun)
+gazebo anti_ackermann_car exit=1 (rerun)
