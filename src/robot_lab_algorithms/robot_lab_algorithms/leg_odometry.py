@@ -6,10 +6,23 @@ frame, p_i(q), comes from the URDF kinematic chain, so
     0 = v_b + w_b x p_i + J_i(q) qdot      =>      v_b = -(J_i(q) qdot + w_b x p_i)
 
 with v_b, w_b the base linear and angular velocity in the base frame (w_b
-from the IMU gyro).  Feet are in stance when, in the gravity-aligned base
-frame (IMU roll and pitch), they are within ``stance_height`` of the lowest
-foot; the estimate is the per-axis median over stance feet.  Position is
-integrated in the plane with the IMU yaw.
+from the IMU gyro).  Each foot gives one such estimate; the stance feet are
+chosen in two steps:
+
+1. candidates: feet within ``stance_height`` of the lowest foot in the
+   gravity-aligned base frame (IMU roll and pitch);
+2. stance: candidates whose estimate lies within a gate of the previous
+   velocity (``gate + gate_per_speed * |v|``) - a foot in swing moves at
+   about twice the body speed, so its estimate is far off.  If none passes,
+   the candidate closest to the previous velocity is used.
+
+The estimate is the per-axis median over stance feet, low-passed with time
+constant ``tau``.  Position is integrated in the plane with the IMU yaw.
+
+Height alone is not enough: the Go2 himloco trot lifts its feet only a few
+millimetres, so a 2 cm height window counted swing feet as stance and the
+estimate read 34% short (MuJoCo, 2026-10-13); the velocity gate cut that to
+3.7%, the remainder being foot slip in stance.
 
 The node publishes ``nav_msgs/Odometry`` (twist in the base frame) for the
 EKF's odom0, replacing the wheel odometry that a walking robot does not
@@ -147,29 +160,37 @@ def tilt_matrix(orientation):
     return _axis_angle((0, 0, 1), -yaw) @ orientation
 
 
-def stance_velocity(feet, angular_velocity, orientation, stance_height=0.02):
+def stance_velocity(feet, angular_velocity, orientation, stance_height=0.03, previous=None,
+                    gate=0.15, gate_per_speed=0.3):
     """Base velocity (base frame) from stance feet -> (velocity or None, stance names).
 
     ``feet``: {name: (p, v_rel)} in the base frame; ``orientation``: base
-    rotation in the world (only roll and pitch are used to find the ground).
+    rotation in the world (only roll and pitch are used to find the ground);
+    ``previous``: the last velocity estimate, for the swing-foot gate.
     """
     if not feet:
         return None, []
     tilt = tilt_matrix(orientation)
     heights = {name: float((tilt @ p)[2]) for name, (p, _) in feet.items()}
     lowest = min(heights.values())
-    stance = [name for name, h in heights.items() if h <= lowest + stance_height]
-    estimates = np.array([-(v + np.cross(angular_velocity, p)) for name, (p, v) in feet.items()
-                          if name in stance])
-    return np.median(estimates, axis=0), sorted(stance)
+    estimates = {name: -(v + np.cross(angular_velocity, p)) for name, (p, v) in feet.items()
+                 if heights[name] <= lowest + stance_height}
+    stance = sorted(estimates)
+    if previous is not None:
+        previous = np.asarray(previous, dtype=float)
+        limit = gate + gate_per_speed * float(np.linalg.norm(previous[:2]))
+        distance = {name: float(np.linalg.norm(e[:2] - previous[:2])) for name, e in estimates.items()}
+        stance = sorted(name for name, d in distance.items() if d < limit) or [min(distance, key=distance.get)]
+    return np.median(np.array([estimates[name] for name in stance]), axis=0), stance
 
 
 class LegOdometry:
     """Integrates the stance velocity in the plane with the IMU yaw."""
 
-    def __init__(self, kinematics, stance_height=0.02, imu_rotation=None):
+    def __init__(self, kinematics, stance_height=0.03, imu_rotation=None, tau=0.02):
         self.kinematics = kinematics
         self.stance_height = stance_height
+        self.tau = tau
         self.imu_rotation = np.eye(3) if imu_rotation is None else imu_rotation  # base <- imu
         self.x = self.y = 0.0
         self.last_time = None
@@ -181,12 +202,14 @@ class LegOdometry:
         orientation = imu_orientation @ self.imu_rotation.T          # world <- base
         angular = self.imu_rotation @ np.asarray(imu_angular_velocity, dtype=float)
         feet = {name: self.kinematics.foot(name, positions, velocities) for name in self.kinematics.foot_links}
-        velocity, self.stance = stance_velocity(feet, angular, orientation, self.stance_height)
+        velocity, self.stance = stance_velocity(feet, angular, orientation, self.stance_height,
+                                                previous=self.velocity)
+        dt = min(stamp - self.last_time, 0.2) if self.last_time is not None and stamp > self.last_time else 0.0
         if velocity is not None:
-            self.velocity = velocity
+            blend = 1.0 if dt <= 0 or self.tau <= 0 else min(1.0, dt / self.tau)
+            self.velocity = self.velocity + blend * (velocity - self.velocity)
         world = orientation @ self.velocity
-        if self.last_time is not None and stamp > self.last_time:
-            dt = min(stamp - self.last_time, 0.2)
+        if dt > 0:
             self.x += float(world[0]) * dt
             self.y += float(world[1]) * dt
         self.last_time = stamp
@@ -215,7 +238,7 @@ def main(args=None):
             self.declare_parameter('joint_states_topic', '/joint_states')
             self.declare_parameter('odom_topic', '/leg_odometry')
             self.declare_parameter('odom_frame', 'odom')
-            self.declare_parameter('stance_height', 0.02)
+            self.declare_parameter('stance_height', 0.03)
             self.declare_parameter('velocity_variance', 0.01)
             g = lambda name: self.get_parameter(name).value  # noqa: E731
             description = str(g('robot_description'))

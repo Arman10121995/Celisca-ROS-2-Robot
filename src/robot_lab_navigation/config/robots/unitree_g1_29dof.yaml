@@ -28,9 +28,11 @@ controller_server:
       vx_max: 0.35
       use_rotate_to_heading: true
       rotate_to_heading_angular_vel: 0.8
-      regulated_linear_scaling_min_speed: 0.2
+      regulated_linear_scaling_min_speed: 0.25
       regulated_linear_scaling_min_radius: 0.5
-      min_approach_linear_velocity: 0.1
+      # Learned gaits barely move below ~0.15 m/s (G1 stalled 0.5 m short of
+      # a goal at the 0.1 m/s approach speed, MuJoCo 2026-10-13).
+      min_approach_linear_velocity: 0.2
       lookahead_dist: 0.8
       min_lookahead_dist: 0.5
       max_lookahead_dist: 1.2

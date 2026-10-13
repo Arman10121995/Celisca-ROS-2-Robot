@@ -67,6 +67,24 @@ def test_stance_feet_give_the_base_velocity():
     assert velocity == pytest.approx(v_base, abs=1e-12)
 
 
+def test_swing_feet_close_to_the_ground_are_gated_out():
+    """A shuffling trot: swing feet only 4 mm up, moving at about twice the body speed."""
+    v_base = np.array([0.3, 0.0, 0.0])
+    feet = {}
+    for name, p, stance in (('FL', [0.2, 0.1, -0.300], True), ('RR', [-0.2, -0.1, -0.301], True),
+                            ('FR', [0.2, -0.1, -0.297], False), ('RL', [-0.2, 0.1, -0.297], False)):
+        p = np.array(p)
+        v_rel = -v_base if stance else np.array([0.3, 0.0, 0.05])  # swing: forward relative to the body
+        feet[name] = (p, v_rel)
+    # Height alone counts all four feet and halves the speed.
+    velocity, stance = stance_velocity(feet, np.zeros(3), np.eye(3), stance_height=0.02)
+    assert len(stance) == 4 and velocity[0] < 0.1
+    # With the previous estimate the swing feet fall outside the gate.
+    velocity, stance = stance_velocity(feet, np.zeros(3), np.eye(3), previous=[0.28, 0.0, 0.0])
+    assert stance == ['FL', 'RR']
+    assert velocity == pytest.approx(v_base, abs=1e-12)
+
+
 def test_tilt_decides_which_feet_touch():
     # Pitched nose-down 0.2 rad: in the base frame the front feet look higher
     # than they are; gravity alignment must still pick the front feet.
