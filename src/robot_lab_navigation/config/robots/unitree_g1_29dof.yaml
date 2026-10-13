@@ -36,4 +36,8 @@ controller_server:
       lookahead_dist: 0.8
       min_lookahead_dist: 0.5
       max_lookahead_dist: 1.2
-      max_angular_accel: 2.0
+      # RPP ramps its in-place turn from the measured yaw rate by
+      # max_angular_accel * dt; a gait that does not respond to 0.1 rad/s
+      # never ramps up (B2 and A1 turned at 0.03 rad/s and failed to make
+      # progress, MuJoCo 2026-10-13), so the ramp is effectively removed.
+      max_angular_accel: 20.0

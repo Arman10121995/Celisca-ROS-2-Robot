@@ -70,6 +70,15 @@ def generate_launch_description():
         description="Show the Gazebo GUI. 'false' runs headless (server only).",
     )
 
+    unpause_when_active_arg = DeclareLaunchArgument(
+        name="unpause_when_active",
+        default_value="",
+        description=(
+            "With paused:=true: a ros2_control controller name; the world is "
+            "unpaused as soon as it is configured, so its activation happens "
+            "on the first physics step (gazebo_unpause_when_ready.py)."),
+    )
+
     paused_arg = DeclareLaunchArgument(
         name="paused",
         default_value="false",
@@ -401,6 +410,15 @@ def generate_launch_description():
             package='ros_gz_bridge', executable='parameter_bridge',
             arguments=[f'/world/{gz_world_name}/set_pose@ros_gz_interfaces/srv/SetEntityPose'],
             output='screen'))
+        unpause_controller = LaunchConfiguration('unpause_when_active').perform(context).strip()
+        if unpause_controller and LaunchConfiguration('paused').perform(context) == 'true':
+            actions.append(Node(
+                package="robot_lab_description",
+                executable="gazebo_unpause_when_ready.py",
+                name="gazebo_unpause_when_ready",
+                parameters=[{"world_name": gz_world_name, "controller": unpause_controller}],
+                output="screen",
+            ))
         actions.append(Node(
             package="robot_lab_description",
             executable="gazebo_reset_bridge.py",
@@ -519,6 +537,7 @@ def generate_launch_description():
         robot_package_arg,
         gui_arg,
         paused_arg,
+        unpause_when_active_arg,
         display_plugins_arg,
         display_hold_arg,
         robot_state_publisher_node,

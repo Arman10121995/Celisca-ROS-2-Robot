@@ -82,12 +82,15 @@ def run(name, rows, accel_std):
     truth = np.array([r[0] for r in rows])[50:]
     e = np.array(est)[50:]
     moving = truth[:, 3] > 0.1
+    fast = truth[:, 3] > 0.3
     ms = np.array(compute) * 1e3
     return {
         'position_rmse_m': round(float(np.sqrt(np.mean(np.sum((e[:, :2] - truth[:, :2]) ** 2, axis=1)))), 4),
         'speed_rmse_mps': round(float(np.sqrt(np.mean((e[:, 3] - truth[:, 3]) ** 2))), 4),
         'heading_rmse_deg': round(math.degrees(float(np.sqrt(np.mean(
             [wrap(a - b) ** 2 for a, b in zip(e[moving, 2], truth[moving, 2])])))), 2),
+        'heading_rmse_fast_deg': round(math.degrees(float(np.sqrt(np.mean(
+            [wrap(a - b) ** 2 for a, b in zip(e[fast, 2], truth[fast, 2])])))), 2),
         'turn_rate_rmse': round(float(np.sqrt(np.mean((e[:, 4] - truth[:, 4]) ** 2))), 4),
         'compute_ms': {'p50': round(float(np.percentile(ms, 50)), 4), 'p99': round(float(np.percentile(ms, 99)), 4)},
     }
@@ -134,11 +137,12 @@ def main():
              'Revision `%s`, %s; seeds %s; fixes at %.0f Hz with %.1f m noise (raw fix RMSE %.3f m).' % (
                  results['revision'][:7], results['host'], seeds, 1.0 / DT, NOISE, results['raw_fix_rmse_m']), '',
              'accel_std chosen on seed 0: %s.' % ', '.join('%s %g' % kv for kv in gains.items()), '',
-             '| Estimator | Position RMSE (m) | Speed RMSE (m/s) | Heading RMSE (deg, moving) | Turn-rate RMSE (rad/s) | Compute p50 / p99 (ms) |',
+             '| Estimator | Position RMSE (m) | Speed RMSE (m/s) | Heading RMSE, v > 0.1 / v > 0.3 (deg) | Turn-rate RMSE (rad/s) | Compute p50 / p99 (ms) |',
              '|---|---|---|---|---|---|']
     for name, r in results['estimators'].items():
-        lines.append('| %s | %.3f | %.3f | %.1f | %.3f | %.3f / %.3f |' % (
-            name, r['position_rmse_m'], r['speed_rmse_mps'], r['heading_rmse_deg'], r['turn_rate_rmse'],
+        lines.append('| %s | %.3f | %.3f | %.1f / %.1f | %.3f | %.3f / %.3f |' % (
+            name, r['position_rmse_m'], r['speed_rmse_mps'], r['heading_rmse_deg'], r['heading_rmse_fast_deg'],
+            r['turn_rate_rmse'],
             r['compute_ms']['p50'], r['compute_ms']['p99']))
     report = '\n'.join(lines) + '\n'
     os.makedirs(args.out, exist_ok=True)

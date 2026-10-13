@@ -1340,6 +1340,10 @@ def _build_simulation_actions(context):
                     # other backends spawn blind and never place a tilted root.
                     **({"spawn_pitch": spawn_pitch, "spawn_roll": spawn_roll}
                        if simulator == "mujoco" else {}),
+                    # Gazebo + legged policy: start paused and step only once
+                    # the PD controller is configured (no limp fall at spawn).
+                    **({"paused": "true", "unpause_when_active": "legged_pd_controller"}
+                       if legged_active and simulator == "gazebo" else {}),
                     "use_sim_time": use_sim_time,
                     "gui": gui_value,
                     # A robot without drive wheels (a humanoid or dog in
@@ -1389,6 +1393,8 @@ def _build_simulation_actions(context):
             # The description's ros2_control plugin owns the joints; the
             # policy's PD runs in an effort trajectory controller loaded
             # with the policy gains.
+            # The world starts paused (below) so the robot does not fall limp
+            # while these load; activation waits for the first step.
             for spawner_arguments in (
                     ["joint_state_broadcaster"],
                     ["legged_pd_controller", "-t",
@@ -1396,7 +1402,8 @@ def _build_simulation_actions(context):
                      "-p", legged_controller_params]):
                 actions.append(Node(
                     package="controller_manager", executable="spawner",
-                    arguments=spawner_arguments + ["--controller-manager-timeout", "120"],
+                    arguments=spawner_arguments + ["--controller-manager-timeout", "120",
+                                                   "--switch-timeout", "90"],
                     output="screen"))
 
     controller_config = mode_config.get("controller", {})
