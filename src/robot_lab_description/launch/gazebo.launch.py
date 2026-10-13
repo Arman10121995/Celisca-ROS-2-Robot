@@ -169,7 +169,9 @@ def generate_launch_description():
             return []
         from robot_lab_utils.robot_description import load_description
         urdf = load_description(LaunchConfiguration("model").perform(context),
-                                "is_ignition:=" + is_ignition)
+                                "is_ignition:=" + is_ignition,
+                                # Truth under the spawned name (see robot_description above).
+                                "model_name:=" + LaunchConfiguration("robot_name").perform(context))
         if not _truthy("display_plugins", context):
             return [Node(
                 package="robot_state_publisher",
