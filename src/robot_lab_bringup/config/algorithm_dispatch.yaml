@@ -172,20 +172,42 @@ algorithms:
       not_for_reason: "it commands the two wheels of a differential drive"
     twist_relay:
       node: {package: robot_lab_controller, executable: twist_relay}
+    # R7.8 path-tracking controllers (robot_lab_algorithms.tracking_control)
+    # on the differential-drive plant.  Each serves Nav2 FollowPath, so in nav
+    # mode it replaces the local planner's FollowPath server and drives the
+    # robot.  Until 2026-10-13 these ids started single-axis demonstration
+    # nodes on side topics (/cmd_vel_lqr, ...) and pid_controller started a
+    # pure-pursuit node listening to /a_star/path.
     pid_controller:
-      node: {package: robot_lab_motion, executable: pure_pursuit.py}
-    pid_controller_algorithm:
-      node: {package: robot_lab_algorithms, executable: pid_controller}
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: pid}}
+      serves: {follow_path: /robot_lab/follow_path}
+      not_for_features: [car_steering]
+      not_for_reason: "the tracking model is a differential-drive unicycle (rotates in place)"
     lqr_controller:
-      node: {package: robot_lab_algorithms, executable: lqr_controller}
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: lqr}}
+      serves: {follow_path: /robot_lab/follow_path}
+      not_for_features: [car_steering]
+      not_for_reason: "the tracking model is a differential-drive unicycle (rotates in place)"
     mpc_controller:
-      node: {package: robot_lab_algorithms, executable: mpc_controller}
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: linear_mpc}}
+      serves: {follow_path: /robot_lab/follow_path}
+      not_for_features: [car_steering]
+      not_for_reason: "the tracking model is a differential-drive unicycle (rotates in place)"
     nonlinear_mpc:
-      node: {package: robot_lab_algorithms, executable: nonlinear_mpc}
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: nonlinear_mpc}}
+      serves: {follow_path: /robot_lab/follow_path}
+      not_for_features: [car_steering]
+      not_for_reason: "the tracking model is a differential-drive unicycle (rotates in place)"
     feedback_linearization:
-      node: {package: robot_lab_algorithms, executable: feedback_linearization}
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: feedback_linearization}}
+      serves: {follow_path: /robot_lab/follow_path}
+      not_for_features: [car_steering]
+      not_for_reason: "the tracking model is a differential-drive unicycle (rotates in place)"
     backstepping_controller:
-      node: {package: robot_lab_algorithms, executable: backstepping_controller}
+      node: {package: robot_lab_algorithms, executable: nav2_local_planner, parameters: {planner: backstepping}}
+      serves: {follow_path: /robot_lab/follow_path}
+      not_for_features: [car_steering]
+      not_for_reason: "the tracking model is a differential-drive unicycle (rotates in place)"
     joint_effort_commander:
       node: {package: robot_lab_adapter, executable: joint-effort-commander}
     humanoid_standing_controller:

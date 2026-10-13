@@ -1100,241 +1100,200 @@ method_subrecords:
 
   # =============================================================================
   # R7.8 CONTROL METHODS
+  # Path tracking on one differential-drive (unicycle) plant; implementation
+  # robot_lab_algorithms.tracking_control, served as Nav2 FollowPath by
+  # nav2_local_planner.  Rewritten 2026-10-13: the earlier records described
+  # generic textbook forms that the single-axis demonstration nodes did not
+  # implement.  Benchmark: docs/status/evidence/r78-control-benchmark-2026-10-13/.
   # =============================================================================
-  
+
   control:
     pid_controller:
       method_id: "pid_controller"
       category: "control"
-      display_name: "PID Controller"
-      implementation_ref: "robot_lab_algorithms.pid_controller"
-      mathematical_foundation: "Proportional-Integral-Derivative control with anti-windup"
+      display_name: "PID Path-Tracking Controller"
+      implementation_ref: "robot_lab_algorithms.tracking_control.PidTracker"
+      mathematical_foundation: "PID on a heading error that folds in the lateral offset, with curvature feedforward"
       equations:
-        - "Proportional term: u_p = K_p * e(t) where e(t) = reference - measurement"
-        - "Integral term: u_i = K_i * integral_0^t e(τ) dτ"
-        - "Derivative term: u_d = K_d * de(t)/dt"
-        - "Total control: u(t) = u_p + u_i + u_d"
-        - "Anti-windup: if |u(t)| > u_max, then ∫e(τ)dτ = constant"
-        - "Bumpless transfer: smooth switching between modes"
+        - "theta_d = theta_r(s*) - atan(k_lat * e_lat)"
+        - "e = wrap(theta_d - theta)"
+        - "w = kappa(s*) v_r + K_p e + K_i I + K_d de_f/dt  (de_f: first-order filtered derivative, tau 0.3 s)"
+        - "I grows only while |w| < w_max or e drives w back from saturation; |I| <= i_max (conditional integration)"
+        - "v = v_r(s*) max(0, cos e_theta)"
       source_references:
-        - "Åström and Hägglund - PID Controllers: Theory, Design, and Tuning"
-        - "Dorf and Bishop - Modern Control Systems"
+        - "Astrom and Hagglund - Advanced PID Control (2006), integrator windup"
       applicable_robots: ["bumperbot", "labbot"]
       input_strata:
         - "control_linear_plant"
         - "control_constrained"
-      output_types: ["Twist", "ControlEffort"]
+      output_types: ["Twist"]
       parameters:
-        k_p: [1.0, 1.0]  # [linear, angular]
-        k_i: [0.1, 0.1]
-        k_d: [0.01, 0.01]
-        integral_windup_limit: 10.0
-        max_output: [0.5, 0.5]
-        min_output: [-0.5, -0.5]
+        kp: 2.0
+        ki: 0.3
+        kd: 0.1
+        k_lat: 2.0
+        i_max: 1.0
       assumptions:
-        - "Linear or approximately linear plant"
-        - "Reference is achievable"
-        - "System is observable and controllable"
+        - "Differential-drive plant that can turn in place"
+        - "Path smooth at the 0.25 m resampling scale"
       limitations:
-        - "Requires tuning for each plant"
-        - "May have steady-state error"
-        - "Sensitive to noise in derivative term"
-        - "Can be unstable if poorly tuned"
+        - "Gains tuned on the model plant, not identified on the robot"
+        - "No preview: reacts to corners only when they are reached"
       computational_complexity: "O(1)"
       memory_requirements: "Minimal"
-      
+
     lqr_controller:
       method_id: "lqr_controller"
       category: "control"
-      display_name: "Linear Quadratic Regulator"
-      implementation_ref: "robot_lab_algorithms.lqr_controller"
-      mathematical_foundation: "Optimal state feedback controller minimizing quadratic cost"
+      display_name: "LQR Path-Tracking Controller"
+      implementation_ref: "robot_lab_algorithms.tracking_control.LqrTracker"
+      mathematical_foundation: "Discrete LQR on the lateral/heading error linearised about the path"
       equations:
-        - "Cost function: J = integral_0^∞ [x^T Q x + u^T R u] dt"
-        - "Algebraic Riccati equation: A^T P + P A - P B R^-1 B^T P + Q = 0"
-        - "Optimal feedback: u = -K x where K = R^-1 B^T P"
-        - "Closed-loop system: x_dot = (A - B K) x"
-        - "Stability: A - B K has all eigenvalues in LHP"
+        - "z = [e_lat, e_theta], u = w - kappa v_r"
+        - "z_{k+1} = [[1, v dt], [0, 1]] z_k + [[v dt^2/2], [dt]] u_k"
+        - "P = A'PA - A'PB (R + B'PB)^-1 B'PA + Q  (DARE)"
+        - "K(v) = (R + B'PB)^-1 B'PA; w = kappa v_r - K(v_r) z"
       source_references:
-        - "Bryson and Ho - Applied Optimal Control"
-        - "Dorf and Bishop - Modern Control Systems"
+        - "Anderson and Moore - Optimal Control: Linear Quadratic Methods (1990)"
       applicable_robots: ["bumperbot", "labbot"]
       input_strata:
         - "control_linear_plant"
-        - "control_constrained"
-      output_types: ["Twist", "ControlEffort"]
+      output_types: ["Twist"]
       parameters:
-        q_matrix: [[1.0, 0.0], [0.0, 1.0]]  # state cost weights
-        r_matrix: [[1.0, 0.0], [0.0, 1.0]]  # control cost weights
-        a_matrix: [[0.0, 1.0], [0.0, 0.0]]  # system matrix
-        b_matrix: [[0.0], [1.0]]          # input matrix
+        q_lat: 6.0
+        q_heading: 1.0
+        r: 0.6
+        dt: 0.05
       assumptions:
-        - "Linear time-invariant system"
-        - "Controllable and observable system"
-        - "Quadratic cost function captures objectives"
-        - "No constraints on control effort"
+        - "Small heading error (linearisation)"
+        - "Speed changes slowly relative to the gain schedule (0.01 m/s steps)"
       limitations:
-        - "Only works for linear systems"
-        - "Requires exact model knowledge"
-        - "Does not handle constraints"
-        - "Computationally intensive to solve Riccati equation"
-      computational_complexity: "O(n^3) for Riccati solution where n=state dimension"
-      memory_requirements: "Medium"
-      
+        - "Unconstrained design: saturation is applied afterwards"
+        - "Large initial heading errors leave the linearised region (envelope test)"
+      computational_complexity: "O(1) per step after one DARE per speed bucket"
+      memory_requirements: "Minimal"
+
     mpc_controller:
       method_id: "mpc_controller"
       category: "control"
-      display_name: "Model Predictive Control"
-      implementation_ref: "robot_lab_algorithms.mpc_controller"
-      mathematical_foundation: "Receding horizon optimization with system model and constraints"
+      display_name: "Constrained Linear MPC Path Tracker"
+      implementation_ref: "robot_lab_algorithms.tracking_control.LinearMpcTracker"
+      mathematical_foundation: "Linear time-varying MPC on the lateral error model with hard turn-rate bounds"
       equations:
-        - "Cost function: J = sum_{k=0}^{N-1} [x_k^T Q x_k + u_k^T R u_k] + x_N^T Q_N x_N"
-        - "System model: x_{k+1} = A x_k + B u_k"
-        - "State constraints: x_min <= x_k <= x_max"
-        - "Control constraints: u_min <= u_k <= u_max"
-        - "Optimization: u_0*, u_1*, ..., u_{N-1}* = argmin_J u"
-        - "Receding horizon: apply u_0*, then solve again at next time step"
+        - "z_{k+1} = A(v_k) z_k + B(v_k)(w_k - kappa_k v_k), (v_k, kappa_k) from the path preview"
+        - "min sum_k z_k' Q z_k + r (w_k - kappa_k v_k)^2 + s (w_k - w_{k-1})^2, terminal weight 4Q"
+        - "s.t. -w_max <= w_k <= w_max, k = 0..N-1"
+        - "Condensed QP with box bounds solved exactly by bounded-variable least squares (BVLS)"
       source_references:
-        - "Camacho and Bordons - Model Predictive Control"
-        - "Rawlings and Mayne - Model Predictive Control: Theory and Design"
+        - "Rawlings, Mayne and Diehl - Model Predictive Control: Theory, Computation, and Design (2017)"
+        - "Stark and Parker - Bounded-variable least-squares (1995)"
       applicable_robots: ["bumperbot", "labbot"]
       input_strata:
-        - "control_linear_plant"
         - "control_constrained"
-      output_types: ["Twist", "ControlEffort"]
+      output_types: ["Twist"]
       parameters:
-        prediction_horizon: 10
-        control_horizon: 5
-        q_matrix: [[1.0, 0.0], [0.0, 1.0]]
-        r_matrix: [[0.1, 0.0], [0.0, 0.1]]
-        state_constraints: [[-1.0, -1.0], [1.0, 1.0]]
-        control_constraints: [[-0.5, -0.5], [0.5, 0.5]]
+        horizon: 20
+        dt: 0.1
+        q_lat: 6.0
+        q_heading: 1.0
+        r: 0.6
+        rate: 0.4
+        q_terminal: 4.0
       assumptions:
-        - "Linear system model"
-        - "Convex cost function and constraints"
-        - "Future references known or estimable"
+        - "Linearised error model along the previewed path"
       limitations:
-        - "Computationally intensive"
-        - "Requires exact model knowledge"
-        - "Sensitive to horizon parameters"
-        - "Performance depends on constraint formulation"
-      computational_complexity: "O(n^3) per time step where n=decision variables"
-      memory_requirements: "High"
-      
+        - "Speed follows the reference profile; only the turn rate is optimised"
+        - "Rate penalty is soft; acceleration limits are not constraints"
+      computational_complexity: "BVLS on N=20 variables per step"
+      memory_requirements: "Low"
+
     nonlinear_mpc:
       method_id: "nonlinear_mpc"
       category: "control"
-      display_name: "Nonlinear Model Predictive Control"
-      implementation_ref: "robot_lab_algorithms.nonlinear_mpc"
-      mathematical_foundation: "MPC for nonlinear systems using sequential quadratic programming"
+      display_name: "Nonlinear MPC Path Tracker"
+      implementation_ref: "robot_lab_algorithms.tracking_control.NonlinearMpcTracker"
+      mathematical_foundation: "Nonlinear MPC on the unicycle kinematics, single shooting with an adjoint gradient"
       equations:
-        - "Nonlinear model: x_{k+1} = f(x_k, u_k)"
-        - "Cost function: J = sum_{k=0}^{N-1} [l(x_k, u_k)] + l_N(x_N)"
-        - "Discretization: Euler or Runge-Kutta integration"
-        - "Linearization: f(x,u) ≈ f(x_0,u_0) + ∂f/∂x Δx + ∂f/∂u Δu"
-        - "QP subproblem: solve linearized problem at each iteration"
-        - "SQP iteration: x_{i+1} = x_i + Δx, u_{i+1} = u_i + Δu"
+        - "x_{k+1} = x_k + v_k cos(theta_k) dt, y_{k+1} = y_k + v_k sin(theta_k) dt, theta_{k+1} = theta_k + w_k dt"
+        - "J = sum q_p |p_k - p_rk|^2 + q_th 2(1 - cos(theta_k - theta_rk)) + r_v (v_k - v_rk)^2 + r_w (w_k - w_rk)^2 + rate penalties"
+        - "dJ/du from the backward (adjoint) recursion lambda_k = dl/dx_k + (df/dx_k)' lambda_{k+1}"
+        - "v_min <= v_k <= v_max, |w_k| <= w_max; L-BFGS-B, at most 30 iterations, warm-started from the shifted solution"
       source_references:
-        - "Nocedal and Wright - Numerical Optimization"
-        - "Diehl et al. - Real-time optimization and nonlinear model predictive control"
-      applicable_robots: ["bumperbot", "labbot", "go2"]
+        - "Grune and Pannek - Nonlinear Model Predictive Control (2017)"
+        - "Byrd, Lu, Nocedal and Zhu - L-BFGS-B (1995)"
+      applicable_robots: ["bumperbot", "labbot"]
       input_strata:
         - "control_nonlinear_plant"
         - "control_constrained"
-      output_types: ["Twist", "ControlEffort"]
+      output_types: ["Twist"]
       parameters:
-        prediction_horizon: 5
-        control_horizon: 3
-        max_iterations: 20
-        tolerance: 1e-6
-        discretization: "euler"
+        horizon: 15
+        dt: 0.1
+        q_position: 8.0
+        q_heading: 1.0
+        r_v: 1.0
+        r_w: 0.2
+        max_iterations: 30
       assumptions:
-        - "Smooth nonlinear dynamics"
-        - "Twice differentiable cost function"
-        - "Convex feasible region"
-        - "Good initial guess"
+        - "Kinematic plant; actuator lag not modelled"
       limitations:
-        - "Computationally very intensive"
-        - "Sensitive to initial conditions"
-        - "May converge to local minima"
-        - "Requires careful parameter tuning"
-      computational_complexity: "O(iterations * n^3) per time step"
-      memory_requirements: "Very High"
-      
+        - "Iteration-limited, so not always converged; compute time can exceed the 50 ms period under load"
+      computational_complexity: "O(N * iterations) per step"
+      memory_requirements: "Low"
+
     feedback_linearization:
       method_id: "feedback_linearization"
       category: "control"
-      display_name: "Feedback Linearization Controller"
-      implementation_ref: "robot_lab_algorithms.feedback_linearization"
-      mathematical_foundation: "Nonlinear control design that cancels nonlinearities and linearizes the system"
+      display_name: "Feedback-Linearisation Path Tracker"
+      implementation_ref: "robot_lab_algorithms.tracking_control.FeedbackLinearizationTracker"
+      mathematical_foundation: "Static input-output linearisation of a point ahead of the wheel axle"
       equations:
-        - "System: x_dot = f(x) + g(x) u"
-        - "Lie derivative: L_f h = ∂h/∂x f(x)"
-        - "Relative degree: r = min{k: L_g L_f^{k-1} h ≠ 0}"
-        - "Feedback linearization: u = (L_g L_f^{r-1} h)^-1 [v - L_f^r h]"
-        - "Linearized system: y^{(r)} = v (exact linearization)"
-        - "Control design: v = -K [y, y_dot, ..., y^{(r-1)}]^T"
+        - "P = (x + d cos theta, y + d sin theta)"
+        - "P_dot = M(theta) [v, w], M = [[cos theta, -d sin theta], [sin theta, d cos theta]], det M = d"
+        - "P_dot_des = P_dot_r + K (P_r - P), P_r = path(s* + d) moving at v_r"
+        - "[v, w] = M^-1 P_dot_des"
       source_references:
-        - "Khalil - Nonlinear Systems"
-        - "Isidori - Nonlinear Control Systems"
-      applicable_robots: ["bumperbot", "labbot", "go2", "berkeley_humanoid_lite"]
+        - "Oriolo, De Luca and Vendittelli - WMR control via dynamic feedback linearization, IEEE TCST 10(6), 2002"
+      applicable_robots: ["bumperbot", "labbot"]
       input_strata:
         - "control_nonlinear_plant"
-        - "control_constrained"
-      output_types: ["Twist", "ControlEffort"]
+      output_types: ["Twist"]
       parameters:
-        desired_dynamics: [1.0, 1.0]  # natural frequency and damping
-        max_control_effort: 10.0
-        min_control_effort: -10.0
+        offset: 0.2
+        gain: 1.5
       assumptions:
-        - "System has well-defined relative degree"
-        - "L_g L_f^{r-1} h ≠ 0 in operating region"
-        - "Exact model cancellation is possible"
+        - "d != 0; the point P, not the axle, is linearised"
       limitations:
-        - "Requires exact model knowledge"
-        - "Sensitive to model errors"
-        - "May require high control effort"
-        - "Can be unstable if model is inaccurate"
-        - "Difficult to implement for high-order systems"
-      computational_complexity: "O(n) where n=system order"
-      memory_requirements: "Medium"
-      
+        - "Forward-only saturation (v >= 0) breaks exactness when P must move backwards"
+        - "The axle cuts inside corners by up to about d"
+      computational_complexity: "O(1)"
+      memory_requirements: "Minimal"
+
     backstepping_controller:
       method_id: "backstepping_controller"
       category: "control"
-      display_name: "Backstepping Controller"
-      implementation_ref: "robot_lab_algorithms.backstepping_controller"
-      mathematical_foundation: "Recursive Lyapunov-based control design for nonlinear systems in strict-feedback form"
+      display_name: "Backstepping Path Tracker"
+      implementation_ref: "robot_lab_algorithms.tracking_control.BacksteppingTracker"
+      mathematical_foundation: "Lyapunov/backstepping tracking law for the unicycle"
       equations:
-        - "System: x_1_dot = f_1(x_1) + g_1(x_1) x_2"
-        - "        x_2_dot = f_2(x_1,x_2) + g_2(x_1,x_2) x_3"
-        - "        ..."
-        - "        x_n_dot = f_n(x_1,...,x_n) + g_n(x_1,...,x_n) u"
-        - "Virtual control: α_1 = -c_1 x_1 + desired_reference"
-        - "Error: z_1 = x_1 - reference, z_2 = x_2 - α_1, ..."
-        - "Stabilizing function: α_i = -c_i z_i - z_{i-1} + ..."
-        - "Control: u = -c_n z_n - z_{n-1} + ..."
-        - "Lyapunov function: V = sum_{i=1}^n (1/2) z_i^2"
+        - "e_x = cos(th)(x_r - x) + sin(th)(y_r - y), e_y = -sin(th)(x_r - x) + cos(th)(y_r - y), e_th = th_r - th"
+        - "v = v_r cos(e_th) + c_x e_x"
+        - "w = w_r + c_th e_th + gamma v_r e_y sin(e_th)/e_th"
+        - "V = (e_x^2 + e_y^2)/2 + e_th^2/(2 gamma), V_dot = -c_x e_x^2 - (c_th/gamma) e_th^2 <= 0"
       source_references:
-        - "Khalil - Nonlinear Systems"
-        - "Krstic et al. - Nonlinear and Adaptive Control Design"
-      applicable_robots: ["bumperbot", "labbot", "go2", "berkeley_humanoid_lite"]
+        - "Jiang and Nijmeijer - Tracking control of mobile robots: a case study in backstepping, Automatica 33(7), 1997"
+        - "Kanayama, Kimura, Miyazaki and Noguchi - A stable tracking control method for an autonomous mobile robot, ICRA 1990"
+      applicable_robots: ["bumperbot", "labbot"]
       input_strata:
         - "control_nonlinear_plant"
-        - "control_constrained"
-      output_types: ["Twist", "ControlEffort"]
+      output_types: ["Twist"]
       parameters:
-        control_gains: [1.0, 1.0, 1.0]  # c_1, c_2, c_3...
-        adaptation_gains: [0.1, 0.1, 0.1]
+        c_x: 1.0
+        c_theta: 2.0
+        gamma: 8.0
       assumptions:
-        - "System in strict-feedback form"
-        - "Functions f_i, g_i are known and bounded"
-        - "g_i(x) ≠ 0 in operating region"
+        - "Reference speed v_r > 0 for lateral convergence"
       limitations:
-        - "Requires system to be in strict-feedback form"
-        - "Can be complex for high-order systems"
-        - "Requires exact model knowledge"
-        - "Sensitive to model errors"
-        - "May require adaptation for robustness"
-      computational_complexity: "O(n) where n=system order"
-      memory_requirements: "Medium"
+        - "Saturation is outside the Lyapunov argument"
+      computational_complexity: "O(1)"
+      memory_requirements: "Minimal"

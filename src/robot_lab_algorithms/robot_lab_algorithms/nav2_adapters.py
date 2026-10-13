@@ -12,7 +12,12 @@ at them (``server_name``):
 * ``nav2_local_planner``: ``nav2_msgs/action/FollowPath`` with a pure
   pursuit tracker or follow-the-gap, publishing ``/cmd_vel`` like the
   controller server, with the same arrival, stop-before-collision and
-  progress checks for both.
+  progress checks for both.  The same server runs the R7.8 path-tracking
+  controllers (robot_lab_algorithms.tracking_control: PID, LQR, linear and
+  nonlinear MPC, feedback linearisation, backstepping) behind one shared
+  supervisor: rotate in place while the heading error exceeds
+  ``rotate_to_heading``, stop before collisions, and a pose watchdog that
+  stops the robot when its TF pose goes stale.
 
 The Nav2 planner/controller servers keep running (lifecycle, costmaps,
 recovery behaviours); only their actions go unused.
@@ -20,12 +25,18 @@ recovery behaviours); only their actions go unused.
 from __future__ import annotations
 
 import math
+import os
 import threading
 import time
 
-import numpy as np
+# The controllers solve small problems every 50 ms; multi-threaded BLAS only
+# adds spinning threads that take CPU from the simulator.
+for _variable in ('OPENBLAS_NUM_THREADS', 'OMP_NUM_THREADS', 'MKL_NUM_THREADS'):
+    os.environ.setdefault(_variable, '1')
 
-from robot_lab_algorithms import grid_planners
+import numpy as np  # noqa: E402
+
+from robot_lab_algorithms import grid_planners, tracking_control  # noqa: E402
 
 
 def yaw_of(q):
@@ -180,7 +191,21 @@ def blocked_ahead(scan, v, w, limits, horizon_s=0.8):
     return False
 
 
-LOCAL_LAWS = {'regulated_pure_pursuit', 'follow_the_gap'}
+TRACKING_LAWS = set(tracking_control.CONTROLLERS)
+LOCAL_LAWS = {'regulated_pure_pursuit', 'follow_the_gap'} | TRACKING_LAWS
+
+
+def supervise_heading(heading_error, limits):
+    """Shared rotate-in-place mode for the tracking controllers -> (v, w) or None.
+
+    ``heading_error`` is robot heading minus path heading.  Above
+    ``rotate_to_heading`` every controller hands over to the same in-place
+    turn, so start-up turns do not depend on each law's large-angle
+    behaviour (measured separately in the R7.8 envelope test).
+    """
+    if abs(heading_error) <= limits.rotate_to_heading:
+        return None
+    return 0.0, -math.copysign(min(limits.max_angular, 1.5 * abs(heading_error)), heading_error)
 
 
 # ---------------------------------------------------------------------------
@@ -337,12 +362,20 @@ def _make_local_planner_node():
             self.declare_parameter('blocked_abort_s', 5.0)
             self.declare_parameter('progress_radius', 0.2)
             self.declare_parameter('progress_time_s', 15.0)
+            self.declare_parameter('pose_timeout_s', 0.5)
+            self.declare_parameter('stale_abort_s', 5.0)
             self.law = str(self.get_parameter('planner').value)
             if self.law not in LOCAL_LAWS:
                 raise ValueError('unknown local planner %r; choose from %s' % (self.law, sorted(LOCAL_LAWS)))
             g = lambda name: self.get_parameter(name).value  # noqa: E731
             self.limits = TrackingLimits(max_linear=float(g('max_linear')), max_angular=float(g('max_angular')),
                                          lookahead=float(g('lookahead')), robot_radius=float(g('robot_radius')))
+            self.controller = None
+            if self.law in TRACKING_LAWS:
+                self.controller = tracking_control.make_controller(
+                    self.law, limits=tracking_control.Limits(v_max=self.limits.max_linear,
+                                                             w_max=self.limits.max_angular))
+            self.last_command = (0.0, 0.0)
             self.scan = None
             self.active = None
             self.lock = threading.Lock()
@@ -369,12 +402,23 @@ def _make_local_planner_node():
             goal_handle.execute()
 
         def pose(self):
+            """(x, y, yaw, age_s): the latest map pose and how old its TF is."""
             t = self.tf.lookup_transform(self.get_parameter('global_frame').value,
                                          self.get_parameter('robot_frame').value, rclpy.time.Time())
-            return (t.transform.translation.x, t.transform.translation.y, yaw_of(t.transform.rotation))
+            stamp = t.header.stamp.sec + t.header.stamp.nanosec * 1e-9
+            age = self.get_clock().now().nanoseconds * 1e-9 - stamp
+            return (t.transform.translation.x, t.transform.translation.y, yaw_of(t.transform.rotation), age)
 
         def stop(self):
+            self.last_command = (0.0, 0.0)
             self.cmd_pub.publish(Twist())
+
+        def finish(self, goal_handle, outcome):
+            """End a goal (not a preemption): stop, and reset controller state."""
+            self.stop()
+            if self.controller is not None:
+                self.controller.reset()
+            getattr(goal_handle, outcome)()
 
         def execute(self, goal_handle):
             g = lambda name: self.get_parameter(name).value  # noqa: E731
@@ -386,7 +430,11 @@ def _make_local_planner_node():
                 goal_handle.abort()
                 return result
             period = 1.0 / float(g('rate'))
-            index, blocked_since, anchor = 0, None, None
+            index, blocked_since, anchor, stale_since, last_time = 0, None, None, None, None
+            reference, along = None, None
+            if self.controller is not None:
+                reference = tracking_control.Reference([(p[0], p[1]) for p in path],
+                                                       v_max=self.limits.max_linear)
             feedback = FollowPath.Feedback()
             clock = self.get_clock()
             while rclpy.ok():
@@ -396,32 +444,52 @@ def _make_local_planner_node():
                     goal_handle.abort()
                     return result
                 if goal_handle.is_cancel_requested:
-                    self.stop()
-                    goal_handle.canceled()
+                    self.finish(goal_handle, 'canceled')
                     return result
+                now = clock.now().nanoseconds * 1e-9
                 try:
-                    pose = self.pose()
+                    *pose, age = self.pose()
                 except Exception:  # noqa: BLE001
+                    pose, age = None, math.inf
+                # Watchdog: never drive on a stale pose.
+                if pose is None or age > float(g('pose_timeout_s')):
+                    self.stop()
+                    stale_since = stale_since if stale_since is not None else now
+                    if now - stale_since > float(g('stale_abort_s')):
+                        self.get_logger().error('%s: robot pose stale (%.1f s); aborting' % (self.law, age))
+                        self.finish(goal_handle, 'abort')
+                        return result
                     time.sleep(period)
                     continue
-                now = clock.now().nanoseconds * 1e-9
+                stale_since = None
+                dt = period if last_time is None or now <= last_time else now - last_time
+                last_time = now
                 goal = path[-1]
                 distance = math.hypot(goal[0] - pose[0], goal[1] - pose[1])
                 if distance <= float(g('xy_goal_tolerance')):
                     error = wrap(goal[2] - pose[2])
                     if abs(error) <= float(g('yaw_goal_tolerance')):
-                        self.stop()
-                        goal_handle.succeed()
+                        self.finish(goal_handle, 'succeed')
                         return result
                     twist = Twist()
                     twist.angular.z = math.copysign(max(0.2, min(self.limits.max_angular, 1.5 * abs(error))), error)
+                    self.last_command = (0.0, float(twist.angular.z))
                     self.cmd_pub.publish(twist)
                     anchor = None
                     time.sleep(period)
                     continue
                 index, target = lookahead_point(path, pose, index, self.limits.lookahead)
                 remaining = distance
-                if self.law == 'follow_the_gap' and self.scan is not None:
+                if reference is not None:
+                    if along is None:  # first projection: search the whole path
+                        along = reference.project(pose[0], pose[1], 0.0, back=0.0, ahead=reference.length)
+                    along = reference.project(pose[0], pose[1], along)
+                    _, _, heading_error = reference.errors(pose, along)
+                    command = supervise_heading(heading_error, self.limits)
+                    if command is None:
+                        command = self.controller.command(tuple(pose), self.last_command, reference, along, dt)
+                    v, w = command
+                elif self.law == 'follow_the_gap' and self.scan is not None:
                     v, w = follow_the_gap(pose, target, remaining, self.limits, self.scan)
                 else:
                     v, w = pure_pursuit(pose, target, remaining, self.limits)
@@ -429,9 +497,8 @@ def _make_local_planner_node():
                     v = 0.0
                     blocked_since = blocked_since if blocked_since is not None else now
                     if now - blocked_since > float(g('blocked_abort_s')):
-                        self.stop()
                         self.get_logger().warn('%s: blocked ahead; aborting for recovery' % self.law)
-                        goal_handle.abort()
+                        self.finish(goal_handle, 'abort')
                         return result
                 else:
                     blocked_since = None
@@ -440,12 +507,12 @@ def _make_local_planner_node():
                         > float(g('progress_radius')):
                     anchor = (now, pose[0], pose[1])
                 elif now - anchor[0] > float(g('progress_time_s')):
-                    self.stop()
                     self.get_logger().warn('%s: failed to make progress' % self.law)
-                    goal_handle.abort()
+                    self.finish(goal_handle, 'abort')
                     return result
                 twist = Twist()
                 twist.linear.x, twist.angular.z = float(v), float(w)
+                self.last_command = (float(v), float(w))
                 self.cmd_pub.publish(twist)
                 feedback.distance_to_goal, feedback.speed = float(distance), float(abs(v))
                 goal_handle.publish_feedback(feedback)

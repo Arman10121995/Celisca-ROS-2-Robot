@@ -40,13 +40,17 @@ for planner in $PLANNERS; do
       start_rviz:=false "$CATEGORY:=$planner" "$@" > "$run.launch.log" 2>&1 &
     LAUNCH=$!
     rm -rf "$run.bag"
+    # /tf is kept to diagnose stale map->odom transforms seen by Nav2 servers.
     ros2 bag record -o "$run.bag" /odom/ground_truth /cmd_vel /plan /goal_pose \
-      /navigate_to_pose/_action/status /amcl_pose > "$run.bag.log" 2>&1 &
+      /navigate_to_pose/_action/status /amcl_pose /tf /tf_static > "$run.bag.log" 2>&1 &
     BAG=$!
+    "$HERE/tf_freeze_probe.sh" "$run.launch.log" "$run.tf_freeze.txt" &
+    PROBE=$!
     timeout "${TRIAL_TIMEOUT:-2400}" python3 "$HERE/sim_nav_goals.py" --seed "$seed" \
       --goals "${GOALS:-3}" --robot-radius "${ROBOT_RADIUS:-0.2}" --start $START \
       --trace-out "$run.trace.json" > "$run.json" 2> "$run.err"
     kill -INT "$BAG" 2>/dev/null; wait "$BAG" 2>/dev/null
+    kill "$PROBE" 2>/dev/null
     kill -INT "$LAUNCH" 2>/dev/null
     for _ in $(seq 1 40); do kill -0 "$LAUNCH" 2>/dev/null || break; sleep 1; done
     kill -TERM -- -"$LAUNCH" 2>/dev/null; sleep 1; kill -KILL -- -"$LAUNCH" 2>/dev/null

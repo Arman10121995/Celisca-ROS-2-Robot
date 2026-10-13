@@ -1,13 +1,13 @@
-"""Control algorithms (R7.8).
+"""Generic single-axis control demonstrations.
 
-Implements five low-level or model-based controllers:
-  1. PID with anti-windup
-  2. LQR (Linear Quadratic Regulator)
-  3. Constrained Linear MPC
-  4. Nonlinear MPC
-  5. Feedback Linearization/Backstepping
+The classes here (PID, LQR on a double integrator, a simplified MPC, ...)
+and their console scripts (pid_controller, lqr_controller, ...) act on one
+axis of the odometry and publish on side topics such as /cmd_vel_lqr; they
+do not drive a robot.  They are kept for the existing numerical tests.
 
-Each controller is implemented as a pure numerical class with a ROS node wrapper.
+The R7.8 controllers that the lab selects and benchmarks are the path
+trackers in robot_lab_algorithms.tracking_control, served as Nav2
+FollowPath by nav2_local_planner (algorithm_dispatch.yaml, control).
 """
 
 from __future__ import annotations

@@ -3,7 +3,8 @@
 Selecting rrt/rrt*/prm/voronoi or follow_the_gap/regulated_pure_pursuit used
 to start a side node publishing /plan/<id> or /cmd_vel_<id> while Nav2's
 plugin planned and drove.  Now the selection starts an action adapter and
-the navigator's behavior tree calls it by server_name.
+the navigator's behavior tree calls it by server_name.  The R7.8 tracking
+controllers (control category) serve FollowPath the same way.
 """
 import importlib.util
 import os
@@ -41,6 +42,19 @@ def test_node_planners_serve_a_nav2_action(category, action, executable, ids):
         assert entry['serves'][action].startswith('/robot_lab/')
 
 
+@pytest.mark.parametrize('algorithm,law', [
+    ('pid_controller', 'pid'), ('lqr_controller', 'lqr'), ('mpc_controller', 'linear_mpc'),
+    ('nonlinear_mpc', 'nonlinear_mpc'), ('feedback_linearization', 'feedback_linearization'),
+    ('backstepping_controller', 'backstepping')])
+def test_tracking_controllers_serve_follow_path(algorithm, law):
+    """R7.8: the control ids drive through FollowPath, not side topics."""
+    entry = DISPATCH['control'][algorithm]
+    assert entry['node']['executable'] == 'nav2_local_planner'
+    assert entry['node']['parameters']['planner'] == law
+    assert entry['serves']['follow_path'] == '/robot_lab/follow_path'
+    assert 'car_steering' in entry['not_for_features']
+
+
 def test_placeholder_mppi_node_is_not_offered_as_a_planner():
     assert 'placeholder' in DISPATCH['local_planning']['mppi_local_planner']['unavailable']
 
@@ -68,6 +82,7 @@ def test_navigation_tree_is_pointed_at_the_adapter_servers(tmp_path):
      '/robot_lab/compute_path_to_pose', 'rrt_star_planner'),
     ({'local_planning': 'follow_the_gap'}, 'follow_path_server',
      '/robot_lab/follow_path', 'follow_the_gap'),
+    ({'control': 'lqr_controller'}, 'follow_path_server', '/robot_lab/follow_path', 'lqr'),
 ])
 def test_launch_starts_the_adapter_and_routes_the_navigator(overrides, argument, server, planner):
     try:

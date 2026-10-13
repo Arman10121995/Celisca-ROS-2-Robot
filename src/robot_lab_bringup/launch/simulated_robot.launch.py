@@ -1548,9 +1548,12 @@ def _build_simulation_actions(context):
         # A node planner that serves a Nav2 action replaces the plugin
         # server's in the navigator's tree (robot_lab_algorithms.nav2_adapters);
         # selecting it used to start a side node while the plugin drove.
+        # A path-tracking controller (control category, R7.8) comes last: when
+        # selected, it drives FollowPath instead of the local planner.
         for category, action, argument in (
                 ("global_planning", "compute_path_to_pose", "compute_path_server"),
-                ("local_planning", "follow_path", "follow_path_server")):
+                ("local_planning", "follow_path", "follow_path_server"),
+                ("control", "follow_path", "follow_path_server")):
             entry = (dispatch.get(category) or {}).get(algorithm_selection.get(category) or "") or {}
             server = (entry.get("serves") or {}).get(action)
             if server:

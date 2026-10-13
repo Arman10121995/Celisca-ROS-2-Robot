@@ -987,20 +987,24 @@
     repository: internal
     license: Apache-2.0
 - id: pid_controller
-  version: 1.0.0
-  name: PID Controller
-  description: Standard PID controller for position and velocity control
+  version: 2.0.0
+  name: PID Path-Tracking Controller
+  description: Serves Nav2 FollowPath on a differential-drive (unicycle) plant; PID on a heading error that includes the lateral offset, curvature feedforward, filtered derivative and conditional-integration anti-windup
   status: integrated
   category: control
   family: pid
   implementation:
-    package: robot_lab_controller
-    plugin: PIDController
-    language: cpp
+    package: robot_lab_algorithms
+    executable: nav2_local_planner
+    law: pid
+    module: robot_lab_algorithms.tracking_control
+    language: python
   input_contract:
     required_topics:
-    - /plan
-    - /odom
+    - /tf
+    - /scan
+    required_actions:
+    - nav2_msgs/action/FollowPath
   output_contract:
     provided_topics:
     - /cmd_vel
@@ -1008,15 +1012,253 @@
   supported_robot_classes:
   - mobile
   parameters:
-    kp_linear: 1.0
-    ki_linear: 0.0
-    kd_linear: 0.1
-    kp_angular: 1.0
+    kp: 2.0
+    ki: 0.3
+    kd: 0.1
+    k_lat: 2.0
+    i_max: 1.0
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Astrom and Hagglund, Advanced PID Control (2006), anti-windup by conditional integration"
   tags:
   - pid
+  - path_tracking
+  - r7_8
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: model-plant tracking, disturbance, envelope, saturation and deadline tests; Gazebo runs pending"
+      date: "2026-10-13"
+- id: lqr_controller
+  version: 1.0.0
+  name: LQR Path-Tracking Controller
+  description: Serves Nav2 FollowPath on a differential-drive (unicycle) plant; discrete LQR on the linearised lateral/heading error, Riccati gains per reference speed
+  status: integrated
+  category: control
+  family: lqr
+  implementation:
+    package: robot_lab_algorithms
+    executable: nav2_local_planner
+    law: lqr
+    module: robot_lab_algorithms.tracking_control
+    language: python
+  input_contract:
+    required_topics:
+    - /tf
+    - /scan
+    required_actions:
+    - nav2_msgs/action/FollowPath
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  parameters:
+    q_lat: 6.0
+    q_heading: 1.0
+    r: 0.6
+    dt: 0.05
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Anderson and Moore, Optimal Control: Linear Quadratic Methods (1990)"
+  tags:
+  - lqr
+  - path_tracking
+  - r7_8
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: model-plant tracking, disturbance, envelope, saturation and deadline tests; Gazebo runs pending"
+      date: "2026-10-13"
+- id: mpc_controller
+  version: 1.0.0
+  name: Constrained Linear MPC Path Tracker
+  description: Serves Nav2 FollowPath on a differential-drive (unicycle) plant; linear time-varying MPC on the lateral/heading error over a 2 s preview with hard turn-rate bounds, QP solved exactly by bounded least squares
+  status: integrated
+  category: control
+  family: mpc
+  implementation:
+    package: robot_lab_algorithms
+    executable: nav2_local_planner
+    law: linear_mpc
+    module: robot_lab_algorithms.tracking_control
+    language: python
+  input_contract:
+    required_topics:
+    - /tf
+    - /scan
+    required_actions:
+    - nav2_msgs/action/FollowPath
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  parameters:
+    horizon: 20
+    dt: 0.1
+    q_lat: 6.0
+    q_heading: 1.0
+    r: 0.6
+    rate: 0.4
+    q_terminal: 4.0
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Rawlings, Mayne and Diehl, Model Predictive Control (2017)"
+  tags:
+  - mpc
+  - path_tracking
+  - r7_8
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: model-plant tracking, disturbance, envelope, saturation and deadline tests; Gazebo runs pending"
+      date: "2026-10-13"
+- id: nonlinear_mpc
+  version: 1.0.0
+  name: Nonlinear MPC Path Tracker
+  description: Serves Nav2 FollowPath on a differential-drive (unicycle) plant; nonlinear MPC on the full unicycle with bounded speed and turn rate, single shooting, adjoint gradient, L-BFGS-B with warm start
+  status: integrated
+  category: control
+  family: mpc
+  implementation:
+    package: robot_lab_algorithms
+    executable: nav2_local_planner
+    law: nonlinear_mpc
+    module: robot_lab_algorithms.tracking_control
+    language: python
+  input_contract:
+    required_topics:
+    - /tf
+    - /scan
+    required_actions:
+    - nav2_msgs/action/FollowPath
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  parameters:
+    horizon: 15
+    dt: 0.1
+    q_position: 8.0
+    q_heading: 1.0
+    max_iterations: 30
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Grune and Pannek, Nonlinear Model Predictive Control (2017)"
+  tags:
+  - mpc
+  - nonlinear
+  - path_tracking
+  - r7_8
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: model-plant tracking, disturbance, envelope, saturation and deadline tests; Gazebo runs pending"
+      date: "2026-10-13"
+- id: feedback_linearization
+  version: 1.0.0
+  name: Feedback-Linearisation Path Tracker
+  description: Serves Nav2 FollowPath on a differential-drive (unicycle) plant; input-output linearisation of a point 0.2 m ahead of the axle with a linear outer loop
+  status: integrated
+  category: control
+  family: feedback_linearization
+  implementation:
+    package: robot_lab_algorithms
+    executable: nav2_local_planner
+    law: feedback_linearization
+    module: robot_lab_algorithms.tracking_control
+    language: python
+  input_contract:
+    required_topics:
+    - /tf
+    - /scan
+    required_actions:
+    - nav2_msgs/action/FollowPath
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  parameters:
+    offset: 0.2
+    gain: 1.5
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Oriolo, De Luca and Vendittelli, WMR control via dynamic feedback linearization, IEEE TCST 10(6) 2002 (static point-offset form)"
+  tags:
+  - feedback_linearization
+  - path_tracking
+  - r7_8
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: model-plant tracking, disturbance, envelope, saturation and deadline tests; Gazebo runs pending"
+      date: "2026-10-13"
+- id: backstepping_controller
+  version: 1.0.0
+  name: Backstepping Path Tracker
+  description: Serves Nav2 FollowPath on a differential-drive (unicycle) plant; Lyapunov/backstepping tracking law of Jiang and Nijmeijer with V = (e_x^2+e_y^2)/2 + e_th^2/(2 gamma)
+  status: integrated
+  category: control
+  family: backstepping
+  implementation:
+    package: robot_lab_algorithms
+    executable: nav2_local_planner
+    law: backstepping
+    module: robot_lab_algorithms.tracking_control
+    language: python
+  input_contract:
+    required_topics:
+    - /tf
+    - /scan
+    required_actions:
+    - nav2_msgs/action/FollowPath
+  output_contract:
+    provided_topics:
+    - /cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  parameters:
+    c_x: 1.0
+    c_theta: 2.0
+    gamma: 8.0
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Jiang and Nijmeijer, Tracking control of mobile robots: a case study in backstepping, Automatica 33(7) 1997"
+  tags:
+  - backstepping
+  - path_tracking
+  - r7_8
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: model-plant tracking, disturbance, envelope, saturation and deadline tests; Gazebo runs pending"
+      date: "2026-10-13"
 - id: twist_relay
   version: 1.0.0
   name: Twist Relay
