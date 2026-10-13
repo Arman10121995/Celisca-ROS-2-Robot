@@ -419,11 +419,19 @@ def _tune_roller_contacts(stage, root_prim, contact_offset=0.002, position_itera
     the rollers touching the floor at only 41-57% of theirs (MuJoCo 95-97%),
     so the car strafed at about half speed (2026-10-13).  No solver
     iteration counts were set on this ~65-link articulation, and the
-    default contact offset is large next to such a roller.  Returns
+    default contact offset is large next to such a roller.  32/8 iterations
+    alone moved the strafe from 0.154 to 0.167 m/s.  Returns
     (roller collision prims tuned, iteration counts set).
     """
     from pxr import PhysxSchema, Usd, UsdPhysics
 
+    # The importer makes collision meshes instanceable; instance proxies
+    # cannot be edited (the first version tuned 0 prims), so the roller
+    # instances are made local first.
+    for prim in list(stage.Traverse(Usd.TraverseInstanceProxies())):
+        if (not prim.IsInstanceProxy() and prim.IsInstance()
+                and 'roller' in str(prim.GetPath()).lower()):
+            prim.SetInstanceable(False)
     tuned = 0
     for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
         if prim.IsInstanceProxy() or 'roller' not in str(prim.GetPath()).lower():
