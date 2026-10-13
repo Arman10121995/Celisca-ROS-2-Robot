@@ -8,6 +8,11 @@ none of them walks on /cmd_vel, so none can map by moving or navigate.
 Since 2026-10-12 a profile with a provisioned learned policy
 (``legged_policy``) also localizes in Isaac, where the policy's PD drives
 hold the stance (experimental; walking validation per backend pending).
+Since 2026-10-13 such a profile maps and navigates where its policy runs
+(MuJoCo, Isaac, and Gazebo for descriptions with ros2_control): the policy
+walks on /cmd_vel and leg kinematic odometry replaces wheel odometry.  The
+wheel-legged Go2W does not offer it (its wheeled feet break the stance
+assumption of leg odometry).
 """
 import os
 import sys
@@ -40,15 +45,24 @@ def test_wheeled_bases_run_every_mode_everywhere(robot, simulator):
 @pytest.mark.parametrize("robot", [r for r in PROFILES
                                    if r.startswith(("unitree_", "berkeley_humanoid_lite"))])
 def test_legged_and_humanoid_robots_localize_where_the_bridges_hold_them(robot):
-    assert runnable(robot, "pybullet") == {"display", "loc"}
-    assert runnable(robot, "mujoco") == {"display", "loc"}
     features = PROFILES[robot].get("features", [])
     policy = "legged_policy" in features
-    assert runnable(robot, "isaac") == ({"display", "loc"} if policy else {"display"})
+    walking = {"slam", "nav"} & set(PROFILES[robot].get("supported_modes", []))
+    assert not walking or policy, "only a robot with a walking policy maps or navigates"
+    assert runnable(robot, "pybullet") == {"display", "loc"}
+    assert runnable(robot, "mujoco") == {"display", "loc"} | (walking if policy else set())
+    assert runnable(robot, "isaac") == ({"display", "loc"} | walking if policy else {"display"})
     # Gazebo: the description's LiDAR and a ros2_control block for the
     # policy's effort PD controller (Go2 only so far).
     gazebo_policy = policy and {"ros2_control", "lidar_2d"} <= set(features)
-    assert runnable(robot, "gazebo") == ({"display", "loc"} if gazebo_policy else {"display"})
+    assert runnable(robot, "gazebo") == ({"display", "loc"} | walking if gazebo_policy else {"display"})
+
+
+def test_walking_robots_map_and_navigate():
+    for robot in ("unitree_go2", "unitree_a1", "unitree_b2", "unitree_g1_29dof"):
+        assert {"slam", "nav"} <= runnable(robot, "mujoco")
+    assert {"slam", "nav"} <= runnable("unitree_go2", "gazebo")
+    assert not {"slam", "nav"} & runnable("unitree_go2w", "mujoco")
 
 
 def test_provisioned_policies_are_the_profiles_marked_legged_policy():

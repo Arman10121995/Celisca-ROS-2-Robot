@@ -2083,14 +2083,17 @@ class SimulationLauncherGui(tk.Tk):
                 and self.launch_kind_var.get() == "simulation")
 
     def _legged_policy_required(self):
-        """Isaac/Gazebo loc: the policy is the robot's only stance there."""
+        """The policy is the robot's only stance (Isaac/Gazebo loc) or its
+        only way to walk for mapping and navigation (MuJoCo/Isaac/Gazebo)."""
         simulator = self.simulator_var.get()
         robot = self.robot_var.get()
-        return (robot in LEGGED_POLICY_PROFILES
-                and (simulator == "isaac"
-                     or (simulator == "gazebo" and robot in LEGGED_POLICY_GAZEBO))
-                and self.mode_var.get() == "loc"
-                and self.launch_kind_var.get() == "simulation")
+        mode = self.mode_var.get()
+        if robot not in LEGGED_POLICY_PROFILES or self.launch_kind_var.get() != "simulation":
+            return False
+        backend = (simulator == "isaac"
+                   or (simulator == "gazebo" and robot in LEGGED_POLICY_GAZEBO))
+        return (mode == "loc" and backend) or (
+            mode in ("slam", "nav") and (backend or simulator == "mujoco"))
 
     def _bhl_policy_selectable(self):
         return (self.robot_var.get() == "berkeley_humanoid_lite_sim"

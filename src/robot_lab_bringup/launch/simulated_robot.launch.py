@@ -49,6 +49,12 @@ _DIFF_DRIVE_KEYS = ("left_wheel_joint", "right_wheel_joint",
 # Stack defaults, used when neither an explicit *_plugin argument nor a
 # planner selection pins the nav2 plugin class.
 _DEFAULT_GLOBAL_PLANNER_PLUGIN = "nav2_smac_planner/SmacPlanner2D"
+
+# Backends whose in-step PD path runs an rl_sar legged policy, and the modes
+# in which the policy walks the robot on /cmd_vel for mapping/navigation
+# (localization keeps its own per-backend default, see the policy block).
+_LEGGED_POLICY_SIMULATORS = ("mujoco", "isaac", "gazebo")
+_LEGGED_WALKING_MODES = ("slam", "nav")
 _DEFAULT_LOCAL_PLANNER_PLUGIN = (
     "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
 )
@@ -1140,13 +1146,17 @@ def _build_simulation_actions(context):
         # gains (robot_lab_isaac) - so it replaces the passive hold and any
         # effort controller on the same joints.  In Gazebo an effort
         # joint_trajectory_controller (ign_ros2_control) carries the same
-        # gains, for descriptions with a ros2_control block.  MuJoCo: opt-in
-        # via legged_policy:=<name|path>.  Isaac and Gazebo have no other
-        # stance for a dog (Isaac's pose hold let them drift and tip,
-        # 2026-09-23), so there the robot's provisioned policy is selected
-        # unless legged_policy:=none.
+        # gains, for descriptions with a ros2_control block.  MuJoCo
+        # localization: opt-in via legged_policy:=<name|path>.  Isaac and
+        # Gazebo have no other stance for a dog (Isaac's pose hold let them
+        # drift and tip, 2026-09-23), and mapping/navigation need the robot
+        # to walk on /cmd_vel, so there the robot's provisioned policy is
+        # selected unless legged_policy:=none.
         legged_policy_name = _launch_value(context, "legged_policy").strip()
-        if not legged_policy_name and simulator in ("isaac", "gazebo") and mode_name == "loc":
+        if not legged_policy_name and (
+                (simulator in ("isaac", "gazebo") and mode_name == "loc")
+                or (simulator in _LEGGED_POLICY_SIMULATORS
+                    and mode_name in _LEGGED_WALKING_MODES)):
             from robot_lab_adapter.legged_policy import default_policy_for
             legged_policy_name = default_policy_for(robot_model)
         if _is_none(legged_policy_name) or legged_policy_name.lower() == "none":
@@ -1158,12 +1168,13 @@ def _build_simulation_actions(context):
         legged_controller_params = ""
         legged_active = False
         if legged_policy_name:
-            if simulator not in ("mujoco", "isaac", "gazebo") or mode_name != "loc":
+            if (simulator not in _LEGGED_POLICY_SIMULATORS
+                    or mode_name not in ("loc",) + _LEGGED_WALKING_MODES):
                 raise RuntimeError(
-                    "legged_policy:=%s needs mode:=loc in MuJoCo, Isaac or "
-                    "Gazebo; the rl_sar contract runs through their in-step "
-                    "PD paths only. Other backends/modes have no actuation "
-                    "path for it." % legged_policy_name)
+                    "legged_policy:=%s needs mode:=loc, slam or nav in MuJoCo, "
+                    "Isaac or Gazebo; the rl_sar contract runs through their "
+                    "in-step PD paths only. Other backends/modes have no "
+                    "actuation path for it." % legged_policy_name)
             if simulator == "gazebo" and not _description_has_ros2_control(model_path):
                 raise RuntimeError(
                     "legged_policy:=%s in Gazebo needs a ros2_control block in "
@@ -1457,8 +1468,23 @@ def _build_simulation_actions(context):
 
     # EKF odom0: Gazebo uses the SimpleController wheel estimate; self-contained
     # spawners (PyBullet/MuJoCo/Isaac) publish perfect odometry on /odom/ground_truth.
+    # A walking robot has no wheels: leg kinematic odometry (joint states +
+    # IMU + description, robot_lab_algorithms.leg_odometry) replaces both,
+    # in every backend.
     _sim = _launch_value(context, "simulator")
     _odom0_topic = "/robot_lab_controller/odom" if _sim == "gazebo" else "/odom/ground_truth"
+    if legged_active and _section_enabled(mode_config.get("local_localization")):
+        _odom0_topic = "/leg_odometry"
+        gated_actions.append(Node(
+            package="robot_lab_algorithms",
+            executable="leg_odometry",
+            output="screen",
+            parameters=[{
+                "use_sim_time": _as_bool(use_sim_time, True),
+                "robot_description": _xacro_urdf(model_path),
+                "base_link": base_frame,
+            }],
+        ))
 
     if _section_enabled(mode_config.get("local_localization")):
         gated_actions.append(

@@ -10,10 +10,10 @@ follows /cmd_vel:
   PyBullet, MuJoCo and Isaac bridges ray-cast a scan for every robot (from
   its laser link, else 0.12 m above its root link).
 * ``rgbd_camera`` - declared camera link; every backend renders it.
-* ``velocity_base`` - the robot drives on /cmd_vel (the differential-drive
-  bases).  Legged and humanoid robots have no velocity-tracking gait in this
-  lab yet, so they can localize where they stand but not map by moving or
-  navigate.
+* ``velocity_base`` - the robot follows /cmd_vel: the wheeled bases, and a
+  legged or humanoid robot whose model-matched policy walks it (below).
+  Without one, a legged robot can localize where it stands but not map by
+  moving or navigate.
 * ``stands`` - the robot stays upright without a controller.  Wheeled bases
   do; the PyBullet and MuJoCo bridges hold a legged or humanoid robot's
   joints at its spawn pose.  Isaac's hold does not keep them in place
@@ -25,7 +25,9 @@ follows /cmd_vel:
   the MuJoCo and Isaac physics steps, so in Isaac it provides the stance
   the pose hold cannot; in Gazebo an effort joint_trajectory_controller
   carries it for descriptions with a ``ros2_control`` block (implemented
-  2026-10-12; validation per robot/backend pending).
+  2026-10-12; validation per robot/backend pending).  The policy walks on
+  /cmd_vel and leg kinematic odometry replaces wheel odometry, so such a
+  robot also counts as a ``velocity_base`` there (2026-10-13, experimental).
 
 Robot features come from robot_lab_robots/config/robots.yaml.
 """
@@ -56,7 +58,8 @@ FEATURE_LABELS = {
     "lidar_2d": "a 2D LiDAR (Gazebo uses the one in the description; the "
                 "PyBullet, MuJoCo and Isaac bridges cast one for any robot)",
     "rgbd_camera": "an RGB-D camera link",
-    "velocity_base": "a base that drives on /cmd_vel (no walking gait yet)",
+    "velocity_base": "a base that follows /cmd_vel (wheels, or a provisioned "
+                     "walking policy in MuJoCo, Isaac or Gazebo)",
     "stands": "a stable stance without a controller (the PyBullet and "
               "MuJoCo bridges hold its joints; Isaac's hold does not)",
     "car_steering": "a car-like base that cannot turn on the spot",
@@ -77,6 +80,7 @@ def robot_features(robot_config, simulator=None):
                 simulator in POLICY_STANCE_SIMULATORS
                 or (simulator == "gazebo" and "ros2_control" in features)):
             features.add("stands")
+            features.add("velocity_base")  # the policy walks on /cmd_vel
     return features
 
 
