@@ -1,0 +1,140 @@
+{
+ "phases": [
+  {
+   "phase": "stand",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "truth": {
+    "vx": -0.0,
+    "wz": -0.001
+   },
+   "leg": {
+    "vx": -0.0,
+    "wz": -0.001
+   },
+   "ekf": {
+    "vx": -0.0,
+    "wz": -0.001
+   }
+  },
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "truth": {
+    "vx": 0.388,
+    "wz": -0.001
+   },
+   "leg": {
+    "vx": 0.345,
+    "wz": -0.002
+   },
+   "ekf": {
+    "vx": 0.347,
+    "wz": -0.002
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "truth": {
+    "vx": 0.384,
+    "wz": 0.482
+   },
+   "leg": {
+    "vx": 0.348,
+    "wz": 0.482
+   },
+   "ekf": {
+    "vx": 0.347,
+    "wz": 0.481
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "truth": {
+    "vx": 0.396,
+    "wz": -0.487
+   },
+   "leg": {
+    "vx": 0.36,
+    "wz": -0.486
+   },
+   "ekf": {
+    "vx": 0.361,
+    "wz": -0.486
+   }
+  },
+  {
+   "phase": "straight_2",
+   "command": [
+    0.3,
+    0.0
+   ],
+   "truth": {
+    "vx": 0.285,
+    "wz": -0.009
+   },
+   "leg": {
+    "vx": 0.218,
+    "wz": -0.009
+   },
+   "ekf": {
+    "vx": 0.217,
+    "wz": -0.009
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "truth": {
+    "vx": -0.002,
+    "wz": -0.01
+   },
+   "leg": {
+    "vx": -0.002,
+    "wz": -0.01
+   },
+   "ekf": {
+    "vx": -0.006,
+    "wz": -0.01
+   }
+  }
+ ],
+ "counts": {
+  "truth": 2043,
+  "leg": 2010,
+  "ekf": 1170
+ },
+ "truth_displacement_m": [
+  5.358,
+  2.838
+ ],
+ "walked_m": 9.984,
+ "leg_displacement_m": [
+  4.527,
+  2.619
+ ],
+ "leg_drift_m": 0.859,
+ "leg_drift_fraction": 0.086,
+ "ekf_displacement_m": [
+  4.635,
+  2.532
+ ],
+ "ekf_drift_m": 0.784,
+ "ekf_drift_fraction": 0.0786
+}

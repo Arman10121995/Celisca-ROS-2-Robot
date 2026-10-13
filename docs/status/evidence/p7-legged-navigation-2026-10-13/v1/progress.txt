@@ -1,0 +1,11 @@
+mujoco go2 leg_odometry exit=0
+mujoco go2 nav exit=1
+isaac go2 leg_odometry exit=0
+isaac go2 nav exit=1
+gazebo go2 leg_odometry exit=0
+gazebo go2 nav exit=1
+mujoco unitree_a1 leg_odometry exit=0
+mujoco unitree_a1 nav exit=1
+mujoco unitree_g1_29dof leg_odometry exit=0
+mujoco unitree_g1_29dof nav exit=1
+ALLDONE
