@@ -12,11 +12,13 @@ Scores, all against simulator truth and the reference map:
 * trajectory: the slam pose (TF map -> base) against truth after aligning
   the two frames at the start (RMSE, maximum, final);
 * map precision: the share of the slam map's occupied cells that lie within
-  0.10 m (two cells) of a reference wall, after the same alignment;
+  0.10 m (two cells) of a reference occupied cell, after the same alignment
+  (no invented walls);
 * map recall: the share of reference wall-surface cells (occupied cells
   touching free space) within 3 m of the driven path that have a slam
   occupied cell within 0.10 m;
-* the mean distance from slam occupied cells to the nearest reference wall.
+* the mean distance from slam occupied cells to the nearest reference wall
+  surface.
 
 Prints one JSON object; ``--map-out`` also saves the final slam map as PGM.
 """
@@ -81,6 +83,9 @@ class ReferenceMap:
         rows, cols = np.nonzero(self.occupied & touches_free)
         self.wall_points = np.column_stack([cols, rows]) * self.resolution + self.origin + self.resolution / 2
         self.tree = cKDTree(self.wall_points)
+        rows, cols = np.nonzero(self.occupied)
+        self.occupied_tree = cKDTree(np.column_stack([cols, rows]) * self.resolution + self.origin
+                                     + self.resolution / 2)
 
     def cell(self, x, y):
         return (int((y - self.origin[1]) / self.resolution), int((x - self.origin[0]) / self.resolution))
@@ -141,6 +146,57 @@ class ReferenceMap:
         return [self.point(r, c) for r, c in cells[::4]] + [self.point(*cells[-1])]
 
 
+def score_map(reference, world, path):
+    """Map scores for slam occupied cells ``world`` (N x 2, world frame).
+
+    precision: share of slam occupied cells within 0.10 m of a reference
+    occupied cell (no invented walls); wall distance: from slam cells to the
+    nearest reference wall *surface*; recall: share of reference wall
+    surfaces within 3 m of the driven ``path`` with a slam cell within
+    0.10 m.
+    """
+    if not len(world):
+        return {'slam_occupied_cells': 0}
+    near_any, _ = reference.occupied_tree.query(world)
+    near_surface, _ = reference.tree.query(world)
+    ref_dist_to_path, _ = cKDTree(path).query(reference.wall_points)
+    seen_walls = reference.wall_points[ref_dist_to_path < 3.0]
+    recall_hits = cKDTree(world).query(seen_walls)[0] <= 0.10 if len(seen_walls) else np.zeros(0)
+    return {
+        'slam_occupied_cells': int(len(world)),
+        'precision_0p10': round(float(np.mean(near_any <= 0.10)), 3),
+        'mean_surface_distance_m': round(float(np.mean(near_surface)), 3),
+        'p95_surface_distance_m': round(float(np.percentile(near_surface, 95)), 3),
+        'reference_walls_near_path': int(len(seen_walls)),
+        'recall_0p10': round(float(np.mean(recall_hits)), 3) if len(recall_hits) else None}
+
+
+def rescore(map_name, pgm, bag):
+    """Score a saved slam map (PGM + YAML with world_from_map) against the
+    reference, with the driven path read from the run's bag."""
+    import glob
+    import sqlite3
+    from rclpy.serialization import deserialize_message
+    from nav_msgs.msg import Odometry
+    reference = ReferenceMap(map_name)
+    meta = yaml.safe_load(open(os.path.splitext(pgm)[0] + '.yaml'))
+    with open(pgm, 'rb') as handle:
+        handle.readline()
+        width, height = (int(v) for v in handle.readline().split())
+        handle.readline()
+        image = np.flipud(np.frombuffer(handle.read(), dtype=np.uint8).reshape(height, width))
+    rows, cols = np.nonzero(image == 0)
+    world = np.array([compose(meta['world_from_map'], compose(
+        meta['origin'], ((c + 0.5) * meta['resolution'], (r + 0.5) * meta['resolution'], 0.0)))[:2]
+        for r, c in zip(rows, cols)]) if len(rows) else np.zeros((0, 2))
+    db = sqlite3.connect(glob.glob(os.path.join(bag, '*.db3'))[0])
+    topic = dict(db.execute('select name, id from topics'))['/odom/ground_truth']
+    path = np.array([[m.pose.pose.position.x, m.pose.pose.position.y] for m in (
+        deserialize_message(d, Odometry) for (d,) in db.execute(
+            'select data from messages where topic_id=? order by timestamp', (topic,)))])
+    return score_map(reference, world, path[::10])
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--map', default='nav_obstacle', help='reference map (robot_lab_maps)')
@@ -156,7 +212,12 @@ def main():
     parser.add_argument('--timeout', type=float, default=900.0, help='wall seconds for the whole drive')
     parser.add_argument('--warmup', type=float, default=10.0)
     parser.add_argument('--map-out')
+    parser.add_argument('--rescore', nargs=2, metavar=('PGM', 'BAG'),
+                        help='score a saved map (with its YAML) and the run bag; no robot')
     args = parser.parse_args()
+    if args.rescore:
+        print(json.dumps(rescore(args.map, *args.rescore), indent=1))
+        return 0
 
     import rclpy
     from geometry_msgs.msg import Twist
@@ -308,20 +369,10 @@ def main():
         p = compose(world_from_map, compose(map_origin, (lx, ly, 0.0)))
         world.append(p[:2])
     world = np.array(world) if world else np.zeros((0, 2))
-    near_ref, _ = reference.tree.query(world) if len(world) else (np.zeros(0), None)
-    near_path = cKDTree(path)
-    ref_dist_to_path, _ = near_path.query(reference.wall_points)
-    seen_walls = reference.wall_points[ref_dist_to_path < 3.0]
-    recall_hits = (cKDTree(world).query(seen_walls)[0] <= 0.10) if len(world) and len(seen_walls) else np.zeros(0)
     report['world_from_map'] = [round(v, 4) for v in world_from_map]
-    report['map'] = {
-        'slam_occupied_cells': int(len(world)), 'slam_free_cells': int(np.sum((data >= 0) & (data < 25))),
-        'precision_0p10': round(float(np.mean(near_ref <= 0.10)), 3) if len(world) else None,
-        'mean_wall_distance_m': round(float(np.mean(near_ref)), 3) if len(world) else None,
-        'p95_wall_distance_m': round(float(np.percentile(near_ref, 95)), 3) if len(world) else None,
-        'reference_walls_near_path': int(len(seen_walls)),
-        'recall_0p10': round(float(np.mean(recall_hits)), 3) if len(recall_hits) else None,
-        'resolution_m': round(float(info.resolution), 3)}
+    report['map'] = score_map(reference, world, path)
+    report['map'].update(slam_free_cells=int(np.sum((data >= 0) & (data < 25))),
+                         resolution_m=round(float(info.resolution), 3))
     if args.map_out:
         image = np.full(data.shape, 205, dtype=np.uint8)
         image[(data >= 0) & (data < 25)] = 254
