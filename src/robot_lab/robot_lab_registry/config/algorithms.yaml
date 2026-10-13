@@ -1504,42 +1504,221 @@
       description: "Pure-Python module/unit checks pass"
       date: "2026-09-08"
 - id: dead_reckoning
-  version: 1.0.0
+  version: 2.0.0
   name: Dead Reckoning
+  description: "Odometry increments only (the baseline every scan matcher is compared with); predicts with the odom->base increment, publishes PoseWithCovarianceStamped beside AMCL"
   status: integrated
   category: localization
   family: odometry
   implementation:
     package: robot_lab_algorithms
     executable: dead_reckoning
+    module: robot_lab_algorithms.scan_matching
     language: python
   input_contract:
     required_topics:
-    - /odom
+    - /scan
+    - /map
+    - /tf
     required_parameters: []
   output_contract:
     provided_topics:
-    - /estimated_pose
+    - /robot_lab/dead_reckoning_pose
   required_capabilities: []
   supported_robot_classes:
   - mobile
   - legged
+  - humanoid
   parameters:
-    initial_x: 0.0
+    beam_step: 2
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Thrun, Burgard and Fox, Probabilistic Robotics (2005), odometry motion model"
   tags:
   - localization
   - odometry
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - r7_3
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: numerical_test
-      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_dead_reckoning_integrates"
-      description: "Numerical logic test passes (deterministic, no ROS graph)"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r73-localization-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: scan-to-map localization on nav_maze with ray-cast scans and Gazebo truth trajectories; simulator runs pending"
+      date: "2026-10-13"
+- id: icp_localization
+  version: 2.0.0
+  name: ICP Scan-to-Map Localization
+  description: "Iterative closest point to the map surface cells with the closed-form 2D rigid alignment and a shrinking gate; predicts with the odom->base increment, publishes PoseWithCovarianceStamped beside AMCL"
+  status: integrated
+  category: localization
+  family: scan_matching
+  implementation:
+    package: robot_lab_algorithms
+    executable: icp_localization
+    module: robot_lab_algorithms.scan_matching
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    - /map
+    - /tf
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /robot_lab/icp_point_to_point_pose
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    beam_step: 2
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Besl and McKay, A method for registration of 3-D shapes, IEEE PAMI 14(2) 1992"
+  tags:
+  - localization
+  - icp
+  - r7_3
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r73-localization-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: scan-to-map localization on nav_maze with ray-cast scans and Gazebo truth trajectories; simulator runs pending"
+      date: "2026-10-13"
+- id: plicp_localization
+  version: 2.0.0
+  name: Point-to-Line ICP Localization
+  description: "Gauss-Newton on point-to-line distances to the map with robust weights; predicts with the odom->base increment, publishes PoseWithCovarianceStamped beside AMCL"
+  status: integrated
+  category: localization
+  family: scan_matching
+  implementation:
+    package: robot_lab_algorithms
+    executable: plicp_localization
+    module: robot_lab_algorithms.scan_matching
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    - /map
+    - /tf
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /robot_lab/icp_point_to_line_pose
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    beam_step: 2
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Censi, An ICP variant using a point-to-line metric, ICRA 2008"
+  tags:
+  - localization
+  - icp
+  - plicp
+  - r7_3
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r73-localization-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: scan-to-map localization on nav_maze with ray-cast scans and Gazebo truth trajectories; simulator runs pending"
+      date: "2026-10-13"
+- id: ndt_localization
+  version: 2.0.0
+  name: NDT Scan-to-Map Localization
+  description: "2D normal distributions transform on 0.5 m map cells, reweighted Gauss-Newton with line search; predicts with the odom->base increment, publishes PoseWithCovarianceStamped beside AMCL"
+  status: integrated
+  category: localization
+  family: scan_matching
+  implementation:
+    package: robot_lab_algorithms
+    executable: ndt_localization
+    module: robot_lab_algorithms.scan_matching
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    - /map
+    - /tf
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /robot_lab/ndt_pose
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    beam_step: 2
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Biber and Strasser, The normal distributions transform, IROS 2003"
+  tags:
+  - localization
+  - ndt
+  - r7_3
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r73-localization-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: scan-to-map localization on nav_maze with ray-cast scans and Gazebo truth trajectories; simulator runs pending"
+      date: "2026-10-13"
+- id: correlative_localization
+  version: 2.0.0
+  name: Correlative Scan Matching Localization
+  description: "Coarse-to-fine exhaustive search of a +-0.3 m, +-10 deg window on a Gaussian likelihood field; predicts with the odom->base increment, publishes PoseWithCovarianceStamped beside AMCL"
+  status: integrated
+  category: localization
+  family: scan_matching
+  implementation:
+    package: robot_lab_algorithms
+    executable: correlative_localization
+    module: robot_lab_algorithms.scan_matching
+    language: python
+  input_contract:
+    required_topics:
+    - /scan
+    - /map
+    - /tf
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /robot_lab/correlative_pose
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    beam_step: 2
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Olson, Real-time correlative scan matching, ICRA 2009"
+  tags:
+  - localization
+  - correlative
+  - r7_3
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r73-localization-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: scan-to-map localization on nav_maze with ray-cast scans and Gazebo truth trajectories; simulator runs pending"
+      date: "2026-10-13"
 - id: ekf_3d_estimator
   version: 2.0.0
   name: EKF State Estimator (CTRV)

@@ -55,8 +55,12 @@ algorithms:
       node: {package: robot_lab_algorithms, executable: icp_localization}
     ndt_localization:
       node: {package: robot_lab_algorithms, executable: ndt_localization}
+    plicp_localization:
+      node: {package: robot_lab_algorithms, executable: plicp_localization}
+    correlative_localization:
+      node: {package: robot_lab_algorithms, executable: correlative_localization}
     rgbd_slam_localization:
-      node: {package: robot_lab_algorithms, executable: rgbd_slam_localization}
+      unavailable: "retired 2026-10-13 - the node was a simplified stand-in; RGB-D localization runs as rtabmap_localization"
     dead_reckoning:
       node: {package: robot_lab_algorithms, executable: dead_reckoning}
     slam_toolbox:

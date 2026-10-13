@@ -1,9 +1,25 @@
-"""Localization algorithms (P5).
+"""Localization nodes (R7.3).
 
-Adds `dead_reckoning`, a lightweight odometry-integration pose estimator that
-rounds out the localization category to five integrated implementations. It
-integrates linear/angular velocity commands into an estimated pose and
-degrades gracefully when odometry topics are absent.
+The console scripts run scan-to-map localizers from
+robot_lab_algorithms.scan_matching (rewritten 2026-10-13):
+
+* icp_localization - ICP, point to point (SVD alignment);
+* plicp_localization - ICP, point to line (Gauss-Newton on map normals);
+* ndt_localization - 2D normal distributions transform;
+* correlative_localization - coarse-to-fine correlative scan matching;
+* dead_reckoning - the odometry alone.
+
+Each node subscribes to /map, /scan and the odom -> base TF; it predicts
+with the odometry increment between scans, aligns the scan, and publishes
+geometry_msgs/PoseWithCovarianceStamped on /robot_lab/<method>_pose beside
+AMCL (it does not publish TF).  The initial pose comes from /initialpose,
+else the first /amcl_pose, else the initial_* parameters.
+
+The classes defined below (DeadReckoning, AMCLLocalization, ICPLocalization,
+NDTLocalization, RGBDSLAMLocalization) are the earlier versions, kept for
+their tests only: the dead_reckoning node had no subscriptions, ICP
+estimated rotation about the map origin with brute-force matching, and the
+"AMCL" and "RGB-D SLAM" nodes were simplified stand-ins.
 """
 
 import math
@@ -501,374 +517,139 @@ class RGBDSLAMLocalization:
         return self.pose
 
 
-class DeadReckoningNode(Node):
-    """ROS wrapper around :class:`DeadReckoning` for the console entry point."""
+class ScanLocalizerNode(Node):
+    """Track the robot pose in /map with one scan_matching localizer."""
 
-    def __init__(self, node_name='dead_reckoning'):
+    def __init__(self, method, node_name):
         super().__init__(node_name)
-        self.declare_parameter('initial_x', 0.0)
-        self.declare_parameter('initial_y', 0.0)
-        self.declare_parameter('initial_theta', 0.0)
-        self.dr = DeadReckoning(
-            initial_x=self.get_parameter('initial_x').value,
-            initial_y=self.get_parameter('initial_y').value,
-            initial_theta=self.get_parameter('initial_theta').value,
-        )
-        self.get_logger().info('DeadReckoning ready')
-
-    @property
-    def x(self):
-        return self.dr.x
-
-    @property
-    def y(self):
-        return self.dr.y
-
-    @property
-    def theta(self):
-        return self.dr.theta
-
-    def integrate(self, vx, wz, dt):
-        return self.dr.integrate(vx, wz, dt)
-
-
-class AMCLNode(Node):
-    """ROS wrapper for AMCL particle filter localization."""
-
-    def __init__(self, node_name='amcl'):
-        super().__init__(node_name)
-        self.declare_parameter('num_particles', 100)
-        self.declare_parameter('initial_x', 0.0)
-        self.declare_parameter('initial_y', 0.0)
-        self.declare_parameter('initial_theta', 0.0)
-        self.declare_parameter('odom_topic', '/odom/ground_truth')
-        self.declare_parameter('scan_topic', '/scan')
-        self.declare_parameter('output_topic', '/robot_lab/algorithms/amcl_pose')
-        
-        self.amcl = AMCLLocalization(
-            num_particles=int(self.get_parameter('num_particles').value),
-            initial_pose=(float(self.get_parameter('initial_x').value),
-                        float(self.get_parameter('initial_y').value),
-                        float(self.get_parameter('initial_theta').value))
-        )
-        
-        # Subscribe to odometry and laser scan
-        from nav_msgs.msg import Odometry
+        import numpy as np
+        import tf2_ros
+        from geometry_msgs.msg import PoseWithCovarianceStamped
+        from nav_msgs.msg import OccupancyGrid
+        from rclpy.qos import DurabilityPolicy, QoSProfile, qos_profile_sensor_data
         from sensor_msgs.msg import LaserScan
-        self.create_subscription(
-            Odometry, self.get_parameter('odom_topic').value, self._on_odom, 10)
-        self.create_subscription(
-            LaserScan, self.get_parameter('scan_topic').value, self._on_scan, 10)
-        
-        # Publish estimated pose
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        self._pub = self.create_publisher(
-            PoseWithCovarianceStamped, self.get_parameter('output_topic').value, 10)
-        
-        self._last_odom = None
-        self._last_scan = None
-        self.get_logger().info('AMCL ready')
-
-    def _on_odom(self, msg):
-        self._last_odom = msg
-        self._process()
-
-    def _on_scan(self, msg):
-        self._last_scan = msg
-        self._process()
-
-    def _process(self):
-        if self._last_odom is None or self._last_scan is None:
-            return
-        
-        # Extract motion (simplified - use velocity from odometry)
-        vx = self._last_odom.twist.twist.linear.x
-        wz = self._last_odom.twist.twist.angular.z
-        dt = 0.1  # Fixed time step for now
-        
-        # Update particles based on motion
-        self.amcl.motion_update(vx, wz, dt)
-        
-        # Extract landmarks from scan (simplified - use scan points as landmarks)
-        landmarks = []
-        for i, r in enumerate(self._last_scan.ranges):
-            if r > 0 and r < self._last_scan.range_max:
-                angle = self._last_scan.angle_min + i * self._last_scan.angle_increment
-                x = r * math.cos(angle)
-                y = r * math.sin(angle)
-                # For now, use distance as expected distance (simplified)
-                landmarks.append((x, y, r))
-        
-        # Update based on measurements
-        if landmarks:
-            self.amcl.measurement_update(landmarks)
-        
-        # Resample
-        self.amcl.resample()
-        
-        # Publish estimated pose
-        x, y, theta = self.amcl.estimate_pose()
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        pose_msg = PoseWithCovarianceStamped()
-        pose_msg.header.stamp = self.get_clock().now().to_msg()
-        pose_msg.header.frame_id = 'map'
-        pose_msg.pose.pose.position.x = x
-        pose_msg.pose.pose.position.y = y
-        pose_msg.pose.pose.position.z = 0.0
-        
-        # Convert theta to quaternion
-        half_theta = theta / 2.0
-        pose_msg.pose.pose.orientation.w = math.cos(half_theta)
-        pose_msg.pose.pose.orientation.x = 0.0
-        pose_msg.pose.pose.orientation.y = 0.0
-        pose_msg.pose.pose.orientation.z = math.sin(half_theta)
-        
-        # Simple covariance (would be calculated from particle spread in real implementation)
-        pose_msg.pose.covariance = [0.1] * 36
-        pose_msg.pose.covariance[0] = pose_msg.pose.covariance[7] = pose_msg.pose.covariance[14] = 0.25
-        pose_msg.pose.covariance[21] = pose_msg.pose.covariance[28] = pose_msg.pose.covariance[35] = 0.1
-        
-        self._pub.publish(pose_msg)
-
-
-class ICPNode(Node):
-    """ROS wrapper for ICP scan matching localization."""
-
-    def __init__(self, node_name='icp_localization'):
-        super().__init__(node_name)
-        self.declare_parameter('initial_x', 0.0)
-        self.declare_parameter('initial_y', 0.0)
-        self.declare_parameter('initial_theta', 0.0)
+        from robot_lab_algorithms import scan_matching
+        self._np, self._sm = np, scan_matching
+        self.method = method
         self.declare_parameter('scan_topic', '/scan')
         self.declare_parameter('map_topic', '/map')
-        self.declare_parameter('output_topic', '/icp_pose')
-        
-        self.icp = ICPLocalization(
-            initial_pose=(float(self.get_parameter('initial_x').value),
-                        float(self.get_parameter('initial_y').value),
-                        float(self.get_parameter('initial_theta').value))
-        )
-        
-        from sensor_msgs.msg import LaserScan
-        from nav_msgs.msg import OccupancyGrid
-        self.create_subscription(
-            LaserScan, self.get_parameter('scan_topic').value, self._on_scan, 10)
-        self.create_subscription(
-            OccupancyGrid, self.get_parameter('map_topic').value, self._on_map, 10)
-        
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        self._pub = self.create_publisher(
-            PoseWithCovarianceStamped, self.get_parameter('output_topic').value, 10)
-        
-        self._map = None
-        self.get_logger().info('ICP Localization ready')
+        self.declare_parameter('odom_frame', 'odom')
+        self.declare_parameter('base_frame', 'base_footprint')
+        self.declare_parameter('output_topic', '/robot_lab/%s_pose' % method)
+        self.declare_parameter('initial_x', 0.0)
+        self.declare_parameter('initial_y', 0.0)
+        self.declare_parameter('initial_theta', 0.0)
+        self.declare_parameter('beam_step', 2)
+        g = lambda name: self.get_parameter(name).value  # noqa: E731
+        self._pose_type = PoseWithCovarianceStamped
+        self.localizer = None
+        self.map = None
+        self.initial = None
+        self.last_odom = None
+        self.sensor = None
+        self.tf = tf2_ros.Buffer()
+        self.tf_listener = tf2_ros.TransformListener(self.tf, self)
+        self.pub = self.create_publisher(PoseWithCovarianceStamped, g('output_topic'), 10)
+        latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
+        self.create_subscription(OccupancyGrid, g('map_topic'), self.on_map, latched)
+        self.create_subscription(PoseWithCovarianceStamped, '/initialpose', self.on_initial, 10)
+        self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self.on_amcl, 10)
+        self.create_subscription(LaserScan, g('scan_topic'), self.on_scan, qos_profile_sensor_data)
+        self.get_logger().info('%s localizer -> %s' % (method, g('output_topic')))
 
-    def _on_map(self, msg):
-        self._map = msg
+    @staticmethod
+    def _pose_of(msg_pose):
+        q = msg_pose.orientation
+        return (msg_pose.position.x, msg_pose.position.y,
+                math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
 
-    def _on_scan(self, msg):
-        if self._map is None:
+    def on_map(self, msg):
+        self.map = self._sm.OccupancyMap.from_msg(msg)
+        self.localizer = None  # rebuilt on the next scan with the new map
+
+    def on_initial(self, msg):
+        self.initial = self._pose_of(msg.pose.pose)
+        self.localizer = None
+
+    def on_amcl(self, msg):
+        if self.initial is None:
+            self.initial = self._pose_of(msg.pose.pose)
+
+    def _odom_pose(self, stamp):
+        from rclpy.time import Time
+        t = self.tf.lookup_transform(self.get_parameter('odom_frame').value,
+                                     self.get_parameter('base_frame').value, Time())
+        q = t.transform.rotation
+        return self._np.array([t.transform.translation.x, t.transform.translation.y,
+                               math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))])
+
+    def _sensor_offset(self, frame):
+        if self.sensor is None:
+            from rclpy.time import Time
+            t = self.tf.lookup_transform(self.get_parameter('base_frame').value, frame, Time())
+            q = t.transform.rotation
+            self.sensor = (t.transform.translation.x, t.transform.translation.y,
+                           math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
+        return self.sensor
+
+    def on_scan(self, msg):
+        if self.map is None:
             return
-        
-        # Extract scan points (polar coordinates)
-        scan_points = []
-        for i, r in enumerate(msg.ranges):
-            if r > 0 and r < msg.range_max:
-                angle = msg.angle_min + i * msg.angle_increment
-                scan_points.append((r, angle))
-        
-        # Extract reference points from map (simplified)
-        reference_points = self._extract_map_features()
-        
-        if scan_points and reference_points:
-            pose = self.icp.match_scan(scan_points, reference_points)
-            self._publish_pose(pose, msg.header.stamp)
-
-    def _extract_map_features(self):
-        """Extract features from the map for matching."""
-        if self._map is None:
-            return []
-        
-        # Simple approach: extract all free space points (simplified)
-        features = []
-        resolution = self._map.info.resolution
-        width = self._map.info.width
-        height = self._map.info.height
-        origin_x = self._map.info.origin.position.x
-        origin_y = self._map.info.origin.position.y
-        
-        for y in range(height):
-            for x in range(width):
-                idx = y * width + x
-                if self._map.data[idx] == 0:  # Free space
-                    map_x = origin_x + x * resolution
-                    map_y = origin_y + y * resolution
-                    features.append((map_x, map_y))
-        
-        return features
-
-    def _publish_pose(self, pose, stamp):
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        pose_msg = PoseWithCovarianceStamped()
-        pose_msg.header.stamp = stamp
-        pose_msg.header.frame_id = 'map'
-        pose_msg.pose.pose.position.x = pose[0]
-        pose_msg.pose.pose.position.y = pose[1]
-        pose_msg.pose.pose.position.z = 0.0
-        
-        # Convert theta to quaternion
-        half_theta = pose[2] / 2.0
-        pose_msg.pose.pose.orientation.w = math.cos(half_theta)
-        pose_msg.pose.pose.orientation.x = 0.0
-        pose_msg.pose.pose.orientation.y = 0.0
-        pose_msg.pose.pose.orientation.z = math.sin(half_theta)
-        
-        # Simple covariance
-        pose_msg.pose.covariance = [0.1] * 36
-        pose_msg.pose.covariance[0] = pose_msg.pose.covariance[7] = pose_msg.pose.covariance[14] = 0.25
-        pose_msg.pose.covariance[21] = pose_msg.pose.covariance[28] = pose_msg.pose.covariance[35] = 0.1
-        
-        self._pub.publish(pose_msg)
+        try:
+            odom = self._odom_pose(msg.header.stamp)
+            offset = self._sensor_offset(msg.header.frame_id)
+        except Exception:  # noqa: BLE001 - TF not ready yet
+            return
+        if self.localizer is None:
+            start = self.initial or tuple(float(self.get_parameter(n).value)
+                                          for n in ('initial_x', 'initial_y', 'initial_theta'))
+            self.localizer = self._sm.ScanLocalizer(self.method, self.map, start)
+            self.last_odom = odom
+        delta = self._sm.relative(self.last_odom, odom)
+        self.last_odom = odom
+        points = self._sm.scan_points(msg.ranges, msg.angle_min, msg.angle_increment, msg.range_min,
+                                      msg.range_max, int(self.get_parameter('beam_step').value), offset)
+        x, y, th = self.localizer.step(delta, points)
+        out = self._pose_type()
+        out.header.stamp = msg.header.stamp
+        out.header.frame_id = 'map'
+        out.pose.pose.position.x, out.pose.pose.position.y = float(x), float(y)
+        out.pose.pose.orientation.z, out.pose.pose.orientation.w = math.sin(th / 2), math.cos(th / 2)
+        self.pub.publish(out)
 
 
-class NDTNode(Node):
-    """ROS wrapper for NDT localization."""
-
-    def __init__(self, node_name='ndt_localization'):
-        super().__init__(node_name)
-        self.declare_parameter('initial_x', 0.0)
-        self.declare_parameter('initial_y', 0.0)
-        self.declare_parameter('initial_theta', 0.0)
-        self.declare_parameter('scan_topic', '/scan')
-        self.declare_parameter('output_topic', '/ndt_pose')
-        
-        self.ndt = NDTLocalization(
-            initial_pose=(float(self.get_parameter('initial_x').value),
-                        float(self.get_parameter('initial_y').value),
-                        float(self.get_parameter('initial_theta').value))
-        )
-        
-        from sensor_msgs.msg import LaserScan
-        self.create_subscription(
-            LaserScan, self.get_parameter('scan_topic').value, self._on_scan, 10)
-        
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        self._pub = self.create_publisher(
-            PoseWithCovarianceStamped, self.get_parameter('output_topic').value, 10)
-        
-        self.get_logger().info('NDT Localization ready')
-
-    def _on_scan(self, msg):
-        # Extract scan points (polar coordinates)
-        scan_points = []
-        for i, r in enumerate(msg.ranges):
-            if r > 0 and r < msg.range_max:
-                angle = msg.angle_min + i * msg.angle_increment
-                scan_points.append((r, angle))
-        
-        # Create simple reference grid (in real implementation this would be precomputed from map)
-        reference_grid = self._create_reference_grid()
-        
-        pose = self.ndt.match_scan(scan_points, reference_grid)
-        self._publish_pose(pose, msg.header.stamp)
-
-    def _create_reference_grid(self):
-        """Create a simple reference grid (placeholder)."""
-        # This would be precomputed from the map in a real implementation
-        grid = {}
-        # Add some sample points with normal distributions
-        grid[(0, 0)] = ([0.0, 0.0], [1.0, 0.0, 0.0])  # mean, covariance
-        grid[(1, 0)] = ([1.0, 0.0], [1.0, 0.0, 0.0])
-        grid[(0, 1)] = ([0.0, 1.0], [1.0, 0.0, 0.0])
-        return grid
-
-    def _publish_pose(self, pose, stamp):
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        pose_msg = PoseWithCovarianceStamped()
-        pose_msg.header.stamp = stamp
-        pose_msg.header.frame_id = 'map'
-        pose_msg.pose.pose.position.x = pose[0]
-        pose_msg.pose.pose.position.y = pose[1]
-        pose_msg.pose.pose.position.z = 0.0
-        
-        # Convert theta to quaternion
-        half_theta = pose[2] / 2.0
-        pose_msg.pose.pose.orientation.w = math.cos(half_theta)
-        pose_msg.pose.pose.orientation.x = 0.0
-        pose_msg.pose.pose.orientation.y = 0.0
-        pose_msg.pose.pose.orientation.z = math.sin(half_theta)
-        
-        # Simple covariance
-        pose_msg.pose.covariance = [0.1] * 36
-        pose_msg.pose.covariance[0] = pose_msg.pose.covariance[7] = pose_msg.pose.covariance[14] = 0.25
-        pose_msg.pose.covariance[21] = pose_msg.pose.covariance[28] = pose_msg.pose.covariance[35] = 0.1
-        
-        self._pub.publish(pose_msg)
-
-
-class RGBDSLAMNode(Node):
-    """ROS wrapper for RGB-D SLAM localization."""
-
-    def __init__(self, node_name='rgbd_slam_localization'):
-        super().__init__(node_name)
-        self.declare_parameter('initial_x', 0.0)
-        self.declare_parameter('initial_y', 0.0)
-        self.declare_parameter('initial_theta', 0.0)
-        self.declare_parameter('rgb_topic', '/camera/rgb/image_raw')
-        self.declare_parameter('depth_topic', '/camera/depth/image_raw')
-        self.declare_parameter('output_topic', '/rgbd_slam_pose')
-        
-        self.rgbd_slam = RGBDSLAMLocalization(
-            initial_pose=(float(self.get_parameter('initial_x').value),
-                        float(self.get_parameter('initial_y').value),
-                        float(self.get_parameter('initial_theta').value))
-        )
-        
-        # Placeholder subscriptions - in real implementation these would be used
-        self.get_logger().info('RGB-D SLAM Localization ready')
-
-    def _publish_pose(self, pose, stamp):
-        from geometry_msgs.msg import PoseWithCovarianceStamped
-        pose_msg = PoseWithCovarianceStamped()
-        pose_msg.header.stamp = stamp
-        pose_msg.header.frame_id = 'map'
-        pose_msg.pose.pose.position.x = pose[0]
-        pose_msg.pose.pose.position.y = pose[1]
-        pose_msg.pose.pose.position.z = pose[2]
-        
-        # Convert theta to quaternion (pose[2] is theta in this simplified implementation)
-        half_theta = pose[2] / 2.0
-        pose_msg.pose.pose.orientation.w = math.cos(half_theta)
-        pose_msg.pose.pose.orientation.x = 0.0
-        pose_msg.pose.pose.orientation.y = 0.0
-        pose_msg.pose.pose.orientation.z = math.sin(half_theta)
-        
-        # Simple covariance
-        pose_msg.pose.covariance = [0.1] * 36
-        pose_msg.pose.covariance[0] = pose_msg.pose.covariance[7] = pose_msg.pose.covariance[14] = 0.25
-        pose_msg.pose.covariance[21] = pose_msg.pose.covariance[28] = pose_msg.pose.covariance[35] = 0.1
-        
-        self._pub.publish(pose_msg)
+def _localizer_main(method, node_name, args=None):
+    return _run(lambda: ScanLocalizerNode(method, node_name), node_name, args=args)
 
 
 def dead_reckoning_main(args=None):
-    return _run(DeadReckoningNode, 'dead_reckoning', args=args)
-
-
-def amcl_main(args=None):
-    return _run(AMCLNode, 'amcl', args=args)
+    return _localizer_main('dead_reckoning', 'dead_reckoning', args)
 
 
 def icp_localization_main(args=None):
-    return _run(ICPNode, 'icp_localization', args=args)
+    return _localizer_main('icp_point_to_point', 'icp_localization', args)
+
+
+def plicp_localization_main(args=None):
+    return _localizer_main('icp_point_to_line', 'plicp_localization', args)
 
 
 def ndt_localization_main(args=None):
-    return _run(NDTNode, 'ndt_localization', args=args)
+    return _localizer_main('ndt', 'ndt_localization', args)
+
+
+def correlative_localization_main(args=None):
+    return _localizer_main('correlative', 'correlative_localization', args)
+
+
+def amcl_main(args=None):
+    print('amcl (robot_lab_algorithms): retired - the lab runs Nav2 AMCL (localization:=amcl)')
+    return 1
 
 
 def rgbd_slam_localization_main(args=None):
-    return _run(RGBDSLAMNode, 'rgbd_slam_localization', args=args)
+    print('rgbd_slam_localization: retired - use RTAB-Map (localization:=rtabmap_localization)')
+    return 1
 
 
 if __name__ == '__main__':

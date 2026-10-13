@@ -31,6 +31,8 @@ setup(
             'amcl = robot_lab_algorithms.localization:amcl_main',
             'icp_localization = robot_lab_algorithms.localization:icp_localization_main',
             'ndt_localization = robot_lab_algorithms.localization:ndt_localization_main',
+            'plicp_localization = robot_lab_algorithms.localization:plicp_localization_main',
+            'correlative_localization = robot_lab_algorithms.localization:correlative_localization_main',
             'rgbd_slam_localization = robot_lab_algorithms.localization:rgbd_slam_localization_main',
             # State estimation
             'ekf_3d_estimator = robot_lab_algorithms.state_estimation:ekf_3d_estimator_main',
