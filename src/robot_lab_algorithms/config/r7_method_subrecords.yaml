@@ -711,380 +711,362 @@ method_subrecords:
   # =============================================================================
   
   global_planning:
-    dijkstra_planner:
-      method_id: "dijkstra_planner"
-      category: "global_planning"
-      display_name: "Dijkstra's Algorithm Planner"
-      implementation_ref: "robot_lab_algorithms.dijkstra_planner"
-      mathematical_foundation: "Graph-based shortest path in weighted graph using Dijkstra's algorithm"
-      equations:
-        - "Total cost: C = sum(cost(cell_i)) for cells in path"
-        - "Greedy selection: node = argmin(cost_to_come[node]) among frontier"
-        - "Cost update: cost_to_come[neighbor] = min(cost_to_come[current] + edge_cost)"
-        - "Termination: when goal node has minimum cost in frontier"
-      source_references:
-        - "Dijkstra - A note on two problems in connexion with graphs"
-        - "CLRS - Introduction to Algorithms"
-      applicable_robots: ["bumperbot", "labbot"]
-      input_strata:
-        - "planning_2d_grid"
-      output_types: ["Path", "NavPath"]
-      parameters:
-        resolution: 0.05
-        cost_weights: [1.0, 1.0, 0.1]  # [obstacle, inflation, unknown]
-        max_planning_time: 5.0
-      assumptions:
-        - "2D occupancy grid map"
-        - "Non-negative edge costs"
-        - "Discrete grid-based planning"
-        - "Graph-based algorithm family"
-      limitations:
-        - "Only works on grid maps"
-        - "Computationally expensive for large maps"
-        - "Does not consider dynamic obstacles"
-        - "Produces angular paths"
-      computational_complexity: "O(E + V log V) where E=edges, V=vertices"
-      memory_requirements: "High"
-      
+    # Rewritten 2026-10-13 to the measured comparison arms (R7.6/R7.7 evidence).
     a_star_planner:
-      method_id: "a_star_planner"
-      category: "global_planning"
-      display_name: "A* Search Planner"
-      implementation_ref: "robot_lab_algorithms.a_star_planner"
-      mathematical_foundation: "Graph-based optimal path finding using A* search with heuristic on grid graphs"
+      method_id: a_star_planner
+      category: global_planning
+      display_name: Smac 2D A*
+      implementation_ref: nav2_smac_planner/SmacPlanner2D
+      mathematical_foundation: A* on the costmap grid with cost-aware edges
       equations:
-        - "f(n) = g(n) + h(n) where g(n) = cost from start, h(n) = heuristic to goal"
-        - "g(n) = g(parent) + cost(parent, n)"
-        - "Euclidean heuristic: h(n) = distance(n, goal)"
-        - "Manhattan heuristic: h(n) = |x_n - x_goal| + |y_n - y_goal| for 4-connected grid"
+      - f = g + h, h = Euclidean distance
+      - edge cost includes costmap cost
       source_references:
-        - "Hart, Nilsson, Raphael - A Formal Basis for the Heuristic Determination of Minimum Cost Paths"
-        - "Russell and Norvig - Artificial Intelligence: A Modern Approach"
-      applicable_robots: ["bumperbot", "labbot"]
+      - Hart, Nilsson and Raphael, IEEE TSSC 4(2) 1968
+      - Macenski et al., Smac planner, 2023
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "planning_2d_grid"
-      output_types: ["Path", "NavPath"]
+      - planning_2d_static_maze
+      output_types:
+      - Path
       parameters:
-        resolution: 0.05
-        heuristic_weight: 1.0
-        allow_unknown: false
-        cost_weights: [1.0, 1.0, 0.1]
+        tolerance: 0.25
       assumptions:
-        - "Admissible heuristic (never overestimates)"
-        - "2D occupancy grid map"
-        - "Discrete grid-based planning"
-        - "Graph-based algorithm family"
+      - Static 2D costmap
       limitations:
-        - "Only works on grid maps"
-        - "Heuristic must be admissible for optimality"
-        - "Memory intensive for large maps"
-        - "Does not consider dynamic obstacles"
-      computational_complexity: "O(E + V log V)"
-      memory_requirements: "High"
-      
+      - Grid-resolution paths
+      computational_complexity: O(N log N)
+      memory_requirements: Medium
+    navfn_planner:
+      method_id: navfn_planner
+      category: global_planning
+      display_name: NavFn (Dijkstra wavefront)
+      implementation_ref: nav2_navfn_planner/NavfnPlanner
+      mathematical_foundation: Dijkstra potential field propagated from the goal
+      equations:
+      - Potential propagation over the costmap; path by gradient descent
+      source_references:
+      - Brock and Khatib, High-speed navigation using the global dynamic window approach, ICRA 1999
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
+      input_strata:
+      - planning_2d_static_maze
+      output_types:
+      - Path
+      parameters:
+        use_astar: false
+      assumptions:
+      - Static 2D costmap
+      limitations:
+      - Grid-resolution paths
+      computational_complexity: O(N log N)
+      memory_requirements: Medium
+    hybrid_a_star_planner:
+      method_id: hybrid_a_star_planner
+      category: global_planning
+      display_name: Smac Hybrid-A*
+      implementation_ref: nav2_smac_planner/SmacPlannerHybrid
+      mathematical_foundation: A* over (x, y, heading) with Dubins/Reeds-Shepp motion primitives
+      equations:
+      - Expansion by curvature-limited arcs, minimum turning radius 0.4 m (Bumperbot)
+      - Analytic expansion near the goal
+      source_references:
+      - Dolgov et al., Path planning for autonomous vehicles in unknown semi-structured environments, IJRR 29(5) 2010
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - ackermann_car
+      input_strata:
+      - planning_2d_static_maze
+      output_types:
+      - Path
+      parameters:
+        minimum_turning_radius: 0.4
+      assumptions:
+      - Curvature-limited vehicle
+      limitations:
+      - Arrival loops on a differential base (R7.6)
+      computational_complexity: O(N log N)
+      memory_requirements: Medium
+    state_lattice_planner:
+      method_id: state_lattice_planner
+      category: global_planning
+      display_name: Smac State Lattice
+      implementation_ref: nav2_smac_planner/SmacPlannerLattice
+      mathematical_foundation: Search over precomputed kinematically feasible motion primitives
+      equations:
+      - Lattice of primitives for a 0.5 m turning radius (diff variant)
+      source_references:
+      - Pivtoraiko, Knepper and Kelly, Differentially constrained mobile robot motion planning in state lattices, JFR 26(3) 2009
+      applicable_robots:
+      - bumperbot
+      - labbot
+      input_strata:
+      - planning_2d_static_maze
+      output_types:
+      - Path
+      parameters:
+        lattice_filepath: diff 0.5 m
+      assumptions:
+      - Primitive set matches the robot
+      limitations:
+      - Detours of 13-51 m on short maze goals (R7.6)
+      computational_complexity: O(N log N)
+      memory_requirements: Medium
     rrt_planner:
-      method_id: "rrt_planner"
-      category: "global_planning"
-      display_name: "Rapidly-exploring Random Tree Planner"
-      implementation_ref: "robot_lab_algorithms.rrt_planner"
-      mathematical_foundation: "Sampling-based planning using rapidly-exploring random trees"
+      method_id: rrt_planner
+      category: global_planning
+      display_name: RRT
+      implementation_ref: robot_lab_algorithms.grid_planners.rrt
+      mathematical_foundation: Goal-biased rapidly-exploring random tree with collision-checked edges
       equations:
-        - "Tree extension: x_new = steer(x_near, x_rand)"
-        - "Distance metric: d(x1, x2) = Euclidean distance in configuration space"
-        - "Nearest neighbor: x_near = argmin(d(x_rand, x) for x in tree)"
-        - "Collision checking: is_collision_free(x_near, x_new)"
+      - Sample q (goal bias), extend nearest node by step, keep collision-free edges
       source_references:
-        - "LaValle - Rapidly-exploring Random Trees: A New Tool for Path Planning"
-        - "LaValle - Planning Algorithms"
-      applicable_robots: ["bumperbot", "labbot"]
+      - LaValle, Rapidly-exploring random trees (1998)
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "planning_2d_continuous"
-      output_types: ["Path", "NavPath"]
+      - planning_2d_static_maze
+      output_types:
+      - Path
       parameters:
-        max_iterations: 10000
-        step_size: 0.1
-        goal_bias: 0.05
-        collision_check_resolution: 0.01
+        blocked_at: 80
+        step: 0.5
       assumptions:
-        - "Continuous 2D planning space"
-        - "Valid collision checking function"
-        - "Probabilistic completeness"
+      - Free space sampled from the costmap
       limitations:
-        - "Not optimal - finds feasible, not shortest path"
-        - "Computationally expensive for high-dimensional spaces"
-        - "Sensitive to step size parameter"
-        - "May fail in narrow passages"
-      computational_complexity: "O(n log n) per iteration where n=tree size"
-      memory_requirements: "Medium"
-      
+      - Long, jagged paths; no optimality
+      computational_complexity: O(K log K)
+      memory_requirements: Medium
     rrt_star_planner:
-      method_id: "rrt_star_planner"
-      category: "global_planning"
-      display_name: "RRT* Planner (Asymptotically Optimal)"
-      implementation_ref: "robot_lab_algorithms.rrt_star_planner"
-      mathematical_foundation: "Asymptotically optimal sampling-based planner extending RRT"
+      method_id: rrt_star_planner
+      category: global_planning
+      display_name: RRT*
+      implementation_ref: robot_lab_algorithms.grid_planners.rrt_star
+      mathematical_foundation: RRT with best-parent choice and rewiring, anytime within 1 s
       equations:
-        - "Cost function: c(x) = cost from start to x"
-        - "Rewiring: if cost(x_near) + d(x_near, x_new) < cost(x_neighbor)"
-        - "Radius reduction: radius = radius * (1 - 1/log(iteration))"
-        - "Asymptotic optimality: lim_{n->∞} cost(solution) = cost(optimal)"
+      - Choose parent minimising cost within radius r(n); rewire neighbours
       source_references:
-        - "Karaman and Frazzoli - Sampling-based Algorithms for Optimal Motion Planning"
-        - "LaValle - Planning Algorithms"
-      applicable_robots: ["bumperbot", "labbot"]
+      - Karaman and Frazzoli, Sampling-based algorithms for optimal motion planning, IJRR 30(7) 2011
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "planning_2d_continuous"
-      output_types: ["Path", "NavPath"]
+      - planning_2d_static_maze
+      output_types:
+      - Path
       parameters:
-        max_iterations: 5000
-        step_size: 0.1
-        rewiring_radius: 0.5
-        goal_bias: 0.05
+        time_budget: 1.0
+        blocked_at: 80
       assumptions:
-        - "Continuous 2D planning space"
-        - "Asymptotic optimality requires sufficient iterations"
-        - "Cost function is additive"
+      - Free space sampled from the costmap
       limitations:
-        - "Slow convergence to optimal solution"
-        - "Computationally expensive"
-        - "Sensitive to parameter tuning"
-        - "Memory intensive for large trees"
-      computational_complexity: "O(n log n) per iteration"
-      memory_requirements: "High"
-      
+      - May find no path within the budget in a maze
+      computational_complexity: O(K log K)
+      memory_requirements: Medium
     prm_planner:
-      method_id: "prm_planner"
-      category: "global_planning"
-      display_name: "Probabilistic Roadmap Planner"
-      implementation_ref: "robot_lab_algorithms.prm_planner"
-      mathematical_foundation: "Roadmap-based planner using probabilistic sampling"
+      method_id: prm_planner
+      category: global_planning
+      display_name: PRM
+      implementation_ref: robot_lab_algorithms.grid_planners.prm
+      mathematical_foundation: 'Probabilistic roadmap: 600 free samples, k = 12 nearest-neighbour edges, Dijkstra'
       equations:
-        - "Sampling: x_i ~ uniform(free_configuration_space)"
-        - "Connection: edge exists if collision_free(x_i, x_j)"
-        - "Roadmap construction: G = (V, E) where V = samples, E = valid connections"
-        - "Query: find shortest path in G from start to goal"
+      - Roadmap edges collision-checked on the grid
       source_references:
-        - "Overmars - Motion Planning in STL"
-        - "LaValle - Planning Algorithms"
-      applicable_robots: ["bumperbot", "labbot"]
+      - Kavraki et al., Probabilistic roadmaps for path planning in high-dimensional configuration spaces, IEEE TRA 12(4) 1996
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "planning_2d_continuous"
-      output_types: ["Path", "NavPath"]
+      - planning_2d_static_maze
+      output_types:
+      - Path
       parameters:
-        num_samples: 1000
-        k_nearest_neighbors: 10
-        collision_check_resolution: 0.01
+        samples: 600
+        k: 12
+        blocked_at: 80
       assumptions:
-        - "Multiple queries on same environment"
-        - "Roadmap precomputation is amortized over multiple queries"
-        - "Valid collision checking function"
+      - Static map
       limitations:
-        - "Precomputation time can be long"
-        - "May miss narrow passages"
-        - "Memory intensive for storing roadmap"
-        - "Resolution-dependent quality"
-      computational_complexity: "O(n^2) for roadmap construction, O(n log n) for queries"
-      memory_requirements: "High"
+      - Straight edges cut corners
+      computational_complexity: O(K log K)
+      memory_requirements: Medium
+    voronoi_planner:
+      method_id: voronoi_planner
+      category: global_planning
+      display_name: Voronoi Roadmap
+      implementation_ref: robot_lab_algorithms.grid_planners.voronoi
+      mathematical_foundation: Path along the generalized Voronoi diagram (maximum clearance)
+      equations:
+      - Voronoi of obstacle points, keep edges with clearance >= 0.75 x separation
+      - Connect start/goal, Dijkstra
+      source_references:
+      - 'Choset and Burdick, Sensor-based exploration: the hierarchical generalized Voronoi graph, IJRR 19(2) 2000'
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
+      input_strata:
+      - planning_2d_static_maze
+      output_types:
+      - Path
+      parameters:
+        separation: 0.75
+      assumptions:
+      - Static map
+      limitations:
+      - Longer paths (16% on nav_maze)
+      computational_complexity: O(N log N)
+      memory_requirements: Medium
 
   # =============================================================================
   # R7.7 LOCAL PLANNING METHODS
   # =============================================================================
   
   local_planning:
-    follow_the_gap:
-      method_id: "follow_the_gap"
-      category: "local_planning"
-      display_name: "Follow the Gap Local Planner"
-      implementation_ref: "robot_lab_algorithms.follow_the_gap"
-      mathematical_foundation: "Reactive planner that follows the largest gap in sensor data using pure reactive behavior"
+    # Rewritten 2026-10-13 to the measured comparison arms (R7.6/R7.7 evidence).
+    pure_pursuit:
+      method_id: pure_pursuit
+      category: local_planning
+      display_name: Nav2 Regulated Pure Pursuit
+      implementation_ref: nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+      mathematical_foundation: Pure pursuit on a lookahead point with curvature and cost speed regulation
       equations:
-        - "Gap detection: find largest angular gap in laser scan"
-        - "Gap size: θ_gap = θ_right - θ_left for gap between θ_left and θ_right"
-        - "Target selection: gap with maximum θ_gap where θ_gap > robot_width"
-        - "Target heading: θ_target = θ_left + θ_gap/2"
-        - "Curvature: κ = 2 * sin(Δθ) / distance_to_gap"
+      - kappa = 2 y / L^2
+      - v regulated by curvature, proximity and approach distance; rotate to heading above 45 deg
       source_references:
-        - "Borenstein and Koren - The Vector Field Histogram"
-        - "Urban rover navigation methods"
-      applicable_robots: ["bumperbot", "labbot"]
+      - Macenski et al., Regulated pure pursuit for robot path tracking, Autonomous Robots 47 (2023)
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "perception_lidar_2d_sparse"
-        - "perception_lidar_2d_dense"
-      output_types: ["Twist", "geometry_msgs/Twist"]
+      - local_planning_maze
+      output_types:
+      - Twist
       parameters:
-        robot_width: 0.2
-        min_gap_size: 0.3
-        max_angular_velocity: 0.5
-        target_distance: 1.0
+        desired_linear_vel: 0.3
+        lookahead_dist: 0.6
       assumptions:
-        - "2D LiDAR scan available"
-        - "Robot can be approximated as circle"
-        - "Gaps correspond to navigable space"
-        - "Purely reactive behavior - no path planning"
+      - Accurate localization
       limitations:
-        - "Only considers immediate obstacles"
-        - "Can get stuck in local minima"
-        - "Does not plan for future obstacles"
-        - "Requires gap larger than robot"
-        - "No memory of past navigation - purely reactive"
-      computational_complexity: "O(n) where n=number of scan points"
-      memory_requirements: "Low"
-      
+      - Conservative in narrow passages
+      computational_complexity: O(N)
+      memory_requirements: Medium
     dwb_local_planner:
-      method_id: "dwb_local_planner"
-      category: "local_planning"
-      display_name: "Dynamic Window Approach Local Planner"
-      implementation_ref: "robot_lab_algorithms.dwb_local_planner"
-      mathematical_foundation: "Reactive trajectory-based planner that evaluates multiple trajectories in velocity space with obstacle avoidance"
+      method_id: dwb_local_planner
+      category: local_planning
+      display_name: Nav2 DWB
+      implementation_ref: dwb_core::DWBLocalPlanner
+      mathematical_foundation: 'Trajectory rollout: dynamic window velocity samples, rollouts scored with critics'
       equations:
-        - "Trajectory generation: x(t) = x_0 + integral_0^t [v cos(θ), v sin(θ)] dt"
-        - "Dynamic window: v ∈ [v_min, v_max], ω ∈ [ω_min, ω_max]"
-        - "Cost function: J = α*heading_cost + β*obstacle_cost + γ*velocity_cost"
-        - "Obstacle cost: sum over trajectory of distance_to_obstacles"
-        - "Optimal control: u* = argmin_J u ∈ U"
+      - 'Critics: path/goal distance and alignment, obstacle footprint, oscillation, rotate-to-goal'
       source_references:
-        - "Fox et al. - The Dynamic Window Approach to Collision Avoidance"
-        - "ROS DWB Local Planner documentation"
-      applicable_robots: ["bumperbot", "labbot"]
+      - Fox, Burgard and Thrun, The dynamic window approach to collision avoidance, IEEE RAM 4(1) 1997
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "perception_lidar_2d_dense"
-      output_types: ["Twist", "geometry_msgs/Twist"]
+      - local_planning_maze
+      output_types:
+      - Twist
       parameters:
-        max_vel_x: 0.5
-        min_vel_x: -0.1
-        max_vel_theta: 0.5
-        min_vel_theta: -0.5
-        acc_lim_x: 0.2
-        acc_lim_theta: 0.3
-        cost_weights: [1.0, 1.0, 0.1]
+        sim_time: 1.7
       assumptions:
-        - "Constant acceleration over prediction horizon"
-        - "Circular robot footprint"
-        - "2D laser scan available"
-        - "Reactive obstacle avoidance with short prediction horizon"
+      - Critic weights tuned for the robot
       limitations:
-        - "Computationally intensive for many trajectories"
-        - "Sensitive to cost function weights"
-        - "Assumes constant acceleration"
-        - "May oscillate in cluttered environments"
-        - "Short prediction horizon makes it primarily reactive"
-      computational_complexity: "O(k*m*n) where k=trajectories, m=points per trajectory, n=scan points"
-      memory_requirements: "Medium"
-      
+      - Local minima at inflation edges (P3)
+      computational_complexity: O(V T)
+      memory_requirements: Medium
+    mppi_controller:
+      method_id: mppi_controller
+      category: local_planning
+      display_name: Nav2 MPPI
+      implementation_ref: nav2_mppi_controller::MPPIController
+      mathematical_foundation: 'Trajectory optimization: model predictive path integral over 2000 noisy control sequences (2.8 s), weighted average'
+      equations:
+      - u* = sum w_k u_k, w_k = exp(-(S_k - min S) / lambda)
+      source_references:
+      - Williams et al., Information theoretic MPC for model-based reinforcement learning, ICRA 2017
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
+      input_strata:
+      - local_planning_maze
+      output_types:
+      - Twist
+      parameters:
+        batch_size: 2000
+        vx_max: 0.3
+      assumptions:
+      - Critic weights tuned for the robot
+      limitations:
+      - Did not settle into Bumperbot arrival window (R7.7)
+      computational_complexity: O(K T)
+      memory_requirements: Medium
     regulated_pure_pursuit:
-      method_id: "regulated_pure_pursuit"
-      category: "local_planning"
-      display_name: "Regulated Pure Pursuit Planner"
-      implementation_ref: "robot_lab_algorithms.regulated_pure_pursuit"
-      mathematical_foundation: "Path-following controller using pure pursuit with speed regulation"
+      method_id: regulated_pure_pursuit
+      category: local_planning
+      display_name: robot_lab Pure Pursuit (FollowPath adapter)
+      implementation_ref: robot_lab_algorithms.nav2_adapters.pure_pursuit
+      mathematical_foundation: Pure pursuit with curvature slowdown below a 0.9 m turn radius, served as Nav2 FollowPath
       equations:
-        - "Lookahead distance: L = min(max_lookahead, max(robot_length, curvature * v^2 / a_max))"
-        - "Goal point selection: find point on path at distance L from robot"
-        - "Curvature: κ = 2 * |y_goal| / L^2 for lateral offset y_goal"
-        - "Angular velocity: ω = v * κ * sign(y_goal)"
-        - "Speed regulation: v = min(v_max, sqrt(a_max * L / |κ|))"
+      - kappa = 2 y / L^2, v reduced when 1/kappa < 0.9 m, rotate to heading above 45 deg
       source_references:
-        - "Coulter - Implementation of the Pure Pursuit Path Tracking Algorithm"
-        - "Amoir and Park - Tracking control of nonholonomic mobile robots"
-      applicable_robots: ["bumperbot", "labbot"]
+      - Coulter, Implementation of the pure pursuit path tracking algorithm, CMU-RI-TR-92-01 (1992)
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "planning_2d_continuous"
-      output_types: ["Twist", "geometry_msgs/Twist"]
+      - local_planning_maze
+      output_types:
+      - Twist
       parameters:
-        lookahead_distance: 0.5
-        max_lookahead_distance: 2.0
-        max_angular_velocity: 0.5
-        max_linear_velocity: 0.5
-        curvature_gain: 1.0
+        lookahead: 0.6
       assumptions:
-        - "Smooth global path available"
-        - "Robot can be approximated as point mass"
-        - "Nonholonomic constraints"
+      - Accurate localization
       limitations:
-        - "Requires smooth path to follow"
-        - "May cut corners if lookahead too large"
-        - "Can oscillate if lookahead too small"
-        - "Does not consider obstacles"
-      computational_complexity: "O(n) where n=path points"
-      memory_requirements: "Low"
-      
-    teb_local_planner:
-      method_id: "teb_local_planner"
-      category: "local_planning"
-      display_name: "Timed Elastic Band Local Planner"
-      implementation_ref: "robot_lab_algorithms.teb_local_planner"
-      mathematical_foundation: "Trajectory optimization considering time, kinematics, and obstacles"
+      - No cost-based regulation
+      computational_complexity: O(N)
+      memory_requirements: Medium
+    follow_the_gap:
+      method_id: follow_the_gap
+      category: local_planning
+      display_name: robot_lab Follow-the-Gap (FollowPath adapter)
+      implementation_ref: robot_lab_algorithms.nav2_adapters.follow_the_gap
+      mathematical_foundation: 'Reactive: steer toward the free scan gap closest to the path direction'
       equations:
-        - "Elastic band: path represented as sequence of pose-time pairs"
-        - "Cost function: J = w_time*time_cost + w_dist*distance_cost + w_kin*kinematic_cost + w_obs*obstacle_cost"
-        - "Time optimization: minimize total time subject to constraints"
-        - "Kinematic constraints: v <= v_max, ω <= ω_max, |a| <= a_max"
-        - "Obstacle avoidance: distance_from_obstacles >= safety_margin"
+      - Open beams beyond a clearance horizon; gaps wider than the robot; speed from free space ahead
       source_references:
-        - "Zucker et al. - A New Approach to Trajectory Generation for Mobile Robots"
-        - "ROS TEB Local Planner documentation"
-      applicable_robots: ["bumperbot", "labbot"]
+      - 'Sezer and Gokasan, A novel obstacle avoidance algorithm: follow the gap method, RAS 60(9) 2012'
+      applicable_robots:
+      - bumperbot
+      - labbot
+      - unitree_go2
       input_strata:
-        - "perception_lidar_2d_dense"
-      output_types: ["Twist", "Trajectory"]
+      - local_planning_maze
+      output_types:
+      - Twist
       parameters:
-        max_vel_x: 0.5
-        max_vel_theta: 0.5
-        acc_lim_x: 0.2
-        acc_lim_theta: 0.3
-        min_obstacle_dist: 0.1
-        weight_time: 1.0
-        weight_kinematics: 1.0
-        weight_obstacles: 1.0
+        robot_radius: 0.12
       assumptions:
-        - "Holonomic or differential drive robot"
-        - "2D laser scan available"
-        - "Smooth cost landscape"
+      - 2D scan sees obstacles
       limitations:
-        - "Computationally intensive"
-        - "Sensitive to parameter tuning"
-        - "May get stuck in local minima"
-        - "Assumes known obstacle positions"
-      computational_complexity: "O(n*m) where n=poses, m=iterations"
-      memory_requirements: "High"
-      
-    mppi_local_planner:
-      method_id: "mppi_local_planner"
-      category: "local_planning"
-      display_name: "Model Predictive Path Integral Local Planner"
-      implementation_ref: "robot_lab_algorithms.mppi_local_planner"
-      mathematical_foundation: "Stochastic trajectory optimization using sampling-based MPPI"
-      equations:
-        - "State propagation: x_k = f(x_{k-1}, u_{k-1}, dt) + noise"
-        - "Cost calculation: S(u) = sum_{k=0}^N Q_k(x_k, u_k) for trajectory u"
-        - "Sampling: u^i ~ p(u) for i = 1..S"
-        - "Weighting: w^i = exp(-γ * S(u^i)) where γ = temperature parameter"
-        - "Control update: u* = sum_i w^i u^i / sum_i w^i"
-      source_references:
-        - "Theodore et al. - Model Predictive Path Integral Control"
-        - "Williams et al. - Information-Theoretic Model Predictive Control"
-      applicable_robots: ["bumperbot", "labbot"]
-      input_strata:
-        - "perception_lidar_2d_dense"
-      output_types: ["Twist", "Trajectory"]
-      parameters:
-        num_samples: 100
-        time_horizon: 2.0
-        time_step: 0.1
-        temperature: 0.1
-        cost_weights: [1.0, 1.0, 0.1]
-        noise_covariance: [0.01, 0.01, 0.001]
-      assumptions:
-        - "Smooth cost function"
-        - "Gaussian noise model"
-        - "Convex feasible space"
-      limitations:
-        - "Computationally intensive"
-        - "Sensitive to sample count"
-        - "Requires careful parameter tuning"
-        - "Assumes differentiable cost function"
-      computational_complexity: "O(S*N*m) where S=samples, N=horizon, m=state dimension"
-      memory_requirements: "Very High"
+      - Cuts closest to walls (R7.7)
+      computational_complexity: O(N)
+      memory_requirements: Medium
 
   # =============================================================================
   # R7.8 CONTROL METHODS
