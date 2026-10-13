@@ -506,6 +506,7 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
         self.legged_policy_var = tk.BooleanVar(value=False)
+        self.wheel_odometry_var = tk.BooleanVar(value=False)
         self.bhl_policy_var = tk.BooleanVar(value=True)
         self.native_policy_var = tk.BooleanVar(value=False)
         self.native_articulation_var = tk.BooleanVar(value=False)
@@ -960,6 +961,20 @@ class SimulationLauncherGui(tk.Tk):
             command=self._update_validation_and_command,
         )
         self.legged_policy_checkbox.grid(row=33, column=0, sticky="w", pady=(10, 0))
+        # EKF on wheel odometry from joint states instead of simulator truth
+        # (MuJoCo/PyBullet/Isaac; Gazebo always uses its controllers' odometry).
+        self.wheel_odometry_checkbox = ttk.Checkbutton(
+            advanced,
+            text="Wheel odometry for the EKF (not simulator truth)",
+            variable=self.wheel_odometry_var,
+            command=self._update_validation_and_command,
+        )
+        self.wheel_odometry_checkbox.grid(row=39, column=0, sticky="w", pady=(4, 0))
+        add_tooltip(self.wheel_odometry_checkbox,
+                    "MuJoCo, PyBullet and Isaac: the EKF fuses wheel odometry "
+                    "computed from the measured joint states "
+                    "(odometry_source:=wheels) instead of the simulator's "
+                    "body twist. Gazebo always uses wheel odometry.")
         add_tooltip(self.legged_policy_checkbox,
                     "Localization, for Go2/A1/B2/Go2W. Runs the policy's own "
                     "PD law inside the simulator. MuJoCo: optional, replaces "
@@ -2095,6 +2110,15 @@ class SimulationLauncherGui(tk.Tk):
         return (mode == "loc" and backend) or (
             mode in ("slam", "nav") and (backend or simulator == "mujoco"))
 
+    def _wheel_odometry_selectable(self):
+        """A wheeled robot in a self-contained backend, in a mode with the EKF."""
+        profile = self.robot_profiles.get(self.robot_var.get(), {})
+        return (bool(profile.get("drive"))
+                and self.robot_var.get() not in LEGGED_POLICY_PROFILES
+                and self.simulator_var.get() in ("mujoco", "pybullet", "isaac")
+                and self.mode_var.get() in ("loc", "slam", "3d_slam", "nav")
+                and self.launch_kind_var.get() == "simulation")
+
     def _bhl_policy_selectable(self):
         return (self.robot_var.get() == "berkeley_humanoid_lite_sim"
                 and self.simulator_var.get() == "mujoco"
@@ -2222,6 +2246,9 @@ class SimulationLauncherGui(tk.Tk):
             command = [part for part in command
                        if not part.startswith("legged_policy:=")]
             command.append("legged_policy:=" + LEGGED_POLICY_PROFILES[self.robot_var.get()])
+        if command and self.wheel_odometry_var.get() and self._wheel_odometry_selectable():
+            command = [part for part in command if not part.startswith("odometry_source:=")]
+            command.append("odometry_source:=wheels")
         if command and self._bhl_policy_selectable():
             # The BHL policy defaults on, so the toggle is always written
             # explicitly: the preview says which policy path will run.
@@ -2339,6 +2366,8 @@ class SimulationLauncherGui(tk.Tk):
             ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
         self.legged_policy_checkbox.state(
             ["!disabled"] if self._legged_policy_selectable() else ["disabled"])
+        self.wheel_odometry_checkbox.state(
+            ["!disabled"] if self._wheel_odometry_selectable() else ["disabled"])
         self.bhl_policy_checkbox.state(
             ["!disabled"] if self._bhl_policy_selectable() else ["disabled"])
         self.native_policy_checkbox.state(

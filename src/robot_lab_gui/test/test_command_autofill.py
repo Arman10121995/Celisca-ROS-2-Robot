@@ -1059,3 +1059,28 @@ def test_px4_preserves_every_installed_world_and_autofills_flight(app):
         canonical=app.map_profiles[world]['gazebo'].get('world_name',world)
         assert 'map_name:='+canonical in app.command_var.get(), app.validation_var.get()
         assert 'mode:=flight' in app.command_var.get()
+
+
+def test_wheel_odometry_option_switches_the_ekf_input(app):
+    """MuJoCo/PyBullet/Isaac wheeled robots can feed the EKF wheel odometry
+    from joint states instead of simulator truth; Gazebo never offers it."""
+    select(app, app.robot_combo, "labbot")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["nav"].invoke()
+    assert app.wheel_odometry_checkbox.instate(["!disabled"])
+    assert "odometry_source" not in displayed_command(app)
+    app.wheel_odometry_checkbox.invoke()
+    assert "odometry_source:=wheels" in displayed_command(app)
+    select(app, app.simulator_combo, "gazebo")
+    assert app.wheel_odometry_checkbox.instate(["disabled"])
+    assert "odometry_source" not in displayed_command(app)
+
+
+def test_walking_robots_get_their_policy_for_mapping_and_navigation(app):
+    """slam/nav in MuJoCo, Isaac and (Go2) Gazebo always run the walking policy."""
+    select(app, app.robot_combo, "unitree_go2")
+    select(app, app.simulator_combo, "mujoco")
+    app.mode_buttons["nav"].invoke()
+    assert "legged_policy:=go2_himloco" in displayed_command(app)
+    app.mode_buttons["slam"].invoke()
+    assert "legged_policy:=go2_himloco" in displayed_command(app)
