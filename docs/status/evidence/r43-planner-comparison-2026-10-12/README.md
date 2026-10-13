@@ -126,6 +126,8 @@ costmap MessageFilter and the TransformListener thread lock the same two
 mutexes in opposite order, so the listener thread blocks forever. Upstream
 fixed it in 0.25.24. `scripts/build_tf2_deadlock_fix.sh` overlays the fix;
 see the [global planning tutorial](../../../tutorials/global_planning_comparison.md).
+The protocol rerun with the overlay passed 30/30 goals with no stale-transform
+signature ([tf2-0.25.24-2026-10-13/](tf2-0.25.24-2026-10-13/README.md)).
 
 ## Reproduce
 

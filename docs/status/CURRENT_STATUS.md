@@ -85,7 +85,9 @@ October 13: implemented on master, experimental.
     ([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)),
     fixed upstream in 0.25.24. Apt still has 0.25.23.
   - `scripts/build_tf2_deadlock_fix.sh` overlays 0.25.24 (ABI-identical
-    headers). Validation runs follow.
+    headers). Since then: the R4.3 protocol passes 30/30 goals, and 33
+    Nav2 launches show no freeze, where about 3 were expected
+    ([evidence](evidence/r43-planner-comparison-2026-10-12/tf2-0.25.24-2026-10-13/README.md)).
 
 October 12 (later): measured on master.
 
