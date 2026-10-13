@@ -368,8 +368,7 @@ def _author_wheel_velocity_drives(stage, joint_names,
             continue
         drive = UsdPhysics.DriveAPI.Apply(prim, "angular")
         (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(0.0)
-        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(
-            float(damping_per_rad) * math.pi / 180.0)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(damping))
         joint = PhysxSchema.PhysxJointAPI.Apply(prim)
         current = joint.GetArmatureAttr().Get() if joint.GetArmatureAttr() else None
         if armature and not current:
@@ -433,8 +432,7 @@ def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
             continue
         drive = UsdPhysics.DriveAPI.Apply(prim, "angular")
         (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(float(stiffness))
-        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(
-            float(damping_per_rad) * math.pi / 180.0)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(damping))
         (drive.GetMaxForceAttr() or drive.CreateMaxForceAttr()).Set(float(max_force))
         joint = PhysxSchema.PhysxJointAPI.Apply(prim)
         (joint.GetArmatureAttr() or joint.CreateArmatureAttr()).Set(float(armature))
