@@ -1,9 +1,22 @@
-"""Sensor fusion algorithms (P5).
+"""Sensor fusion nodes (R7.5).
 
-Adds three fusion filters that round out the sensor_fusion category:
-  1. wheel_imu_fusion  - complementary fusion of wheel odometry and IMU yaw.
-  2. gps_odom_fusion   - simple weighted fusion of GPS and odometry position.
-  3. complementary_imu - complementary filter for IMU attitude (pitch/roll).
+The console scripts run the filters in robot_lab_algorithms.fusion_filters
+(rewritten 2026-10-13; benchmark docs/status/evidence/r75-fusion-benchmark-2026-10-13):
+
+* complementary_imu, mahony_filter, madgwick_filter, attitude_eskf -
+  attitude from ``sensor_msgs/Imu`` gyro + accelerometer, republished as
+  ``sensor_msgs/Imu`` with the estimated orientation on /imu/<method>.
+* wheel_imu_fusion (EKF), gps_odom_fusion (EKF with GNSS) and
+  wheel_imu_gnss_ukf (UKF with GNSS) - planar pose from the wheel odometry
+  twist, the IMU gyro and optional ``sensor_msgs/NavSatFix``, published as
+  ``nav_msgs/Odometry``.
+
+The classes defined directly below (WheelImuFusion, GpsOdomFusion,
+ComplementaryImu, MahonyFilter, MadgwickFilter, WheelIMUGNSSUKF) are the
+earlier simplified versions, kept for their existing tests only: the
+complementary filter swapped the roll/pitch gyro axes, the "Madgwick" filter
+applied Mahony's error with a nonstandard step, and the "UKF" was dead
+reckoning with a fixed GNSS blend.  No node uses them.
 """
 
 from __future__ import annotations
@@ -353,364 +366,152 @@ class WheelIMUGNSSUKF:
 # ROS 2 node wrappers (what the console entry points run)
 # ---------------------------------------------------------------------------
 
-from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
+from ._runtime import run as _run  # noqa: E402
+from . import fusion_filters as _ff  # noqa: E402
 
 
-class WheelImuFusionNode(Node):
-    """Fuse wheel odometry speed with IMU yaw rate onto /odometry/wheel_imu."""
-
-    def __init__(self, node_name='wheel_imu_fusion'):
-        super().__init__(node_name)
-        from nav_msgs.msg import Odometry
-        from sensor_msgs.msg import Imu
-        self._odometry_type = Odometry
-        self.declare_parameter('odom_topic', '/odom/ground_truth')
-        self.declare_parameter('imu_topic', '/imu/out')
-        self.declare_parameter('output_topic', '/odometry/wheel_imu')
-        self.declare_parameter('alpha', 0.5)
-        self.fusion = WheelImuFusion(alpha=float(self.get_parameter('alpha').value))
-        self._pub = self.create_publisher(
-            Odometry, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Odometry, self.get_parameter('odom_topic').value, self._on_odom, 10)
-        self.create_subscription(
-            Imu, self.get_parameter('imu_topic').value, self._on_imu, 10)
-        self._yaw_rate = 0.0
-        self._last_stamp = None
-        self.get_logger().info('wheel_imu_fusion ready')
-
-    def _on_imu(self, msg):
-        self._yaw_rate = msg.angular_velocity.z
-
-    def _on_odom(self, msg):
-        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
-        dt = 0.0 if self._last_stamp is None else max(0.0, stamp - self._last_stamp)
-        self._last_stamp = stamp
-        vx, yaw = self.fusion.fuse(msg.twist.twist.linear.x, self._yaw_rate, dt)
-        out = self._odometry_type()
-        out.header = msg.header
-        out.child_frame_id = msg.child_frame_id
-        out.pose.pose = msg.pose.pose
-        out.twist.twist.linear.x = float(vx)
-        out.twist.twist.angular.z = float(self._yaw_rate)
-        self._pub.publish(out)
-        self.yaw = yaw
+def _seconds(header):
+    return header.stamp.sec + header.stamp.nanosec * 1e-9
 
 
-class GpsOdomFusionNode(Node):
-    """Weighted GPS/odometry position fusion onto /odometry/gps_odom."""
+class AttitudeNode(Node):
+    """Run one attitude filter on an IMU topic and republish the orientation."""
 
-    def __init__(self, node_name='gps_odom_fusion'):
-        super().__init__(node_name)
-        from nav_msgs.msg import Odometry
-        from sensor_msgs.msg import NavSatFix
-        self._odometry_type = Odometry
-        self.declare_parameter('odom_topic', '/odom/ground_truth')
-        self.declare_parameter('gps_topic', '/gps/fix')
-        self.declare_parameter('output_topic', '/odometry/gps_odom')
-        self.declare_parameter('gps_weight', 0.7)
-        self.fusion = GpsOdomFusion(
-            gps_weight=float(self.get_parameter('gps_weight').value))
-        self._pub = self.create_publisher(
-            Odometry, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Odometry, self.get_parameter('odom_topic').value, self._on_odom, 10)
-        self.create_subscription(
-            NavSatFix, self.get_parameter('gps_topic').value, self._on_gps, 10)
-        self._gps = None
-        self._origin = None
-        self.get_logger().info('gps_odom_fusion ready')
+    GAINS = {  # parameter name and default (tuned on the R7.5 benchmark's tuning seed)
+        'complementary': ('tau', 4.0),
+        'mahony': ('kp', 0.25),
+        'madgwick': ('beta', 0.02),
+        # The benchmark picked 16 m/s^2 for a constant gyro bias; 2.0 keeps the
+        # accelerometer in charge of tilt when the bias also drifts.
+        'eskf': ('linear_accel_std', 2.0),
+    }
 
-    def _on_gps(self, msg):
-        # Local tangent-plane approximation around the first fix, which is
-        # enough for a planar simulation and needs no projection library.
-        if self._origin is None:
-            self._origin = (msg.latitude, msg.longitude)
-        metres_per_degree = 111320.0
-        self._gps = (
-            (msg.longitude - self._origin[1]) * metres_per_degree
-            * math.cos(math.radians(self._origin[0])),
-            (msg.latitude - self._origin[0]) * metres_per_degree,
-        )
-
-    def _on_odom(self, msg):
-        position = msg.pose.pose.position
-        # Without a fix the odometry estimate passes through unchanged.
-        gps = self._gps if self._gps is not None else (position.x, position.y)
-        x, y = self.fusion.fuse(position.x, position.y, gps[0], gps[1])
-        out = self._odometry_type()
-        out.header = msg.header
-        out.child_frame_id = msg.child_frame_id
-        out.pose.pose.position.x = float(x)
-        out.pose.pose.position.y = float(y)
-        out.pose.pose.position.z = position.z
-        out.pose.pose.orientation = msg.pose.pose.orientation
-        out.twist = msg.twist
-        self._pub.publish(out)
-
-
-class ComplementaryImuNode(Node):
-    """Complementary accelerometer/gyro filter republished on /imu/complementary."""
-
-    def __init__(self, node_name='complementary_imu'):
-        super().__init__(node_name)
+    def __init__(self, method, node_name=None):
+        super().__init__(node_name or method)
         from sensor_msgs.msg import Imu
         self._imu_type = Imu
+        parameter, default = self.GAINS[method]
         self.declare_parameter('imu_topic', '/imu/out')
-        self.declare_parameter('output_topic', '/imu/complementary')
-        self.declare_parameter('alpha', 0.98)
-        self.filter = ComplementaryImu(
-            alpha=float(self.get_parameter('alpha').value))
-        self._pub = self.create_publisher(
-            Imu, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Imu, self.get_parameter('imu_topic').value, self._on_imu, 10)
-        self._last_stamp = None
-        self.get_logger().info('complementary_imu ready')
+        self.declare_parameter('output_topic', '/imu/%s' % method)
+        self.declare_parameter(parameter, default)
+        self.filter = _ff.ATTITUDE_FILTERS[method](**{parameter: float(self.get_parameter(parameter).value)})
+        self._pub = self.create_publisher(Imu, self.get_parameter('output_topic').value, 20)
+        self.create_subscription(Imu, self.get_parameter('imu_topic').value, self._on_imu, 50)
+        self._last = None
+        self.get_logger().info('%s attitude filter on %s -> %s' % (
+            method, self.get_parameter('imu_topic').value, self.get_parameter('output_topic').value))
 
     def _on_imu(self, msg):
-        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
-        dt = 0.0 if self._last_stamp is None else max(0.0, stamp - self._last_stamp)
-        self._last_stamp = stamp
-        pitch, roll = self.filter.update(
-            msg.linear_acceleration.x, msg.linear_acceleration.y,
-            msg.linear_acceleration.z, msg.angular_velocity.x,
-            msg.angular_velocity.y, dt)
+        stamp = _seconds(msg.header)
+        dt = 0.0 if self._last is None else min(0.1, max(0.0, stamp - self._last))
+        self._last = stamp
+        g, a = msg.angular_velocity, msg.linear_acceleration
+        q = self.filter.update((g.x, g.y, g.z), (a.x, a.y, a.z), dt)
         out = self._imu_type()
         out.header = msg.header
+        out.orientation.w, out.orientation.x, out.orientation.y, out.orientation.z = (float(v) for v in q)
         out.angular_velocity = msg.angular_velocity
+        out.angular_velocity_covariance = msg.angular_velocity_covariance
         out.linear_acceleration = msg.linear_acceleration
-        half_roll, half_pitch = roll / 2.0, pitch / 2.0
-        out.orientation.w = math.cos(half_roll) * math.cos(half_pitch)
-        out.orientation.x = math.sin(half_roll) * math.cos(half_pitch)
-        out.orientation.y = math.cos(half_roll) * math.sin(half_pitch)
-        out.orientation.z = -math.sin(half_roll) * math.sin(half_pitch)
+        out.linear_acceleration_covariance = msg.linear_acceleration_covariance
         self._pub.publish(out)
 
 
-def wheel_imu_fusion_main(args=None):
-    return _run(WheelImuFusionNode, 'wheel_imu_fusion', args=args)
+class PoseFusionNode(Node):
+    """Planar pose from wheel odometry twist + IMU gyro (+ GNSS) with an EKF or UKF."""
 
-
-def gps_odom_fusion_main(args=None):
-    return _run(GpsOdomFusionNode, 'gps_odom_fusion', args=args)
-
-
-def complementary_imu_main(args=None):
-    return _run(ComplementaryImuNode, 'complementary_imu', args=args)
-
-
-class MahonyFilterNode(Node):
-    """ROS wrapper for Mahony AHRS filter."""
-
-    def __init__(self, node_name='mahony_filter'):
+    def __init__(self, method, node_name, output_topic, use_gnss):
         super().__init__(node_name)
-        self.declare_parameter('imu_topic', '/imu/out')
-        self.declare_parameter('output_topic', '/imu/mahony')
-        self.declare_parameter('sample_rate', 100.0)
-        self.declare_parameter('kp', 1.0)
-        self.declare_parameter('ki', 0.0)
-        
-        self.filter = MahonyFilter(
-            sample_rate=float(self.get_parameter('sample_rate').value),
-            kp=float(self.get_parameter('kp').value),
-            ki=float(self.get_parameter('ki').value))
-        
-        from sensor_msgs.msg import Imu
-        self._imu_type = Imu
-        self._pub = self.create_publisher(
-            Imu, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Imu, self.get_parameter('imu_topic').value, self._on_imu, 10)
-        self._last_stamp = None
-        self.get_logger().info('mahony_filter ready')
-
-    def _on_imu(self, msg):
-        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
-        dt = 0.0 if self._last_stamp is None else max(0.0, stamp - self._last_stamp)
-        self._last_stamp = stamp
-        
-        # Update filter
-        self.filter.update(
-            msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z,
-            msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z, dt)
-        
-        # Publish filtered IMU
-        self._publish_imu(msg, self.filter.q)
-
-    def _publish_imu(self, msg, quaternion):
-        out = self._imu_type()
-        out.header = msg.header
-        out.angular_velocity = msg.angular_velocity
-        out.linear_acceleration = msg.linear_acceleration
-        out.orientation.w = quaternion[0]
-        out.orientation.x = quaternion[1]
-        out.orientation.y = quaternion[2]
-        out.orientation.z = quaternion[3]
-        self._pub.publish(out)
-
-
-class MadgwickFilterNode(Node):
-    """ROS wrapper for Madgwick AHRS filter."""
-
-    def __init__(self, node_name='madgwick_filter'):
-        super().__init__(node_name)
-        self.declare_parameter('imu_topic', '/imu/out')
-        self.declare_parameter('output_topic', '/imu/madgwick')
-        self.declare_parameter('sample_rate', 100.0)
-        self.declare_parameter('beta', 0.1)
-        
-        self.filter = MadgwickFilter(
-            sample_rate=float(self.get_parameter('sample_rate').value),
-            beta=float(self.get_parameter('beta').value))
-        
-        from sensor_msgs.msg import Imu
-        self._imu_type = Imu
-        self._pub = self.create_publisher(
-            Imu, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Imu, self.get_parameter('imu_topic').value, self._on_imu, 10)
-        self._last_stamp = None
-        self.get_logger().info('madgwick_filter ready')
-
-    def _on_imu(self, msg):
-        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
-        dt = 0.0 if self._last_stamp is None else max(0.0, stamp - self._last_stamp)
-        self._last_stamp = stamp
-        
-        # Update filter
-        self.filter.update(
-            msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z,
-            msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z, dt)
-        
-        # Publish filtered IMU
-        self._publish_imu(msg, self.filter.q)
-
-    def _publish_imu(self, msg, quaternion):
-        out = self._imu_type()
-        out.header = msg.header
-        out.angular_velocity = msg.angular_velocity
-        out.linear_acceleration = msg.linear_acceleration
-        out.orientation.w = quaternion[0]
-        out.orientation.x = quaternion[1]
-        out.orientation.y = quaternion[2]
-        out.orientation.z = quaternion[3]
-        self._pub.publish(out)
-
-
-class WheelIMUGNSSUKFNode(Node):
-    """ROS wrapper for Wheel+IMU+GNSS UKF fusion."""
-
-    def __init__(self, node_name='wheel_imu_gnss_ukf'):
-        super().__init__(node_name)
-        self.declare_parameter('odom_topic', '/odom/ground_truth')
-        self.declare_parameter('imu_topic', '/imu/out')
-        self.declare_parameter('gnss_topic', '/gps/fix')
-        self.declare_parameter('output_topic', '/odometry/wheel_imu_gnss')
-        
-        self.fusion = WheelIMUGNSSUKF()
-        
         from nav_msgs.msg import Odometry
         from sensor_msgs.msg import Imu, NavSatFix
         self._odometry_type = Odometry
-        self._pub = self.create_publisher(
-            Odometry, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Odometry, self.get_parameter('odom_topic').value, self._on_odom, 10)
-        self.create_subscription(
-            Imu, self.get_parameter('imu_topic').value, self._on_imu, 10)
-        self.create_subscription(
-            NavSatFix, self.get_parameter('gnss_topic').value, self._on_gnss, 10)
-        
-        self._last_odom = None
+        self.declare_parameter('odom_topic', '/robot_lab_controller/odom')
+        self.declare_parameter('imu_topic', '/imu/out')
+        self.declare_parameter('gnss_topic', '/gps/fix')
+        self.declare_parameter('output_topic', output_topic)
+        self.declare_parameter('use_gnss', use_gnss)
+        self.declare_parameter('gnss_noise', 0.5)
+        self.filter = (_ff.WheelImuGnssUkf if method == 'ukf' else _ff.WheelImuEkf)(
+            gnss_noise=float(self.get_parameter('gnss_noise').value))
+        self.use_gnss = bool(self.get_parameter('use_gnss').value)
+        self._pub = self.create_publisher(Odometry, self.get_parameter('output_topic').value, 20)
+        self.create_subscription(Odometry, self.get_parameter('odom_topic').value, self._on_odom, 50)
+        self.create_subscription(Imu, self.get_parameter('imu_topic').value, self._on_imu, 50)
+        if self.use_gnss:
+            self.create_subscription(NavSatFix, self.get_parameter('gnss_topic').value, self._on_gnss, 10)
+        self._origin = None
         self._last_imu = None
-        self._last_gnss = None
-        self._last_stamp = None
-        self.get_logger().info('wheel_imu_gnss_ukf ready')
-
-    def _on_odom(self, msg):
-        self._last_odom = msg
-        self._process()
+        self._child = 'base_footprint'
+        self.get_logger().info('%s pose fusion -> %s (GNSS %s)' % (
+            method, self.get_parameter('output_topic').value, 'on' if self.use_gnss else 'off'))
 
     def _on_imu(self, msg):
-        self._last_imu = msg
-        self._process()
+        stamp = _seconds(msg.header)
+        if self._last_imu is not None and stamp > self._last_imu:
+            self.filter.predict(msg.angular_velocity.z, min(0.1, stamp - self._last_imu))
+        self._last_imu = stamp
+
+    def _on_odom(self, msg):
+        self._child = msg.child_frame_id or self._child
+        self.filter.update_wheels(msg.twist.twist.linear.x, msg.twist.twist.angular.z)
+        self._publish(msg.header)
 
     def _on_gnss(self, msg):
-        self._last_gnss = msg
-        self._process()
+        # Local tangent plane around the first fix.
+        if self._origin is None:
+            self._origin = (msg.latitude, msg.longitude)
+        metres = 111320.0
+        x = (msg.longitude - self._origin[1]) * metres * math.cos(math.radians(self._origin[0]))
+        y = (msg.latitude - self._origin[0]) * metres
+        self.filter.update_gnss(x, y)
 
-    def _process(self):
-        if self._last_odom is None:
-            return
-        
-        stamp = self._last_odom.header.stamp.sec + self._last_odom.header.stamp.nanosec * 1e-9
-        if self._last_stamp is not None:
-            dt = stamp - self._last_stamp
-            if dt > 0 and self._last_imu is not None:
-                # Update with wheel odometry and IMU
-                wheel_vx = self._last_odom.twist.twist.linear.x
-                wheel_vy = self._last_odom.twist.twist.linear.y
-                imu_gx = self._last_imu.angular_velocity.x
-                imu_gy = self._last_imu.angular_velocity.y
-                imu_gz = self._last_imu.angular_velocity.z
-                self.fusion.update_wheel_imu(wheel_vx, wheel_vy, imu_gx, imu_gy, imu_gz, dt)
-        
-        # Update with GNSS if available
-        if self._last_gnss is not None:
-            # Simple conversion from lat/lon to local coordinates
-            gnss_x = self._last_gnss.longitude * 111320.0  # Approximate meters per degree
-            gnss_y = self._last_gnss.latitude * 111320.0
-            gnss_z = 0.0  # Assuming flat ground
-            self.fusion.update_gnss(gnss_x, gnss_y, gnss_z)
-        
-        self._last_stamp = stamp
-        
-        # Publish fused state
-        self._publish_odometry(self._last_odom.header)
-
-    def _publish_odometry(self, header):
-        state = self.fusion.get_state()
+    def _publish(self, header):
+        x, y, theta, v, _ = (float(s) for s in self.filter.state)
         out = self._odometry_type()
-        out.header = header
-        out.child_frame_id = 'base_link'
-        out.pose.pose.position.x = float(state[0])
-        out.pose.pose.position.y = float(state[1])
-        out.pose.pose.position.z = float(state[2])
-        
-        # Convert Euler angles to quaternion
-        roll, pitch, yaw = state[6], state[7], state[8]
-        half_roll, half_pitch, half_yaw = roll / 2.0, pitch / 2.0, yaw / 2.0
-        
-        cy = math.cos(half_yaw)
-        sy = math.sin(half_yaw)
-        cp = math.cos(half_pitch)
-        sp = math.sin(half_pitch)
-        cr = math.cos(half_roll)
-        sr = math.sin(half_roll)
-        
-        out.pose.pose.orientation.w = cr * cp * cy + sr * sp * sy
-        out.pose.pose.orientation.x = sr * cp * cy - cr * sp * sy
-        out.pose.pose.orientation.y = cr * sp * cy + sr * cp * sy
-        out.pose.pose.orientation.z = cr * cp * sy - sr * sp * cy
-        
-        out.twist.twist.linear.x = float(state[3])
-        out.twist.twist.linear.y = float(state[4])
-        out.twist.twist.linear.z = float(state[5])
-        
+        out.header.stamp = header.stamp
+        out.header.frame_id = 'odom'
+        out.child_frame_id = self._child
+        out.pose.pose.position.x, out.pose.pose.position.y = x, y
+        out.pose.pose.orientation.z, out.pose.pose.orientation.w = math.sin(theta / 2), math.cos(theta / 2)
+        covariance = [0.0] * 36
+        P = self.filter.P
+        covariance[0], covariance[1], covariance[6], covariance[7] = P[0, 0], P[0, 1], P[1, 0], P[1, 1]
+        covariance[35] = P[2, 2]
+        out.pose.covariance = [float(c) for c in covariance]
+        out.twist.twist.linear.x = v
+        out.twist.twist.angular.z = float(self.filter.last_gyro - self.filter.state[4])
         self._pub.publish(out)
 
 
+def complementary_imu_main(args=None):
+    return _run(lambda: AttitudeNode('complementary', 'complementary_imu'), 'complementary_imu', args=args)
+
+
 def mahony_filter_main(args=None):
-    return _run(MahonyFilterNode, 'mahony_filter', args=args)
+    return _run(lambda: AttitudeNode('mahony', 'mahony_filter'), 'mahony_filter', args=args)
 
 
 def madgwick_filter_main(args=None):
-    return _run(MadgwickFilterNode, 'madgwick_filter', args=args)
+    return _run(lambda: AttitudeNode('madgwick', 'madgwick_filter'), 'madgwick_filter', args=args)
+
+
+def attitude_eskf_main(args=None):
+    return _run(lambda: AttitudeNode('eskf', 'attitude_eskf'), 'attitude_eskf', args=args)
+
+
+def wheel_imu_fusion_main(args=None):
+    return _run(lambda: PoseFusionNode('ekf', 'wheel_imu_fusion', '/odometry/wheel_imu', False),
+                'wheel_imu_fusion', args=args)
+
+
+def gps_odom_fusion_main(args=None):
+    return _run(lambda: PoseFusionNode('ekf', 'gps_odom_fusion', '/odometry/gps_odom', True),
+                'gps_odom_fusion', args=args)
 
 
 def wheel_imu_gnss_ukf_main(args=None):
-    return _run(WheelIMUGNSSUKFNode, 'wheel_imu_gnss_ukf', args=args)
+    return _run(lambda: PoseFusionNode('ukf', 'wheel_imu_gnss_ukf', '/odometry/wheel_imu_gnss', True),
+                'wheel_imu_gnss_ukf', args=args)
 
 
 if __name__ == '__main__':

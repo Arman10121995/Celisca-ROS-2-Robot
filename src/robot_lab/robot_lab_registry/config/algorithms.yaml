@@ -425,8 +425,8 @@
   - simple
 - id: imu_complementary_filter
   version: 1.0.0
-  name: IMU Complementary Filter
-  description: Complementary filter for IMU sensor fusion
+  name: IMU Madgwick Filter (imu_tools)
+  description: "Upstream imu_tools Madgwick attitude filter (the id predates the name); /imu/out in, /imu/madgwick_upstream out"
   status: integrated
   category: sensor_fusion
   family: complementary_filter
@@ -436,10 +436,10 @@
     language: cpp
   input_contract:
     required_topics:
-    - /imu
+    - /imu/out
   output_contract:
     provided_topics:
-    - /imu/filtered
+    - /imu/madgwick_upstream
   required_capabilities: []
   supported_robot_classes:
   - mobile
@@ -1657,120 +1657,303 @@
       description: "Pure-Python module/unit checks pass"
       date: "2026-09-08"
 - id: wheel_imu_fusion
-  version: 1.0.0
-  name: Wheel IMU Fusion
+  version: 2.0.0
+  name: Wheel + IMU EKF
+  description: "EKF on [x, y, theta, v, gyro bias]: gyro drives heading, wheel odometry measures speed and yaw rate, zero angular rate update at standstill; publishes nav_msgs/Odometry on /odometry/wheel_imu"
   status: integrated
   category: sensor_fusion
-  family: complementary
+  family: ekf
   implementation:
     package: robot_lab_algorithms
     executable: wheel_imu_fusion
+    module: robot_lab_algorithms.fusion_filters
     language: python
   input_contract:
     required_topics:
-    - /odom
-    - /imu
+    - /robot_lab_controller/odom
+    - /imu/out
     required_parameters: []
   output_contract:
     provided_topics:
-    - /fused_state
+    - /odometry/wheel_imu
   required_capabilities: []
   supported_robot_classes:
   - mobile
-  - legged
   parameters:
-    alpha: 0.5
+    wheel_rate_noise: 0.2
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Thrun, Burgard and Fox, Probabilistic Robotics (2005), EKF"
   tags:
   - sensor_fusion
-  - complementary
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - ekf
+  - odometry
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: numerical_test
-      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_complementary_fusion_blends"
-      description: "Numerical logic test passes (deterministic, no ROS graph)"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
 - id: gps_odom_fusion
-  version: 1.0.0
-  name: GPS Odom Fusion
+  version: 2.0.0
+  name: Wheel + IMU + GNSS EKF
+  description: "The wheel/IMU EKF with GNSS position updates (local tangent plane around the first fix); publishes nav_msgs/Odometry on /odometry/gps_odom"
   status: integrated
   category: sensor_fusion
-  family: weighted
+  family: ekf
   implementation:
     package: robot_lab_algorithms
     executable: gps_odom_fusion
+    module: robot_lab_algorithms.fusion_filters
     language: python
   input_contract:
     required_topics:
-    - /odom
+    - /robot_lab_controller/odom
+    - /imu/out
     - /gps/fix
     required_parameters: []
   output_contract:
     provided_topics:
-    - /fused_pose
+    - /odometry/gps_odom
   required_capabilities: []
   supported_robot_classes:
-  - aerial
   - mobile
   parameters:
-    gps_weight: 0.7
+    gnss_noise: 0.5
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Thrun, Burgard and Fox, Probabilistic Robotics (2005), EKF"
   tags:
   - sensor_fusion
-  - weighted
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - ekf
+  - gnss
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: unit_test
-      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
-      description: "Pure-Python module/unit checks pass"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
 - id: complementary_imu
-  version: 1.0.0
-  name: Complementary IMU
+  version: 2.0.0
+  name: Complementary Attitude Filter
+  description: "Gyro integration with roll and pitch pulled toward the accelerometer tilt (time constant tau); publishes sensor_msgs/Imu with the estimated orientation on /imu/complementary"
   status: integrated
   category: sensor_fusion
   family: complementary
   implementation:
     package: robot_lab_algorithms
     executable: complementary_imu
+    module: robot_lab_algorithms.fusion_filters
     language: python
   input_contract:
     required_topics:
-    - /imu
+    - /imu/out
     required_parameters: []
   output_contract:
     provided_topics:
-    - /attitude
+    - /imu/complementary
   required_capabilities: []
   supported_robot_classes:
+  - mobile
   - legged
   - humanoid
-  - mobile
   - aerial
   parameters:
-    alpha: 0.98
+    tau: 4.0
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Standard complementary filter; e.g. Euston et al., IROS 2008"
   tags:
   - sensor_fusion
+  - attitude
   - complementary
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: numerical_test
-      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_complementary_fusion_blends"
-      description: "Numerical logic test passes (deterministic, no ROS graph)"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
+- id: mahony_filter
+  version: 2.0.0
+  name: Mahony Attitude Filter
+  description: "Mahony explicit complementary filter: PI feedback of the accelerometer-gravity cross error into the gyro; /imu/mahony"
+  status: integrated
+  category: sensor_fusion
+  family: complementary
+  implementation:
+    package: robot_lab_algorithms
+    executable: mahony_filter
+    module: robot_lab_algorithms.fusion_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /imu/out
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /imu/mahony
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    kp: 0.25
+    ki: 0.05
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Mahony, Hamel and Pflimlin, Nonlinear complementary filters on the special orthogonal group, IEEE TAC 53(5) 2008"
+  tags:
+  - sensor_fusion
+  - attitude
+  - mahony
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
+- id: madgwick_filter
+  version: 2.0.0
+  name: Madgwick Attitude Filter
+  description: "Madgwick gradient-descent attitude filter (IMU form); /imu/madgwick"
+  status: integrated
+  category: sensor_fusion
+  family: gradient_descent
+  implementation:
+    package: robot_lab_algorithms
+    executable: madgwick_filter
+    module: robot_lab_algorithms.fusion_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /imu/out
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /imu/madgwick
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    beta: 0.02
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Madgwick, An efficient orientation filter for inertial and inertial/magnetic sensor arrays, report 2010"
+  tags:
+  - sensor_fusion
+  - attitude
+  - madgwick
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
+- id: attitude_eskf
+  version: 2.0.0
+  name: Attitude Error-State Kalman Filter
+  description: "Error-state Kalman filter on attitude and gyro bias with an accelerometer gravity update whose noise covers platform accelerations; /imu/eskf"
+  status: integrated
+  category: sensor_fusion
+  family: kalman
+  implementation:
+    package: robot_lab_algorithms
+    executable: attitude_eskf
+    module: robot_lab_algorithms.fusion_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /imu/out
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /imu/eskf
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  parameters:
+    linear_accel_std: 2.0
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Sola, Quaternion kinematics for the error-state Kalman filter, arXiv:1711.02508 (2017)"
+  tags:
+  - sensor_fusion
+  - attitude
+  - eskf
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
+- id: wheel_imu_gnss_ukf
+  version: 2.0.0
+  name: Wheel + IMU + GNSS UKF
+  description: "Unscented Kalman filter on [x, y, theta, v, gyro bias] with wheel, gyro and GNSS measurements; /odometry/wheel_imu_gnss"
+  status: integrated
+  category: sensor_fusion
+  family: ukf
+  implementation:
+    package: robot_lab_algorithms
+    executable: wheel_imu_gnss_ukf
+    module: robot_lab_algorithms.fusion_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /robot_lab_controller/odom
+    - /imu/out
+    - /gps/fix
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /odometry/wheel_imu_gnss
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  parameters:
+    gnss_noise: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Wan and van der Merwe, The unscented Kalman filter for nonlinear estimation, AS-SPCC 2000"
+  tags:
+  - sensor_fusion
+  - ukf
+  - gnss
+  - r7_5
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r75-fusion-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: modelled-sensor benchmark (attitude or planar pose against truth); simulator runs pending"
+      date: "2026-10-13"
 - id: rrt_planner
   version: 1.0.0
   name: RRT Planner

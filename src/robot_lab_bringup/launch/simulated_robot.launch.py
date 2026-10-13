@@ -639,6 +639,8 @@ def _algorithm_nodes(nodes, use_sim_time, robot_model=""):
         extra = spec.get("parameters")
         if isinstance(extra, dict) and extra:
             parameters.append(dict(extra))
+        # Upstream nodes with fixed topic names are wired with remappings.
+        remappings = [(str(k), str(v)) for k, v in (spec.get("remappings") or {}).items()]
         actions.append(
             Node(
                 package=package,
@@ -646,6 +648,7 @@ def _algorithm_nodes(nodes, use_sim_time, robot_model=""):
                 name=spec.get("name") or ("%s_%s" % (category, algorithm_id)),
                 output="screen",
                 parameters=parameters,
+                remappings=remappings,
             )
         )
     return actions

@@ -46,6 +46,7 @@ setup(
             'complementary_imu = robot_lab_algorithms.sensor_fusion:complementary_imu_main',
             'mahony_filter = robot_lab_algorithms.sensor_fusion:mahony_filter_main',
             'madgwick_filter = robot_lab_algorithms.sensor_fusion:madgwick_filter_main',
+            'attitude_eskf = robot_lab_algorithms.sensor_fusion:attitude_eskf_main',
             'wheel_imu_gnss_ukf = robot_lab_algorithms.sensor_fusion:wheel_imu_gnss_ukf_main',
             # Global planning
             'nav2_global_planner = robot_lab_algorithms.nav2_adapters:global_planner_main',

@@ -94,7 +94,16 @@ algorithms:
     imu_republisher:
       stack: local_localization
     imu_complementary_filter:
-      node: {package: imu_filter_madgwick, executable: imu_filter_madgwick_node}
+      # The upstream imu_tools Madgwick filter (the id predates the name).
+      # Its topics are fixed (imu/data_raw -> imu/data): wire the bridges'
+      # IMU in and publish beside the robot_lab filters.
+      node:
+        package: imu_filter_madgwick
+        executable: imu_filter_madgwick_node
+        parameters: {use_mag: false, publish_tf: false, world_frame: enu}
+        remappings: {imu/data_raw: /imu/out, imu/data: /imu/madgwick_upstream}
+    attitude_eskf:
+      node: {package: robot_lab_algorithms, executable: attitude_eskf}
     wheel_imu_fusion:
       node: {package: robot_lab_algorithms, executable: wheel_imu_fusion}
     gps_odom_fusion:
