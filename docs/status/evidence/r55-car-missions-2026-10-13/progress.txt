@@ -14,3 +14,4 @@ ALLDONE
 gazebo ackermann_car exit=1 (rerun)
 gazebo rear_steer_car exit=0 (rerun)
 gazebo anti_ackermann_car exit=1 (rerun)
+gazebo anti_ackermann_car exit=0 (rerun after spawn fix)

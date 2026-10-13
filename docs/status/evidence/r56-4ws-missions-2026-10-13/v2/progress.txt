@@ -1,0 +1,24 @@
+mujoco ackermann exit=0
+mujoco in_phase exit=1
+mujoco crab exit=1
+mujoco pivot exit=0
+mujoco mecanum exit=1
+pybullet ackermann exit=0
+pybullet in_phase exit=0
+pybullet crab exit=0
+pybullet pivot exit=0
+pybullet mecanum exit=0
+gazebo ackermann exit=0
+gazebo in_phase exit=0
+gazebo crab exit=0
+gazebo pivot exit=0
+gazebo mecanum exit=0
+isaac ackermann exit=0
+isaac in_phase exit=0
+isaac crab exit=0
+isaac pivot exit=0
+isaac mecanum exit=0
+ALLDONE
+mujoco in_phase exit=0 (rerun, quiet host)
+mujoco crab exit=0 (rerun, quiet host)
+mujoco mecanum exit=1 (rerun, quiet host)

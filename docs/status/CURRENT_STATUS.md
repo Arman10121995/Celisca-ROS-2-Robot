@@ -43,6 +43,14 @@ October 13: implemented on master, experimental.
     window smoother on noisy position fixes: 0.16-0.19 m from 0.43 m raw
     fixes ([evidence](evidence/r74-state-estimation-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/state_estimation_comparison.md)).
+- **Walking robots navigate (P7).** Leg kinematic odometry feeds the EKF,
+  and slam/nav modes select each robot's policy. The obstacle mission
+  passes for Go2 (MuJoCo, Isaac), A1 (MuJoCo, Isaac) and G1 (MuJoCo).
+  Gazebo Go2, B2 and the G1 in Isaac failed on fixable causes (a paused
+  start that deadlocked the controller spawners; gaits that stand still
+  at the 0.2-0.3 m/s approach speed); fixed, reruns pending
+  ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md),
+  [tutorial](../tutorials/legged-policies.md)).
 - **Planner reruns.** With a clearance margin, RRT/RRT\* reach 14/15 goals
   (were 8 and 9) and Voronoi 15/15. MPPI capped at 0.3 m/s still reaches
   7/15: it gets within 0.05-0.19 m but does not settle into Bumperbot's
@@ -50,12 +58,22 @@ October 13: implemented on master, experimental.
 - **Missions.**
   - Workflow/reset screens pass 8/8 for Labbot and Bumperbot in all four
     backends ([evidence](evidence/r61-workflow-reset-2026-10-13/README.md)).
-  - 13 of 20 4WS/mecanum obstacle missions pass
-    ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)). The
-    pivot-mode arrivals were aborted by a 10 s progress checker; the
-    overlay is fixed and a rerun is queued.
+  - 4WS/mecanum obstacle missions: 13 of 20 passed first, **19 of 20** on
+    the rerun with a wider arrival window. Every 4WS pattern now passes in
+    every backend; MuJoCo mecanum was still aborted while aligning at the
+    goal, and its overlay got the same window
+    ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
+  - Car obstacle missions (Ackermann, rear-steer, anti-Ackermann): **10 of
+    12** pass. MuJoCo rear-steer hit the tf2 freeze; Gazebo Ackermann
+    aborted its detour after repeated collision-ahead stops
+    ([evidence](evidence/r55-car-missions-2026-10-13/README.md)).
 - **Gazebo cars.** The car description had no ground-truth publisher, so
-  Gazebo car missions timed out; it now has one.
+  Gazebo car missions timed out; it now has one, in the spawned
+  description too.
+- **Isaac mecanum strafe.** Freeing the 60 rollers from the URDF
+  importer's joint drives did not help: 0.119 m/s of 0.3 (was 0.142). The
+  roller contact is the next suspect
+  ([evidence](evidence/p56-drive-patterns-2026-10-12/README.md)).
 - **Stale transforms.** In 9 of about 90 recent Nav2 trials (R4.3, the
   planner comparisons and the car missions), a Nav2 server's whole TF view
   froze while AMCL kept publishing. The robot then spun in place, overshot

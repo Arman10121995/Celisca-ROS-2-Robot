@@ -8,7 +8,7 @@ ackermann, in_phase, crab or pivot, or `mecanum_car`. The mission is
 `scripts/sim_nav_mission.py`:
 
 1. A detour goal behind the obstacle row.
-2. A cancel after 1 s; the robot must stop.
+2. A cancel after 1 m of travel; the robot must stop.
 3. A resume to the same goal.
 4. A second goal next to an obstacle.
 
@@ -58,7 +58,44 @@ Mecanum and in-phase pass everywhere. Final errors of passing goals are
   poses"). Patience was exceeded twice. This is the planner_server form of
   the stale-pose signature (R4.3).
 
-## Rerun
+## Second run (`v2/`)
 
-All 20 cells are queued again with the new arrival window
-(`claude-4ws-missions-v2`).
+All 20 cells ran again from 06:06 to 06:50 (master `feb9a3b` to
+`8a57b76`; none of those commits changes the drives, their Nav2
+configuration or the checker). The 4WS overlay now had Bumperbot's
+progress checker (0.1 m in 30 s) and a 0.05 rad arrival heading.
+
+| Simulator | ackermann | in_phase | crab | pivot | mecanum |
+|---|---|---|---|---|---|
+| MuJoCo | **pass** | **pass** (rerun) | **pass** (rerun) | **pass** | fail (arrival) |
+| PyBullet | **pass** | **pass** | **pass** | **pass** | **pass** |
+| Gazebo | **pass** | **pass** | **pass** | **pass** | **pass** |
+| Isaac | **pass** | **pass** | **pass** | **pass** | **pass** |
+
+**19 of 20 cells pass**: every 4WS pattern passes in every backend,
+including all four pivot cells. Final truth errors of passing goals are 0.017-0.192 m.
+
+**Rerun cells.** The first v2 attempts at MuJoCo in_phase, crab and
+mecanum are kept in `v2/loaded_host/`.
+
+- in_phase and crab failed on a **TF freeze**: controller_server repeated
+  one `map -> odom` stamp 407 and 286 times while a fresh listener kept
+  receiving new ones (`*.tf_freeze.txt`). This is the tf2 0.25.23
+  deadlock.
+- I was also running tests, a build and the offline benchmarks on the
+  host at the time; the extra load likely makes the deadlock more
+  frequent.
+- The reruns (07:16-07:22) ran on a quiet host **and** with the tf2
+  0.25.24 overlay, installed at 06:52. in_phase and crab passed; the two
+  changes cannot be separated from these runs.
+
+**MuJoCo mecanum: arrival, twice.** Both attempts brought the robot to
+0.03-0.09 m of the goal, and the base progress checker ("Failed to make
+progress") aborted the final alignment: once on the detour goal, and on
+both goals in the loaded attempt. The mecanum overlay had not been given
+the 4WS arrival window. It now has it (`f36bc5e`). Its "control loop
+missed its desired rate" warnings are not caused by load: the quiet
+rerun had 560, the loaded attempt 640, and the passing first run 527.
+
+The mecanum cells run again in every backend in validation round 3
+(`claude-mecanum-v3`).

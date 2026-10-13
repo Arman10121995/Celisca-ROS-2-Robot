@@ -13,7 +13,7 @@ Each car uses its own defaults: Smac Hybrid-A* with its 0.5 m turning
 radius, and Regulated Pure Pursuit. The mission:
 
 1. A detour goal behind the obstacle row.
-2. A cancel after 1 s; the car must stop.
+2. A cancel after 1 m of travel; the car must stop.
 3. A resume to the same goal.
 4. A goal next to an obstacle.
 
@@ -22,7 +22,8 @@ spot, so the goal heading is not checked (`--max-yaw-error-deg 0`); the
 final headings are in the records. `motion_reverse_m` is the distance
 driven backwards.
 
-The cells ran from 01:32 to 05:55 at revisions `7b1b19e` to `b8e8ba5`.
+The cells ran from 01:32 to 05:55 at revisions `7b1b19e` to `b8e8ba5`;
+the Gazebo anti_ackermann_car rerun ran at 07:22 at `42d1ccb`.
 None of those commits changes the car drive or its Nav2 configuration. The
 first Gazebo runs ran without ground truth: the car description had no
 truth publisher. They were rerun after `30f5e83`; the originals are kept
@@ -34,11 +35,11 @@ on the SSD in `claude-car-missions/gazebo_no_truth_before_30f5e83/`.
 |---|---|---|---|
 | MuJoCo | **pass** (0.20 / 0.20 m) | fail (TF freeze) | **pass** (0.16 / 0.22 m) |
 | PyBullet | **pass** (0.21 / 0.23 m) | **pass** (0.21 / 0.28 m) | **pass** (0.16 / 0.19 m) |
-| Gazebo | fail (resume aborted 1.51 m short) | **pass** (0.18 / 0.21 m) | rerun queued (no truth; see below) |
+| Gazebo | fail (resume aborted 1.51 m short) | **pass** (0.18 / 0.21 m) | **pass** (0.17 / 0.23 m), rerun at 07:22 |
 | Isaac | **pass** (0.19 / 0.23 m) | **pass** (0.20 / 0.27 m) | **pass** (0.14 / 0.16 m) |
 
 The pairs are the final truth errors of the resumed detour goal and of the
-near-obstacle goal. **9 of 11 measured cells pass.** Most cells also drove
+near-obstacle goal. **10 of 12 cells pass.** Most cells also drove
 0.8-1.3 m backwards at some point (`motion_reverse_m`).
 
 ## Failures
@@ -60,4 +61,7 @@ near-obstacle goal. **9 of 11 measured cells pass.** Most cells also drove
     parameter, not the description Gazebo spawns.
   - `anti_ackermann_car` reuses the Ackermann file, so its truth went to
     `/model/ackermann_car/...`.
-  - Fixed in the spawn path as well; the cell is queued again.
+  - Fixed in the spawn path as well (`71b2dbb`). The rerun at 07:22 had
+    truth and passed: 0.17 m and 0.23 m, with 1.07 m driven backwards.
+    It ran with the tf2 0.25.24 overlay installed (06:52); the other
+    cells ran before it.

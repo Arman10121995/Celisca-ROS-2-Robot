@@ -1,0 +1,95 @@
+detected 2026-10-13T06:09:36+02:00
+[controller_server-15] [ERROR] [1791864576.144095505] [tf_help]: Transform data too old when converting from map to odom
+[controller_server-15] [ERROR] [1791864576.145358913] [tf_help]: Data time: 81s 3999999ns, Transform time: 80s 3999999ns
+--- fresh listener: map -> odom
+At time 83.803999999
+- Translation: [-7.050, -7.017, 0.000]
+At time 84.803999999
+- Translation: [-7.067, -6.982, 0.000]
+At time 85.603999999
+- Translation: [-7.058, -6.991, 0.000]
+At time 86.603999999
+- Translation: [-7.112, -6.909, 0.000]
+At time 87.403999999
+- Translation: [-7.138, -6.888, 0.000]
+--- fresh listener: odom -> base_footprint
+At time 88.503999999
+- Translation: [6.922, 4.766, 0.000]
+At time 89.403999999
+- Translation: [7.130, 4.885, 0.000]
+At time 90.283999999
+- Translation: [7.332, 5.002, 0.000]
+At time 91.143999999
+- Translation: [7.531, 5.115, 0.000]
+At time 92.3999999
+- Translation: [7.729, 5.229, 0.000]
+--- controller_server pid 869787 threads (tid comm state wchan)
+869787 controller_serv S futex_wait_queue_me
+869815 controller_serv S futex_wait_queue_me
+869816 controller_serv S futex_wait_queue_me
+869874 gc S futex_wait_queue_me
+869875 dq.builtins S futex_wait_queue_me
+869876 dq.user S futex_wait_queue_me
+869878 tev S futex_wait_queue_me
+869879 recv S do_select
+869880 recvUC S __skb_wait_for_more_packets
+869882 controller_serv S futex_wait_queue_me
+869883 controller_serv S futex_wait_queue_me
+869905 controller_serv S futex_wait_queue_me
+869913 controller_serv S futex_wait_queue_me
+869914 controller_serv S futex_wait_queue_me
+869926 controller_serv S futex_wait_queue_me
+869927 controller_serv S futex_wait_queue_me
+869940 controller_serv S futex_wait_queue_me
+869996 controller_serv S futex_wait_queue_me
+871117 controller_serv R 0
+--- planner_server pid 869789 threads (tid comm state wchan)
+869789 planner_server S futex_wait_queue_me
+869810 planner_server S futex_wait_queue_me
+869811 planner_server S futex_wait_queue_me
+869846 gc S futex_wait_queue_me
+869847 dq.builtins S futex_wait_queue_me
+869848 dq.user S futex_wait_queue_me
+869849 tev S futex_wait_queue_me
+869850 recv S do_select
+869851 recvUC S __skb_wait_for_more_packets
+869852 planner_server S futex_wait_queue_me
+869877 planner_server S futex_wait_queue_me
+869908 planner_server S futex_wait_queue_me
+869941 planner_server S futex_wait_queue_me
+869942 planner_server S futex_wait_queue_me
+869943 planner_server S futex_wait_queue_me
+869944 planner_server S futex_wait_queue_me
+869946 planner_server S futex_wait_queue_me
+869947 planner_server S futex_wait_queue_me
+870038 planner_server S futex_wait_queue_me
+--- amcl pid 869779 threads (tid comm state wchan)
+869779 amcl S futex_wait_queue_me
+869794 amcl S futex_wait_queue_me
+869796 amcl S futex_wait_queue_me
+869817 gc S futex_wait_queue_me
+869820 dq.builtins S futex_wait_queue_me
+869825 dq.user S futex_wait_queue_me
+869826 tev S futex_wait_queue_me
+869827 recv S do_select
+869828 recvUC S __skb_wait_for_more_packets
+869829 amcl S futex_wait_queue_me
+869831 amcl S futex_wait_queue_me
+869910 amcl S futex_wait_queue_me
+869911 amcl S futex_wait_queue_me
+869928 amcl S futex_wait_queue_me
+--- bt_navigator pid 869797 threads (tid comm state wchan)
+869797 bt_navigator S futex_wait_queue_me
+869836 bt_navigator S futex_wait_queue_me
+869837 bt_navigator S futex_wait_queue_me
+869853 gc S futex_wait_queue_me
+869854 dq.builtins S futex_wait_queue_me
+869857 dq.user S futex_wait_queue_me
+869858 tev S futex_wait_queue_me
+869859 recv S do_select
+869860 recvUC S __skb_wait_for_more_packets
+869861 bt_navigator S futex_wait_queue_me
+869864 bt_navigator S futex_wait_queue_me
+869962 bt_navigator S futex_wait_queue_me
+869981 bt_navigator S futex_wait_queue_me
+871115 bt_navigator S futex_wait_queue_me

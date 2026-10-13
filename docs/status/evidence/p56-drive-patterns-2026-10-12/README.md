@@ -62,6 +62,21 @@ angles are in `gazebo_*.json`.
 
 All 20 cells stop at zero.
 
+## Isaac strafe follow-up (2026-10-13)
+
+The Isaac URDF importer gives every revolute joint a drive, so the 60
+passive rollers were held by it. `42d1ccb` gives roller joints zero
+stiffness and the URDF's bearing-level damping; the launch log confirms
+"Free roller joints: 60". The repeat
+([isaac_mecanum_drive_free_rollers_2026-10-13.json](isaac_mecanum_drive_free_rollers_2026-10-13.json))
+strafed at **0.119 m/s** of 0.3, no better than 0.142. The roller drives
+were not the cause. The roller contact (friction combination, roller
+collision shapes) is the next suspect. The other phases are unchanged:
+straight 0.403, arcs 0.334/0.488, spin 1.016 rad/s, stop at zero.
+
+The same build passed the mecanum obstacle mission in Isaac (0.06 m and
+0.09 m from truth).
+
 ## Not covered here
 
 These are open-loop drive screens on a flat map. Obstacle routes,

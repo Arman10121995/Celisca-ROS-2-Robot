@@ -221,18 +221,25 @@ code delivery, not a passed mission or universal support.
 - [ ] **R5.5:** Complete Ackermann, rear-steer and anti-Ackermann obstacle/
   slalom, mapping, localization and navigation qualification. Retain each
   drive model's turning constraints and independent body/contact evidence.
+  The obstacle mission passes in 10 of 12 car/backend cells
+  ([evidence](evidence/r55-car-missions-2026-10-13/README.md)).
 - [ ] **R5.6/P5/P6:** Repeat current 4WS Ackermann, in-phase/crab and pivot,
   plus mecanum, across all four backends and required maps/modes. Include
   strict final position/heading, measured contacts, repeated obstacle routes,
   cancellation/second goals, command loss, reset and longer mapping missions.
   Earlier passing screens are not a rerun of every final configuration.
+  The obstacle mission (detour, cancel, resume, second goal) passes in 19
+  of 20 pattern/backend cells; MuJoCo mecanum is rerun with the arrival
+  window ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
 - [ ] **R5.2:** Resolve Go2 stair/terrain traversal and roll-axis recovery;
   existing failed get-up trials remain negative evidence. Qualify robust
   walking/turning and sensor/goal missions before broader mode enablement.
 - [ ] **P7 (rl_sar):** Go2/A1/B2/Go2W policies walk on `/cmd_vel` in MuJoCo
-  ([evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)); measure the
-  new Isaac PD path, add a Gazebo actuation path and gate mapping/navigation on
-  measured turning (Go2 himloco does not spin in place).
+  ([evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)), Isaac and
+  (Go2) Gazebo. Walking robots now navigate with leg odometry: the obstacle
+  mission passes for Go2 and A1 in MuJoCo and Isaac and for the G1 in
+  MuJoCo ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md)).
+  Gazebo Go2, B2 and Isaac G1 reruns, slam-mode mapping and repeats remain.
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live

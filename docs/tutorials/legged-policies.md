@@ -5,7 +5,8 @@ Documentation updated October 13, 2026 against master. Read
 describes an **experimental** operator path. Flat-ground walks on
 `/cmd_vel` are measured for each robot and backend listed below
 ([evidence](../status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md)).
-Terrain, push recovery, mapping and navigation are not qualified.
+Navigation is measured on one obstacle mission per robot and backend
+(2026-10-13). Terrain, push recovery and mapping are not qualified.
 
 The lab runs selected locomotion policies from
 [rl_sar](https://github.com/fan-ziqi/rl_sar)
@@ -101,6 +102,49 @@ Commands arrive on the same topics as the other controllers
 Drive pad works; `(vx, vy, wz)` is clamped to the controller's limits
 (default `0.8 0.4 1.0`).
 
+## Mapping and navigation (experimental, 2026-10-13)
+
+In `slam` and `nav` modes, MuJoCo, Isaac and Gazebo select the robot's
+policy automatically, as Isaac and Gazebo already do in `loc`. The GUI
+fills in the policy for these modes.
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+    mode:=nav simulator:=mujoco map_name:=nav_obstacle robot_model:=unitree_go2 gui:=false
+```
+
+**Odometry.** A walking robot has no wheels to count, so
+`leg_odometry` estimates the trunk velocity from the stance feet:
+
+- forward kinematics of each foot from `/joint_states` (URDF), plus the IMU
+  rate, gives `v = -(J q̇ + ω × p)` for each foot on the ground;
+- a foot counts as stance when it is within 3 cm of the lowest foot and
+  agrees with the previous estimate (swing feet near the ground would
+  otherwise make the robot look 20-40% slower);
+- the result is published on `/leg_odometry`, and the EKF uses it as
+  `odom0`. AMCL then corrects the drift against the map.
+
+On a 9 m walk the leg odometry ends 1.3-7.1% of the distance from truth.
+
+**Navigation.** Regulated Pure Pursuit drives the policy through
+`/cmd_vel`. The per-robot overlays in
+`src/robot_lab_navigation/config/robots/` set the footprints, a minimum
+speed each gait actually walks at, and no turn ramp (a gait that ignores
+0.1 rad/s would never start turning). Go2 does not rotate to the goal
+heading, because himloco cannot turn on the spot in MuJoCo or Gazebo.
+
+**Measured** on the nav_obstacle mission (detour, cancel, resume, second
+goal; [evidence](../status/evidence/p7-legged-navigation-2026-10-13/README.md)):
+
+| Robot | MuJoCo | Isaac | Gazebo |
+|---|---|---|---|
+| Go2 | **pass** | **pass** | fail: the paused start deadlocked its controller spawners (fixed, rerun pending) |
+| A1 | **pass** | **pass** | not available |
+| B2 | fail: stands still below about 0.35 m/s (speeds raised, rerun pending) | not run (drifts) | not available |
+| G1 | **pass** | fail: stood still at 0.2 m/s while its odometry crept on (speeds raised, rerun pending) | not available |
+
+Latest round per cell. Passing goals end 0.01-0.22 m from truth.
+
 ## Safety contract
 
 - Command timeout (0.5 s): commands expire to zero velocity; the policy
@@ -115,12 +159,13 @@ Drive pad works; `(vx, vy, wz)` is clamped to the controller's limits
 
 ## Limits (read before trusting it)
 
-The measurements above are flat-ground velocity screens, not missions.
-These remain unqualified (task ledger R5.2 and R3.6):
+The walks above are flat-ground velocity screens; the navigation results
+are one seeded mission per cell on one flat map. These remain unqualified
+(task ledger R5.2 and R3.6):
 
 - terrain, falls and recovery;
-- localization coupling;
-- mapping and navigation.
+- mapping (slam mode) with leg odometry;
+- navigation beyond the cells measured above.
 
 Known limits:
 
