@@ -1,0 +1,34 @@
+{
+ "command_vy": 0.3,
+ "samples": 300,
+ "measured_lateral_mps": 0.167,
+ "measured_forward_mps": 0.078,
+ "ideal_hub_rate": 6.0,
+ "ideal_roller_rate": 67.3,
+ "wheels": {
+  "front_left_wheel_joint": {
+   "hub_rate_mean": 6.078,
+   "rollers": 15,
+   "fastest_roller_rate_mean": 39.86,
+   "fastest_roller_rate_p90": 64.6
+  },
+  "front_right_wheel_joint": {
+   "hub_rate_mean": 6.152,
+   "rollers": 15,
+   "fastest_roller_rate_mean": 34.37,
+   "fastest_roller_rate_p90": 48.29
+  },
+  "rear_left_wheel_joint": {
+   "hub_rate_mean": 6.178,
+   "rollers": 15,
+   "fastest_roller_rate_mean": 32.72,
+   "fastest_roller_rate_p90": 39.22
+  },
+  "rear_right_wheel_joint": {
+   "hub_rate_mean": 5.955,
+   "rollers": 15,
+   "fastest_roller_rate_mean": 26.94,
+   "fastest_roller_rate_p90": 37.86
+  }
+ }
+}

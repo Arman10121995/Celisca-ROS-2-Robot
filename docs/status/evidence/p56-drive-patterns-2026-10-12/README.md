@@ -113,7 +113,27 @@ drives are now free, so the remaining suspects are in PhysX:
 - contact offsets that are large next to 6 mm rollers;
 - the imported roller joint axes.
 
-These are the next experiments.
+**Two of them tried (2026-10-13 afternoon).**
+
+| Isaac change | Lateral speed | Forward drift | Fastest roller, mean per wheel |
+|---|---|---|---|
+| Free rollers, bearing damping (above) | 0.154 m/s | 0.094 m/s | 27.5-38.2 rad/s |
+| + 32/8 solver iterations ([json](isaac_mecanum_rollers_iterations_2026-10-13.json)) | 0.167 m/s | 0.078 m/s | 26.9-39.9 rad/s |
+| + 2 mm contact offset on the 60 roller collisions ([json](isaac_mecanum_rollers_iterations_contact_offset_2026-10-13.json)) | 0.167 m/s | -0.034 m/s | 31.8-40.3 rad/s |
+
+- Neither brings the rollers near the 67 rad/s they need. The strafe
+  stays at about 55% of the command.
+- The contact offset first reached no prims at all: the importer's
+  collision meshes are instanceable. The roller instances are now made
+  local first (`175fa1c`, `cdcb01c`).
+- The full drive check with both changes
+  ([json](isaac_mecanum_drive_roller_tuning_2026-10-13.json)) strafes at
+  0.148 m/s with less forward drift (0.022 m/s). Every other phase is
+  unchanged, and the obstacle mission still passes (0.12 m and 0.09 m).
+- The changes stay: they do no harm and reduce the drift.
+- **Isaac mecanum strafing remains at about half speed.** The imported
+  roller joint axes and PhysX's friction on such small rollers are what
+  is left to check.
 
 ## Not covered here
 

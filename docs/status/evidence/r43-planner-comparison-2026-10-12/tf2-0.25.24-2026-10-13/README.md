@@ -33,5 +33,10 @@ Before the overlay, about 1 in 10 trials froze (9 of about 90). At that
 rate about 3 freezes would be expected in 33 launches. Zero is consistent
 with the deadlock fix; it is not yet a large sample.
 
+**Later the same day: 46 launches, still 0.** Thirteen more Nav2 launches
+followed by 13:10: legged round 4 (4), the MuJoCo rear-steer car (1), the
+R7.3 scan recordings (6) and Isaac mecanum (2). None shows a signature.
+At the earlier rate about 4-5 freezes would be expected.
+
 The trial bags, traces and launch logs stay on the SSD in
 `robot_lab_runtime/claude-r43-tf2fix/`.

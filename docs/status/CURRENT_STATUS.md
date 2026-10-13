@@ -83,9 +83,12 @@ October 13: implemented on master, experimental.
 - **Gazebo cars.** The car description had no ground-truth publisher, so
   Gazebo car missions timed out; it now has one, in the spawned
   description too.
-- **Isaac mecanum strafe.** Freeing the 60 rollers from the URDF
-  importer's joint drives did not help: 0.119 m/s of 0.3 (was 0.142). The
-  roller contact is the next suspect
+- **Isaac mecanum strafe.** Still about half speed (0.148-0.167 m/s of
+  0.3). A roller-rate probe shows the hubs at the ideal rate but the
+  contact rollers at about half theirs (MuJoCo 95-97%). Freeing the
+  roller drives, per-degree damping, solver iterations and a smaller
+  roller contact offset did not fix it; the mecanum obstacle mission
+  passes in Isaac regardless
   ([evidence](evidence/p56-drive-patterns-2026-10-12/README.md)).
 - **Stale transforms.** In 9 of about 90 recent Nav2 trials (R4.3, the
   planner comparisons and the car missions), a Nav2 server's whole TF view
