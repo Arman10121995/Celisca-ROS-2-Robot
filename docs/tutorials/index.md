@@ -58,9 +58,16 @@ compute) and on the same 15 goals in Gazebo (2026-10-13).
 [Sensor fusion](sensor_fusion_comparison.md) compares five attitude
 filters and three pose filters on modelled sensors with known truth,
 offline and over ROS (2026-10-13).
+[Perception](perception_comparison.md) compares obstacle detection,
+ground removal and clustering on synthetic scenes;
+[localization](localization_comparison.md) compares four scan matchers
+with dead reckoning on nav_maze trajectories recorded in Gazebo; and
+[state estimation](state_estimation_comparison.md) compares six filters
+on noisy position fixes (all offline with known truth, 2026-10-13).
 The Go2 tutorial is a bounded runtime evidence walkthrough, not a replacement
-for a fair algorithm comparison. These documents do not constitute five
-algorithms in any category.
+for a fair algorithm comparison. The learning examples in the table above
+do not by themselves constitute five algorithms in any category; the
+measured comparisons are listed in each comparison page with their limits.
 
 ## What must precede a full comparison
 

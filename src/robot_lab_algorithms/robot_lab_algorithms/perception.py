@@ -384,9 +384,11 @@ class ScanClustererNode(Node):
         super().__init__(node_name)
         self.declare_parameter('scan_topic', '/scan')
         self.declare_parameter('cluster_distance', 0.3)
+        self.declare_parameter('adaptive', False)
         self.declare_parameter('markers_topic', '/perception/clusters')
         self.clusterer = ScanClusterer(
-            cluster_distance=float(self.get_parameter('cluster_distance').value))
+            cluster_distance=float(self.get_parameter('cluster_distance').value),
+            adaptive=bool(self.get_parameter('adaptive').value))
         self._pub = self.create_publisher(
             MarkerArray, self.get_parameter('markers_topic').value, 10)
         self.create_subscription(

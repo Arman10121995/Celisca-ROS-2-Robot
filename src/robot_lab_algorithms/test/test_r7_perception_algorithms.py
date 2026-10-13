@@ -99,6 +99,17 @@ class TestScanClusterer(unittest.TestCase):
         self.assertEqual(self.clusterer.node_name, 'scan_clusterer')
         self.assertEqual(self.clusterer.cluster_distance, 0.3)
 
+    def test_adaptive_breakpoint_keeps_a_grazing_wall_whole(self):
+        """A far wall seen at a grazing angle: fixed threshold splits it, adaptive does not."""
+        step = math.radians(1.0)
+        angles = [math.radians(20.0) + i * step for i in range(11)]
+        ranges = [4.0 / math.sin(a) for a in angles]   # the wall y = 4 m
+        fixed = ScanClusterer(cluster_distance=0.3).cluster_ranges(angles[0], step, ranges, 30.0)
+        adaptive = ScanClusterer(cluster_distance=0.3, adaptive=True).cluster_ranges(
+            angles[0], step, ranges, 30.0)
+        self.assertGreater(len(fixed), 1)
+        self.assertEqual(len(adaptive), 1)
+
 
 class TestPointcloudSegmenter(unittest.TestCase):
     """Tests for PointcloudSegmenter algorithm."""

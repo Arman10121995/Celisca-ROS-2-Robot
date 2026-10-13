@@ -20,6 +20,7 @@ node ids now run it:
 **How the nodes run.** Each node:
 
 - subscribes to `/map`, `/scan` and the `odom -> base` transform;
+- takes its start pose from `/initialpose` or the first `/amcl_pose`;
 - predicts with the odometry increment, then aligns the scan;
 - refuses corrections larger than 0.5 m;
 - publishes `PoseWithCovarianceStamped` on `/robot_lab/<method>_pose`,
@@ -49,7 +50,7 @@ with 0.02 m range noise, 3% dropouts and a 12 m range.
 scale, a heading drift of 0.5°/m and white noise. Every localizer gets the
 same input (seeds 1, 2).
 
-| Localizer | Position RMSE | Max error | Heading RMSE | Lost (> 0.5 m) | Compute p50 / max p99 |
+| Localizer | Position RMSE | Max error (mean of runs) | Heading RMSE | Lost (> 0.5 m) | Compute p50 / max p99 |
 |---|---|---|---|---|---|
 | ICP point to point | **0.007 m** | 0.016 m | 0.21° | 0% | 2.7 / 6.6 ms |
 | ICP point to line | 0.008 m | 0.017 m | 0.23° | 0% | **1.8 / 2.7 ms** |
@@ -64,8 +65,8 @@ Per-run numbers are in [results.json](results.json) and the table in
 
 - **All four scan matchers hold the pose to about a centimetre,** while
   the biased odometry alone drifts past 0.5 m on 41% of the scans.
-- **Point-to-line ICP is the fastest** (1.8 ms median). It converges in
-  fewer iterations than point-to-point.
+- **Point-to-line ICP is the fastest** (1.8 ms median, against 2.7 ms for
+  point to point) at the same accuracy.
 - **Correlative matching is resolution-limited.**
   - Its 0.025 m / 0.5° fine grid sets a floor of 2-3 cm.
   - Once, on seed 37, it picked a neighbouring corridor-like optimum

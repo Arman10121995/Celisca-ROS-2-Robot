@@ -291,9 +291,15 @@ code delivery, not a passed mission or universal support.
   plant and in Gazebo ([control](../tutorials/control_comparison.md)).
   Sensor fusion (R7.5) has real attitude and
   pose filters, measured on modelled sensors offline and over ROS
-  ([fusion](../tutorials/sensor_fusion_comparison.md)). Perception,
-  localization and state estimation still need the same matched-input
-  runs. Numerical kernels or generated scores do not count.
+  ([fusion](../tutorials/sensor_fusion_comparison.md)). Perception
+  (R7.2), localization (R7.3) and state estimation (R7.4) now run real
+  methods, measured offline with known truth: synthetic scenes, ray-cast
+  scans along Gazebo trajectories, and noisy position fixes
+  ([perception](../tutorials/perception_comparison.md),
+  [localization](../tutorials/localization_comparison.md),
+  [state estimation](../tutorials/state_estimation_comparison.md)).
+  Their runs on simulator sensor data remain. Numerical kernels or
+  generated scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
 - [ ] **R9.1/R9.2:**
@@ -301,9 +307,14 @@ code delivery, not a passed mission or universal support.
     (118/125;
     [evidence](evidence/r91-license-inventory-2026-10-12/README.md)).
   - Three of the seven comparison tutorials are measured in Gazebo
-    (global, local, control), and sensor fusion on modelled sensors.
-  - Model/asset attribution, a real clean-host installation and the other
-    five tutorials remain.
+    (global, local, control). The other four (perception, localization,
+    state estimation, sensor fusion) are measured offline with known
+    truth; their simulator-data runs remain.
+  - Model/asset attribution is checked against the nearest LICENSE or
+    package manifest (`scripts/asset_attribution.py`,
+    [evidence](evidence/r91-asset-attribution-2026-10-13/README.md));
+    five registry entries remain open. A real clean-host installation
+    remains.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
