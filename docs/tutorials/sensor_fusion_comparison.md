@@ -1,87 +1,116 @@
-# Sensor Fusion Comparison: Multi-Sensor Integration
+# Sensor Fusion Comparison: attitude and planar pose
 
-Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
-Read [current status](../status/CURRENT_STATUS.md) for available workflows and
-remaining qualification; evidence below retains its named source stages.
+Measured October 13, 2026, at revision `303e01a`. The evidence and raw
+results are in
+[r75-fusion-benchmark-2026-10-13](../status/evidence/r75-fusion-benchmark-2026-10-13/README.md).
 
-> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
-> the generated scores and placeholder command claims. R9.2 remains partial.
+**Category:** sensor_fusion
+**Type:** measured comparison on modelled sensors (offline and over ROS)
 
+## What is compared
 
-**Category:** sensor_fusion  
-**Type:** draft_template
-**Target Audience:** intermediate  
-**Estimated Time:** 75 minutes  
+**Attitude from an IMU.** Five attitude filters estimate roll and pitch
+from gyro and accelerometer readings:
 
-## Description
+| Selection (`sensor_fusion:=`) | Method | Idea |
+|---|---|---|
+| `complementary_imu` | Complementary filter | Integrate the gyro; pull roll and pitch toward the accelerometer tilt with time constant tau |
+| `mahony_filter` | Mahony (2008) | Feed the cross product of measured and predicted gravity back into the gyro (proportional and integral) |
+| `madgwick_filter` | Madgwick (2010) | One normalised gradient-descent step toward the measured gravity per sample |
+| `attitude_eskf` | Error-state Kalman filter | Estimate attitude and gyro bias; weigh the accelerometer by how much the platform accelerates |
+| `imu_complementary_filter` | imu_tools Madgwick (upstream C++) | The ROS package's filter, for reference |
 
-Compare 5 sensor fusion algorithms for attitude and pose estimation
+**Planar pose.** Three pose filters estimate (x, y, heading) from wheel
+odometry, a gyro and GNSS:
 
-## Prerequisites
+| Selection | Method |
+|---|---|
+| `wheel_imu_fusion` | EKF: gyro heading with bias, wheel speed, zero angular rate update at standstill |
+| `gps_odom_fusion` | The same EKF plus GNSS position |
+| `wheel_imu_gnss_ukf` | Unscented Kalman filter on the same model |
 
-- Multiple sensor types available
-- IMU and motion data understanding
-- Sensor calibration completed
-
-
-## Learning Objectives
-
-- Understand different fusion approaches
-- Compare complementary vs Mahony vs Madgwick filters
-- Evaluate convergence and noise handling
-- Analyze sensor dropout robustness
-
+All of them read standard messages (`sensor_msgs/Imu`, `nav_msgs/Odometry`,
+`sensor_msgs/NavSatFix`) and publish beside the lab's own estimator. Select
+one in the GUI's **Sensor fusion** slot, or with `sensor_fusion:=`.
 
 ## Run
 
-Only the method/experiment declarations can currently be checked with this page:
-
 ```bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+python3 scripts/r7_5_fusion_benchmark.py --out <dir>      # offline, about 1 minute
+scripts/r7_5_attitude_replay.sh <dir>/ros_replay.json     # the five attitude nodes over ROS, 2 minutes
 ```
 
-This checks numerical fixtures and configuration contracts. It does not execute
-five robot methods or produce the proposed comparison results below. Follow
-[the completion audit](../status/audit-2026-10-02.md) and
-[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
+The benchmark generates sensors with known truth:
 
+- **Attitude:** a body that rolls, pitches and turns, with constant gyro
+  bias, sensor noise, and horizontal accelerations of 0.5 m/s². These rise
+  to 2 m/s² for 20 s.
+- **Pose:** a 0.5 m/s drive with stops, wheel scale errors, two wheel-slip
+  episodes and 1 Hz GNSS.
 
-## Proposed artifacts
+Each attitude filter's gain is chosen on a separate tuning seed. The
+results average three other seeds.
 
-An executed comparison must produce and validate these artifacts:
+## Results
 
-- `docs/tutorials/sensor_fusion_comparison.md`
-- `docs/tutorials/sensor_fusion_results.json`
-- `docs/tutorials/fusion_attitude_plots.png`
+**Attitude** (tilt error after 10 s):
 
+| Filter (tuned gain) | Tilt RMS | Under 2 m/s² (RMS / max) | Settle from 20° off | Yaw drift |
+|---|---|---|---|---|
+| ESKF (16 m/s²) | **0.46°** | **0.53° / 0.98°** | **4.3 s** | -24°/min |
+| Mahony (kp 0.25) | 1.49° | 2.46° / 4.75° | 15.2 s | **-0.6°/min** |
+| Complementary (tau 4 s) | 1.90° | 2.69° / 6.18° | 11.4 s | 40°/min |
+| Madgwick (beta 0.02) | 2.03° | 2.96° / 6.82° | 15.7 s | 39°/min |
 
-## Success Criteria
+Over ROS, with each node at its default gain:
 
-- [ ] All 5 fusion methods execute
-- [ ] Attitude accuracy metrics collected
-- [ ] Noise handling behavior analyzed
-- [ ] Method recommendations for different sensor configurations
+- Mahony 1.33°;
+- ESKF 1.41° (default 2.0 m/s²);
+- complementary 1.90°;
+- Madgwick 1.95°;
+- upstream imu_tools Madgwick 3.73° (gain 0.1).
 
+**Pose** over 300 s:
+
+| Method | Position RMSE | Final error | Heading RMSE |
+|---|---|---|---|
+| Wheel dead reckoning | 17.8 m | 40.3 m | 50° |
+| EKF (wheels + gyro) | 0.42 m | 0.93 m | 1.6° |
+| EKF + GNSS | **0.20 m** | 0.17 m | 1.8° |
+| UKF + GNSS | **0.20 m** | 0.17 m | 1.8° |
+
+## What the numbers say
+
+- **Estimating the gyro bias is what matters.** The ESKF learns the bias,
+  so it can rely on the gyro and hardly lean when the platform accelerates.
+  The fixed-gain filters must trade noise against acceleration error
+  through one gain.
+- **Gains decide the ranking among the fixed-gain filters.** Upstream
+  Madgwick at its default gain (0.1) scores 3.73°. The lab's Madgwick
+  scored 3.72° at the same gain. Implementations agree; tuning differs.
+- **No filter can hold yaw without a heading reference.** Mahony's
+  integral term happened to pick up the z bias while the body tilted. The
+  ESKF learned it and then lost it under acceleration.
+- **For a wheeled robot, heading should come from the gyro, not the
+  wheels.** Wheel yaw rate carries track-width error and slip, which cost
+  dead reckoning 50° of heading. The gyro bias is learned whenever the
+  robot stands still.
+- **The UKF matches the EKF here.** The unicycle model is mildly nonlinear
+  at these rates, and the UKF costs three times the compute.
+
+## Limits
+
+- Modelled sensors: constant biases, white noise, no vibration and no
+  magnetometer. Simulator IMUs are a separate step. The MuJoCo and Isaac
+  bridges publish a perfect orientation and a constant accelerometer, so
+  they cannot test attitude filters; Gazebo's IMU sensor can.
+- The pose filters need wheel odometry. Only Gazebo publishes it
+  (`/robot_lab_controller/odom`).
 
 ## Related tutorials
 
 - [Tutorial index](README.md)
 - [Numerical learning notes](sensor_fusion.md)
-- [Related comparison draft](comparison_sensor_fusion.md)
 - [Measured-run and failure workflow](../WORKFLOW.md)
-- [Current done/remaining checklist](../status/CHECKLIST.md)
 
-## Notes
-
-- This tutorial assumes you have a working robot_lab installation
-- All commands should be run from the workspace root
-- For GUI tutorials, ensure you have a display available or use a tested X11 display
-- Results may vary based on your hardware configuration
-
----
-
-*Draft reviewed: 2026-10-07; original generated template: 2026-10-01*
-
-*Part of R9.2: Seven Real Comparison Tutorials
-
-*See [ROADMAP.md](../../ROADMAP.md) for task details*
+*Part of R9.2: Seven Real Comparison Tutorials. See [ROADMAP.md](../../ROADMAP.md).*

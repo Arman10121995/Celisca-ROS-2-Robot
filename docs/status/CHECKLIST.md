@@ -288,18 +288,20 @@ code delivery, not a passed mission or universal support.
   ([global](../tutorials/global_planning_comparison.md),
   [local](../tutorials/local_planning_comparison.md)). Six path-tracking
   controllers (R7.8) drive through FollowPath and are measured on a model
-  plant ([control](../tutorials/control_comparison.md)); their Gazebo run
-  is queued. Perception, localization, state estimation and sensor fusion
-  still need the same matched-input runs. Numerical kernels or generated
-  scores do not count.
+  plant and in Gazebo ([control](../tutorials/control_comparison.md)).
+  Sensor fusion (R7.5) has real attitude and
+  pose filters, measured on modelled sensors offline and over ROS
+  ([fusion](../tutorials/sensor_fusion_comparison.md)). Perception,
+  localization and state estimation still need the same matched-input
+  runs. Numerical kernels or generated scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
 - [ ] **R9.1/R9.2:**
   - Declared dependency licenses are resolved from installed metadata
     (118/125;
     [evidence](evidence/r91-license-inventory-2026-10-12/README.md)).
-  - Two of the seven comparison tutorials are measured in Gazebo, and the
-    control tutorial on a model plant.
+  - Three of the seven comparison tutorials are measured in Gazebo
+    (global, local, control), and sensor fusion on modelled sensors.
   - Model/asset attribution, a real clean-host installation and the other
     five tutorials remain.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current

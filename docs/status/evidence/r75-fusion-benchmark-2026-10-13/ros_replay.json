@@ -1,0 +1,29 @@
+{
+ "samples_published": 12000,
+ "wall_seconds": 122.0,
+ "complementary": {
+  "messages": 12000,
+  "overall_rms_deg": 1.903,
+  "disturbed_rms_deg": 2.686
+ },
+ "mahony": {
+  "messages": 12000,
+  "overall_rms_deg": 1.331,
+  "disturbed_rms_deg": 2.57
+ },
+ "madgwick": {
+  "messages": 12000,
+  "overall_rms_deg": 1.952,
+  "disturbed_rms_deg": 2.964
+ },
+ "eskf": {
+  "messages": 12000,
+  "overall_rms_deg": 1.412,
+  "disturbed_rms_deg": 2.857
+ },
+ "madgwick_upstream": {
+  "messages": 12000,
+  "overall_rms_deg": 3.73,
+  "disturbed_rms_deg": 7.519
+ }
+}

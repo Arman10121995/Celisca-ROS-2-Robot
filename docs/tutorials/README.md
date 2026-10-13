@@ -51,7 +51,9 @@ R7 breadth and R9.2 measured comparisons remain **partial**. **Global
 planning** (eight planners) and **local planning** (five controllers) are
 now measured comparisons on the same seeded goals, with per-goal truth
 metrics and failures (2026-10-12/13). **Control** (six path-tracking
-controllers) is measured on a model plant and in Gazebo (2026-10-13).
+controllers) is measured on a model plant and in Gazebo, and **sensor
+fusion** (five attitude and three pose filters) on modelled sensors,
+offline and over ROS (2026-10-13).
 The other pages describe planned experiments and artifact requirements.
 They do not provide five measured runnable methods per category or
 performance rankings.
@@ -61,7 +63,7 @@ performance rankings.
 | Perception | [Obstacle detection](perception_comparison.md) | [Method comparison](comparison_perception.md) |
 | Localization | [Pose estimation](localization_comparison.md) | [Method comparison](comparison_localization.md) |
 | State estimation | [Filter performance](state_estimation_comparison.md) | [Method comparison](comparison_state_estimation.md) |
-| Sensor fusion | [Sensor integration](sensor_fusion_comparison.md) | [Method comparison](comparison_sensor_fusion.md) |
+| Sensor fusion | [**Measured: attitude and pose filters on modelled sensors**](sensor_fusion_comparison.md) | [Method comparison](comparison_sensor_fusion.md) |
 | Global planning | [**Measured: eight planners on nav_maze**](global_planning_comparison.md) | [Method comparison](comparison_global_planning.md) |
 | Local planning | [**Measured: five controllers on nav_maze**](local_planning_comparison.md) | [Method comparison](comparison_local_planning.md) |
 | Control | [**Measured: six path trackers, model plant and Gazebo**](control_comparison.md) | [Method comparison](comparison_control.md) |

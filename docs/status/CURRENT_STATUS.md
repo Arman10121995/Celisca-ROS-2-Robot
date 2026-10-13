@@ -13,17 +13,41 @@ October 13: implemented on master, experimental.
     envelope, saturation and compute time. Nonlinear MPC tracks 90°
     corners eight times closer than the others. LQR has a false
     equilibrium 1 m off the path at 90° or more.
-  - The Gazebo comparison is queued.
   - [Evidence](evidence/r78-control-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/control_comparison.md).
+- **Control in Gazebo.** All six controllers reached all 15 nav_maze goals
+  for Bumperbot. Backstepping and LQR held the plan closest, at 5.3 and
+  5.6 cm cross-track RMS.
+- **Sensor fusion (R7.5).** The fusion ids now run real filters:
+  complementary, Mahony, Madgwick and a new attitude ESKF, plus a
+  wheel+gyro EKF, an EKF with GNSS and a UKF. Before, the complementary
+  filter's axes were swapped and the "UKF" was dead reckoning.
+  - On modelled sensors, the ESKF holds tilt to 0.46° RMS. The gyro-heading
+    EKF keeps position to 0.42 m over 300 s, where wheel dead reckoning
+    drifts 18 m.
+  - [Evidence](evidence/r75-fusion-benchmark-2026-10-13/README.md),
+    [tutorial](../tutorials/sensor_fusion_comparison.md).
+- **Planner reruns.** With a clearance margin, RRT/RRT\* reach 14/15 goals
+  (were 8 and 9) and Voronoi 15/15. MPPI capped at 0.3 m/s still reaches
+  7/15: it gets within 0.05-0.19 m but does not settle into Bumperbot's
+  tight arrival window.
+- **Missions.**
+  - Workflow/reset screens pass 8/8 for Labbot and Bumperbot in all four
+    backends ([evidence](evidence/r61-workflow-reset-2026-10-13/README.md)).
+  - 13 of 20 4WS/mecanum obstacle missions pass
+    ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)). The
+    pivot-mode arrivals were aborted by a 10 s progress checker; the
+    overlay is fixed and a rerun is queued.
 - **Gazebo cars.** The car description had no ground-truth publisher, so
   Gazebo car missions timed out; it now has one.
 - **Stale transforms.** In 9 of about 90 recent Nav2 trials (R4.3, the
   planner comparisons and the car missions), a Nav2 server's whole TF view
   froze while AMCL kept publishing. The robot then spun in place, overshot
-  its goal, or the planner started from an old pose. Comparison bags now record
-  `/tf`, and a probe snapshots the next occurrence. The cause is still
-  open.
+  its goal, or the planner started from an old pose.
+  - The probe has since caught it twice. A fresh listener kept receiving
+    `map -> odom` while controller_server's newest transform stayed fixed.
+  - So the server's subscription stops, not the publisher. Comparison and
+    mission runs record `/tf` and run the probe. The cause is open.
 
 October 12 (later): measured on master.
 

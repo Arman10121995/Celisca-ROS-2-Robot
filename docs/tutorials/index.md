@@ -55,6 +55,9 @@ in Gazebo, with truth metrics and every failure kept.
 [Control](control_comparison.md) compares six path-tracking controllers on
 a model plant (tracking, disturbance, stability envelope, saturation,
 compute) and on the same 15 goals in Gazebo (2026-10-13).
+[Sensor fusion](sensor_fusion_comparison.md) compares five attitude
+filters and three pose filters on modelled sensors with known truth,
+offline and over ROS (2026-10-13).
 The Go2 tutorial is a bounded runtime evidence walkthrough, not a replacement
 for a fair algorithm comparison. These documents do not constitute five
 algorithms in any category.
