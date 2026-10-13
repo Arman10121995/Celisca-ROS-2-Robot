@@ -28,11 +28,13 @@ controller_server:
       vx_max: 0.35
       use_rotate_to_heading: true
       rotate_to_heading_angular_vel: 0.8
-      regulated_linear_scaling_min_speed: 0.25
       regulated_linear_scaling_min_radius: 0.5
-      # Learned gaits barely move below ~0.15 m/s (G1 stalled 0.5 m short of
-      # a goal at the 0.1 m/s approach speed, MuJoCo 2026-10-13).
-      min_approach_linear_velocity: 0.2
+      # Learned gaits barely move below a policy-specific speed.  B2 stood
+      # still for 20 s at a 0.2 m/s command, 0.19 and 0.40 m short of its
+      # goals, until the progress checker aborted (MuJoCo 2026-10-13, v3);
+      # it walks at 0.26 m/s for a 0.4 m/s command.
+      regulated_linear_scaling_min_speed: 0.3
+      min_approach_linear_velocity: 0.3
       lookahead_dist: 0.8
       min_lookahead_dist: 0.5
       max_lookahead_dist: 1.2
