@@ -51,8 +51,7 @@ R7 breadth and R9.2 measured comparisons remain **partial**. **Global
 planning** (eight planners) and **local planning** (five controllers) are
 now measured comparisons on the same seeded goals, with per-goal truth
 metrics and failures (2026-10-12/13). **Control** (six path-tracking
-controllers) is measured on a model plant; its Gazebo run is queued
-(2026-10-13).
+controllers) is measured on a model plant and in Gazebo (2026-10-13).
 The other pages describe planned experiments and artifact requirements.
 They do not provide five measured runnable methods per category or
 performance rankings.
@@ -65,7 +64,7 @@ performance rankings.
 | Sensor fusion | [Sensor integration](sensor_fusion_comparison.md) | [Method comparison](comparison_sensor_fusion.md) |
 | Global planning | [**Measured: eight planners on nav_maze**](global_planning_comparison.md) | [Method comparison](comparison_global_planning.md) |
 | Local planning | [**Measured: five controllers on nav_maze**](local_planning_comparison.md) | [Method comparison](comparison_local_planning.md) |
-| Control | [**Measured: six path trackers on a model plant**](control_comparison.md) | [Method comparison](comparison_control.md) |
+| Control | [**Measured: six path trackers, model plant and Gazebo**](control_comparison.md) | [Method comparison](comparison_control.md) |
 
 Historical generated scores and placeholder commands were withdrawn by the
 [October 2 audit](../status/audit-2026-10-02.md). A fair comparison still needs

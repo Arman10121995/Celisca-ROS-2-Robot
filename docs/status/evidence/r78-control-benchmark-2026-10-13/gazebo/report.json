@@ -1,0 +1,655 @@
+{
+ "planners": {
+  "backstepping_controller": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 27.06,
+    "mean": 26.019,
+    "std": 6.355,
+    "min": 12.74,
+    "max": 35.92
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.815,
+    "mean": 6.806,
+    "std": 1.878,
+    "min": 3.168,
+    "max": 10.013
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.264,
+    "mean": 0.26,
+    "std": 0.017,
+    "min": 0.217,
+    "max": 0.279
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.076,
+    "mean": 0.074,
+    "std": 0.037,
+    "min": 0.018,
+    "max": 0.158
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.375,
+    "mean": 0.378,
+    "std": 0.052,
+    "min": 0.283,
+    "max": 0.48
+   }
+  },
+  "feedback_linearization": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 26.78,
+    "mean": 25.941,
+    "std": 6.428,
+    "min": 12.0,
+    "max": 35.76
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.8,
+    "mean": 6.744,
+    "std": 1.879,
+    "min": 3.105,
+    "max": 9.927
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.263,
+    "mean": 0.258,
+    "std": 0.018,
+    "min": 0.215,
+    "max": 0.278
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.067,
+    "mean": 0.079,
+    "std": 0.039,
+    "min": 0.011,
+    "max": 0.151
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.372,
+    "mean": 0.35,
+    "std": 0.054,
+    "min": 0.244,
+    "max": 0.43
+   }
+  },
+  "lqr_controller": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 27.08,
+    "mean": 26.059,
+    "std": 6.32,
+    "min": 12.82,
+    "max": 35.78
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.804,
+    "mean": 6.819,
+    "std": 1.882,
+    "min": 3.129,
+    "max": 10.011
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.263,
+    "mean": 0.259,
+    "std": 0.018,
+    "min": 0.216,
+    "max": 0.281
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.075,
+    "mean": 0.08,
+    "std": 0.033,
+    "min": 0.015,
+    "max": 0.159
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.352,
+    "mean": 0.375,
+    "std": 0.049,
+    "min": 0.31,
+    "max": 0.48
+   }
+  },
+  "mpc_controller": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 27.16,
+    "mean": 25.999,
+    "std": 6.382,
+    "min": 12.48,
+    "max": 35.72
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.838,
+    "mean": 6.818,
+    "std": 1.875,
+    "min": 3.141,
+    "max": 10.0
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.263,
+    "mean": 0.26,
+    "std": 0.017,
+    "min": 0.221,
+    "max": 0.28
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.076,
+    "mean": 0.075,
+    "std": 0.034,
+    "min": 0.02,
+    "max": 0.161
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.39,
+    "mean": 0.379,
+    "std": 0.043,
+    "min": 0.327,
+    "max": 0.48
+   }
+  },
+  "nonlinear_mpc": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 26.6,
+    "mean": 26.012,
+    "std": 6.402,
+    "min": 12.38,
+    "max": 36.0
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.806,
+    "mean": 6.784,
+    "std": 1.873,
+    "min": 3.183,
+    "max": 9.954
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.262,
+    "mean": 0.259,
+    "std": 0.017,
+    "min": 0.218,
+    "max": 0.278
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.066,
+    "mean": 0.073,
+    "std": 0.043,
+    "min": 0.007,
+    "max": 0.17
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.352,
+    "mean": 0.366,
+    "std": 0.054,
+    "min": 0.28,
+    "max": 0.48
+   }
+  },
+  "pid_controller": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 26.88,
+    "mean": 26.044,
+    "std": 6.359,
+    "min": 12.7,
+    "max": 35.84
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.825,
+    "mean": 6.797,
+    "std": 1.881,
+    "min": 3.127,
+    "max": 10.006
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.263,
+    "mean": 0.259,
+    "std": 0.018,
+    "min": 0.215,
+    "max": 0.279
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.067,
+    "mean": 0.076,
+    "std": 0.043,
+    "min": 0.002,
+    "max": 0.136
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.372,
+    "mean": 0.371,
+    "std": 0.043,
+    "min": 0.304,
+    "max": 0.446
+   }
+  }
+ },
+ "paired": {
+  "backstepping_controller vs feedback_linearization": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.999,
+    "mean": 1.005,
+    "std": 0.018,
+    "min": 0.988,
+    "max": 1.062
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.009,
+    "mean": 1.011,
+    "std": 0.01,
+    "min": 0.997,
+    "max": 1.034
+   }
+  },
+  "backstepping_controller vs lqr_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.999,
+    "mean": 0.998,
+    "std": 0.009,
+    "min": 0.978,
+    "max": 1.013
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.998,
+    "mean": 0.998,
+    "std": 0.007,
+    "min": 0.98,
+    "max": 1.012
+   }
+  },
+  "backstepping_controller vs mpc_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.999,
+    "mean": 1.001,
+    "std": 0.011,
+    "min": 0.982,
+    "max": 1.022
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.999,
+    "mean": 0.998,
+    "std": 0.007,
+    "min": 0.982,
+    "max": 1.009
+   }
+  },
+  "backstepping_controller vs nonlinear_mpc": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.997,
+    "mean": 1.001,
+    "std": 0.014,
+    "min": 0.983,
+    "max": 1.032
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.003,
+    "mean": 1.003,
+    "std": 0.009,
+    "min": 0.989,
+    "max": 1.027
+   }
+  },
+  "backstepping_controller vs pid_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.998,
+    "mean": 0.999,
+    "std": 0.016,
+    "min": 0.969,
+    "max": 1.033
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.001,
+    "mean": 1.002,
+    "std": 0.009,
+    "min": 0.987,
+    "max": 1.022
+   }
+  },
+  "feedback_linearization vs lqr_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.999,
+    "mean": 0.993,
+    "std": 0.019,
+    "min": 0.936,
+    "max": 1.012
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.991,
+    "mean": 0.988,
+    "std": 0.009,
+    "min": 0.97,
+    "max": 0.999
+   }
+  },
+  "feedback_linearization vs mpc_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 1.0,
+    "mean": 0.997,
+    "std": 0.015,
+    "min": 0.962,
+    "max": 1.021
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.99,
+    "mean": 0.988,
+    "std": 0.01,
+    "min": 0.966,
+    "max": 1.002
+   }
+  },
+  "feedback_linearization vs nonlinear_mpc": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.996,
+    "mean": 0.996,
+    "std": 0.012,
+    "min": 0.969,
+    "max": 1.015
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.996,
+    "mean": 0.993,
+    "std": 0.012,
+    "min": 0.972,
+    "max": 1.011
+   }
+  },
+  "feedback_linearization vs pid_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.998,
+    "mean": 0.994,
+    "std": 0.021,
+    "min": 0.945,
+    "max": 1.032
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.992,
+    "mean": 0.991,
+    "std": 0.008,
+    "min": 0.979,
+    "max": 1.008
+   }
+  },
+  "lqr_controller vs mpc_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 1.002,
+    "mean": 1.004,
+    "std": 0.011,
+    "min": 0.984,
+    "max": 1.027
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.001,
+    "mean": 1.0,
+    "std": 0.004,
+    "min": 0.991,
+    "max": 1.004
+   }
+  },
+  "lqr_controller vs nonlinear_mpc": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.998,
+    "mean": 1.003,
+    "std": 0.017,
+    "min": 0.97,
+    "max": 1.036
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.002,
+    "mean": 1.005,
+    "std": 0.011,
+    "min": 0.983,
+    "max": 1.031
+   }
+  },
+  "lqr_controller vs pid_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 1.002,
+    "mean": 1.001,
+    "std": 0.017,
+    "min": 0.972,
+    "max": 1.032
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.001,
+    "mean": 1.004,
+    "std": 0.008,
+    "min": 0.993,
+    "max": 1.023
+   }
+  },
+  "mpc_controller vs nonlinear_mpc": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 1.001,
+    "mean": 1.0,
+    "std": 0.017,
+    "min": 0.962,
+    "max": 1.044
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.005,
+    "mean": 1.005,
+    "std": 0.011,
+    "min": 0.987,
+    "max": 1.035
+   }
+  },
+  "mpc_controller vs pid_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.997,
+    "mean": 0.998,
+    "std": 0.018,
+    "min": 0.975,
+    "max": 1.033
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.002,
+    "mean": 1.004,
+    "std": 0.009,
+    "min": 0.992,
+    "max": 1.021
+   }
+  },
+  "nonlinear_mpc vs pid_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.993,
+    "mean": 0.998,
+    "std": 0.018,
+    "min": 0.974,
+    "max": 1.051
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.0,
+    "mean": 0.999,
+    "std": 0.009,
+    "min": 0.984,
+    "max": 1.018
+   }
+  }
+ },
+ "manifest": {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "nav_maze",
+  "category": "control",
+  "planners": "pid_controller lqr_controller mpc_controller nonlinear_mpc feedback_linearization backstepping_controller",
+  "seeds": "11 23 37 41 53",
+  "launch_args": "global_planning:=a_star_planner local_planning:=pure_pursuit",
+  "goals_per_seed": "3",
+  "sequence_start": "-7.0 -7.0",
+  "revision": "b8e8ba529fd1c7214159300e7a803fc6f03ce499",
+  "started": "2026-10-13T04:58:30+02:00"
+ }
+}

@@ -1,0 +1,94 @@
+detected 2026-10-13T02:24:55+02:00
+[controller_server-15] [WARN] [1791851095.653171154] [controller_server]: Resulting plan has 0 poses in it.
+--- fresh listener: map -> odom
+At time 68.804000000
+- Translation: [-6.954, -7.104, 0.000]
+At time 69.804000000
+- Translation: [-7.024, -7.056, 0.000]
+At time 70.604000000
+- Translation: [-6.950, -7.120, 0.000]
+At time 71.404000000
+- Translation: [-6.939, -7.127, 0.000]
+At time 72.404000000
+- Translation: [-6.963, -7.107, 0.000]
+--- fresh listener: odom -> base_footprint
+At time 73.444000000
+- Translation: [5.094, 3.911, 0.000]
+At time 74.344000000
+- Translation: [5.114, 3.922, 0.000]
+At time 75.204000000
+- Translation: [5.113, 3.922, 0.000]
+At time 76.144000000
+- Translation: [5.113, 3.922, 0.000]
+At time 77.44000000
+- Translation: [5.113, 3.922, 0.000]
+--- controller_server pid 700812 threads (tid comm state wchan)
+700812 controller_serv S futex_wait_queue_me
+700852 controller_serv S futex_wait_queue_me
+700853 controller_serv S futex_wait_queue_me
+700886 gc S futex_wait_queue_me
+700887 dq.builtins S futex_wait_queue_me
+700888 dq.user S futex_wait_queue_me
+700889 tev S futex_wait_queue_me
+700890 recv S do_select
+700891 recvUC S __skb_wait_for_more_packets
+700892 controller_serv S futex_wait_queue_me
+700904 controller_serv S futex_wait_queue_me
+700932 controller_serv S futex_wait_queue_me
+700975 controller_serv S futex_wait_queue_me
+700977 controller_serv S futex_wait_queue_me
+700990 controller_serv S futex_wait_queue_me
+700991 controller_serv S futex_wait_queue_me
+700993 controller_serv S futex_wait_queue_me
+701038 controller_serv S futex_wait_queue_me
+701858 controller_serv S futex_wait_queue_me
+--- planner_server pid 700814 threads (tid comm state wchan)
+700814 planner_server S futex_wait_queue_me
+700848 planner_server S futex_wait_queue_me
+700849 planner_server S futex_wait_queue_me
+700879 gc S futex_wait_queue_me
+700880 dq.builtins S futex_wait_queue_me
+700881 dq.user S futex_wait_queue_me
+700882 tev S futex_wait_queue_me
+700883 recv S do_select
+700884 recvUC S __skb_wait_for_more_packets
+700885 planner_server S futex_wait_queue_me
+700895 planner_server S futex_wait_queue_me
+700933 planner_server S futex_wait_queue_me
+700994 planner_server S futex_wait_queue_me
+700995 planner_server S futex_wait_queue_me
+700996 planner_server S futex_wait_queue_me
+700997 planner_server S futex_wait_queue_me
+700998 planner_server S futex_wait_queue_me
+700999 planner_server S futex_wait_queue_me
+701059 planner_server S futex_wait_queue_me
+--- amcl pid 700804 threads (tid comm state wchan)
+700804 amcl S futex_wait_queue_me
+700827 amcl S futex_wait_queue_me
+700828 amcl S futex_wait_queue_me
+700855 gc S futex_wait_queue_me
+700856 dq.builtins S futex_wait_queue_me
+700857 dq.user S futex_wait_queue_me
+700858 tev S 0
+700859 recv S do_select
+700863 recvUC S __skb_wait_for_more_packets
+700867 amcl S futex_wait_queue_me
+700876 amcl S futex_wait_queue_me
+700959 amcl S futex_wait_queue_me
+700960 amcl S futex_wait_queue_me
+700989 amcl S futex_wait_queue_me
+--- bt_navigator pid 700818 threads (tid comm state wchan)
+700818 bt_navigator S futex_wait_queue_me
+700893 bt_navigator S futex_wait_queue_me
+700894 bt_navigator S futex_wait_queue_me
+700924 gc S futex_wait_queue_me
+700925 dq.builtins S futex_wait_queue_me
+700926 dq.user S futex_wait_queue_me
+700927 tev S futex_wait_queue_me
+700928 recv S do_select
+700929 recvUC S __skb_wait_for_more_packets
+700930 bt_navigator S futex_wait_queue_me
+700931 bt_navigator S futex_wait_queue_me
+701025 bt_navigator S futex_wait_queue_me
+701026 bt_navigator S futex_wait_queue_me
+701856 bt_navigator S futex_wait_queue_me

@@ -48,6 +48,22 @@ are still counted in the success column. The tutorial explains the
 freeze.
 
 In this run the robot_lab planners blocked cells only at the inscribed
-radius (`blocked_at: 99`). The default is now 80. A rerun with the
-margin is queued as `claude-global-cmp-margin80` and will be appended
-here.
+radius (`blocked_at: 99`). The default is now 80.
+
+## Rerun with `blocked_at: 80` (2026-10-13, revision `b8e8ba5`)
+
+The four robot_lab planners were rerun on the same protocol and goals:
+[margin80/report.md](margin80/report.md), with per-seed records in
+`margin80/`.
+
+| Planner | Goals reached |
+|---|---|
+| Voronoi | 15/15 |
+| RRT* | 14/15 |
+| RRT | 14/15 |
+| PRM | 12/15 |
+
+- RRT and RRT* both failed seed 11 goal 2, where neither found a path.
+- All three PRM failures (seed 37) came after a controller_server TF
+  freeze. `margin80/prm_planner_seed37.tf_freeze.txt` shows that a fresh
+  listener still received `map -> odom` from AMCL.

@@ -92,17 +92,33 @@ second's):
     [global comparison](global_planning_comparison.md)).
   - Without them, MPPI reached 7 of 12 goals.
 
-  This is not a fair verdict on MPPI. Its sampler uses Nav2's default
-  vx_max of 0.5 m/s, while the other planners are limited to about
-  0.3 m/s, and its critic weights were not tuned for Bumperbot. It shows
-  that the shipped MPPI configuration is not ready for this robot.
+  Its sampler used Nav2's default vx_max of 0.5 m/s while the others ran
+  at about 0.3 m/s. **A rerun with vx_max 0.3 m/s also reached 7 of 15**
+  ([evidence](../status/evidence/r77-local-planner-comparison-2026-10-12/mppi_vx03/report.md),
+  revision `b8e8ba5`), so speed was not the cause.
+
+  In both runs almost every failed goal ended 0.05-0.23 m from the goal
+  and within 5° of its heading. MPPI brings the robot close but does not
+  settle into Bumperbot's arrival window (0.07 m, 0.03 rad) before the
+  progress checker aborts. Its critics were not tuned for this robot or
+  this window.
+
+**Path tracking.** Cross-track error from Gazebo truth to the latest
+global plan (`scripts/path_tracking_error.py` on the trial bags;
+[table](../status/evidence/r77-local-planner-comparison-2026-10-12/tracking.md)):
+
+- Nav2 RPP 6.6 cm RMS (p95 11.8 cm);
+- DWB 6.8 cm;
+- robot_lab pure pursuit 6.9 cm;
+- follow-the-gap 7.1 cm;
+- MPPI 8.9 cm (p95 18.7 cm).
 
 ## Limits
 
 - One robot, one map, five seeds, three goals each. These are
   distributions on this task, not general rankings.
-- Each plugin keeps its own speed parameters. MPPI's 0.5 m/s cap is the
-  main imbalance.
+- Each plugin keeps its own speed parameters. In the first run MPPI's
+  0.5 m/s cap was the main imbalance; the 0.3 m/s rerun removes it.
 - The robot_lab python TEB and MPPI nodes are placeholders and are not
   selectable as planners (`algorithm_dispatch.yaml`). `teb_local_planner`
   is not built in this workspace.

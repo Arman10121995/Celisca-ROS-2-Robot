@@ -54,7 +54,7 @@ measured comparisons (2026-10-12/13). Each uses the same 15 seeded goals
 in Gazebo, with truth metrics and every failure kept.
 [Control](control_comparison.md) compares six path-tracking controllers on
 a model plant (tracking, disturbance, stability envelope, saturation,
-compute; 2026-10-13); the Gazebo run of the same controllers is queued.
+compute) and on the same 15 goals in Gazebo (2026-10-13).
 The Go2 tutorial is a bounded runtime evidence walkthrough, not a replacement
 for a fair algorithm comparison. These documents do not constitute five
 algorithms in any category.

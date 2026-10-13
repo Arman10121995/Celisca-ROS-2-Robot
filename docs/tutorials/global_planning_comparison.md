@@ -113,10 +113,34 @@ below).
   - RRT\*'s rewiring gives near-A\* path lengths when it succeeds; RRT's
     paths are about 19% longer.
 
-The robot_lab sampling planners now default to a ~7 cm margin inside the
-inflation band (`blocked_at: 80`). A rerun with that margin is queued
-and will be added to the evidence. The table above is the first run, at
-the inscribed boundary.
+### Rerun with a clearance margin (`blocked_at: 80`)
+
+The robot_lab planners now block cells about 7 cm inside the inflation band
+instead of at the inscribed radius. The four robot_lab planners were rerun
+on the same 15 goals at revision `b8e8ba5`
+([evidence](../status/evidence/r76-global-planner-comparison-2026-10-12/margin80/report.md)):
+
+| Planner | Success (first run) | Success (margin 80) | Sim time median (s) | Path median (m) | Clearance median / worst (m) |
+|---|---|---|---|---|---|
+| voronoi_planner | 14/15 | **15/15** | 45.18 | 8.543 | 0.580 / 0.330 |
+| rrt_star_planner | 9/15 | **14/15** | 39.91 | 6.766 | 0.163 / -0.020 |
+| rrt_planner | 8/15 | **14/15** | 59.97 | 7.740 | 0.130 / -0.020 |
+| prm_planner | 15/15 | 12/15 (3 after a TF freeze) | 41.35 | 7.138 | 0.196 / **0.104** |
+
+- **The margin fixes most RRT/RRT\* failures.** Their paths no longer sit
+  on the inscribed boundary where RPP's collision check stops.
+- **RRT and RRT\* still miss the same goal** (seed 11, goal 2). Neither
+  found a path within its budget.
+- **Their footprints still touch walls on a few goals** (worst -0.020 m).
+  Straight sampled edges still cut corners.
+- **PRM's three failures** are all of seed 37 and came after
+  controller_server's TF view froze. A probe caught this one: a fresh
+  listener received `map -> odom` from AMCL every second while the
+  controller's newest was 14.8 s old
+  ([probe](../status/evidence/r76-global-planner-comparison-2026-10-12/margin80/prm_planner_seed37.tf_freeze.txt)).
+  PRM's clearance improved (worst 0.104 m, was -0.020 m).
+
+The first-run table above is kept as measured, at the inscribed boundary.
 
 The same freeze ended goals elsewhere:
 
@@ -125,9 +149,17 @@ The same freeze ended goals elsewhere:
 - MPPI seed 41 in the [local planning comparison](local_planning_comparison.md).
 - A MuJoCo car mission.
 
-In all, it happened in 9 of about 90 recent Nav2 launches. Comparison bags
-now record `/tf`, and `scripts/tf_freeze_probe.sh` snapshots a fresh
-listener and the server threads at the next occurrence.
+In all, it happened in 9 of about 90 Nav2 launches up to October 13. Since
+then `scripts/tf_freeze_probe.sh` has caught it twice: PRM above, and a
+4WS mission in Isaac. Both times:
+
+- a fresh `tf2_echo` received AMCL's `map -> odom` and the EKF's
+  `odom -> base_footprint` normally;
+- controller_server's newest transform stayed fixed.
+
+So the publishers are alive and one server's TF subscription has stopped.
+It happens in Gazebo, MuJoCo and Isaac, with CycloneDDS. The cause inside
+the server (tf2_ros listener thread or the DDS reader) is still open.
 
 ## Limits
 

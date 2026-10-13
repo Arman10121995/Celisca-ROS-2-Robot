@@ -5,7 +5,7 @@ and method notes are in
 [r78-control-benchmark-2026-10-13](../status/evidence/r78-control-benchmark-2026-10-13/README.md).
 
 **Category:** control
-**Type:** measured comparison (model plant). A Gazebo run is queued.
+**Type:** measured comparison (model plant and Gazebo)
 
 ## What is compared
 
@@ -77,6 +77,26 @@ GUI does not offer them for car-like robots.
 | Feedback linearisation | 3.9 s | 77 | 0 | 0.07 ms |
 | Backstepping | 6.05 s | 77 | 0 | 0.04 ms |
 
+## Results in Gazebo (Bumperbot, nav_maze)
+
+The six controllers drove Bumperbot through Nav2 on the same 15 seeded goals
+as the [local planning comparison](local_planning_comparison.md). The global
+planner was Smac 2D A* and localization was AMCL. The evidence is in
+[gazebo/](../status/evidence/r78-control-benchmark-2026-10-13/gazebo/report.md).
+
+| Controller | Success | Sim time median (s) | Clearance min (m) | Cross-track RMS / p95 (m) |
+|---|---|---|---|---|
+| Backstepping | 15/15 | 27.06 | 0.283 | **0.053** / 0.100 |
+| LQR | 15/15 | 27.08 | 0.310 | 0.056 / 0.108 |
+| Linear MPC | 15/15 | 27.16 | 0.327 | 0.057 / 0.113 |
+| Feedback linearisation | 15/15 | 26.78 | **0.244** | 0.061 / 0.114 |
+| PID | 15/15 | 26.88 | 0.304 | 0.063 / 0.126 |
+| Nonlinear MPC | 15/15 | 26.60 | 0.280 | 0.063 / 0.126 |
+
+Cross-track error is measured from Gazebo truth to the latest global plan
+(`scripts/path_tracking_error.py`). For comparison, Nav2 Regulated Pure
+Pursuit took 38.9 s median with 6.6 cm RMS in the R7.7 runs.
+
 ## What the numbers say
 
 - **Preview matters at corners.** Only the nonlinear MPC sees a corner
@@ -96,6 +116,13 @@ GUI does not offer them for car-like robots.
   envelope test leaves the supervisor out on purpose.
 - **Anti-windup is visible.** With the turn rate capped, PID without
   anti-windup overshoots by 3.5 cm and settles 2.3 s later.
+- **On the robot the differences shrink.** All six reached every goal in
+  Gazebo, within about 1% of each other's time. The shared speed profile
+  and supervisor set the pace, so the laws differ only in how closely they
+  hold the plan. Backstepping and LQR hold it best.
+- **NMPC's corner advantage does not carry over to the maze.** The plan is
+  a grid path that the reference smooths over 0.25 m, so previewing a
+  corner gains little.
 - **Compute.** The nonlinear MPC is the only law near the 50 ms budget.
   Under a load average of 16 it missed 2 of 34,341 deadlines.
   Multi-threaded BLAS made it much worse (2% misses), so BLAS is pinned to
@@ -103,8 +130,9 @@ GUI does not offer them for car-like robots.
 
 ## Limits
 
-- This is a model plant. The gains were chosen on it, not identified on
-  Bumperbot, and the plant has no wheel slip, delay or sensor noise.
+- The model plant has no wheel slip, delay or sensor noise. The gains were
+  chosen on it, not identified on Bumperbot.
+- Gazebo: one robot, one map, five seeds, three goals each.
 - Compute times come from a loaded host.
 - The unicycle plant covers differential drives. Car-like robots need the
   bicycle model with a minimum turning radius. These controllers are gated

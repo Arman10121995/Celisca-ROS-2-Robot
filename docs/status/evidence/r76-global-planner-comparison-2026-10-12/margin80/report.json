@@ -1,0 +1,366 @@
+{
+ "planners": {
+  "prm_planner": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 12,
+   "success_rate": 0.8,
+   "outcomes": {
+    "succeeded": 12,
+    "aborted": 3
+   },
+   "duration_sim_s": {
+    "n": 12,
+    "median": 41.35,
+    "mean": 42.737,
+    "std": 12.735,
+    "min": 17.62,
+    "max": 59.22
+   },
+   "path_length_m": {
+    "n": 12,
+    "median": 7.138,
+    "mean": 7.097,
+    "std": 1.958,
+    "min": 3.08,
+    "max": 10.182
+   },
+   "mean_speed_mps": {
+    "n": 12,
+    "median": 0.174,
+    "mean": 0.17,
+    "std": 0.033,
+    "min": 0.107,
+    "max": 0.218
+   },
+   "final_error_truth_m": {
+    "n": 12,
+    "median": 0.042,
+    "mean": 0.071,
+    "std": 0.054,
+    "min": 0.006,
+    "max": 0.17
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.196,
+    "mean": 0.269,
+    "std": 0.175,
+    "min": 0.104,
+    "max": 0.63
+   }
+  },
+  "rrt_planner": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 14,
+   "success_rate": 0.933,
+   "outcomes": {
+    "succeeded": 14,
+    "aborted": 1
+   },
+   "duration_sim_s": {
+    "n": 14,
+    "median": 59.97,
+    "mean": 57.28,
+    "std": 18.304,
+    "min": 19.58,
+    "max": 82.44
+   },
+   "path_length_m": {
+    "n": 14,
+    "median": 7.74,
+    "mean": 7.095,
+    "std": 2.073,
+    "min": 3.214,
+    "max": 10.276
+   },
+   "mean_speed_mps": {
+    "n": 14,
+    "median": 0.131,
+    "mean": 0.128,
+    "std": 0.026,
+    "min": 0.09,
+    "max": 0.164
+   },
+   "final_error_truth_m": {
+    "n": 14,
+    "median": 0.086,
+    "mean": 0.091,
+    "std": 0.042,
+    "min": 0.014,
+    "max": 0.165
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.13,
+    "mean": 0.226,
+    "std": 0.213,
+    "min": -0.02,
+    "max": 0.78
+   }
+  },
+  "rrt_star_planner": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 14,
+   "success_rate": 0.933,
+   "outcomes": {
+    "succeeded": 14,
+    "aborted": 1
+   },
+   "duration_sim_s": {
+    "n": 14,
+    "median": 39.91,
+    "mean": 39.413,
+    "std": 10.591,
+    "min": 17.18,
+    "max": 59.26
+   },
+   "path_length_m": {
+    "n": 14,
+    "median": 6.766,
+    "mean": 6.421,
+    "std": 1.641,
+    "min": 3.092,
+    "max": 8.642
+   },
+   "mean_speed_mps": {
+    "n": 14,
+    "median": 0.172,
+    "mean": 0.168,
+    "std": 0.039,
+    "min": 0.104,
+    "max": 0.227
+   },
+   "final_error_truth_m": {
+    "n": 14,
+    "median": 0.066,
+    "mean": 0.072,
+    "std": 0.042,
+    "min": 0.006,
+    "max": 0.155
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.163,
+    "mean": 0.15,
+    "std": 0.112,
+    "min": -0.02,
+    "max": 0.33
+   }
+  },
+  "voronoi_planner": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 45.18,
+    "mean": 49.9,
+    "std": 15.161,
+    "min": 30.9,
+    "max": 84.72
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 8.543,
+    "mean": 8.011,
+    "std": 2.129,
+    "min": 3.197,
+    "max": 11.216
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.156,
+    "mean": 0.166,
+    "std": 0.044,
+    "min": 0.095,
+    "max": 0.251
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.102,
+    "mean": 0.095,
+    "std": 0.038,
+    "min": 0.026,
+    "max": 0.181
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.58,
+    "mean": 0.538,
+    "std": 0.135,
+    "min": 0.33,
+    "max": 0.935
+   }
+  }
+ },
+ "paired": {
+  "prm_planner vs rrt_planner": {
+   "goals_both_succeeded": 11,
+   "identical_goal_positions": 11,
+   "time_ratio": {
+    "n": 11,
+    "median": 0.767,
+    "mean": 0.734,
+    "std": 0.146,
+    "min": 0.499,
+    "max": 0.9
+   },
+   "path_ratio": {
+    "n": 11,
+    "median": 0.958,
+    "mean": 0.979,
+    "std": 0.137,
+    "min": 0.828,
+    "max": 1.384
+   }
+  },
+  "prm_planner vs rrt_star_planner": {
+   "goals_both_succeeded": 11,
+   "identical_goal_positions": 11,
+   "time_ratio": {
+    "n": 11,
+    "median": 1.009,
+    "mean": 1.014,
+    "std": 0.142,
+    "min": 0.754,
+    "max": 1.353
+   },
+   "path_ratio": {
+    "n": 11,
+    "median": 1.027,
+    "mean": 1.032,
+    "std": 0.057,
+    "min": 0.909,
+    "max": 1.134
+   }
+  },
+  "prm_planner vs voronoi_planner": {
+   "goals_both_succeeded": 12,
+   "identical_goal_positions": 12,
+   "time_ratio": {
+    "n": 12,
+    "median": 0.842,
+    "mean": 0.852,
+    "std": 0.207,
+    "min": 0.47,
+    "max": 1.269
+   },
+   "path_ratio": {
+    "n": 12,
+    "median": 0.887,
+    "mean": 0.87,
+    "std": 0.079,
+    "min": 0.665,
+    "max": 0.963
+   }
+  },
+  "rrt_planner vs rrt_star_planner": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 1.455,
+    "mean": 1.462,
+    "std": 0.373,
+    "min": 0.842,
+    "max": 2.335
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 1.11,
+    "mean": 1.099,
+    "std": 0.122,
+    "min": 0.82,
+    "max": 1.364
+   }
+  },
+  "rrt_planner vs voronoi_planner": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 1.083,
+    "mean": 1.166,
+    "std": 0.332,
+    "min": 0.634,
+    "max": 1.859
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 0.935,
+    "mean": 0.915,
+    "std": 0.138,
+    "min": 0.609,
+    "max": 1.128
+   }
+  },
+  "rrt_star_planner vs voronoi_planner": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 0.807,
+    "mean": 0.813,
+    "std": 0.186,
+    "min": 0.512,
+    "max": 1.135
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 0.852,
+    "mean": 0.833,
+    "std": 0.096,
+    "min": 0.646,
+    "max": 0.967
+   }
+  }
+ },
+ "manifest": {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "nav_maze",
+  "category": "global_planning",
+  "planners": "rrt_planner rrt_star_planner prm_planner voronoi_planner",
+  "seeds": "11 23 37 41 53",
+  "launch_args": "local_planning:=pure_pursuit",
+  "goals_per_seed": "3",
+  "sequence_start": "-7.0 -7.0",
+  "revision": "b8e8ba529fd1c7214159300e7a803fc6f03ce499",
+  "started": "2026-10-13T03:53:03+02:00"
+ }
+}

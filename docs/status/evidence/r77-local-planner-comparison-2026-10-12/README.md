@@ -39,3 +39,17 @@ Summary:
   view froze, 29 s into the first goal (`scripts/tf_freeze_goals.py`).
   The freeze also hit five global-planner trials; it is not the
   controller's doing.
+
+## MPPI rerun at vx_max 0.3 m/s (2026-10-13, revision `b8e8ba5`)
+
+Same protocol and goals, with MPPI's sampler capped at Bumperbot's
+0.3 m/s: [mppi_vx03/report.md](mppi_vx03/report.md).
+
+- Result: **7/15 again**, with no TF freeze.
+- All eight failed goals ended 0.05-0.19 m from the goal and
+  within 4.5° of its heading. MPPI gets close, then does not settle into
+  the 0.07 m / 0.03 rad arrival window before the progress checker aborts.
+- The first run's failures look the same, apart from the frozen seed 41.
+
+Cross-track error from the latest plan for all five first-run planners is
+in [tracking.md](tracking.md).

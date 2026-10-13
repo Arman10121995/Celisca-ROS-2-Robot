@@ -1,0 +1,25 @@
+detected 2026-10-13T02:49:05+02:00
+[controller_server-16] [ERROR] [1791852544.373871511] [tf_help]: Transform data too old when converting from map to odom
+[controller_server-16] [ERROR] [1791852544.373945078] [tf_help]: Data time: 47s 899999999ns, Transform time: 47s 399999999ns
+--- fresh listener: map -> odom
+At time 50.399999999
+- Translation: [-7.052, -7.042, 0.000]
+At time 51.0
+- Translation: [-7.021, -7.090, 0.000]
+At time 51.600000000
+- Translation: [-7.002, -7.116, 0.000]
+At time 52.200000000
+- Translation: [-7.022, -7.082, 0.000]
+At time 52.799999999
+- Translation: [-6.991, -7.121, 0.000]
+--- fresh listener: odom -> base_footprint
+At time 53.316666666
+- Translation: [7.550, 3.844, 0.000]
+At time 53.916666666
+- Translation: [7.550, 3.844, 0.000]
+At time 54.49999999
+- Translation: [7.550, 3.844, 0.000]
+At time 54.49999999
+- Translation: [7.550, 3.844, 0.000]
+At time 54.49999999
+- Translation: [7.550, 3.844, 0.000]

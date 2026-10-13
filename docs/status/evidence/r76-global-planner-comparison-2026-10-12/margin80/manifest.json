@@ -1,0 +1,4 @@
+{"simulator": "gazebo", "robot": "bumperbot", "map": "nav_maze", "category": "global_planning",
+ "planners": "rrt_planner rrt_star_planner prm_planner voronoi_planner", "seeds": "11 23 37 41 53", "launch_args": "local_planning:=pure_pursuit",
+ "goals_per_seed": "3", "sequence_start": "-7.0 -7.0", "revision": "b8e8ba529fd1c7214159300e7a803fc6f03ce499",
+ "started": "2026-10-13T03:53:03+02:00"}

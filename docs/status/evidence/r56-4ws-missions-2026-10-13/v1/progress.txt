@@ -1,0 +1,21 @@
+mujoco ackermann exit=1
+mujoco in_phase exit=0
+mujoco crab exit=1
+mujoco pivot exit=1
+mujoco mecanum exit=0
+pybullet ackermann exit=0
+pybullet in_phase exit=0
+pybullet crab exit=0
+pybullet pivot exit=1
+pybullet mecanum exit=0
+gazebo ackermann exit=1
+gazebo in_phase exit=0
+gazebo crab exit=0
+gazebo pivot exit=1
+gazebo mecanum exit=0
+isaac ackermann exit=1
+isaac in_phase exit=0
+isaac crab exit=0
+isaac pivot exit=0
+isaac mecanum exit=0
+ALLDONE

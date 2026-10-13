@@ -1,9 +1,17 @@
 # Chassis and the full wheel swept envelope, with a small clearance.
 controller_server:
   ros__parameters:
+    # 2026-10-13: with yaw 0.015 rad and the base progress checker (0.5 m in
+    # 10 s), pivot mode reached the goal position (0.03-0.12 m) in MuJoCo,
+    # PyBullet and Gazebo but DWB's final in-place alignment ran past 10 s
+    # and was aborted; Gazebo Ackermann mode did the same.  Same checker as
+    # Bumperbot/Labbot, and a 3 degree arrival heading.
+    progress_checker:
+      required_movement_radius: 0.1
+      movement_time_allowance: 30.0
     general_goal_checker:
       xy_goal_tolerance: 0.08
-      yaw_goal_tolerance: 0.015
+      yaw_goal_tolerance: 0.05
     FollowPath:
       critics: [RotateToGoal, Oscillation, ObstacleFootprint, GoalAlign, PathAlign, PathDist, GoalDist]
       ObstacleFootprint.scale: 0.1

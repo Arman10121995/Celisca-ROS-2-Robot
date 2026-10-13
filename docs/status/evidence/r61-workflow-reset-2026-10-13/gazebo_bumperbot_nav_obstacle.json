@@ -1,0 +1,420 @@
+{
+  "mode": "slam",
+  "base_frame": "base_footprint",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5686,
+      "yaw_change_rad": -0.0001,
+      "tail_speed_mps": 0.19985903709923078,
+      "tail_yaw_speed_rps": 6.516510381467073e-06,
+      "end": {
+        "x": -6.431356982514376,
+        "y": -7.000024243094365,
+        "z": -1.6205421932462695e-05,
+        "yaw": -6.782102220584622e-05
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5704,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.19999382618656944,
+      "tail_yaw_speed_rps": 9.806724615747675e-07,
+      "end": {
+        "x": -6.972169129567406,
+        "y": -6.9999870396713435,
+        "z": 9.35501449542046e-07,
+        "yaw": -6.9879207866741e-05
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0004,
+      "yaw_change_rad": 1.1764,
+      "tail_speed_mps": 0.0001397558306268944,
+      "tail_yaw_speed_rps": 0.3994670025018958,
+      "end": {
+        "x": -7.001593964664764,
+        "y": -7.000319667030276,
+        "z": 8.583572129722471e-07,
+        "yaw": 1.1762840449935759
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0004,
+      "yaw_change_rad": -1.1804,
+      "tail_speed_mps": 0.00013870342177701975,
+      "tail_yaw_speed_rps": 0.399473663674483,
+      "end": {
+        "x": -7.001808967168977,
+        "y": -7.000003736092331,
+        "z": 1.240216857362003e-06,
+        "yaw": 0.013821696457279063
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.1236,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 1.8273540894560025e-12,
+      "tail_yaw_speed_rps": 6.3484111665484955e-09,
+      "end": {
+        "x": -6.508437411321293,
+        "y": -7.002093786750258,
+        "z": 6.37625079645303e-07,
+        "yaw": -0.004358128391510098
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 6.140290389923769e-06,
+      "tail_yaw_speed_rps": 3.3308022800883786e-11,
+      "end": {
+        "x": -7.00000494097613,
+        "y": -6.999999999963879,
+        "z": -0.0006625698729966883,
+        "yaw": 7.907860364941493e-12
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3675,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.19929358547049247,
+      "tail_yaw_speed_rps": 1.6145465818517344e-09,
+      "end": {
+        "x": -6.632526243811947,
+        "y": -7.000000002631565,
+        "z": -8.808350420685e-05,
+        "yaw": -4.603992882377844e-09
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_2d_map": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true
+  },
+  "initial_map_to_world": {
+    "yaw": 2.4836953961960242e-05,
+    "x": -7.000006228121897,
+    "y": -6.9999999999655085
+  },
+  "initial_truth": {
+    "x": -7.000006228121902,
+    "y": -6.9999999999655085,
+    "z": -0.00036209261795037083,
+    "yaw": -2.1955303732887994e-11
+  },
+  "localization_error_m": 0.007748236275421919,
+  "sensor_messages_during_drive": {
+    "/oakd/depth/image_raw": 637,
+    "/oakd/rgb/image_raw": 635,
+    "/scan": 105
+  },
+  "map_updates": [
+    {
+      "width": 267,
+      "height": 268,
+      "known": 1430,
+      "occupied": 91,
+      "stamp": 0.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 1430,
+      "occupied": 91,
+      "stamp": 1.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 1430,
+      "occupied": 91,
+      "stamp": 2.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 3759,
+      "occupied": 228,
+      "stamp": 3.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 6558,
+      "occupied": 303,
+      "stamp": 4.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 9805,
+      "occupied": 422,
+      "stamp": 5.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 10560,
+      "occupied": 454,
+      "stamp": 6.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 10560,
+      "occupied": 454,
+      "stamp": 7.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 11209,
+      "occupied": 489,
+      "stamp": 8.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12374,
+      "occupied": 553,
+      "stamp": 9.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 10.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 11.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 12.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 13.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 14.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 15.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 16.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 17.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 18.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 12698,
+      "occupied": 569,
+      "stamp": 19.8
+    },
+    {
+      "width": 268,
+      "height": 268,
+      "known": 12979,
+      "occupied": 653,
+      "stamp": 20.8
+    },
+    {
+      "width": 268,
+      "height": 268,
+      "known": 13308,
+      "occupied": 710,
+      "stamp": 21.8
+    },
+    {
+      "width": 268,
+      "height": 268,
+      "known": 13308,
+      "occupied": 710,
+      "stamp": 22.8
+    },
+    {
+      "width": 268,
+      "height": 268,
+      "known": 13308,
+      "occupied": 710,
+      "stamp": 23.8
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 1419,
+      "occupied": 99,
+      "stamp": 25.4
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 1419,
+      "occupied": 99,
+      "stamp": 26.4
+    },
+    {
+      "width": 267,
+      "height": 268,
+      "known": 6435,
+      "occupied": 302,
+      "stamp": 27.4
+    },
+    {
+      "width": 267,
+      "height": 269,
+      "known": 8101,
+      "occupied": 448,
+      "stamp": 28.4
+    }
+  ],
+  "accepted_slam_poses": [
+    {
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "x": 0.12021018855934679,
+      "y": -2.1577822117906907e-05
+    },
+    {
+      "x": 0.2302504837267296,
+      "y": 0.0095530156345182
+    },
+    {
+      "x": 0.3502704320600542,
+      "y": -0.0008741981174917636
+    },
+    {
+      "x": 0.4802803263307782,
+      "y": -0.0013024852018340954
+    },
+    {
+      "x": 0.5866032329444979,
+      "y": -0.001718183395834821
+    },
+    {
+      "x": 0.3495084444946822,
+      "y": -0.0009399765368539004
+    },
+    {
+      "x": 0.23950088006087153,
+      "y": -0.0005093392141410276
+    },
+    {
+      "x": 0.1294963726125918,
+      "y": -7.756240809282299e-05
+    },
+    {
+      "x": 0.003177760939027531,
+      "y": 0.00035827838674602286
+    },
+    {
+      "x": 0.2302095761892338,
+      "y": -0.010395868257055397
+    },
+    {
+      "x": 0.36021780169765716,
+      "y": -0.0009303692540306907
+    },
+    {
+      "x": 0.45957861731409533,
+      "y": -0.00147938203478063
+    }
+  ],
+  "reset_response": "Gazebo robot pose/control reset; world clock preserved",
+  "post_reset_map_to_world": {
+    "yaw": 0.004029618664935304,
+    "x": -7.494004940714959,
+    "y": -7.000014631630042
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 0.002866974884909937,
+  "map_updates_after_reset": 4,
+  "cloud_updates_after_reset": 0,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1453,
+  "sensor_counts": {
+    "/oakd/depth/image_raw": 881,
+    "/oakd/rgb/image_raw": 879,
+    "/scan": 146
+  },
+  "scan_geometry": {
+    "frame": "laser_link",
+    "samples": 360,
+    "finite": 359,
+    "min_m": 0.6842665076255798,
+    "max_m": 11.792725563049316,
+    "range_min": 0.11999999731779099,
+    "range_max": 12.0
+  },
+  "passed": true
+}

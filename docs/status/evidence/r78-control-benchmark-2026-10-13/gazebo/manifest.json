@@ -1,0 +1,4 @@
+{"simulator": "gazebo", "robot": "bumperbot", "map": "nav_maze", "category": "control",
+ "planners": "pid_controller lqr_controller mpc_controller nonlinear_mpc feedback_linearization backstepping_controller", "seeds": "11 23 37 41 53", "launch_args": "global_planning:=a_star_planner local_planning:=pure_pursuit",
+ "goals_per_seed": "3", "sequence_start": "-7.0 -7.0", "revision": "b8e8ba529fd1c7214159300e7a803fc6f03ce499",
+ "started": "2026-10-13T04:58:30+02:00"}

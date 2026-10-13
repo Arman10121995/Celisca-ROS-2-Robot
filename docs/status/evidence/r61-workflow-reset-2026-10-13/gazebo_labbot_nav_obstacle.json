@@ -1,0 +1,428 @@
+{
+  "mode": "slam",
+  "base_frame": "base_footprint",
+  "command_topic": "/key_vel",
+  "phases": {
+    "forward": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5856,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.19999955378311718,
+      "tail_yaw_speed_rps": 2.9487144037019093e-08,
+      "end": {
+        "x": -6.414351582028934,
+        "y": -6.999999998916411,
+        "z": -1.8327909604007315e-05,
+        "yaw": -3.3938868802392085e-09
+      }
+    },
+    "reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.5856,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 0.19999955378275835,
+      "tail_yaw_speed_rps": 1.57158546312734e-08,
+      "end": {
+        "x": -6.985649819639447,
+        "y": -7.00000000010584,
+        "z": -8.657220652590503e-07,
+        "yaw": 3.4094834765804948e-09
+      }
+    },
+    "turn": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0109,
+      "yaw_change_rad": 1.2164,
+      "tail_speed_mps": 0.007352438139938621,
+      "tail_yaw_speed_rps": 0.39976642409352303,
+      "end": {
+        "x": -6.994718228390887,
+        "y": -6.99051728025162,
+        "z": -5.522866166280741e-07,
+        "yaw": 1.216362057406679
+      }
+    },
+    "turn_reverse": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.0124,
+      "yaw_change_rad": -1.2163,
+      "tail_speed_mps": 0.007343776140826573,
+      "tail_yaw_speed_rps": 0.39976071039247113,
+      "end": {
+        "x": -6.982680730392749,
+        "y": -6.986623798150914,
+        "z": -5.46655842281307e-07,
+        "yaw": 0.022040523164946955
+      }
+    },
+    "publisher_loss": {
+      "completed": true,
+      "sim_s": 3.0,
+      "distance_m": 0.1083,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.0,
+      "tail_yaw_speed_rps": 0.0,
+      "end": {
+        "x": -6.488308712537839,
+        "y": -6.986586473376821,
+        "z": -5.463789355543995e-07,
+        "yaw": 6.570800914050651e-05
+      }
+    },
+    "post_reset_idle": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "tail_speed_mps": 3.2147944153740004e-11,
+      "tail_yaw_speed_rps": 6.461789136328899e-14,
+      "end": {
+        "x": -7.000000000308662,
+        "y": -7.000000000000768,
+        "z": -0.0006565858642197988,
+        "yaw": 3.1579975465599585e-14
+      }
+    },
+    "post_reset_drive": {
+      "completed": true,
+      "sim_s": 2.0,
+      "distance_m": 0.3856,
+      "yaw_change_rad": -0.0,
+      "tail_speed_mps": 0.19999955378880152,
+      "tail_yaw_speed_rps": 1.0849691122418461e-08,
+      "end": {
+        "x": -6.614351135813989,
+        "y": -7.000000003006762,
+        "z": -8.84425067118009e-05,
+        "yaw": -7.194728499598213e-10
+      }
+    }
+  },
+  "checks": {
+    "ready": true,
+    "settled": true,
+    "forward": true,
+    "reverse": true,
+    "turn": true,
+    "turn_reverse": true,
+    "publisher_loss": true,
+    "localization": true,
+    "live_2d_map": true,
+    "reset_service": true,
+    "reset_spawn": true,
+    "reset_stopped": true,
+    "reset_localization": true,
+    "reset_drive_resumes": true,
+    "reset_estimator_tracks_motion": true,
+    "reset_mapping_resumes": true,
+    "monotonic_clock": true
+  },
+  "initial_map_to_world": {
+    "yaw": 9.758763951987935e-06,
+    "x": -7.000000000295843,
+    "y": -6.999999999996809
+  },
+  "initial_truth": {
+    "x": -7.000000000295873,
+    "y": -6.999999999996809,
+    "z": -0.00036312862818317957,
+    "yaw": -1.3461021312323752e-13
+  },
+  "localization_error_m": 0.0032551633534015326,
+  "sensor_messages_during_drive": {
+    "/oakd/depth/image_raw": 637,
+    "/oakd/rgb/image_raw": 637,
+    "/scan": 105
+  },
+  "map_updates": [
+    {
+      "width": 94,
+      "height": 267,
+      "known": 1255,
+      "occupied": 95,
+      "stamp": 0.030000000000000002
+    },
+    {
+      "width": 94,
+      "height": 267,
+      "known": 1255,
+      "occupied": 95,
+      "stamp": 1.0
+    },
+    {
+      "width": 94,
+      "height": 267,
+      "known": 1255,
+      "occupied": 95,
+      "stamp": 2.0
+    },
+    {
+      "width": 94,
+      "height": 267,
+      "known": 1255,
+      "occupied": 95,
+      "stamp": 3.0
+    },
+    {
+      "width": 96,
+      "height": 267,
+      "known": 2954,
+      "occupied": 224,
+      "stamp": 4.0
+    },
+    {
+      "width": 101,
+      "height": 268,
+      "known": 5173,
+      "occupied": 330,
+      "stamp": 5.0
+    },
+    {
+      "width": 103,
+      "height": 268,
+      "known": 5591,
+      "occupied": 369,
+      "stamp": 6.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 5766,
+      "occupied": 404,
+      "stamp": 7.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 6030,
+      "occupied": 432,
+      "stamp": 8.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 6548,
+      "occupied": 478,
+      "stamp": 9.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 6870,
+      "occupied": 440,
+      "stamp": 10.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 11.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 12.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 13.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 14.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 15.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 16.2
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 17.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 18.2
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7256,
+      "occupied": 435,
+      "stamp": 19.2
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7478,
+      "occupied": 439,
+      "stamp": 20.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7756,
+      "occupied": 465,
+      "stamp": 21.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7776,
+      "occupied": 473,
+      "stamp": 22.0
+    },
+    {
+      "width": 106,
+      "height": 268,
+      "known": 7776,
+      "occupied": 473,
+      "stamp": 23.0
+    },
+    {
+      "width": 94,
+      "height": 267,
+      "known": 1222,
+      "occupied": 90,
+      "stamp": 25.4
+    },
+    {
+      "width": 94,
+      "height": 267,
+      "known": 1222,
+      "occupied": 90,
+      "stamp": 26.4
+    },
+    {
+      "width": 99,
+      "height": 267,
+      "known": 4332,
+      "occupied": 276,
+      "stamp": 27.4
+    },
+    {
+      "width": 102,
+      "height": 267,
+      "known": 5105,
+      "occupied": 317,
+      "stamp": 28.4
+    }
+  ],
+  "accepted_slam_poses": [
+    {
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "x": 0.13073118651623358,
+      "y": -1.3235880723296748e-06
+    },
+    {
+      "x": 0.24154457860100847,
+      "y": 0.009574466447964112
+    },
+    {
+      "x": 0.37193240029182056,
+      "y": 0.008730393222996763
+    },
+    {
+      "x": 0.49210778713194026,
+      "y": -0.0016936595754755955
+    },
+    {
+      "x": 0.5951646624493948,
+      "y": -0.002093599888155299
+    },
+    {
+      "x": 0.4619551105577913,
+      "y": 0.00833999635693093
+    },
+    {
+      "x": 0.3318304727219299,
+      "y": 0.008763843902176714
+    },
+    {
+      "x": 0.22178850750618045,
+      "y": -0.0003938638654362505
+    },
+    {
+      "x": 0.09176837789045765,
+      "y": 3.0692322634064054e-05
+    },
+    {
+      "x": -0.000744500450121378,
+      "y": 0.0008206115314008391
+    },
+    {
+      "x": 0.1529088435290527,
+      "y": 0.01107821105020281
+    },
+    {
+      "x": 0.27291883025628183,
+      "y": 0.011054110488130403
+    },
+    {
+      "x": 0.3829225885062867,
+      "y": 0.010624590480837645
+    },
+    {
+      "x": 0.5017180656872416,
+      "y": 0.010201185697101187
+    }
+  ],
+  "reset_response": "Gazebo robot pose/control reset; world clock preserved",
+  "post_reset_map_to_world": {
+    "yaw": -6.694866408757698e-06,
+    "x": -7.49400000007805,
+    "y": -6.999996692558621
+  },
+  "post_reset_localization_error_m": 0.0,
+  "post_reset_drive_localization_error_m": 0.00989077439168311,
+  "map_updates_after_reset": 4,
+  "cloud_updates_after_reset": 0,
+  "clock_backward_jumps": 0,
+  "truth_samples": 1453,
+  "sensor_counts": {
+    "/oakd/depth/image_raw": 881,
+    "/oakd/rgb/image_raw": 881,
+    "/scan": 146
+  },
+  "scan_geometry": {
+    "frame": "laser_link",
+    "samples": 360,
+    "finite": 309,
+    "min_m": 0.6784987449645996,
+    "max_m": 11.733627319335938,
+    "range_min": 0.11999999731779099,
+    "range_max": 12.0
+  },
+  "passed": true
+}

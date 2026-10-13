@@ -1,8 +1,8 @@
 # R7.8: six path-tracking controllers on one plant (2026-10-13)
 
 Status: **implemented, experimental**. This directory holds the model-plant
-benchmark. The Gazebo comparison of the same controllers driving Bumperbot
-through Nav2 is queued and will be linked here when it has run.
+benchmark and, in [gazebo/](gazebo/), the Gazebo comparison of the same
+controllers driving Bumperbot through Nav2.
 
 ## What was built
 
@@ -131,9 +131,59 @@ suite): a kinematic fake robot (the same `ActuatorPlant`) publishes
 - **TF stopped 3 s into a second path:** every command after 0.8 s was
   zero, and the goal ABORTED 5.6 s after the TF loss ("robot pose stale").
 
+## Gazebo comparison (nav_maze, 2026-10-13)
+
+The six controllers drove Bumperbot through Nav2 in Gazebo on nav_maze.
+The protocol is the R7.7 local-planner protocol:
+
+- global planner Smac 2D A*, AMCL;
+- the same 15 seeded goals (seeds 11, 23, 37, 41, 53, three goals each);
+- truth metrics.
+
+It ran at revision `b8e8ba5` (`gazebo/manifest.json`). Results are in
+[gazebo/report.md](gazebo/report.md) and `gazebo/report.json`.
+Cross-track error from the latest `/plan` is in
+[gazebo/tracking.md](gazebo/tracking.md) (`scripts/path_tracking_error.py`
+on the trial bags).
+
+| Controller | Success | Sim time median (s) | Mean speed (m/s) | Final error median (m) | Clearance median / min (m) | Cross-track RMS / p95 (m) |
+|---|---|---|---|---|---|---|
+| backstepping_controller | 15/15 | 27.06 | 0.264 | 0.076 | 0.375 / 0.283 | **0.053** / 0.100 |
+| lqr_controller | 15/15 | 27.08 | 0.263 | 0.075 | 0.352 / 0.310 | 0.056 / 0.108 |
+| mpc_controller | 15/15 | 27.16 | 0.263 | 0.076 | 0.390 / 0.327 | 0.057 / 0.113 |
+| feedback_linearization | 15/15 | 26.78 | 0.263 | 0.067 | 0.372 / **0.244** | 0.061 / 0.114 |
+| pid_controller | 15/15 | 26.88 | 0.263 | 0.067 | 0.372 / 0.304 | 0.063 / 0.126 |
+| nonlinear_mpc | 15/15 | 26.60 | 0.262 | 0.066 | 0.352 / 0.280 | 0.063 / 0.126 |
+
+What this shows:
+
+- **All six reach every goal.** No trial hit the TF freeze described in the
+  global planning tutorial.
+- **Times and paths are within about 1% of each other** on identical goals.
+  The median paired time ratios are 0.993-1.002, and single goals range from
+  0.94 to 1.06. The shared reference speed profile and
+  supervisor set the pace.
+- **The laws differ in how closely they track.** Backstepping and LQR keep
+  the robot closest to the plan (5.3 and 5.6 cm RMS); PID and NMPC are
+  loosest (6.3 cm).
+- **NMPC's corner advantage on the model plant does not carry over.** The
+  maze plan is a grid path that the reference smooths over 0.25 m, so a
+  corner preview buys little. NMPC also runs under the simulator's load.
+- **Feedback linearisation cuts closest to walls** (0.244 m minimum
+  clearance), as its point offset predicts.
+
+For scale: in the R7.7 runs (revision `10f1e51`), Nav2 RPP took 38.9 s
+median, with 6.6 cm cross-track RMS
+([tracking](../r77-local-planner-comparison-2026-10-12/tracking.md)).
+
 ## Reproduce
 
 ```bash
 python3 scripts/r7_8_control_benchmark.py --out <dir>
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q src/robot_lab_algorithms/test/test_tracking_control.py
+GOALS=3 ROBOT_RADIUS=0.12 scripts/planner_comparison.sh <dir> gazebo bumperbot nav_maze control \
+  "pid_controller lqr_controller mpc_controller nonlinear_mpc feedback_linearization backstepping_controller" \
+  "11 23 37 41 53" global_planning:=a_star_planner local_planning:=pure_pursuit
+python3 scripts/planner_comparison_report.py <dir> --markdown report.md
+python3 scripts/path_tracking_error.py <dir> --markdown tracking.md
 ```
