@@ -228,9 +228,9 @@ code delivery, not a passed mission or universal support.
   strict final position/heading, measured contacts, repeated obstacle routes,
   cancellation/second goals, command loss, reset and longer mapping missions.
   Earlier passing screens are not a rerun of every final configuration.
-  The obstacle mission (detour, cancel, resume, second goal) passes in 19
-  of 20 pattern/backend cells; MuJoCo mecanum is rerun with the arrival
-  window ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
+  The obstacle mission (detour, cancel, resume, second goal) now passes in
+  all 20 pattern/backend cells, one seed each
+  ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
 - [ ] **R5.2:** Resolve Go2 stair/terrain traversal and roll-axis recovery;
   existing failed get-up trials remain negative evidence. Qualify robust
   walking/turning and sensor/goal missions before broader mode enablement.

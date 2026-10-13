@@ -97,5 +97,22 @@ the 4WS arrival window. It now has it (`f36bc5e`). Its "control loop
 missed its desired rate" warnings are not caused by load: the quiet
 rerun had 560, the loaded attempt 640, and the passing first run 527.
 
-The mecanum cells run again in every backend in validation round 3
-(`claude-mecanum-v3`).
+## Mecanum rerun (`v3-mecanum/`)
+
+Validation round 3 ran the mecanum cell again in every backend
+(11:21-11:30, from `f36bc5e`, with the 4WS arrival window and the tf2
+0.25.24 overlay; later commits by then touched documentation, the
+walking-robot settings and an Isaac roller change that was not yet
+built). None of the four logs has a stale-transform or progress-checker
+error. **All four pass**: truth errors 0.035-0.108 m.
+
+| Simulator | Detour goal | Near-obstacle goal |
+|---|---|---|
+| MuJoCo | 0.066 m | 0.060 m |
+| PyBullet | 0.068 m | 0.096 m |
+| Gazebo | 0.035 m | 0.108 m |
+| Isaac | 0.082 m | 0.084 m |
+
+With this rerun, **every 4WS pattern and the mecanum car pass the
+obstacle mission in all four backends** (the four 4WS patterns from the
+second run, mecanum from this one).

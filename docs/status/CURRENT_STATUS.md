@@ -58,10 +58,10 @@ October 13: implemented on master, experimental.
 - **Missions.**
   - Workflow/reset screens pass 8/8 for Labbot and Bumperbot in all four
     backends ([evidence](evidence/r61-workflow-reset-2026-10-13/README.md)).
-  - 4WS/mecanum obstacle missions: 13 of 20 passed first, **19 of 20** on
-    the rerun with a wider arrival window. Every 4WS pattern now passes in
-    every backend; MuJoCo mecanum was still aborted while aligning at the
-    goal, and its overlay got the same window
+  - 4WS/mecanum obstacle missions: 13 of 20 passed first, 19 of 20 on
+    the rerun with a wider arrival window, and the mecanum rerun with the
+    same window passes in all four backends. **Every 4WS pattern and the
+    mecanum car now pass in every backend**
     ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
   - Car obstacle missions (Ackermann, rear-steer, anti-Ackermann): **10 of
     12** pass. MuJoCo rear-steer hit the tf2 freeze; Gazebo Ackermann
