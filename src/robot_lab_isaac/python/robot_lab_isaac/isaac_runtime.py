@@ -410,6 +410,41 @@ def _relax_roller_drives(stage, damping_per_rad=1e-5):
     return sorted(relaxed)
 
 
+def _tune_roller_contacts(stage, root_prim, contact_offset=0.002, position_iterations=32,
+                          velocity_iterations=8):
+    """Solver and contact settings for an articulation with passive rollers.
+
+    The mecanum car's 60 rollers have a 6 mm radius.  With the drives freed
+    and bearing damping, its hubs turned at the ideal rate in a strafe but
+    the rollers touching the floor at only 41-57% of theirs (MuJoCo 95-97%),
+    so the car strafed at about half speed (2026-10-13).  No solver
+    iteration counts were set on this ~65-link articulation, and the
+    default contact offset is large next to such a roller.  Returns
+    (roller collision prims tuned, iteration counts set).
+    """
+    from pxr import PhysxSchema, Usd, UsdPhysics
+
+    tuned = 0
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        if prim.IsInstanceProxy() or 'roller' not in str(prim.GetPath()).lower():
+            continue
+        if not prim.HasAPI(UsdPhysics.CollisionAPI):
+            continue
+        collision = PhysxSchema.PhysxCollisionAPI.Apply(prim)
+        (collision.GetContactOffsetAttr() or collision.CreateContactOffsetAttr()).Set(float(contact_offset))
+        (collision.GetRestOffsetAttr() or collision.CreateRestOffsetAttr()).Set(0.0)
+        tuned += 1
+    # The iteration counts belong on the prim carrying the articulation root.
+    articulated = next((p for p in Usd.PrimRange(root_prim) if p.HasAPI(UsdPhysics.ArticulationRootAPI)),
+                       root_prim)
+    articulation = PhysxSchema.PhysxArticulationAPI.Apply(articulated)
+    (articulation.GetSolverPositionIterationCountAttr()
+     or articulation.CreateSolverPositionIterationCountAttr()).Set(int(position_iterations))
+    (articulation.GetSolverVelocityIterationCountAttr()
+     or articulation.CreateSolverVelocityIterationCountAttr()).Set(int(velocity_iterations))
+    return tuned, (int(position_iterations), int(velocity_iterations))
+
+
 def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
                                   damping=0.1, max_force=10.0,
                                   armature=0.01):
@@ -928,6 +963,9 @@ def _run_stage(app, reader, cfg, state):
         rollers = _relax_roller_drives(stage_obj)
         if rollers:
             _emit({"event": "log", "msg": "Free roller joints: %d" % len(rollers)})
+            tuned, iterations = _tune_roller_contacts(stage_obj, root_prim)
+            _emit({"event": "log", "msg": "Roller contacts: %d collision prims at a 2 mm "
+                   "contact offset; solver iterations %s" % (tuned, iterations)})
         joint_pd = cfg.get("joint_pd") or None
         if joint_pd:
             pd_joints = _author_joint_pd_drives(stage_obj, joint_pd)

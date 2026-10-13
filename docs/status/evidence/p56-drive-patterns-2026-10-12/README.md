@@ -93,8 +93,27 @@ with about 30 N at a 6 mm roller's rim.
   either.
 - The obstacle mission still passes (0.07 m and 0.05 m from truth).
 
-A probe of roller spin rates (`scripts/roller_spin_probe.py`) is next: it
-tells held rollers from slipping wheels.
+**Roller spin probe** (`scripts/roller_spin_probe.py`, 12:32). It commands
+a 0.3 m/s strafe and reads every hub and roller rate from
+`/joint_states`. Ideal 45° mecanum wheels turn their hubs at 6.0 rad/s,
+and the roller touching the ground at about 67 rad/s.
+
+| | Lateral speed | Hub rate | Fastest roller, mean per wheel |
+|---|---|---|---|
+| MuJoCo ([json](mujoco_mecanum_rollers_2026-10-13.json)) | 0.251 m/s (forward drift -0.002) | 5.68-5.71 rad/s | 63.9-65.4 rad/s (95-97% of ideal) |
+| Isaac ([json](isaac_mecanum_rollers_2026-10-13.json)) | 0.154 m/s (forward drift 0.094) | 6.02-6.05 rad/s | 27.5-38.2 rad/s (41-57% of ideal) |
+
+In Isaac the hubs turn at the ideal rate, but the rollers turn at only
+about half the rate the strafe needs, and unevenly between wheels (hence
+the forward drift). The rollers neither turn freely nor are held still:
+something resists them or lets them slip against the floor. Their joint
+drives are now free, so the remaining suspects are in PhysX:
+
+- the articulation's solver iterations (none are set; about 65 links);
+- contact offsets that are large next to 6 mm rollers;
+- the imported roller joint axes.
+
+These are the next experiments.
 
 ## Not covered here
 
