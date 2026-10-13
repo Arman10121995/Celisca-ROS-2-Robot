@@ -55,19 +55,33 @@ python3 scripts/planner_comparison_report.py <dir> --markdown report.md
 
 ## Results
 
-| Planner | Success | Sim time median (s) | Path median (m) | Path / A* (paired) | Min clearance median / worst (m) |
-|---|---|---|---|---|---|
-| a_star_planner | 15/15 | 38.48 | 6.781 | 1.00 | 0.307 / 0.271 |
-| navfn_planner | 15/15 | 39.60 | 6.773 | 1.01 | 0.395 / 0.330 |
-| prm_planner | 15/15 | 38.58 | 6.779 | 1.00 | 0.172 / **-0.020** |
-| voronoi_planner | 14/15 | 46.25 | 8.381 | 1.16 | **0.530** / 0.380 |
-| state_lattice_planner | 13/15 | 44.26 | 9.533 | 1.37 | 0.241 / 0.030 |
-| rrt_star_planner | 9/15 | 33.12 | 6.794 | 1.01 | 0.184 / -0.020 |
-| rrt_planner | 8/15 | 56.23 | 7.444 | 1.19 | 0.038 / -0.070 |
-| hybrid_a_star_planner | 7/15 | 30.94 | 6.830 | 1.03 | 0.230 / -0.020 |
+| Planner | Success | Failures after a TF freeze | Sim time median (s) | Path median (m) | Path / A* (paired) | Min clearance median / worst (m) |
+|---|---|---|---|---|---|---|
+| a_star_planner | 15/15 | - | 38.48 | 6.781 | 1.00 | 0.307 / 0.271 |
+| navfn_planner | 15/15 | - | 39.60 | 6.773 | 1.01 | 0.395 / 0.330 |
+| prm_planner | 15/15 | - | 38.58 | 6.779 | 1.00 | 0.172 / **-0.020** |
+| voronoi_planner | 14/15 | 1 (its only failure) | 46.25 | 8.381 | 1.16 | **0.530** / 0.380 |
+| state_lattice_planner | 13/15 | 2 (both failures) | 44.26 | 9.533 | 1.37 | 0.241 / 0.030 |
+| rrt_star_planner | 9/15 | 3 | 33.12 | 6.794 | 1.01 | 0.184 / -0.020 |
+| rrt_planner | 8/15 | 2 | 56.23 | 7.444 | 1.19 | 0.038 / -0.070 |
+| hybrid_a_star_planner | 7/15 | 1 | 30.94 | 6.830 | 1.03 | 0.230 / -0.020 |
 
 "Path / A*" is the inverse of the paired A*/planner path ratio on the
 goals both reached.
+
+**Failures after a TF freeze.** In five trials (one launch each), Nav2's
+controller_server stopped receiving transforms partway through. From then
+on it logged "Transform data too old when converting from map to odom",
+while AMCL kept publishing. The controller then used a frozen robot pose:
+the robot rotated in place until the progress checker aborted, and later
+goals in the same launch failed at once.
+
+These goals are counted as failures of the planner that was running. The
+column shows how many of each planner's failures came after a freeze;
+the cause is not the planner. Counts come from `scripts/tf_freeze_goals.py`
+on the launch logs. One Hybrid-A* goal had already been circling for
+175 s when its freeze began. The cause of the freeze is still open (see
+below).
 
 ## What the numbers say
 
@@ -78,19 +92,21 @@ goals both reached.
   the worst footprint clearance is -0.020 m.
 - **The Voronoi roadmap does what it is for.** It keeps the most
   clearance (median minimum 0.53 m), at the price of 16% longer paths and
-  slower travel. Its one failure was a stop near a wall
-  (progress/collision, seed 53).
+  slower travel. Its one failure (seed 53, goal 3) came after a TF
+  freeze: the robot rotated in place on a frozen pose. This entry
+  previously called it a stop near a wall; the launch log shows otherwise.
 - **The lattice and Hybrid-A\* planners are designed for curvature-limited
   robots.** On a differential base in narrow corridors they produce
   arrival loops:
   - Lattice "successes" include detours of 13-51 m to goals 7 m away by
-    grid.
+    grid. Both lattice failures came after a TF freeze.
   - Hybrid-A\* ran out the 300 s goal timeout on 6 goals, after driving
     up to about 60 m in circles near the goal.
 
   Prefer them for the car-like robots, where the lab already selects
   them.
-- **Plain RRT and RRT\* struggle in a maze.**
+- **Plain RRT and RRT\* struggle in a maze.** Even without the frozen
+  goals (2 of RRT's 7 failures, 3 of RRT\*'s 6), they fail the most:
   - Within the time budget they sometimes find no path.
   - Their paths sit on the inscribed boundary, so RPP's collision check
     stops on them ("detected collision ahead").
@@ -102,10 +118,16 @@ inflation band (`blocked_at: 80`). A rerun with that margin is queued
 and will be added to the evidence. The table above is the first run, at
 the inscribed boundary.
 
-Two failures elsewhere (lattice seed 11, and the R4.3 A* failure) show
-plans that start where the robot used to be: planner_server's view of
-the robot's TF had gone stale. They are counted against the arm they
-happened in.
+The same freeze ended goals elsewhere:
+
+- R4.3 A* seed 11: planner_server froze, and its plans started where the
+  robot used to be.
+- MPPI seed 41 in the [local planning comparison](local_planning_comparison.md).
+- A MuJoCo car mission.
+
+In all, it happened in 9 of about 90 recent Nav2 launches. Comparison bags
+now record `/tf`, and `scripts/tf_freeze_probe.sh` snapshots a fresh
+listener and the server threads at the next occurrence.
 
 ## Limits
 

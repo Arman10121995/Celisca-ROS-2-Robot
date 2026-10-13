@@ -86,6 +86,11 @@ second's):
 - **MPPI reached only 7 of 15 goals.** Its runs ended with "Failed to make
   progress", and on seed 41 also with "Collision Ahead" during the
   back-up recovery. It came within 0.030 m of a mapped wall.
+  - Three of the eight failures (all of seed 41) came after controller_server's
+    TF view froze, 29 s into the first goal. These are not MPPI's doing:
+    the same freeze ended goals in five global-planner trials (see the
+    [global comparison](global_planning_comparison.md)).
+  - Without them, MPPI reached 7 of 12 goals.
 
   This is not a fair verdict on MPPI. Its sampler uses Nav2's default
   vx_max of 0.5 m/s, while the other planners are limited to about

@@ -35,3 +35,7 @@ Summary:
   15/15, DWB 14/15 (one progress-checker stop), MPPI 7/15.
 - MPPI's runs ended in progress failures and collision-checked recovery
   aborts. It ran with Nav2's default 0.5 m/s vx_max and untuned critics.
+- Three MPPI failures (all of seed 41) came after controller_server's TF
+  view froze, 29 s into the first goal (`scripts/tf_freeze_goals.py`).
+  The freeze also hit five global-planner trials; it is not the
+  controller's doing.

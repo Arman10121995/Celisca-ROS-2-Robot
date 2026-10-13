@@ -1252,7 +1252,7 @@ tasks:
           - "docs/tutorials/planning.md: comprehensive documentation with path cost metrics"
           - "verify_r7_complete.py: all requirements satisfied"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "2026-10-12/13 claude: eight runnable global planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals): A* 15/15, NavFn 15/15, PRM 15/15, Voronoi roadmap 14/15 (most clearance, 16% longer), Lattice 13/15 and Hybrid-A* 7/15 (arrival loops on a differential base), RRT* 9/15 and RRT 8/15 (paths on the inscribed boundary stopped by RPP's collision check). The robot_lab RRT/RRT*/PRM/Voronoi now serve Nav2 ComputePathToPose with correct algorithms (grid_planners.py); default clearance margin blocked_at 80 with a rerun queued. Remaining: rerun results, other robots/maps."
+        next_action: "2026-10-12/13 claude: eight runnable global planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals): A* 15/15, NavFn 15/15, PRM 15/15, Voronoi roadmap 14/15 (most clearance, 16% longer), Lattice 13/15 and Hybrid-A* 7/15 (arrival loops on a differential base), RRT* 9/15 and RRT 8/15 (paths on the inscribed boundary stopped by RPP's collision check). The robot_lab RRT/RRT*/PRM/Voronoi now serve Nav2 ComputePathToPose with correct algorithms (grid_planners.py); default clearance margin blocked_at 80 with a rerun queued. Failure attribution 2026-10-13: controller_server TF freezes (scripts/tf_freeze_goals.py) ended Voronoi 1 (its only failure), Lattice 2 (both), RRT* 3, RRT 2 and Hybrid-A* 1 goals; still counted as arm failures and listed per planner in the tutorial. Remaining: rerun results, TF-freeze diagnosis, other robots/maps."
       R7.7:
         title: "Five local planners"
         state: "partial"
@@ -1272,7 +1272,7 @@ tasks:
           - "docs/tutorials/local_planning.md: comprehensive documentation with collision tracking metrics"
           - "verify_r7_complete.py: all requirements satisfied"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "2026-10-12 claude: five runnable local planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals 11/23/37/41/53): Nav2 RPP 15/15, robot_lab pure pursuit 15/15 and follow-the-gap 15/15 (both now serving Nav2 FollowPath through robot_lab_algorithms.nav2_adapters), DWB 14/15, MPPI 7/15 with Nav2's default 0.5 m/s cap and untuned critics. Python TEB/MPPI placeholders are no longer offered as planners. Remaining: MPPI tuning, other robots/maps, control-category comparison."
+        next_action: "2026-10-12 claude: five runnable local planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals 11/23/37/41/53): Nav2 RPP 15/15, robot_lab pure pursuit 15/15 and follow-the-gap 15/15 (both now serving Nav2 FollowPath through robot_lab_algorithms.nav2_adapters), DWB 14/15, MPPI 7/15 with Nav2's default 0.5 m/s cap and untuned critics. Python TEB/MPPI placeholders are no longer offered as planners. Three MPPI failures (seed 41) came after a controller_server TF freeze (2026-10-13 attribution). Remaining: MPPI rerun at vx_max 0.3 (queued), TF-freeze diagnosis, other robots/maps."
       R7.8:
         title: "Five low-level or model-based controllers"
         state: "partial"
@@ -1286,13 +1286,14 @@ tasks:
           - "docs/tutorials/"
         acceptance_ref: "ROADMAP.md"
         evidence:
+          - "docs/status/evidence/r78-control-benchmark-2026-10-13/README.md (2026-10-13 model-plant benchmark of the six FollowPath tracking controllers)"
           - "Six control methods implemented with method subrecords, equations, source references"
           - "Five benchmark experiments with disturbance and recovery tests"
           - "PID, LQR, MPC, nonlinear MPC, feedback linearization, backstepping controller"
           - "docs/tutorials/control.md: comprehensive documentation with equations and actuator models"
           - "verify_r7_complete.py: all requirements satisfied"
         completion_audit: "2026-10-02: prior completion is not supported by the full ROADMAP acceptance; see docs/status/audit-2026-10-02.md."
-        next_action: "Method subrecords, metric specifications and experiment templates exist. Verify each claimed algorithm against its implementation and upstream method, execute fair matched-input comparisons, and save measured traces/results for this category; metadata/fixture checks are not benchmark completion."
+        next_action: "2026-10-13 claude: implemented, experimental. robot_lab_algorithms.tracking_control has six path-tracking controllers on one differential-drive plant with an actuator model - PID (conditional-integration anti-windup), discrete LQR (DARE gains per speed), constrained linear MPC (box-bounded QP by BVLS), nonlinear MPC (adjoint gradient, L-BFGS-B, 30 iterations), point-offset feedback linearisation and Jiang-Nijmeijer backstepping - served as Nav2 FollowPath by nav2_local_planner behind one supervisor (45 deg rotate-in-place, scan stop, progress check, pose watchdog: stop on a TF pose older than 0.5 s, abort after 5 s). control:= pid_controller/lqr_controller/mpc_controller/nonlinear_mpc/feedback_linearization/backstepping_controller now select them (registry + dispatch; they replace the local planner's FollowPath); until now those ids started side-topic demonstration nodes. Model-plant benchmark (docs/status/evidence/r78-control-benchmark-2026-10-13): tracking on three paths, 0.25 m/0.3 rad disturbance, 77-cell envelope (LQR 71/77: false equilibrium at ~95 deg facing the path), saturation recovery (PID without anti-windup overshoots 3.5 cm, with 0), compute p99 0.04-13 ms with 2 NMPC deadline misses of 34,341 under load 16; ROS check of the server with a kinematic fake robot (path succeeded, watchdog stopped and aborted). Remaining: Gazebo comparison of the six on nav_maze (queued, claude-control-cmp), gains identified on the robot, a bicycle-model family for car-like robots."
   R8:
     title: "Backend qualification and scaling"
     state: "partial"

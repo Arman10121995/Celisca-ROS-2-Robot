@@ -1,5 +1,30 @@
 # Current Robot Lab status
 
+October 13: implemented on master, experimental.
+
+- **Control (R7.8).** Six path-tracking controllers now drive through
+  Nav2's FollowPath: PID with anti-windup, LQR, constrained linear MPC,
+  nonlinear MPC, feedback linearisation and backstepping. They are
+  selected with `control:=` or the GUI's Motion controller slot.
+  - The same control ids used to start side-topic demonstration nodes.
+  - A shared supervisor rotates the robot in place, stops it before
+    collisions and stops it when the pose goes stale (watchdog).
+  - A model-plant benchmark covers tracking, disturbance, stability
+    envelope, saturation and compute time. Nonlinear MPC tracks 90°
+    corners eight times closer than the others. LQR has a false
+    equilibrium 1 m off the path at 90° or more.
+  - The Gazebo comparison is queued.
+  - [Evidence](evidence/r78-control-benchmark-2026-10-13/README.md),
+    [tutorial](../tutorials/control_comparison.md).
+- **Gazebo cars.** The car description had no ground-truth publisher, so
+  Gazebo car missions timed out; it now has one.
+- **Stale transforms.** In 9 of about 90 recent Nav2 trials (R4.3, the
+  planner comparisons and the car missions), a Nav2 server's whole TF view
+  froze while AMCL kept publishing. The robot then spun in place, overshot
+  its goal, or the planner started from an old pose. Comparison bags now record
+  `/tf`, and a probe snapshots the next occurrence. The cause is still
+  open.
+
 October 12 (later): measured on master.
 
 - **Celisca navigation.** The Celisca mission passes in all 32 cells (4

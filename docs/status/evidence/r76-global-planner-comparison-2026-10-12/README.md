@@ -40,6 +40,13 @@ Success:
 | RRT | 8/15 |
 | Hybrid-A* | 7/15 (six 300 s timeouts while circling) |
 
+Some of these failures came after controller_server's TF view froze,
+which is not the planner's doing. They are Voronoi 1 (its only failure),
+Lattice 2 (both), RRT* 3, RRT 2 and Hybrid-A* 1, from
+`python3 scripts/tf_freeze_goals.py <dir>` on the launch logs. They
+are still counted in the success column. The tutorial explains the
+freeze.
+
 In this run the robot_lab planners blocked cells only at the inscribed
 radius (`blocked_at: 99`). The default is now 80. A rerun with the
 margin is queued as `claude-global-cmp-margin80` and will be appended
