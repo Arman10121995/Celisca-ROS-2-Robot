@@ -17,7 +17,8 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam \
   start_rviz:=false "$@" > "$OUT.launch.log" 2>&1 &
 LAUNCH=$!
 rm -rf "$OUT.tf.bag"
-ros2 bag record -o "$OUT.tf.bag" /tf /tf_static /odom/ground_truth > /dev/null 2>&1 &
+# EXTRA_BAG_TOPICS (e.g. "/imu/out /scan") are recorded too, for offline replays.
+ros2 bag record -o "$OUT.tf.bag" /tf /tf_static /odom/ground_truth ${EXTRA_BAG_TOPICS:-} > /dev/null 2>&1 &
 BAG=$!
 python3 "$HERE/slam_mapping_check.py" --map "$MAP" --map-out "${OUT%.json}.pgm" ${CHECK_ARGS:-} \
   > "$OUT" 2> "$OUT.err"
