@@ -77,6 +77,25 @@ straight 0.403, arcs 0.334/0.488, spin 1.016 rad/s, stop at zero.
 The same build passed the mecanum obstacle mission in Isaac (0.06 m and
 0.09 m from truth).
 
+A second suspect was the damping the fix gave the rollers. USD angular
+drive damping is per degree, so "1e-4" was 0.0057 N·m·s/rad, 570 times
+the URDF's bearing damping. At the ~33 rad/s a strafe needs, that resists
+with about 30 N at a 6 mm roller's rim.
+
+- `6a88bce` set the URDF value in per-degree units. It also broke the
+  wheel and steering drives (an undefined name), so every Isaac wheeled
+  robot failed to spawn until `a84ab0c`. A static name test now guards
+  the file.
+- The repeat with the corrected damping
+  ([isaac_mecanum_drive_roller_damping_per_degree_2026-10-13.json](isaac_mecanum_drive_roller_damping_per_degree_2026-10-13.json))
+  strafed at **0.148 m/s**, with 0.066 m/s of forward drift: about the
+  same as the 0.142 and 0.119 m/s before. Damping was not the cause
+  either.
+- The obstacle mission still passes (0.07 m and 0.05 m from truth).
+
+A probe of roller spin rates (`scripts/roller_spin_probe.py`) is next: it
+tells held rollers from slipping wheels.
+
 ## Not covered here
 
 These are open-loop drive screens on a flat map. Obstacle routes,

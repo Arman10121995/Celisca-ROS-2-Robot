@@ -18,6 +18,11 @@ last /amcl_pose moved forward by the odometry since that pose's stamp
 odometry alone.  Metrics: position and heading error against truth,
 time "lost" (error > 0.5 m), compute per scan.
 
+``--odom-bias`` corrupts the recorded increments the way the offline
+benchmark does (distance +3%, rotation +2%, heading drift 0.5 deg/m and
+seeded white noise), to test the matchers' corrections on real scans;
+AMCL, which ran live on the true odometry, is then left out.
+
   python3 scripts/r7_3_live_scan_replay.py --map nav_maze --out <dir> <run.bag> ...
 """
 import argparse
@@ -147,9 +152,11 @@ def sensor_offset(static, frame, base):
     return pose
 
 
-def summary(errors, heading, compute=None):
-    e = np.array(errors)
+def summary(offsets, heading, compute=None):
+    offsets = np.array(offsets)
+    e = np.hypot(offsets[:, 0], offsets[:, 1])
     out = {'scans': len(e), 'position_rmse_m': round(float(np.sqrt(np.mean(e ** 2))), 4),
+           'mean_offset_m': [round(float(v), 4) for v in offsets.mean(axis=0)],
            'position_p95_m': round(float(np.percentile(e, 95)), 4), 'max_error_m': round(float(e.max()), 4),
            'heading_rmse_deg': round(math.degrees(float(np.sqrt(np.mean(np.square(heading))))), 3),
            'lost_fraction': round(float(np.mean(e > 0.5)), 4)}
@@ -159,7 +166,15 @@ def summary(errors, heading, compute=None):
     return out
 
 
-def replay(path, occupancy, base, rate):
+def biased(delta, rng):
+    """The offline benchmark's odometry error model applied to one increment."""
+    dx, dy, dth = delta
+    dist = math.hypot(dx, dy)
+    return np.array([dx * 1.03 + rng.normal(0, 0.003), dy * 1.03 + rng.normal(0, 0.003),
+                     dth * 1.02 + math.radians(0.5) * dist + rng.normal(0, 0.003)])
+
+
+def replay(path, occupancy, base, rate, odom_bias=False, seed=1):
     odom, truth, scans, amcl, static = read_bag(path, base)
     if not scans:
         raise SystemExit('%s has no /scan' % path)
@@ -179,18 +194,26 @@ def replay(path, occupancy, base, rate):
     for method in ['dead_reckoning'] + METHODS:
         localizer = ScanLocalizer(method, occupancy, usable[0][3])
         previous = usable[0][2]
+        rng = np.random.default_rng(seed)
         errors, heading, compute = [], [], []
         for t, msg, o, g in usable[1:]:
             points = scan_points(msg.ranges, msg.angle_min, msg.angle_increment, msg.range_min,
                                  min(msg.range_max, 12.0), sensor_offset=tuple(offset))
+            delta = relative(previous, o)
+            if odom_bias:
+                delta = biased(delta, rng)
             start = time.perf_counter()
-            pose = localizer.step(relative(previous, o), points)
+            pose = localizer.step(delta, points)
             compute.append(time.perf_counter() - start)
             previous = o
-            errors.append(math.hypot(pose[0] - g[0], pose[1] - g[1]))
+            errors.append((pose[0] - g[0], pose[1] - g[1]))
             heading.append(abs(wrap(pose[2] - g[2])))
         results[method] = summary(errors, heading, compute)
         results[method]['rejected_matches'] = localizer.rejected
+    if odom_bias:
+        travelled = sum(math.hypot(b[3][0] - a[3][0], b[3][1] - a[3][1]) for a, b in zip(usable, usable[1:]))
+        return {'bag': os.path.abspath(path), 'scans_used': len(usable), 'odom_bias': True,
+                'travelled_m': round(travelled, 2)}, results
     # AMCL as it ran: the last /amcl_pose, moved forward by the odometry since.
     amcl_t = [row[0] for row in amcl]
     errors, heading = [], []
@@ -203,7 +226,7 @@ def replay(path, occupancy, base, rate):
         if oa is None:
             continue
         estimate = compose(pose, relative(oa, o))
-        errors.append(math.hypot(estimate[0] - g[0], estimate[1] - g[1]))
+        errors.append((estimate[0] - g[0], estimate[1] - g[1]))
         heading.append(abs(wrap(estimate[2] - g[2])))
     results['amcl_live'] = summary(errors, heading)
     travelled = sum(math.hypot(b[3][0] - a[3][0], b[3][1] - a[3][1]) for a, b in zip(usable, usable[1:]))
@@ -220,12 +243,15 @@ def main():
     parser.add_argument('--base', default='base_footprint')
     parser.add_argument('--rate', type=float, default=5.0, help='scans per second replayed')
     parser.add_argument('--label', default='')
+    parser.add_argument('--odom-bias', action='store_true',
+                        help="corrupt the recorded odometry with the offline benchmark's bias model")
+    parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--out', required=True)
     args = parser.parse_args()
     occupancy = read_map(args.map)
     runs = {}
     for bag in args.bags:
-        meta, results = replay(bag, occupancy, args.base, args.rate)
+        meta, results = replay(bag, occupancy, args.base, args.rate, args.odom_bias, args.seed)
         runs[os.path.basename(os.path.normpath(bag))] = {'meta': meta, 'results': results}
         print(os.path.basename(os.path.normpath(bag)), json.dumps({k: v['position_rmse_m'] for k, v in results.items()}))
     names = list(next(iter(runs.values()))['results'])
@@ -241,11 +267,13 @@ def main():
     results = {
         'revision': subprocess.run(['git', '-C', HERE, 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip(),
         'host': '%s %s' % (platform.node(), platform.machine()), 'label': args.label, 'map': args.map,
-        'rate_hz': args.rate, 'runs': runs, 'mean': mean,
+        'rate_hz': args.rate, 'odom_bias': args.odom_bias, 'seed': args.seed, 'runs': runs, 'mean': mean,
     }
     lines = ['# R7.3 replay of simulator scans%s' % (' (%s)' % args.label if args.label else ''), '',
-             'Revision `%s`; map %s; %d runs; %.0f scans/s replayed; localizers start at truth.' % (
-                 results['revision'][:7], args.map, len(runs), args.rate), '',
+             'Revision `%s`; map %s; %d runs; %.0f scans/s replayed; localizers start at truth; '
+             'odometry %s.' % (results['revision'][:7], args.map, len(runs), args.rate,
+                               'with the benchmark bias model (seed %d)' % args.seed if args.odom_bias
+                               else 'as recorded'), '',
              '| Localizer | Position RMSE (m) | p95 (m) | Max (m) | Heading RMSE (deg) | Lost (>0.5 m) | Compute p50 / max p99 (ms) |',
              '|---|---|---|---|---|---|---|']
     for name, r in mean.items():
