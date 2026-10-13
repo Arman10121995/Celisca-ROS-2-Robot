@@ -88,7 +88,7 @@ algorithms:
     particle_filter:
       node: {package: robot_lab_algorithms, executable: particle_filter}
     error_state_ekf:
-      node: {package: robot_lab_algorithms, executable: error_state_ekf}
+      unavailable: "retired 2026-10-13 - its node filtered noiseless ground truth; the error-state formulation runs for attitude as sensor_fusion attitude_eskf"
 
   sensor_fusion:
     imu_republisher:

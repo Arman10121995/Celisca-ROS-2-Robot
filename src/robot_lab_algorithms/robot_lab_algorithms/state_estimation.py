@@ -1,14 +1,21 @@
-"""State estimation algorithms (P5).
+"""State estimation nodes (R7.4).
 
-Adds three state estimators that round out the state_estimation category:
-  1. ekf_3d_estimator        - an extended Kalman filter style 3D state estimate
-                               (position/velocity) from odometry-like measures.
-  2. motion_model_estimator  - a constant-velocity motion-model predict/update.
-  3. pose_graph_estimator    - a simple pose-graph style incremental pose merge
-                               (online pose averaging with uncertainty decay).
+The console scripts run robot_lab_algorithms.tracking_filters (rewritten
+2026-10-13): estimators of position, heading, speed and turn rate from
+noisy position fixes (AMCL, GNSS/UWB, or truth plus injected noise):
 
-Each is a pure-Python deterministic implementation with a lightweight Node that
-exposes a state-update method and degrades gracefully when no inputs arrive.
+* linear_kalman_filter - constant-velocity linear Kalman filter;
+* ekf_3d_estimator - CTRV extended Kalman filter (the id predates the model);
+* ukf_estimator - CTRV unscented Kalman filter;
+* particle_filter - CTRV particle filter;
+* motion_model_estimator - interacting multiple model (straight + turning);
+* pose_graph_estimator - sliding-window least-squares smoother (a linear
+  Gaussian pose graph over the last N fixes).
+
+The classes defined below (EKF3DEstimator, MotionModelEstimator,
+PoseGraphEstimator, LinearKalmanFilter, UnscentedKalmanFilter, ParticleFilter,
+ErrorStateEKF) are the earlier versions, kept for their tests only; their
+nodes filtered noiseless ground truth, so nothing was being estimated.
 """
 
 from __future__ import annotations
@@ -684,227 +691,112 @@ class ErrorStateEKF:
 from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402
 
 
-class _OdometryEstimatorNode(Node):
-    """Shared plumbing: consume /odom, publish a filtered Odometry estimate."""
+class StateEstimatorNode(Node):
+    """Estimate pose, heading, speed and turn rate from noisy position fixes.
 
-    def __init__(self, node_name, default_output):
+    Measurements come from ``pose_topic`` (geometry_msgs/PoseWithCovarianceStamped,
+    default /amcl_pose).  For matched-input benchmarks, set ``inject_noise_std``
+    > 0: the node then reads ``odom_topic`` (truth) at ``measurement_rate`` and
+    adds Gaussian noise of that standard deviation to each fix (seeded).
+    Publishes nav_msgs/Odometry on /odometry/<method> after every fix.
+    """
+
+    def __init__(self, method, node_name, output_topic):
         super().__init__(node_name)
+        from geometry_msgs.msg import PoseWithCovarianceStamped
         from nav_msgs.msg import Odometry
+        from robot_lab_algorithms import tracking_filters
         self._odometry_type = Odometry
+        self.declare_parameter('pose_topic', '/amcl_pose')
         self.declare_parameter('odom_topic', '/odom/ground_truth')
-        self.declare_parameter('output_topic', default_output)
-        self._pub = self.create_publisher(
-            Odometry, self.get_parameter('output_topic').value, 10)
-        self.create_subscription(
-            Odometry, self.get_parameter('odom_topic').value,
-            self._on_odom, 10)
-        self._last_stamp = None
-        self.get_logger().info('%s ready' % node_name)
+        self.declare_parameter('inject_noise_std', 0.0)
+        self.declare_parameter('measurement_rate', 10.0)
+        self.declare_parameter('measurement_std', 0.3)
+        self.declare_parameter('accel_std', 0.5)
+        self.declare_parameter('seed', 0)
+        self.declare_parameter('output_topic', output_topic)
+        g = lambda name: self.get_parameter(name).value  # noqa: E731
+        self.filter = tracking_filters.ESTIMATORS[method](measurement_std=float(g('measurement_std')),
+                                                          accel_std=float(g('accel_std')))
+        self.noise = float(g('inject_noise_std'))
+        self.period = 1.0 / max(1e-3, float(g('measurement_rate')))
+        self.rng = __import__('numpy').random.default_rng(int(g('seed')))
+        self._pub = self.create_publisher(Odometry, g('output_topic'), 20)
+        self._last = None
+        self._last_fix = None
+        if self.noise > 0:
+            self.create_subscription(Odometry, g('odom_topic'), self._on_truth, 50)
+            source = '%s + %.2f m noise' % (g('odom_topic'), self.noise)
+        else:
+            self.create_subscription(PoseWithCovarianceStamped, g('pose_topic'), self._on_pose, 20)
+            source = g('pose_topic')
+        self.get_logger().info('%s state estimator on %s -> %s' % (method, source, g('output_topic')))
 
-    def _dt(self, msg):
-        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
-        dt = 0.0 if self._last_stamp is None else max(0.0, stamp - self._last_stamp)
-        self._last_stamp = stamp
-        return dt
-
-    def _publish(self, msg, x, y, z=0.0):
+    def _fix(self, header, x, y):
+        stamp = header.stamp.sec + header.stamp.nanosec * 1e-9
+        if self._last is not None and stamp > self._last:
+            self.filter.predict(min(1.0, stamp - self._last))
+        self._last = stamp
+        self.filter.update((x, y))
+        estimate = self.filter.estimate()
+        if estimate is None:
+            return
+        ex, ey, theta, v, w = estimate
         out = self._odometry_type()
-        out.header = msg.header
-        out.child_frame_id = msg.child_frame_id
-        out.pose.pose.position.x = float(x)
-        out.pose.pose.position.y = float(y)
-        out.pose.pose.position.z = float(z)
-        out.pose.pose.orientation = msg.pose.pose.orientation
-        out.twist = msg.twist
+        out.header.stamp = header.stamp
+        out.header.frame_id = header.frame_id or 'map'
+        out.pose.pose.position.x, out.pose.pose.position.y = float(ex), float(ey)
+        out.pose.pose.orientation.z, out.pose.pose.orientation.w = math.sin(theta / 2), math.cos(theta / 2)
+        out.twist.twist.linear.x, out.twist.twist.angular.z = float(v), float(w)
         self._pub.publish(out)
 
-    def _on_odom(self, msg):  # pragma: no cover - overridden
-        raise NotImplementedError
+    def _on_pose(self, msg):
+        p = msg.pose.pose.position
+        self._fix(msg.header, p.x, p.y)
+
+    def _on_truth(self, msg):
+        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        if self._last_fix is not None and stamp - self._last_fix < self.period - 1e-6:
+            return
+        self._last_fix = stamp
+        p = msg.pose.pose.position
+        nx, ny = self.rng.normal(0.0, self.noise, 2)
+        self._fix(msg.header, p.x + nx, p.y + ny)
 
 
-class EKF3DEstimatorNode(_OdometryEstimatorNode):
-    """Constant-velocity EKF over 3D position/velocity."""
-
-    def __init__(self, node_name='ekf_3d_estimator'):
-        super().__init__(node_name, '/odometry/ekf_3d')
-        self.declare_parameter('process_noise', 0.1)
-        self.declare_parameter('measurement_noise', 0.2)
-        self.estimator = EKF3DEstimator(
-            process_noise=float(self.get_parameter('process_noise').value),
-            measurement_noise=float(self.get_parameter('measurement_noise').value))
-
-    def _on_odom(self, msg):
-        dt = self._dt(msg)
-        if dt > 0.0:
-            self.estimator.predict(dt)
-        position = msg.pose.pose.position
-        linear = msg.twist.twist.linear
-        self.estimator.update([position.x, position.y, position.z,
-                               linear.x, linear.y, linear.z])
-        state = self.estimator.state()
-        self._publish(msg, state[0], state[1], state[2])
-
-
-class MotionModelEstimatorNode(_OdometryEstimatorNode):
-    """Constant-velocity motion model corrected by odometry measurements."""
-
-    def __init__(self, node_name='motion_model_estimator'):
-        super().__init__(node_name, '/odometry/motion_model')
-        self.declare_parameter('model_noise', 0.05)
-        self.declare_parameter('correction_gain', 0.5)
-        self.estimator = MotionModelEstimator(
-            model_noise=float(self.get_parameter('model_noise').value))
-
-    def _on_odom(self, msg):
-        dt = self._dt(msg)
-        self.estimator.vx = msg.twist.twist.linear.x
-        self.estimator.vy = msg.twist.twist.linear.y
-        if dt > 0.0:
-            self.estimator.predict(dt)
-        self.estimator.correct(
-            msg.pose.pose.position.x, msg.pose.pose.position.y,
-            gain=float(self.get_parameter('correction_gain').value))
-        state = self.estimator.state()
-        self._publish(msg, state[0], state[1])
-
-
-class PoseGraphEstimatorNode(_OdometryEstimatorNode):
-    """Incremental pose-graph estimator fed with relative odometry motion."""
-
-    def __init__(self, node_name='pose_graph_estimator'):
-        super().__init__(node_name, '/odometry/pose_graph')
-        self.declare_parameter('decay', 0.9)
-        self.estimator = PoseGraphEstimator(
-            decay=float(self.get_parameter('decay').value))
-        self._previous = None
-
-    def _on_odom(self, msg):
-        position = msg.pose.pose.position
-        current = (position.x, position.y)
-        if self._previous is not None:
-            self.estimator.add_relative(current[0] - self._previous[0],
-                                        current[1] - self._previous[1], 0.0)
-        self._previous = current
-        state = self.estimator.state()
-        self._publish(msg, state[0], state[1])
-
-
-def ekf_3d_estimator_main(args=None):
-    return _run(EKF3DEstimatorNode, 'ekf_3d_estimator', args=args)
-
-
-def motion_model_estimator_main(args=None):
-    return _run(MotionModelEstimatorNode, 'motion_model_estimator', args=args)
-
-
-def pose_graph_estimator_main(args=None):
-    return _run(PoseGraphEstimatorNode, 'pose_graph_estimator', args=args)
-
-
-class LinearKalmanFilterNode(_OdometryEstimatorNode):
-    """Linear Kalman Filter state estimator node."""
-
-    def __init__(self, node_name='linear_kalman_filter'):
-        super().__init__(node_name, '/odometry/linear_kf')
-        self.declare_parameter('process_noise', 0.1)
-        self.declare_parameter('measurement_noise', 0.2)
-        self.estimator = LinearKalmanFilter(
-            process_noise=float(self.get_parameter('process_noise').value),
-            measurement_noise=float(self.get_parameter('measurement_noise').value))
-
-    def _on_odom(self, msg):
-        dt = self._dt(msg)
-        if dt > 0.0:
-            self.estimator.predict(dt)
-        position = msg.pose.pose.position
-        self.estimator.update(position.x, position.y)
-        state = self.estimator.get_state()
-        self._publish(msg, state[0], state[1])
-
-
-class UKFNode(_OdometryEstimatorNode):
-    """Unscented Kalman Filter state estimator node."""
-
-    def __init__(self, node_name='ukf_estimator'):
-        super().__init__(node_name, '/odometry/ukf')
-        self.declare_parameter('alpha', 1.0)
-        self.declare_parameter('beta', 2.0)
-        self.declare_parameter('kappa', 0.0)
-        self.estimator = UnscentedKalmanFilter(
-            alpha=float(self.get_parameter('alpha').value),
-            beta=float(self.get_parameter('beta').value),
-            kappa=float(self.get_parameter('kappa').value))
-
-    def _on_odom(self, msg):
-        dt = self._dt(msg)
-        if dt > 0.0:
-            self.estimator.predict(dt)
-        position = msg.pose.pose.position
-        self.estimator.update(position.x, position.y)
-        state = self.estimator.get_state()
-        self._publish(msg, state[0], state[1])
-
-
-class ParticleFilterNode(_OdometryEstimatorNode):
-    """Particle Filter state estimator node."""
-
-    def __init__(self, node_name='particle_filter'):
-        super().__init__(node_name, '/odometry/particle_filter')
-        self.declare_parameter('num_particles', 100)
-        self.declare_parameter('motion_noise', 0.1)
-        self.declare_parameter('measurement_noise', 0.2)
-        self.estimator = ParticleFilter(
-            num_particles=int(self.get_parameter('num_particles').value),
-            motion_noise=float(self.get_parameter('motion_noise').value),
-            measurement_noise=float(self.get_parameter('measurement_noise').value))
-
-    def _on_odom(self, msg):
-        dt = self._dt(msg)
-        if dt > 0.0:
-            self.estimator.predict(dt)
-        position = msg.pose.pose.position
-        self.estimator.update(position.x, position.y)
-        self.estimator.resample()
-        state = self.estimator.get_state()
-        self._publish(msg, state[0], state[1])
-
-
-class ErrorStateEKFNode(_OdometryEstimatorNode):
-    """Error-State EKF state estimator node."""
-
-    def __init__(self, node_name='error_state_ekf'):
-        super().__init__(node_name, '/odometry/error_state_ekf')
-        self.declare_parameter('process_noise', 0.1)
-        self.declare_parameter('measurement_noise', 0.2)
-        self.estimator = ErrorStateEKF(
-            process_noise=float(self.get_parameter('process_noise').value),
-            measurement_noise=float(self.get_parameter('measurement_noise').value))
-
-    def _on_odom(self, msg):
-        dt = self._dt(msg)
-        if dt > 0.0:
-            self.estimator.predict(dt)
-        position = msg.pose.pose.position
-        self.estimator.update(position.x, position.y)
-        state = self.estimator.get_state()
-        self._publish(msg, state[0], state[1])
+def _estimator_main(method, node_name, output_topic, args=None):
+    return _run(lambda: StateEstimatorNode(method, node_name, output_topic), node_name, args=args)
 
 
 def linear_kalman_filter_main(args=None):
-    return _run(LinearKalmanFilterNode, 'linear_kalman_filter', args=args)
+    return _estimator_main('cv_kalman', 'linear_kalman_filter', '/odometry/linear_kf', args)
+
+
+def ekf_3d_estimator_main(args=None):
+    return _estimator_main('ctrv_ekf', 'ekf_3d_estimator', '/odometry/ctrv_ekf', args)
 
 
 def ukf_estimator_main(args=None):
-    return _run(UKFNode, 'ukf_estimator', args=args)
+    return _estimator_main('ctrv_ukf', 'ukf_estimator', '/odometry/ukf', args)
 
 
 def particle_filter_main(args=None):
-    return _run(ParticleFilterNode, 'particle_filter', args=args)
+    return _estimator_main('particle_filter', 'particle_filter', '/odometry/particle_filter', args)
+
+
+def motion_model_estimator_main(args=None):
+    return _estimator_main('imm', 'motion_model_estimator', '/odometry/imm', args)
+
+
+def pose_graph_estimator_main(args=None):
+    return _estimator_main('window_smoother', 'pose_graph_estimator', '/odometry/window_smoother', args)
 
 
 def error_state_ekf_main(args=None):
-    return _run(ErrorStateEKFNode, 'error_state_ekf', args=args)
+    print('error_state_ekf: retired - its node filtered noiseless truth; the error-state '
+          'formulation runs for attitude as sensor_fusion:=attitude_eskf')
+    return 1
 
 
 if __name__ == '__main__':
-    sys.exit(ekf_3d_estimator_main())
+    sys.exit(linear_kalman_filter_main())

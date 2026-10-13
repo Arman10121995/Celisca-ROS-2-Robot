@@ -1541,121 +1541,261 @@
       description: "Numerical logic test passes (deterministic, no ROS graph)"
       date: "2026-09-08"
 - id: ekf_3d_estimator
-  version: 1.0.0
-  name: EKF 3D Estimator
+  version: 2.0.0
+  name: EKF State Estimator (CTRV)
+  description: "Extended Kalman filter on the constant turn rate and velocity model from noisy position fixes (default /amcl_pose; inject_noise_std adds noise to truth for benchmarks), estimating position, heading, speed and turn rate; the id predates the model"
   status: integrated
   category: state_estimation
-  family: kalman_filter
+  family: kalman
   implementation:
     package: robot_lab_algorithms
     executable: ekf_3d_estimator
+    module: robot_lab_algorithms.tracking_filters
     language: python
   input_contract:
     required_topics:
-    - /odom
+    - /amcl_pose
     required_parameters: []
   output_contract:
     provided_topics:
-    - /estimated_state
+    - /odometry/ctrv_ekf
   required_capabilities: []
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
-  - aerial
   parameters:
-    process_noise: 0.1
+    measurement_std: 0.3
+    accel_std: 0.5
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Bar-Shalom, Li and Kirubarajan, Estimation with Applications to Tracking and Navigation (2001)"
   tags:
   - state_estimation
-  - kalman_filter
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - ekf
+  - ctrv
+  - r7_4
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: numerical_test
-      reference: "test_p5_algorithm_breadth.py::AlgorithmLogicTests::test_ekf_update_converges"
-      description: "Numerical logic test passes (deterministic, no ROS graph)"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      date: "2026-10-13"
 - id: motion_model_estimator
-  version: 1.0.0
-  name: Motion Model Estimator
+  version: 2.0.0
+  name: Interacting Multiple Model Estimator
+  description: "IMM with a straight-line and a turning CTRV EKF mixed by a Markov switching matrix, from noisy position fixes (default /amcl_pose; inject_noise_std adds noise to truth for benchmarks), estimating position, heading, speed and turn rate"
   status: integrated
   category: state_estimation
-  family: motion_model
+  family: imm
   implementation:
     package: robot_lab_algorithms
     executable: motion_model_estimator
+    module: robot_lab_algorithms.tracking_filters
     language: python
   input_contract:
     required_topics:
-    - /odom
+    - /amcl_pose
     required_parameters: []
   output_contract:
     provided_topics:
-    - /estimated_state
+    - /odometry/imm
   required_capabilities: []
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
   parameters:
-    model_noise: 0.05
+    measurement_std: 0.3
+    accel_std: 0.5
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Blom and Bar-Shalom, The interacting multiple model algorithm, IEEE TAC 33(8) 1988"
   tags:
   - state_estimation
-  - motion_model
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - imm
+  - r7_4
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: unit_test
-      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
-      description: "Pure-Python module/unit checks pass"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      date: "2026-10-13"
 - id: pose_graph_estimator
-  version: 1.0.0
-  name: Pose Graph Estimator
+  version: 2.0.0
+  name: Sliding-Window Pose-Graph Smoother
+  description: "Fixed-lag least squares over the last 20 fixes with constant-velocity factors (a linear Gaussian pose graph), from noisy position fixes (default /amcl_pose; inject_noise_std adds noise to truth for benchmarks), estimating position, heading, speed and turn rate"
   status: integrated
   category: state_estimation
-  family: pose_graph
+  family: smoother
   implementation:
     package: robot_lab_algorithms
     executable: pose_graph_estimator
+    module: robot_lab_algorithms.tracking_filters
     language: python
   input_contract:
     required_topics:
-    - /odom
+    - /amcl_pose
     required_parameters: []
   output_contract:
     provided_topics:
-    - /estimated_state
+    - /odometry/window_smoother
   required_capabilities: []
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
-  - aerial
   parameters:
-    decay: 0.9
+    measurement_std: 0.3
+    accel_std: 0.5
   source:
     repository: internal
     license: Apache-2.0
+    reference: "Dellaert and Kaess, Factor Graphs for Robot Perception, FnT Robotics 6(1-2) 2017"
   tags:
   - state_estimation
+  - smoother
   - pose_graph
-  - p5
-  created: '2026-09-05'
-  updated: '2026-09-05'
+  - r7_4
+  created: '2026-10-13'
+  updated: '2026-10-13'
   evidence:
-    - kind: unit_test
-      reference: "test_p5_algorithm_breadth.py::NodeAssetTests::test_node_modules_exist"
-      description: "Pure-Python module/unit checks pass"
-      date: "2026-09-08"
+    - kind: benchmark
+      reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      date: "2026-10-13"
+- id: linear_kalman_filter
+  version: 2.0.0
+  name: Linear Kalman Filter (constant velocity)
+  description: "Linear Kalman filter on [x, y, vx, vy] with white-acceleration process noise, from noisy position fixes (default /amcl_pose; inject_noise_std adds noise to truth for benchmarks), estimating position, heading, speed and turn rate"
+  status: integrated
+  category: state_estimation
+  family: kalman
+  implementation:
+    package: robot_lab_algorithms
+    executable: linear_kalman_filter
+    module: robot_lab_algorithms.tracking_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /amcl_pose
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /odometry/linear_kf
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    measurement_std: 0.3
+    accel_std: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Kalman, A new approach to linear filtering and prediction problems, J. Basic Eng. 82 (1960)"
+  tags:
+  - state_estimation
+  - kalman
+  - r7_4
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      date: "2026-10-13"
+- id: ukf_estimator
+  version: 2.0.0
+  name: UKF State Estimator (CTRV)
+  description: "Unscented Kalman filter on the constant turn rate and velocity model, from noisy position fixes (default /amcl_pose; inject_noise_std adds noise to truth for benchmarks), estimating position, heading, speed and turn rate"
+  status: integrated
+  category: state_estimation
+  family: ukf
+  implementation:
+    package: robot_lab_algorithms
+    executable: ukf_estimator
+    module: robot_lab_algorithms.tracking_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /amcl_pose
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /odometry/ukf
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    measurement_std: 0.3
+    accel_std: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Wan and van der Merwe, The unscented Kalman filter for nonlinear estimation, AS-SPCC 2000"
+  tags:
+  - state_estimation
+  - ukf
+  - ctrv
+  - r7_4
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      date: "2026-10-13"
+- id: particle_filter
+  version: 2.0.0
+  name: Particle Filter (CTRV)
+  description: "500-particle filter on the CTRV model with systematic resampling at half effective sample size, from noisy position fixes (default /amcl_pose; inject_noise_std adds noise to truth for benchmarks), estimating position, heading, speed and turn rate"
+  status: integrated
+  category: state_estimation
+  family: particle
+  implementation:
+    package: robot_lab_algorithms
+    executable: particle_filter
+    module: robot_lab_algorithms.tracking_filters
+    language: python
+  input_contract:
+    required_topics:
+    - /amcl_pose
+    required_parameters: []
+  output_contract:
+    provided_topics:
+    - /odometry/particle_filter
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  parameters:
+    measurement_std: 0.3
+    accel_std: 0.5
+  source:
+    repository: internal
+    license: Apache-2.0
+    reference: "Gordon, Salmond and Smith, Novel approach to nonlinear/non-Gaussian Bayesian state estimation, IEE Proc. F 140(2) 1993"
+  tags:
+  - state_estimation
+  - particle_filter
+  - ctrv
+  - r7_4
+  created: '2026-10-13'
+  updated: '2026-10-13'
+  evidence:
+    - kind: benchmark
+      reference: "docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/README.md"
+      description: "Implemented, experimental: estimators on noisy position fixes against truth; simulator runs pending"
+      date: "2026-10-13"
 - id: wheel_imu_fusion
   version: 2.0.0
   name: Wheel + IMU EKF
