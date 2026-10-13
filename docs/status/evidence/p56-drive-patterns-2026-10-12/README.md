@@ -131,9 +131,22 @@ drives are now free, so the remaining suspects are in PhysX:
   0.148 m/s with less forward drift (0.022 m/s). Every other phase is
   unchanged, and the obstacle mission still passes (0.12 m and 0.09 m).
 - The changes stay: they do no harm and reduce the drift.
-- **Isaac mecanum strafing remains at about half speed.** The imported
-  roller joint axes and PhysX's friction on such small rollers are what
-  is left to check.
+- At this point Isaac mecanum strafing was still at about half speed.
+
+**Cause found: faceted roller collisions.** Each roller's collision is a
+convex hull with 12 sides around its axis. MuJoCo rolls it smoothly, but
+PhysX rests it on a flat facet and has to tip it over each edge, which
+resists rolling. `e0e496e` replaces each roller's collision with an
+analytic capsule sized from the mesh's bounds (the mesh stays as the
+visual).
+
+| Isaac change | Lateral speed | Forward drift | Fastest roller, mean per wheel |
+|---|---|---|---|
+| Capsule rollers ([json](isaac_mecanum_rollers_capsules_2026-10-13.json)) | **0.293 m/s** | 0.002 m/s | 70.2-79.6 rad/s (104-118% of ideal) |
+
+With capsules, Isaac strafes at 98% of the command: better than MuJoCo
+(0.251 m/s), with no forward drift. The full drive check and the obstacle
+mission are being rerun with this change.
 
 ## Not covered here
 
