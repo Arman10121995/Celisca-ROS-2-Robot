@@ -73,6 +73,18 @@ LOCAL_PLANNER_EXTRA_PARAMS = {
             "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic",
             "PathAngleCritic", "PreferForwardCritic",
         ],
+        # Arrival.  At Nav2's defaults MPPI reached 7/15 Bumperbot goals:
+        # the other eight ended 0.05-0.19 m and < 4.5 deg away and never
+        # settled into the 0.07 m / 0.03 rad window (R7.7, 2026-10-13).
+        # Stronger goal critics and narrower sampling near the goal.
+        "FollowPath.vx_std": 0.1,
+        "FollowPath.wz_std": 0.3,
+        "FollowPath.GoalCritic.cost_weight": 10.0,
+        "FollowPath.GoalCritic.cost_power": 1,
+        "FollowPath.GoalCritic.threshold_to_consider": 1.0,
+        "FollowPath.GoalAngleCritic.cost_weight": 8.0,
+        "FollowPath.GoalAngleCritic.cost_power": 1,
+        "FollowPath.GoalAngleCritic.threshold_to_consider": 0.5,
     },
 }
 
