@@ -46,8 +46,12 @@ October 13: implemented on master, experimental.
   its goal, or the planner started from an old pose.
   - The probe has since caught it twice. A fresh listener kept receiving
     `map -> odom` while controller_server's newest transform stayed fixed.
-  - So the server's subscription stops, not the publisher. Comparison and
-    mission runs record `/tf` and run the probe. The cause is open.
+  - So the server's subscription stops, not the publisher.
+  - **Cause:** an ABBA deadlock in the installed tf2/tf2_ros 0.25.23
+    ([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)),
+    fixed upstream in 0.25.24. Apt still has 0.25.23.
+  - `scripts/build_tf2_deadlock_fix.sh` overlays 0.25.24 (ABI-identical
+    headers). Validation runs follow.
 
 October 12 (later): measured on master.
 

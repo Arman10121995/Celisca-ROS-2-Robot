@@ -118,7 +118,14 @@ in tuning. The evidence points to TF updates no longer reaching
 planner_server. In Humble, `Costmap2DROS::getRobotPose` does not check how
 old the pose is, so the fault is silent. It is not specific to either
 search. It is counted as a failure of the arm it
-happened in; diagnosing it is open work.
+happened in.
+
+Diagnosed 2026-10-13: an ABBA deadlock in the installed tf2/tf2_ros 0.25.23
+([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)). A
+costmap MessageFilter and the TransformListener thread lock the same two
+mutexes in opposite order, so the listener thread blocks forever. Upstream
+fixed it in 0.25.24. `scripts/build_tf2_deadlock_fix.sh` overlays the fix;
+see the [global planning tutorial](../../../tutorials/global_planning_comparison.md).
 
 ## Reproduce
 

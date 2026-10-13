@@ -158,8 +158,24 @@ then `scripts/tf_freeze_probe.sh` has caught it twice: PRM above, and a
 - controller_server's newest transform stayed fixed.
 
 So the publishers are alive and one server's TF subscription has stopped.
-It happens in Gazebo, MuJoCo and Isaac, with CycloneDDS. The cause inside
-the server (tf2_ros listener thread or the DDS reader) is still open.
+It happens in Gazebo, MuJoCo and Isaac.
+
+**Cause.** The installed Humble tf2/tf2_ros 0.25.23 has an ABBA deadlock
+([ros2/geometry2#992](https://github.com/ros2/geometry2/issues/992)):
+
+- the costmap's `MessageFilter::add` calls `Buffer::waitForTransform`,
+  holding one mutex while it waits for a second;
+- the TransformListener thread's `testTransformableRequests` holds that
+  second mutex while it waits for the first.
+
+When the two meet, the listener thread blocks forever and the server's
+transforms freeze. The bug came with 0.25.23 (#974) and is fixed in 0.25.24
+(#990, 2026-09-15). Apt still offers 0.25.23 here.
+
+`scripts/build_tf2_deadlock_fix.sh` builds tf2 and tf2_ros 0.25.24 into the
+workspace overlay. The headers are identical to 0.25.23, so Nav2 loads the
+fixed libraries. Runs after the overlay will show whether the freezes are
+gone. The failures above stay as measured.
 
 ## Limits
 
