@@ -1,8 +1,9 @@
 # R7.2: perception kernels on synthetic scenes (2026-10-13)
 
 Status: **implemented, experimental**. The kernels are measured on seeded
-synthetic laser scans and depth clouds with known objects. Runs on
-simulator sensor data are pending.
+synthetic laser scans and depth clouds with known objects, and on the real
+`/scan` streams the simulator runs recorded ([live](live/README.md)). The
+depth-cloud half on simulator data is still pending.
 
 ## What was built
 
@@ -105,8 +106,9 @@ Raw numbers are in [results.json](results.json) and [report.md](report.md).
   likely breaks it into more pieces: 15.6 clusters per scene against
   11.6.
 - **Limits.** The scenes are synthetic: perfect circles and boxes, no
-  reflectance dropouts, no motion blur or multi-echo returns. Runs on
-  Gazebo `/scan` and depth clouds are the next step.
+  reflectance dropouts, no motion blur or multi-echo returns. The 2D-laser
+  half of the next step — real Gazebo/MuJoCo `/scan` — is in
+  [live](live/README.md); the depth-cloud half still needs a recorded cloud.
 
 ## Reproduce
 

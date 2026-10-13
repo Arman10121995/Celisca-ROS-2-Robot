@@ -1,0 +1,287 @@
+{
+ "revision": "07a2cd0d033fdf255fd5fc1ead4f916f31e88579",
+ "host": "molar1 aarch64",
+ "map": "nav_maze",
+ "boundary_sep_m": 0.2,
+ "cluster_dist_m": 0.3,
+ "match_tol_beams": 2,
+ "bags": 3,
+ "summary": {
+  "dbscan": {
+   "precision": 0.5862,
+   "recall": 0.1062,
+   "f1": 0.1799,
+   "clusters_per_scan": 5.33,
+   "true_segments_per_scan": 20.15,
+   "tp": 102,
+   "fp": 72,
+   "fn": 858
+  },
+  "euclidean": {
+   "precision": 0.5862,
+   "recall": 0.1062,
+   "f1": 0.1799,
+   "clusters_per_scan": 5.33,
+   "true_segments_per_scan": 20.15,
+   "tp": 102,
+   "fp": 72,
+   "fn": 858
+  },
+  "obstacle_detector": {
+   "precision": 0.862,
+   "recall": 0.5531,
+   "f1": 0.6739,
+   "clusters_per_scan": 12.34,
+   "true_segments_per_scan": 20.15,
+   "tp": 531,
+   "fp": 85,
+   "fn": 429
+  },
+  "scan_clusterer_adaptive": {
+   "precision": 0.7019,
+   "recall": 0.1938,
+   "f1": 0.3037,
+   "clusters_per_scan": 6.3,
+   "true_segments_per_scan": 20.15,
+   "tp": 186,
+   "fp": 79,
+   "fn": 774
+  },
+  "scan_clusterer_fixed": {
+   "precision": 0.862,
+   "recall": 0.5531,
+   "f1": 0.6739,
+   "clusters_per_scan": 13.35,
+   "true_segments_per_scan": 20.15,
+   "tp": 531,
+   "fp": 85,
+   "fn": 429
+  }
+ },
+ "runs": {
+  "claude-r73-live-mujoco/a_star_planner_seed23.bag": {
+   "dbscan": {
+    "precision": 0.6167,
+    "recall": 0.1034,
+    "f1": 0.177,
+    "tp": 37,
+    "fp": 23,
+    "fn": 321,
+    "clusters_per_scan": 5.59,
+    "true_segments_per_scan": 22.06,
+    "ms_p50": 2.575,
+    "ms_max": 4.395
+   },
+   "euclidean": {
+    "precision": 0.6167,
+    "recall": 0.1034,
+    "f1": 0.177,
+    "tp": 37,
+    "fp": 23,
+    "fn": 321,
+    "clusters_per_scan": 5.59,
+    "true_segments_per_scan": 22.06,
+    "ms_p50": 2.169,
+    "ms_max": 2.907
+   },
+   "obstacle_detector": {
+    "precision": 0.897,
+    "recall": 0.5838,
+    "f1": 0.7073,
+    "tp": 209,
+    "fp": 24,
+    "fn": 149,
+    "clusters_per_scan": 13.82,
+    "true_segments_per_scan": 22.06,
+    "ms_p50": 2.081,
+    "ms_max": 3.043
+   },
+   "scan_clusterer_adaptive": {
+    "precision": 0.7677,
+    "recall": 0.2123,
+    "f1": 0.3326,
+    "tp": 76,
+    "fp": 23,
+    "fn": 282,
+    "clusters_per_scan": 6.94,
+    "true_segments_per_scan": 22.06,
+    "ms_p50": 0.572,
+    "ms_max": 0.636
+   },
+   "scan_clusterer_fixed": {
+    "precision": 0.897,
+    "recall": 0.5838,
+    "f1": 0.7073,
+    "tp": 209,
+    "fp": 24,
+    "fn": 149,
+    "clusters_per_scan": 14.82,
+    "true_segments_per_scan": 22.06,
+    "ms_p50": 0.318,
+    "ms_max": 0.343
+   }
+  },
+  "claude-r73-live-mujoco/a_star_planner_seed37.bag": {
+   "dbscan": {
+    "precision": 0.6604,
+    "recall": 0.1394,
+    "f1": 0.2303,
+    "tp": 35,
+    "fp": 18,
+    "fn": 216,
+    "clusters_per_scan": 5.29,
+    "true_segments_per_scan": 18.93,
+    "ms_p50": 2.562,
+    "ms_max": 4.382
+   },
+   "euclidean": {
+    "precision": 0.6604,
+    "recall": 0.1394,
+    "f1": 0.2303,
+    "tp": 35,
+    "fp": 18,
+    "fn": 216,
+    "clusters_per_scan": 5.29,
+    "true_segments_per_scan": 18.93,
+    "ms_p50": 2.141,
+    "ms_max": 2.979
+   },
+   "obstacle_detector": {
+    "precision": 0.8812,
+    "recall": 0.5618,
+    "f1": 0.6861,
+    "tp": 141,
+    "fp": 19,
+    "fn": 110,
+    "clusters_per_scan": 11.36,
+    "true_segments_per_scan": 18.93,
+    "ms_p50": 1.971,
+    "ms_max": 2.807
+   },
+   "scan_clusterer_adaptive": {
+    "precision": 0.6935,
+    "recall": 0.1713,
+    "f1": 0.2748,
+    "tp": 43,
+    "fp": 19,
+    "fn": 208,
+    "clusters_per_scan": 5.43,
+    "true_segments_per_scan": 18.93,
+    "ms_p50": 0.582,
+    "ms_max": 0.611
+   },
+   "scan_clusterer_fixed": {
+    "precision": 0.8812,
+    "recall": 0.5618,
+    "f1": 0.6861,
+    "tp": 141,
+    "fp": 19,
+    "fn": 110,
+    "clusters_per_scan": 12.43,
+    "true_segments_per_scan": 18.93,
+    "ms_p50": 0.324,
+    "ms_max": 0.355
+   }
+  },
+  "claude-r73-live-mujoco/a_star_planner_seed53.bag": {
+   "dbscan": {
+    "precision": 0.4918,
+    "recall": 0.0855,
+    "f1": 0.1456,
+    "tp": 30,
+    "fp": 31,
+    "fn": 321,
+    "clusters_per_scan": 5.11,
+    "true_segments_per_scan": 19.47,
+    "ms_p50": 2.537,
+    "ms_max": 4.521
+   },
+   "euclidean": {
+    "precision": 0.4918,
+    "recall": 0.0855,
+    "f1": 0.1456,
+    "tp": 30,
+    "fp": 31,
+    "fn": 321,
+    "clusters_per_scan": 5.11,
+    "true_segments_per_scan": 19.47,
+    "ms_p50": 2.047,
+    "ms_max": 2.999
+   },
+   "obstacle_detector": {
+    "precision": 0.8117,
+    "recall": 0.5157,
+    "f1": 0.6307,
+    "tp": 181,
+    "fp": 42,
+    "fn": 170,
+    "clusters_per_scan": 11.84,
+    "true_segments_per_scan": 19.47,
+    "ms_p50": 1.924,
+    "ms_max": 3.006
+   },
+   "scan_clusterer_adaptive": {
+    "precision": 0.6442,
+    "recall": 0.1909,
+    "f1": 0.2945,
+    "tp": 67,
+    "fp": 37,
+    "fn": 284,
+    "clusters_per_scan": 6.53,
+    "true_segments_per_scan": 19.47,
+    "ms_p50": 0.588,
+    "ms_max": 0.625
+   },
+   "scan_clusterer_fixed": {
+    "precision": 0.8117,
+    "recall": 0.5157,
+    "f1": 0.6307,
+    "tp": 181,
+    "fp": 42,
+    "fn": 170,
+    "clusters_per_scan": 12.79,
+    "true_segments_per_scan": 19.47,
+    "ms_p50": 0.322,
+    "ms_max": 0.343
+   }
+  }
+ },
+ "metas": {
+  "claude-r73-live-mujoco/a_star_planner_seed23.bag": {
+   "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-mujoco/a_star_planner_seed23.bag",
+   "scans_used": 17,
+   "beams": 360,
+   "laser_yaw": 3.14,
+   "range": [
+    0.12,
+    11.9
+   ],
+   "boundary_sep_m": 0.2,
+   "cluster_dist_m": 0.3
+  },
+  "claude-r73-live-mujoco/a_star_planner_seed37.bag": {
+   "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-mujoco/a_star_planner_seed37.bag",
+   "scans_used": 14,
+   "beams": 360,
+   "laser_yaw": 3.14,
+   "range": [
+    0.12,
+    11.9
+   ],
+   "boundary_sep_m": 0.2,
+   "cluster_dist_m": 0.3
+  },
+  "claude-r73-live-mujoco/a_star_planner_seed53.bag": {
+   "bag": "/workspace/molar/robot_lab_runtime/claude-r73-live-mujoco/a_star_planner_seed53.bag",
+   "scans_used": 19,
+   "beams": 360,
+   "laser_yaw": 3.14,
+   "range": [
+    0.12,
+    11.9
+   ],
+   "boundary_sep_m": 0.2,
+   "cluster_dist_m": 0.3
+  }
+ }
+}
