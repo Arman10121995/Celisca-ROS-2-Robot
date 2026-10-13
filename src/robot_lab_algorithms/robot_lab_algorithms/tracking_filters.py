@@ -247,13 +247,26 @@ class CtrvParticleFilter:
                 self.rng.normal(0, 0.3, self.N)])
             return
         d2 = np.sum((self.p[:, :2] - z) ** 2, axis=1)
-        self.w = self.w * np.exp(-0.5 * d2 / self.r ** 2) + 1e-300
+        # Sensor resetting (as in augmented MCL): when no particle explains the
+        # fix, re-seed a fifth of them around it so the filter can recover.
+        if d2.min() > (3.0 * self.r) ** 2:
+            k = self.N // 5
+            pick = self.rng.choice(self.N, k, replace=False)
+            self.p[pick, 0] = z[0] + self.rng.normal(0, self.r, k)
+            self.p[pick, 1] = z[1] + self.rng.normal(0, self.r, k)
+            d2[pick] = np.sum((self.p[pick, :2] - z) ** 2, axis=1)
+        # Log-domain weights: no underflow to a uniform set when all are far.
+        log_w = np.log(np.maximum(self.w, 1e-300)) - 0.5 * d2 / self.r ** 2
+        log_w -= log_w.max()
+        self.w = np.exp(log_w)
         self.w /= self.w.sum()
         if 1.0 / np.sum(self.w ** 2) < self.N / 2:
             positions = (self.rng.random() + np.arange(self.N)) / self.N
             index = np.minimum(np.searchsorted(np.cumsum(self.w), positions), self.N - 1)
             self.p = self.p[index]
             self.w = np.full(self.N, 1.0 / self.N)
+            # Roughening against sample impoverishment.
+            self.p += self.rng.normal(0, 1.0, self.p.shape) * np.array([0.02, 0.02, 0.02, 0.02, 0.02])
 
     def estimate(self):
         if self.p is None:
