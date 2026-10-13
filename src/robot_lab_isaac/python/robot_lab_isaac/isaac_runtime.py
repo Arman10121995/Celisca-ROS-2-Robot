@@ -378,6 +378,31 @@ def _author_wheel_velocity_drives(stage, joint_names,
     return sorted(driven)
 
 
+def _relax_roller_drives(stage, damping=1e-4):
+    """Free the passive mecanum/omni rollers from the importer's default drives.
+
+    Isaac Sim's URDF importer gives every revolute joint a drive
+    (``joint_drive_type``).  A passive roller must spin freely, so its drive
+    stiffness goes to zero and its damping to the URDF's tiny bearing
+    friction; with the default drive the rollers resisted, and the mecanum
+    car strafed at 0.142 of 0.3 m/s in Isaac against 0.25-0.28 elsewhere
+    (2026-10-12).  Returns the prim paths relaxed.
+    """
+    from pxr import Usd, UsdPhysics
+
+    relaxed = []
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        if prim.IsInstanceProxy() or 'roller' not in prim.GetName().lower():
+            continue
+        if not prim.IsA(UsdPhysics.RevoluteJoint):
+            continue
+        drive = UsdPhysics.DriveAPI.Apply(prim, "angular")
+        (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(0.0)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(damping))
+        relaxed.append(str(prim.GetPath()))
+    return sorted(relaxed)
+
+
 def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
                                   damping=0.1, max_force=10.0,
                                   armature=0.01):
@@ -893,6 +918,9 @@ def _run_stage(app, reader, cfg, state):
             stage_obj, cfg.get("drive_steer_joints", []))
         if steered:
             _emit({"event": "log", "msg": "Steering position drives: %s" % steered})
+        rollers = _relax_roller_drives(stage_obj)
+        if rollers:
+            _emit({"event": "log", "msg": "Free roller joints: %d" % len(rollers)})
         joint_pd = cfg.get("joint_pd") or None
         if joint_pd:
             pd_joints = _author_joint_pd_drives(stage_obj, joint_pd)
