@@ -1,6 +1,11 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-Updated: 2026-10-09. See [the current extension checkpoint](docs/status/continuation-2026-10-08.md)
+October 13 continuation: [current delivered work and remaining scope](docs/status/continuation-2026-10-13-codex.md).
+The new `R7.8.bicycle` lane adds three source-profile car controllers and GUI
+dispatch; physical comparisons remain pending. Preserve Claude's live trials
+and their source-scoped measurements.
+
+Updated: 2026-10-13. See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,

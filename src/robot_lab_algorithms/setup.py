@@ -53,6 +53,7 @@ setup(
             # Global planning
             'nav2_global_planner = robot_lab_algorithms.nav2_adapters:global_planner_main',
             'nav2_local_planner = robot_lab_algorithms.nav2_adapters:local_planner_main',
+            'nav2_bicycle = robot_lab_algorithms.nav2_bicycle:main',
             'leg_odometry = robot_lab_algorithms.leg_odometry:main',
             'wheel_odometry = robot_lab_algorithms.wheel_odometry:main',
             'rrt_planner = robot_lab_algorithms.global_planning:rrt_planner_main',

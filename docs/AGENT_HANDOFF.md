@@ -62,6 +62,13 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 13 codex independent lane:** `R7.8.bicycle` adds a separate car-only
+FollowPath server, source-profile geometry/footprints, forward DUBIN selection,
+three GUI controllers and a [bicycle guide](tutorials/bicycle-control.md).
+See [the status continuation](status/continuation-2026-10-13-codex.md). Preserve
+Claude's running legged/MPPI queues and existing differential-control source;
+physical bicycle missions and broader roadmap acceptance remain open.
+
 **Latest October 9 continuation from `bf4b9ba`:** persistent Drone/Drive
 click highlights survive pointer leave/release; native Stretch navigation and
 taught arm/hand task editing/execution; native-X500 selected-world takeoff

@@ -13,6 +13,7 @@ from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 
 try:
     import yaml
@@ -576,6 +577,16 @@ def _resolve_algorithm_selection(context, mode_config, dispatch, robot_config=No
                 "%s algorithm '%s' cannot be launched: %s"
                 % (category, requested, entry["unavailable"])
             )
+        required = set(entry.get('required_features') or [])
+        missing = required-set((robot_config or {}).get('features') or [])
+        drive_types = entry.get('for_drive_types') or []
+        allowed_modes = entry.get('for_modes') or []
+        requested_mode = _launch_value(context, 'mode') if allowed_modes else ''
+        if allowed_modes and MODE_ALIASES.get(requested_mode, requested_mode) not in allowed_modes:
+            raise RuntimeError("%s algorithm '%s' requires mode %s" % (category, requested, allowed_modes))
+        if missing or (drive_types and (robot_config or {}).get('drive', {}).get('type') not in drive_types):
+            raise RuntimeError("%s algorithm '%s' requires %s and drive type %s" %
+                (category, requested, sorted(required), drive_types))
         unsuitable = set(entry.get("not_for_features") or []) \
             & set((robot_config or {}).get("features") or [])
         if unsuitable:
@@ -623,7 +634,7 @@ def _robot_tracking_parameters(robot_model):
     return params
 
 
-def _algorithm_nodes(nodes, use_sim_time, robot_model=""):
+def _algorithm_nodes(nodes, use_sim_time, robot_model="", robot_config=None):
     """Node actions for every selection that runs as its own process."""
     actions = []
     for category, algorithm_id, spec in nodes:
@@ -632,6 +643,17 @@ def _algorithm_nodes(nodes, use_sim_time, robot_model=""):
         if not package or not executable:
             continue
         parameters = [{"use_sim_time": _as_bool(use_sim_time, True)}]
+        if executable == 'nav2_bicycle':
+            configuration = robot_config or {}
+            if configuration.get('drive', {}).get('type') != 'ackermann':
+                raise RuntimeError('The bicycle controller needs a source Ackermann drive profile.')
+            overlay = _load_yaml(str(Path(get_package_share_directory('robot_lab_navigation'))/
+                'config'/'robots'/(robot_model+'.yaml')))
+            local = overlay['local_costmap']['local_costmap']['ros__parameters']
+            footprint = json.loads(local['footprint']) if isinstance(local['footprint'], str) else local['footprint']
+            profile = dict(robot=robot_model, drive=configuration['drive'],
+                base_frame=local['robot_base_frame'], footprint=footprint)
+            parameters.append(dict(source_profile=ParameterValue(json.dumps(profile), value_type=str)))
         if executable == "nav2_local_planner" and robot_model:
             tracking = _robot_tracking_parameters(robot_model)
             if tracking:
@@ -1617,6 +1639,8 @@ def _build_simulation_actions(context):
             server = (entry.get("serves") or {}).get(action)
             if server:
                 nav_args[argument] = server
+                if entry.get('car_search_model'):
+                    nav_args['car_search_model'] = entry['car_search_model']
                 print("[robot_lab] navigator %s -> %s (%s)"
                       % (action, server, algorithm_selection[category]))
         gated_actions.append(
@@ -1628,7 +1652,7 @@ def _build_simulation_actions(context):
 
     # Selections that run as their own process (planners, estimators,
     # perception pipelines and controllers that are not stack plugins).
-    gated_actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time, robot_model))
+    gated_actions.extend(_algorithm_nodes(algorithm_nodes, use_sim_time, robot_model, robot_config))
 
     if gated_actions and _launch_value(context, "simulator") != "gazebo":
         # Gate: the sections above start once the simulator has published its

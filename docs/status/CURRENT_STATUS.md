@@ -2,6 +2,14 @@
 
 October 13: implemented on master, experimental.
 
+- **Car controls (R7.8.bicycle, Codex).** Three additional source-profile
+  controllers—bicycle pure pursuit, Stanley and steering-rate MPC—serve a
+  separate Nav2 FollowPath action with actual odometry, full-footprint stopping
+  checks and car-safe cancellation/heading handling. GUI Motion controller
+  selects them on Ackermann/rear-steer cars, with forward DUBIN planning.
+  Numerical/installation checks are separate from pending physical missions.
+  [Guide](../tutorials/bicycle-control.md), [scope](continuation-2026-10-13-codex.md).
+
 - **Control (R7.8).** Six path-tracking controllers now drive through
   Nav2's FollowPath: PID with anti-windup, LQR, constrained linear MPC,
   nonlinear MPC, feedback linearisation and backstepping. They are

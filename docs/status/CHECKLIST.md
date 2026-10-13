@@ -1,5 +1,10 @@
 # Robot Lab done and remaining checklist
 
+- [x] October 13: separate source-profile bicycle pursuit/Stanley/MPC controls,
+  car-only GUI/launch dispatch, full stopping footprint and freshness/cancel guards.
+- [ ] Physical bicycle-controller car missions and forward/reverse extension.
+  See [the continuation](continuation-2026-10-13-codex.md).
+
 Latest [initial implementation continuation](implementation-continuation-2026-10-09.md):
 
 - [x] Persistent highlighted Drone/Drive direction and altitude click latches;
@@ -12,10 +17,10 @@ Latest [initial implementation continuation](implementation-continuation-2026-10
   source-bound measured result; reset invalidation and requested seed UI.
 - [ ] Physical qualification of these new tasks/controls/flight/workloads.
 - [ ] Remaining model/backend controllers, global arm/dexterous/object/grasp
-  adapters, aerial sensing/mapping/dynamic avoidance, world/provider work,
+  adapters, mapped/dynamic aerial avoidance and other backends, world/provider work,
   simulator-applied seeds and fair algorithm comparisons.
 
-Updated October 9, 2026. **The project is partial.** The user prioritizes
+Updated October 13, 2026. **The project is partial.** The user prioritizes
 initial implementation before testing/validation. [Current status](CURRENT_STATUS.md)
 and [the checkpoint](continuation-2026-10-08.md) link exact physical source stages,
 publication and software checks. A checked item below
@@ -51,8 +56,8 @@ the older roadmap. Existing stabilization fixes must remain working.
   cancel/reset and owned cleanup; remove invented legacy benchmark metrics.
 - [x] PX4 single-instance lease, SSD log budget and startup-error cleanup.
 - [ ] Complete source-specific controllers for remaining robots/backends,
-  dexterous hands, arbitrary-object/mobile tasks, aerial sensors/mapping/dynamic
-  avoidance, independently owned terrain/provider work and substantive algorithm
+  dexterous hands, arbitrary-object/mobile tasks, mapped/dynamic aerial
+  avoidance and other backends, independently owned terrain/provider work and substantive algorithm
   adapters plus seed/mission/result comparison contracts.
 - [ ] Run the focused and broad validation handoff after those implementations.
 

@@ -101,6 +101,9 @@ execution and measurement acceptance criteria are met.
   control column; robot categories/types, limits and sidebar navigation.
 - [TurtleBot 3 Burger/Waffle/Waffle Pi](turtlebot3.md): source-backed wheels
   and LDS, measured four-backend GUI Drive and evidence-gated modes.
+- [Experimental bicycle controls](bicycle-control.md): source-profile pursuit,
+  Stanley and steering-rate MPC for front/rear-steer cars, with car-only GUI
+  dispatch and forward DUBIN planning; physical qualification pending.
 - [Native Panda Arm controls](panda_arm.md): actual MuJoCo joint/Home/Stop/
   Hand and MoveIt Plan/Execute, measured static-world TCP and physical cube
   grasp; Servo, attached-payload planning and other backends remain.

@@ -1,3 +1,54 @@
+- id: bicycle_pure_pursuit
+  version: 1.0.0
+  name: Bicycle Pure Pursuit (experimental)
+  description: Forward fixed-axle car tracking with source curvature/steering slew limits and full stopping footprint; physical qualification pending
+  status: integrated
+  category: control
+  family: bicycle_geometric
+  implementation: {package: robot_lab_algorithms, executable: nav2_bicycle, module: robot_lab_algorithms.bicycle_control, law: bicycle_pure_pursuit, language: python}
+  input_contract: {required_topics: [/tf, /odom, /local_costmap/costmap], required_actions: [nav2_msgs/action/FollowPath]}
+  output_contract: {provided_topics: [/cmd_vel, /robot_lab/bicycle/status]}
+  required_capabilities: []
+  supported_robot_classes: [mobile]
+  parameters: {max_linear: 0.3, rate: 20.0}
+  source: {repository: internal, license: BSD-3-Clause, reference: 'https://atsushisakai.github.io/PythonRobotics/modules/6_path_tracking/pure_pursuit_tracking/pure_pursuit_tracking.html'}
+  tags: [bicycle, ackermann, experimental, r7_8]
+  created: '2026-10-13'
+  updated: '2026-10-13'
+- id: bicycle_stanley
+  version: 1.0.0
+  name: Bicycle Stanley (experimental)
+  description: Stanley steering with an explicit rear-steer fixed-axle feedback adaptation; source limits and full footprint; physical qualification pending
+  status: integrated
+  category: control
+  family: bicycle_geometric
+  implementation: {package: robot_lab_algorithms, executable: nav2_bicycle, module: robot_lab_algorithms.bicycle_control, law: bicycle_stanley, language: python}
+  input_contract: {required_topics: [/tf, /odom, /local_costmap/costmap], required_actions: [nav2_msgs/action/FollowPath]}
+  output_contract: {provided_topics: [/cmd_vel, /robot_lab/bicycle/status]}
+  required_capabilities: []
+  supported_robot_classes: [mobile]
+  parameters: {max_linear: 0.3, rate: 20.0}
+  source: {repository: internal, license: BSD-3-Clause, reference: 'https://atsushisakai.github.io/PythonRobotics/modules/6_path_tracking/stanley_control/stanley_control.html'}
+  tags: [bicycle, ackermann, experimental, r7_8]
+  created: '2026-10-13'
+  updated: '2026-10-13'
+- id: bicycle_mpc
+  version: 1.0.0
+  name: Bicycle Steering-Rate MPC (experimental)
+  description: Linear time-varying bicycle-error MPC with source steering angle/rate constraints, bounded solver and geometric fallback; physical qualification pending
+  status: integrated
+  category: control
+  family: bicycle_mpc
+  implementation: {package: robot_lab_algorithms, executable: nav2_bicycle, module: robot_lab_algorithms.bicycle_control, law: bicycle_mpc, language: python}
+  input_contract: {required_topics: [/tf, /odom, /local_costmap/costmap], required_actions: [nav2_msgs/action/FollowPath]}
+  output_contract: {provided_topics: [/cmd_vel, /robot_lab/bicycle/status]}
+  required_capabilities: []
+  supported_robot_classes: [mobile]
+  parameters: {max_linear: 0.3, rate: 20.0}
+  source: {repository: internal, license: BSD-3-Clause, reference: 'https://atsushisakai.github.io/PythonRobotics/modules/6_path_tracking/model_predictive_speed_and_steering_control/model_predictive_speed_and_steering_control.html'}
+  tags: [bicycle, ackermann, experimental, r7_8]
+  created: '2026-10-13'
+  updated: '2026-10-13'
 - id: laser_scan_to_pointcloud
   version: 1.0.0
   name: Laser Scan to PointCloud

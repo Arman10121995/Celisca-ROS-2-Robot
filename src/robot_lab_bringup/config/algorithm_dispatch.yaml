@@ -177,6 +177,27 @@ algorithms:
       unavailable: "placeholder - it scores random velocities by a constant goal distance, with no horizon rollout or obstacle cost; use mppi_controller (Nav2 MPPI)"
 
   control:
+    bicycle_pure_pursuit:
+      node: {package: robot_lab_algorithms, executable: nav2_bicycle, parameters: {planner: bicycle_pure_pursuit}}
+      serves: {follow_path: /robot_lab/bicycle_follow_path}
+      required_features: [car_steering]
+      for_drive_types: [ackermann]
+      for_modes: [nav]
+      car_search_model: DUBIN
+    bicycle_stanley:
+      node: {package: robot_lab_algorithms, executable: nav2_bicycle, parameters: {planner: bicycle_stanley}}
+      serves: {follow_path: /robot_lab/bicycle_follow_path}
+      required_features: [car_steering]
+      for_drive_types: [ackermann]
+      for_modes: [nav]
+      car_search_model: DUBIN
+    bicycle_mpc:
+      node: {package: robot_lab_algorithms, executable: nav2_bicycle, parameters: {planner: bicycle_mpc}}
+      serves: {follow_path: /robot_lab/bicycle_follow_path}
+      required_features: [car_steering]
+      for_drive_types: [ackermann]
+      for_modes: [nav]
+      car_search_model: DUBIN
     simple_controller:
       stack: controller
     noisy_controller:

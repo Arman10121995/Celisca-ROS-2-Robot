@@ -586,6 +586,14 @@ class SimulationLauncherGui(tk.Tk):
                 and algorithm_id != 'dwb_local_planner':
             return 'Parallel steering uses DWB with a translation/pivot constraint.'
         entry = (self.algorithm_dispatch.get(category) or {}).get(algorithm_id) or {}
+        if entry.get('for_modes') and self.mode_var.get() not in entry['for_modes']:
+            return 'This controller executes Nav2 FollowPath in Navigation mode.'
+        if not self._robot_free():
+            features = set((self._robot_config() or {}).get('features') or [])
+            missing = set(entry.get('required_features') or [])-features
+            drives = entry.get('for_drive_types') or []
+            if missing or (drives and self._drive_type() not in drives):
+                return 'This controller requires an authored Ackermann car steering profile.'
         excluded = set(entry.get("not_for_features") or [])
         if not excluded or self._robot_free():
             return ""

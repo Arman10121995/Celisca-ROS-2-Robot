@@ -305,6 +305,7 @@ def _setup(context, *args, **kwargs):
     global_planner_plugin = LaunchConfiguration("global_planner_plugin").perform(context)
     local_planner_plugin = LaunchConfiguration("local_planner_plugin").perform(context)
     motion_model = LaunchConfiguration("motion_model").perform(context).strip().lower()
+    car_search_model = LaunchConfiguration('car_search_model').perform(context).strip()
     spin_recovery = LaunchConfiguration("spin_recovery").perform(context).strip().lower() not in (
         "false", "0", "no")
     compute_path_server = LaunchConfiguration("compute_path_server").perform(context).strip()
@@ -312,6 +313,11 @@ def _setup(context, *args, **kwargs):
     requested_plugins = (global_planner_plugin, local_planner_plugin)
     global_planner_plugin, local_planner_plugin = _compatible_planners(
         motion_model, global_planner_plugin, local_planner_plugin)
+    if car_search_model not in ('auto', 'DUBIN', 'REEDS_SHEPP'):
+        raise ValueError('Car search model must be auto, DUBIN or REEDS_SHEPP')
+    if car_search_model != 'auto' and (motion_model != 'ackermann'
+            or global_planner_plugin != 'nav2_smac_planner/SmacPlannerHybrid'):
+        raise ValueError('Explicit car search model requires the Ackermann Hybrid-A* planner')
     if (global_planner_plugin, local_planner_plugin) != requested_plugins:
         print("[robot_lab] navigation auto plugins: "
               f"global={global_planner_plugin}, local={local_planner_plugin}")
@@ -330,6 +336,8 @@ def _setup(context, *args, **kwargs):
         parameters.append({"use_sim_time": use_sim_time})
         parameters.extend(_motion_model_overrides(
             exec_name, motion_model, global_planner_plugin))
+        if exec_name == 'planner_server' and car_search_model != 'auto':
+            parameters.append({'GridBased.motion_model_for_search': car_search_model})
         if exec_name == "bt_navigator":
             # Resolve the default behavior tree from the installed package
             # share (portable) instead of an absolute source path.
@@ -430,6 +438,8 @@ def generate_launch_description():
             "spin_recovery", default_value="true",
             description="'false': the recovery tree backs up instead of spinning "
                         "(for robots that cannot turn on the spot)"),
+        DeclareLaunchArgument('car_search_model', default_value='auto',
+            description='auto retains current car planning; DUBIN supplies forward-only bicycle-controller paths'),
         DeclareLaunchArgument(
             "compute_path_server", default_value="",
             description="ComputePathToPose action the navigator calls instead of "

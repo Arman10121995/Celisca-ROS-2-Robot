@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-13",
+  "base_revision": "4e93bcc5be6497b944e3f5c689459059399c8117",
+  "branch": "master",
+  "state": "implemented experimental bicycle controls; physical qualification pending",
+  "source_sha256": {
+    "src/robot_lab_algorithms/robot_lab_algorithms/bicycle_control.py": "cd8bae46df0196fb98abe72c5b84e331c86eaf3391ab3462d6d24a8f7821d277",
+    "src/robot_lab_algorithms/robot_lab_algorithms/nav2_bicycle.py": "219b80b639db4b24be9502c281ef9624c7591980b0641ce47952180dc01a9bf7",
+    "src/robot_lab_algorithms/test/test_bicycle_control.py": "c10140b779af98f2261e615390d3b78fee8e10a71db4818c21c56bc1f7259fce",
+    "src/robot_lab_algorithms/setup.py": "8e4bc61e3d147f1799b0836be06af630a58b71247c5ec33d0eeaee7f212b6642",
+    "src/robot_lab_algorithms/package.xml": "23bd1c289b3a3e117333e9fc209347742ead3656f758bd8e146718e5c7f96608",
+    "src/robot_lab_bringup/config/algorithm_dispatch.yaml": "9403de8cc8d82dcde0bef2c2a4084361323c025d201cd0246a3690e09dea1ff6",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "ccdd87ab44d68d677a6b1915352c550122d9e9a9ae455fea989bdda29e8a4e0a",
+    "src/robot_lab_navigation/launch/navigation.launch.py": "f3e9a65c395102fe3ff997b433ec0914a53b2e3662bc4f576d647e12cad816c3",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "701a63adb035a6005a03da818477b6e867a0ee68de3195ffa0f2b321f0b96ca2",
+    "src/robot_lab/robot_lab_registry/config/algorithms.yaml": "9d0e5dde57e1132aec2d5774ffd638457c4c389568702aeed0dd81957e22390b"
+  },
+  "installed_files": {
+    "src/robot_lab_algorithms/robot_lab_algorithms/bicycle_control.py": {
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/bicycle_control.py",
+      "sha256": "cd8bae46df0196fb98abe72c5b84e331c86eaf3391ab3462d6d24a8f7821d277",
+      "matches_source": true
+    },
+    "src/robot_lab_algorithms/robot_lab_algorithms/nav2_bicycle.py": {
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_algorithms/lib/python3.10/site-packages/robot_lab_algorithms/nav2_bicycle.py",
+      "sha256": "219b80b639db4b24be9502c281ef9624c7591980b0641ce47952180dc01a9bf7",
+      "matches_source": true
+    },
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": {
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/launcher.py",
+      "sha256": "701a63adb035a6005a03da818477b6e867a0ee68de3195ffa0f2b321f0b96ca2",
+      "matches_source": true
+    },
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": {
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/simulated_robot.launch.py",
+      "sha256": "ccdd87ab44d68d677a6b1915352c550122d9e9a9ae455fea989bdda29e8a4e0a",
+      "matches_source": true
+    },
+    "src/robot_lab_navigation/launch/navigation.launch.py": {
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_navigation/share/robot_lab_navigation/launch/navigation.launch.py",
+      "sha256": "f3e9a65c395102fe3ff997b433ec0914a53b2e3662bc4f576d647e12cad816c3",
+      "matches_source": true
+    }
+  },
+  "checks": {
+    "numerical_tests": 10,
+    "gui_selections": 9,
+    "ros_constructors": 3,
+    "metadata_schema": "actual installed algorithm catalog validates",
+    "build": "five packages 12.9 s; final algorithm package 4.69 s; final shutdown-guard installation refresh recorded in install-refresh.log",
+    "logs": {
+      "numerical-checks.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/numerical-checks.log",
+      "numerical-checks-final.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/numerical-checks-final.log",
+      "gui-commands.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/gui-commands.log",
+      "ros-constructors.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/ros-constructors.log",
+      "registry-check.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/registry-check.log",
+      "build.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/build.log",
+      "build-final-2.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/build-final-2.log",
+      "install-refresh.log": "/workspace/molar/robot_lab_runtime/bicycle-implementation-2026-10-13/install-refresh.log"
+    }
+  },
+  "qualification": {
+    "physical_mission": false,
+    "new_simulator_plant": false,
+    "full_suite": false,
+    "new_ci_result": null
+  },
+  "retained_negative": "Initial 0.5 s MPC preview failed two unchanged lateral-recovery checks; corrected to 1.5 s prediction while applying at actual simulation dt.",
+  "limits": "forward-only; rear Stanley adaptation and anti-Ackermann slip need physical tests; no all-map/backend claim"
+}
