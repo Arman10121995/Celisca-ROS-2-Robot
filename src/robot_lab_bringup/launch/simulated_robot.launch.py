@@ -1476,6 +1476,25 @@ def _build_simulation_actions(context):
     # in every backend.
     _sim = _launch_value(context, "simulator")
     _odom0_topic = "/robot_lab_controller/odom" if _sim == "gazebo" else "/odom/ground_truth"
+    # The self-contained bridges have no wheel controller: wheel odometry
+    # from the measured joint states takes its topic, for estimators and,
+    # with odometry_source:=wheels, for the EKF.
+    if (_sim != "gazebo" and not legged_active and drive_config
+            and _section_enabled(mode_config.get("local_localization"))):
+        gated_actions.append(Node(
+            package="robot_lab_algorithms",
+            executable="wheel_odometry",
+            output="screen",
+            parameters=[{
+                "use_sim_time": _as_bool(use_sim_time, True),
+                "drive_config": drive_args["drive_config"],
+                **{key: (float(value) if key in ("wheel_radius", "wheel_separation") else value)
+                   for key, value in drive_args.items() if key in _DIFF_DRIVE_KEYS},
+                "base_frame": base_frame or "base_footprint",
+            }],
+        ))
+        if _launch_value(context, "odometry_source").strip().lower() == "wheels":
+            _odom0_topic = "/robot_lab_controller/odom"
     if legged_active and _section_enabled(mode_config.get("local_localization")):
         _odom0_topic = "/leg_odometry"
         gated_actions.append(Node(
@@ -1749,6 +1768,14 @@ def generate_launch_description():
             description="Opt-in lateral hip target [rad] for the roll phase's "
                         "*other* pair, to separate the support from the moment. "
                         "0.0 (the default) means no splay on that pair."),
+        DeclareLaunchArgument(
+            "odometry_source", default_value="truth",
+            description="EKF odometry input in MuJoCo, PyBullet and Isaac: "
+                        "'truth' (the simulator's body twist, the historical "
+                        "default) or 'wheels' (wheel odometry from the measured "
+                        "joint states, robot_lab_algorithms.wheel_odometry). "
+                        "Gazebo always uses its controllers' wheel odometry; "
+                        "walking robots use leg odometry."),
         DeclareLaunchArgument(
             "legged_policy", default_value="",
             description="Model-matched rl_sar legged policy (loc mode, "

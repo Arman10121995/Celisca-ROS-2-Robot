@@ -85,6 +85,26 @@ def test_go2_walks_with_leg_odometry_in_mujoco(mode):
 
 
 @pytest.mark.integration
+@pytest.mark.parametrize('source,odom0', [('truth', '/odom/ground_truth'), ('wheels', '/robot_lab_controller/odom')])
+def test_wheel_odometry_runs_outside_gazebo_and_can_feed_the_ekf(source, odom0):
+    from launch.actions import IncludeLaunchDescription
+    from launch_ros.actions import Node
+    context, actions = _build(robot_model='labbot', simulator='mujoco', mode='nav',
+                              map_name='nav_obstacle', odometry_source=source)
+    every = list(_walk(actions))
+    wheel = [a for a in every if isinstance(a, Node)
+             and getattr(a, '_Node__node_executable', '') == 'wheel_odometry']
+    assert wheel, 'wheel odometry not started'
+    params = _parameters(context, wheel[0])
+    assert params['left_wheel_joint'].split('\n')[0] == 'labbot_left_wheel_joint'
+    local = [a for a in every if isinstance(a, IncludeLaunchDescription) and _text(
+        context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
+            'local_localization.launch.py')]
+    arguments = {_text(context, k): _text(context, v) for k, v in local[0].launch_arguments}
+    assert arguments['odom0'] == odom0
+
+
+@pytest.mark.integration
 def test_wheeled_robots_keep_their_odometry():
     from launch.actions import IncludeLaunchDescription
     from launch_ros.actions import Node
