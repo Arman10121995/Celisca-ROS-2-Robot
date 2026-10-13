@@ -24,17 +24,20 @@ controller_server:
       xy_goal_tolerance: 0.25
       yaw_goal_tolerance: 0.35
     FollowPath:
-      desired_linear_vel: 0.35
-      vx_max: 0.35
+      # b2_robot_lab stands still at 0.3 m/s and walks 0.24 m/s at 0.4
+      # (leg odometry screen, MuJoCo 2026-10-13), so it is commanded faster
+      # than the other dogs and never below 0.4.
+      desired_linear_vel: 0.5
+      vx_max: 0.5
       use_rotate_to_heading: true
       rotate_to_heading_angular_vel: 0.8
       regulated_linear_scaling_min_radius: 0.5
-      # Learned gaits barely move below a policy-specific speed.  B2 stood
+      # Learned gaits do not move below a policy-specific speed.  B2 stood
       # still for 20 s at a 0.2 m/s command, 0.19 and 0.40 m short of its
-      # goals, until the progress checker aborted (MuJoCo 2026-10-13, v3);
-      # it walks at 0.26 m/s for a 0.4 m/s command.
-      regulated_linear_scaling_min_speed: 0.3
-      min_approach_linear_velocity: 0.3
+      # goals, until the progress checker aborted, and stalled for seconds
+      # at 0.35 (MuJoCo 2026-10-13, round 3).
+      regulated_linear_scaling_min_speed: 0.4
+      min_approach_linear_velocity: 0.4
       lookahead_dist: 0.8
       min_lookahead_dist: 0.5
       max_lookahead_dist: 1.2

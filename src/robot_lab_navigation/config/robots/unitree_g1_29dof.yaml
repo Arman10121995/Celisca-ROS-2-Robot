@@ -28,11 +28,14 @@ controller_server:
       vx_max: 0.35
       use_rotate_to_heading: true
       rotate_to_heading_angular_vel: 0.8
-      regulated_linear_scaling_min_speed: 0.25
+      regulated_linear_scaling_min_speed: 0.3
       regulated_linear_scaling_min_radius: 0.5
-      # Learned gaits barely move below ~0.15 m/s (G1 stalled 0.5 m short of
-      # a goal at the 0.1 m/s approach speed, MuJoCo 2026-10-13).
-      min_approach_linear_velocity: 0.2
+      # Learned gaits do not move below a policy-specific speed.  The G1
+      # stalled 0.5 m short of a goal at a 0.1 m/s approach speed, and it
+      # stands still at 0.2 in MuJoCo and Isaac while its leg odometry
+      # creeps on: in Isaac, Nav2 declared both goals reached 0.49 and
+      # 0.58 m from truth (round 3, 2026-10-13).  It walks 0.29 m/s at 0.3.
+      min_approach_linear_velocity: 0.3
       lookahead_dist: 0.8
       min_lookahead_dist: 0.5
       max_lookahead_dist: 1.2
