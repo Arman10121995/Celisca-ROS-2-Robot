@@ -329,6 +329,12 @@ def main():
         with open(args.map_out, 'wb') as handle:
             handle.write(b'P5\n%d %d\n255\n' % (info.width, info.height))
             handle.write(np.flipud(image).tobytes())
+        with open(os.path.splitext(args.map_out)[0] + '.yaml', 'w') as handle:
+            yaml.safe_dump({'image': os.path.basename(args.map_out), 'mode': 'trinary',
+                            'resolution': float(info.resolution),
+                            'origin': [float(map_origin[0]), float(map_origin[1]), float(map_origin[2])],
+                            'negate': 0, 'occupied_thresh': 0.65, 'free_thresh': 0.196,
+                            'world_from_map': [float(v) for v in world_from_map]}, handle)
     print(json.dumps(report, indent=1))
     node.destroy_node()
     rclpy.shutdown()
