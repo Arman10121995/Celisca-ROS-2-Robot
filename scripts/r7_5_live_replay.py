@@ -96,7 +96,7 @@ def attitude(data, track, skip=5.0):
     results = {}
     for name, make in ATTITUDE.items():
         flt = make(q0)
-        last, errors, roll_err, pitch_err = None, [], [], []
+        last, roll_err, pitch_err = None, [], []
         for m in imu:
             t = stamp(m.header)
             g, a = m.angular_velocity, m.linear_acceleration
