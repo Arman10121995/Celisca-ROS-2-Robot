@@ -428,10 +428,11 @@ def _tune_roller_contacts(stage, root_prim, contact_offset=0.002, position_itera
     # The importer makes collision meshes instanceable; instance proxies
     # cannot be edited (the first version tuned 0 prims), so the roller
     # instances are made local first.
-    for prim in list(stage.Traverse(Usd.TraverseInstanceProxies())):
-        if (not prim.IsInstanceProxy() and prim.IsInstance()
-                and 'roller' in str(prim.GetPath()).lower()):
-            prim.SetInstanceable(False)
+    # Collect first: de-instancing expires the proxies under each instance.
+    instances = [prim.GetPath() for prim in stage.Traverse()
+                 if prim.IsInstance() and 'roller' in str(prim.GetPath()).lower()]
+    for path in instances:
+        stage.GetPrimAtPath(path).SetInstanceable(False)
     tuned = 0
     for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
         if prim.IsInstanceProxy() or 'roller' not in str(prim.GetPath()).lower():
