@@ -88,13 +88,37 @@ per trajectory).
   one run its error reached 30 cm at a similar-looking spot before it
   came back.
 
+## On simulator scans
+
+The same matchers replayed recorded Gazebo and MuJoCo runs: the robot's
+own scans and odometry, with the AMCL that ran live as a reference
+([evidence](../status/evidence/r73-localization-benchmark-2026-10-13/live/README.md)).
+
+| Localizer | Gazebo | MuJoCo | With biased odometry |
+|---|---|---|---|
+| ICP, point to point | **3.7 cm** | **3.6 cm** | unchanged |
+| ICP, point to line | 4.6 cm | 4.5 cm | unchanged |
+| NDT | 4.7 cm | 4.6 cm | unchanged |
+| Correlative | 5.1 cm | 5.3 cm | unchanged |
+| AMCL (live) | 7.9 cm | 8.8 cm | - |
+| Odometry alone | 3.4 cm | 0.7 cm (truth) | 33-38 cm |
+
+- Real scans cost the matchers a few centimetres, mostly a fixed offset
+  between the map grid and the simulated walls.
+- They still beat AMCL on the same scans, and they do not care how bad
+  the odometry is.
+- Gazebo's wheel odometry is so good on a flat floor that it alone is as
+  accurate here. MuJoCo feeds the simulator's truth as odometry unless
+  `odometry_source:=wheels` is set.
+
 ## Limits
 
-- The scans are ray-cast on the same map that the localizers match
-  against. Real scans see things the map does not (people, furniture,
-  glass), and real beams have width.
-- The odometry is modelled from the truth increments, not measured.
-- A live comparison in Gazebo, against AMCL on the same runs, is next.
+- The ray-cast benchmark matches against the same map it scans. The
+  recorded runs add real simulator scans, but both use one robot on one
+  flat map.
+- The localizers start at the true pose; global localization and
+  recovery from a wrong pose are not tested.
+- slam_toolbox's localization mode is not compared yet.
 
 ## Related tutorials
 

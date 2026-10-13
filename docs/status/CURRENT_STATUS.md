@@ -28,15 +28,17 @@ October 13: implemented on master, experimental.
   - [Evidence](evidence/r75-fusion-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/sensor_fusion_comparison.md).
 - **Perception, localization, state estimation (R7.2-R7.4).** The ids now
-  run real methods, each measured offline with known truth; runs on
-  simulator sensor data are pending.
+  run real methods, each measured offline with known truth; localization
+  is also measured on recorded simulator scans. Perception and state
+  estimation on simulator data are pending.
   - Perception: KD-tree clustering, adaptive scan breakpoints and a refined
     RANSAC. RANSAC finds all of a 2° floor where a height threshold finds
     43% ([evidence](evidence/r72-perception-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/perception_comparison.md)).
   - Localization: point-to-point and point-to-line ICP, NDT and correlative
     matching against the map. On ray-cast nav_maze scans they hold 7-24 mm
-    where biased odometry drifts 0.55 m
+    where biased odometry drifts 0.55 m; on recorded Gazebo and MuJoCo
+    scans 3.6-5.3 cm, against 7.9-8.8 cm for the AMCL that ran with them
     ([evidence](evidence/r73-localization-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/localization_comparison.md)).
   - State estimation: CV Kalman, CTRV EKF/UKF, particle filter, IMM and a

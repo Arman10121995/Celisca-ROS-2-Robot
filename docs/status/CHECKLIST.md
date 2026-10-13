@@ -305,8 +305,10 @@ code delivery, not a passed mission or universal support.
   ([perception](../tutorials/perception_comparison.md),
   [localization](../tutorials/localization_comparison.md),
   [state estimation](../tutorials/state_estimation_comparison.md)).
-  Their runs on simulator sensor data remain. Numerical kernels or
-  generated scores do not count.
+  Localization is also measured on recorded Gazebo and MuJoCo scans
+  against the AMCL that ran with them; perception and state estimation on
+  simulator data remain. Numerical kernels or generated scores do not
+  count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
 - [ ] **R9.1/R9.2:**

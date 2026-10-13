@@ -1,8 +1,9 @@
 # R7.3: scan-to-map localizers on nav_maze (2026-10-13)
 
 Status: **implemented, experimental**. The localizers are measured on scans
-ray-cast on the real nav_maze map, along robot trajectories recorded in
-Gazebo. Runs with live simulator scans are pending.
+ray-cast on the real nav_maze map along robot trajectories recorded in
+Gazebo, and on recorded Gazebo and MuJoCo scans against the AMCL that ran
+with them ([live/](live/README.md)).
 
 ## What was built
 
@@ -77,8 +78,22 @@ Per-run numbers are in [results.json](results.json) and the table in
   - The map and the scans come from the same grid. The scans are
     noise-perturbed, but there is no map-world mismatch (furniture,
     glass, moving people) and no beam divergence.
-  - Live Gazebo/MuJoCo scans, and a comparison with Nav2 AMCL and
-    slam_toolbox on the same data, are the next step.
+  - Simulator scans: see below.
+
+## On simulator scans ([live/](live/README.md))
+
+Recorded Gazebo and MuJoCo runs (Bumperbot, nav_maze, three runs each)
+replayed through the same matchers:
+
+- the matchers hold **3.6-5.4 cm**, against **7.9-8.8 cm** for the AMCL that
+  ran live on the same scans;
+- their error is a fixed offset of 2-5 cm, the same in both simulators,
+  which points at the map grid's registration rather than noise;
+- with the benchmark's biased odometry they change by less than 1 mm,
+  while the odometry alone drifts to 0.33-0.38 m.
+
+Global localization (no known start) and slam_toolbox on the same data are
+not covered.
 
 ## Reproduce
 

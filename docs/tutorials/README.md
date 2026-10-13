@@ -57,7 +57,8 @@ offline and over ROS (2026-10-13). **Perception** (six kernels on
 synthetic scenes), **localization** (four scan matchers and dead
 reckoning on nav_maze trajectories recorded in Gazebo) and **state
 estimation** (six filters on noisy position fixes) are measured offline
-with known truth (2026-10-13); their runs on simulator sensor data are
+with known truth (2026-10-13); localization also on recorded Gazebo and
+MuJoCo scans. Perception and state estimation on simulator data are
 pending. The "Method comparison" pages are older drafts that describe
 planned experiments; they are not measured rankings.
 
