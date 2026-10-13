@@ -437,6 +437,11 @@ robots:
     # description carries a head LiDAR (go2_sim.xacro).  Experimental.
     features: [legged_policy, ros2_control, lidar_2d]
     supports_room_vacuum: false
+    # Its Gazebo PD controller runs at 500 Hz.  nav_obstacle and nav_maze step
+    # physics at 10 ms, so the loop ran at 100 Hz: the Go2 lurched to
+    # 0.6-0.7 m/s on a 0.4 m/s command and lost localization, while it walks
+    # cleanly in nav_empty (2 ms).  Coarser worlds launch as a capped copy.
+    gazebo_max_physics_step_s: 0.002
 
   unitree_go2w:
     package: robot_lab_robots

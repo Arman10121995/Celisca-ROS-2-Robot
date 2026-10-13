@@ -410,8 +410,52 @@ def _relax_roller_drives(stage, damping_per_rad=1e-5):
     return sorted(relaxed)
 
 
+def _roller_capsules(stage):
+    """Replace each roller's convex collision mesh by an analytic capsule.
+
+    PhysX rolls a convex hull facet by facet: the 12-sided 6 mm roller
+    rests on a flat patch and has to be tipped over each edge.  With the
+    drives free, the bearing damping corrected, 32/8 solver iterations and a
+    2 mm contact offset, the contact rollers still turned at about half the
+    rate a strafe needs (2026-10-13).  A capsule rolls smoothly.  It is
+    sized from the mesh's bounds in the roller frame (long axis, largest
+    other half-extent as radius); the mesh's collision is disabled, its
+    visual stays.  Returns the number of rollers converted.
+    """
+    from pxr import Gf, Usd, UsdGeom, UsdPhysics
+
+    cache = UsdGeom.BBoxCache(Usd.TimeCode.Default(),
+                              [UsdGeom.Tokens.default_, UsdGeom.Tokens.guide,
+                               UsdGeom.Tokens.proxy, UsdGeom.Tokens.render])
+    links = [prim for prim in stage.Traverse()
+             if 'roller' in prim.GetName().lower() and prim.HasAPI(UsdPhysics.RigidBodyAPI)]
+    converted = 0
+    for link in links:
+        meshes = [prim for prim in Usd.PrimRange(link)
+                  if prim != link and prim.HasAPI(UsdPhysics.CollisionAPI)
+                  and not prim.IsA(UsdGeom.Capsule)]
+        if not meshes:
+            continue
+        bounds = Gf.Range3d()
+        for mesh in meshes:
+            bounds.UnionWith(cache.ComputeRelativeBound(mesh, link).ComputeAlignedRange())
+            UsdPhysics.CollisionAPI(mesh).CreateCollisionEnabledAttr(False)
+        size, center = bounds.GetSize(), bounds.GetMidpoint()
+        axis = max(range(3), key=lambda i: size[i])
+        radius = max(size[i] for i in range(3) if i != axis) / 2.0
+        capsule = UsdGeom.Capsule.Define(stage, link.GetPath().AppendChild('roller_capsule'))
+        capsule.CreateAxisAttr('XYZ'[axis])
+        capsule.CreateRadiusAttr(float(radius))
+        capsule.CreateHeightAttr(float(max(0.0, size[axis] - 2.0 * radius)))
+        capsule.AddTranslateOp().Set(Gf.Vec3d(center))
+        capsule.CreatePurposeAttr(UsdGeom.Tokens.guide)
+        UsdPhysics.CollisionAPI.Apply(capsule.GetPrim())
+        converted += 1
+    return converted
+
+
 def _tune_roller_contacts(stage, root_prim, contact_offset=0.002, position_iterations=32,
-                          velocity_iterations=8):
+                          velocity_iterations=8, capsules=True):
     """Solver and contact settings for an articulation with passive rollers.
 
     The mecanum car's 60 rollers have a 6 mm radius.  With the drives freed
@@ -433,6 +477,8 @@ def _tune_roller_contacts(stage, root_prim, contact_offset=0.002, position_itera
                  if prim.IsInstance() and 'roller' in str(prim.GetPath()).lower()]
     for path in instances:
         stage.GetPrimAtPath(path).SetInstanceable(False)
+    if capsules:
+        _roller_capsules(stage)
     tuned = 0
     for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
         if prim.IsInstanceProxy() or 'roller' not in str(prim.GetPath()).lower():
