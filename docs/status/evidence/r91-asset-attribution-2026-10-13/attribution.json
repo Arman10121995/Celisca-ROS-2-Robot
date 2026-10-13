@@ -1,0 +1,891 @@
+[
+ {
+  "kind": "robot",
+  "id": "bumperbot",
+  "declared": "Apache-2.0",
+  "repository": "https://github.com/ros2/bumperbot",
+  "assets": 5,
+  "assets_found": 5,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "assem12ros_29",
+  "declared": "MIT",
+  "repository": "https://github.com/Arthur-Azevedo/Awesome-URDFs",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "BSD"
+  ],
+  "basis": "license file",
+  "agrees": false
+ },
+ {
+  "kind": "robot",
+  "id": "aliengo_z1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_alengo",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "berkeley_humanoid_lite",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/berkeley-automation/Humanoid-Benchmark",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": false
+ },
+ {
+  "kind": "robot",
+  "id": "a1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_a1",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "aliengo",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_aliengo",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "b1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_b1",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "b2",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_b2",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "BSD"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "b2w",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_b2w",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "BSD"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "g1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_g1",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "go1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_go1",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "go2",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_go2",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "BSD"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "go2w",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_go2w",
+  "assets": 2,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "BSD"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "h1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_h1",
+  "assets": 1,
+  "assets_found": 0,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [],
+  "basis": "none found",
+  "agrees": null
+ },
+ {
+  "kind": "robot",
+  "id": "h1_2",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/unitreerobotics/ros2_h1",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/unitree/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "laikago",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/Arthur-Azevedo/Awesome-URDFs",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [
+   "src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "z1",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/Arthur-Azevedo/Awesome-URDFs",
+  "assets": 2,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/_upstream/Awesome-URDFs/LICENSE"
+  ],
+  "detected": [
+   "BSD-3-Clause"
+  ],
+  "package_manifest_licenses": [
+   "TODO"
+  ],
+  "basis": "license file",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "legacy_humanoid",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_robots/_upstream/legacy_humanoid_import/LICENSE"
+  ],
+  "detected": [
+   "unrecognised"
+  ],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "quadrotor_sitl",
+  "declared": "GPL-3.0",
+  "repository": "https://github.com/ArduPilot/ardupilot",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": false
+ },
+ {
+  "kind": "robot",
+  "id": "labbot",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "ackermann_car",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "rear_steer_car",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "anti_ackermann_car",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "four_wheel_steer_car",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "mecanum_car",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 2,
+  "assets_found": 2,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "robot",
+  "id": "px4_x500",
+  "declared": "BSD-3-Clause",
+  "repository": "https://github.com/PX4/PX4-Autopilot",
+  "assets": 0,
+  "assets_found": 0,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [],
+  "basis": "none found",
+  "agrees": null
+ },
+ {
+  "kind": "environment",
+  "id": "small_office",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "small_house",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "small_warehouse",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "warehouse_demo",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "celisca_floor_1",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "celisca_floor_2",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "celisca_floor_2_furniture",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "celisca_floor_1_furniture",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "celisca_f1_actor",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "celisca_f2_actor",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "outdoor_terrain",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "terrain_stairs",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "terrain_stepping_stones",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "aerial_course",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "aerial_indoor",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "bigger_warehouse",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "empty",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "residential_demo",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "simple_box",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_empty",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_obstacle",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_maze",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_narrow_passage",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_warehouse",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_dynamic",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "environment",
+  "id": "nav_sensor_degraded",
+  "declared": "Apache-2.0",
+  "repository": "internal",
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": true
+ },
+ {
+  "kind": "policy",
+  "id": "go2_recovery_nju",
+  "declared": null,
+  "repository": null,
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_adapter/policies/go2_recovery_nju/LICENSE"
+  ],
+  "detected": [
+   "MIT"
+  ],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "license file",
+  "agrees": null
+ },
+ {
+  "kind": "policy",
+  "id": "go2_velocity_flat",
+  "declared": null,
+  "repository": null,
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [],
+  "detected": [],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "package manifest",
+  "agrees": null
+ },
+ {
+  "kind": "policy",
+  "id": "rl_sar",
+  "declared": null,
+  "repository": null,
+  "assets": 1,
+  "assets_found": 1,
+  "license_files": [
+   "src/robot_lab_adapter/policies/rl_sar/LICENSE"
+  ],
+  "detected": [
+   "Apache-2.0"
+  ],
+  "package_manifest_licenses": [
+   "Apache-2.0"
+  ],
+  "basis": "license file",
+  "agrees": null
+ }
+]
