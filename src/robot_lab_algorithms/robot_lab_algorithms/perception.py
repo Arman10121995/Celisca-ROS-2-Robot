@@ -62,8 +62,35 @@ except ImportError as e:
             return self._node_name
 
 
+def _components(points, radius):
+    """Connected components of points under a distance threshold (KD-tree BFS)."""
+    import numpy as np
+    from scipy.spatial import cKDTree
+    pts = np.asarray(points, dtype=float)
+    if len(pts) == 0:
+        return []
+    tree = cKDTree(pts)
+    neighbours = tree.query_ball_point(pts, radius)
+    label = np.full(len(pts), -1)
+    groups = []
+    for i in range(len(pts)):
+        if label[i] >= 0:
+            continue
+        label[i] = len(groups)
+        frontier, members = [i], [i]
+        while frontier:
+            j = frontier.pop()
+            for k in neighbours[j]:
+                if label[k] < 0:
+                    label[k] = label[i]
+                    frontier.append(k)
+                    members.append(k)
+        groups.append(members)
+    return groups
+
+
 class ObstacleDetector:
-    """Detect obstacle clusters from an occupancy grid or scan ranges."""
+    """Group 2D points into clusters by proximity (single linkage, KD-tree)."""
 
     def __init__(self, node_name='obstacle_detector', cluster_distance=0.5):
         self.node_name = node_name
@@ -73,36 +100,33 @@ class ObstacleDetector:
         """Group 2D points [(x, y), ...] into clusters by proximity."""
         if not points:
             return []
-        remaining = list(points)
-        clusters = []
-        while remaining:
-            seed = remaining.pop()
-            cluster = [seed]
-            frontier = [seed]
-            while frontier:
-                a = frontier.pop()
-                for b in list(remaining):
-                    if math.hypot(a[0] - b[0], a[1] - b[1]) <= self.cluster_distance:
-                        remaining.remove(b)
-                        cluster.append(b)
-                        frontier.append(b)
-            clusters.append(cluster)
-        return clusters
+        return [[tuple(points[i]) for i in group] for group in _components(points, self.cluster_distance)]
 
 
 class ScanClusterer:
-    """Cluster LaserScan angle/range readings into object clusters."""
+    """Segment a LaserScan into clusters at range breakpoints.
 
-    def __init__(self, node_name='scan_clusterer', cluster_distance=0.3):
+    Consecutive beams belong to one cluster while their points are closer
+    than ``cluster_distance``; with ``adaptive=True`` the threshold grows
+    with range (Borges and Aldon's adaptive breakpoint detector), so far
+    surfaces seen at grazing angles are not split.
+    """
+
+    def __init__(self, node_name='scan_clusterer', cluster_distance=0.3, adaptive=False,
+                 lambda_angle=math.radians(10), sigma=0.03):
         self.node_name = node_name
         self.cluster_distance = cluster_distance
+        self.adaptive = adaptive
+        self.lambda_angle = lambda_angle
+        self.sigma = sigma
 
     def cluster_ranges(self, angle_min, angle_increment, ranges, max_range):
         """Return list of clusters, each a list of (x, y) cartesian points."""
         clusters = []
         current = []
+        last_r = None
         for i, r in enumerate(ranges):
-            if r >= max_range or r <= 0.0:
+            if r >= max_range or r <= 0.0 or r != r:
                 if current:
                     clusters.append(current)
                     current = []
@@ -114,11 +138,16 @@ class ScanClusterer:
                 current = [(x, y)]
             else:
                 px, py = current[-1]
-                if math.hypot(x - px, y - py) > self.cluster_distance:
+                limit = self.cluster_distance
+                if self.adaptive and last_r is not None:
+                    limit = max(limit, last_r * math.sin(abs(angle_increment)) /
+                                math.sin(self.lambda_angle - abs(angle_increment)) + 3 * self.sigma)
+                if math.hypot(x - px, y - py) > limit:
                     clusters.append(current)
                     current = [(x, y)]
                 else:
                     current.append((x, y))
+            last_r = r
         if current:
             clusters.append(current)
         return clusters
@@ -142,7 +171,8 @@ class PointcloudSegmenter:
 
 
 class EuclideanClusterer:
-    """Euclidean distance-based clustering for 3D point clouds."""
+    """Euclidean clustering (PCL's region growing): connected components under
+    a distance tolerance, keeping clusters of at least ``min_points``."""
 
     def __init__(self, node_name='euclidean_clusterer', tolerance=0.1, min_points=5):
         self.node_name = node_name
@@ -151,53 +181,17 @@ class EuclideanClusterer:
 
     def cluster(self, points_xyz):
         """Cluster 3D points using Euclidean distance threshold.
-        
+
         Returns list of clusters, each a list of (x, y, z) points.
         """
         if not points_xyz:
             return []
-        
-        clusters = []
-        visited = set()
-        
-        for i, point in enumerate(points_xyz):
-            if i in visited:
-                continue
-            
-            # Start new cluster with this point
-            cluster = [point]
-            queue = [i]
-            visited.add(i)
-            
-            while queue:
-                current_idx = queue.pop(0)
-                current_point = points_xyz[current_idx]
-                
-                # Find neighbors within tolerance
-                for j, other_point in enumerate(points_xyz):
-                    if j in visited:
-                        continue
-                    
-                    distance = math.sqrt(
-                        (current_point[0] - other_point[0])**2 + 
-                        (current_point[1] - other_point[1])**2 + 
-                        (current_point[2] - other_point[2])**2
-                    )
-                    
-                    if distance <= self.tolerance:
-                        cluster.append(other_point)
-                        queue.append(j)
-                        visited.add(j)
-            
-            # Only keep clusters with enough points
-            if len(cluster) >= self.min_points:
-                clusters.append(cluster)
-        
-        return clusters
+        return [[tuple(points_xyz[i]) for i in group] for group in _components(points_xyz, self.tolerance)
+                if len(group) >= self.min_points]
 
 
 class DBSCANClusterer:
-    """DBSCAN (Density-Based Spatial Clustering of Applications with Noise) clustering."""
+    """DBSCAN (Ester et al. 1996) with KD-tree neighbourhoods."""
 
     def __init__(self, node_name='dbscan_clusterer', eps=0.1, min_samples=5):
         self.node_name = node_name
@@ -206,162 +200,93 @@ class DBSCANClusterer:
 
     def cluster(self, points_xyz):
         """Cluster 3D points using DBSCAN algorithm.
-        
+
         Returns tuple of (clusters, noise) where clusters is a list of point clusters
         and noise is a list of points not belonging to any cluster.
         """
         if not points_xyz:
             return [], []
-        
-        # Find neighbors for each point
-        neighbors = []
-        for i, point in enumerate(points_xyz):
-            point_neighbors = []
-            for j, other_point in enumerate(points_xyz):
-                if i == j:
-                    continue
-                distance = math.sqrt(
-                    (point[0] - other_point[0])**2 + 
-                    (point[1] - other_point[1])**2 + 
-                    (point[2] - other_point[2])**2
-                )
-                if distance <= self.eps:
-                    point_neighbors.append(j)
-            neighbors.append(point_neighbors)
-        
-        # DBSCAN algorithm
-        cluster_id = 0
+        import numpy as np
+        from scipy.spatial import cKDTree
+        pts = np.asarray(points_xyz, dtype=float)
+        neighbours = cKDTree(pts).query_ball_point(pts, self.eps)
+        # A core point has at least min_samples points, itself included, within
+        # eps; clusters grow only through core points (border points join but
+        # do not extend the cluster).
+        core = np.array([len(n) >= self.min_samples for n in neighbours])
+        labels = np.full(len(pts), -1)
         clusters = []
-        noise = []
-        labels = [-1] * len(points_xyz)  # -1 means unclassified
-        
-        # Ester et al. (1996): a core point has at least min_samples points,
-        # itself included, within eps; clusters grow only through core points
-        # (border points join but do not extend the cluster).
-        def is_core(index):
-            return len(neighbors[index]) + 1 >= self.min_samples
-
-        for i in range(len(points_xyz)):
-            if labels[i] != -1:  # Already classified
+        for i in range(len(pts)):
+            if labels[i] != -1 or not core[i]:
                 continue
-            
-            # Check if this is a core point
-            if is_core(i):
-                # Start a new cluster
-                cluster = []
-                queue = [i]
-                labels[i] = cluster_id
-                
-                while queue:
-                    current_idx = queue.pop(0)
-                    cluster.append(points_xyz[current_idx])
-                    if not is_core(current_idx):
-                        continue  # border point
-                    
-                    # Expand to all density-reachable points
-                    for neighbor_idx in neighbors[current_idx]:
-                        if labels[neighbor_idx] in (-1, -2):  # unclassified, or noise turned border
-                            labels[neighbor_idx] = cluster_id
-                            queue.append(neighbor_idx)
-                
-                clusters.append(cluster)
-                cluster_id += 1
-            else:
-                # This is a noise point (for now)
-                labels[i] = -2  # Mark as potential noise
-        
-        # Collect noise points
-        for i, label in enumerate(labels):
-            if label == -2:  # Noise
-                noise.append(points_xyz[i])
-        
+            cluster_id = len(clusters)
+            labels[i] = cluster_id
+            queue, members = [i], []
+            while queue:
+                j = queue.pop()
+                members.append(j)
+                if not core[j]:
+                    continue
+                for k in neighbours[j]:
+                    if labels[k] == -1:
+                        labels[k] = cluster_id
+                        queue.append(k)
+            clusters.append([tuple(points_xyz[j]) for j in sorted(members)])
+        noise = [tuple(points_xyz[i]) for i in range(len(pts)) if labels[i] == -1]
         return clusters, noise
 
 
 class RANSACGroundRemoval:
-    """RANSAC-based ground removal and obstacle segmentation from point clouds."""
+    """RANSAC plane fit for the ground, refined by least squares on its inliers.
 
-    def __init__(self, node_name='ransac_ground_removal', max_iterations=100, 
-                 distance_threshold=0.05, normal_threshold=0.85):
+    Hypotheses whose normal is further than ``normal_threshold`` (cosine) from
+    vertical are skipped, so walls are not taken for the floor.
+    """
+
+    def __init__(self, node_name='ransac_ground_removal', max_iterations=100,
+                 distance_threshold=0.05, normal_threshold=0.85, seed=0):
         self.node_name = node_name
         self.max_iterations = max_iterations
         self.distance_threshold = distance_threshold
         self.normal_threshold = normal_threshold
+        self.seed = seed
 
     def segment(self, points_xyz):
         """Segment 3D points into ground and obstacles using RANSAC plane fitting.
-        
+
         Returns tuple of (ground_points, obstacle_points).
         """
         if not points_xyz or len(points_xyz) < 3:
-            return [], points_xyz
-        
-        best_inliers = []
-        best_plane = None
-        
-        # RANSAC plane fitting
+            return [], list(points_xyz)
+        import numpy as np
+        pts = np.asarray(points_xyz, dtype=float)
+        rng = np.random.default_rng(self.seed)
+        best = None
+        best_count = 0
         for _ in range(self.max_iterations):
-            # Randomly select 3 points to define a plane
-            import random
-            rng = random.Random()
-            indices = rng.sample(range(len(points_xyz)), min(3, len(points_xyz)))
-            
-            if len(indices) < 3:
+            p1, p2, p3 = pts[rng.choice(len(pts), 3, replace=False)]
+            normal = np.cross(p2 - p1, p3 - p1)
+            length = np.linalg.norm(normal)
+            if length < 1e-10:
                 continue
-                
-            p1, p2, p3 = [points_xyz[i] for i in indices]
-            
-            # Calculate plane normal using cross product
-            v1 = (p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2])
-            v2 = (p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2])
-            
-            # Cross product
-            normal_x = v1[1] * v2[2] - v1[2] * v2[1]
-            normal_y = v1[2] * v2[0] - v1[0] * v2[2] 
-            normal_z = v1[0] * v2[1] - v1[1] * v2[0]
-            
-            normal_length = math.sqrt(normal_x**2 + normal_y**2 + normal_z**2)
-            if normal_length < 1e-10:
-                continue  # Degenerate plane
-            
-            # Normalize normal
-            normal = (normal_x / normal_length, normal_y / normal_length, normal_z / normal_length)
-            
-            # Plane equation: normal · (p - p1) = 0 => normal · p = normal · p1
-            plane_d = normal[0] * p1[0] + normal[1] * p1[1] + normal[2] * p1[2]
-            
-            # Count inliers
-            inliers = []
-            for j, point in enumerate(points_xyz):
-                distance = abs(normal[0] * point[0] + normal[1] * point[1] + normal[2] * point[2] - plane_d)
-                if distance <= self.distance_threshold:
-                    inliers.append(j)
-            
-            # Check if this is the best plane so far
-            if len(inliers) > len(best_inliers):
-                best_inliers = inliers
-                best_plane = (normal, plane_d)
-        
-        if best_plane is None:
-            # No plane found, return all as obstacles
-            return [], points_xyz
-        
-        # Check if the best plane is likely ground (normal should be close to (0,0,1))
-        normal, plane_d = best_plane
-        if abs(normal[2]) < self.normal_threshold:  # Not a horizontal plane
-            return [], points_xyz
-        
-        # Separate ground and obstacles
-        ground_points = []
-        obstacle_points = []
-        
-        for i, point in enumerate(points_xyz):
-            if i in best_inliers:
-                ground_points.append(point)
-            else:
-                obstacle_points.append(point)
-        
-        return ground_points, obstacle_points
+            normal = normal / length
+            if abs(normal[2]) < self.normal_threshold:
+                continue
+            inliers = np.abs((pts - p1) @ normal) <= self.distance_threshold
+            count = int(inliers.sum())
+            if count > best_count:
+                best, best_count = inliers, count
+        if best is None or best_count < 3:
+            return [], list(points_xyz)
+        # Least-squares refinement z = a x + b y + c on the inliers.
+        inlier_pts = pts[best]
+        A = np.column_stack([inlier_pts[:, 0], inlier_pts[:, 1], np.ones(len(inlier_pts))])
+        a, b, c = np.linalg.lstsq(A, inlier_pts[:, 2], rcond=None)[0]
+        normal = np.array([-a, -b, 1.0]) / math.sqrt(a * a + b * b + 1.0)
+        distance = np.abs((pts - np.array([0.0, 0.0, c])) @ normal)
+        ground = distance <= self.distance_threshold
+        return ([tuple(points_xyz[i]) for i in np.nonzero(ground)[0]],
+                [tuple(points_xyz[i]) for i in np.nonzero(~ground)[0]])
 
 
 def _spin(node, spin_count=0):
