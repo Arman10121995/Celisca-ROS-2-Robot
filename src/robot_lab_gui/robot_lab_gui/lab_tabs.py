@@ -1211,9 +1211,12 @@ def create_tabs(notebook, app):
     app.arm_tab = ArmTab(app.control_notebook, app)
     from .hand_tab import HandTab
     app.hand_tab = HandTab(app.control_notebook, app)
+    from .fleet_tab import FleetTab
+    app.fleet_tab = FleetTab(notebook, app)
     tabs = [
         app.arm_tab,
         app.hand_tab,
+        app.fleet_tab,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),
         AssetsTab(notebook, app),

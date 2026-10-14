@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "baseline_revision": "59661cbc4857af0f1a1c1f83b495b3da7731e2a1",
+  "scope": {
+    "robot_instances": {
+      "alpha": "bumperbot",
+      "beta": "labbot"
+    },
+    "map": "nav_empty",
+    "backend": "Gazebo Fortress 6",
+    "host": "aarch64",
+    "source_session": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-51gw9kr8/session.json",
+    "source_snapshot": "/workspace/molar/robot_lab_runtime/r10-extension-2026-10-14/source-snapshot-live",
+    "implementation": "experimental; broader acceptance remains pending"
+  },
+  "metrics": {
+    "alpha_manual_travel_m": 0.7688017298271419,
+    "beta_manual_travel_m": 0.7144502496470638,
+    "alpha_neutral_displacement_m": 0.0,
+    "beta_displacement_during_alpha_drive_m": 0.0,
+    "nav2_goal": {
+      "x": 0.9,
+      "y": -0.5,
+      "yaw": 0.0
+    },
+    "nav2_result": "Nav2 succeeded",
+    "nav2_position_error_at_result_m": 0.06218243408174099,
+    "nav2_yaw_error_at_result_rad": 0.0005793657878379498,
+    "nav2_angular_velocity_at_result_rad_s": 0.40552850448538613,
+    "nav2_physical_goal_settling": "not assessed; formation was requested after the action result",
+    "heartbeat_loss_members": [
+      {
+        "id": "alpha",
+        "mode": "idle",
+        "reason": "Operator heartbeat lost; explicit new ownership required",
+        "linear_m_s": 0.0,
+        "angular_rad_s": 0.0
+      },
+      {
+        "id": "beta",
+        "mode": "idle",
+        "reason": "Operator heartbeat lost; explicit new ownership required",
+        "linear_m_s": 0.0,
+        "angular_rad_s": 0.0
+      }
+    ],
+    "alpha_reset_position_error_m": 1.1213802150603823e-14,
+    "beta_displacement_during_alpha_reset_m": 0.0,
+    "minimum_measured_centre_separation_m": 0.8499996760515885,
+    "clock_rewinds": 0,
+    "sampled_states": 334,
+    "message_counts": {
+      "alpha": {
+        "odom": 1526,
+        "truth": 1526,
+        "scan": 153,
+        "amcl": 38
+      },
+      "beta": {
+        "odom": 1525,
+        "truth": 1525,
+        "scan": 153,
+        "amcl": 15
+      }
+    },
+    "launch_exit": 0
+  },
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/fleet_session.py": "641719d56d2a35b02f70640e00f743cd1f27c2ed23c01184a3dfcdb959a74258",
+    "src/robot_lab_utils/robot_lab_utils/fleet_motion.py": "46e4f36c879ca32146198978f997fadb7530b9441a6bff0b56ab610aa77dce0a",
+    "src/robot_lab_utils/robot_lab_utils/fleet_controller.py": "0f30b4495e52587663ae9ec1ead8919e74a5894963f3f9a52e1b5e8feed0854c",
+    "src/robot_lab_gui/robot_lab_gui/fleet_tab.py": "649a59bc95a0a48886cef09f9dacb92cbaf72b8836935b10e4fa7a68871fe2d8",
+    "src/robot_lab_bringup/launch/shared_world.launch.py": "d4882297ac21d1f70b9a7de67283e61e215d31b6884b4d9c47862ba60e0ad072"
+  },
+  "artifacts": {
+    "report": "/workspace/molar/robot_lab_runtime/r10-extension-2026-10-14/shared-world-nav-2/report.json",
+    "console": "/workspace/molar/robot_lab_runtime/r10-extension-2026-10-14/shared-world-nav-2/gui-console.log",
+    "events": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-51gw9kr8/events.jsonl"
+  },
+  "preserved_failures": [
+    "shared-world-gui-1: wrong world plugin generation",
+    "shared-world-gui-2: double-prefixed robot parameter node",
+    "shared-world-gui-3: ROSClock callback collision and missing controller initialization parameters",
+    "shared-world-gui-4: reverse toward peer blocked by separation guard",
+    "shared-world-gui-5: source Labbot camera self returns blocked Drive",
+    "shared-world-nav-1: namespaced AMCL did not receive common map"
+  ],
+  "remaining": [
+    "Other maps, repeated arrivals and independent contact instrumentation",
+    "Physical goal settling, pause/cancel/resume, peer sensor/process loss and late acknowledgements",
+    "3\u20138 members, other complete robots and other backends",
+    "Task queue, traffic/resources/Open-RMF, cooperative coverage and multi-FCU aerial swarms",
+    "Marine and multi-legged adapters"
+  ]
+}

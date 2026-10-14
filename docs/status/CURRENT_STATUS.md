@@ -1,10 +1,23 @@
 # Current Robot Lab status
 
+October 15: **R10 is first**. The native Fleet & Swarm tab starts a single
+Gazebo world with named Bumperbot/Labbot instances, separate TF/sensors and
+source wheel controllers, latched group/instance Drive, actual Nav2 dispatch/
+allocation and four ground group kernels. One GUI nav_empty diagnostic records
+0.76880/0.71445 m independent movement, a Nav2 result at 0.06218 m physical error,
+formation motion, heartbeat-loss Stop and isolated reset without clock rewind.
+Settled arrival, contacts and broader mission/backend acceptance remain open;
+13 focused checks pass. Marine/gait and the remaining fleet/swarm integrations
+precede the older roadmap. [Guide](../tutorials/fleet-and-swarm.md),
+[scope, failures and gaps](fleet-2026-10-15.md).
+
 The October 14 next extension is now scoped as R10: shared-world fleets,
 fleet management, ground/aerial swarms, underwater robots/maps and six/eight/
 many-legged robot families. Source research and agent instructions are
-recorded; runtime remains queued after current implementation work. GUI Health
-shows the same status. [Detailed guide](../NEXT_EXTENSION_GUIDE.md).
+recorded. The latest instruction puts R10 first: shared-world Gazebo base/GUI
+initial implementation is now partial, followed by marine and gait workflows and remaining fleet/swarm integration,
+then the previous roadmap. GUI Health shows the same status.
+[Detailed guide](../NEXT_EXTENSION_GUIDE.md).
 
 October 14 hand integration: four source hand profiles now have experimental
 coordinated poses, source PID/tendon actuation, individual finger groups,

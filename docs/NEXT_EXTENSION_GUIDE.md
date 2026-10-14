@@ -1,9 +1,18 @@
 # Next extension: fleets, swarms, marine and multi-legged robotics
 
-Requested October 14, 2026. This is the next extension after the current
-initial implementation work. R3–R9 and their remaining acceptance stay open.
+Requested October 14, 2026. The latest user instruction puts this extension
+first, then resumes the previous initial implementation work. R3–R9 and their remaining acceptance stay open.
 R10 defines the additional scope; a researched source or planned GUI panel is
-not a runnable robot. GUI Health reads the same queued task ledger.
+not a runnable robot. GUI Health reads the same task ledger. Shared-world
+Gazebo Bumperbot/Labbot initial implementation is now partial; marine/gait integration is
+queued separately. Ground robots currently use Humble's Fortress 6 server and
+plugins; PX4 uses a separate Harmonic 8 runtime. Do not mix their plugin ABIs.
+
+October 15: [the native Fleet & Swarm workflow](tutorials/fleet-and-swarm.md)
+and [actual scoped diagnostic](status/fleet-2026-10-15.md) are implemented.
+The current handoff moves to marine/gait initial integration, while remaining
+queues/Open-RMF/coverage/multi-FCU and shared backend adapters stay open.
+Do not replace these with catalog counts or broaden the one nav_empty result.
 
 ## Deliver in this order
 

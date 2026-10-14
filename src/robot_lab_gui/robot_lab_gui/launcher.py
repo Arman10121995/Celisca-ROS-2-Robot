@@ -3480,6 +3480,8 @@ class SimulationLauncherGui(tk.Tk):
                              daemon=False).start()
 
     def _stop_launch(self):
+        if hasattr(self, 'fleet_tab'):
+            self.fleet_tab.all_stop()
         self._stop_aux_commands()
         if not self.process or not self._launch_running:
             return
@@ -3592,6 +3594,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self, 'fleet_tab'):
+            self.fleet_tab.close()
         preview = getattr(self, 'registry_preview', None)
         if preview is not None:
             preview.close()

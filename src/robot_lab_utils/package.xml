@@ -14,6 +14,7 @@
   <exec_depend>python3-yaml</exec_depend>
   <exec_depend>python3-numpy</exec_depend>
   <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-pil</exec_depend>
   <exec_depend>python3-shapely</exec_depend>
   <exec_depend>python3-rtree</exec_depend>
   <exec_depend>python3-trimesh</exec_depend>
@@ -22,6 +23,10 @@
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>rosgraph_msgs</exec_depend>
   <exec_depend>rcl_interfaces</exec_depend>
+  <exec_depend>action_msgs</exec_depend>
+  <exec_depend>nav2_msgs</exec_depend>
+  <exec_depend>ros_gz_interfaces</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>twist_mux_msgs</depend>

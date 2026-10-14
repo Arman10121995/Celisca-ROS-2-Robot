@@ -1,5 +1,15 @@
 # Stabilization and remaining work: agent execution guide
 
+Latest October 14 priority: finish the new R10 extension implementation first,
+then resume this older patch queue. Read [NEXT_EXTENSION_GUIDE](NEXT_EXTENSION_GUIDE.md)
+and the claimed shared-world/fleet/GUI tasks in the live ledger. Keep broad
+validation separate from initial feature delivery.
+
+October 15: preserve the implemented [Fleet & Swarm workflow](tutorials/fleet-and-swarm.md)
+and [scoped diagnostic](status/fleet-2026-10-15.md). Continue marine/gait and
+remaining fleet/swarm initial adapters before this old patch queue. Startup
+defects and their exact fixes are recorded in the tutorial's agent handoff.
+
 October 14 hand continuation: [native hand controls](tutorials/native-hand-controls.md)
 and [diagnostic scope](status/native-hands-2026-10-14.md). Four source-bound
 experimental adapters are implemented; source motor limits and measured

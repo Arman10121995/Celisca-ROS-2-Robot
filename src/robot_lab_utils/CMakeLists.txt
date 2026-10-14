@@ -29,6 +29,7 @@ install(TARGETS
 
 install(PROGRAMS
   ${PROJECT_NAME}/safety_stop.py
+  ${PROJECT_NAME}/fleet_controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1373,8 +1373,9 @@ label educational approximations honestly.
 
 ## R10 — Next extension: fleets, swarms and new robot forms
 
-Requested October 14, after current initial implementation batches. Source
-research is recorded; runtime integration remains queued. Existing R3–R9
+Latest October 14 priority: implement R10 first, then resume the previous
+initial implementation queue. Source research is recorded; shared-world
+Gazebo runtime/GUI initial implementation is partial and marine/gait integration remains queued. Existing R3–R9
 acceptance stays open. [Detailed agent guide](docs/NEXT_EXTENSION_GUIDE.md)
 defines source candidates, compatibility gaps, implementation order and GUI
 requirements. These task paths inherit the ledger's R10 scope until claimed.
@@ -1387,6 +1388,13 @@ no runtime mission is claimed by this planning task.
 
 ### R10.1 — Shared-world multi-robot sessions
 
+October 15: one-world Gazebo Bumperbot/Labbot instance, namespaced source
+controllers/sensors/TF, native group/instance Drive, Stop/heartbeat and scoped
+reset are implemented. A normal GUI nav_empty diagnostic measures independent
+motion, physical Stop and isolated reset without clock rewind; contacts, peer
+loss, 3–8 members, other maps and shared backend adapters remain open.
+[Scope/receipt](docs/status/fleet-2026-10-15.md), [guide](docs/tutorials/fleet-and-swarm.md).
+
 Implement distinct entities, namespaced controllers/sensors/actions, unique
 TF, one world/clock, real inter-robot contacts, per-instance/group Drive,
 all-stop and scoped reset. Acceptance: two existing bases execute independent
@@ -1396,6 +1404,12 @@ experiment jobs do not establish a fleet.
 
 ### R10.2 — Fleet management
 
+October 15: actual namespaced AMCL/Nav2 dispatch/nearest-idle allocation,
+pause/resume/cancel generation barriers and state/SSD journals are implemented.
+One Bumperbot action returns success at 0.06218 m physical error in a two-body
+world; it still rotates at the result, so settled arrival remains unassessed.
+Task queues, Open-RMF traffic/resource integration and broader missions remain.
+
 Implement compatible Open-RMF/Nav2 adapters, real dispatch/allocation, traffic
 coordination, pause/resume/cancel, measured robot/task health and supported
 charging/infrastructure. Acceptance: actual missions coordinate at shared
@@ -1403,6 +1417,12 @@ resources and task status agrees with physical outcomes. Missing battery,
 charger, door or lift simulation stays unknown/unavailable.
 
 ### R10.3 — Swarm robotics
+
+October 15: four educational centralized ground kernels plus sensor freshness,
+scan/separation guards, leave/rejoin and heartbeat Stop are implemented. Actual
+two-body formation motion and heartbeat-loss Stop are measured; convergence,
+other behaviors, cooperative coverage/distributed protocols and aerial swarms
+remain open. These are not the full ROS2swarm or Open-RMF implementations.
 
 Implement formation, rendezvous, dispersion, flocking and cooperative coverage
 with timestamped neighbors, bounded collision-aware commands, group Stop,
@@ -1444,6 +1464,11 @@ physical locomotion, body/terrain/obstacle clearance and class-specific sensor/
 map missions. Catalog pieces and animated wave poses do not qualify a robot.
 
 ### R10.8 — GUI and experiment integration
+
+October 15: native Fleet & Swarm editor/presets/autofill, live instance/group
+controls, actual Nav2 goals, leave/rejoin and scoped reset are implemented and
+exercised by the recorded normal GUI diagnostic. Marine/gait controls, other
+configurations, physical joystick and shared-world experiment workloads remain.
 
 Implement native Fleet/Swarm/Marine panels as adapters arrive, instance/group
 selection, latched/depth controls, taxonomy, compatible algorithm defaults and

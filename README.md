@@ -1,8 +1,18 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 15 adds the native **Fleet & Swarm** tab: several Bumperbot/Labbot
+instances in one Gazebo world, independent/group latched Drive, per-robot
+AMCL/Nav2, real dispatch/allocation, ground group controllers and scoped reset.
+A normal GUI nav_empty diagnostic records independent motion, a Nav2 result,
+formation motion, heartbeat Stop and isolated reset; broader acceptance remains
+open. [GUI guide](docs/tutorials/fleet-and-swarm.md),
+[measured scope and remaining work](docs/status/fleet-2026-10-15.md).
+
 The next extension includes **fleet management, ground/aerial swarms,
 underwater robots/maps, six/eight-legged and centipede/segmented robots**.
-Runtime integration is queued after current implementation work.
+The latest instruction prioritizes this extension first, then the remaining
+roadmap. Shared-world Gazebo base/GUI work is implemented experimentally; marine/gait integration
+remains queued.
 [R10 roadmap](ROADMAP.md#r10--next-extension-fleets-swarms-and-new-robot-forms),
 [source research and agent guide](docs/NEXT_EXTENSION_GUIDE.md).
 

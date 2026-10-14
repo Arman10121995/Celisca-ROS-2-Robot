@@ -62,12 +62,28 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
-**October 14 next-extension request:** R10 adds fleets/swarm, underwater robots
-and maps, hexapod/octopod and segmented/centipede forms. Continue current
-initial implementation first. [The guide](NEXT_EXTENSION_GUIDE.md) defines
+**October 15 R10 implementation:** the native Fleet & Swarm shared-world
+Gazebo base workflow is implemented experimentally. Read
+[the guide](tutorials/fleet-and-swarm.md) and
+[actual scope/receipt](status/fleet-2026-10-15.md). Two named bases move
+independently; actual Nav2 dispatch, formation motion, heartbeat Stop and an
+isolated reset are measured in nav_empty. The Nav2 result still had yaw motion:
+settled arrival/contact/broader missions remain open. Preserve the per-instance
+controller files, relative parameter-node name, common map remap, TF and
+generation barriers, scoped pose-derived reset and Labbot fleet-only 5 cm lidar
+clearance. Marine/gait implementation and remaining queue/RMF/coverage/multi-FCU
+work come before the old roadmap; do not rerun broad validation now.
+
+**October 14 latest priority:** implement R10 extensions first, then resume
+the existing R3–R9 work. R10 adds fleets/swarm, underwater robots and maps,
+hexapod/octopod and segmented/centipede forms. Codex owns R10.1/2/3/8 shared-world
+Gazebo base/GUI work. [The guide](NEXT_EXTENSION_GUIDE.md) defines
 primary source candidates, namespaces/shared-world and marine/gait contracts.
-Runtime tasks are queued; research and isolated queue jobs do not qualify
-fleet/swarm or underwater support. Provision on SSD and group complete models.
+Shared-world initial implementation is partial; marine and gait tasks remain queued.
+Research and isolated queue jobs do not qualify fleet/swarm or underwater
+support. Provision on SSD and group complete models. Preserve existing source
+certificates and feature implementations; unfinished old parent acceptance
+does not block reuse of the existing working base/controller contracts.
 
 **October 14 Codex hand lane:** `R5.8.native_hands` adds source-authored
 DEX-EE PID and Robotiq/UMI coupled-tendon controls, normal GUI poses/autofill,

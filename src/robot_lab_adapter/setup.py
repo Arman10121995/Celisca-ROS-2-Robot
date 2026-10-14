@@ -51,6 +51,7 @@ setup(
             'mavros-offboard-controller = robot_lab_adapter.mavros_offboard_controller:main',
             'px4-ros-controller = robot_lab_adapter.px4_ros_controller:main',
             'legged-policy-controller = robot_lab_adapter.legged_policy_controller:main',
+            'fleet-controller = robot_lab_utils.fleet_controller:main',
         ],
     },
 )
